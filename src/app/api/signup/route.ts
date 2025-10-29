@@ -58,55 +58,24 @@ export async function POST(request: NextRequest) {
     }
 
 
-    // Determine which Supabase instance to use
-    const isBIZEN = rawData.appSource === 'bizen'
-    
-    console.log('🎯 App Source:', rawData.appSource, '→ Using:', isBIZEN ? 'BIZEN Supabase' : 'Microcredential Supabase')
-    
-    // Use environment variables directly (same pattern as auth callback route)
-    let supabaseUrl: string | undefined
-    let supabaseKey: string | undefined
-    
-    if (isBIZEN) {
-      // BIZEN app - use BIZEN-specific keys
-      supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL_BIZEN
-      supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY_BIZEN
-      
-      // Fallback to main keys if BIZEN keys not set (for backwards compatibility)
-      if (!supabaseUrl || !supabaseKey) {
-        console.warn('⚠️ BIZEN keys not found, falling back to main Supabase keys')
-        supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-        supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      }
-    } else {
-      // Microcredential app - use main keys
-      supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-      supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    }
+    // BIZEN-only project - use standard Supabase env vars
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     
     // Validate environment variables exist
     if (!supabaseUrl || !supabaseKey) {
       console.error('❌ Missing Supabase environment variables:', {
-        appSource: rawData.appSource,
-        isBIZEN,
-        hasMicrocredentialUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-        hasMicrocredentialKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        hasBizenUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL_BIZEN,
-        hasBizenKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY_BIZEN,
-        selectedUrl: !!supabaseUrl,
-        selectedKey: !!supabaseKey
+        hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        hasKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
       })
       return NextResponse.json({
         success: false,
-        message: isBIZEN 
-          ? 'Error de configuración: faltan las claves de Supabase para BIZEN. Verifica NEXT_PUBLIC_SUPABASE_URL_BIZEN y NEXT_PUBLIC_SUPABASE_ANON_KEY_BIZEN en .env.local'
-          : 'Error de configuración: faltan las claves de Supabase para Microcredential. Verifica NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en .env.local',
+        message: 'Error de configuración: faltan las claves de Supabase. Verifica NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en .env.local',
         errors: {}
       }, { status: 500 })
     }
     
     console.log('✅ Supabase keys found:', {
-      app: isBIZEN ? 'BIZEN' : 'Microcredential',
       urlSet: !!supabaseUrl,
       keySet: !!supabaseKey,
       urlPreview: supabaseUrl.substring(0, 40) + '...'
@@ -135,23 +104,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Validate email domain based on app, unless override flag is set
-    const allowAll = process.env.ALLOW_ALL_EMAILS === 'true'
-    if (!allowAll && !isBIZEN) {
-      // Microcredential - only Mondragón emails
-      const emailLower = rawData.email.toLowerCase()
-      if (!emailLower.endsWith('@mondragonmexico.edu.mx') && !emailLower.endsWith('@mondragon.edu.mx')) {
-        return NextResponse.json({
-          success: false,
-          message: '🎓 Solo se permiten correos institucionales de Mondragón (@mondragonmexico.edu.mx)',
-          errors: {
-            email: ['Debes usar tu correo institucional de Mondragón']
-          }
-        })
-      }
-    }
+    // BIZEN allows all emails (no domain restriction)
+    // Can be overridden with ALLOW_ALL_EMAILS if needed
 
-    console.log('🔧 Creating Supabase client for:', isBIZEN ? 'BIZEN' : 'MICROCREDENTIAL')
+    console.log('🔧 Creating Supabase client for BIZEN')
     console.log('🔧 Supabase URL:', supabaseUrl.substring(0, 30) + '...')
     console.log('🔧 Supabase Key (first 30):', supabaseKey.substring(0, 30))
     console.log('🔧 Supabase Key (last 20):', supabaseKey.substring(supabaseKey.length - 20))
@@ -199,8 +155,8 @@ export async function POST(request: NextRequest) {
     console.log('📤 Key length:', supabaseKey.length)
     console.log('📤 Key starts with:', supabaseKey.substring(0, 20))
     
-    // Determine callback URL based on app
-    const callbackPath = isBIZEN ? '/bizen/auth/callback' : '/auth/callback'
+    // BIZEN callback URL
+    const callbackPath = '/bizen/auth/callback'
     const redirectUrl = `${origin}${callbackPath}`
     console.log('📤 Redirect URL:', redirectUrl)
     
@@ -239,11 +195,8 @@ export async function POST(request: NextRequest) {
       let errorMessage = 'Error de autenticación. Intenta de nuevo'
       
       if (error.message.includes('Invalid API key') || error.message.includes('JWT')) {
-        const keyType = isBIZEN ? 'BIZEN' : 'Microcredential'
-        errorMessage = `Error de configuración: La API key de Supabase para ${keyType} es inválida. Verifica que las claves en .env.local coincidan con tu proyecto Supabase.`
-        console.error(`❌ CRITICAL: Invalid Supabase API key detected for ${keyType} app!`)
-        console.error(`   App Source: ${rawData.appSource}`)
-        console.error(`   Using: ${isBIZEN ? 'NEXT_PUBLIC_SUPABASE_URL_BIZEN' : 'NEXT_PUBLIC_SUPABASE_URL'}`)
+        errorMessage = 'Error de configuración: La API key de Supabase es inválida. Verifica que las claves en .env.local coincidan con tu proyecto Supabase.'
+        console.error('❌ CRITICAL: Invalid Supabase API key detected!')
       } else if (error.message.includes('User already registered') || error.message.includes('user_already_exists')) {
         errorMessage = 'Este correo ya está registrado. Si ya tienes una cuenta, ve a la página de inicio de sesión.'
       } else if (error.message.includes('Invalid email')) {

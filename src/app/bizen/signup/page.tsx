@@ -4,7 +4,7 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { createClientBizen } from "@/lib/supabase/client-bizen"
+import { createClient } from "@/lib/supabase/client"
 
 // TypeScript declarations for Google reCAPTCHA
 declare global {
@@ -124,7 +124,7 @@ export default function BIZENSignupPage() {
   const [showPass, setShowPass] = React.useState(false)
   const [recaptchaLoaded, setRecaptchaLoaded] = React.useState(false)
   const router = useRouter()
-  const supabase = createClientBizen()
+  const supabase = createClient()
 
   // Load reCAPTCHA
   React.useEffect(() => {

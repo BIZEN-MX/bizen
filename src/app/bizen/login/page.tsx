@@ -5,7 +5,7 @@ import { Suspense } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { createClientBizen } from "@/lib/supabase/client-bizen"
+import { createClient } from "@/lib/supabase/client"
 
 const brandName = "BIZEN"
 const logoSrc = "/bsmx-logo.png"
@@ -102,7 +102,7 @@ function Divider({ label = "o" }: { label?: string }) {
 
 function BIZENLoginContent() {
   const router = useRouter()
-  const supabase = createClientBizen()
+  const supabase = createClient()
   const [loading, setLoading] = React.useState(false)
   const [message, setMessage] = React.useState<string | null>(null)
   const [email, setEmail] = React.useState("")

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session, AuthError } from '@supabase/supabase-js'
-import { createClientBizen } from '@/lib/supabase/client-bizen'
+import { createClient } from '@/lib/supabase/client'
 
 interface AuthContextBizenType {
   user: User | null
@@ -21,7 +21,7 @@ export function AuthProviderBizen({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClientBizen()
+  const supabase = createClient()
 
   useEffect(() => {
     // Get initial session

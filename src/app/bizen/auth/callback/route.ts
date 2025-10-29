@@ -1,4 +1,4 @@
-import { createSupabaseServerBizen } from '@/lib/supabase/server-bizen'
+import { createSupabaseServer } from '@/lib/supabase/server'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const origin = requestUrl.origin
 
   if (code) {
-    const supabase = await createSupabaseServerBizen()
+    const supabase = await createSupabaseServer()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (error) {
