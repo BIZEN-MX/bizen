@@ -8,9 +8,9 @@ export async function middleware(request: NextRequest) {
     },
   })
 
-  // Use standard Supabase credentials (BIZEN-only project)
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  // Prefer BIZEN envs, fallback to generic
+  const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL_BIZEN || process.env.NEXT_PUBLIC_SUPABASE_URL)!
+  const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY_BIZEN || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)!
 
   const supabase = createServerClient(
     supabaseUrl,

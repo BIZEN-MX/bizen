@@ -14,8 +14,8 @@ type MutableCookies = {
 }
 
 export async function createSupabaseServer(): Promise<SupabaseClient<Database>> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL_BIZEN || process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY_BIZEN || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   if (!url || !anon) {
     throw new Error("Missing Supabase credentials")
   }
