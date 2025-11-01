@@ -29,7 +29,7 @@ export default function AIChatbot() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/chatbot', {
+      const response = await fetch('/api/free-chatbot', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

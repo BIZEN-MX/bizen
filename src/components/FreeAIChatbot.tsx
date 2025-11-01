@@ -86,8 +86,8 @@ export default function FreeAIChatbot() {
       let response: string
 
       if (useAI) {
-        // Use OpenAI API (when available)
-        const apiResponse = await fetch('/api/chatbot', {
+        // Use server endpoint (currently free chatbot)
+        const apiResponse = await fetch('/api/free-chatbot', {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
