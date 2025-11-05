@@ -40,7 +40,7 @@ export default function FixedSidebar() {
         position: "fixed",
         top: 72,
         right: 0,
-        width: "min(320px, 90vw)",
+        width: 280,
         height: "calc(100vh - 72px)",
         background: "#fff",
         boxShadow: "-4px 0 20px rgba(0, 0, 0, 0.1)",
