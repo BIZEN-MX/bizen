@@ -725,3 +725,207 @@ model Doodad {
 
   @@map("doodads")
 }
+
+// ============================================
+// BUSINESS LAB MODELS
+// ============================================
+
+model LabTrack {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String    @unique
+  title       String
+  description String?
+  icon        String?
+  color       String?
+  order       Int       @default(0)
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at")
+
+  steps LabStep[]
+
+  @@map("lab_tracks")
+}
+
+model LabStep {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trackId       String    @map("track_id") @db.Uuid
+  title         String
+  description   String?
+  goal          String?
+  order         Int       @default(0)
+  required      Boolean   @default(true)
+  estimatedTime String?   @map("estimated_time")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @default(now()) @map("updated_at")
+
+  track       LabTrack            @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  progress    LabStepProgress[]
+  checklists  LabChecklist[]
+  artifacts   LabArtifact[]
+  experiments LabExperiment[]
+
+  @@index([trackId])
+  @@map("lab_steps")
+}
+
+model LabStepProgress {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  stepId      String    @map("step_id") @db.Uuid
+  isCompleted Boolean   @default(false) @map("is_completed")
+  completedAt DateTime? @map("completed_at")
+  notes       String?
+  updatedAt   DateTime  @default(now()) @map("updated_at")
+
+  step LabStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, stepId])
+  @@index([userId])
+  @@index([stepId])
+  @@map("lab_step_progress")
+}
+
+model LabChecklist {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  stepId    String   @map("step_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  text      String
+  done      Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  step LabStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@unique([stepId, userId, text])
+  @@index([stepId, userId])
+  @@map("lab_checklists")
+}
+
+model LabArtifact {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  stepId    String   @map("step_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  type      String
+  title     String
+  content   String?
+  url       String?
+  metadata  Json?
+  isShared  Boolean  @default(false) @map("is_shared")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  step LabStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stepId])
+  @@map("lab_artifacts")
+}
+
+model LabTemplate {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String   @unique
+  title       String
+  description String?
+  category    String?
+  schema      Json?
+  sample      String?
+  icon        String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+
+  @@map("lab_templates")
+}
+
+model LabExperiment {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  stepId      String    @map("step_id") @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  hypothesis  String
+  metric      String?
+  targetValue String?   @map("target_value")
+  result      String?
+  decision    String?
+  status      String    @default("planning")
+  startDate   DateTime? @map("start_date") @db.Date
+  endDate     DateTime? @map("end_date") @db.Date
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at")
+
+  step LabStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stepId])
+  @@map("lab_experiments")
+}
+
+model LabScore {
+  userId         String   @id @map("user_id") @db.Uuid
+  readinessScore Int      @default(0) @map("readiness_score")
+  breakdown      Json?
+  notes          String?
+  calculatedAt   DateTime @default(now()) @map("calculated_at")
+  updatedAt      DateTime @default(now()) @map("updated_at")
+
+  @@map("lab_scores")
+}
+
+model LabAiJob {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
+  tool         String
+  status       String    @default("pending")
+  input        Json?
+  output       Json?
+  errorMessage String?   @map("error_message")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  completedAt  DateTime? @map("completed_at")
+
+  @@index([userId])
+  @@map("lab_ai_jobs")
+}
+
+model LabSimInput {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id") @db.Uuid
+  kind      String
+  params    Json
+  createdAt DateTime @default(now()) @map("created_at")
+
+  outputs LabSimOutput[]
+
+  @@index([userId])
+  @@map("lab_sim_inputs")
+}
+
+model LabSimOutput {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  inputId         String   @map("input_id")
+  results         Json
+  charts          Json?
+  recommendations String?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  input LabSimInput @relation(fields: [inputId], references: [id], onDelete: Cascade)
+
+  @@index([inputId])
+  @@map("lab_sim_outputs")
+}
+
+model LabMentor {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String    @map("user_id") @db.Uuid
+  bio           String?
+  expertise     String[]  @default([])
+  hourlyRate    Decimal?  @map("hourly_rate") @db.Decimal(10, 2)
+  availability  String?
+  isActive      Boolean   @default(true) @map("is_active")
+  rating        Decimal?  @default(0) @map("rating") @db.Decimal(3, 2)
+  totalSessions Int       @default(0) @map("total_sessions")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @default(now()) @map("updated_at")
+
+  @@index([userId])
+  @@map("lab_mentors")
+}
