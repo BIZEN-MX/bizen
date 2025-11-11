@@ -111,7 +111,8 @@ export default function LabPage() {
         minHeight: "100vh",
         background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         padding: "40px",
-        fontFamily: "Montserrat, sans-serif"
+        fontFamily: "Montserrat, sans-serif",
+        width: "100%"
       }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
@@ -137,7 +138,8 @@ export default function LabPage() {
           padding: 24,
           boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
           marginBottom: 24,
-          border: "2px solid #DBEAFE"
+          border: "2px solid #DBEAFE",
+          width: "100%"
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <span style={{ fontSize: 24 }}>🎯</span>
@@ -184,7 +186,8 @@ export default function LabPage() {
             padding: 24,
             boxShadow: "0 4px 20px rgba(139,92,246,0.15)",
             marginBottom: 24,
-            border: "2px solid #DDD6FE"
+            border: "2px solid #DDD6FE",
+            width: "100%"
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
               <span style={{ fontSize: 24 }}>💡</span>
@@ -447,7 +450,8 @@ export default function LabPage() {
           borderRadius: 16,
           padding: 24,
           border: "2px solid #FDE68A",
-          boxShadow: "0 2px 12px rgba(251,191,36,0.15)"
+          boxShadow: "0 2px 12px rgba(251,191,36,0.15)",
+          width: "100%"
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <span style={{ fontSize: 24 }}>⚠️</span>
