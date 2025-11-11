@@ -4,6 +4,9 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
+// Force dynamic rendering to avoid prerendering issues
+export const dynamic = 'force-dynamic'
+
 export default function WelcomePage() {
   const [isMouthOpen, setIsMouthOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
