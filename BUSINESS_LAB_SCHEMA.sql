@@ -176,6 +176,15 @@ CREATE TABLE IF NOT EXISTS lab_sim_outputs (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Add input_id column if it doesn't exist (for existing tables)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                 WHERE table_name = 'lab_sim_outputs' AND column_name = 'input_id') THEN
+    ALTER TABLE lab_sim_outputs ADD COLUMN input_id UUID REFERENCES lab_sim_inputs(id) ON DELETE CASCADE;
+  END IF;
+END $$;
+
 -- ============================================
 -- 12. LAB MENTORS (Mentor marketplace)
 -- ============================================
