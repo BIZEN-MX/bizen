@@ -126,6 +126,15 @@ CREATE TABLE IF NOT EXISTS lab_templates (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Add missing columns if they don't exist (for existing tables)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                 WHERE table_name = 'lab_templates' AND column_name = 'icon') THEN
+    ALTER TABLE lab_templates ADD COLUMN icon TEXT;
+  END IF;
+END $$;
+
 -- ============================================
 -- 7. LAB EXPERIMENTS (Hypothesis testing)
 -- ============================================
