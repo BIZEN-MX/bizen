@@ -6,6 +6,9 @@ import { useSettings, Language, Theme, TextSize, ContrastMode } from "@/contexts
 import { useAuth } from "@/contexts/AuthContext"
 import PageLogo from "@/components/PageLogo"
 
+// Force dynamic rendering to avoid prerendering issues
+export const dynamic = 'force-dynamic'
+
 export default function SettingsPage() {
   const router = useRouter()
   const { user } = useAuth()
