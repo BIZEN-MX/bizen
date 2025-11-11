@@ -2839,7 +2839,6 @@ export default function CashFlowGamePage() {
           </div>
         </div>
       )}
-      </div>
       </main>
 
       {/* Sidebar Spacer */}
