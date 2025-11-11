@@ -112,7 +112,8 @@ export default function LabPage() {
         background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         padding: "40px",
         fontFamily: "Montserrat, sans-serif",
-        width: "100%"
+        width: "100%",
+        boxSizing: "border-box" as const
       }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
@@ -237,7 +238,8 @@ export default function LabPage() {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: 16,
-          marginBottom: 32
+          marginBottom: 32,
+          width: "100%"
         }}>
           <Link href="/business-lab/templates" style={{ textDecoration: "none" }}>
             <div style={{
