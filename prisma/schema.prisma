@@ -48,20 +48,34 @@ model License {
 
 // Profile extends Supabase auth.users
 model Profile {
-  userId    String   @id @map("user_id") // FK to auth.users.id
-  fullName  String   @map("full_name")
-  role      String // "student" | "teacher" | "school_admin"
-  schoolId  String?  @map("school_id")
-  xp        Int      @default(0) // Experience points
-  level     Int      @default(1) // Current level
-  createdAt DateTime @default(now()) @map("created_at")
+  userId            String   @id @map("user_id") // FK to auth.users.id
+  fullName          String   @map("full_name")
+  role              String // "student" | "teacher" | "school_admin" | "moderator"
+  schoolId          String?  @map("school_id")
+  xp                Int      @default(0) // Experience points
+  level             Int      @default(1) // Current level
+  nickname          String?  @unique // Forum pseudonym
+  reputation        Int      @default(0) // Forum reputation
+  postsCreated      Int      @default(0) @map("posts_created")
+  commentsCreated   Int      @default(0) @map("comments_created")
+  acceptedAnswers   Int      @default(0) @map("accepted_answers")
+  createdAt         DateTime @default(now()) @map("created_at")
 
-  school       School?       @relation(fields: [schoolId], references: [id])
-  enrollments  Enrollment[]
-  progress     Progress[]
-  attempts     Attempt[]
-  submissions  Submission[]
-  certificates Certificate[]
+  school               School?              @relation(fields: [schoolId], references: [id])
+  enrollments          Enrollment[]
+  progress             Progress[]
+  attempts             Attempt[]
+  submissions          Submission[]
+  certificates         Certificate[]
+  forumThreads         ForumThread[]        @relation("ForumThreadAuthor")
+  forumComments        ForumComment[]       @relation("ForumCommentAuthor")
+  forumVotes           ForumVote[]          @relation("ForumVotes")
+  forumBookmarks       ForumBookmark[]      @relation("ForumBookmarks")
+  forumFollows         ForumFollow[]        @relation("ForumFollows")
+  forumReportsCreated  ForumReport[]        @relation("ForumReporter")
+  forumReportsReviewed ForumReport[]        @relation("ForumReviewer")
+  forumNotifications   ForumNotification[]  @relation("ForumNotifications")
+  forumUserBadges      ForumUserBadge[]     @relation("ForumUserBadges")
 
   @@map("profiles")
 }
@@ -292,4 +306,422 @@ model Certificate {
 
   @@unique([userId, courseId])
   @@map("certificates")
+}
+
+// ========================================
+// ENTREPRENEUR FORUM (Advanced)
+// ========================================
+
+model ForumTopic {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  icon        String?
+  orderIndex  Int      @default(0) @map("order_index")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  threads ForumThread[]
+
+  @@map("forum_topics")
+}
+
+model ForumTag {
+  id         String   @id @default(cuid())
+  name       String
+  slug       String   @unique
+  usageCount Int      @default(0) @map("usage_count")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  threadTags ForumThreadTag[]
+
+  @@map("forum_tags")
+}
+
+model ForumThread {
+  id                String   @id @default(cuid())
+  title             String
+  body              String   @db.Text
+  authorId          String   @map("author_id")
+  topicId           String   @map("topic_id")
+  status            String   @default("open") // 'open', 'resolved', 'locked'
+  acceptedCommentId String?  @map("accepted_comment_id")
+  score             Int      @default(0)
+  viewCount         Int      @default(0) @map("view_count")
+  commentCount      Int      @default(0) @map("comment_count")
+  isPinned          Boolean  @default(false) @map("is_pinned")
+  isHidden          Boolean  @default(false) @map("is_hidden")
+  moderationStatus  String   @default("approved") @map("moderation_status") // 'pending', 'approved', 'rejected'
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  author    Profile          @relation("ForumThreadAuthor", fields: [authorId], references: [userId], onDelete: Cascade)
+  topic     ForumTopic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  comments  ForumComment[]
+  tags      ForumThreadTag[]
+  bookmarks ForumBookmark[]
+  follows   ForumFollow[]
+
+  @@index([authorId])
+  @@index([topicId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([score])
+  @@index([moderationStatus])
+  @@map("forum_threads")
+}
+
+model ForumThreadTag {
+  threadId String @map("thread_id")
+  tagId    String @map("tag_id")
+
+  thread ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  tag    ForumTag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([threadId, tagId])
+  @@index([tagId])
+  @@map("forum_thread_tags")
+}
+
+model ForumComment {
+  id               String   @id @default(cuid())
+  threadId         String   @map("thread_id")
+  parentCommentId  String?  @map("parent_comment_id")
+  authorId         String   @map("author_id")
+  body             String   @db.Text
+  score            Int      @default(0)
+  isHidden         Boolean  @default(false) @map("is_hidden")
+  isAccepted       Boolean  @default(false) @map("is_accepted")
+  moderationStatus String   @default("approved") @map("moderation_status") // 'pending', 'approved', 'rejected'
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  thread        ForumThread    @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  parentComment ForumComment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  replies       ForumComment[] @relation("CommentReplies")
+  author        Profile        @relation("ForumCommentAuthor", fields: [authorId], references: [userId], onDelete: Cascade)
+
+  @@index([threadId])
+  @@index([parentCommentId])
+  @@index([authorId])
+  @@index([createdAt])
+  @@map("forum_comments")
+}
+
+model ForumVote {
+  id         String   @id @default(cuid())
+  userId     String   @map("user_id")
+  targetType String   @map("target_type") // 'thread' or 'comment'
+  targetId   String   @map("target_id")
+  value      Int      // -1 or 1
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user Profile @relation("ForumVotes", fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@unique([userId, targetType, targetId])
+  @@index([userId])
+  @@index([targetType, targetId])
+  @@map("forum_votes")
+}
+
+model ForumBookmark {
+  userId    String   @map("user_id")
+  threadId  String   @map("thread_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   Profile     @relation("ForumBookmarks", fields: [userId], references: [userId], onDelete: Cascade)
+  thread ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@id([userId, threadId])
+  @@index([threadId])
+  @@map("forum_bookmarks")
+}
+
+model ForumFollow {
+  userId        String   @map("user_id")
+  threadId      String   @map("thread_id")
+  notifyEmail   Boolean  @default(true) @map("notify_email")
+  notifyInApp   Boolean  @default(true) @map("notify_in_app")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  user   Profile     @relation("ForumFollows", fields: [userId], references: [userId], onDelete: Cascade)
+  thread ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@id([userId, threadId])
+  @@index([threadId])
+  @@map("forum_follows")
+}
+
+model ForumReport {
+  id          String    @id @default(cuid())
+  reporterId  String    @map("reporter_id")
+  targetType  String    @map("target_type") // 'thread', 'comment', 'user'
+  targetId    String    @map("target_id")
+  reason      String
+  details     String?
+  status      String    @default("open") // 'open', 'reviewing', 'closed'
+  reviewedBy  String?   @map("reviewed_by")
+  reviewedAt  DateTime? @map("reviewed_at")
+  actionTaken String?   @map("action_taken")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  reporter Profile  @relation("ForumReporter", fields: [reporterId], references: [userId], onDelete: Cascade)
+  reviewer Profile? @relation("ForumReviewer", fields: [reviewedBy], references: [userId], onDelete: SetNull)
+
+  @@index([reporterId])
+  @@index([targetType, targetId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("forum_reports")
+}
+
+model ForumNotification {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  type      String    // 'new_comment', 'accepted_answer', 'mention', 'upvote'
+  data      Json
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user Profile @relation("ForumNotifications", fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([readAt])
+  @@map("forum_notifications")
+}
+
+model ForumBadge {
+  id                String   @id @default(cuid())
+  name              String
+  description       String?
+  icon              String?
+  requirementType   String   @map("requirement_type") // 'accepted_answers', 'reputation', 'posts_created'
+  requirementValue  Int      @map("requirement_value")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  userBadges ForumUserBadge[]
+
+  @@map("forum_badges")
+}
+
+model ForumUserBadge {
+  userId   String   @map("user_id")
+  badgeId  String   @map("badge_id")
+  earnedAt DateTime @default(now()) @map("earned_at")
+
+  user  Profile    @relation("ForumUserBadges", fields: [userId], references: [userId], onDelete: Cascade)
+  badge ForumBadge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, badgeId])
+  @@index([badgeId])
+  @@map("forum_user_badges")
+}
+
+// ========================================
+// CASHFLOW GAME
+// ========================================
+
+model Profession {
+  id                   Int      @id @default(autoincrement())
+  name                 String   @db.VarChar(100)
+  description          String?  @db.Text
+  salary               Int
+  taxes                Int
+  homeMortgagePayment  Int      @map("home_mortgage_payment")
+  schoolLoanPayment    Int      @map("school_loan_payment")
+  carLoanPayment       Int      @map("car_loan_payment")
+  creditCardPayment    Int      @map("credit_card_payment")
+  retailPayment        Int      @map("retail_payment")
+  otherExpenses        Int      @map("other_expenses")
+  childExpense         Int      @map("child_expense")
+  homeMortgage         Int      @map("home_mortgage")
+  schoolLoans          Int      @map("school_loans")
+  carLoans             Int      @map("car_loans")
+  creditCards          Int      @map("credit_cards")
+  retailDebt           Int      @map("retail_debt")
+  startingCash         Int      @map("starting_cash")
+  startingSavings      Int      @map("starting_savings")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  players Player[]
+
+  @@map("professions")
+}
+
+model GameSession {
+  id               Int       @id @default(autoincrement())
+  userId           String    @map("user_id")
+  status           String    @default("active") @db.VarChar(20)
+  currentPhase     String?   @default("rat_race") @map("current_phase") @db.VarChar(20)
+  startedAt        DateTime  @default(now()) @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+  lastActivityAt   DateTime  @default(now()) @map("last_activity_at")
+  totalTurns       Int       @default(0) @map("total_turns")
+  durationMinutes  Int?      @map("duration_minutes")
+
+  players    Player[]
+  gameEvents GameEvent[]
+
+  @@map("game_sessions")
+}
+
+model Player {
+  id                  Int       @id @default(autoincrement())
+  gameSessionId       Int       @map("game_session_id")
+  userId              String    @map("user_id")
+  professionId        Int       @map("profession_id")
+  cashOnHand          Int       @map("cash_on_hand")
+  savings             Int       @default(0)
+  numChildren         Int       @default(0) @map("num_children")
+  currentPosition     Int       @default(0) @map("current_position")
+  isOnFastTrack       Boolean   @default(false) @map("is_on_fast_track")
+  hasEscapedRatRace   Boolean   @default(false) @map("has_escaped_rat_race")
+  escapedAt           DateTime? @map("escaped_at")
+  currentTurn         Int       @default(1) @map("current_turn")
+  totalIncome         Int?      @map("total_income")
+  totalExpenses       Int?      @map("total_expenses")
+  passiveIncome       Int       @default(0) @map("passive_income")
+  cashFlow            Int?      @map("cash_flow")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  gameSession        GameSession         @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+  profession         Profession          @relation(fields: [professionId], references: [id])
+  playerInvestments  PlayerInvestment[]
+  playerLiabilities  PlayerLiability[]
+  playerDoodads      PlayerDoodad[]
+  gameEvents         GameEvent[]
+
+  @@unique([gameSessionId, userId])
+  @@map("players")
+}
+
+model OpportunityCard {
+  id             Int       @id @default(autoincrement())
+  type           String    @db.VarChar(50)
+  name           String    @db.VarChar(200)
+  description    String?   @db.Text
+  downPayment    Int?      @map("down_payment")
+  cost           Int
+  mortgage       Int?
+  cashFlow       Int?      @map("cash_flow")
+  shares         Int?
+  minSalePrice   Int?      @map("min_sale_price")
+  maxSalePrice   Int?      @map("max_sale_price")
+  bedrooms       Int?
+  rarity         String    @default("common") @db.VarChar(20)
+  isActive       Boolean   @default(true) @map("is_active")
+  isFastTrack    Boolean   @default(false) @map("is_fast_track")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  playerInvestments PlayerInvestment[]
+
+  @@map("opportunity_cards")
+}
+
+model PlayerInvestment {
+  id                 Int       @id @default(autoincrement())
+  playerId           Int       @map("player_id")
+  opportunityCardId  Int       @map("opportunity_card_id")
+  purchasedAt        DateTime  @default(now()) @map("purchased_at")
+  purchasePrice      Int       @map("purchase_price")
+  downPaymentPaid    Int?      @map("down_payment_paid")
+  mortgageAmount     Int?      @map("mortgage_amount")
+  sharesOwned        Int       @default(1) @map("shares_owned")
+  isSold             Boolean   @default(false) @map("is_sold")
+  soldAt             DateTime? @map("sold_at")
+  salePrice          Int?      @map("sale_price")
+  currentCashFlow    Int?      @map("current_cash_flow")
+  totalIncomeEarned  Int       @default(0) @map("total_income_earned")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  player          Player          @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  opportunityCard OpportunityCard @relation(fields: [opportunityCardId], references: [id])
+
+  @@map("player_investments")
+}
+
+model PlayerLiability {
+  id               Int       @id @default(autoincrement())
+  playerId         Int       @map("player_id")
+  type             String    @db.VarChar(50)
+  description      String?   @db.VarChar(200)
+  principalAmount  Int       @map("principal_amount")
+  remainingBalance Int       @map("remaining_balance")
+  interestRate     Decimal?  @map("interest_rate") @db.Decimal(5, 2)
+  monthlyPayment   Int       @map("monthly_payment")
+  acquiredAt       DateTime  @default(now()) @map("acquired_at")
+  paidOffAt        DateTime? @map("paid_off_at")
+  isPaidOff        Boolean   @default(false) @map("is_paid_off")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@map("player_liabilities")
+}
+
+model PlayerDoodad {
+  id          Int      @id @default(autoincrement())
+  playerId    Int      @map("player_id")
+  doodadId    Int?     @map("doodad_id")
+  name        String   @db.VarChar(100)
+  description String?  @db.Text
+  cost        Int
+  purchasedAt DateTime @default(now()) @map("purchased_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  player Player  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  doodad Doodad? @relation("DoodadPurchases", fields: [doodadId], references: [id])
+
+  @@map("player_doodads")
+}
+
+model MarketCard {
+  id                    Int      @id @default(autoincrement())
+  type                  String   @db.VarChar(50)
+  name                  String   @db.VarChar(200)
+  description           String   @db.Text
+  affectsInvestmentType String?  @map("affects_investment_type") @db.VarChar(50)
+  multiplier            Decimal? @db.Decimal(5, 2)
+  cashBonus             Int?     @map("cash_bonus")
+  isActive              Boolean  @default(true) @map("is_active")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  @@map("market_cards")
+}
+
+model GameEvent {
+  id              Int      @id @default(autoincrement())
+  gameSessionId   Int      @map("game_session_id")
+  playerId        Int      @map("player_id")
+  eventType       String   @map("event_type") @db.VarChar(50)
+  eventData       Json?    @map("event_data")
+  cashChange      Int?     @map("cash_change")
+  cashFlowChange  Int?     @map("cash_flow_change")
+  turnNumber      Int      @map("turn_number")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  gameSession GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+  player      Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@index([gameSessionId])
+  @@index([playerId])
+  @@index([turnNumber])
+  @@map("game_events")
+}
+
+model Doodad {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(200)
+  description String   @db.Text
+  cost        Int
+  category    String?  @db.VarChar(50)
+  rarity      String   @default("common") @db.VarChar(20)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  playerDoodads PlayerDoodad[] @relation("DoodadPurchases")
+
+  @@map("doodads")
 }

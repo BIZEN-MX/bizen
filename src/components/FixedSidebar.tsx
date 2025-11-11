@@ -27,7 +27,7 @@ export default function FixedSidebar() {
       setShowExitDialog(true)
     } else {
       // If not on lesson page, navigate directly
-      router.push(path)
+    router.push(path)
     }
   }
 
@@ -255,6 +255,105 @@ export default function FixedSidebar() {
                   }}
                 />
                 <span>Business Lab</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo("/forum")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px",
+                  background: isActivePath("/forum") ? "#EFF6FF" : "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 14,
+                  fontWeight: isActivePath("/forum") ? 700 : 600,
+                  textAlign: "left",
+                  color: isActivePath("/forum") ? "#0F62FE" : "#000"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#EFF6FF"
+                  e.currentTarget.style.color = "#0F62FE"
+                  e.currentTarget.style.transform = "translateX(-4px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = isActivePath("/forum") ? "#EFF6FF" : "transparent"
+                  e.currentTarget.style.color = isActivePath("/forum") ? "#0F62FE" : "#000"
+                  e.currentTarget.style.transform = "translateX(0)"
+                }}
+              >
+                <span style={{ fontSize: 20 }}>💬</span>
+                <span>Foro Emprendedor</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo("/cash-flow")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px",
+                  background: isActivePath("/cash-flow") ? "#EFF6FF" : "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 14,
+                  fontWeight: isActivePath("/cash-flow") ? 700 : 600,
+                  textAlign: "left",
+                  color: isActivePath("/cash-flow") ? "#0F62FE" : "#000"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#EFF6FF"
+                  e.currentTarget.style.color = "#0F62FE"
+                  e.currentTarget.style.transform = "translateX(-4px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = isActivePath("/cash-flow") ? "#EFF6FF" : "transparent"
+                  e.currentTarget.style.color = isActivePath("/cash-flow") ? "#0F62FE" : "#000"
+                  e.currentTarget.style.transform = "translateX(0)"
+                }}
+              >
+                <span style={{ fontSize: 20 }}>💰</span>
+                <span>Cash flow</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo("/simuladores")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px",
+                  background: isActivePath("/simuladores") ? "#EFF6FF" : "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 14,
+                  fontWeight: isActivePath("/simuladores") ? 700 : 600,
+                  textAlign: "left",
+                  color: isActivePath("/simuladores") ? "#0F62FE" : "#000"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#EFF6FF"
+                  e.currentTarget.style.color = "#0F62FE"
+                  e.currentTarget.style.transform = "translateX(-4px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = isActivePath("/simuladores") ? "#EFF6FF" : "transparent"
+                  e.currentTarget.style.color = isActivePath("/simuladores") ? "#0F62FE" : "#000"
+                  e.currentTarget.style.transform = "translateX(0)"
+                }}
+              >
+                <span style={{ fontSize: 20 }}>📊</span>
+                <span>Simuladores</span>
               </button>
             </div>
           </div>

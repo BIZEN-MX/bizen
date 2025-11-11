@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Image from "next/image"
-import Button from "@/components/ui/Button"
+import Button from "@/components/ui/button"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import PageLogo from "@/components/PageLogo"
@@ -18,7 +18,7 @@ interface UserStats {
 }
 
 export default function ProfilePage() {
-  const { user, loading } = useAuth()
+  const { user, loading, refreshUser } = useAuth()
   const router = useRouter()
   const supabase = createClientMicrocred()
   const [showAvatarPicker, setShowAvatarPicker] = useState(false)
@@ -148,6 +148,9 @@ export default function ProfilePage() {
 
       // Refresh the user session to get updated metadata
       await supabase.auth.refreshSession()
+      
+      // Force refresh the AuthContext
+      await refreshUser()
 
       // Success!
       setLastSaved(new Date())
@@ -167,13 +170,12 @@ export default function ProfilePage() {
   // Trigger auto-save when form data or avatar changes (debounced)
   useEffect(() => {
     // Don't auto-save on initial load or if no user
-    if (!user || !formData.email) return
+    if (!user || !formData.fullName) return
     
     // Check if data actually changed from saved values
     const hasChanges = 
       formData.fullName !== (user.user_metadata?.full_name || "") ||
-      formData.phone !== (user.user_metadata?.phone || "") ||
-      formData.age !== (user.user_metadata?.age || "") ||
+      formData.username !== (user.user_metadata?.username || "") ||
       formData.bio !== (user.user_metadata?.bio || "") ||
       JSON.stringify(selectedAvatar) !== JSON.stringify(user.user_metadata?.avatar || { type: "emoji", value: "👤" })
     
@@ -590,7 +592,58 @@ export default function ProfilePage() {
 
           </div>
 
-          {/* Error Message */}
+          {/* Save Status Messages */}
+          {saving && (
+            <div style={{
+              marginTop: 24,
+              padding: "12px 16px",
+              background: "rgba(59, 130, 246, 0.1)",
+              border: "2px solid #3B82F6",
+              borderRadius: 12,
+              display: "flex",
+              alignItems: "center",
+              gap: 8
+            }}>
+              <div style={{
+                width: 20,
+                height: 20,
+                border: "3px solid rgba(59, 130, 246, 0.3)",
+                borderTop: "3px solid #3B82F6",
+                borderRadius: "50%",
+                animation: "spin 1s linear infinite"
+              }} />
+              <span style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "#3B82F6"
+              }}>
+                Guardando...
+              </span>
+            </div>
+          )}
+
+          {lastSaved && !saving && !saveError && (
+            <div style={{
+              marginTop: 24,
+              padding: "12px 16px",
+              background: "rgba(16, 185, 129, 0.1)",
+              border: "2px solid #10B981",
+              borderRadius: 12,
+              display: "flex",
+              alignItems: "center",
+              gap: 8
+            }}>
+              <span style={{ fontSize: 20 }}>✅</span>
+              <span style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "#10B981"
+              }}>
+                Cambios guardados - {lastSaved.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            </div>
+          )}
+
           {saveError && (
             <div style={{
               marginTop: 24,

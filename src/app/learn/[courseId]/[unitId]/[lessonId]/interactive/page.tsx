@@ -12,7 +12,8 @@ const playSound = (soundName: string, volume = 0.3) => {
       // Use Web Audio API to synthesize sounds
       if (soundName === 'click') {
         // Synthesize a satisfying click sound
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+        const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+        const audioContext = new AudioContextClass()
         const oscillator = audioContext.createOscillator()
         const gainNode = audioContext.createGain()
         
@@ -29,7 +30,8 @@ const playSound = (soundName: string, volume = 0.3) => {
         oscillator.stop(audioContext.currentTime + 0.1)
       } else if (soundName === 'success' || soundName === 'celebration') {
         // Synthesize a celebration sound (ascending notes)
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+        const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+        const audioContext = new AudioContextClass()
         const notes = [523.25, 659.25, 783.99] // C, E, G
         
         notes.forEach((freq, index) => {
@@ -51,7 +53,8 @@ const playSound = (soundName: string, volume = 0.3) => {
         })
       } else if (soundName === 'error' || soundName === 'wrong') {
         // Synthesize an error sound (descending note)
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+        const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+        const audioContext = new AudioContextClass()
         const oscillator = audioContext.createOscillator()
         const gainNode = audioContext.createGain()
         
@@ -69,7 +72,8 @@ const playSound = (soundName: string, volume = 0.3) => {
         oscillator.stop(audioContext.currentTime + 0.2)
       } else if (soundName === 'ding') {
         // Synthesize a ding sound
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+        const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+        const audioContext = new AudioContextClass()
         const oscillator = audioContext.createOscillator()
         const gainNode = audioContext.createGain()
         
@@ -85,7 +89,7 @@ const playSound = (soundName: string, volume = 0.3) => {
         oscillator.start(audioContext.currentTime)
         oscillator.stop(audioContext.currentTime + 0.3)
       }
-    } catch (e) {
+    } catch {
       // Silently fail if audio doesn't work
     }
   }
@@ -2597,7 +2601,7 @@ function Card8({ onComplete }: CardProps) {
                       Recibo de Banco
                     </text>
                     <text x="200" y="145" fontSize="12" fill="#D4AF37" fontWeight="600" textAnchor="middle" fontFamily="Montserrat">
-                      "Vale por Oro"
+                      &quot;Vale por Oro&quot;
                     </text>
                     
                     {/* Bank seal */}
@@ -2650,7 +2654,7 @@ function Card8({ onComplete }: CardProps) {
                       Dinero Fiduciario
                     </text>
                     <text x="200" y="185" fontSize="11" fill="#BFDBFE" fontWeight="500" textAnchor="middle" fontFamily="Montserrat">
-                      "Vale por Confianza"
+                      &quot;Vale por Confianza&quot;
                     </text>
                     
                     {/* Government seal modern */}
@@ -3126,7 +3130,7 @@ function Card10({ onComplete }: CardProps) {
             <rect x="20" y="30" width="340" height="500" rx="32" fill="#FFFFFF" />
             
             {/* Status bar */}
-            <rect x="20" y="30" width="340" height="50" rx="32" rxBottom="0" fill="#F9FAFB" />
+            <rect x="20" y="30" width="340" height="50" rx="32" fill="#F9FAFB" />
             <text x="40" y="60" fontSize="16" fill="#6B7280" fontWeight="600">9:41</text>
             <text x="320" y="60" fontSize="14" fill="#6B7280">📶 🔋</text>
             
@@ -3667,12 +3671,10 @@ function Card11({ onComplete }: CardProps) {
 // Card 12: Final reflection + reward
 interface Card12Props extends CardProps {
   totalXp: number;
-  courseId: string;
-  unitId: string;
   lessonId: string;
 }
 
-function Card12({ onComplete, totalXp, courseId, unitId, lessonId }: Card12Props) {
+function Card12({ totalXp, lessonId }: Card12Props) {
   const [showConfetti, setShowConfetti] = useState(false)
   const { user } = useAuth()
 
@@ -4266,7 +4268,6 @@ function L2Card1({ onComplete }: CardProps) {
 function L2Card2({ onComplete }: CardProps) {
   const [selected, setSelected] = useState<string | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
-  const [isComplete, setIsComplete] = useState(false)
 
   const options = [
     { id: 'A', label: 'Metal precioso', icon: 'moneda-oro', correct: false },
@@ -4280,17 +4281,12 @@ function L2Card2({ onComplete }: CardProps) {
     const isCorrect = options.find(o => o.id === id)?.correct
     playSound(isCorrect ? 'success' : 'error')
     setShowFeedback(true)
-    
-    if (isCorrect) {
-      setIsComplete(true)
-    }
   }
 
   const handleTryAgain = () => {
     playSound('click')
     setSelected(null)
     setShowFeedback(false)
-    setIsComplete(false)
   }
 
   const renderIcon = (icon: string) => {
@@ -6445,7 +6441,7 @@ function L2Card11({ onComplete }: CardProps) {
 }
 
 // L2 Card 12: Summary + Badge
-function L2Card12({ onComplete, totalXp, courseId, unitId, lessonId }: Card12Props) {
+function L2Card12({ totalXp, lessonId }: Card12Props) {
   const [showConfetti, setShowConfetti] = useState(false)
   const { user } = useAuth()
 
@@ -6890,7 +6886,7 @@ export default function InteractiveLessonPage() {
           {currentCard === 9 && <Card9 key="card-9" onComplete={handleCardComplete} />}
           {currentCard === 10 && <Card10 key="card-10" onComplete={handleCardComplete} />}
           {currentCard === 11 && <Card11 key="card-11" onComplete={handleCardComplete} />}
-          {currentCard === 12 && <Card12 key="card-12" onComplete={handleCardComplete} totalXp={xp} courseId={courseId} unitId={unitId} lessonId={lessonId} />}
+          {currentCard === 12 && <Card12 key="card-12" onComplete={handleCardComplete} totalXp={xp} lessonId={lessonId} />}
             </>
           )}
 
@@ -6908,7 +6904,7 @@ export default function InteractiveLessonPage() {
               {currentCard === 9 && <L2Card9 key="l2-card-9" onComplete={handleCardComplete} />}
               {currentCard === 10 && <L2Card10 key="l2-card-10" onComplete={handleCardComplete} />}
               {currentCard === 11 && <L2Card11 key="l2-card-11" onComplete={handleCardComplete} />}
-              {currentCard === 12 && <L2Card12 key="l2-card-12" onComplete={handleCardComplete} totalXp={xp} courseId={courseId} unitId={unitId} lessonId={lessonId} />}
+              {currentCard === 12 && <L2Card12 key="l2-card-12" onComplete={handleCardComplete} totalXp={xp} lessonId={lessonId} />}
             </>
           )}
         </AnimatePresence>

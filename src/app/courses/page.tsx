@@ -7,7 +7,7 @@ import { useSettings } from "@/contexts/SettingsContext"
 import { useTranslation } from "@/lib/translations"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import Button from "@/components/ui/Button"
+import Button from "@/components/ui/button"
 import PageLogo from "@/components/PageLogo"
 
 interface Lesson {

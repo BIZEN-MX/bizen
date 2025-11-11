@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createSupabaseServer } from "@/lib/supabase/server"
 import { PrismaClient } from "@prisma/client"
 import { calculateLevel } from "@/lib/xp"
 
@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    const supabase = await createSupabaseServer()
     
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()

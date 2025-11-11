@@ -109,6 +109,7 @@ export default function BIZENSignupPage() {
   const [password, setPassword] = React.useState("")
   const [accepted, setAccepted] = React.useState(false)
   const [showPass, setShowPass] = React.useState(false)
+  const [googleLoading, setGoogleLoading] = React.useState(false)
   const [recaptchaLoaded, setRecaptchaLoaded] = React.useState(false)
   const router = useRouter()
   const supabase = createClientMicrocred()
@@ -154,6 +155,25 @@ export default function BIZENSignupPage() {
       }
     } catch (err) {
       setState({ success: false, message: 'Error de autenticación. Intenta de nuevo', errors: {}, loading: false })
+    }
+  }
+
+  async function handleGoogleSignUp() {
+    setState(prev => ({ ...prev, message: null }))
+    try {
+      setGoogleLoading(true)
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+      if (error) throw error
+      // User will be redirected to Google, no need to navigate here
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Error al registrarse con Google"
+      setState(prev => ({ ...prev, message: errorMessage }))
+      setGoogleLoading(false)
     }
   }
 
@@ -225,7 +245,42 @@ export default function BIZENSignupPage() {
               <input id="accepted" name="accepted" type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} style={{ marginTop: 2 }} />
               <label htmlFor="accepted" style={{ fontSize: 12, color: "#444" }}>Acepto los términos y condiciones</label>
             </div>
-            <Button type="submit" disabled={state.loading} loading={state.loading}>{state.loading ? "Creando cuenta..." : "Registrarme"}</Button>
+            <Button type="submit" disabled={state.loading || googleLoading} loading={state.loading}>{state.loading ? "Creando cuenta..." : "Registrarme"}</Button>
+
+            <div style={{ textAlign: "center", fontSize: 13, color: "#666", margin: "12px 0" }}>o continúa con</div>
+            
+            <button
+              type="button"
+              onClick={handleGoogleSignUp}
+              disabled={state.loading || googleLoading}
+              style={{
+                height: 46,
+                borderRadius: 12,
+                border: "1px solid rgba(0,0,0,0.12)",
+                width: "100%",
+                background: "#fff",
+                color: "#333",
+                fontWeight: 600,
+                cursor: googleLoading ? "wait" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                transition: "all 0.2s ease",
+                fontFamily: 'Montserrat, sans-serif',
+              }}
+              onMouseEnter={(e) => !googleLoading && (e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)")}
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.6 10.227c0-.709-.064-1.39-.182-2.045H10v3.868h5.382a4.6 4.6 0 01-1.996 3.018v2.51h3.232c1.891-1.742 2.982-4.305 2.982-7.35z" fill="#4285F4"/>
+                <path d="M10 20c2.7 0 4.964-.895 6.618-2.423l-3.232-2.509c-.895.6-2.04.955-3.386.955-2.605 0-4.81-1.76-5.595-4.123H1.064v2.59A9.996 9.996 0 0010 20z" fill="#34A853"/>
+                <path d="M4.405 11.9c-.2-.6-.314-1.24-.314-1.9 0-.66.114-1.3.314-1.9V5.51H1.064A9.996 9.996 0 000 10c0 1.614.386 3.14 1.064 4.49l3.34-2.59z" fill="#FBBC05"/>
+                <path d="M10 3.977c1.468 0 2.786.505 3.823 1.496l2.868-2.868C14.959.99 12.695 0 10 0 6.09 0 2.71 2.24 1.064 5.51l3.34 2.59C5.19 5.736 7.395 3.977 10 3.977z" fill="#EA4335"/>
+              </svg>
+              {googleLoading ? "Redirigiendo..." : "Continuar con Google"}
+            </button>
+
             <div style={{ textAlign: "center", fontSize: 14, marginTop: 8 }}>
               ¿Ya tienes cuenta? <a href="/login" style={{ color: "#0B71FE", fontWeight: 700, textDecoration: "none" }}>Inicia sesión</a>
             </div>

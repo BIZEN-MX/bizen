@@ -1,28 +1,25 @@
 import * as React from "react"
+import { cn } from "@/lib/utils"
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-export default function Input(props: InputProps) {
-  return (
-    <input
-      {...props}
-      style={{
-        width: "100%",
-        height: 44,
-        borderRadius: 12,
-        border: "1px solid rgba(0,0,0,0.12)",
-        padding: "0 14px",
-        outline: "none",
-        fontSize: 14,
-        color: "#111",
-        background: "#fff",
-        transition: "box-shadow .2s ease, border-color .2s ease",
-        ...(props.style || {}),
-      }}
-      onFocus={(e) => (e.currentTarget.style.boxShadow = `0 0 0 4px #0B71FE26`)}
-      onBlur={(e) => (e.currentTarget.style.boxShadow = "none")}
-    />
-  )
-}
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Input.displayName = "Input"
 
-
+// Export both ways
+export { Input }
+export default Input

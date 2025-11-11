@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-import Card from "@/components/ui/Card"
+import Card from "@/components/ui/card"
 
 interface AnalyticsData {
   totalStudents: number
