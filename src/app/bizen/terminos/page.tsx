@@ -37,7 +37,7 @@ export default function BIZENTerminosPage() {
       <div style={{
         background: "#2c3e50",
         color: "#fff",
-        padding: "16px 24px",
+        padding: "16px 40px",
         borderBottom: "1px solid #34495e",
         position: "sticky" as const,
         top: 0,
@@ -45,16 +45,10 @@ export default function BIZENTerminosPage() {
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
       }}>
         <div style={{ 
-          maxWidth: 900, 
-          margin: "0 auto", 
           display: "flex" as const, 
           alignItems: "center" as const,
           gap: 16
         }}>
-          <div style={{ display: "flex" as const, alignItems: "center" as const, gap: 12 }}>
-            <Image src={logoSrc} alt={`${brandName} logo`} width={36} height={36} priority />
-            <strong style={{ fontSize: 18, fontFamily: "Arial, sans-serif" }}>{brandName}</strong>
-          </div>
           <button 
             onClick={() => router.back()}
             style={{
@@ -75,14 +69,13 @@ export default function BIZENTerminosPage() {
           >
             ← Regresar
           </button>
+          <strong style={{ fontSize: 18, fontFamily: "Arial, sans-serif" }}>Términos y Condiciones</strong>
         </div>
       </div>
 
       {/* Content */}
       <div style={{ 
-        maxWidth: 900, 
-        margin: "0 auto", 
-        padding: "32px 24px" 
+        padding: "32px 40px" 
       }}>
         <article style={{ 
           background: "#fff", 
