@@ -5,21 +5,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
-// Hide the FixedSidebar on this page
-if (typeof document !== 'undefined') {
-  React.useLayoutEffect(() => {
-    const sidebar = document.querySelector('[data-fixed-sidebar]') as HTMLElement
-    if (sidebar) {
-      sidebar.style.display = 'none'
-    }
-    return () => {
-      if (sidebar) {
-        sidebar.style.display = ''
-      }
-    }
-  })
-}
-
 // ===== Brand & Theme
 const brandName = "BIZEN"
 const supportEmail = "diego@bizen.mx"
