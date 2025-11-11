@@ -250,8 +250,8 @@ export default function BIZENTerminosPage() {
           }}>
             <p>© {new Date().getFullYear()} {brandName}. Todos los derechos reservados.</p>
             <p style={{ marginTop: 10 }}>
-              <Link href="/bizen/signup" style={{ color: "#3498db", marginRight: 16, textDecoration: "underline" }}>Crear cuenta</Link>
-              <Link href="/bizen/login" style={{ color: "#3498db", marginRight: 16, textDecoration: "underline" }}>Iniciar sesión</Link>
+              <Link href="/signup" style={{ color: "#3498db", marginRight: 16, textDecoration: "underline" }}>Crear cuenta</Link>
+              <Link href="/login" style={{ color: "#3498db", marginRight: 16, textDecoration: "underline" }}>Iniciar sesión</Link>
               <Link href="/bizen/privacidad" style={{ color: "#3498db", textDecoration: "underline" }}>Aviso de Privacidad</Link>
             </p>
           </div>
