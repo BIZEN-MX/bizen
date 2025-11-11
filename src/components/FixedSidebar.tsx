@@ -55,7 +55,7 @@ export default function FixedSidebar() {
   return (
     <>
       {/* Fixed Sidebar Panel */}
-      <div style={{
+      <div data-fixed-sidebar style={{
         position: "fixed",
         top: 0,
         right: 0,
