@@ -20,6 +20,15 @@ CREATE TABLE IF NOT EXISTS lab_tracks (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Add is_active column if it doesn't exist (for existing tables)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                 WHERE table_name = 'lab_tracks' AND column_name = 'is_active') THEN
+    ALTER TABLE lab_tracks ADD COLUMN is_active BOOLEAN DEFAULT true;
+  END IF;
+END $$;
+
 -- ============================================
 -- 2. LAB STEPS (Individual steps in each track)
 -- ============================================
