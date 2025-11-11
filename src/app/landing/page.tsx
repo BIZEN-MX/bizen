@@ -6,6 +6,9 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 
+// Force dynamic rendering to avoid prerendering issues
+export const dynamic = 'force-dynamic'
+
 type Level = "Principiante" | "Intermedio" | "Avanzado"
 
 export type Course = {
