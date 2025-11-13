@@ -1,15 +1,13 @@
+"use client"
+
 /**
  * Page: /simuladores
  * Financial Simulators Catalog
  */
 
 import Link from 'next/link';
-import { createSupabaseServer } from '@/lib/supabase/server';
-
-export const metadata = {
-  title: 'Simuladores Financieros | BIZEN',
-  description: 'Herramientas educativas para aprender sobre finanzas personales',
-};
+import { useEffect, useState } from 'react';
+import { createClientMicrocred } from '@/lib/supabase/client-microcred';
 
 interface Simulator {
   id: string;
@@ -21,16 +19,32 @@ interface Simulator {
   sort_order: number;
 }
 
-export default async function SimulatorsPage() {
-  const supabase = await createSupabaseServer();
+export default function SimulatorsPage() {
+  const [simulatorsList, setSimulatorsList] = useState<Simulator[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   
-  const { data: simulators, error } = await supabase
-    .from('simulators')
-    .select('*')
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true });
-  
-  const simulatorsList: Simulator[] = simulators || [];
+  useEffect(() => {
+    const fetchSimulators = async () => {
+      try {
+        const supabase = createClientMicrocred()
+        const { data: simulators } = await supabase
+          .from('simulators')
+          .select('*')
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true })
+        
+        setSimulatorsList(simulators || [])
+      } catch (err) {
+        console.error('Error fetching simulators:', err)
+        setError(true)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchSimulators()
+  }, [])
   
   const categoryLabels: Record<string, string> = {
     budgeting: 'Presupuesto',
@@ -42,16 +56,17 @@ export default async function SimulatorsPage() {
   
   return (
     <main style={{
-      marginRight: "320px",
+      marginRight: "340px",
       paddingTop: "40px",
       paddingBottom: "40px",
       paddingLeft: "40px",
       paddingRight: "40px",
-      overflow: "auto",
       minHeight: "100vh",
       background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       fontFamily: "Montserrat, sans-serif",
-      boxSizing: "border-box" as const
+      boxSizing: "border-box" as const,
+      maxWidth: "calc(100vw - 340px)",
+      overflowX: "hidden"
     }}>
       {/* Header */}
       <div style={{ marginBottom: 32, textAlign: "center" }}>

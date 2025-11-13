@@ -9,16 +9,22 @@ const prisma = new PrismaClient()
 // GET list threads
 export async function GET(request: NextRequest) {
   try {
+    console.log("📡 GET /api/forum/threads called")
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
+      console.error("❌ Auth error:", authError)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    console.log("✅ User authenticated:", user.id)
 
     const { searchParams } = new URL(request.url)
     const sort = searchParams.get("sort") || "new"
     const topicSlug = searchParams.get("topic")
+    
+    console.log("📊 Query params:", { sort, topicSlug })
 
     let orderBy: any = { createdAt: 'desc' }
     if (sort === 'top') orderBy = { score: 'desc' }
@@ -30,10 +36,17 @@ export async function GET(request: NextRequest) {
     }
 
     if (topicSlug && topicSlug !== 'all') {
+      console.log("🔍 Finding topic:", topicSlug)
       const topic = await prisma.forumTopic.findUnique({ where: { slug: topicSlug } })
-      if (topic) where.topicId = topic.id
+      if (topic) {
+        where.topicId = topic.id
+        console.log("✅ Topic found:", topic.name)
+      } else {
+        console.warn("⚠️ Topic not found:", topicSlug)
+      }
     }
 
+    console.log("🔍 Fetching threads with where:", where)
     const threads = await prisma.forumThread.findMany({
       where,
       orderBy: [
@@ -57,20 +70,28 @@ export async function GET(request: NextRequest) {
       take: 50
     })
 
+    console.log(`✅ Found ${threads.length} threads`)
+
     const formatted = threads.map(t => ({
       ...t,
       author: {
         ...t.author,
-        nickname: t.author.nickname || t.author.fullName.split(' ')[0]
+        nickname: t.author.nickname || t.author.fullName?.split(' ')[0] || 'Usuario'
       },
       tags: t.tags.map(tt => tt.tag),
       hasAcceptedAnswer: !!t.acceptedCommentId
     }))
 
+    console.log("✅ Returning formatted threads")
     return NextResponse.json(formatted)
   } catch (error) {
-    console.error("Error fetching threads:", error)
-    return NextResponse.json({ error: "Failed to fetch threads" }, { status: 500 })
+    console.error("❌ Error fetching threads:", error)
+    console.error("Error details:", error instanceof Error ? error.message : String(error))
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace")
+    return NextResponse.json({ 
+      error: "Failed to fetch threads",
+      details: error instanceof Error ? error.message : String(error)
+    }, { status: 500 })
   } finally {
     await prisma.$disconnect()
   }

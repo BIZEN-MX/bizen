@@ -62,26 +62,30 @@ export function calculateMonthlyBudget(input: MonthlyBudgetInput): MonthlyBudget
     // Recommendations based on 50/30/20
     if (totalFixed > essentialTarget) {
       const excess = totalFixed - essentialTarget;
+      const percentage = ((totalFixed / input.monthlyIncome) * 100).toFixed(0);
       recommendations.push(
-        `Tus gastos esenciales (${totalFixed.toFixed(0)} MXN) superan el 50% recomendado. Intenta reducirlos en ${excess.toFixed(0)} MXN.`
+        `📊 Tus necesidades básicas representan el ${percentage}% de tu ingreso (${totalFixed.toFixed(0)} MXN). La regla recomienda mantenerlas al 50%. Considera reducir ${excess.toFixed(0)} MXN buscando opciones más económicas en renta, servicios o transporte.`
       );
     }
     
     if (totalVariable > wantsTarget) {
       const excess = totalVariable - wantsTarget;
+      const percentage = ((totalVariable / input.monthlyIncome) * 100).toFixed(0);
       recommendations.push(
-        `Tus gastos variables (${totalVariable.toFixed(0)} MXN) superan el 30% recomendado. Intenta reducirlos en ${excess.toFixed(0)} MXN.`
+        `🎯 Tus gastos en deseos son del ${percentage}% (${totalVariable.toFixed(0)} MXN), cuando lo ideal es 30%. Podrías recortar ${excess.toFixed(0)} MXN en entretenimiento, salidas o compras no esenciales.`
       );
     }
     
     if (actualSavings < savingsTarget) {
       const shortfall = savingsTarget - actualSavings;
+      const percentage = ((actualSavings / input.monthlyIncome) * 100).toFixed(1);
       recommendations.push(
-        `Tu ahorro actual (${actualSavings.toFixed(0)} MXN) está por debajo del 20% recomendado. Intenta aumentarlo en ${shortfall.toFixed(0)} MXN.`
+        `💰 Tu capacidad de ahorro actual es del ${percentage}% (${actualSavings.toFixed(0)} MXN), por debajo del 20% recomendado. Para llegar a la meta, necesitas liberar ${shortfall.toFixed(0)} MXN mensuales reduciendo gastos o aumentando ingresos.`
       );
     } else {
+      const percentage = ((actualSavings / input.monthlyIncome) * 100).toFixed(1);
       recommendations.push(
-        `¡Excelente! Estás ahorrando ${actualSavings.toFixed(0)} MXN (${((actualSavings / input.monthlyIncome) * 100).toFixed(1)}%).`
+        `🎉 ¡Excelente trabajo! Estás ahorrando ${actualSavings.toFixed(0)} MXN al mes (${percentage}% de tus ingresos). Superas el 20% recomendado y estás construyendo un futuro financiero sólido.`
       );
     }
   }
@@ -90,20 +94,28 @@ export function calculateMonthlyBudget(input: MonthlyBudgetInput): MonthlyBudget
   if (totalExpenses > input.monthlyIncome) {
     const deficit = totalExpenses - input.monthlyIncome;
     recommendations.push(
-      `⚠️ Tus gastos totales (${totalExpenses.toFixed(0)} MXN) superan tu ingreso. Tienes un déficit de ${deficit.toFixed(0)} MXN.`
+      `⚠️ ¡Alerta! Tus gastos totales (${totalExpenses.toFixed(0)} MXN) superan tu ingreso mensual por ${deficit.toFixed(0)} MXN. Esto significa que estás gastando más de lo que ganas. Es urgente ajustar tu presupuesto para evitar deudas.`
     );
   }
   
   if (!meetsGoal && actualSavings >= 0) {
+    const percentageNeeded = ((gapToGoal / totalExpenses) * 100).toFixed(0);
     recommendations.push(
-      `Para alcanzar tu meta de ahorro de ${input.savingsGoal.toFixed(0)} MXN, necesitas reducir gastos en ${gapToGoal.toFixed(0)} MXN.`
+      `🎯 Estás cerca de tu meta. Para ahorrar ${input.savingsGoal.toFixed(0)} MXN mensuales, necesitas liberar ${gapToGoal.toFixed(0)} MXN adicionales (aproximadamente ${percentageNeeded}% de tus gastos actuales).`
     );
   }
   
-  if (meetsGoal) {
-    recommendations.push(
-      `¡Felicidades! Estás cumpliendo tu meta de ahorro de ${input.savingsGoal.toFixed(0)} MXN.`
-    );
+  if (actualSavings >= input.savingsGoal && input.savingsGoal > 0) {
+    const surplus = actualSavings - input.savingsGoal;
+    if (surplus > 0) {
+      recommendations.push(
+        `✨ ¡Felicidades! No solo cumples tu meta de ahorro de ${input.savingsGoal.toFixed(0)} MXN, sino que tienes ${surplus.toFixed(0)} MXN extra. Considera invertir este excedente para acelerar tu crecimiento financiero.`
+      );
+    } else {
+      recommendations.push(
+        `✅ ¡Perfecto! Estás cumpliendo exactamente tu meta de ahorro de ${input.savingsGoal.toFixed(0)} MXN mensual. Mantén este ritmo y alcanzarás tus objetivos financieros.`
+      );
+    }
   }
   
   return {

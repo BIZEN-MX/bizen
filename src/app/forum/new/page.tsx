@@ -132,7 +132,8 @@ export default function NewThreadPage() {
         placeItems: "center", 
         minHeight: "60vh", 
         fontFamily: "Montserrat, sans-serif",
-        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)"
+        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        marginRight: "340px"
       }}>
         <div style={{ textAlign: "center" }}>
           <div style={{
@@ -166,13 +167,15 @@ export default function NewThreadPage() {
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
       background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      backgroundAttachment: "fixed"
+      backgroundAttachment: "fixed",
+      marginRight: "340px"
     }}>
       <main style={{ 
         position: "relative",
-        maxWidth: 1000, 
-        margin: "0 auto", 
-        padding: "clamp(20px, 4vw, 40px)",
+        maxWidth: "100%", 
+        margin: "0", 
+        padding: "40px",
+        paddingRight: "40px",
         zIndex: 1
       }}>
         {/* Breadcrumb */}

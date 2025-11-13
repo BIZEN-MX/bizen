@@ -279,8 +279,9 @@ export default function ProfilePage() {
         paddingTop: "40px",
         paddingBottom: "80px",
         paddingLeft: "40px",
-        paddingRight: "360px",
-        fontFamily: "Montserrat, sans-serif"
+        paddingRight: "380px",
+        fontFamily: "Montserrat, sans-serif",
+        maxWidth: "100%"
       }}>
         {/* Logo */}
         <div style={{ marginBottom: 24 }}>
@@ -289,7 +290,7 @@ export default function ProfilePage() {
 
         {/* Page Title */}
         <div style={{
-          textAlign: "center",
+          textAlign: "left",
           marginBottom: 48
         }}>
           <h1 style={{

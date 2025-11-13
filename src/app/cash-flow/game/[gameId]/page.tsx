@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useAuth } from "@/contexts/AuthContext"
 import { useRouter, useParams } from "next/navigation"
+import GameBoard from "@/components/cashflow/GameBoard"
 
 type Player = {
   id: number
@@ -130,6 +131,8 @@ export default function CashFlowGamePage() {
   const [showTutorial, setShowTutorial] = useState(false)
   const [tutorialStep, setTutorialStep] = useState(0)
   const [actionInProgress, setActionInProgress] = useState(false)
+  const [isRollingDice, setIsRollingDice] = useState(false)
+  const [diceResult, setDiceResult] = useState<number | null>(null)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -200,30 +203,43 @@ export default function CashFlowGamePage() {
 
   const drawCard = async () => {
     setActionInProgress(true)
+    console.log("🎴 Drawing card...")
     try {
       const response = await fetch(`/api/cashflow/game/${gameId}/draw-card`, {
         method: "POST"
       })
+      console.log("📡 Draw card response status:", response.status)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log("✅ Card drawn:", data)
         
         if (data.isDoodad) {
           // Doodad drawn (luxury temptation)
+          console.log("🎰 Doodad drawn:", data.doodad?.name)
           setCurrentDoodad(data.doodad)
           setShowDoodadModal(true)
         } else if (data.isMarketEvent) {
           // Market event occurred
+          console.log("📉 Market event:", data.marketEvent?.name)
           setMarketEventData(data)
           setShowMarketEvent(true)
+          console.log("🔄 Refreshing game state after market event...")
           await fetchGameState() // Refresh to show updated state
         } else {
           // Regular opportunity card
+          console.log("🃏 Opportunity card:", data.card?.name)
           setCurrentCard(data.card)
           setShowCard(true)
         }
+      } else {
+        const errorData = await response.json()
+        console.error("❌ Failed to draw card:", errorData)
+        alert(`❌ Error al sacar carta:\n\n${errorData.error || 'Error desconocido'}\n\n${errorData.details ? `Detalles: ${errorData.details}` : 'Revisa la consola del navegador para más información.'}`)
       }
     } catch (error) {
-      console.error("Error drawing card:", error)
+      console.error("❌ Error drawing card:", error)
+      alert(`❌ Error de red al sacar carta.\n\n${error instanceof Error ? error.message : 'Error desconocido'}\n\nRevisa tu conexión y la consola del navegador.`)
     } finally {
       setActionInProgress(false)
     }
@@ -302,19 +318,30 @@ export default function CashFlowGamePage() {
 
   const takeLoan = async () => {
     setActionInProgress(true)
+    console.log("💰 Taking loan:", loanAmount)
     try {
       const response = await fetch(`/api/cashflow/game/${gameId}/take-loan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: loanAmount })
       })
+      console.log("📡 Take loan response status:", response.status)
 
       if (response.ok) {
+        const data = await response.json()
+        console.log("✅ Loan taken successfully:", data)
+        alert(`✅ ¡Préstamo aprobado!\n\n💰 Recibiste: $${data.amount?.toLocaleString() || loanAmount.toLocaleString()}\n💳 Pago mensual: $${data.monthlyPayment?.toLocaleString()}/mes\n💵 Nuevo efectivo: $${data.newCash?.toLocaleString()}`)
+        console.log("🔄 Refreshing game state...")
         await fetchGameState()
         setShowLoanModal(false)
+      } else {
+        const errorData = await response.json()
+        console.error("❌ Failed to take loan:", errorData)
+        alert(`❌ Error al solicitar préstamo:\n\n${errorData.error || 'Error desconocido'}\n\n${errorData.details ? `Detalles: ${errorData.details}` : 'Revisa la consola del navegador para más información.'}`)
       }
     } catch (error) {
-      console.error("Error taking loan:", error)
+      console.error("❌ Error taking loan:", error)
+      alert(`❌ Error de red al solicitar el préstamo.\n\n${error instanceof Error ? error.message : 'Error desconocido'}\n\nRevisa tu conexión y la consola del navegador.`)
     } finally {
       setActionInProgress(false)
     }
@@ -411,6 +438,75 @@ export default function CashFlowGamePage() {
     setShowTutorial(true)
   }
 
+  const rollDice = async () => {
+    setIsRollingDice(true)
+    setActionInProgress(true)
+    
+    // Simulate dice roll animation
+    const roll = Math.floor(Math.random() * 6) + 1
+    setDiceResult(roll)
+    
+    // Wait for animation
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    try {
+      const response = await fetch(`/api/cashflow/game/${gameId}/roll-dice`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ diceRoll: roll })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log("🎲 Dice rolled:", data)
+        
+        // Move player and handle landing
+        await fetchGameState()
+        
+        // Check what space they landed on and trigger action
+        if (data.landedSpace) {
+          handleSpaceLanding(data.landedSpace)
+        }
+      }
+    } catch (error) {
+      console.error("Error rolling dice:", error)
+    } finally {
+      setIsRollingDice(false)
+      setActionInProgress(false)
+      setDiceResult(null)
+    }
+  }
+
+  const handleSpaceLanding = (spaceType: string) => {
+    switch (spaceType) {
+      case 'opportunity':
+        // Auto-draw card when landing on opportunity
+        setTimeout(() => drawCard(), 500)
+        break
+      case 'payday':
+        // Payday happens automatically on backend
+        alert('💵 ¡Día de pago! Recibiste tu salario e ingresos pasivos.')
+        break
+      case 'market':
+        // Market event happens automatically
+        setTimeout(() => drawCard(), 500)
+        break
+      case 'doodad':
+        // Doodad temptation
+        setTimeout(() => drawCard(), 500)
+        break
+      case 'charity':
+        // Optional donation
+        if (confirm('❤️ ¿Deseas donar 10% de tu salario a caridad? (beneficios fiscales)')) {
+          // Handle charity donation
+        }
+        break
+      case 'baby':
+        alert('👶 ¡Felicidades! Tuviste un bebé. Tus gastos mensuales aumentan.')
+        break
+    }
+  }
+
   const endTurn = async () => {
     setActionInProgress(true)
     try {
@@ -496,14 +592,9 @@ export default function CashFlowGamePage() {
               fontSize: 28,
               fontWeight: 900,
               margin: 0,
-              background: player.isOnFastTrack
-                ? "linear-gradient(135deg, #fff, #fef3c7)"
-                : "linear-gradient(135deg, #667eea, #764ba2)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text"
+              color: player.isOnFastTrack ? "#f59e0b" : "#2563eb"
             }}>
-              {player.isOnFastTrack ? "⚡ FAST TRACK" : "💰 CASHFLOW"}
+              {player.isOnFastTrack ? "⚡ FAST TRACK" : "CASHFLOW"}
             </h1>
             <div style={{ 
               fontSize: 14, 
@@ -1067,7 +1158,16 @@ export default function CashFlowGamePage() {
           </div>
         </div>
 
-        {/* Game Actions */}
+        {/* Game Board */}
+        <GameBoard
+          playerPosition={player.currentTurn % 24}
+          isRolling={isRollingDice}
+          onRollDice={rollDice}
+          canRoll={!actionInProgress && !showCard && !showMarketEvent && !showDoodadModal}
+          isOnFastTrack={player.isOnFastTrack}
+        />
+
+        {/* Quick Actions */}
         <div style={{
           background: "white",
           borderRadius: 16,
@@ -1076,57 +1176,36 @@ export default function CashFlowGamePage() {
           textAlign: "center"
         }}>
           <h2 style={{
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: 800,
-            margin: "0 0 20px",
+            margin: "0 0 16px",
             color: "#333"
           }}>
-            🎲 Acciones
+            ⚡ Acciones Rápidas
           </h2>
 
           <div style={{
             display: "flex",
-            gap: 16,
-            justifyContent: "center"
+            gap: 12,
+            justifyContent: "center",
+            flexWrap: "wrap"
           }}>
-            <button
-              onClick={drawCard}
-              disabled={actionInProgress || showCard || showMarketEvent || showDoodadModal}
-              style={{
-                padding: "16px 32px",
-                background: (actionInProgress || showCard || showMarketEvent || showDoodadModal) 
-                  ? "#ccc" 
-                  : "linear-gradient(135deg, #667eea, #764ba2)",
-                color: "white",
-                border: "none",
-                borderRadius: 12,
-                fontSize: 16,
-                fontWeight: 700,
-                cursor: (actionInProgress || showCard || showMarketEvent || showDoodadModal) ? "not-allowed" : "pointer",
-                boxShadow: "0 6px 20px rgba(102, 126, 234, 0.3)",
-                transition: "all 0.3s ease",
-                fontFamily: "Montserrat, sans-serif"
-              }}
-            >
-              🃏 Sacar Carta
-            </button>
-
             <button
               onClick={() => setShowLoanModal(true)}
               disabled={actionInProgress}
               style={{
-                padding: "16px 32px",
+                padding: "12px 24px",
                 background: actionInProgress 
                   ? "#ccc" 
                   : "linear-gradient(135deg, #f59e0b, #d97706)",
                 color: "white",
                 border: "none",
-                borderRadius: 12,
-                fontSize: 16,
+                borderRadius: 10,
+                fontSize: 14,
                 fontWeight: 700,
                 cursor: actionInProgress ? "not-allowed" : "pointer",
-                boxShadow: "0 6px 20px rgba(245, 158, 11, 0.3)",
-                transition: "all 0.3s ease",
+                boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
+                transition: "all 0.2s ease",
                 fontFamily: "Montserrat, sans-serif"
               }}
             >
@@ -1137,23 +1216,32 @@ export default function CashFlowGamePage() {
               onClick={endTurn}
               disabled={actionInProgress}
               style={{
-                padding: "16px 32px",
+                padding: "12px 24px",
                 background: actionInProgress 
                   ? "#ccc" 
                   : "linear-gradient(135deg, #10b981, #059669)",
                 color: "white",
                 border: "none",
-                borderRadius: 12,
-                fontSize: 16,
+                borderRadius: 10,
+                fontSize: 14,
                 fontWeight: 700,
                 cursor: actionInProgress ? "not-allowed" : "pointer",
-                boxShadow: "0 6px 20px rgba(16, 185, 129, 0.3)",
-                transition: "all 0.3s ease",
+                boxShadow: "0 4px 12px rgba(16, 185, 129, 0.3)",
+                transition: "all 0.2s ease",
                 fontFamily: "Montserrat, sans-serif"
               }}
             >
               ⏭️ Terminar Turno
             </button>
+          </div>
+          
+          <div style={{
+            fontSize: 12,
+            color: "#666",
+            marginTop: 12,
+            fontStyle: "italic"
+          }}>
+            Tira el dado para moverte por el tablero
           </div>
         </div>
       </div>

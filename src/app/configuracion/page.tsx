@@ -262,7 +262,8 @@ function SettingsContent() {
       background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       backgroundAttachment: "fixed",
       fontFamily: "Montserrat, sans-serif",
-      padding: "40px 20px"
+      padding: "40px",
+      marginRight: "340px"
     }}>
       {/* Decorative Orbs */}
       <div style={{
@@ -302,8 +303,8 @@ function SettingsContent() {
         zIndex: 0
       }} />
       <div style={{
-        maxWidth: 1200,
-        margin: "0 auto",
+        maxWidth: "100%",
+        margin: "0",
         position: "relative",
         zIndex: 1
       }}>
@@ -1207,7 +1208,7 @@ function SettingsContent() {
 
 export default function SettingsPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)" }}>Cargando configuración...</div>}>
+    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)", marginRight: "340px" }}>Cargando configuración...</div>}>
       <SettingsContent />
     </Suspense>
   )

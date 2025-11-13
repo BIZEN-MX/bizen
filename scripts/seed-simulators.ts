@@ -22,8 +22,8 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const simulators = [
   {
     slug: 'monthly-budget',
-    name: 'Presupuesto Mensual 50/30/20',
-    description: 'Organiza tus ingresos en necesidades, deseos y ahorro usando la regla 50/30/20 o un modo personalizado.',
+    name: 'Presupuesto Mensual Inteligente',
+    description: 'Toma el control total de tus finanzas personales. Descubre cómo distribuir tu ingreso de forma óptima entre necesidades, deseos y ahorro. Utiliza la probada regla 50/30/20 o personaliza tu estrategia. Recibe recomendaciones específicas para mejorar tu salud financiera y alcanzar tus metas.',
     category: 'budgeting',
     icon: '💰',
     sort_order: 1,

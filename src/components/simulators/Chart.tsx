@@ -84,7 +84,7 @@ export function Chart({
     );
   };
   
-  const chartMargin = { top: 10, right: 30, left: 0, bottom: 0 };
+  const chartMargin = { top: 20, right: 30, left: 10, bottom: 20 };
   
   if (type === 'bar') {
     return (
@@ -94,15 +94,20 @@ export function Chart({
           <XAxis
             dataKey={xAxisKey}
             label={xAxisLabel ? { value: xAxisLabel, position: 'insideBottom', offset: -5 } : undefined}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 13, fill: '#374151' }}
+            height={60}
           />
           <YAxis
             tickFormatter={formatYValue}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: '#374151' }}
             label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft' } : undefined}
+            width={80}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Legend wrapperStyle={{ fontSize: '14px', paddingTop: '10px' }} />
+          <Legend 
+            wrapperStyle={{ fontSize: '14px', paddingTop: '20px', paddingBottom: '10px' }} 
+            iconType="square"
+          />
           {lines.map((line) => (
             <Bar
               key={line.dataKey}
@@ -123,15 +128,20 @@ export function Chart({
         <XAxis
           dataKey={xAxisKey}
           label={xAxisLabel ? { value: xAxisLabel, position: 'insideBottom', offset: -5 } : undefined}
-          tick={{ fontSize: 12 }}
+          tick={{ fontSize: 13, fill: '#374151' }}
+          height={60}
         />
         <YAxis
           tickFormatter={formatYValue}
-          tick={{ fontSize: 12 }}
+          tick={{ fontSize: 12, fill: '#374151' }}
           label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft' } : undefined}
+          width={80}
         />
         <Tooltip content={<CustomTooltip />} />
-        <Legend wrapperStyle={{ fontSize: '14px', paddingTop: '10px' }} />
+        <Legend 
+          wrapperStyle={{ fontSize: '14px', paddingTop: '20px', paddingBottom: '10px' }} 
+          iconType="circle"
+        />
         {lines.map((line) => (
           <Line
             key={line.dataKey}

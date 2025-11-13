@@ -148,9 +148,12 @@ export default function ProgressPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
+      paddingRight: 40,
+      paddingLeft: 40,
       fontFamily: "Montserrat, sans-serif",
       background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      backgroundAttachment: "fixed"
+      backgroundAttachment: "fixed",
+      marginRight: "340px"
     }}>
       {/* Decorative Orbs */}
       <div style={{
@@ -192,9 +195,9 @@ export default function ProgressPage() {
 
       <main style={{ 
         position: "relative",
-        maxWidth: 1000, 
-        margin: "0 auto", 
-        padding: "clamp(20px, 4vw, 40px)",
+        maxWidth: "100%", 
+        margin: "0", 
+        padding: 0,
         zIndex: 1,
         fontFamily: "Montserrat, sans-serif"
       }}>

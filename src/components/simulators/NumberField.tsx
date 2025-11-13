@@ -99,15 +99,15 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
     const suffix = percentage ? '%' : '';
     
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-3" style={{ marginBottom: 16 }}>
         {label && (
-          <label className="text-sm font-medium text-gray-700">
+          <label className="text-sm font-semibold text-gray-700" style={{ marginBottom: 6 }}>
             {label}
           </label>
         )}
-        <div className="relative">
+        <div className="relative group">
           {prefix && (
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-base font-semibold pointer-events-none transition-colors duration-200 group-focus-within:text-blue-600">
               {prefix}
             </span>
           )}
@@ -120,24 +120,26 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             className={cn(
-              prefix && 'pl-7',
-              suffix && 'pr-7',
-              error && 'border-red-500 focus-visible:ring-red-500',
+              prefix && 'pl-8',
+              suffix && 'pr-10',
+              error && 'border-red-400 focus-visible:border-red-500 focus-visible:ring-red-100 hover:border-red-300',
               className
             )}
             {...props}
           />
           {suffix && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-base font-semibold pointer-events-none transition-colors duration-200 group-focus-within:text-blue-600">
               {suffix}
             </span>
           )}
         </div>
         {hint && !error && (
-          <p className="text-xs text-gray-500">{hint}</p>
+          <p className="text-xs text-gray-500 italic leading-relaxed">{hint}</p>
         )}
         {error && (
-          <p className="text-xs text-red-600">{error}</p>
+          <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+            <span>⚠️</span> {error}
+          </p>
         )}
       </div>
     );

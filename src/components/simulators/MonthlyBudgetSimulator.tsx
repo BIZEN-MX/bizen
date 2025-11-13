@@ -105,42 +105,47 @@ export function MonthlyBudgetSimulator() {
       <div className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Datos de Entrada</CardTitle>
+            <CardTitle>📊 Tu Información Financiera</CardTitle>
             <Button onClick={loadPreset} variant="outline" size="sm">
-              📝 Cargar Valores de Prueba
+              ⚡ Cargar Ejemplo Práctico
             </Button>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-8">
             {/* Income */}
             <NumberField
-              label="Ingreso Mensual"
+              label="💰 Ingreso Mensual Total"
               value={monthlyIncome}
               onChange={(val) => setValue('monthlyIncome', val)}
               currency
               error={errors.monthlyIncome?.message}
+              hint="Incluye salario, ingresos extra y cualquier otra fuente de dinero mensual"
             />
             
             {/* Mode */}
-            <div>
-              <Label>Modo</Label>
+            <div style={{ marginTop: 32 }}>
+              <Label tooltip="La regla 50/30/20 destina 50% a necesidades, 30% a deseos y 20% a ahorro">
+                📋 Método de Presupuesto
+              </Label>
               <select
                 {...register('mode')}
-                className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                className="flex h-12 w-full rounded-lg border-2 border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-900 transition-all duration-200 ease-in-out hover:border-blue-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:shadow-lg cursor-pointer"
               >
-                <option value="50/30/20">Regla 50/30/20</option>
-                <option value="custom">Personalizado</option>
+                <option value="50/30/20">📊 Regla 50/30/20 (Recomendado)</option>
+                <option value="custom">✏️ Personalizado (Tú decides)</option>
               </select>
             </div>
             
             {/* Fixed Expenses */}
-            <div>
-              <Label>Gastos Fijos (Esenciales)</Label>
-              <div className="space-y-2 mt-2">
+            <div style={{ marginTop: 36 }}>
+              <Label tooltip="Gastos que debes pagar cada mes: renta, comida, transporte, servicios">
+                🏠 Gastos Fijos (Necesidades)
+              </Label>
+              <div className="space-y-4 mt-4">
                 {fixedFields.map((field, index) => (
                   <div key={field.id} className="flex gap-2">
                     <Input
                       {...register(`fixedExpenses.${index}.name`)}
-                      placeholder="Nombre"
+                      placeholder="Ej: Renta, Comida, Transporte"
                       className="flex-1"
                     />
                     <NumberField
@@ -171,14 +176,16 @@ export function MonthlyBudgetSimulator() {
             </div>
             
             {/* Variable Expenses */}
-            <div>
-              <Label>Gastos Variables (Deseos)</Label>
-              <div className="space-y-2 mt-2">
+            <div style={{ marginTop: 36 }}>
+              <Label tooltip="Gastos opcionales que disfrutas: entretenimiento, salidas, compras">
+                🎉 Gastos Variables (Deseos)
+              </Label>
+              <div className="space-y-4 mt-4">
                 {variableFields.map((field, index) => (
                   <div key={field.id} className="flex gap-2">
                     <Input
                       {...register(`variableExpenses.${index}.name`)}
-                      placeholder="Nombre"
+                      placeholder="Ej: Netflix, Restaurantes, Ropa"
                       className="flex-1"
                     />
                     <NumberField
@@ -209,13 +216,16 @@ export function MonthlyBudgetSimulator() {
             </div>
             
             {/* Savings Goal */}
-            <NumberField
-              label="Meta de Ahorro Mensual"
-              value={watch('savingsGoal')}
-              onChange={(val) => setValue('savingsGoal', val)}
-              currency
-              error={errors.savingsGoal?.message}
-            />
+            <div style={{ marginTop: 36 }}>
+              <NumberField
+                label="💎 Meta de Ahorro Mensual"
+                value={watch('savingsGoal')}
+                onChange={(val) => setValue('savingsGoal', val)}
+                currency
+                error={errors.savingsGoal?.message}
+                hint="¿Cuánto quieres ahorrar cada mes? La regla 50/30/20 sugiere el 20% de tus ingresos"
+              />
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -226,21 +236,21 @@ export function MonthlyBudgetSimulator() {
           <>
             <div className="grid grid-cols-2 gap-4">
               <ResultsCard
-                title="Gastos Totales"
+                title="💳 Gastos Totales"
                 value={currencyMXN(result.totalExpenses)}
                 variant={result.totalExpenses > monthlyIncome ? 'danger' : 'default'}
               />
               <ResultsCard
-                title="Ahorro Real"
+                title="💰 Ahorro Real"
                 value={currencyMXN(result.actualSavings)}
                 variant={result.meetsGoal ? 'success' : 'warning'}
               />
               <ResultsCard
-                title="Gastos Fijos"
+                title="🏠 Necesidades"
                 value={currencyMXN(result.totalFixed)}
               />
               <ResultsCard
-                title="Gastos Variables"
+                title="🎉 Deseos"
                 value={currencyMXN(result.totalVariable)}
               />
             </div>
@@ -248,9 +258,9 @@ export function MonthlyBudgetSimulator() {
             {mode === '50/30/20' && result.breakdown && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Regla 50/30/20</CardTitle>
+                  <CardTitle>📊 Comparación con la Regla 50/30/20</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent style={{ paddingTop: 24, paddingBottom: 32 }}>
                   <Chart
                     data={chartData}
                     type="bar"
@@ -260,7 +270,7 @@ export function MonthlyBudgetSimulator() {
                       { dataKey: 'actual', name: 'Real', color: '#10b981' },
                     ]}
                     formatYAxis="currency"
-                    height={250}
+                    height={320}
                   />
                 </CardContent>
               </Card>
@@ -268,7 +278,7 @@ export function MonthlyBudgetSimulator() {
             
             <Card>
               <CardHeader>
-                <CardTitle>Recomendaciones</CardTitle>
+                <CardTitle>💡 Recomendaciones Personalizadas</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 {result.recommendations.map((rec, i) => (
@@ -287,7 +297,7 @@ export function MonthlyBudgetSimulator() {
           </>
         ) : (
           <Alert variant="info">
-            Completa los campos de entrada para ver los resultados.
+            👈 Completa tu información financiera en la columna izquierda para obtener un análisis detallado de tu presupuesto y recomendaciones personalizadas.
           </Alert>
         )}
       </div>

@@ -1,22 +1,29 @@
+"use client"
+
 /**
  * Page: /simuladores/[slug]
  * Individual Simulator Page
  */
 
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { MonthlyBudgetSimulator } from '@/components/simulators/MonthlyBudgetSimulator';
 import { SavingsGoalSimulator } from '@/components/simulators/SavingsGoalSimulator';
 import { CreditCardPayoffSimulator } from '@/components/simulators/CreditCardPayoffSimulator';
 import { SimpleLoanSimulator } from '@/components/simulators/SimpleLoanSimulator';
 import { InvestmentComparisonSimulator } from '@/components/simulators/InvestmentComparisonSimulator';
 import { InflationCalculatorSimulator } from '@/components/simulators/InflationCalculatorSimulator';
-import { createSupabaseServer } from '@/lib/supabase/server';
+import { createClientMicrocred } from '@/lib/supabase/client-microcred';
 
-interface SimulatorPageProps {
-  params: {
-    slug: string;
-  };
+interface Simulator {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  category: string;
+  icon: string;
+  sort_order: number;
 }
 
 const simulatorComponents: Record<string, React.ComponentType> = {
@@ -28,63 +35,91 @@ const simulatorComponents: Record<string, React.ComponentType> = {
   'inflation-calculator': InflationCalculatorSimulator,
 };
 
-export async function generateMetadata({ params }: SimulatorPageProps) {
-  const supabase = await createSupabaseServer();
+export default function SimulatorPage() {
+  const params = useParams()
+  const router = useRouter()
+  const slug = params?.slug as string
   
-  const { data: simulator } = await supabase
-    .from('simulators')
-    .select('name, description')
-    .eq('slug', params.slug)
-    .eq('is_active', true)
-    .single();
+  const [simulator, setSimulator] = useState<Simulator | null>(null)
+  const [loading, setLoading] = useState(true)
   
-  if (!simulator) {
-    return {
-      title: 'Simulador no encontrado | BIZEN',
-    };
+  useEffect(() => {
+    const fetchSimulator = async () => {
+      try {
+        const supabase = createClientMicrocred()
+        const { data, error } = await supabase
+          .from('simulators')
+          .select('*')
+          .eq('slug', slug)
+          .eq('is_active', true)
+          .single()
+        
+        if (error || !data) {
+          router.push('/simuladores')
+        } else {
+          setSimulator(data)
+        }
+      } catch (err) {
+        console.error('Error fetching simulator:', err)
+        router.push('/simuladores')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    if (slug) {
+      fetchSimulator()
+    }
+  }, [slug, router])
+  
+  if (loading) {
+    return (
+      <div style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', fontFamily: 'Montserrat, sans-serif' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: 48,
+            height: 48,
+            border: '4px solid #0F62FE22',
+            borderTop: '4px solid #0F62FE',
+            borderRadius: '50%',
+            margin: '0 auto 16px',
+            animation: 'spin 1s linear infinite'
+          }} />
+          <p style={{ color: '#666', fontSize: 16 }}>Cargando simulador...</p>
+        </div>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    )
   }
   
-  return {
-    title: `${simulator.name} | BIZEN Simuladores`,
-    description: simulator.description,
-  };
-}
-
-export default async function SimulatorPage({ params }: SimulatorPageProps) {
-  const { slug } = params;
-  
-  // Get simulator info from database
-  const supabase = await createSupabaseServer();
-  const { data: simulator, error } = await supabase
-    .from('simulators')
-    .select('*')
-    .eq('slug', slug)
-    .eq('is_active', true)
-    .single();
-  
-  if (error || !simulator) {
-    notFound();
-  }
+  if (!simulator) return null
   
   // Get the component for this simulator
   const SimulatorComponent = simulatorComponents[slug];
   
   if (!SimulatorComponent) {
-    notFound();
+    router.push('/simuladores')
+    return null
   }
   
   return (
     <main style={{
-      marginRight: "320px",
+      marginRight: "340px",
       paddingTop: "40px",
       paddingBottom: "40px",
       paddingLeft: "40px",
       paddingRight: "40px",
-      overflow: "auto",
       minHeight: "100vh",
       background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       fontFamily: "Montserrat, sans-serif",
-      boxSizing: "border-box" as const
+      boxSizing: "border-box" as const,
+      maxWidth: "calc(100vw - 340px)",
+      overflowX: "hidden"
     }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
@@ -177,16 +212,3 @@ export default async function SimulatorPage({ params }: SimulatorPageProps) {
     </main>
   );
 }
-
-// Generate static params for known simulators (optional, for optimization)
-export async function generateStaticParams() {
-  return [
-    { slug: 'monthly-budget' },
-    { slug: 'savings-goal' },
-    { slug: 'credit-card-payoff' },
-    { slug: 'simple-loan' },
-    { slug: 'investment-comparison' },
-    { slug: 'inflation-calculator' },
-  ];
-}
-

@@ -148,7 +148,8 @@ export default function CuentaPage() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        fontFamily: "Montserrat, sans-serif"
+        fontFamily: "Montserrat, sans-serif",
+        marginRight: "340px"
       }}>
         <div style={{ animation: "spin 1s linear infinite" }}>⏳</div>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -166,7 +167,8 @@ export default function CuentaPage() {
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
       background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      backgroundAttachment: "fixed"
+      backgroundAttachment: "fixed",
+      marginRight: "340px"
     }}>
       {/* Decorative Orbs */}
       <div style={{
@@ -208,9 +210,10 @@ export default function CuentaPage() {
 
       <main style={{
         position: "relative",
-        maxWidth: 900,
-        margin: "0 auto",
-        padding: "0 20px",
+        maxWidth: "100%",
+        width: "100%",
+        margin: "0",
+        padding: "0 40px",
         paddingTop: 40,
         zIndex: 1
       }}>

@@ -50,24 +50,61 @@ export async function GET(
     const player = players[0]
 
     // Get active investments
-    const { data: investments } = await supabase
+    const { data: investmentsRaw } = await supabase
       .from('player_investments')
       .select('*, opportunity_cards(*)')
       .eq('player_id', player.id)
       .eq('is_sold', false)
 
     // Get unpaid liabilities
-    const { data: liabilities } = await supabase
+    const { data: liabilitiesRaw } = await supabase
       .from('player_liabilities')
       .select('*')
       .eq('player_id', player.id)
       .eq('is_paid_off', false)
 
     // Get doodads
-    const { data: doodads } = await supabase
+    const { data: doodadsRaw } = await supabase
       .from('player_doodads')
       .select('*')
       .eq('player_id', player.id)
+    
+    // Transform investments to camelCase
+    const investments = investmentsRaw?.map(inv => ({
+      id: inv.id,
+      purchasePrice: inv.purchase_price,
+      downPaymentPaid: inv.down_payment_paid,
+      currentCashFlow: inv.current_cash_flow,
+      purchasedAt: inv.purchased_at,
+      totalIncomeEarned: inv.total_income_earned,
+      opportunityCard: {
+        id: inv.opportunity_cards.id,
+        name: inv.opportunity_cards.name,
+        type: inv.opportunity_cards.type,
+        minSalePrice: inv.opportunity_cards.min_sale_price,
+        maxSalePrice: inv.opportunity_cards.max_sale_price
+      }
+    })) || []
+
+    // Transform liabilities to camelCase
+    const liabilities = liabilitiesRaw?.map(lib => ({
+      id: lib.id,
+      type: lib.type,
+      description: lib.description,
+      principalAmount: lib.principal_amount,
+      remainingBalance: lib.remaining_balance,
+      monthlyPayment: lib.monthly_payment,
+      interestRate: lib.interest_rate
+    })) || []
+
+    // Transform doodads to camelCase
+    const doodads = doodadsRaw?.map(doodad => ({
+      id: doodad.id,
+      name: doodad.name,
+      description: doodad.description,
+      cost: doodad.cost,
+      purchasedAt: doodad.purchased_at
+    })) || []
 
     // Transform to camelCase for frontend
     const profession = player.professions
@@ -110,9 +147,9 @@ export async function GET(
           startingCash: profession.starting_cash,
           startingSavings: profession.starting_savings
         },
-        investments: investments || [],
-        liabilities: liabilities || [],
-        doodads: doodads || []
+        investments: investments,
+        liabilities: liabilities,
+        doodads: doodads
       }
     })
 
