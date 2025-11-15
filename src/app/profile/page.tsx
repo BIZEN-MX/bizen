@@ -7,7 +7,6 @@ import Image from "next/image"
 import Button from "../../components/ui/button"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
-import PageLogo from "@/components/PageLogo"
 
 interface UserStats {
   xp: number
@@ -283,14 +282,9 @@ export default function ProfilePage() {
         fontFamily: "Montserrat, sans-serif",
         maxWidth: "100%"
       }}>
-        {/* Logo */}
-        <div style={{ marginBottom: 24 }}>
-          <PageLogo />
-        </div>
-
         {/* Page Title */}
         <div style={{
-          textAlign: "left",
+          textAlign: "center",
           marginBottom: 48
         }}>
           <h1 style={{

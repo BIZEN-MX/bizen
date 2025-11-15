@@ -154,6 +154,27 @@ export default function ThreadDetailPage() {
     }
   }
 
+  const handleDelete = async () => {
+    if (!confirm('¿Estás seguro de que quieres eliminar este tema? Esta acción no se puede deshacer.')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/forum/threads/${threadId}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        router.push('/forum')
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Error al eliminar el tema')
+      }
+    } catch (error) {
+      console.error("Error deleting thread:", error)
+      alert('Error al eliminar el tema')
+    }
+  }
+
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newComment.trim() || submitting) return
@@ -236,14 +257,35 @@ export default function ThreadDetailPage() {
             <button
               onClick={() => handleVote('comment', comment.id, 1)}
               style={{
-                background: comment.userVote === 1 ? "#10B981" : "transparent",
-                border: "none",
+                background: "transparent",
+                border: comment.userVote === 1 ? "2px solid #0B71FE" : "2px solid transparent",
                 fontSize: 20,
                 cursor: "pointer",
-                padding: 4
+                padding: 4,
+                borderRadius: 4,
+                transition: "all 0.2s ease"
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = "scale(0.9)"
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              ▲
+              <span style={{ 
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                display: "inline-block",
+                transform: comment.userVote === 1 ? "scale(1.3)" : "scale(1)",
+                transition: "transform 0.2s ease"
+              }}>
+                👍
+              </span>
             </button>
             <span style={{ fontSize: 16, fontWeight: 700, color: "#374151" }}>
               {comment.score}
@@ -251,14 +293,35 @@ export default function ThreadDetailPage() {
             <button
               onClick={() => handleVote('comment', comment.id, -1)}
               style={{
-                background: comment.userVote === -1 ? "#EF4444" : "transparent",
-                border: "none",
+                background: "transparent",
+                border: comment.userVote === -1 ? "2px solid #0B71FE" : "2px solid transparent",
                 fontSize: 20,
                 cursor: "pointer",
-                padding: 4
+                padding: 4,
+                borderRadius: 4,
+                transition: "all 0.2s ease"
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = "scale(0.9)"
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              ▼
+              <span style={{ 
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                display: "inline-block",
+                transform: comment.userVote === -1 ? "scale(1.3)" : "scale(1)",
+                transition: "transform 0.2s ease"
+              }}>
+                👎
+              </span>
             </button>
           </div>
 
@@ -342,8 +405,10 @@ export default function ThreadDetailPage() {
         paddingTop: 40,
         paddingBottom: 80,
         fontFamily: "Montserrat, sans-serif",
-        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         backgroundAttachment: "fixed",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
         marginRight: "340px"
       }}>
         <main style={{ 
@@ -354,14 +419,39 @@ export default function ThreadDetailPage() {
         paddingRight: "40px",
         zIndex: 1
       }}>
-        {/* Breadcrumb */}
-        <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
-          <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none" }}>
-            Foro
-          </Link>
-          <span style={{ color: "#9CA3AF" }}>→</span>
-          <Link href={`/forum/topic/${thread.topic.slug}`} style={{ color: "#0F62FE", textDecoration: "none" }}>
-            {thread.topic.name}
+        {/* Back Button */}
+        <div style={{ marginBottom: 24 }}>
+          <Link href="/forum" style={{ textDecoration: "none" }}>
+            <button style={{
+              padding: "8px 16px",
+              background: "rgba(15, 98, 254, 0.15)",
+              backdropFilter: "blur(10px)",
+              border: "2px solid rgba(15, 98, 254, 0.3)",
+              borderRadius: 8,
+              fontSize: 14,
+              fontWeight: 600,
+              color: "#0F62FE",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all 0.2s ease",
+              boxShadow: "0 2px 8px rgba(15, 98, 254, 0.1)",
+              fontFamily: "Montserrat, sans-serif"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(15, 98, 254, 0.25)"
+              e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.5)"
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(15, 98, 254, 0.2)"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
+              e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.3)"
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(15, 98, 254, 0.1)"
+            }}
+            >
+              ← Volver al Foro
+            </button>
           </Link>
         </div>
 
@@ -478,69 +568,187 @@ export default function ThreadDetailPage() {
               onClick={() => handleVote('thread', thread.id, 1)}
               style={{
                 padding: "10px 16px",
-                background: thread.userVote === 1 ? "#10B981" : "rgba(255, 255, 255, 0.6)",
-                color: thread.userVote === 1 ? "white" : "#374151",
-                border: "none",
+                background: "rgba(255, 255, 255, 0.6)",
+                color: "#374151",
+                border: thread.userVote === 1 ? "2px solid #0B71FE" : "2px solid transparent",
                 borderRadius: 8,
                 fontSize: 14,
                 fontWeight: 700,
                 cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif"
+                fontFamily: "Montserrat, sans-serif",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.2s ease",
+                boxShadow: thread.userVote === 1 ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = "scale(0.95)"
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              ▲ {thread.score > 0 && thread.score}
+              <span style={{ 
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                display: "inline-block",
+                fontSize: 18,
+                transform: thread.userVote === 1 ? "scale(1.2)" : "scale(1)",
+                transition: "transform 0.2s ease"
+              }}>
+                👍
+              </span> {thread.score > 0 && thread.score}
             </button>
             
             <button
               onClick={() => handleVote('thread', thread.id, -1)}
               style={{
                 padding: "10px 16px",
-                background: thread.userVote === -1 ? "#EF4444" : "rgba(255, 255, 255, 0.6)",
-                color: thread.userVote === -1 ? "white" : "#374151",
-                border: "none",
+                background: "rgba(255, 255, 255, 0.6)",
+                color: "#374151",
+                border: thread.userVote === -1 ? "2px solid #0B71FE" : "2px solid transparent",
                 borderRadius: 8,
                 fontSize: 14,
                 fontWeight: 700,
                 cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif"
+                fontFamily: "Montserrat, sans-serif",
+                transition: "all 0.2s ease",
+                boxShadow: thread.userVote === -1 ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = "scale(0.95)"
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              ▼
+              <span style={{ 
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                display: "inline-block",
+                fontSize: 18,
+                transform: thread.userVote === -1 ? "scale(1.2)" : "scale(1)",
+                transition: "transform 0.2s ease"
+              }}>
+                👎
+              </span>
             </button>
 
             <button
               onClick={handleBookmark}
               style={{
                 padding: "10px 16px",
-                background: thread.isBookmarked ? "#F59E0B" : "rgba(255, 255, 255, 0.6)",
-                color: thread.isBookmarked ? "white" : "#374151",
-                border: "none",
+                background: "rgba(255, 255, 255, 0.6)",
+                color: "#374151",
+                border: thread.isBookmarked ? "2px solid #0B71FE" : "2px solid transparent",
                 borderRadius: 8,
                 fontSize: 14,
                 fontWeight: 700,
                 cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif"
+                fontFamily: "Montserrat, sans-serif",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.2s ease",
+                boxShadow: thread.isBookmarked ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = "scale(0.95)"
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              {thread.isBookmarked ? "★" : "☆"} Guardar
+              <span style={{ 
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                display: "inline-block",
+                fontSize: 16,
+                transform: thread.isBookmarked ? "scale(1.2)" : "scale(1)",
+                transition: "transform 0.2s ease"
+              }}>
+                {thread.isBookmarked ? "★" : "☆"}
+              </span>
+              {thread.isBookmarked ? "Guardado" : "Guardar"}
             </button>
 
             <button
               onClick={handleFollow}
               style={{
                 padding: "10px 16px",
-                background: thread.isFollowing ? "#8B5CF6" : "rgba(255, 255, 255, 0.6)",
-                color: thread.isFollowing ? "white" : "#374151",
-                border: "none",
+                background: "rgba(255, 255, 255, 0.6)",
+                color: "#374151",
+                border: thread.isFollowing ? "2px solid #0B71FE" : "2px solid transparent",
                 borderRadius: 8,
                 fontSize: 14,
                 fontWeight: 700,
                 cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif"
+                fontFamily: "Montserrat, sans-serif",
+                transition: "all 0.2s ease",
+                boxShadow: thread.isFollowing ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = "scale(0.95)"
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
               }}
             >
               {thread.isFollowing ? "Siguiendo" : "Seguir"}
             </button>
+
+            {thread.author.userId === user?.id && (
+              <button
+                onClick={handleDelete}
+                style={{
+                  padding: "10px 16px",
+                  background: "rgba(255, 255, 255, 0.6)",
+                  color: "#EF4444",
+                  border: "2px solid transparent",
+                  borderRadius: 8,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "Montserrat, sans-serif",
+                  transition: "all 0.2s ease"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"
+                  e.currentTarget.style.borderColor = "#EF4444"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
+                  e.currentTarget.style.borderColor = "transparent"
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = "scale(0.95)"
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.transform = "scale(1)"
+                }}
+              >
+                Eliminar
+              </button>
+            )}
           </div>
         </div>
         )}

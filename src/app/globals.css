@@ -354,6 +354,88 @@ body, html {
 }
 
 /* ==========================================
+   TABLET RESPONSIVENESS (iPad, Android tablets)
+   ========================================== */
+
+/* Hide FixedSidebar on tablets to maximize content space */
+@media (min-width: 768px) and (max-width: 1024px) {
+  [data-fixed-sidebar] {
+    display: none !important;
+  }
+}
+
+/* Tablet adjustments - Override inline styles that account for sidebar */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Remove right margins that account for sidebar */
+  /* Target common sidebar margin values: 320px, 340px, 160px */
+  main[style*="marginRight"]:not([style*="marginRight: 0"]):not([style*="marginRight:0"]):not([style*="marginRight: \"0\""]),
+  div[style*="marginRight"]:not([style*="marginRight: 0"]):not([style*="marginRight:0"]):not([style*="marginRight: \"0\""]) {
+    margin-right: 0 !important;
+  }
+  
+  /* Adjust right padding to be responsive instead of fixed sidebar values (320px, 340px) */
+  main[style*="paddingRight"]:not([style*="paddingRight: 0"]):not([style*="paddingRight:0"]):not([style*="paddingRight: \"0\""]),
+  div[style*="paddingRight"]:not([style*="paddingRight: 0"]):not([style*="paddingRight:0"]):not([style*="paddingRight: \"0\""]) {
+    padding-right: clamp(20px, 4vw, 40px) !important;
+  }
+  
+  /* Ensure content containers don't exceed viewport width */
+  main[style*="maxWidth"] {
+    max-width: 100% !important;
+  }
+  
+  /* Box sizing for all main elements */
+  main {
+    box-sizing: border-box !important;
+  }
+  
+  /* Specific fixes for common patterns */
+  /* Forum pages background containers */
+  div[style*="marginRight"][style*="background"] {
+    margin-right: 0 !important;
+  }
+  
+  /* Learning pages that use 160px for centering */
+  div[style*="marginRight"][style*="160px"] {
+    margin-right: auto !important;
+  }
+}
+
+/* Tablet Portrait - Optimized spacing */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  /* Ensure main content has appropriate padding */
+  main {
+    padding-left: clamp(20px, 4vw, 40px) !important;
+    padding-right: clamp(20px, 4vw, 40px) !important;
+  }
+  
+  /* Improve button spacing */
+  button {
+    min-width: 120px !important;
+    padding: clamp(12px, 2vw, 16px) clamp(20px, 4vw, 28px) !important;
+  }
+  
+  /* Card spacing adjustments */
+  [style*="gap"] {
+    gap: clamp(16px, 3vw, 24px) !important;
+  }
+}
+
+/* Tablet Landscape - More horizontal space */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  /* Slightly more padding in landscape for better use of space */
+  main {
+    padding-left: clamp(24px, 5vw, 48px) !important;
+    padding-right: clamp(24px, 5vw, 48px) !important;
+  }
+  
+  /* Allow more columns in landscape */
+  [style*="grid-template-columns"] {
+    /* Grids will maintain their original layout in landscape */
+  }
+}
+
+/* ==========================================
    THEME SYSTEM (Dark Mode & Accessibility)
    ========================================== */
 

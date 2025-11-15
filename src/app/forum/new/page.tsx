@@ -115,11 +115,18 @@ export default function NewThreadPage() {
       } else {
         const error = await response.json()
         console.error("Error creating thread:", error)
-        alert(error.details || error.error || "Error al crear el tema")
+        const errorMessage = error.details 
+          ? `${error.error}: ${error.details}` 
+          : error.error || "Error al crear el tema"
+        if (error.hint) {
+          console.warn("Hint:", error.hint)
+        }
+        alert(errorMessage)
       }
     } catch (error) {
       console.error("Error creating thread:", error)
-      alert("Error al crear el tema")
+      const errorMessage = error instanceof Error ? error.message : "Error al crear el tema"
+      alert(errorMessage)
     } finally {
       setSubmitting(false)
     }
@@ -166,8 +173,10 @@ export default function NewThreadPage() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+      backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       backgroundAttachment: "fixed",
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
       marginRight: "340px"
     }}>
       <main style={{ 
@@ -178,13 +187,39 @@ export default function NewThreadPage() {
         paddingRight: "40px",
         zIndex: 1
       }}>
-        {/* Breadcrumb */}
-        <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
-          <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none" }}>
-            Foro
+        {/* Back Button */}
+        <div style={{ marginBottom: 24 }}>
+          <Link href="/forum" style={{ textDecoration: "none" }}>
+            <button style={{
+              padding: "8px 16px",
+              background: "rgba(15, 98, 254, 0.15)",
+              backdropFilter: "blur(10px)",
+              border: "2px solid rgba(15, 98, 254, 0.3)",
+              borderRadius: 8,
+              fontSize: 14,
+              fontWeight: 600,
+              color: "#0F62FE",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all 0.2s ease",
+              boxShadow: "0 2px 8px rgba(15, 98, 254, 0.1)"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(15, 98, 254, 0.25)"
+              e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.5)"
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(15, 98, 254, 0.2)"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
+              e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.3)"
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(15, 98, 254, 0.1)"
+            }}
+            >
+              ← Volver al Foro
+            </button>
           </Link>
-          <span style={{ color: "#9CA3AF" }}>→</span>
-          <span style={{ color: "#374151" }}>Crear Tema</span>
         </div>
 
         <h1 style={{ 
@@ -277,7 +312,7 @@ export default function NewThreadPage() {
                 <option value="">Selecciona una categoría</option>
                 {topics.map(topic => (
                   <option key={topic.id} value={topic.id}>
-                    {topic.icon} {topic.name}
+                    {topic.name}
                   </option>
                 ))}
               </select>

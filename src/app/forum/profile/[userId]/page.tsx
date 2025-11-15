@@ -118,8 +118,10 @@ export default function ForumProfilePage() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      backgroundAttachment: "fixed"
+      backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+      backgroundAttachment: "fixed",
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat"
     }}>
       <main style={{ 
         position: "relative",

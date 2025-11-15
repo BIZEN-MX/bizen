@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Card from "../../components/ui/card"
 import Button from "../../components/ui/button"
-import PageLogo from "@/components/PageLogo"
 
 interface Assignment {
   id: string
@@ -204,15 +203,14 @@ export default function AssignmentsPage() {
 
     <main style={{ 
         position: "relative",
-      maxWidth: 1000, 
-      margin: "0 auto", 
+      width: "calc(100% - 320px)",
+      maxWidth: "none",
+      margin: 0,
       padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1,
-      fontFamily: "Montserrat, sans-serif"
+      fontFamily: "Montserrat, sans-serif",
+      boxSizing: "border-box"
     }}>
-        {/* Logo */}
-        <PageLogo />
-
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ 

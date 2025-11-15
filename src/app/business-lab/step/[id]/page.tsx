@@ -212,9 +212,11 @@ export default function StepDetailPage() {
         minHeight: "100vh",
         background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         padding: "40px",
+        paddingRight: "360px",
         fontFamily: "Montserrat, sans-serif",
         width: "100%",
-        boxSizing: "border-box" as const
+        boxSizing: "border-box" as const,
+        overflowX: "hidden"
       }}>
       {/* Back Button */}
       <button 
@@ -274,7 +276,7 @@ export default function StepDetailPage() {
 
         <div style={{
           display: "grid",
-          gridTemplateColumns: "1fr 350px",
+          gridTemplateColumns: "minmax(0, 1fr) 320px",
           gap: 24,
           width: "100%"
         }}>
@@ -764,14 +766,6 @@ export default function StepDetailPage() {
         )}
       </main>
 
-      <aside style={{
-        position: "fixed",
-        top: 0,
-        right: 0,
-        width: "320px",
-        height: "100vh",
-        pointerEvents: "none"
-      }} />
     </>
   )
 }

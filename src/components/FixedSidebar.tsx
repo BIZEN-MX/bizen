@@ -11,23 +11,33 @@ import Image from "next/image"
 export default function FixedSidebar() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const { settings } = useSettings()
   const t = useTranslation(settings.language)
   const [showExitDialog, setShowExitDialog] = useState(false)
+  const [showAuthDialog, setShowAuthDialog] = useState(false)
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null)
 
   // Check if user is on a lesson page
   const isOnLessonPage = pathname?.includes('/learn/')
 
+  // Protected routes that require authentication
+  const protectedRoutes = ['/assignments', '/progress', '/forum', '/profile', '/cuenta', '/configuracion']
+
   const navigateTo = (path: string) => {
+    // Check if route requires auth and user is not authenticated
+    if (!user && protectedRoutes.some(route => path.startsWith(route))) {
+      setShowAuthDialog(true)
+      return
+    }
+
     // If on lesson page, show confirmation dialog
     if (isOnLessonPage) {
       setPendingNavigation(path)
       setShowExitDialog(true)
     } else {
       // If not on lesson page, navigate directly
-    router.push(path)
+      router.push(path)
     }
   }
 
@@ -66,11 +76,11 @@ export default function FixedSidebar() {
         zIndex: 1000,
         overflowY: "auto",
         fontFamily: "Montserrat, sans-serif",
-        borderLeft: "1px solid rgba(15, 98, 254, 0.1)"
+        borderLeft: "2px solid rgba(15, 98, 254, 0.2)"
       }}>
         <div style={{ padding: "24px 20px" }}>
-          {/* Username with Avatar */}
-          {user && (
+          {/* Username with Avatar or Create Account Button */}
+          {user ? (
             <div style={{ 
               marginBottom: 24,
               display: "flex",
@@ -112,6 +122,71 @@ export default function FixedSidebar() {
                 {user.user_metadata?.username || user.email?.split('@')[0] || t.sidebar.student}
               </h2>
             </div>
+          ) : (
+            /* Always show "Crear Cuenta" button when user is not authenticated */
+            <div style={{ marginBottom: 24 }}>
+              <button
+                onClick={() => router.push("/signup")}
+                style={{
+                  width: "100%",
+                  padding: "14px 20px",
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  color: "white",
+                  boxShadow: "0 4px 20px rgba(11, 113, 254, 0.5), 0 0 30px rgba(11, 113, 254, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "relative",
+                  overflow: "hidden",
+                  animation: "pulse-glow 2s ease-in-out infinite"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
+                  e.currentTarget.style.boxShadow = "0 8px 25px rgba(11, 113, 254, 0.6), 0 0 40px rgba(11, 113, 254, 0.4)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0) scale(1)"
+                  e.currentTarget.style.boxShadow = "0 4px 20px rgba(11, 113, 254, 0.5), 0 0 30px rgba(11, 113, 254, 0.3)"
+                }}
+              >
+                {/* Shine effect overlay */}
+                <div style={{
+                  position: "absolute",
+                  top: 0,
+                  left: "-100%",
+                  width: "100%",
+                  height: "100%",
+                  background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)",
+                  animation: "shine 3s ease-in-out infinite"
+                }} />
+                <span style={{ position: "relative", zIndex: 1 }}>Crear Cuenta</span>
+              </button>
+              <style>{`
+                @keyframes pulse-glow {
+                  0%, 100% {
+                    box-shadow: 0 4px 20px rgba(11, 113, 254, 0.5), 0 0 30px rgba(11, 113, 254, 0.3);
+                  }
+                  50% {
+                    box-shadow: 0 4px 25px rgba(11, 113, 254, 0.7), 0 0 40px rgba(11, 113, 254, 0.5);
+                  }
+                }
+                @keyframes shine {
+                  0% {
+                    left: -100%;
+                  }
+                  20%, 100% {
+                    left: 100%;
+                  }
+                }
+              `}</style>
+            </div>
           )}
 
           {/* Quick Actions */}
@@ -146,74 +221,15 @@ export default function FixedSidebar() {
                   e.currentTarget.style.transform = "translateX(0)"
                 }}
               >
-                <span style={{ fontSize: 20 }}>📚</span>
+                <span style={{ 
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>📚</span>
                 <span>{t.nav.exploreCourses}</span>
-              </button>
-
-              <button
-                onClick={() => navigateTo("/assignments")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px",
-                  background: isActivePath("/assignments") ? "#EFF6FF" : "transparent",
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 14,
-                  fontWeight: isActivePath("/assignments") ? 700 : 600,
-                  textAlign: "left",
-                  color: isActivePath("/assignments") ? "#0F62FE" : "#000"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#EFF6FF"
-                  e.currentTarget.style.color = "#0F62FE"
-                  e.currentTarget.style.transform = "translateX(-4px)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = isActivePath("/assignments") ? "#EFF6FF" : "transparent"
-                  e.currentTarget.style.color = isActivePath("/assignments") ? "#0F62FE" : "#000"
-                  e.currentTarget.style.transform = "translateX(0)"
-                }}
-              >
-                <span style={{ fontSize: 20 }}>📝</span>
-                <span>{t.nav.assignments}</span>
-              </button>
-
-              <button
-                onClick={() => navigateTo("/progress")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px",
-                  background: isActivePath("/progress") ? "#EFF6FF" : "transparent",
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 14,
-                  fontWeight: isActivePath("/progress") ? 700 : 600,
-                  textAlign: "left",
-                  color: isActivePath("/progress") ? "#0F62FE" : "#000"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#EFF6FF"
-                  e.currentTarget.style.color = "#0F62FE"
-                  e.currentTarget.style.transform = "translateX(-4px)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = isActivePath("/progress") ? "#EFF6FF" : "transparent"
-                  e.currentTarget.style.color = isActivePath("/progress") ? "#0F62FE" : "#000"
-                  e.currentTarget.style.transform = "translateX(0)"
-                }}
-              >
-                <span style={{ fontSize: 20 }}>🏆</span>
-                <span>{t.nav.myProgress}</span>
               </button>
 
               <button
@@ -258,39 +274,6 @@ export default function FixedSidebar() {
               </button>
 
               <button
-                onClick={() => navigateTo("/forum")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px",
-                  background: isActivePath("/forum") ? "#EFF6FF" : "transparent",
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 14,
-                  fontWeight: isActivePath("/forum") ? 700 : 600,
-                  textAlign: "left",
-                  color: isActivePath("/forum") ? "#0F62FE" : "#000"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#EFF6FF"
-                  e.currentTarget.style.color = "#0F62FE"
-                  e.currentTarget.style.transform = "translateX(-4px)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = isActivePath("/forum") ? "#EFF6FF" : "transparent"
-                  e.currentTarget.style.color = isActivePath("/forum") ? "#0F62FE" : "#000"
-                  e.currentTarget.style.transform = "translateX(0)"
-                }}
-              >
-                <span style={{ fontSize: 20 }}>💬</span>
-                <span>Foro Emprendedor</span>
-              </button>
-
-              <button
                 onClick={() => navigateTo("/cash-flow")}
                 style={{
                   display: "flex",
@@ -319,7 +302,14 @@ export default function FixedSidebar() {
                   e.currentTarget.style.transform = "translateX(0)"
                 }}
               >
-                <span style={{ fontSize: 20 }}>💰</span>
+                <span style={{ 
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>💰</span>
                 <span>Cash flow</span>
               </button>
 
@@ -352,13 +342,147 @@ export default function FixedSidebar() {
                   e.currentTarget.style.transform = "translateX(0)"
                 }}
               >
-                <span style={{ fontSize: 20 }}>📊</span>
+                <span style={{ 
+                  fontSize: 20,
+                  fontWeight: 700,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>$</span>
                 <span>Simuladores</span>
               </button>
+
+              {/* Only show these navigation items when user is authenticated */}
+              {user && (
+              <>
+              <button
+                onClick={() => navigateTo("/assignments")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px",
+                  background: isActivePath("/assignments") ? "#EFF6FF" : "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 14,
+                  fontWeight: isActivePath("/assignments") ? 700 : 600,
+                  textAlign: "left",
+                  color: isActivePath("/assignments") ? "#0F62FE" : "#000"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#EFF6FF"
+                  e.currentTarget.style.color = "#0F62FE"
+                  e.currentTarget.style.transform = "translateX(-4px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = isActivePath("/assignments") ? "#EFF6FF" : "transparent"
+                  e.currentTarget.style.color = isActivePath("/assignments") ? "#0F62FE" : "#000"
+                  e.currentTarget.style.transform = "translateX(0)"
+                }}
+              >
+                <span style={{ 
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>✏️</span>
+                <span>{t.nav.assignments}</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo("/progress")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px",
+                  background: isActivePath("/progress") ? "#EFF6FF" : "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 14,
+                  fontWeight: isActivePath("/progress") ? 700 : 600,
+                  textAlign: "left",
+                  color: isActivePath("/progress") ? "#0F62FE" : "#000"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#EFF6FF"
+                  e.currentTarget.style.color = "#0F62FE"
+                  e.currentTarget.style.transform = "translateX(-4px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = isActivePath("/progress") ? "#EFF6FF" : "transparent"
+                  e.currentTarget.style.color = isActivePath("/progress") ? "#0F62FE" : "#000"
+                  e.currentTarget.style.transform = "translateX(0)"
+                }}
+              >
+                <span style={{ 
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>🏆</span>
+                <span>{t.nav.myProgress}</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo("/forum")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px",
+                  background: isActivePath("/forum") ? "#EFF6FF" : "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 14,
+                  fontWeight: isActivePath("/forum") ? 700 : 600,
+                  textAlign: "left",
+                  color: isActivePath("/forum") ? "#0F62FE" : "#000"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#EFF6FF"
+                  e.currentTarget.style.color = "#0F62FE"
+                  e.currentTarget.style.transform = "translateX(-4px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = isActivePath("/forum") ? "#EFF6FF" : "transparent"
+                  e.currentTarget.style.color = isActivePath("/forum") ? "#0F62FE" : "#000"
+                  e.currentTarget.style.transform = "translateX(0)"
+                }}
+              >
+                <span style={{ 
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>💬</span>
+                <span>Foro Emprendedor</span>
+              </button>
+              </>
+              )}
             </div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links - Only show for authenticated users */}
+          {user && (
           <div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <button
@@ -390,7 +514,14 @@ export default function FixedSidebar() {
                   e.currentTarget.style.transform = "translateX(0)"
                 }}
               >
-                <span style={{ fontSize: 20 }}>👤</span>
+                <span style={{ 
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>👤</span>
                 <span>{t.nav.profile}</span>
               </button>
 
@@ -423,7 +554,14 @@ export default function FixedSidebar() {
                   e.currentTarget.style.transform = "translateX(0)"
                 }}
               >
-                <span style={{ fontSize: 20 }}>⚙️</span>
+                <span style={{ 
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>⚙️</span>
                 <span>{t.nav.account}</span>
               </button>
 
@@ -456,11 +594,19 @@ export default function FixedSidebar() {
                   e.currentTarget.style.transform = "translateX(0)"
                 }}
               >
-                <span style={{ fontSize: 20 }}>⚙️</span>
+                <span style={{ 
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>⚙️</span>
                 <span>{t.nav.settings}</span>
               </button>
             </div>
           </div>
+          )}
         </div>
       </div>
 
@@ -559,6 +705,164 @@ export default function FixedSidebar() {
                 }}
               >
                 Salir de la lección
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Authentication Required Dialog */}
+      {showAuthDialog && (
+        <div 
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.6)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1100,
+            padding: 20,
+            fontFamily: "Montserrat, sans-serif",
+            backdropFilter: "blur(4px)"
+          }}
+          onClick={() => setShowAuthDialog(false)}
+        >
+          <div 
+            style={{
+              background: "white",
+              borderRadius: 20,
+              padding: "40px",
+              maxWidth: 480,
+              width: "100%",
+              boxShadow: "0 25px 70px rgba(0, 0, 0, 0.4)",
+              position: "relative"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Icon */}
+            <div style={{
+              width: 80,
+              height: 80,
+              margin: "0 auto 24px",
+              background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 40,
+              boxShadow: "0 8px 20px rgba(11, 113, 254, 0.3)"
+            }}>
+              🔒
+            </div>
+
+            <div style={{
+              fontSize: 26,
+              fontWeight: 800,
+              marginBottom: 16,
+              textAlign: "center",
+              background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text"
+            }}>
+              ¡Crea tu cuenta gratis!
+            </div>
+            
+            <p style={{
+              fontSize: 16,
+              color: "#374151",
+              lineHeight: 1.7,
+              marginBottom: 28,
+              textAlign: "center"
+            }}>
+              Necesitas una cuenta para acceder a esta función. Crea tu cuenta gratis para desbloquear todas las herramientas de BIZEN, incluyendo asignaciones, seguimiento de progreso, foro y más.
+            </p>
+
+            <div style={{
+              display: "flex",
+              gap: 12,
+              flexDirection: "column"
+            }}>
+              <button
+                onClick={() => {
+                  setShowAuthDialog(false)
+                  router.push("/signup")
+                }}
+                style={{
+                  padding: "16px 24px",
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 12,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
+                  fontFamily: "Montserrat, sans-serif"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)"
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.5)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)"
+                  e.currentTarget.style.boxShadow = "0 4px 15px rgba(11, 113, 254, 0.4)"
+                }}
+              >
+                Crear Cuenta Gratis
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowAuthDialog(false)
+                  router.push("/login")
+                }}
+                style={{
+                  padding: "16px 24px",
+                  background: "transparent",
+                  color: "#0B71FE",
+                  border: "2px solid #0B71FE",
+                  borderRadius: 12,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#EFF6FF"
+                  e.currentTarget.style.transform = "translateY(-1px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent"
+                  e.currentTarget.style.transform = "translateY(0)"
+                }}
+              >
+                Ya tengo cuenta
+              </button>
+
+              <button
+                onClick={() => setShowAuthDialog(false)}
+                style={{
+                  padding: "12px",
+                  background: "transparent",
+                  color: "#6B7280",
+                  border: "none",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "color 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = "#374151"}
+                onMouseLeave={(e) => e.currentTarget.style.color = "#6B7280"}
+              >
+                Cancelar
               </button>
             </div>
           </div>

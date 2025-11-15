@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { useSettings, Language, Theme, TextSize, ContrastMode } from "@/contexts/SettingsContext"
 import { useAuth } from "@/contexts/AuthContext"
-import PageLogo from "@/components/PageLogo"
 
 // Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
@@ -308,9 +307,6 @@ function SettingsContent() {
         position: "relative",
         zIndex: 1
       }}>
-        {/* Logo */}
-        <PageLogo />
-
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
           <h1 style={{

@@ -21,14 +21,16 @@ export default async function ScorePage() {
   const score = await getUserScore(user.id)
 
   return (
-    <div style={{
+    <main style={{
       marginRight: "320px",
       minHeight: "100vh",
       background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       padding: "40px",
+      paddingRight: "360px",
       fontFamily: "Montserrat, sans-serif",
       width: "100%",
-      boxSizing: "border-box" as const
+      boxSizing: "border-box" as const,
+      overflowX: "hidden"
     }}>
       <Link href="/business-lab" style={{ textDecoration: "none" }}>
         <button style={{
@@ -152,6 +154,6 @@ export default async function ScorePage() {
           <li>Usa los simuladores para proyecciones financieras</li>
         </ul>
       </div>
-    </div>
+    </main>
   )
 }

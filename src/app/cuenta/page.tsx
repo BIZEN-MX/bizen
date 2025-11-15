@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Image from "next/image"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
-import PageLogo from "@/components/PageLogo"
 
 export default function CuentaPage() {
   const { user, loading } = useAuth()
@@ -217,9 +216,6 @@ export default function CuentaPage() {
         paddingTop: 40,
         zIndex: 1
       }}>
-        {/* Logo */}
-        <PageLogo />
-
         {/* Success/Error Messages */}
         {saveSuccess && (
           <div style={{

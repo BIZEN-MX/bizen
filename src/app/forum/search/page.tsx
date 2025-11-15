@@ -126,8 +126,10 @@ function ForumSearchContent() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      backgroundAttachment: "fixed"
+      backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+      backgroundAttachment: "fixed",
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat"
     }}>
       <main style={{ 
         position: "relative",
@@ -238,7 +240,7 @@ function ForumSearchContent() {
                   {thread.body.substring(0, 200)}...
                 </p>
                 <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#9CA3AF", fontWeight: 600, flexWrap: "wrap" }}>
-                  <span>{thread.topic.icon} {thread.topic.name}</span>
+                  <span>{thread.topic.name}</span>
                   <span>por {thread.author.nickname}</span>
                   <span>{thread.score} votos</span>
                   <span>{thread.commentCount} respuestas</span>

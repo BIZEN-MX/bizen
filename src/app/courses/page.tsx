@@ -8,7 +8,6 @@ import { useTranslation } from "@/lib/translations"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Button from "@/components/ui/button"
-import PageLogo from "@/components/PageLogo"
 
 interface Lesson {
   id: string
@@ -213,24 +212,27 @@ export default function CoursesPage() {
 
   useEffect(() => {
     if (loading) return
-    if (!user) {
-      router.replace("/login")
-      return
-    }
 
     const fetchCoursesData = async () => {
       try {
         setLoadingData(true)
         
-        // Refresh session to get latest user metadata
-        const { createClient } = await import("@/lib/supabase/client")
-        const supabase = createClient()
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        // Get completed lessons from user metadata
-        const completedLessons: string[] = session?.user?.user_metadata?.completedLessons || []
-        console.log('✅ Completed lessons:', completedLessons)
+        let completedLessons: string[] = []
         const completedCourses: string[] = []
+        
+        // If user is authenticated, get completed lessons from user metadata
+        if (user) {
+          const { createClient } = await import("@/lib/supabase/client")
+          const supabase = createClient()
+          const { data: { session } } = await supabase.auth.getSession()
+          completedLessons = session?.user?.user_metadata?.completedLessons || []
+          console.log('✅ Completed lessons (authenticated):', completedLessons)
+        } else {
+          // For unauthenticated users, get completed lessons from localStorage
+          const storedLessons = localStorage.getItem('guestCompletedLessons')
+          completedLessons = storedLessons ? JSON.parse(storedLessons) : []
+          console.log('✅ Completed lessons (guest):', completedLessons)
+        }
 
         const coursesData = [
           {
@@ -431,6 +433,13 @@ export default function CoursesPage() {
           }
         ]
 
+        // Count total completed lessons for lock logic
+        const totalCompletedLessons = completedLessons.length
+        
+        // For unauthenticated users, lock all lessons after the 3rd one
+        const maxGuestLessons = 3
+        const shouldLockForGuest = !user && totalCompletedLessons >= maxGuestLessons
+        
         // Build courses with lessons
         const allCourses: Course[] = coursesData.map((courseData, courseIndex) => {
           const courseIsLocked = courseIndex > 0 && !completedCourses.includes(coursesData[courseIndex - 1]!.id)
@@ -442,12 +451,30 @@ export default function CoursesPage() {
             const previousLessonId = lessonIndex > 0 ? `l${courseData.order}-${lessonIndex}` : null
             const previousCompleted = previousLessonId ? completedLessons.includes(previousLessonId) : true
             
+            // Calculate lesson number across all courses for guest limit
+            let lessonNumber = 0
+            for (let i = 0; i < courseIndex; i++) {
+              lessonNumber += coursesData[i]!.lessons.length
+            }
+            lessonNumber += lessonIndex + 1
+            
+            // Lock lesson if:
+            // 1. Course is locked, OR
+            // 2. Previous lesson not completed, OR
+            // 3. Guest user and lesson is after the 3rd one
+            const isLocked = courseIsLocked || 
+                            (!isFirstLesson && !previousCompleted) ||
+                            (shouldLockForGuest || (!user && lessonNumber > maxGuestLessons))
+            
             // Debug logging
             if (lessonIndex <= 2) {
               console.log(`🔍 Lesson ${lessonId}:`, {
                 previousLessonId,
                 previousCompleted,
-                isLocked: courseIsLocked || (!isFirstLesson && !previousCompleted)
+                lessonNumber,
+                isLocked,
+                shouldLockForGuest,
+                totalCompletedLessons
               })
             }
             
@@ -459,7 +486,7 @@ export default function CoursesPage() {
               order: lessonIndex + 1,
               courseOrder: courseData.order,
               isCompleted: completedLessons.includes(lessonId),
-              isLocked: courseIsLocked || (!isFirstLesson && !previousCompleted),
+              isLocked: isLocked,
               hasQuiz: lessonIndex % 2 === 0,
               quizId: lessonIndex % 2 === 0 ? `q${lessonId}` : undefined,
               score: completedLessons.includes(lessonId) ? Math.floor(Math.random() * 30) + 70 : undefined,
@@ -585,8 +612,6 @@ export default function CoursesPage() {
     )
   }
 
-  if (!user) return null
-
   // Function to scroll to a specific course
   const scrollToCourse = (courseOrder: number) => {
     const element = document.getElementById(`course-course-${courseOrder}`)
@@ -656,35 +681,6 @@ export default function CoursesPage() {
         display: "flex",
         flexDirection: "column"
       }}>
-        {/* Logo and Brand */}
-        <div style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 24,
-          gap: 10
-        }}>
-          <Image 
-            src="/bizen-logo.png" 
-            alt="BIZEN Logo" 
-            width={40} 
-            height={40}
-            priority
-            style={{
-              objectFit: "contain"
-            }}
-          />
-          <span style={{
-            fontSize: 20,
-          fontWeight: 800,
-            color: "#0F62FE",
-            fontFamily: "Montserrat, sans-serif",
-            letterSpacing: "0.5px"
-          }}>
-            BIZEN
-          </span>
-      </div>
 
         {/* Overall Progress */}
       <div style={{ 
@@ -692,6 +688,7 @@ export default function CoursesPage() {
           backdropFilter: "blur(10px)",
           borderRadius: 12,
           padding: "16px 12px",
+          marginTop: 40,
           marginBottom: 24,
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
       }}>
@@ -860,40 +857,6 @@ export default function CoursesPage() {
             </div>
           </button>
                 </div>
-
-        {/* Back to Dashboard Button */}
-        <button
-          onClick={() => router.push("/dashboard")}
-                  style={{ 
-            marginTop: "auto",
-            padding: "12px 16px",
-            background: "rgba(255, 255, 255, 0.9)",
-            backdropFilter: "blur(10px)",
-            border: "2px solid rgba(59, 130, 246, 0.3)",
-            borderRadius: 12,
-            cursor: "pointer",
-              transition: "all 0.3s ease",
-                    display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-                fontSize: 14,
-            fontWeight: 700,
-            color: "#0F62FE",
-            fontFamily: "Montserrat, sans-serif"
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(59, 130, 246, 0.1)"
-            e.currentTarget.style.transform = "translateY(-2px)"
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(255, 255, 255, 0.9)"
-            e.currentTarget.style.transform = "translateY(0)"
-          }}
-        >
-          <span style={{ fontSize: 16 }}>←</span>
-          {t.nav.dashboard}
-        </button>
       </div>
 
       {/* Sticky Course Bar */}
@@ -1049,7 +1012,13 @@ export default function CoursesPage() {
                         lesson={lesson}
                         offsetX={offsetX}
                         isNext={isNext}
-                        onClick={() => setSelectedLesson(selectedLesson?.id === lesson.id ? null : lesson)}
+                        onClick={() => {
+                          if (lesson.isLocked && !user) {
+                            router.push("/signup")
+                          } else {
+                            setSelectedLesson(selectedLesson?.id === lesson.id ? null : lesson)
+                          }
+                        }}
                       />
                       
                       {/* Preview Panel - Alternates between right and left */}
@@ -1143,6 +1112,24 @@ export default function CoursesPage() {
                                     style={{ width: "100%", fontSize: "clamp(11px, 2vw, 12px)", padding: "clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 12px)" }}
                                   >
                                     {lesson.isCompleted ? t.courses.review : t.courses.begin}
+                                  </Button>
+                                </motion.div>
+                              )}
+                              {lesson.isLocked && !user && (
+                                <motion.div whileTap={{ scale: 0.95 }}>
+                                  <Button
+                                    onClick={() => {
+                                      router.push("/signup")
+                                    }}
+                                    style={{ 
+                                      width: "100%", 
+                                      fontSize: "clamp(11px, 2vw, 12px)", 
+                                      padding: "clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 12px)",
+                                      background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                                      color: "white"
+                                    }}
+                                  >
+                                    Crear Cuenta para Continuar
                                   </Button>
                                 </motion.div>
                               )}

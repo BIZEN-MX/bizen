@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Card from "../../components/ui/card"
 import Button from "../../components/ui/button"
-import PageLogo from "@/components/PageLogo"
 
 interface Certificate {
   id: string
@@ -201,9 +200,6 @@ export default function ProgressPage() {
         zIndex: 1,
         fontFamily: "Montserrat, sans-serif"
       }}>
-        {/* Logo */}
-        <PageLogo />
-
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
           <h1 style={{ 
@@ -287,12 +283,15 @@ export default function ProgressPage() {
         <div style={{ 
           padding: "32px 28px", 
           marginBottom: 32,
-          background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
-          color: "#fff",
+          background: "rgba(11, 113, 254, 0.15)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
           borderRadius: 20,
-          boxShadow: "0 8px 32px rgba(15, 98, 254, 0.3)"
+          border: "1px solid rgba(59, 130, 246, 0.4)",
+          boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
+          color: "#1E40AF"
         }}>
-        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700, color: "#1E40AF" }}>
           Progreso General
         </h2>
         <div style={{
@@ -301,16 +300,16 @@ export default function ProgressPage() {
           gap: 20
         }}>
           <div>
-            <div style={{ fontSize: 40, fontWeight: 800 }}>{totalProgress}%</div>
-            <div style={{ fontSize: 14, opacity: 0.9, marginTop: 4 }}>Progreso Promedio</div>
+            <div style={{ fontSize: 40, fontWeight: 800, color: "#0B71FE" }}>{totalProgress}%</div>
+            <div style={{ fontSize: 14, color: "#374151", fontWeight: 600, marginTop: 4 }}>Progreso Promedio</div>
           </div>
           <div>
-            <div style={{ fontSize: 40, fontWeight: 800 }}>{courses.length}</div>
-            <div style={{ fontSize: 14, opacity: 0.9, marginTop: 4 }}>Cursos Activos</div>
+            <div style={{ fontSize: 40, fontWeight: 800, color: "#0B71FE" }}>{courses.length}</div>
+            <div style={{ fontSize: 14, color: "#374151", fontWeight: 600, marginTop: 4 }}>Cursos Activos</div>
           </div>
           <div>
-            <div style={{ fontSize: 40, fontWeight: 800 }}>{certificates.length}</div>
-            <div style={{ fontSize: 14, opacity: 0.9, marginTop: 4 }}>Certificados Obtenidos</div>
+            <div style={{ fontSize: 40, fontWeight: 800, color: "#0B71FE" }}>{certificates.length}</div>
+            <div style={{ fontSize: 14, color: "#374151", fontWeight: 600, marginTop: 4 }}>Certificados Obtenidos</div>
           </div>
         </div>
         </div>

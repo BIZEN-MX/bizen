@@ -187,33 +187,93 @@ function ForumContent() {
             </p>
           </div>
 
-          <Link
-            href="/forum/new"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "14px 24px",
-              background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-              color: "white",
-              borderRadius: 12,
-              fontWeight: 700,
-              textDecoration: "none",
-              fontSize: 15,
-              transition: "transform 0.2s ease",
-              boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)"
-              e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.4)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)"
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(11, 113, 254, 0.3)"
-            }}
-          >
-            Crear Tema
-          </Link>
+          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+            <Link
+              href="/forum/bookmarks"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "10px 18px",
+                background: "rgba(255, 255, 255, 0.8)",
+                color: "#374151",
+                borderRadius: 10,
+                fontWeight: 600,
+                textDecoration: "none",
+                fontSize: 14,
+                border: "2px solid #E5E7EB",
+                transition: "all 0.2s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#FEF3C7"
+                e.currentTarget.style.borderColor = "#F59E0B"
+                e.currentTarget.style.color = "#92400E"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.8)"
+                e.currentTarget.style.borderColor = "#E5E7EB"
+                e.currentTarget.style.color = "#374151"
+              }}
+            >
+              ⭐ Guardados
+            </Link>
+            <Link
+              href="/forum/following"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "10px 18px",
+                background: "rgba(255, 255, 255, 0.8)",
+                color: "#374151",
+                borderRadius: 10,
+                fontWeight: 600,
+                textDecoration: "none",
+                fontSize: 14,
+                border: "2px solid #E5E7EB",
+                transition: "all 0.2s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#EDE9FE"
+                e.currentTarget.style.borderColor = "#8B5CF6"
+                e.currentTarget.style.color = "#6D28D9"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.8)"
+                e.currentTarget.style.borderColor = "#E5E7EB"
+                e.currentTarget.style.color = "#374151"
+              }}
+            >
+              🔔 Siguiendo
+            </Link>
+            <Link
+              href="/forum/new"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "14px 24px",
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                color: "white",
+                borderRadius: 12,
+                fontWeight: 700,
+                textDecoration: "none",
+                fontSize: 15,
+                transition: "transform 0.2s ease",
+                boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)"
+                e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.4)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)"
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(11, 113, 254, 0.3)"
+              }}
+            >
+              Crear Tema
+            </Link>
+          </div>
         </div>
 
         {/* Filters */}
@@ -221,7 +281,8 @@ function ForumContent() {
           display: "grid",
           gridTemplateColumns: "1fr auto",
           gap: 16,
-          marginBottom: 24
+          marginBottom: 24,
+          alignItems: "flex-start"
         }}>
           {/* Topic Filter */}
           <div style={{
@@ -234,15 +295,24 @@ function ForumContent() {
               onClick={() => setSelectedTopic('all')}
               style={{
                 padding: "8px 16px",
-                background: selectedTopic === 'all' ? "#0F62FE" : "rgba(255, 255, 255, 0.6)",
-                color: selectedTopic === 'all' ? "white" : "#374151",
-                border: "none",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 600,
+                background: selectedTopic === 'all' 
+                  ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
+                  : "rgba(255, 255, 255, 0.4)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                color: selectedTopic === 'all' ? "white" : "#1E40AF",
+                border: selectedTopic === 'all' 
+                  ? "1px solid rgba(255, 255, 255, 0.3)" 
+                  : "2px solid rgba(255, 255, 255, 0.5)",
+                borderRadius: 10,
+                fontSize: 13,
+                fontWeight: 700,
                 cursor: "pointer",
-                transition: "all 0.2s ease",
-                fontFamily: "Montserrat, sans-serif"
+                transition: "all 0.3s ease",
+                fontFamily: "Montserrat, sans-serif",
+                boxShadow: selectedTopic === 'all' 
+                  ? "0 4px 12px rgba(11, 113, 254, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)" 
+                  : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
               }}
             >
               Todos
@@ -253,15 +323,24 @@ function ForumContent() {
                 onClick={() => setSelectedTopic(topic.slug)}
                 style={{
                   padding: "8px 16px",
-                  background: selectedTopic === topic.slug ? "#0F62FE" : "rgba(255, 255, 255, 0.6)",
-                  color: selectedTopic === topic.slug ? "white" : "#374151",
-                  border: "none",
-                  borderRadius: 8,
-                  fontSize: 14,
-                  fontWeight: 600,
+                  background: selectedTopic === topic.slug 
+                    ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
+                    : "rgba(255, 255, 255, 0.4)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                  color: selectedTopic === topic.slug ? "white" : "#1E40AF",
+                  border: selectedTopic === topic.slug 
+                    ? "1px solid rgba(255, 255, 255, 0.3)" 
+                    : "2px solid rgba(255, 255, 255, 0.5)",
+                  borderRadius: 10,
+                  fontSize: 13,
+                  fontWeight: 700,
                   cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif"
+                  transition: "all 0.3s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  boxShadow: selectedTopic === topic.slug 
+                    ? "0 4px 12px rgba(11, 113, 254, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)" 
+                    : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
                 }}
               >
                 {topic.name}
@@ -274,15 +353,17 @@ function ForumContent() {
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
             style={{
-              padding: "8px 16px",
+              padding: "3px 8px",
               background: "rgba(255, 255, 255, 0.6)",
               border: "none",
-              borderRadius: 8,
-              fontSize: 14,
+              borderRadius: 6,
+              fontSize: 11,
               fontWeight: 600,
               cursor: "pointer",
               fontFamily: "Montserrat, sans-serif",
-              color: "#374151"
+              color: "#374151",
+              lineHeight: "1.2",
+              alignSelf: "flex-start"
             }}
           >
             <option value="new">Más Recientes</option>

@@ -4,10 +4,15 @@ import { PrismaClient } from "@prisma/client"
 import { filterContent } from "@/lib/forum/contentFilter"
 import { checkRateLimit } from "@/lib/forum/rateLimiter"
 
-const prisma = new PrismaClient()
+const prisma = process.env.DATABASE_URL ? new PrismaClient() : null
 
 // GET list threads
 export async function GET(request: NextRequest) {
+  if (!prisma) {
+    console.warn("⚠️ DATABASE_URL not configured. Returning empty forum threads list.")
+    return NextResponse.json([])
+  }
+
   try {
     console.log("📡 GET /api/forum/threads called")
     const supabase = await createSupabaseServer()
@@ -31,7 +36,10 @@ export async function GET(request: NextRequest) {
     if (sort === 'unanswered') orderBy = { commentCount: 'asc' }
 
     const where: any = {
-      moderationStatus: 'approved',
+      OR: [
+        { moderationStatus: 'approved' },
+        { moderationStatus: 'pending', authorId: user.id } // Show user's own pending threads
+      ],
       isHidden: false
     }
 
@@ -93,12 +101,22 @@ export async function GET(request: NextRequest) {
       details: error instanceof Error ? error.message : String(error)
     }, { status: 500 })
   } finally {
-    await prisma.$disconnect()
+    if (prisma) {
+      await prisma.$disconnect().catch(() => {})
+    }
   }
 }
 
 // POST create thread
 export async function POST(request: NextRequest) {
+  if (!prisma) {
+    console.error("❌ Cannot create thread: DATABASE_URL not configured")
+    return NextResponse.json(
+      { error: "Forum storage is temporarily unavailable" },
+      { status: 503 }
+    )
+  }
+
   try {
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -121,9 +139,27 @@ export async function POST(request: NextRequest) {
     }
 
     // Get or create user profile
-    let profile = await prisma.profile.findUnique({
-      where: { userId: user.id }
-    })
+    let profile
+    try {
+      profile = await prisma.profile.findUnique({
+        where: { userId: user.id }
+      })
+    } catch (profileError: any) {
+      console.error("❌ Error fetching profile:", profileError)
+      // If profile table doesn't exist, create a minimal profile object
+      if (profileError?.code === "P2021" || profileError?.message?.includes("does not exist")) {
+        // Return a basic profile structure for forum operations
+        profile = {
+          userId: user.id,
+          reputation: 0,
+          postsCreated: 0,
+          commentsCreated: 0,
+          acceptedAnswers: 0
+        } as any
+      } else {
+        throw profileError
+      }
+    }
 
     if (!profile) {
       // Auto-create profile if it doesn't exist
@@ -213,10 +249,73 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(thread, { status: 201 })
   } catch (error) {
-    console.error("Error creating thread:", error)
-    return NextResponse.json({ error: "Failed to create thread" }, { status: 500 })
+    console.error("❌ Error creating thread:", error)
+    console.error("Error details:", error instanceof Error ? error.message : String(error))
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace")
+    
+    // Provide detailed error information for debugging
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const errorCode = (error as any)?.code || "UNKNOWN_ERROR"
+    
+    // Handle specific Prisma errors
+    if (errorCode === "P2021" || errorMessage.includes("does not exist")) {
+      // Extract which table is missing from the error message - try multiple patterns
+      let tableName = "unknown"
+      
+      // Pattern 1: relation "table_name" does not exist
+      let match = errorMessage.match(/relation "(.+?)" does not exist/i)
+      if (match) tableName = match[1]
+      
+      // Pattern 2: Table 'table_name' does not exist
+      if (tableName === "unknown") {
+        match = errorMessage.match(/Table ['"](.+?)['"] does not exist/i)
+        if (match) tableName = match[1]
+      }
+      
+      // Pattern 3: table_name in various formats
+      if (tableName === "unknown") {
+        match = errorMessage.match(/`(.+?)`/i)
+        if (match) tableName = match[1]
+      }
+      
+      // Pattern 4: Check for model name from Prisma
+      if (tableName === "unknown") {
+        match = errorMessage.match(/model (Forum\w+)/i)
+        if (match) tableName = match[1].toLowerCase().replace(/([A-Z])/g, '_$1').toLowerCase()
+      }
+      
+      console.error(`❌ Missing table: ${tableName}`)
+      console.error(`❌ Full error message: ${errorMessage}`)
+      
+      return NextResponse.json({ 
+        error: "Forum database tables not set up",
+        details: `The table "${tableName}" does not exist. Full error: ${errorMessage}`,
+        code: errorCode,
+        hint: tableName.includes("profile") || tableName === "profiles"
+          ? "The profiles table is missing. Check if it exists in your database."
+          : `The ${tableName} table is missing. Run the forum_tables.sql script again or check your database.`
+      }, { status: 503 })
+    }
+    
+    if (errorMessage.includes("DATABASE_URL") || errorMessage.includes("Prisma") || !errorCode) {
+      return NextResponse.json({ 
+        error: "Database connection issue",
+        details: "Unable to connect to the database. Check your DATABASE_URL configuration.",
+        code: errorCode,
+        hint: "Verify that DATABASE_URL is set correctly in your environment variables."
+      }, { status: 503 })
+    }
+    
+    return NextResponse.json({ 
+      error: "Failed to create thread",
+      details: errorMessage,
+      code: errorCode,
+      hint: "Check server logs for more details"
+    }, { status: 500 })
   } finally {
-    await prisma.$disconnect()
+    if (prisma) {
+      await prisma.$disconnect().catch(() => {})
+    }
   }
 }
 

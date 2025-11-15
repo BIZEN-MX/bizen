@@ -121,7 +121,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protected student routes
-  const protectedRoutes = ['/dashboard', '/path', '/courses', '/learn', '/quiz', '/assignments', '/progress']
+  const protectedRoutes = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum']
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
   if (isProtectedRoute && !session) {

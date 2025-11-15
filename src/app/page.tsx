@@ -200,7 +200,7 @@ export default function WelcomePage() {
               marginTop: "clamp(16px, 2.5vw, 20px)",
             }}>
               <Link
-                href="/dashboard"
+                href="/courses"
                 style={{
                   padding: "clamp(16px, 3vw, 20px) clamp(32px, 6vw, 48px)",
                   fontSize: "clamp(16px, 2.2vw, 18px)",

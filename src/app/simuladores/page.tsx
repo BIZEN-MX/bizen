@@ -56,7 +56,7 @@ export default function SimulatorsPage() {
   
   return (
     <main style={{
-      marginRight: "340px",
+      marginRight: "320px",
       paddingTop: "40px",
       paddingBottom: "40px",
       paddingLeft: "40px",
@@ -65,7 +65,7 @@ export default function SimulatorsPage() {
       background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       fontFamily: "Montserrat, sans-serif",
       boxSizing: "border-box" as const,
-      maxWidth: "calc(100vw - 340px)",
+      maxWidth: "calc(100vw - 320px)",
       overflowX: "hidden"
     }}>
       {/* Header */}
@@ -95,13 +95,16 @@ export default function SimulatorsPage() {
         
       {/* Educational Disclaimer */}
       <div style={{
-        background: "rgba(96, 165, 250, 0.1)",
+        background: "rgba(255, 255, 255, 0.3)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
         border: "2px solid rgba(59, 130, 246, 0.3)",
         borderRadius: 16,
         padding: 20,
         marginBottom: 24,
         maxWidth: 900,
-        margin: "0 auto 24px"
+        margin: "0 auto 24px",
+        boxShadow: "0 4px 20px rgba(59, 130, 246, 0.15)"
       }}>
         <p style={{ fontSize: 14, color: "#1e40af", lineHeight: 1.6, margin: 0 }}>
           <strong>⚠️ Propósito Educativo:</strong> Estos simuladores son herramientas de aprendizaje.
@@ -162,11 +165,13 @@ export default function SimulatorsPage() {
               style={{ textDecoration: "none" }}
             >
               <div style={{
-                background: "white",
+                background: "rgba(255, 255, 255, 0.4)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
                 borderRadius: 20,
                 padding: 24,
                 boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                border: "2px solid #E5E7EB",
+                border: "2px solid rgba(255, 255, 255, 0.5)",
                 transition: "all 0.2s ease",
                 cursor: "pointer",
                 height: "100%",
@@ -175,13 +180,15 @@ export default function SimulatorsPage() {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)"
-                e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
-                e.currentTarget.style.borderColor = "#0B71FE"
+                e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.25)"
+                e.currentTarget.style.borderColor = "rgba(11, 113, 254, 0.6)"
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.5)"
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)"
                 e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
-                e.currentTarget.style.borderColor = "#E5E7EB"
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.5)"
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.4)"
               }}>
                 {/* Color accent bar */}
                 <div style={{
@@ -254,11 +261,14 @@ export default function SimulatorsPage() {
       <div style={{
         marginTop: 40,
         padding: 24,
-        background: "rgba(254, 243, 199, 0.5)",
+        background: "rgba(254, 243, 199, 0.3)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
         borderRadius: 16,
-        border: "2px solid rgba(251, 191, 36, 0.3)",
+        border: "2px solid rgba(251, 191, 36, 0.4)",
         maxWidth: 800,
-        margin: "40px auto 0"
+        margin: "40px auto 0",
+        boxShadow: "0 4px 20px rgba(251, 191, 36, 0.15)"
       }}>
         <p style={{
           fontSize: 14,

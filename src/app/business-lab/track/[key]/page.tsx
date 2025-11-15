@@ -41,14 +41,16 @@ export default async function TrackPage({ params }: Props) {
   const progressPercentage = track.steps.length > 0 ? Math.round((completedCount / track.steps.length) * 100) : 0
 
   return (
-    <div style={{
+    <main style={{
       marginRight: "320px",
       minHeight: "100vh",
       background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       padding: "40px",
+      paddingRight: "360px",
       fontFamily: "Montserrat, sans-serif",
       width: "100%",
-      boxSizing: "border-box" as const
+      boxSizing: "border-box" as const,
+      overflowX: "hidden"
     }}>
       {/* Back Button */}
       <Link href="/business-lab" style={{ textDecoration: "none" }}>
@@ -274,6 +276,6 @@ export default async function TrackPage({ params }: Props) {
           </div>
         </div>
       )}
-    </div>
+    </main>
   )
 }
