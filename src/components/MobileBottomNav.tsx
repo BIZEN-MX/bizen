@@ -154,22 +154,13 @@ export default function MobileBottomNav() {
         <div style={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           height: "100%",
-          maxWidth: "100vw",
-          padding: "0 8px",
-          overflowX: "auto",
-          overflowY: "hidden",
-          scrollbarWidth: "none", // Firefox
-          msOverflowStyle: "none", // IE/Edge
-          WebkitOverflowScrolling: "touch",
-          gap: "8px"
+          width: "100%",
+          padding: "0 4px",
+          gap: "4px",
+          overflow: "hidden" // Prevent any scrolling
         }}>
-          {/* Hide scrollbar but keep functionality */}
-          <style>{`
-            [data-mobile-bottom-nav] div::-webkit-scrollbar {
-              display: none;
-            }
-          `}</style>
           
           {/* Main nav items */}
           {navItems.map((item) => {
@@ -183,16 +174,16 @@ export default function MobileBottomNav() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 4,
-                  padding: "8px 12px",
+                  gap: 2,
+                  padding: "6px 4px",
                   background: isActive ? "rgba(15, 98, 254, 0.15)" : "transparent",
                   border: "none",
-                  borderRadius: 12,
+                  borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  minWidth: "60px",
-                  flex: 1,
-                  maxWidth: "80px"
+                  minWidth: "50px",
+                  flex: "1 1 0",
+                  maxWidth: "none"
                 }}
                 onTouchStart={(e) => {
                   e.currentTarget.style.transform = "scale(0.95)"
@@ -209,24 +200,18 @@ export default function MobileBottomNav() {
                 }}
               >
                 <span style={{
-                  fontSize: 24,
-                  background: isActive 
-                    ? "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)"
-                    : "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: isActive ? "transparent" : "transparent",
-                  backgroundClip: "text",
+                  fontSize: 20,
                   display: "inline-block",
                   filter: isActive ? "none" : "opacity(0.6)"
                 }}>
                   {item.icon}
                 </span>
                 <span style={{
-                  fontSize: 10,
+                  fontSize: 9,
                   fontWeight: isActive ? 700 : 600,
                   color: isActive ? "#0F62FE" : "#374151",
                   textAlign: "center",
-                  lineHeight: 1.2
+                  lineHeight: 1.1
                 }}>
                   {item.label}
                 </span>
@@ -246,16 +231,16 @@ export default function MobileBottomNav() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 4,
-                  padding: "8px 12px",
+                  gap: 2,
+                  padding: "6px 4px",
                   background: isActive ? "rgba(15, 98, 254, 0.15)" : "transparent",
                   border: "none",
-                  borderRadius: 12,
+                  borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  minWidth: "60px",
-                  width: "60px",
-                  flexShrink: 0
+                  minWidth: "50px",
+                  flex: "1 1 0",
+                  maxWidth: "none"
                 }}
                 onTouchStart={(e) => {
                   e.currentTarget.style.transform = "scale(0.95)"
@@ -272,22 +257,18 @@ export default function MobileBottomNav() {
                 }}
               >
                 <span style={{
-                  fontSize: 24,
-                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
+                  fontSize: 20,
                   display: "inline-block",
                   filter: isActive ? "none" : "opacity(0.6)"
                 }}>
                   {item.icon}
                 </span>
                 <span style={{
-                  fontSize: 10,
+                  fontSize: 9,
                   fontWeight: isActive ? 700 : 600,
                   color: isActive ? "#0F62FE" : "#374151",
                   textAlign: "center",
-                  lineHeight: 1.2
+                  lineHeight: 1.1
                 }}>
                   {item.label}
                 </span>
@@ -387,11 +368,7 @@ export default function MobileBottomNav() {
               }}
             >
               <span style={{
-                fontSize: 24,
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
+                fontSize: 20,
                 display: "inline-block",
                 filter: showMoreMenu ? "none" : "opacity(0.6)",
                 transform: showMoreMenu ? "rotate(180deg)" : "rotate(0deg)",
@@ -400,11 +377,11 @@ export default function MobileBottomNav() {
                 ⋯
               </span>
               <span style={{
-                fontSize: 10,
+                fontSize: 9,
                 fontWeight: showMoreMenu ? 700 : 600,
                 color: showMoreMenu ? "#0F62FE" : "#374151",
                 textAlign: "center",
-                lineHeight: 1.2
+                lineHeight: 1.1
               }}>
                 Más
               </span>

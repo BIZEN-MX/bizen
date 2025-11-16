@@ -368,7 +368,7 @@ export default function WelcomePage() {
           }
           .main-content > div:first-child img {
             width: 100% !important;
-            max-width: 100% !important;
+            max-width: clamp(150px, 30vw, 240px) !important;
             height: auto !important;
           }
           footer > div {

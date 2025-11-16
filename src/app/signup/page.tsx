@@ -343,6 +343,11 @@ export default function BIZENSignupPage() {
             order: 2;
           }
         }
+        @media (max-width: 767px) {
+          main > div > div:last-child {
+            display: none !important;
+          }
+        }
       `}</style>
     </main>
   )
