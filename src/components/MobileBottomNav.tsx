@@ -6,6 +6,7 @@ import { useSettings } from "@/contexts/SettingsContext"
 import { useTranslation } from "@/lib/translations"
 import Image from "next/image"
 import { useState } from "react"
+import { haptic } from "@/utils/hapticFeedback"
 
 export default function MobileBottomNav() {
   const router = useRouter()
@@ -28,9 +29,11 @@ export default function MobileBottomNav() {
   const navigateTo = (path: string) => {
     // Check if route requires auth and user is not authenticated
     if (!user && protectedRoutes.some(route => path.startsWith(route))) {
+      haptic.medium()
       setShowAuthDialog(true)
       return
     }
+    haptic.light()
     router.push(path)
   }
 
@@ -66,20 +69,66 @@ export default function MobileBottomNav() {
     }
   ]
 
-  // Account button (bottom center)
-  const accountItem = user ? {
-    id: 'profile',
-    label: 'Perfil',
-    icon: '👤',
-    path: '/profile',
-    protected: true
-  } : {
+  // Additional navigation items for authenticated users
+  const additionalNavItems = user ? [
+    {
+      id: 'assignments',
+      label: 'Asignaciones',
+      icon: '✏️',
+      path: '/assignments',
+      protected: true
+    },
+    {
+      id: 'progress',
+      label: 'Progreso',
+      icon: '🏆',
+      path: '/progress',
+      protected: true
+    },
+    {
+      id: 'forum',
+      label: 'Foro',
+      icon: '💬',
+      path: '/forum',
+      protected: true
+    }
+  ] : []
+
+  // Account button (only for unauthenticated users)
+  const accountItem = !user ? {
     id: 'signup',
     label: 'Crear Cuenta',
     icon: '✨',
     path: '/signup',
     protected: false
-  }
+  } : null
+
+  // More menu items (for authenticated users)
+  const moreMenuItems = user ? [
+    {
+      id: 'profile',
+      label: 'Perfil',
+      icon: '👤',
+      path: '/profile',
+      protected: true
+    },
+    {
+      id: 'account',
+      label: 'Cuenta',
+      icon: '⚙️',
+      path: '/cuenta',
+      protected: true
+    },
+    {
+      id: 'settings',
+      label: 'Configuración',
+      icon: '🔧',
+      path: '/configuracion',
+      protected: true
+    }
+  ] : []
+  
+  const [showMoreMenu, setShowMoreMenu] = useState(false)
 
   return (
     <>
@@ -104,12 +153,24 @@ export default function MobileBottomNav() {
       >
         <div style={{
           display: "flex",
-          justifyContent: "space-around",
           alignItems: "center",
           height: "100%",
           maxWidth: "100vw",
-          padding: "0 8px"
+          padding: "0 8px",
+          overflowX: "auto",
+          overflowY: "hidden",
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE/Edge
+          WebkitOverflowScrolling: "touch",
+          gap: "8px"
         }}>
+          {/* Hide scrollbar but keep functionality */}
+          <style>{`
+            [data-mobile-bottom-nav] div::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
+          
           {/* Main nav items */}
           {navItems.map((item) => {
             const isActive = isActivePath(item.path)
@@ -173,62 +234,267 @@ export default function MobileBottomNav() {
             )
           })}
 
-          {/* Account/Profile button */}
-          <button
-            onClick={() => navigateTo(accountItem.path)}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 4,
-              padding: "8px 12px",
-              background: isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent",
-              border: "none",
-              borderRadius: 12,
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-              minWidth: "60px",
-              flex: 1,
-              maxWidth: "80px"
-            }}
-            onTouchStart={(e) => {
-              e.currentTarget.style.transform = "scale(0.95)"
-              e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.25)" : "rgba(15, 98, 254, 0.1)"
-              e.preventDefault() // Prevent any default touch behaviors
-            }}
-            onTouchEnd={(e) => {
-              e.currentTarget.style.transform = "scale(1)"
-              e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent"
-            }}
-            onTouchCancel={(e) => {
-              e.currentTarget.style.transform = "scale(1)"
-              e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent"
-            }}
-          >
-            <span style={{
-              fontSize: 24,
-              background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              display: "inline-block",
-              filter: isActivePath(accountItem.path) ? "none" : "opacity(0.6)"
-            }}>
-              {accountItem.icon}
-            </span>
-            <span style={{
-              fontSize: 10,
-              fontWeight: isActivePath(accountItem.path) ? 700 : 600,
-              color: isActivePath(accountItem.path) ? "#0F62FE" : "#374151",
-              textAlign: "center",
-              lineHeight: 1.2
-            }}>
-              {accountItem.label}
-            </span>
-          </button>
+          {/* Additional nav items for authenticated users */}
+          {additionalNavItems.map((item) => {
+            const isActive = isActivePath(item.path)
+            return (
+              <button
+                key={item.id}
+                onClick={() => navigateTo(item.path)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 4,
+                  padding: "8px 12px",
+                  background: isActive ? "rgba(15, 98, 254, 0.15)" : "transparent",
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  minWidth: "60px",
+                  width: "60px",
+                  flexShrink: 0
+                }}
+                onTouchStart={(e) => {
+                  e.currentTarget.style.transform = "scale(0.95)"
+                  e.currentTarget.style.background = isActive ? "rgba(15, 98, 254, 0.25)" : "rgba(15, 98, 254, 0.1)"
+                  e.preventDefault()
+                }}
+                onTouchEnd={(e) => {
+                  e.currentTarget.style.transform = "scale(1)"
+                  e.currentTarget.style.background = isActive ? "rgba(15, 98, 254, 0.15)" : "transparent"
+                }}
+                onTouchCancel={(e) => {
+                  e.currentTarget.style.transform = "scale(1)"
+                  e.currentTarget.style.background = isActive ? "rgba(15, 98, 254, 0.15)" : "transparent"
+                }}
+              >
+                <span style={{
+                  fontSize: 24,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block",
+                  filter: isActive ? "none" : "opacity(0.6)"
+                }}>
+                  {item.icon}
+                </span>
+                <span style={{
+                  fontSize: 10,
+                  fontWeight: isActive ? 700 : 600,
+                  color: isActive ? "#0F62FE" : "#374151",
+                  textAlign: "center",
+                  lineHeight: 1.2
+                }}>
+                  {item.label}
+                </span>
+              </button>
+            )
+          })}
+
+          {/* Account button (only for unauthenticated users) */}
+          {accountItem && (
+            <button
+              onClick={() => navigateTo(accountItem.path)}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
+                padding: "8px 12px",
+                background: isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent",
+                border: "none",
+                borderRadius: 12,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                minWidth: "60px",
+                width: "60px",
+                flexShrink: 0
+              }}
+              onTouchStart={(e) => {
+                e.currentTarget.style.transform = "scale(0.95)"
+                e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.25)" : "rgba(15, 98, 254, 0.1)"
+                e.preventDefault()
+              }}
+              onTouchEnd={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+                e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent"
+              }}
+              onTouchCancel={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+                e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent"
+              }}
+            >
+              <span style={{
+                fontSize: 24,
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                display: "inline-block",
+                filter: isActivePath(accountItem.path) ? "none" : "opacity(0.6)"
+              }}>
+                {accountItem.icon}
+              </span>
+              <span style={{
+                fontSize: 10,
+                fontWeight: isActivePath(accountItem.path) ? 700 : 600,
+                color: isActivePath(accountItem.path) ? "#0F62FE" : "#374151",
+                textAlign: "center",
+                lineHeight: 1.2
+              }}>
+                {accountItem.label}
+              </span>
+            </button>
+          )}
+
+          {/* More menu button for authenticated users (Perfil, Cuenta, Configuración) */}
+          {moreMenuItems.length > 0 && (
+            <button
+              onClick={() => setShowMoreMenu(!showMoreMenu)}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
+                padding: "8px 12px",
+                background: showMoreMenu ? "rgba(15, 98, 254, 0.15)" : "transparent",
+                border: "none",
+                borderRadius: 12,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                minWidth: "60px",
+                width: "60px",
+                flexShrink: 0
+              }}
+              onTouchStart={(e) => {
+                e.currentTarget.style.transform = "scale(0.95)"
+                e.currentTarget.style.background = showMoreMenu ? "rgba(15, 98, 254, 0.25)" : "rgba(15, 98, 254, 0.1)"
+                e.preventDefault()
+              }}
+              onTouchEnd={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+                e.currentTarget.style.background = showMoreMenu ? "rgba(15, 98, 254, 0.15)" : "transparent"
+              }}
+              onTouchCancel={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+                e.currentTarget.style.background = showMoreMenu ? "rgba(15, 98, 254, 0.15)" : "transparent"
+              }}
+            >
+              <span style={{
+                fontSize: 24,
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                display: "inline-block",
+                filter: showMoreMenu ? "none" : "opacity(0.6)",
+                transform: showMoreMenu ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.2s ease"
+              }}>
+                ⋯
+              </span>
+              <span style={{
+                fontSize: 10,
+                fontWeight: showMoreMenu ? 700 : 600,
+                color: showMoreMenu ? "#0F62FE" : "#374151",
+                textAlign: "center",
+                lineHeight: 1.2
+              }}>
+                Más
+              </span>
+            </button>
+          )}
         </div>
       </nav>
+
+      {/* More Menu Popup */}
+      {showMoreMenu && moreMenuItems.length > 0 && (
+        <>
+          <div
+            style={{
+              position: "fixed",
+              bottom: "80px",
+              right: "16px",
+              background: "white",
+              borderRadius: 16,
+              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+              padding: "12px",
+              zIndex: 10001,
+              minWidth: "160px",
+              fontFamily: "Montserrat, sans-serif",
+              border: "2px solid rgba(15, 98, 254, 0.1)",
+              animation: "slideUpFade 0.2s ease-out"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {moreMenuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  haptic.light()
+                  navigateTo(item.path)
+                  setShowMoreMenu(false)
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "12px 16px",
+                  background: isActivePath(item.path) ? "rgba(15, 98, 254, 0.1)" : "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  width: "100%",
+                  textAlign: "left",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 14,
+                  fontWeight: isActivePath(item.path) ? 700 : 600,
+                  color: isActivePath(item.path) ? "#0F62FE" : "#374151"
+                }}
+                onTouchStart={(e) => {
+                  e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
+                }}
+                onTouchEnd={(e) => {
+                  e.currentTarget.style.background = isActivePath(item.path) ? "rgba(15, 98, 254, 0.1)" : "transparent"
+                }}
+              >
+                <span style={{
+                  fontSize: 20,
+                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  display: "inline-block"
+                }}>
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Click outside to close more menu */}
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 10000,
+              background: "transparent"
+            }}
+            onClick={() => setShowMoreMenu(false)}
+          />
+        </>
+      )}
 
       {/* Authentication Required Dialog */}
       {showAuthDialog && (

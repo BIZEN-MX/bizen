@@ -1,11 +1,15 @@
 "use client"
 
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useState, Suspense, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { ThreadCardSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
+import { usePullToRefresh } from "@/hooks/usePullToRefresh"
+import { useSwipeGesture } from "@/hooks/useSwipeGesture"
+import PullToRefreshIndicator from "@/components/PullToRefreshIndicator"
+import { haptic } from "@/utils/hapticFeedback"
 
 // Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
@@ -82,6 +86,8 @@ function ForumContent() {
     fetchData()
   }, [user, loading, router, selectedTopic, sortBy])
 
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const fetchData = async () => {
     try {
       setLoadingData(true)
@@ -107,6 +113,46 @@ function ForumContent() {
       setLoadingData(false)
     }
   }
+
+  // Pull-to-refresh hook
+  const { isPulling, pullDistance, isRefreshing, attachPullListeners, refreshThreshold } = usePullToRefresh({
+    onRefresh: async () => {
+      haptic.medium()
+      await fetchData()
+      haptic.success()
+    },
+    threshold: 80,
+    disabled: loadingData || loading
+  })
+
+  // Swipe gestures for navigation
+  const { swipeDirection, attachSwipeListeners } = useSwipeGesture({
+    onSwipeLeft: () => {
+      // Swipe left to go to bookmarks
+      haptic.light()
+      router.push('/forum/bookmarks')
+    },
+    onSwipeRight: () => {
+      // Swipe right to create new thread
+      haptic.light()
+      router.push('/forum/new')
+    },
+    threshold: 50,
+    velocity: 0.3
+  })
+
+  // Attach pull-to-refresh and swipe listeners
+  useEffect(() => {
+    if (containerRef.current) {
+      const cleanupPull = attachPullListeners(containerRef.current)
+      const cleanupSwipe = attachSwipeListeners(containerRef.current)
+      
+      return () => {
+        cleanupPull?.()
+        cleanupSwipe?.()
+      }
+    }
+  }, [attachPullListeners, attachSwipeListeners])
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -146,16 +192,26 @@ function ForumContent() {
   return (
     <>
       <LoadingBar />
-      <div style={{
-        position: "relative",
-        minHeight: "100vh",
-        paddingTop: 40,
-        paddingBottom: 80,
-        fontFamily: "Montserrat, sans-serif",
-        backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-        backgroundAttachment: "fixed",
-        marginRight: "340px"
-      }}>
+      <PullToRefreshIndicator
+        isPulling={isPulling}
+        pullDistance={pullDistance}
+        threshold={refreshThreshold}
+        isRefreshing={isRefreshing}
+      />
+      <div 
+        ref={containerRef}
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          paddingTop: 40,
+          paddingBottom: 80,
+          fontFamily: "Montserrat, sans-serif",
+          backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+          backgroundAttachment: "fixed",
+          marginRight: "340px",
+          touchAction: "pan-y" // Allow vertical scrolling, enable gestures
+        }}
+      >
         <main style={{ 
         position: "relative",
         maxWidth: "100%", 

@@ -666,6 +666,113 @@ body, html {
 }
 
 /* ==========================================
+   ADVANCED MOBILE ANIMATIONS & TRANSITIONS
+   ========================================== */
+
+@media (max-width: 767px) {
+  /* Smooth page transitions */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* More menu popup animation */
+  @keyframes slideUpFade {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Smooth transitions for interactive elements */
+  button, a, [role="button"] {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Stagger animation for list items */
+  [data-stagger] > * {
+    animation: fadeInUp 0.3s ease-out both;
+  }
+
+  [data-stagger] > *:nth-child(1) { animation-delay: 0.05s; }
+  [data-stagger] > *:nth-child(2) { animation-delay: 0.1s; }
+  [data-stagger] > *:nth-child(3) { animation-delay: 0.15s; }
+  [data-stagger] > *:nth-child(4) { animation-delay: 0.2s; }
+  [data-stagger] > *:nth-child(5) { animation-delay: 0.25s; }
+  [data-stagger] > *:nth-child(n+6) { animation-delay: 0.3s; }
+
+  /* Pull-to-refresh animation */
+  @keyframes pullRefresh {
+    0% {
+      transform: translateY(-10px);
+    }
+    50% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Swipe gesture feedback */
+  [data-swipe-active="left"],
+  [data-swipe-active="right"] {
+    transition: transform 0.2s ease-out;
+  }
+
+  [data-swipe-active="left"] {
+    transform: translateX(-10px);
+  }
+
+  [data-swipe-active="right"] {
+    transform: translateX(10px);
+  }
+}
+
+/* ==========================================
    TABLET RESPONSIVENESS (iPad, Android tablets)
    ========================================== */
 
