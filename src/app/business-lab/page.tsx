@@ -114,6 +114,7 @@ export default function LabPage() {
       paddingLeft: "clamp(20px, 4vw, 40px)",
       paddingRight: "clamp(20px, 4vw, 40px)",
       overflowX: "hidden",
+      overflowY: "visible",
       minHeight: "100vh",
       background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       fontFamily: "Montserrat, sans-serif",

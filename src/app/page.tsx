@@ -78,9 +78,12 @@ export default function WelcomePage() {
   return (
       <div style={{
         background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
-      backgroundAttachment: "fixed",
-      minHeight: "100vh",
-      width: "100%"
+        backgroundAttachment: "fixed",
+        minHeight: "100vh",
+        width: "100%",
+        overflowX: "hidden",
+        overflowY: "auto",
+        boxSizing: "border-box",
       }}>
       {/* Header */}
       <header style={{
@@ -148,11 +151,13 @@ export default function WelcomePage() {
       <div style={{
         minHeight: "100vh",
         position: "relative",
-        overflow: "hidden",
+        overflowX: "hidden",
+        overflowY: "auto",
         fontFamily: "Montserrat, sans-serif",
         display: "flex",
         flexDirection: "column",
         width: "100%",
+        boxSizing: "border-box",
       }}>
 
       {/* Decorative blue accents */}
@@ -176,13 +181,16 @@ export default function WelcomePage() {
         margin: "0 auto",
         flex: 1,
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "center",
         padding: "clamp(16px, 3vw, 40px)",
+        paddingTop: "clamp(20px, 4vw, 60px)",
+        paddingBottom: "clamp(20px, 4vw, 60px)",
         width: "100%",
         minHeight: 0,
         boxSizing: "border-box",
-      }}>
+        overflow: "visible",
+      }} className="main-content-wrapper">
         
         <div className="main-content" style={{
           display: "grid",
@@ -559,6 +567,46 @@ export default function WelcomePage() {
             flex-wrap: wrap !important;
             padding: 0 16px !important;
           }
+          
+          /* Hero sections - Stack vertically on mobile (text first, image second) */
+          .hero-section-grid {
+            grid-template-columns: 1fr !important;
+            gap: clamp(24px, 4vw, 40px) !important;
+            min-height: auto !important;
+          }
+          
+          .hero-text {
+            order: 1 !important;
+            width: 100% !important;
+            padding: 0 clamp(16px, 4vw, 24px) !important;
+            box-sizing: border-box !important;
+          }
+          
+          .hero-image {
+            order: 2 !important;
+            width: 100% !important;
+            padding: 0 clamp(16px, 4vw, 24px) !important;
+            box-sizing: border-box !important;
+          }
+          
+          .hero-image img,
+          .hero-image-small {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            object-fit: contain !important;
+          }
+          
+          /* Fun text responsive */
+          h1[style*="Ahorro, invierto"] {
+            font-size: clamp(20px, 6vw, 48px) !important;
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            line-height: 1.3 !important;
+            padding: 0 16px !important;
+            box-sizing: border-box !important;
+          }
         }
         @media (max-width: 480px) {
           /* Extra small phones */
@@ -588,6 +636,37 @@ export default function WelcomePage() {
         @media (min-width: 769px) {
           .main-content > div:last-child {
             text-align: left;
+          }
+        }
+        
+        /* Fix for smaller laptop screens (13" MacBook Air, etc.) */
+        @media (min-width: 769px) and (max-width: 1440px) {
+          /* Ensure content fits on smaller laptop screens */
+          .main-content {
+            gap: clamp(20px, 3vw, 60px) !important;
+          }
+          
+          /* Main content wrapper - allow content to flow naturally */
+          .main-content-wrapper {
+            align-items: flex-start !important;
+            padding-top: clamp(24px, 4vw, 48px) !important;
+            padding-bottom: clamp(24px, 4vw, 48px) !important;
+          }
+          
+          /* Ensure content is never cut */
+          .main-content > div {
+            min-height: auto !important;
+          }
+        }
+        
+        /* Very small laptop screens (13" MacBook Air) */
+        @media (min-width: 769px) and (max-width: 1280px) {
+          .main-content {
+            gap: clamp(16px, 2.5vw, 40px) !important;
+          }
+          
+          .hero-main-text {
+            font-size: clamp(24px, 4vw, 40px) !important;
           }
         }
         @media (min-width: 769px) and (max-width: 1024px) {
@@ -645,7 +724,9 @@ export default function WelcomePage() {
             margin: 0,
             lineHeight: 1.2,
             letterSpacing: "0.02em",
-            whiteSpace: "nowrap"
+            whiteSpace: "normal",
+            wordWrap: "break-word",
+            overflowWrap: "break-word"
           }}>Ahorro, invierto, emprendo, crezco.</h1>
           
           {/* Bottom line */}
@@ -918,22 +999,23 @@ function LandingContent() {
       {/* CÓMO FUNCIONA - Text Left, Image Right */}
       <section id="sobre" className="section about reveal-element" style={{ background: "transparent", paddingTop: "clamp(16px, 2vw, 24px)", paddingBottom: "clamp(24px, 3vw, 32px)" }}>
         <div className="container">
-          <div style={{
+          <div className="hero-section-grid" style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "clamp(32px, 6vw, 64px)",
             alignItems: "center",
             minHeight: "400px"
           }}>
-            {/* Text Left */}
-            <div style={{
+            {/* Text - Will be first on mobile */}
+            <div className="hero-text" style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              textAlign: "center"
+              textAlign: "center",
+              order: 1
             }}>
               <h2 style={{
-                fontSize: "clamp(42px, 6.5vw, 64px)",
+                fontSize: "clamp(32px, 5vw, 64px)",
                 lineHeight: 1.15,
                 margin: "0 0 20px 0",
                 fontWeight: 800,
@@ -943,23 +1025,28 @@ function LandingContent() {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                animation: "shimmer 3s ease-in-out infinite"
+                animation: "shimmer 3s ease-in-out infinite",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
               }}>Presupuesto 50/30/20</h2>
               <p style={{
-                fontSize: "clamp(22px, 3vw, 28px)",
+                fontSize: "clamp(18px, 2.5vw, 28px)",
                 color: "#475569",
                 margin: "0 0 32px 0",
                 lineHeight: 1.6,
-                fontFamily: "Arial, sans-serif"
+                fontFamily: "Arial, sans-serif",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
               }}>Ordeno mi dinero en minutos. Necesidades, gustos y ahorro. Simple y útil.</p>
             </div>
             
-            {/* Image Right */}
-            <div style={{
+            {/* Image - Will be second on mobile */}
+            <div className="hero-image" style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              width: "100%"
+              width: "100%",
+              order: 2
             }}>
               <img
                 src="/hero1.png"
@@ -970,7 +1057,9 @@ function LandingContent() {
                   borderRadius: "16px",
                   objectFit: "contain",
                   display: "block",
-                  flexShrink: 0
+                  flexShrink: 0,
+                  width: "100%",
+                  maxWidth: "100%"
                 }}
               />
             </div>
@@ -981,20 +1070,54 @@ function LandingContent() {
       {/* BENEFICIOS - Image Left, Text Right */}
       <section className="section benefits reveal-element reveal-delay-1" style={{ background: "transparent", paddingTop: "clamp(16px, 2vw, 24px)", paddingBottom: "clamp(24px, 3vw, 32px)" }}>
         <div className="container">
-          <div style={{
+          <div className="hero-section-grid" style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "clamp(32px, 6vw, 64px)",
             alignItems: "center",
             minHeight: "400px"
           }}>
-            {/* Image Left */}
-            <div style={{
+            {/* Text - Will be first on mobile */}
+            <div className="hero-text" style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              order: 1
+            }}>
+              <h2 style={{
+                fontSize: "clamp(32px, 5vw, 64px)",
+                lineHeight: 1.15,
+                margin: "0 0 20px 0",
+                fontWeight: 800,
+                fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'Fredoka One', cursive, sans-serif",
+                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+                backgroundSize: "200% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                animation: "shimmer 3s ease-in-out infinite",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
+              }}>Simuladores financieros</h2>
+              <p style={{
+                fontSize: "clamp(18px, 2.5vw, 28px)",
+                color: "#475569",
+                margin: "0 0 32px 0",
+                lineHeight: 1.6,
+                fontFamily: "Arial, sans-serif",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
+              }}>Pruebo escenarios reales. Cambio números y veo el impacto al instante. Aprendo haciendo.</p>
+            </div>
+            
+            {/* Image - Will be second on mobile */}
+            <div className="hero-image" style={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "flex-start",
+              alignItems: "center",
               width: "100%",
-              paddingTop: "20px"
+              order: 2
             }}>
               <img
                 src="/hero2.png"
@@ -1005,38 +1128,11 @@ function LandingContent() {
                   borderRadius: "16px",
                   objectFit: "contain",
                   display: "block",
-                  flexShrink: 0
+                  flexShrink: 0,
+                  width: "100%",
+                  maxWidth: "100%"
                 }}
               />
-            </div>
-            
-            {/* Text Right */}
-            <div style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center"
-            }}>
-              <h2 style={{
-                fontSize: "clamp(42px, 6.5vw, 64px)",
-                lineHeight: 1.15,
-                margin: "0 0 20px 0",
-                fontWeight: 800,
-                fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'Fredoka One', cursive, sans-serif",
-                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-                backgroundSize: "200% auto",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                animation: "shimmer 3s ease-in-out infinite"
-              }}>Simuladores financieros</h2>
-              <p style={{
-                fontSize: "clamp(22px, 3vw, 28px)",
-                color: "#475569",
-                margin: "0 0 32px 0",
-                lineHeight: 1.6,
-                fontFamily: "Arial, sans-serif"
-              }}>Pruebo escenarios reales. Cambio números y veo el impacto al instante. Aprendo haciendo.</p>
             </div>
           </div>
         </div>
@@ -1045,22 +1141,23 @@ function LandingContent() {
       {/* CURSOS - Text Left, Image Right */}
       <section id="cursos" className="section courses reveal-element reveal-delay-2" style={{ background: "transparent", paddingTop: "clamp(16px, 2vw, 24px)", paddingBottom: "clamp(24px, 3vw, 32px)" }}>
         <div className="container">
-          <div style={{
+          <div className="hero-section-grid" style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "clamp(32px, 6vw, 64px)",
             alignItems: "center",
             minHeight: "400px"
           }}>
-            {/* Text Left */}
-            <div style={{
+            {/* Text - Will be first on mobile */}
+            <div className="hero-text" style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              textAlign: "center"
+              textAlign: "center",
+              order: 1
             }}>
               <h2 style={{
-                fontSize: "clamp(42px, 6.5vw, 64px)",
+                fontSize: "clamp(32px, 5vw, 64px)",
                 lineHeight: 1.15,
                 margin: "0 0 20px 0",
                 fontWeight: 800,
@@ -1070,23 +1167,28 @@ function LandingContent() {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                animation: "shimmer 3s ease-in-out infinite"
+                animation: "shimmer 3s ease-in-out infinite",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
               }}>Cashflow</h2>
               <p style={{
-                fontSize: "clamp(22px, 3vw, 28px)",
+                fontSize: "clamp(18px, 2.5vw, 28px)",
                 color: "#475569",
                 margin: "0 0 32px 0",
                 lineHeight: 1.6,
-                fontFamily: "Arial, sans-serif"
+                fontFamily: "Arial, sans-serif",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
               }}>Aprendes jugando. Simulo ingresos, gastos y decisiones para que sientas el dinero en acción, pero sin riesgo.</p>
             </div>
             
-            {/* Image Right */}
-            <div style={{
+            {/* Image - Will be second on mobile */}
+            <div className="hero-image" style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              width: "100%"
+              width: "100%",
+              order: 2
             }}>
               <img
                 src="/hero3.png"
@@ -1097,7 +1199,9 @@ function LandingContent() {
                   borderRadius: "16px",
                   objectFit: "contain",
                   display: "block",
-                  flexShrink: 0
+                  flexShrink: 0,
+                  width: "100%",
+                  maxWidth: "100%"
                 }}
               />
             </div>
@@ -1108,21 +1212,20 @@ function LandingContent() {
       {/* FORO DE EMPRENDEDORES - Image Left, Text Right */}
       <section className="section forum reveal-element reveal-delay-3" style={{ background: "transparent", paddingTop: "clamp(16px, 2vw, 24px)", paddingBottom: "clamp(24px, 3vw, 32px)" }}>
         <div className="container">
-          <div style={{
+          <div className="hero-section-grid" style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "clamp(32px, 6vw, 64px)",
             alignItems: "center",
             minHeight: "400px"
           }}>
-            {/* Image Left */}
-            <div style={{
+            {/* Image - Will be second on mobile */}
+            <div className="hero-image" style={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "flex-start",
+              alignItems: "center",
               width: "100%",
-              paddingTop: "0px",
-              marginTop: "-40px"
+              order: 2
             }}>
               <img
                 src="/hero4.png"
@@ -1133,20 +1236,23 @@ function LandingContent() {
                   borderRadius: "16px",
                   objectFit: "contain",
                   display: "block",
-                  flexShrink: 0
+                  flexShrink: 0,
+                  width: "100%",
+                  maxWidth: "100%"
                 }}
               />
             </div>
             
-            {/* Text Right */}
-            <div style={{
+            {/* Text - Will be first on mobile */}
+            <div className="hero-text" style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              textAlign: "center"
+              textAlign: "center",
+              order: 1
             }}>
               <h2 style={{
-                fontSize: "clamp(42px, 6.5vw, 64px)",
+                fontSize: "clamp(32px, 5vw, 64px)",
                 lineHeight: 1.15,
                 margin: "0 0 20px 0",
                 fontWeight: 800,
@@ -1156,14 +1262,18 @@ function LandingContent() {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                animation: "shimmer 3s ease-in-out infinite"
+                animation: "shimmer 3s ease-in-out infinite",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
               }}>Foro de emprendedores</h2>
               <p style={{
-                fontSize: "clamp(22px, 3vw, 28px)",
+                fontSize: "clamp(18px, 2.5vw, 28px)",
                 color: "#475569",
                 margin: "0 0 32px 0",
                 lineHeight: 1.6,
-                fontFamily: "Arial, sans-serif"
+                fontFamily: "Arial, sans-serif",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
               }}>Pido feedback, comparto avances y aprendo de otros. Comunidad segura y moderada.</p>
                       </div>
           </div>

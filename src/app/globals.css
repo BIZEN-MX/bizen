@@ -307,32 +307,107 @@ input, textarea, select {
   }
 }
 
-/* Small Desktop (Laptops) */
+/* Small Desktop (Laptops) - 1025px to 1366px */
 @media (min-width: 1025px) and (max-width: 1366px) {
   html {
     font-size: 16px !important;
   }
   
   h1 {
-    font-size: clamp(32px, 4vw, 48px) !important;
+    font-size: clamp(28px, 3.5vw, 42px) !important;
   }
   
   h2 {
-    font-size: clamp(26px, 3vw, 36px) !important;
+    font-size: clamp(24px, 3vw, 32px) !important;
   }
   
   h3 {
-    font-size: clamp(22px, 2.5vw, 28px) !important;
+    font-size: clamp(20px, 2.5vw, 26px) !important;
+  }
+  
+  button, .btn {
+    padding: 12px 28px !important;
+    font-size: 15px !important;
+  }
+  
+  /* Reduce max-widths for smaller screens */
+  [style*="maxWidth: 1200px"],
+  [style*="max-width: 1200px"] {
+    max-width: min(1200px, 95vw) !important;
+  }
+  
+  [style*="maxWidth: 1400px"],
+  [style*="max-width: 1400px"] {
+    max-width: min(1400px, 95vw) !important;
+  }
+  
+  /* Reduce sidebar margin on smaller screens */
+  [style*="marginRight: 320px"],
+  [style*="margin-right: 320px"] {
+    margin-right: clamp(240px, 25vw, 320px) !important;
+  }
+  
+  /* Reduce padding on smaller screens */
+  [style*="padding: 40px"],
+  [style*="paddingLeft: 40px"],
+  [style*="paddingRight: 40px"],
+  [style*="paddingTop: 40px"],
+  [style*="paddingBottom: 40px"] {
+    padding: clamp(20px, 3vw, 40px) !important;
+  }
+}
+
+/* Medium Desktop - 1367px to 1440px (13" MacBook Air, smaller laptops) */
+@media (min-width: 1367px) and (max-width: 1440px) {
+  html {
+    font-size: 16px !important;
+  }
+  
+  h1 {
+    font-size: clamp(30px, 3.8vw, 48px) !important;
+  }
+  
+  h2 {
+    font-size: clamp(26px, 3vw, 38px) !important;
+  }
+  
+  h3 {
+    font-size: clamp(22px, 2.5vw, 30px) !important;
   }
   
   button, .btn {
     padding: 14px 32px !important;
     font-size: 16px !important;
   }
+  
+  /* Responsive max-widths */
+  [style*="maxWidth: 1200px"],
+  [style*="max-width: 1200px"] {
+    max-width: min(1200px, 92vw) !important;
+  }
+  
+  [style*="maxWidth: 1400px"],
+  [style*="max-width: 1400px"] {
+    max-width: min(1400px, 92vw) !important;
+  }
+  
+  /* Responsive sidebar margin */
+  [style*="marginRight: 320px"],
+  [style*="margin-right: 320px"] {
+    margin-right: clamp(280px, 22vw, 320px) !important;
+  }
+  
+  /* Responsive padding */
+  [style*="padding: 40px"],
+  [style*="paddingLeft: 40px"],
+  [style*="paddingRight: 40px"] {
+    padding-left: clamp(24px, 3.5vw, 40px) !important;
+    padding-right: clamp(24px, 3.5vw, 40px) !important;
+  }
 }
 
-/* Large Desktop (Wide screens) */
-@media (min-width: 1367px) {
+/* Large Desktop (Wide screens) - 1441px and above */
+@media (min-width: 1441px) {
   html {
     font-size: 16px !important;
   }
@@ -394,24 +469,123 @@ input, textarea, select {
   }
 }
 
-/* Images - Responsive */
-img {
+/* Images and Media - Responsive */
+img, video, iframe, embed, object {
   max-width: 100% !important;
   height: auto !important;
+}
+
+/* Ensure images don't overflow on smaller screens */
+@media (min-width: 1024px) and (max-width: 1440px) {
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
 }
 
 /* Prevent horizontal scroll - CRITICAL */
 body, html {
   overflow-x: hidden !important;
+  overflow-y: auto !important;
   width: 100% !important;
   max-width: 100vw !important;
   position: relative; /* For proper scrolling context */
+  height: auto !important;
+  min-height: 100vh !important;
 }
 
 /* Prevent any element from causing horizontal scroll */
 * {
   max-width: 100vw;
   box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+}
+
+/* Ensure all main containers allow vertical scrolling */
+main[style*="minHeight: 100vh"],
+main[style*="min-height: 100vh"],
+div[style*="minHeight: 100vh"]:not([data-decorative]),
+div[style*="min-height: 100vh"]:not([data-decorative]) {
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+}
+
+/* Fix for pages with overflowX: hidden but missing overflowY */
+main[style*="overflowX: hidden"]:not([style*="overflowY"]),
+div[style*="overflowX: hidden"]:not([style*="overflowY"]):not([data-decorative]) {
+  overflow-y: visible !important;
+}
+
+/* Responsive breakpoints for smaller desktop screens */
+/* Very Small Desktop - 1024px to 1280px (13" MacBook Air, small laptops) */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  /* Ensure content fits on smaller screens */
+  body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Reduce fixed widths that might cause overflow */
+  [style*="width: calc(100% - 320px)"] {
+    width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+  }
+  
+  [style*="maxWidth: calc(100vw - 320px)"] {
+    max-width: calc(100vw - clamp(240px, 25vw, 320px)) !important;
+  }
+  
+  [style*="maxWidth: calc(100vw - 340px)"] {
+    max-width: calc(100vw - clamp(260px, 27vw, 340px)) !important;
+  }
+  
+  /* Reduce padding that might push content out */
+  [style*="paddingRight: 360px"] {
+    padding-right: clamp(260px, 28vw, 360px) !important;
+  }
+  
+  /* Ensure all containers use box-sizing */
+  main, div[style*="minHeight: 100vh"] {
+    box-sizing: border-box !important;
+  }
+  
+  /* Make sure content doesn't overflow */
+  * {
+    max-width: 100% !important;
+  }
+  
+  /* Responsive font sizes for smaller screens */
+  h1 { font-size: clamp(24px, 4vw, 36px) !important; }
+  h2 { font-size: clamp(20px, 3.5vw, 28px) !important; }
+  h3 { font-size: clamp(18px, 3vw, 24px) !important; }
+}
+
+/* Small Desktop - 1281px to 1440px */
+@media (min-width: 1281px) and (max-width: 1440px) {
+  /* Slightly less aggressive adjustments */
+  [style*="width: calc(100% - 320px)"] {
+    width: calc(100% - clamp(280px, 22vw, 320px)) !important;
+  }
+  
+  [style*="maxWidth: calc(100vw - 320px)"] {
+    max-width: calc(100vw - clamp(280px, 22vw, 320px)) !important;
+  }
+  
+  [style*="paddingRight: 360px"] {
+    padding-right: clamp(300px, 25vw, 360px) !important;
+  }
+}
+
+/* Responsive Sidebar */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  [data-fixed-sidebar] {
+    width: clamp(240px, 25vw, 300px) !important;
+  }
+}
+
+@media (min-width: 1281px) and (max-width: 1440px) {
+  [data-fixed-sidebar] {
+    width: clamp(280px, 22vw, 320px) !important;
+  }
 }
 
 /* Force containers to stay within viewport - MOBILE ONLY */

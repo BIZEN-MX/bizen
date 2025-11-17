@@ -719,6 +719,38 @@ export default function CoursesPage() {
     }
   }
 
+  // Mobile sidebar toggle state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  // Toggle mobile sidebar
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen)
+    const sidebar = document.querySelector('[data-fixed-sidebar]')
+    if (sidebar) {
+      if (!isSidebarOpen) {
+        sidebar.classList.add('mobile-sidebar-open')
+      } else {
+        sidebar.classList.remove('mobile-sidebar-open')
+      }
+    }
+  }
+
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const sidebar = document.querySelector('[data-fixed-sidebar]')
+      const toggleBtn = document.querySelector('.mobile-sidebar-toggle')
+      if (isSidebarOpen && sidebar && !sidebar.contains(e.target as Node) && !toggleBtn?.contains(e.target as Node)) {
+        setIsSidebarOpen(false)
+        sidebar.classList.remove('mobile-sidebar-open')
+      }
+    }
+    if (isSidebarOpen) {
+      document.addEventListener('click', handleClickOutside)
+    }
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [isSidebarOpen])
+
   return (
       <div style={{
         position: "fixed",
@@ -726,10 +758,12 @@ export default function CoursesPage() {
         left: 0,
         width: "100%",
         height: "100%",
-      background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      overflowY: "auto",
-      overflowX: "hidden"
-    }}>
+        minHeight: "100vh",
+        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        overflowY: "auto",
+        overflowX: "hidden",
+        boxSizing: "border-box"
+      }}>
       {/* Decorative Orbs */}
         <div style={{
         position: "fixed",
@@ -766,7 +800,7 @@ export default function CoursesPage() {
       }} />
 
       {/* Left Difficulty Navigation Panel */}
-        <div style={{
+        <div className="courses-left-nav-panel" style={{
         position: "fixed",
           top: 0,
           left: 0,
@@ -957,6 +991,54 @@ export default function CoursesPage() {
           </button>
                 </div>
       </div>
+
+      {/* Mobile Sidebar Toggle Button */}
+      <button
+        className="mobile-sidebar-toggle"
+        onClick={toggleSidebar}
+        style={{
+          position: "fixed",
+          top: "20px",
+          right: "20px",
+          width: "48px",
+          height: "48px",
+          background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+          border: "none",
+          borderRadius: "12px",
+          zIndex: 10001,
+          boxShadow: "0 4px 12px rgba(11, 113, 254, 0.4)",
+          cursor: "pointer",
+          display: "none", // Hidden on desktop, shown via CSS on mobile
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.3s ease",
+        }}
+        aria-label="Toggle menu"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      {/* Mobile Sidebar Backdrop */}
+      {isSidebarOpen && (
+        <div
+          className="mobile-sidebar-backdrop"
+          onClick={toggleSidebar}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
+            display: "none", // Hidden on desktop, shown via CSS on mobile
+          }}
+        />
+      )}
 
       {/* Sticky Course Bar */}
       <div
@@ -1275,6 +1357,90 @@ export default function CoursesPage() {
         }
         
         @media (max-width: 768px) {
+          /* Move left navigation panel to bottom on mobile */
+          .courses-left-nav-panel {
+            position: fixed !important;
+            top: auto !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            height: auto !important;
+            max-height: 60vh !important;
+            overflow-y: auto !important;
+            border-right: none !important;
+            border-top: 2px solid rgba(147, 197, 253, 0.3) !important;
+            padding: 16px !important;
+            z-index: 9999 !important;
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(20px) !important;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1) !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+          }
+          
+          /* Adjust left panel content for mobile */
+          .courses-left-nav-panel > div:first-child {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            width: 100% !important;
+            flex-shrink: 0 !important;
+          }
+          
+          .courses-left-nav-panel > div:last-child {
+            flex-direction: row !important;
+            gap: 8px !important;
+            width: 100% !important;
+            flex-wrap: wrap !important;
+          }
+          
+          .courses-left-nav-panel button {
+            flex: 1 !important;
+            min-width: calc(33.333% - 6px) !important;
+            padding: 12px 8px !important;
+            font-size: 12px !important;
+          }
+          
+          /* Make right sidebar slide in from right on mobile */
+          [data-fixed-sidebar] {
+            transform: translateX(100%) !important;
+            transition: transform 0.3s ease-in-out !important;
+            width: 280px !important;
+            max-width: 85vw !important;
+          }
+          
+          /* Show sidebar when it has the 'open' class */
+          [data-fixed-sidebar].mobile-sidebar-open {
+            transform: translateX(0) !important;
+          }
+          
+          /* Show toggle button on mobile */
+          .mobile-sidebar-toggle {
+            display: flex !important;
+          }
+          
+          /* Show backdrop on mobile when sidebar is open */
+          .mobile-sidebar-backdrop {
+            display: block !important;
+          }
+          
+          /* Adjust main content padding on mobile */
+          main[style*="paddingLeft: 200px"] {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            padding-top: 20px !important;
+            padding-bottom: 200px !important; /* Space for bottom menu */
+          }
+          
+          /* Adjust sticky course bar on mobile */
+          [style*="position: fixed"][style*="left: 200px"][style*="right: 320px"] {
+            left: 0 !important;
+            right: 0 !important;
+            top: auto !important;
+            bottom: 60px !important; /* Above the bottom menu */
+            z-index: 9998 !important;
+          }
+          
           /* Make preview panel full width on mobile */
           [style*="position: absolute"][style*="top: 50%"] {
             position: relative !important;
@@ -1292,6 +1458,18 @@ export default function CoursesPage() {
             [style*="width: clamp(120px"] {
               width: clamp(100px, 22vw, 140px) !important;
               height: clamp(100px, 22vw, 140px) !important;
+            }
+            
+            /* Smaller bottom menu on very small screens */
+            .courses-left-nav-panel {
+              max-height: 50vh !important;
+              padding: 12px !important;
+            }
+            
+            .courses-left-nav-panel button {
+              padding: 10px 6px !important;
+              font-size: 11px !important;
+              min-width: calc(50% - 4px) !important;
             }
           }
         }

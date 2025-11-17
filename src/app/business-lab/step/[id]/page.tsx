@@ -216,7 +216,8 @@ export default function StepDetailPage() {
         fontFamily: "Montserrat, sans-serif",
         width: "100%",
         boxSizing: "border-box" as const,
-        overflowX: "hidden"
+        overflowX: "hidden",
+        overflowY: "visible"
       }}>
       {/* Back Button */}
       <button 

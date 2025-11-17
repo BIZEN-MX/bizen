@@ -66,7 +66,8 @@ export default function SimulatorsPage() {
       fontFamily: "Montserrat, sans-serif",
       boxSizing: "border-box" as const,
       maxWidth: "calc(100vw - 320px)",
-      overflowX: "hidden"
+      overflowX: "hidden",
+      overflowY: "visible"
     }}>
       {/* Header */}
       <div style={{ marginBottom: 32, textAlign: "center" }}>

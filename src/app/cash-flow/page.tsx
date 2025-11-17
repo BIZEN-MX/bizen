@@ -199,7 +199,10 @@ export default function CashFlowPage() {
       display: "flex",
       minHeight: "100vh",
       background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      fontFamily: "Montserrat, sans-serif"
+      fontFamily: "Montserrat, sans-serif",
+      overflowX: "hidden",
+      overflowY: "auto",
+      boxSizing: "border-box"
     }}>
       {/* Main Content Area */}
       <main style={{
@@ -208,8 +211,10 @@ export default function CashFlowPage() {
         paddingBottom: "40px",
         paddingLeft: "40px",
         paddingRight: "40px",
-        overflow: "auto",
-        width: "100%"
+        overflowX: "hidden",
+        overflowY: "visible",
+        width: "100%",
+        boxSizing: "border-box"
       }}>
         {/* Header */}
         <div style={{

@@ -69,14 +69,15 @@ export default function FixedSidebar() {
         position: "fixed",
         top: 0,
         right: 0,
-        width: "320px",
+        width: "clamp(240px, 25vw, 320px)",
         height: "100vh",
         background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         boxShadow: "-4px 0 20px rgba(0, 0, 0, 0.1)",
         zIndex: 1000,
         overflowY: "auto",
         fontFamily: "Montserrat, sans-serif",
-        borderLeft: "2px solid rgba(15, 98, 254, 0.2)"
+        borderLeft: "2px solid rgba(15, 98, 254, 0.2)",
+        boxSizing: "border-box"
       }}>
         <div style={{ padding: "24px 20px" }}>
           {/* Username with Avatar or Create Account Button */}

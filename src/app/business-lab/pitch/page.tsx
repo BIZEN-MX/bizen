@@ -27,7 +27,8 @@ export default async function PitchPage() {
       fontFamily: "Montserrat, sans-serif",
       width: "100%",
       boxSizing: "border-box" as const,
-      overflowX: "hidden"
+      overflowX: "hidden",
+      overflowY: "visible"
     }}>
       <Link href="/business-lab" style={{ textDecoration: "none" }}>
         <button style={{
