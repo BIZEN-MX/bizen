@@ -88,20 +88,21 @@ export default function WelcomePage() {
         top: 0,
         zIndex: 1000,
         width: "100%",
-        padding: "clamp(16px, 3vw, 24px) clamp(20px, 4vw, 40px)",
+        padding: "clamp(12px, 2vw, 20px) clamp(16px, 3vw, 32px)",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
-        gap: "clamp(120px, 22vw, 300px)",
         background: "#ffffff",
         borderBottom: "1px solid rgba(15, 98, 254, 0.1)",
-      }}>
+        boxSizing: "border-box",
+      }} className="main-header">
         {/* Logo and Brand */}
         <Link href="/" style={{
           display: "flex",
           alignItems: "center",
-          gap: "clamp(8px, 2vw, 10px)",
+          gap: "clamp(6px, 1.5vw, 10px)",
           textDecoration: "none",
+          flexShrink: 0,
         }}>
           <Image 
             src="/bizen-logo.png" 
@@ -109,26 +110,27 @@ export default function WelcomePage() {
             width={40} 
             height={40} 
             priority 
-            style={{ width: "clamp(32px, 5vw, 40px)", height: "auto" }}
+            style={{ width: "clamp(28px, 4vw, 40px)", height: "auto", flexShrink: 0 }}
           />
           <strong style={{ 
-            fontSize: "clamp(18px, 3vw, 20px)", 
+            fontSize: "clamp(16px, 2.5vw, 20px)", 
             color: "#0B71FE", 
-            fontFamily: 'Montserrat, sans-serif' 
+            fontFamily: 'Montserrat, sans-serif',
+            whiteSpace: "nowrap"
           }}>BIZEN</strong>
         </Link>
 
-        <nav style={{ display: "flex", gap: "clamp(16px, 4vw, 32px)", alignItems: "center", marginLeft: "clamp(100px, 18vw, 250px)" }} className="header-nav">
+        <nav style={{ display: "flex", gap: "clamp(8px, 2vw, 16px)", alignItems: "center", flexShrink: 0 }} className="header-nav">
           <Link href="/signup" style={{
-            padding: "clamp(10px, 2vw, 12px) clamp(20px, 4vw, 24px)",
-            fontSize: "clamp(14px, 2vw, 16px)",
+            padding: "clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)",
+            fontSize: "clamp(12px, 1.8vw, 16px)",
             fontWeight: 700,
             fontFamily: "Montserrat, sans-serif",
             background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
             backgroundSize: "200% auto",
             color: "white",
             border: "none",
-            borderRadius: "clamp(8px, 1.5vw, 10px)",
+            borderRadius: "clamp(6px, 1.2vw, 10px)",
             textDecoration: "none",
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(15, 98, 254, 0.25)",
@@ -137,6 +139,7 @@ export default function WelcomePage() {
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
+            whiteSpace: "nowrap",
           }}
           className="crear-cuenta-button">Crear cuenta</Link>
         </nav>
@@ -175,17 +178,19 @@ export default function WelcomePage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "clamp(20px, 4vw, 40px)",
+        padding: "clamp(16px, 3vw, 40px)",
         width: "100%",
         minHeight: 0,
+        boxSizing: "border-box",
       }}>
         
         <div className="main-content" style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: "clamp(32px, 6vw, 80px)",
+          gap: "clamp(24px, 5vw, 80px)",
           alignItems: "center",
           width: "100%",
+          boxSizing: "border-box",
         }}>
           
           {/* Left Side - Billy */}
@@ -213,7 +218,8 @@ export default function WelcomePage() {
                   borderRadius: "16px",
                   width: "100%",
                   height: "auto",
-                  maxWidth: "clamp(240px, 40vw, 320px)",
+                  maxWidth: "clamp(200px, 35vw, 320px)",
+                  objectFit: "contain",
                 }}
                 priority
               />
@@ -231,17 +237,19 @@ export default function WelcomePage() {
             textAlign: "center",
           }}>
             {/* Text Content */}
-            <div style={{ width: "100%" }}>
+            <div style={{ width: "100%", boxSizing: "border-box" }}>
               <p style={{
-                fontSize: "clamp(32px, 5vw, 48px)",
+                fontSize: "clamp(20px, 4.5vw, 48px)",
                 color: "#718096",
                 margin: 0,
                 fontWeight: 600,
-                lineHeight: 1.4,
-                maxWidth: "none",
+                lineHeight: 1.3,
+                maxWidth: "100%",
                 width: "100%",
                 fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
-                transform: "scale(1)",
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
+                boxSizing: "border-box",
               }} className="hero-main-text">
                 ¿Aprender finanzas mientras juegas? ¡Sí, <span style={{
                 background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
@@ -471,69 +479,110 @@ export default function WelcomePage() {
         }
         
         @media (max-width: 768px) {
-          header {
-            flex-wrap: wrap;
-            gap: 12px;
+          /* Header fixes for mobile */
+          .main-header {
+            padding: 12px 16px !important;
+            flex-wrap: nowrap !important;
+            gap: 12px !important;
           }
-          header nav {
-            width: 100%;
-            justify-content: center;
-            margin-top: 8px;
+          .main-header nav {
+            margin-left: 0 !important;
+            flex-shrink: 1 !important;
           }
-          /* Ensure button is visible and properly sized on mobile */
           .crear-cuenta-button {
-            padding: 10px 16px !important;
-            font-size: 14px !important;
+            padding: 8px 14px !important;
+            font-size: 13px !important;
+            white-space: nowrap !important;
           }
+          
+          /* Main content fixes */
           .main-content {
             grid-template-columns: 1fr !important;
-            gap: clamp(24px, 5vw, 40px) !important;
+            gap: clamp(20px, 4vw, 32px) !important;
+            width: 100% !important;
           }
           .main-content > div:first-child {
             order: 2;
+            width: 100% !important;
           }
           .main-content > div:last-child {
             order: 1;
+            width: 100% !important;
           }
-          h1 {
-            font-size: clamp(48px, 18vw, 120px) !important;
-            line-height: 1 !important;
-            text-align: center;
-          }
+          
+          /* Image fixes */
           .main-content > div:first-child > div {
-            padding: clamp(16px, 4vw, 24px) !important;
+            padding: clamp(12px, 3vw, 20px) !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
           }
           .main-content > div:first-child img {
             width: 100% !important;
-            max-width: clamp(150px, 30vw, 240px) !important;
+            max-width: 100% !important;
             height: auto !important;
+            object-fit: contain !important;
           }
+          
+          /* Text fixes */
+          .hero-main-text {
+            font-size: clamp(18px, 5vw, 32px) !important;
+            line-height: 1.3 !important;
+            text-align: center !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          
+          /* Button fixes */
+          .main-content > div:last-child > div:last-child {
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+          .main-content > div:last-child > div:last-child a {
+            width: 100% !important;
+            min-width: auto !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          
           /* Footer links horizontal on mobile */
           .footer-links {
             flex-direction: row !important;
             text-align: center !important;
             gap: clamp(8px, 2vw, 16px) !important;
             flex-wrap: wrap !important;
-          }
-          /* Ensure buttons are full width on mobile */
-          .main-content > div:last-child > div:last-child a {
-            width: 100%;
-          }
-          /* Force text size in hero */
-          .main-content > div:last-child > div:first-child p,
-          .hero-main-text {
-            font-size: clamp(32px, 5vw, 48px) !important;
-            font-family: 'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif !important;
-            max-width: none !important;
-            width: 100% !important;
+            padding: 0 16px !important;
           }
         }
         @media (max-width: 480px) {
-          h1 {
-            font-size: clamp(40px, 20vw, 80px) !important;
+          /* Extra small phones */
+          .main-header {
+            padding: 10px 12px !important;
+          }
+          .crear-cuenta-button {
+            padding: 7px 12px !important;
+            font-size: 12px !important;
+          }
+          .hero-main-text {
+            font-size: clamp(16px, 6vw, 24px) !important;
+            line-height: 1.2 !important;
+          }
+          .main-content {
+            padding: 12px !important;
+            gap: 16px !important;
           }
           .main-content > div:first-child > div {
-            padding: 12px !important;
+            padding: 10px !important;
+          }
+          .main-content > div:last-child > div:last-child a {
+            padding: 12px 16px !important;
+            font-size: 14px !important;
           }
         }
         @media (min-width: 769px) {
@@ -557,7 +606,7 @@ export default function WelcomePage() {
       </div>
 
       {/* Fun text between main hero and hero 1 */}
-      <div style={{
+      <div className="reveal-element reveal-delay-1" style={{
         textAlign: "center",
         padding: "clamp(8px, 1.5vw, 16px) 0 clamp(120px, 18vw, 200px) 0",
         background: "transparent",
