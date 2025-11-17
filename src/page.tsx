@@ -49,7 +49,7 @@ export default function WelcomePage() {
         borderBottom: "1px solid rgba(15, 98, 254, 0.1)",
       }}>
         <nav style={{ display: "flex", gap: "32px" }}>
-          <Link href="/landing" style={{
+          <Link href="/" style={{
             color: "#0F62FE",
             textDecoration: "none",
             fontWeight: 600,
@@ -175,7 +175,7 @@ export default function WelcomePage() {
               marginTop: "20px",
             }}>
               <Link
-                href="/landing"
+                href="/"
                 style={{
                   padding: "20px 48px",
                   fontSize: "18px",
@@ -266,7 +266,7 @@ export default function WelcomePage() {
           fontSize: "14px",
           color: "#718096",
         }}>
-          <Link href="/landing" style={{ color: "#4A5568", textDecoration: "none" }}>
+          <Link href="/#cursos" style={{ color: "#4A5568", textDecoration: "none" }}>
             Cursos
           </Link>
           <Link href="/login" style={{ color: "#4A5568", textDecoration: "none" }}>

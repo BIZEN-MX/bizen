@@ -6,11 +6,33 @@ import NavigationLoading from './NavigationLoading';
 import FixedSidebar from './FixedSidebar';
 import MobileBottomNav from './MobileBottomNav';
 import GlobalLogo from './GlobalLogo';
+import { useKeyboardHandler } from '@/hooks/useKeyboardHandler';
+import { useViewportHeight } from '@/hooks/useViewportHeight';
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
+
+  // Fix iOS Safari viewport height
+  useViewportHeight();
+
+  // Handle keyboard appearance on mobile
+  const { isKeyboardVisible } = useKeyboardHandler({
+    scrollToInput: true,
+    offset: 100
+  });
+
+  // Update body attribute when keyboard is visible
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (isKeyboardVisible) {
+        document.body.setAttribute('data-keyboard-visible', 'true');
+      } else {
+        document.body.removeAttribute('data-keyboard-visible');
+      }
+    }
+  }, [isKeyboardVisible]);
 
   // Detect clicks on links to start loading immediately (before pathname changes)
   useEffect(() => {
@@ -64,8 +86,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                      pathname === '/forgot-password' ||
                      pathname === '/bizen/login' ||
                      pathname === '/bizen/signup' ||
-                     pathname === '/' || // Landing page
-                     pathname === '/landing'
+                     pathname === '/' // Landing page
 
   return (
     <>

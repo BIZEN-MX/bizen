@@ -1,13 +1,17 @@
 export function ThreadCardSkeleton() {
   return (
-    <div style={{
-      padding: 24,
-      background: "rgba(255, 255, 255, 0.4)",
-      backdropFilter: "blur(20px)",
-      borderRadius: 16,
-      border: "2px solid rgba(255, 255, 255, 0.6)",
-      animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
-    }}>
+    <div 
+      data-loading="true"
+      style={{
+        padding: "clamp(16px, 4vw, 24px)",
+        background: "rgba(255, 255, 255, 0.4)",
+        backdropFilter: "blur(20px)",
+        borderRadius: 16,
+        border: "2px solid rgba(255, 255, 255, 0.6)",
+        position: "relative",
+        overflow: "hidden"
+      }}
+    >
       <div style={{ display: "flex", gap: 20 }}>
         {/* Vote skeleton */}
         <div style={{
@@ -81,32 +85,25 @@ export function ThreadCardSkeleton() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-      `}</style>
     </div>
   )
 }
 
 export function CommentSkeleton() {
   return (
-    <div style={{
-      padding: 20,
-      background: "rgba(255, 255, 255, 0.6)",
-      backdropFilter: "blur(20px)",
-      borderRadius: 12,
-      border: "2px solid rgba(255, 255, 255, 0.6)",
-      marginBottom: 16,
-      animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
-    }}>
+    <div 
+      data-loading="true"
+      style={{
+        padding: "clamp(16px, 4vw, 20px)",
+        background: "rgba(255, 255, 255, 0.6)",
+        backdropFilter: "blur(20px)",
+        borderRadius: 12,
+        border: "2px solid rgba(255, 255, 255, 0.6)",
+        marginBottom: 16,
+        position: "relative",
+        overflow: "hidden"
+      }}
+    >
       <div style={{ display: "flex", gap: 16 }}>
         {/* Vote buttons */}
         <div style={{
@@ -177,17 +174,6 @@ export function CommentSkeleton() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-      `}</style>
     </div>
   )
 }

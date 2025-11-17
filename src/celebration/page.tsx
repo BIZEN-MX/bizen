@@ -27,7 +27,7 @@ export default function CelebrationPage() {
   }, [])
 
   const handleFinalizar = () => {
-    router.push("/landing")
+    router.push("/")
   }
 
   return (

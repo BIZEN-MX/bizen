@@ -37,13 +37,14 @@ interface Course {
 }
 
 // 3D Star component using star.png
-function LessonIsland({ lesson, offsetX, isNext, onClick }: { lesson: Lesson; offsetX: number; isNext: boolean; onClick: () => void }) {
+function LessonIsland({ lesson, offsetX, isNext, onClick, isVisible }: { lesson: Lesson; offsetX: number; isNext: boolean; onClick: () => void; isVisible: boolean }) {
   // Show "START" label and rotation only for the next lesson to complete
   const showStartLabel = isNext
   
   return (
     <div 
       className="lesson-island-wrapper"
+      data-lesson-id={lesson.id}
       style={{
         position: "relative",
         transform: `translateX(${offsetX}px)`
@@ -52,6 +53,17 @@ function LessonIsland({ lesson, offsetX, isNext, onClick }: { lesson: Lesson; of
       <motion.div
       onClick={onClick}
         whileTap={{ scale: 0.9 }}
+        initial={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50, scale: isVisible ? 1 : 0.8 }}
+        animate={{ 
+          opacity: 1, 
+          y: 0, 
+          scale: 1 
+        }}
+        transition={{ 
+          duration: isVisible ? 0 : 0.6, 
+          ease: [0.16, 1, 0.3, 1],
+          delay: 0
+        }}
       style={{
           width: "clamp(120px, 25vw, 180px)",
           height: "clamp(120px, 25vw, 180px)",
@@ -209,6 +221,9 @@ export default function CoursesPage() {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
   const [currentCourse, setCurrentCourse] = useState<Course | null>(null)
   const [activeLevel, setActiveLevel] = useState<number>(1) // Track active difficulty level
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null)
+  const [visibleIslands, setVisibleIslands] = useState<Set<string>>(new Set())
+  const [lastScrollY, setLastScrollY] = useState(0)
 
   useEffect(() => {
     if (loading) return
@@ -568,6 +583,90 @@ export default function CoursesPage() {
 
     return () => observer.disconnect()
   }, [courses, currentCourse])
+
+  // Track scroll direction and reveal islands on scroll up
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      const direction = currentScrollY < lastScrollY ? 'up' : 'down'
+      
+      setScrollDirection(direction)
+      setLastScrollY(currentScrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [lastScrollY])
+
+  // Initially reveal all islands in viewport on page load
+  useEffect(() => {
+    if (courses.length === 0) return
+
+    const timer = setTimeout(() => {
+      const lessonElements = document.querySelectorAll('[data-lesson-id]')
+      const newVisibleIslands = new Set<string>()
+      
+      lessonElements.forEach((el) => {
+        const rect = el.getBoundingClientRect()
+        const isInViewport = rect.top < window.innerHeight + 200 && rect.bottom > -200
+        if (isInViewport) {
+          const lessonId = el.getAttribute('data-lesson-id')
+          if (lessonId) {
+            newVisibleIslands.add(lessonId)
+          }
+        }
+      })
+      
+      if (newVisibleIslands.size > 0) {
+        setVisibleIslands(newVisibleIslands)
+      }
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [courses])
+
+  // Intersection Observer for islands - reveal on scroll up
+  useEffect(() => {
+    if (courses.length === 0) return
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-50px 0px',
+      threshold: 0.2
+    }
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        const lessonId = entry.target.getAttribute('data-lesson-id')
+        if (!lessonId) return
+
+        // Reveal when scrolling up and island enters viewport
+        if (entry.isIntersecting && scrollDirection === 'up') {
+          setVisibleIslands(prev => {
+            if (!prev.has(lessonId)) {
+              const newSet = new Set(prev)
+              newSet.add(lessonId)
+              return newSet
+            }
+            return prev
+          })
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions)
+
+    // Observe all lesson islands after a short delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      const lessonElements = document.querySelectorAll('[data-lesson-id]')
+      lessonElements.forEach(el => observer.observe(el))
+    }, 100)
+
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+    }
+  }, [courses, scrollDirection])
 
   // Set body and html background for this page
   useEffect(() => {
@@ -997,10 +1096,16 @@ export default function CoursesPage() {
                   // Alternate panel position: even indices on right, odd on left
                   const showOnRight = lessonIdx % 2 === 0
             
+            // Island is visible if it's been revealed OR if it's in the initial viewport
+            // For scroll-up effect: only show animation if it was revealed while scrolling up
+            const wasRevealedOnScrollUp = visibleIslands.has(lesson.id)
+            const isIslandVisible = wasRevealedOnScrollUp
+            
             return (
               <div
                       key={lesson.id}
                       id={`lesson-${lesson.id}`}
+                      data-lesson-id={lesson.id}
             style={{ 
                         width: "100%",
                   display: "flex",
@@ -1012,6 +1117,7 @@ export default function CoursesPage() {
                         lesson={lesson}
                         offsetX={offsetX}
                         isNext={isNext}
+                        isVisible={isIslandVisible}
                         onClick={() => {
                           if (lesson.isLocked && !user) {
                             router.push("/signup")

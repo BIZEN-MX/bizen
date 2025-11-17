@@ -14,8 +14,7 @@ export default function GlobalLogo() {
                      pathname === '/forgot-password' ||
                      pathname === '/bizen/login' ||
                      pathname === '/bizen/signup' ||
-                     pathname === '/' || 
-                     pathname === '/landing'
+                     pathname === '/'
 
   if (isAuthPage) return null
 
