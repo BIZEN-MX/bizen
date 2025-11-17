@@ -93,59 +93,68 @@ export default function WelcomePage() {
         width: "100%",
         padding: "clamp(12px, 2vw, 20px) clamp(16px, 3vw, 32px)",
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
         background: "#ffffff",
         borderBottom: "1px solid rgba(15, 98, 254, 0.1)",
         boxSizing: "border-box",
       }} className="main-header">
-        {/* Logo and Brand */}
-        <Link href="/" style={{
+        <div style={{
           display: "flex",
+          justifyContent: "center",
           alignItems: "center",
-          gap: "clamp(6px, 1.5vw, 10px)",
-          textDecoration: "none",
-          flexShrink: 0,
+          gap: "clamp(80px, 20vw, 350px)",
+          width: "100%",
+          maxWidth: "1200px",
         }}>
-          <Image 
-            src="/bizen-logo.png" 
-            alt="BIZEN logo" 
-            width={40} 
-            height={40} 
-            priority 
-            style={{ width: "clamp(28px, 4vw, 40px)", height: "auto", flexShrink: 0 }}
-          />
-          <strong style={{ 
-            fontSize: "clamp(16px, 2.5vw, 20px)", 
-            color: "#0B71FE", 
-            fontFamily: 'Montserrat, sans-serif',
-            whiteSpace: "nowrap"
-          }}>BIZEN</strong>
-        </Link>
-
-        <nav style={{ display: "flex", gap: "clamp(8px, 2vw, 16px)", alignItems: "center", flexShrink: 0 }} className="header-nav">
-          <Link href="/signup" style={{
-            padding: "clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)",
-            fontSize: "clamp(12px, 1.8vw, 16px)",
-            fontWeight: 700,
-            fontFamily: "Montserrat, sans-serif",
-            background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-            backgroundSize: "200% auto",
-            color: "white",
-            border: "none",
-            borderRadius: "clamp(6px, 1.2vw, 10px)",
-            textDecoration: "none",
-            cursor: "pointer",
-            boxShadow: "0 4px 12px rgba(15, 98, 254, 0.25)",
-            textAlign: "center",
-            letterSpacing: "0.3px",
-            display: "inline-flex",
+          {/* Logo and Brand */}
+          <Link href="/" style={{
+            display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            whiteSpace: "nowrap",
-          }}
-          className="crear-cuenta-button">Crear cuenta</Link>
-        </nav>
+            gap: "clamp(6px, 1.5vw, 10px)",
+            textDecoration: "none",
+            flexShrink: 0,
+          }}>
+            <Image 
+              src="/bizen-logo.png" 
+              alt="BIZEN logo" 
+              width={40} 
+              height={40} 
+              priority 
+              style={{ width: "clamp(28px, 4vw, 40px)", height: "auto", flexShrink: 0 }}
+            />
+            <strong style={{ 
+              fontSize: "clamp(16px, 2.5vw, 20px)", 
+              color: "#0B71FE", 
+              fontFamily: 'Montserrat, sans-serif',
+              whiteSpace: "nowrap"
+            }}>BIZEN</strong>
+          </Link>
+
+          <nav style={{ display: "flex", gap: "clamp(8px, 2vw, 16px)", alignItems: "center", flexShrink: 0 }} className="header-nav">
+            <Link href="/signup" style={{
+              padding: "clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)",
+              fontSize: "clamp(12px, 1.8vw, 16px)",
+              fontWeight: 700,
+              fontFamily: "Montserrat, sans-serif",
+              background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+              backgroundSize: "200% auto",
+              color: "white",
+              border: "none",
+              borderRadius: "clamp(6px, 1.2vw, 10px)",
+              textDecoration: "none",
+              cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(15, 98, 254, 0.25)",
+              textAlign: "center",
+              letterSpacing: "0.3px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              whiteSpace: "nowrap",
+            }}
+            className="crear-cuenta-button">Crear cuenta</Link>
+          </nav>
+        </div>
       </header>
 
       <div style={{
@@ -153,7 +162,7 @@ export default function WelcomePage() {
         position: "relative",
         overflowX: "hidden",
         overflowY: "auto",
-        fontFamily: "Montserrat, sans-serif",
+        fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
         display: "flex",
         flexDirection: "column",
         width: "100%",
@@ -184,7 +193,7 @@ export default function WelcomePage() {
         alignItems: "flex-start",
         justifyContent: "center",
         padding: "clamp(16px, 3vw, 40px)",
-        paddingTop: "clamp(20px, 4vw, 60px)",
+        paddingTop: "clamp(80px, 12vw, 180px)",
         paddingBottom: "clamp(20px, 4vw, 60px)",
         width: "100%",
         minHeight: 0,
@@ -714,7 +723,7 @@ export default function WelcomePage() {
           <h1 style={{
             fontSize: "clamp(32px, 6vw, 56px)",
             fontWeight: 900,
-            fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive, sans-serif",
+            fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
             background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
             backgroundSize: "200% auto",
             WebkitBackgroundClip: "text",
@@ -1019,7 +1028,7 @@ function LandingContent() {
                 lineHeight: 1.15,
                 margin: "0 0 20px 0",
                 fontWeight: 800,
-                fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'Fredoka One', cursive, sans-serif",
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
                 background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
                 backgroundSize: "200% auto",
                 WebkitBackgroundClip: "text",
@@ -1034,7 +1043,7 @@ function LandingContent() {
                 color: "#475569",
                 margin: "0 0 32px 0",
                 lineHeight: 1.6,
-                fontFamily: "Arial, sans-serif",
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
                 wordWrap: "break-word",
                 overflowWrap: "break-word"
               }}>Ordeno mi dinero en minutos. Necesidades, gustos y ahorro. Simple y útil.</p>
@@ -1077,47 +1086,13 @@ function LandingContent() {
             alignItems: "center",
             minHeight: "400px"
           }}>
-            {/* Text - Will be first on mobile */}
-            <div className="hero-text" style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
-              order: 1
-            }}>
-              <h2 style={{
-                fontSize: "clamp(32px, 5vw, 64px)",
-                lineHeight: 1.15,
-                margin: "0 0 20px 0",
-                fontWeight: 800,
-                fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'Fredoka One', cursive, sans-serif",
-                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-                backgroundSize: "200% auto",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                animation: "shimmer 3s ease-in-out infinite",
-                wordWrap: "break-word",
-                overflowWrap: "break-word"
-              }}>Simuladores financieros</h2>
-              <p style={{
-                fontSize: "clamp(18px, 2.5vw, 28px)",
-                color: "#475569",
-                margin: "0 0 32px 0",
-                lineHeight: 1.6,
-                fontFamily: "Arial, sans-serif",
-                wordWrap: "break-word",
-                overflowWrap: "break-word"
-              }}>Pruebo escenarios reales. Cambio números y veo el impacto al instante. Aprendo haciendo.</p>
-            </div>
-            
-            {/* Image - Will be second on mobile */}
+            {/* Image - Left side on desktop, first on mobile */}
             <div className="hero-image" style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               width: "100%",
-              order: 2
+              order: 1
             }}>
               <img
                 src="/hero2.png"
@@ -1134,6 +1109,40 @@ function LandingContent() {
                 }}
               />
             </div>
+            
+            {/* Text - Right side on desktop, second on mobile */}
+            <div className="hero-text" style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              order: 2
+            }}>
+              <h2 style={{
+                fontSize: "clamp(32px, 5vw, 64px)",
+                lineHeight: 1.15,
+                margin: "0 0 20px 0",
+                fontWeight: 800,
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+                backgroundSize: "200% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                animation: "shimmer 3s ease-in-out infinite",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
+              }}>Simuladores financieros</h2>
+              <p style={{
+                fontSize: "clamp(18px, 2.5vw, 28px)",
+                color: "#475569",
+                margin: "0 0 32px 0",
+                lineHeight: 1.6,
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
+              }}>Pruebo escenarios reales. Cambio números y veo el impacto al instante. Aprendo haciendo.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -1148,7 +1157,7 @@ function LandingContent() {
             alignItems: "center",
             minHeight: "400px"
           }}>
-            {/* Text - Will be first on mobile */}
+            {/* Text - Left side on desktop, first on mobile */}
             <div className="hero-text" style={{
               display: "flex",
               flexDirection: "column",
@@ -1161,7 +1170,7 @@ function LandingContent() {
                 lineHeight: 1.15,
                 margin: "0 0 20px 0",
                 fontWeight: 800,
-                fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'Fredoka One', cursive, sans-serif",
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
                 background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
                 backgroundSize: "200% auto",
                 WebkitBackgroundClip: "text",
@@ -1176,13 +1185,13 @@ function LandingContent() {
                 color: "#475569",
                 margin: "0 0 32px 0",
                 lineHeight: 1.6,
-                fontFamily: "Arial, sans-serif",
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
                 wordWrap: "break-word",
                 overflowWrap: "break-word"
               }}>Aprendes jugando. Simulo ingresos, gastos y decisiones para que sientas el dinero en acción, pero sin riesgo.</p>
             </div>
             
-            {/* Image - Will be second on mobile */}
+            {/* Image - Right side on desktop, second on mobile */}
             <div className="hero-image" style={{
               display: "flex",
               justifyContent: "center",
@@ -1219,13 +1228,13 @@ function LandingContent() {
             alignItems: "center",
             minHeight: "400px"
           }}>
-            {/* Image - Will be second on mobile */}
+            {/* Image - Left side on desktop, first on mobile */}
             <div className="hero-image" style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               width: "100%",
-              order: 2
+              order: 1
             }}>
               <img
                 src="/hero4.png"
@@ -1243,20 +1252,20 @@ function LandingContent() {
               />
             </div>
             
-            {/* Text - Will be first on mobile */}
+            {/* Text - Right side on desktop, second on mobile */}
             <div className="hero-text" style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               textAlign: "center",
-              order: 1
+              order: 2
             }}>
               <h2 style={{
                 fontSize: "clamp(32px, 5vw, 64px)",
                 lineHeight: 1.15,
                 margin: "0 0 20px 0",
                 fontWeight: 800,
-                fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'Fredoka One', cursive, sans-serif",
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
                 background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
                 backgroundSize: "200% auto",
                 WebkitBackgroundClip: "text",
@@ -1271,7 +1280,7 @@ function LandingContent() {
                 color: "#475569",
                 margin: "0 0 32px 0",
                 lineHeight: 1.6,
-                fontFamily: "Arial, sans-serif",
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
                 wordWrap: "break-word",
                 overflowWrap: "break-word"
               }}>Pido feedback, comparto avances y aprendo de otros. Comunidad segura y moderada.</p>
@@ -1289,7 +1298,7 @@ function LandingContent() {
         <h2 className="y-mucho-mas-text" style={{
           fontSize: "clamp(40px, 7vw, 80px) !important",
           fontWeight: 900,
-          fontFamily: "Arial, sans-serif",
+          fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
           background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
           backgroundSize: "200% auto",
           WebkitBackgroundClip: "text",
@@ -1313,9 +1322,9 @@ function LandingContent() {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               animation: "shimmer 3s ease-in-out infinite",
-              fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive, sans-serif"
+              fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif"
             }}>Planes</h2>
-            <p>Elige el plan que mejor se adapte a tus necesidades.</p>
+            <p style={{ fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif" }}>Elige el plan que mejor se adapte a tus necesidades.</p>
           </header>
 
           <div className="grid-3">
@@ -1356,7 +1365,7 @@ function LandingContent() {
               lineHeight: 1.15,
               margin: "0 0 8px 0",
               fontWeight: 800,
-              fontFamily: "'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', 'Fredoka One', cursive, sans-serif",
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
               background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
               backgroundSize: "200% auto",
               WebkitBackgroundClip: "text",
@@ -1403,7 +1412,7 @@ function LandingContent() {
               <p style={{
                 fontSize: "clamp(48px, 8vw, 96px)",
                 fontWeight: 700,
-                fontFamily: "Arial, sans-serif",
+                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
                 background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
                 backgroundSize: "200% auto",
                 WebkitBackgroundClip: "text",
@@ -1509,7 +1518,7 @@ function LandingContent() {
               lineHeight: 1.15,
               margin: "0 0 8px 0",
               fontWeight: 800,
-              fontFamily: "Arial, sans-serif",
+              fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
               background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
               backgroundSize: "200% auto",
               WebkitBackgroundClip: "text",
@@ -1713,11 +1722,13 @@ const landingCSS = `
 body {
   background: linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%) !important;
   background-attachment: fixed !important;
+  font-family: 'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif !important;
 }
 
 html {
   background: linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%) !important;
   background-attachment: fixed !important;
+  font-family: 'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif !important;
 }
 
 .section{padding: clamp(48px, 7vw, 96px) 0; background: transparent !important;}
@@ -1957,8 +1968,15 @@ html {
     order: 1;
   }
   .hero-image-small {
-    width: 250px !important;
-    max-width: 250px !important;
+    width: clamp(150px, 45vw, 220px) !important;
+    max-width: clamp(150px, 45vw, 220px) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-image-small {
+    width: clamp(120px, 40vw, 180px) !important;
+    max-width: clamp(120px, 40vw, 180px) !important;
   }
 }
 

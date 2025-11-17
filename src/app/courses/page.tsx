@@ -1214,6 +1214,7 @@ export default function CoursesPage() {
                       <AnimatePresence>
                         {isSelected && (
                           <motion.div
+                            className="lesson-preview-panel"
                             initial={{ opacity: 0, x: showOnRight ? -10 : 10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: showOnRight ? -10 : 10 }}
@@ -1235,7 +1236,7 @@ export default function CoursesPage() {
                             }}
                           >
                             {/* Tail/Pointer - points left if on right, points right if on left */}
-                    <div style={{
+                    <div className="lesson-preview-tail" style={{
                       position: "absolute",
                               top: "50%",
                       [showOnRight ? 'left' : 'right']: "-20px",
@@ -1247,7 +1248,7 @@ export default function CoursesPage() {
                               [showOnRight ? 'borderRight' : 'borderLeft']: "20px solid #E5E7EB",
                               zIndex: 101
                             }} />
-                      <div style={{
+                      <div className="lesson-preview-tail" style={{
                 position: "absolute",
                               top: "50%",
                         [showOnRight ? 'left' : 'right']: "-17px",
@@ -1443,15 +1444,22 @@ export default function CoursesPage() {
           }
           
           /* Make preview panel full width on mobile */
-          [style*="position: absolute"][style*="top: 50%"] {
+          .lesson-preview-panel {
             position: relative !important;
             top: auto !important;
             left: auto !important;
             right: auto !important;
             transform: none !important;
-            width: 100% !important;
+            width: calc(100% - 32px) !important;
             max-width: 100% !important;
             margin-top: 16px !important;
+            margin-left: 16px !important;
+            margin-right: 16px !important;
+          }
+          
+          /* Hide the pointer tail on mobile */
+          .lesson-preview-tail {
+            display: none !important;
           }
           
           /* Reduce lesson island size on very small screens */
