@@ -397,6 +397,79 @@ export default function WelcomePage() {
         .y-mucho-mas-text {
           font-size: clamp(40px, 7vw, 80px) !important;
         }
+        
+        /* Border flash/thunder effect for Empieza Ya button */
+        @keyframes borderFlash {
+          0% {
+            background-position: 0% 0%;
+          }
+          25% {
+            background-position: 100% 0%;
+          }
+          50% {
+            background-position: 100% 100%;
+          }
+          75% {
+            background-position: 0% 100%;
+          }
+          100% {
+            background-position: 0% 0%;
+          }
+        }
+        
+        @keyframes buttonPulse {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 8px 24px rgba(15, 98, 254, 0.35);
+          }
+          50% {
+            transform: scale(1.02);
+            box-shadow: 0 12px 32px rgba(15, 98, 254, 0.5);
+          }
+        }
+        
+        .empieza-ya-button::before {
+          content: "";
+          position: absolute;
+          top: -3px;
+          left: -3px;
+          right: -3px;
+          bottom: -3px;
+          background: 
+            linear-gradient(90deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.4) 45%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.4) 55%, transparent 60%, transparent 100%) 0% 0% / 300% 3px,
+            linear-gradient(180deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.4) 45%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.4) 55%, transparent 60%, transparent 100%) 100% 0% / 3px 300%,
+            linear-gradient(270deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.4) 45%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.4) 55%, transparent 60%, transparent 100%) 100% 100% / 300% 3px,
+            linear-gradient(0deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.4) 45%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.4) 55%, transparent 60%, transparent 100%) 0% 100% / 3px 300%;
+          background-repeat: no-repeat;
+          border-radius: clamp(10px, 1.5vw, 12px);
+          z-index: 0;
+          animation: borderFlash 1.5s linear infinite;
+        }
+        
+        .empieza-ya-button::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: #0F62FE;
+          border-radius: clamp(7px, 1.2vw, 9px);
+          z-index: -1;
+        }
+        
+        .empieza-ya-button {
+          background: #0F62FE !important;
+          border: 3px solid transparent !important;
+          position: relative;
+          animation: buttonPulse 2s ease-in-out infinite;
+        }
+        
+        .empieza-ya-button span {
+          position: relative;
+          z-index: 2;
+        }
+        
         @media (max-width: 768px) {
           header {
             flex-wrap: wrap;
@@ -1138,6 +1211,108 @@ function LandingContent() {
             {defaultFaqs.map(({ q, a }, idx) => (
               <AccordionItem key={idx} question={q} answer={a} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section below FAQ */}
+      <section className="reveal-element reveal-delay-3" style={{
+        background: "transparent",
+        padding: "clamp(48px, 8vw, 120px) 0"
+      }}>
+        <div className="container" style={{
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "0 clamp(16px, 4vw, 32px)"
+        }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "clamp(32px, 6vw, 64px)",
+            alignItems: "center",
+            minHeight: "400px"
+          }}>
+            {/* Text and Button Left */}
+            <div style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "clamp(24px, 4vw, 32px)",
+              textAlign: "center",
+              marginTop: "clamp(-60px, -8vw, -40px)"
+            }}>
+              <p style={{
+                fontSize: "clamp(48px, 8vw, 96px)",
+                fontWeight: 700,
+                fontFamily: "Arial, sans-serif",
+                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+                backgroundSize: "200% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                animation: "shimmer 3s ease-in-out infinite",
+                margin: 0,
+                lineHeight: 1.3
+              }}>¿Qué esperas? Crea tu cuenta ya.</p>
+              
+              <Link
+                href="/signup"
+                className="empieza-ya-button"
+                style={{
+                  padding: "clamp(14px, 2.5vw, 18px) clamp(32px, 6vw, 48px)",
+                  fontSize: "clamp(16px, 2.2vw, 20px)",
+                  fontWeight: 700,
+                  fontFamily: "Montserrat, sans-serif",
+                  background: "#0F62FE",
+                  color: "white",
+                  border: "3px solid transparent",
+                  borderRadius: "clamp(10px, 1.5vw, 12px)",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  boxShadow: "0 8px 24px rgba(15, 98, 254, 0.35)",
+                  textAlign: "center",
+                  letterSpacing: "0.3px",
+                  minHeight: "48px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  position: "relative",
+                  overflow: "hidden"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
+                  e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.45)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0) scale(1)"
+                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.35)"
+                }}
+              >
+                <span style={{ position: "relative", zIndex: 1 }}>Empieza Ya</span>
+              </Link>
+            </div>
+            
+            {/* Image Right */}
+            <div style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%"
+            }}>
+              <img
+                src="/hero5.png"
+                alt="BIZEN"
+                style={{
+                  width: "100%",
+                  maxWidth: "clamp(300px, 40vw, 500px)",
+                  height: "auto",
+                  borderRadius: "16px",
+                  objectFit: "contain",
+                  display: "block"
+                }}
+              />
+            </div>
           </div>
         </div>
       </section>
