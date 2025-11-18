@@ -22,6 +22,9 @@ export default function GlobalLogo() {
     router.push("/courses")
   }
 
+  // Check if we're on the courses page
+  const isCoursesPage = pathname === '/courses'
+
   // On courses page: position at very top-left corner
   // Progress card starts at 32px (panel top padding)
   // Logo height: ~36px (image size)
