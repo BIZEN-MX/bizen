@@ -3,6 +3,8 @@ import { redirect, notFound } from "next/navigation"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { getTrackByKey, getUserLabProgress } from "@/lib/lab/db"
 import Link from "next/link"
+import BackButton from "@/components/business-lab/BackButton"
+import StepCard from "@/components/business-lab/StepCard"
 
 interface Props {
   params: {
@@ -102,28 +104,7 @@ export default async function TrackPage({ params }: Props) {
           overflowY: "visible"
         }}>
       {/* Back Button */}
-      <Link href="/business-lab" style={{ textDecoration: "none" }}>
-        <button style={{
-          padding: "8px 16px",
-          background: "white",
-          border: "2px solid #E5E7EB",
-          borderRadius: 8,
-          fontSize: 14,
-          fontWeight: 600,
-          color: "#374151",
-          cursor: "pointer",
-          marginBottom: 24,
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          transition: "all 0.2s ease"
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.borderColor = "#0B71FE"}
-        onMouseLeave={(e) => e.currentTarget.style.borderColor = "#E5E7EB"}
-        >
-          ← Volver al Lab
-        </button>
-      </Link>
+      <BackButton />
 
       {/* Track Header */}
       <div style={{ marginBottom: 32, width: "100%" }}>
@@ -195,84 +176,7 @@ export default async function TrackPage({ params }: Props) {
         </h2>
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
           {stepsWithProgress.map((step) => (
-            <Link key={step.id} href={`/business-lab/step/${step.id}`} style={{ textDecoration: "none" }}>
-              <div style={{
-                background: "white",
-                borderRadius: 16,
-                padding: 24,
-                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                border: step.isCompleted ? "2px solid #6EE7B7" : "2px solid #E5E7EB",
-                transition: "all 0.2s ease",
-                cursor: "pointer",
-                position: "relative" as const,
-                overflow: "hidden"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-2px)"
-                e.currentTarget.style.boxShadow = "0 8px 24px rgba(11,113,254,0.15)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)"
-                e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.06)"
-              }}
-              >
-                {step.isCompleted && (
-                  <div style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 4,
-                    background: "#10B981"
-                  }} />
-                )}
-                
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <div style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: 12,
-                    background: step.isCompleted ? "#D1FAE5" : "#E0F2FE",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 20,
-                    fontWeight: 700,
-                    color: step.isCompleted ? "#10B981" : "#0B71FE",
-                    flexShrink: 0
-                  }}>
-                    {step.isCompleted ? "✓" : step.order}
-                  </div>
-                  
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                      <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111" }}>
-                        {step.title}
-                      </h3>
-                      {step.required && (
-                        <span style={{
-                          fontSize: 11,
-                          padding: "2px 8px",
-                          background: "#FEE2E2",
-                          color: "#991B1B",
-                          borderRadius: 4,
-                          fontWeight: 600
-                        }}>
-                          REQUERIDO
-                        </span>
-                      )}
-                    </div>
-                    {step.description && (
-                      <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.5 }}>
-                        {step.description}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <span style={{ fontSize: 24 }}>→</span>
-                </div>
-              </div>
-            </Link>
+            <StepCard key={step.id} step={step} isCompleted={step.isCompleted} />
           ))}
         </div>
       </div>
