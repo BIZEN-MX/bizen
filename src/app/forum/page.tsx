@@ -200,16 +200,20 @@ function ForumContent() {
       />
       <div 
         ref={containerRef}
+        className="forum-container"
         style={{
           position: "relative",
           minHeight: "100vh",
           paddingTop: 40,
           paddingBottom: 80,
-          fontFamily: "Montserrat, sans-serif",
+          fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
           backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
           backgroundAttachment: "fixed",
           marginRight: "340px",
-          touchAction: "pan-y" // Allow vertical scrolling, enable gestures
+          touchAction: "pan-y", // Allow vertical scrolling, enable gestures
+          overflowX: "hidden",
+          overflowY: "visible",
+          boxSizing: "border-box"
         }}
       >
         <main style={{ 
@@ -625,6 +629,47 @@ function ForumContent() {
         to {
           opacity: 1;
           transform: translateY(0);
+        }
+      }
+      
+      /* Fix mobile scroll for forum page */
+      @media (max-width: 767px) {
+        /* Ensure container allows scroll */
+        .forum-container {
+          position: relative !important;
+          height: auto !important;
+          min-height: 100vh !important;
+          overflow-y: visible !important;
+          overflow-x: hidden !important;
+          margin-right: 0 !important;
+          padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* Ensure body can scroll on mobile */
+        body {
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+          -webkit-overflow-scrolling: touch !important;
+          position: relative !important;
+          height: auto !important;
+          min-height: 100vh !important;
+        }
+        
+        /* Ensure html can scroll on mobile */
+        html {
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+          -webkit-overflow-scrolling: touch !important;
+          height: auto !important;
+          min-height: 100vh !important;
+        }
+        
+        /* Adjust main content padding on mobile */
+        main[style*="position: relative"] {
+          padding: 20px 16px !important;
+          max-width: 100% !important;
+          margin: 0 !important;
         }
       }
     `}</style>

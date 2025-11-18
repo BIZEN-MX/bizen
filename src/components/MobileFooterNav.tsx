@@ -71,13 +71,15 @@ export default function MobileFooterNav() {
           left: 0 !important;
           right: 0 !important;
           width: 100vw !important;
-          height: 65px !important;
+          height: calc(65px + env(safe-area-inset-bottom)) !important;
+          padding-bottom: env(safe-area-inset-bottom) !important;
           background: linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%) !important;
           border-top: 2px solid rgba(15, 98, 254, 0.2) !important;
           box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1) !important;
           z-index: 10000 !important;
           font-family: Montserrat, sans-serif !important;
           display: block !important;
+          margin: 0 !important;
         }
         .mobile-footer-inner {
           display: flex !important;

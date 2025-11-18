@@ -373,7 +373,7 @@ function SettingsContent() {
   }
 
   return (
-    <div style={{
+    <div className="settings-container" style={{
       position: "relative",
       minHeight: "100vh",
       background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
@@ -381,7 +381,8 @@ function SettingsContent() {
       fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
       padding: "40px",
       maxWidth: "100%",
-      overflowX: "hidden"
+      overflowX: "hidden",
+      boxSizing: "border-box"
     }}>
       {/* Decorative Orbs */}
       <div style={{
@@ -446,7 +447,7 @@ function SettingsContent() {
           </p>
         </div>
 
-        <div style={{
+        <div className="settings-grid" style={{
           display: "grid",
           gridTemplateColumns: "250px 1fr",
           gap: 30
@@ -1964,6 +1965,102 @@ function SettingsContent() {
           </div>
         </div>
       </div>
+      
+      <style>{`
+        /* Fix mobile layout for settings page */
+        @media (max-width: 767px) {
+          .settings-container {
+            padding: 20px 16px !important;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+            overflow-x: hidden !important;
+            overflow-y: visible !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+          }
+          
+          .settings-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          
+          /* Sidebar navigation - make it horizontal scrollable on mobile */
+          .settings-grid > div:first-child {
+            position: relative !important;
+            top: auto !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            padding: 16px !important;
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 8px !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+          }
+          
+          /* Sidebar buttons - adjust for horizontal layout */
+          .settings-grid > div:first-child > button {
+            min-width: 140px !important;
+            width: auto !important;
+            flex-shrink: 0 !important;
+            white-space: nowrap !important;
+            margin-bottom: 0 !important;
+          }
+          
+          /* Content area - full width on mobile */
+          .settings-grid > div:last-child {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 20px 16px !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+            overflow-y: visible !important;
+          }
+          
+          /* Header adjustments */
+          .settings-container > div[style*="maxWidth: 100%"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          
+          .settings-container h1 {
+            font-size: clamp(24px, 6vw, 32px) !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .settings-container p {
+            font-size: clamp(14px, 3vw, 16px) !important;
+          }
+          
+          /* Ensure body can scroll on mobile */
+          body {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+            position: relative !important;
+            height: auto !important;
+            min-height: 100vh !important;
+          }
+          
+          /* Ensure html can scroll on mobile */
+          html {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+            height: auto !important;
+            min-height: 100vh !important;
+          }
+        }
+        
+      `}</style>
     </div>
   )
 }

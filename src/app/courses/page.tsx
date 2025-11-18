@@ -8,7 +8,6 @@ import { useTranslation } from "@/lib/translations"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Button from "@/components/ui/button"
-import { AvatarDisplay } from "@/components/AvatarDisplay"
 
 interface Lesson {
   id: string
@@ -710,24 +709,6 @@ export default function CoursesPage() {
     }
   }, [])
 
-  // Mobile sidebar toggle state - MUST be before any early returns (Rules of Hooks)
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-
-  // Close sidebar when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const sidebar = document.querySelector('[data-fixed-sidebar]')
-      const toggleBtn = document.querySelector('.mobile-sidebar-toggle')
-      if (isSidebarOpen && sidebar && !sidebar.contains(e.target as Node) && !toggleBtn?.contains(e.target as Node)) {
-        setIsSidebarOpen(false)
-        sidebar.classList.remove('mobile-sidebar-open')
-      }
-    }
-    if (isSidebarOpen) {
-      document.addEventListener('click', handleClickOutside)
-    }
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [isSidebarOpen])
 
   if (loading || loadingData) {
     return (
@@ -772,7 +753,7 @@ export default function CoursesPage() {
       requestAnimationFrame(() => {
         const element = document.getElementById(elementId)
         
-        if (element) {
+    if (element) {
           // Calculate offset to account for sticky header and panels
           const offset = 120
           const elementPosition = element.getBoundingClientRect().top
@@ -791,108 +772,6 @@ export default function CoursesPage() {
     })
   }
 
-  // Toggle mobile sidebar
-  const toggleSidebar = () => {
-    const newState = !isSidebarOpen
-    setIsSidebarOpen(newState)
-    const sidebar = document.querySelector('.courses-left-nav-panel[data-fixed-sidebar]') as HTMLElement
-    if (sidebar) {
-      console.log('Sidebar found, toggling to:', newState)
-      console.log('Sidebar children count:', sidebar.children.length)
-      if (newState) {
-        sidebar.classList.add('mobile-sidebar-open')
-        // CRITICAL: Use setProperty with !important to override globals.css
-        sidebar.style.setProperty('display', 'flex', 'important')
-        sidebar.style.setProperty('position', 'fixed', 'important')
-        sidebar.style.setProperty('top', '0', 'important')
-        sidebar.style.setProperty('right', '0', 'important')
-        sidebar.style.setProperty('left', 'auto', 'important')
-        sidebar.style.setProperty('width', '280px', 'important')
-        sidebar.style.setProperty('min-width', '280px', 'important')
-        sidebar.style.setProperty('max-width', '85vw', 'important')
-        sidebar.style.setProperty('height', '100vh', 'important')
-        sidebar.style.setProperty('min-height', '100vh', 'important')
-        sidebar.style.setProperty('max-height', '100vh', 'important')
-        sidebar.style.setProperty('transform', 'translateX(0)', 'important')
-        sidebar.style.setProperty('visibility', 'visible', 'important')
-        sidebar.style.setProperty('opacity', '1', 'important')
-        sidebar.style.setProperty('pointer-events', 'auto', 'important')
-        sidebar.style.setProperty('z-index', '10001', 'important')
-        sidebar.style.setProperty('flex-direction', 'column', 'important')
-        sidebar.style.setProperty('background', 'linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)', 'important')
-        sidebar.style.setProperty('padding', '60px 16px 32px 16px', 'important')
-        sidebar.style.setProperty('overflow-y', 'auto', 'important')
-        sidebar.style.setProperty('overflow-x', 'hidden', 'important')
-        sidebar.style.setProperty('box-shadow', '-2px 0 20px rgba(0, 0, 0, 0.15)', 'important')
-        sidebar.style.setProperty('border-left', '2px solid rgba(147, 197, 253, 0.3)', 'important')
-        sidebar.style.setProperty('border-right', 'none', 'important')
-        sidebar.style.setProperty('box-sizing', 'border-box', 'important')
-        // Ensure all children are visible
-        const children = sidebar.querySelectorAll('*')
-        console.log('Making visible:', children.length, 'children')
-        children.forEach((child) => {
-          const el = child as HTMLElement
-          el.style.opacity = '1'
-          el.style.visibility = 'visible'
-          el.style.display = el.tagName === 'BUTTON' ? 'flex' : el.tagName === 'DIV' ? 'block' : 'initial'
-        })
-        // Specifically ensure progress card and buttons are visible
-        const progressCard = sidebar.querySelector('.sidebar-progress-card') as HTMLElement
-        const levelButtons = sidebar.querySelector('.sidebar-level-buttons') as HTMLElement
-        if (progressCard) {
-          progressCard.style.display = 'block'
-          progressCard.style.opacity = '1'
-          progressCard.style.visibility = 'visible'
-          progressCard.style.position = 'relative'
-          progressCard.style.zIndex = '1'
-          console.log('Progress card made visible', progressCard.getBoundingClientRect())
-        }
-        if (levelButtons) {
-          levelButtons.style.display = 'flex'
-          levelButtons.style.flexDirection = 'column'
-          levelButtons.style.opacity = '1'
-          levelButtons.style.visibility = 'visible'
-          levelButtons.style.position = 'relative'
-          levelButtons.style.zIndex = '1'
-          console.log('Level buttons made visible', levelButtons.getBoundingClientRect())
-        }
-        // Log sidebar position to debug
-        const computed = window.getComputedStyle(sidebar)
-        console.log('=== SIDEBAR DEBUG ===')
-        console.log('Sidebar position:', sidebar.getBoundingClientRect())
-        console.log('Sidebar computed width:', computed.width)
-        console.log('Sidebar computed height:', computed.height)
-        console.log('Sidebar computed display:', computed.display)
-        console.log('Sidebar computed visibility:', computed.visibility)
-        console.log('Sidebar computed transform:', computed.transform)
-        console.log('Sidebar inline styles:', sidebar.style.cssText)
-        console.log('Sidebar classes:', sidebar.className)
-        
-        // Force a reflow to ensure styles are applied
-        void sidebar.offsetWidth
-        
-        // Check again after reflow
-        setTimeout(() => {
-          const rect = sidebar.getBoundingClientRect()
-          const computed2 = window.getComputedStyle(sidebar)
-          console.log('=== AFTER REFLOW ===')
-          console.log('Sidebar position:', rect)
-          console.log('Sidebar computed width:', computed2.width)
-          console.log('Sidebar computed height:', computed2.height)
-          console.log('Sidebar computed display:', computed2.display)
-        }, 100)
-      } else {
-        sidebar.classList.remove('mobile-sidebar-open')
-        sidebar.style.setProperty('transform', 'translateX(100%)', 'important')
-        sidebar.style.setProperty('visibility', 'hidden', 'important')
-        sidebar.style.setProperty('pointer-events', 'none', 'important')
-        sidebar.style.opacity = '0'
-        sidebar.style.pointerEvents = 'none'
-      }
-    } else {
-      console.error('Sidebar not found!')
-    }
-  }
 
   return (
       <div style={{
@@ -901,9 +780,11 @@ export default function CoursesPage() {
         left: 0,
         width: "100%",
         minHeight: "100vh",
-        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+      background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         overflowX: "hidden",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        paddingBottom: 0,
+        marginBottom: 0
     }}>
       {/* Decorative Orbs */}
         <div style={{
@@ -1084,7 +965,7 @@ export default function CoursesPage() {
               // Reset manual flag after scroll completes
               setTimeout(() => setIsManualLevelChange(false), 1500)
             }}
-            style={{
+            style={{ 
               padding: "12px 16px",
               background: activeLevel === 3 
                 ? "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)" 
@@ -1106,392 +987,14 @@ export default function CoursesPage() {
           >
             Avanzado
           </button>
-        </div>
+                </div>
 
       </div>
 
-      {/* Right Navigation Menu Panel */}
-        <div 
-          className="courses-left-nav-panel" 
-          data-fixed-sidebar 
-          style={{
-        position: "fixed",
-          top: 0,
-            right: 0,
-            width: "280px",
-        height: "100vh",
-            background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-            backdropFilter: "blur(20px)",
-            zIndex: 9999,
-            padding: "24px 20px",
-      fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-            borderLeft: "2px solid rgba(147, 197, 253, 0.3)",
-        display: "flex",
-            flexDirection: "column",
-            boxShadow: "-2px 0 12px rgba(0, 0, 0, 0.1)",
-            overflowY: "auto",
-            overflowX: "hidden",
-            boxSizing: "border-box"
-          }}
-        >
-          {/* Username with Avatar or Create Account Button */}
-          {user ? (
-                <div style={{
-          marginBottom: 24,
-              display: "flex",
-              alignItems: "center",
-              gap: 12
-      }}>
-              {/* Avatar */}
-        <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: "50%",
-                background: user.user_metadata?.avatar?.gradient || user.user_metadata?.avatar?.bgColor 
-                  ? "transparent" 
-                  : "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 24,
-          fontWeight: 800,
-              color: "#fff",
-                boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
-                flexShrink: 0,
-                overflow: "hidden"
-            }}>
-                <AvatarDisplay 
-                  avatar={user.user_metadata?.avatar || { type: "emoji", value: (user.user_metadata?.full_name || user.email || "U")[0].toUpperCase() }} 
-                  size={48} 
-                />
-                </div>
 
-              {/* Username */}
-              <h2 style={{
-                margin: 0,
-                fontSize: 18,
-                fontWeight: 700,
-            color: "#0F62FE",
-                flex: 1
-          }}>
-                {user.user_metadata?.username || user.email?.split('@')[0] || t.sidebar.student}
-              </h2>
-            </div>
-          ) : (
-            <div style={{ marginBottom: 24 }}>
-          <button
-                onClick={() => router.push("/signup")}
-            style={{
-                  width: "100%",
-                  padding: "14px 20px",
-                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                  border: "none",
-                borderRadius: 12,
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                  fontSize: 15,
-                  fontWeight: 700,
-                  color: "white",
-                  boxShadow: "0 4px 20px rgba(11, 113, 254, 0.5), 0 0 30px rgba(11, 113, 254, 0.3)",
-                }}
-              >
-                Crear Cuenta
-              </button>
-            </div>
-          )}
-
-          {/* Navigation Menu */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {/* Business Lab */}
-            <button
-              onClick={() => router.push("/business-lab")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "12px",
-                background: (isMobile ? "transparent" : (pathname === "/business-lab" || pathname?.startsWith("/business-lab") ? "#EFF6FF" : "transparent")),
-                border: "none",
-                borderRadius: 10,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                fontSize: 14,
-                fontWeight: pathname === "/business-lab" || pathname?.startsWith("/business-lab") ? 700 : 600,
-                textAlign: "left",
-                color: pathname === "/business-lab" || pathname?.startsWith("/business-lab") ? "#0F62FE" : "#000"
-              }}
-            >
-              <Image 
-                src="/bizen-logo.png" 
-                alt="BIZEN" 
-                width={20} 
-                height={20}
-                style={{ objectFit: "contain", filter: "hue-rotate(200deg) saturate(1.5)" }}
-              />
-              <span className="nav-item-label">Business Lab</span>
-            </button>
-
-            {/* Courses */}
-            <button
-              onClick={() => router.push("/courses")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "12px",
-                background: (isMobile ? "transparent" : (pathname === "/courses" ? "#EFF6FF" : "transparent")),
-                border: "none",
-                borderRadius: 10,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                fontSize: 14,
-                fontWeight: pathname === "/courses" ? 700 : 600,
-                textAlign: "left",
-                color: pathname === "/courses" ? "#0F62FE" : "#000"
-              }}
-            >
-              <span style={{ 
-                fontSize: 20,
-                filter: "hue-rotate(200deg) saturate(1.8) brightness(0.85)",
-                display: "inline-block"
-              }}>📚</span>
-              <span className="nav-item-label">{t.nav.exploreCourses}</span>
-            </button>
-
-            {/* Cash Flow */}
-            <button
-              onClick={() => router.push("/cash-flow")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "12px",
-                background: (isMobile ? "transparent" : (pathname === "/cash-flow" || pathname?.startsWith("/cash-flow") ? "#EFF6FF" : "transparent")),
-                border: "none",
-                borderRadius: 10,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-              fontSize: 14,
-                fontWeight: pathname === "/cash-flow" || pathname?.startsWith("/cash-flow") ? 700 : 600,
-                textAlign: "left",
-                color: pathname === "/cash-flow" || pathname?.startsWith("/cash-flow") ? "#0F62FE" : "#000"
-              }}
-            >
-              <span style={{ 
-                fontSize: 20,
-                filter: "hue-rotate(200deg) saturate(1.8) brightness(0.85)",
-                display: "inline-block"
-              }}>💰</span>
-              <span className="nav-item-label">Cash Flow</span>
-          </button>
-
-            {/* Simuladores */}
-          <button
-              onClick={() => router.push("/simuladores")}
-            style={{ 
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "12px",
-                background: (isMobile ? "transparent" : (pathname === "/simuladores" || pathname?.startsWith("/simuladores") ? "#EFF6FF" : "transparent")),
-                border: "none",
-                borderRadius: 10,
-              cursor: "pointer",
-                transition: "all 0.2s ease",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                fontSize: 14,
-                fontWeight: pathname === "/simuladores" || pathname?.startsWith("/simuladores") ? 700 : 600,
-                textAlign: "left",
-                color: pathname === "/simuladores" || pathname?.startsWith("/simuladores") ? "#0F62FE" : "#000"
-              }}
-            >
-              <span style={{ 
-                fontSize: 20, 
-                fontWeight: 700,
-                color: "#0B71FE",
-                display: "inline-block"
-              }}>$</span>
-              <span className="nav-item-label">Simuladores</span>
-            </button>
-
-            {/* Only show these navigation items when user is authenticated */}
-            {user && (
-              <>
-                {/* Progreso */}
-                <button
-                  onClick={() => router.push("/progress")}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px",
-                    background: (isMobile ? "transparent" : (pathname === "/progress" || pathname?.startsWith("/progress") ? "#EFF6FF" : "transparent")),
-                    border: "none",
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                    fontSize: 14,
-                    fontWeight: pathname === "/progress" || pathname?.startsWith("/progress") ? 700 : 600,
-                    textAlign: "left",
-                    color: pathname === "/progress" || pathname?.startsWith("/progress") ? "#0F62FE" : "#000"
-                  }}
-                >
-                  <span style={{ 
-                    fontSize: 20,
-                    filter: "hue-rotate(200deg) saturate(1.8) brightness(0.85)",
-                    display: "inline-block"
-                  }}>🏆</span>
-                  <span className="nav-item-label">{t.nav.myProgress}</span>
-                </button>
-
-                {/* Foro */}
-                <button
-                  onClick={() => router.push("/forum")}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px",
-                    background: (isMobile ? "transparent" : (pathname === "/forum" || pathname?.startsWith("/forum") ? "#EFF6FF" : "transparent")),
-                    border: "none",
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                fontSize: 14,
-                    fontWeight: pathname === "/forum" || pathname?.startsWith("/forum") ? 700 : 600,
-                    textAlign: "left",
-                    color: pathname === "/forum" || pathname?.startsWith("/forum") ? "#0F62FE" : "#000"
-                  }}
-                >
-                  <span style={{ 
-                    fontSize: 20,
-                    filter: "hue-rotate(200deg) saturate(1.8) brightness(0.85)",
-                    display: "inline-block"
-                  }}>💬</span>
-                  <span className="nav-item-label">Foro Emprendedor</span>
-          </button>
-
-                {/* Perfil */}
-          <button
-                  onClick={() => router.push("/profile")}
-            style={{ 
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px",
-                    background: (isMobile ? "transparent" : (pathname === "/profile" || pathname?.startsWith("/profile") ? "#EFF6FF" : "transparent")),
-                    border: "none",
-                    borderRadius: 10,
-              cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                    fontSize: 14,
-                    fontWeight: pathname === "/profile" || pathname?.startsWith("/profile") ? 700 : 600,
-                    textAlign: "left",
-                    color: pathname === "/profile" || pathname?.startsWith("/profile") ? "#0F62FE" : "#000"
-                  }}
-                >
-                  <span style={{ 
-                    fontSize: 20,
-                    filter: "hue-rotate(200deg) saturate(1.8) brightness(0.85)",
-                    display: "inline-block"
-                  }}>👤</span>
-                  <span className="nav-item-label">{t.nav.profile}</span>
-                </button>
-
-                {/* Cuenta */}
-                <button
-                  onClick={() => router.push("/cuenta")}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px",
-                    background: (isMobile ? "transparent" : (pathname === "/cuenta" || pathname?.startsWith("/cuenta") ? "#EFF6FF" : "transparent")),
-                    border: "none",
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                    fontSize: 14,
-                    fontWeight: pathname === "/cuenta" || pathname?.startsWith("/cuenta") ? 700 : 600,
-                    textAlign: "left",
-                    color: pathname === "/cuenta" || pathname?.startsWith("/cuenta") ? "#0F62FE" : "#000"
-                  }}
-                >
-                  <span style={{ 
-                    fontSize: 20,
-                    filter: "hue-rotate(200deg) saturate(1.8) brightness(0.85)",
-                    display: "inline-block"
-                  }}>⚙️</span>
-                  <span className="nav-item-label">{t.nav.account}</span>
-                </button>
-
-                {/* Configuración */}
-                <button
-                  onClick={() => router.push("/configuracion")}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px",
-                    background: (isMobile ? "transparent" : (pathname === "/configuracion" || pathname?.startsWith("/configuracion") ? "#EFF6FF" : "transparent")),
-                    border: "none",
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-                fontSize: 14,
-                    fontWeight: pathname === "/configuracion" || pathname?.startsWith("/configuracion") ? 700 : 600,
-                    textAlign: "left",
-                    color: pathname === "/configuracion" || pathname?.startsWith("/configuracion") ? "#0F62FE" : "#000"
-                  }}
-                >
-                  <span style={{ 
-                    fontSize: 20,
-                    filter: "hue-rotate(200deg) saturate(1.8) brightness(0.85)",
-                    display: "inline-block"
-                  }}>⚙️</span>
-                  <span className="nav-item-label">{t.nav.settings}</span>
-          </button>
-              </>
-            )}
-                </div>
-      </div>
-
-      {/* Mobile Sidebar Backdrop */}
-      {isSidebarOpen && (
-        <div
-          className="mobile-sidebar-backdrop"
-          onClick={toggleSidebar}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0, 0, 0, 0.5)",
-            zIndex: 9998, // Lower than sidebar (10000)
-            display: "none", // Hidden on desktop, shown via CSS on mobile
-          }}
-        />
-      )}
-
-      {/* Hide MobileBottomNav on courses page AND override globals.css */}
+      {/* Hide MobileBottomNav on courses page */}
       <style>{`
-        /* CRITICAL: Override globals.css that hides [data-fixed-sidebar] on mobile */
         @media (max-width: 767px) {
-          /* More specific selector to override globals.css */
-          div.courses-left-nav-panel[data-fixed-sidebar] {
-            display: flex !important; /* Override: globals.css has display: none */
-          }
-          
           [data-mobile-bottom-nav] {
             display: none !important;
           }
@@ -1565,7 +1068,9 @@ export default function CoursesPage() {
         position: "relative",
         display: "flex",
         justifyContent: "center",
-        alignItems: "flex-start"
+        alignItems: "flex-start",
+        marginBottom: 0,
+        boxSizing: "border-box"
       }}>
         {/* Island Path */}
             <div style={{
@@ -2231,7 +1736,7 @@ export default function CoursesPage() {
             padding-left: 16px !important;
             padding-right: 16px !important;
             padding-top: 80px !important; /* Space for hamburger button */
-            padding-bottom: 80px !important; /* Space for mobile footer (65px + 15px gap) */
+            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; /* Space for mobile footer + safe area */
           }
           
           /* Ensure body can scroll on mobile */

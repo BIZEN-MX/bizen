@@ -1319,6 +1319,15 @@ export default function FixedSidebar() {
             align-self: center !important;
           }
           
+          /* Ensure icons/avatars/emojis are perfectly centered */
+          [data-fixed-sidebar] button > img,
+          [data-fixed-sidebar] button > div:first-child,
+          [data-fixed-sidebar] button > span:first-child {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
+          }
+          
           /* Center emojis on iPad and remove backgrounds */
           [data-fixed-sidebar] button {
             display: flex !important;

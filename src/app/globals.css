@@ -47,6 +47,15 @@ html {
 
 body {
   font-family: 'Feather Bold', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Prevent gap below mobile footer */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: 0 !important;
+  }
 }
 
 @media (min-width: 768px) {
