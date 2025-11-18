@@ -90,14 +90,15 @@ export default function WelcomePage() {
       }}>
       {/* Header */}
       <header style={{
-        position: "sticky",
+        position: "fixed",
         top: 0,
         zIndex: 1000,
         width: "100%",
         padding: "clamp(12px, 2vw, 20px) clamp(16px, 3vw, 32px)",
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
+        gap: "clamp(32px, 8vw, 80px)",
         background: "#ffffff",
         borderBottom: "1px solid rgba(15, 98, 254, 0.1)",
         boxSizing: "border-box",
@@ -106,6 +107,7 @@ export default function WelcomePage() {
         <Link href="/" style={{
           display: "flex",
           alignItems: "center",
+          gap: 8,
           textDecoration: "none",
           flexShrink: 0,
         }}>
@@ -117,6 +119,15 @@ export default function WelcomePage() {
             priority 
             style={{ width: "clamp(28px, 4vw, 40px)", height: "auto", flexShrink: 0 }}
           />
+          <span style={{
+            fontSize: "clamp(16px, 2.5vw, 20px)",
+            fontWeight: 700,
+            color: "#0F62FE",
+            fontFamily: "'Montserrat', sans-serif",
+            letterSpacing: "0.3px"
+          }}>
+            BIZEN
+          </span>
         </Link>
 
           <nav style={{ display: "flex", gap: "clamp(8px, 2vw, 16px)", alignItems: "center", flexShrink: 0 }} className="header-nav">
@@ -145,6 +156,7 @@ export default function WelcomePage() {
       </header>
 
       <div style={{
+        paddingTop: "clamp(64px, 12vw, 80px)", // Add padding to account for fixed header
         minHeight: "100vh",
         position: "relative",
         overflowX: "hidden",
@@ -209,9 +221,9 @@ export default function WelcomePage() {
               position: "relative",
               background: "white",
               borderRadius: "clamp(16px, 4vw, 32px)",
-              padding: "clamp(24px, 5vw, 50px)",
+              padding: "clamp(12px, 3vw, 50px)",
               boxShadow: "0 24px 64px rgba(15, 98, 254, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08)",
-            }}>
+            }} className="billy-container">
               <Image
                 src={isMouthOpen ? "/3.png" : "/2.png"}
                 alt="Billy"
@@ -220,11 +232,12 @@ export default function WelcomePage() {
                 style={{ 
                   display: "block",
                   borderRadius: "16px",
-                  width: "100%",
                   height: "auto",
-                  maxWidth: "clamp(200px, 35vw, 320px)",
+                  maxWidth: "clamp(180px, 30vw, 320px)",
+                  width: "clamp(180px, 30vw, 320px)",
                   objectFit: "contain",
                 }}
+                className="billy-image"
                 priority
               />
             </div>
@@ -671,6 +684,33 @@ export default function WelcomePage() {
           }
           h1 {
             font-size: clamp(80px, 14vw, 140px) !important;
+          }
+        }
+        
+        /* Billy image - smaller on mobile and iPad */
+        @media (max-width: 767px) {
+          .billy-container {
+            padding: clamp(8px, 2vw, 16px) !important;
+          }
+          .billy-image,
+          .billy-container .billy-image,
+          .main-content > div:first-child .billy-image {
+            max-width: clamp(80px, 25vw, 160px) !important;
+            width: clamp(80px, 25vw, 160px) !important;
+            height: auto !important;
+          }
+        }
+        
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .billy-container {
+            padding: clamp(16px, 2.5vw, 32px) !important;
+          }
+          .billy-image,
+          .billy-container .billy-image,
+          .main-content > div:first-child .billy-image {
+            max-width: clamp(120px, 22vw, 200px) !important;
+            width: clamp(120px, 22vw, 200px) !important;
+            height: auto !important;
           }
         }
         

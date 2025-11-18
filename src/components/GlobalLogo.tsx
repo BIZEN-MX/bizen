@@ -7,19 +7,16 @@ export default function GlobalLogo() {
   const router = useRouter()
   const pathname = usePathname()
 
-  // Don't show on auth pages and landing
+  // Don't show on auth pages, landing, and courses page
   const isAuthPage = pathname === '/login' || 
                      pathname === '/signup' || 
                      pathname === '/reset-password' ||
                      pathname === '/forgot-password' ||
                      pathname === '/bizen/signup' ||
-                     pathname === '/'
+                     pathname === '/' ||
+                     pathname === '/courses'
 
   if (isAuthPage) return null
-
-  // Only show on courses page
-  const isCoursesPage = pathname === '/courses'
-  if (!isCoursesPage) return null
 
   const handleClick = () => {
     router.push("/courses")
