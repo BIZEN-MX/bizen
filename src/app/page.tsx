@@ -80,7 +80,10 @@ export default function WelcomePage() {
         background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
         backgroundAttachment: "fixed",
         minHeight: "100vh",
-        width: "100%",
+        width: "100vw",
+        maxWidth: "100vw",
+        margin: 0,
+        padding: 0,
         overflowX: "hidden",
         overflowY: "auto",
         boxSizing: "border-box",
@@ -93,27 +96,18 @@ export default function WelcomePage() {
         width: "100%",
         padding: "clamp(12px, 2vw, 20px) clamp(16px, 3vw, 32px)",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
         background: "#ffffff",
         borderBottom: "1px solid rgba(15, 98, 254, 0.1)",
         boxSizing: "border-box",
       }} className="main-header">
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "clamp(80px, 20vw, 350px)",
-          width: "100%",
-          maxWidth: "1200px",
-      }}>
-        {/* Logo and Brand */}
+        {/* Logo */}
         <Link href="/" style={{
           display: "flex",
           alignItems: "center",
-            gap: "clamp(6px, 1.5vw, 10px)",
           textDecoration: "none",
-            flexShrink: 0,
+          flexShrink: 0,
         }}>
           <Image 
             src="/bizen-logo.png" 
@@ -121,14 +115,8 @@ export default function WelcomePage() {
             width={40} 
             height={40} 
             priority 
-              style={{ width: "clamp(28px, 4vw, 40px)", height: "auto", flexShrink: 0 }}
+            style={{ width: "clamp(28px, 4vw, 40px)", height: "auto", flexShrink: 0 }}
           />
-          <strong style={{ 
-              fontSize: "clamp(16px, 2.5vw, 20px)", 
-            color: "#0B71FE", 
-              fontFamily: 'Montserrat, sans-serif',
-              whiteSpace: "nowrap"
-          }}>BIZEN</strong>
         </Link>
 
           <nav style={{ display: "flex", gap: "clamp(8px, 2vw, 16px)", alignItems: "center", flexShrink: 0 }} className="header-nav">
@@ -136,7 +124,7 @@ export default function WelcomePage() {
               padding: "clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)",
               fontSize: "clamp(12px, 1.8vw, 16px)",
               fontWeight: 700,
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
               backgroundSize: "200% auto",
               color: "white",
@@ -294,7 +282,7 @@ export default function WelcomePage() {
                   padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
                   fontSize: "clamp(14px, 1.8vw, 16px)",
                   fontWeight: 700,
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
                   backgroundSize: "200% auto",
                   color: "white",
@@ -331,7 +319,7 @@ export default function WelcomePage() {
                   padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
                   fontSize: "clamp(14px, 1.8vw, 16px)",
                   fontWeight: 700,
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   background: "white",
                   color: "#0F62FE",
                   border: "2px solid #0F62FE",
@@ -1430,7 +1418,7 @@ function LandingContent() {
                   padding: "clamp(14px, 2.5vw, 18px) clamp(32px, 6vw, 48px)",
                   fontSize: "clamp(16px, 2.2vw, 20px)",
                   fontWeight: 700,
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   background: "#0F62FE",
                   color: "white",
                   border: "3px solid transparent",

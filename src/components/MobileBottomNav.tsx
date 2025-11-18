@@ -199,7 +199,7 @@ export default function MobileBottomNav() {
                   e.currentTarget.style.background = isActive ? "rgba(15, 98, 254, 0.15)" : "transparent"
                 }}
               >
-                <span style={{
+                <span className="mobile-nav-icon" style={{
                   fontSize: 20,
                   display: "inline-block",
                   filter: isActive ? "none" : "opacity(0.6)"
@@ -256,7 +256,7 @@ export default function MobileBottomNav() {
                   e.currentTarget.style.background = isActive ? "rgba(15, 98, 254, 0.15)" : "transparent"
                 }}
               >
-                <span style={{
+                <span className="mobile-nav-icon" style={{
                   fontSize: 20,
                   display: "inline-block",
                   filter: isActive ? "none" : "opacity(0.6)"
@@ -310,7 +310,7 @@ export default function MobileBottomNav() {
                 e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent"
               }}
             >
-              <span style={{
+              <span className="mobile-nav-icon" style={{
                 fontSize: 24,
                 background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
                 WebkitBackgroundClip: "text",
@@ -367,7 +367,7 @@ export default function MobileBottomNav() {
                 e.currentTarget.style.background = showMoreMenu ? "rgba(15, 98, 254, 0.15)" : "transparent"
               }}
             >
-              <span style={{
+              <span className="mobile-nav-icon" style={{
                 fontSize: 20,
                 display: "inline-block",
                 filter: showMoreMenu ? "none" : "opacity(0.6)",
@@ -636,6 +636,9 @@ export default function MobileBottomNav() {
         @media (max-width: 767px) {
           [data-mobile-bottom-nav] {
             display: flex !important;
+          }
+          .mobile-nav-icon {
+            font-size: 36px !important;
           }
         }
         @media (min-width: 768px) {

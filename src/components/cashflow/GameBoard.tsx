@@ -250,7 +250,7 @@ export default function GameBoard({ playerPosition, isRolling, onRollDice, canRo
               cursor: canRoll && !isRolling ? 'pointer' : 'not-allowed',
               opacity: canRoll && !isRolling ? 1 : 0.6,
               transition: 'all 0.2s',
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
               animation: isRolling ? 'shake 0.5s infinite' : 'none'
             }}

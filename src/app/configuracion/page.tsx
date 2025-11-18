@@ -373,17 +373,23 @@ function SettingsContent() {
   }
 
   return (
-    <div className="settings-container" style={{
-      position: "relative",
+    <div className="configuracion-outer" style={{
+      width: "100%",
       minHeight: "100vh",
       background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       backgroundAttachment: "fixed",
-      fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-      padding: "40px",
-      maxWidth: "100%",
+      fontFamily: "'Montserrat', sans-serif",
       overflowX: "hidden",
+      overflowY: "auto",
       boxSizing: "border-box"
     }}>
+      <div className="settings-container" style={{
+        position: "relative",
+        minHeight: "100vh",
+        padding: "40px",
+        overflowX: "hidden",
+        boxSizing: "border-box"
+      }}>
       {/* Decorative Orbs */}
       <div style={{
         position: "fixed",
@@ -484,7 +490,7 @@ function SettingsContent() {
                   fontSize: 14,
                   fontWeight: activeSection === section.id ? 700 : 600,
                   color: activeSection === section.id ? "#0F62FE" : "#6B7280",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
                 onMouseEnter={(e) => {
                   if (activeSection !== section.id) {
@@ -718,7 +724,7 @@ function SettingsContent() {
                             background: "rgba(255, 255, 255, 0.7)",
                             color: "#1E40AF",
                             fontWeight: 600,
-                            fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                            fontFamily: "'Montserrat', sans-serif",
                             outline: "none",
                             transition: "all 0.2s ease",
                           }}
@@ -744,7 +750,7 @@ function SettingsContent() {
                             fontWeight: 700,
                             cursor: saving ? "not-allowed" : "pointer",
                             transition: "all 0.2s ease",
-                            fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                            fontFamily: "'Montserrat', sans-serif",
                             whiteSpace: "nowrap"
                           }}
                           onMouseEnter={(e) => {
@@ -789,7 +795,7 @@ function SettingsContent() {
                             fontWeight: 700,
                             cursor: "pointer",
                             transition: "all 0.2s ease",
-                            fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                            fontFamily: "'Montserrat', sans-serif"
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.transform = "translateY(-2px)"
@@ -818,7 +824,7 @@ function SettingsContent() {
                               background: "rgba(255, 255, 255, 0.7)",
                               color: "#1E40AF",
                               fontWeight: 600,
-                              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                              fontFamily: "'Montserrat', sans-serif",
                               outline: "none",
                               transition: "all 0.2s ease",
                               boxSizing: "border-box"
@@ -847,7 +853,7 @@ function SettingsContent() {
                               background: "rgba(255, 255, 255, 0.7)",
                               color: "#1E40AF",
                               fontWeight: 600,
-                              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                              fontFamily: "'Montserrat', sans-serif",
                               outline: "none",
                               transition: "all 0.2s ease",
                               boxSizing: "border-box"
@@ -877,7 +883,7 @@ function SettingsContent() {
                                 fontWeight: 700,
                                 cursor: saving ? "not-allowed" : "pointer",
                                 transition: "all 0.2s ease",
-                                fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                                fontFamily: "'Montserrat', sans-serif"
                               }}
                               onMouseEnter={(e) => {
                                 if (!saving) {
@@ -910,7 +916,7 @@ function SettingsContent() {
                                 fontWeight: 700,
                                 cursor: "pointer",
                                 transition: "all 0.2s ease",
-                                fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                                fontFamily: "'Montserrat', sans-serif"
                               }}
                               onMouseEnter={(e) => {
                                 e.currentTarget.style.background = "rgba(107, 114, 128, 0.3)"
@@ -1229,7 +1235,7 @@ function SettingsContent() {
                       fontWeight: 700,
                       cursor: saving ? "not-allowed" : "pointer",
                       transition: "all 0.2s ease",
-                      fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                      fontFamily: "'Montserrat', sans-serif"
                     }}
                     onMouseEnter={(e) => {
                       if (!saving) {
@@ -1965,17 +1971,23 @@ function SettingsContent() {
           </div>
         </div>
       </div>
+      </div>
       
       <style>{`
-        /* Fix mobile layout for settings page */
+        /* Mobile - account for footer */
         @media (max-width: 767px) {
+          .configuracion-outer {
+            padding-bottom: 65px !important;
+            min-height: calc(100vh - 65px) !important;
+          }
           .settings-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
             padding: 20px 16px !important;
             padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
             overflow-x: hidden !important;
             overflow-y: visible !important;
-            width: 100% !important;
-            max-width: 100vw !important;
             box-sizing: border-box !important;
           }
           
@@ -2060,6 +2072,43 @@ function SettingsContent() {
           }
         }
         
+        /* Tablet/iPad - no gap, sidebar overlays */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .configuracion-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .settings-container {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+          .settings-grid {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+        }
+        
+        /* Desktop - no gap, sidebar overlays */
+        @media (min-width: 1025px) {
+          .configuracion-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .settings-container {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+          .settings-grid {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+        }
       `}</style>
     </div>
   )

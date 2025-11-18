@@ -105,23 +105,73 @@ export default function LabPage() {
   const progressPercentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0
 
   return (
-    <main style={{
-      width: "calc(100% - 320px)",
-      maxWidth: "none",
-      margin: 0,
-      paddingTop: "40px",
-      paddingBottom: "40px",
-      paddingLeft: "clamp(20px, 4vw, 40px)",
-      paddingRight: "clamp(20px, 4vw, 40px)",
-      overflowX: "hidden",
-      overflowY: "visible",
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      fontFamily: "Montserrat, sans-serif",
-      boxSizing: "border-box" as const
-    }}>
+    <>
+      <style>{`
+        /* Mobile - account for footer */
+        @media (max-width: 767px) {
+          .business-lab-outer {
+            padding-bottom: 65px !important;
+            min-height: calc(100vh - 65px) !important;
+          }
+          .business-lab-main {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(16px, 4vw, 24px) !important;
+          }
+        }
+        /* Tablet/iPad - no gap, sidebar overlays */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .business-lab-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .business-lab-main {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        /* Desktop - no gap, sidebar overlays */
+        @media (min-width: 1025px) {
+          .business-lab-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .business-lab-main {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
+      <div className="business-lab-outer" style={{
+        width: "100%",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        fontFamily: "Montserrat, sans-serif",
+        overflowX: "hidden",
+        overflowY: "auto",
+        boxSizing: "border-box"
+      }}>
+        <main className="business-lab-main" style={{
+          margin: "0 auto",
+          paddingTop: "40px",
+          paddingBottom: "40px",
+          paddingLeft: "clamp(20px, 4vw, 40px)",
+          paddingRight: "clamp(20px, 4vw, 40px)",
+          overflowX: "hidden",
+          overflowY: "visible",
+          minHeight: "100vh",
+          boxSizing: "border-box" as const,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
+        }}>
         {/* Header */}
-        <div style={{ marginBottom: 32 }}>
+        <div style={{ marginBottom: 32, width: "100%", maxWidth: "1200px", textAlign: "center" }}>
           <h1 style={{
             fontSize: 42,
             fontWeight: 900,
@@ -148,6 +198,7 @@ export default function LabPage() {
           marginBottom: 24,
           border: "1px solid rgba(255, 255, 255, 0.4)",
           width: "100%",
+          maxWidth: "1200px",
           boxSizing: "border-box" as const,
           color: "#1E40AF"
         }}>
@@ -201,6 +252,7 @@ export default function LabPage() {
             marginBottom: 24,
             border: "1px solid rgba(255, 255, 255, 0.4)",
             width: "100%",
+            maxWidth: "1200px",
             boxSizing: "border-box" as const,
             color: "#1E40AF"
           }}>
@@ -263,7 +315,8 @@ export default function LabPage() {
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: 16,
           marginBottom: 32,
-          width: "100%"
+          width: "100%",
+          maxWidth: "1200px"
         }}>
           <Link href="/business-lab/templates" style={{ textDecoration: "none" }}>
             <div style={{
@@ -378,21 +431,22 @@ export default function LabPage() {
         </div>
 
         {/* Tracks Section */}
-        <div style={{ marginBottom: 32 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+        <div style={{ marginBottom: 32, width: "100%", maxWidth: "1200px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, justifyContent: "center" }}>
             <span style={{ fontSize: 28 }}>🎯</span>
             <h2 style={{ fontSize: 28, fontWeight: 700, color: "#1E40AF" }}>
               Rutas de Aprendizaje
             </h2>
           </div>
-          <p style={{ color: "#6B7280", marginBottom: 24, fontSize: 15 }}>
+          <p style={{ color: "#6B7280", marginBottom: 24, fontSize: 15, textAlign: "center" }}>
             Sigue estas rutas para construir tu startup de forma estructurada.
           </p>
           
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: 20
+            gap: 20,
+            width: "100%"
           }}>
             {tracks.map((track) => (
               <Link 
@@ -500,6 +554,7 @@ export default function LabPage() {
           border: "1px solid rgba(255, 255, 255, 0.4)",
           boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
           width: "100%",
+          maxWidth: "1200px",
           boxSizing: "border-box" as const,
           color: "#0f172a"
         }}>
@@ -521,6 +576,52 @@ export default function LabPage() {
             <li>Reporta cualquier problema a diego@bizen.mx</li>
           </ul>
         </div>
-      </main>
+        <style>{`
+          /* Business Lab - Centered content in usable space for all devices */
+          @media (max-width: 767px) {
+            main {
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+              width: 100vw !important;
+              max-width: 100vw !important;
+              margin-left: 0 !important;
+              margin-right: 0 !important;
+              display: flex !important;
+              flex-direction: column !important;
+              align-items: center !important;
+            }
+          }
+          
+          @media (min-width: 768px) and (max-width: 1160px) {
+            main {
+              padding-left: clamp(20px, 4vw, 40px) !important;
+              padding-right: 160px !important;
+              width: calc(100vw - 160px) !important;
+              max-width: calc(100vw - 160px) !important;
+              margin-left: 0 !important;
+              margin-right: 0 !important;
+              display: flex !important;
+              flex-direction: column !important;
+              align-items: center !important;
+            }
+          }
+          
+          @media (min-width: 1161px) {
+            main {
+              padding-left: clamp(20px, 4vw, 40px) !important;
+              padding-right: 320px !important;
+              width: calc(100vw - 320px) !important;
+              max-width: calc(100vw - 320px) !important;
+              margin-left: 0 !important;
+              margin-right: 0 !important;
+              display: flex !important;
+              flex-direction: column !important;
+              align-items: center !important;
+            }
+          }
+        `}</style>
+        </main>
+      </div>
+    </>
   )
 }

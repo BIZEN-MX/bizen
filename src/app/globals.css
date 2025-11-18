@@ -1,28 +1,4 @@
 /* ==========================================
-   FONT DEFINITIONS
-   ========================================== */
-
-@font-face {
-  font-family: 'Feather Bold';
-  src: url('/fonts/Feather-Bold.woff2') format('woff2'),
-       url('/fonts/Feather-Bold.woff') format('woff'),
-       url('/fonts/Feather-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Feather Bold';
-  src: url('/fonts/Feather-Bold.woff2') format('woff2'),
-       url('/fonts/Feather-Bold.woff') format('woff'),
-       url('/fonts/Feather-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ==========================================
    COMPREHENSIVE RESPONSIVE STYLES
    Works on Phone, iPad, and Desktop
    ========================================== */
@@ -30,7 +6,7 @@
 /* Base responsive sizing for ALL elements */
 * {
   box-sizing: border-box;
-  font-family: 'Feather Bold', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 /* Prevent text size adjustment on iOS */
@@ -42,11 +18,11 @@ html {
 /* Responsive Typography */
 html {
   font-size: clamp(14px, 2vw, 16px);
-  font-family: 'Feather Bold', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 body {
-  font-family: 'Feather Bold', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   overflow-x: hidden;
   position: relative;
 }
@@ -72,7 +48,7 @@ body {
 
 /* All Headings - Responsive */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Feather Bold', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
 }
 
 h1 {
@@ -99,7 +75,7 @@ h4 {
 p {
   font-size: clamp(14px, 2vw, 18px) !important;
   line-height: 1.6 !important;
-  font-family: 'Feather Bold', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
 }
 
 /* All Buttons - Responsive */
@@ -107,7 +83,7 @@ button, .btn {
   padding: clamp(10px, 2.5vw, 16px) clamp(20px, 4vw, 32px) !important;
   font-size: clamp(14px, 2.5vw, 18px) !important;
   border-radius: clamp(8px, 2vw, 12px) !important;
-  font-family: 'Feather Bold', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
 }
 
 /* Form Inputs - Responsive */
@@ -544,17 +520,50 @@ img, video, iframe, embed, object {
 body, html {
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  width: 100% !important;
+  width: 100vw !important;
   max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
   position: relative; /* For proper scrolling context */
   height: auto !important;
   min-height: 100vh !important;
 }
 
-/* Prevent any element from causing horizontal scroll */
+/* Ensure all pages use full width - no white gaps */
+html, body {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  min-width: 0 !important;
+}
+
+/* Prevent white gaps - ensure all root containers use full width */
+body > *:first-child {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* Ensure main content areas use full width and don't get cut */
+main, [role="main"], div[style*="minHeight: 100vh"]:not([data-decorative]) {
+  width: 100% !important;
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+}
+
+/* Prevent content from being cut off and ensure no white gaps */
 * {
+  box-sizing: border-box !important;
   max-width: 100vw;
-  box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+}
+
+/* Ensure no white gaps on page containers */
+div[style*="width: 100%"]:not([data-decorative]) {
+  max-width: 100vw !important;
 }
 
 /* Ensure all main containers allow vertical scrolling */

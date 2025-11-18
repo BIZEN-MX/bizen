@@ -62,6 +62,8 @@ function ForumContent() {
   const [selectedTopic, setSelectedTopic] = useState<string>('all')
   const [sortBy, setSortBy] = useState<SortOption>('new')
   const [loadingData, setLoadingData] = useState(true)
+  const [showTopicFilter, setShowTopicFilter] = useState(false)
+  const topicFilterRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const bodyEl = document.body
@@ -154,6 +156,23 @@ function ForumContent() {
     }
   }, [attachPullListeners, attachSwipeListeners])
 
+  // Close topic filter dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (topicFilterRef.current && !topicFilterRef.current.contains(event.target as Node)) {
+        setShowTopicFilter(false)
+      }
+    }
+
+    if (showTopicFilter) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showTopicFilter])
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'resolved': return '#10B981'
@@ -198,27 +217,73 @@ function ForumContent() {
         threshold={refreshThreshold}
         isRefreshing={isRefreshing}
       />
-      <div 
-        ref={containerRef}
-        className="forum-container"
-        style={{
+      <>
+        <style>{`
+          /* Mobile - account for footer */
+          @media (max-width: 767px) {
+            .forum-outer {
+              padding-bottom: 65px !important;
+              min-height: calc(100vh - 65px) !important;
+            }
+            .forum-container {
+              width: 100% !important;
+              max-width: 100% !important;
+              margin-right: 0 !important;
+              padding: clamp(16px, 4vw, 24px) !important;
+            }
+          }
+          /* Tablet/iPad - no gap, sidebar overlays */
+          @media (min-width: 768px) and (max-width: 1024px) {
+            .forum-outer {
+              width: 100% !important;
+              max-width: 100% !important;
+            }
+            .forum-container {
+              width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+              max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+              margin-right: 0 !important;
+              padding: clamp(24px, 3vw, 40px) !important;
+            }
+          }
+          /* Desktop - no gap, sidebar overlays */
+          @media (min-width: 1025px) {
+            .forum-outer {
+              width: 100% !important;
+              max-width: 100% !important;
+            }
+            .forum-container {
+              width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+              max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+              margin-right: 0 !important;
+              padding: clamp(24px, 4vw, 40px) !important;
+            }
+          }
+        `}</style>
+        <div className="forum-outer" style={{
           position: "relative",
           minHeight: "100vh",
-          paddingTop: 40,
-          paddingBottom: 80,
-          fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+          fontFamily: "'Montserrat', sans-serif",
           backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
           backgroundAttachment: "fixed",
-          marginRight: "340px",
-          touchAction: "pan-y", // Allow vertical scrolling, enable gestures
-          overflowX: "hidden",
-          overflowY: "visible",
+          width: "100%",
           boxSizing: "border-box"
-        }}
-      >
+        }}>
+          <div 
+            ref={containerRef}
+            className="forum-container"
+            style={{
+              position: "relative",
+              minHeight: "100vh",
+              paddingTop: 40,
+              paddingBottom: 80,
+              touchAction: "pan-y", // Allow vertical scrolling, enable gestures
+              overflowX: "hidden",
+              overflowY: "visible",
+              boxSizing: "border-box"
+            }}
+          >
         <main style={{ 
         position: "relative",
-        maxWidth: "100%", 
         margin: "0", 
         padding: "40px",
         paddingRight: "40px",
@@ -344,52 +409,142 @@ function ForumContent() {
           marginBottom: 24,
           alignItems: "flex-start"
         }}>
-          {/* Topic Filter */}
-          <div style={{
+          {/* Topic Filter - Desktop: show all buttons, Mobile: show filter button */}
+          <div ref={topicFilterRef} className="topic-filter-container" style={{
             display: "flex",
             gap: 8,
             flexWrap: "wrap",
-            alignItems: "center"
+            alignItems: "center",
+            position: "relative"
           }}>
+            {/* Mobile Filter Button */}
             <button
-              onClick={() => setSelectedTopic('all')}
+              onClick={() => setShowTopicFilter(!showTopicFilter)}
+              className="mobile-topic-filter-btn"
               style={{
-                padding: "8px 16px",
-                background: selectedTopic === 'all' 
+                display: "none", // Hidden by default, shown on mobile via CSS
+                padding: "10px 18px",
+                background: selectedTopic !== 'all' 
                   ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
-                  : "rgba(255, 255, 255, 0.4)",
+                  : "rgba(255, 255, 255, 0.6)",
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
-                color: selectedTopic === 'all' ? "white" : "#1E40AF",
-                border: selectedTopic === 'all' 
+                color: selectedTopic !== 'all' ? "white" : "#1E40AF",
+                border: selectedTopic !== 'all' 
                   ? "1px solid rgba(255, 255, 255, 0.3)" 
                   : "2px solid rgba(255, 255, 255, 0.5)",
                 borderRadius: 10,
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: 700,
                 cursor: "pointer",
                 transition: "all 0.3s ease",
                 fontFamily: "Montserrat, sans-serif",
-                boxShadow: selectedTopic === 'all' 
+                boxShadow: selectedTopic !== 'all' 
                   ? "0 4px 12px rgba(11, 113, 254, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)" 
-                  : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
+                  : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
+                alignItems: "center",
+                gap: 8
               }}
             >
-              Todos
+              <span>📋 {selectedTopic === 'all' ? 'Filtrar por Tema' : topics.find(t => t.slug === selectedTopic)?.name || 'Tema'}</span>
+              <span style={{ fontSize: 12 }}>{showTopicFilter ? '▲' : '▼'}</span>
             </button>
-            {topics.map(topic => (
+
+            {/* Mobile Topic Dropdown */}
+            {showTopicFilter && (
+              <div className="mobile-topic-dropdown" style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                marginTop: 8,
+                background: "rgba(255, 255, 255, 0.95)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                borderRadius: 12,
+                border: "2px solid rgba(255, 255, 255, 0.6)",
+                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
+                padding: 12,
+                zIndex: 1000,
+                minWidth: 200,
+                maxWidth: "90vw",
+                display: "flex",
+                flexDirection: "column",
+                gap: 6
+              }}>
+                <button
+                  onClick={() => {
+                    setSelectedTopic('all')
+                    setShowTopicFilter(false)
+                  }}
+                  style={{
+                    padding: "10px 16px",
+                    background: selectedTopic === 'all' 
+                      ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
+                      : "rgba(255, 255, 255, 0.6)",
+                    color: selectedTopic === 'all' ? "white" : "#1E40AF",
+                    border: selectedTopic === 'all' 
+                      ? "1px solid rgba(255, 255, 255, 0.3)" 
+                      : "2px solid rgba(255, 255, 255, 0.5)",
+                    borderRadius: 8,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    fontFamily: "Montserrat, sans-serif",
+                    textAlign: "left"
+                  }}
+                >
+                  Todos
+                </button>
+                {topics.map(topic => (
+                  <button
+                    key={topic.id}
+                    onClick={() => {
+                      setSelectedTopic(topic.slug)
+                      setShowTopicFilter(false)
+                    }}
+                    style={{
+                      padding: "10px 16px",
+                      background: selectedTopic === topic.slug 
+                        ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
+                        : "rgba(255, 255, 255, 0.6)",
+                      color: selectedTopic === topic.slug ? "white" : "#1E40AF",
+                      border: selectedTopic === topic.slug 
+                        ? "1px solid rgba(255, 255, 255, 0.3)" 
+                        : "2px solid rgba(255, 255, 255, 0.5)",
+                      borderRadius: 8,
+                      fontSize: 14,
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                      fontFamily: "Montserrat, sans-serif",
+                      textAlign: "left"
+                    }}
+                  >
+                    {topic.name}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Desktop Topic Buttons */}
+            <div className="desktop-topic-buttons" style={{
+              display: "flex",
+              gap: 8,
+              flexWrap: "wrap",
+              alignItems: "center"
+            }}>
               <button
-                key={topic.id}
-                onClick={() => setSelectedTopic(topic.slug)}
+                onClick={() => setSelectedTopic('all')}
                 style={{
                   padding: "8px 16px",
-                  background: selectedTopic === topic.slug 
+                  background: selectedTopic === 'all' 
                     ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
                     : "rgba(255, 255, 255, 0.4)",
                   backdropFilter: "blur(20px)",
                   WebkitBackdropFilter: "blur(20px)",
-                  color: selectedTopic === topic.slug ? "white" : "#1E40AF",
-                  border: selectedTopic === topic.slug 
+                  color: selectedTopic === 'all' ? "white" : "#1E40AF",
+                  border: selectedTopic === 'all' 
                     ? "1px solid rgba(255, 255, 255, 0.3)" 
                     : "2px solid rgba(255, 255, 255, 0.5)",
                   borderRadius: 10,
@@ -398,14 +553,43 @@ function ForumContent() {
                   cursor: "pointer",
                   transition: "all 0.3s ease",
                   fontFamily: "Montserrat, sans-serif",
-                  boxShadow: selectedTopic === topic.slug 
+                  boxShadow: selectedTopic === 'all' 
                     ? "0 4px 12px rgba(11, 113, 254, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)" 
                     : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
                 }}
               >
-                {topic.name}
+                Todos
               </button>
-            ))}
+              {topics.map(topic => (
+                <button
+                  key={topic.id}
+                  onClick={() => setSelectedTopic(topic.slug)}
+                  style={{
+                    padding: "8px 16px",
+                    background: selectedTopic === topic.slug 
+                      ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
+                      : "rgba(255, 255, 255, 0.4)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    color: selectedTopic === topic.slug ? "white" : "#1E40AF",
+                    border: selectedTopic === topic.slug 
+                      ? "1px solid rgba(255, 255, 255, 0.3)" 
+                      : "2px solid rgba(255, 255, 255, 0.5)",
+                    borderRadius: 10,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    fontFamily: "Montserrat, sans-serif",
+                    boxShadow: selectedTopic === topic.slug 
+                      ? "0 4px 12px rgba(11, 113, 254, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)" 
+                      : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
+                  }}
+                >
+                  {topic.name}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Sort Filter */}
@@ -618,9 +802,11 @@ function ForumContent() {
           </div>
         )}
       </main>
-    </div>
+          </div>
+        </div>
+      </>
     
-    <style>{`
+      <style>{`
       @keyframes fadeInUp {
         from {
           opacity: 0;
@@ -632,7 +818,15 @@ function ForumContent() {
         }
       }
       
-      /* Fix mobile scroll for forum page */
+      /* Hide desktop topic buttons on all devices, show filter button */
+      .desktop-topic-buttons {
+        display: none !important;
+      }
+      .mobile-topic-filter-btn {
+        display: flex !important;
+      }
+      
+      /* Mobile specific styles */
       @media (max-width: 767px) {
         /* Ensure container allows scroll */
         .forum-container {

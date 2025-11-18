@@ -77,15 +77,6 @@ export default function GlobalLogo() {
           objectFit: "contain"
         }}
       />
-      <span style={{
-        fontSize: 22,
-        fontWeight: 700,
-        color: "#0F62FE",
-        fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
-        letterSpacing: "0.3px"
-      }}>
-        BIZEN
-      </span>
       
       {/* Ensure logo doesn't expand to full width */}
       <style>{`

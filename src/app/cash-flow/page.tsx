@@ -197,9 +197,18 @@ export default function CashFlowPage() {
   return (
     <>
       <style>{`
+        /* Mobile - account for footer */
         @media (max-width: 767px) {
+          .cashflow-outer {
+            padding-bottom: 65px !important;
+            min-height: calc(100vh - 65px) !important;
+          }
           .cashflow-container {
+            width: 100% !important;
+            max-width: 100% !important;
             padding: clamp(16px, 4vw, 24px) !important;
+            padding-bottom: clamp(16px, 4vw, 24px) !important;
+            margin-right: 0 !important;
           }
           .cashflow-header h1 {
             font-size: clamp(32px, 8vw, 56px) !important;
@@ -216,6 +225,9 @@ export default function CashFlowPage() {
           }
           .cashflow-section {
             padding: clamp(20px, 5vw, 40px) !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
           }
           .profession-grid {
             grid-template-columns: 1fr !important;
@@ -227,17 +239,43 @@ export default function CashFlowPage() {
             grid-template-columns: 1fr !important;
           }
         }
+        /* Tablet/iPad - no gap, sidebar overlays */
         @media (min-width: 768px) and (max-width: 1024px) {
+          .cashflow-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
           .cashflow-container {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
             padding: clamp(24px, 3vw, 40px) !important;
+            margin-right: 0 !important;
+          }
+          .cashflow-section {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
           }
           .profession-grid {
             grid-template-columns: repeat(2, 1fr) !important;
           }
         }
+        /* Desktop - no gap, sidebar overlays */
         @media (min-width: 1025px) {
+          .cashflow-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
           .cashflow-container {
-            padding-right: clamp(40px, 5vw, 360px) !important;
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+            margin-right: 0 !important;
+          }
+          .cashflow-section {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
           }
         }
         .delete-game-button {
@@ -255,19 +293,17 @@ export default function CashFlowPage() {
           min-width: 0 !important;
         }
       `}</style>
-      <div style={{
+      <div className="cashflow-outer" style={{
         width: "100%",
         minHeight: "100vh",
         background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-        fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+        fontFamily: "'Montserrat', sans-serif",
         overflowX: "hidden",
         overflowY: "auto",
         boxSizing: "border-box"
       }}>
         {/* Main Content Area */}
         <main className="cashflow-container" style={{
-          width: "100%",
-          maxWidth: "100%",
           paddingTop: "clamp(24px, 4vw, 40px)",
           paddingBottom: "clamp(24px, 4vw, 40px)",
           paddingLeft: "clamp(16px, 4vw, 40px)",
@@ -275,7 +311,7 @@ export default function CashFlowPage() {
           overflowX: "hidden",
           overflowY: "visible",
           boxSizing: "border-box",
-          margin: "0 auto"
+          margin: "0"
         }}>
         {/* Header */}
         <div className="cashflow-section" style={{
@@ -305,7 +341,7 @@ export default function CashFlowPage() {
               fontSize: "clamp(12px, 2.5vw, 14px)",
               fontWeight: 700,
               cursor: "pointer",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               transition: "all 0.2s",
               whiteSpace: "nowrap"
             }}
@@ -385,7 +421,7 @@ export default function CashFlowPage() {
                   fontWeight: 700,
                   cursor: "pointer",
                   boxShadow: "0 4px 12px rgba(16, 185, 129, 0.3)",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   alignSelf: "flex-start"
                 }}
               >
@@ -527,7 +563,7 @@ export default function CashFlowPage() {
                           fontSize: "14px",
                           fontWeight: 700,
                           cursor: "pointer",
-                          fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                          fontFamily: "'Montserrat', sans-serif",
                           whiteSpace: "nowrap",
                           textAlign: "center",
                           minWidth: 0,
@@ -550,7 +586,7 @@ export default function CashFlowPage() {
                           fontSize: "14px",
                           fontWeight: 700,
                           cursor: "pointer",
-                          fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                          fontFamily: "'Montserrat', sans-serif",
                           flexShrink: 0,
                           display: "flex",
                           alignItems: "center",
@@ -852,7 +888,7 @@ export default function CashFlowPage() {
                       fontWeight: 800,
                       cursor: "pointer",
                       transition: "all 0.3s ease",
-                      fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                      fontFamily: "'Montserrat', sans-serif",
                       minWidth: "120px"
                     }}
                   >
@@ -876,7 +912,7 @@ export default function CashFlowPage() {
                     cursor: startingGame ? "not-allowed" : "pointer",
                     boxShadow: "0 8px 24px rgba(16, 185, 129, 0.3)",
                     transition: "all 0.3s ease",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                     minWidth: "180px"
                   }}
                   onMouseEnter={(e) => {

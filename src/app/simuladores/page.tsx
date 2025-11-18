@@ -55,20 +55,67 @@ export default function SimulatorsPage() {
   };
   
   return (
-    <main style={{
-      marginRight: "320px",
-      paddingTop: "40px",
-      paddingBottom: "40px",
-      paddingLeft: "40px",
-      paddingRight: "40px",
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      fontFamily: "Montserrat, sans-serif",
-      boxSizing: "border-box" as const,
-      maxWidth: "calc(100vw - 320px)",
-      overflowX: "hidden",
-      overflowY: "visible"
-    }}>
+    <>
+      <style>{`
+        /* Mobile - account for footer */
+        @media (max-width: 767px) {
+          .simuladores-outer {
+            padding-bottom: 65px !important;
+            min-height: calc(100vh - 65px) !important;
+          }
+          .simuladores-main {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(16px, 4vw, 24px) !important;
+          }
+        }
+        /* Tablet/iPad - no gap, sidebar overlays */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .simuladores-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .simuladores-main {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        /* Desktop - no gap, sidebar overlays */
+        @media (min-width: 1025px) {
+          .simuladores-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .simuladores-main {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
+      <div className="simuladores-outer" style={{
+        width: "100%",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        fontFamily: "Montserrat, sans-serif",
+        overflowX: "hidden",
+        overflowY: "auto",
+        boxSizing: "border-box"
+      }}>
+        <main className="simuladores-main" style={{
+          paddingTop: "40px",
+          paddingBottom: "40px",
+          paddingLeft: "40px",
+          paddingRight: "40px",
+          minHeight: "100vh",
+          boxSizing: "border-box" as const,
+          overflowX: "hidden",
+          overflowY: "visible"
+        }}>
       {/* Header */}
       <div style={{ marginBottom: 32, textAlign: "center" }}>
         <h1 style={{
@@ -282,7 +329,9 @@ export default function SimulatorsPage() {
           para explorar rápidamente cómo funcionan. Luego, personaliza con tus propios datos.
         </p>
       </div>
-    </main>
+        </main>
+      </div>
+    </>
   );
 }
 

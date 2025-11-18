@@ -151,67 +151,6 @@ function LessonIsland({ lesson, offsetX, isNext, onClick, isVisible }: { lesson:
        />
 
       {/* Status Badges */}
-      {lesson.isLocked && (
-        <div style={{
-          position: "absolute",
-          top: "clamp(-6px, -1vw, -8px)",
-          right: "clamp(-6px, -1vw, -8px)",
-          width: "clamp(24px, 5vw, 32px)",
-          height: "clamp(24px, 5vw, 32px)",
-          background: "#fff",
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "clamp(12px, 2.5vw, 16px)",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-          zIndex: 10
-        }}>
-          🔒
-        </div>
-      )}
-
-      {lesson.isCompleted && lesson.score && lesson.score >= 90 && (
-        <div style={{
-          position: "absolute",
-          top: "clamp(-6px, -1vw, -8px)",
-          right: "clamp(-6px, -1vw, -8px)",
-          width: "clamp(24px, 5vw, 32px)",
-          height: "clamp(24px, 5vw, 32px)",
-          background: "#FFD700",
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "clamp(14px, 3vw, 18px)",
-          boxShadow: "0 2px 8px rgba(255, 215, 0, 0.4)",
-          zIndex: 10
-        }}>
-          ⭐
-        </div>
-      )}
-
-      {lesson.isCompleted && (!lesson.score || lesson.score < 90) && (
-        <div style={{
-          position: "absolute",
-          top: "clamp(-6px, -1vw, -8px)",
-          right: "clamp(-6px, -1vw, -8px)",
-          width: "clamp(24px, 5vw, 32px)",
-          height: "clamp(24px, 5vw, 32px)",
-          background: "#10B981",
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "clamp(14px, 3vw, 18px)",
-          color: "#fff",
-          fontWeight: 800,
-          boxShadow: "0 2px 8px rgba(16, 185, 129, 0.4)",
-          zIndex: 10
-        }}>
-          ✓
-        </div>
-      )}
     </motion.div>
     </div>
   )
@@ -712,7 +651,7 @@ export default function CoursesPage() {
 
   if (loading || loadingData) {
     return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "'Feather Bold', 'Montserrat', sans-serif" }}>
+      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "'Montserrat', sans-serif" }}>
         <div style={{ textAlign: "center" }}>
           <div style={{
             width: 48,
@@ -764,10 +703,10 @@ export default function CoursesPage() {
             behavior: "smooth"
           })
           console.log(`Scrolled to element ${elementId}`)
-        } else {
+      } else {
           console.error(`Element with id "${elementId}" not found. Looking for:`, elementId)
           console.log('Available elements with course- prefix:', Array.from(document.querySelectorAll('[id^="course-"]')).map(el => el.id))
-        }
+      }
       })
     })
   }
@@ -778,14 +717,17 @@ export default function CoursesPage() {
         position: "relative",
         top: 0,
         left: 0,
-        width: "100%",
+        width: "100vw",
+        maxWidth: "100vw",
         minHeight: "100vh",
-      background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         overflowX: "hidden",
         boxSizing: "border-box",
         paddingBottom: 0,
-        marginBottom: 0
-    }}>
+        marginBottom: 0,
+        margin: 0,
+        padding: 0
+      }}>
       {/* Decorative Orbs */}
         <div style={{
         position: "fixed",
@@ -834,7 +776,7 @@ export default function CoursesPage() {
           backdropFilter: "blur(20px)",
           zIndex: 9998,
           padding: "80px 16px 24px 16px",
-      fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+      fontFamily: "'Montserrat', sans-serif",
         borderRight: "2px solid rgba(147, 197, 253, 0.3)",
         display: "flex",
           flexDirection: "column",
@@ -915,7 +857,7 @@ export default function CoursesPage() {
               border: activeLevel === 1 ? "1px solid rgba(255, 255, 255, 0.3)" : "1px solid rgba(147, 197, 253, 0.4)",
               borderRadius: 10,
                 cursor: "pointer",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               fontSize: 14,
               fontWeight: activeLevel === 1 ? 700 : 600,
               transition: "all 0.2s ease",
@@ -945,7 +887,7 @@ export default function CoursesPage() {
               border: activeLevel === 2 ? "1px solid rgba(255, 255, 255, 0.3)" : "1px solid rgba(147, 197, 253, 0.4)",
               borderRadius: 10,
               cursor: "pointer",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               fontSize: 14,
               fontWeight: activeLevel === 2 ? 700 : 600,
               transition: "all 0.2s ease",
@@ -975,7 +917,7 @@ export default function CoursesPage() {
               border: activeLevel === 3 ? "1px solid rgba(255, 255, 255, 0.3)" : "1px solid rgba(147, 197, 253, 0.4)",
               borderRadius: 10,
               cursor: "pointer",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               fontSize: 14,
               fontWeight: activeLevel === 3 ? 700 : 600,
               transition: "all 0.2s ease",
@@ -1006,14 +948,16 @@ export default function CoursesPage() {
         className="sticky-course-bar"
         style={{
         position: "fixed",
-          top: "20px",
-        left: "50%",
-          transform: "translateX(-50%)",
+          top: "0",
+        left: "0",
+        right: "0",
           zIndex: 99999,
           display: "flex",
           justifyContent: "center",
+          alignItems: "flex-start",
         pointerEvents: "none",
           padding: "0 clamp(16px, 4vw, 24px)",
+          boxSizing: "border-box"
         }}
       >
         {currentCourse && (
@@ -1063,15 +1007,16 @@ export default function CoursesPage() {
         paddingBottom: "clamp(40px, 8vw, 80px)",
         paddingLeft: "16px",
         paddingRight: "16px",
-      fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+      fontFamily: "'Montserrat', sans-serif",
         background: "transparent",
         position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",
         marginBottom: 0,
-        boxSizing: "border-box"
-      }}>
+        boxSizing: "border-box",
+        width: "100%"
+      }} className="courses-main-content">
         {/* Island Path */}
             <div style={{
           width: "100%",
@@ -1080,53 +1025,20 @@ export default function CoursesPage() {
           position: "relative",
           zIndex: 1,
           padding: "0 clamp(16px, 4vw, 24px)",
-          boxSizing: "border-box"
+          boxSizing: "border-box",
+                    display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
         }}>
           {courses.map((course) => (
-            <div key={course.id} id={`course-${course.id}`} style={{ marginBottom: "clamp(40px, 8vw, 80px)" }}>
-              {/* Course Separator - Subtle */}
-          <div style={{ 
-                textAlign: "center",
-                marginBottom: "clamp(40px, 8vw, 80px)",
-                padding: "clamp(12px, 3vw, 20px) 0"
-        }}>
-              <div style={{
-                display: "inline-block",
-                  padding: "clamp(12px, 2vw, 16px) clamp(20px, 4vw, 28px)",
-                  background: "rgba(255, 255, 255, 0.95)",
-                  borderRadius: "clamp(16px, 3vw, 24px)",
-                  boxShadow: "0 4px 20px rgba(59, 130, 246, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1)",
-                  border: "2px solid rgba(147, 197, 253, 0.4)",
-                  backdropFilter: "blur(10px)"
-                }}>
-                  <div style={{
-                    fontSize: "clamp(13px, 2.5vw, 15px)",
-                      fontWeight: 800,
-                    color: "#1E40AF",
-                    marginBottom: 6
-              }}>
-                {course.title}
-                  </div>
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 12,
-                    fontSize: "clamp(10px, 1.8vw, 12px)",
-                    color: "#6B7280"
-                  }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      {course.lessons.length} {t.courses.lessons}
-                    </span>
-                  </div>
-                </div>
-            </div>
+            <div key={course.id} id={`course-${course.id}`} style={{ marginBottom: "clamp(40px, 8vw, 80px)", width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
 
               {/* Lessons in Smooth Curve */}
               <div style={{
                     display: "flex",
                     flexDirection: "column",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: "clamp(40px, 8vw, 80px)",
                 width: "100%",
                 maxWidth: "100%",
@@ -1436,6 +1348,8 @@ export default function CoursesPage() {
           main[style*="padding-left"] {
             padding-left: clamp(180px, 18vw, 200px) !important;
             padding-right: 160px !important; /* Narrow sidebar for iPad */
+            display: flex !important;
+            justify-content: center !important;
           }
           
           /* Ensure island path container fits in available space on tablet (with left panel, narrow right sidebar) */
@@ -1444,13 +1358,16 @@ export default function CoursesPage() {
             max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px - 32px) !important; /* Narrow sidebar 160px */
             width: 100% !important;
             margin: 0 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
           }
           
-          /* Adjust sticky course bar for tablet - centered */
+          /* Adjust sticky course bar for tablet - centered in usable space */
           .sticky-course-bar {
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            right: auto !important;
+            left: clamp(180px, 18vw, 200px) !important;
+            right: 160px !important;
+            justify-content: center !important;
           }
         }
         
@@ -1460,6 +1377,8 @@ export default function CoursesPage() {
           main[style*="padding-left"] {
             padding-left: clamp(180px, 20vw, 240px) !important;
             padding-right: 320px !important;
+            display: flex !important;
+            justify-content: center !important;
           }
           
           /* Ensure island path container fits in available space on desktop */
@@ -1468,13 +1387,16 @@ export default function CoursesPage() {
             max-width: calc(100vw - clamp(180px, 20vw, 240px) - 320px - 48px) !important;
             width: 100% !important;
             margin: 0 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
           }
           
-          /* Adjust sticky course bar for desktop - centered */
+          /* Adjust sticky course bar for desktop - centered in usable space */
           .sticky-course-bar {
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            right: auto !important;
+            left: clamp(180px, 20vw, 240px) !important;
+            right: 320px !important;
+            justify-content: center !important;
           }
         }
         
@@ -1732,11 +1654,17 @@ export default function CoursesPage() {
           
           /* Adjust main content padding on mobile - no left padding since panel is hidden */
           main[style*="paddingLeft"],
-          main[style*="padding-left"] {
+          main[style*="padding-left"],
+          .courses-main-content {
             padding-left: 16px !important;
             padding-right: 16px !important;
             padding-top: 80px !important; /* Space for hamburger button */
-            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; /* Space for mobile footer + safe area */
+            padding-bottom: calc(65px + env(safe-area-inset-bottom)) !important; /* Space for mobile footer + safe area */
+          }
+          
+          /* Remove extra margin from last course section on mobile */
+          .courses-main-content > div > div:last-child {
+            margin-bottom: 0 !important;
           }
           
           /* Ensure body can scroll on mobile */
@@ -1758,7 +1686,7 @@ export default function CoursesPage() {
             min-height: 100vh !important;
           }
           
-          /* Ensure island path container fits in available space on mobile */
+          /* Ensure island path container fits in available space on mobile - centered */
           div[style*="maxWidth: 800px"],
           div[style*="maxWidth: 800"] {
             max-width: calc(100vw - 32px) !important;
@@ -1768,6 +1696,9 @@ export default function CoursesPage() {
             box-sizing: border-box !important;
             overflow-x: hidden !important; /* Prevent horizontal overflow */
             overflow-y: visible !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
           }
           
           /* Ensure lesson islands don't overflow on mobile - clip overflow */
@@ -1791,15 +1722,15 @@ export default function CoursesPage() {
             overflow: visible !important;
           }
           
-          /* Adjust sticky course bar on mobile - centered */
+          /* Adjust sticky course bar on mobile - centered in usable space */
           .sticky-course-bar {
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            right: auto !important;
-            top: 80px !important; /* Below hamburger button */
+            left: 16px !important;
+            right: 16px !important;
+            top: 20px !important;
             bottom: auto !important;
             z-index: 9998 !important;
             pointer-events: auto !important;
+            justify-content: center !important;
           }
           
           /* Make preview panel full width on mobile - ensure it's not cut off */
@@ -1929,14 +1860,17 @@ export default function CoursesPage() {
               align-items: flex-start !important;
             }
             
-            /* Center islands container on desktop */
+            /* Center islands container on desktop - centered in usable space */
             div[style*="maxWidth: 800px"],
             div[style*="maxWidth: 800"] {
-              max-width: calc(100vw - clamp(180px, 20vw, 240px) - 280px - 48px) !important; /* Full width sidebar 280px */
+              max-width: calc(100vw - clamp(180px, 20vw, 240px) - 320px - 48px) !important; /* Full width sidebar 320px */
               width: 100% !important;
               margin: 0 auto !important;
               overflow-x: hidden !important; /* Prevent horizontal overflow */
               overflow-y: visible !important;
+              display: flex !important;
+              flex-direction: column !important;
+              align-items: center !important;
             }
             
             /* Container for lessons - prevent overflow on desktop */
@@ -1976,7 +1910,7 @@ export default function CoursesPage() {
               align-items: flex-start !important;
             }
             
-            /* Center islands container on iPad */
+            /* Center islands container on iPad - centered in usable space */
             div[style*="maxWidth: 800px"],
             div[style*="maxWidth: 800"] {
               max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px - 32px) !important; /* Narrow sidebar 160px */
@@ -1984,6 +1918,9 @@ export default function CoursesPage() {
               margin: 0 auto !important;
               overflow-x: hidden !important; /* Prevent horizontal overflow */
               overflow-y: visible !important;
+              display: flex !important;
+              flex-direction: column !important;
+              align-items: center !important;
             }
             
             /* Container for lessons - prevent overflow on iPad */

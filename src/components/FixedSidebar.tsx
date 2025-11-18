@@ -207,7 +207,7 @@ export default function FixedSidebar() {
         zIndex: 1000,
         overflowY: "auto",
         overflowX: "hidden",
-        fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+        fontFamily: "'Montserrat', sans-serif",
         borderLeft: "2px solid rgba(15, 98, 254, 0.2)",
         boxSizing: "border-box"
       }}>
@@ -225,7 +225,7 @@ export default function FixedSidebar() {
                   borderRadius: 12,
                   cursor: "pointer",
                   transition: "all 0.3s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 15,
                   fontWeight: 700,
                   color: "white",
@@ -294,7 +294,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: coursesActive ? 700 : 600,
                   textAlign: "left",
@@ -345,7 +345,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: businessLabActive ? 700 : 600,
                   textAlign: "left",
@@ -396,7 +396,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: cashFlowActive ? 700 : 600,
                   textAlign: "left",
@@ -447,7 +447,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: simulatorsActive ? 700 : 600,
                   textAlign: "left",
@@ -502,7 +502,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: assignmentsActive ? 700 : 600,
                   textAlign: "left",
@@ -547,7 +547,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: progressActive ? 700 : 600,
                   textAlign: "left",
@@ -598,7 +598,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: forumActive ? 700 : 600,
                   textAlign: "left",
@@ -657,7 +657,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: profileActive ? 700 : 600,
                   textAlign: "left",
@@ -720,7 +720,7 @@ export default function FixedSidebar() {
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
                   fontWeight: settingsActive ? 700 : 600,
                   textAlign: "left",
@@ -778,7 +778,7 @@ export default function FixedSidebar() {
           justifyContent: "center",
           zIndex: 1100,
           padding: 20,
-          fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+          fontFamily: "'Montserrat', sans-serif"
         }}>
           <div style={{
             background: "white",
@@ -827,7 +827,7 @@ export default function FixedSidebar() {
                   cursor: "pointer",
                   transition: "transform 0.2s ease",
                   boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
                 onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
@@ -847,7 +847,7 @@ export default function FixedSidebar() {
                   fontWeight: 700,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#FEF2F2"
@@ -880,7 +880,7 @@ export default function FixedSidebar() {
             justifyContent: "center",
             zIndex: 1100,
             padding: 20,
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             backdropFilter: "blur(4px)"
           }}
           onClick={() => setShowAuthDialog(false)}
@@ -957,7 +957,7 @@ export default function FixedSidebar() {
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                   boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-2px)"
@@ -986,7 +986,7 @@ export default function FixedSidebar() {
                   fontWeight: 700,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#EFF6FF"
@@ -1011,7 +1011,7 @@ export default function FixedSidebar() {
                   fontWeight: 600,
                   cursor: "pointer",
                   transition: "color 0.2s ease",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.color = "#374151"}
                 onMouseLeave={(e) => e.currentTarget.style.color = "#6B7280"}
@@ -1343,6 +1343,46 @@ export default function FixedSidebar() {
             gap: 4px !important;
             width: 100% !important;
             text-align: center !important;
+          }
+        }
+        
+        /* All devices - Ensure icons are perfectly centered */
+        @media (max-width: 1160px) {
+          [data-fixed-sidebar] {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          
+          [data-fixed-sidebar] .sidebar-inner-container {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            width: 100% !important;
+          }
+          
+          [data-fixed-sidebar] .sidebar-inner-container > div {
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          
+          [data-fixed-sidebar] button {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            width: 100% !important;
+          }
+          
+          [data-fixed-sidebar] button img,
+          [data-fixed-sidebar] button > img,
+          [data-fixed-sidebar] button Image {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            display: block !important;
           }
         }
         

@@ -235,7 +235,7 @@ function Card1({ onComplete }: CardProps) {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
                 marginBottom: 16,
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
                 lineHeight: 1.1,
                 letterSpacing: "-0.03em"
             }}
@@ -255,7 +255,7 @@ function Card1({ onComplete }: CardProps) {
                 fontSize: "clamp(16px, 2.2vw, 20px)",
                 color: "#fff",
                 fontWeight: 900,
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
                 boxShadow: "0 6px 24px rgba(15, 98, 254, 0.3)",
                 letterSpacing: "0.05em"
             }}
@@ -335,7 +335,7 @@ function Card1({ onComplete }: CardProps) {
                   border: "none",
                   borderRadius: 20,
                   cursor: "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 16,
@@ -594,7 +594,7 @@ function Card1({ onComplete }: CardProps) {
                 lineHeight: 1.5,
                 color: "#374151",
                 margin: "0 0 20px",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 700,
                 textShadow: "0 1px 2px rgba(255, 255, 255, 0.9)"
               }}>
@@ -686,7 +686,7 @@ function Card1({ onComplete }: CardProps) {
                   border: "none",
                   borderRadius: 20,
                   cursor: "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 16,
@@ -1407,7 +1407,7 @@ function Card3({ onComplete }: CardProps) {
               cursor: "pointer",
               backdropFilter: "blur(10px)",
               boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               letterSpacing: "0.02em"
             }}
           >
@@ -1672,7 +1672,7 @@ function Card4({ onComplete }: CardProps) {
               fontWeight: 900,
               cursor: "pointer",
               boxShadow: "0 6px 20px rgba(15, 98, 254, 0.35)",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               letterSpacing: "0.02em"
             }}
           >
@@ -1889,7 +1889,7 @@ function Card5({ onComplete }: CardProps) {
                   cursor: "pointer",
                   backdropFilter: "blur(10px)",
                   boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   letterSpacing: "0.02em"
                 }}
               >
@@ -2200,7 +2200,7 @@ function Card6({ onComplete }: CardProps) {
                   fontWeight: 900,
                   cursor: "pointer",
                   boxShadow: "0 6px 20px rgba(15, 98, 254, 0.35)",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   letterSpacing: "0.02em"
                 }}
               >
@@ -2400,7 +2400,7 @@ function Card7({ onComplete }: CardProps) {
               cursor: "pointer",
               backdropFilter: "blur(10px)",
               boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               letterSpacing: "0.02em"
             }}
           >
@@ -2701,7 +2701,7 @@ function Card8({ onComplete }: CardProps) {
                     fontWeight: 900,
                   cursor: "pointer",
                     boxShadow: "0 6px 20px rgba(15, 98, 254, 0.35)",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                     letterSpacing: "0.02em"
                 }}
               >
@@ -2972,7 +2972,7 @@ function Card9({ onComplete }: CardProps) {
               cursor: "pointer",
                 backdropFilter: "blur(10px)",
                 boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 letterSpacing: "0.02em"
             }}
           >
@@ -3194,7 +3194,7 @@ function Card10({ onComplete }: CardProps) {
               cursor: "pointer",
               boxShadow: "0 8px 24px rgba(15, 98, 254, 0.4)",
               display: "block",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+              fontFamily: "'Montserrat', sans-serif"
             }}
           >
             📱 Confirmar Transferencia
@@ -3316,7 +3316,7 @@ function Card10({ onComplete }: CardProps) {
                 cursor: "pointer",
                 backdropFilter: "blur(10px)",
                 boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 letterSpacing: "0.02em"
               }}
             >
@@ -3577,7 +3577,7 @@ function Card11({ onComplete }: CardProps) {
               cursor: "pointer",
               backdropFilter: "blur(10px)",
               boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               letterSpacing: "0.02em"
             }}
           >
@@ -4005,7 +4005,7 @@ function Card12({ totalXp, lessonId }: Card12Props) {
             borderRadius: 16,
             cursor: "pointer",
             boxShadow: "0 8px 24px rgba(15, 98, 254, 0.3)",
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             letterSpacing: "0.02em"
           }}
         >
@@ -4133,7 +4133,7 @@ function L2Card1({ onComplete }: CardProps) {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               marginBottom: 16,
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               lineHeight: 1.1,
               letterSpacing: "-0.03em"
             }}
@@ -4153,7 +4153,7 @@ function L2Card1({ onComplete }: CardProps) {
               fontSize: "clamp(16px, 2.2vw, 20px)",
               color: "#fff",
               fontWeight: 900,
-              fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
               boxShadow: "0 6px 24px rgba(15, 98, 254, 0.3)",
               letterSpacing: "0.05em"
             }}
@@ -4219,7 +4219,7 @@ function L2Card1({ onComplete }: CardProps) {
                 border: "none",
             borderRadius: 20,
                 cursor: "pointer",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 12,
@@ -4830,7 +4830,7 @@ function L2Card4({ onComplete }: CardProps) {
             cursor: "pointer",
             backdropFilter: "blur(10px)",
             boxShadow: "0 6px 20px rgba(15, 98, 254, 0.35)",
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             letterSpacing: "0.02em"
           }}
         >
@@ -5243,7 +5243,7 @@ function L2Card6({ onComplete }: CardProps) {
             fontSize: 18,
             fontWeight: 900,
             cursor: "pointer",
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             boxShadow: "0 4px 16px rgba(15, 98, 254, 0.3)"
           }}
         >
@@ -5511,7 +5511,7 @@ function L2Card7({ onComplete }: CardProps) {
             fontSize: 18,
             fontWeight: 900,
             cursor: selected.size > 0 ? "pointer" : "not-allowed",
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+            fontFamily: "'Montserrat', sans-serif"
           }}
         >
           Continuar →
@@ -6012,7 +6012,7 @@ function L2Card9({ onComplete }: CardProps) {
             fontSize: 18,
             fontWeight: 900,
             cursor: "pointer",
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+            fontFamily: "'Montserrat', sans-serif"
           }}
         >
           Continuar →
@@ -6237,7 +6237,7 @@ function L2Card10({ onComplete }: CardProps) {
             fontSize: 18,
             fontWeight: 900,
             cursor: selected ? "pointer" : "not-allowed",
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+            fontFamily: "'Montserrat', sans-serif"
           }}
         >
           Continuar →
@@ -6431,7 +6431,7 @@ function L2Card11({ onComplete }: CardProps) {
             fontSize: 18,
             fontWeight: 900,
             cursor: selected ? "pointer" : "not-allowed",
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+            fontFamily: "'Montserrat', sans-serif"
           }}
         >
           Continuar →
@@ -6674,7 +6674,7 @@ function L2Card12({ totalXp, lessonId }: Card12Props) {
             border: "none",
             borderRadius: 16,
             cursor: "pointer",
-            fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+            fontFamily: "'Montserrat', sans-serif"
           }}
         >
           Continuar a la Siguiente Lección →
@@ -6731,7 +6731,7 @@ export default function InteractiveLessonPage() {
         display: "grid", 
         placeItems: "center", 
         minHeight: "100vh", 
-        fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+        fontFamily: "'Montserrat', sans-serif",
         background: "linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)"
       }}>
         <div style={{ textAlign: "center" }}>
@@ -6820,7 +6820,7 @@ export default function InteractiveLessonPage() {
         height: "100vh",
         width: "100vw",
         background: "linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #DBEAFE 100%)",
-        fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+        fontFamily: "'Montserrat', sans-serif",
         position: "fixed",
         top: 0,
         left: 0,

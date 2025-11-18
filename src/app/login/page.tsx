@@ -365,7 +365,7 @@ function BIZENLoginContent() {
             order: 2;
           }
         }
-        @media (max-width: 767px) {
+        @media (max-width: 1159px) {
           main > div > div:first-child {
             display: none !important;
           }

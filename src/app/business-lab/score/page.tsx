@@ -21,18 +21,66 @@ export default async function ScorePage() {
   const score = await getUserScore(user.id)
 
   return (
-    <main style={{
-      marginRight: "320px",
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      padding: "40px",
-      paddingRight: "360px",
-      fontFamily: "Montserrat, sans-serif",
-      width: "100%",
-      boxSizing: "border-box" as const,
-      overflowX: "hidden",
-      overflowY: "visible"
-    }}>
+    <>
+      <style>{`
+        /* Mobile - account for footer */
+        @media (max-width: 767px) {
+          .score-outer {
+            padding-bottom: 65px !important;
+            min-height: calc(100vh - 65px) !important;
+          }
+          .score-main {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(16px, 4vw, 24px) !important;
+          }
+        }
+        /* Tablet/iPad - no gap, sidebar overlays */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .score-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .score-main {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        /* Desktop - no gap, sidebar overlays */
+        @media (min-width: 1025px) {
+          .score-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .score-main {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
+      <div className="score-outer" style={{
+        width: "100%",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        fontFamily: "Montserrat, sans-serif",
+        overflowX: "hidden",
+        overflowY: "auto",
+        boxSizing: "border-box"
+      }}>
+        <main className="score-main" style={{
+          margin: "0 auto",
+          minHeight: "100vh",
+          fontFamily: "Montserrat, sans-serif",
+          width: "100%",
+          boxSizing: "border-box" as const,
+          overflowX: "hidden",
+          overflowY: "visible"
+        }}>
       <Link href="/business-lab" style={{ textDecoration: "none" }}>
         <button style={{
           padding: "8px 16px",
@@ -155,6 +203,8 @@ export default async function ScorePage() {
           <li>Usa los simuladores para proyecciones financieras</li>
         </ul>
       </div>
-    </main>
+        </main>
+      </div>
+    </>
   )
 }

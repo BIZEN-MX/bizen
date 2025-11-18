@@ -154,15 +154,59 @@ export default function AssignmentsPage() {
   }
 
   return (
-    <div style={{
-      position: "relative",
-      minHeight: "100vh",
-      paddingTop: 40,
-      paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      backgroundAttachment: "fixed"
-    }}>
+    <>
+      <style>{`
+        /* Mobile - account for footer */
+        @media (max-width: 767px) {
+          .assignments-outer {
+            padding-bottom: 65px !important;
+            min-height: calc(100vh - 65px) !important;
+          }
+          .assignments-main {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(16px, 4vw, 24px) !important;
+          }
+        }
+        /* Tablet/iPad - no gap, sidebar overlays */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .assignments-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .assignments-main {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        /* Desktop - no gap, sidebar overlays */
+        @media (min-width: 1025px) {
+          .assignments-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .assignments-main {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
+      <div className="assignments-outer" style={{
+        position: "relative",
+        minHeight: "100vh",
+        paddingTop: 40,
+        paddingBottom: 80,
+        fontFamily: "Montserrat, sans-serif",
+        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        backgroundAttachment: "fixed",
+        width: "100%",
+        boxSizing: "border-box"
+      }}>
       {/* Decorative Orbs */}
       <div style={{
         position: "fixed",
@@ -201,16 +245,14 @@ export default function AssignmentsPage() {
         zIndex: 0
       }} />
 
-    <main style={{ 
-        position: "relative",
-      width: "calc(100% - 320px)",
-      maxWidth: "none",
-      margin: 0,
-      padding: "clamp(20px, 4vw, 40px)",
-        zIndex: 1,
-      fontFamily: "Montserrat, sans-serif",
-      boxSizing: "border-box"
-    }}>
+        <main className="assignments-main" style={{ 
+          position: "relative",
+          margin: 0,
+          padding: "clamp(20px, 4vw, 40px)",
+          zIndex: 1,
+          fontFamily: "Montserrat, sans-serif",
+          boxSizing: "border-box"
+        }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ 
@@ -432,8 +474,9 @@ export default function AssignmentsPage() {
           </p>
           </div>
       )}
-    </main>
-    </div>
+        </main>
+      </div>
+    </>
   )
 }
 

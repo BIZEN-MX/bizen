@@ -142,18 +142,66 @@ export default function ProgressPage() {
     : 0
 
   return (
-    <div style={{
-      position: "relative",
-      minHeight: "100vh",
-      paddingTop: 40,
-      paddingBottom: 80,
-      paddingRight: 40,
-      paddingLeft: 40,
-      fontFamily: "Montserrat, sans-serif",
-      background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      backgroundAttachment: "fixed",
-      marginRight: "340px"
-    }}>
+    <>
+      <style>{`
+        /* Mobile - account for footer */
+        @media (max-width: 767px) {
+          .progress-outer {
+            padding-bottom: 65px !important;
+            min-height: calc(100vh - 65px) !important;
+          }
+          .progress-inner {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(16px, 4vw, 24px) !important;
+          }
+        }
+        /* Tablet/iPad - no gap, sidebar overlays */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .progress-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .progress-inner {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        /* Desktop - no gap, sidebar overlays */
+        @media (min-width: 1025px) {
+          .progress-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .progress-inner {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
+      <div className="progress-outer" style={{
+        position: "relative",
+        minHeight: "100vh",
+        fontFamily: "Montserrat, sans-serif",
+        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        backgroundAttachment: "fixed",
+        width: "100%",
+        boxSizing: "border-box"
+      }}>
+        <div className="progress-inner" style={{
+          position: "relative",
+          minHeight: "100vh",
+          paddingTop: 40,
+          paddingBottom: 80,
+          paddingRight: 40,
+          paddingLeft: 40,
+          boxSizing: "border-box"
+        }}>
       {/* Decorative Orbs */}
       <div style={{
         position: "fixed",
@@ -513,8 +561,10 @@ export default function ProgressPage() {
             ))}
           </div>
         </div>
-      </main>
-    </div>
+        </main>
+        </div>
+      </div>
+    </>
   )
 }
 

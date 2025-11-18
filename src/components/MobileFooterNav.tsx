@@ -107,6 +107,10 @@ export default function MobileFooterNav() {
           margin: 0 !important;
           flex-shrink: 1 !important;
         }
+        .mobile-footer-icon {
+          width: 40px !important;
+          height: 40px !important;
+        }
         .mobile-footer-btn.active {
           background: #EFF6FF !important;
         }
@@ -145,17 +149,19 @@ export default function MobileFooterNav() {
                 <Image 
                   src="/rightmenusettings.png" 
                   alt="Profile" 
-                  width={30} 
-                  height={30}
-                  style={{ width: 30, height: 30, objectFit: "contain" }}
+                  width={40} 
+                  height={40}
+                  className="mobile-footer-icon"
+                  style={{ width: 40, height: 40, objectFit: "contain" }}
                 />
               ) : (
                 <Image 
                   src={item.icon} 
                   alt={item.path} 
-                  width={30} 
-                  height={30}
-                  style={{ width: 30, height: 30, objectFit: "contain" }}
+                  width={40} 
+                  height={40}
+                  className="mobile-footer-icon"
+                  style={{ width: 40, height: 40, objectFit: "contain" }}
                 />
               )}
             </button>

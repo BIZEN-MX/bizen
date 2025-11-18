@@ -202,7 +202,7 @@ export default function CashFlowGamePage() {
     borderRadius: 12,
     fontSize: 16,
     fontWeight: 700,
-    fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+    fontFamily: "'Montserrat', sans-serif"
   }
   const modalSecondaryButtonStyle: React.CSSProperties = {
     flex: 1,
@@ -212,7 +212,7 @@ export default function CashFlowGamePage() {
     borderRadius: 12,
     fontSize: 16,
     fontWeight: 700,
-    fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+    fontFamily: "'Montserrat', sans-serif"
   }
 
   const warningBoxStyle: React.CSSProperties = {
@@ -851,7 +851,7 @@ export default function CashFlowGamePage() {
         width: "100%",
         minHeight: "100vh",
         background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-        fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+        fontFamily: "'Montserrat', sans-serif",
         overflowX: "hidden"
       }}>
         <main className="cashflow-game-main" style={{
@@ -919,7 +919,7 @@ export default function CashFlowGamePage() {
                 fontSize: 14,
                 fontWeight: 700,
                 cursor: "pointer",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 transition: "all 0.2s"
               }}
               onMouseEnter={(e) => {
@@ -1512,7 +1512,7 @@ export default function CashFlowGamePage() {
                 cursor: actionInProgress ? "not-allowed" : "pointer",
                 boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
                 transition: "all 0.2s ease",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                fontFamily: "'Montserrat', sans-serif"
               }}
             >
               🏦 Préstamo
@@ -1534,7 +1534,7 @@ export default function CashFlowGamePage() {
                 cursor: actionInProgress ? "not-allowed" : "pointer",
                 boxShadow: "0 4px 12px rgba(16, 185, 129, 0.3)",
                 transition: "all 0.2s ease",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                fontFamily: "'Montserrat', sans-serif"
               }}
             >
               ⏭️ Terminar Turno
@@ -1887,7 +1887,7 @@ export default function CashFlowGamePage() {
                     fontSize: 16,
                     fontWeight: 700,
                     cursor: "pointer",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                     transition: "all 0.2s"
                   }}
                 >
@@ -1907,7 +1907,7 @@ export default function CashFlowGamePage() {
                   fontSize: 16,
                   fontWeight: 700,
                   cursor: "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   boxShadow: "0 6px 20px rgba(102, 126, 234, 0.3)",
                   transition: "all 0.2s"
                 }}
@@ -1927,7 +1927,7 @@ export default function CashFlowGamePage() {
                   fontSize: 14,
                   fontWeight: 600,
                   cursor: "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
               >
                 Saltar
@@ -2017,7 +2017,7 @@ export default function CashFlowGamePage() {
                 fontSize: 16,
                 fontWeight: 700,
                 cursor: "pointer",
-                fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                fontFamily: "'Montserrat', sans-serif"
               }}
             >
               Continuar
@@ -2165,7 +2165,7 @@ export default function CashFlowGamePage() {
                   fontSize: 16,
                   fontWeight: 700,
                   cursor: (actionInProgress || player.cashOnHand < selectedLoan.remainingBalance) ? "not-allowed" : "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
               >
                 💰 Pagar ${selectedLoan.remainingBalance.toLocaleString()}
@@ -2184,7 +2184,7 @@ export default function CashFlowGamePage() {
                   fontSize: 16,
                   fontWeight: 700,
                   cursor: actionInProgress ? "not-allowed" : "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
               >
                 Cancelar
@@ -2283,7 +2283,7 @@ export default function CashFlowGamePage() {
                       fontSize: 13,
                       fontWeight: 700,
                       cursor: "pointer",
-                      fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                      fontFamily: "'Montserrat', sans-serif",
                       transition: "all 0.2s"
                     }}
                   >
@@ -2306,7 +2306,7 @@ export default function CashFlowGamePage() {
                   borderRadius: 12,
                   fontSize: 18,
                   fontWeight: 700,
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   textAlign: "center"
                 }}
               />
@@ -2376,7 +2376,7 @@ export default function CashFlowGamePage() {
                   fontSize: 16,
                   fontWeight: 700,
                   cursor: (actionInProgress || loanAmount < 1000) ? "not-allowed" : "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
               >
                 💰 Solicitar Préstamo
@@ -2395,7 +2395,7 @@ export default function CashFlowGamePage() {
                   fontSize: 16,
                   fontWeight: 700,
                   cursor: actionInProgress ? "not-allowed" : "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
               >
                 Cancelar
@@ -2517,7 +2517,7 @@ export default function CashFlowGamePage() {
                     fontSize: 12,
                     fontWeight: 600,
                     cursor: "pointer",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                    fontFamily: "'Montserrat', sans-serif"
                   }}
                 >
                   Mínimo
@@ -2539,7 +2539,7 @@ export default function CashFlowGamePage() {
                     fontSize: 12,
                     fontWeight: 600,
                     cursor: "pointer",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                    fontFamily: "'Montserrat', sans-serif"
                   }}
                 >
                   Medio
@@ -2557,7 +2557,7 @@ export default function CashFlowGamePage() {
                     fontSize: 12,
                     fontWeight: 600,
                     cursor: "pointer",
-                    fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                    fontFamily: "'Montserrat', sans-serif"
                   }}
                 >
                   Máximo
@@ -2577,7 +2577,7 @@ export default function CashFlowGamePage() {
                   borderRadius: 8,
                   fontSize: 16,
                   fontWeight: 700,
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   textAlign: "center"
                 }}
               />
@@ -2634,7 +2634,7 @@ export default function CashFlowGamePage() {
                   fontSize: 16,
                   fontWeight: 700,
                   cursor: actionInProgress ? "not-allowed" : "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
               >
                 💰 Vender
@@ -2653,7 +2653,7 @@ export default function CashFlowGamePage() {
                   fontSize: 16,
                   fontWeight: 700,
                   cursor: actionInProgress ? "not-allowed" : "pointer",
-                  fontFamily: "'Feather Bold', 'Montserrat', sans-serif"
+                  fontFamily: "'Montserrat', sans-serif"
                 }}
               >
                 Cancelar
