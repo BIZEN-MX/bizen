@@ -265,14 +265,14 @@ function ForumContent() {
         `}</style>
         <div className="forum-outer" style={{
           position: "relative",
-          minHeight: "100vh",
+          minHeight: "100dvh",
           fontFamily: "'Montserrat', sans-serif",
           backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
           backgroundAttachment: "fixed",
           width: "100%",
           boxSizing: "border-box",
           overflowX: "hidden",
-          overflowY: "auto",
+          overflowY: "visible",
           WebkitOverflowScrolling: "touch"
         }}>
           <div 
@@ -280,12 +280,12 @@ function ForumContent() {
             className="forum-container"
             style={{
               position: "relative",
-              minHeight: "100vh",
+              minHeight: "100dvh",
               paddingTop: 40,
               paddingBottom: 80,
               touchAction: "pan-y", // Allow vertical scrolling, enable gestures
               overflowX: "hidden",
-              overflowY: "auto",
+              overflowY: "visible",
               boxSizing: "border-box",
               WebkitOverflowScrolling: "touch"
             }}
@@ -837,16 +837,17 @@ function ForumContent() {
       /* Mobile specific styles */
       @media (max-width: 767px) {
         .forum-outer {
-          overflow-y: auto !important;
+          overflow-y: visible !important;
           overflow-x: hidden !important;
           -webkit-overflow-scrolling: touch !important;
+          min-height: 100dvh !important;
         }
         /* Ensure container allows scroll */
         .forum-container {
           position: relative !important;
           height: auto !important;
-          min-height: 100vh !important;
-          overflow-y: auto !important;
+          min-height: 100dvh !important;
+          overflow-y: visible !important;
           overflow-x: hidden !important;
           margin-right: 0 !important;
           padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
@@ -859,8 +860,7 @@ function ForumContent() {
           overflow-x: hidden !important;
           -webkit-overflow-scrolling: touch !important;
           position: relative !important;
-          height: auto !important;
-          min-height: 100vh !important;
+          height: 100% !important;
         }
         
         /* Ensure html can scroll on mobile */
@@ -868,8 +868,7 @@ function ForumContent() {
           overflow-y: auto !important;
           overflow-x: hidden !important;
           -webkit-overflow-scrolling: touch !important;
-          height: auto !important;
-          min-height: 100vh !important;
+          height: 100% !important;
         }
         
         /* Adjust main content padding on mobile */
