@@ -375,7 +375,7 @@ function SettingsContent() {
   return (
     <div className="configuracion-outer" style={{
       width: "100%",
-      minHeight: "100vh",
+      flex: 1,
       background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
       backgroundAttachment: "fixed",
       fontFamily: "'Montserrat', sans-serif",
@@ -385,7 +385,7 @@ function SettingsContent() {
     }}>
       <div className="settings-container" style={{
         position: "relative",
-        minHeight: "100vh",
+        flex: 1,
         padding: "40px",
         overflowX: "hidden",
         boxSizing: "border-box"
@@ -2116,7 +2116,7 @@ function SettingsContent() {
 
 export default function SettingsPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)", padding: "40px", maxWidth: "100%", overflowX: "hidden" }}>Cargando configuración...</div>}>
+    <Suspense fallback={<div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)", padding: "40px", maxWidth: "100%", overflowX: "hidden" }}>Cargando configuración...</div>}>
       <SettingsContent />
     </Suspense>
   )

@@ -826,9 +826,16 @@ export default function CashFlowGamePage() {
   return (
     <>
       <style>{`
+        .cashflow-game-container {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .cashflow-game-main {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
         @media (max-width: 767px) {
           .cashflow-game-container {
-            padding: clamp(8px, 2vw, 16px) !important;
             width: 100% !important;
             max-width: 100% !important;
           }
@@ -854,7 +861,12 @@ export default function CashFlowGamePage() {
         }
         @media (min-width: 768px) {
           .cashflow-game-container {
-            padding-right: clamp(20px, 5vw, 360px) !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .cashflow-game-main {
+            width: 100% !important;
+            max-width: 100% !important;
           }
         }
       `}</style>
@@ -868,7 +880,7 @@ export default function CashFlowGamePage() {
         <main className="cashflow-game-main" style={{
           width: "100%",
           maxWidth: "100%",
-          padding: "clamp(16px, 3vw, 20px)",
+          padding: "clamp(16px, 3vw, 24px)",
           paddingBottom: isMobile ? "140px" : "clamp(40px, 4vw, 80px)",
           display: "flex",
           justifyContent: "center",
@@ -876,8 +888,8 @@ export default function CashFlowGamePage() {
           boxSizing: "border-box"
         }}>
         <div className="cashflow-game-container" style={{ 
-          maxWidth: "min(1400px, 100%)", 
           width: "100%",
+          maxWidth: "100%",
           boxSizing: "border-box"
         }}>
         {/* Header */}
@@ -1479,7 +1491,7 @@ export default function CashFlowGamePage() {
           maxWidth: "100%",
           overflowX: "auto",
           overflowY: "visible",
-          padding: "clamp(12px, 2vw, 20px)",
+          padding: "clamp(8px, 1.5vw, 16px)",
           boxSizing: "border-box"
         }}>
           <GameBoard

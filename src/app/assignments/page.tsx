@@ -198,7 +198,7 @@ export default function AssignmentsPage() {
       `}</style>
       <div className="assignments-outer" style={{
       position: "relative",
-      minHeight: "100vh",
+      flex: 1,
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",

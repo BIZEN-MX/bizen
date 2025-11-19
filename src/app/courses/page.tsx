@@ -767,7 +767,7 @@ export default function CoursesPage() {
         left: 0,
         width: "100vw",
         maxWidth: "100vw",
-        minHeight: "100vh",
+        flex: 1,
         background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         overflowX: "hidden",
         boxSizing: "border-box",
@@ -1051,7 +1051,7 @@ export default function CoursesPage() {
 
 
     <main style={{ 
-        minHeight: "100vh",
+        flex: 1,
         paddingTop: "80px",
         paddingBottom: "clamp(40px, 8vw, 80px)",
         paddingLeft: "16px",

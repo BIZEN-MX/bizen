@@ -223,7 +223,7 @@ function ForumContent() {
           @media (max-width: 767px) {
             .forum-outer {
               padding-bottom: 65px !important;
-              min-height: calc(100vh - 65px) !important;
+              flex: 1 !important;
               overflow-y: auto !important;
               -webkit-overflow-scrolling: touch !important;
             }
@@ -265,7 +265,7 @@ function ForumContent() {
         `}</style>
         <div className="forum-outer" style={{
           position: "relative",
-          minHeight: "100dvh",
+          flex: 1,
           fontFamily: "'Montserrat', sans-serif",
           backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
           backgroundAttachment: "fixed",
@@ -280,7 +280,7 @@ function ForumContent() {
             className="forum-container"
             style={{
               position: "relative",
-              minHeight: "100dvh",
+              flex: 1,
               paddingTop: 40,
               paddingBottom: 80,
               touchAction: "pan-y", // Allow vertical scrolling, enable gestures
@@ -840,13 +840,13 @@ function ForumContent() {
           overflow-y: visible !important;
           overflow-x: hidden !important;
           -webkit-overflow-scrolling: touch !important;
-          min-height: 100dvh !important;
+          flex: 1 !important;
         }
         /* Ensure container allows scroll */
         .forum-container {
           position: relative !important;
           height: auto !important;
-          min-height: 100dvh !important;
+          flex: 1 !important;
           overflow-y: visible !important;
           overflow-x: hidden !important;
           margin-right: 0 !important;
@@ -885,7 +885,7 @@ function ForumContent() {
 
 export default function ForumPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>Cargando...</div>}>
+    <Suspense fallback={<div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>Cargando...</div>}>
       <ForumContent />
     </Suspense>
   )

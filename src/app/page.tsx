@@ -78,8 +78,7 @@ export default function WelcomePage() {
   return (
       <div style={{
         background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
-        backgroundAttachment: "fixed",
-        minHeight: "100dvh",
+        flex: 1,
         width: "100%",
         margin: 0,
         padding: 0,
@@ -87,7 +86,7 @@ export default function WelcomePage() {
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
-      }} className="main-wrapper main-page-container">
+      }} className="main-page-container">
       {/* Header */}
       <header style={{
         position: "fixed",
@@ -158,7 +157,6 @@ export default function WelcomePage() {
       <main style={{ flex: 1, width: "100%", display: "flex", flexDirection: "column" }}>
       <div style={{
         paddingTop: "clamp(64px, 12vw, 80px)", // Add padding to account for fixed header
-        minHeight: "100vh",
         position: "relative",
         overflowX: "hidden",
         overflowY: "auto",
@@ -585,46 +583,25 @@ export default function WelcomePage() {
             padding: 0 16px !important;
           }
           
-          /* Fix footer gap on mobile - use dynamic viewport */
+          /* Fix footer gap on mobile - use dynamic viewport and iOS support */
           .main-page-footer {
             margin: 0 !important;
             margin-top: auto !important;
             margin-bottom: 0 !important;
-            padding-bottom: env(safe-area-inset-bottom, 0) !important;
+            padding-bottom: max(clamp(16px, 3vw, 24px), env(safe-area-inset-bottom, 0px)) !important;
           }
           
-          .main-wrapper,
           .main-page-container {
             margin: 0 !important;
             padding: 0 !important;
-            padding-bottom: 0 !important;
-            min-height: 100dvh !important; /* Dynamic viewport height for tall iPhones */
+            flex: 1 !important;
             display: flex !important;
             flex-direction: column !important;
-            background-color: #E6F0FF !important;
           }
           
-          /* Ensure no gap below footer */
-          body, html {
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow-x: hidden !important;
-            height: 100% !important;
-            background-color: #E6F0FF !important;
-          }
-          
-          /* Remove any bottom spacing from viewport */
-          #__next {
-            margin: 0 !important;
-            padding: 0 !important;
-            min-height: 100dvh !important; /* Dynamic viewport height */
-            display: flex !important;
-            flex-direction: column !important;
-            background-color: #E6F0FF !important;
-          }
-          
-          /* Remove margin-bottom from all elements */
-          section, div, p, * {
+          /* Ensure footer padding includes safe area */
+          footer {
+            padding-bottom: env(safe-area-inset-bottom, clamp(16px, 3vw, 24px)) !important;
             margin-bottom: 0 !important;
           }
           
@@ -852,12 +829,12 @@ export default function WelcomePage() {
         zIndex: 10,
         width: "100%",
         padding: "clamp(16px, 3vw, 24px)",
+        paddingBottom: `env(safe-area-inset-bottom, clamp(16px, 3vw, 24px))`,
         background: "rgba(255, 255, 255, 0.9)",
         backdropFilter: "blur(10px)",
         borderTop: "1px solid rgba(15, 98, 254, 0.1)",
         margin: 0,
         marginTop: "auto",
-        marginBottom: 0,
       }} className="main-page-footer">
         <div style={{
           maxWidth: "1200px",
@@ -2158,7 +2135,6 @@ html {
   /* Main hero section - adjust for mobile */
   .main-content-wrapper {
     padding: clamp(40px, 10vw, 80px) clamp(20px, 5vw, 32px) !important;
-    min-height: 100vh !important;
   }
   
   /* Main content grid - stack on mobile */

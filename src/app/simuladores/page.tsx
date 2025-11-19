@@ -99,7 +99,7 @@ export default function SimulatorsPage() {
       `}</style>
       <div className="simuladores-outer" style={{
         width: "100%",
-        minHeight: "100vh",
+        flex: 1,
         background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         fontFamily: "Montserrat, sans-serif",
         overflowX: "hidden",
@@ -111,7 +111,7 @@ export default function SimulatorsPage() {
       paddingBottom: "40px",
       paddingLeft: "40px",
       paddingRight: "40px",
-      minHeight: "100vh",
+      flex: 1,
       boxSizing: "border-box" as const,
       overflowX: "hidden",
       overflowY: "visible"

@@ -186,7 +186,7 @@ export default function ProgressPage() {
       `}</style>
       <div className="progress-outer" style={{
         position: "relative",
-        minHeight: "100vh",
+        flex: 1,
         fontFamily: "Montserrat, sans-serif",
         background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         backgroundAttachment: "fixed",
@@ -195,7 +195,7 @@ export default function ProgressPage() {
       }}>
         <div className="progress-inner" style={{
       position: "relative",
-      minHeight: "100vh",
+      flex: 1,
       paddingTop: 40,
       paddingBottom: 80,
       paddingRight: 40,
