@@ -80,15 +80,10 @@ export default function WelcomePage() {
         background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
         backgroundAttachment: "fixed",
         minHeight: "100vh",
-        height: "100%",
-        width: "100vw",
-        maxWidth: "100vw",
+        width: "100%",
         margin: 0,
         padding: 0,
-        paddingBottom: 0,
-        marginBottom: 0,
         overflowX: "hidden",
-        overflowY: "auto",
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
@@ -592,34 +587,40 @@ export default function WelcomePage() {
           
           /* Fix footer gap on mobile */
           .main-page-footer {
-            padding-bottom: max(clamp(16px, 3vw, 24px), env(safe-area-inset-bottom)) !important;
-            margin-bottom: 0 !important;
+            margin: 0 !important;
             margin-top: auto !important;
+            padding-bottom: env(safe-area-inset-bottom, 0) !important;
           }
           
           .main-page-container {
+            margin: 0 !important;
+            padding: 0 !important;
             padding-bottom: 0 !important;
-            margin-bottom: 0 !important;
             min-height: 100vh !important;
-            height: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
           }
           
           /* Ensure no gap below footer */
           body, html {
             margin: 0 !important;
             padding: 0 !important;
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
-            height: 100% !important;
             overflow-x: hidden !important;
+            height: 100% !important;
           }
           
           /* Remove any bottom spacing from viewport */
           #__next {
             margin: 0 !important;
             padding: 0 !important;
+            min-height: 100vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+          }
+          
+          /* Remove margin-bottom from all elements */
+          * {
             margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
           }
           
           /* Hero sections - Stack vertically on mobile (text first, image second) */
@@ -846,11 +847,10 @@ export default function WelcomePage() {
         zIndex: 10,
         width: "100%",
         padding: "clamp(16px, 3vw, 24px)",
-        paddingBottom: "max(clamp(16px, 3vw, 24px), env(safe-area-inset-bottom))",
         background: "rgba(255, 255, 255, 0.9)",
         backdropFilter: "blur(10px)",
         borderTop: "1px solid rgba(15, 98, 254, 0.1)",
-        marginBottom: 0,
+        margin: 0,
         marginTop: "auto",
       }} className="main-page-footer">
         <div style={{
