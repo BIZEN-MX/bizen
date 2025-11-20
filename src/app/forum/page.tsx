@@ -68,8 +68,10 @@ function ForumContent() {
   useEffect(() => {
     const bodyEl = document.body
     if (bodyEl) {
+      // Don't use fixed background on mobile - it causes scrolling issues
+      const isMobile = window.innerWidth <= 767
       bodyEl.style.backgroundImage = "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)"
-      bodyEl.style.backgroundAttachment = "fixed"
+      bodyEl.style.backgroundAttachment = isMobile ? "scroll" : "fixed"
     }
     return () => {
       bodyEl.style.backgroundImage = "none"
@@ -274,7 +276,7 @@ function ForumContent() {
           flex: 1,
           fontFamily: "'Montserrat', sans-serif",
           backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-          backgroundAttachment: "fixed",
+          backgroundAttachment: typeof window !== "undefined" && window.innerWidth <= 767 ? "scroll" : "fixed",
           width: "100%",
           boxSizing: "border-box",
           overflowX: "hidden",
@@ -291,7 +293,7 @@ function ForumContent() {
               paddingBottom: 80,
               touchAction: "pan-y", // Allow vertical scrolling, enable gestures
               overflowX: "hidden",
-              overflowY: "visible",
+              overflowY: typeof window !== "undefined" && window.innerWidth <= 767 ? "auto" : "visible",
               boxSizing: "border-box",
               WebkitOverflowScrolling: "touch"
             }}
@@ -840,28 +842,30 @@ function ForumContent() {
         display: flex !important;
       }
       
-      /* Mobile specific styles */
-      @media (max-width: 767px) {
-        .forum-outer {
-          overflow-y: auto !important;
-          overflow-x: hidden !important;
-          -webkit-overflow-scrolling: touch !important;
-          flex: 1 !important;
-          height: 100vh !important;
-          height: 100dvh !important;
-        }
-        /* Ensure container allows scroll */
-        .forum-container {
-          position: relative !important;
-          height: auto !important;
-          min-height: 100% !important;
-          flex: 1 !important;
-          overflow-y: visible !important;
-          overflow-x: hidden !important;
-          margin-right: 0 !important;
-          padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-          -webkit-overflow-scrolling: touch !important;
-        }
+          /* Mobile specific styles */
+          @media (max-width: 767px) {
+            .forum-outer {
+              overflow-y: auto !important;
+              overflow-x: hidden !important;
+              -webkit-overflow-scrolling: touch !important;
+              flex: 1 !important;
+              min-height: 100vh !important;
+              min-height: 100dvh !important;
+              height: auto !important;
+              background-attachment: scroll !important;
+            }
+            /* Ensure container allows scroll */
+            .forum-container {
+              position: relative !important;
+              height: auto !important;
+              min-height: 100% !important;
+              flex: 1 !important;
+              overflow-y: auto !important;
+              overflow-x: hidden !important;
+              margin-right: 0 !important;
+              padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+              -webkit-overflow-scrolling: touch !important;
+            }
         
         /* Ensure app-scroll allows scrolling */
         .app-scroll {

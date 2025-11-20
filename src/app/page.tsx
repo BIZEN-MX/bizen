@@ -197,7 +197,7 @@ export default function WelcomePage() {
         flex: 1,
         display: "flex",
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         padding: "clamp(16px, 3vw, 40px)",
         paddingTop: "clamp(64px, 8vw, 80px)",
         paddingBottom: "clamp(64px, 8vw, 80px)",
@@ -235,6 +235,7 @@ export default function WelcomePage() {
               background: "white",
               borderRadius: "clamp(16px, 4vw, 32px)",
               padding: "clamp(12px, 3vw, 50px)",
+              paddingRight: "clamp(4px, 1vw, 12px)",
               boxShadow: "0 24px 64px rgba(15, 98, 254, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08)",
               overflow: "visible",
               zIndex: 100,
@@ -272,6 +273,8 @@ export default function WelcomePage() {
             maxWidth: "100%",
             boxSizing: "border-box",
             width: "100%",
+            paddingLeft: "clamp(0px, 0.5vw, 8px)",
+            marginLeft: "clamp(-20px, -2vw, -8px)",
           }} className="text-and-buttons-container">
             {/* Text Content */}
             <div style={{ width: "100%", boxSizing: "border-box" }}>
@@ -849,9 +852,14 @@ export default function WelcomePage() {
           .text-and-buttons-container {
             text-align: center !important;
             align-items: center !important;
-            padding-left: clamp(40px, 6vw, 80px) !important;
-            padding-right: clamp(20px, 3vw, 40px) !important;
+            padding-left: 0 !important;
+            padding-right: clamp(4px, 1vw, 16px) !important;
             max-width: 100% !important;
+            margin-left: clamp(-16px, -2vw, -8px) !important;
+          }
+          
+          .billy-container {
+            padding-right: clamp(4px, 1vw, 12px) !important;
           }
           .buttons-container {
             align-items: center !important;
@@ -862,12 +870,13 @@ export default function WelcomePage() {
         @media (min-width: 769px) and (max-width: 1440px) {
           /* Ensure content fits on smaller laptop screens */
           .main-content {
-            gap: clamp(20px, 3vw, 60px) !important;
+            gap: clamp(32px, 6vw, 80px) !important;
           }
           
           /* Main content wrapper - allow content to flow naturally */
           .main-content-wrapper {
             align-items: center !important;
+            justify-content: center !important;
             padding-top: clamp(80px, 10vw, 100px) !important;
             padding-bottom: clamp(80px, 10vw, 100px) !important;
             justify-content: center !important;
@@ -2677,8 +2686,13 @@ html {
   }
   
   .text-and-buttons-container {
-    padding-left: clamp(40px, 6vw, 80px) !important;
-    padding-right: clamp(20px, 3vw, 40px) !important;
+    padding-left: 0 !important;
+    padding-right: clamp(4px, 1vw, 16px) !important;
+    margin-left: clamp(-12px, -1.5vw, -4px) !important;
+  }
+  
+  .billy-container {
+    padding-right: clamp(4px, 1vw, 12px) !important;
   }
   
   /* Tablet Billy image */
@@ -2689,6 +2703,7 @@ html {
   
   .billy-container {
     padding: clamp(20px, 3.5vw, 45px) !important;
+    padding-right: clamp(8px, 1.5vw, 16px) !important;
   }
 }
 
@@ -2706,12 +2721,17 @@ html {
   /* Small Desktop - two columns for main content */
   .main-content {
     grid-template-columns: 1.1fr 0.9fr !important;
-    gap: clamp(50px, 6vw, 80px) !important;
+    gap: clamp(0px, 0.5vw, 12px) !important;
   }
   
   .text-and-buttons-container {
-    padding-left: clamp(50px, 7vw, 100px) !important;
-    padding-right: clamp(20px, 3vw, 40px) !important;
+    padding-left: 0 !important;
+    padding-right: clamp(8px, 1.5vw, 24px) !important;
+    margin-left: clamp(-16px, -2vw, -8px) !important;
+  }
+  
+  .billy-container {
+    padding-right: clamp(8px, 1.5vw, 16px) !important;
   }
   
   /* Small Desktop Billy image */
@@ -2722,6 +2742,7 @@ html {
   
   .billy-container {
     padding: clamp(25px, 3.5vw, 48px) !important;
+    padding-right: clamp(8px, 1.5vw, 20px) !important;
   }
 }
 
@@ -2739,12 +2760,17 @@ html {
   /* Desktop - two columns for main content */
   .main-content {
     grid-template-columns: 1.1fr 0.9fr !important;
-    gap: clamp(60px, 8vw, 100px) !important;
+    gap: clamp(0px, 0.5vw, 16px) !important;
   }
   
   .text-and-buttons-container {
-    padding-left: clamp(60px, 8vw, 120px) !important;
-    padding-right: clamp(20px, 4vw, 50px) !important;
+    padding-left: 0 !important;
+    padding-right: clamp(8px, 2vw, 28px) !important;
+    margin-left: clamp(-20px, -2.5vw, -12px) !important;
+  }
+  
+  .billy-container {
+    padding-right: clamp(8px, 2vw, 20px) !important;
   }
   
   /* Desktop Billy image */
