@@ -39,8 +39,10 @@ export function LessonScreen({
       }}
     >
       {/* Progress Bar */}
-      <div className="pt-4 md:pt-6 pb-2 md:pb-4 flex-shrink-0">
-        <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+      <div className="pt-4 md:pt-6 pb-2 md:pb-4 flex-shrink-0 pointer-events-none">
+        <div className="pointer-events-auto">
+          <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+        </div>
       </div>
 
       {/* Main Content - Scrollable */}

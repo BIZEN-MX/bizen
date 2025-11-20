@@ -9,6 +9,205 @@ import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Button from "@/components/ui/button"
 
+// Billy explanation component for courses page
+function BillyCoursesExplanation() {
+  const [isVisible, setIsVisible] = useState(false)
+  const [hasSeenWelcome, setHasSeenWelcome] = useState(false)
+  
+  useEffect(() => {
+    // Check if user has seen the welcome message before
+    if (typeof window !== 'undefined') {
+      const hasSeenBefore = localStorage.getItem('coursesPageWelcomeSeen')
+      if (hasSeenBefore) {
+        setHasSeenWelcome(true)
+      } else {
+        // Mark as seen after showing it
+        localStorage.setItem('coursesPageWelcomeSeen', 'true')
+      }
+    }
+  }, [])
+  
+  useEffect(() => {
+    // Only run animation if this is the first time seeing the welcome
+    if (hasSeenWelcome) return
+    
+    // Fade in after a short delay
+    const fadeInTimeout = setTimeout(() => {
+      setIsVisible(true)
+    }, 300)
+    
+    return () => {
+      clearTimeout(fadeInTimeout)
+    }
+  }, [hasSeenWelcome])
+  
+  // Don't render if user has already seen the welcome message
+  if (hasSeenWelcome) {
+    return null
+  }
+  
+  const primaryColor = "#1e40af"
+  
+  return (
+    <>
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .billy-courses-container {
+            flex-direction: column-reverse !important;
+            align-items: center !important;
+          }
+          .billy-courses-bubble {
+            margin-right: 0 !important;
+            margin-bottom: 20px !important;
+            max-width: 90% !important;
+          }
+          .billy-courses-bubble-tail-outer,
+          .billy-courses-bubble-tail-inner {
+            display: none !important;
+          }
+        }
+      `}</style>
+      
+      <div 
+        className="billy-courses-container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 40,
+          marginBottom: 20,
+          position: "relative",
+          opacity: isVisible ? 1 : 0,
+          animation: isVisible ? "fadeInUp 0.6s ease-out" : "none",
+        }}
+      >
+        {/* Speech Bubble */}
+        <div 
+          className="billy-courses-bubble"
+          style={{
+            position: "relative",
+            background: "#fff",
+            borderRadius: 20,
+            padding: "24px 32px",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+            border: `3px solid ${primaryColor}`,
+            maxWidth: 600,
+            marginRight: 30,
+          }}
+        >
+          {/* Comic-style tail pointing to Billy */}
+          <div 
+            className="billy-courses-bubble-tail-outer"
+            style={{
+              position: "absolute",
+              right: -18,
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: 0,
+              height: 0,
+              borderTop: "15px solid transparent",
+              borderBottom: "15px solid transparent",
+              borderLeft: `20px solid ${primaryColor}`,
+            }} 
+          />
+          <div 
+            className="billy-courses-bubble-tail-inner"
+            style={{
+              position: "absolute",
+              right: -13,
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: 0,
+              height: 0,
+              borderTop: "12px solid transparent",
+              borderBottom: "12px solid transparent",
+              borderLeft: "17px solid #fff",
+            }} 
+          />
+          
+          {/* Speech text */}
+          <div style={{
+            margin: 0,
+            fontSize: 16,
+            lineHeight: 1.6,
+            color: "#0f172a",
+            fontWeight: 500,
+          }}>
+            <p style={{ margin: "0 0 12px 0", fontWeight: 700, fontSize: 18 }}>
+              ¡Bienvenido a la página de Cursos! 📚
+            </p>
+            <p style={{ margin: "0 0 10px 0" }}>
+              <strong>📚 Courses (Cursos)</strong><br />
+              Aquí es donde aprendo todos los temas de BIZEN. Cada curso tiene unidades y lecciones cortas, con actividades, preguntas y retos. Todo está organizado para avanzar paso a paso y ganar XP.
+            </p>
+            <p style={{ margin: "0 0 10px 0" }}>
+              <strong>💸 Cashflow</strong><br />
+              Es una simulación donde controlo ingresos, gastos y decisiones del día a día. Me ayuda a entender cómo se mueve el dinero, cómo planear y cómo evitar errores financieros. Es como un juego de flujo de efectivo.
+            </p>
+            <p style={{ margin: "0 0 10px 0" }}>
+              <strong>🎮 Simuladores</strong><br />
+              Aquí encuentro mini-simulaciones interactivas más específicas: ahorrar, invertir, usar crédito, manejar un presupuesto, etc. Cada simulador me enseña un concepto financiero con práctica real, pero rápida y divertida.
+            </p>
+            <p style={{ margin: "0 0 10px 0" }}>
+              <strong>🏆 Mi Progreso</strong><br />
+              Es un resumen claro de todo lo que llevo avanzado: cursos completados, XP acumulado, racha, logros, lecciones pendientes, nivel actual y lo que me falta para subir.
+            </p>
+            <p style={{ margin: "0 0 10px 0" }}>
+              <strong>💬 Foro</strong><br />
+              Es un espacio para preguntar, compartir ideas y aprender con otros. Aquí puedo pedir ayuda, resolver dudas y entrar a conversaciones sobre emprendimiento, finanzas, proyectos y retos.
+            </p>
+            <p style={{ margin: "0 0 10px 0" }}>
+              <strong>👤 Profile (Perfil)</strong><br />
+              Aquí veo mis datos, mis insignias, mis niveles, mi avatar y mis estadísticas. Todo lo que dice quién soy dentro de BIZEN.
+            </p>
+            <p style={{ margin: "0 0 10px 0" }}>
+              <strong>⚙️ Configuración</strong><br />
+              En esta sección ajusto cosas importantes de mi cuenta: idioma, notificaciones, accesibilidad, preferencias, modo oscuro y opciones generales de la app.
+            </p>
+            <p style={{ margin: "0 0 0 0" }}>
+              <strong>💼 Business-Lab</strong><br />
+              Es un espacio para empezar mi emprendimiento, guiándome de la mano paso a paso para convertirme en todo un emprendedor.
+            </p>
+          </div>
+        </div>
+        
+        {/* Billy Character */}
+        <div style={{
+          position: "relative",
+          width: 150,
+          height: 150,
+          flexShrink: 0,
+        }}>
+          <Image
+            src="/drago1.png"
+            alt="Drago1"
+            width={150}
+            height={150}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.15))",
+            }}
+            priority
+          />
+        </div>
+      </div>
+    </>
+  )
+}
+
 interface Lesson {
   id: string
   title: string
@@ -1080,6 +1279,9 @@ export default function CoursesPage() {
         boxSizing: "border-box",
         width: "100%"
       }} className="courses-main-content">
+        {/* Billy - Welcome message on first visit */}
+        <BillyCoursesExplanation />
+        
         {/* Island Path */}
             <div style={{
           width: "100%",

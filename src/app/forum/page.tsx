@@ -269,7 +269,7 @@ function ForumContent() {
             }
           }
         `}</style>
-        <div className="forum-outer" style={{
+        <div className="forum-outer" data-bizen-tour="foro" style={{
           position: "relative",
           flex: 1,
           fontFamily: "'Montserrat', sans-serif",

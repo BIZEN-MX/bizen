@@ -282,6 +282,7 @@ export default function FixedSidebar() {
           <div style={{ marginBottom: 24 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: stackAlignment }}>
               <button
+                data-bizen-tour-menu-item="courses"
                 onClick={() => navigateTo("/courses")}
                 style={{
                   display: "flex",
@@ -333,6 +334,7 @@ export default function FixedSidebar() {
               </button>
 
               <button
+                data-bizen-tour-menu-item="business-lab"
                 onClick={() => navigateTo("/business-lab")}
                 style={{
                   display: "flex",
@@ -384,6 +386,7 @@ export default function FixedSidebar() {
               </button>
 
               <button
+                data-bizen-tour-menu-item="cashflow"
                 onClick={() => navigateTo("/cash-flow")}
                 style={{
                   display: "flex",
@@ -435,6 +438,7 @@ export default function FixedSidebar() {
               </button>
 
               <button
+                data-bizen-tour-menu-item="simuladores"
                 onClick={() => navigateTo("/simuladores")}
                 style={{
                   display: "flex",
@@ -489,6 +493,7 @@ export default function FixedSidebar() {
               {user && (
               <>
               <button
+                data-bizen-tour-menu-item="progreso"
                 onClick={() => navigateTo("/progress")}
                 style={{
                   display: "flex",
@@ -540,6 +545,7 @@ export default function FixedSidebar() {
               </button>
 
               <button
+                data-bizen-tour-menu-item="foro"
                 onClick={() => navigateTo("/forum")}
                 style={{
                   display: "flex",
@@ -599,6 +605,7 @@ export default function FixedSidebar() {
           <div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: stackAlignment }}>
               <button
+                data-bizen-tour-menu-item="profile"
                 onClick={() => navigateTo("/profile")}
                 style={{
                   display: "flex",
@@ -662,6 +669,7 @@ export default function FixedSidebar() {
               </button>
 
               <button
+                data-bizen-tour-menu-item="configuracion"
                 onClick={() => navigateTo("/configuracion")}
                 style={{
                   display: "flex",

@@ -196,14 +196,14 @@ export default function WelcomePage() {
         margin: "0 auto",
         flex: 1,
         display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
         alignItems: "center",
+        justifyContent: "flex-start",
         padding: "clamp(16px, 3vw, 40px)",
-        paddingTop: "clamp(80px, 12vw, 120px)",
-        paddingBottom: "clamp(20px, 4vw, 60px)",
+        paddingTop: "clamp(64px, 8vw, 80px)",
+        paddingBottom: "clamp(64px, 8vw, 80px)",
         width: "100%",
         minHeight: "calc(100vh - clamp(64px, 12vw, 80px))",
+        height: "calc(100vh - clamp(64px, 12vw, 80px))",
         boxSizing: "border-box",
         overflow: "visible",
       }} className="main-content-wrapper">
@@ -267,7 +267,12 @@ export default function WelcomePage() {
             transform: isVisible ? "translateX(0)" : "translateX(50px)",
             transition: "opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s",
             textAlign: "center",
-          }}>
+            alignItems: "center",
+            justifyContent: "center",
+            maxWidth: "100%",
+            boxSizing: "border-box",
+            width: "100%",
+          }} className="text-and-buttons-container">
             {/* Text Content */}
             <div style={{ width: "100%", boxSizing: "border-box" }}>
               <h1 style={{
@@ -280,7 +285,7 @@ export default function WelcomePage() {
                 textAlign: "center",
                 wordWrap: "break-word",
                 overflowWrap: "break-word",
-              }}>
+              }} className="hero-main-title">
                 ¿Aprender finanzas mientras juegas? ¡Sí! <span style={{
                 background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
                 backgroundSize: "200% auto",
@@ -299,7 +304,7 @@ export default function WelcomePage() {
               alignItems: "center",
               gap: "clamp(12px, 2vw, 16px)",
               marginTop: "clamp(16px, 2.5vw, 20px)",
-            }}>
+            }} className="buttons-container">
               {loading ? (
                 <button 
                   disabled
@@ -407,6 +412,24 @@ export default function WelcomePage() {
       </div>
 
       <style>{`
+        /* Override global footer styles from globals.css - ensure footer is NOT sticky */
+        footer.main-page-footer,
+        .main-page-container footer,
+        .main-page-footer {
+          position: static !important;
+          bottom: auto !important;
+          top: auto !important;
+          left: auto !important;
+          right: auto !important;
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        
+        /* Override the global footer rule that applies margin-top: auto */
+        .main-page-container footer {
+          margin-top: 0 !important;
+        }
+        
         /* Scroll reveal animations */
         .reveal-element {
           opacity: 0;
@@ -541,9 +564,40 @@ export default function WelcomePage() {
           z-index: 2;
         }
         
-        /* Ensure footer is not sticky/fixed on landing page */
-        .main-page-footer {
+        /* Ensure footer is not sticky/fixed on landing page - all devices */
+        .main-page-footer,
+        footer.main-page-footer,
+        footer[class*="main-page-footer"],
+        .main-page-footer[style*="position"],
+        footer[style*="position"] {
           position: static !important;
+          bottom: auto !important;
+          top: auto !important;
+          left: auto !important;
+          right: auto !important;
+        }
+        
+        /* Override any global footer styles */
+        @media (max-width: 768px) {
+          .main-page-footer,
+          footer.main-page-footer {
+            position: static !important;
+            bottom: auto !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+          }
+        }
+        
+        @media (min-width: 769px) {
+          .main-page-footer,
+          footer.main-page-footer {
+            position: static !important;
+            bottom: auto !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+          }
         }
         
         /* Ensure app layout containers use full width on landing page */
@@ -657,10 +711,24 @@ export default function WelcomePage() {
           
           /* Fix footer gap on mobile - use dynamic viewport and iOS support */
           .main-page-footer {
+            position: static !important;
+            bottom: auto !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
             margin: 0 !important;
-            margin-top: auto !important;
+            margin-top: 0 !important;
             margin-bottom: 0 !important;
             padding-bottom: max(clamp(16px, 3vw, 24px), env(safe-area-inset-bottom, 0px)) !important;
+          }
+          
+          footer.main-page-footer {
+            position: static !important;
+            bottom: auto !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            margin-top: 0 !important;
           }
           
           .main-page-container {
@@ -671,10 +739,17 @@ export default function WelcomePage() {
             flex-direction: column !important;
           }
           
-          /* Ensure footer padding includes safe area */
-          footer {
+          /* Ensure footer padding includes safe area - override global footer styles */
+          footer.main-page-footer,
+          .main-page-container footer {
+            position: static !important;
+            bottom: auto !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
             padding-bottom: env(safe-area-inset-bottom, clamp(16px, 3vw, 24px)) !important;
             margin-bottom: 0 !important;
+            margin-top: 0 !important;
           }
           
           /* Hero sections - Stack vertically on mobile (text first, image second) */
@@ -756,8 +831,30 @@ export default function WelcomePage() {
           }
         }
         @media (min-width: 769px) {
+          .main-content-wrapper {
+            justify-content: flex-start !important;
+          }
+          .main-content {
+            grid-template-columns: 1.1fr 0.9fr !important;
+            max-width: clamp(900px, 85vw, 1200px) !important;
+            margin-left: clamp(40px, 8vw, 120px) !important;
+            margin-right: auto !important;
+          }
           .main-content > div:last-child {
-            text-align: left;
+            text-align: center;
+          }
+          .hero-main-title {
+            text-align: center !important;
+          }
+          .text-and-buttons-container {
+            text-align: center !important;
+            align-items: center !important;
+            padding-left: clamp(40px, 6vw, 80px) !important;
+            padding-right: clamp(20px, 3vw, 40px) !important;
+            max-width: 100% !important;
+          }
+          .buttons-container {
+            align-items: center !important;
           }
         }
         
@@ -770,9 +867,10 @@ export default function WelcomePage() {
           
           /* Main content wrapper - allow content to flow naturally */
           .main-content-wrapper {
-            align-items: flex-start !important;
-            padding-top: clamp(24px, 4vw, 48px) !important;
-            padding-bottom: clamp(24px, 4vw, 48px) !important;
+            align-items: center !important;
+            padding-top: clamp(80px, 10vw, 100px) !important;
+            padding-bottom: clamp(80px, 10vw, 100px) !important;
+            justify-content: center !important;
           }
           
           /* Ensure content is never cut */
@@ -801,7 +899,10 @@ export default function WelcomePage() {
         
         @media (min-width: 769px) and (max-width: 1024px) {
           .main-content-wrapper {
-            padding-top: clamp(140px, 22vw, 240px) !important;
+            padding-top: clamp(80px, 12vw, 120px) !important;
+            padding-bottom: clamp(80px, 12vw, 120px) !important;
+            align-items: center !important;
+            justify-content: center !important;
           }
           .main-content {
             gap: clamp(40px, 6vw, 60px) !important;
@@ -939,7 +1040,7 @@ export default function WelcomePage() {
         backdropFilter: "blur(10px)",
         borderTop: "1px solid rgba(15, 98, 254, 0.1)",
         margin: 0,
-        marginTop: "auto",
+        marginTop: 0,
       }} className="main-page-footer">
         <div style={{
           maxWidth: "100%",
@@ -2450,7 +2551,9 @@ html {
   
   /* Main hero section - adjust for mobile */
   .main-content-wrapper {
-    padding: clamp(40px, 10vw, 80px) clamp(20px, 5vw, 32px) !important;
+    padding: clamp(60px, 12vw, 100px) clamp(20px, 5vw, 32px) !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   
   /* Main content grid - stack on mobile */
@@ -2569,8 +2672,13 @@ html {
   
   /* Tablet - two columns for main content */
   .main-content {
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: 1.1fr 0.9fr !important;
     gap: clamp(40px, 5vw, 60px) !important;
+  }
+  
+  .text-and-buttons-container {
+    padding-left: clamp(40px, 6vw, 80px) !important;
+    padding-right: clamp(20px, 3vw, 40px) !important;
   }
   
   /* Tablet Billy image */
@@ -2597,8 +2705,13 @@ html {
   
   /* Small Desktop - two columns for main content */
   .main-content {
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: 1.1fr 0.9fr !important;
     gap: clamp(50px, 6vw, 80px) !important;
+  }
+  
+  .text-and-buttons-container {
+    padding-left: clamp(50px, 7vw, 100px) !important;
+    padding-right: clamp(20px, 3vw, 40px) !important;
   }
   
   /* Small Desktop Billy image */
@@ -2625,8 +2738,13 @@ html {
   
   /* Desktop - two columns for main content */
   .main-content {
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: 1.1fr 0.9fr !important;
     gap: clamp(60px, 8vw, 100px) !important;
+  }
+  
+  .text-and-buttons-container {
+    padding-left: clamp(60px, 8vw, 120px) !important;
+    padding-right: clamp(20px, 4vw, 50px) !important;
   }
   
   /* Desktop Billy image */

@@ -383,7 +383,7 @@ function SettingsContent() {
       overflowY: "auto",
       boxSizing: "border-box"
     }}>
-      <div className="settings-container" style={{
+      <div className="settings-container" data-bizen-tour="configuracion" style={{
         position: "relative",
         flex: 1,
         padding: "40px",

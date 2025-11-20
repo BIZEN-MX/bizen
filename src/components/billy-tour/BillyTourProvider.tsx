@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { BillyTourContextProvider } from "./BillyTourContext";
 import { BillyTourOverlay } from "./BillyTourOverlay";
-import { BILLY_TOUR_STEPS, BILLY_TOUR_LOCAL_STORAGE_KEY } from "./billyTourConfig";
+import { BILLY_TOUR_STEPS, BILLY_TOUR_LOCAL_STORAGE_KEY, type BillyTourStep } from "./billyTourConfig";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 
@@ -16,6 +16,11 @@ export function BillyTourProvider({ children }: BillyTourProviderProps) {
   const pathname = usePathname();
   const [shouldAutoStart, setShouldAutoStart] = useState(false);
 
+  // Use all tour steps for the complete onboarding tour
+  const relevantSteps = useMemo(() => {
+    return BILLY_TOUR_STEPS;
+  }, []);
+
   useEffect(() => {
     // Only run on client
     if (typeof window === "undefined") return;
@@ -24,17 +29,17 @@ export function BillyTourProvider({ children }: BillyTourProviderProps) {
     // Only auto-start tour for authenticated users
     if (!user) return;
 
-    // Only auto-start on the courses page (main app entry point)
+    // Only auto-start on the courses page (main entry point)
     if (pathname !== "/courses") return;
 
-    // Check if tour has been seen before
+    // Check if the full tour has been seen before
     const hasSeenTour = localStorage.getItem(BILLY_TOUR_LOCAL_STORAGE_KEY);
     
     if (!hasSeenTour) {
       // Small delay to ensure DOM is ready and user has a chance to see the page
       const timer = setTimeout(() => {
         setShouldAutoStart(true);
-      }, 1000);
+      }, 1500);
 
       return () => clearTimeout(timer);
     }
@@ -47,7 +52,7 @@ export function BillyTourProvider({ children }: BillyTourProviderProps) {
   const handleTourEnd = () => {
     console.log("✅ Billy Tour: Completed");
     
-    // Mark tour as seen in localStorage
+    // Mark the full tour as seen in localStorage
     if (typeof window !== "undefined") {
       localStorage.setItem(BILLY_TOUR_LOCAL_STORAGE_KEY, "true");
     }
@@ -57,12 +62,15 @@ export function BillyTourProvider({ children }: BillyTourProviderProps) {
   };
 
   const handleStepChange = (stepIndex: number) => {
-    console.log(`📍 Billy Tour: Step ${stepIndex + 1}/${BILLY_TOUR_STEPS.length}`);
+    console.log(`📍 Billy Tour: Step ${stepIndex + 1}/${relevantSteps.length}`);
   };
+
+  // Only provide tour if there are relevant steps for this page
+  const hasRelevantSteps = relevantSteps.length > 0;
 
   return (
     <BillyTourContextProvider
-      totalSteps={BILLY_TOUR_STEPS.length}
+      totalSteps={relevantSteps.length}
       onTourStart={handleTourStart}
       onTourEnd={handleTourEnd}
       onStepChange={handleStepChange}

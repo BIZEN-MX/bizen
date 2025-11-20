@@ -273,7 +273,7 @@ export default function ProfilePage() {
       }} />
 
       {/* Main Content */}
-      <main className="profile-main-content" style={{ 
+      <main className="profile-main-content" data-bizen-tour="profile" style={{ 
         minHeight: "100vh",
         padding: "40px",
         fontFamily: "Montserrat, sans-serif",

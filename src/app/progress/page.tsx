@@ -223,7 +223,7 @@ export default function ProgressPage() {
           }
         }
       `}</style>
-      <div className="progress-outer" style={{
+      <div className="progress-outer" data-bizen-tour="progreso" style={{
         position: "relative",
         flex: 1,
         fontFamily: "Montserrat, sans-serif",

@@ -75,7 +75,7 @@ export default function BIZENHomePage() {
           </Link>
           
           <Link
-            href="/bizen/signup"
+            href="/signup"
             style={{
               display: "block",
               padding: "16px 32px",

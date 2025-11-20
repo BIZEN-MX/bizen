@@ -97,7 +97,7 @@ export default function SimulatorsPage() {
           }
         }
       `}</style>
-      <div className="simuladores-outer" style={{
+      <div className="simuladores-outer" data-bizen-tour="simuladores" style={{
         width: "100%",
         flex: 1,
         background: "linear-gradient(135deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
