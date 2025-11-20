@@ -17,7 +17,7 @@ export default function MobileBottomNav() {
   const [showAuthDialog, setShowAuthDialog] = useState(false)
 
   // Protected routes that require authentication
-  const protectedRoutes = ['/assignments', '/progress', '/forum', '/profile', '/cuenta', '/configuracion']
+  const protectedRoutes = ['/progress', '/forum', '/profile', '/cuenta', '/configuracion']
 
   const isActivePath = (path: string) => {
     if (path === '/courses') {
@@ -71,13 +71,6 @@ export default function MobileBottomNav() {
 
   // Additional navigation items for authenticated users
   const additionalNavItems = user ? [
-    {
-      id: 'assignments',
-      label: 'Asignaciones',
-      icon: '✏️',
-      path: '/assignments',
-      protected: true
-    },
     {
       id: 'progress',
       label: 'Progreso',

@@ -16,7 +16,7 @@ export default function MobileFooterNav() {
   const [showProfilePanel, setShowProfilePanel] = useState(false)
 
   const isOnLessonPage = pathname?.includes('/learn/')
-  const protectedRoutes = ['/assignments', '/progress', '/forum', '/profile', '/cuenta', '/configuracion']
+  const protectedRoutes = ['/progress', '/forum', '/profile', '/cuenta', '/configuracion']
 
   const navigateTo = (path: string) => {
     if (!user && protectedRoutes.some(route => path.startsWith(route))) {

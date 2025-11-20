@@ -100,7 +100,7 @@ export default function FixedSidebar() {
   const isOnLessonPage = pathname?.includes('/learn/')
 
   // Protected routes that require authentication
-  const protectedRoutes = ['/assignments', '/progress', '/forum', '/profile', '/cuenta', '/configuracion']
+  const protectedRoutes = ['/progress', '/forum', '/profile', '/cuenta', '/configuracion']
 
   const navigateTo = (path: string) => {
     // Check if route requires auth and user is not authenticated
@@ -165,7 +165,6 @@ export default function FixedSidebar() {
   const businessLabActive = isActivePath("/business-lab")
   const cashFlowActive = isActivePath("/cash-flow")
   const simulatorsActive = isActivePath("/simuladores")
-  const assignmentsActive = isActivePath("/assignments")
   const progressActive = isActivePath("/progress")
   const forumActive = isActivePath("/forum")
   const profileActive = isActivePath("/profile")
@@ -489,52 +488,6 @@ export default function FixedSidebar() {
               {/* Only show these navigation items when user is authenticated */}
               {user && (
               <>
-              {pathname !== '/courses' && (
-              <button
-                onClick={() => navigateTo("/assignments")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (assignmentsActive ? "#EFF6FF" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: assignmentsActive ? 700 : 600,
-                  textAlign: "left",
-                  color: assignmentsActive ? "#0F62FE" : "#000",
-                  ...compactButtonOverrides(assignmentsActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "#EFF6FF"
-                    e.currentTarget.style.color = "#0F62FE"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = assignmentsActive ? "#EFF6FF" : "transparent"
-                    e.currentTarget.style.color = assignmentsActive ? "#0F62FE" : "#000"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <span style={{ 
-                  fontSize: 20,
-                  filter: "hue-rotate(200deg) saturate(1.8) brightness(0.85)",
-                  display: "inline-block"
-                }}>✏️</span>
-                {showNavLabels && (
-                  <span className="nav-item-label">{t.nav.assignments}</span>
-                )}
-              </button>
-              )}
-
               <button
                 onClick={() => navigateTo("/progress")}
                 style={{
