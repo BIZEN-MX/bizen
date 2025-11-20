@@ -3,12 +3,16 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext"
 import * as React from "react"
 
 // Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
 
 export default function WelcomePage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
   const [isMouthOpen, setIsMouthOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null)
@@ -77,7 +81,7 @@ export default function WelcomePage() {
 
   return (
       <div style={{
-        background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
+        background: "#ffffff",
         flex: 1,
         width: "100%",
         margin: 0,
@@ -159,15 +163,16 @@ export default function WelcomePage() {
         paddingTop: "clamp(64px, 12vw, 80px)", // Add padding to account for fixed header
         position: "relative",
         overflowX: "hidden",
-        overflowY: "auto",
+        overflowY: "visible",
         fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
         display: "flex",
         flexDirection: "column",
         width: "100%",
         boxSizing: "border-box",
+        minHeight: "100vh",
       }}>
 
-      {/* Decorative blue accents */}
+      {/* Decorative blue accents - hidden on mobile */}
       <div style={{
         position: "absolute",
         top: "clamp(-100px, -15vw, -200px)",
@@ -178,13 +183,14 @@ export default function WelcomePage() {
         borderRadius: "50%",
         overflow: "hidden",
         pointerEvents: "none",
-      }} />
+        display: "none",
+      }} className="decorative-blue-accent" />
 
       {/* Main Content */}
       <div style={{
         position: "relative",
         zIndex: 1,
-        maxWidth: "1200px",
+        maxWidth: "100%",
         margin: "0 auto",
         flex: 1,
         display: "flex",
@@ -201,8 +207,8 @@ export default function WelcomePage() {
         
         <div className="main-content" style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "clamp(24px, 5vw, 80px)",
+          gridTemplateColumns: "1fr",
+          gap: "clamp(32px, 6vw, 80px)",
           alignItems: "center",
           width: "100%",
           boxSizing: "border-box",
@@ -215,6 +221,9 @@ export default function WelcomePage() {
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? "translateX(0)" : "translateX(-50px)",
             transition: "opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s",
+            position: "relative",
+            zIndex: 100,
+            overflow: "visible",
           }}>
             <div style={{
               position: "relative",
@@ -222,6 +231,8 @@ export default function WelcomePage() {
               borderRadius: "clamp(16px, 4vw, 32px)",
               padding: "clamp(12px, 3vw, 50px)",
               boxShadow: "0 24px 64px rgba(15, 98, 254, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08)",
+              overflow: "visible",
+              zIndex: 100,
             }} className="billy-container">
               <Image
                 src={isMouthOpen ? "/3.png" : "/2.png"}
@@ -232,8 +243,8 @@ export default function WelcomePage() {
                   display: "block",
                   borderRadius: "16px",
                   height: "auto",
-                  maxWidth: "clamp(180px, 30vw, 320px)",
-                  width: "clamp(180px, 30vw, 320px)",
+                  maxWidth: "100%",
+                  width: "100%",
                   objectFit: "contain",
                 }}
                 className="billy-image"
@@ -254,29 +265,54 @@ export default function WelcomePage() {
           }}>
             {/* Text Content */}
             <div style={{ width: "100%", boxSizing: "border-box" }}>
-              <p style={{
-                fontSize: "clamp(20px, 4.5vw, 48px)",
-                color: "#718096",
-                margin: 0,
-                fontWeight: 600,
-                lineHeight: 1.3,
-                maxWidth: "100%",
-                width: "100%",
-                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
-                wordWrap: "break-word",
-                overflowWrap: "break-word",
-                boxSizing: "border-box",
-              }} className="hero-main-text">
-                ¿Aprender finanzas mientras juegas? ¡Sí, <span style={{
-                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-                backgroundSize: "200% auto",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                animation: "shimmer 3s ease-in-out infinite",
-                  fontWeight: 700,
-                }}>BIZEN</span> es eso y más!
-              </p>
+              {user ? (
+                <>
+                  <h1 style={{
+                    fontSize: "clamp(24px, 4.5vw, 44px)",
+                    color: "#6B7280",
+                    margin: "0 0 16px 0",
+                    fontWeight: 800,
+                    lineHeight: 1.3,
+                    fontFamily: "'Montserrat', sans-serif",
+                    textAlign: "center",
+                  }}>
+                    Bienvenido de nuevo, {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Estudiante'}! 👋
+                  </h1>
+                  <p style={{
+                    fontSize: "clamp(16px, 2.5vw, 20px)",
+                    color: "#718096",
+                    margin: 0,
+                    fontWeight: 500,
+                    lineHeight: 1.6,
+                    fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+                  }}>
+                    Continúa tu aprendizaje donde lo dejaste. Tienes nuevos módulos esperándote.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h1 style={{
+                    fontSize: "clamp(24px, 4.5vw, 44px)",
+                    color: "#6B7280",
+                    margin: "0 0 16px 0",
+                    fontWeight: 800,
+                    lineHeight: 1.3,
+                    fontFamily: "'Montserrat', sans-serif",
+                    textAlign: "center",
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                  }}>
+                    ¿Aprender finanzas mientras juegas? ¡Sí! <span style={{
+                      background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+                      backgroundSize: "200% auto",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      animation: "shimmer 3s ease-in-out infinite",
+                    }}>BIZEN</span> es eso y más
+                  </h1>
+                </>
+              )}
             </div>
 
             {/* Buttons */}
@@ -287,81 +323,183 @@ export default function WelcomePage() {
               gap: "clamp(12px, 2vw, 16px)",
               marginTop: "clamp(16px, 2.5vw, 20px)",
             }}>
-              <Link
-                href="/signup"
-                style={{
-                  padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
-                  fontSize: "clamp(14px, 1.8vw, 16px)",
-                  fontWeight: 700,
-                  fontFamily: "'Montserrat', sans-serif",
-                  background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-                  backgroundSize: "200% auto",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "clamp(8px, 1.2vw, 10px)",
-                  textDecoration: "none",
-                  cursor: "pointer",
-                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                  boxShadow: "0 8px 24px rgba(15, 98, 254, 0.25)",
-                  textAlign: "center",
-                  letterSpacing: "0.3px",
-                  animation: "shimmerButton 3s ease-in-out infinite",
-                  minHeight: "48px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  minWidth: "clamp(240px, 35vw, 320px)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
-                  e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.35)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0) scale(1)"
-                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.25)"
-                }}
-              >
-                Empieza Ahora
-              </Link>
-
-              <Link
-                href="/login"
-                style={{
-                  padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
-                  fontSize: "clamp(14px, 1.8vw, 16px)",
-                  fontWeight: 700,
-                  fontFamily: "'Montserrat', sans-serif",
-                  background: "white",
-                  color: "#0F62FE",
-                  border: "2px solid #0F62FE",
-                  borderRadius: "clamp(8px, 1.2vw, 10px)",
-                  textDecoration: "none",
-                  cursor: "pointer",
-                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                  boxShadow: "0 4px 16px rgba(15, 98, 254, 0.1)",
-                  textAlign: "center",
-                  letterSpacing: "0.3px",
-                  minHeight: "48px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  minWidth: "clamp(240px, 35vw, 320px)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
-                  e.currentTarget.style.background = "#0F62FE"
-                  e.currentTarget.style.color = "white"
-                  e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.25)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0) scale(1)"
-                  e.currentTarget.style.background = "white"
-                  e.currentTarget.style.color = "#0F62FE"
-                  e.currentTarget.style.boxShadow = "0 4px 16px rgba(15, 98, 254, 0.1)"
-                }}
-              >
-                Ya tengo una cuenta
-              </Link>
+              {loading ? (
+                <button 
+                  disabled
+                  style={{
+                    padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
+                    fontSize: "clamp(14px, 1.8vw, 16px)",
+                    fontWeight: 700,
+                    fontFamily: "'Montserrat', sans-serif",
+                    background: "#ccc",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "clamp(8px, 1.2vw, 10px)",
+                    cursor: "not-allowed",
+                    opacity: 0.6,
+                    minHeight: "48px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minWidth: "clamp(240px, 35vw, 320px)",
+                  }}
+                >
+                  Cargando...
+                </button>
+              ) : user ? (
+                <>
+                  <button
+                    onClick={() => router.push("/billy-welcome")}
+                    style={{
+                      padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
+                      fontSize: "clamp(14px, 1.8vw, 16px)",
+                      fontWeight: 700,
+                      fontFamily: "'Montserrat', sans-serif",
+                      background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+                      backgroundSize: "200% auto",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "clamp(8px, 1.2vw, 10px)",
+                      cursor: "pointer",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      boxShadow: "0 8px 24px rgba(15, 98, 254, 0.25)",
+                      textAlign: "center",
+                      letterSpacing: "0.3px",
+                      animation: "shimmerButton 3s ease-in-out infinite",
+                      minHeight: "48px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minWidth: "clamp(240px, 35vw, 320px)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
+                      e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.35)"
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0) scale(1)"
+                      e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.25)"
+                    }}
+                  >
+                    Ir a Microcredencial Mondragón
+                  </button>
+                  <Link
+                    href="#cursos"
+                    style={{
+                      padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
+                      fontSize: "clamp(14px, 1.8vw, 16px)",
+                      fontWeight: 700,
+                      fontFamily: "'Montserrat', sans-serif",
+                      background: "white",
+                      color: "#0F62FE",
+                      border: "2px solid #0F62FE",
+                      borderRadius: "clamp(8px, 1.2vw, 10px)",
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      boxShadow: "0 4px 16px rgba(15, 98, 254, 0.1)",
+                      textAlign: "center",
+                      letterSpacing: "0.3px",
+                      minHeight: "48px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minWidth: "clamp(240px, 35vw, 320px)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
+                      e.currentTarget.style.background = "#0F62FE"
+                      e.currentTarget.style.color = "white"
+                      e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.25)"
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0) scale(1)"
+                      e.currentTarget.style.background = "white"
+                      e.currentTarget.style.color = "#0F62FE"
+                      e.currentTarget.style.boxShadow = "0 4px 16px rgba(15, 98, 254, 0.1)"
+                    }}
+                  >
+                    Ver cursos
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/signup"
+                    style={{
+                      padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
+                      fontSize: "clamp(14px, 1.8vw, 16px)",
+                      fontWeight: 700,
+                      fontFamily: "'Montserrat', sans-serif",
+                      background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+                      backgroundSize: "200% auto",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "clamp(8px, 1.2vw, 10px)",
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      boxShadow: "0 8px 24px rgba(15, 98, 254, 0.25)",
+                      textAlign: "center",
+                      letterSpacing: "0.3px",
+                      animation: "shimmerButton 3s ease-in-out infinite",
+                      minHeight: "48px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minWidth: "clamp(240px, 35vw, 320px)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
+                      e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.35)"
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0) scale(1)"
+                      e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.25)"
+                    }}
+                  >
+                    Empieza Ahora
+                  </Link>
+                  <Link
+                    href="/login"
+                    style={{
+                      padding: "clamp(14px, 2.5vw, 18px) clamp(20px, 3.5vw, 32px)",
+                      fontSize: "clamp(14px, 1.8vw, 16px)",
+                      fontWeight: 700,
+                      fontFamily: "'Montserrat', sans-serif",
+                      background: "white",
+                      color: "#0F62FE",
+                      border: "2px solid #0F62FE",
+                      borderRadius: "clamp(8px, 1.2vw, 10px)",
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      boxShadow: "0 4px 16px rgba(15, 98, 254, 0.1)",
+                      textAlign: "center",
+                      letterSpacing: "0.3px",
+                      minHeight: "48px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minWidth: "clamp(240px, 35vw, 320px)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
+                      e.currentTarget.style.background = "#0F62FE"
+                      e.currentTarget.style.color = "white"
+                      e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.25)"
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0) scale(1)"
+                      e.currentTarget.style.background = "white"
+                      e.currentTarget.style.color = "#0F62FE"
+                      e.currentTarget.style.boxShadow = "0 4px 16px rgba(15, 98, 254, 0.1)"
+                    }}
+                  >
+                    Ya tengo una cuenta
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -411,6 +549,14 @@ export default function WelcomePage() {
           }
           100% {
             background-position: 0% 50%;
+          }
+        }
+        @keyframes bubblePulse {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
           }
         }
         .hero-main-text {
@@ -735,6 +881,31 @@ export default function WelcomePage() {
         @media (max-width: 767px) {
           .billy-container {
             padding: clamp(8px, 2vw, 16px) !important;
+            overflow: visible !important;
+          }
+          
+          .billy-container > div[style*="position: absolute"] {
+            position: absolute !important;
+            z-index: 1000 !important;
+            overflow: visible !important;
+          }
+          
+          .main-content-wrapper {
+            overflow: visible !important;
+          }
+          
+          #contacto {
+            overflow: visible !important;
+            position: relative !important;
+            z-index: 1 !important;
+          }
+          
+          /* Responsive title styles */
+          .main-content h1 {
+            font-size: clamp(20px, 5vw, 36px) !important;
+            line-height: 1.4 !important;
+            color: #6B7280 !important;
+            padding: 0 clamp(12px, 3vw, 20px) !important;
           }
           .billy-image,
           .billy-container .billy-image,
@@ -837,7 +1008,7 @@ export default function WelcomePage() {
         marginTop: "auto",
       }} className="main-page-footer">
         <div style={{
-          maxWidth: "1200px",
+          maxWidth: "100%",
           margin: "0 auto",
           display: "flex",
           justifyContent: "center",
@@ -969,7 +1140,7 @@ const defaultPlans: Plan[] = [
   {
     name: "Instituciones",
     cta: "Hablar con ventas",
-    ctaUrl: "#contacto",
+    ctaUrl: "/signup",
     priceNote: "Programas a medida",
     highlighted: false,
     features: [
@@ -1561,9 +1732,18 @@ function LandingContent() {
       </section>
 
       {/* CONTACTO */}
-      <section id="contacto" className="section contact reveal-element reveal-delay-4" style={{ background: "transparent", position: "relative", overflow: "hidden" }}>
-        {/* Decorative background elements */}
-        <div style={{
+      <section id="contacto" className="section contact reveal-element" style={{ 
+        background: "transparent", 
+        position: "relative", 
+        overflow: "visible",
+        paddingTop: "clamp(48px, 8vw, 96px)",
+        paddingBottom: "clamp(48px, 8vw, 96px)",
+        width: "100%",
+        boxSizing: "border-box",
+        zIndex: 1,
+      }}>
+        {/* Decorative background elements - hidden on mobile */}
+        <div className="decorative-contact-bg-1" style={{
           position: "absolute",
           top: "-100px",
           right: "-100px",
@@ -1572,9 +1752,10 @@ function LandingContent() {
           background: "radial-gradient(circle, rgba(15, 98, 254, 0.1) 0%, transparent 70%)",
           borderRadius: "50%",
           pointerEvents: "none",
-          zIndex: 0
+          zIndex: 0,
+          display: "none",
         }} />
-        <div style={{
+        <div className="decorative-contact-bg-2" style={{
           position: "absolute",
           bottom: "-150px",
           left: "-150px",
@@ -1583,15 +1764,16 @@ function LandingContent() {
           background: "radial-gradient(circle, rgba(15, 98, 254, 0.08) 0%, transparent 70%)",
           borderRadius: "50%",
           pointerEvents: "none",
-          zIndex: 0
+          zIndex: 0,
+          display: "none",
         }} />
         
-        <div className="container contact-inner" style={{ position: "relative", zIndex: 1 }}>
-          <header className="section-head">
+        <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: "100%", margin: "0 auto", padding: "0 clamp(24px, 5vw, 48px)", width: "100%" }}>
+          <header className="section-head" style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 48px)" }}>
             <h2 style={{
               fontSize: "clamp(36px, 5.5vw, 56px)",
               lineHeight: 1.15,
-              margin: "0 0 8px 0",
+              margin: "0 0 16px 0",
               fontWeight: 800,
               fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
               background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
@@ -1601,30 +1783,33 @@ function LandingContent() {
               backgroundClip: "text",
               animation: "shimmer 3s ease-in-out infinite"
             }}>Contacto</h2>
-            <p style={{ fontSize: "clamp(16px, 2vw, 20px)", marginTop: "12px" }}>¿Dudas o propuestas? Escríbenos, nos encantará leerte.</p>
+            <p style={{ 
+              fontSize: "clamp(16px, 2vw, 20px)", 
+              color: "#475569",
+              margin: 0,
+              lineHeight: 1.6
+            }}>¿Dudas o propuestas? Escríbenos, nos encantará leerte.</p>
           </header>
 
           <div style={{
             display: "grid",
-            gap: "32px",
+            gap: "clamp(32px, 5vw, 48px)",
             gridTemplateColumns: "1fr",
             alignItems: "start"
           }}>
-          <form
-              className="contact-form-glass"
+            <form
+              className="contact-form"
               onSubmit={async (e) => {
-              e.preventDefault()
+                e.preventDefault()
                 const form = e.currentTarget
                 const formData = new FormData(form)
                 const name = formData.get('name') as string
                 const email = formData.get('email') as string
                 const message = formData.get('message') as string
 
-                // Get submit button and form for UI updates
                 const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement
                 const originalButtonText = submitButton.textContent
 
-                // Disable button and show loading state
                 submitButton.disabled = true
                 submitButton.textContent = 'Enviando...'
 
@@ -1640,73 +1825,190 @@ function LandingContent() {
                   const result = await response.json()
 
                   if (result.success) {
-                    // Show success message
                     alert(result.message || '¡Gracias por contactarnos! Te responderemos pronto.')
-                    // Reset form
                     form.reset()
                   } else {
-                    // Show error message
                     alert(result.message || 'Error al enviar el mensaje. Por favor intenta de nuevo.')
                   }
                 } catch (error) {
                   console.error('Error submitting contact form:', error)
                   alert('Error al enviar el mensaje. Por favor intenta de nuevo más tarde.')
                 } finally {
-                  // Re-enable button
                   submitButton.disabled = false
                   submitButton.textContent = originalButtonText || 'Enviar mensaje'
                 }
               }}
+              style={{
+                background: "rgba(255, 255, 255, 0.8)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(15, 98, 254, 0.2)",
+                borderRadius: "24px",
+                padding: "clamp(32px, 5vw, 48px)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)"
+              }}
             >
-              <div className="contact-field">
-                <label htmlFor="name">
-                  <span style={{ fontSize: "20px", marginRight: "8px" }}>👤</span>
+              <div className="contact-field" style={{ marginBottom: "24px" }}>
+                <label htmlFor="contact-name" style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontWeight: 700,
+                  fontSize: "clamp(14px, 1.8vw, 16px)",
+                  color: "#0F172A",
+                  marginBottom: "10px"
+                }}>
+                  <span style={{ fontSize: "20px" }}>👤</span>
                   Nombre
                 </label>
-                <input id="name" name="name" type="text" required placeholder="Tu nombre completo" />
-            </div>
-              <div className="contact-field">
-                <label htmlFor="email">
-                  <span style={{ fontSize: "20px", marginRight: "8px" }}>📧</span>
+                <input 
+                  id="contact-name" 
+                  name="name" 
+                  type="text" 
+                  required 
+                  placeholder="Tu nombre completo"
+                  style={{
+                    width: "100%",
+                    border: "2px solid rgba(15, 98, 254, 0.2)",
+                    borderRadius: "12px",
+                    padding: "14px 18px",
+                    fontSize: "clamp(14px, 1.8vw, 16px)",
+                    background: "white",
+                    transition: "all 0.3s ease",
+                    fontFamily: "inherit"
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#0F62FE"
+                    e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15, 98, 254, 0.15)"
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.2)"
+                    e.currentTarget.style.boxShadow = "none"
+                  }}
+                />
+              </div>
+              
+              <div className="contact-field" style={{ marginBottom: "24px" }}>
+                <label htmlFor="contact-email" style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontWeight: 700,
+                  fontSize: "clamp(14px, 1.8vw, 16px)",
+                  color: "#0F172A",
+                  marginBottom: "10px"
+                }}>
+                  <span style={{ fontSize: "20px" }}>📧</span>
                   Email
                 </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                placeholder="tucorreo@ejemplo.com"
-              />
-            </div>
-              <div className="contact-field">
-                <label htmlFor="message">
-                  <span style={{ fontSize: "20px", marginRight: "8px" }}>💬</span>
+                <input
+                  id="contact-email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="tucorreo@ejemplo.com"
+                  style={{
+                    width: "100%",
+                    border: "2px solid rgba(15, 98, 254, 0.2)",
+                    borderRadius: "12px",
+                    padding: "14px 18px",
+                    fontSize: "clamp(14px, 1.8vw, 16px)",
+                    background: "white",
+                    transition: "all 0.3s ease",
+                    fontFamily: "inherit"
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#0F62FE"
+                    e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15, 98, 254, 0.15)"
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.2)"
+                    e.currentTarget.style.boxShadow = "none"
+                  }}
+                />
+              </div>
+              
+              <div className="contact-field" style={{ marginBottom: "24px" }}>
+                <label htmlFor="contact-message" style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontWeight: 700,
+                  fontSize: "clamp(14px, 1.8vw, 16px)",
+                  color: "#0F172A",
+                  marginBottom: "10px"
+                }}>
+                  <span style={{ fontSize: "20px" }}>💬</span>
                   Mensaje
                 </label>
-              <textarea
-                id="message"
-                name="message"
+                <textarea
+                  id="contact-message"
+                  name="message"
                   rows={5}
-                required
-                placeholder="Cuéntanos en qué podemos ayudarte…"
-              />
-            </div>
-              <button className="btn primary contact-submit" type="submit" style={{
-                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-                backgroundSize: "200% auto",
-                animation: "shimmer 3s ease-in-out infinite",
-                width: "100%",
-                fontSize: "clamp(16px, 2vw, 18px)",
-                fontWeight: 700,
-                padding: "16px 24px",
-                marginTop: "8px",
-                boxShadow: "0 8px 24px rgba(15, 98, 254, 0.35)"
-              }}>
-              Enviar mensaje
-            </button>
-          </form>
+                  required
+                  placeholder="Cuéntanos en qué podemos ayudarte…"
+                  style={{
+                    width: "100%",
+                    border: "2px solid rgba(15, 98, 254, 0.2)",
+                    borderRadius: "12px",
+                    padding: "14px 18px",
+                    fontSize: "clamp(14px, 1.8vw, 16px)",
+                    background: "white",
+                    resize: "vertical",
+                    minHeight: "120px",
+                    transition: "all 0.3s ease",
+                    fontFamily: "inherit"
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = "#0F62FE"
+                    e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15, 98, 254, 0.15)"
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.2)"
+                    e.currentTarget.style.boxShadow = "none"
+                  }}
+                />
+              </div>
+              
+              <button 
+                type="submit" 
+                style={{
+                  width: "100%",
+                  background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+                  backgroundSize: "200% auto",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "12px",
+                  padding: "16px 24px",
+                  fontSize: "clamp(16px, 2vw, 18px)",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 8px 24px rgba(15, 98, 254, 0.35)",
+                  animation: "shimmer 3s ease-in-out infinite"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)"
+                  e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.4)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)"
+                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.35)"
+                }}
+              >
+                Enviar mensaje
+              </button>
+            </form>
 
-            <aside className="contact-aside-glass">
+            <aside style={{
+              background: "rgba(255, 255, 255, 0.8)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              border: "1px solid rgba(15, 98, 254, 0.2)",
+              borderRadius: "24px",
+              padding: "clamp(32px, 5vw, 48px)",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)"
+            }}>
               <h3 style={{
                 fontSize: "clamp(24px, 3vw, 32px)",
                 fontWeight: 800,
@@ -1716,53 +2018,192 @@ function LandingContent() {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                animation: "shimmer 3s ease-in-out infinite",
-                fontFamily: "Arial, sans-serif"
+                animation: "shimmer 3s ease-in-out infinite"
               }}>Datos de contacto</h3>
-              <ul className="contact-info-list">
-                <li>
-                  <span className="contact-icon">📧</span>
+              
+              <ul style={{
+                listStyle: "none",
+                margin: "0 0 32px 0",
+                padding: 0,
+                display: "grid",
+                gap: "20px"
+              }}>
+                <li style={{
+                  display: "flex",
+                  gap: "16px",
+                  alignItems: "flex-start",
+                  padding: "16px",
+                  background: "rgba(255, 255, 255, 0.6)",
+                  borderRadius: "16px",
+                  border: "1px solid rgba(15, 98, 254, 0.1)"
+                }}>
+                  <span style={{ fontSize: "28px", lineHeight: 1 }}>📧</span>
                   <div>
-                    <strong>Email</strong>
-                    <span>diego@bizen.mx</span>
+                    <strong style={{ 
+                      display: "block", 
+                      fontWeight: 700, 
+                      fontSize: "clamp(14px, 1.8vw, 16px)",
+                      color: "#0F172A",
+                      marginBottom: "4px"
+                    }}>Email</strong>
+                    <span style={{ 
+                      fontSize: "clamp(13px, 1.6vw, 15px)", 
+                      color: "#475569" 
+                    }}>diego@bizen.mx</span>
                   </div>
                 </li>
-                <li>
-                  <span className="contact-icon">📍</span>
+                <li style={{
+                  display: "flex",
+                  gap: "16px",
+                  alignItems: "flex-start",
+                  padding: "16px",
+                  background: "rgba(255, 255, 255, 0.6)",
+                  borderRadius: "16px",
+                  border: "1px solid rgba(15, 98, 254, 0.1)"
+                }}>
+                  <span style={{ fontSize: "28px", lineHeight: 1 }}>📍</span>
                   <div>
-                    <strong>Ubicación</strong>
-                    <span>CDMX, México</span>
+                    <strong style={{ 
+                      display: "block", 
+                      fontWeight: 700, 
+                      fontSize: "clamp(14px, 1.8vw, 16px)",
+                      color: "#0F172A",
+                      marginBottom: "4px"
+                    }}>Ubicación</strong>
+                    <span style={{ 
+                      fontSize: "clamp(13px, 1.6vw, 15px)", 
+                      color: "#475569" 
+                    }}>CDMX, México</span>
                   </div>
                 </li>
-                <li>
-                  <span className="contact-icon">🕘</span>
+                <li style={{
+                  display: "flex",
+                  gap: "16px",
+                  alignItems: "flex-start",
+                  padding: "16px",
+                  background: "rgba(255, 255, 255, 0.6)",
+                  borderRadius: "16px",
+                  border: "1px solid rgba(15, 98, 254, 0.1)"
+                }}>
+                  <span style={{ fontSize: "28px", lineHeight: 1 }}>🕘</span>
                   <div>
-                    <strong>Horario</strong>
-                    <span>Lun–Vie · 9:00–18:00</span>
+                    <strong style={{ 
+                      display: "block", 
+                      fontWeight: 700, 
+                      fontSize: "clamp(14px, 1.8vw, 16px)",
+                      color: "#0F172A",
+                      marginBottom: "4px"
+                    }}>Horario</strong>
+                    <span style={{ 
+                      fontSize: "clamp(13px, 1.6vw, 15px)", 
+                      color: "#475569" 
+                    }}>Lun–Vie · 9:00–18:00</span>
                   </div>
                 </li>
-            </ul>
-              <div className="socials-enhanced" aria-label="Redes sociales">
-                <h4 style={{ marginBottom: "16px", fontSize: "18px", fontWeight: 700, color: "#0F172A" }}>Síguenos</h4>
+              </ul>
+              
+              <div style={{ marginTop: "24px" }}>
+                <h4 style={{ 
+                  marginBottom: "16px", 
+                  fontSize: "18px", 
+                  fontWeight: 700, 
+                  color: "#0F172A" 
+                }}>Síguenos</h4>
                 <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                  <a href="#" aria-label="Instagram" className="social-glass">
-                    <span>Instagram</span>
+                  <a href="#" aria-label="Instagram" style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "12px 18px",
+                    background: "rgba(255, 255, 255, 0.6)",
+                    backdropFilter: "blur(10px)",
+                    WebkitBackdropFilter: "blur(10px)",
+                    border: "1px solid rgba(15, 98, 254, 0.2)",
+                    borderRadius: "16px",
+                    textDecoration: "none",
+                    color: "#0F172A",
+                    fontWeight: 600,
+                    fontSize: "clamp(13px, 1.6vw, 15px)",
+                    transition: "all 0.3s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#0F62FE"
+                    e.currentTarget.style.color = "white"
+                    e.currentTarget.style.transform = "translateY(-2px)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
+                    e.currentTarget.style.color = "#0F172A"
+                    e.currentTarget.style.transform = "translateY(0)"
+                  }}
+                  >
+                    Instagram
                   </a>
-                  <a href="#" aria-label="Twitter/X" className="social-glass">
-                    <span>Twitter</span>
+                  <a href="#" aria-label="Twitter/X" style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "12px 18px",
+                    background: "rgba(255, 255, 255, 0.6)",
+                    backdropFilter: "blur(10px)",
+                    WebkitBackdropFilter: "blur(10px)",
+                    border: "1px solid rgba(15, 98, 254, 0.2)",
+                    borderRadius: "16px",
+                    textDecoration: "none",
+                    color: "#0F172A",
+                    fontWeight: 600,
+                    fontSize: "clamp(13px, 1.6vw, 15px)",
+                    transition: "all 0.3s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#0F62FE"
+                    e.currentTarget.style.color = "white"
+                    e.currentTarget.style.transform = "translateY(-2px)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
+                    e.currentTarget.style.color = "#0F172A"
+                    e.currentTarget.style.transform = "translateY(0)"
+                  }}
+                  >
+                    Twitter
                   </a>
-                  <a href="#" aria-label="YouTube" className="social-glass">
-                    <span>YouTube</span>
-                  </a>
-                  <a href="#" aria-label="LinkedIn" className="social-glass">
-                    <span>LinkedIn</span>
+                  <a href="#" aria-label="LinkedIn" style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "12px 18px",
+                    background: "rgba(255, 255, 255, 0.6)",
+                    backdropFilter: "blur(10px)",
+                    WebkitBackdropFilter: "blur(10px)",
+                    border: "1px solid rgba(15, 98, 254, 0.2)",
+                    borderRadius: "16px",
+                    textDecoration: "none",
+                    color: "#0F172A",
+                    fontWeight: 600,
+                    fontSize: "clamp(13px, 1.6vw, 15px)",
+                    transition: "all 0.3s ease"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#0F62FE"
+                    e.currentTarget.style.color = "white"
+                    e.currentTarget.style.transform = "translateY(-2px)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
+                    e.currentTarget.style.color = "#0F172A"
+                    e.currentTarget.style.transform = "translateY(0)"
+                  }}
+                  >
+                    LinkedIn
                   </a>
                 </div>
-            </div>
-          </aside>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
+
     </>
   )
 }
@@ -1912,123 +2353,11 @@ html {
 }
 .accordion-item.open .accordion-panel{display:block}
 
-.contact-inner{display:grid; gap:32px; align-items:start; grid-template-columns:1fr; padding:clamp(24px, 4vw, 48px) 0;}
-.contact-form-glass{
-  background:rgba(255, 255, 255, 0.6);
-  backdrop-filter:blur(20px) saturate(180%);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  border:1px solid rgba(255, 255, 255, 0.3);
-  border-radius:32px;
-  padding:clamp(32px, 5vw, 48px);
-  box-shadow:0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.contact-field{display:grid; gap:10px; margin-bottom:24px;}
-.contact-field label{
-  font-weight:700;
-  font-size:clamp(14px, 1.8vw, 16px);
-  color:#0F172A;
-  display:flex;
-  align-items:center;
-  font-family:Arial, sans-serif;
-}
-.contact-field input, .contact-field textarea{
-  width:100%;
-  border:2px solid rgba(15, 98, 254, 0.2);
-  border-radius:16px;
-  padding:14px 18px;
-  font:inherit;
-  font-size:clamp(14px, 1.8vw, 16px);
-  background:rgba(255, 255, 255, 0.8);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family:Arial, sans-serif;
-}
-.contact-field input:focus, .contact-field textarea:focus{
-  outline:none;
-  border-color:#0F62FE;
-  box-shadow:0 0 0 4px rgba(15, 98, 254, 0.15);
-  background:rgba(255, 255, 255, 0.95);
-  transform:translateY(-2px);
-}
-.contact-field textarea{resize:vertical; min-height:120px;}
-.contact-submit:hover{transform:none !important; box-shadow:none !important;}
-.contact-aside-glass{
-  background:rgba(255, 255, 255, 0.6);
-  backdrop-filter:blur(20px) saturate(180%);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  border:1px solid rgba(255, 255, 255, 0.3);
-  border-radius:32px;
-  padding:clamp(32px, 5vw, 48px);
-  box-shadow:0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.contact-info-list{
-  list-style:none;
-  margin:0 0 32px 0;
-  padding:0;
-  display:grid;
-  gap:20px;
-}
-.contact-info-list li{
-  display:flex;
-  gap:16px;
-  align-items:flex-start;
-  padding:16px;
-  background:rgba(255, 255, 255, 0.5);
-  border-radius:16px;
-  border:1px solid rgba(15, 98, 254, 0.1);
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.contact-icon{
-  font-size:28px;
-  line-height:1;
-  flex-shrink:0;
-  filter:drop-shadow(0 2px 4px rgba(15, 98, 254, 0.2));
-}
-.contact-info-list li div{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.contact-info-list li strong{
-  font-weight:700;
-  font-size:clamp(14px, 1.8vw, 16px);
-  color:#0F172A;
-  font-family:Arial, sans-serif;
-}
-.contact-info-list li span{
-  font-size:clamp(13px, 1.6vw, 15px);
-  color:#475569;
-  font-family:Arial, sans-serif;
-}
-.socials-enhanced{margin-top:24px;}
-.social-glass{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:12px 18px;
-  background:rgba(255, 255, 255, 0.6);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(15, 98, 254, 0.2);
-  border-radius:16px;
-  text-decoration:none;
-  color:#0F172A;
-  font-weight:600;
-  font-size:clamp(13px, 1.6vw, 15px);
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family:Arial, sans-serif;
-}
-@media (min-width: 980px){ 
-  .contact-inner > div{grid-template-columns: 1.2fr .8fr !important;} 
-  .contact-form-glass, .contact-aside-glass{height:100%;}
-}
 
 .hero-image-small {
-  width: 350px !important;
-  max-width: 350px !important;
+  width: 100% !important;
+  max-width: clamp(250px, 35vw, 350px) !important;
+  height: auto !important;
 }
 
 /* ==========================================
@@ -2051,12 +2380,12 @@ html {
     min-height: auto !important;
   }
   
-  /* Hero images - responsive sizing */
+  /* Hero images - responsive sizing for mobile */
   .hero-image-small {
-            width: 100% !important;
-    max-width: clamp(200px, 60vw, 280px) !important;
-            height: auto !important;
-          }
+    width: 100% !important;
+    max-width: clamp(150px, 50vw, 220px) !important;
+    height: auto !important;
+  }
   
   /* Hero text sections */
   .hero-text {
@@ -2100,16 +2429,22 @@ html {
     font-size: clamp(16px, 3vw, 20px) !important;
   }
   
-  /* Contact form - full width on mobile */
-  .contact-inner {
-    grid-template-columns: 1fr !important;
-    gap: clamp(24px, 5vw, 32px) !important;
-  }
   
   /* Plans grid - stack on mobile */
   .grid-3 {
     grid-template-columns: 1fr !important;
     gap: clamp(20px, 4vw, 24px) !important;
+  }
+  
+  /* Contact section - stack on mobile */
+  #contacto .container > div {
+    grid-template-columns: 1fr !important;
+    gap: clamp(32px, 5vw, 48px) !important;
+  }
+  
+  #contacto form,
+  #contacto aside {
+    width: 100% !important;
   }
   
   /* Section padding - reduce on mobile */
@@ -2120,6 +2455,49 @@ html {
   /* Container padding - increase on mobile for better spacing */
   .container {
     padding: 0 clamp(20px, 5vw, 32px) !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  /* Main content wrapper - full width on mobile */
+  .main-content-wrapper {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: clamp(12px, 3vw, 24px) !important;
+    padding-right: clamp(12px, 3vw, 24px) !important;
+  }
+  
+  /* Main page container - full width, white background on mobile */
+  .main-page-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Main element - full width */
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Hide decorative elements on mobile */
+  .decorative-blue-accent,
+  .decorative-contact-bg-1,
+  .decorative-contact-bg-2 {
+    display: none !important;
+  }
+  
+  /* Remove any body/html margins/padding that might cause gaps */
+  body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
   }
   
   /* Fun text "Ahorro, invierto..." - adjust for mobile */
@@ -2142,12 +2520,23 @@ html {
     grid-template-columns: 1fr !important;
     gap: clamp(32px, 6vw, 48px) !important;
   }
+  
+  /* Responsive title for mobile */
+  .main-content h1 {
+    font-size: clamp(20px, 5.5vw, 38px) !important;
+    line-height: 1.4 !important;
+    color: #6B7280 !important;
+    padding: 0 clamp(12px, 3vw, 20px) !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
 }
 
 /* Small mobile devices (up to 480px) */
 @media (max-width: 480px) {
   .hero-image-small {
-    max-width: clamp(180px, 70vw, 240px) !important;
+    max-width: clamp(120px, 60vw, 180px) !important;
+    width: 100% !important;
   }
   
   .y-mucho-mas-text {
@@ -2166,6 +2555,41 @@ html {
   .cta-section-grid {
     gap: clamp(24px, 5vw, 40px) !important;
   }
+  
+  /* Extra small screens - title */
+  .main-content h1 {
+    font-size: clamp(18px, 6vw, 32px) !important;
+    line-height: 1.35 !important;
+    color: #6B7280 !important;
+    padding: 0 clamp(12px, 3vw, 20px) !important;
+  }
+  
+  /* Extra small screens - hero images even smaller */
+  .hero-image-small {
+    max-width: clamp(100px, 55vw, 150px) !important;
+    width: 100% !important;
+  }
+}
+
+/* Extra extra small devices (up to 375px) */
+@media (max-width: 375px) {
+  .hero-image-small {
+    max-width: clamp(90px, 50vw, 130px) !important;
+    width: 100% !important;
+  }
+}
+
+/* Show decorative elements on tablet and desktop */
+@media (min-width: 768px) {
+  .decorative-blue-accent,
+  .decorative-contact-bg-1,
+  .decorative-contact-bg-2 {
+    display: block !important;
+  }
+  
+  .main-page-container {
+    background: linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%) !important;
+  }
 }
 
 /* Tablet Portrait (768px - 1024px) */
@@ -2175,7 +2599,8 @@ html {
   }
   
   .hero-image-small {
-    max-width: clamp(280px, 45vw, 320px) !important;
+    max-width: clamp(220px, 40vw, 280px) !important;
+    width: 100% !important;
   }
   
   .cta-section-grid {
@@ -2183,9 +2608,32 @@ html {
   }
   
   /* Contact section - can stay side by side on tablet */
-  .contact-inner {
+  #contacto .container > div {
     grid-template-columns: 1fr !important;
     gap: clamp(32px, 4vw, 40px) !important;
+  }
+  
+  /* Tablet title */
+  .main-content h1 {
+    font-size: clamp(28px, 4.5vw, 42px) !important;
+    line-height: 1.3 !important;
+    color: #6B7280 !important;
+  }
+  
+  /* Tablet - two columns for main content */
+  .main-content {
+    grid-template-columns: 1fr 1fr !important;
+    gap: clamp(40px, 5vw, 60px) !important;
+  }
+  
+  /* Tablet Billy image */
+  .billy-image {
+    max-width: clamp(240px, 35vw, 300px) !important;
+    width: 100% !important;
+  }
+  
+  .billy-container {
+    padding: clamp(20px, 3.5vw, 45px) !important;
   }
 }
 
@@ -2196,7 +2644,24 @@ html {
   }
   
   .hero-image-small {
-    max-width: clamp(320px, 40vw, 380px) !important;
+    max-width: clamp(280px, 35vw, 320px) !important;
+    width: 100% !important;
+  }
+  
+  /* Small Desktop - two columns for main content */
+  .main-content {
+    grid-template-columns: 1fr 1fr !important;
+    gap: clamp(50px, 6vw, 80px) !important;
+  }
+  
+  /* Small Desktop Billy image */
+  .billy-image {
+    max-width: clamp(260px, 32vw, 300px) !important;
+    width: 100% !important;
+  }
+  
+  .billy-container {
+    padding: clamp(25px, 3.5vw, 48px) !important;
   }
 }
 
@@ -2207,14 +2672,32 @@ html {
   }
   
   .hero-image-small {
-    max-width: 380px !important;
+    max-width: clamp(300px, 32vw, 350px) !important;
+    width: 100% !important;
+  }
+  
+  /* Desktop - two columns for main content */
+  .main-content {
+    grid-template-columns: 1fr 1fr !important;
+    gap: clamp(60px, 8vw, 100px) !important;
+  }
+  
+  /* Desktop Billy image */
+  .billy-image {
+    max-width: clamp(280px, 30vw, 320px) !important;
+    width: 100% !important;
+  }
+  
+  .billy-container {
+    padding: clamp(30px, 4vw, 50px) !important;
   }
 }
 
 /* Contact section - side by side on large screens */
 @media (min-width: 980px) {
-  .contact-inner {
+  #contacto .container > div {
     grid-template-columns: 1.2fr 0.8fr !important;
+    gap: clamp(40px, 5vw, 48px) !important;
   }
 }
 
