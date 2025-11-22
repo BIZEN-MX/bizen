@@ -3,9 +3,10 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { prisma } from "@/lib/prisma";
 
+// BIZEN admin emails
 const ADMIN_EMAILS = [
   "diego@bizen.mx",
-  "202207895@mondragonmexico.edu.mx",
+  "202207895@mondragonmexico.edu.mx", // Legacy admin email
 ];
 
 export async function GET() {

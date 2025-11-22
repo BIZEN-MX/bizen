@@ -20,10 +20,10 @@ const getRuleBasedResponse = (message: string): string | null => {
     return "BIZEN es una plataforma de educación financiera con 6 módulos interactivos sobre identidad digital, finanzas personales, presupuestos, inversiones y créditos."
   }
   if (m.includes("módulo") || m.includes("modulo") || m.includes("curso")) {
-    return "BIZEN tiene 6 módulos: Identidad Digital, Finanzas Personales, Presupuestos y Ahorro, Inversiones Básicas, Créditos y Deudas, y Microcredenciales. Cada módulo incluye lecciones, quizzes y certificaciones."
+    return "BIZEN tiene 6 módulos: Identidad Digital, Finanzas Personales, Presupuestos y Ahorro, Inversiones Básicas, Créditos y Deudas, y Temas Avanzados. Cada módulo incluye lecciones, quizzes y certificaciones."
   }
   if (m.includes("registro") || m.includes("registrarse") || m.includes("signup") || m.includes("crear cuenta")) {
-    return "Para registrarte: ve a la página de registro, completa el formulario, verifica tu email y comienza. Los estudiantes Mondragón usan su correo institucional."
+    return "Para registrarte: ve a la página de registro, completa el formulario, verifica tu email y comienza. ¡Es rápido y fácil!"
   }
   if (m.includes("login") || m.includes("iniciar sesión") || m.includes("contraseña") || m.includes("password")) {
     return "Si tienes problemas: verifica email/contraseña, usa 'Olvidé mi contraseña', asegúrate de que tu cuenta esté verificada. Si persiste, contacta soporte."

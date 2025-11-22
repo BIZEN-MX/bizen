@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       email: formData.get('email') as string,
       password: formData.get('password') as string,
       accepted: formData.get('accepted') === 'on',
-      appSource: formData.get('appSource') as string || 'microcredential', // Default to microcredential
+      appSource: formData.get('appSource') as string || 'bizen', // Default to bizen
       recaptchaToken: formData.get('recaptchaToken') as string || ''
     }
     

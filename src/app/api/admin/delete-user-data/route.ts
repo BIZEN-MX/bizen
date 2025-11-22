@@ -2,10 +2,10 @@ import { NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 
-// List of admin emails
+// BIZEN admin emails
 const ADMIN_EMAILS = [
   "diego@bizen.mx",
-  "202207895@mondragonmexico.edu.mx",
+  "202207895@mondragonmexico.edu.mx", // Legacy admin email
 ]
 
 export async function POST(request: Request) {

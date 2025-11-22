@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-// BSMXOnePage.tsx — Landing one-page (React puro, sin Framer)
+// Landing page component for BIZEN
 "use client"
 
 import * as React from "react"
@@ -27,7 +27,7 @@ export type Plan = {
 
 export type FAQ = { q: string; a: string }
 
-export type BSMXOnePageProps = {
+export type LandingPageProps = {
   // Colores
   primary?: string
   accent?: string
@@ -231,7 +231,7 @@ const defaultFaqs: FAQ[] = [
   },
 ]
 
-const defaultProps: Required<BSMXOnePageProps> = {
+const defaultProps: Required<LandingPageProps> = {
   // Colores
   primary: "#0F71FD",
   accent: "#10B981",
@@ -314,7 +314,7 @@ const defaultProps: Required<BSMXOnePageProps> = {
 
 /* ───────── Component ───────── */
 
-export default function BSMXOnePage(p: BSMXOnePageProps) {
+export default function LandingPage(p: LandingPageProps) {
   const props = { ...defaultProps, ...p }
   const { user, signOut, loading } = useAuth()
   const [loggingOut, setLoggingOut] = React.useState(false)
@@ -395,7 +395,7 @@ export default function BSMXOnePage(p: BSMXOnePageProps) {
         <div className="container header-inner">
           <a href="#top" className="brand" aria-label={`${brandName} inicio`}>
             <img 
-              src="/bsmx-logo.png" 
+              src="/bizen-logo.png" 
               alt="BIZEN Logo" 
               className="logo-image"
               width={36}
@@ -499,14 +499,14 @@ export default function BSMXOnePage(p: BSMXOnePageProps) {
               <ul className="badges" aria-label="Ventajas">
                 <li>🧩 Aprendizaje práctico</li>
                 <li>📈 Progreso gamificado</li>
-                <li>🎓 Certificación Mondragón</li>
+                <li>🎓 Certificación BIZEN</li>
               </ul>
             </div>
 
             <figure className="hero-media">
               <img
                 src={heroImage}
-                alt="BSMX hero"
+                alt="BIZEN hero"
                 width={960}
                 height={720}
                 loading="eager"

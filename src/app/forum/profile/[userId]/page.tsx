@@ -39,6 +39,12 @@ export default function ForumProfilePage() {
 
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loadingData, setLoadingData] = useState(true)
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [isLoadingFollow, setIsLoadingFollow] = useState(false)
+  const [followStats, setFollowStats] = useState<{
+    followersCount: number
+    followingCount: number
+  } | null>(null)
 
   useEffect(() => {
     const bodyEl = document.body
@@ -78,6 +84,90 @@ export default function ForumProfilePage() {
     }
   }
 
+  // Check if current user is following this profile
+  const checkFollowStatus = async () => {
+    if (!user || !userId || userId === user.id) return
+    
+    try {
+      const response = await fetch(`/api/profile/follow?userId=${userId}`)
+      if (response.ok) {
+        const data = await response.json()
+        setIsFollowing(data.isFollowing)
+      }
+    } catch (error) {
+      console.error("Error checking follow status:", error)
+    }
+  }
+
+  // Fetch follow stats for this user
+  const fetchFollowStats = async () => {
+    if (!userId) return
+    
+    try {
+      // We'll need to create an endpoint to get stats for any user
+      // For now, we'll use a workaround
+      const response = await fetch(`/api/forum/profile/${userId}/stats`)
+      if (response.ok) {
+        const data = await response.json()
+        setFollowStats(data)
+      }
+    } catch (error) {
+      console.error("Error fetching follow stats:", error)
+    }
+  }
+
+  // Handle follow/unfollow
+  const handleFollowToggle = async () => {
+    if (!user || !userId || userId === user.id || isLoadingFollow) return
+    
+    setIsLoadingFollow(true)
+    try {
+      if (isFollowing) {
+        // Unfollow
+        const response = await fetch(`/api/profile/follow?followingId=${userId}`, {
+          method: 'DELETE'
+        })
+        if (response.ok) {
+          setIsFollowing(false)
+          if (followStats) {
+            setFollowStats({
+              ...followStats,
+              followersCount: Math.max(0, followStats.followersCount - 1)
+            })
+          }
+        }
+      } else {
+        // Follow
+        const response = await fetch('/api/profile/follow', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ followingId: userId })
+        })
+        if (response.ok) {
+          setIsFollowing(true)
+          if (followStats) {
+            setFollowStats({
+              ...followStats,
+              followersCount: followStats.followersCount + 1
+            })
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling follow:", error)
+    } finally {
+      setIsLoadingFollow(false)
+    }
+  }
+
+  useEffect(() => {
+    if (user && userId && userId !== user.id) {
+      checkFollowStatus()
+      fetchFollowStats()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, userId])
+
   if (loading || loadingData) {
     return (
       <div style={{ 
@@ -112,23 +202,73 @@ export default function ForumProfilePage() {
   if (!user || !profile) return null
 
   return (
-    <div style={{
-      position: "relative",
-      minHeight: "100vh",
-      paddingTop: 40,
-      paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
-      backgroundAttachment: "fixed",
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat"
-    }}>
-      <main style={{ 
+    <>
+      <style>{`
+        /* Mobile (≤767px): Full width */
+        @media (max-width: 767px) {
+          .forum-profile-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding-top: 20px !important;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+          }
+          .forum-profile-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(16px, 4vw, 24px) !important;
+          }
+        }
+        
+        /* Tablet/iPad (768px-1024px): Account for right sidebar */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .forum-profile-outer {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+          }
+          .forum-profile-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        
+        /* Desktop (≥1025px): Account for right sidebar */
+        @media (min-width: 1025px) {
+          .forum-profile-outer {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+          }
+          .forum-profile-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
+      <div className="forum-profile-outer" style={{
         position: "relative",
-        maxWidth: 1000, 
-        margin: "0 auto", 
+        minHeight: "100vh",
+        paddingTop: "clamp(20px, 4vw, 40px)",
+        paddingBottom: "clamp(80px, 12vw, 120px)",
+        fontFamily: "Montserrat, sans-serif",
+        backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        backgroundAttachment: "fixed",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        width: "100%",
+        boxSizing: "border-box"
+      }}>
+      <main className="forum-profile-container" style={{ 
+        position: "relative",
+        width: "100%",
+        maxWidth: "100%",
+        margin: "0",
         padding: "clamp(20px, 4vw, 40px)",
-        zIndex: 1
+        zIndex: 1,
+        boxSizing: "border-box"
       }}>
         {/* Breadcrumb */}
         <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
@@ -162,14 +302,80 @@ export default function ForumProfilePage() {
             }}>
               {profile.nickname[0].toUpperCase()}
             </div>
-            <div>
+            <div style={{ flex: 1 }}>
               <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 800 }}>
                 {profile.nickname}
               </h1>
-              <div style={{ fontSize: 15, opacity: 0.9 }}>
+              <div style={{ fontSize: 15, opacity: 0.9, marginBottom: 12 }}>
                 Nivel {profile.level} • {profile.reputation} puntos de reputación
               </div>
+              
+              {/* Follow Stats */}
+              {followStats && (
+                <div style={{ display: "flex", gap: 20, fontSize: 14, opacity: 0.9 }}>
+                  <div>
+                    <strong>{followStats.followersCount}</strong> seguidores
+                  </div>
+                  <div>
+                    <strong>{followStats.followingCount}</strong> siguiendo
+                  </div>
+                </div>
+              )}
             </div>
+            
+            {/* Follow User Button */}
+            {user && userId !== user.id && (
+              <button
+                onClick={handleFollowToggle}
+                disabled={isLoadingFollow}
+                title={isFollowing ? "Dejar de seguir a este usuario" : "Seguir a este usuario"}
+                style={{
+                  padding: "12px 24px",
+                  background: isFollowing 
+                    ? "rgba(255, 255, 255, 0.2)" 
+                    : "rgba(255, 255, 255, 0.9)",
+                  color: isFollowing ? "#fff" : "#0F62FE",
+                  border: isFollowing ? "2px solid rgba(255, 255, 255, 0.4)" : "none",
+                  borderRadius: 12,
+                  fontSize: 15,
+                  fontWeight: 700,
+                  cursor: isLoadingFollow ? "not-allowed" : "pointer",
+                  opacity: isLoadingFollow ? 0.6 : 1,
+                  transition: "all 0.2s ease",
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8
+                }}
+                onMouseEnter={(e) => {
+                  if (!isLoadingFollow) {
+                    e.currentTarget.style.transform = "scale(1.05)"
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)"
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)"
+                  e.currentTarget.style.boxShadow = "none"
+                }}
+              >
+                {isLoadingFollow ? (
+                  <>
+                    <span>⏳</span>
+                    <span>Cargando...</span>
+                  </>
+                ) : isFollowing ? (
+                  <>
+                    <span>👤✓</span>
+                    <span>Siguiendo</span>
+                  </>
+                ) : (
+                  <>
+                    <span>👤+</span>
+                    <span>Seguir Usuario</span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
 
           {/* Stats */}
@@ -267,6 +473,7 @@ export default function ForumProfilePage() {
         </div>
       </main>
     </div>
+    </>
   )
 }
 

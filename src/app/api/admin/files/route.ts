@@ -1,22 +1,17 @@
-import { NextResponse } from 'next/server';
-import { createSupabaseServer } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { requireAuthAndRole } from '@/lib/auth/api-auth';
 import { prisma } from '@/lib/prisma';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 Starting GET /api/admin/files...');
+    // Use standardized authentication and role check
+    const authResult = await requireAuthAndRole(request, 'school_admin');
     
-    // Get authenticated user (for admin verification)
-    const supabase = await createSupabaseServer();
-    console.log('✅ Supabase client created');
-    
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    console.log('✅ Auth check complete, user:', user?.email, 'error:', userError?.message);
-
-    if (userError || !user) {
-      console.log('❌ Not authenticated');
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+    if (!authResult.success) {
+      return authResult.response;
     }
+
+    const { user } = authResult.data;
 
     console.log('🔍 Fetching files from database...');
     

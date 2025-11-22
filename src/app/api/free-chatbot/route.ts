@@ -150,24 +150,17 @@ export async function POST(request: NextRequest) {
             messages: [
               {
                 role: 'system',
-                content: `Eres un asistente inteligente de BIZEN, una plataforma educativa con dos programas:
+                content: `Eres un asistente inteligente de BIZEN, una plataforma de educación financiera.
 
-BIZEN (Educación Financiera):
+BIZEN ofrece 6 módulos de educación financiera:
 - Módulo 1: Identidad Digital
 - Módulo 2: Finanzas Personales
 - Módulo 3: Presupuestos y Ahorro
 - Módulo 4: Inversiones Básicas
 - Módulo 5: Créditos y Deudas
+- Módulo 6: Temas Avanzados
 
-Microcredential (Marketing de Influencia y Branding Personal - Solo para estudiantes Mondragón):
-- Módulo 1: Introducción al Ecosistema Influencer
-- Módulo 2: Branding Personal y Posicionamiento
-- Módulo 3: Imagen Personal y Estilo
-- Módulo 4: Producción y Edición de Video
-- Módulo 5: Networking Estratégico
-- Módulo 6: Proyecto Final
-
-Responde en español de manera amigable, profesional y útil. Si la pregunta es sobre algo específico de BIZEN o Microcredential, proporciona información detallada. Si no estás seguro, sé honesto y ofrece ayuda general.`
+Responde en español de manera amigable, profesional y útil. Si la pregunta es sobre algo específico de BIZEN, proporciona información detallada. Si no estás seguro, sé honesto y ofrece ayuda general.`
               },
               // Include conversation history for context
               ...conversationHistory.slice(-4).map((m: { role: string; content: string }) => ({
@@ -306,7 +299,6 @@ const synonyms: Record<string, string[]> = {
   'seccion': ['sección', 'parte', 'tema'],
   'correo': ['email', 'e-mail', 'mail'],
   'contacto': ['soporte', 'ayuda', 'support', 'ayudar'],
-  'microcredencial': ['microcredential', 'micro credencial', 'micro-credencial'],
   'influencer': ['influencers', 'influencia', 'influencer marketing'],
   'branding': ['marca personal', 'brand', 'personal brand'],
   'storytelling': ['narrativa', 'historia personal', 'story'],
@@ -483,7 +475,7 @@ function getRuleBasedResponse(message: string): string {
   if (lowerMessage.includes('hola') || lowerMessage.includes('hi') || 
       lowerMessage.includes('buenos') || lowerMessage.includes('buen día') ||
       lowerMessage.includes('buenas') || lowerMessage.includes('saludos')) {
-    return '¡Hola! Soy tu asistente de BIZEN. Puedo ayudarte con:\n\n📚 BIZEN: 5 módulos de educación financiera (Identidad Digital, Finanzas, Presupuestos, Inversiones, Créditos)\n🎓 Microcredential: 6 módulos de Marketing de Influencia y Branding Personal (solo estudiantes Mondragón)\n🔐 Registro, login y recuperación de contraseña\n📊 Tu progreso y certificaciones\n💬 Soporte técnico y navegación\n🎯 Quizzes y desbloqueo de secciones\n\n¿En qué puedo ayudarte hoy?'
+    return '¡Hola! Soy tu asistente de BIZEN. Puedo ayudarte con:\n\n📚 BIZEN: 6 módulos de educación financiera (Identidad Digital, Finanzas, Presupuestos, Inversiones, Créditos, Temas Avanzados)\n🔐 Registro, login y recuperación de contraseña\n📊 Tu progreso y certificaciones\n💬 Soporte técnico y navegación\n🎯 Quizzes y desbloqueo de secciones\n\n¿En qué puedo ayudarte hoy?'
   }
   
   // About BIZEN
@@ -497,10 +489,10 @@ function getRuleBasedResponse(message: string): string {
     return 'En BIZEN tenemos varios módulos disponibles:\n\n• Módulo 1: Identidad Digital\n• Módulo 2: Finanzas Personales\n• Módulo 3: Presupuestos y Ahorro\n• Módulo 4: Inversiones Básicas\n• Módulo 5: Créditos y Deudas\n\nCada módulo incluye lecciones interactivas, quizzes y certificaciones.'
   }
   
-  // Microcredential modules
-  if (lowerMessage.includes('microcredencial') || lowerMessage.includes('influencer') || 
-      lowerMessage.includes('branding personal') || lowerMessage.includes('marca personal')) {
-    return 'Microcredential es un curso especializado de 6 módulos sobre Marketing de Influencia y Branding Personal:\n\n1️⃣ Introducción al Ecosistema Influencer\n2️⃣ Branding Personal y Posicionamiento\n3️⃣ Imagen Personal y Estilo\n4️⃣ Producción y Edición de Video\n5️⃣ Networking Estratégico\n6️⃣ Proyecto Final\n\nEstá diseñado para estudiantes de Mondragón. ¿Quieres saber más sobre algún módulo específico?'
+  // Branding/Personal brand questions - redirect to BIZEN Identity Digital module
+  if (lowerMessage.includes('branding personal') || lowerMessage.includes('marca personal') || 
+      lowerMessage.includes('identidad digital')) {
+    return 'En BIZEN, el Módulo 1: Identidad Digital cubre temas relacionados con tu presencia online, protección de datos y gestión de identidad digital. ¿Quieres saber más sobre este módulo o sobre otro tema de educación financiera?'
   }
   
   // Registration/Login
@@ -547,22 +539,22 @@ function getRuleBasedResponse(message: string): string {
 
   // Questions that need clarification
   if (lowerMessage.length < 10 || lowerMessage.split(' ').length < 3) {
-    return 'Parece que tu pregunta es muy corta. Puedo ayudarte con:\n\n📚 BIZEN: Módulos de educación financiera (Identidad Digital, Finanzas, Presupuestos, Inversiones, Créditos)\n🎓 Microcredential: Marketing de Influencia y Branding Personal (6 módulos)\n🔐 Registro, login, progreso, certificaciones\n💬 Soporte técnico\n\n¿Podrías ser más específico sobre qué necesitas?'
+    return 'Parece que tu pregunta es muy corta. Puedo ayudarte con:\n\n📚 BIZEN: Módulos de educación financiera (Identidad Digital, Finanzas, Presupuestos, Inversiones, Créditos, Temas Avanzados)\n🔐 Registro, login, progreso, certificaciones\n💬 Soporte técnico\n\n¿Podrías ser más específico sobre qué necesitas?'
   }
   
   // Questions about something that might not be related
   if (lowerMessage.includes('cómo') && (lowerMessage.includes('hacer') || lowerMessage.includes('crear') || lowerMessage.includes('aprender'))) {
     // Try to extract what they want to learn/do
     if (lowerMessage.includes('video') || lowerMessage.includes('reel') || lowerMessage.includes('contenido')) {
-      return 'Si quieres aprender sobre creación de videos y contenido, eso está en el Módulo 4 de Microcredential (Producción y Edición de Video). Cubre grabación, edición, reels virales y técnicas de engagement. ¿Quieres más detalles sobre este módulo?'
+      return 'En BIZEN nos enfocamos en educación financiera. Si quieres aprender sobre creación de contenido, te recomiendo buscar recursos especializados en ese tema. ¿Hay algo sobre educación financiera en lo que pueda ayudarte?'
     }
     if (lowerMessage.includes('marca') || lowerMessage.includes('branding') || lowerMessage.includes('personal')) {
-      return 'Si te interesa el branding personal, eso está en el Módulo 2 de Microcredential. Cubre construcción de identidad digital, storytelling y estrategias de posicionamiento. También puedes consultar el Módulo 1 de BIZEN sobre Identidad Digital. ¿Cuál prefieres?'
+      return 'En BIZEN, el Módulo 1: Identidad Digital cubre temas relacionados con tu presencia online, protección de datos y gestión de identidad digital. ¿Quieres saber más sobre este módulo?'
     }
   }
   
   // Default fallback - more helpful and contextual
-  return 'Entiendo tu pregunta, pero necesito más detalles para ayudarte mejor. Puedo ayudarte con:\n\n📚 BIZEN: 5 módulos de educación financiera\n🎓 Microcredential: 6 módulos de Marketing de Influencia (solo estudiantes Mondragón)\n🔐 Registro, login, recuperación de contraseña\n📊 Progreso, certificaciones, desbloqueo de secciones\n💬 Problemas técnicos y soporte\n\n¿Podrías reformular tu pregunta o ser más específico sobre qué módulo o tema te interesa?'
+  return 'Entiendo tu pregunta, pero necesito más detalles para ayudarte mejor. Puedo ayudarte con:\n\n📚 BIZEN: 6 módulos de educación financiera (Identidad Digital, Finanzas, Presupuestos, Inversiones, Créditos, Temas Avanzados)\n🔐 Registro, login, recuperación de contraseña\n📊 Progreso, certificaciones, desbloqueo de secciones\n💬 Problemas técnicos y soporte\n\n¿Podrías reformular tu pregunta o ser más específico sobre qué módulo o tema te interesa?'
 }
 
 // Handle OPTIONS request for CORS

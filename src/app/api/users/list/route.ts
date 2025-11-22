@@ -20,20 +20,16 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: usersError.message }, { status: 500 })
     }
 
-    // Separate users by app_source metadata
+    // Filter BIZEN users
     const bizenUsers = users.filter(user => 
-      user.user_metadata?.app_source === "bizen"
-    )
-    
-    const microcredentialUsers = users.filter(user => 
-      user.user_metadata?.app_source === "microcredential" || 
-      (user.user_metadata?.app_source !== "bizen" && user.email?.endsWith("@mondragon.edu.mx"))
+      user.user_metadata?.app_source === "bizen" ||
+      !user.user_metadata?.app_source // Legacy users without app_source are treated as BIZEN
     )
 
     return NextResponse.json({
       bizen: bizenUsers,
-      microcredential: microcredentialUsers,
-      total: users.length
+      total: users.length,
+      bizenCount: bizenUsers.length
     })
   } catch (error) {
     return NextResponse.json({ 

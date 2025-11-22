@@ -346,7 +346,7 @@ export default function ThreadDetailPage() {
               color: "#9CA3AF",
               fontWeight: 600
             }}>
-              <span>{comment.author.nickname} ({comment.author.reputation} pts)</span>
+              <span><Link href={`/forum/profile/${comment.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{comment.author.nickname}</Link> ({comment.author.reputation} pts)</span>
               <span>{new Date(comment.createdAt).toLocaleDateString('es-ES')}</span>
               <button
                 onClick={() => setReplyTo(comment.id)}
@@ -398,26 +398,73 @@ export default function ThreadDetailPage() {
 
   return (
     <>
+      <style>{`
+        /* Mobile (≤767px): Full width */
+        @media (max-width: 767px) {
+          .forum-thread-outer {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding-top: 20px !important;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+          }
+          .forum-thread-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(16px, 4vw, 24px) !important;
+          }
+        }
+        
+        /* Tablet/iPad (768px-1024px): Account for right sidebar */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .forum-thread-outer {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+          }
+          .forum-thread-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        
+        /* Desktop (≥1025px): Account for right sidebar */
+        @media (min-width: 1025px) {
+          .forum-thread-outer {
+            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+          }
+          .forum-thread-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
       <LoadingBar />
-      <div style={{
+      <div className="forum-thread-outer" style={{
         position: "relative",
         minHeight: "100vh",
-        paddingTop: 40,
-        paddingBottom: 80,
+        paddingTop: "clamp(20px, 4vw, 40px)",
+        paddingBottom: "clamp(80px, 12vw, 120px)",
         fontFamily: "Montserrat, sans-serif",
         backgroundImage: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
         backgroundAttachment: "fixed",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        marginRight: "340px"
+        width: "100%",
+        boxSizing: "border-box"
       }}>
-        <main style={{ 
+        <main className="forum-thread-container" style={{ 
         position: "relative",
+        width: "100%",
         maxWidth: "100%", 
         margin: "0", 
-        padding: "40px",
-        paddingRight: "40px",
-        zIndex: 1
+        padding: "clamp(20px, 4vw, 40px)",
+        zIndex: 1,
+        boxSizing: "border-box"
       }}>
         {/* Back Button */}
         <div style={{ marginBottom: 24 }}>
@@ -543,7 +590,7 @@ export default function ThreadDetailPage() {
             paddingBottom: 20,
             borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
           }}>
-            <span>por {thread.author.nickname}</span>
+            <span>por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link></span>
             <span>Nivel {thread.author.level}</span>
             <span>{thread.author.reputation} pts</span>
             <span>{new Date(thread.createdAt).toLocaleDateString('es-ES')}</span>

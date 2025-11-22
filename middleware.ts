@@ -1,9 +1,17 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { getSupabaseConfig, validateEnv } from '@/lib/env'
 
-// Initialize Prisma for middleware
-const prisma = new PrismaClient()
+// Validate environment variables at module load (runs once)
+try {
+  validateEnv()
+} catch (error) {
+  // In production, fail fast if env vars are missing
+  if (process.env.NODE_ENV === 'production') {
+    console.error('❌ [MIDDLEWARE] Environment validation failed:', error)
+    throw error
+  }
+}
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -12,9 +20,8 @@ export async function middleware(request: NextRequest) {
     },
   })
 
-  // Prefer BIZEN envs, fallback to generic
-  const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL_BIZEN || process.env.NEXT_PUBLIC_SUPABASE_URL)!
-  const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY_BIZEN || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)!
+  // Get validated Supabase configuration
+  const { url: supabaseUrl, anonKey: supabaseKey } = getSupabaseConfig()
 
   const supabase = createServerClient(
     supabaseUrl,
@@ -75,49 +82,23 @@ export async function middleware(request: NextRequest) {
   }
 
   // Role-based route protection - TEACHER routes
+  // Note: Detailed role checks are handled in API routes for better performance
+  // Middleware only checks for session existence
   if (pathname.startsWith('/teacher')) {
     if (!session) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
-
-    // Check if user has teacher role
-    try {
-      const profile = await prisma.profile.findUnique({
-        where: { userId: session.user.id },
-        select: { role: true }
-      })
-
-      if (!profile || profile.role !== 'teacher') {
-        console.log('[MIDDLEWARE] Access denied - User is not a teacher')
-        return NextResponse.redirect(new URL('/dashboard?error=unauthorized', request.url))
-      }
-    } catch (error) {
-      console.error('[MIDDLEWARE] Error checking teacher role:', error)
-      return NextResponse.redirect(new URL('/dashboard?error=role_check_failed', request.url))
-    }
+    // Role verification happens in the API routes using requireAuthAndRole
   }
 
   // Role-based route protection - ADMIN routes
+  // Note: Detailed role checks are handled in API routes for better performance
+  // Middleware only checks for session existence
   if (pathname.startsWith('/admin')) {
     if (!session) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
-
-    // Check if user has school_admin role
-    try {
-      const profile = await prisma.profile.findUnique({
-        where: { userId: session.user.id },
-        select: { role: true }
-      })
-
-      if (!profile || profile.role !== 'school_admin') {
-        console.log('[MIDDLEWARE] Access denied - User is not a school admin')
-        return NextResponse.redirect(new URL('/dashboard?error=unauthorized', request.url))
-      }
-    } catch (error) {
-      console.error('[MIDDLEWARE] Error checking admin role:', error)
-      return NextResponse.redirect(new URL('/dashboard?error=role_check_failed', request.url))
-    }
+    // Role verification happens in the API routes using requireAuthAndRole
   }
 
   // Protected student routes

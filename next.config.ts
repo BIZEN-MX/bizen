@@ -4,13 +4,15 @@ import path from "path";
 const nextConfig: NextConfig = {
   transpilePackages: ["src/apps"],
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
+    // TODO: After fixing all ESLint errors, set to false
+    // This allows production builds to complete even if there are ESLint errors
+    // Current status: Many console.log statements and other issues need fixing
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has type errors.
+    // TODO: After fixing all TypeScript errors (especially 'any' types), set to false
+    // This allows production builds to complete even if there are type errors
+    // Current status: 294+ uses of 'any' type need to be replaced
     ignoreBuildErrors: true,
   },
   webpack: (config) => {

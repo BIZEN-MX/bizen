@@ -768,7 +768,7 @@ function ForumContent() {
                     flexWrap: "wrap"
                   }}>
                     <span>{thread.topic.name}</span>
-                    <span>por {thread.author.nickname} ({thread.author.reputation} pts)</span>
+                    <span>por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link> ({thread.author.reputation} pts)</span>
                     <span>{formatDate(thread.createdAt)}</span>
                     <span>{thread.commentCount} respuestas</span>
                     <span>{thread.viewCount} vistas</span>

@@ -3,10 +3,10 @@ import { createSupabaseServer } from "@/lib/supabase/server"
 import { createSupabaseAdmin } from "@/lib/supabase/admin"
 import { prisma } from "@/lib/prisma"
 
-// List of admin emails - only these users can access the dashboard
+// BIZEN admin emails - only these users can access the dashboard
 const ADMIN_EMAILS = [
   "diego@bizen.mx",
-  "202207895@mondragonmexico.edu.mx",
+  "202207895@mondragonmexico.edu.mx", // Legacy admin email
   // Add more admin emails here if needed
 ]
 

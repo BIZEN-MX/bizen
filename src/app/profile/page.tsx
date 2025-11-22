@@ -27,6 +27,12 @@ export default function ProfilePage() {
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [loadingStats, setLoadingStats] = useState(true)
+  const [profileStats, setProfileStats] = useState<{
+    joinDate: string | null
+    followersCount: number
+    followingCount: number
+  } | null>(null)
+  const [loadingProfileStats, setLoadingProfileStats] = useState(true)
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -102,7 +108,24 @@ export default function ProfilePage() {
       }
     }
 
+    // Fetch profile stats (join date, followers, following)
+    const fetchProfileStats = async () => {
+      try {
+        setLoadingProfileStats(true)
+        const response = await fetch('/api/profile/stats')
+        if (response.ok) {
+          const data = await response.json()
+          setProfileStats(data)
+        }
+      } catch (error) {
+        console.error('Error fetching profile stats:', error)
+      } finally {
+        setLoadingProfileStats(false)
+      }
+    }
+
     fetchStats()
+    fetchProfileStats()
   }, [user, loading, router])
 
   // Set body background for this page
@@ -453,6 +476,97 @@ export default function ProfilePage() {
                 {user.user_metadata?.username || formData.username}
               </p>
             )}
+
+            {/* Join Date, Followers, Following */}
+            <div style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 12,
+              marginTop: 16,
+              marginBottom: 16
+            }}>
+              {profileStats && (
+                <>
+                  {profileStats.joinDate && (
+                    <p style={{
+                      margin: 0,
+                      fontSize: 14,
+                      color: "#6B7280",
+                      fontWeight: 500
+                    }}>
+                      Se unió el {new Date(profileStats.joinDate).toLocaleDateString('es-ES', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </p>
+                  )}
+                  <div style={{
+                    display: "flex",
+                    gap: 24,
+                    alignItems: "center"
+                  }}>
+                    <div style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 4
+                    }}>
+                      <span style={{
+                        fontSize: 20,
+                        fontWeight: 800,
+                        color: "#1E40AF"
+                      }}>
+                        {profileStats.followersCount}
+                      </span>
+                      <span style={{
+                        fontSize: 12,
+                        color: "#6B7280",
+                        fontWeight: 600
+                      }}>
+                        Seguidores
+                      </span>
+                    </div>
+                    <div style={{
+                      width: 1,
+                      height: 32,
+                      background: "#E5E7EB"
+                    }} />
+                    <div style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 4
+                    }}>
+                      <span style={{
+                        fontSize: 20,
+                        fontWeight: 800,
+                        color: "#1E40AF"
+                      }}>
+                        {profileStats.followingCount}
+                      </span>
+                      <span style={{
+                        fontSize: 12,
+                        color: "#6B7280",
+                        fontWeight: 600
+                      }}>
+                        Siguiendo
+                      </span>
+                    </div>
+                  </div>
+                </>
+              )}
+              {loadingProfileStats && (
+                <p style={{
+                  margin: 0,
+                  fontSize: 14,
+                  color: "#9CA3AF"
+                }}>
+                  Cargando estadísticas...
+                </p>
+              )}
+            </div>
             
             {/* Role Badge */}
             <div style={{
