@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function GET(
   request: NextRequest,
@@ -16,9 +14,28 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    // Get query params for pagination
+    const { searchParams } = new URL(request.url)
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 50) // Default 20, max 50
+    const skip = parseInt(searchParams.get('skip') || '0')
+    const includeReplies = searchParams.get('includeReplies') === 'true' // Default false - only load replies when explicitly requested
+
+    // First, get the thread without comments to avoid heavy nested queries
     const thread = await prisma.forumThread.findUnique({
       where: { id: params.id },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        body: true,
+        status: true,
+        score: true,
+        viewCount: true,
+        commentCount: true,
+        acceptedCommentId: true,
+        isPinned: true,
+        createdAt: true,
+        authorId: true,
+        topicId: true,
         author: {
           select: {
             userId: true,
@@ -28,50 +45,24 @@ export async function GET(
             level: true
           }
         },
-        topic: true,
-        tags: {
-          include: { tag: true }
+        topic: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            icon: true
+          }
         },
-        comments: {
-          where: {
-            moderationStatus: 'approved',
-            isHidden: false,
-            parentCommentId: null
-          },
-          include: {
-            author: {
+        tags: {
+          select: {
+            tag: {
               select: {
-                userId: true,
-                nickname: true,
-                fullName: true,
-                reputation: true,
-                level: true
+                id: true,
+                name: true,
+                slug: true
               }
-            },
-            replies: {
-              where: {
-                moderationStatus: 'approved',
-                isHidden: false
-              },
-              include: {
-                author: {
-                  select: {
-                    userId: true,
-                    nickname: true,
-                    fullName: true,
-                    reputation: true,
-                    level: true
-                  }
-                }
-              },
-              orderBy: { createdAt: 'asc' }
             }
-          },
-          orderBy: [
-            { isAccepted: 'desc' },
-            { score: 'desc' },
-            { createdAt: 'asc' }
-          ]
+          }
         }
       }
     })
@@ -80,11 +71,81 @@ export async function GET(
       return NextResponse.json({ error: "Thread not found" }, { status: 404 })
     }
 
-    // Increment view count
-    await prisma.forumThread.update({
+    // Get comments separately with optimized query
+    // Only load top-level comments first, replies will be loaded on demand
+    const comments = await prisma.forumComment.findMany({
+      where: {
+        threadId: params.id,
+        moderationStatus: 'approved',
+        isHidden: false,
+        parentCommentId: null
+      },
+      select: {
+        id: true,
+        body: true,
+        score: true,
+        isAccepted: true,
+        createdAt: true,
+        _count: {
+          select: {
+            replies: {
+              where: {
+                moderationStatus: 'approved',
+                isHidden: false
+              }
+            }
+          }
+        },
+        author: {
+          select: {
+            userId: true,
+            nickname: true,
+            fullName: true,
+            reputation: true,
+            level: true
+          }
+        },
+        // Only include replies if explicitly requested and limit to 10 per comment
+        ...(includeReplies ? {
+          replies: {
+            where: {
+              moderationStatus: 'approved',
+              isHidden: false
+            },
+            select: {
+              id: true,
+              body: true,
+              score: true,
+              createdAt: true,
+              author: {
+                select: {
+                  userId: true,
+                  nickname: true,
+                  fullName: true,
+                  reputation: true,
+                  level: true
+                }
+              }
+            },
+            orderBy: { createdAt: 'asc' },
+            take: 10 // Limit replies per comment to improve performance
+          }
+        } : {})
+      },
+      orderBy: [
+        { isAccepted: 'desc' },
+        { score: 'desc' },
+        { createdAt: 'asc' }
+      ],
+      take: limit,
+      skip: skip
+    })
+
+    // Increment view count asynchronously (don't block response)
+    prisma.forumThread.update({
       where: { id: params.id },
       data: { viewCount: { increment: 1 } }
-    })
+    }).catch(err => console.error("Error incrementing view count:", err))
 
     // Check user's vote, bookmark, follow
     const [userVote, bookmark, follow] = await Promise.all([
@@ -115,35 +176,57 @@ export async function GET(
       })
     ])
 
-    // Get user votes for all comments
-    const commentIds = thread.comments.flatMap(c => [c.id, ...c.replies.map(r => r.id)])
-    const commentVotes = await prisma.forumVote.findMany({
+    // Get user votes for all comments in a single optimized query
+    const commentIds = includeReplies 
+      ? comments.flatMap(c => [c.id, ...(c.replies || []).map((r: any) => r.id)])
+      : comments.map(c => c.id)
+    
+    const commentVotes = commentIds.length > 0 ? await prisma.forumVote.findMany({
       where: {
         userId: user.id,
         targetType: 'comment',
         targetId: { in: commentIds }
+      },
+      select: {
+        targetId: true,
+        value: true
       }
-    })
+    }) : []
 
     const voteMap = new Map(commentVotes.map(v => [v.targetId, v.value]))
 
     // Format response
-    const formattedComments = thread.comments.map(c => ({
-      ...c,
+    const formattedComments = comments.map(c => ({
+      id: c.id,
+      body: c.body,
+      score: c.score,
+      isAccepted: c.isAccepted,
+      createdAt: c.createdAt,
+      replyCount: c._count.replies,
       author: {
         ...c.author,
         nickname: c.author.nickname || c.author.fullName.split(' ')[0]
       },
-      replies: c.replies.map(r => ({
+      replies: includeReplies && (c as any).replies ? (c as any).replies.map((r: any) => ({
         ...r,
         author: {
           ...r.author,
           nickname: r.author.nickname || r.author.fullName.split(' ')[0]
         },
         userVote: voteMap.get(r.id) || null
-      })),
+      })) : [],
       userVote: voteMap.get(c.id) || null
     }))
+
+    // Get total comment count for pagination
+    const totalComments = await prisma.forumComment.count({
+      where: {
+        threadId: params.id,
+        moderationStatus: 'approved',
+        isHidden: false,
+        parentCommentId: null
+      }
+    })
 
     return NextResponse.json({
       ...thread,
@@ -155,13 +238,21 @@ export async function GET(
       comments: formattedComments,
       userVote: userVote?.value || null,
       isBookmarked: !!bookmark,
-      isFollowing: !!follow
+      isFollowing: !!follow,
+      pagination: {
+        total: totalComments,
+        limit,
+        skip,
+        hasMore: skip + limit < totalComments
+      }
+    }, {
+      headers: {
+        'Cache-Control': 'private, max-age=30' // Cache for 30 seconds to reduce load
+      }
     })
   } catch (error) {
     console.error("Error fetching thread:", error)
     return NextResponse.json({ error: "Failed to fetch thread" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
   }
 }
 
@@ -221,8 +312,6 @@ export async function PATCH(
   } catch (error) {
     console.error("Error updating thread:", error)
     return NextResponse.json({ error: "Failed to update thread" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
   }
 }
 
@@ -266,8 +355,6 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting thread:", error)
     return NextResponse.json({ error: "Failed to delete thread" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
   }
 }
 

@@ -45,13 +45,14 @@ interface Comment {
   score: number
   isAccepted: boolean
   createdAt: string
+  replyCount?: number
   author: {
     userId: string
     nickname: string
     reputation: number
     level: number
   }
-  replies: Comment[]
+  replies?: Comment[]
   userVote: number | null
 }
 
@@ -67,6 +68,10 @@ export default function ThreadDetailPage() {
   const [replyTo, setReplyTo] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
+  const [pagination, setPagination] = useState<{ total: number; limit: number; skip: number; hasMore: boolean } | null>(null)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [loadingReplies, setLoadingReplies] = useState<Set<string>>(new Set())
+  const [loadedReplies, setLoadedReplies] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const bodyEl = document.body
@@ -91,19 +96,56 @@ export default function ThreadDetailPage() {
     }
   }, [user, loading, router, threadId])
 
-  const fetchThread = async () => {
+  const fetchThread = async (skip = 0, limit = 20) => {
     try {
       setLoadingData(true)
-      const response = await fetch(`/api/forum/threads/${threadId}`)
+      // Don't load replies initially - they will be loaded on demand
+      const response = await fetch(`/api/forum/threads/${threadId}?skip=${skip}&limit=${limit}&includeReplies=false`)
       if (response.ok) {
         const data = await response.json()
         setThread(data)
-        setComments(data.comments || [])
+        // If loading more comments, append them; otherwise replace
+        if (skip > 0) {
+          setComments(prev => [...prev, ...(data.comments || [])])
+        } else {
+          setComments(data.comments || [])
+        }
+        return data.pagination
       }
     } catch (error) {
       console.error("Error fetching thread:", error)
     } finally {
       setLoadingData(false)
+    }
+  }
+
+  const fetchCommentReplies = async (commentId: string) => {
+    if (loadingReplies.has(commentId) || loadedReplies.has(commentId)) {
+      return // Already loading or loaded
+    }
+    
+    try {
+      setLoadingReplies(prev => new Set(prev).add(commentId))
+      const response = await fetch(`/api/forum/comments/${commentId}?limit=20`)
+      if (response.ok) {
+        const data = await response.json()
+        // Update the comment in the comments array with its replies
+        setComments(prev => prev.map(comment => 
+          comment.id === commentId 
+            ? { ...comment, replies: data.replies }
+            : comment
+        ))
+        setLoadedReplies(prev => new Set(prev).add(commentId))
+        return data.replies
+      }
+    } catch (error) {
+      console.error("Error fetching comment replies:", error)
+    } finally {
+      setLoadingReplies(prev => {
+        const next = new Set(prev)
+        next.delete(commentId)
+        return next
+      })
     }
   }
 
@@ -220,25 +262,25 @@ export default function ThreadDetailPage() {
 
   const renderComment = (comment: Comment, depth: number = 0) => (
     <div key={comment.id} style={{
-      marginLeft: depth > 0 ? 40 : 0,
-      marginBottom: 16
+      marginLeft: depth > 0 ? "clamp(20px, 5vw, 40px)" : 0,
+      marginBottom: "clamp(12px, 3vw, 16px)"
     }}>
       <div style={{
-        padding: 20,
+        padding: "clamp(16px, 4vw, 20px)",
         background: comment.isAccepted ? "rgba(16, 185, 129, 0.1)" : "rgba(255, 255, 255, 0.6)",
         backdropFilter: "blur(20px)",
-        borderRadius: 12,
+        borderRadius: "clamp(8px, 2vw, 12px)",
         border: comment.isAccepted ? "2px solid #10B981" : "2px solid rgba(255, 255, 255, 0.6)",
         boxShadow: "0 4px 16px rgba(31, 38, 135, 0.1)"
       }}>
         {comment.isAccepted && (
           <div style={{
-            marginBottom: 12,
-            padding: "6px 12px",
+            marginBottom: "clamp(10px, 2.5vw, 12px)",
+            padding: "clamp(5px, 1.5vw, 6px) clamp(10px, 2.5vw, 12px)",
             background: "#10B981",
             color: "white",
-            borderRadius: 6,
-            fontSize: 12,
+            borderRadius: "clamp(4px, 1vw, 6px)",
+            fontSize: "clamp(11px, 2.5vw, 12px)",
             fontWeight: 700,
             display: "inline-block"
           }}>
@@ -246,24 +288,29 @@ export default function ThreadDetailPage() {
           </div>
         )}
 
-        <div style={{ display: "flex", gap: 16 }}>
+        <div style={{ display: "flex", gap: "clamp(12px, 3vw, 16px)", flexWrap: "wrap" }}>
           {/* Vote Buttons */}
           <div style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 4
+            gap: "clamp(2px, 1vw, 4px)"
           }}>
             <button
               onClick={() => handleVote('comment', comment.id, 1)}
               style={{
                 background: "transparent",
                 border: comment.userVote === 1 ? "2px solid #0B71FE" : "2px solid transparent",
-                fontSize: 20,
+                fontSize: "clamp(18px, 4vw, 20px)",
                 cursor: "pointer",
-                padding: 4,
-                borderRadius: 4,
-                transition: "all 0.2s ease"
+                padding: "clamp(3px, 1vw, 4px)",
+                borderRadius: "clamp(3px, 1vw, 4px)",
+                transition: "all 0.2s ease",
+                minWidth: "clamp(32px, 8vw, 40px)",
+                minHeight: "clamp(32px, 8vw, 40px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
               }}
               onMouseDown={(e) => {
                 e.currentTarget.style.transform = "scale(0.9)"
@@ -287,7 +334,7 @@ export default function ThreadDetailPage() {
                 👍
               </span>
             </button>
-            <span style={{ fontSize: 16, fontWeight: 700, color: "#374151" }}>
+            <span style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 700, color: "#374151" }}>
               {comment.score}
             </span>
             <button
@@ -295,11 +342,16 @@ export default function ThreadDetailPage() {
               style={{
                 background: "transparent",
                 border: comment.userVote === -1 ? "2px solid #0B71FE" : "2px solid transparent",
-                fontSize: 20,
+                fontSize: "clamp(18px, 4vw, 20px)",
                 cursor: "pointer",
-                padding: 4,
-                borderRadius: 4,
-                transition: "all 0.2s ease"
+                padding: "clamp(3px, 1vw, 4px)",
+                borderRadius: "clamp(3px, 1vw, 4px)",
+                transition: "all 0.2s ease",
+                minWidth: "clamp(32px, 8vw, 40px)",
+                minHeight: "clamp(32px, 8vw, 40px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
               }}
               onMouseDown={(e) => {
                 e.currentTarget.style.transform = "scale(0.9)"
@@ -328,23 +380,26 @@ export default function ThreadDetailPage() {
           {/* Comment Content */}
           <div style={{ flex: 1 }}>
             <div style={{
-              fontSize: 14,
+              fontSize: "clamp(13px, 3vw, 14px)",
               lineHeight: 1.7,
               color: "#374151",
-              marginBottom: 12,
+              marginBottom: "clamp(10px, 2.5vw, 12px)",
               fontWeight: 500,
-              whiteSpace: "pre-wrap"
+              whiteSpace: "pre-wrap",
+              wordWrap: "break-word",
+              overflowWrap: "break-word"
             }}>
               {comment.body}
             </div>
 
             <div style={{
               display: "flex",
-              gap: 16,
+              gap: "clamp(8px, 2vw, 16px)",
               alignItems: "center",
-              fontSize: 12,
+              fontSize: "clamp(11px, 2.5vw, 12px)",
               color: "#9CA3AF",
-              fontWeight: 600
+              fontWeight: 600,
+              flexWrap: "wrap"
             }}>
               <span><Link href={`/forum/profile/${comment.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{comment.author.nickname}</Link> ({comment.author.reputation} pts)</span>
               <span>{new Date(comment.createdAt).toLocaleDateString('es-ES')}</span>
@@ -355,8 +410,10 @@ export default function ThreadDetailPage() {
                   border: "none",
                   color: "#0F62FE",
                   cursor: "pointer",
-                  fontSize: 12,
-                  fontWeight: 700
+                  fontSize: "clamp(11px, 2.5vw, 12px)",
+                  fontWeight: 700,
+                  padding: "clamp(4px, 1vw, 6px)",
+                  whiteSpace: "nowrap"
                 }}
               >
                 Responder
@@ -367,14 +424,16 @@ export default function ThreadDetailPage() {
                   style={{
                     background: "none",
                     border: "none",
-                  color: "#10B981",
-                  cursor: "pointer",
-                  fontSize: 12,
-                  fontWeight: 700
-                }}
-              >
-                Aceptar Respuesta
-              </button>
+                    color: "#10B981",
+                    cursor: "pointer",
+                    fontSize: "clamp(11px, 2.5vw, 12px)",
+                    fontWeight: 700,
+                    padding: "clamp(4px, 1vw, 6px)",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  Aceptar Respuesta
+                </button>
               )}
             </div>
           </div>
@@ -383,8 +442,52 @@ export default function ThreadDetailPage() {
 
       {/* Nested Replies */}
       {comment.replies && comment.replies.length > 0 && (
-        <div style={{ marginTop: 16 }}>
+        <div style={{ marginTop: "clamp(12px, 3vw, 16px)" }}>
           {comment.replies.map(reply => renderComment(reply, depth + 1))}
+        </div>
+      )}
+      
+      {/* Load Replies Button */}
+      {(!comment.replies || comment.replies.length === 0) && comment.replyCount && comment.replyCount > 0 && !loadedReplies.has(comment.id) && (
+        <div style={{ marginTop: 12 }}>
+          <button
+            onClick={() => fetchCommentReplies(comment.id)}
+            disabled={loadingReplies.has(comment.id)}
+            style={{
+              background: "transparent",
+              border: "1px solid #0F62FE",
+              color: "#0F62FE",
+              padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px)",
+              borderRadius: 6,
+              cursor: loadingReplies.has(comment.id) ? "wait" : "pointer",
+              fontSize: "clamp(11px, 2.5vw, 14px)",
+              fontWeight: 600,
+              transition: "all 0.2s ease",
+              width: "100%",
+              maxWidth: "100%",
+              textAlign: "center",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis"
+            }}
+            onMouseEnter={(e) => {
+              if (!loadingReplies.has(comment.id)) {
+                e.currentTarget.style.background = "#0F62FE"
+                e.currentTarget.style.color = "#fff"
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!loadingReplies.has(comment.id)) {
+                e.currentTarget.style.background = "transparent"
+                e.currentTarget.style.color = "#0F62FE"
+              }
+            }}
+          >
+            {loadingReplies.has(comment.id) 
+              ? "Cargando..." 
+              : `Ver ${comment.replyCount} ${comment.replyCount === 1 ? 'respuesta' : 'respuestas'}`
+            }
+          </button>
         </div>
       )}
     </div>
