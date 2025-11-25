@@ -249,15 +249,17 @@ export default function CashFlowPage() {
             grid-template-columns: 1fr !important;
           }
         }
-        /* Tablet/iPad - no gap, sidebar overlays */
+        /* Tablet/iPad - respect fixed right sidebar */
         @media (min-width: 768px) and (max-width: 1024px) {
           .cashflow-outer {
-            width: 100% !important;
-            max-width: 100% !important;
+            width: calc(100% - clamp(200px, 22vw, 260px)) !important;
+            max-width: calc(100% - clamp(200px, 22vw, 260px)) !important;
+            margin-right: clamp(200px, 22vw, 260px) !important;
+            padding: 0 !important;
           }
           .cashflow-container {
-            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
-            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            width: 100% !important;
+            max-width: 100% !important;
             padding: clamp(24px, 3vw, 40px) !important;
             margin-right: 0 !important;
           }
@@ -270,15 +272,17 @@ export default function CashFlowPage() {
             grid-template-columns: repeat(2, 1fr) !important;
           }
         }
-        /* Desktop - no gap, sidebar overlays */
+        /* Desktop - keep content in usable space (exclude fixed right sidebar) */
         @media (min-width: 1025px) {
           .cashflow-outer {
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-          .cashflow-container {
             width: calc(100% - clamp(240px, 25vw, 320px)) !important;
             max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            margin-right: clamp(240px, 25vw, 320px) !important;
+            padding: 0 !important;
+          }
+          .cashflow-container {
+            width: 100% !important;
+            max-width: 100% !important;
             padding: clamp(24px, 4vw, 40px) !important;
             margin-right: 0 !important;
           }

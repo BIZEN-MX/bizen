@@ -10,7 +10,6 @@ import { usePullToRefresh } from "@/hooks/usePullToRefresh"
 import { useSwipeGesture } from "@/hooks/useSwipeGesture"
 import PullToRefreshIndicator from "@/components/PullToRefreshIndicator"
 import { haptic } from "@/utils/hapticFeedback"
-import AgeVerificationModal from "@/components/forum/AgeVerificationModal"
 
 // Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
@@ -66,8 +65,6 @@ function ForumContent() {
   const [loadingData, setLoadingData] = useState(true)
   const [showTopicFilter, setShowTopicFilter] = useState(false)
   const topicFilterRef = useRef<HTMLDivElement>(null)
-  const [showAgeModal, setShowAgeModal] = useState(false)
-  const [ageVerified, setAgeVerified] = useState(false)
 
   useEffect(() => {
     const bodyEl = document.body
@@ -90,52 +87,8 @@ function ForumContent() {
       router.replace("/login")
       return
     }
-
-    // Check if age is verified
-    checkAgeVerification()
-  }, [user, loading, router])
-
-  const checkAgeVerification = async () => {
-    try {
-      const response = await fetch("/api/forum/verify-age")
-      
-      if (!response.ok) {
-        // If API error, allow access but show modal
-        console.error("Error checking age verification:", response.status)
-        setShowAgeModal(true)
-        // Allow threads to load even if there's an error
-        setAgeVerified(true)
-        return
-      }
-      
-      const data = await response.json()
-      
-      if (!data.ageVerified) {
-        setShowAgeModal(true)
-        // Allow threads to load even if modal is shown (user can verify later)
-        setAgeVerified(true)
-      } else {
-        setAgeVerified(true)
-      }
-    } catch (error) {
-      console.error("Error checking age verification:", error)
-      // If error, allow access and load threads
-      setShowAgeModal(true)
-      setAgeVerified(true)
-    }
-  }
-
-  const handleAgeVerified = () => {
-    setShowAgeModal(false)
-    setAgeVerified(true)
-    // fetchData will be called by the useEffect
-  }
-
-  useEffect(() => {
-    if (ageVerified && user && !loading) {
-      fetchData()
-    }
-  }, [selectedTopic, sortBy, ageVerified, user, loading])
+    fetchData()
+  }, [selectedTopic, sortBy, user, loading, router])
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -894,20 +847,6 @@ function ForumContent() {
                       onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} 
                       onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}
                     >{thread.author.nickname}</span> ({thread.author.reputation} pts)
-                    {thread.author.isMinor && (
-                      <span style={{
-                        marginLeft: 8,
-                        padding: "2px 8px",
-                        background: "#FEF3C7",
-                        color: "#92400E",
-                        borderRadius: 4,
-                        fontSize: 10,
-                        fontWeight: 700,
-                        border: "1px solid #FCD34D"
-                      }}>
-                        Menor de 18
-                      </span>
-                    )}
                     </span>
                     <span>{formatDate(thread.createdAt)}</span>
                     <span>{thread.commentCount} respuestas</span>
@@ -1028,10 +967,6 @@ function ForumContent() {
         }
       }
     `}</style>
-    <AgeVerificationModal 
-      isOpen={showAgeModal} 
-      onVerified={handleAgeVerified}
-    />
     </>
   )
 }

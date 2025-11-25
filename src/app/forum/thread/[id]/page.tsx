@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { CommentSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
-import AgeVerificationModal from "@/components/forum/AgeVerificationModal"
 
 interface ThreadDetail {
   id: string
@@ -75,8 +74,6 @@ export default function ThreadDetailPage() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [loadingReplies, setLoadingReplies] = useState<Set<string>>(new Set())
   const [loadedReplies, setLoadedReplies] = useState<Set<string>>(new Set())
-  const [showAgeModal, setShowAgeModal] = useState(false)
-  const [ageVerified, setAgeVerified] = useState(false)
 
   useEffect(() => {
     const bodyEl = document.body
@@ -96,44 +93,10 @@ export default function ThreadDetailPage() {
       router.replace("/login")
       return
     }
-
-    // Check if age is verified
-    checkAgeVerification()
-  }, [user, loading, router])
-
-  const checkAgeVerification = async () => {
-    try {
-      const response = await fetch("/api/forum/verify-age")
-      const data = await response.json()
-      
-      if (!data.ageVerified) {
-        setShowAgeModal(true)
-      } else {
-        setAgeVerified(true)
-        if (threadId) {
-          fetchThread()
-        }
-      }
-    } catch (error) {
-      console.error("Error checking age verification:", error)
-      // If error, allow access but show modal
-      setShowAgeModal(true)
-    }
-  }
-
-  const handleAgeVerified = () => {
-    setShowAgeModal(false)
-    setAgeVerified(true)
     if (threadId) {
       fetchThread()
     }
-  }
-
-  useEffect(() => {
-    if (ageVerified && threadId) {
-      fetchThread()
-    }
-  }, [threadId, ageVerified])
+  }, [user, loading, router, threadId])
 
   const fetchThread = async (skip = 0, limit = 20) => {
     try {
@@ -442,20 +405,6 @@ export default function ThreadDetailPage() {
             }}>
               <span>
                 <Link href={`/forum/profile/${comment.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{comment.author.nickname}</Link> ({comment.author.reputation} pts)
-                {comment.author.isMinor && (
-                  <span style={{
-                    marginLeft: 8,
-                    padding: "2px 8px",
-                    background: "#FEF3C7",
-                    color: "#92400E",
-                    borderRadius: 4,
-                    fontSize: 10,
-                    fontWeight: 700,
-                    border: "1px solid #FCD34D"
-                  }}>
-                    Menor de 18
-                  </span>
-                )}
               </span>
               <span>{new Date(comment.createdAt).toLocaleDateString('es-ES')}</span>
               <button
@@ -770,20 +719,6 @@ export default function ThreadDetailPage() {
           }}>
             <span>
               por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link>
-              {thread.author.isMinor && (
-                <span style={{
-                  marginLeft: 8,
-                  padding: "2px 8px",
-                  background: "#FEF3C7",
-                  color: "#92400E",
-                  borderRadius: 4,
-                  fontSize: 10,
-                  fontWeight: 700,
-                  border: "1px solid #FCD34D"
-                }}>
-                  Menor de 18
-                </span>
-              )}
             </span>
             <span>Nivel {thread.author.level}</span>
             <span>{thread.author.reputation} pts</span>
@@ -1124,10 +1059,6 @@ export default function ThreadDetailPage() {
         )}
       </main>
     </div>
-    <AgeVerificationModal 
-      isOpen={showAgeModal} 
-      onVerified={handleAgeVerified}
-    />
     </>
   )
 }

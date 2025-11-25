@@ -1858,31 +1858,10 @@ export default function CoursesPage() {
             margin-bottom: 0 !important;
           }
           
-          /* Ensure body can scroll on mobile */
-          body {
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            -webkit-overflow-scrolling: touch !important;
-            position: relative !important;
-            height: auto !important;
-            min-height: 100vh !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            background: #ffffff !important;
-            background-attachment: fixed !important;
-          }
-          
-          /* Ensure html can scroll on mobile */
+          /* Ensure body/html keep white background without changing scroll behavior */
+          body,
           html {
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow-x: hidden !important;
-            overflow-y: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            height: auto !important;
-            min-height: 100vh !important;
             background: #ffffff !important;
-            background-attachment: fixed !important;
           }
           
           /* Ensure main container doesn't cause horizontal scroll */
