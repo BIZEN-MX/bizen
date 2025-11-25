@@ -165,7 +165,7 @@ function ForumContent() {
     }
   }
 
-  // Pull-to-refresh hook
+  // Pull-to-refresh hook - DISABLED to prevent scroll interference
   const { isPulling, pullDistance, isRefreshing, attachPullListeners, refreshThreshold } = usePullToRefresh({
     onRefresh: async () => {
       haptic.medium()
@@ -173,7 +173,7 @@ function ForumContent() {
       haptic.success()
     },
     threshold: 80,
-    disabled: loadingData || loading
+    disabled: true // Disable pull-to-refresh to allow normal scrolling
   })
 
   // Swipe gestures for navigation

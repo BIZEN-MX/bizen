@@ -351,3 +351,20 @@ body > * {
   }
 }
 
+/* App Shell and Scroll Containers - White Background */
+.app-shell {
+  background-color: #ffffff !important;
+}
+
+.app-scroll {
+  background-color: #ffffff !important;
+}
+
+.app-main {
+  background-color: #ffffff !important;
+}
+
+html, body {
+  background-color: #ffffff !important;
+}
+
