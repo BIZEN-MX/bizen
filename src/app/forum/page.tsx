@@ -69,10 +69,8 @@ function ForumContent() {
   useEffect(() => {
     const bodyEl = document.body
     if (bodyEl) {
-      // Don't use fixed background on mobile - it causes scrolling issues
-      const isMobile = window.innerWidth <= 767
       bodyEl.style.background = "#ffffff"
-      bodyEl.style.backgroundAttachment = isMobile ? "scroll" : "fixed"
+      bodyEl.style.backgroundAttachment = "scroll"
     }
     return () => {
       bodyEl.style.backgroundImage = "none"
@@ -221,92 +219,44 @@ function ForumContent() {
       />
       <>
         <style>{`
-          /* Fix app-shell and app-scroll on mobile for forum */
+          /* Ensure forum-outer doesn't interfere with footer on mobile */
           @media (max-width: 767px) {
-            .app-shell,
-            .app-scroll,
-            .app-main {
-              width: 100% !important;
-              max-width: 100vw !important;
-              left: 0 !important;
-              right: 0 !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              transform: none !important;
-              background-color: #ffffff !important;
+            .forum-outer {
+              position: relative !important;
+              z-index: 1 !important;
+              overflow-x: hidden !important;
+              background: #ffffff !important;
+              min-height: 100vh !important;
+              padding-bottom: 0 !important;
+            }
+            
+            .forum-container {
+              padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+              position: relative !important;
+              z-index: 1 !important;
+            }
+            
+            /* Ensure footer stays above everything */
+            [data-mobile-bottom-nav] {
+              z-index: 10000 !important;
+              position: fixed !important;
             }
           }
           
-          /* Mobile - account for footer */
-          @media (max-width: 767px) {
-            /* Let app-scroll handle scrolling, not forum-outer */
-            .app-scroll {
-              overflow-y: auto !important;
-              overflow-x: hidden !important;
-              -webkit-overflow-scrolling: touch !important;
-              touch-action: pan-y !important;
-            }
-            
-            .forum-outer {
-              padding-bottom: 65px !important;
-              flex: 1 !important;
-              overflow-y: visible !important;
-              overflow-x: hidden !important;
-              height: auto !important;
-              min-height: 100% !important;
-              position: relative !important;
-              width: 100% !important;
-              max-width: 100vw !important;
-              left: 0 !important;
-              right: 0 !important;
-              touch-action: pan-y !important;
-              pointer-events: auto !important;
-            }
+          /* Tablet/iPad (768px-1160px) - sidebar overlays (narrow 160px) */
+          @media (min-width: 768px) and (max-width: 1160px) {
             .forum-container {
-              width: 100% !important;
-              max-width: 100% !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              overflow-y: visible !important;
-              overflow-x: hidden !important;
-              height: auto !important;
-              min-height: 100% !important;
-              touch-action: pan-y !important;
-              pointer-events: auto !important;
-            }
-            .forum-container main {
-              width: 100% !important;
-              max-width: 100% !important;
-              margin: 0 !important;
-              padding: clamp(16px, 4vw, 24px) !important;
-              box-sizing: border-box !important;
-              left: 0 !important;
-              right: 0 !important;
-              transform: none !important;
-            }
-          }
-          /* Tablet/iPad - no gap, sidebar overlays */
-          @media (min-width: 768px) and (max-width: 1024px) {
-            .forum-outer {
-              width: 100% !important;
-              max-width: 100% !important;
-            }
-            .forum-container {
-              width: calc(100% - clamp(240px, 25vw, 320px)) !important;
-              max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+              width: calc(100% - 160px) !important;
+              max-width: calc(100% - 160px) !important;
               margin-right: 0 !important;
               padding: clamp(24px, 3vw, 40px) !important;
             }
           }
-          /* Desktop - no gap, sidebar overlays */
-          @media (min-width: 1025px) {
-            .forum-outer {
-              width: 100% !important;
-              max-width: 100% !important;
-            }
+          /* Desktop (1161px+) - sidebar overlays (full width 280px) */
+          @media (min-width: 1161px) {
             .forum-container {
-              width: calc(100% - clamp(240px, 25vw, 320px)) !important;
-              max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+              width: calc(100% - 280px) !important;
+              max-width: calc(100% - 280px) !important;
               margin-right: 0 !important;
               padding: clamp(24px, 4vw, 40px) !important;
             }
@@ -317,19 +267,10 @@ function ForumContent() {
           flex: 1,
           fontFamily: "'Montserrat', sans-serif",
           background: "#ffffff",
-          backgroundAttachment: typeof window !== "undefined" && window.innerWidth <= 767 ? "scroll" : "fixed",
           width: "100%",
-          maxWidth: "100vw",
           boxSizing: "border-box",
-          overflowX: "hidden",
-          overflowY: typeof window !== "undefined" && window.innerWidth <= 767 ? "visible" : "auto",
-          WebkitOverflowScrolling: "touch",
-          left: 0,
-          right: 0,
-          margin: 0,
-          padding: 0,
-          touchAction: "pan-y",
-          pointerEvents: "auto"
+          minHeight: "100vh",
+          zIndex: 1
         }}>
           <div 
             ref={containerRef}
@@ -339,32 +280,16 @@ function ForumContent() {
               flex: 1,
               paddingTop: 40,
               paddingBottom: 80,
-              touchAction: "pan-y", // Allow vertical scrolling, enable gestures
-              overflowX: "hidden",
-              overflowY: "visible", // Don't make this scrollable, let parent handle it
               boxSizing: "border-box",
-              WebkitOverflowScrolling: "touch",
-              width: "100%",
-              maxWidth: "100%",
-              left: 0,
-              right: 0,
-              margin: 0,
-              pointerEvents: "auto"
+              width: "100%"
             }}
           >
         <main style={{ 
         position: "relative",
         margin: "0", 
         padding: "clamp(16px, 4vw, 40px)",
-        paddingRight: "clamp(16px, 4vw, 40px)",
-        paddingLeft: "clamp(16px, 4vw, 40px)",
         width: "100%",
-        maxWidth: "100%",
-        boxSizing: "border-box",
-        zIndex: 1,
-        left: 0,
-        right: 0,
-        transform: "none"
+        boxSizing: "border-box"
       }}>
         {/* Header */}
         <div style={{ 
@@ -919,52 +844,6 @@ function ForumContent() {
       }
       .mobile-topic-filter-btn {
         display: flex !important;
-      }
-      
-      /* Mobile specific styles */
-      @media (max-width: 767px) {
-        .forum-outer {
-              overflow-y: auto !important;
-          overflow-x: hidden !important;
-          -webkit-overflow-scrolling: touch !important;
-          flex: 1 !important;
-              min-height: 100vh !important;
-              min-height: 100dvh !important;
-              height: auto !important;
-              background-attachment: scroll !important;
-        }
-        /* Ensure container allows scroll */
-        .forum-container {
-          position: relative !important;
-          height: auto !important;
-              min-height: 100% !important;
-          flex: 1 !important;
-              overflow-y: auto !important;
-          overflow-x: hidden !important;
-          margin-right: 0 !important;
-          padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-          -webkit-overflow-scrolling: touch !important;
-        }
-        
-        /* Ensure app-scroll allows scrolling */
-        .app-scroll {
-          overflow-y: auto !important;
-          overflow-x: hidden !important;
-          -webkit-overflow-scrolling: touch !important;
-        }
-        
-        /* Ensure app-main allows scrolling */
-        .app-main {
-          overflow-y: visible !important;
-          overflow-x: hidden !important;
-        }
-        
-        /* Adjust main content padding on mobile */
-        main[style*="position: relative"] {
-          padding: 20px 16px !important;
-          max-width: 100% !important;
-          margin: 0 !important;
-        }
       }
     `}</style>
     </>

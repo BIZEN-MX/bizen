@@ -59,7 +59,7 @@ export default function FixedSidebar() {
         sidebar.style.setProperty('z-index', '10001', 'important') // Lower than hamburger button (10002)
         sidebar.style.setProperty('padding-top', '70px', 'important') // Extra padding to avoid hamburger button
         sidebar.style.setProperty('flex-direction', 'column', 'important')
-        sidebar.style.setProperty('background', 'linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)', 'important')
+        sidebar.style.setProperty('background', '#ffffff', 'important')
         sidebar.style.setProperty('padding', '70px 16px 32px 16px', 'important') // Extra padding at top (70px) to avoid hamburger button
         sidebar.style.setProperty('overflow-y', 'auto', 'important')
         sidebar.style.setProperty('overflow-x', 'hidden', 'important')
@@ -201,7 +201,7 @@ export default function FixedSidebar() {
         right: 0,
         width: "clamp(240px, 25vw, 320px)",
         height: "100vh",
-        background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+        background: "#ffffff",
         boxShadow: "-4px 0 20px rgba(0, 0, 0, 0.1)",
         zIndex: 1000,
         overflowY: "auto",
@@ -1027,7 +1027,7 @@ export default function FixedSidebar() {
             border-right: none !important;
             padding: 70px 12px 32px 12px !important; /* Horizontal padding for icon spacing */
             z-index: 10000 !important;
-            background: linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%) !important;
+            background: #ffffff !important;
             backdrop-filter: blur(20px) !important;
             box-shadow: -2px 0 20px rgba(0, 0, 0, 0.15) !important;
             flex-direction: column !important;
@@ -1102,7 +1102,7 @@ export default function FixedSidebar() {
             transition: transform 0.3s ease-in-out !important;
             display: flex !important;
             flex-direction: column !important;
-            background: linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%) !important;
+            background: #ffffff !important;
             backdrop-filter: blur(20px) !important;
             box-shadow: -2px 0 20px rgba(0, 0, 0, 0.15) !important;
             visibility: visible !important;

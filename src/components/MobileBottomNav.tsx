@@ -134,7 +134,8 @@ export default function MobileBottomNav() {
           left: 0,
           right: 0,
           height: "70px",
-          background: "linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%)",
+          background: "#ffffff",
+          backgroundColor: "#ffffff",
           borderTop: "2px solid rgba(15, 98, 254, 0.2)",
           boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.1)",
           zIndex: 10000, // Higher than FixedSidebar (1000) and GlobalLogo (1001)
@@ -629,6 +630,7 @@ export default function MobileBottomNav() {
         @media (max-width: 767px) {
           [data-mobile-bottom-nav] {
             display: flex !important;
+            background: #ffffff !important;
           }
           .mobile-nav-icon {
             font-size: 36px !important;
@@ -638,6 +640,12 @@ export default function MobileBottomNav() {
           [data-mobile-bottom-nav] {
             display: none !important;
           }
+        }
+        
+        /* Ensure white background on all devices */
+        [data-mobile-bottom-nav] {
+          background: #ffffff !important;
+          background-color: #ffffff !important;
         }
       `}</style>
     </>

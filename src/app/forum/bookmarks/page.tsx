@@ -122,7 +122,7 @@ export default function BookmarksPage() {
   return (
     <>
       <LoadingBar />
-      <div style={{
+      <div className="forum-bookmarks-outer" style={{
         position: "relative",
         minHeight: "100vh",
         paddingTop: 40,
@@ -131,14 +131,17 @@ export default function BookmarksPage() {
         background: "#ffffff",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        marginRight: "340px"
+        width: "100%",
+        maxWidth: "100vw",
+        boxSizing: "border-box"
       }}>
         <main style={{ 
           position: "relative",
+          width: "100%",
           maxWidth: "100%", 
-          margin: "0", 
-          padding: "40px",
-          paddingRight: "40px",
+          margin: "0 auto", 
+          padding: "clamp(24px, 4vw, 40px)",
+          boxSizing: "border-box",
           zIndex: 1
         }}>
           {/* Header */}
@@ -291,17 +294,25 @@ export default function BookmarksPage() {
                       </span>
                     </div>
 
-                    <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginTop: 12 }}>
-                      <span style={{ fontSize: 13, color: "#6B7280" }}>
+                    <div style={{ 
+                      display: "flex", 
+                      gap: 16, 
+                      flexWrap: "nowrap", 
+                      alignItems: "center", 
+                      marginTop: 12,
+                      overflowX: "auto",
+                      width: "100%"
+                    }}>
+                      <span style={{ fontSize: 13, color: "#6B7280", whiteSpace: "nowrap" }}>
                         {thread.topic.name}
                       </span>
-                      <span style={{ fontSize: 13, color: "#6B7280" }}>
+                      <span style={{ fontSize: 13, color: "#6B7280", whiteSpace: "nowrap" }}>
                         por {thread.author.nickname}
                       </span>
-                      <span style={{ fontSize: 13, color: "#6B7280" }}>
+                      <span style={{ fontSize: 13, color: "#6B7280", whiteSpace: "nowrap" }}>
                         {thread.commentCount} comentarios
                       </span>
-                      <span style={{ fontSize: 13, color: "#6B7280" }}>
+                      <span style={{ fontSize: 13, color: "#6B7280", whiteSpace: "nowrap" }}>
                         {formatDate(thread.createdAt)}
                       </span>
                       {thread.hasAcceptedAnswer && (
@@ -311,7 +322,8 @@ export default function BookmarksPage() {
                           background: "#10B98122",
                           color: "#10B981",
                           borderRadius: 4,
-                          fontWeight: 600
+                          fontWeight: 600,
+                          whiteSpace: "nowrap"
                         }}>
                           ✓ Resuelto
                         </span>
@@ -333,6 +345,22 @@ export default function BookmarksPage() {
           to {
             opacity: 1;
             transform: translateY(0);
+          }
+        }
+        
+        /* Responsive width adjustments - iPad (768px-1160px) */
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .forum-bookmarks-outer {
+            width: calc(100% - 160px) !important;
+            max-width: calc(100% - 160px) !important;
+          }
+        }
+        
+        /* Desktop (1161px+) */
+        @media (min-width: 1161px) {
+          .forum-bookmarks-outer {
+            width: calc(100% - 280px) !important;
+            max-width: calc(100% - 280px) !important;
           }
         }
       `}</style>

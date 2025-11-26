@@ -554,20 +554,20 @@ export default function LabPage() {
             }
           }
           
-          /* Tablet/iPad (768px-1024px): Account for right sidebar */
-          @media (min-width: 768px) and (max-width: 1024px) {
+          /* Tablet/iPad (768px-1160px): Account for right sidebar (narrow 160px) */
+          @media (min-width: 768px) and (max-width: 1160px) {
             .business-lab-main {
-              width: calc(100% - clamp(240px, 25vw, 320px)) !important;
-              max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+              width: calc(100% - 160px) !important;
+              max-width: calc(100% - 160px) !important;
               padding: clamp(24px, 3vw, 40px) !important;
             }
           }
           
-          /* Desktop (≥1025px): Account for right sidebar */
-          @media (min-width: 1025px) {
+          /* Desktop (≥1161px): Account for right sidebar (full width 280px) */
+          @media (min-width: 1161px) {
             .business-lab-main {
-              width: calc(100% - clamp(240px, 25vw, 320px)) !important;
-              max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+              width: calc(100% - 280px) !important;
+              max-width: calc(100% - 280px) !important;
               padding: clamp(24px, 4vw, 40px) !important;
             }
           }

@@ -2072,15 +2072,15 @@ function SettingsContent() {
           }
         }
         
-        /* Tablet/iPad - no gap, sidebar overlays */
-        @media (min-width: 768px) and (max-width: 1024px) {
+        /* Tablet/iPad (768px-1160px) - sidebar overlays (narrow 160px) */
+        @media (min-width: 768px) and (max-width: 1160px) {
           .configuracion-outer {
             width: 100% !important;
             max-width: 100% !important;
           }
           .settings-container {
-            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
-            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            width: calc(100% - 160px) !important;
+            max-width: calc(100% - 160px) !important;
             margin-right: 0 !important;
             padding: clamp(24px, 3vw, 40px) !important;
           }
@@ -2091,15 +2091,15 @@ function SettingsContent() {
           }
         }
         
-        /* Desktop - no gap, sidebar overlays */
-        @media (min-width: 1025px) {
+        /* Desktop (1161px+) - sidebar overlays (full width 280px) */
+        @media (min-width: 1161px) {
           .configuracion-outer {
             width: 100% !important;
             max-width: 100% !important;
           }
           .settings-container {
-            width: calc(100% - clamp(240px, 25vw, 320px)) !important;
-            max-width: calc(100% - clamp(240px, 25vw, 320px)) !important;
+            width: calc(100% - 280px) !important;
+            max-width: calc(100% - 280px) !important;
             margin-right: 0 !important;
             padding: clamp(24px, 4vw, 40px) !important;
           }
