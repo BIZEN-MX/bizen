@@ -396,3 +396,133 @@ html, body {
   }
 }
 
+/* ============================================
+   TABLET/IPAD LAYOUT FIX
+   Ensure ALL content uses full width accounting for fixed right sidebar
+   NO gap between content and sidebar!
+   ============================================ */
+
+/* iPad/Tablet (768px-1160px): Account for 104px right sidebar */
+@media (min-width: 768px) and (max-width: 1160px) {
+  /* Force body to use full width */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* All top-level containers must stretch to full width */
+  body > div,
+  body > main,
+  #__next,
+  #__next > div {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding-right: 104px !important;
+    padding-left: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Main elements and major containers */
+  main:not([data-mobile-bottom-nav]) {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-right: 104px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Divs with maxWidth that are centered - make them full width */
+  div[style*="maxWidth"],
+  div[style*="max-width"] {
+    max-width: 100% !important;
+  }
+
+  /* Pages with centered content containers */
+  div[style*="margin: 0 auto"],
+  div[style*="margin:0 auto"] {
+    margin-left: 0 !important;
+    padding-left: 16px !important;
+  }
+
+  /* Ensure sections and content wrappers use full width */
+  section,
+  article {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Landing page specific - ensure header and sections account for sidebar */
+  .main-page-container,
+  .main-header {
+    padding-right: calc(104px + 16px) !important;
+  }
+}
+
+/* Desktop (1161px+): Account for 280px right sidebar */
+@media (min-width: 1161px) {
+  /* Force body to use full width */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* All top-level containers must stretch to full width */
+  body > div,
+  body > main,
+  #__next,
+  #__next > div {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding-right: 280px !important;
+    padding-left: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Main elements and major containers */
+  main:not([data-mobile-bottom-nav]) {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-right: 280px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Divs with maxWidth that are centered - make them full width */
+  div[style*="maxWidth"],
+  div[style*="max-width"] {
+    max-width: 100% !important;
+  }
+
+  /* Pages with centered content containers */
+  div[style*="margin: 0 auto"],
+  div[style*="margin:0 auto"] {
+    margin-left: 0 !important;
+    padding-left: 16px !important;
+  }
+
+  /* Ensure sections and content wrappers use full width */
+  section,
+  article {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Landing page specific - ensure header and sections account for sidebar */
+  .main-page-container,
+  .main-header {
+    padding-right: calc(280px + 16px) !important;
+  }
+}
+

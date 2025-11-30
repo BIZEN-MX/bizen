@@ -1208,7 +1208,7 @@ export default function CoursesPage() {
                     const screenWidth = window.innerWidth
                     
                     if (screenWidth >= 768 && screenWidth <= 1160) {
-                      // iPad (768px-1160px): account for left panel (~200px) + right sidebar (~160px narrow) + padding
+                      // iPad (768px-1160px): account for left panel (~200px) + right sidebar (~104px narrow) + padding
                       const leftPanel = Math.min(200, Math.max(180, screenWidth * 0.18))
                       const rightSidebar = 160 // Narrow sidebar for iPad
                       availableWidth = screenWidth - leftPanel - rightSidebar - containerPadding - 32
@@ -1477,8 +1477,8 @@ export default function CoursesPage() {
         /* On tablet/iPad - account for sidebars */
         @media (min-width: 768px) and (max-width: 1160px) {
           div[style*="gap: clamp(16px, 3vw, 24px)"][style*="marginBottom: clamp(10px"] {
-            width: calc(100vw - clamp(180px, 18vw, 200px) - 160px) !important;
-            max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px) !important;
+            width: calc(100vw - clamp(180px, 18vw, 200px) - 104px) !important;
+            max-width: calc(100vw - clamp(180px, 18vw, 200px) - 104px) !important;
           }
         }
         
@@ -1576,7 +1576,7 @@ export default function CoursesPage() {
           main[style*="paddingLeft"],
           main[style*="padding-left"] {
             padding-left: clamp(180px, 18vw, 200px) !important;
-            padding-right: 160px !important; /* Narrow sidebar for iPad */
+            padding-right: 104px !important; /* Narrow sidebar for iPad */
             display: flex !important;
             justify-content: center !important;
           }
@@ -1584,7 +1584,7 @@ export default function CoursesPage() {
           /* Ensure island path container fits in available space on tablet (with left panel, narrow right sidebar) */
           div[style*="maxWidth: 800px"],
           div[style*="maxWidth: 800"] {
-            max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px - 32px) !important; /* Narrow sidebar 160px */
+            max-width: calc(100vw - clamp(180px, 18vw, 200px) - 104px - 32px) !important; /* Narrow sidebar 104px */
             width: 100% !important;
             margin: 0 auto !important;
             display: flex !important;
@@ -1595,19 +1595,19 @@ export default function CoursesPage() {
           /* Adjust sticky course bar for tablet - centered in usable space */
           .sticky-course-bar {
             left: clamp(180px, 18vw, 200px) !important;
-            right: 160px !important;
+            right: 104px !important;
             justify-content: center !important;
           }
           
           /* Constrain course bar content width to match learning path on tablet */
           .sticky-course-bar-content {
-            max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px - 64px) !important;
+            max-width: calc(100vw - clamp(180px, 18vw, 200px) - 104px - 64px) !important;
             width: auto !important;
           }
           
           /* Constrain preview panel to usable space on tablet */
           .lesson-preview-panel {
-            max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px - 48px) !important;
+            max-width: calc(100vw - clamp(180px, 18vw, 200px) - 104px - 48px) !important;
           }
         }
         
@@ -2273,10 +2273,10 @@ export default function CoursesPage() {
               display: none !important;
             }
             
-            /* iPad: adjust main padding for left panel + right sidebar (narrow 160px) */
+            /* iPad: adjust main padding for left panel + right sidebar (narrow 104px) */
             main {
               padding-left: clamp(180px, 18vw, 200px) !important;
-              padding-right: 160px !important; /* Narrow sidebar for iPad */
+              padding-right: 104px !important; /* Narrow sidebar for iPad */
               display: flex !important;
               justify-content: center !important;
               align-items: flex-start !important;
@@ -2285,7 +2285,7 @@ export default function CoursesPage() {
             /* Center islands container on iPad - centered in usable space */
             div[style*="maxWidth: 800px"],
             div[style*="maxWidth: 800"] {
-              max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px - 32px) !important; /* Narrow sidebar 160px */
+              max-width: calc(100vw - clamp(180px, 18vw, 200px) - 104px - 32px) !important; /* Narrow sidebar 104px */
               width: 100% !important;
               margin: 0 auto !important;
               overflow-x: hidden !important; /* Prevent horizontal overflow */
@@ -2298,19 +2298,19 @@ export default function CoursesPage() {
             /* Adjust sticky course bar for iPad - centered in usable space */
             .sticky-course-bar {
               left: clamp(180px, 18vw, 200px) !important;
-              right: 160px !important;
+              right: 104px !important;
               justify-content: center !important;
             }
             
             /* Constrain course bar content width to match learning path on iPad */
             .sticky-course-bar-content {
-              max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px - 64px) !important;
+              max-width: calc(100vw - clamp(180px, 18vw, 200px) - 104px - 64px) !important;
               width: auto !important;
             }
             
             /* Constrain preview panel to usable space on iPad */
             .lesson-preview-panel {
-              max-width: calc(100vw - clamp(180px, 18vw, 200px) - 160px - 48px) !important;
+              max-width: calc(100vw - clamp(180px, 18vw, 200px) - 104px - 48px) !important;
             }
             
             /* Container for lessons - prevent overflow on iPad */
