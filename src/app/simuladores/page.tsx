@@ -223,7 +223,7 @@ export default function SimulatorsPage() {
             e.currentTarget.style.transform = "translateY(0)"
             e.currentTarget.style.boxShadow = "0 2px 8px rgba(11,113,254,0.1)"
           }}>
-            📋 Mis Simulaciones Guardadas
+            Mis Simulaciones Guardadas
           </button>
         </Link>
       </div>
@@ -313,7 +313,7 @@ export default function SimulatorsPage() {
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
                 onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>
-                  Abrir Simulador →
+                  Abrir Simulador
                 </button>
               </div>
             </Link>

@@ -265,8 +265,16 @@ export default function WelcomePage() {
           </div>
 
           <style>{`
-        /* Prevent horizontal scroll on landing */
-        .main-page-container { overflow-x: hidden !important; }
+        /* Prevent horizontal scroll on landing - keep all content in frame */
+        html:has(.main-page-container),
+        body:has(.main-page-container) { overflow-x: hidden !important; max-width: 100vw !important; }
+        .main-page-container { overflow-x: hidden !important; width: 100% !important; max-width: 100vw !important; }
+        .main-page-container main { overflow-x: hidden !important; max-width: 100% !important; width: 100% !important; }
+        .main-page-container main > div { overflow-x: hidden !important; max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
+        .main-content-wrapper { overflow-x: hidden !important; max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
+        .hero-rectangles-wrapper { overflow-x: auto !important; overflow-y: visible !important; -webkit-overflow-scrolling: touch; }
+        .hero-top-block .hero-tagline,
+        .hero-top-block .hero-tagline-sub { max-width: 100% !important; overflow-wrap: break-word !important; word-wrap: break-word !important; }
         
         /* Override global footer styles from globals.css - ensure footer is NOT sticky */
         footer.main-page-footer,
@@ -286,16 +294,21 @@ export default function WelcomePage() {
           margin-top: 0 !important;
         }
 
-        /* Top bar: keep Crear cuenta button in view on all screen sizes */
+        /* Top bar: keep Crear cuenta button in view on all screen sizes, prevent overflow */
         .main-header {
           max-width: 100% !important;
+          width: 100% !important;
           box-sizing: border-box !important;
+          overflow-x: hidden !important;
         }
         .main-header .crear-cuenta-button {
           flex-shrink: 0 !important;
         }
         .main-header .header-bar-nav {
           min-width: 0 !important;
+          max-width: 100% !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch;
         }
 
         /* Nav links: not bold, hover color change */
@@ -318,6 +331,163 @@ export default function WelcomePage() {
           color: #fff !important;
           filter: brightness(1.05);
           transition: background 0.2s ease, filter 0.2s ease;
+        }
+
+        /* Tablet and desktop (768px+): show decorative accent, scale header and hero */
+        @media (min-width: 768px) {
+          .decorative-blue-accent {
+            display: block !important;
+          }
+          .main-header {
+            padding: 20px 28px !important;
+            gap: 28px !important;
+          }
+          .main-header a[href="/"] span {
+            font-size: 24px !important;
+          }
+          .main-header a[href="/"] img {
+            width: 52px !important;
+            height: auto !important;
+          }
+          .main-header .header-bar-nav {
+            padding: 14px 28px !important;
+            gap: 28px !important;
+          }
+          .main-header .header-bar-nav a,
+          .main-header .header-nav-link {
+            font-size: 18px !important;
+          }
+          .main-header .crear-cuenta-button {
+            padding: 15px 26px !important;
+            font-size: 18px !important;
+            border-radius: 11px !important;
+          }
+          .hero-top-block {
+            top: clamp(44px, 5vw, 64px) !important;
+            width: min(96vw, 1200px) !important;
+            max-width: 1200px !important;
+          }
+          .hero-tagline {
+            font-size: clamp(38px, 5vw, 58px) !important;
+          }
+          .hero-tagline-sub {
+            font-size: clamp(18px, 1.15rem, 21px) !important;
+            margin-top: 18px !important;
+          }
+          .hero-rectangles-wrapper {
+            margin-top: clamp(260px, 40vw, 380px) !important;
+            padding: 0 clamp(24px, 4vw, 40px) !important;
+          }
+          .hero-rect-row {
+            gap: clamp(28px, 4vw, 48px) !important;
+            margin-top: clamp(36px, 5vw, 56px) !important;
+          }
+          .hero-rect-card {
+            width: clamp(180px, 24vw, 300px) !important;
+            height: clamp(100px, 13vw, 165px) !important;
+          }
+          .hero-circle-label {
+            font-size: clamp(15px, 1.8vw, 20px) !important;
+          }
+        }
+
+        @media (min-width: 900px) {
+          .main-header {
+            padding: 21px 30px !important;
+            gap: 30px !important;
+          }
+          .main-header a[href="/"] span {
+            font-size: 26px !important;
+          }
+          .main-header a[href="/"] img {
+            width: 56px !important;
+          }
+          .main-header .header-bar-nav {
+            padding: 15px 32px !important;
+            gap: 30px !important;
+          }
+          .main-header .header-bar-nav a,
+          .main-header .header-nav-link {
+            font-size: 19px !important;
+          }
+          .main-header .crear-cuenta-button {
+            padding: 16px 28px !important;
+            font-size: 19px !important;
+          }
+          .hero-top-block {
+            top: clamp(46px, 5.5vw, 68px) !important;
+            width: min(96vw, 1240px) !important;
+            max-width: 1240px !important;
+          }
+          .hero-tagline {
+            font-size: clamp(40px, 5.2vw, 62px) !important;
+          }
+          .hero-tagline-sub {
+            font-size: clamp(19px, 1.2rem, 22px) !important;
+            margin-top: 20px !important;
+          }
+          .hero-rect-row {
+            gap: clamp(32px, 4.5vw, 56px) !important;
+            margin-top: clamp(38px, 5.5vw, 64px) !important;
+          }
+          .hero-rect-card {
+            width: clamp(200px, 25vw, 330px) !important;
+            height: clamp(112px, 14vw, 180px) !important;
+          }
+          .hero-circle-label {
+            font-size: clamp(16px, 1.9vw, 21px) !important;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .main-header {
+            padding: 22px 32px !important;
+            gap: 32px !important;
+          }
+          .main-header a[href="/"] span {
+            font-size: 27px !important;
+          }
+          .main-header a[href="/"] img {
+            width: 58px !important;
+          }
+          .main-header .header-bar-nav {
+            padding: 16px 34px !important;
+            gap: 32px !important;
+          }
+          .main-header .header-bar-nav a,
+          .main-header .header-nav-link {
+            font-size: 20px !important;
+          }
+          .main-header .crear-cuenta-button {
+            padding: 17px 30px !important;
+            font-size: 20px !important;
+          }
+          .hero-top-block {
+            top: clamp(48px, 6vw, 72px) !important;
+            width: min(96vw, 1280px) !important;
+            max-width: 1280px !important;
+          }
+          .hero-tagline {
+            font-size: clamp(42px, 5.5vw, 66px) !important;
+          }
+          .hero-tagline-sub {
+            font-size: clamp(19px, 1.25rem, 23px) !important;
+            margin-top: 20px !important;
+          }
+          .hero-rectangles-wrapper {
+            margin-top: clamp(280px, 41vw, 420px) !important;
+          }
+          .hero-rect-row {
+            gap: clamp(34px, 5vw, 60px) !important;
+            margin-top: clamp(42px, 6vw, 68px) !important;
+          }
+          .hero-rect-card {
+            width: clamp(210px, 26vw, 350px) !important;
+            height: clamp(118px, 14.5vw, 190px) !important;
+          }
+          .hero-circle-label {
+            font-size: clamp(17px, 2vw, 22px) !important;
+          }
         }
 
         /* Screens > 1100px: scale up top elements so it doesn't look empty */
@@ -1602,9 +1772,15 @@ function LandingContent() {
               border-color: rgba(15, 98, 254, 0.3) !important;
               box-shadow: 0 4px 16px rgba(15, 98, 254, 0.1) !important;
             }
-            @media (max-width: 768px) {
+            @media (max-width: 767px) {
               .problem-columns {
                 grid-template-columns: 1fr !important;
+              }
+            }
+            @media (min-width: 768px) {
+              .problem-columns {
+                grid-template-columns: 1fr 1fr !important;
+                gap: clamp(24px, 4vw, 36px) !important;
               }
             }
           `}</style>
@@ -1705,9 +1881,21 @@ function LandingContent() {
               border-color: rgba(15, 98, 254, 0.28) !important;
               box-shadow: 0 8px 32px rgba(15, 98, 254, 0.1) !important;
             }
-            @media (max-width: 768px) {
+            @media (max-width: 767px) {
               .how-it-works-steps {
                 grid-template-columns: 1fr !important;
+              }
+            }
+            @media (min-width: 768px) and (max-width: 899px) {
+              .how-it-works-steps {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: clamp(20px, 3vw, 28px) !important;
+              }
+            }
+            @media (min-width: 900px) {
+              .how-it-works-steps {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: clamp(24px, 4vw, 36px) !important;
               }
             }
           `}</style>
@@ -2412,6 +2600,22 @@ html {
   max-width:1400px;
   margin:0 auto;
   padding:0 clamp(16px, 4vw, 32px);
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+.main-page-container .section{
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+@media (min-width: 768px){
+  .container{ padding:0 clamp(24px, 4vw, 40px) !important; overflow-x: hidden !important; }
+  .section{ padding: clamp(72px, 10vw, 120px) 0 !important; }
+  .section-head{ max-width: 920px !important; }
+}
+@media (min-width: 1024px){
+  .container{ padding:0 clamp(32px, 4vw, 48px) !important; }
+  .section{ padding: clamp(80px, 10vw, 128px) 0 !important; }
 }
 
 .hero{padding-top: clamp(24px, 3vw, 48px)}
@@ -2427,15 +2631,22 @@ html {
 
 .card{background:var(--c-card); border:1px solid var(--c-border); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition);}
 .card:hover{transform:translateY(-2px); box-shadow:0 14px 34px rgba(0,0,0,.08); border-color:rgba(14,165,233,.35)}
-.grid-3{display:grid; gap:24px; grid-template-columns:1fr}
-.grid-6{display:grid; gap:16px; grid-template-columns:1fr 1fr}
-@media (min-width: 900px){ .grid-3{grid-template-columns:repeat(3, 1fr)} .grid-6{grid-template-columns:repeat(3, 1fr)} }
-/* Tablet and desktop gap adjustments */
+.grid-3{display:grid; gap:24px; grid-template-columns:1fr; min-width:0; overflow-x:hidden;}
+.grid-6{display:grid; gap:16px; grid-template-columns:1fr 1fr; min-width:0; overflow-x:hidden;}
+.main-page-container .grid-3 > *,
+.main-page-container .grid-6 > *,
+.main-page-container .steps > *,
+.main-page-container .plan{ min-width: 0 !important; max-width: 100% !important; }
 @media (min-width: 768px){
-  .grid-3{gap:32px;}
+  .grid-3{ grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; }
+  .grid-6{ grid-template-columns: repeat(2, 1fr) !important; gap: 20px !important; }
+}
+@media (min-width: 900px){
+  .grid-3{ grid-template-columns: repeat(3, 1fr) !important; gap: 32px !important; }
+  .grid-6{ grid-template-columns: repeat(3, 1fr) !important; gap: 24px !important; }
 }
 @media (min-width: 1025px){
-  .grid-3{gap:40px;}
+  .grid-3{ gap: 40px !important; }
 }
 
 @media (min-width: 1200px){ .grid-6{grid-template-columns:repeat(6, 1fr)} }
@@ -2444,7 +2655,8 @@ html {
 .step{display:grid; gap:8px; padding:20px}
 .step .step-icon{filter: drop-shadow(0 2px 8px rgba(14,165,233,.25))}
 .steps .step h3{margin-top:4px}
-@media (min-width: 900px){ .steps{grid-template-columns:repeat(3,1fr)} }
+@media (min-width: 768px){ .steps{ grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; } }
+@media (min-width: 900px){ .steps{ grid-template-columns: repeat(3, 1fr) !important; gap: 28px !important; } }
 
 .benefit{display:grid; gap:10px; text-align:left}
 .benefit .benefit-icon{width:40px; height:40px; display:grid; place-items:center; background:rgba(16,185,129,.15); color:#065F46; border-radius:12px; font-weight:900;}
@@ -2502,16 +2714,33 @@ html {
   border-color: rgba(15, 98, 254, 0.5);
 }
 
+.problem-columns,
+.how-it-works-steps,
+.plans-two-squares {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
 @media (max-width: 600px) {
   .plans-two-squares { grid-template-columns: 1fr !important; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .problem-columns { grid-template-columns: 1fr !important; }
 }
+@media (min-width: 768px) {
+  .problem-columns { grid-template-columns: 1fr 1fr !important; gap: clamp(24px, 4vw, 36px) !important; }
+}
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .how-it-works-steps { grid-template-columns: 1fr !important; }
+}
+@media (min-width: 768px) and (max-width: 899px) {
+  .how-it-works-steps { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (min-width: 900px) {
+  .how-it-works-steps { grid-template-columns: repeat(3, 1fr) !important; }
 }
 
 .cta-button:hover {
@@ -2837,9 +3066,9 @@ html {
     gap: clamp(40px, 5vw, 56px) !important;
   }
   
-  /* Contact section - can stay side by side on tablet */
+  /* Contact section - two columns on tablet (768px+) */
   #contacto .container > div {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: clamp(32px, 4vw, 40px) !important;
   }
   

@@ -21,12 +21,12 @@ interface SimulatorRun {
 }
 
 const simulatorNames: Record<string, string> = {
-  'monthly-budget': '💰 Presupuesto Mensual 50/30/20',
-  'savings-goal': '🎯 Meta de Ahorro',
-  'credit-card-payoff': '💳 Liquidación de Tarjeta',
-  'simple-loan': '🏦 Préstamo Simple',
-  'investment-comparison': '📈 Comparación de Inversiones',
-  'inflation-calculator': '📊 Calculadora de Inflación',
+  'monthly-budget': 'Presupuesto Mensual 50/30/20',
+  'savings-goal': 'Meta de Ahorro',
+  'credit-card-payoff': 'Liquidación de Tarjeta',
+  'simple-loan': 'Préstamo Simple',
+  'investment-comparison': 'Comparación de Inversiones',
+  'inflation-calculator': 'Calculadora de Inflación',
 };
 
 export default function HistoryPage() {
@@ -168,7 +168,7 @@ export default function HistoryPage() {
           WebkitTextFillColor: "transparent",
           backgroundClip: "text"
         }}>
-          📋 Mis Simulaciones Guardadas
+          Mis Simulaciones Guardadas
         </h1>
         <p style={{ fontSize: 18, color: "#64748b", margin: 0 }}>
           Revisa y administra tus simulaciones anteriores
@@ -347,7 +347,7 @@ export default function HistoryPage() {
                     e.currentTarget.style.color = "#ef4444"
                   }}
                 >
-                  🗑️
+                  Eliminar
                 </button>
               </div>
               
@@ -384,7 +384,7 @@ export default function HistoryPage() {
                     e.currentTarget.style.background = "white"
                     e.currentTarget.style.color = "#0B71FE"
                   }}>
-                    Ver Detalles →
+                    Ver Detalles
                   </button>
                 </Link>
               </div>

@@ -74,26 +74,37 @@ export default function SimulatorPage() {
   
   if (loading) {
     return (
-      <div style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', fontFamily: 'Montserrat, sans-serif' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            width: 48,
-            height: 48,
-            border: '4px solid #0F62FE22',
-            borderTop: '4px solid #0F62FE',
-            borderRadius: '50%',
-            margin: '0 auto 16px',
-            animation: 'spin 1s linear infinite'
-          }} />
-          <p style={{ color: '#666', fontSize: 16 }}>Cargando simulador...</p>
-        </div>
+      <>
         <style>{`
+          @media (max-width: 767px) {
+            .simulador-detail-loading { margin-left: 0 !important; width: 100% !important; }
+          }
+          @media (min-width: 768px) and (max-width: 1160px) {
+            .simulador-detail-loading { margin-left: 220px !important; width: calc(100% - 220px) !important; }
+          }
+          @media (min-width: 1161px) {
+            .simulador-detail-loading { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+          }
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
           }
         `}</style>
-      </div>
+        <div className="simulador-detail-loading" style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', fontFamily: 'Montserrat, sans-serif', marginLeft: 280, width: 'calc(100% - 280px)' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              width: 48,
+              height: 48,
+              border: '4px solid #0F62FE22',
+              borderTop: '4px solid #0F62FE',
+              borderRadius: '50%',
+              margin: '0 auto 16px',
+              animation: 'spin 1s linear infinite'
+            }} />
+            <p style={{ color: '#666', fontSize: 16 }}>Cargando simulador...</p>
+          </div>
+        </div>
+      </>
     )
   }
   
@@ -108,20 +119,58 @@ export default function SimulatorPage() {
   }
   
   return (
-    <main style={{
-      marginRight: "340px",
-      paddingTop: "40px",
-      paddingBottom: "40px",
-      paddingLeft: "40px",
-      paddingRight: "40px",
-      minHeight: "100vh",
-      background: "#ffffff",
-      fontFamily: "Montserrat, sans-serif",
-      boxSizing: "border-box" as const,
-      maxWidth: "calc(100vw - 340px)",
-      overflowX: "hidden",
-      overflowY: "visible"
-    }}>
+    <>
+      <style>{`
+        /* Mobile - full width, account for footer */
+        @media (max-width: 767px) {
+          .simulador-detail-outer {
+            padding-bottom: 65px !important;
+            min-height: calc(100vh - 65px) !important;
+          }
+          .simulador-detail-main {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding: clamp(16px, 4vw, 24px) !important;
+          }
+        }
+        /* Tablet/iPad (768px-1160px) - left sidebar 220px */
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .simulador-detail-outer { width: 100% !important; max-width: 100% !important; }
+          .simulador-detail-main {
+            width: calc(100% - 220px) !important;
+            max-width: calc(100% - 220px) !important;
+            margin-left: 220px !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        /* Desktop (1161px+) - left sidebar 280px */
+        @media (min-width: 1161px) {
+          .simulador-detail-outer { width: 100% !important; max-width: 100% !important; }
+          .simulador-detail-main {
+            width: calc(100% - 280px) !important;
+            max-width: calc(100% - 280px) !important;
+            margin-left: 280px !important;
+            margin-right: 0 !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
+      <div className="simulador-detail-outer" style={{ width: '100%', flex: 1, background: '#ffffff', fontFamily: 'Montserrat, sans-serif', overflowX: 'hidden', overflowY: 'auto', boxSizing: 'border-box' }}>
+        <main className="simulador-detail-main" style={{
+          paddingTop: "40px",
+          paddingBottom: "40px",
+          paddingLeft: "40px",
+          paddingRight: "40px",
+          minHeight: "100vh",
+          background: "#ffffff",
+          fontFamily: "Montserrat, sans-serif",
+          boxSizing: "border-box" as const,
+          overflowX: "hidden",
+          overflowY: "visible"
+        }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <Link href="/simuladores" style={{ textDecoration: "none" }}>
@@ -151,7 +200,6 @@ export default function SimulatorPage() {
         </Link>
         
         <div style={{ display: "flex", gap: 16, alignItems: "start", marginBottom: 20 }}>
-          <div style={{ fontSize: 56 }}>{simulator.icon}</div>
           <div style={{ flex: 1 }}>
             <h1 style={{
               fontSize: 42,
@@ -179,7 +227,7 @@ export default function SimulatorPage() {
           marginBottom: 24
         }}>
           <p style={{ fontSize: 14, color: "#1e40af", lineHeight: 1.6, margin: 0 }}>
-            <strong>⚠️ Propósito Educativo:</strong> Este simulador es una herramienta de
+            <strong>Propósito educativo:</strong> Este simulador es una herramienta de
             aprendizaje. Los resultados son aproximaciones y no constituyen asesoría financiera
             profesional. Siempre consulta con un experto para decisiones financieras importantes.
           </p>
@@ -199,7 +247,7 @@ export default function SimulatorPage() {
         textAlign: "center"
       }}>
         <p style={{ fontSize: 14, color: "#78350F", lineHeight: 1.7, margin: "0 0 12px" }}>
-          💡 <strong>Tip:</strong> Usa el botón "Cargar Valores de Prueba" para explorar
+          <strong>Tip:</strong> Usa el botón "Cargar Valores de Prueba" para explorar
           rápidamente el simulador. Luego personaliza con tus propios datos.
         </p>
         <p style={{ fontSize: 14, color: "#78350F", lineHeight: 1.7, margin: 0 }}>
@@ -210,6 +258,8 @@ export default function SimulatorPage() {
           .
         </p>
       </div>
-    </main>
+        </main>
+      </div>
+    </>
   );
 }

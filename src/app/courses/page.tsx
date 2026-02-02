@@ -19,6 +19,8 @@ interface Lesson {
   hasQuiz: boolean
   quizId?: string
   score?: number
+  /** 1-3 stars when completed; undefined when not completed */
+  stars?: number
   courseId: string
   courseTitle: string
 }
@@ -319,6 +321,11 @@ export default function CoursesPage() {
                             (!isFirstLesson && !previousCompleted) ||
                             (shouldLockForGuest || (!user && lessonNumber > maxGuestLessons))
             
+            const isCompleted = completedLessons.includes(lessonId)
+            const score = isCompleted ? Math.floor(Math.random() * 30) + 70 : undefined
+            const stars = isCompleted && score != null
+              ? (score >= 90 ? 3 : score >= 70 ? 2 : 1)
+              : undefined
             return {
               id: lessonId,
               title: lessonData.title,
@@ -326,11 +333,12 @@ export default function CoursesPage() {
               contentType: lessonTypes[lessonIndex % 3]!,
               order: lessonIndex + 1,
               courseOrder: courseData.order,
-              isCompleted: completedLessons.includes(lessonId),
+              isCompleted,
               isLocked: isLocked,
               hasQuiz: lessonIndex % 2 === 0,
               quizId: lessonIndex % 2 === 0 ? `q${lessonId}` : undefined,
-              score: completedLessons.includes(lessonId) ? Math.floor(Math.random() * 30) + 70 : undefined,
+              score,
+              stars,
               courseId: courseData.id,
               courseTitle: courseData.title
             }
@@ -630,6 +638,25 @@ export default function CoursesPage() {
                       </div>
                       <div style={{ fontSize: 17, fontWeight: 700, color: "#111", lineHeight: 1.3, overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", width: "100%", wordBreak: "break-word" }} title={lesson.title}>
                         {lesson.title}
+                      </div>
+                      {/* 3 stars: grey when not completed, 1-3 filled when completed */}
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, marginTop: 8, flexShrink: 0 }} aria-label={lesson.isCompleted && lesson.stars != null ? `${lesson.stars} de 3 estrellas` : "Sin completar"}>
+                        {[1, 2, 3].map((i) => {
+                          const filled = lesson.isCompleted && lesson.stars != null && i <= lesson.stars
+                          return (
+                            <span key={i} style={{ display: "inline-flex", color: filled ? "#F59E0B" : "#D1D5DB" }} aria-hidden>
+                              {filled ? (
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ display: "block" }}>
+                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                </svg>
+                              ) : (
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: "block" }}>
+                                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                </svg>
+                              )}
+                            </span>
+                          )
+                        })}
                       </div>
                     </div>
                     <div style={{ flexShrink: 0, marginTop: 14, width: "100%" }}>

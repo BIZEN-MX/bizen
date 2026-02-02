@@ -173,6 +173,7 @@ export default function FixedSidebar() {
   const simulatorsActive = isActivePath("/simuladores")
   const progressActive = isActivePath("/progress")
   const forumActive = isActivePath("/forum")
+  const rankingActive = isActivePath("/ranking")
   const profileActive = isActivePath("/profile")
   const settingsActive = isActivePath("/configuracion")
 
@@ -593,6 +594,44 @@ export default function FixedSidebar() {
                 }}
               >
                 <span className="nav-item-label">Foro</span>
+              </button>
+
+              <button
+                data-bizen-tour-menu-item="ranking"
+                onClick={() => navigateTo("/ranking")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px",
+                  background: isCompactSidebar ? "transparent" : (rankingActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: 14,
+                  fontWeight: rankingActive ? 700 : 600,
+                  textAlign: "left",
+                  color: rankingActive ? "#93C5FD" : "#fff",
+                  ...compactButtonOverrides(rankingActive)
+                }}
+                onMouseEnter={(e) => {
+                  if (!isCompactSidebar) {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                    e.currentTarget.style.color = "#93C5FD"
+                    e.currentTarget.style.transform = "translateX(-4px)"
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isCompactSidebar) {
+                    e.currentTarget.style.background = rankingActive ? "rgba(255,255,255,0.15)" : "transparent"
+                    e.currentTarget.style.color = rankingActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.transform = "translateX(0)"
+                  }
+                }}
+              >
+                <span className="nav-item-label">Ranking</span>
               </button>
               </>
               )}
