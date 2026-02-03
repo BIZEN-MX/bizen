@@ -26,16 +26,16 @@ export function ProgressBar({ currentStep, totalSteps, className = "" }: Progres
       aria-label={`Lesson progress: step ${currentStep} of ${totalSteps}`}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs md:text-sm font-medium text-slate-400">
-          Step {currentStep} of {totalSteps}
+        <span className="text-xl md:text-2xl font-semibold text-slate-700">
+          Paso {currentStep} de {totalSteps}
         </span>
-        <span className="text-xs md:text-sm font-medium text-slate-400">
+        <span className="text-xl md:text-2xl font-semibold text-slate-600">
           {Math.round(percentage)}%
         </span>
       </div>
-      <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+      <div className="w-full h-3 md:h-3.5 bg-slate-200 rounded-full overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out rounded-full"
+          className="h-full bg-slate-600 transition-all duration-300 ease-out rounded-full"
           style={{ width: `${percentage}%` }}
         />
       </div>

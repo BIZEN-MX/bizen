@@ -21,6 +21,8 @@ export function OrderStep({
   )
   const [hasEvaluated, setHasEvaluated] = useState(false)
   const hasPlayedSound = useRef(false)
+  const onAnsweredRef = useRef(onAnswered)
+  onAnsweredRef.current = onAnswered
 
   useEffect(() => {
     // Check if items are in correct order
@@ -28,10 +30,10 @@ export function OrderStep({
       const item = step.items.find((it) => it.id === id)
       return item && item.correctOrder === index + 1
     })
-    
+
     if (!hasEvaluated) {
       setHasEvaluated(true)
-      
+
       // Play sound only once
       if (!hasPlayedSound.current) {
         if (isCorrect) {
@@ -42,13 +44,15 @@ export function OrderStep({
         hasPlayedSound.current = true
       }
     }
-    
-    onAnswered({ 
-      isCompleted: true, 
+
+    // Use ref so parent re-renders (new onAnswered) don't retrigger this effect and cause a loop
+    onAnsweredRef.current({
+      isCompleted: true,
       isCorrect,
-      answerData: { orderedItemIds: [...orderedItemIds] }
+      answerData: { orderedItemIds: [...orderedItemIds] },
     })
-  }, [orderedItemIds, step.items, onAnswered, hasEvaluated])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hasEvaluated omitted to avoid double run when we set it
+  }, [orderedItemIds, step.items])
 
   const moveItem = (fromIndex: number, toIndex: number) => {
     const newOrder = [...orderedItemIds]
@@ -75,8 +79,8 @@ export function OrderStep({
     }
     const isCorrect = item.correctOrder === currentIndex + 1
     return isCorrect
-      ? "bg-green-600/20 border-green-500 ring-2 ring-green-500"
-      : "bg-red-600/20 border-red-500 ring-2 ring-red-500"
+      ? "bg-emerald-100 border-emerald-600"
+      : "bg-red-100 border-red-600"
   }
 
   return (
@@ -95,13 +99,13 @@ export function OrderStep({
               className={`${sharedStyles.orderItem} ${getItemStyle(item, index)} flex items-center justify-between gap-3 md:gap-4 transition-all duration-300`}
             >
               <div className="flex items-center gap-3 md:gap-4 flex-1">
-                <span className="text-slate-400 font-bold text-lg md:text-xl w-8 md:w-10 text-center">
+                <span className="text-slate-600 font-bold text-3xl md:text-4xl w-12 md:w-14 text-center">
                   {index + 1}
                 </span>
-                <span className="text-base md:text-lg flex-1">{item.label}</span>
+                <span className="text-xl md:text-2xl lg:text-3xl flex-1">{item.label}</span>
                 {hasEvaluated && (
-                  <span className="text-2xl ml-2">
-                    {item.correctOrder === index + 1 ? '✓' : '✗'}
+                  <span className="text-2xl md:text-3xl ml-2">
+                    {item.correctOrder === index + 1 ? "✓" : "✗"}
                   </span>
                 )}
               </div>
@@ -110,7 +114,7 @@ export function OrderStep({
                   <button
                     onClick={() => moveUp(index)}
                     disabled={index === 0}
-                    className="p-2 rounded-lg bg-slate-600 hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     aria-label="Move up"
                   >
                     <svg
@@ -130,7 +134,7 @@ export function OrderStep({
                   <button
                     onClick={() => moveDown(index)}
                     disabled={index === orderedItemIds.length - 1}
-                    className="p-2 rounded-lg bg-slate-600 hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     aria-label="Move down"
                   >
                     <svg

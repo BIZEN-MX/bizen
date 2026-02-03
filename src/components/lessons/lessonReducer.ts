@@ -28,6 +28,9 @@ export type LessonAction =
 export function lessonReducer(state: LessonState, action: LessonAction): LessonState {
   switch (action.type) {
     case "INIT": {
+      const firstStep = action.steps[0]
+      const firstStepAutoComplete =
+        firstStep?.stepType === "info" || firstStep?.stepType === "summary"
       return {
         originalSteps: action.steps,
         allSteps: action.steps,
@@ -35,7 +38,7 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         answersByStepId: {},
         incorrectSteps: [],
         hasBuiltReviewSteps: false,
-        isContinueEnabled: false,
+        isContinueEnabled: !!firstStepAutoComplete,
       }
     }
 
@@ -77,6 +80,9 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
 
     case "NEXT_STEP": {
       const nextIndex = state.currentStepIndex + 1
+      const nextStep = state.allSteps[nextIndex]
+      const nextStepAutoComplete =
+        nextStep?.stepType === "info" || nextStep?.stepType === "summary"
       const isLastOriginalStep = nextIndex >= state.originalSteps.length
 
       // If we're at the end of original steps and haven't built review steps yet
@@ -92,7 +98,7 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
       return {
         ...state,
         currentStepIndex: nextIndex,
-        isContinueEnabled: false,
+        isContinueEnabled: !!nextStepAutoComplete,
       }
     }
 
@@ -155,7 +161,7 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         return {
           ...state,
           currentStepIndex: summaryStepIndex,
-          isContinueEnabled: false,
+          isContinueEnabled: true,
         }
       }
       return state

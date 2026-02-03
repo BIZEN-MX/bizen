@@ -1,61 +1,92 @@
 "use client"
 
 import { useRouter, useParams } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine } from "@/components/lessons"
-import { lesson1Steps } from "@/data/lessons/lesson1"
+import { getStepsForLesson } from "@/data/lessons/registry"
 
 /**
  * Interactive Lesson Page
- * 
+ *
  * Route: /learn/[courseId]/[unitId]/[lessonId]/interactive
- * 
- * This page replaces the old lesson implementation with the new Duolingo-style
- * lesson engine. It maps lesson IDs to their corresponding lesson data.
- * 
- * Example routes:
- * - /learn/course-1/unit-1/l1-1/interactive → Lesson 1: "Historia del dinero"
+ *
+ * Lesson content is registered in src/data/lessons/registry.ts.
+ * Add new lessons in src/data/lessons/lessonN.ts and register them in registry.ts.
  */
 export default function InteractiveLessonPage() {
   const router = useRouter()
   const params = useParams()
-  const { courseId, unitId, lessonId } = params
+  const { user } = useAuth()
+  const { lessonId } = params
+  const lessonIdStr = lessonId as string
 
-  // Map lesson IDs to their lesson data
-  const getLessonSteps = () => {
-    switch (lessonId) {
-      case "l1-1":
-        return lesson1Steps
-      // Add more lessons here as they're created
-      // case "l1-2":
-      //   return lesson2Steps
-      default:
-        // Fallback: return lesson1Steps for now
-        // In production, you might want to show an error or redirect
-        console.warn(`Lesson ${lessonId} not found, using lesson1Steps as fallback`)
-        return lesson1Steps
+  const lessonSteps = getStepsForLesson(lessonIdStr)
+
+  const handleComplete = async () => {
+    if (lessonIdStr) {
+      if (user) {
+        const { createClient } = await import("@/lib/supabase/client")
+        const supabase = createClient()
+        const existing = (user.user_metadata?.completedLessons as string[] | undefined) || []
+        if (!existing.includes(lessonIdStr)) {
+          const completedLessons = [...existing, lessonIdStr]
+          await supabase.auth.updateUser({
+            data: { ...user.user_metadata, completedLessons },
+          })
+          // Refresh session so /courses sees updated completedLessons and progress bar updates
+          await supabase.auth.refreshSession()
+        }
+      } else {
+        const stored = typeof window !== "undefined" ? localStorage.getItem("guestCompletedLessons") : null
+        const existing: string[] = stored ? JSON.parse(stored) : []
+        if (!existing.includes(lessonIdStr)) {
+          const completedLessons = [...existing, lessonIdStr]
+          if (typeof window !== "undefined") {
+            localStorage.setItem("guestCompletedLessons", JSON.stringify(completedLessons))
+          }
+        }
+      }
     }
-  }
-
-  const handleComplete = () => {
-    // Navigate back to the lesson/course menu or next lesson
-    // You can customize this based on your navigation structure
-    const backPath = `/learn/${courseId}/${unitId}`
-    router.push(backPath)
+    router.push("/courses")
   }
 
   const handleExit = () => {
-    // Navigate back to the lesson/course menu
-    const backPath = `/learn/${courseId}/${unitId}`
-    router.push(backPath)
+    router.push("/courses")
   }
 
-  const lessonSteps = getLessonSteps()
-
   return (
-    <LessonEngine
-      lessonSteps={lessonSteps}
-      onComplete={handleComplete}
-      onExit={handleExit}
-    />
+    <>
+      <style>{`
+        /* Mobile - full width */
+        @media (max-width: 767px) {
+          .lesson-interactive-outer {
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding-bottom: 65px !important;
+          }
+        }
+        /* Tablet (768px–1160px) - sidebar 220px */
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .lesson-interactive-outer {
+            margin-left: 220px !important;
+            width: calc(100% - 220px) !important;
+          }
+        }
+        /* Desktop (1161px+) - sidebar 280px */
+        @media (min-width: 1161px) {
+          .lesson-interactive-outer {
+            margin-left: 280px !important;
+            width: calc(100% - 280px) !important;
+          }
+        }
+      `}</style>
+      <div className="lesson-interactive-outer" style={{ minHeight: "100vh", boxSizing: "border-box" }}>
+        <LessonEngine
+          lessonSteps={lessonSteps}
+          onComplete={handleComplete}
+          onExit={handleExit}
+        />
+      </div>
+    </>
   )
 }

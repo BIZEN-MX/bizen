@@ -46,7 +46,7 @@ export function ImageChoiceStep({
     }
     const isCorrect = imageId === step.correctImageId
     return isCorrect
-      ? "bg-green-600/20 border-green-500 ring-2 ring-green-500"
+      ? "bg-emerald-600/25 border-emerald-500 ring-2 ring-emerald-400"
       : "bg-red-600/20 border-red-500 ring-2 ring-red-500"
   }
 
@@ -71,8 +71,8 @@ export function ImageChoiceStep({
             >
               <div className={sharedStyles.imageContainer}>
                 {/* Placeholder for image - replace with actual image loading */}
-                <div className="w-full h-32 md:h-40 bg-slate-700 rounded-lg flex items-center justify-center relative">
-                  <span className="text-slate-400 text-sm">Image: {imageOption.imageId}</span>
+                <div className="w-full h-32 md:h-40 bg-slate-200 rounded-lg flex items-center justify-center relative">
+                  <span className="text-slate-600 text-sm">Image: {imageOption.imageId}</span>
                   {showFeedback && isSelected && (
                     <span className="absolute top-2 right-2 text-3xl bg-slate-900/80 rounded-full w-10 h-10 flex items-center justify-center">
                       {isCorrect ? '✓' : '✗'}

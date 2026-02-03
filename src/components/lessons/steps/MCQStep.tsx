@@ -51,35 +51,36 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected }:
           // Determine button style based on selection and correctness
           let buttonClasses = sharedStyles.option
           if (isSelected && hasFeedback) {
-            // Override with feedback colors
-            buttonClasses = isCorrect 
-              ? "p-4 md:p-5 rounded-xl bg-green-600/30 border-2 border-green-500 ring-2 ring-green-500 transition-all duration-300 text-left" 
-              : "p-4 md:p-5 rounded-xl bg-red-600/30 border-2 border-red-500 ring-2 ring-red-500 transition-all duration-300 text-left"
+            buttonClasses = isCorrect
+              ? "p-5 md:p-6 rounded-2xl bg-emerald-100 border-2 border-emerald-600 text-emerald-900 transition-all duration-300 text-left"
+              : "p-5 md:p-6 rounded-2xl bg-red-100 border-2 border-red-600 text-red-900 transition-all duration-300 text-left"
           } else if (isSelected) {
             buttonClasses = `${sharedStyles.option} ${sharedStyles.optionSelected}`
           }
-          
+
           return (
             <button
               key={option.id}
               onClick={() => handleSelect(option.id)}
               disabled={hasFeedback && isSelected}
               className={`${buttonClasses} ${
-                hasFeedback && isSelected ? 'cursor-default opacity-100' : 'cursor-pointer'
+                hasFeedback && isSelected ? "cursor-default opacity-100" : "cursor-pointer"
               }`}
             >
               <div className="flex items-center justify-between w-full">
-                <span className="text-base md:text-lg text-left flex-1">{option.label}</span>
+                <span className="text-xl md:text-2xl lg:text-3xl text-left flex-1">{option.label}</span>
                 {isSelected && hasFeedback && (
-                  <span className="ml-3 text-2xl">
-                    {isCorrect ? '✓' : '✗'}
+                  <span className="ml-3 text-2xl md:text-3xl">
+                    {isCorrect ? "✓" : "✗"}
                   </span>
                 )}
               </div>
               {isSelected && hasFeedback && option.explanation && (
-                <p className={`mt-2 text-sm md:text-base text-left ${
-                  isCorrect ? 'text-green-300' : 'text-red-300'
-                }`}>
+                <p
+                  className={`mt-3 text-xl md:text-2xl text-left ${
+                    isCorrect ? "text-emerald-800" : "text-red-800"
+                  }`}
+                >
                   {option.explanation}
                 </p>
               )}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Card from "../../components/ui/card"
@@ -123,12 +124,26 @@ export default function ProgressPage() {
         // No certificates API yet, so set empty array
         setCertificates([])
 
+        // Fetch streak and points from user stats API
+        let currentStreak = 0
+        let totalPoints = 0
+        try {
+          const statsRes = await fetch("/api/user/stats")
+          if (statsRes.ok) {
+            const statsData = await statsRes.json()
+            currentStreak = statsData.currentStreak ?? 0
+            totalPoints = statsData.totalPoints ?? statsData.xp ?? 0
+          }
+        } catch {
+          // keep 0
+        }
+
         // Set real stats
         setStats({
           coursesEnrolled: coursesEnrolled,
           lessonsCompleted: lessonsCompleted,
-          currentStreak: 0, // Not available in current API
-          totalPoints: 0 // Not available in current API
+          currentStreak,
+          totalPoints
         })
       } catch (error) {
         console.error("Error fetching progress:", error)
@@ -269,7 +284,7 @@ export default function ProgressPage() {
         fontFamily: "Montserrat, sans-serif"
       }}>
         {/* Header */}
-        <div style={{ marginBottom: 40 }}>
+        <div style={{ marginBottom: 24 }}>
           <h1 style={{ 
             margin: 0, 
             fontSize: "clamp(28px, 6vw, 36px)", 
@@ -281,6 +296,31 @@ export default function ProgressPage() {
           <p style={{ margin: "8px 0 0", color: "#374151", fontSize: "clamp(14px, 3vw, 16px)", fontWeight: 600 }}>
             Revisa tus logros y certificados
           </p>
+        </div>
+
+        {/* Streak below header - left aligned */}
+        <div style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 32,
+          padding: "14px 22px",
+          background: "rgba(255, 255, 255, 0.9)",
+          borderRadius: 16,
+          border: "2px solid rgba(59, 130, 246, 0.25)",
+          boxShadow: "0 4px 20px rgba(59, 130, 246, 0.12)",
+          width: "fit-content"
+        }}>
+          <div style={{ position: "relative", width: 72, height: 72, flexShrink: 0 }}>
+            <Image src="/streak.png" alt="" fill sizes="72px" style={{ objectFit: "contain" }} />
+          </div>
+          <div>
+            <div style={{ fontSize: 28, fontWeight: 800, color: "#1E40AF", lineHeight: 1.2 }}>{stats?.currentStreak ?? 0}</div>
+            <div style={{ fontSize: 14, color: "#6B7280", fontWeight: 600 }}>
+              {stats?.currentStreak === 1 ? "día de racha" : "días de racha"}
+            </div>
+          </div>
         </div>
 
         {/* Stats Section - Only show real stats */}

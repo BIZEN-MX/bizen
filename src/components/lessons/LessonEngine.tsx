@@ -89,36 +89,51 @@ export function LessonEngine({ lessonSteps, onComplete, onExit }: LessonEnginePr
   const handleContinue = useCallback(() => {
     if (!state.isContinueEnabled) return
 
-    const isLastOriginalStep = state.currentStepIndex === state.originalSteps.length - 1
+    const nextIndex = state.currentStepIndex + 1
+    const nextStep = state.originalSteps[nextIndex]
+    const nextStepIsSummary = nextStep?.stepType === "summary"
     const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
 
     if (isLastStep) {
-      // Lesson complete
+      // Lesson complete (e.g. finished summary or last review step)
       onComplete?.()
-    } else if (isLastOriginalStep && !state.hasBuiltReviewSteps) {
-      // We're on the last original step - move forward and build review steps
-      dispatch({ type: "NEXT_STEP" })
-      // The useEffect will handle building review steps or going to summary
+    } else if (nextStepIsSummary && !state.hasBuiltReviewSteps) {
+      // One step before summary: show review steps or jump to summary (don't advance past array)
+      if (state.incorrectSteps.length > 0) {
+        dispatch({ type: "BUILD_REVIEW_STEPS" })
+      } else {
+        dispatch({ type: "GO_TO_SUMMARY" })
+      }
     } else {
       dispatch({ type: "NEXT_STEP" })
     }
-  }, [state.isContinueEnabled, state.currentStepIndex, state.allSteps, state.originalSteps.length, state.hasBuiltReviewSteps, onComplete])
+  }, [state.isContinueEnabled, state.currentStepIndex, state.allSteps, state.originalSteps, state.hasBuiltReviewSteps, state.incorrectSteps.length, onComplete])
 
   const currentStep = state.allSteps[state.currentStepIndex]
-  if (!currentStep) {
+  // Transient state: we're past last original step but haven't built review/summary yet (should not happen after fix above)
+  const pendingReviewOrSummary = state.currentStepIndex >= state.originalSteps.length && !state.hasBuiltReviewSteps
+  if (!currentStep && !pendingReviewOrSummary) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <p className="text-xl">Lesson complete!</p>
+          <p className="text-3xl md:text-4xl font-bold text-slate-900">¡Lección completada!</p>
           {onComplete && (
             <button
               onClick={onComplete}
-              className="mt-4 px-6 py-3 bg-blue-600 rounded-xl hover:bg-blue-700"
+              className="mt-4 px-6 py-3 text-xl md:text-2xl bg-slate-800 text-white rounded-xl hover:bg-slate-900"
             >
-              Finish
+              Finalizar
             </button>
           )}
         </div>
+      </div>
+    )
+  }
+  // Brief loading while effect/state catches up (should be rare)
+  if (!currentStep) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <p className="text-xl md:text-2xl text-slate-600">Cargando...</p>
       </div>
     )
   }
@@ -272,8 +287,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit }: LessonEnginePr
       }
     >
       {isReviewStep && (
-        <div className="mb-4 p-3 bg-blue-600/20 border border-blue-500 rounded-lg">
-          <p className="text-sm md:text-base font-semibold text-blue-300">
+        <div className="mb-4 p-3 bg-amber-100 border border-amber-400 rounded-lg">
+          <p className="text-xl md:text-2xl font-semibold text-amber-900">
             📚 Review: Try this question again
           </p>
         </div>

@@ -1,0 +1,192 @@
+import { LessonStep } from "@/types/lessonTypes"
+
+/**
+ * Course 1 - Lesson 2: "¿Cómo gana valor?"
+ *
+ * Duolingo-style: why money has value (scarcity, usefulness, trust, acceptance).
+ * All text in Spanish for BIZEN.
+ */
+export const lesson2Steps: LessonStep[] = [
+  {
+    id: "s1_intro",
+    stepType: "info",
+    title: "¿Cómo gana valor?",
+    body: "Un billete es solo papel. Una moneda es solo metal. ¿Por qué aceptamos que tienen valor? Hoy verás qué hace que el dinero valga y por qué la gente lo usa para intercambiar.",
+    description: "Introducción al valor del dinero",
+    isAssessment: false,
+  },
+  {
+    id: "s2_info_aceptacion",
+    stepType: "info",
+    title: "La clave: todos lo aceptan",
+    body: "El dinero vale porque muchas personas acuerdan aceptarlo. Si tú crees que un billete vale y la tienda también, entonces sirve para comprar. Ese acuerdo colectivo es la base del valor del dinero.",
+    description: "Aceptación colectiva",
+    isAssessment: false,
+  },
+  {
+    id: "s3_mcq_por_que_valor",
+    stepType: "mcq",
+    isAssessment: true,
+    title: "¿Por qué tiene valor el dinero?",
+    question: "¿Qué hace que un billete o una moneda tengan valor?",
+    options: [
+      {
+        id: "o1",
+        label: "Porque muchas personas acuerdan aceptarlo para intercambiar.",
+        isCorrect: true,
+        explanation: "El valor viene del acuerdo colectivo: si todos lo aceptan, funciona como dinero.",
+      },
+      {
+        id: "o2",
+        label: "Porque el papel o el metal son muy caros de fabricar.",
+        isCorrect: false,
+        explanation: "El costo del material es bajo; el valor viene de la confianza y la aceptación.",
+      },
+      {
+        id: "o3",
+        label: "Porque el gobierno lo imprime y ya tiene valor automático.",
+        isCorrect: false,
+        explanation: "El gobierno lo respalda, pero el valor real depende de que la gente lo acepte y confíe.",
+      },
+    ],
+    recordIncorrect: true,
+  },
+  {
+    id: "s4_info_escasez",
+    stepType: "info",
+    title: "Escasez y cantidad",
+    body: "Si hubiera billetes por todas partes y sin control, cada uno valdría menos. Cuando el dinero es limitado y predecible, la gente confía más en su valor. La escasez ayuda a que el dinero mantenga su poder de compra.",
+    description: "Escasez y confianza",
+    isAssessment: false,
+  },
+  {
+    id: "s5_true_false_escasez",
+    stepType: "true_false",
+    isAssessment: true,
+    title: "Escasez del dinero",
+    statement: "Si se imprimiera mucho más dinero sin control, cada billete valdría menos.",
+    correctValue: true,
+    explanation: "Más cantidad del mismo dinero, sin respaldo ni límite, hace que cada unidad valga menos (inflación).",
+    recordIncorrect: true,
+  },
+  {
+    id: "s6_info_confianza",
+    stepType: "info",
+    title: "Confianza en quien lo emite",
+    body: "Confiamos en el dinero porque creemos que quien lo emite (por ejemplo el banco central) actuará con responsabilidad. Si perdemos esa confianza, la gente deja de querer ese dinero y pierde valor.",
+    description: "Confianza institucional",
+    isAssessment: false,
+  },
+  {
+    id: "s7_mcq_confianza",
+    stepType: "mcq",
+    isAssessment: true,
+    title: "¿Qué pasa si se pierde la confianza?",
+    question: "Si la gente deja de confiar en quien emite el dinero, ¿qué sucede?",
+    options: [
+      {
+        id: "o1",
+        label: "El dinero pierde valor o la gente deja de aceptarlo.",
+        isCorrect: true,
+        explanation: "Sin confianza, la gente prefiere no usar ese dinero y su valor cae.",
+      },
+      {
+        id: "o2",
+        label: "El dinero vale más porque hay menos en circulación.",
+        isCorrect: false,
+        explanation: "La falta de confianza no aumenta el valor; normalmente lo reduce.",
+      },
+      {
+        id: "o3",
+        label: "Nada; el valor del dinero no depende de la confianza.",
+        isCorrect: false,
+        explanation: "La confianza es fundamental para que el dinero conserve su valor.",
+      },
+    ],
+    recordIncorrect: true,
+  },
+  {
+    id: "s8_order_factores",
+    stepType: "order",
+    isAssessment: true,
+    title: "Ordena los factores",
+    question: "Ordena de la forma más lógica: qué hace que el dinero tenga valor.",
+    items: [
+      { id: "item1", label: "La gente acepta usarlo", correctOrder: 1 },
+      { id: "item2", label: "Hay confianza en quien lo emite", correctOrder: 2 },
+      { id: "item3", label: "La cantidad no crece sin control", correctOrder: 3 },
+      { id: "item4", label: "Sirve para comprar y vender", correctOrder: 4 },
+    ],
+    recordIncorrect: true,
+  },
+  {
+    id: "s9_match_conceptos",
+    stepType: "match",
+    isAssessment: true,
+    title: "Relaciona concepto con idea",
+    question: "Une cada concepto con la idea correcta.",
+    leftItems: [
+      { id: "left1", label: "Aceptación" },
+      { id: "left2", label: "Escasez" },
+      { id: "left3", label: "Confianza" },
+    ],
+    rightItems: [
+      { id: "right1", label: "Que muchas personas usen y acepten el dinero" },
+      { id: "right2", label: "Que la cantidad de dinero no crezca sin control" },
+      { id: "right3", label: "Creer en quien emite el dinero (ej. banco central)" },
+    ],
+    correctPairs: [
+      { leftId: "left1", rightId: "right1" },
+      { leftId: "left2", rightId: "right2" },
+      { leftId: "left3", rightId: "right3" },
+    ],
+    recordIncorrect: true,
+  },
+  {
+    id: "s10_fill_blanks",
+    stepType: "fill_blanks",
+    isAssessment: true,
+    title: "Completa la idea",
+    question: "Completa la frase con las palabras correctas.",
+    textParts: [
+      { type: "text", content: "El dinero tiene valor porque la gente lo " },
+      { type: "blank", id: "b1", correctOptionId: "opt1" },
+      { type: "text", content: ", confía en quien lo " },
+      { type: "blank", id: "b2", correctOptionId: "opt3" },
+      { type: "text", content: " y su cantidad no crece sin " },
+      { type: "blank", id: "b3", correctOptionId: "opt5" },
+      { type: "text", content: "." },
+    ],
+    options: [
+      { id: "opt1", label: "acepta", isCorrect: true },
+      { id: "opt2", label: "rechaza", isCorrect: false },
+      { id: "opt3", label: "emite", isCorrect: true },
+      { id: "opt4", label: "guarda", isCorrect: false },
+      { id: "opt5", label: "control", isCorrect: true },
+      { id: "opt6", label: "papel", isCorrect: false },
+    ],
+    recordIncorrect: true,
+  },
+  {
+    id: "s11_multi_select",
+    stepType: "multi_select",
+    isAssessment: true,
+    title: "¿Qué ayuda a que el dinero tenga valor?",
+    question: "Selecciona todo lo que ayuda a que el dinero mantenga su valor.",
+    options: [
+      { id: "o1", label: "Que muchas personas lo acepten", isCorrect: true },
+      { id: "o2", label: "Que haya confianza en quien lo emite", isCorrect: true },
+      { id: "o3", label: "Que la cantidad no crezca sin control", isCorrect: true },
+      { id: "o4", label: "Que el billete sea de un color bonito", isCorrect: false },
+      { id: "o5", label: "Que solo una persona lo use", isCorrect: false },
+    ],
+    recordIncorrect: true,
+  },
+  {
+    id: "s12_summary",
+    stepType: "summary",
+    isAssessment: false,
+    title: "Lo que aprendí hoy",
+    body: "El dinero tiene valor porque la gente lo acepta, confía en quien lo emite y su cantidad no crece sin control. Sin aceptación, confianza y cierta escasez, el dinero perdería su poder de compra. Por eso es importante que los que emiten dinero actúen con responsabilidad.",
+  },
+]

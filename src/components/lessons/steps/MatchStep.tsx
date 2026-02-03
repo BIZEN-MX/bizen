@@ -18,6 +18,8 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [] }: Ma
   )
   const [hasEvaluated, setHasEvaluated] = useState(false)
   const hasPlayedSound = useRef(false)
+  const onAnsweredRef = useRef(onAnswered)
+  onAnsweredRef.current = onAnswered
 
   useEffect(() => {
     // Check if all pairs are matched
@@ -31,9 +33,9 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [] }: Ma
             match.leftId === correctPair.leftId && match.rightId === correctPair.rightId
         )
       )
-      
+
       setHasEvaluated(true)
-      
+
       // Play sound only once
       if (!hasPlayedSound.current) {
         if (isCorrect) {
@@ -43,14 +45,15 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [] }: Ma
         }
         hasPlayedSound.current = true
       }
-      
-      onAnswered({ 
-        isCompleted: true, 
+
+      onAnsweredRef.current({
+        isCompleted: true,
         isCorrect,
-        answerData: { matches: [...matches] }
+        answerData: { matches: [...matches] },
       })
     }
-  }, [matches, step.leftItems, step.correctPairs, onAnswered, hasEvaluated])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- onAnswered omitted to avoid infinite loop
+  }, [matches, step.leftItems, step.correctPairs, hasEvaluated])
 
   const handleLeftClick = (leftId: string) => {
     if (selectedLeftId === leftId) {
@@ -86,7 +89,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [] }: Ma
     }
     const isCorrect = isMatchCorrect(leftId, rightId)
     return isCorrect
-      ? "bg-green-600/20 border-green-500 ring-2 ring-green-500"
+      ? "bg-emerald-600/25 border-emerald-500 ring-2 ring-emerald-400"
       : "bg-red-600/20 border-red-500 ring-2 ring-red-500"
   }
 
@@ -98,7 +101,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [] }: Ma
       <div className={sharedStyles.matchContainer}>
         {/* Left Items */}
         <div className="space-y-3 md:space-y-4">
-          <h4 className="text-sm md:text-base font-semibold text-slate-400 mb-3">
+          <h4 className="text-xl md:text-2xl font-semibold text-slate-600 mb-3">
             Match these:
           </h4>
           {step.leftItems.map((leftItem) => {
@@ -114,7 +117,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [] }: Ma
                 } ${hasEvaluated ? 'cursor-default' : 'cursor-pointer'}`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-base md:text-lg">{leftItem.label}</span>
+                  <span className="text-xl md:text-2xl lg:text-3xl">{leftItem.label}</span>
                   {hasEvaluated && matchedRightId && (
                     <span className="text-2xl ml-2">
                       {isMatchCorrect(leftItem.id, matchedRightId) ? '✓' : '✗'}
@@ -128,7 +131,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [] }: Ma
 
         {/* Right Items */}
         <div className="space-y-3 md:space-y-4">
-          <h4 className="text-sm md:text-base font-semibold text-slate-400 mb-3">
+          <h4 className="text-xl md:text-2xl font-semibold text-slate-600 mb-3">
             With these:
           </h4>
           {step.rightItems.map((rightItem) => {
@@ -144,7 +147,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [] }: Ma
                 } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-base md:text-lg">{rightItem.label}</span>
+                  <span className="text-xl md:text-2xl lg:text-3xl">{rightItem.label}</span>
                   {hasEvaluated && isMatched && matchedLeftId && (
                     <span className="text-2xl ml-2">
                       {isMatchCorrect(matchedLeftId, rightItem.id) ? '✓' : '✗'}

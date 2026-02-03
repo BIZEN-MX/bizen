@@ -46,7 +46,10 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([])
   const [loadingData, setLoadingData] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
-  
+  const [lessonModalLesson, setLessonModalLesson] = useState<Lesson | null>(null)
+  const [streak, setStreak] = useState<number>(0)
+  const [refreshKey, setRefreshKey] = useState(0)
+
   // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => {
@@ -289,38 +292,48 @@ export default function CoursesPage() {
           }
         ]
 
+        // On localhost, unlock all lessons/courses so you can test any lesson
+        const isLocalhost =
+          typeof window !== "undefined" &&
+          (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+
         // Count total completed lessons for lock logic
         const totalCompletedLessons = completedLessons.length
-        
+
         // For unauthenticated users, lock all lessons after the 3rd one
         const maxGuestLessons = 3
         const shouldLockForGuest = !user && totalCompletedLessons >= maxGuestLessons
-        
+
         // Build courses with lessons
         const allCourses: Course[] = coursesData.map((courseData, courseIndex) => {
-          const courseIsLocked = courseIndex > 0 && !completedCourses.includes(coursesData[courseIndex - 1]!.id)
-          
+          const courseIsLocked =
+            !isLocalhost &&
+            courseIndex > 0 &&
+            !completedCourses.includes(coursesData[courseIndex - 1]!.id)
+
           const lessons: Lesson[] = courseData.lessons.map((lessonData, lessonIndex) => {
             const lessonId = `l${courseData.order}-${lessonIndex + 1}`
             const lessonTypes = ["reading", "video", "exercise"]
             const isFirstLesson = lessonIndex === 0
             const previousLessonId = lessonIndex > 0 ? `l${courseData.order}-${lessonIndex}` : null
             const previousCompleted = previousLessonId ? completedLessons.includes(previousLessonId) : true
-            
+
             // Calculate lesson number across all courses for guest limit
             let lessonNumber = 0
             for (let i = 0; i < courseIndex; i++) {
               lessonNumber += coursesData[i]!.lessons.length
             }
             lessonNumber += lessonIndex + 1
-            
-            // Lock lesson if:
+
+            // Lock lesson if (skip all locks on localhost for testing):
             // 1. Course is locked, OR
             // 2. Previous lesson not completed, OR
             // 3. Guest user and lesson is after the 3rd one
-            const isLocked = courseIsLocked || 
-                            (!isFirstLesson && !previousCompleted) ||
-                            (shouldLockForGuest || (!user && lessonNumber > maxGuestLessons))
+            const isLocked =
+              !isLocalhost &&
+              (courseIsLocked ||
+                (!isFirstLesson && !previousCompleted) ||
+                (shouldLockForGuest || (!user && lessonNumber > maxGuestLessons)))
             
             const isCompleted = completedLessons.includes(lessonId)
             const score = isCompleted ? Math.floor(Math.random() * 30) + 70 : undefined
@@ -358,6 +371,17 @@ export default function CoursesPage() {
         })
         
         setCourses(allCourses)
+
+        // Fetch streak (consecutive days user has used the app)
+        try {
+          const res = await fetch("/api/user/stats")
+          if (res.ok) {
+            const data = await res.json()
+            setStreak(data.currentStreak ?? 0)
+          }
+        } catch {
+          setStreak(0)
+        }
         
       } catch (error) {
         console.error("Error fetching courses:", error)
@@ -367,7 +391,18 @@ export default function CoursesPage() {
     }
 
     fetchCoursesData()
-  }, [user, loading, router])
+  }, [user, loading, router, refreshKey])
+
+  // Refetch when user returns to tab so progress bar reflects latest completions
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === "visible" && user && !loading) {
+        setRefreshKey((k) => k + 1)
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibility)
+    return () => document.removeEventListener("visibilitychange", onVisibility)
+  }, [user, loading])
 
   // Set body and html background for this page
   useEffect(() => {
@@ -482,7 +517,7 @@ export default function CoursesPage() {
       data-bizen-tour="courses"
       style={{ 
         flex: 1,
-        paddingTop: "clamp(24px, 4vw, 40px)",
+        paddingTop: "clamp(8px, 1.5vw, 16px)",
         paddingBottom: "clamp(40px, 8vw, 80px)",
         paddingLeft: "16px",
         paddingRight: "16px",
@@ -496,7 +531,7 @@ export default function CoursesPage() {
         boxSizing: "border-box",
         width: "100%"
       }} className="courses-main-content">
-        {/* Course squares + lessons list */}
+        {/* Same width as course bars (800px) - streak right-aligned, then course list */}
             <div style={{
           width: "100%",
           maxWidth: "800px",
@@ -510,6 +545,89 @@ export default function CoursesPage() {
           alignItems: "stretch",
           gap: 0
         }}>
+          {/* Top row: Start | course squares | Finish line | Streak */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            marginBottom: 12,
+            flexWrap: "wrap",
+            width: "100%"
+          }}>
+            {/* Left block: Start + squares + Finish (centered in available space) */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, flex: "1 1 auto", minWidth: 0 }}>
+              {/* Start */}
+              <div style={{
+                fontSize: 13,
+                fontWeight: 800,
+                color: "#6B7280",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                flexShrink: 0
+              }}>
+                Inicio
+              </div>
+              {/* One square per course */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                {courses.map((course) => {
+                  const isCourseComplete = course.lessons.length > 0 && course.lessons.every((l) => l.isCompleted)
+                  return (
+                    <div
+                      key={course.id}
+                      style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: 8,
+                        flexShrink: 0,
+                        background: isCourseComplete ? "#2563EB" : "#E5E7EB",
+                        border: isCourseComplete ? "none" : "2px solid #D1D5DB",
+                        transition: "background 0.2s ease"
+                      }}
+                      title={`${course.title}: ${isCourseComplete ? "Completado" : "En progreso"}`}
+                    />
+                  )
+                })}
+              </div>
+              {/* Finish line */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                flexShrink: 0,
+                marginLeft: 8
+              }}>
+                <div style={{
+                  width: 4,
+                  height: 36,
+                  borderRadius: 2,
+                  background: "linear-gradient(90deg, #2563EB 0%, #1D4ED8 100%)",
+                  boxShadow: "0 0 0 2px rgba(37, 99, 235, 0.3)"
+                }} />
+                <span style={{ fontSize: 13, fontWeight: 800, color: "#1E40AF", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Meta
+                </span>
+              </div>
+            </div>
+            {/* Streak (right) */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginRight: 48,
+              flexShrink: 0
+            }}>
+              <div style={{ position: "relative", width: 72, height: 72, flexShrink: 0 }}>
+                <Image src="/streak.png" alt="" fill sizes="72px" style={{ objectFit: "contain" }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: "#1E40AF", lineHeight: 1.2 }}>{streak}</div>
+                <div style={{ fontSize: 14, color: "#6B7280", fontWeight: 600 }}>
+                  {streak === 1 ? "día de racha" : "días de racha"}
+                </div>
+              </div>
+            </div>
+          </div>
           {(() => {
             let nextLessonId: string | null = null
             for (const c of courses) {
@@ -520,9 +638,31 @@ export default function CoursesPage() {
                 break
               }
             }
-            return courses.map((course) => (
+            const courseBarBlues = [
+              "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+              "linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%)",
+              "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
+              "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+              "linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%)",
+              "linear-gradient(135deg, #1E40AF 0%, #1E3A8A 100%)"
+            ]
+            const courseBarShadow = [
+              "0 4px 14px rgba(59, 130, 246, 0.35)",
+              "0 4px 14px rgba(14, 165, 233, 0.35)",
+              "0 4px 14px rgba(99, 102, 241, 0.35)",
+              "0 4px 14px rgba(37, 99, 235, 0.35)",
+              "0 4px 14px rgba(29, 78, 216, 0.35)",
+              "0 4px 14px rgba(30, 64, 175, 0.35)"
+            ]
+            return courses.map((course) => {
+              const barBg = course.isLocked ? "linear-gradient(135deg, #E5E7EB 0%, #F3F4F6 100%)" : (courseBarBlues[(course.order - 1) % courseBarBlues.length])
+              const barShadow = course.isLocked ? "0 2px 8px rgba(0,0,0,0.06)" : (courseBarShadow[(course.order - 1) % courseBarShadow.length])
+              const completedInCourse = course.lessons.filter((l) => l.isCompleted).length
+              const totalInCourse = course.lessons.length
+              const courseProgressPercent = totalInCourse > 0 ? Math.round((completedInCourse / totalInCourse) * 100) : 0
+              return (
+            <React.Fragment key={course.id}>
             <div
-              key={course.id}
               id={`course-${course.id}`}
               style={{
                 marginBottom: "clamp(32px, 6vw, 48px)",
@@ -533,45 +673,67 @@ export default function CoursesPage() {
                 alignItems: "stretch"
               }}
             >
-              {/* Course square: number + title */}
+              {/* Course square: number + title + progress bar */}
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: 16,
+                  flexDirection: "column",
                   padding: "clamp(16px, 3vw, 24px)",
-                  background: course.isLocked ? "linear-gradient(135deg, #E5E7EB 0%, #F3F4F6 100%)" : "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+                  paddingBottom: 14,
+                  background: barBg,
                   borderRadius: 12,
-                  boxShadow: course.isLocked ? "0 2px 8px rgba(0,0,0,0.06)" : "0 4px 14px rgba(59, 130, 246, 0.35)",
+                  boxShadow: barShadow,
                   border: course.isLocked ? "2px solid #D1D5DB" : "2px solid rgba(255,255,255,0.3)",
                   marginBottom: 16
                 }}
               >
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 10 }}>
+                  <div
+                    style={{
+                      width: "clamp(48px, 10vw, 64px)",
+                      height: "clamp(48px, 10vw, 64px)",
+                      minWidth: "clamp(48px, 10vw, 64px)",
+                      minHeight: "clamp(48px, 10vw, 64px)",
+                      borderRadius: 10,
+                      background: course.isLocked ? "#9CA3AF" : "rgba(255,255,255,0.25)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "clamp(18px, 4vw, 24px)",
+                      fontWeight: 800,
+                      color: course.isLocked ? "#6B7280" : "#fff"
+                    }}
+                  >
+                    {course.order}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "clamp(12px, 2vw, 14px)", fontWeight: 600, color: course.isLocked ? "#6B7280" : "rgba(255,255,255,0.9)", marginBottom: 2 }}>
+                      {t.courses.course} {course.order}
+                    </div>
+                    <div style={{ fontSize: "clamp(16px, 3.5vw, 20px)", fontWeight: 800, color: course.isLocked ? "#374151" : "#fff", lineHeight: 1.2 }}>
+                      {course.title}
+                    </div>
+                  </div>
+                </div>
+                {/* Course progress bar */}
                 <div
                   style={{
-                    width: "clamp(48px, 10vw, 64px)",
-                    height: "clamp(48px, 10vw, 64px)",
-                    minWidth: "clamp(48px, 10vw, 64px)",
-                    minHeight: "clamp(48px, 10vw, 64px)",
-                    borderRadius: 10,
-                    background: course.isLocked ? "#9CA3AF" : "rgba(255,255,255,0.25)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "clamp(18px, 4vw, 24px)",
-                    fontWeight: 800,
-                    color: course.isLocked ? "#6B7280" : "#fff"
+                    width: "100%",
+                    height: 8,
+                    borderRadius: 4,
+                    background: course.isLocked ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.35)",
+                    overflow: "hidden"
                   }}
                 >
-                  {course.order}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: "clamp(12px, 2vw, 14px)", fontWeight: 600, color: course.isLocked ? "#6B7280" : "rgba(255,255,255,0.9)", marginBottom: 2 }}>
-                    {t.courses.course} {course.order}
-                  </div>
-                  <div style={{ fontSize: "clamp(16px, 3.5vw, 20px)", fontWeight: 800, color: course.isLocked ? "#374151" : "#fff", lineHeight: 1.2 }}>
-                    {course.title}
-                  </div>
+                  <div
+                    style={{
+                      width: `${courseProgressPercent}%`,
+                      height: "100%",
+                      borderRadius: 4,
+                      background: course.isLocked ? "#9CA3AF" : "rgba(255,255,255,0.95)",
+                      transition: "width 0.3s ease"
+                    }}
+                  />
                 </div>
               </div>
 
@@ -592,12 +754,16 @@ export default function CoursesPage() {
                 }}
               >
                 {course.lessons.map((lesson) => {
-                  const isNextToComplete = lesson.id === nextLessonId
                   const isFirstLessonCover = course.id === "course-1" && lesson.id === "l1-1"
+                  const isCardClickable = !lesson.isLocked
                   return (
                   <div
                     key={lesson.id}
-                    className={`lesson-square-card ${isNextToComplete ? "lesson-breathing" : ""}`}
+                    role={isCardClickable ? "button" : undefined}
+                    tabIndex={isCardClickable ? 0 : undefined}
+                    onKeyDown={isCardClickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setLessonModalLesson(lesson) } } : undefined}
+                    onClick={isCardClickable ? () => setLessonModalLesson(lesson) : undefined}
+                    className="lesson-square-card"
                     style={{
                       width: 260,
                       minWidth: 260,
@@ -613,7 +779,7 @@ export default function CoursesPage() {
                       border: lesson.isLocked ? "2px solid #E5E7EB" : "2px solid rgba(59, 130, 246, 0.3)",
                       boxSizing: "border-box",
                       scrollSnapAlign: "start",
-                      animation: isNextToComplete ? "lesson-breathe 3s ease-in-out infinite" : undefined
+                      cursor: isCardClickable ? "pointer" : undefined
                     }}
                   >
                     <div style={{ textAlign: "center", width: "100%", minWidth: 0, flex: "1 1 auto", display: "flex", flexDirection: "column", justifyContent: "flex-start", overflow: "hidden", gap: 4 }}>
@@ -674,36 +840,10 @@ export default function CoursesPage() {
                       </div>
                     </div>
                     <div style={{ flexShrink: 0, marginTop: 14, width: "100%" }}>
-                      {!lesson.isLocked && (
-                        <Button
-                          className="lesson-btn lesson-btn-start"
-                          onClick={() => {
-                            if (lesson.order === 1 || lesson.order === 2) {
-                              router.push(`/learn/${lesson.courseId}/unit-1/${lesson.id}/interactive`)
-                            } else {
-                              router.push(`/learn/${lesson.courseId}/unit-1/${lesson.id}`)
-                            }
-                          }}
-                          style={{
-                            width: "100%",
-                            fontSize: 16,
-                            fontWeight: 700,
-                            padding: "10px 16px",
-                            background: "#3B82F6",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 12,
-                            cursor: "pointer",
-                            transition: "background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease"
-                          }}
-                        >
-                          {lesson.isCompleted ? "Ver" : "Iniciar"}
-                        </Button>
-                      )}
                       {lesson.isLocked && !user && (
                         <Button
                           className="lesson-btn lesson-btn-signup"
-                          onClick={() => window.open("/signup", "_blank")}
+                          onClick={(e) => { e.stopPropagation(); window.open("/signup", "_blank") }}
                           style={{
                             width: "100%",
                             fontSize: 15,
@@ -729,10 +869,94 @@ export default function CoursesPage() {
                 })}
               </div>
             </div>
-          )); })()}
+            </React.Fragment>
+              );
+            });
+          })()}
         </div>
       </main>
 
+      {/* Modal: Iniciar / Regresar */}
+      {lessonModalLesson && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="lesson-modal-title"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+            background: "rgba(0,0,0,0.5)",
+            boxSizing: "border-box"
+          }}
+          onClick={() => setLessonModalLesson(null)}
+        >
+          <div
+            id="lesson-modal-title"
+            style={{
+              background: "white",
+              borderRadius: 20,
+              padding: "24px 28px",
+              maxWidth: 360,
+              width: "100%",
+              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 20
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ fontSize: 18, fontWeight: 600, color: "#6B7280" }}>{lessonModalLesson.unitTitle}</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: "#111", lineHeight: 1.3 }}>{lessonModalLesson.title}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <Button
+                onClick={() => {
+                  if (lessonModalLesson.order === 1 || lessonModalLesson.order === 2) {
+                    router.push(`/learn/${lessonModalLesson.courseId}/unit-1/${lessonModalLesson.id}/interactive`)
+                  } else {
+                    router.push(`/learn/${lessonModalLesson.courseId}/unit-1/${lessonModalLesson.id}`)
+                  }
+                  setLessonModalLesson(null)
+                }}
+                style={{
+                  width: "100%",
+                  fontSize: 17,
+                  fontWeight: 700,
+                  padding: "14px 20px",
+                  background: "#3B82F6",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer"
+                }}
+              >
+                {lessonModalLesson.isCompleted ? "Ver" : "Iniciar"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setLessonModalLesson(null)}
+                style={{
+                  width: "100%",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  padding: "12px 20px",
+                  background: "transparent",
+                  color: "#6B7280",
+                  border: "2px solid #E5E7EB",
+                  borderRadius: 12,
+                  cursor: "pointer"
+                }}
+              >
+                Regresar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         /* Course title separator - use full usable width */
@@ -760,11 +984,6 @@ export default function CoursesPage() {
         @keyframes shimmer {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
-        }
-        
-        @keyframes lesson-breathe {
-          0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2); }
-          50% { transform: scale(1.02); box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35); }
         }
         
         /* Lesson action buttons - hover effect */

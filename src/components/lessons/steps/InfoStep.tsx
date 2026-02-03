@@ -20,15 +20,20 @@ export function InfoStep({ step, onAnswered }: InfoStepProps) {
 
   return (
     <div className={sharedStyles.container}>
-      {step.title && <h2 className={sharedStyles.title}>{step.title}</h2>}
+      {step.title && (
+        <>
+          <h2 className={sharedStyles.title}>{step.title}</h2>
+          <div className="h-1 w-16 md:w-20 rounded-full bg-slate-300 mb-4" aria-hidden />
+        </>
+      )}
       {step.description && <p className={sharedStyles.description}>{step.description}</p>}
       {step.imageUrl && (
-        <div className={`${sharedStyles.imageContainer} my-6`}>
+        <div className={`${sharedStyles.imageContainer} my-6 md:my-8`}>
           <Image
             src={step.imageUrl}
             alt="Ilustración de la lección"
-            width={320}
-            height={320}
+            width={400}
+            height={400}
             className={`${sharedStyles.image} object-contain`}
           />
         </div>

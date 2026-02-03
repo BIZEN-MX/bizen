@@ -16,7 +16,7 @@ interface StickyFooterProps {
 export function StickyFooter({ children, className = "" }: StickyFooterProps) {
   return (
     <footer
-      className={`fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-700 z-50 pointer-events-none ${className}`}
+      className={`fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50 pointer-events-none ${className}`}
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="max-w-2xl mx-auto p-4 md:p-6 pointer-events-auto">
@@ -47,22 +47,22 @@ export function StickyFooterButton({
   ...props
 }: StickyFooterButtonProps) {
   const baseStyles =
-    "w-full max-w-md mx-auto block rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900"
+    "w-full max-w-md mx-auto block rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white"
 
   const variantStyles = {
     primary:
-      "bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white focus:ring-blue-500 shadow-lg hover:shadow-xl",
+      "bg-slate-800 hover:bg-slate-900 text-white focus:ring-slate-500 shadow-lg hover:shadow-xl text-xl md:text-2xl",
     secondary:
-      "bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-white focus:ring-slate-500",
+      "bg-slate-200 hover:bg-slate-300 text-slate-900 focus:ring-slate-400",
     success:
-      "bg-green-600 hover:bg-green-700 active:bg-green-800 text-white focus:ring-green-500 shadow-lg hover:shadow-xl",
+      "bg-emerald-600 hover:bg-emerald-700 text-white focus:ring-emerald-500 shadow-lg hover:shadow-xl text-xl md:text-2xl",
     danger:
-      "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white focus:ring-red-500",
+      "bg-red-600 hover:bg-red-700 text-white focus:ring-red-500",
   }
 
   return (
     <button
-      className={`${baseStyles} ${variantStyles[variant]} py-3 md:py-4 text-base md:text-lg ${className}`}
+      className={`${baseStyles} ${variantStyles[variant]} py-3 md:py-4 text-base md:text-lg lg:text-xl ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >

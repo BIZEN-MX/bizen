@@ -135,23 +135,23 @@ export default function WelcomePage() {
       }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", flexShrink: 0 }}>
           <Image src="/bizen-logo.png" alt="BIZEN logo" width={48} height={48} priority style={{ width: 48, height: "auto", flexShrink: 0 }} />
-          <span style={{ fontSize: 22, fontWeight: 700, color: "#0F62FE", fontFamily: "'Montserrat', sans-serif", letterSpacing: "0.3px" }}>BIZEN</span>
+          <span style={{ fontSize: 22, fontWeight: 700, color: "#0F62FE", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", letterSpacing: "0.3px" }}>BIZEN</span>
         </Link>
         <nav style={{ display: "flex", gap: "24px", alignItems: "center", flexShrink: 1, minWidth: 0, padding: "14px 32px", backgroundColor: "#dbeafe", borderRadius: 9999 }} className="header-bar-nav">
-          <Link href="#sobre-bizen" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Sobre Bizen</Link>
-          <Link href="#impacto" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Impacto</Link>
-          <Link href="#precios" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Implementación</Link>
-          <Link href="#precios" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Para escuelas</Link>
-          <Link href="#contacto" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Contacto</Link>
+          <Link href="#sobre-bizen" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Sobre Bizen</Link>
+          <Link href="#impacto" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Impacto</Link>
+          <Link href="#precios" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Implementación</Link>
+          <Link href="#precios" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Para escuelas</Link>
+          <Link href="#contacto" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Contacto</Link>
         </nav>
-        <Link href="/signup" target="_blank" rel="noopener noreferrer" style={{ padding: "16px 28px", fontSize: 19, fontWeight: 500, fontFamily: "'Montserrat', sans-serif", background: "#0F62FE", color: "white", borderRadius: 10, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", whiteSpace: "nowrap", flexShrink: 0 }} className="crear-cuenta-button">Agendar demo</Link>
+        <Link href="/signup" target="_blank" rel="noopener noreferrer" style={{ padding: "16px 28px", fontSize: 19, fontWeight: 500, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", background: "#0F62FE", color: "white", borderRadius: 10, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", whiteSpace: "nowrap", flexShrink: 0 }} className="crear-cuenta-button">Agendar demo</Link>
       </div>
 
       <main style={{ flex: 1, width: "100%", maxWidth: "100%", display: "flex", flexDirection: "column" }}>
         <div style={{
           paddingTop: "clamp(16px, 3vw, 24px)",
           position: "relative",
-          fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+          fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
           display: "flex",
           flexDirection: "column",
           width: "100%",
@@ -215,7 +215,7 @@ export default function WelcomePage() {
                 fontWeight: 700,
                 margin: 0,
                 lineHeight: 1.1,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                   width: "100%",
               }}>
                 &quot;La plataforma que está transformando la educación financiera en México.&quot;
@@ -226,7 +226,7 @@ export default function WelcomePage() {
                 fontWeight: 400,
                 margin: "16px 0 0",
                 lineHeight: 1.5,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                       width: "100%",
               }}>
                 BIZEN es la plataforma educativa que combina <span style={{ color: "#0F71FD", fontWeight: 600 }}>gamificación e inteligencia artificial</span> para enseñar <span style={{ color: "#0F71FD", fontWeight: 600 }}>finanzas personales</span> de forma práctica, clara y relevante para estudiantes de preparatoria y universidad.
@@ -266,6 +266,12 @@ export default function WelcomePage() {
           </div>
 
           <style>{`
+        /* Landing page: professional font stack */
+        .main-page-container,
+        .main-page-container .section,
+        .main-page-container .container {
+          font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        }
         /* Prevent horizontal scroll on landing - keep all content in frame */
         html:has(.main-page-container),
         body:has(.main-page-container) { overflow-x: hidden !important; max-width: 100vw !important; }
@@ -723,7 +729,7 @@ export default function WelcomePage() {
         }
         .hero-main-text {
           font-size: clamp(32px, 5vw, 48px) !important;
-          font-family: 'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif !important;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
         }
         
         .y-mucho-mas-text {
@@ -1417,7 +1423,7 @@ function LandingContent() {
           fontSize: "clamp(18px, 2vw, 24px)",
           fontWeight: 600,
           color: "#1f2937",
-          fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+          fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
         }}>
           Estas instituciones ya confían en <span style={{ color: "#111" }}>BIZEN</span>
         </p>
@@ -1448,7 +1454,7 @@ function LandingContent() {
               fontSize: "clamp(28px, 4vw, 42px)",
               fontWeight: 800,
               color: "#111",
-              fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
               lineHeight: 1.2,
               letterSpacing: "-0.02em",
             }}>
@@ -1458,7 +1464,7 @@ function LandingContent() {
               margin: "0 0 28px",
               fontSize: "clamp(17px, 1.15rem, 19px)",
               color: "#374151",
-              fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
               lineHeight: 1.65,
               maxWidth: "560px",
               marginLeft: "auto",
@@ -1561,7 +1567,7 @@ function LandingContent() {
                   background: "#0F62FE",
                   borderRadius: "12px",
                   textDecoration: "none",
-                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
+                  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                   transition: "background 0.2s ease, box-shadow 0.2s ease",
                   boxShadow: "0 4px 16px rgba(15, 98, 254, 0.35)",
                 }}
@@ -1611,7 +1617,7 @@ function LandingContent() {
             fontSize: "clamp(32px, 4.5vw, 48px)",
             fontWeight: 800,
             color: "#111",
-            fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
             lineHeight: 1.15,
             letterSpacing: "-0.03em",
           }}>
@@ -1670,7 +1676,7 @@ function LandingContent() {
                   fontSize: "clamp(18px, 1.25rem, 22px)",
                   fontWeight: 700,
                   color: "#1e293b",
-                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
+                  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                   lineHeight: 1.3,
                 }}>
                   {card.title}
@@ -1711,7 +1717,7 @@ function LandingContent() {
               fontSize: "clamp(28px, 4vw, 42px)",
               fontWeight: 800,
               color: "#111",
-              fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
               lineHeight: 1.2,
               letterSpacing: "-0.02em",
             }}>
@@ -1772,7 +1778,7 @@ function LandingContent() {
                   fontSize: "clamp(18px, 2vw, 22px)",
                   fontWeight: 700,
                   color: "#111",
-                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
+                  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                 }}>
                   {step.title}
                 </h3>
@@ -1821,7 +1827,7 @@ function LandingContent() {
                 fontSize: "clamp(28px, 4vw, 40px)",
                 fontWeight: 800,
                 color: "#111",
-                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                 lineHeight: 1.2,
               }}>
                 ¿Listo para empezar?
@@ -1830,7 +1836,7 @@ function LandingContent() {
                 margin: "16px 0 28px",
                 fontSize: "clamp(16px, 1.1rem, 20px)",
                 color: "#475569",
-                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                 lineHeight: 1.5,
               }}>
                 Lleva educación financiera práctica a tu institución. Agenda una demo y conoce la plataforma.
@@ -1846,7 +1852,7 @@ function LandingContent() {
                   background: "#0F62FE",
                   borderRadius: "12px",
                   textDecoration: "none",
-                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
+                  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                   transition: "background 0.2s ease, filter 0.2s ease",
                   boxShadow: "0 4px 14px rgba(15, 98, 254, 0.4)",
                 }}
@@ -1868,7 +1874,7 @@ function LandingContent() {
               lineHeight: 1.15,
               margin: "0 0 8px 0",
               fontWeight: 800,
-              fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
               background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
               backgroundSize: "200% auto",
               WebkitBackgroundClip: "text",
@@ -1938,7 +1944,7 @@ function LandingContent() {
               lineHeight: 1.15,
               margin: "0 0 16px 0",
               fontWeight: 800,
-              fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
               background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
               backgroundSize: "200% auto",
               WebkitBackgroundClip: "text",
@@ -2411,13 +2417,13 @@ const landingCSS = `
 body {
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 25%, #eef6ff 55%, #e3f0ff 85%, #dbeafe 100%) !important;
   background-attachment: fixed !important;
-  font-family: 'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
 }
 
 html {
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 25%, #eef6ff 55%, #e3f0ff 85%, #dbeafe 100%) !important;
   background-attachment: fixed !important;
-  font-family: 'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
   scroll-behavior: smooth;
 }
 
@@ -2510,7 +2516,7 @@ html {
 .plan--highlight{background:rgba(240, 247, 255, 0.7); border:2px solid rgba(15, 98, 254, 0.4); box-shadow:0 12px 32px rgba(15, 98, 254, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6); position:relative; overflow:visible;}
 .plan--highlight::before{content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%); background-size:200% auto; animation:shimmer 3s ease-in-out infinite;}
 .tag{position:absolute; top:16px; right:16px; background:linear-gradient(135deg, #0F62FE 0%, #4A90E2 100%); color:#fff; border-radius:999px; font-weight:800; padding:8px 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 12px rgba(15, 98, 254, 0.3); z-index:2;}
-.plan-name{font-size:clamp(24px, 3vw, 32px); margin:0 0 12px 0; font-weight:900; letter-spacing:-0.02em; background:linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 3s ease-in-out infinite; font-family:'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive, sans-serif; white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
+.plan-name{font-size:clamp(24px, 3vw, 32px); margin:0 0 12px 0; font-weight:900; letter-spacing:-0.02em; background:linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 3s ease-in-out infinite; font-family:'Inter', system-ui, -apple-system, sans-serif; white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
 .plan-note{font-size:14px; margin:0 0 24px 0; color:var(--c-muted); font-weight:500; white-space:normal;}
 .plan-list{list-style:none; margin:0 0 24px 0; padding:0; display:grid; gap:14px; flex-grow:1; overflow:visible;}
 .plan-list li{display:flex; gap:12px; align-items:flex-start; font-size:15px; line-height:1.6; color:var(--c-text); white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
@@ -2601,7 +2607,7 @@ html {
   justify-content:space-between;
   align-items:center;
   font-weight:800;
-  font-family:Arial, sans-serif;
+  font-family:'Inter', system-ui, -apple-system, sans-serif;
   font-size:clamp(16px, 2vw, 20px);
   color:#0F62FE;
   transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2620,7 +2626,7 @@ html {
   padding:0 20px 18px 20px;
   color:var(--c-muted);
   display:none;
-  font-family:Arial, sans-serif;
+  font-family:'Inter', system-ui, -apple-system, sans-serif;
   font-size:clamp(15px, 1.8vw, 18px);
   line-height:1.7;
   word-wrap:break-word;

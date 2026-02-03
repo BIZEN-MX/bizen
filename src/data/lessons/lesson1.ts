@@ -2,24 +2,24 @@ import { LessonStep } from "@/types/lessonTypes"
 
 /**
  * Course 1 - Lesson 1: "Historia del dinero"
- * 
- * 15 steps covering the history of money, from barter to digital currency.
- * All text is in Spanish for the Mexican financial education app.
+ *
+ * Covers the history of money from barter to digital currency.
+ * All text in Spanish for BIZEN.
  */
 export const lesson1Steps: LessonStep[] = [
   {
     id: "s1_intro",
     stepType: "info",
     title: "Historia del dinero",
-    body: "Hoy entiendo cómo nació el dinero. Al principio, la gente no tenía billetes ni monedas. Todo era intercambio directo. Yo doy algo y recibo otra cosa. Con el tiempo esto se volvió un problema porque no siempre coincidían las necesidades. Por eso nació el dinero.",
-    description: "Introducción a la historia del dinero",
+    body: "Antes no existían billetes ni monedas. La gente intercambiaba cosas directamente: yo te doy algo y tú me das otra cosa a cambio. Con el tiempo eso se volvió un problema: no siempre lo que tú tenías era lo que el otro necesitaba. Por eso, con los siglos, apareció el dinero. En esta lección verás cómo fue esa evolución.",
+    description: "Introducción",
     isAssessment: false,
   },
   {
     id: "s2_flash_trueque",
     stepType: "info",
     title: "¿Qué es el trueque?",
-    body: "Trueque: sistema donde las personas intercambiaban objetos o servicios directamente, sin usar dinero. No había un valor estándar, todo dependía de lo que cada uno quería en ese momento.",
+    body: "El trueque es intercambiar objetos o servicios directamente, sin usar dinero. Por ejemplo: cambio mi pan por tu leche. No había un “precio” estándar: todo dependía de lo que cada uno quería y aceptaba en ese momento. Fue la forma de intercambio más antigua antes de que existiera el dinero.",
     description: "Definición de trueque",
     isAssessment: false,
   },
@@ -34,19 +34,19 @@ export const lesson1Steps: LessonStep[] = [
         id: "o1",
         label: "Intercambio directo de objetos o servicios sin usar dinero.",
         isCorrect: true,
-        explanation: "El trueque fue el sistema de intercambio antes de existir el dinero.",
+        explanation: "Correcto. En el trueque se cambia una cosa por otra sin billetes ni monedas.",
       },
       {
         id: "o2",
         label: "Uso de monedas antiguas para comprar comida.",
         isCorrect: false,
-        explanation: "Las monedas llegaron después del trueque.",
+        explanation: "Eso ya es usar dinero (monedas). El trueque es anterior: no había monedas.",
       },
       {
         id: "o3",
         label: "Pagos digitales por medio de una app.",
         isCorrect: false,
-        explanation: "Eso es dinero moderno, no trueque.",
+        explanation: "Eso es dinero moderno. El trueque es mucho más antiguo y no usa dinero.",
       },
     ],
     recordIncorrect: true,
@@ -60,21 +60,21 @@ export const lesson1Steps: LessonStep[] = [
     options: [
       {
         id: "o1",
-        label: "No siempre coincidían las necesidades de las personas.",
+        label: "No siempre coincidían las necesidades: tú querías X y el otro no lo necesitaba.",
         isCorrect: true,
-        explanation: "Si la otra persona no quería lo que tú ofrecías, el intercambio no se podía hacer.",
+        explanation: "Exacto. Si el otro no quería lo que tú ofrecías, el intercambio no se podía hacer. Por eso luego se inventó el dinero.",
       },
       {
         id: "o2",
         label: "Había muy pocos productos en el mercado.",
         isCorrect: false,
-        explanation: "El problema no era la cantidad de productos, sino coordinar el intercambio.",
+        explanation: "El problema no era la cantidad de productos, sino que fuera difícil encontrar a alguien que quisiera lo que tú tenías.",
       },
       {
         id: "o3",
         label: "Las personas no sabían sumar ni restar.",
         isCorrect: false,
-        explanation: "Las matemáticas no eran el problema principal del trueque.",
+        explanation: "No. El problema era coordinar el intercambio cuando las necesidades no coincidían.",
       },
     ],
     recordIncorrect: true,
@@ -84,28 +84,12 @@ export const lesson1Steps: LessonStep[] = [
     stepType: "order",
     isAssessment: true,
     title: "Ordena la evolución del dinero",
-    question: "Coloca en orden cómo evolucionó el dinero a través del tiempo.",
+    question: "Coloca en orden cómo fue evolucionando el intercambio a lo largo de la historia.",
     items: [
-      {
-        id: "item1",
-        label: "Trueque",
-        correctOrder: 1,
-      },
-      {
-        id: "item2",
-        label: "Monedas de metal",
-        correctOrder: 2,
-      },
-      {
-        id: "item3",
-        label: "Billetes",
-        correctOrder: 3,
-      },
-      {
-        id: "item4",
-        label: "Dinero digital",
-        correctOrder: 4,
-      },
+      { id: "item1", label: "Trueque", correctOrder: 1 },
+      { id: "item2", label: "Monedas de metal", correctOrder: 2 },
+      { id: "item3", label: "Billetes", correctOrder: 3 },
+      { id: "item4", label: "Dinero digital", correctOrder: 4 },
     ],
     recordIncorrect: true,
   },
@@ -142,18 +126,10 @@ export const lesson1Steps: LessonStep[] = [
     title: "¿Para qué sirve el dinero?",
     question: "Completa la frase con las palabras correctas.",
     textParts: [
-      { type: "text", content: "El dinero nació para hacer los intercambios más " },
-      {
-        type: "blank",
-        id: "b1",
-        correctOptionId: "opt1",
-      },
+      { type: "text", content: "El dinero surgió para hacer los intercambios más " },
+      { type: "blank", id: "b1", correctOptionId: "opt1" },
       { type: "text", content: " y más " },
-      {
-        type: "blank",
-        id: "b2",
-        correctOptionId: "opt4",
-      },
+      { type: "blank", id: "b2", correctOptionId: "opt4" },
       { type: "text", content: "." },
     ],
     options: [
@@ -170,12 +146,12 @@ export const lesson1Steps: LessonStep[] = [
     id: "s8_multi_dinero_antiguo",
     stepType: "multi_select",
     isAssessment: true,
-    title: "¿Qué fue dinero alguna vez?",
-    question: "Selecciona objetos que se usaron como dinero en la antigüedad.",
+    title: "¿Qué se usó como dinero en el pasado?",
+    question: "Selecciona todo lo que en algún momento de la historia se usó como dinero.",
     options: [
       { id: "o1", label: "Oro", isCorrect: true },
       { id: "o2", label: "Sal", isCorrect: true },
-      { id: "o3", label: "Granos", isCorrect: true },
+      { id: "o3", label: "Granos (maíz, trigo)", isCorrect: true },
       { id: "o4", label: "Tarjetas bancarias", isCorrect: false },
       { id: "o5", label: "Apps móviles", isCorrect: false },
     ],
@@ -188,34 +164,34 @@ export const lesson1Steps: LessonStep[] = [
     title: "Verdadero o falso",
     statement: "El dinero existió desde el inicio de la humanidad.",
     correctValue: false,
-    explanation: "Primero existió el trueque. El dinero apareció mucho después.",
+    explanation: "Primero existió el trueque durante miles de años. El dinero (monedas, billetes) apareció mucho después.",
     recordIncorrect: true,
   },
   {
     id: "s10_story_maiz",
     stepType: "mcq",
     isAssessment: true,
-    title: "Historia: Ana y el maíz",
-    question: "Ana quiere cambiar maíz por pescado, pero el pescador no quiere maíz. ¿Cuál es el verdadero problema?",
-    description: "Así funcionaba el trueque: si la otra persona no quería lo que tú ofrecías, era muy difícil hacer el intercambio.",
+    title: "Caso: Ana y el maíz",
+    question: "Ana tiene maíz y quiere pescado. El pescador no necesita maíz. ¿Cuál es el problema?",
+    description: "En el trueque, si la otra persona no quiere lo que tú ofreces, el intercambio no se puede hacer.",
     options: [
       {
         id: "o1",
-        label: "No coincidían las necesidades de las personas.",
+        label: "No coincidían las necesidades: Ana ofrecía algo que el pescador no quería.",
         isCorrect: true,
-        explanation: "Este es el problema central del trueque.",
+        explanation: "Correcto. Ese es el problema del trueque. Con dinero, Ana podría vender su maíz y comprar pescado.",
       },
       {
         id: "o2",
         label: "Había muy poco maíz.",
         isCorrect: false,
-        explanation: "El problema no era la cantidad, sino coordinar el intercambio.",
+        explanation: "El problema no era la cantidad, sino que el pescador no quería maíz a cambio.",
       },
       {
         id: "o3",
         label: "El pescado era demasiado caro.",
         isCorrect: false,
-        explanation: "En el trueque no había precios fijos como en el dinero.",
+        explanation: "En el trueque no había “precios”: el problema era que las necesidades no coincidían.",
       },
     ],
     recordIncorrect: true,
@@ -224,28 +200,13 @@ export const lesson1Steps: LessonStep[] = [
     id: "s11_image_dinero_moderno",
     stepType: "image_choice",
     isAssessment: true,
-    title: "Dinero moderno",
-    question: "¿Cuál imagen representa mejor el dinero moderno?",
-    correctImageId: "img2", // Billetes y monedas
+    title: "Dinero hoy",
+    question: "¿Cuál opción representa mejor el dinero que usamos hoy (efectivo)?",
+    correctImageId: "img2",
     imageOptions: [
-      {
-        id: "img1",
-        label: "Lingotes de oro",
-        imageAlt: "Lingotes de oro",
-        imageId: "gold_bars",
-      },
-      {
-        id: "img2",
-        label: "Billetes y monedas",
-        imageAlt: "Billetes y monedas",
-        imageId: "cash_coins",
-      },
-      {
-        id: "img3",
-        label: "Bolsa de arroz",
-        imageAlt: "Bolsa de arroz",
-        imageId: "rice_bag",
-      },
+      { id: "img1", label: "Lingotes de oro", imageAlt: "Lingotes de oro", imageId: "gold_bars" },
+      { id: "img2", label: "Billetes y monedas", imageAlt: "Billetes y monedas", imageId: "cash_coins" },
+      { id: "img3", label: "Bolsa de arroz", imageAlt: "Bolsa de arroz", imageId: "rice_bag" },
     ],
     recordIncorrect: true,
   },
@@ -256,26 +217,10 @@ export const lesson1Steps: LessonStep[] = [
     title: "Ordena la frase",
     question: "Ordena las palabras para formar una frase correcta.",
     items: [
-      {
-        id: "item1",
-        label: "El dinero",
-        correctOrder: 1,
-      },
-      {
-        id: "item2",
-        label: "facilita",
-        correctOrder: 2,
-      },
-      {
-        id: "item3",
-        label: "los intercambios",
-        correctOrder: 3,
-      },
-      {
-        id: "item4",
-        label: "entre personas",
-        correctOrder: 4,
-      },
+      { id: "item1", label: "El dinero", correctOrder: 1 },
+      { id: "item2", label: "facilita", correctOrder: 2 },
+      { id: "item3", label: "los intercambios", correctOrder: 3 },
+      { id: "item4", label: "entre personas.", correctOrder: 4 },
     ],
     recordIncorrect: true,
   },
@@ -284,19 +229,17 @@ export const lesson1Steps: LessonStep[] = [
     stepType: "true_false",
     isAssessment: true,
     title: "Monedas antiguas",
-    statement: "Las primeras monedas estaban hechas de metales valiosos como oro y plata.",
+    statement: "Las primeras monedas se hicieron de metales valiosos, como oro y plata.",
     correctValue: true,
-    explanation: "El metal tenía valor propio, por eso funcionaba como dinero confiable.",
+    explanation: "Sí. El metal tenía valor en sí mismo y era aceptado por muchos, por eso servía como dinero.",
     recordIncorrect: true,
   },
   {
     id: "s14_summary_conceptos",
     stepType: "summary",
     isAssessment: false,
-    title: "Lo que aprendí hoy",
-    body: "Hoy entendí que primero existió el trueque, pero era poco práctico. Después surgieron las monedas, los billetes y, finalmente, el dinero digital. El dinero hace que los intercambios sean más fáciles y más rápidos.",
+    title: "Lo que aprendiste",
+    body: "Primero existió el trueque: intercambio directo de cosas sin dinero. El problema era que no siempre coincidían las necesidades. Luego surgieron las monedas (metal), después los billetes y hoy también el dinero digital. El dinero hace que los intercambios sean más fáciles y rápidos.",
   },
-  // Note: Review steps (s15_review_dynamic) are built dynamically by the lesson engine
-  // based on incorrect answers, so they don't need to be in this static array
 ]
 

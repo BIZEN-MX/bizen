@@ -19,6 +19,8 @@ export function FillBlanksStep({
   const [blankAnswers, setBlankAnswers] = useState<Record<string, string>>(initialAnswers)
   const [hasEvaluated, setHasEvaluated] = useState(false)
   const hasPlayedSound = useRef(false)
+  const onAnsweredRef = useRef(onAnswered)
+  onAnsweredRef.current = onAnswered
 
   useEffect(() => {
     // Get all blank IDs
@@ -35,9 +37,9 @@ export function FillBlanksStep({
         ) as Extract<typeof step.textParts[number], { type: "blank" }>
         return part && blankAnswers[id] === part.correctOptionId
       })
-      
+
       setHasEvaluated(true)
-      
+
       // Play sound only once
       if (!hasPlayedSound.current) {
         if (isCorrect) {
@@ -47,14 +49,15 @@ export function FillBlanksStep({
         }
         hasPlayedSound.current = true
       }
-      
-      onAnswered({ 
-        isCompleted: true, 
+
+      onAnsweredRef.current({
+        isCompleted: true,
         isCorrect,
-        answerData: { blankAnswers: { ...blankAnswers } }
+        answerData: { blankAnswers: { ...blankAnswers } },
       })
     }
-  }, [blankAnswers, step.textParts, onAnswered, hasEvaluated])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- onAnswered omitted to avoid infinite loop
+  }, [blankAnswers, step.textParts, hasEvaluated])
 
   const handleBlankChange = (blankId: string, optionId: string) => {
     if (!hasEvaluated) {
@@ -73,7 +76,7 @@ export function FillBlanksStep({
     
     const isCorrect = blankAnswers[blankId] === part.correctOptionId
     return isCorrect
-      ? "bg-green-600/20 border-green-500 ring-2 ring-green-500"
+      ? "bg-emerald-600/25 border-emerald-500 ring-2 ring-emerald-400"
       : "bg-red-600/20 border-red-500 ring-2 ring-red-500"
   }
 
@@ -84,7 +87,7 @@ export function FillBlanksStep({
       {step.question && <h3 className={sharedStyles.question}>{step.question}</h3>}
       <div className="space-y-4 md:space-y-6">
         {/* Text with blanks */}
-        <div className="text-base md:text-lg leading-relaxed">
+        <div className="text-2xl md:text-3xl lg:text-4xl leading-relaxed">
           {step.textParts.map((part, index) => {
             if (part.type === "text") {
               return <span key={index}>{part.content}</span>

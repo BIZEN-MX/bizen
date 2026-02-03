@@ -30,7 +30,7 @@ export function LessonScreen({
 }: LessonScreenProps) {
   return (
     <div
-      className="min-h-screen flex flex-col bg-slate-900 text-white relative"
+      className="min-h-screen flex flex-col bg-white text-slate-900 relative"
       style={{
         paddingTop: "env(safe-area-inset-top)",
         minHeight: "100dvh",

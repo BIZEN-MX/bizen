@@ -19,6 +19,8 @@ export function MultiSelectStep({
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelected)
   const [hasEvaluated, setHasEvaluated] = useState(false)
   const hasPlayedSound = useRef(false)
+  const onAnsweredRef = useRef(onAnswered)
+  onAnsweredRef.current = onAnswered
 
   useEffect(() => {
     // Check if at least one option is selected
@@ -31,9 +33,9 @@ export function MultiSelectStep({
         .filter((opt) => opt.isCorrect)
         .every((opt) => selectedOptionIds.includes(opt.id))
       const isCorrect = allSelectedCorrect && allCorrectSelected
-      
+
       setHasEvaluated(true)
-      
+
       // Play sound only once
       if (!hasPlayedSound.current) {
         if (isCorrect) {
@@ -43,14 +45,15 @@ export function MultiSelectStep({
         }
         hasPlayedSound.current = true
       }
-      
-      onAnswered({ 
-        isCompleted: true, 
+
+      onAnsweredRef.current({
+        isCompleted: true,
         isCorrect,
-        answerData: { selectedOptionIds: [...selectedOptionIds] }
+        answerData: { selectedOptionIds: [...selectedOptionIds] },
       })
     }
-  }, [selectedOptionIds, step.options, onAnswered, hasEvaluated])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- onAnswered omitted to avoid infinite loop
+  }, [selectedOptionIds, step.options, hasEvaluated])
 
   const handleToggle = (optionId: string) => {
     if (hasEvaluated) return // Don't allow changes after evaluation
@@ -67,13 +70,13 @@ export function MultiSelectStep({
     
     // Show feedback colors
     if (isSelected && option.isCorrect) {
-      return "bg-green-600/20 border-green-500 ring-2 ring-green-500"
+      return "bg-emerald-600/25 border-emerald-500 ring-2 ring-emerald-400"
     }
     if (isSelected && !option.isCorrect) {
       return "bg-red-600/20 border-red-500 ring-2 ring-red-500"
     }
     if (!isSelected && option.isCorrect) {
-      return "bg-green-600/10 border-green-500/50"
+      return "bg-emerald-600/15 border-emerald-500/50"
     }
     return ""
   }
@@ -96,7 +99,7 @@ export function MultiSelectStep({
               }`}
             >
               <div className="flex items-center justify-between w-full">
-                <span className="text-base md:text-lg text-left flex-1">{option.label}</span>
+                <span className="text-xl md:text-2xl lg:text-3xl text-left flex-1">{option.label}</span>
                 {hasEvaluated && (
                   <span className="ml-3 text-2xl">
                     {option.isCorrect ? '✓' : isSelected ? '✗' : ''}

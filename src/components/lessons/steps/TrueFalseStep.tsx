@@ -40,12 +40,12 @@ export function TrueFalseStep({
 
   const getButtonStyle = (value: boolean) => {
     if (!showFeedback || selectedValue !== value) {
-      return "bg-slate-700 hover:bg-slate-600 text-white"
+      return "bg-slate-100 hover:bg-slate-200 text-slate-900 border-2 border-slate-300"
     }
     const isCorrect = value === step.correctValue
     return isCorrect
-      ? "bg-green-600 text-white ring-2 ring-green-400"
-      : "bg-red-600 text-white ring-2 ring-red-400"
+      ? "bg-emerald-100 text-emerald-900 border-2 border-emerald-600"
+      : "bg-red-100 text-red-900 border-2 border-red-600"
   }
 
   return (
@@ -53,19 +53,19 @@ export function TrueFalseStep({
       {step.title && <h2 className={sharedStyles.title}>{step.title}</h2>}
       {step.description && <p className={sharedStyles.description}>{step.description}</p>}
       <h3 className={sharedStyles.question}>{step.statement}</h3>
-      <div className={`${sharedStyles.flexRow} mt-6`}>
+      <div className={`${sharedStyles.flexRow} mt-6 md:mt-8`}>
         <button
           onClick={() => handleSelect(true)}
           disabled={showFeedback}
-          className={`${sharedStyles.button} ${sharedStyles.spacing.md} flex-1 transition-all duration-300 ${getButtonStyle(true)} ${
-            showFeedback ? 'cursor-default' : 'cursor-pointer'
+          className={`${sharedStyles.button} ${sharedStyles.spacing.md} flex-1 transition-all duration-300 rounded-2xl ${getButtonStyle(true)} ${
+            showFeedback ? "cursor-default" : "cursor-pointer"
           }`}
         >
           <div className="flex items-center justify-center gap-2">
-            <span className="text-base md:text-lg font-semibold">Verdadero</span>
+            <span className="text-2xl md:text-3xl font-semibold">Verdadero</span>
             {showFeedback && selectedValue === true && (
-              <span className="text-2xl">
-                {step.correctValue === true ? '✓' : '✗'}
+              <span className="text-2xl md:text-3xl">
+                {step.correctValue === true ? "✓" : "✗"}
               </span>
             )}
           </div>
@@ -73,29 +73,33 @@ export function TrueFalseStep({
         <button
           onClick={() => handleSelect(false)}
           disabled={showFeedback}
-          className={`${sharedStyles.button} ${sharedStyles.spacing.md} flex-1 transition-all duration-300 ${getButtonStyle(false)} ${
-            showFeedback ? 'cursor-default' : 'cursor-pointer'
+          className={`${sharedStyles.button} ${sharedStyles.spacing.md} flex-1 transition-all duration-300 rounded-2xl ${getButtonStyle(false)} ${
+            showFeedback ? "cursor-default" : "cursor-pointer"
           }`}
         >
           <div className="flex items-center justify-center gap-2">
-            <span className="text-base md:text-lg font-semibold">Falso</span>
+            <span className="text-2xl md:text-3xl font-semibold">Falso</span>
             {showFeedback && selectedValue === false && (
-              <span className="text-2xl">
-                {step.correctValue === false ? '✓' : '✗'}
+              <span className="text-2xl md:text-3xl">
+                {step.correctValue === false ? "✓" : "✗"}
               </span>
             )}
           </div>
         </button>
       </div>
       {showFeedback && step.explanation && (
-        <div className={`mt-4 p-4 rounded-xl ${
-          selectedValue === step.correctValue
-            ? 'bg-green-600/20 border border-green-500'
-            : 'bg-red-600/20 border border-red-500'
-        }`}>
-          <p className={`text-sm md:text-base ${
-            selectedValue === step.correctValue ? 'text-green-300' : 'text-red-300'
-          }`}>
+        <div
+          className={`mt-5 p-5 md:p-6 rounded-2xl ${
+            selectedValue === step.correctValue
+              ? "bg-emerald-100 border-2 border-emerald-600"
+              : "bg-red-100 border-2 border-red-600"
+          }`}
+        >
+          <p
+            className={`text-xl md:text-2xl ${
+              selectedValue === step.correctValue ? "text-emerald-900" : "text-red-900"
+            }`}
+          >
             {step.explanation}
           </p>
         </div>
