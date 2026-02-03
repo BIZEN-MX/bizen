@@ -63,30 +63,8 @@ export function ModuleGate({
           background: "#FFFFFF",
         }}
       >
-        <div
-          style={{
-            padding: 32,
-            textAlign: "center",
-          }}
-        >
-          <div
-            style={{
-              width: 48,
-              height: 48,
-              border: `4px solid ${primaryColor}22`,
-              borderTop: `4px solid ${primaryColor}`,
-              borderRadius: "50%",
-              margin: "0 auto 16px",
-              animation: "spin 1s linear infinite",
-            }}
-          />
+        <div style={{ padding: 32, textAlign: "center" }}>
           <p style={{ fontSize: 18, color: "#666" }}>Verificando acceso al módulo...</p>
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
         </div>
       </div>
     );

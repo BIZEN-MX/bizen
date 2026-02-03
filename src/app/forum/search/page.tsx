@@ -95,24 +95,7 @@ function ForumSearchContent() {
         fontFamily: "Montserrat, sans-serif",
         background: "#ffffff"
       }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{
-            width: 48,
-            height: 48,
-            border: "4px solid #0F62FE22",
-            borderTop: "4px solid #0F62FE",
-            borderRadius: "50%",
-            margin: "0 auto 16px",
-            animation: "spin 1s linear infinite",
-          }} />
-          <p style={{ color: "#666", fontSize: 16 }}>Buscando...</p>
-        </div>
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
+        <p style={{ color: "#666", fontSize: 16 }}>Buscando...</p>
       </div>
     )
   }
@@ -130,7 +113,18 @@ function ForumSearchContent() {
       backgroundAttachment: "fixed",
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat"
-    }}>
+    }} className="forum-search-outer">
+      <style>{`
+        @media (max-width: 767px) {
+          .forum-search-outer { margin-left: 0 !important; max-width: 100% !important; }
+        }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .forum-search-outer { margin-left: 220px !important; max-width: calc(100% - 220px) !important; width: auto !important; }
+        }
+        @media (min-width: 1161px) {
+          .forum-search-outer { margin-left: 280px !important; max-width: calc(100% - 280px) !important; width: auto !important; }
+        }
+      `}</style>
       <main style={{ 
         position: "relative",
         maxWidth: 1200, 

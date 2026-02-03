@@ -150,8 +150,7 @@ export default function CuentaPage() {
         fontFamily: "Montserrat, sans-serif",
         marginRight: "340px"
       }}>
-        <div style={{ animation: "spin 1s linear infinite" }}>⏳</div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
       </div>
     )
   }
@@ -869,8 +868,6 @@ export default function CuentaPage() {
         </div>
       </main>
 
-      {/* CSS Animations */}
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }

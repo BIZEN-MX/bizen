@@ -415,17 +415,14 @@ export default function ForumProfilePage() {
               >
                 {isLoadingFollow ? (
                   <>
-                    <span>⏳</span>
                     <span>Cargando...</span>
                   </>
                 ) : isFollowing ? (
                   <>
-                    <span>👤✓</span>
                     <span>Siguiendo</span>
                   </>
                 ) : (
                   <>
-                    <span>👤+</span>
                     <span>Seguir Usuario</span>
                   </>
                 )}

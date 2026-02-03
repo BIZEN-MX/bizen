@@ -19,9 +19,7 @@ export default function MobileSkeletonLoader({
 }: MobileSkeletonLoaderProps) {
   const getSkeletonStyle = () => {
     const baseStyle: React.CSSProperties = {
-      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-      backgroundSize: '200% 100%',
-      animation: 'shimmer 1.5s infinite',
+      background: '#e5e7eb',
       borderRadius: 8,
       position: 'relative',
       overflow: 'hidden'
@@ -80,16 +78,6 @@ export default function MobileSkeletonLoader({
           aria-label="Loading..."
         />
       ))}
-      <style>{`
-        @keyframes shimmer {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
-        }
-      `}</style>
     </>
   )
 }

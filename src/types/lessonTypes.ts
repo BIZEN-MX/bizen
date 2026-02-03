@@ -46,6 +46,8 @@ export interface InfoStepFields {
   stepType: "info";
   title: string;
   body: string;
+  /** Optional image URL (e.g. /billy-mascot-leccion1.png) shown above the body */
+  imageUrl?: string;
 }
 
 export interface McqStepFields {

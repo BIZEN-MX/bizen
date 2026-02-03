@@ -199,7 +199,7 @@ export default function FollowingPage() {
                 border: "2px solid rgba(255, 255, 255, 0.6)",
                 textAlign: "center"
               }}>
-                <div style={{ fontSize: 64, marginBottom: 16 }}>🔔</div>
+                <div style={{ fontSize: 48, marginBottom: 16, color: "#1E40AF", fontWeight: 700 }}>Siguiendo</div>
                 <h3 style={{ fontSize: 20, fontWeight: 700, color: "#1E40AF", marginBottom: 8 }}>
                   No sigues ningún tema
                 </h3>
@@ -348,19 +348,28 @@ export default function FollowingPage() {
           }
         }
         
-        /* Responsive width adjustments - iPad (768px-1160px) */
+        /* Avoid overlap with left sidebar - tablet (768px-1160px) */
         @media (min-width: 768px) and (max-width: 1160px) {
           .forum-following-outer {
-            width: calc(100% - 160px) !important;
-            max-width: calc(100% - 160px) !important;
+            margin-left: 220px !important;
+            max-width: calc(100% - 220px) !important;
+            width: auto !important;
           }
         }
         
         /* Desktop (1161px+) */
         @media (min-width: 1161px) {
           .forum-following-outer {
-            width: calc(100% - 280px) !important;
+            margin-left: 280px !important;
             max-width: calc(100% - 280px) !important;
+            width: auto !important;
+          }
+        }
+        
+        @media (max-width: 767px) {
+          .forum-following-outer {
+            margin-left: 0 !important;
+            max-width: 100% !important;
           }
         }
       `}</style>

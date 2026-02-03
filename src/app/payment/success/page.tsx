@@ -31,23 +31,8 @@ function PaymentSuccessContent() {
         background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
       }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{
-            width: 48,
-            height: 48,
-            border: "4px solid #0F62FE22",
-            borderTop: "4px solid #0F62FE",
-            borderRadius: "50%",
-            margin: "0 auto 16px",
-            animation: "spin 1s linear infinite",
-          }} />
           <p style={{ color: "#666", fontSize: 16 }}>Verificando pago...</p>
         </div>
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     )
   }
@@ -217,23 +202,8 @@ export default function PaymentSuccessPage() {
         background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
       }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{
-            width: 48,
-            height: 48,
-            border: "4px solid #0F62FE22",
-            borderTop: "4px solid #0F62FE",
-            borderRadius: "50%",
-            margin: "0 auto 16px",
-            animation: "spin 1s linear infinite",
-          }} />
           <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
         </div>
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     }>
       <PaymentSuccessContent />

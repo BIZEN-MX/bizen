@@ -358,7 +358,7 @@ function ForumContent() {
                 e.currentTarget.style.color = "#374151"
               }}
             >
-              ⭐ Guardados
+              Guardados
             </Link>
             <Link
               href="/forum/following"
@@ -387,7 +387,7 @@ function ForumContent() {
                 e.currentTarget.style.color = "#374151"
               }}
             >
-              🔔 Siguiendo
+              Siguiendo
             </Link>
             <Link
               href="/forum/new"
@@ -496,7 +496,7 @@ function ForumContent() {
                 gap: 8
               }}
             >
-              <span>📋 {selectedTopic === 'all' ? 'Filtrar por Tema' : topics.find(t => t.slug === selectedTopic)?.name || 'Tema'}</span>
+              <span>{selectedTopic === 'all' ? 'Filtrar por Tema' : topics.find(t => t.slug === selectedTopic)?.name || 'Tema'}</span>
               <span style={{ fontSize: 12 }}>{showTopicFilter ? '▲' : '▼'}</span>
             </button>
 

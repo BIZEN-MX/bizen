@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect } from "react"
+import Image from "next/image"
 import { InfoStepFields } from "@/types/lessonTypes"
 import { sharedStyles } from "../sharedStyles"
 
@@ -21,6 +22,17 @@ export function InfoStep({ step, onAnswered }: InfoStepProps) {
     <div className={sharedStyles.container}>
       {step.title && <h2 className={sharedStyles.title}>{step.title}</h2>}
       {step.description && <p className={sharedStyles.description}>{step.description}</p>}
+      {step.imageUrl && (
+        <div className={`${sharedStyles.imageContainer} my-6`}>
+          <Image
+            src={step.imageUrl}
+            alt="Ilustración de la lección"
+            width={320}
+            height={320}
+            className={`${sharedStyles.image} object-contain`}
+          />
+        </div>
+      )}
       <div className={sharedStyles.body}>{step.body}</div>
     </div>
   )

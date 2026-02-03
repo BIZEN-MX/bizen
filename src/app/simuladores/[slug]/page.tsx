@@ -85,24 +85,9 @@ export default function SimulatorPage() {
           @media (min-width: 1161px) {
             .simulador-detail-loading { margin-left: 280px !important; width: calc(100% - 280px) !important; }
           }
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
         `}</style>
         <div className="simulador-detail-loading" style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', fontFamily: 'Montserrat, sans-serif', marginLeft: 280, width: 'calc(100% - 280px)' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: 48,
-              height: 48,
-              border: '4px solid #0F62FE22',
-              borderTop: '4px solid #0F62FE',
-              borderRadius: '50%',
-              margin: '0 auto 16px',
-              animation: 'spin 1s linear infinite'
-            }} />
-            <p style={{ color: '#666', fontSize: 16 }}>Cargando simulador...</p>
-          </div>
+          <p style={{ color: '#666', fontSize: 16 }}>Cargando simulador...</p>
         </div>
       </>
     )

@@ -360,6 +360,126 @@ export default function ProgressPage() {
         </div>
         </div>
 
+        {/* Logros & Insignias */}
+        <div style={{
+          width: "100%",
+          marginBottom: 32,
+          background: "rgba(255, 255, 255, 0.5)",
+          backdropFilter: "blur(10px)",
+          borderRadius: 20,
+          padding: 28,
+          border: "2px solid rgba(147, 197, 253, 0.4)"
+        }}>
+          <h3 style={{
+            margin: "0 0 20px",
+            fontSize: 20,
+            fontWeight: 800,
+            color: "#1E40AF",
+            display: "flex",
+            alignItems: "center",
+            gap: 10
+          }}>
+            Logros e Insignias
+          </h3>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
+            gap: 16
+          }}>
+            <div style={{
+              background: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+              borderRadius: 16,
+              padding: 16,
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(16, 185, 129, 0.3)",
+              transition: "transform 0.2s ease",
+              cursor: "pointer"
+            }}
+            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1)"}
+            >
+              <div style={{ fontSize: 32, marginBottom: 8 }}>🎯</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>Primera Lección</div>
+            </div>
+
+            <div style={{
+              background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
+              borderRadius: 16,
+              padding: 16,
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
+              transition: "transform 0.2s ease",
+              cursor: "pointer"
+            }}
+            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1)"}
+            >
+              <div style={{ fontSize: 32, marginBottom: 8 }}>🔥</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>Racha 7 Días</div>
+            </div>
+
+            <div style={{
+              background: "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+              borderRadius: 16,
+              padding: 16,
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
+              transition: "transform 0.2s ease",
+              cursor: "pointer"
+            }}
+            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1)"}
+            >
+              <div style={{ fontSize: 32, marginBottom: 8 }}>🎓</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>Curso Completo</div>
+            </div>
+
+            <div style={{
+              background: "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)",
+              borderRadius: 16,
+              padding: 16,
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(139, 92, 246, 0.3)",
+              transition: "transform 0.2s ease",
+              cursor: "pointer"
+            }}
+            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1)"}
+            >
+              <div style={{ fontSize: 32, marginBottom: 8 }}>⭐</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>Puntuación Perfecta</div>
+            </div>
+
+            <div style={{
+              background: "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)",
+              borderRadius: 16,
+              padding: 16,
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(236, 72, 153, 0.3)",
+              transition: "transform 0.2s ease",
+              cursor: "pointer"
+            }}
+            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => e.currentTarget.style.transform = "scale(1)"}
+            >
+              <div style={{ fontSize: 32, marginBottom: 8 }}>🌅</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>Madrugador</div>
+            </div>
+
+            <div style={{
+              background: "rgba(156, 163, 175, 0.3)",
+              borderRadius: 16,
+              padding: 16,
+              textAlign: "center",
+              border: "2px dashed rgba(156, 163, 175, 0.5)"
+            }}>
+              <div style={{ fontSize: 32, marginBottom: 8, opacity: 0.5 }}>🔒</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF" }}>Bloqueado</div>
+            </div>
+          </div>
+        </div>
+
         {/* Certificates Section */}
         <div style={{ marginBottom: 40 }}>
           <h2 style={{ 

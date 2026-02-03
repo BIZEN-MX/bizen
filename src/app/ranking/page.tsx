@@ -90,26 +90,7 @@ export default function RankingPage() {
           @media (min-width: 768px) and (max-width: 1160px) { .ranking-outer { margin-left: 220px !important; width: calc(100% - 220px) !important; } }
           @media (min-width: 1161px) { .ranking-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; } }
         `}</style>
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              width: 48,
-              height: 48,
-              border: "4px solid rgba(15, 98, 254, 0.2)",
-              borderTop: "4px solid #0F62FE",
-              borderRadius: "50%",
-              margin: "0 auto 16px",
-              animation: "ranking-spin 1s linear infinite",
-            }}
-          />
-          <p style={{ color: "#64748b", fontSize: 16 }}>Cargando ranking...</p>
-        </div>
-        <style>{`
-          @keyframes ranking-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
+        <p style={{ color: "#64748b", fontSize: 16 }}>Cargando ranking...</p>
       </div>
     )
   }

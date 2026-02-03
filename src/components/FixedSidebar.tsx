@@ -64,7 +64,7 @@ export default function FixedSidebar() {
         sidebar.style.setProperty('z-index', '10001', 'important') // Lower than hamburger button (10002)
         sidebar.style.setProperty('padding-top', '70px', 'important') // Extra padding to avoid hamburger button
         sidebar.style.setProperty('flex-direction', 'column', 'important')
-        sidebar.style.setProperty('background', '#1e4976', 'important')
+        sidebar.style.setProperty('background', '#1e3a5f', 'important')
         sidebar.style.setProperty('padding', '70px 16px 32px 16px', 'important') // Extra padding at top (70px) to avoid hamburger button
         sidebar.style.setProperty('overflow-y', 'auto', 'important')
         sidebar.style.setProperty('overflow-x', 'hidden', 'important')
@@ -208,7 +208,7 @@ export default function FixedSidebar() {
         left: 0,
         width: "clamp(240px, 25vw, 320px)",
         height: "100vh",
-        background: "#1e4976",
+        background: "#1e3a5f",
         boxShadow: "4px 0 20px rgba(0, 0, 0, 0.2)",
         zIndex: 1000,
         overflowY: "auto",
@@ -986,7 +986,7 @@ export default function FixedSidebar() {
       <style>{`
         /* Softer navy sidebar: white text, uppercase, bold */
         [data-fixed-sidebar] {
-          background: #1e4976 !important;
+          background: #1e3a5f !important;
         }
         [data-fixed-sidebar] .nav-item-label,
         [data-fixed-sidebar] button span,
@@ -1028,7 +1028,7 @@ export default function FixedSidebar() {
             border-left: none !important;
             padding: 70px 12px 32px 12px !important; /* Horizontal padding for icon spacing */
             z-index: 10000 !important;
-            background: #1e4976 !important;
+            background: #1e3a5f !important;
             backdrop-filter: blur(20px) !important;
             box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15) !important;
             flex-direction: column !important;
@@ -1103,7 +1103,7 @@ export default function FixedSidebar() {
             transition: transform 0.3s ease-in-out !important;
             display: flex !important;
             flex-direction: column !important;
-            background: #1e4976 !important;
+            background: #1e3a5f !important;
             backdrop-filter: blur(20px) !important;
             box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15) !important;
             visibility: visible !important;
@@ -1265,7 +1265,7 @@ export default function FixedSidebar() {
             height: 100vh !important;
             overflow-x: hidden !important;
             overflow-y: auto !important;
-            background: #1e4976 !important;
+            background: #1e3a5f !important;
           }
           
           /* Show text labels on iPad - text only, no images */
@@ -1368,7 +1368,7 @@ export default function FixedSidebar() {
             height: 100vh !important;
             overflow-x: hidden !important;
             overflow-y: auto !important;
-            background: #1e4976 !important;
+            background: #1e3a5f !important;
           }
           
           /* Show text labels on desktop - wrap so full text is visible */

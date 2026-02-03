@@ -52,22 +52,7 @@ export default function TestInteractivePage() {
           Taking you to "Historia del Dinero" interactive experience
         </p>
 
-        <div style={{
-          width: 64,
-          height: 64,
-          border: "4px solid #0F62FE22",
-          borderTop: "4px solid #0F62FE",
-          borderRadius: "50%",
-          margin: "0 auto",
-          animation: "spin 1s linear infinite",
-        }} />
-
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
+        <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
 
         <div style={{
           marginTop: 32,

@@ -140,10 +140,11 @@ export default function WelcomePage() {
         <nav style={{ display: "flex", gap: "24px", alignItems: "center", flexShrink: 1, minWidth: 0, padding: "14px 32px", backgroundColor: "#dbeafe", borderRadius: 9999 }} className="header-bar-nav">
           <Link href="#sobre-bizen" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Sobre Bizen</Link>
           <Link href="#impacto" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Impacto</Link>
-          <Link href="#precios" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Planes</Link>
+          <Link href="#precios" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Implementación</Link>
+          <Link href="#precios" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Para escuelas</Link>
           <Link href="#contacto" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Montserrat', sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Contacto</Link>
         </nav>
-        <Link href="/signup" target="_blank" rel="noopener noreferrer" style={{ padding: "16px 28px", fontSize: 19, fontWeight: 500, fontFamily: "'Montserrat', sans-serif", background: "#0F62FE", color: "white", borderRadius: 10, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", whiteSpace: "nowrap", flexShrink: 0 }} className="crear-cuenta-button">Crear cuenta</Link>
+        <Link href="/signup" target="_blank" rel="noopener noreferrer" style={{ padding: "16px 28px", fontSize: 19, fontWeight: 500, fontFamily: "'Montserrat', sans-serif", background: "#0F62FE", color: "white", borderRadius: 10, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", whiteSpace: "nowrap", flexShrink: 0 }} className="crear-cuenta-button">Agendar demo</Link>
       </div>
 
       <main style={{ flex: 1, width: "100%", maxWidth: "100%", display: "flex", flexDirection: "column" }}>
@@ -1281,12 +1282,6 @@ const defaultCourses: Course[] = [
   },
 ]
 
-const planTitles = ["Instituciones", "Individual"] as const
-const planDescriptions: Record<(typeof planTitles)[number], string> = {
-  Instituciones: "Para escuelas, universidades y organizaciones educativas.",
-  Individual: "Para estudiantes y personas que quieren aprender finanzas.",
-}
-
 const logoCarouselLogos: { src: string; alt: string }[] = [
   { src: "/logos/logo-imef.png", alt: "IMEF Ejecutivos de Finanzas" },
   { src: "/logos/logo-mondragon.png", alt: "Universidad Mondragón México" },
@@ -1301,16 +1296,10 @@ const problemSchools: { title: string; description: string }[] = [
   { title: "Difícil medir avance", description: "No hay forma clara de ver el progreso de cada estudiante." },
   { title: "Falta de tiempo del docente", description: "Los profesores no tienen tiempo para personalizar la enseñanza." },
 ]
-const problemIndividual: { title: string; description: string }[] = [
-  { title: "No sé por dónde empezar", description: "Hay tanta información que no sé qué aprender primero." },
-  { title: "Aprendo pero no aplico", description: "Leo y veo contenido pero no paso a la acción con mi dinero." },
-  { title: "Me cuesta ser constante", description: "Empiezo con ánimo pero abandono al poco tiempo." },
-]
-
-const howItWorksSteps: { title: string; schoolsText: string; individualsText: string }[] = [
-  { title: "Empiezo", schoolsText: "El colegio crea grupos y accesos.", individualsText: "Creas tu cuenta y empiezas hoy." },
-  { title: "Practico", schoolsText: "Los estudiantes usan simuladores y retos en clase.", individualsText: "Haces retos y simuladores a tu ritmo." },
-  { title: "Mido mi progreso", schoolsText: "El docente ve reportes y avance por alumno.", individualsText: "Ves tu avance y logros en tu perfil." },
+const howItWorksSteps: { title: string; schoolsText: string }[] = [
+  { title: "Empiezo", schoolsText: "El colegio crea grupos y accesos." },
+  { title: "Practico", schoolsText: "Los estudiantes usan simuladores y retos en clase." },
+  { title: "Mido mi progreso", schoolsText: "El docente ve reportes y avance por alumno." },
 ]
 
 const defaultFaqs: FAQ[] = [
@@ -1320,7 +1309,7 @@ const defaultFaqs: FAQ[] = [
   },
   {
     q: "¿Para quién es?",
-    a: "Para estudiantes de prepa/universidad y personas que inician en finanzas personales.",
+    a: "Para escuelas, universidades y organizaciones educativas que quieren ofrecer educación financiera práctica a sus estudiantes.",
   },
   {
     q: "¿Cómo funcionan los retos?",
@@ -1410,18 +1399,11 @@ const audienceEscuelas = {
   cta: "Agendar demo",
   ctaHref: "#contacto",
 }
-const audienceParticulares = {
-  badge: "Para ti",
-  bullets: ["Acceso inmediato", "A tu ritmo", "Práctica con simuladores"],
-  cta: "Comprar ahora",
-  ctaHref: "/signup",
-}
 
 function LandingContent() {
   const primary = "#0F71FD"
   const accent = "#10B981"
-  const [audienceTab, setAudienceTab] = React.useState<"Escuelas" | "Particulares">("Escuelas")
-  const audienceContent = audienceTab === "Escuelas" ? audienceEscuelas : audienceParticulares
+  const audienceContent = audienceEscuelas
 
   return (
     <>
@@ -1482,7 +1464,7 @@ function LandingContent() {
               marginLeft: "auto",
               marginRight: "auto",
             }}>
-              BIZEN es la plataforma de educación financiera que combina gamificación e inteligencia artificial para que aprendas de forma práctica. Pensada para escuelas y para ti: cursos claros, simuladores reales y un progreso que puedes ver y medir.
+              BIZEN es la plataforma de educación financiera que combina gamificación e inteligencia artificial para que tus estudiantes aprendan de forma práctica. Pensada para escuelas: cursos claros, simuladores reales y un progreso que puedes ver y medir.
             </p>
             <ul style={{
               listStyle: "none",
@@ -1516,65 +1498,10 @@ function LandingContent() {
         </div>
       </section>
 
-      {/* Audience Switcher (Tabs) - Escuelas / Particulares */}
+      {/* Audience - Para escuelas */}
       <section id="audiencia" className="section audience-switcher reveal-element" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(248, 251, 255, 0.4) 50%, transparent 100%)", padding: "clamp(56px, 10vw, 88px) clamp(16px, 4vw, 24px)" }}>
         <div className="container" style={{ maxWidth: "820px", margin: "0 auto" }}>
           <div style={{ width: "100%" }}>
-            <div role="tablist" className="audience-tabs" style={{
-              display: "flex",
-              gap: "0",
-              borderRadius: "14px",
-              background: "rgba(15, 98, 254, 0.08)",
-              padding: "8px",
-              marginBottom: "32px",
-              border: "1px solid rgba(15, 98, 254, 0.12)",
-              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)",
-            }}>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={audienceTab === "Escuelas"}
-                onClick={() => setAudienceTab("Escuelas")}
-                style={{
-                  flex: 1,
-                  padding: "16px 24px",
-                  fontSize: "clamp(17px, 1.15rem, 19px)",
-                  fontWeight: 600,
-                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
-                  color: audienceTab === "Escuelas" ? "#fff" : "#475569",
-                  background: audienceTab === "Escuelas" ? "#0F62FE" : "transparent",
-                  border: "none",
-                  borderRadius: "12px",
-                  cursor: "pointer",
-                  transition: "background 0.2s ease, color 0.2s ease",
-                }}
-                className="audience-tab-btn"
-              >
-                Escuelas
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={audienceTab === "Particulares"}
-                onClick={() => setAudienceTab("Particulares")}
-                style={{
-                  flex: 1,
-                  padding: "16px 24px",
-                  fontSize: "clamp(17px, 1.15rem, 19px)",
-                  fontWeight: 600,
-                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
-                  color: audienceTab === "Particulares" ? "#fff" : "#475569",
-                  background: audienceTab === "Particulares" ? "#0F62FE" : "transparent",
-                  border: "none",
-                  borderRadius: "12px",
-                  cursor: "pointer",
-                  transition: "background 0.2s ease, color 0.2s ease",
-                }}
-                className="audience-tab-btn"
-              >
-                Particulares
-              </button>
-            </div>
             <div role="tabpanel" style={{
               textAlign: "center",
               padding: "clamp(36px, 5vw, 52px) clamp(28px, 4vw, 48px)",
@@ -1661,127 +1588,115 @@ function LandingContent() {
         </div>
       </section>
 
-      {/* El problema - pain points, two columns */}
-      <section id="problema" className="section problem-section reveal-element reveal-delay-1" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(248, 251, 255, 0.4) 30%, rgba(241, 245, 249, 0.35) 70%, transparent 100%)", padding: "clamp(56px, 10vw, 96px) clamp(16px, 4vw, 24px)" }}>
-        <div className="container" style={{ maxWidth: "960px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "clamp(40px, 6vw, 56px)" }}>
-            <h2 style={{
-              margin: "0 0 12px",
-              fontSize: "clamp(28px, 4vw, 42px)",
-              fontWeight: 800,
-              color: "#111",
-              fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
-              lineHeight: 1.2,
-              letterSpacing: "-0.02em",
-            }}>
-              El problema
-            </h2>
-            <p style={{ margin: 0, fontSize: "clamp(16px, 1.05rem, 18px)", color: "#64748b", fontFamily: "'Inter', sans-serif", maxWidth: "520px", marginLeft: "auto", marginRight: "auto" }}>
-              En escuelas y en lo individual, la educación financiera tropieza con lo mismo.
-            </p>
-          </div>
-          <div className="problem-columns" style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "clamp(28px, 4vw, 48px)",
-            alignItems: "stretch",
+      {/* El problema - pain points, centered */}
+      <section id="problema" className="section problem-section reveal-element reveal-delay-1" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(248, 251, 255, 0.5) 25%, rgba(239, 246, 255, 0.45) 75%, transparent 100%)", padding: "clamp(64px, 10vw, 112px) clamp(20px, 4vw, 32px)", textAlign: "center" }}>
+        <div className="container problem-section-inner" style={{ maxWidth: "640px", margin: "0 auto", width: "100%" }}>
+          <span style={{
+            display: "inline-block",
+            padding: "8px 18px",
+            borderRadius: "999px",
+            fontSize: "clamp(12px, 0.85rem, 13px)",
+            fontWeight: 700,
+            color: "#0F62FE",
+            background: "rgba(15, 98, 254, 0.12)",
+            marginBottom: "20px",
+            fontFamily: "'Inter', sans-serif",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
           }}>
-            <div className="problem-column" style={{
-              padding: "clamp(24px, 3vw, 32px)",
-              borderRadius: "20px",
-              background: "rgba(255, 255, 255, 0.92)",
-              border: "1px solid rgba(15, 98, 254, 0.12)",
-              boxShadow: "0 4px 24px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(15, 98, 254, 0.06)",
-            }}>
-              <h3 style={{
-                margin: "0 0 24px",
-                fontSize: "clamp(18px, 2vw, 22px)",
-                fontWeight: 700,
-                color: "#0F62FE",
-                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
+            En escuelas
+          </span>
+          <h2 style={{
+            margin: "0 0 16px",
+            fontSize: "clamp(32px, 4.5vw, 48px)",
+            fontWeight: 800,
+            color: "#111",
+            fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
+            lineHeight: 1.15,
+            letterSpacing: "-0.03em",
+          }}>
+            El problema
+          </h2>
+          <p style={{
+            margin: "0 0 clamp(48px, 8vw, 64px)",
+            fontSize: "clamp(17px, 1.1rem, 19px)",
+            color: "#475569",
+            fontFamily: "'Inter', sans-serif",
+            lineHeight: 1.6,
+            maxWidth: "480px",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}>
+            En escuelas, la educación financiera tropieza con lo mismo.
+          </p>
+          <div className="problem-cards-list" style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "clamp(20px, 3vw, 28px)",
+            alignItems: "center",
+            width: "100%",
+          }}>
+            {problemSchools.map((card, i) => (
+              <div key={i} className="problem-card" style={{
+                width: "100%",
+                maxWidth: "560px",
+                padding: "clamp(24px, 3vw, 32px) clamp(28px, 4vw, 40px)",
+                borderRadius: "20px",
+                background: "#fff",
+                border: "2px solid rgba(15, 98, 254, 0.12)",
+                boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(15, 98, 254, 0.08)",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                gap: "10px",
+                textAlign: "center",
+                transition: "border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease",
               }}>
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#0F62FE" }} aria-hidden />
-                En escuelas
-              </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                {problemSchools.map((card, i) => (
-                  <div key={i} className="problem-card" style={{
-                    padding: "20px 22px",
-                    borderRadius: "16px",
-                    background: "#fff",
-                    border: "1px solid rgba(15, 98, 254, 0.15)",
-                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
-                    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-                  }}>
-                    <h4 style={{ margin: "0 0 8px", fontSize: "clamp(15px, 1rem, 17px)", fontWeight: 700, color: "#1f2937", fontFamily: "'Inter', sans-serif" }}>
-                      {card.title}
-                    </h4>
-                    <p style={{ margin: 0, fontSize: "14px", color: "#64748b", lineHeight: 1.55, fontFamily: "'Inter', sans-serif" }}>
-                      {card.description}
-                    </p>
-                  </div>
-                ))}
+                <div style={{
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.06) 100%)",
+                  border: "1px solid rgba(239, 68, 68, 0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: "16px",
+                  flexShrink: 0,
+                }}>
+                  <span style={{ fontSize: "20px", fontWeight: 800, color: "#DC2626", fontFamily: "'Inter', sans-serif" }}>{i + 1}</span>
+                </div>
+                <h3 style={{
+                  margin: "0 0 10px",
+                  fontSize: "clamp(18px, 1.25rem, 22px)",
+                  fontWeight: 700,
+                  color: "#1e293b",
+                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
+                  lineHeight: 1.3,
+                }}>
+                  {card.title}
+                </h3>
+                <p style={{
+                  margin: 0,
+                  fontSize: "clamp(15px, 1rem, 16px)",
+                  color: "#64748b",
+                  lineHeight: 1.6,
+                  fontFamily: "'Inter', sans-serif",
+                  maxWidth: "420px",
+                }}>
+                  {card.description}
+                </p>
               </div>
-            </div>
-            <div className="problem-column" style={{
-              padding: "clamp(24px, 3vw, 32px)",
-              borderRadius: "20px",
-              background: "rgba(255, 255, 255, 0.92)",
-              border: "1px solid rgba(15, 98, 254, 0.12)",
-              boxShadow: "0 4px 24px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(15, 98, 254, 0.06)",
-            }}>
-              <h3 style={{
-                margin: "0 0 24px",
-                fontSize: "clamp(18px, 2vw, 22px)",
-                fontWeight: 700,
-                color: "#0F62FE",
-                fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}>
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#0F62FE" }} aria-hidden />
-                En particulares
-              </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                {problemIndividual.map((card, i) => (
-                  <div key={i} className="problem-card" style={{
-                    padding: "20px 22px",
-                    borderRadius: "16px",
-                    background: "#fff",
-                    border: "1px solid rgba(15, 98, 254, 0.15)",
-                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
-                    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-                  }}>
-                    <h4 style={{ margin: "0 0 8px", fontSize: "clamp(15px, 1rem, 17px)", fontWeight: 700, color: "#1f2937", fontFamily: "'Inter', sans-serif" }}>
-                      {card.title}
-                    </h4>
-                    <p style={{ margin: 0, fontSize: "14px", color: "#64748b", lineHeight: 1.55, fontFamily: "'Inter', sans-serif" }}>
-                      {card.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
           <style>{`
+            .problem-section-inner { display: flex; flex-direction: column; align-items: center; }
             .problem-card:hover {
-              border-color: rgba(15, 98, 254, 0.3) !important;
-              box-shadow: 0 4px 16px rgba(15, 98, 254, 0.1) !important;
+              border-color: rgba(15, 98, 254, 0.25) !important;
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(15, 98, 254, 0.12) !important;
+              transform: translateY(-2px);
             }
             @media (max-width: 767px) {
-              .problem-columns {
-                grid-template-columns: 1fr !important;
-              }
-            }
-            @media (min-width: 768px) {
-              .problem-columns {
-                grid-template-columns: 1fr 1fr !important;
-                gap: clamp(24px, 4vw, 36px) !important;
-              }
+              .problem-cards-list { width: 100%; }
             }
           `}</style>
         </div>
@@ -1863,14 +1778,7 @@ function LandingContent() {
                 </h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
                   <p style={{ margin: 0, fontSize: "clamp(14px, 0.95rem, 15px)", color: "#475569", lineHeight: 1.55, fontFamily: "'Inter', sans-serif" }}>
-                    <span style={{ fontWeight: 600, color: "#0F62FE", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.04em" }}>En escuelas</span>
-                    <br />
                     <span style={{ color: "#64748b" }}>{step.schoolsText}</span>
-                  </p>
-                  <p style={{ margin: 0, fontSize: "clamp(14px, 0.95rem, 15px)", color: "#475569", lineHeight: 1.55, fontFamily: "'Inter', sans-serif" }}>
-                    <span style={{ fontWeight: 600, color: "#0F62FE", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.04em" }}>En individual</span>
-                    <br />
-                    <span style={{ color: "#64748b" }}>{step.individualsText}</span>
                   </p>
                 </div>
               </div>
@@ -1925,7 +1833,7 @@ function LandingContent() {
                 fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
                 lineHeight: 1.5,
               }}>
-                Únete a BIZEN y aprende finanzas personales de forma práctica y divertida.
+                Lleva educación financiera práctica a tu institución. Agenda una demo y conoce la plataforma.
               </p>
               <Link
                 href="/signup"
@@ -1944,80 +1852,8 @@ function LandingContent() {
                 }}
                 className="cta-button"
               >
-                Crear cuenta
+                Agendar demo
               </Link>
-            </div>
-
-            {/* Plan squares below CTA - nudge left for visual center */}
-            <div className="plans-two-squares" style={{
-            display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: "clamp(32px, 5vw, 56px)",
-              width: "100%",
-              transform: "translateX(-52px)",
-            }}>
-            {planTitles.map((title, i) => (
-              <div
-                key={i}
-                className="plan-square"
-                style={{
-                  aspectRatio: "1",
-                  borderRadius: "28px",
-                  border: "2px solid rgba(15, 98, 254, 0.3)",
-                  background: "rgba(255, 255, 255, 0.9)",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-                  justifyContent: "center",
-                  padding: "clamp(28px, 4vw, 40px)",
-                  transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
-                }}
-              >
-                <h3 style={{
-                  margin: 0,
-                  fontSize: (title === "Instituciones" || title === "Individual") ? "clamp(18px, 2.5vw, 26px)" : "clamp(22px, 3.5vw, 32px)",
-                  fontWeight: 700,
-                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
-              textAlign: "center",
-                  lineHeight: 1.3,
-                }}>
-                  <span style={{ color: "#0F62FE" }}>BIZEN</span>{" "}
-                  <span style={{ color: "#1f2937" }}>{title}</span>
-                </h3>
-              <p style={{
-                  margin: "8px 0 0",
-                  fontSize: "clamp(13px, 1.1vw, 15px)",
-                  color: "#64748b",
-                  fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, sans-serif",
-        textAlign: "center",
-                  lineHeight: 1.45,
-                  maxWidth: "260px",
-                }}>
-                  {planDescriptions[title]}
-                </p>
-                {title === "Instituciones" && (
-                  <div style={{ flexShrink: 0, marginTop: "16px", position: "relative", width: "clamp(160px, 36vw, 240px)", height: "clamp(160px, 36vw, 240px)" }}>
-                    <Image
-                      src="/bizen-instituciones.png"
-                      alt="BIZEN Instituciones - educación"
-                      fill
-                      style={{ objectFit: "contain" }}
-                    />
-      </div>
-                )}
-                {title === "Individual" && (
-                  <div style={{ flexShrink: 0, marginTop: "16px", position: "relative", width: "clamp(160px, 36vw, 240px)", height: "clamp(160px, 36vw, 240px)" }}>
-                    <Image
-                      src="/bizen-particulares.png"
-                      alt="BIZEN Individual - para ti"
-                      fill
-                      style={{ objectFit: "contain" }}
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
             </div>
           </div>
         </div>
@@ -2708,22 +2544,12 @@ html {
   100% { transform: translateX(-50%); }
 }
 
-.plan-square:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(15, 98, 254, 0.2), 0 8px 24px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  border-color: rgba(15, 98, 254, 0.5);
-}
-
 .problem-columns,
-.how-it-works-steps,
-.plans-two-squares {
+.how-it-works-steps {
   min-width: 0 !important;
   max-width: 100% !important;
   overflow-x: hidden !important;
   box-sizing: border-box !important;
-}
-@media (max-width: 600px) {
-  .plans-two-squares { grid-template-columns: 1fr !important; }
 }
 
 @media (max-width: 767px) {

@@ -36,23 +36,8 @@ export default function ProtectedRoute({
           borderRadius: "12px",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
         }}>
-          <div style={{
-            width: "40px",
-            height: "40px",
-            border: "4px solid #e5e7eb",
-            borderTop: "4px solid #0B71FE",
-            borderRadius: "50%",
-            animation: "spin 1s linear infinite",
-            margin: "0 auto 1rem"
-          }} />
           <p style={{ margin: 0, color: "#6b7280" }}>Cargando...</p>
         </div>
-        <style jsx>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     )
   }

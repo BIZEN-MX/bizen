@@ -1053,7 +1053,7 @@ export default function ThreadDetailPage() {
             borderRadius: 16,
             border: "2px solid rgba(239, 68, 68, 0.3)"
           }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>🔒</div>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: "#DC2626" }}>Cerrado</div>
             <div style={{ fontSize: 15, fontWeight: 700, color: "#DC2626" }}>
               Este tema está cerrado y no acepta nuevas respuestas
             </div>
