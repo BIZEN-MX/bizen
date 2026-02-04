@@ -30,7 +30,7 @@ export function LessonScreen({
 }: LessonScreenProps) {
   return (
     <div
-      className="min-h-screen flex flex-col bg-white text-slate-900 relative"
+      className="flex flex-col bg-white text-slate-900 relative w-full flex-1 min-h-0"
       style={{
         paddingTop: "env(safe-area-inset-top)",
         minHeight: "100dvh",
@@ -38,18 +38,22 @@ export function LessonScreen({
         overflow: "hidden",
       }}
     >
-      {/* Progress Bar */}
-      <div className="pt-4 md:pt-6 pb-2 md:pb-4 flex-shrink-0 pointer-events-none">
-        <div className="pointer-events-auto">
-          <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
-        </div>
+      {/* Progress Bar - visible strip at top */}
+      <div style={{ flexShrink: 0, paddingTop: 8, paddingBottom: 8 }}>
+        <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
       </div>
 
-      {/* Main Content - Scrollable */}
-      <LessonContainer className={className}>{children}</LessonContainer>
+      {/* Main Content - Scrollable; extra padding so content is not hidden under fixed footer */}
+      <LessonContainer className={className} bottomPad={footerContent ? 100 : undefined}>
+        {children}
+      </LessonContainer>
 
-      {/* Sticky Footer - Always at bottom */}
-      {footerContent && <StickyFooter>{footerContent}</StickyFooter>}
+      {/* Footer - Fixed to bottom of viewport so it stays visible */}
+      {footerContent && (
+        <div className="lesson-footer-fixed">
+          <StickyFooter>{footerContent}</StickyFooter>
+        </div>
+      )}
     </div>
   )
 }

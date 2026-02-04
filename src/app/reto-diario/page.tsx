@@ -62,7 +62,7 @@ export default function RetoDiarioPage() {
           }}
         />
 
-        <div style={{ position: "relative", zIndex: 1, maxWidth: "720px", margin: "0 auto" }}>
+        <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: "min(100%, 960px)", margin: "0 auto", boxSizing: "border-box" }}>
           {/* Hero: icon + title + tagline */}
           <div
             style={{

@@ -133,8 +133,6 @@ export interface BaseLessonStep {
   stepType: StepType;
   title?: string;
   description?: string;
-  /** Optional label for the primary footer button (e.g. "Empezar" on welcome screen) */
-  continueLabel?: string;
   isAssessment?: boolean; // true if it should be considered for correctness tracking
   recordIncorrect?: boolean; // default true for question steps
   reviewSourceStepId?: string; // used when a review step is a repetition of another step

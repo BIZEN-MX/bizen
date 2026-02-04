@@ -97,7 +97,7 @@ export default function CoursesPage() {
           {
             id: "course-1", title: "Fundamentos del Dinero", description: "Aprende los conceptos básicos sobre el dinero", level: "Beginner", order: 1,
             lessons: [
-              { unitTitle: "¿Qué es el dinero?", title: "Por qué importa el dinero" },
+              { unitTitle: "¿Qué es el dinero?", title: "Historia del dinero" },
               { unitTitle: "¿Qué es el dinero?", title: "¿Cómo gana valor?" },
               { unitTitle: "¿Qué es el dinero?", title: "Dinero físico vs digital" },
               { unitTitle: "Conceptos financieros básicos", title: "Ingresos y gastos" },
@@ -902,7 +902,9 @@ export default function CoursesPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <Button
                 onClick={() => {
-                  if (lessonModalLesson.order === 1 || lessonModalLesson.order === 2) {
+                  if (lessonModalLesson.courseId === "course-1" && lessonModalLesson.order === 3) {
+                    router.push("/learn/course-1/unit-1/l3-fisico-vs-digital")
+                  } else if (lessonModalLesson.order === 1 || lessonModalLesson.order === 2) {
                     router.push(`/learn/${lessonModalLesson.courseId}/unit-1/${lessonModalLesson.id}/interactive`)
                   } else {
                     router.push(`/learn/${lessonModalLesson.courseId}/unit-1/${lessonModalLesson.id}`)

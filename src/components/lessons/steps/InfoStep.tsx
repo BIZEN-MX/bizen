@@ -38,7 +38,7 @@ export function InfoStep({ step, onAnswered }: InfoStepProps) {
           />
         </div>
       )}
-      <div className={`${sharedStyles.body} whitespace-pre-line`}>{step.body}</div>
+      <div className={sharedStyles.body}>{step.body}</div>
     </div>
   )
 }

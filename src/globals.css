@@ -396,6 +396,11 @@ html, body {
   }
 }
 
+/* Hide app mobile footer on interactive lesson page (lesson has its own bar) */
+body[data-lesson-interactive="true"] .mobile-footer-container {
+  display: none !important;
+}
+
 /* ============================================
    TABLET/IPAD LAYOUT FIX
    Ensure ALL content uses full width accounting for fixed left sidebar

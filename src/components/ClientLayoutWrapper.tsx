@@ -93,6 +93,9 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                      pathname === '/bizen/privacidad' || // Privacy page
                      pathname === '/bizen/terminos' // Terms page
 
+  // Hide app footer on interactive lesson page (lesson has its own Salir/Continuar bar)
+  const isLessonInteractivePage = pathname?.includes('/learn/') && pathname?.includes('/interactive')
+
   // Detect mobile screen size (≤767px)
   useEffect(() => {
     const checkMobile = () => {
@@ -107,7 +110,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   useEffect(() => {
     if (typeof document === "undefined") return
 
-    if (!isAuthPage && isMobile) {
+    if (!isAuthPage && isMobile && !isLessonInteractivePage) {
       document.body.setAttribute("data-mobile-footer", "true")
     } else {
       document.body.removeAttribute("data-mobile-footer")
@@ -116,15 +119,26 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     return () => {
       document.body.removeAttribute("data-mobile-footer")
     }
-  }, [isAuthPage, isMobile])
+  }, [isAuthPage, isMobile, isLessonInteractivePage])
+
+  // Flag body on lesson interactive page so CSS can hide app footer (backup)
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    if (isLessonInteractivePage) {
+      document.body.setAttribute("data-lesson-interactive", "true")
+    } else {
+      document.body.removeAttribute("data-lesson-interactive")
+    }
+    return () => document.body.removeAttribute("data-lesson-interactive")
+  }, [isLessonInteractivePage])
 
   return (
     <>
       {/* Show FixedSidebar only on larger screens (>767px) */}
       {!isAuthPage && !isMobile && <FixedSidebar />}
       
-      {/* Show MobileFooterNav only on mobile (≤767px) */}
-      {!isAuthPage && isMobile && <MobileFooterNav />}
+      {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page */}
+      {!isAuthPage && isMobile && !isLessonInteractivePage && <MobileFooterNav />}
       
       {/* Only show MobileBottomNav on desktop/tablet, never on mobile */}
       {!isAuthPage && !isMobile && <MobileBottomNav />}

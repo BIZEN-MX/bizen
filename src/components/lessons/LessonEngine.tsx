@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useReducer, useEffect, useCallback } from "react"
+import React, { useReducer, useEffect, useCallback, useState } from "react"
 import { LessonStep } from "@/types/lessonTypes"
 import { lessonReducer, LessonState } from "./lessonReducer"
 import { LessonScreen, StickyFooterButton } from "./index"
@@ -26,6 +26,7 @@ interface LessonEngineProps {
  * Main lesson engine component that manages state and renders appropriate step components
  */
 export function LessonEngine({ lessonSteps, onComplete, onExit }: LessonEngineProps) {
+  const [showExitConfirm, setShowExitConfirm] = useState(false)
   const [state, dispatch] = useReducer(lessonReducer, {
     originalSteps: lessonSteps,
     allSteps: lessonSteps,
@@ -269,32 +270,97 @@ export function LessonEngine({ lessonSteps, onComplete, onExit }: LessonEnginePr
       currentStep={state.currentStepIndex + 1}
       totalSteps={state.allSteps.length}
       footerContent={
-        <div className="flex gap-3 md:gap-4">
-          {onExit && (
-            <StickyFooterButton variant="secondary" onClick={onExit} className="flex-1 max-w-none">
-              Exit
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 16,
+          }}
+        >
+          {onExit ? (
+            <StickyFooterButton
+              variant="danger"
+              onClick={() => setShowExitConfirm(true)}
+              style={{
+                minHeight: 56,
+                minWidth: 140,
+                padding: "14px 24px",
+                fontSize: "1.125rem",
+              }}
+              className="rounded-xl"
+            >
+              Salir
             </StickyFooterButton>
+          ) : (
+            <span style={{ minWidth: 0 }} aria-hidden />
           )}
           <StickyFooterButton
-            variant={isLastStep || isSummaryStep ? "success" : "primary"}
+            variant={isLastStep || isSummaryStep ? "success" : "blue"}
             onClick={handleContinue}
             disabled={!state.isContinueEnabled}
-            className={onExit ? "flex-1 max-w-none" : "w-full"}
+            style={{
+              minHeight: 56,
+              minWidth: 160,
+              padding: "14px 24px",
+              fontSize: "1.125rem",
+            }}
+            className="rounded-xl"
           >
-            {(currentStep as { continueLabel?: string }).continueLabel ??
-              (isLastStep || isSummaryStep ? "Completar lección" : "Continuar")}
+            {isSummaryStep ? "Siguiente lección" : isLastStep ? "Finalizar" : "Continuar"}
           </StickyFooterButton>
         </div>
       }
     >
       {isReviewStep && (
-        <div className="mb-4 p-3 bg-amber-100 border border-amber-400 rounded-lg">
-          <p className="text-xl md:text-2xl font-semibold text-amber-900">
+        <div className="mb-4 p-3 bg-indigo-50 border border-indigo-200 rounded-xl">
+          <p className="text-xl md:text-2xl font-semibold text-indigo-900">
             Otra oportunidad
           </p>
         </div>
       )}
       {renderStep()}
+      {showExitConfirm && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="exit-dialog-title"
+          onClick={() => setShowExitConfirm(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 md:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="exit-dialog-title" className="text-xl md:text-2xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+              ⚠️ ¿Estás seguro?
+            </h2>
+            <p className="text-base md:text-lg text-slate-600 mb-6 leading-relaxed">
+              Si sales ahora, se perderá tu progreso de la lección actual. ¿Deseas continuar?
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                type="button"
+                onClick={() => setShowExitConfirm(false)}
+                className="flex-1 px-5 py-3 rounded-xl font-semibold text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-md"
+              >
+                Continuar con la lección
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowExitConfirm(false)
+                  onExit?.()
+                }}
+                className="flex-1 px-5 py-3 rounded-xl font-semibold text-red-600 bg-white border border-red-300 hover:bg-red-50 transition-colors"
+              >
+                Salir de la lección
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </LessonScreen>
   )
 }

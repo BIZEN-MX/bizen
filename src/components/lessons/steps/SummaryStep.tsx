@@ -23,7 +23,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
       <div className="h-1 w-20 md:w-24 rounded-full bg-slate-300 mb-4" aria-hidden />
       <h2 className={sharedStyles.title}>{step.title}</h2>
       <div
-        className={`${sharedStyles.body} mt-6 p-5 md:p-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-800 text-2xl md:text-3xl lg:text-4xl whitespace-pre-line`}
+        className={`${sharedStyles.body} mt-6 p-5 md:p-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-800 text-2xl md:text-3xl lg:text-4xl`}
       >
         {step.body}
       </div>

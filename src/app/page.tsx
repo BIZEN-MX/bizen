@@ -144,7 +144,7 @@ export default function WelcomePage() {
           <Link href="#precios" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Para escuelas</Link>
           <Link href="#contacto" className="header-nav-link" style={{ fontSize: 19, fontWeight: 400, color: "#1e40af", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap" }}>Contacto</Link>
         </nav>
-        <Link href="/signup" target="_blank" rel="noopener noreferrer" style={{ padding: "16px 28px", fontSize: 19, fontWeight: 500, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", background: "#0F62FE", color: "white", borderRadius: 10, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", whiteSpace: "nowrap", flexShrink: 0 }} className="crear-cuenta-button">Agendar demo</Link>
+        <Link href="#contacto" style={{ padding: "16px 28px", fontSize: 19, fontWeight: 500, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", background: "#0F62FE", color: "white", borderRadius: 10, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", whiteSpace: "nowrap", flexShrink: 0 }} className="crear-cuenta-button">Agendar demo</Link>
       </div>
 
       <main style={{ flex: 1, width: "100%", maxWidth: "100%", display: "flex", flexDirection: "column" }}>
@@ -236,30 +236,30 @@ export default function WelcomePage() {
             {/* Rectangles - separate full-width block, outside absolute container to avoid clipping */}
             <div className="hero-rectangles-wrapper">
               <div className="hero-rect-row">
-                <Link href="/signup" target="_blank" rel="noopener noreferrer" className="hero-card-link">
+                <div className="hero-card-link">
                   <div className="hero-rect-card">
                     <div className="hero-rect-inner">
                       <Image src="/hero1.png" alt="Billy con lápiz y libreta" fill style={{ objectFit: "contain" }} />
-                </div>
+                    </div>
                   </div>
                   <span className="hero-circle-label">Finanzas<br />Personales</span>
-                      </Link>
-                <Link href="/signup" target="_blank" rel="noopener noreferrer" className="hero-card-link">
+                </div>
+                <div className="hero-card-link">
                   <div className="hero-rect-card">
                     <div className="hero-rect-inner">
                       <Image src="/hero2.png" alt="Billy con tablet y gráfica financiera" fill style={{ objectFit: "contain" }} />
                     </div>
                   </div>
                   <span className="hero-circle-label">Simuladores<br />financieros</span>
-                      </Link>
-                <Link href="/signup" target="_blank" rel="noopener noreferrer" className="hero-card-link">
+                </div>
+                <div className="hero-card-link">
                   <div className="hero-rect-card">
                     <div className="hero-rect-inner">
                       <Image src="/hero3.png" alt="Billy con alcancía" fill style={{ objectFit: "contain" }} />
-                </div>
-              </div>
+                    </div>
+                  </div>
                   <span className="hero-circle-label">Plan de<br />ahorro</span>
-                </Link>
+                </div>
             </div>
             </div>
 
@@ -655,7 +655,6 @@ export default function WelcomePage() {
             0 2px 12px rgba(15, 113, 253, 0.12),
             inset 0 1px 0 rgba(255, 255, 255, 0.9);
           transition: opacity 0.25s ease;
-          cursor: pointer;
           opacity: 0.88;
         }
         .hero-card-link:hover .hero-rect-card {
@@ -854,6 +853,10 @@ export default function WelcomePage() {
         }
         
         @media (max-width: 768px) {
+          /* Header: never sticky on small screens – scrolls with page */
+          .main-page-container .main-header {
+            position: static !important;
+          }
           /* Header fixes for mobile */
           .main-header nav {
             flex-shrink: 1 !important;
@@ -1597,21 +1600,6 @@ function LandingContent() {
       {/* El problema - pain points, centered */}
       <section id="problema" className="section problem-section reveal-element reveal-delay-1" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(248, 251, 255, 0.5) 25%, rgba(239, 246, 255, 0.45) 75%, transparent 100%)", padding: "clamp(64px, 10vw, 112px) clamp(20px, 4vw, 32px)", textAlign: "center" }}>
         <div className="container problem-section-inner" style={{ maxWidth: "640px", margin: "0 auto", width: "100%" }}>
-          <span style={{
-            display: "inline-block",
-            padding: "8px 18px",
-            borderRadius: "999px",
-            fontSize: "clamp(12px, 0.85rem, 13px)",
-            fontWeight: 700,
-            color: "#0F62FE",
-            background: "rgba(15, 98, 254, 0.12)",
-            marginBottom: "20px",
-            fontFamily: "'Inter', sans-serif",
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-          }}>
-            En escuelas
-          </span>
           <h2 style={{
             margin: "0 0 16px",
             fontSize: "clamp(32px, 4.5vw, 48px)",
@@ -1633,7 +1621,7 @@ function LandingContent() {
             marginLeft: "auto",
             marginRight: "auto",
           }}>
-            En escuelas, la educación financiera tropieza con lo mismo.
+            La educación financiera tropieza con lo mismo.
           </p>
           <div className="problem-cards-list" style={{
             display: "flex",
@@ -1842,7 +1830,7 @@ function LandingContent() {
                 Lleva educación financiera práctica a tu institución. Agenda una demo y conoce la plataforma.
               </p>
               <Link
-                href="/signup"
+                href="#contacto"
                 style={{
                   display: "inline-block",
                   padding: "16px 32px",
@@ -1892,493 +1880,225 @@ function LandingContent() {
         </div>
       </section>
 
-      {/* CONTACTO */}
+      {/* SCHEDULE A DEMO - lesson-style card, matches BIZEN UI */}
       <section id="contacto" className="section contact reveal-element" style={{
         background: "transparent",
-        position: "relative",
-        overflow: "visible",
-        paddingTop: "clamp(64px, 10vw, 120px)",
-        paddingBottom: "clamp(120px, 15vw, 200px)", // Greatly increased padding for footer buffer
+        paddingTop: "clamp(64px, 10vw, 96px)",
+        paddingBottom: "clamp(96px, 12vw, 160px)",
         width: "100%",
         boxSizing: "border-box",
-        zIndex: 1,
       }}>
-        {/* Decorative background elements - hidden on mobile */}
-        <div className="decorative-contact-bg-1" style={{
-          position: "absolute",
-          top: "-100px",
-          right: "-100px",
-          width: "400px",
-          height: "400px",
-          background: "radial-gradient(circle, rgba(15, 98, 254, 0.06) 0%, transparent 70%)",
-          borderRadius: "50%",
-          pointerEvents: "none",
-          zIndex: 0,
-          display: "none",
-        }} />
-        <div className="decorative-contact-bg-2" style={{
-          position: "absolute",
-          bottom: "-150px",
-          left: "-150px",
-          width: "500px",
-          height: "500px",
-          background: "radial-gradient(circle, rgba(15, 98, 254, 0.05) 0%, transparent 70%)",
-          borderRadius: "50%",
-          pointerEvents: "none",
-          zIndex: 0,
-          display: "none",
-        }} />
-
-        <div className="container" style={{
-          position: "relative",
-          zIndex: 1,
-          maxWidth: "1200px",
+        <div style={{
+          maxWidth: "min(98vw, 1200px)",
           margin: "0 auto",
-          padding: "0 clamp(16px, 4vw, 32px)",
+          padding: "0 clamp(24px, 5vw, 48px)",
           width: "100%",
-          boxSizing: "border-box"
+          boxSizing: "border-box",
         }}>
-          <header className="section-head" style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 48px)" }}>
-            <h2 style={{
-              fontSize: "clamp(36px, 5.5vw, 56px)",
-              lineHeight: 1.15,
-              margin: "0 0 16px 0",
-              fontWeight: 800,
-              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-              background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-              backgroundSize: "200% auto",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              animation: "shimmer 3s ease-in-out infinite"
-            }}>Contacto</h2>
-            <p style={{
-              fontSize: "clamp(16px, 2vw, 20px)",
-              color: "#475569",
-              margin: 0,
-              lineHeight: 1.6
-            }}>¿Dudas o propuestas? Escríbenos, nos encantará leerte.</p>
-          </header>
-
-          <div style={{
+          <div className="schedule-demo-card schedule-demo-two-col" style={{
+            position: "relative",
+            background: "#ffffff",
+            borderRadius: "16px",
+            border: "1px solid #e2e8f0",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+            padding: "clamp(28px, 5vw, 48px) clamp(28px, 4vw, 48px)",
+            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
             display: "grid",
-            gap: "clamp(24px, 4vw, 40px)",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            alignItems: "stretch",
-            width: "100%",
-            boxSizing: "border-box"
+            gridTemplateColumns: "1fr",
+            gap: "clamp(32px, 5vw, 48px)",
           }}>
+            <div style={{
+              position: "absolute",
+              top: "12px",
+              right: "clamp(24px, 5vw, 48px)",
+              zIndex: 2,
+              width: "clamp(72px, 10vw, 100px)",
+              height: "auto",
+              pointerEvents: "none",
+            }}>
+              <Image src="/hero4.png" alt="" width={100} height={100} style={{ width: "100%", height: "auto", objectFit: "contain" }} />
+            </div>
+            <div className="schedule-demo-content">
+              <h2 style={{
+                fontSize: "clamp(24px, 3.2vw, 30px)",
+                fontWeight: 700,
+                color: "#1e293b",
+                margin: "0 0 12px 0",
+                lineHeight: 1.25,
+              }}>
+                Ver cómo BIZEN prepara a los estudiantes para la vida real
+              </h2>
+              <p style={{
+                fontSize: "clamp(15px, 1.9vw, 17px)",
+                color: "#475569",
+                margin: "0 0 24px 0",
+                lineHeight: 1.5,
+              }}>
+                15 minutos. Sin presión. Solo claridad.
+              </p>
+
+              <ul style={{
+                listStyle: "none",
+                margin: "0 0 24px 0",
+                padding: 0,
+                display: "grid",
+                gap: "10px",
+              }}>
+                {["Cómo funcionan las lecciones de BIZEN", "Cómo las escuelas siguen el progreso de los estudiantes", "Lo fácil que es implementar"].map((item, i) => (
+                  <li key={i} style={{
+                    display: "flex",
+                    gap: "12px",
+                    alignItems: "flex-start",
+                    fontSize: "clamp(15px, 1.8vw, 16px)",
+                    color: "#334155",
+                    lineHeight: 1.5,
+                  }}>
+                    <span style={{ color: "#0F62FE", fontWeight: 700, flexShrink: 0 }}>✓</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <p style={{
+                fontSize: "clamp(14px, 1.7vw, 15px)",
+                color: "#64748b",
+                margin: 0,
+                lineHeight: 1.6,
+              }}>
+                Ideal para secundarias y preparatorias, directores, coordinadores académicos y escuelas que buscan educación práctica.
+              </p>
+            </div>
+
+            <div className="schedule-demo-form-wrap" style={{
+              background: "#f8fafc",
+              borderRadius: "14px",
+              padding: "24px 28px",
+              border: "1px solid #e2e8f0",
+            }}>
             <form
-              className="contact-form"
               onSubmit={async (e) => {
                 e.preventDefault()
                 const form = e.currentTarget
                 const formData = new FormData(form)
-                const name = formData.get('name') as string
-                const email = formData.get('email') as string
-                const message = formData.get('message') as string
+                const name = formData.get("name") as string
+                const email = formData.get("email") as string
+                const school = formData.get("school") as string
+                const role = formData.get("role") as string
+                const students = formData.get("students") as string
+                const parts = [`Escuela: ${school || "—"}`, `Rol: ${role || "—"}`, students ? `Estudiantes: ${students}` : ""].filter(Boolean)
+                const message = parts.join("\n")
 
                 const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement
-                const originalButtonText = submitButton.textContent
-
+                const originalText = submitButton.textContent
                 submitButton.disabled = true
-                submitButton.textContent = 'Enviando...'
+                submitButton.textContent = "Enviando…"
 
                 try {
-                  const response = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
+                  const res = await fetch("/api/contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ name, email, message }),
                   })
-
-                  const result = await response.json()
-
-                  if (result.success) {
-                    alert(result.message || '¡Gracias por contactarnos! Te responderemos pronto.')
+                  const data = await res.json()
+                  if (data.success) {
+                    alert(data.message || "Gracias. Te contactaremos pronto.")
                     form.reset()
                   } else {
-                    alert(result.message || 'Error al enviar el mensaje. Por favor intenta de nuevo.')
+                    alert(data.message || "Error. Intenta de nuevo.")
                   }
-                } catch (error) {
-                  console.error('Error submitting contact form:', error)
-                  alert('Error al enviar el mensaje. Por favor intenta de nuevo más tarde.')
+                } catch {
+                  alert("Error al enviar. Intenta de nuevo más tarde.")
                 } finally {
                   submitButton.disabled = false
-                  submitButton.textContent = originalButtonText || 'Enviar mensaje'
+                  submitButton.textContent = originalText || "Agendar demo"
                 }
               }}
-              style={{
-                background: "rgba(255, 255, 255, 0.8)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                border: "1px solid rgba(15, 98, 254, 0.2)",
-                borderRadius: "24px",
-                padding: "clamp(32px, 5vw, 48px)",
-                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)"
-              }}
+              className="schedule-demo-form"
+              style={{ display: "grid", gap: "18px 24px" }}
             >
-              <div className="contact-field" style={{ marginBottom: "24px" }}>
-                <label htmlFor="contact-name" style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontWeight: 700,
-                  fontSize: "clamp(14px, 1.8vw, 16px)",
-                  color: "#0F172A",
-                  marginBottom: "10px"
-                }}>
-                  <span style={{ fontSize: "20px" }}>👤</span>
-                  Nombre
-                </label>
-                <input
-                  id="contact-name"
-                  name="name"
-                  type="text"
-                  required
-                  placeholder="Tu nombre completo"
-                  style={{
-                    width: "100%",
-                    border: "2px solid rgba(15, 98, 254, 0.2)",
-                    borderRadius: "12px",
-                    padding: "14px 18px",
-                    fontSize: "clamp(14px, 1.8vw, 16px)",
-                    background: "white",
-                    transition: "all 0.3s ease",
-                    fontFamily: "inherit"
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#0F62FE"
-                    e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15, 98, 254, 0.15)"
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.2)"
-                    e.currentTarget.style.boxShadow = "none"
-                  }}
-                />
-              </div>
-
-              <div className="contact-field" style={{ marginBottom: "24px" }}>
-                <label htmlFor="contact-email" style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontWeight: 700,
-                  fontSize: "clamp(14px, 1.8vw, 16px)",
-                  color: "#0F172A",
-                  marginBottom: "10px"
-                }}>
-                  <span style={{ fontSize: "20px" }}>📧</span>
-                  Email
-                </label>
-                <input
-                  id="contact-email"
-                  name="email"
-                  type="email"
-                  required
-                  placeholder="tucorreo@ejemplo.com"
-                  style={{
-                    width: "100%",
-                    border: "2px solid rgba(15, 98, 254, 0.2)",
-                    borderRadius: "12px",
-                    padding: "14px 18px",
-                    fontSize: "clamp(14px, 1.8vw, 16px)",
-                    background: "white",
-                    transition: "all 0.3s ease",
-                    fontFamily: "inherit"
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#0F62FE"
-                    e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15, 98, 254, 0.15)"
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.2)"
-                    e.currentTarget.style.boxShadow = "none"
-                  }}
-                />
-              </div>
-
-              <div className="contact-field" style={{ marginBottom: "24px" }}>
-                <label htmlFor="contact-message" style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontWeight: 700,
-                  fontSize: "clamp(14px, 1.8vw, 16px)",
-                  color: "#0F172A",
-                  marginBottom: "10px"
-                }}>
-                  <span style={{ fontSize: "20px" }}>💬</span>
-                  Mensaje
-                </label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  rows={5}
-                  required
-                  placeholder="Cuéntanos en qué podemos ayudarte…"
-                  style={{
-                    width: "100%",
-                    border: "2px solid rgba(15, 98, 254, 0.2)",
-                    borderRadius: "12px",
-                    padding: "14px 18px",
-                    fontSize: "clamp(14px, 1.8vw, 16px)",
-                    background: "white",
-                    resize: "none",
-                    minHeight: "120px",
-                    transition: "all 0.3s ease",
-                    fontFamily: "inherit"
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#0F62FE"
-                    e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15, 98, 254, 0.15)"
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.2)"
-                    e.currentTarget.style.boxShadow = "none"
-                  }}
-                />
-              </div>
+              {[
+                { id: "demo-name", name: "name", label: "Nombre completo", type: "text", required: true },
+                { id: "demo-email", name: "email", label: "Email", type: "email", required: true },
+                { id: "demo-school", name: "school", label: "Nombre de la escuela", type: "text", required: true },
+                { id: "demo-role", name: "role", label: "Tu rol", type: "text", required: true, placeholder: "ej. Director, Coordinador académico" },
+                { id: "demo-students", name: "students", label: "Número de estudiantes (opcional)", type: "text", required: false },
+              ].map((f) => (
+                <div key={f.id} style={{ display: "flex", flexDirection: "column", gap: "6px", gridColumn: f.name === "students" ? "1 / -1" : undefined }}>
+                  <label htmlFor={f.id} style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>
+                    {f.label}
+                  </label>
+                  <input
+                    id={f.id}
+                    name={f.name}
+                    type={f.type}
+                    required={f.required}
+                    placeholder={f.placeholder}
+                    style={{
+                      width: "100%",
+                      padding: "12px 16px",
+                      fontSize: "15px",
+                      borderRadius: "10px",
+                      background: "#fff",
+                      border: "1px solid #e2e8f0",
+                      color: "#1e293b",
+                      fontFamily: "inherit",
+                      boxSizing: "border-box",
+                      transition: "border-color 0.2s, box-shadow 0.2s",
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = "#0F62FE"
+                      e.currentTarget.style.boxShadow = "0 0 0 3px rgba(15, 98, 254, 0.2)"
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = "#cbd5e1"
+                      e.currentTarget.style.boxShadow = "none"
+                    }}
+                  />
+                </div>
+              ))}
 
               <button
                 type="submit"
                 style={{
                   width: "100%",
-                  background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-                  backgroundSize: "200% auto",
-                  color: "white",
+                  marginTop: "8px",
+                  gridColumn: "1 / -1",
+                  padding: "16px 24px",
+                  minHeight: "52px",
+                  fontSize: "clamp(17px, 2vw, 20px)",
+                  fontWeight: 600,
+                  color: "#ffffff",
+                  background: "#0F62FE",
                   border: "none",
                   borderRadius: "12px",
-                  padding: "16px 24px",
-                  fontSize: "clamp(16px, 2vw, 18px)",
-                  fontWeight: 700,
                   cursor: "pointer",
-                  transition: "all 0.3s ease",
-                  boxShadow: "0 8px 24px rgba(15, 98, 254, 0.35)",
-                  animation: "shimmer 3s ease-in-out infinite"
+                  fontFamily: "inherit",
+                  boxShadow: "0 4px 14px rgba(15, 98, 254, 0.35)",
+                  transition: "background 0.2s, box-shadow 0.2s, transform 0.1s",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)"
-                  e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.4)"
+                  e.currentTarget.style.background = "#1d4ed8"
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(15, 98, 254, 0.4)"
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)"
-                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.35)"
+                  e.currentTarget.style.background = "#0F62FE"
+                  e.currentTarget.style.boxShadow = "0 4px 14px rgba(15, 98, 254, 0.35)"
                 }}
               >
-                Enviar mensaje
+                Agendar demo
               </button>
             </form>
+            </div>
 
-            <aside style={{
-              background: "rgba(255, 255, 255, 0.8)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(15, 98, 254, 0.2)",
-              borderRadius: "24px",
-              padding: "clamp(24px, 4vw, 40px)",
-              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
-              display: "flex",
-              flexDirection: "column",
-              height: "auto",
-              boxSizing: "border-box",
-              alignSelf: "stretch"
+            <p style={{
+              margin: "24px 0 0 0",
+              gridColumn: "1 / -1",
+              fontSize: "13px",
+              color: "#94a3b8",
+              lineHeight: 1.5,
             }}>
-              <h3 style={{
-                fontSize: "clamp(24px, 3vw, 32px)",
-                fontWeight: 800,
-                marginBottom: "24px",
-                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
-                backgroundSize: "200% auto",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                animation: "shimmer 3s ease-in-out infinite"
-              }}>Datos de contacto</h3>
-
-              <ul style={{
-                listStyle: "none",
-                margin: "0 0 32px 0",
-                padding: 0,
-                display: "grid",
-                gap: "20px"
-              }}>
-                <li style={{
-                  display: "flex",
-                  gap: "16px",
-                  alignItems: "flex-start",
-                  padding: "16px",
-                  background: "rgba(255, 255, 255, 0.6)",
-                  borderRadius: "16px",
-                  border: "1px solid rgba(15, 98, 254, 0.1)"
-                }}>
-                  <span style={{ fontSize: "28px", lineHeight: 1 }}>📧</span>
-                  <div>
-                    <strong style={{
-                      display: "block",
-                      fontWeight: 700,
-                      fontSize: "clamp(14px, 1.8vw, 16px)",
-                      color: "#0F172A",
-                      marginBottom: "4px"
-                    }}>Email</strong>
-                    <span style={{
-                      fontSize: "clamp(13px, 1.6vw, 15px)",
-                      color: "#475569",
-                      wordBreak: "break-all",
-                      overflowWrap: "anywhere"
-                    }}>diego@bizen.mx</span>
-                  </div>
-                </li>
-                <li style={{
-                  display: "flex",
-                  gap: "16px",
-                  alignItems: "flex-start",
-                  padding: "16px",
-                  background: "rgba(255, 255, 255, 0.6)",
-                  borderRadius: "16px",
-                  border: "1px solid rgba(15, 98, 254, 0.1)"
-                }}>
-                  <span style={{ fontSize: "28px", lineHeight: 1 }}>📍</span>
-                  <div>
-                    <strong style={{
-                      display: "block",
-                      fontWeight: 700,
-                      fontSize: "clamp(14px, 1.8vw, 16px)",
-                      color: "#0F172A",
-                      marginBottom: "4px"
-                    }}>Ubicación</strong>
-                    <span style={{
-                      fontSize: "clamp(13px, 1.6vw, 15px)",
-                      color: "#475569",
-                      overflowWrap: "break-word"
-                    }}>CDMX, México</span>
-                  </div>
-                </li>
-                <li style={{
-                  display: "flex",
-                  gap: "16px",
-                  alignItems: "flex-start",
-                  padding: "16px",
-                  background: "rgba(255, 255, 255, 0.6)",
-                  borderRadius: "16px",
-                  border: "1px solid rgba(15, 98, 254, 0.1)"
-                }}>
-                  <span style={{ fontSize: "28px", lineHeight: 1 }}>🕘</span>
-                  <div>
-                    <strong style={{
-                      display: "block",
-                      fontWeight: 700,
-                      fontSize: "clamp(14px, 1.8vw, 16px)",
-                      color: "#0F172A",
-                      marginBottom: "4px"
-                    }}>Horario</strong>
-                    <span style={{
-                      fontSize: "clamp(13px, 1.6vw, 15px)",
-                      color: "#475569"
-                    }}>Lun–Vie · 9:00–18:00</span>
-                  </div>
-                </li>
-              </ul>
-
-              <div style={{ marginTop: "24px" }}>
-                <h4 style={{
-                  marginBottom: "16px",
-                  fontSize: "18px",
-                  fontWeight: 700,
-                  color: "#0F172A"
-                }}>Síguenos</h4>
-                <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                  <a href="#" aria-label="Instagram" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "12px 18px",
-                    background: "rgba(255, 255, 255, 0.6)",
-                    backdropFilter: "blur(10px)",
-                    WebkitBackdropFilter: "blur(10px)",
-                    border: "1px solid rgba(15, 98, 254, 0.2)",
-                    borderRadius: "16px",
-                    textDecoration: "none",
-                    color: "#0F172A",
-                    fontWeight: 600,
-                    fontSize: "clamp(13px, 1.6vw, 15px)",
-                    transition: "all 0.3s ease"
-                  }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#0F62FE"
-                      e.currentTarget.style.color = "white"
-                      e.currentTarget.style.transform = "translateY(-2px)"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
-                      e.currentTarget.style.color = "#0F172A"
-                      e.currentTarget.style.transform = "translateY(0)"
-                    }}
-                  >
-                    Instagram
-                  </a>
-                  <a href="#" aria-label="Twitter/X" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "12px 18px",
-                    background: "rgba(255, 255, 255, 0.6)",
-                    backdropFilter: "blur(10px)",
-                    WebkitBackdropFilter: "blur(10px)",
-                    border: "1px solid rgba(15, 98, 254, 0.2)",
-                    borderRadius: "16px",
-                    textDecoration: "none",
-                    color: "#0F172A",
-                    fontWeight: 600,
-                    fontSize: "clamp(13px, 1.6vw, 15px)",
-                    transition: "all 0.3s ease"
-                  }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#0F62FE"
-                      e.currentTarget.style.color = "white"
-                      e.currentTarget.style.transform = "translateY(-2px)"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
-                      e.currentTarget.style.color = "#0F172A"
-                      e.currentTarget.style.transform = "translateY(0)"
-                    }}
-                  >
-                    Twitter
-                  </a>
-                  <a href="#" aria-label="LinkedIn" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "12px 18px",
-                    background: "rgba(255, 255, 255, 0.6)",
-                    backdropFilter: "blur(10px)",
-                    WebkitBackdropFilter: "blur(10px)",
-                    border: "1px solid rgba(15, 98, 254, 0.2)",
-                    borderRadius: "16px",
-                    textDecoration: "none",
-                    color: "#0F172A",
-                    fontWeight: 600,
-                    fontSize: "clamp(13px, 1.6vw, 15px)",
-                    transition: "all 0.3s ease"
-                  }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#0F62FE"
-                      e.currentTarget.style.color = "white"
-                      e.currentTarget.style.transform = "translateY(-2px)"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
-                      e.currentTarget.style.color = "#0F172A"
-                      e.currentTarget.style.transform = "translateY(0)"
-                    }}
-                  >
-                    LinkedIn
-                  </a>
-                </div>
-              </div>
-            </aside>
+              Creado específicamente para estudiantes de secundaria y preparatoria.
+            </p>
           </div>
         </div>
       </section>
@@ -2735,6 +2455,24 @@ html {
   #contacto form,
   #contacto aside {
     width: 100% !important;
+  }
+  
+  /* Schedule demo - two columns on desktop */
+  @media (min-width: 768px) {
+    .schedule-demo-two-col {
+      grid-template-columns: 1fr 1fr !important;
+      gap: clamp(40px, 6vw, 56px) !important;
+    }
+  }
+  
+  /* Schedule demo form - 1 column on mobile, 2 per row on desktop */
+  .schedule-demo-form {
+    grid-template-columns: 1fr !important;
+  }
+  @media (min-width: 520px) {
+    .schedule-demo-form {
+      grid-template-columns: 1fr 1fr !important;
+    }
   }
   
   /* Section padding - reduce on mobile */

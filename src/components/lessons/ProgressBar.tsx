@@ -8,35 +8,48 @@ interface ProgressBarProps {
   className?: string
 }
 
-/**
- * Responsive progress bar for lesson navigation
- * - Full width on mobile
- * - Centered + constrained on desktop (max-w-2xl)
- */
+const BLUE = "#2563EB"
+
 export function ProgressBar({ currentStep, totalSteps, className = "" }: ProgressBarProps) {
   const percentage = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0
 
   return (
     <div
-      className={`w-full max-w-2xl mx-auto px-4 md:px-6 ${className}`}
+      className={className}
+      style={{
+        margin: "0 auto",
+        maxWidth: 400,
+        padding: "14px 20px",
+        background: "#F8FAFC",
+        borderBottom: `3px solid ${BLUE}`,
+        textAlign: "center",
+      }}
       role="progressbar"
       aria-valuenow={currentStep}
       aria-valuemin={0}
       aria-valuemax={totalSteps}
-      aria-label={`Lesson progress: step ${currentStep} of ${totalSteps}`}
+      aria-label={`Progreso: paso ${currentStep} de ${totalSteps}`}
     >
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xl md:text-2xl font-semibold text-slate-700">
-          Paso {currentStep} de {totalSteps}
-        </span>
-        <span className="text-xl md:text-2xl font-semibold text-slate-600">
-          {Math.round(percentage)}%
-        </span>
-      </div>
-      <div className="w-full h-3 md:h-3.5 bg-slate-200 rounded-full overflow-hidden">
+      <div
+        style={{
+          width: "100%",
+          height: 24,
+          background: "#E2E8F0",
+          borderRadius: 12,
+          overflow: "hidden",
+          border: `3px solid ${BLUE}`,
+          boxSizing: "border-box",
+        }}
+      >
         <div
-          className="h-full bg-slate-600 transition-all duration-300 ease-out rounded-full"
-          style={{ width: `${percentage}%` }}
+          style={{
+            width: `${percentage}%`,
+            height: "100%",
+            background: BLUE,
+            borderRadius: 9,
+            minWidth: percentage > 0 ? 8 : 0,
+            transition: "width 0.3s ease",
+          }}
         />
       </div>
     </div>

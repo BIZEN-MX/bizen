@@ -16,10 +16,10 @@ interface StickyFooterProps {
 export function StickyFooter({ children, className = "" }: StickyFooterProps) {
   return (
     <footer
-      className={`fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50 pointer-events-none ${className}`}
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className={`lesson-sticky-footer flex-shrink-0 w-full bg-slate-100 border-t-2 border-slate-300 z-10 mt-auto ${className}`}
+      style={{ paddingTop: 16, paddingBottom: "max(16px, env(safe-area-inset-bottom))", paddingLeft: 20, paddingRight: 20 }}
     >
-      <div className="max-w-2xl mx-auto p-4 md:p-6 pointer-events-auto">
+      <div className="w-full">
         {children}
       </div>
     </footer>
@@ -28,7 +28,7 @@ export function StickyFooter({ children, className = "" }: StickyFooterProps) {
 
 interface StickyFooterButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
-  variant?: "primary" | "secondary" | "success" | "danger"
+  variant?: "primary" | "secondary" | "success" | "danger" | "blue"
   isLoading?: boolean
 }
 
@@ -47,24 +47,37 @@ export function StickyFooterButton({
   ...props
 }: StickyFooterButtonProps) {
   const baseStyles =
-    "w-full max-w-md mx-auto block rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white"
+    "block rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white"
 
   const variantStyles = {
     primary:
-      "bg-slate-800 hover:bg-slate-900 text-white focus:ring-slate-500 shadow-lg hover:shadow-xl text-xl md:text-2xl",
+      "bg-green-500 hover:bg-green-600 text-white focus:ring-green-400 shadow-lg hover:shadow-xl",
     secondary:
-      "bg-slate-200 hover:bg-slate-300 text-slate-900 focus:ring-slate-400",
+      "bg-white border-2 border-indigo-400 hover:bg-indigo-50 text-slate-800 focus:ring-indigo-400",
     success:
-      "bg-emerald-600 hover:bg-emerald-700 text-white focus:ring-emerald-500 shadow-lg hover:shadow-xl text-xl md:text-2xl",
+      "bg-green-500 hover:bg-green-600 text-white focus:ring-green-400 shadow-lg hover:shadow-xl",
     danger:
-      "bg-red-600 hover:bg-red-700 text-white focus:ring-red-500",
+      "bg-red-500 hover:bg-red-600 text-white focus:ring-red-400",
+    blue:
+      "bg-blue-500 hover:bg-blue-600 text-white focus:ring-blue-400 shadow-lg hover:shadow-xl",
   }
 
+  const variantClass = variantStyles[variant] ?? variantStyles.primary
+  const inlineBg =
+    variant === "danger"
+      ? { backgroundColor: "#EF4444", color: "#fff" }
+      : variant === "blue"
+        ? { backgroundColor: "#3B82F6", color: "#fff" }
+        : undefined
+  const { style: propsStyle, ...restProps } = props
+  const mergedStyle =
+    inlineBg || propsStyle ? { ...inlineBg, ...(propsStyle as React.CSSProperties) } : undefined
   return (
     <button
-      className={`${baseStyles} ${variantStyles[variant]} py-3 md:py-4 text-base md:text-lg lg:text-xl ${className}`}
+      className={`${baseStyles} ${variantClass} py-4 md:py-5 text-base md:text-lg lg:text-xl ${className}`}
+      style={mergedStyle}
       disabled={disabled || isLoading}
-      {...props}
+      {...restProps}
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">
