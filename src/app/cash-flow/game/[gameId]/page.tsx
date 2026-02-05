@@ -662,18 +662,33 @@ export default function CashFlowGamePage() {
 
   if (loading || loadingGame || !gameState) {
     return (
-      <div style={{
-        minHeight: "100vh",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#ffffff"
-      }}>
-        <div style={{ color: "#333", fontSize: 24, fontWeight: 700 }}>
-          Cargando juego...
+      <>
+        <style>{`
+          .cashflow-game-page { width: 100% !important; min-height: 100vh; overflow-x: hidden !important; }
+          @media (min-width: 768px) and (max-width: 1160px) {
+            .cashflow-game-page { margin-left: 220px !important; width: calc(100% - 220px) !important; max-width: calc(100vw - 220px) !important; }
+          }
+          @media (min-width: 1161px) {
+            .cashflow-game-page { margin-left: 280px !important; width: calc(100% - 280px) !important; max-width: calc(100vw - 280px) !important; }
+          }
+        `}</style>
+        <div
+          className="cashflow-game-page"
+          style={{
+            minHeight: "100vh",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#ffffff",
+            boxSizing: "border-box"
+          }}
+        >
+          <div style={{ color: "#333", fontSize: 24, fontWeight: 700 }}>
+            Cargando juego...
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
@@ -829,6 +844,34 @@ export default function CashFlowGamePage() {
         * {
           box-sizing: border-box;
         }
+        /* Page root: clear left sidebar on tablet/desktop so content is never covered */
+        .cashflow-game-page {
+          width: 100% !important;
+          min-height: 100vh;
+          overflow-x: hidden !important;
+        }
+        @media (max-width: 767px) {
+          .cashflow-game-page {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+            width: 100% !important;
+            padding-bottom: 0;
+          }
+        }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .cashflow-game-page {
+            margin-left: 220px !important;
+            width: calc(100% - 220px) !important;
+            max-width: calc(100vw - 220px) !important;
+          }
+        }
+        @media (min-width: 1161px) {
+          .cashflow-game-page {
+            margin-left: 280px !important;
+            width: calc(100% - 280px) !important;
+            max-width: calc(100vw - 280px) !important;
+          }
+        }
         .cashflow-game-container {
           width: 100% !important;
           max-width: 100% !important;
@@ -843,12 +886,12 @@ export default function CashFlowGamePage() {
         }
         @media (min-width: 1161px) {
           .cashflow-game-main {
-            padding-right: 304px !important;
+            padding-right: 24px !important;
           }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .cashflow-game-main {
-            padding-right: 120px !important;
+            padding-right: 16px !important;
           }
         }
         .cashflow-game-container > div[style*="display: grid"] {
@@ -887,6 +930,15 @@ export default function CashFlowGamePage() {
           grid-column: 2 !important;
           visibility: visible !important;
           opacity: 1 !important;
+        }
+        /* Stack grid to single column when content area is narrow (tablet with sidebar) */
+        @media (min-width: 768px) and (max-width: 1100px) {
+          .cashflow-game-container > div[style*="display: grid"] {
+            grid-template-columns: 1fr !important;
+          }
+          .cashflow-game-container > div[style*="display: grid"] > div:nth-child(2) {
+            grid-column: 1 !important;
+          }
         }
         @media (max-width: 767px) {
           .cashflow-game-container > div[style*="grid"] > div:last-child {
@@ -946,7 +998,7 @@ export default function CashFlowGamePage() {
           }
         }
       `}</style>
-      <div style={{
+      <div className="cashflow-game-page" style={{
         width: "100%",
         minHeight: "100vh",
         background: "#ffffff",
@@ -956,14 +1008,13 @@ export default function CashFlowGamePage() {
         <main className="cashflow-game-main" style={{
           width: "100%",
           maxWidth: "100%",
-          padding: "clamp(16px, 3vw, 24px)",
-          paddingRight: isMobile ? "clamp(16px, 3vw, 24px)" : "clamp(296px, calc(3vw + 280px), 304px)",
-          paddingBottom: isMobile ? "140px" : "clamp(40px, 4vw, 80px)",
+          padding: isMobile ? "clamp(12px, 3vw, 16px)" : "clamp(16px, 3vw, 24px)",
+          paddingBottom: isMobile ? "calc(140px + env(safe-area-inset-bottom, 0px))" : "clamp(40px, 4vw, 80px)",
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
           boxSizing: "border-box",
-          overflowX: "visible",
+          overflowX: "hidden",
           overflowY: "visible"
         }}>
         <div className="cashflow-game-container" style={{ 

@@ -1468,7 +1468,7 @@ export default function WelcomePage() {
                   name: "Alejandro Rolland",
                   title: "Secretaría de Desarrollo Sustentable · Querétaro",
                   institution: "",
-                  image: "/image%20copy.png",
+                  image: "/image-copy.png",
                   logo: undefined,
                 },
                 {
@@ -2661,16 +2661,16 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                       borderRadius: "16px",
                       overflow: "hidden",
                       position: "relative",
+                      aspectRatio: "16/9",
+                      background: "rgba(0,0,0,0.15)",
                     }}>
                       <Image
                         src={slide.imageSrc}
                         alt={slide.imageAlt}
-                        width={640}
-                        height={360}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 640px"
                         style={{
-                          width: "100%",
-                          height: "auto",
-                          display: "block",
+                          objectFit: "contain",
                           borderRadius: "16px",
                         }}
                       />

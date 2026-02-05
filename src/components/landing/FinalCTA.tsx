@@ -30,7 +30,7 @@ export function FinalCTA({ onDemo, onBuy }: { onDemo: () => void; onBuy: () => v
               <p className="text-sm text-gray-600 mb-4">{FINAL_CTA_ESCUELAS.sentence}</p>
               <Button
                 onClick={onDemo}
-                className="mt-auto rounded-xl bg-blue-600 hover:bg-blue-700 text-white w-full"
+                className="mt-auto rounded-full bg-blue-600 hover:bg-blue-700 text-white w-full"
               >
                 Agendar demo
               </Button>

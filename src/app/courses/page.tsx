@@ -49,7 +49,7 @@ export default function CoursesPage() {
   const [lessonModalLesson, setLessonModalLesson] = useState<Lesson | null>(null)
   const [streak, setStreak] = useState<number>(0)
   const [refreshKey, setRefreshKey] = useState(0)
-
+  
   // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => {
@@ -299,32 +299,32 @@ export default function CoursesPage() {
 
         // Count total completed lessons for lock logic
         const totalCompletedLessons = completedLessons.length
-
+        
         // For unauthenticated users, lock all lessons after the 3rd one
         const maxGuestLessons = 3
         const shouldLockForGuest = !user && totalCompletedLessons >= maxGuestLessons
-
+        
         // Build courses with lessons
         const allCourses: Course[] = coursesData.map((courseData, courseIndex) => {
           const courseIsLocked =
             !isLocalhost &&
             courseIndex > 0 &&
             !completedCourses.includes(coursesData[courseIndex - 1]!.id)
-
+          
           const lessons: Lesson[] = courseData.lessons.map((lessonData, lessonIndex) => {
             const lessonId = `l${courseData.order}-${lessonIndex + 1}`
             const lessonTypes = ["reading", "video", "exercise"]
             const isFirstLesson = lessonIndex === 0
             const previousLessonId = lessonIndex > 0 ? `l${courseData.order}-${lessonIndex}` : null
             const previousCompleted = previousLessonId ? completedLessons.includes(previousLessonId) : true
-
+            
             // Calculate lesson number across all courses for guest limit
             let lessonNumber = 0
             for (let i = 0; i < courseIndex; i++) {
               lessonNumber += coursesData[i]!.lessons.length
             }
             lessonNumber += lessonIndex + 1
-
+            
             // Lock lesson if (skip all locks on localhost for testing):
             // 1. Course is locked, OR
             // 2. Previous lesson not completed, OR
@@ -332,7 +332,7 @@ export default function CoursesPage() {
             const isLocked =
               !isLocalhost &&
               (courseIsLocked ||
-                (!isFirstLesson && !previousCompleted) ||
+                            (!isFirstLesson && !previousCompleted) ||
                 (shouldLockForGuest || (!user && lessonNumber > maxGuestLessons)))
             
             const isCompleted = completedLessons.includes(lessonId)
@@ -371,7 +371,7 @@ export default function CoursesPage() {
         })
         
         setCourses(allCourses)
-
+        
         // Fetch streak (consecutive days user has used the app)
         try {
           const res = await fetch("/api/user/stats")
@@ -540,15 +540,15 @@ export default function CoursesPage() {
           zIndex: 1,
           padding: "0",
           boxSizing: "border-box",
-          display: "flex",
+                    display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
           gap: 0
         }}>
           {/* Top row: Start | course squares | Finish line | Streak */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
+              <div style={{
+                  display: "flex",
+                  alignItems: "center",
             justifyContent: "space-between",
             gap: 12,
             marginBottom: 12,
@@ -558,16 +558,16 @@ export default function CoursesPage() {
             {/* Left block: Start + squares + Finish (centered in available space) */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, flex: "1 1 auto", minWidth: 0 }}>
               {/* Start */}
-              <div style={{
+                  <div style={{
                 fontSize: 13,
                 fontWeight: 800,
-                color: "#6B7280",
+                    color: "#6B7280",
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
-                flexShrink: 0
+                    flexShrink: 0
               }}>
                 Inicio
-              </div>
+                  </div>
               {/* One square per course */}
               <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                 {courses.map((course) => {
@@ -590,7 +590,7 @@ export default function CoursesPage() {
                 })}
               </div>
               {/* Finish line */}
-              <div style={{
+                  <div style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 6,
@@ -607,12 +607,12 @@ export default function CoursesPage() {
                 <span style={{ fontSize: 13, fontWeight: 800, color: "#1E40AF", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Meta
                 </span>
-              </div>
+                  </div>
             </div>
             {/* Streak (right) */}
-            <div style={{
-              display: "flex",
-              alignItems: "center",
+              <div style={{
+                    display: "flex",
+                alignItems: "center",
               gap: 12,
               marginRight: 48,
               flexShrink: 0
@@ -660,15 +660,15 @@ export default function CoursesPage() {
               const completedInCourse = course.lessons.filter((l) => l.isCompleted).length
               const totalInCourse = course.lessons.length
               const courseProgressPercent = totalInCourse > 0 ? Math.round((completedInCourse / totalInCourse) * 100) : 0
-              return (
+            return (
             <React.Fragment key={course.id}>
-            <div
+              <div
               id={`course-${course.id}`}
-              style={{
+            style={{ 
                 marginBottom: "clamp(32px, 6vw, 48px)",
                 marginTop: 0,
-                width: "100%",
-                display: "flex",
+                        width: "100%",
+                  display: "flex",
                 flexDirection: "column",
                 alignItems: "stretch"
               }}
@@ -676,8 +676,8 @@ export default function CoursesPage() {
               {/* Course square: number + title + progress bar */}
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
+                        display: "flex",
+                        flexDirection: "column",
                   padding: "clamp(16px, 3vw, 24px)",
                   paddingBottom: 14,
                   background: barBg,
@@ -697,7 +697,7 @@ export default function CoursesPage() {
                       borderRadius: 10,
                       background: course.isLocked ? "#9CA3AF" : "rgba(255,255,255,0.25)",
                       display: "flex",
-                      alignItems: "center",
+                        alignItems: "center",
                       justifyContent: "center",
                       fontSize: "clamp(18px, 4vw, 24px)",
                       fontWeight: 800,
@@ -717,7 +717,7 @@ export default function CoursesPage() {
                 </div>
                 {/* Course progress bar */}
                 <div
-                  style={{
+                            style={{
                     width: "100%",
                     height: 8,
                     borderRadius: 4,
@@ -734,8 +734,8 @@ export default function CoursesPage() {
                       transition: "width 0.3s ease"
                     }}
                   />
-                </div>
-              </div>
+                      </div>
+                  </div>
 
               {/* Lessons - horizontal scroll, bigger square cards */}
               <div
@@ -763,7 +763,7 @@ export default function CoursesPage() {
                     onKeyDown={isCardClickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setLessonModalLesson(lesson) } } : undefined}
                     onClick={isCardClickable ? () => setLessonModalLesson(lesson) : undefined}
                     className="lesson-square-card"
-                    style={{
+                                    style={{ 
                       width: 260,
                       minWidth: 260,
                       aspectRatio: "1",
@@ -788,7 +788,7 @@ export default function CoursesPage() {
                           height: 44,
                           borderRadius: 14,
                           background: lesson.isLocked ? "#9CA3AF" : "#3B82F6",
-                          color: "white",
+                                      color: "white",
                           fontSize: 20,
                           fontWeight: 800,
                           display: "flex",
@@ -827,16 +827,16 @@ export default function CoursesPage() {
                       </div>
                     </div>
                     <div style={{ flexShrink: 0, marginTop: 14, width: "100%" }}>
-                      {lesson.isLocked && !user && (
-                        <Button
+                              {lesson.isLocked && !user && (
+                                  <Button
                           className="lesson-btn lesson-btn-signup"
                           onClick={(e) => { e.stopPropagation(); window.open("/signup", "_blank") }}
-                          style={{
-                            width: "100%",
+                                    style={{ 
+                                      width: "100%", 
                             fontSize: 15,
                             fontWeight: 700,
                             padding: "10px 16px",
-                            background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                                      background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
                             color: "white",
                             border: "none",
                             borderRadius: 12,
@@ -845,17 +845,17 @@ export default function CoursesPage() {
                           }}
                         >
                           Crear cuenta
-                        </Button>
-                      )}
+                                  </Button>
+                              )}
                       {lesson.isLocked && user && (
                         <span style={{ display: "block", textAlign: "center", fontSize: 15, color: "#6B7280", fontWeight: 600 }}>Bloqueado</span>
-                      )}
-                    </div>
-                  </div>
-                );
-                })}
+                        )}
               </div>
-            </div>
+              </div>
+                );
+          })}
+        </div>
+      </div>
             </React.Fragment>
               );
             });
@@ -974,7 +974,7 @@ export default function CoursesPage() {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
         }
-        
+
         /* Lesson action buttons - hover effect */
         .lesson-btn:hover {
           transform: scale(1.02);

@@ -467,6 +467,17 @@ body[data-lesson-interactive="true"] .mobile-footer-container {
   .main-header {
     padding-left: calc(220px + 16px) !important;
   }
+
+  /* Landing: no sidebar → no left gap (override above) */
+  body[data-landing-page="true"] > div,
+  body[data-landing-page="true"] main,
+  body[data-landing-page="true"] .app-shell,
+  body[data-landing-page="true"] .app-scroll,
+  body[data-landing-page="true"] .app-main,
+  body[data-landing-page="true"] .main-page-container,
+  body[data-landing-page="true"] .main-header {
+    padding-left: 0 !important;
+  }
 }
 
 /* Desktop (1161px+): Account for 280px left sidebar */
@@ -529,4 +540,50 @@ body[data-lesson-interactive="true"] .mobile-footer-container {
   .main-header {
     padding-left: calc(280px + 16px) !important;
   }
+
+  /* Landing: no sidebar → no left gap (override above) */
+  body[data-landing-page="true"] > div,
+  body[data-landing-page="true"] main,
+  body[data-landing-page="true"] .app-shell,
+  body[data-landing-page="true"] .app-scroll,
+  body[data-landing-page="true"] .app-main,
+  body[data-landing-page="true"] .main-page-container,
+  body[data-landing-page="true"] .main-header {
+    padding-left: 0 !important;
+  }
+}
+
+/* Landing page (all viewports): no left gap, full-width background */
+body[data-landing-page="true"],
+html:has(body[data-landing-page="true"]) {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+}
+/* Remove left padding from ALL layout containers on landing */
+body[data-landing-page="true"] > div,
+body[data-landing-page="true"] #__next,
+body[data-landing-page="true"] #__next > div,
+body[data-landing-page="true"] .app-shell,
+body[data-landing-page="true"] .app-scroll,
+body[data-landing-page="true"] .app-main,
+body[data-landing-page="true"] main,
+body[data-landing-page="true"] .main-page-container,
+body[data-landing-page="true"] .main-header {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+/* Override the centered-container rule that adds 16px left padding */
+body[data-landing-page="true"] div[style*="margin: 0 auto"],
+body[data-landing-page="true"] div[style*="margin:0 auto"] {
+  padding-left: 0 !important;
+}
+/* Force landing root to fill width (no left gap) */
+body[data-landing-page="true"] .landing-page-root,
+body[data-landing-page="true"] [data-landing-root] {
+  min-width: 100% !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  box-sizing: border-box !important;
 }

@@ -121,6 +121,17 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     }
   }, [isAuthPage, isMobile, isLessonInteractivePage])
 
+  // Flag body on landing page so CSS can remove sidebar padding (no sidebar = no left gap)
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    if (pathname === "/") {
+      document.body.setAttribute("data-landing-page", "true")
+    } else {
+      document.body.removeAttribute("data-landing-page")
+    }
+    return () => document.body.removeAttribute("data-landing-page")
+  }, [pathname])
+
   // Flag body on lesson interactive page so CSS can hide app footer (backup)
   useEffect(() => {
     if (typeof document === "undefined") return
