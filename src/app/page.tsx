@@ -209,14 +209,14 @@ export default function WelcomePage() {
               top: "clamp(40px, 6vw, 72px)",
               transform: "translateX(-50%)",
               textAlign: "center",
-              width: "min(98vw, 1320px)",
-              maxWidth: "1320px",
+              width: "min(98vw, 1000px)",
+              maxWidth: "1000px",
               zIndex: 10,
                 opacity: isVisible ? 1 : 0,
               transition: "opacity 0.6s ease 0.3s",
             }}>
               <p className="hero-tagline" style={{
-                fontSize: "clamp(32px, 5vw, 58px)",
+                fontSize: "clamp(48px, 9vw, 110px)",
                 color: "#000",
                 fontWeight: 500,
                 margin: 0,
@@ -406,18 +406,18 @@ export default function WelcomePage() {
           }
           .hero-top-block {
             top: clamp(44px, 5vw, 64px) !important;
-            width: min(96vw, 1200px) !important;
-            max-width: 1200px !important;
+            width: min(96vw, 920px) !important;
+            max-width: 920px !important;
           }
           .hero-tagline {
-            font-size: clamp(32px, 5vw, 52px) !important;
+            font-size: clamp(48px, 9vw, 110px) !important;
           }
           .hero-tagline-sub {
             font-size: clamp(18px, 1.15rem, 21px) !important;
             margin-top: 18px !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(260px, 40vw, 380px) !important;
+            margin-top: clamp(140px, 28vw, 250px) !important;
             padding: 0 clamp(24px, 4vw, 40px) !important;
           }
           .hero-rect-row {
@@ -458,8 +458,8 @@ export default function WelcomePage() {
           }
           .hero-top-block {
             top: clamp(46px, 5.5vw, 68px) !important;
-            width: min(96vw, 1240px) !important;
-            max-width: 1240px !important;
+            width: min(96vw, 960px) !important;
+            max-width: 960px !important;
           }
           .hero-tagline {
             font-size: clamp(34px, 5vw, 54px) !important;
@@ -506,8 +506,8 @@ export default function WelcomePage() {
           }
           .hero-top-block {
             top: clamp(48px, 6vw, 72px) !important;
-            width: min(96vw, 1280px) !important;
-            max-width: 1280px !important;
+            width: min(96vw, 1000px) !important;
+            max-width: 1000px !important;
           }
           .hero-tagline {
             font-size: clamp(36px, 5vw, 56px) !important;
@@ -517,7 +517,7 @@ export default function WelcomePage() {
             margin-top: 20px !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(280px, 41vw, 420px) !important;
+            margin-top: clamp(160px, 28vw, 280px) !important;
           }
           .hero-rect-row {
             gap: clamp(34px, 5vw, 60px) !important;
@@ -561,8 +561,8 @@ export default function WelcomePage() {
           /* Hero section: bigger tagline, subtext, rectangles and labels */
           .hero-top-block {
             top: clamp(48px, 6vw, 88px) !important;
-            max-width: 1280px !important;
-            width: min(96vw, 1280px) !important;
+            max-width: 1000px !important;
+            width: min(96vw, 1000px) !important;
           }
           .hero-tagline {
             font-size: clamp(36px, 5vw, 58px) !important;
@@ -609,8 +609,8 @@ export default function WelcomePage() {
           /* Hero section: even larger on very wide screens */
           .hero-top-block {
             top: clamp(56px, 7vw, 100px) !important;
-            max-width: 1320px !important;
-            width: min(96vw, 1320px) !important;
+            max-width: 1000px !important;
+            width: min(96vw, 1000px) !important;
           }
           .hero-tagline {
             font-size: clamp(38px, 5vw, 60px) !important;
@@ -623,7 +623,7 @@ export default function WelcomePage() {
             gap: clamp(40px, 5vw, 80px) !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(320px, 42vw, 480px) !important;
+            margin-top: clamp(200px, 30vw, 340px) !important;
           }
           .hero-rect-card {
             width: clamp(300px, 28vw, 440px) !important;
@@ -638,7 +638,7 @@ export default function WelcomePage() {
         .hero-rectangles-wrapper {
           width: 100%;
           max-width: 100%;
-          margin-top: clamp(240px, 45vw, 420px);
+          margin-top: clamp(120px, 32vw, 280px);
           padding: 0 clamp(24px, 4vw, 48px);
           box-sizing: border-box;
           overflow-x: auto;
@@ -647,7 +647,7 @@ export default function WelcomePage() {
         }
         @media (max-width: 768px) {
           .hero-rectangles-wrapper {
-            margin-top: clamp(220px, 55vw, 320px);
+            margin-top: clamp(100px, 42vw, 220px);
             padding: 0 clamp(16px, 4vw, 24px);
           }
         }
