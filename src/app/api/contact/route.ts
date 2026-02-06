@@ -52,7 +52,8 @@ export async function POST(request: NextRequest) {
           message: 'Por favor completa todos los campos requeridos.',
         },
         { status: 400 }
-      )
+      );
+    }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -122,14 +123,14 @@ export async function POST(request: NextRequest) {
         message: 'El servicio de contacto no está configurado. Por favor escribe a ' + CONTACT_EMAIL,
       },
       { status: 503 }
-    )
+    );
   } catch (error: unknown) {
-    const err = error as { message?: string }
-    console.error('[/api/contact] Unexpected error:', err?.message ?? error)
+    const err = error as { message?: string };
+    console.error('[/api/contact] Unexpected error:', err?.message ?? error);
     return NextResponse.json(
       { success: false, message: 'Error al enviar el mensaje. Por favor intenta de nuevo más tarde.' },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -139,7 +140,7 @@ function escapeHtml(text: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
+    .replace(/'/g, '&#39;');
 }
 
 
