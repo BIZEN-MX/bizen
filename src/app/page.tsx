@@ -24,6 +24,26 @@ export default function WelcomePage() {
   const [demoModalOpen, setDemoModalOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
 
+  // Lock body scroll when demo modal is open so the page doesn't move while typing
+  useEffect(() => {
+    if (!demoModalOpen) return
+    const prevOverflow = document.body.style.overflow
+    const prevScrollY = window.scrollY
+    document.body.style.overflow = 'hidden'
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${prevScrollY}px`
+    document.body.style.left = '0'
+    document.body.style.right = '0'
+    return () => {
+      document.body.style.overflow = prevOverflow
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      window.scrollTo(0, prevScrollY)
+    }
+  }, [demoModalOpen])
+
   const heroCardSummaries: { title: string; summary: string }[] = [
     {
       title: "Finanzas personales",
@@ -1290,8 +1310,8 @@ export default function WelcomePage() {
 
       {/* Schedule Demo Modal - compact, enhanced */}
       {demoModalOpen && (
-        <div role="dialog" aria-modal="true" aria-labelledby="demo-modal-title" style={{ position: "fixed", inset: 0, zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", background: "rgba(15, 23, 42, 0.4)", backdropFilter: "blur(4px)", boxSizing: "border-box" }} onClick={(e) => e.target === e.currentTarget && setDemoModalOpen(false)}>
-          <div style={{ position: "relative", background: "#ffffff", borderRadius: "20px", border: "1px solid rgba(15, 98, 254, 0.12)", boxShadow: "0 20px 40px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(15, 98, 254, 0.04)", padding: "28px 32px", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", maxWidth: "min(98vw, 520px)", width: "100%", maxHeight: "88vh", overflowY: "auto" }} onClick={(e) => e.stopPropagation()}>
+        <div role="dialog" aria-modal="true" aria-labelledby="demo-modal-title" style={{ position: "fixed", inset: 0, zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", background: "rgba(15, 23, 42, 0.4)", backdropFilter: "blur(4px)", boxSizing: "border-box", overflow: "hidden", overscrollBehavior: "contain" }} onClick={(e) => e.target === e.currentTarget && setDemoModalOpen(false)}>
+          <div style={{ position: "relative", background: "#ffffff", borderRadius: "20px", border: "1px solid rgba(15, 98, 254, 0.12)", boxShadow: "0 20px 40px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(15, 98, 254, 0.04)", padding: "28px 32px", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", maxWidth: "min(98vw, 520px)", width: "100%", maxHeight: "min(88vh, 560px)", overflowY: "auto", overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }} onClick={(e) => e.stopPropagation()}>
             <button type="button" aria-label="Cerrar" onClick={() => setDemoModalOpen(false)} style={{ position: "absolute", top: "12px", right: "12px", width: "32px", height: "32px", borderRadius: "50%", border: "none", background: "#f1f5f9", cursor: "pointer", fontSize: "18px", lineHeight: 1, color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s, color 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.background = "#e2e8f0"; e.currentTarget.style.color = "#334155"; }} onMouseOut={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#64748b"; }}>×</button>
             <div style={{ paddingRight: "36px" }}>
               <div style={{ width: "40px", height: "4px", borderRadius: "2px", background: "linear-gradient(90deg, #1e3a8a, #60a5fa)", marginBottom: "16px" }} />

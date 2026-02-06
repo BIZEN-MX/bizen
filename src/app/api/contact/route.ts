@@ -67,6 +67,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    let resendFailed = false
+    let dbFailed = false
+
     // 1) Try Resend first when key is set (so form works even if DB is broken)
     if (process.env.RESEND_API_KEY) {
       try {
@@ -88,7 +91,9 @@ export async function POST(request: NextRequest) {
           { status: 201 }
         )
       } catch (emailError: unknown) {
-        console.error('[/api/contact] Resend failed:', emailError)
+        resendFailed = true
+        const err = emailError as { message?: string }
+        console.error('[/api/contact] Resend failed:', err?.message ?? emailError)
       }
     }
 
@@ -112,15 +117,32 @@ export async function POST(request: NextRequest) {
           { status: 201 }
         )
       } catch (dbError: unknown) {
+        dbFailed = true
         const err = dbError as { code?: string; message?: string }
         console.error('[/api/contact] DB save failed:', err?.code ?? err?.message ?? dbError)
       }
     }
 
+    const hasResend = Boolean(process.env.RESEND_API_KEY)
+    const hasDb = Boolean(process.env.DATABASE_URL)
+    const reason =
+      !hasResend && !hasDb
+        ? 'not_configured'
+        : resendFailed && dbFailed
+          ? 'resend_failed_and_db_failed'
+          : resendFailed
+            ? 'resend_failed'
+            : dbFailed
+              ? 'db_failed'
+              : 'not_configured'
+    console.error('[/api/contact] 503 reason:', reason, { hasResend, hasDb, resendFailed, dbFailed })
+
     return NextResponse.json(
       {
         success: false,
         message: 'El servicio de contacto no está configurado. Por favor escribe a ' + CONTACT_EMAIL,
+        contactEmail: CONTACT_EMAIL,
+        reason,
       },
       { status: 503 }
     );

@@ -45,6 +45,8 @@ export interface ImageOption {
 export interface InfoStepFields {
   stepType: "info";
   title: string;
+  /** Optional description/subtitle shown below title */
+  description?: string;
   body: string;
   /** Optional image URL (e.g. /billy-mascot-leccion1.png) shown above the body */
   imageUrl?: string;

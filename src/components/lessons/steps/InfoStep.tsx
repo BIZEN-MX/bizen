@@ -19,14 +19,13 @@ export function InfoStep({ step, onAnswered }: InfoStepProps) {
   }, [])
 
   return (
-    <div className={sharedStyles.container}>
+    <div className={sharedStyles.container} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '60vh' }}>
       {step.title && (
         <>
-          <h2 className={sharedStyles.title}>{step.title}</h2>
-          <div className="h-1 w-16 md:w-20 rounded-full bg-slate-300 mb-4" aria-hidden />
+          <h2 className={sharedStyles.title} style={{ fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 600, marginBottom: '2rem' }}>{step.title}</h2>
         </>
       )}
-      {step.description && <p className={sharedStyles.description}>{step.description}</p>}
+      {step.description && <p className={sharedStyles.description} style={{ fontSize: 'clamp(16px, 3vw, 20px)', marginBottom: '2rem', color: '#64748b', fontWeight: 500 }}>{step.description}</p>}
       {step.imageUrl && (
         <div className={`${sharedStyles.imageContainer} my-6 md:my-8`}>
           <Image
@@ -38,7 +37,11 @@ export function InfoStep({ step, onAnswered }: InfoStepProps) {
           />
         </div>
       )}
-      <div className={sharedStyles.body}>{step.body}</div>
+      <div className={sharedStyles.body} style={{ fontSize: 'clamp(16px, 3vw, 20px)', lineHeight: 1.8, maxWidth: '600px' }}>
+        {step.body.split('\n\n').map((line, i) => (
+          <p key={i} style={{ margin: '0.5rem 0' }}>{line}</p>
+        ))}
+      </div>
     </div>
   )
 }

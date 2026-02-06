@@ -5,9 +5,10 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 const rawUrl = process.env.DATABASE_URL ?? ''
-// Use pgbouncer mode when connecting through Supabase pooler (port 6543) to avoid
-// "prepared statement already exists" in serverless (Prisma skips prepared statements).
-const needsPgbouncer = rawUrl.includes('6543') && !rawUrl.includes('pgbouncer=true')
+// Use pgbouncer mode when using Supabase pooler to avoid 42P05 "prepared statement already exists".
+const needsPgbouncer =
+  (rawUrl.includes('6543') || rawUrl.includes('pooler.supabase.com')) &&
+  !rawUrl.includes('pgbouncer=true')
 const url = needsPgbouncer
   ? rawUrl + (rawUrl.includes('?') ? '&' : '?') + 'pgbouncer=true'
   : undefined
