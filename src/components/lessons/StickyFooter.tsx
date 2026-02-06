@@ -28,7 +28,7 @@ export function StickyFooter({ children, className = "" }: StickyFooterProps) {
 
 interface StickyFooterButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
-  variant?: "primary" | "secondary" | "success" | "danger" | "blue"
+  variant?: "primary" | "secondary" | "success" | "danger" | "blue" | "outline"
   isLoading?: boolean
 }
 
@@ -60,6 +60,8 @@ export function StickyFooterButton({
       "bg-red-500 hover:bg-red-600 text-white focus:ring-red-400",
     blue:
       "bg-blue-500 hover:bg-blue-600 text-white focus:ring-blue-400 shadow-lg hover:shadow-xl",
+    outline:
+      "bg-white border-2 border-slate-900 hover:bg-slate-50 text-blue-600 focus:ring-slate-400",
   }
 
   const variantClass = variantStyles[variant] ?? variantStyles.primary
@@ -67,8 +69,10 @@ export function StickyFooterButton({
     variant === "danger"
       ? { backgroundColor: "#EF4444", color: "#fff" }
       : variant === "blue"
-        ? { backgroundColor: "#3B82F6", color: "#fff" }
-        : undefined
+        ? { backgroundColor: "#2563eb", color: "#fff" }
+        : variant === "outline"
+          ? { backgroundColor: "#f1f5f9", color: "#2563eb", border: "3px solid #1e293b" }
+          : undefined
   const { style: propsStyle, ...restProps } = props
   const mergedStyle =
     inlineBg || propsStyle ? { ...inlineBg, ...(propsStyle as React.CSSProperties) } : undefined

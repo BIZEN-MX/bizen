@@ -139,6 +139,7 @@ export interface BaseLessonStep {
   recordIncorrect?: boolean; // default true for question steps
   reviewSourceStepId?: string; // used when a review step is a repetition of another step
   fullScreen?: boolean; // true to hide progress bar and footer, step renders its own buttons
+  continueLabel?: string; // e.g. "Continuar", "Seguir", "Avanzar", "Completar misión"
 }
 
 // ============================================================================

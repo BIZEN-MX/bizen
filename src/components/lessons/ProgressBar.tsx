@@ -9,6 +9,7 @@ interface ProgressBarProps {
 }
 
 const BLUE = "#2563EB"
+const BORDER = "#1e293b"
 
 export function ProgressBar({ currentStep, totalSteps, className = "" }: ProgressBarProps) {
   const percentage = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0
@@ -18,10 +19,9 @@ export function ProgressBar({ currentStep, totalSteps, className = "" }: Progres
       className={className}
       style={{
         margin: "0 auto",
-        maxWidth: 400,
-        padding: "14px 20px",
-        background: "#F8FAFC",
-        borderBottom: `3px solid ${BLUE}`,
+        width: "min(90%, 900px)",
+        padding: "8px 0",
+        background: "transparent",
         textAlign: "center",
       }}
       role="progressbar"
@@ -33,11 +33,11 @@ export function ProgressBar({ currentStep, totalSteps, className = "" }: Progres
       <div
         style={{
           width: "100%",
-          height: 24,
-          background: "#E2E8F0",
-          borderRadius: 12,
+          height: 32,
+          background: "#e2e8f0",
+          borderRadius: 20,
           overflow: "hidden",
-          border: `3px solid ${BLUE}`,
+          border: `3px solid ${BORDER}`,
           boxSizing: "border-box",
         }}
       >
@@ -46,7 +46,7 @@ export function ProgressBar({ currentStep, totalSteps, className = "" }: Progres
             width: `${percentage}%`,
             height: "100%",
             background: BLUE,
-            borderRadius: 9,
+            borderRadius: 14,
             minWidth: percentage > 0 ? 8 : 0,
             transition: "width 0.3s ease",
           }}

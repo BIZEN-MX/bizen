@@ -150,11 +150,13 @@ export function LessonEngine({ lessonSteps, onComplete, onExit }: LessonEnginePr
       onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any }) => {
         handleAnswered(currentStep.id, result)
       },
-      // For fullScreen steps, pass navigation callbacks
+      // For fullScreen steps, pass navigation + progress for functional bar
       ...(currentStep.fullScreen ? {
-        onExit: onExit,
+        onExit: () => setShowExitConfirm(true),
         onContinue: handleContinue,
         isContinueEnabled: state.isContinueEnabled,
+        currentStepIndex: state.currentStepIndex,
+        totalSteps: state.allSteps.length,
       } : {}),
     }
 
@@ -346,7 +348,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit }: LessonEnginePr
         >
           {onExit ? (
             <StickyFooterButton
-              variant="danger"
+              variant="outline"
               onClick={() => setShowExitConfirm(true)}
               style={{
                 minHeight: 56,
@@ -373,7 +375,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit }: LessonEnginePr
             }}
             className="rounded-xl"
           >
-            {isSummaryStep ? "Siguiente lección" : isLastStep ? "Finalizar" : "Continuar"}
+            {(currentStep as { continueLabel?: string }).continueLabel ?? (isSummaryStep ? "Siguiente lección" : isLastStep ? "Completar misión" : "Continuar")}
           </StickyFooterButton>
         </div>
       }

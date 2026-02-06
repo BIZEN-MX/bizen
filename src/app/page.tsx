@@ -11,38 +11,15 @@ import * as React from "react"
 // Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
 
-const PHONE_BREAKPOINT = 767
-
 export default function WelcomePage() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const [isMouthOpen, setIsMouthOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const [isPhone, setIsPhone] = useState(false)
   const [activeHeroCard, setActiveHeroCard] = useState<number | null>(null)
   const [activeProfile, setActiveProfile] = useState<"directores" | "docentes" | "estudiantes" | "padres">("directores")
   const [demoModalOpen, setDemoModalOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
-
-  // Lock body scroll when demo modal is open so the page doesn't move while typing
-  useEffect(() => {
-    if (!demoModalOpen) return
-    const prevOverflow = document.body.style.overflow
-    const prevScrollY = window.scrollY
-    document.body.style.overflow = 'hidden'
-    document.body.style.position = 'fixed'
-    document.body.style.top = `-${prevScrollY}px`
-    document.body.style.left = '0'
-    document.body.style.right = '0'
-    return () => {
-      document.body.style.overflow = prevOverflow
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.right = ''
-      window.scrollTo(0, prevScrollY)
-    }
-  }, [demoModalOpen])
 
   const heroCardSummaries: { title: string; summary: string }[] = [
     {
@@ -58,14 +35,6 @@ export default function WelcomePage() {
       summary: "Definimos una meta y un monto mensual para ahorrar con orden y constancia.",
     },
   ]
-
-  // Lock: show "use desktop/tablet" message on phones
-  useEffect(() => {
-    const check = () => setIsPhone(typeof window !== "undefined" && window.innerWidth < PHONE_BREAKPOINT)
-    check()
-    window.addEventListener("resize", check)
-    return () => window.removeEventListener("resize", check)
-  }, [])
 
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 100)
@@ -110,44 +79,6 @@ export default function WelcomePage() {
       display: "flex",
       flexDirection: "column",
     }} className="main-page-container landing-page-root" data-landing-root>
-      {/* Phone lock: ask to open on desktop/tablet */}
-      {isPhone && (
-        <div
-          style={{
-        position: "fixed",
-            inset: 0,
-            zIndex: 99999,
-            background: "linear-gradient(135deg, #1e3a8a 0%, #4A90E2 100%)",
-        display: "flex",
-            flexDirection: "column",
-        alignItems: "center",
-            justifyContent: "center",
-            padding: 32,
-            textAlign: "center",
-            color: "#fff",
-          }}
-        >
-          <Image
-            src="/2.png"
-            alt="Billy"
-            width={200}
-            height={200}
-            style={{
-              width: 160,
-              height: "auto",
-              maxWidth: "60vw",
-              objectFit: "contain",
-              marginBottom: 16,
-            }}
-          />
-          <span style={{ fontSize: 28, fontWeight: 600, color: "#fff", letterSpacing: "0.05em" }}>
-            BIZEN
-          </span>
-          <p style={{ fontSize: 22, fontWeight: 500, margin: "24px 0 0", maxWidth: 320, lineHeight: 1.4 }}>
-            Para una mejor experiencia, ábrelo en tu computadora o tablet.
-          </p>
-        </div>
-      )}
       {/* Top of page: logo, nav links, Crear cuenta - bigger elements, button always in view */}
       <div className="main-header" style={{
         width: "100%",
@@ -229,14 +160,14 @@ export default function WelcomePage() {
               top: "clamp(40px, 6vw, 72px)",
               transform: "translateX(-50%)",
               textAlign: "center",
-              width: "min(98vw, 1000px)",
-              maxWidth: "1000px",
+              width: "min(98vw, 1320px)",
+              maxWidth: "1320px",
               zIndex: 10,
                 opacity: isVisible ? 1 : 0,
               transition: "opacity 0.6s ease 0.3s",
             }}>
               <p className="hero-tagline" style={{
-                fontSize: "clamp(48px, 9vw, 110px)",
+                fontSize: "clamp(36px, 6vw, 72px)",
                 color: "#000",
                 fontWeight: 500,
                 margin: 0,
@@ -426,18 +357,18 @@ export default function WelcomePage() {
           }
           .hero-top-block {
             top: clamp(44px, 5vw, 64px) !important;
-            width: min(96vw, 920px) !important;
-            max-width: 920px !important;
+            width: min(96vw, 1200px) !important;
+            max-width: 1200px !important;
           }
           .hero-tagline {
-            font-size: clamp(48px, 9vw, 110px) !important;
+            font-size: clamp(36px, 6vw, 72px) !important;
           }
           .hero-tagline-sub {
             font-size: clamp(18px, 1.15rem, 21px) !important;
             margin-top: 18px !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(140px, 28vw, 250px) !important;
+            margin-top: clamp(260px, 40vw, 380px) !important;
             padding: 0 clamp(24px, 4vw, 40px) !important;
           }
           .hero-rect-row {
@@ -478,8 +409,8 @@ export default function WelcomePage() {
           }
           .hero-top-block {
             top: clamp(46px, 5.5vw, 68px) !important;
-            width: min(96vw, 960px) !important;
-            max-width: 960px !important;
+            width: min(96vw, 1240px) !important;
+            max-width: 1240px !important;
           }
           .hero-tagline {
             font-size: clamp(34px, 5vw, 54px) !important;
@@ -526,8 +457,8 @@ export default function WelcomePage() {
           }
           .hero-top-block {
             top: clamp(48px, 6vw, 72px) !important;
-            width: min(96vw, 1000px) !important;
-            max-width: 1000px !important;
+            width: min(96vw, 1280px) !important;
+            max-width: 1280px !important;
           }
           .hero-tagline {
             font-size: clamp(36px, 5vw, 56px) !important;
@@ -537,7 +468,7 @@ export default function WelcomePage() {
             margin-top: 20px !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(160px, 28vw, 280px) !important;
+            margin-top: clamp(280px, 41vw, 420px) !important;
           }
           .hero-rect-row {
             gap: clamp(34px, 5vw, 60px) !important;
@@ -581,8 +512,8 @@ export default function WelcomePage() {
           /* Hero section: bigger tagline, subtext, rectangles and labels */
           .hero-top-block {
             top: clamp(48px, 6vw, 88px) !important;
-            max-width: 1000px !important;
-            width: min(96vw, 1000px) !important;
+            max-width: 1280px !important;
+            width: min(96vw, 1280px) !important;
           }
           .hero-tagline {
             font-size: clamp(36px, 5vw, 58px) !important;
@@ -629,8 +560,8 @@ export default function WelcomePage() {
           /* Hero section: even larger on very wide screens */
           .hero-top-block {
             top: clamp(56px, 7vw, 100px) !important;
-            max-width: 1000px !important;
-            width: min(96vw, 1000px) !important;
+            max-width: 1320px !important;
+            width: min(96vw, 1320px) !important;
           }
           .hero-tagline {
             font-size: clamp(38px, 5vw, 60px) !important;
@@ -643,7 +574,7 @@ export default function WelcomePage() {
             gap: clamp(40px, 5vw, 80px) !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(200px, 30vw, 340px) !important;
+            margin-top: clamp(320px, 42vw, 480px) !important;
           }
           .hero-rect-card {
             width: clamp(300px, 28vw, 440px) !important;
@@ -658,7 +589,7 @@ export default function WelcomePage() {
         .hero-rectangles-wrapper {
           width: 100%;
           max-width: 100%;
-          margin-top: clamp(120px, 32vw, 280px);
+          margin-top: clamp(240px, 45vw, 420px);
           padding: 0 clamp(24px, 4vw, 48px);
           box-sizing: border-box;
           overflow-x: auto;
@@ -667,7 +598,7 @@ export default function WelcomePage() {
         }
         @media (max-width: 768px) {
           .hero-rectangles-wrapper {
-            margin-top: clamp(100px, 42vw, 220px);
+            margin-top: clamp(220px, 55vw, 320px);
             padding: 0 clamp(16px, 4vw, 24px);
           }
         }
@@ -1310,8 +1241,8 @@ export default function WelcomePage() {
 
       {/* Schedule Demo Modal - compact, enhanced */}
       {demoModalOpen && (
-        <div role="dialog" aria-modal="true" aria-labelledby="demo-modal-title" style={{ position: "fixed", inset: 0, zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", background: "rgba(15, 23, 42, 0.4)", backdropFilter: "blur(4px)", boxSizing: "border-box", overflow: "hidden", overscrollBehavior: "contain" }} onClick={(e) => e.target === e.currentTarget && setDemoModalOpen(false)}>
-          <div style={{ position: "relative", background: "#ffffff", borderRadius: "20px", border: "1px solid rgba(15, 98, 254, 0.12)", boxShadow: "0 20px 40px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(15, 98, 254, 0.04)", padding: "28px 32px", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", maxWidth: "min(98vw, 520px)", width: "100%", maxHeight: "min(88vh, 560px)", overflowY: "auto", overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }} onClick={(e) => e.stopPropagation()}>
+        <div role="dialog" aria-modal="true" aria-labelledby="demo-modal-title" style={{ position: "fixed", inset: 0, zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", background: "rgba(15, 23, 42, 0.4)", backdropFilter: "blur(4px)", boxSizing: "border-box" }} onClick={(e) => e.target === e.currentTarget && setDemoModalOpen(false)}>
+          <div style={{ position: "relative", background: "#ffffff", borderRadius: "20px", border: "1px solid rgba(15, 98, 254, 0.12)", boxShadow: "0 20px 40px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(15, 98, 254, 0.04)", padding: "28px 32px", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", maxWidth: "min(98vw, 520px)", width: "100%", maxHeight: "88vh", overflowY: "auto" }} onClick={(e) => e.stopPropagation()}>
             <button type="button" aria-label="Cerrar" onClick={() => setDemoModalOpen(false)} style={{ position: "absolute", top: "12px", right: "12px", width: "32px", height: "32px", borderRadius: "50%", border: "none", background: "#f1f5f9", cursor: "pointer", fontSize: "18px", lineHeight: 1, color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s, color 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.background = "#e2e8f0"; e.currentTarget.style.color = "#334155"; }} onMouseOut={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#64748b"; }}>×</button>
             <div style={{ paddingRight: "36px" }}>
               <div style={{ width: "40px", height: "4px", borderRadius: "2px", background: "linear-gradient(90deg, #1e3a8a, #60a5fa)", marginBottom: "16px" }} />

@@ -30,12 +30,13 @@ export function LessonScreen({
 }: LessonScreenProps) {
   return (
     <div
-      className="flex flex-col bg-white text-slate-900 relative w-full flex-1 min-h-0"
+      className="flex flex-col text-slate-900 relative w-full flex-1 min-h-0"
       style={{
         paddingTop: "env(safe-area-inset-top)",
         minHeight: "100dvh",
         height: "100dvh",
         overflow: "hidden",
+        background: "#f1f5f9",
       }}
     >
       {/* Progress Bar - visible strip at top */}

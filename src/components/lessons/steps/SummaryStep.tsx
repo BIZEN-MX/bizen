@@ -19,13 +19,12 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
   }, [])
 
   return (
-    <div className={sharedStyles.container}>
-      <div className="h-1 w-20 md:w-24 rounded-full bg-slate-300 mb-4" aria-hidden />
-      <h2 className={sharedStyles.title}>{step.title}</h2>
-      <div
-        className={`${sharedStyles.body} mt-6 p-5 md:p-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-800 text-2xl md:text-3xl lg:text-4xl`}
-      >
-        {step.body}
+    <div className={sharedStyles.container} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: '60vh' }}>
+      <h2 className={sharedStyles.title} style={{ fontSize: 'clamp(36px, 7vw, 56px)', fontWeight: 600, marginBottom: '2rem', color: '#1e293b' }}>{step.title}</h2>
+      <div style={{ fontSize: 'clamp(22px, 4.5vw, 30px)', lineHeight: 1.8, maxWidth: '700px', color: '#1e293b' }}>
+        {step.body.split('\n\n').map((line, i) => (
+          <p key={i} style={{ margin: '0.8rem 0' }}>{line}</p>
+        ))}
       </div>
     </div>
   )
