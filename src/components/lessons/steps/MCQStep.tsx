@@ -4,9 +4,10 @@ import React, { useState } from "react"
 import { McqStepFields } from "@/types/lessonTypes"
 import { sharedStyles } from "../sharedStyles"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
+import { LessonProgressHeader } from "../LessonProgressHeader"
 
 interface MCQStepProps {
-  step: McqStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean }
+  step: McqStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; reviewSourceStepId?: string }
   onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any }) => void
   selectedOptionId?: string
   onExit?: () => void
@@ -14,18 +15,26 @@ interface MCQStepProps {
   isContinueEnabled?: boolean
   currentStepIndex?: number
   totalSteps?: number
+  streak?: number
+  stars?: 1 | 2 | 3
 }
 
-export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, onExit, onContinue, isContinueEnabled, currentStepIndex = 0, totalSteps = 1 }: MCQStepProps) {
+export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, onExit, onContinue, isContinueEnabled, currentStepIndex = 0, totalSteps = 1, streak = 0, stars = 3 }: MCQStepProps) {
   const [selectedOptionId, setSelectedOptionId] = useState<string | undefined>(initialSelected)
   const [showFeedback, setShowFeedback] = useState<Record<string, boolean>>({})
   const [hasChecked, setHasChecked] = useState(false)
 
   const handleSelect = (optionId: string) => {
-    if (step.fullScreen && !hasChecked) {
-      // In fullScreen mode, just select without feedback until "Comprobar" is clicked
-      setSelectedOptionId(optionId)
-    } else {
+    if (step.fullScreen) {
+      if (hasChecked && optionId !== selectedOptionId) {
+        // Wrong before: allow retry – pick another option and try again
+        setHasChecked(false)
+        setSelectedOptionId(optionId)
+        setShowFeedback({})
+      } else if (!hasChecked) {
+        setSelectedOptionId(optionId)
+      }
+    } else if (!hasChecked) {
       // Regular mode: immediate feedback
       setSelectedOptionId(optionId)
       const selectedOption = step.options.find((opt) => opt.id === optionId)
@@ -54,9 +63,14 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
     
     const selectedOption = step.options.find((opt) => opt.id === selectedOptionId)
     const isCorrect = selectedOption?.isCorrect ?? false
+    const correctOption = step.options.find((opt) => opt.isCorrect)
     
     setHasChecked(true)
-    setShowFeedback({ [selectedOptionId]: true })
+    // Mark both selected and correct option so user always sees the right answer (in green)
+    setShowFeedback({
+      [selectedOptionId]: true,
+      ...(correctOption?.id && correctOption.id !== selectedOptionId ? { [correctOption.id]: true } : {}),
+    })
     
     // Play sound
     if (isCorrect) {
@@ -72,10 +86,22 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
     })
   }
 
+  const isReviewStep = !!step.reviewSourceStepId
+  const showResetButton = isReviewStep && hasChecked && !isContinueEnabled
+
+  const handleResetQuestion = () => {
+    setHasChecked(false)
+    setSelectedOptionId(undefined)
+    setShowFeedback({})
+  }
+
   // Full-screen mode: new visual design matching the image
   if (step.fullScreen && onExit && onContinue) {
     const optionLabels = ['A)', 'B)', 'C)', 'D)', 'E)', 'F)']
-    
+    const correctOption = step.options.find((o) => o.isCorrect)
+    const correctIndex = correctOption ? step.options.indexOf(correctOption) : -1
+    const correctLabel = correctIndex >= 0 ? `${optionLabels[correctIndex]} ${correctOption?.label}` : ''
+
     return (
       <div style={{ 
         display: 'flex', 
@@ -88,26 +114,12 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
         background: '#f1f5f9',
         boxSizing: 'border-box',
       }}>
-        {/* Functional progress bar */}
-        <div style={{ 
-          width: 'min(90%, 900px)', 
-          height: '32px', 
-          borderRadius: '20px', 
-          border: '3px solid #1e293b',
-          background: '#e2e8f0',
-          marginBottom: '2rem',
-          overflow: 'hidden',
-          boxSizing: 'border-box',
-        }}>
-          <div style={{
-            width: `${totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0}%`,
-            height: '100%',
-            background: '#2563eb',
-            borderRadius: '14px',
-            minWidth: totalSteps > 0 ? 8 : 0,
-            transition: 'width 0.3s ease',
-          }} />
-        </div>
+        <LessonProgressHeader
+          currentStepIndex={currentStepIndex}
+          totalSteps={totalSteps}
+          streak={streak}
+          stars={stars}
+        />
 
         {/* Content area */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', maxWidth: '800px' }}>
@@ -122,70 +134,65 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
             {step.question}
           </h2>
           
-          {/* Options as rounded pills */}
+          {/* Options: correct = green, incorrect = red. After check, highlight correct option in green. */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', maxWidth: '700px' }}>
             {step.options.map((option, index) => {
               const isSelected = selectedOptionId === option.id
               const hasFeedback = showFeedback[option.id] && hasChecked
               const isCorrect = option.isCorrect
+              // Correct answer = green; wrong answer = red
+              const feedbackBg = hasFeedback ? (isCorrect ? '#d1fae5' : '#fee2e2') : (isSelected ? '#bfdbfe' : '#dbeafe')
+              const feedbackBorder = hasFeedback ? (isCorrect ? '3px solid #10b981' : '3px solid #ef4444') : (isSelected ? '3px solid #2563eb' : '3px solid transparent')
+              const feedbackColor = hasFeedback ? (isCorrect ? '#047857' : '#dc2626') : '#1e293b'
               
               return (
-                <button
-                  key={option.id}
-                  onClick={() => handleSelect(option.id)}
-                  disabled={hasChecked}
-                  style={{
-                    padding: '1.5rem 2rem',
-                    fontSize: 'clamp(18px, 3.5vw, 24px)',
-                    fontWeight: 500,
-                    color: hasFeedback ? (isCorrect ? '#047857' : '#dc2626') : '#1e293b',
-                    background: hasFeedback 
-                      ? (isCorrect ? '#d1fae5' : '#fee2e2')
-                      : isSelected 
-                        ? '#bfdbfe' 
-                        : '#dbeafe',
-                    border: hasFeedback 
-                      ? (isCorrect ? '3px solid #10b981' : '3px solid #ef4444')
-                      : isSelected
-                        ? '3px solid #2563eb'
-                        : '3px solid transparent',
-                    borderRadius: '9999px',
-                    cursor: hasChecked ? 'default' : 'pointer',
-                    fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                    textAlign: 'left',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  <span style={{ fontWeight: 600 }}>{optionLabels[index]}</span>
-                  <span style={{ flex: 1 }}>{option.label}</span>
-                  {hasFeedback && (
-                    <span style={{ fontSize: '1.5rem', marginLeft: '0.5rem' }}>
-                      {isCorrect ? '✓' : '✗'}
-                    </span>
+                <div key={option.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <button
+                    onClick={() => handleSelect(option.id)}
+                    disabled={hasChecked && isContinueEnabled}
+                    style={{
+                      padding: '1.5rem 2rem',
+                      fontSize: 'clamp(18px, 3.5vw, 24px)',
+                      fontWeight: 500,
+                      color: feedbackColor,
+                      background: feedbackBg,
+                      border: feedbackBorder,
+                      borderRadius: '9999px',
+                      cursor: hasChecked && isContinueEnabled ? 'default' : 'pointer',
+                      fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <span style={{ fontWeight: 600 }}>{optionLabels[index]}</span>
+                    <span style={{ flex: 1 }}>{option.label}</span>
+                    {hasFeedback && (
+                      <span style={{ fontSize: '1.5rem', marginLeft: '0.5rem' }}>
+                        {isCorrect ? '✓' : '✗'}
+                      </span>
+                    )}
+                  </button>
+                  {/* Feedback: show ONLY the correct answer when wrong (no explanation text) */}
+                  {hasFeedback && isSelected && !isCorrect && correctLabel && (
+                    <p style={{
+                      margin: 0,
+                      paddingLeft: '2rem',
+                      paddingRight: '2rem',
+                      fontSize: 'clamp(16px, 3vw, 20px)',
+                      lineHeight: 1.5,
+                      color: '#dc2626',
+                      fontWeight: 500,
+                    }}>
+                      La respuesta correcta es {correctLabel}
+                    </p>
                   )}
-                </button>
+                </div>
               )
             })}
           </div>
-
-          {/* Feedback after checking */}
-          {hasChecked && selectedOptionId && showFeedback[selectedOptionId] && (
-            <div style={{ 
-              marginTop: '2rem', 
-              padding: '1.5rem', 
-              borderRadius: '16px',
-              background: step.options.find(o => o.id === selectedOptionId)?.isCorrect ? '#d1fae5' : '#fee2e2',
-              border: `2px solid ${step.options.find(o => o.id === selectedOptionId)?.isCorrect ? '#10b981' : '#ef4444'}`,
-              fontSize: 'clamp(18px, 3.5vw, 22px)',
-              color: step.options.find(o => o.id === selectedOptionId)?.isCorrect ? '#047857' : '#dc2626',
-              fontWeight: 500,
-            }}>
-              {step.options.find(o => o.id === selectedOptionId)?.explanation}
-            </div>
-          )}
         </div>
 
         {/* Buttons at bottom */}
@@ -193,7 +200,8 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
           width: '100%', 
           maxWidth: '900px',
           display: 'flex', 
-          gap: '1.5rem',
+          flexWrap: 'wrap',
+          gap: '1rem',
           justifyContent: 'space-between',
           alignItems: 'center',
           marginTop: '2rem',
@@ -215,45 +223,65 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
           >
             Salir
           </button>
-          {!hasChecked ? (
-            <button
-              onClick={handleCheck}
-              disabled={!selectedOptionId}
-              style={{
-                padding: '16px 48px',
-                fontSize: 'clamp(18px, 3.5vw, 24px)',
-                fontWeight: 600,
-                color: '#ffffff',
-                background: selectedOptionId ? '#2563eb' : '#94a3b8',
-                border: 'none',
-                borderRadius: '9999px',
-                cursor: selectedOptionId ? 'pointer' : 'not-allowed',
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                minWidth: '180px',
-              }}
-            >
-              Comprobar
-            </button>
-          ) : (
-            <button
-              onClick={onContinue}
-              disabled={!isContinueEnabled}
-              style={{
-                padding: '16px 48px',
-                fontSize: 'clamp(18px, 3.5vw, 24px)',
-                fontWeight: 600,
-                color: '#ffffff',
-                background: isContinueEnabled ? '#2563eb' : '#94a3b8',
-                border: 'none',
-                borderRadius: '9999px',
-                cursor: isContinueEnabled ? 'pointer' : 'not-allowed',
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                minWidth: '180px',
-              }}
-            >
-              Continuar
-            </button>
-          )}
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            {showResetButton && (
+              <button
+                type="button"
+                onClick={handleResetQuestion}
+                style={{
+                  padding: '16px 32px',
+                  fontSize: 'clamp(16px, 3vw, 22px)',
+                  fontWeight: 500,
+                  color: '#64748b',
+                  background: '#e2e8f0',
+                  border: '2px solid #94a3b8',
+                  borderRadius: '9999px',
+                  cursor: 'pointer',
+                  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+                }}
+              >
+                Resetear pregunta
+              </button>
+            )}
+            {hasChecked && isContinueEnabled ? (
+              <button
+                onClick={onContinue}
+                style={{
+                  padding: '16px 48px',
+                  fontSize: 'clamp(18px, 3.5vw, 24px)',
+                  fontWeight: 600,
+                  color: '#ffffff',
+                  background: '#2563eb',
+                  border: 'none',
+                  borderRadius: '9999px',
+                  cursor: 'pointer',
+                  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+                  minWidth: '180px',
+                }}
+              >
+                Continuar
+              </button>
+            ) : (
+              <button
+                onClick={handleCheck}
+                disabled={!selectedOptionId}
+                style={{
+                  padding: '16px 48px',
+                  fontSize: 'clamp(18px, 3.5vw, 24px)',
+                  fontWeight: 600,
+                  color: '#ffffff',
+                  background: selectedOptionId ? '#2563eb' : '#94a3b8',
+                  border: 'none',
+                  borderRadius: '9999px',
+                  cursor: selectedOptionId ? 'pointer' : 'not-allowed',
+                  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+                  minWidth: '180px',
+                }}
+              >
+                Comprobar
+              </button>
+            )}
+          </div>
         </div>
       </div>
     )

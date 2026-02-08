@@ -134,7 +134,7 @@ export default function WelcomePage() {
             display: "none",
           }} className="decorative-blue-accent" />
 
-          {/* Main Content */}
+          {/* Main Content - cards positioned way up, right below tagline */}
           <div style={{
             position: "relative",
             zIndex: 1,
@@ -142,10 +142,10 @@ export default function WelcomePage() {
             margin: "0 auto",
             flex: 1,
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             justifyContent: "center",
             padding: "clamp(16px, 3vw, 40px)",
-            paddingTop: "clamp(24px, 4vw, 48px)",
+            paddingTop: "clamp(0, 2vw, 16px)",
             paddingBottom: "clamp(40px, 6vw, 60px)",
             width: "100%",
             minHeight: "100vh",
@@ -181,7 +181,7 @@ export default function WelcomePage() {
                 fontSize: "clamp(18px, 1.2rem, 22px)",
                 color: "#374151",
                 fontWeight: 400,
-                margin: "16px 0 0",
+                margin: "8px 0 4px 0",
                 lineHeight: 1.5,
                 fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                       width: "100%",
@@ -191,7 +191,7 @@ export default function WelcomePage() {
               </div>
 
             {/* Rectangles - separate full-width block, outside absolute container to avoid clipping */}
-            <div className="hero-rectangles-wrapper">
+            <div className="hero-rectangles-wrapper" style={{ marginTop: "clamp(112px, 16vw, 220px)" }}>
               <div className="hero-rect-row">
                 {[0, 1, 2].map((index) => (
                   <div
@@ -261,11 +261,25 @@ export default function WelcomePage() {
           padding-left: 0 !important;
           margin-left: 0 !important;
         }
+        /* REMOVE nested scroll - body scrolls, not app-scroll (fixes touchpad scroll capture) */
+        html:has(.main-page-container) .app-shell {
+          position: static !important;
+          inset: auto !important;
+          height: auto !important;
+          min-height: 100% !important;
+          overflow: visible !important;
+        }
+        html:has(.main-page-container) .app-scroll {
+          overflow: visible !important;
+          overflow-x: hidden !important;
+          height: auto !important;
+          min-height: 100% !important;
+        }
         .main-page-container { overflow-x: hidden !important; width: 100% !important; max-width: 100vw !important; }
         .main-page-container main { overflow-x: hidden !important; max-width: 100% !important; width: 100% !important; }
         .main-page-container main > div { overflow-x: hidden !important; max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
         .main-content-wrapper { overflow-x: hidden !important; max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
-        .hero-rectangles-wrapper { overflow-x: auto !important; overflow-y: visible !important; -webkit-overflow-scrolling: touch; }
+        .hero-rectangles-wrapper { overflow-x: clip !important; overflow-y: visible !important; }
         .hero-top-block .hero-tagline,
         .hero-top-block .hero-tagline-sub { max-width: 100% !important; overflow-wrap: break-word !important; word-wrap: break-word !important; }
         
@@ -300,8 +314,7 @@ export default function WelcomePage() {
         .main-header .header-bar-nav {
           min-width: 0 !important;
           max-width: 100% !important;
-          overflow-x: auto !important;
-          -webkit-overflow-scrolling: touch;
+          overflow-x: clip !important;
         }
 
         /* Nav links: not bold, hover color change */
@@ -368,7 +381,7 @@ export default function WelcomePage() {
             margin-top: 18px !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(260px, 40vw, 380px) !important;
+            margin-top: clamp(112px, 16vw, 220px) !important;
             padding: 0 clamp(24px, 4vw, 40px) !important;
           }
           .hero-rect-row {
@@ -468,7 +481,7 @@ export default function WelcomePage() {
             margin-top: 20px !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(280px, 41vw, 420px) !important;
+            margin-top: clamp(160px, 20vw, 300px) !important;
           }
           .hero-rect-row {
             gap: clamp(34px, 5vw, 60px) !important;
@@ -574,7 +587,7 @@ export default function WelcomePage() {
             gap: clamp(40px, 5vw, 80px) !important;
           }
           .hero-rectangles-wrapper {
-            margin-top: clamp(320px, 42vw, 480px) !important;
+            margin-top: clamp(160px, 20vw, 300px) !important;
           }
           .hero-rect-card {
             width: clamp(300px, 28vw, 440px) !important;
@@ -585,20 +598,20 @@ export default function WelcomePage() {
           }
         }
 
-        /* Rectangles wrapper - 3 cards always in one row, scroll horizontally on narrow screens */
+        /* Rectangles wrapper - 3 cards in one row, no horizontal scroll (avoids touchpad scroll capture) */
         .hero-rectangles-wrapper {
           width: 100%;
           max-width: 100%;
-          margin-top: clamp(240px, 45vw, 420px);
+          margin-top: clamp(96px, 14vw, 180px);
           padding: 0 clamp(24px, 4vw, 48px);
           box-sizing: border-box;
-          overflow-x: auto;
+          overflow-x: clip;
           position: relative;
           z-index: 5;
         }
         @media (max-width: 768px) {
           .hero-rectangles-wrapper {
-            margin-top: clamp(220px, 55vw, 320px);
+            margin-top: clamp(80px, 12vw, 150px);
             padding: 0 clamp(16px, 4vw, 24px);
           }
         }
@@ -2451,7 +2464,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
       </section>
 
       {/* Cada clase, una aventura divertida - Carousel */}
-      <section className="section adventure-carousel-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(56px, 8vw, 96px) clamp(20px, 4vw, 48px)", overflow: "visible" }}>
+      <section className="section adventure-carousel-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px)", overflow: "visible" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", overflow: "visible" }}>
           <h2 style={{
             textAlign: "center",
@@ -3112,15 +3125,18 @@ html {
 .main-page-container .adventure-carousel-section {
   overflow-x: clip !important;
   overflow-y: visible !important;
+  padding: clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px) !important;
 }
 @media (min-width: 768px){
   .container{ padding:0 clamp(24px, 4vw, 40px) !important; overflow-x: hidden !important; }
   .section{ padding: clamp(72px, 10vw, 120px) 0 !important; }
+  .main-page-container .adventure-carousel-section{ padding: clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px) !important; }
   .section-head{ max-width: 920px !important; }
 }
 @media (min-width: 1024px){
   .container{ padding:0 clamp(32px, 4vw, 48px) !important; }
   .section{ padding: clamp(80px, 10vw, 128px) 0 !important; }
+  .main-page-container .adventure-carousel-section{ padding: clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px) !important; }
 }
 
 .hero{padding-top: clamp(24px, 3vw, 48px)}
@@ -3491,6 +3507,9 @@ html {
   /* Section padding - reduce on mobile */
   .section {
     padding: clamp(32px, 6vw, 64px) 0 !important;
+  }
+  .main-page-container .adventure-carousel-section {
+    padding: clamp(12px, 2vw, 20px) clamp(20px, 4vw, 48px) !important;
   }
   
   /* Container padding - increase on mobile for better spacing */

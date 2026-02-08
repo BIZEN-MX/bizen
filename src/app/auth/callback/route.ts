@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: Request) {
   const { origin, searchParams } = new URL(request.url);
@@ -12,7 +13,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/login?error=no_code`);
   }
 
-  const requestUrl = new URL(request.url)
   const cookieStore = await cookies();
 
   const supabase = createServerClient(
@@ -51,13 +51,43 @@ export async function GET(request: Request) {
 
     // Handle different auth flows
     if (type === 'recovery') {
-      // Password reset flow
       return NextResponse.redirect(`${origin}/reset-password?verified=true`);
-    } else {
-      // Email verification successful - redirect to courses (BIZEN dashboard)
-      // Add cache-busting parameter to force client-side refresh
-      return NextResponse.redirect(`${origin}/courses?verified=true&t=${Date.now()}`);
     }
+
+    // If user has school with active license, set paywall bypass cookie
+    let redirectUrl = `${origin}/courses?verified=true&t=${Date.now()}`;
+    try {
+      const profile = await prisma.profile.findUnique({
+        where: { userId: data.user!.id },
+        include: {
+          school: {
+            include: {
+              licenses: {
+                where: {
+                  status: 'active',
+                  endDate: { gt: new Date() }
+                },
+                take: 1
+              }
+            }
+          }
+        }
+      });
+      const hasActiveLicense = profile?.school?.licenses?.length && profile.school.licenses.length > 0;
+      if (hasActiveLicense) {
+        cookieStore.set('bizen_has_access', '1', {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 365,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+        });
+      }
+    } catch (e) {
+      console.warn('Auth callback: could not check school license:', e);
+    }
+
+    return NextResponse.redirect(redirectUrl);
   } catch (error) {
     console.error('Unexpected error in auth callback:', error);
     return NextResponse.redirect(`${origin}/login?error=unexpected_error`);

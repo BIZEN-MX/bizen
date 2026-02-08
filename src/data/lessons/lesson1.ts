@@ -20,6 +20,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "En esta lección voy a aprender\n\nQué es el dinero\nPor qué se creó\nCómo ha cambiado con el tiempo\n\nAl final voy a poder explicar\n\nPor qué el dinero de hoy es diferente al de antes",
     isAssessment: false,
     continueLabel: "Continuar",
+    fullScreen: true,
   },
   // SLIDE 3 – Pregunta inicial
   {
@@ -44,6 +45,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "Al inicio no había dinero\nLas personas intercambiaban cosas\nA esto se le llama trueque\n\nYo daba algo que tenía\nY recibía algo que necesitaba\n\nEjemplo\nYo tenía maíz\nOtra persona tenía sal\nHacíamos un intercambio",
     isAssessment: false,
     continueLabel: "Seguir",
+    fullScreen: true,
   },
   // SLIDE 5 – Problemas del trueque
   {
@@ -53,6 +55,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "El trueque no era perfecto\n\nProblemas\nNo siempre la otra persona quería lo que yo tenía\nEra difícil saber cuánto valía cada cosa\nNo se podía ahorrar para después\n\nEsto hacía lento el comercio",
     isAssessment: false,
     continueLabel: "Continuar",
+    fullScreen: true,
   },
   // SLIDE 6 – Pregunta rápida
   {
@@ -77,6 +80,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "Después del trueque\nLas personas empezaron a usar objetos como dinero\n\nEran cosas que todos valoraban\n\nEjemplos\nSal\nGranos\nGanado\nConchas\nMetales\n\nEsto facilitó un poco los intercambios",
     isAssessment: false,
     continueLabel: "Continuar",
+    fullScreen: true,
   },
   // SLIDE 8 – Limitaciones del dinero mercancía
   {
@@ -86,6 +90,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "Aunque ayudó\nSeguía teniendo problemas\n\nAlgunos objetos eran pesados\nOtros se dañaban\nNo todos eran fáciles de dividir\n\nSe necesitaba algo mejor",
     isAssessment: false,
     continueLabel: "Avanzar",
+    fullScreen: true,
   },
   // SLIDE 9 – Las primeras monedas
   {
@@ -95,6 +100,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "Aquí aparecen las monedas\nHechas de oro, plata o cobre\n\nVentajas\nEran más fáciles de transportar\nTenían un valor más claro\nDuraban más tiempo\n\nEl gobierno garantizaba su valor\nEso generaba confianza",
     isAssessment: false,
     continueLabel: "Continuar",
+    fullScreen: true,
   },
   // SLIDE 10 – Pregunta interactiva monedas
   {
@@ -119,6 +125,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "Más adelante apareció el dinero en papel\n\nEra más ligero\nMás fácil de transportar\nMás práctico\n\nAl inicio no valía por sí solo\nRepresentaba oro o plata\nEra una promesa",
     isAssessment: false,
     continueLabel: "Seguir",
+    fullScreen: true,
   },
   // SLIDE 12 – Ejemplo sencillo
   {
@@ -128,6 +135,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "Un billete decía\nEste papel equivale a cierta cantidad de oro\n\nEso permitió mover mucho dinero\nSin cargar metales pesados\n\nEl comercio creció más rápido",
     isAssessment: false,
     continueLabel: "Continuar",
+    fullScreen: true,
   },
   // SLIDE 13 – El dinero actual
   {
@@ -137,6 +145,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "Hoy el dinero ya no depende del oro\nSe llama dinero fiduciario\n\nVale porque confiamos en él\n\nLo uso en\nBilletes\nMonedas\nTarjetas\nTransferencias\nPagos digitales",
     isAssessment: false,
     continueLabel: "Avanzar",
+    fullScreen: true,
   },
   // SLIDE 14 – Reflexión
   {
@@ -146,6 +155,7 @@ export const lesson1Steps: LessonStep[] = [
     body: "El dinero ha cambiado\nPero su función es la misma\n\nFacilitar intercambios\nAhorrar valor\nMedir precios\n\nLa forma cambia\nLa idea no",
     isAssessment: false,
     continueLabel: "Continuar",
+    fullScreen: true,
   },
   // SLIDE 15 – Pregunta final
   {
@@ -170,5 +180,6 @@ export const lesson1Steps: LessonStep[] = [
     body: "Hoy entendí\nQue el dinero no siempre existió\nQue fue evolucionando\nQue sigue cambiando hoy\n\nEsto es solo el inicio",
     isAssessment: false,
     continueLabel: "Completar misión",
+    fullScreen: true,
   },
 ]

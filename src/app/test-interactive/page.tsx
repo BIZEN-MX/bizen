@@ -8,7 +8,7 @@ export default function TestInteractivePage() {
 
   useEffect(() => {
     // Redirect to the interactive lesson
-    router.push('/learn/course-1/unit-1/lesson-1/interactive')
+    router.push('/learn/course-1/unit-1/l1-1/interactive')
   }, [router])
 
   return (
@@ -81,7 +81,7 @@ export default function TestInteractivePage() {
               📚 Courses Page (Click first lesson)
             </a>
             <a
-              href="/learn/course-1/unit-1/lesson-1/interactive"
+              href="/learn/course-1/unit-1/l1-1/interactive"
               style={{
                 padding: "10px 16px",
                 background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",

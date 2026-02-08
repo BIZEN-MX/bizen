@@ -12,13 +12,25 @@ function PaymentSuccessContent() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Verify payment was successful
-    if (sessionId) {
-      // In production, you'd verify the session with your backend
-      setLoading(false)
-    } else {
+    if (!sessionId) {
       router.push('/payment')
+      return
     }
+    const verify = async () => {
+      try {
+        const res = await fetch('/api/payment/verify-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId }),
+        })
+        if (!res.ok) throw new Error('Verification failed')
+      } catch {
+        // Still show success - cookie may already be set or user can retry
+      } finally {
+        setLoading(false)
+      }
+    }
+    verify()
   }, [sessionId, router])
 
   if (loading) {

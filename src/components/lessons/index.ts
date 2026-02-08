@@ -8,6 +8,8 @@
 export { LessonScreen } from "./LessonScreen"
 export { LessonContainer } from "./LessonContainer"
 export { ProgressBar } from "./ProgressBar"
+export { LessonProgressHeader } from "./LessonProgressHeader"
+export type { LessonProgressHeaderProps } from "./LessonProgressHeader"
 export { StickyFooter, StickyFooterButton } from "./StickyFooter"
 export { sharedStyles, textSizes, spacing } from "./sharedStyles"
 export { LessonEngine } from "./LessonEngine"

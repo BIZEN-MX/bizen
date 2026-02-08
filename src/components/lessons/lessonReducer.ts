@@ -24,6 +24,8 @@ export type LessonAction =
   | { type: "NEXT_STEP" }
   | { type: "BUILD_REVIEW_STEPS" }
   | { type: "GO_TO_SUMMARY" }
+  | { type: "APPEND_REVIEW_STEP"; sourceStepId: string }
+  | { type: "GO_TO_SUMMARY_AFTER_REVIEW" }
 
 export function lessonReducer(state: LessonState, action: LessonAction): LessonState {
   switch (action.type) {
@@ -46,22 +48,26 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
       const { stepId, isCorrect, answerData } = action
       const step = state.allSteps.find((s) => s.id === stepId)
       const isReviewStep = !!step?.reviewSourceStepId
-      
-      // Only record incorrect for non-review steps
-      // Review steps that are answered incorrectly don't get added to incorrectSteps again
-      const shouldRecordIncorrect =
-        !isReviewStep && step?.isAssessment && !isCorrect && (step.recordIncorrect ?? true)
+      const sourceStepId = step?.reviewSourceStepId
 
-      const newIncorrectSteps = shouldRecordIncorrect
-        ? [...new Set([...state.incorrectSteps, stepId])]
-        : state.incorrectSteps
+      let newIncorrectSteps = state.incorrectSteps
+      if (isReviewStep && isCorrect && sourceStepId) {
+        newIncorrectSteps = state.incorrectSteps.filter((id) => id !== sourceStepId)
+      } else if (!isReviewStep && step?.isAssessment && !isCorrect && (step.recordIncorrect ?? true)) {
+        newIncorrectSteps = [...new Set([...state.incorrectSteps, stepId])]
+      }
+
+      const newAnswersByStepId = {
+        ...state.answersByStepId,
+        [stepId]: { stepId, isCorrect, answerData },
+      }
+      if (isReviewStep && isCorrect && sourceStepId) {
+        newAnswersByStepId[sourceStepId] = { stepId: sourceStepId, isCorrect: true, answerData }
+      }
 
       return {
         ...state,
-        answersByStepId: {
-          ...state.answersByStepId,
-          [stepId]: { stepId, isCorrect, answerData },
-        },
+        answersByStepId: newAnswersByStepId,
         incorrectSteps: newIncorrectSteps,
       }
     }
@@ -136,14 +142,9 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         })
         .filter((step): step is LessonStep => step !== null)
 
-      // Combine: original steps (except summary) + review steps + summary
-      const newAllSteps = [
-        ...stepsBeforeSummary,
-        ...reviewSteps,
-        ...(summaryStep ? [summaryStep] : []),
-      ]
+      // Combine: original steps (except summary) + review steps only (no summary until all correct)
+      const newAllSteps = [...stepsBeforeSummary, ...reviewSteps]
 
-      // Update current step index to point to first review step
       const firstReviewIndex = stepsBeforeSummary.length
 
       return {
@@ -152,6 +153,40 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         currentStepIndex: firstReviewIndex,
         hasBuiltReviewSteps: true,
         isContinueEnabled: false,
+      }
+    }
+
+    case "APPEND_REVIEW_STEP": {
+      const { sourceStepId } = action
+      const originalStep = state.originalSteps.find((s) => s.id === sourceStepId)
+      if (!originalStep) return state
+
+      const reviewCount = state.allSteps.filter((s) => s.reviewSourceStepId === sourceStepId).length
+      const newReviewStep: LessonStep = {
+        ...originalStep,
+        id: `review-${sourceStepId}-${reviewCount}`,
+        reviewSourceStepId: originalStep.id,
+        title: originalStep.title ? `Review: ${originalStep.title}` : "Review Question",
+        description: "Try this question again",
+      } as LessonStep
+
+      return {
+        ...state,
+        allSteps: [...state.allSteps, newReviewStep],
+        isContinueEnabled: true,
+      }
+    }
+
+    case "GO_TO_SUMMARY_AFTER_REVIEW": {
+      const summaryStepIndex = state.originalSteps.findIndex((s) => s.stepType === "summary")
+      const summaryStep = summaryStepIndex >= 0 ? state.originalSteps[summaryStepIndex] : null
+      if (!summaryStep) return state
+
+      return {
+        ...state,
+        allSteps: [...state.allSteps, summaryStep],
+        currentStepIndex: state.allSteps.length,
+        isContinueEnabled: true,
       }
     }
 

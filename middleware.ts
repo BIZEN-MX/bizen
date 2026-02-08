@@ -101,12 +101,28 @@ export async function middleware(request: NextRequest) {
     // Role verification happens in the API routes using requireAuthAndRole
   }
 
-  // Protected student routes
+  // Protected student routes (require login)
   const protectedRoutes = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum']
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
   if (isProtectedRoute && !session) {
     return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  // Paywall: block courses, cash-flow, learn, simuladores, business-lab, etc. without payment
+  // Cookie bizen_has_access is set after Stripe payment or when user has school license (auth callback)
+  const paidRoutes = [
+    '/courses', '/cash-flow', '/learn', '/simuladores', '/business-lab',
+    '/dashboard', '/forum', '/leaderboard', '/ranking', '/progress', '/reto-diario',
+    '/cuenta', '/configuracion', '/profile', '/teacher', '/bizen/dashboard'
+  ]
+  const isPaidRoute = paidRoutes.some(route => pathname.startsWith(route))
+  const allowedWithoutPayment = ['/payment', '/payment/success', '/payment/cancel']
+  const isAllowedWithoutPayment = allowedWithoutPayment.some(route => pathname.startsWith(route))
+  const hasAccessCookie = request.cookies.get('bizen_has_access')?.value === '1'
+
+  if (isPaidRoute && !isAllowedWithoutPayment && !hasAccessCookie) {
+    return NextResponse.redirect(new URL('/payment', request.url))
   }
 
   return response

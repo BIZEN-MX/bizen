@@ -4,18 +4,21 @@ import React, { useEffect } from "react"
 import Image from "next/image"
 import { InfoStepFields } from "@/types/lessonTypes"
 import { sharedStyles } from "../sharedStyles"
+import { LessonProgressHeader } from "../LessonProgressHeader"
 
 interface InfoStepProps {
-  step: InfoStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean }
+  step: InfoStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; continueLabel?: string }
   onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any }) => void
   onExit?: () => void
   onContinue?: () => void
   isContinueEnabled?: boolean
   currentStepIndex?: number
   totalSteps?: number
+  streak?: number
+  stars?: 1 | 2 | 3
 }
 
-export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabled, currentStepIndex = 0, totalSteps = 1 }: InfoStepProps) {
+export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabled, currentStepIndex = 0, totalSteps = 1, streak = 0, stars = 3 }: InfoStepProps) {
   useEffect(() => {
     // Info steps are always completed immediately (no interaction needed). Run once on mount
     // so we don't re-trigger when parent recreates onAnswered and cause an infinite loop.
@@ -37,26 +40,12 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
         background: '#f1f5f9',
         boxSizing: 'border-box',
       }}>
-        {/* Functional progress bar - rounded pill, fill by step */}
-        <div style={{ 
-          width: 'min(90%, 900px)', 
-          height: '32px', 
-          borderRadius: '20px', 
-          border: '3px solid #1e293b',
-          background: '#e2e8f0',
-          marginBottom: '2rem',
-          overflow: 'hidden',
-          boxSizing: 'border-box',
-        }}>
-          <div style={{
-            width: `${totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0}%`,
-            height: '100%',
-            background: '#2563eb',
-            borderRadius: '14px',
-            minWidth: totalSteps > 0 ? 8 : 0,
-            transition: 'width 0.3s ease',
-          }} />
-        </div>
+        <LessonProgressHeader
+          currentStepIndex={currentStepIndex}
+          totalSteps={totalSteps}
+          streak={streak}
+          stars={stars}
+        />
 
         {/* Content area - centered vertically */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -130,7 +119,7 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
               minWidth: '180px',
             }}
           >
-            Iniciar misión
+            {step.continueLabel || "Continuar"}
           </button>
         </div>
       </div>

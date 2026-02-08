@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useCallback, useRef } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine } from "@/components/lessons"
@@ -30,33 +30,41 @@ export default function InteractiveLessonPage() {
     return () => document.body.removeAttribute("data-lesson-interactive")
   }, [])
 
-  const handleComplete = async () => {
-    if (lessonIdStr) {
-      if (user) {
-        const { createClient } = await import("@/lib/supabase/client")
+  const redirectToCoursesRef = useRef(false)
+  const handleComplete = useCallback((stars?: number) => {
+    if (redirectToCoursesRef.current) return
+    redirectToCoursesRef.current = true
+
+    const starsEarned = typeof stars === "number" && stars >= 1 && stars <= 3 ? stars : 2
+    if (lessonIdStr && typeof window !== "undefined" && !user) {
+      const stored = localStorage.getItem("guestCompletedLessons")
+      const existing: string[] = stored ? JSON.parse(stored) : []
+      const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
+      localStorage.setItem("guestCompletedLessons", JSON.stringify(completedLessons))
+      const starsStored = localStorage.getItem("guestLessonStars")
+      const starsObj: Record<string, number> = starsStored ? JSON.parse(starsStored) : {}
+      starsObj[lessonIdStr] = starsEarned
+      localStorage.setItem("guestLessonStars", JSON.stringify(starsObj))
+    }
+    if (user && lessonIdStr) {
+      import("@/lib/supabase/client").then(({ createClient }) => {
         const supabase = createClient()
         const existing = (user.user_metadata?.completedLessons as string[] | undefined) || []
-        if (!existing.includes(lessonIdStr)) {
-          const completedLessons = [...existing, lessonIdStr]
-          await supabase.auth.updateUser({
-            data: { ...user.user_metadata, completedLessons },
-          })
-          // Refresh session so /courses sees updated completedLessons and progress bar updates
-          await supabase.auth.refreshSession()
-        }
-      } else {
-        const stored = typeof window !== "undefined" ? localStorage.getItem("guestCompletedLessons") : null
-        const existing: string[] = stored ? JSON.parse(stored) : []
-        if (!existing.includes(lessonIdStr)) {
-          const completedLessons = [...existing, lessonIdStr]
-          if (typeof window !== "undefined") {
-            localStorage.setItem("guestCompletedLessons", JSON.stringify(completedLessons))
-          }
-        }
-      }
+        const lessonStars = (user.user_metadata?.lessonStars as Record<string, number> | undefined) || {}
+        const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
+        const newLessonStars = { ...lessonStars, [lessonIdStr]: starsEarned }
+        supabase.auth.updateUser({
+          data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
+        }).then(() => supabase.auth.refreshSession())
+      })
     }
-    router.push("/courses")
-  }
+    // Force full-page redirect so user always reaches courses
+    if (typeof window !== "undefined") {
+      window.location.href = "/courses"
+    } else {
+      router.replace("/courses")
+    }
+  }, [lessonIdStr, user, router])
 
   const handleExit = () => {
     router.push("/courses")
