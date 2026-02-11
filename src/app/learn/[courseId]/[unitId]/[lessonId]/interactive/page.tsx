@@ -91,6 +91,46 @@ export default function InteractiveLessonPage() {
     setShowExitDialog(false)
   }
 
+  // Lesson has no content yet (not in registry or slug typo)
+  if (!lessonSteps.length) {
+    const courseNum = courseIdStr.replace(/^course-/, "") || "1"
+    return (
+      <div
+        style={{
+          minHeight: "100dvh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 24,
+          padding: 24,
+          background: "#f1f5f9",
+          fontFamily: "'Montserrat', sans-serif",
+        }}
+      >
+        <p style={{ fontSize: 20, fontWeight: 600, color: "#334155", textAlign: "center" }}>
+          Esta lección aún no tiene contenido.
+        </p>
+        <button
+          type="button"
+          onClick={() => router.push(`/courses/${courseNum}`)}
+          style={{
+            padding: "14px 24px",
+            background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+            color: "white",
+            border: "none",
+            borderRadius: 12,
+            fontSize: 16,
+            fontWeight: 700,
+            cursor: "pointer",
+          }}
+        >
+          Volver al curso
+        </button>
+      </div>
+    )
+  }
+
   return (
     <>
       <style>{`

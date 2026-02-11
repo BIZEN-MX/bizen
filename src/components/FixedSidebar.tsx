@@ -7,6 +7,19 @@ import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { useSettings } from "@/contexts/SettingsContext"
 import { useTranslation } from "@/lib/translations"
+import {
+  Map as MapIcon,
+  Target,
+  CircleDollarSign,
+  Gamepad2,
+  MessageSquare,
+  MoreHorizontal,
+  BarChart2,
+  Trophy,
+  User,
+  Settings,
+  Share2
+} from "lucide-react"
 
 export default function FixedSidebar() {
   const router = useRouter()
@@ -59,7 +72,7 @@ export default function FixedSidebar() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
-  
+
   // Toggle mobile sidebar
   const toggleSidebar = () => {
     const newState = !isSidebarOpen
@@ -102,7 +115,7 @@ export default function FixedSidebar() {
       }
     }
   }
-  
+
   // Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -174,16 +187,16 @@ export default function FixedSidebar() {
   const compactButtonOverrides = (isActive: boolean) =>
     isCompactSidebar
       ? {
-          justifyContent: "center" as const,
-          alignItems: "center" as const,
-          flexDirection: "column" as const,
-          padding: "12px 0",
-          gap: 4,
-          width: "100%",
-          textAlign: "center" as const,
-          background: "transparent",
-          color: isActive ? "#93C5FD" : "#fff"
-        }
+        justifyContent: "center" as const,
+        alignItems: "center" as const,
+        flexDirection: "column" as const,
+        padding: "12px 0",
+        gap: 4,
+        width: "100%",
+        textAlign: "center" as const,
+        background: "transparent",
+        color: isActive ? "#93C5FD" : "#fff"
+      }
       : {}
 
   const showNavLabels = !isCompactSidebar
@@ -195,9 +208,11 @@ export default function FixedSidebar() {
   const simulatorsActive = isActivePath("/simuladores")
   const progressActive = isActivePath("/progress")
   const forumActive = isActivePath("/forum")
-  const rankingActive = isActivePath("/ranking")
+
   const profileActive = isActivePath("/profile")
   const settingsActive = isActivePath("/configuracion")
+
+  const iconSize = 24
 
   return (
     <>
@@ -304,7 +319,7 @@ export default function FixedSidebar() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"
-                  e.currentTarget.style.boxShadow = "0 8px 25px rgba(11, 113, 254, 0.6), 0 0 40px rgba(11, 113, 254, 0.4)"
+                  e.currentTarget.style.boxShadow = "0 8px 25px rgba(11, 113, 254, 0.6), 0 0 40px rgba(11, 113, 254, 0.5)"
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0) scale(1)"
@@ -353,7 +368,7 @@ export default function FixedSidebar() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
+                  gap: 12,
                   padding: "12px",
                   background: isCompactSidebar ? "transparent" : (coursesActive ? "rgba(255,255,255,0.15)" : "transparent"),
                   border: "none",
@@ -382,13 +397,7 @@ export default function FixedSidebar() {
                   }
                 }}
               >
-                <Image
-                  src="/leftmenucourses.png"
-                  alt=""
-                  width={56}
-                  height={56}
-                  style={{ objectFit: "contain", flexShrink: 0 }}
-                />
+                <MapIcon size={iconSize} strokeWidth={coursesActive ? 2.5 : 2} />
                 <span className="nav-item-label">{t.nav.exploreCourses}</span>
               </button>
 
@@ -398,7 +407,7 @@ export default function FixedSidebar() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
+                  gap: 12,
                   padding: "12px",
                   background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "rgba(255,255,255,0.15)" : "transparent"),
                   border: "none",
@@ -427,55 +436,49 @@ export default function FixedSidebar() {
                   }
                 }}
               >
-                <Image
-                  src="/leftmenudailychallenge.png"
-                  alt=""
-                  width={56}
-                  height={56}
-                  style={{ objectFit: "contain", flexShrink: 0 }}
-                />
+                <Target size={iconSize} strokeWidth={retoDiarioActive ? 2.5 : 2} />
                 <span className="nav-item-label">Reto diario</span>
               </button>
 
               {/* Business Lab hidden for now — remove this block to show again */}
               {false && (
-              <button
-                data-bizen-tour-menu-item="business-lab"
-                onClick={() => navigateTo("/business-lab")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: businessLabActive ? 700 : 600,
-                  textAlign: "left",
-                  color: businessLabActive ? "#93C5FD" : "#fff",
-                  ...compactButtonOverrides(businessLabActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                    e.currentTarget.style.color = "#93C5FD"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = businessLabActive ? "#93C5FD" : "#fff"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <span className="nav-item-label">Business Lab</span>
-              </button>
+                <button
+                  data-bizen-tour-menu-item="business-lab"
+                  onClick={() => navigateTo("/business-lab")}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "12px",
+                    background: isCompactSidebar ? "transparent" : (businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                    border: "none",
+                    borderRadius: 10,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontSize: 14,
+                    fontWeight: businessLabActive ? 700 : 600,
+                    textAlign: "left",
+                    color: businessLabActive ? "#93C5FD" : "#fff",
+                    ...compactButtonOverrides(businessLabActive)
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isCompactSidebar) {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                      e.currentTarget.style.color = "#93C5FD"
+                      e.currentTarget.style.transform = "translateX(-4px)"
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isCompactSidebar) {
+                      e.currentTarget.style.background = businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"
+                      e.currentTarget.style.color = businessLabActive ? "#93C5FD" : "#fff"
+                      e.currentTarget.style.transform = "translateX(0)"
+                    }
+                  }}
+                >
+                  <span className="nav-item-label">Business Lab</span>
+                </button>
               )}
 
               <button
@@ -484,7 +487,7 @@ export default function FixedSidebar() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
+                  gap: 12,
                   padding: "12px",
                   background: isCompactSidebar ? "transparent" : (cashFlowActive ? "rgba(255,255,255,0.15)" : "transparent"),
                   border: "none",
@@ -513,13 +516,7 @@ export default function FixedSidebar() {
                   }
                 }}
               >
-                <Image
-                  src="/leftmenucashflow.png"
-                  alt=""
-                  width={56}
-                  height={56}
-                  style={{ objectFit: "contain", flexShrink: 0 }}
-                />
+                <CircleDollarSign size={iconSize} strokeWidth={cashFlowActive ? 2.5 : 2} />
                 <span className="nav-item-label">Cash flow</span>
               </button>
 
@@ -529,7 +526,7 @@ export default function FixedSidebar() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
+                  gap: 12,
                   padding: "12px",
                   background: isCompactSidebar ? "transparent" : (simulatorsActive ? "rgba(255,255,255,0.15)" : "transparent"),
                   border: "none",
@@ -558,339 +555,280 @@ export default function FixedSidebar() {
                   }
                 }}
               >
-                <Image
-                  src="/leftmenusimulators.png"
-                  alt=""
-                  width={56}
-                  height={56}
-                  style={{ objectFit: "contain", flexShrink: 0 }}
-                />
+                <Gamepad2 size={iconSize} strokeWidth={simulatorsActive ? 2.5 : 2} />
                 <span className="nav-item-label">Simuladores</span>
               </button>
 
               {/* Only show these navigation items when mounted and user is authenticated */}
               {mounted && user && (
-              <>
-              <button
-                data-bizen-tour-menu-item="foro"
-                onClick={() => navigateTo("/forum")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (forumActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: forumActive ? 700 : 600,
-                  textAlign: "left",
-                  color: forumActive ? "#93C5FD" : "#fff",
-                  ...compactButtonOverrides(forumActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                    e.currentTarget.style.color = "#93C5FD"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = forumActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = forumActive ? "#93C5FD" : "#fff"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <Image
-                  src="/leftmenuforum.png"
-                  alt=""
-                  width={56}
-                  height={56}
-                  style={{ objectFit: "contain", flexShrink: 0 }}
-                />
-                <span className="nav-item-label">Foro</span>
-              </button>
-
-              {/* Más: below Foro; flyout to the right; desktop = hover, mobile/compact = click */}
-              {mounted && user && (
-              <div
-                ref={masTriggerRef}
-                style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", gap: 6, alignItems: stackAlignment }}
-                onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
-                onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
-              >
-                <button
-                  type="button"
-                  onClick={() => isCompactSidebar && setIsMasOpen((o) => !o)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px",
-                    background: isCompactSidebar ? "transparent" : (isMasOpen ? "rgba(255,255,255,0.15)" : "transparent"),
-                    border: "none",
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontSize: 14,
-                    fontWeight: 600,
-                    textAlign: "left",
-                    color: isMasOpen ? "#93C5FD" : "#fff",
-                    width: "100%",
-                    minHeight: 0,
-                    justifyContent: "flex-start",
-                    ...compactButtonOverrides(isMasOpen)
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isCompactSidebar) {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                      e.currentTarget.style.color = "#93C5FD"
-                      e.currentTarget.style.transform = "translateX(-4px)"
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isCompactSidebar) {
-                      e.currentTarget.style.background = isMasOpen ? "rgba(255,255,255,0.15)" : "transparent"
-                      e.currentTarget.style.color = isMasOpen ? "#93C5FD" : "#fff"
-                      e.currentTarget.style.transform = "translateX(0)"
-                    }
-                  }}
-                >
-                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 56, minWidth: 56, height: 56, flexShrink: 0, overflow: "hidden" }}>
-                    <Image
-                      src="/leftmenumore.png"
-                      alt=""
-                      width={72}
-                      height={72}
-                      style={{ objectFit: "contain" }}
-                    />
-                  </span>
-                  <span className="nav-item-label">Más</span>
-                  {isCompactSidebar && <span style={{ marginLeft: "auto", fontSize: 12, opacity: 0.9 }}>{isMasOpen ? "▼" : "▶"}</span>}
-                </button>
-
-                {isMasOpen && typeof document !== "undefined" && createPortal(
-                <div
-                  className="mas-flyout-panel"
-                  style={{
-                    position: "fixed",
-                    top: masFlyoutPosition.top,
-                    left: masFlyoutPosition.left,
-                    minWidth: 200,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 6,
-                    padding: "12px",
-                    background: "#1e3a5f",
-                    border: "1px solid rgba(255,255,255,0.15)",
-                    borderRadius: 12,
-                    boxShadow: "4px 4px 20px rgba(0,0,0,0.25)",
-                    zIndex: 10002,
-                  }}
-                  onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
-                  onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
-                >
+                <>
                   <button
-                    data-bizen-tour-menu-item="progreso"
-                    onClick={() => navigateTo("/progress")}
+                    data-bizen-tour-menu-item="foro"
+                    onClick={() => navigateTo("/forum")}
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 10,
-                      padding: "10px 12px",
-                      background: isCompactSidebar ? "transparent" : (progressActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                      gap: 12,
+                      padding: "12px",
+                      background: isCompactSidebar ? "transparent" : (forumActive ? "rgba(255,255,255,0.15)" : "transparent"),
                       border: "none",
-                      borderRadius: 8,
+                      borderRadius: 10,
                       cursor: "pointer",
                       transition: "all 0.2s ease",
                       fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 13,
-                      fontWeight: progressActive ? 700 : 600,
+                      fontSize: 14,
+                      fontWeight: forumActive ? 700 : 600,
                       textAlign: "left",
-                      color: progressActive ? "#93C5FD" : "#fff",
-                      ...compactButtonOverrides(progressActive)
+                      color: forumActive ? "#93C5FD" : "#fff",
+                      ...compactButtonOverrides(forumActive)
                     }}
                     onMouseEnter={(e) => {
                       if (!isCompactSidebar) {
                         e.currentTarget.style.background = "rgba(255,255,255,0.1)"
                         e.currentTarget.style.color = "#93C5FD"
+                        e.currentTarget.style.transform = "translateX(-4px)"
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = progressActive ? "rgba(255,255,255,0.15)" : "transparent"
-                        e.currentTarget.style.color = progressActive ? "#93C5FD" : "#fff"
+                        e.currentTarget.style.background = forumActive ? "rgba(255,255,255,0.15)" : "transparent"
+                        e.currentTarget.style.color = forumActive ? "#93C5FD" : "#fff"
+                        e.currentTarget.style.transform = "translateX(0)"
                       }
                     }}
                   >
-                    <Image src="/leftmenuprogress.png" alt="" width={40} height={40} style={{ objectFit: "contain", flexShrink: 0 }} />
-                    <span className="nav-item-label">{t.nav.myProgress}</span>
+                    <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
+                    <span className="nav-item-label">Foro</span>
                   </button>
 
-                  <button
-                    data-bizen-tour-menu-item="ranking"
-                    onClick={() => navigateTo("/ranking")}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      padding: "10px 12px",
-                      background: isCompactSidebar ? "transparent" : (rankingActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                      border: "none",
-                      borderRadius: 8,
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 13,
-                      fontWeight: rankingActive ? 700 : 600,
-                      textAlign: "left",
-                      color: rankingActive ? "#93C5FD" : "#fff",
-                      ...compactButtonOverrides(rankingActive)
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isCompactSidebar) {
-                        e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                        e.currentTarget.style.color = "#93C5FD"
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isCompactSidebar) {
-                        e.currentTarget.style.background = rankingActive ? "rgba(255,255,255,0.15)" : "transparent"
-                        e.currentTarget.style.color = rankingActive ? "#93C5FD" : "#fff"
-                      }
-                    }}
-                  >
-                    <Image src="/leftmenuranking.png" alt="" width={40} height={40} style={{ objectFit: "contain", flexShrink: 0 }} />
-                    <span className="nav-item-label">Ranking</span>
-                  </button>
+                  {/* Más: below Foro; flyout to the right; desktop = hover, mobile/compact = click */}
+                  {mounted && user && (
+                    <div
+                      ref={masTriggerRef}
+                      style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", gap: 6, alignItems: stackAlignment }}
+                      onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
+                      onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => isCompactSidebar && setIsMasOpen((o) => !o)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 12,
+                          padding: "12px",
+                          background: isCompactSidebar ? "transparent" : (isMasOpen ? "rgba(255,255,255,0.15)" : "transparent"),
+                          border: "none",
+                          borderRadius: 10,
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontFamily: "'Montserrat', sans-serif",
+                          fontSize: 14,
+                          fontWeight: 600,
+                          textAlign: "left",
+                          color: isMasOpen ? "#93C5FD" : "#fff",
+                          width: "100%",
+                          minHeight: 0,
+                          justifyContent: "flex-start",
+                          ...compactButtonOverrides(isMasOpen)
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isCompactSidebar) {
+                            e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                            e.currentTarget.style.color = "#93C5FD"
+                            e.currentTarget.style.transform = "translateX(-4px)"
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isCompactSidebar) {
+                            e.currentTarget.style.background = isMasOpen ? "rgba(255,255,255,0.15)" : "transparent"
+                            e.currentTarget.style.color = isMasOpen ? "#93C5FD" : "#fff"
+                            e.currentTarget.style.transform = "translateX(0)"
+                          }
+                        }}
+                      >
+                        <MoreHorizontal size={iconSize} />
+                        <span className="nav-item-label">Más</span>
+                        {isCompactSidebar && <span style={{ marginLeft: "auto", fontSize: 12, opacity: 0.9 }}>{isMasOpen ? "▼" : "▶"}</span>}
+                      </button>
 
-                  <button
-                    data-bizen-tour-menu-item="profile"
-                    onClick={() => navigateTo("/profile")}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      padding: "10px 12px",
-                      background: isCompactSidebar ? "transparent" : (profileActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                      border: "none",
-                      borderRadius: 8,
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 13,
-                      fontWeight: profileActive ? 700 : 600,
-                      textAlign: "left",
-                      color: profileActive ? "#93C5FD" : "#fff",
-                      ...compactButtonOverrides(profileActive)
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isCompactSidebar) {
-                        e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                        e.currentTarget.style.color = "#93C5FD"
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isCompactSidebar) {
-                        e.currentTarget.style.background = profileActive ? "rgba(255,255,255,0.15)" : "transparent"
-                        e.currentTarget.style.color = profileActive ? "#93C5FD" : "#fff"
-                      }
-                    }}
-                  >
-                    <Image src="/leftmenuprofile.png" alt="" width={40} height={40} style={{ objectFit: "contain", flexShrink: 0 }} />
-                    <span className="nav-item-label">{t.nav.profile}</span>
-                  </button>
+                      {isMasOpen && typeof document !== "undefined" && createPortal(
+                        <div
+                          className="mas-flyout-panel"
+                          style={{
+                            position: "fixed",
+                            top: masFlyoutPosition.top,
+                            left: masFlyoutPosition.left,
+                            minWidth: 200,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 6,
+                            padding: "12px",
+                            background: "#1e3a5f",
+                            border: "1px solid rgba(255,255,255,0.15)",
+                            borderRadius: 12,
+                            boxShadow: "4px 4px 20px rgba(0,0,0,0.25)",
+                            zIndex: 10002,
+                          }}
+                          onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
+                          onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
+                        >
+                          <button
+                            data-bizen-tour-menu-item="progreso"
+                            onClick={() => navigateTo("/progress")}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              padding: "10px 12px",
+                              background: isCompactSidebar ? "transparent" : (progressActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                              border: "none",
+                              borderRadius: 8,
+                              cursor: "pointer",
+                              transition: "all 0.2s ease",
+                              fontFamily: "'Montserrat', sans-serif",
+                              fontSize: 13,
+                              fontWeight: progressActive ? 700 : 600,
+                              textAlign: "left",
+                              color: progressActive ? "#93C5FD" : "#fff",
+                              ...compactButtonOverrides(progressActive)
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                                e.currentTarget.style.color = "#93C5FD"
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = progressActive ? "rgba(255,255,255,0.15)" : "transparent"
+                                e.currentTarget.style.color = progressActive ? "#93C5FD" : "#fff"
+                              }
+                            }}
+                          >
+                            <BarChart2 size={20} strokeWidth={progressActive ? 2.5 : 2} />
+                            <span className="nav-item-label">{t.nav.myProgress}</span>
+                          </button>
 
-                  <button
-                    data-bizen-tour-menu-item="configuracion"
-                    onClick={() => navigateTo("/configuracion")}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      padding: "10px 12px",
-                      background: isCompactSidebar ? "transparent" : (settingsActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                      border: "none",
-                      borderRadius: 8,
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 13,
-                      fontWeight: settingsActive ? 700 : 600,
-                      textAlign: "left",
-                      color: settingsActive ? "#93C5FD" : "#fff",
-                      ...compactButtonOverrides(settingsActive)
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isCompactSidebar) {
-                        e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                        e.currentTarget.style.color = "#93C5FD"
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isCompactSidebar) {
-                        e.currentTarget.style.background = settingsActive ? "rgba(255,255,255,0.15)" : "transparent"
-                        e.currentTarget.style.color = settingsActive ? "#93C5FD" : "#fff"
-                      }
-                    }}
-                  >
-                    <Image src="/leftmenusettings.png" alt="" width={40} height={40} style={{ objectFit: "contain", flexShrink: 0 }} />
-                    <span className="nav-item-label">Configuración</span>
-                  </button>
 
-                  <a
-                    href="https://www.instagram.com/bizen.mx?igsh=ZmJmYmdxZHg1Z2E3"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      padding: "10px 12px",
-                      background: "transparent",
-                      border: "none",
-                      borderRadius: 8,
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      textAlign: "left",
-                      color: "#fff",
-                      textDecoration: "none",
-                      width: "100%",
-                      boxSizing: "border-box"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                      e.currentTarget.style.color = "#93C5FD"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "transparent"
-                      e.currentTarget.style.color = "#fff"
-                    }}
-                  >
-                    <Image
-                      src="/instagram-icon.png"
-                      alt="Instagram"
-                      width={40}
-                      height={40}
-                      style={{ objectFit: "contain", flexShrink: 0 }}
-                    />
-                    <span className="nav-item-label">Síguenos</span>
-                  </a>
-                </div>,
-                document.body
-                )}
-              </div>
-              )}
-              </>
+
+                          <button
+                            data-bizen-tour-menu-item="profile"
+                            onClick={() => navigateTo("/profile")}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              padding: "10px 12px",
+                              background: isCompactSidebar ? "transparent" : (profileActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                              border: "none",
+                              borderRadius: 8,
+                              cursor: "pointer",
+                              transition: "all 0.2s ease",
+                              fontFamily: "'Montserrat', sans-serif",
+                              fontSize: 13,
+                              fontWeight: profileActive ? 700 : 600,
+                              textAlign: "left",
+                              color: profileActive ? "#93C5FD" : "#fff",
+                              ...compactButtonOverrides(profileActive)
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                                e.currentTarget.style.color = "#93C5FD"
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = profileActive ? "rgba(255,255,255,0.15)" : "transparent"
+                                e.currentTarget.style.color = profileActive ? "#93C5FD" : "#fff"
+                              }
+                            }}
+                          >
+                            <User size={20} strokeWidth={profileActive ? 2.5 : 2} />
+                            <span className="nav-item-label">{t.nav.profile}</span>
+                          </button>
+
+                          <button
+                            data-bizen-tour-menu-item="configuracion"
+                            onClick={() => navigateTo("/configuracion")}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              padding: "10px 12px",
+                              background: isCompactSidebar ? "transparent" : (settingsActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                              border: "none",
+                              borderRadius: 8,
+                              cursor: "pointer",
+                              transition: "all 0.2s ease",
+                              fontFamily: "'Montserrat', sans-serif",
+                              fontSize: 13,
+                              fontWeight: settingsActive ? 700 : 600,
+                              textAlign: "left",
+                              color: settingsActive ? "#93C5FD" : "#fff",
+                              width: "100%",
+                              boxSizing: "border-box",
+                              ...compactButtonOverrides(settingsActive)
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                                e.currentTarget.style.color = "#93C5FD"
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = settingsActive ? "rgba(255,255,255,0.15)" : "transparent"
+                                e.currentTarget.style.color = settingsActive ? "#93C5FD" : "#fff"
+                              }
+                            }}
+                          >
+                            <Settings size={20} strokeWidth={settingsActive ? 2.5 : 2} />
+                            <span className="nav-item-label">Configuración</span>
+                          </button>
+
+                          <a
+                            href="https://www.instagram.com/bizen.mx?igsh=ZmJmYmdxZHg1Z2E3"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              padding: "10px 12px",
+                              background: "transparent",
+                              border: "none",
+                              borderRadius: 8,
+                              cursor: "pointer",
+                              transition: "all 0.2s ease",
+                              fontFamily: "'Montserrat', sans-serif",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              textAlign: "left",
+                              color: "#fff",
+                              textDecoration: "none",
+                              width: "100%",
+                              boxSizing: "border-box"
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                              e.currentTarget.style.color = "#93C5FD"
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "transparent"
+                              e.currentTarget.style.color = "#fff"
+                            }}
+                          >
+                            <Share2 size={20} strokeWidth={2} />
+                            <span className="nav-item-label">Síguenos</span>
+                          </a>
+                        </div>,
+                        document.body
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -932,7 +870,7 @@ export default function FixedSidebar() {
             }}>
               ⚠️ ¿Estás seguro?
             </div>
-            
+
             <p style={{
               fontSize: 16,
               color: "#374151",
@@ -1000,7 +938,7 @@ export default function FixedSidebar() {
 
       {/* Authentication Required Dialog */}
       {showAuthDialog && (
-        <div 
+        <div
           style={{
             position: "fixed",
             top: 0,
@@ -1018,7 +956,7 @@ export default function FixedSidebar() {
           }}
           onClick={() => setShowAuthDialog(false)}
         >
-          <div 
+          <div
             style={{
               background: "white",
               borderRadius: 20,
@@ -1058,7 +996,7 @@ export default function FixedSidebar() {
             }}>
               ¡Crea tu cuenta gratis!
             </div>
-            
+
             <p style={{
               fontSize: 16,
               color: "#374151",
@@ -1168,6 +1106,18 @@ export default function FixedSidebar() {
           text-transform: uppercase !important;
           letter-spacing: 0.5px;
           font-weight: 700 !important;
+        }
+        
+        /* Ensure Lucide SVG icons in nav buttons render correctly (size, no collapse, inherit color) */
+        [data-fixed-sidebar] button svg {
+          flex-shrink: 0 !important;
+          width: 24px !important;
+          height: 24px !important;
+          min-width: 24px !important;
+          min-height: 24px !important;
+          display: block !important;
+          color: inherit !important;
+          stroke: currentColor !important;
         }
         
         /* CRITICAL: Hide hamburger menu button on ALL devices globally */
