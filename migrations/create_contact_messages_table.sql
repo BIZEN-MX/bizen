@@ -9,3 +9,4 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 
 -- Optional: index for listing by date
 CREATE INDEX IF NOT EXISTS contact_messages_created_at_idx ON contact_messages (created_at DESC);
+

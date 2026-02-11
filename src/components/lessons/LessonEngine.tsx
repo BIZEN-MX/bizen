@@ -23,7 +23,7 @@ interface LessonEngineProps {
   onComplete?: (stars?: number) => void
   onExit?: () => void
   /** Called when progress changes (progress bar = currentStep/totalSteps; stars = by mistakes). */
-  onProgressChange?: (progress: { currentStep: number; totalSteps: number; streak: number; stars: number }) => void
+  onProgressChange?: (progress: { currentStep: number; totalSteps: number; streak: number; stars: 0 | 1 | 2 | 3 }) => void
 }
 
 /**
@@ -98,8 +98,12 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     if (result?.isCorrect) streak++
     else break
   }
-  // Stars 0–3 by mistake count: assessment steps still wrong (in incorrectSteps) at completion
-  const mistakeCount = state.incorrectSteps.length
+  // Stars 0–3 by mistake count: based on TOTAL initial mistakes (tracked in state.totalMistakes)
+  // 0 mistakes = 3 stars
+  // 1 mistake = 2 stars
+  // 2 mistakes = 1 star
+  // 3+ mistakes = 0 stars
+  const mistakeCount = state.totalMistakes
   const stars: 0 | 1 | 2 | 3 =
     mistakeCount === 0 ? 3 : mistakeCount === 1 ? 2 : mistakeCount === 2 ? 1 : 0
 
@@ -192,15 +196,15 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       // Order steps: Continuar disabled until user clicks Comprobar first (then enabled only if correct)
       ...(shouldPassNavProps
         ? {
-            onExit: onExit,
-            onContinue: handleContinue,
-            isContinueEnabled: state.isContinueEnabled,
-            isLastStep: isLastStepInEngine,
-            currentStepIndex: state.currentStepIndex,
-            totalSteps: state.allSteps.length,
-            streak,
-            stars,
-          }
+          onExit: onExit,
+          onContinue: handleContinue,
+          isContinueEnabled: state.isContinueEnabled,
+          isLastStep: isLastStepInEngine,
+          currentStepIndex: state.currentStepIndex,
+          totalSteps: state.allSteps.length,
+          streak,
+          stars,
+        }
         : {}),
     }
 

@@ -20,7 +20,7 @@ export const TEMA1_SUBTEMAS: Tema1Subtema[] = [
     lessons: [
       { title: "¿Qué es el dinero para mí hoy?", level: "Básico", slug: "que-es-el-dinero-para-mi-hoy" },
       { title: "¿Cómo me hace sentir el dinero?", level: "Básico", slug: "como-me-hace-sentir-el-dinero" },
-      { title: "Lo que creo que el dinero dice de mí", level: "Básico", slug: "lo-que-creo-que-el-dinero-dice-de-mi" },
+      { title: "Lo que creo que el dinero dice de mí", level: "Básico", slug: "dinero-y-autoestima" },
       { title: "Expectativas vs realidad financiera", level: "Intermedio", slug: "expectativas-vs-realidad-financiera" },
       { title: "Responsabilidad personal con el dinero", level: "Intermedio", slug: "responsabilidad-personal-con-el-dinero" },
     ],

@@ -197,7 +197,7 @@ export default function InteractiveLessonPage() {
                 backgroundClip: "text",
               }}
             >
-              ⚠️ ¿Estás seguro?
+              ¿Deseas salir?
             </div>
             <p
               style={{
@@ -207,7 +207,7 @@ export default function InteractiveLessonPage() {
                 marginBottom: 24,
               }}
             >
-              Si sales ahora, se perderá tu progreso de la lección actual. ¿Deseas continuar?
+              Si sales ahora, perderás todo el progreso de esta lección. ¡Estás haciendo un gran trabajo, te animamos a terminarla!
             </p>
             <div
               style={{

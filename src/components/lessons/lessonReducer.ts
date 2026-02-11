@@ -12,6 +12,7 @@ export interface LessonState {
   currentStepIndex: number
   answersByStepId: Record<string, AnswerResult>
   incorrectSteps: string[]
+  totalMistakes: number // Track unique initial mistakes for scoring
   hasBuiltReviewSteps: boolean
   isContinueEnabled: boolean
 }
@@ -39,6 +40,7 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         currentStepIndex: 0,
         answersByStepId: {},
         incorrectSteps: [],
+        totalMistakes: 0,
         hasBuiltReviewSteps: false,
         isContinueEnabled: !!firstStepAutoComplete,
       }
@@ -51,10 +53,18 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
       const sourceStepId = step?.reviewSourceStepId
 
       let newIncorrectSteps = state.incorrectSteps
+      let newTotalMistakes = state.totalMistakes
+
       if (isReviewStep && isCorrect && sourceStepId) {
         newIncorrectSteps = state.incorrectSteps.filter((id) => id !== sourceStepId)
-      } else if (!isReviewStep && step?.isAssessment && !isCorrect && (step.recordIncorrect ?? true)) {
-        newIncorrectSteps = [...new Set([...state.incorrectSteps, stepId])]
+      } else if (!isReviewStep && step?.isAssessment && !isCorrect) {
+        // Record mistake if this step wasn't already marked incorrect (avoid double counting retries if allowed)
+        if (!state.incorrectSteps.includes(stepId) && (step.recordIncorrect ?? true)) {
+          newTotalMistakes = state.totalMistakes + 1
+        }
+        if (step.recordIncorrect ?? true) {
+          newIncorrectSteps = [...new Set([...state.incorrectSteps, stepId])]
+        }
       }
 
       const newAnswersByStepId = {
@@ -69,6 +79,7 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         ...state,
         answersByStepId: newAnswersByStepId,
         incorrectSteps: newIncorrectSteps,
+        totalMistakes: newTotalMistakes,
       }
     }
 
