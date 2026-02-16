@@ -5,6 +5,7 @@ import { TrueFalseStepFields } from "@/types/lessonTypes"
 import { sharedStyles } from "../sharedStyles"
 import { CONTENT_MAX_WIDTH, CONTENT_GAP } from "../layoutConstants"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
+import { ExerciseInstruction } from "./ExerciseInstruction"
 // LessonProgressHeader now shown in LessonScreen for all slides
 
 interface TrueFalseStepProps {
@@ -129,9 +130,10 @@ export function TrueFalseStep({
     ) : null
     const activityBlock = (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3rem', width: '100%', maxWidth: '700px', minWidth: 0 }}>
-        <h2 style={{ 
-          fontSize: 'clamp(24px, 5vw, 40px)', 
-          fontWeight: 600, 
+        <ExerciseInstruction type="trueFalse" />
+        <h2 style={{
+          fontSize: 'clamp(24px, 5vw, 40px)',
+          fontWeight: 600,
           marginBottom: 0,
           color: '#1e293b',
           lineHeight: 1.3,
@@ -244,11 +246,11 @@ export function TrueFalseStep({
         textAlign: 'center', 
         minHeight: 0,
         flex: 1,
-        padding: '2rem 1.5rem',
+        padding: 'clamp(12px, 2vh, 2rem) 1.5rem',
         background: '#f1f5f9',
         boxSizing: 'border-box',
       }}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'center', width: '100%', maxWidth: CONTENT_MAX_WIDTH, minHeight: 0 }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', WebkitOverflowScrolling: 'touch', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'center', width: '100%', maxWidth: CONTENT_MAX_WIDTH }}>
           {imageBlock ? (
             (() => {
               const contentSide = <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>{activityBlock}</div>
@@ -262,15 +264,17 @@ export function TrueFalseStep({
           ) : activityBlock}
         </div>
 
-        {/* Buttons at bottom */}
+        {/* Buttons at bottom – always visible; safe area on notched devices */}
         <div style={{ 
           width: '100%', 
           maxWidth: CONTENT_MAX_WIDTH,
           display: 'flex', 
-          gap: '1rem',
+          gap: 'clamp(0.5rem, 2vw, 1rem)',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: '2rem',
+          marginTop: '1rem',
+          flexShrink: 0,
+          paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
         }}>
           <button
             onClick={onExit}
@@ -337,6 +341,7 @@ export function TrueFalseStep({
     <div className={sharedStyles.container}>
       {step.title && <h2 className={sharedStyles.title}>{step.title}</h2>}
       {step.description && <p className={sharedStyles.description}>{step.description}</p>}
+      <ExerciseInstruction type="trueFalse" />
       <h3 className={sharedStyles.question}>{step.statement}</h3>
       <div className={`${sharedStyles.flexRow} mt-6 md:mt-8`}>
         <button

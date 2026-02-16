@@ -96,7 +96,7 @@ export function SummaryStep({ step, onAnswered, onExit, onContinue, isContinueEn
           alignItems: 'center',
           marginTop: '0.5rem',
           paddingTop: '0.75rem',
-          paddingBottom: 'env(safe-area-inset-bottom, 0)',
+          paddingBottom: 'max(8px, env(safe-area-inset-bottom, 0))',
           flexShrink: 0,
           minHeight: 72,
         }}>

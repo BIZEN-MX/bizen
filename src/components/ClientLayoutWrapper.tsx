@@ -92,6 +92,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                      pathname.startsWith('/payment/') || // Payment pages
                      pathname === '/bizen/privacidad' || // Privacy page
                      pathname === '/bizen/terminos' // Terms page
+  const isDiagnosticPage = pathname?.startsWith('/diagnostic')
+  const hideAppNavigation = isAuthPage || isDiagnosticPage
 
   // Hide app footer on interactive lesson page (lesson has its own Salir/Continuar bar)
   const isLessonInteractivePage = pathname?.includes('/learn/') && pathname?.includes('/interactive')
@@ -110,7 +112,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   useEffect(() => {
     if (typeof document === "undefined") return
 
-    if (!isAuthPage && isMobile && !isLessonInteractivePage) {
+    if (!hideAppNavigation && isMobile && !isLessonInteractivePage) {
       document.body.setAttribute("data-mobile-footer", "true")
     } else {
       document.body.removeAttribute("data-mobile-footer")
@@ -119,7 +121,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     return () => {
       document.body.removeAttribute("data-mobile-footer")
     }
-  }, [isAuthPage, isMobile, isLessonInteractivePage])
+  }, [hideAppNavigation, isMobile, isLessonInteractivePage])
 
   // Flag body on landing page so CSS can remove sidebar padding (no sidebar = no left gap)
   useEffect(() => {
@@ -131,6 +133,17 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     }
     return () => document.body.removeAttribute("data-landing-page")
   }, [pathname])
+
+  // Diagnostic quiz runs as a standalone flow without sidebar/nav chrome.
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    if (isDiagnosticPage) {
+      document.body.setAttribute("data-no-sidebar", "true")
+    } else {
+      document.body.removeAttribute("data-no-sidebar")
+    }
+    return () => document.body.removeAttribute("data-no-sidebar")
+  }, [isDiagnosticPage])
 
   // Flag body on lesson interactive page so CSS can hide app footer (backup)
   useEffect(() => {
@@ -146,13 +159,13 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   return (
     <>
       {/* Show FixedSidebar only on larger screens (>767px), hidden during interactive lesson */}
-      {!isAuthPage && !isMobile && !isLessonInteractivePage && <FixedSidebar />}
+      {!hideAppNavigation && !isMobile && !isLessonInteractivePage && <FixedSidebar />}
       
       {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page */}
-      {!isAuthPage && isMobile && !isLessonInteractivePage && <MobileFooterNav />}
+      {!hideAppNavigation && isMobile && !isLessonInteractivePage && <MobileFooterNav />}
       
       {/* Only show MobileBottomNav on desktop/tablet, never on mobile */}
-      {!isAuthPage && !isMobile && <MobileBottomNav />}
+      {!hideAppNavigation && !isMobile && <MobileBottomNav />}
       
       <GlobalLogo />
       {children}
@@ -160,5 +173,4 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     </>
   );
 }
-
 

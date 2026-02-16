@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { MatchStepFields } from "@/types/lessonTypes"
 import { sharedStyles } from "../sharedStyles"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X } from "../layoutConstants"
+import { ExerciseInstruction } from "./ExerciseInstruction"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 // LessonProgressHeader now shown in LessonScreen for all slides
 
@@ -175,6 +176,9 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], onEx
 
   const mainContent = (
     <>
+      <div style={{ textAlign: "center", marginBottom: "clamp(12px, 2vh, 20px)" }}>
+        <ExerciseInstruction type="match" />
+      </div>
       {/* Title */}
       <div style={{ textAlign: "center", marginBottom: "clamp(24px, 4vh, 48px)" }}>
         <h2 style={{

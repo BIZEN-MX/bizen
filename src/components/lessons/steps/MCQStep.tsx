@@ -5,6 +5,7 @@ import { McqStepFields } from "@/types/lessonTypes"
 import { sharedStyles } from "../sharedStyles"
 import { CONTENT_MAX_WIDTH, CONTENT_GAP } from "../layoutConstants"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
+import { ExerciseInstruction } from "./ExerciseInstruction"
 // LessonProgressHeader now shown in LessonScreen for all slides
 
 interface MCQStepProps {
@@ -112,12 +113,12 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
         textAlign: 'center', 
         minHeight: 0,
         flex: 1,
-        padding: '2rem 1.5rem',
+        padding: 'clamp(12px, 2vh, 2rem) 1.5rem',
         background: '#f1f5f9',
         boxSizing: 'border-box',
       }}>
-        {/* Content area – image LEFT or RIGHT of activity (nowrap so buttons stay visible) */}
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'center', width: '100%', maxWidth: CONTENT_MAX_WIDTH }}>
+        {/* Content area – scrollable so buttons stay visible on small screens */}
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', WebkitOverflowScrolling: 'touch', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'center', width: '100%', maxWidth: CONTENT_MAX_WIDTH }}>
           {(() => {
             const align = (step.imageAlign === 'left' || step.imageAlign === 'right') ? step.imageAlign : 'right'
             const imageBlock = step.imageUrl ? (
@@ -127,6 +128,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
             ) : null
             const activityBlock = (
               <>
+          <ExerciseInstruction type="mcq" />
           {/* Question as title */}
           <h2 style={{ 
             fontSize: 'clamp(24px, 5vw, 40px)', 
@@ -212,16 +214,18 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
           })()}
         </div>
 
-        {/* Buttons at bottom */}
+        {/* Buttons at bottom – always visible; safe area on notched devices */}
         <div style={{ 
           width: '100%', 
           maxWidth: CONTENT_MAX_WIDTH,
           display: 'flex', 
           flexWrap: 'wrap',
-          gap: '1rem',
+          gap: 'clamp(0.5rem, 2vw, 1rem)',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: '2rem',
+          marginTop: '1rem',
+          flexShrink: 0,
+          paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
         }}>
           <button
             onClick={onExit}
@@ -309,6 +313,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, o
     <div className={sharedStyles.container} style={{ maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto' }}>
       {step.title && <h2 className={sharedStyles.title} style={{ fontSize: 'clamp(36px, 7vw, 56px)', color: '#1e293b' }}>{step.title}</h2>}
       {step.description && <p className={sharedStyles.description} style={{ fontSize: 'clamp(20px, 4vw, 28px)', color: '#1e293b' }}>{step.description}</p>}
+      <ExerciseInstruction type="mcq" />
       <h3 className={sharedStyles.question} style={{ fontSize: 'clamp(22px, 4.5vw, 30px)', color: '#1e293b', marginBottom: '1.5rem' }}>{step.question}</h3>
       <div className={sharedStyles.grid1Col}>
         {step.options.map((option) => {

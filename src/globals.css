@@ -406,6 +406,11 @@ body[data-lesson-interactive="true"] [data-fixed-sidebar] {
   display: none !important;
 }
 
+/* Standalone pages (for example diagnostic quiz) without left navigation */
+body[data-no-sidebar="true"] [data-fixed-sidebar] {
+  display: none !important;
+}
+
 /* LOCKED: no scroll within lessons - screen is fixed, overflow hidden */
 body[data-lesson-interactive="true"] .lesson-screen-root,
 body[data-lesson-interactive="true"] .lesson-container-no-scroll {
@@ -557,6 +562,18 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   body[data-lesson-interactive="true"] .app-main {
     padding-left: 0 !important;
   }
+
+  /* Standalone pages: no sidebar reserved space on tablet */
+  body[data-no-sidebar="true"] > div,
+  body[data-no-sidebar="true"] main,
+  body[data-no-sidebar="true"] #__next,
+  body[data-no-sidebar="true"] #__next > div,
+  body[data-no-sidebar="true"] .app-shell,
+  body[data-no-sidebar="true"] .app-scroll,
+  body[data-no-sidebar="true"] .app-main {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+  }
 }
 
 /* Desktop (1161px+): Account for 280px left sidebar */
@@ -640,6 +657,18 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   body[data-lesson-interactive="true"] .app-scroll,
   body[data-lesson-interactive="true"] .app-main {
     padding-left: 0 !important;
+  }
+
+  /* Standalone pages: no sidebar reserved space on desktop */
+  body[data-no-sidebar="true"] > div,
+  body[data-no-sidebar="true"] main,
+  body[data-no-sidebar="true"] #__next,
+  body[data-no-sidebar="true"] #__next > div,
+  body[data-no-sidebar="true"] .app-shell,
+  body[data-no-sidebar="true"] .app-scroll,
+  body[data-no-sidebar="true"] .app-main {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
   }
 }
 

@@ -136,7 +136,21 @@ function BIZENLoginContent() {
     }
   }, [])
 
+  function isNetworkError(err: unknown): boolean {
+    const msg = err instanceof Error ? err.message : String(err)
+    return (
+      msg === "Failed to fetch" ||
+      msg === "Network request failed" ||
+      msg === "Load failed" ||
+      msg.includes("NetworkError") ||
+      msg.includes("fetch")
+    )
+  }
+
   function translateAuthError(errorMessage: string): string {
+    if (errorMessage === "Failed to fetch" || errorMessage.includes("fetch") || errorMessage.includes("Network")) {
+      return "No hay conexión. Revisa tu internet e intenta de nuevo."
+    }
     const errorTranslations: Record<string, string> = {
       "Invalid login credentials": "Credenciales de inicio de sesión inválidas. Verifica tu email y contraseña.",
       "Email not confirmed": "Email no confirmado. Revisa tu correo y haz clic en el enlace de verificación.",
@@ -170,7 +184,7 @@ function BIZENLoginContent() {
       router.replace("/courses")
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Error al iniciar sesión"
-      setMessage(translateAuthError(errorMessage))
+      setMessage(isNetworkError(err) ? "No hay conexión. Revisa tu internet e intenta de nuevo." : translateAuthError(errorMessage))
     } finally {
       setLoading(false)
     }
@@ -190,7 +204,7 @@ function BIZENLoginContent() {
       // User will be redirected to Google, no need to navigate here
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Error al iniciar sesión con Google"
-      setMessage(translateAuthError(errorMessage))
+      setMessage(isNetworkError(err) ? "No hay conexión. Revisa tu internet e intenta de nuevo." : translateAuthError(errorMessage))
       setGoogleLoading(false)
     }
   }

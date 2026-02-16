@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { OrderStepFields } from "@/types/lessonTypes"
 import { sharedStyles } from "../sharedStyles"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X } from "../layoutConstants"
+import { ExerciseInstruction } from "./ExerciseInstruction"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 // LessonProgressHeader now shown in LessonScreen for all slides
 
@@ -255,6 +256,9 @@ export function OrderStep({
 
   const content = (
     <>
+      <div style={{ textAlign: "center", marginBottom: "clamp(12px, 2vh, 20px)" }}>
+        <ExerciseInstruction type="order" />
+      </div>
       {/* Title box - same style as match step */}
       {step.question && (
         <div style={{ textAlign: "center", marginBottom: "clamp(24px, 4vh, 48px)" }}>
@@ -467,14 +471,16 @@ export function OrderStep({
         textAlign: "center",
         minHeight: 0,
         flex: 1,
-        padding: "2rem 1.5rem",
+        padding: "clamp(12px, 2vh, 2rem) 1.5rem",
         background: "#f1f5f9",
         boxSizing: "border-box",
       }}>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: CONTENT_MAX_WIDTH, padding: `0 ${CONTENT_PADDING_X}`, minHeight: 0 }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: "auto", WebkitOverflowScrolling: "touch", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: CONTENT_MAX_WIDTH, padding: `0 ${CONTENT_PADDING_X}` }}>
           {content}
         </div>
-        {buttonsRow}
+        <div style={{ flexShrink: 0, width: "100%", paddingBottom: "max(8px, env(safe-area-inset-bottom))" }}>
+          {buttonsRow}
+        </div>
       </div>
     )
   }

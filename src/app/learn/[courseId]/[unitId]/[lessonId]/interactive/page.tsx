@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
 import { getStepsForLesson } from "@/data/lessons/registry"
+import { FooterNav } from "@/components/FooterNav"
 
 /**
  * Interactive Lesson Page
@@ -63,9 +64,14 @@ export default function InteractiveLessonPage() {
         const lessonStars = (user.user_metadata?.lessonStars as Record<string, number> | undefined) || {}
         const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
         const newLessonStars = { ...lessonStars, [lessonIdStr]: starsEarned }
-        supabase.auth.updateUser({
-          data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
-        }).then(() => supabase.auth.refreshSession())
+        supabase.auth
+          .updateUser({
+            data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
+          })
+          .then(() => supabase.auth.refreshSession())
+          .catch(() => {
+            // Ignore network/auth errors (e.g. offline or Capacitor); progress still saved in memory
+          })
       })
     }
     // Redirect to lessons menu (course page) after finishing the lesson
@@ -162,13 +168,17 @@ export default function InteractiveLessonPage() {
         /* Nav buttons at bottom of slide - in flow so bottom doesn't look empty */
         .lesson-footer-in-flow {
           width: 100%;
+          flex-shrink: 0;
           background: #f1f5f9;
           border-top: 2px solid #cbd5e1;
           padding-top: 16px;
           padding-bottom: max(16px, env(safe-area-inset-bottom));
         }
       `}</style>
-      <div className="lesson-interactive-outer" style={{ height: "100dvh", maxHeight: "100dvh", overflow: "hidden", display: "flex", flexDirection: "column", background: "#f1f5f9" }}>
+      <div
+        className="lesson-interactive-outer"
+        style={{ height: "100dvh", maxHeight: "100dvh", overflow: "hidden", display: "flex", flexDirection: "column", background: "#f1f5f9" }}
+      >
         {/* Progress bar - FIRST element, always visible at top */}
         <div
           style={{
@@ -190,11 +200,22 @@ export default function InteractiveLessonPage() {
             stars={progress.stars}
           />
         </div>
-        <LessonEngine
-          lessonSteps={lessonSteps}
-          onComplete={handleComplete}
-          onExit={handleExit}
-          onProgressChange={setProgress}
+        {/* Content area - takes remaining space so footer stays in view */}
+        <div style={{ flex: 1, minHeight: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+          <LessonEngine
+            lessonSteps={lessonSteps}
+            onComplete={handleComplete}
+            onExit={handleExit}
+            onProgressChange={setProgress}
+          />
+        </div>
+        {/* Footer nav - in flow at bottom, always visible */}
+        <FooterNav
+          onSkip={handleExit}
+          onContinue={() => {}}
+          disabledContinue={false}
+          skipLabel="Skip"
+          continueLabel="Continue"
         />
       </div>
 

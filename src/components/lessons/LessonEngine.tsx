@@ -320,13 +320,14 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
   const isSummaryStep = currentStep.stepType === "summary"
 
-  // Full-screen mode: render step inside a single centered container (same width/padding on all slides)
+  // Full-screen mode: step fills height; content can scroll so buttons stay visible on small screens
   if (shouldPassFullScreenProps) {
     return (
       <div
         className="flex flex-col bg-white text-slate-900 relative w-full flex-1 min-h-0"
         style={{
           paddingTop: "env(safe-area-inset-top)",
+          paddingBottom: "max(0px, env(safe-area-inset-bottom))",
           minHeight: 0,
           height: "100%",
           overflow: "hidden",
@@ -340,10 +341,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             minHeight: 0,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: "flex-start",
+            alignItems: "stretch",
             paddingTop: CONTENT_PADDING_Y,
-            paddingBottom: CONTENT_PADDING_Y,
+            paddingBottom: 0,
             boxSizing: "border-box",
           }}
         >
@@ -356,9 +357,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               marginRight: "auto",
               paddingLeft: CONTENT_PADDING_X,
               paddingRight: CONTENT_PADDING_X,
-              height: "100%",
+              flex: 1,
               minHeight: 0,
-              display: isSummaryStepType ? "flex" : "flex",
+              display: "flex",
               flexDirection: "column",
               boxSizing: "border-box",
             }}

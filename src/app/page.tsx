@@ -112,6 +112,9 @@ export default function WelcomePage() {
         </nav>
 
         <div className="landing-header-actions" style={{ display: "flex", alignItems: "center", gap: "clamp(20px, 3vw, 36px)", flexShrink: 0 }}>
+          <Link href="/diagnostic" className="landing-header-quiz">
+            Quiz diagnóstico
+          </Link>
           <Link href="/login" className="landing-header-login" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Iniciar sesión">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
             <span>Inicia sesión</span>
@@ -132,6 +135,7 @@ export default function WelcomePage() {
               <Link href="#precios" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Implementación</Link>
               <Link href="#impacto" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Impacto</Link>
               <Link href="#problema" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Problema</Link>
+              <Link href="/diagnostic" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Quiz diagnóstico</Link>
             </nav>
             <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid #e5e7eb", display: "flex", flexDirection: "column", gap: "12px" }}>
               <Link href="/login" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }} onClick={() => setMobileMenuOpen(false)}>
@@ -503,6 +507,29 @@ export default function WelcomePage() {
           background: transparent !important;
           color: #1e5bb8 !important;
           filter: none !important;
+        }
+        .landing-header-quiz {
+          background: #1e3a8a;
+          color: #ffffff;
+          border-radius: 999px;
+          padding: 10px 20px;
+          font-weight: 600;
+          font-size: 14px;
+          letter-spacing: 0.02em;
+          text-decoration: none;
+          border: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .landing-header-quiz:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 10px 30px rgba(30, 58, 138, 0.3);
+        }
+        .landing-header-quiz:focus-visible {
+          outline: 2px solid rgba(59, 130, 246, 0.7);
+          outline-offset: 2px;
         }
 
         /* Tablet and desktop (768px+): show decorative accent, scale header and hero */
@@ -3954,4 +3981,3 @@ html {
 .btn.ghost{background:white; color:var(--c-text);}
 .btn[disabled]{opacity:.6; cursor:not-allowed}
 `
-

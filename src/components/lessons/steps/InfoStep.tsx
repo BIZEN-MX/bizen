@@ -31,7 +31,7 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
   // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: call once on mount only
   }, [])
 
-  // Full-screen mode: flashcard layout with "BILLY TE QUIERE ENSEÑAR ALGO" and "QUIERO VER"
+  // Full-screen mode: flashcard layout; content scrolls so buttons stay visible on small screens
   if (step.fullScreen && onExit && onContinue) {
     return (
       <div style={{ 
@@ -42,20 +42,21 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
         textAlign: 'center', 
         minHeight: 0,
         flex: 1,
-        padding: '2rem 1.5rem',
+        padding: 'clamp(12px, 2vh, 2rem) 1.5rem',
         background: '#f1f5f9',
         boxSizing: 'border-box',
-        gap: 'clamp(20px, 3vh, 32px)',
+        gap: 'clamp(12px, 2vh, 24px)',
       }}>
-        {/* Top section: Billy header + Quiero Ver button */}
+        {/* Top section: Billy header + Quiero Ver button - shrink on small screens */}
         <div style={{
           width: '100%',
           maxWidth: CONTENT_MAX_WIDTH,
           display: 'flex',
-          gap: '1rem',
+          gap: '0.75rem',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
+          flexShrink: 0,
         }}>
           {/* Billy header */}
           <div style={{
@@ -94,7 +95,7 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
           </button>
         </div>
 
-        {/* Flashcard content box - orange border; minHeight 0 so row can shrink and buttons stay visible */}
+        {/* Flashcard content box - scrollable so buttons stay visible on small screens */}
         <div style={{
           flex: 1,
           minHeight: 0,
@@ -103,11 +104,13 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
           border: `4px solid ${FLASHCARD_BORDER_COLOR}`,
           borderRadius: '24px',
           background: '#ffffff',
-          padding: 'clamp(24px, 4vw, 48px)',
+          padding: 'clamp(16px, 3vw, 48px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
           justifyContent: 'center',
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch',
         }}>
           {!isRevealed ? (
             // Placeholder before reveal – hero character only (no "Flashcard" label)
@@ -183,15 +186,18 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
           )}
         </div>
 
-        {/* Bottom navigation buttons - only show after reveal */}
+        {/* Bottom navigation buttons - always visible; safe area on notched devices */}
         {isRevealed && (
           <div style={{ 
             width: '100%', 
             maxWidth: CONTENT_MAX_WIDTH,
             display: 'flex', 
-            gap: '1.5rem',
+            gap: 'clamp(0.75rem, 2vw, 1.5rem)',
             justifyContent: 'space-between',
             alignItems: 'center',
+            flexShrink: 0,
+            paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+            paddingTop: '0.5rem',
           }}>
             <button
               onClick={onExit}
