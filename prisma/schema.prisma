@@ -964,3 +964,19 @@ model LabMentor {
   @@index([userId])
   @@map("lab_mentors")
 }
+
+// ========================================
+// DIAGNOSTIC QUIZ
+// ========================================
+
+model DiagnosticResult {
+  id          String   @id @default(cuid())
+  email       String
+  fullName    String   @map("full_name")
+  institution String
+  answers     Json
+  score       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("diagnostic_results")
+}

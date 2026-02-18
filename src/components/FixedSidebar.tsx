@@ -204,8 +204,7 @@ export default function FixedSidebar() {
   const coursesActive = isActivePath("/courses")
   const retoDiarioActive = isActivePath("/reto-diario")
   const businessLabActive = isActivePath("/business-lab")
-  const cashFlowActive = isActivePath("/cash-flow")
-  const simulatorsActive = isActivePath("/simuladores")
+  const simuladorActive = isActivePath("/simulador")
   const progressActive = isActivePath("/progress")
   const forumActive = isActivePath("/forum")
 
@@ -482,24 +481,24 @@ export default function FixedSidebar() {
               )}
 
               <button
-                data-bizen-tour-menu-item="cashflow"
-                onClick={() => navigateTo("/cash-flow")}
+                data-bizen-tour-menu-item="simulador"
+                onClick={() => navigateTo("/simulador")}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: 12,
                   padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (cashFlowActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  background: isCompactSidebar ? "transparent" : (simuladorActive ? "rgba(255,255,255,0.15)" : "transparent"),
                   border: "none",
                   borderRadius: 10,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                   fontFamily: "'Montserrat', sans-serif",
                   fontSize: 14,
-                  fontWeight: cashFlowActive ? 700 : 600,
+                  fontWeight: simuladorActive ? 700 : 600,
                   textAlign: "left",
-                  color: cashFlowActive ? "#93C5FD" : "#fff",
-                  ...compactButtonOverrides(cashFlowActive)
+                  color: simuladorActive ? "#93C5FD" : "#fff",
+                  ...compactButtonOverrides(simuladorActive)
                 }}
                 onMouseEnter={(e) => {
                   if (!isCompactSidebar) {
@@ -510,53 +509,14 @@ export default function FixedSidebar() {
                 }}
                 onMouseLeave={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = cashFlowActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = cashFlowActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.background = simuladorActive ? "rgba(255,255,255,0.15)" : "transparent"
+                    e.currentTarget.style.color = simuladorActive ? "#93C5FD" : "#fff"
                     e.currentTarget.style.transform = "translateX(0)"
                   }
                 }}
               >
-                <CircleDollarSign size={iconSize} strokeWidth={cashFlowActive ? 2.5 : 2} />
-                <span className="nav-item-label">Cash flow</span>
-              </button>
-
-              <button
-                data-bizen-tour-menu-item="simuladores"
-                onClick={() => navigateTo("/simuladores")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (simulatorsActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: simulatorsActive ? 700 : 600,
-                  textAlign: "left",
-                  color: simulatorsActive ? "#93C5FD" : "#fff",
-                  ...compactButtonOverrides(simulatorsActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                    e.currentTarget.style.color = "#93C5FD"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = simulatorsActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = simulatorsActive ? "#93C5FD" : "#fff"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <Gamepad2 size={iconSize} strokeWidth={simulatorsActive ? 2.5 : 2} />
-                <span className="nav-item-label">Simuladores</span>
+                <Gamepad2 size={iconSize} strokeWidth={simuladorActive ? 2.5 : 2} />
+                <span className="nav-item-label">Simulador</span>
               </button>
 
               {/* Only show these navigation items when mounted and user is authenticated */}

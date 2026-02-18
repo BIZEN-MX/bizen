@@ -148,7 +148,7 @@ export default function WelcomePage() {
         </div>
       )}
 
-      <main className="landing-main" style={{ flex: 1, width: "100%", maxWidth: "100%", display: "flex", flexDirection: "column", overflow: "visible" }}>
+      <main className="landing-main" style={{ flex: 1, width: "100%", maxWidth: "100%", display: "flex", flexDirection: "column", overflow: "visible", overflowY: "visible", overflowX: "hidden" }}>
         <div className="landing-gradient-wrapper" style={gradientStyle}>
           {/* Hero Section - centered text with geometric shapes */}
           <div className="landing-hero-wrapper" style={{
@@ -163,9 +163,8 @@ export default function WelcomePage() {
             width: "100%",
             maxWidth: "100%",
             boxSizing: "border-box",
-            minHeight: "80vh",
-            overflowX: "hidden",
-            overflowY: "visible",
+            minHeight: "auto",
+            overflow: "visible",
           }}>
 
             {/* Blue geometric shapes - left side (hidden on small screens to avoid overlap) */}
@@ -306,9 +305,42 @@ export default function WelcomePage() {
         .main-page-container .container {
           font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
         }
-        /* Prevent horizontal scroll on landing - keep all content in frame */
-        html:has(.main-page-container),
-        body:has(.main-page-container) { overflow-x: hidden !important; max-width: 100vw !important; }
+        /* FORCE DELETE ALL SCROLLBARS ON LANDING */
+        html, body {
+          overflow-x: hidden !important;
+          overflow-y: auto !important;
+          max-width: 100% !important;
+          width: 100% !important;
+          height: auto !important;
+          min-height: 100% !important;
+          scrollbar-width: none !important;
+        }
+
+        [data-landing-root],
+        [data-landing-root] *,
+        .main-page-container,
+        .main-page-container *,
+        body[data-landing-page="true"],
+        body[data-landing-page="true"] * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+
+        [data-landing-root]::-webkit-scrollbar,
+        [data-landing-root] *::-webkit-scrollbar,
+        .main-page-container::-webkit-scrollbar,
+        .main-page-container *::-webkit-scrollbar,
+        body[data-landing-page="true"]::-webkit-scrollbar,
+        body[data-landing-page="true"] *::-webkit-scrollbar {
+          display: none !important;
+        }
+
+        /* Prevent horizontal scroll and redundant behavior */
+        html:has([data-landing-root]),
+        body:has([data-landing-root]) {
+          overflow-x: hidden !important;
+          max-width: 100% !important;
+        }
         
         /* ELIMINATE left gap - force zero padding on ALL layout ancestors (no sidebar on landing) */
         html:has(.main-page-container) body,
@@ -336,8 +368,11 @@ export default function WelcomePage() {
           height: auto !important;
           min-height: 100% !important;
         }
-        /* SINGLE SCROLL ONLY: no nested scroll - every element must not create scroll */
-        html:has(.main-page-container) * {
+        html:has(.main-page-container) *,
+        .main-page-container *,
+        .landing-main *,
+        .section *,
+        section * {
           overflow-y: visible !important;
         }
         html:has(.main-page-container) .landing-demo-modal-content {
@@ -348,15 +383,29 @@ export default function WelcomePage() {
         html:has(.main-page-container) .main-page-container section,
         html:has(.main-page-container) .main-content-wrapper,
         html:has(.main-page-container) .main-header {
-          overflow-x: hidden !important;
-        }
-        html:has(.main-page-container) .main-page-container {
           overflow: visible !important;
         }
-        .main-page-container { overflow-x: hidden !important; width: 100% !important; max-width: 100vw !important; overflow-y: visible !important; height: auto !important; min-height: 100% !important; }
+        .main-page-container { overflow: visible !important; width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 100% !important; }
         .landing-main,
-        .main-page-container main { overflow: visible !important; overflow-y: visible !important; max-width: 100% !important; width: 100% !important; height: auto !important; min-height: 100% !important; flex: none !important; display: block !important; }
-        .main-page-container main > div { overflow: visible !important; max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
+        .main-page-container main,
+        main.landing-main { 
+          overflow: visible !important; 
+          max-width: 100% !important; 
+          width: 100% !important; 
+          height: auto !important; 
+          min-height: auto !important; 
+          flex: none !important; 
+          display: block !important; 
+        }
+        .main-page-container main > div,
+        .landing-gradient-wrapper,
+        .landing-rest-wrapper { 
+          overflow: visible !important; 
+          max-width: 100% !important; 
+          width: 100% !important; 
+          height: auto !important;
+          box-sizing: border-box !important; 
+        }
         .main-content-wrapper { overflow: visible !important; max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
         
         /* Override global footer styles from globals.css - ensure footer is NOT sticky */
@@ -1057,11 +1106,11 @@ export default function WelcomePage() {
             white-space: nowrap !important;
             min-height: 44px !important;
           }
-          /* Hide carousel arrows on mobile (they sit outside container and break layout) */
+          /* Show carousel arrows but they will be repositioned for mobile */
           .landing-carousel-arrow,
           .landing-testimonial-arrow,
           .landing-adventure-arrow {
-            display: none !important;
+            display: flex !important;
           }
           .main-page-container .quiero-demo-button {
             padding: clamp(12px, 3vw, 14px) clamp(18px, 4vw, 24px) !important;
@@ -1459,7 +1508,7 @@ export default function WelcomePage() {
       )}
 
       {/* Testimonials Carousel - last section (Impacto link targets here) */}
-      <section id="impacto" className="section testimonials-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(56px, 8vw, 96px) clamp(20px, 4vw, 48px)", marginBottom: "clamp(64px, 10vw, 100px)" }}>
+      <section id="impacto" className="section testimonials-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(56px, 8vw, 96px) clamp(20px, 4vw, 48px)", marginBottom: "clamp(64px, 10vw, 100px)", overflowX: "hidden", overflowY: "visible" }}>
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <h2 style={{
             textAlign: "center",
@@ -1475,88 +1524,7 @@ export default function WelcomePage() {
 
           <div style={{ position: "relative", maxWidth: "900px", margin: "0 auto" }}>
             {/* Left Arrow - disabled on first card; hidden on mobile to avoid overflow */}
-            <button
-              type="button"
-              className="landing-carousel-arrow landing-testimonial-arrow"
-              disabled={activeTestimonial === 0}
-              onClick={() => activeTestimonial > 0 && setActiveTestimonial(prev => prev - 1)}
-              style={{
-                position: "absolute",
-                left: "-60px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                width: "48px",
-                height: "48px",
-                borderRadius: "50%",
-                background: activeTestimonial === 0 ? "rgba(203, 213, 225, 0.4)" : "rgba(139, 92, 246, 0.15)",
-                border: `1px solid ${activeTestimonial === 0 ? "rgba(148, 163, 184, 0.4)" : "rgba(139, 92, 246, 0.3)"}`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: activeTestimonial === 0 ? "not-allowed" : "pointer",
-                zIndex: 10,
-                transition: "all 0.2s ease",
-                opacity: activeTestimonial === 0 ? 0.6 : 1,
-              }}
-              onMouseOver={(e) => {
-                if (activeTestimonial !== 0) {
-                  e.currentTarget.style.background = "rgba(139, 92, 246, 0.25)"
-                  e.currentTarget.style.transform = "translateY(-50%) scale(1.05)"
-                }
-              }}
-              onMouseOut={(e) => {
-                if (activeTestimonial === 0) return
-                e.currentTarget.style.background = "rgba(139, 92, 246, 0.15)"
-                e.currentTarget.style.transform = "translateY(-50%)"
-              }}
-              aria-label="Testimonial anterior"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTestimonial === 0 ? "#94a3b8" : "#8b5cf6"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </button>
 
-            {/* Right Arrow - disabled on last card; hidden on mobile */}
-            <button
-              type="button"
-              className="landing-carousel-arrow landing-testimonial-arrow"
-              disabled={activeTestimonial === 2}
-              onClick={() => activeTestimonial < 2 && setActiveTestimonial(prev => prev + 1)}
-              style={{
-                position: "absolute",
-                right: "-60px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                width: "48px",
-                height: "48px",
-                borderRadius: "50%",
-                background: activeTestimonial === 2 ? "rgba(203, 213, 225, 0.4)" : "rgba(15, 98, 254, 0.15)",
-                border: `1px solid ${activeTestimonial === 2 ? "rgba(148, 163, 184, 0.4)" : "rgba(15, 98, 254, 0.3)"}`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: activeTestimonial === 2 ? "not-allowed" : "pointer",
-                zIndex: 10,
-                transition: "all 0.2s ease",
-                opacity: activeTestimonial === 2 ? 0.6 : 1,
-              }}
-              onMouseOver={(e) => {
-                if (activeTestimonial !== 2) {
-                  e.currentTarget.style.background = "rgba(15, 98, 254, 0.25)"
-                  e.currentTarget.style.transform = "translateY(-50%) scale(1.05)"
-                }
-              }}
-              onMouseOut={(e) => {
-                if (activeTestimonial === 2) return
-                e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
-                e.currentTarget.style.transform = "translateY(-50%)"
-              }}
-              aria-label="Siguiente testimonial"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTestimonial === 2 ? "#94a3b8" : "#1e3a8a"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </button>
 
             {/* Testimonial Cards - animated on navigate */}
             <div style={{ position: "relative", perspective: "1000px", minHeight: "320px" }}>
@@ -1583,7 +1551,7 @@ export default function WelcomePage() {
                   title: "Coordinadora Universidad",
                   institution: "Mondragón México",
                   image: "/uploads/Landing_page/joanna.png",
-                  logo: "/bizen_sign.png",
+                  logo: undefined,
                 },
               ].map((testimonial, idx) => (
                 <div
@@ -1675,24 +1643,68 @@ export default function WelcomePage() {
               ))}
             </div>
 
-            {/* Indicators */}
-            <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginTop: "24px" }}>
-              {[0, 1, 2].map(idx => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveTestimonial(idx)}
-                  style={{
-                    width: activeTestimonial === idx ? "32px" : "12px",
-                    height: "12px",
-                    borderRadius: "6px",
-                    background: activeTestimonial === idx ? "#1e3a8a" : "#cbd5e1",
-                    border: "none",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                  }}
-                  aria-label={`Go to testimonial ${idx + 1}`}
-                />
-              ))}
+            {/* Indicators and Arrows */}
+            <div className="carousel-nav-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", width: "max-content", margin: "40px auto 0" }}>
+              <button
+                type="button"
+                className="landing-carousel-arrow landing-testimonial-arrow prev"
+                disabled={activeTestimonial === 0}
+                onClick={() => activeTestimonial > 0 && setActiveTestimonial(prev => prev - 1)}
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "50%",
+                  background: activeTestimonial === 0 ? "rgba(203, 213, 225, 0.4)" : "rgba(139, 92, 246, 0.15)",
+                  border: `1px solid ${activeTestimonial === 0 ? "rgba(148, 163, 184, 0.4)" : "rgba(139, 92, 246, 0.3)"}`,
+                  cursor: activeTestimonial === 0 ? "not-allowed" : "pointer",
+                  opacity: activeTestimonial === 0 ? 0.6 : 1,
+                }}
+                aria-label="Testimonial anterior"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTestimonial === 0 ? "#94a3b8" : "#8b5cf6"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+
+              <div style={{ display: "flex", justifyContent: "center", gap: "8px" }}>
+                {[0, 1, 2].map(idx => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveTestimonial(idx)}
+                    style={{
+                      width: activeTestimonial === idx ? "32px" : "12px",
+                      height: "12px",
+                      borderRadius: "6px",
+                      background: activeTestimonial === idx ? "#1e3a8a" : "#cbd5e1",
+                      border: "none",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                    }}
+                    aria-label={`Go to testimonial ${idx + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                className="landing-carousel-arrow landing-testimonial-arrow next"
+                disabled={activeTestimonial === 2}
+                onClick={() => activeTestimonial < 2 && setActiveTestimonial(prev => prev + 1)}
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "50%",
+                  background: activeTestimonial === 2 ? "rgba(203, 213, 225, 0.4)" : "rgba(15, 98, 254, 0.15)",
+                  border: `1px solid ${activeTestimonial === 2 ? "rgba(148, 163, 184, 0.4)" : "rgba(15, 98, 254, 0.3)"}`,
+                  cursor: activeTestimonial === 2 ? "not-allowed" : "pointer",
+                  opacity: activeTestimonial === 2 ? 0.6 : 1,
+                }}
+                aria-label="Siguiente testimonial"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTestimonial === 2 ? "#94a3b8" : "#1e3a8a"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -1700,7 +1712,7 @@ export default function WelcomePage() {
 
       {/* Footer */}
       <LandingWaitlistFooter onOpenDemoModal={() => setDemoModalOpen(true)} />
-    </div >
+    </div>
   )
 }
 
@@ -1899,6 +1911,8 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
           paddingRight: "clamp(20px, 5vw, 48px)",
           position: "relative",
           overflow: "hidden",
+          overflowX: "hidden",
+          overflowY: "visible",
         }}>
           {/* Gray geometric shapes - left side */}
           <div style={{
@@ -2594,8 +2608,8 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
           </section>
 
           {/* Cada clase, una aventura divertida - Carousel (no scroll; single main page scroll only) */}
-          <section className="section adventure-carousel-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px)", overflow: "visible", overflowY: "visible", maxHeight: "none" }}>
-            <div style={{ maxWidth: "1200px", margin: "0 auto", overflow: "visible", overflowY: "visible", maxHeight: "none" }} className="adventure-carousel-inner">
+          <section className="section adventure-carousel-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px) clamp(64px, 8vw, 120px)", overflow: "visible", maxHeight: "none", height: "auto" }}>
+            <div style={{ maxWidth: "1200px", margin: "0 auto", overflow: "visible", overflowX: "visible", overflowY: "visible", maxHeight: "none", height: "auto" }} className="adventure-carousel-inner">
               <h2 style={{
                 textAlign: "center",
                 margin: "0 0 clamp(48px, 7vw, 72px)",
@@ -2609,82 +2623,8 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
               </h2>
 
               <div style={{ position: "relative", maxWidth: "1000px", margin: "0 auto", overflow: "visible", overflowY: "visible" }}>
-                {/* Left Arrow - hidden on mobile to avoid overflow */}
-                <button
-                  type="button"
-                  className="landing-carousel-arrow landing-adventure-arrow"
-                  aria-label="Slide anterior"
-                  onClick={() => setActiveAdventureSlide(prev => prev === 0 ? 2 : prev - 1)}
-                  style={{
-                    position: "absolute",
-                    left: "-70px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    width: "52px",
-                    height: "52px",
-                    borderRadius: "50%",
-                    background: "rgba(139, 92, 246, 0.15)",
-                    border: "1px solid rgba(139, 92, 246, 0.3)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    zIndex: 10,
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = "rgba(139, 92, 246, 0.3)"
-                    e.currentTarget.style.transform = "translateY(-50%) scale(1.08)"
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = "rgba(139, 92, 246, 0.15)"
-                    e.currentTarget.style.transform = "translateY(-50%)"
-                  }}
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 18l-6-6 6-6" />
-                  </svg>
-                </button>
-
-                {/* Right Arrow - hidden on mobile */}
-                <button
-                  type="button"
-                  className="landing-carousel-arrow landing-adventure-arrow"
-                  aria-label="Siguiente slide"
-                  onClick={() => setActiveAdventureSlide(prev => prev === 2 ? 0 : prev + 1)}
-                  style={{
-                    position: "absolute",
-                    right: "-70px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    width: "52px",
-                    height: "52px",
-                    borderRadius: "50%",
-                    background: "rgba(15, 98, 254, 0.15)",
-                    border: "1px solid rgba(15, 98, 254, 0.3)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    zIndex: 10,
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = "rgba(15, 98, 254, 0.3)"
-                    e.currentTarget.style.transform = "translateY(-50%) scale(1.08)"
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
-                    e.currentTarget.style.transform = "translateY(-50%)"
-                  }}
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 18l6-6-6-6" />
-                  </svg>
-                </button>
-
                 {/* Carousel Content - smooth crossfade when changing cards; minHeight reserves space so card doesn't overlap dots */}
-                <div className="adventure-carousel-content-wrap" style={{ position: "relative", minHeight: "640px", overflow: "visible", overflowY: "visible", maxHeight: "none" }}>
+                <div className="adventure-carousel-content-wrap" style={{ position: "relative", minHeight: "clamp(650px, 80vh, 850px)", overflow: "visible", overflowX: "visible", overflowY: "visible", maxHeight: "none", height: "auto" }}>
                   {[
                     {
                       title: "Microlearning",
@@ -2809,23 +2749,63 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   ))}
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginTop: "32px", position: "relative", zIndex: 5 }}>
-                  {[0, 1, 2].map(idx => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveAdventureSlide(idx)}
-                      style={{
-                        width: activeAdventureSlide === idx ? "32px" : "12px",
-                        height: "12px",
-                        borderRadius: "6px",
-                        background: activeAdventureSlide === idx ? "#1e3a8a" : "#cbd5e1",
-                        border: "none",
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                      }}
-                      aria-label={`Go to slide ${idx + 1}`}
-                    />
-                  ))}
+                <div className="carousel-nav-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", width: "max-content", margin: "64px auto 0", position: "relative", zIndex: 5 }}>
+                  <button
+                    type="button"
+                    className="landing-carousel-arrow landing-adventure-arrow prev"
+                    aria-label="Slide anterior"
+                    onClick={() => setActiveAdventureSlide(prev => prev === 0 ? 2 : prev - 1)}
+                    style={{
+                      width: "52px",
+                      height: "52px",
+                      borderRadius: "50%",
+                      background: "rgba(139, 92, 246, 0.15)",
+                      border: "1px solid rgba(139, 92, 246, 0.3)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                  </button>
+
+                  <div style={{ display: "flex", justifyContent: "center", gap: "8px" }}>
+                    {[0, 1, 2].map(idx => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveAdventureSlide(idx)}
+                        style={{
+                          width: activeAdventureSlide === idx ? "32px" : "12px",
+                          height: "12px",
+                          borderRadius: "6px",
+                          background: activeAdventureSlide === idx ? "#1e3a8a" : "#cbd5e1",
+                          border: "none",
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                        }}
+                        aria-label={`Go to slide ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    className="landing-carousel-arrow landing-adventure-arrow next"
+                    aria-label="Siguiente slide"
+                    onClick={() => setActiveAdventureSlide(prev => prev === 2 ? 0 : prev + 1)}
+                    style={{
+                      width: "52px",
+                      height: "52px",
+                      borderRadius: "50%",
+                      background: "rgba(15, 98, 254, 0.15)",
+                      border: "1px solid rgba(15, 98, 254, 0.3)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
@@ -3221,7 +3201,7 @@ html {
   scroll-behavior: smooth;
 }
 
-.section{padding: clamp(64px, 8vw, 120px) 0; scroll-margin-top: 80px; background: transparent !important;}
+.section{padding: clamp(64px, 8vw, 120px) 0; scroll-margin-top: 80px; background: transparent !important; overflow-x: hidden !important; overflow-y: visible !important;}
 
 /* Reveal on scroll - fade up when section enters viewport */
 .reveal-element {
@@ -3253,38 +3233,42 @@ html {
   overflow-x: hidden;
   box-sizing: border-box;
 }
-.main-page-container .section{
-  overflow-x: hidden !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-}
+        .main-page-container .section,
+        .main-page-container .adventure-carousel-section,
+        .adventure-carousel-section,
+        .main-page-container section {
+          overflow: visible !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+          height: auto !important;
+          max-height: none !important;
+          min-height: 0 !important;
+        }
 /* Cada clase section: NO internal scroll - only document/body scrolls */
 /* Cada clase section: NO internal scroll - only document/body scrolls */
 .main-page-container .landing-gradient-wrapper,
 .main-page-container .landing-rest-wrapper {
   overflow: visible !important;
-  overflow-y: visible !important;
-  overflow-x: visible !important;
   height: auto !important;
   max-height: none !important;
   flex-shrink: 0 !important;
 }
 .main-page-container .adventure-carousel-section {
   overflow: visible !important;
-  overflow-x: visible !important;
-  overflow-y: visible !important;
-  padding: clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px) !important;
+  padding: clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px) clamp(64px, 8vw, 120px) !important;
   height: auto !important;
   max-height: none !important;
   min-height: 0 !important;
 }
 .main-page-container .adventure-carousel-inner,
-.main-page-container .adventure-carousel-section > div {
+.main-page-container .adventure-carousel-section > div,
+.adventure-carousel-inner {
   overflow: visible !important;
   overflow-y: visible !important;
   overflow-x: visible !important;
   max-height: none !important;
   min-height: 0 !important;
+  height: auto !important;
 }
 .main-page-container .adventure-carousel-inner {
   overflow: visible !important;
@@ -3371,6 +3355,58 @@ html {
 .check{color:var(--c-accent); font-weight:600; font-size:18px; min-width:20px; margin-top:2px;}
 .plan-btn:hover{transform:none !important;}
 .plan-btn:active{transform:none !important;}
+
+        .carousel-track {
+          display: flex;
+          overflow-x: auto;
+          overflow-y: hidden !important;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-x: contain;
+          scrollbar-width: none;
+          ms-overflow-style: none;
+        }
+        .carousel-track::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Responsive Arrows Logic */
+        .landing-carousel-arrow {
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           transition: all 0.2s ease;
+           z-index: 10;
+        }
+
+        @media (min-width: 1281px) {
+          .landing-adventure-arrow.prev { left: -70px !important; top: 50% !important; transform: translateY(-50%) !important; position: absolute !important; }
+          .landing-adventure-arrow.next { right: -70px !important; top: 50% !important; transform: translateY(-50%) !important; position: absolute !important; }
+          .landing-testimonial-arrow.prev { left: -60px !important; top: 50% !important; transform: translateY(-50%) !important; position: absolute !important; }
+          .landing-testimonial-arrow.next { right: -60px !important; top: 50% !important; transform: translateY(-50%) !important; position: absolute !important; }
+        }
+
+        @media (max-width: 1280px) {
+          .landing-adventure-arrow.prev,
+          .landing-adventure-arrow.next,
+          .landing-testimonial-arrow.prev,
+          .landing-testimonial-arrow.next {
+            position: relative !important;
+            left: auto !important;
+            right: auto !important;
+            top: auto !important;
+            transform: none !important;
+            margin: 0 !important;
+            display: flex !important;
+          }
+        }
+
+        .carousel-nav-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: clamp(16px, 4vw, 32px);
+          width: 100%;
+        }
 
 /* Logo carousel - infinite horizontal scroll */
 .logos-carousel-section { width: 100%; overflow: hidden; }
@@ -3712,6 +3748,8 @@ html {
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
   }
   
   /* Hide decorative elements on mobile */

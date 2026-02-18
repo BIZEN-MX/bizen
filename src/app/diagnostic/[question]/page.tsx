@@ -4,10 +4,21 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import * as React from "react"
 import { diagnosticQuiz, type QuizOption, type QuizQuestion } from "@/components/diagnostic/quizData"
+import { ExamIntro, type UserInfo } from "@/components/diagnostic/ExamIntro"
+import {
+  LessonProgressHeader,
+  StickyFooter,
+  StickyFooterButton,
+  CONTENT_MAX_WIDTH,
+  CONTENT_PADDING_X,
+  CONTENT_PADDING_Y,
+  CONTENT_GAP,
+} from "@/components/lessons"
 
 type StoredQuizState = {
   quizSubmitted: boolean
   userAnswers: Record<string, QuizOption["value"] | undefined>
+  userInfo?: UserInfo
 }
 
 const STORAGE_KEY = "bizen_diagnostic_quiz_v1"
@@ -23,65 +34,120 @@ function QuizQuestionCard({
   onSelect: (value: QuizOption["value"]) => void
   showResults: boolean
 }) {
-  const isCorrect = showResults && selectedValue === question.answer
+  const optionLabels = ["A", "B", "C", "D"]
 
   return (
-    <article
-      className={`rounded-2xl border bg-white p-5 shadow-sm sm:p-6 ${
-        isCorrect ? "border-emerald-400" : "border-slate-200"
-      }`}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+        maxWidth: "700px",
+        margin: "0 auto",
+      }}
     >
-      <header className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700">
+      <div style={{ marginBottom: 8, textAlign: "center" }}>
+        <span
+          style={{
+            fontSize: "clamp(13px, 2vw, 15px)",
+            color: "#64748b",
+            fontWeight: 500,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+          }}
+        >
           {question.label}
         </span>
-        {showResults ? (
-          <span
-            className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-              isCorrect ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
-            }`}
-          >
-            {isCorrect ? "Correcta" : `Respuesta: ${question.answer}`}
-          </span>
-        ) : null}
-      </header>
+      </div>
 
-      <p className="mb-5 text-base leading-7 text-slate-800">{question.question}</p>
+      <h2
+        style={{
+          fontSize: "clamp(24px, 5vw, 36px)",
+          fontWeight: 700,
+          marginBottom: "2.5rem",
+          color: "#1e293b",
+          lineHeight: 1.3,
+          textAlign: "center",
+        }}
+      >
+        {question.question}
+      </h2>
 
-      <div className="grid gap-3" role="group" aria-label={question.question}>
-        {question.options.map((option) => {
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", width: "100%" }}>
+        {question.options.map((option, index) => {
           const isSelected = selectedValue === option.value
           const isAnswer = option.value === question.answer
-          const optionStyles = showResults
-            ? isAnswer
-              ? "border-emerald-500 bg-emerald-50"
-              : isSelected
-                ? "border-red-500 bg-red-50"
-                : "border-slate-200 bg-white"
-            : isSelected
-              ? "border-blue-500 bg-blue-50"
-              : "border-slate-200 bg-white"
+
+          let bgColor = "#f8fafc"
+          let borderColor = isSelected ? "#2563eb" : "#e2e8f0"
+          let textColor = "#1e293b"
+          let indicator = null
+
+          if (showResults) {
+            if (isAnswer) {
+              bgColor = "#d1fae5"
+              borderColor = "#10b981"
+              textColor = "#047857"
+              indicator = "✓"
+            } else if (isSelected) {
+              bgColor = "#fee2e2"
+              borderColor = "#ef4444"
+              textColor = "#dc2626"
+              indicator = "✗"
+            }
+          } else if (isSelected) {
+            bgColor = "#eff6ff"
+          }
 
           return (
-            <label
+            <button
               key={option.value}
-              className={`flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 transition ${optionStyles}`}
+              onClick={() => !showResults && onSelect(option.value)}
+              disabled={showResults}
+              style={{
+                padding: "1.25rem 1.75rem",
+                fontSize: "clamp(16px, 3.5vw, 19px)",
+                fontWeight: 600,
+                color: textColor,
+                background: bgColor,
+                border: `3px solid ${borderColor}`,
+                borderRadius: "20px",
+                cursor: showResults ? "default" : "pointer",
+                fontFamily: "inherit",
+                textAlign: "left",
+                display: "flex",
+                alignItems: "center",
+                gap: "1.25rem",
+                transition: "all 0.2s ease",
+                boxShadow: isSelected && !showResults ? "0 4px 12px rgba(37, 99, 235, 0.1)" : "none",
+              }}
             >
-              <input
-                type="radio"
-                name={question.id}
-                value={option.value}
-                checked={isSelected}
-                onChange={() => onSelect(option.value)}
-                className="mt-1"
-              />
-              <span className="text-sm font-semibold text-slate-500">{option.value})</span>
-              <span className="text-sm text-slate-700">{option.text}</span>
-            </label>
+              <span style={{
+                width: 36,
+                height: 36,
+                borderRadius: "12px",
+                background: isSelected ? "#2563eb" : "#f1f5f9",
+                color: isSelected ? "#fff" : "#64748b",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "15px",
+                fontWeight: 700,
+                flexShrink: 0,
+                border: isSelected ? "none" : "2px solid #e2e8f0"
+              }}>
+                {optionLabels[index]}
+              </span>
+              <span style={{ flex: 1, lineHeight: 1.4 }}>{option.text}</span>
+              {indicator && (
+                <span style={{ fontSize: "1.5rem", fontWeight: 800 }}>{indicator}</span>
+              )}
+            </button>
           )
         })}
       </div>
-    </article>
+    </div>
   )
 }
 
@@ -95,6 +161,7 @@ function readStoredQuizState(): StoredQuizState | null {
     return {
       quizSubmitted: Boolean(parsed.quizSubmitted),
       userAnswers: parsed.userAnswers ?? {},
+      userInfo: parsed.userInfo,
     }
   } catch {
     return null
@@ -106,6 +173,7 @@ export default function DiagnosticQuestionPage() {
   const params = useParams()
   const [userAnswers, setUserAnswers] = React.useState<Record<string, QuizOption["value"] | undefined>>({})
   const [quizSubmitted, setQuizSubmitted] = React.useState(false)
+  const [userInfo, setUserInfo] = React.useState<UserInfo | undefined>(undefined)
   const [isStorageReady, setIsStorageReady] = React.useState(false)
 
   const totalQuestions = diagnosticQuiz.length
@@ -121,6 +189,7 @@ export default function DiagnosticQuestionPage() {
     if (stored) {
       setUserAnswers(stored.userAnswers)
       setQuizSubmitted(stored.quizSubmitted)
+      setUserInfo(stored.userInfo)
     }
     setIsStorageReady(true)
   }, [])
@@ -128,12 +197,12 @@ export default function DiagnosticQuestionPage() {
   React.useEffect(() => {
     if (!isStorageReady) return
     try {
-      const state: StoredQuizState = { userAnswers, quizSubmitted }
+      const state: StoredQuizState = { userAnswers, quizSubmitted, userInfo }
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
     } catch {
       // Ignore storage failures and keep in-memory state.
     }
-  }, [isStorageReady, userAnswers, quizSubmitted])
+  }, [isStorageReady, userAnswers, quizSubmitted, userInfo])
 
   React.useEffect(() => {
     if (!Number.isFinite(rawPage) || rawPage < 1 || rawPage > totalQuestions) {
@@ -145,11 +214,7 @@ export default function DiagnosticQuestionPage() {
     () => diagnosticQuiz.reduce((sum, question) => sum + (userAnswers[question.id] ? 1 : 0), 0),
     [userAnswers]
   )
-  const correctCount = React.useMemo(
-    () => diagnosticQuiz.reduce((sum, question) => sum + (userAnswers[question.id] === question.answer ? 1 : 0), 0),
-    [userAnswers]
-  )
-  const quizScore = totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0
+
   const quizIncomplete = answeredCount !== totalQuestions
 
   const goToPage = React.useCallback(
@@ -164,121 +229,184 @@ export default function DiagnosticQuestionPage() {
     setUserAnswers((prev) => ({ ...prev, [questionId]: value }))
   }, [])
 
-  const handleQuizSubmit = React.useCallback(() => {
-    if (!quizIncomplete) {
+  const handleQuizSubmit = React.useCallback(async () => {
+    if (!quizIncomplete && userInfo) {
       setQuizSubmitted(true)
-    }
-  }, [quizIncomplete])
 
-  const handleQuizReset = React.useCallback(() => {
-    setUserAnswers({})
-    setQuizSubmitted(false)
-    try {
-      window.localStorage.removeItem(STORAGE_KEY)
-    } catch {
-      // Ignore storage failures and keep in-memory state.
+      try {
+        await fetch("/api/diagnostic-quiz", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: userInfo.email,
+            fullName: userInfo.fullName,
+            institution: userInfo.institution,
+            userAnswers
+          }),
+        })
+      } catch (error) {
+        console.error("Failed to save diagnostic results:", error)
+      }
+
+      // Small delay before redirecting after submission
+      setTimeout(() => {
+        router.push("/")
+      }, 3000)
     }
-    router.push("/diagnostic/1", { scroll: false })
-  }, [router])
+  }, [quizIncomplete, router, userInfo, userAnswers])
+
+  const handleStartQuiz = (info: UserInfo) => {
+    setUserInfo(info)
+  }
+
+  // If userInfo is missing, show the intro form
+  if (isStorageReady && !userInfo) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <ExamIntro onStart={handleStartQuiz} />
+      </div>
+    )
+  }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-5 sm:px-6">
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4">
-        <header className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">Quiz diagnóstico financiero</h1>
-          <Link
-            href="/"
-            className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-          >
-            Volver al landing
-          </Link>
-        </header>
-
-        <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-          <div className="grid gap-3 sm:grid-cols-4">
-            <div className="rounded-xl bg-slate-100 px-4 py-3">
-              <p className="text-[11px] uppercase tracking-wide text-slate-500">Pregunta</p>
-              <p className="text-xl font-semibold text-slate-900">
-                {currentPage}/{totalQuestions}
-              </p>
-            </div>
-            <div className="rounded-xl bg-slate-100 px-4 py-3">
-              <p className="text-[11px] uppercase tracking-wide text-slate-500">Contestadas</p>
-              <p className="text-xl font-semibold text-slate-900">
-                {answeredCount}/{totalQuestions}
-              </p>
-            </div>
-            <div className="rounded-xl bg-slate-100 px-4 py-3">
-              <p className="text-[11px] uppercase tracking-wide text-slate-500">Estado</p>
-              <p className="text-xl font-semibold text-slate-900">{quizSubmitted ? "Calificado" : "Pendiente"}</p>
-            </div>
-            <div className="rounded-xl bg-slate-100 px-4 py-3">
-              <p className="text-[11px] uppercase tracking-wide text-slate-500">Puntaje</p>
-              <p className="text-xl font-semibold text-slate-900">{quizSubmitted ? `${quizScore}%` : "-"}</p>
-            </div>
-          </div>
-
-          <p className="mt-3 text-sm text-slate-600">
-            {quizSubmitted
-              ? `Acertaste ${correctCount} de ${totalQuestions} preguntas.`
-              : "Navega por las páginas con Anterior y Siguiente."}
-          </p>
-        </section>
-
-        <QuizQuestionCard
-          question={currentQuestion}
-          selectedValue={userAnswers[currentQuestion.id]}
-          onSelect={(value) => handleQuizAnswer(currentQuestion.id, value)}
-          showResults={quizSubmitted}
+    <div
+      style={{
+        height: "100dvh",
+        maxHeight: "100dvh",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        background: "#f1f5f9",
+        fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+      }}
+    >
+      {/* Progress Header */}
+      <div
+        style={{
+          flexShrink: 0,
+          minHeight: 100,
+          padding: "16px 20px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: "#f1f5f9",
+          borderBottom: "2px solid #cbd5e1",
+          boxSizing: "border-box",
+        }}
+      >
+        <LessonProgressHeader
+          currentStepIndex={currentPage - 1}
+          totalSteps={totalQuestions}
+          streak={0}
+          stars={3}
+          hideStreak={true}
+          hideStars={true}
         />
-
-        <section className="sticky bottom-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-md sm:p-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Anterior
-            </button>
-
-            <div className="flex flex-wrap gap-2">
-              {currentPage < totalQuestions ? (
-                <button
-                  type="button"
-                  onClick={() => goToPage(currentPage + 1)}
-                  className="rounded-full bg-blue-700 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-800"
-                >
-                  Siguiente
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleQuizSubmit}
-                  disabled={quizIncomplete}
-                  className="rounded-full bg-blue-700 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-                >
-                  Finalizar y calificar
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={handleQuizReset}
-                className="rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
-              >
-                Reiniciar
-              </button>
-            </div>
-          </div>
-
-          {currentPage === totalQuestions && quizIncomplete ? (
-            <p className="mt-2 text-xs text-amber-700">
-              Faltan respuestas. Regresa con Anterior para completar todas las preguntas antes de calificar.
-            </p>
-          ) : null}
-        </section>
       </div>
-    </main>
+
+      {/* Content Area */}
+      <main
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflowY: "auto",
+          padding: `${CONTENT_PADDING_Y} ${CONTENT_PADDING_X}`,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          boxSizing: "border-box",
+        }}
+      >
+        <div style={{ width: "100%", maxWidth: CONTENT_MAX_WIDTH }}>
+          <QuizQuestionCard
+            question={currentQuestion}
+            selectedValue={userAnswers[currentQuestion.id]}
+            onSelect={(value) => handleQuizAnswer(currentQuestion.id, value)}
+            showResults={quizSubmitted}
+          />
+        </div>
+      </main>
+
+      {/* Sticky Footer */}
+      <div
+        style={{
+          flexShrink: 0,
+          width: "100%",
+          padding: "20px",
+          paddingBottom: "max(20px, env(safe-area-inset-bottom))",
+          background: "#fff",
+          borderTop: "2px solid #cbd5e1",
+          boxSizing: "border-box",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: CONTENT_MAX_WIDTH,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 16,
+          }}
+        >
+          <StickyFooterButton
+            variant="outline"
+            onClick={() => {
+              if (currentPage === 1) {
+                router.push("/")
+              } else {
+                goToPage(currentPage - 1)
+              }
+            }}
+            style={{
+              minWidth: 140,
+              fontSize: "1.1rem",
+              fontWeight: 700,
+            }}
+          >
+            {currentPage === 1 ? "Salir" : "Anterior"}
+          </StickyFooterButton>
+
+          <div style={{ display: "flex", gap: 12 }}>
+            {currentPage < totalQuestions ? (
+              <StickyFooterButton
+                variant="blue"
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={userAnswers[currentQuestion.id] === undefined}
+                style={{
+                  minWidth: 160,
+                  fontSize: "1.1rem",
+                  fontWeight: 700,
+                }}
+              >
+                Siguiente
+              </StickyFooterButton>
+            ) : (
+              <StickyFooterButton
+                variant="success"
+                onClick={handleQuizSubmit}
+                disabled={quizIncomplete || quizSubmitted}
+                style={{
+                  minWidth: 180,
+                  fontSize: "1.1rem",
+                  fontWeight: 700,
+                }}
+              >
+                {quizSubmitted ? "Quiz Finalizado" : "Finalizar"}
+              </StickyFooterButton>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <style jsx global>{`
+        body {
+          overflow: hidden !important;
+        }
+      `}</style>
+    </div>
   )
 }

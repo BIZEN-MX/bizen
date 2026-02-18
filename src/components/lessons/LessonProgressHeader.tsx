@@ -9,6 +9,8 @@ export interface LessonProgressHeaderProps {
   streak: number
   /** 0–3 stars based on mistakes: 0 mistakes = 3, 1 = 2, 2 = 1, 3+ = 0. */
   stars: 0 | 1 | 2 | 3
+  hideStreak?: boolean
+  hideStars?: boolean
 }
 
 const BLUE = "#2563eb"
@@ -18,6 +20,8 @@ export function LessonProgressHeader({
   totalSteps,
   streak,
   stars,
+  hideStreak = false,
+  hideStars = false,
 }: LessonProgressHeaderProps) {
   return (
     <div
@@ -65,48 +69,52 @@ export function LessonProgressHeader({
         }}
       >
         {/* Streak - custom flame image (larger) */}
-        <span
-          style={{
-            fontSize: "clamp(16px, 3.5vw, 22px)",
-            fontWeight: 600,
-            color: "#1e293b",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          <img
-            src="/streak.png"
-            alt=""
-            width={56}
-            height={56}
-            style={{ display: "block", objectFit: "contain" }}
-          />
-          {streak}
-        </span>
+        {!hideStreak && (
+          <span
+            style={{
+              fontSize: "clamp(16px, 3.5vw, 22px)",
+              fontWeight: 600,
+              color: "#1e293b",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <img
+              src="/streak.png"
+              alt=""
+              width={56}
+              height={56}
+              style={{ display: "block", objectFit: "contain" }}
+            />
+            {streak}
+          </span>
+        )}
 
         {/* 3 stars - stars.png; unearned shown gray (larger) */}
-        <span
-          style={{ display: "flex", alignItems: "center", gap: "6px" }}
-          role="img"
-          aria-label={stars === 0 ? "0 de 3 estrellas" : `${stars} de 3 estrellas`}
-        >
-          {[1, 2, 3].map((i) => (
-            <img
-              key={i}
-              src="/stars.png"
-              alt=""
-              width={40}
-              height={40}
-              style={{
-                display: "block",
-                objectFit: "contain",
-                opacity: i <= stars ? 1 : 0.35,
-                filter: i <= stars ? "none" : "grayscale(1)",
-              }}
-            />
-          ))}
-        </span>
+        {!hideStars && (
+          <span
+            style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            role="img"
+            aria-label={stars === 0 ? "0 de 3 estrellas" : `${stars} de 3 estrellas`}
+          >
+            {[1, 2, 3].map((i) => (
+              <img
+                key={i}
+                src="/stars.png"
+                alt=""
+                width={40}
+                height={40}
+                style={{
+                  display: "block",
+                  objectFit: "contain",
+                  opacity: i <= stars ? 1 : 0.35,
+                  filter: i <= stars ? "none" : "grayscale(1)",
+                }}
+              />
+            ))}
+          </span>
+        )}
       </div>
     </div>
   )

@@ -48,17 +48,10 @@ export default function MobileBottomNav() {
     },
     // { id: 'business-lab', label: 'Business Lab', icon: '💼', path: '/business-lab', protected: false },
     {
-      id: 'cash-flow',
-      label: 'Cash Flow',
-      icon: '💰',
-      path: '/cash-flow',
-      protected: false
-    },
-    {
-      id: 'simuladores',
-      label: 'Simuladores',
-      icon: '$',
-      path: '/simuladores',
+      id: 'simulador',
+      label: 'Simulador',
+      icon: '🎮',
+      path: '/simulador',
       protected: false
     }
   ]
@@ -114,13 +107,13 @@ export default function MobileBottomNav() {
       protected: true
     }
   ] : []
-  
+
   const [showMoreMenu, setShowMoreMenu] = useState(false)
 
   return (
     <>
       {/* Mobile Bottom Navigation - Only visible on mobile */}
-      <nav 
+      <nav
         data-mobile-bottom-nav
         style={{
           position: "fixed",
@@ -149,7 +142,7 @@ export default function MobileBottomNav() {
           gap: "4px",
           overflow: "hidden" // Prevent any scrolling
         }}>
-          
+
           {/* Main nav items */}
           {navItems.map((item) => {
             const isActive = isActivePath(item.path)
@@ -463,7 +456,7 @@ export default function MobileBottomNav() {
 
       {/* Authentication Required Dialog */}
       {showAuthDialog && (
-        <div 
+        <div
           style={{
             position: "fixed",
             top: 0,
@@ -481,7 +474,7 @@ export default function MobileBottomNav() {
           }}
           onClick={() => setShowAuthDialog(false)}
         >
-          <div 
+          <div
             style={{
               background: "white",
               borderRadius: 20,
@@ -521,7 +514,7 @@ export default function MobileBottomNav() {
             }}>
               ¡Crea tu cuenta gratis!
             </div>
-            
+
             <p style={{
               fontSize: 16,
               color: "#374151",

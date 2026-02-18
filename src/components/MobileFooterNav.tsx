@@ -56,8 +56,7 @@ export default function MobileFooterNav() {
   const navItems = [
     { path: "/courses", icon: "/rightmenucourses.png", active: isActivePath("/courses") },
     // { path: "/business-lab", icon: "/rightmenubusinesslab.png", active: isActivePath("/business-lab") },
-    { path: "/cash-flow", icon: "/rightmenucashflow.png", active: isActivePath("/cash-flow") },
-    { path: "/simuladores", icon: "/rightmenusimulators.png", active: isActivePath("/simuladores") },
+    { path: "/simulador", icon: "/rightmenusimulators.png", active: isActivePath("/simulador") },
     { path: "/progress", icon: "/rightmenuprogress.png", active: isActivePath("/progress") },
     { path: "/forum", icon: "/rightmenuforo.png", active: isActivePath("/forum") },
     { path: "/profile", icon: "avatar", active: isActivePath("/profile") || isActivePath("/configuracion"), isProfileButton: true },
@@ -150,33 +149,33 @@ export default function MobileFooterNav() {
                   width: 30,
                   height: 30,
                   borderRadius: "50%",
-                  background: user?.user_metadata?.avatar?.gradient || user?.user_metadata?.avatar?.bgColor 
-                    ? "transparent" 
+                  background: user?.user_metadata?.avatar?.gradient || user?.user_metadata?.avatar?.bgColor
+                    ? "transparent"
                     : "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   overflow: "hidden",
                 }}>
-                  <AvatarDisplay 
-                    avatar={user?.user_metadata?.avatar || { type: "emoji", value: (user?.user_metadata?.full_name || user?.email || "U")[0].toUpperCase() }} 
-                    size={30} 
+                  <AvatarDisplay
+                    avatar={user?.user_metadata?.avatar || { type: "emoji", value: (user?.user_metadata?.full_name || user?.email || "U")[0].toUpperCase() }}
+                    size={30}
                   />
                 </div>
               ) : item.icon === "avatar" ? (
-                <Image 
-                  src="/rightmenusettings.png" 
-                  alt="Profile" 
-                  width={40} 
+                <Image
+                  src="/rightmenusettings.png"
+                  alt="Profile"
+                  width={40}
                   height={40}
                   className="mobile-footer-icon"
                   style={{ width: 40, height: 40, objectFit: "contain" }}
                 />
               ) : (
-                <Image 
-                  src={item.icon} 
-                  alt={item.path} 
-                  width={40} 
+                <Image
+                  src={item.icon}
+                  alt={item.path}
+                  width={40}
                   height={40}
                   className="mobile-footer-icon"
                   style={{ width: 40, height: 40, objectFit: "contain" }}
@@ -214,45 +213,45 @@ export default function MobileFooterNav() {
       )}
 
       {showProfilePanel && (
-        <div 
-          style={{ 
-            position: "fixed", 
-            top: 0, 
-            left: 0, 
-            right: 0, 
-            bottom: 0, 
-            background: "rgba(0, 0, 0, 0.5)", 
-            zIndex: 10001, 
-            display: "flex", 
-            alignItems: "flex-end", 
-            justifyContent: "center", 
-            padding: "0" 
-          }} 
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 10001,
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "center",
+            padding: "0"
+          }}
           onClick={() => setShowProfilePanel(false)}
         >
-          <div 
-            style={{ 
+          <div
+            style={{
               background: "linear-gradient(180deg, rgba(224, 242, 254, 0.95) 0%, rgba(219, 234, 254, 0.95) 50%, rgba(191, 219, 254, 0.95) 100%)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
-              borderRadius: "20px 20px 0 0", 
-              padding: "24px", 
-              width: "100%", 
+              borderRadius: "20px 20px 0 0",
+              padding: "24px",
+              width: "100%",
               maxWidth: "100%",
               boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.2)",
               animation: "slideUp 0.3s ease-out",
               border: "1px solid rgba(255, 255, 255, 0.3)"
-            }} 
+            }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ 
-              width: "40px", 
-              height: "4px", 
-              background: "#d1d5db", 
-              borderRadius: "2px", 
-              margin: "0 auto 20px auto" 
+            <div style={{
+              width: "40px",
+              height: "4px",
+              background: "#d1d5db",
+              borderRadius: "2px",
+              margin: "0 auto 20px auto"
             }} />
-            
+
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <button
                 onClick={() => {
@@ -276,7 +275,7 @@ export default function MobileFooterNav() {
               >
                 <span>Configuración</span>
               </button>
-              
+
               <button
                 onClick={() => {
                   setShowProfilePanel(false)
@@ -299,7 +298,7 @@ export default function MobileFooterNav() {
               >
                 <span>Perfil</span>
               </button>
-              
+
               {user && (
                 <button
                   onClick={async () => {

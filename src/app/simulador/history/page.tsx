@@ -35,27 +35,27 @@ export default function HistoryPage() {
   const [error, setError] = React.useState('');
   const [filterSlug, setFilterSlug] = React.useState<string>('');
   const router = useRouter();
-  
+
   React.useEffect(() => {
     loadRuns();
   }, [filterSlug]);
-  
+
   async function loadRuns() {
     setLoading(true);
     setError('');
-    
+
     try {
       const url = filterSlug
         ? `/api/simuladores/runs?slug=${filterSlug}`
         : '/api/simuladores/runs';
-      
+
       const response = await fetch(url);
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Error al cargar');
       }
-      
+
       setRuns(data.runs || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -63,26 +63,26 @@ export default function HistoryPage() {
       setLoading(false);
     }
   }
-  
+
   async function handleDelete(id: string) {
     if (!confirm('¿Estás seguro de que quieres eliminar esta simulación?')) return;
-    
+
     try {
       const response = await fetch(`/api/simuladores/runs/${id}`, {
         method: 'DELETE',
       });
-      
+
       if (!response.ok) {
         throw new Error('Error al eliminar');
       }
-      
+
       // Reload runs
       loadRuns();
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Error al eliminar');
     }
   }
-  
+
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('es-MX', {
@@ -93,11 +93,11 @@ export default function HistoryPage() {
       minute: '2-digit',
     }).format(date);
   }
-  
+
   function getRunSummary(run: SimulatorRun): string {
     // Generate a quick summary based on simulator type
     const { simulator_slug, outputs } = run;
-    
+
     switch (simulator_slug) {
       case 'monthly-budget':
         return `Ingreso: ${currencyMXN(outputs.totalExpenses || 0)}`;
@@ -115,9 +115,9 @@ export default function HistoryPage() {
         return 'Ver detalles';
     }
   }
-  
+
   const uniqueSlugs = Array.from(new Set(runs.map((r) => r.simulator_slug)));
-  
+
   return (
     <main style={{
       marginRight: "320px",
@@ -134,7 +134,7 @@ export default function HistoryPage() {
     }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
-        <Link href="/simuladores" style={{ textDecoration: "none" }}>
+        <Link href="/simulador" style={{ textDecoration: "none" }}>
           <button style={{
             padding: "10px 20px",
             background: "white",
@@ -148,15 +148,15 @@ export default function HistoryPage() {
             fontFamily: "Montserrat, sans-serif",
             marginBottom: 16
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#0B71FE"
-            e.currentTarget.style.color = "white"
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "white"
-            e.currentTarget.style.color = "#0B71FE"
-          }}>
-            ← Volver a Simuladores
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#0B71FE"
+              e.currentTarget.style.color = "white"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "white"
+              e.currentTarget.style.color = "#0B71FE"
+            }}>
+            ← Volver a Simulador
           </button>
         </Link>
         <h1 style={{
@@ -174,7 +174,7 @@ export default function HistoryPage() {
           Revisa y administra tus simulaciones anteriores
         </p>
       </div>
-        
+
       {/* Filter */}
       {uniqueSlugs.length > 0 && (
         <div style={{ marginBottom: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -217,14 +217,14 @@ export default function HistoryPage() {
           ))}
         </div>
       )}
-      
+
       {/* Loading / Error States */}
       {loading && (
         <div style={{ textAlign: "center", padding: "48px 0" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
         </div>
       )}
-      
+
       {error && (
         <div style={{
           background: "rgba(239, 68, 68, 0.1)",
@@ -237,7 +237,7 @@ export default function HistoryPage() {
           {error}
         </div>
       )}
-        
+
       {/* Empty State */}
       {!loading && !error && runs.length === 0 && (
         <div style={{
@@ -255,7 +255,7 @@ export default function HistoryPage() {
           <p style={{ fontSize: 16, color: "#6B7280", marginBottom: 24 }}>
             Usa cualquiera de los simuladores y guarda tus resultados para consultarlos después
           </p>
-          <Link href="/simuladores" style={{ textDecoration: "none" }}>
+          <Link href="/simulador" style={{ textDecoration: "none" }}>
             <button style={{
               padding: "14px 28px",
               background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
@@ -269,14 +269,14 @@ export default function HistoryPage() {
               fontFamily: "Montserrat, sans-serif",
               boxShadow: "0 4px 12px rgba(11,113,254,0.3)"
             }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
-            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>
-              Explorar Simuladores
+              onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+              onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>
+              Explorar Simulador
             </button>
           </Link>
         </div>
       )}
-        
+
       {/* Runs List */}
       {!loading && !error && runs.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -289,14 +289,14 @@ export default function HistoryPage() {
               border: "2px solid #E5E7EB",
               transition: "all 0.2s ease"
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
-              e.currentTarget.style.borderColor = "#0B71FE"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
-              e.currentTarget.style.borderColor = "#E5E7EB"
-            }}>
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
+                e.currentTarget.style.borderColor = "#0B71FE"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
+                e.currentTarget.style.borderColor = "#E5E7EB"
+              }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 6, fontWeight: 600 }}>
@@ -335,7 +335,7 @@ export default function HistoryPage() {
                   Eliminar
                 </button>
               </div>
-              
+
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div>
                   <p style={{ fontSize: 14, color: "#374151", fontWeight: 600 }}>
@@ -347,7 +347,7 @@ export default function HistoryPage() {
                     </p>
                   )}
                 </div>
-                <Link href={`/simuladores/${run.simulator_slug}?runId=${run.id}`} style={{ textDecoration: "none" }}>
+                <Link href={`/simulador/${run.simulator_slug}?runId=${run.id}`} style={{ textDecoration: "none" }}>
                   <button style={{
                     padding: "10px 20px",
                     background: "white",
@@ -361,14 +361,14 @@ export default function HistoryPage() {
                     fontFamily: "Montserrat, sans-serif",
                     marginLeft: 16
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#0B71FE"
-                    e.currentTarget.style.color = "white"
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "white"
-                    e.currentTarget.style.color = "#0B71FE"
-                  }}>
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#0B71FE"
+                      e.currentTarget.style.color = "white"
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "white"
+                      e.currentTarget.style.color = "#0B71FE"
+                    }}>
                     Ver Detalles
                   </button>
                 </Link>
