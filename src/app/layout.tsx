@@ -5,6 +5,7 @@ import { SettingsProvider } from "@/contexts/SettingsContext"
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
 import { BillyTourProvider } from "@/components/billy-tour/BillyTourProvider"
+// Production Build Trigger - Wed Feb 18 14:45:00 CST 2026
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -35,11 +36,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SettingsProvider>
           <AuthProvider>
             <BillyTourProvider>
-            <AppLayout>
-              <ClientLayoutWrapper>
-                {children}
-              </ClientLayoutWrapper>
-            </AppLayout>
+              <AppLayout>
+                <ClientLayoutWrapper>
+                  {children}
+                </ClientLayoutWrapper>
+              </AppLayout>
             </BillyTourProvider>
           </AuthProvider>
         </SettingsProvider>
