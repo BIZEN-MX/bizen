@@ -13,7 +13,7 @@ if [ -z "$CHANGED_FILES" ]; then
 fi
 
 # If any change touches BIZEN-specific or shared/global files, run build
-if echo "$CHANGED_FILES" | grep -E '^(src/app/bizen/|src/lib/supabase/client-bizen\.ts|src/shared/|public/|package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lockb|next\.config\.ts|postcss\.config\.mjs|tailwind\.config\.(js|cjs|mjs|ts)|tsconfig\.json|eslint\.config\.mjs|middleware\.ts)$' > /dev/null; then
+if echo "$CHANGED_FILES" | grep -E '^(src/app/bizen/|src/lib/supabase/client-bizen\.ts|src/shared/|public/|package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lockb|next\.config\.ts|postcss\.config\.mjs|tailwind\.config|tsconfig\.json|eslint\.config\.mjs|middleware\.ts)' -q; then
   exit 1
 fi
 

@@ -10,9 +10,15 @@ if [ -z "$CHANGED_FILES" ]; then
   exit 1
 fi
 
-# If any change is outside BIZEN-only paths, build Microcred
-# Microcred is everything under src/app except src/app/bizen
-if echo "$CHANGED_FILES" | grep -E '^(src/app/(?!bizen/)|src/lib/supabase/client\.ts|src/shared/|public/|package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lockb|next\.config\.ts|postcss\.config\.mjs|tailwind\.config\.(js|cjs|mjs|ts)|tsconfig\.json|eslint\.config\.mjs|middleware\.ts)' -q; then
+# 1. Build if global or shared files changed
+if echo "$CHANGED_FILES" | grep -E '^(src/lib/supabase/client\.ts|src/shared/|public/|package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lockb|next\.config\.ts|postcss\.config\.mjs|tailwind\.config|tsconfig\.json|eslint\.config\.mjs|middleware\.ts)' -q; then
+  exit 1
+fi
+
+# 2. Build if anything in src/app changed EXCEPT src/app/bizen/
+# We identify this by checking if there's a file that starts with src/app/ 
+# but DOES NOT match src/app/bizen/
+if echo "$CHANGED_FILES" | grep '^src/app/' | grep -v '^src/app/bizen/' -q; then
   exit 1
 fi
 
