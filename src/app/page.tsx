@@ -87,6 +87,8 @@ export default function WelcomePage() {
     return () => observer.disconnect()
   }, [])
 
+  const gradientStyle = { background: "linear-gradient(180deg, #f5f9ff 0%, #eef6ff 18%, #e0efff 40%, #d4e8ff 60%, #dbeafe 75%, #d4e8ff 88%, #bfdbfe 100%)", backgroundAttachment: "scroll" as const, overflow: "visible" }
+
   return (
     <div style={{
       background: "#ffffff",
