@@ -22,7 +22,8 @@ const modalInputStyle = {
   fontFamily: "inherit",
   boxSizing: "border-box" as const,
   transition: "border-color 0.2s, box-shadow 0.2s",
-  outline: "none"
+  outline: "none",
+  textAlign: "center" as const
 }
 
 export default function WelcomePage() {
@@ -102,7 +103,6 @@ export default function WelcomePage() {
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
-      cursor: "none",
     }} className="main-page-container landing-page-root" data-landing-root>
       {/* Header: match reference – blue nav links, house + Inicia sesión, Agenda tu DEMO */}
       <header className="main-header landing-header" style={{
@@ -196,7 +196,7 @@ export default function WelcomePage() {
               </button>
             </div>
 
-            <nav style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <nav style={{ display: "flex", flexDirection: "column", gap: "24px", alignItems: "center" }}>
               <Link href="/" style={{ marginBottom: "20px", display: "inline-block" }} onClick={() => setMobileMenuOpen(false)}>
                 <span style={{ fontSize: "28px", fontWeight: 700, color: "#fff", letterSpacing: "0.05em" }}>BIZEN</span>
               </Link>
@@ -1675,28 +1675,28 @@ export default function WelcomePage() {
                   if (submitButton) { submitButton.disabled = false; submitButton.textContent = originalText || "Confirmar Agenda"; }
                 }
               }}
-              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+              style={{ display: "flex", flexDirection: "column", gap: "20px", alignItems: "center", textAlign: "center" }}
             >
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }} className="modal-form-grid">
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
                   <label htmlFor="modal-demo-name" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Nombre completo</label>
                   <input id="modal-demo-name" name="name" type="text" required placeholder="Tu nombre" style={modalInputStyle} />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
                   <label htmlFor="modal-demo-email" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Correo institucional</label>
                   <input id="modal-demo-email" name="email" type="email" required placeholder="email@escuela.com" style={modalInputStyle} />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
                   <label htmlFor="modal-demo-school" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Institución</label>
                   <input id="modal-demo-school" name="school" type="text" required placeholder="Nombre de tu escuela" style={modalInputStyle} />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
                   <label htmlFor="modal-demo-role" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Puesto / Rol</label>
                   <input id="modal-demo-role" name="role" type="text" required placeholder="ej. Director" style={modalInputStyle} />
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%", alignItems: "center" }}>
                 <label htmlFor="modal-demo-students" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Número de estudiantes (aproximado)</label>
                 <input id="modal-demo-students" name="students" type="text" placeholder="ej. 500 estudiantes" style={modalInputStyle} />
               </div>
@@ -1951,6 +1951,7 @@ export default function WelcomePage() {
 
       {/* Blue Dot Cursor */}
       <div
+        className="blue-dot-cursor"
         style={{
           position: "fixed",
           top: 0,
@@ -3414,6 +3415,16 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
 }
 
 const landingCSS = `
+        @media (pointer: fine) {
+          .landing-page-root {
+            cursor: none !important;
+          }
+        }
+        @media (pointer: coarse) {
+          .blue-dot-cursor {
+            display: none !important;
+          }
+        }
         @keyframes shimmer {
           0% {
             background-position: 0% 50%;
