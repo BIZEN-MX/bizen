@@ -92,7 +92,7 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
                         >
                             Solicita tu demo gratis
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                                <path d="M5 12h14M12 5l7 7-7 7" />
                             </svg>
                         </button>
                     </div>
@@ -107,11 +107,11 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
                     gap: "clamp(32px, 5vw, 48px)",
                     marginBottom: "clamp(28px, 4vw, 40px)",
                 }}
-                className="footer-top-row"
+                    className="footer-top-row"
                 >
                     <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginLeft: "clamp(32px, 5vw, 56px)" }}>
                         <h2 style={{
-                        fontWeight: 500,
+                            fontWeight: 500,
                             fontSize: "clamp(40px, 5vw, 56px)",
                             color: "#ffffff",
                             fontFamily: "'Inter', sans-serif",
@@ -131,14 +131,14 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
                             fontFamily: "'Inter', sans-serif",
                             transition: "opacity 0.2s ease",
                         }}
-                        className="footer-phone"
+                            className="footer-phone"
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                             </svg>
                             +52 442 708 1622
                         </a>
-                </div>
+                    </div>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "20px", alignItems: "flex-end" }}>
                         <h3 style={{
@@ -162,10 +162,10 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
                                 color: "#ffffff",
                                 transition: "all 0.2s ease",
                             }}
-                            className="footer-social-icon"
+                                className="footer-social-icon"
                             >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                                 </svg>
                             </a>
                             <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" style={{
@@ -179,10 +179,10 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
                                 color: "#ffffff",
                                 transition: "all 0.2s ease",
                             }}
-                            className="footer-social-icon"
+                                className="footer-social-icon"
                             >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                                 </svg>
                             </a>
                             <a href="https://www.instagram.com/bizen.mx?igsh=ZmJmYmdxZHg1Z2E3" target="_blank" rel="noopener noreferrer" style={{
@@ -196,10 +196,10 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
                                 color: "#ffffff",
                                 transition: "all 0.2s ease",
                             }}
-                            className="footer-social-icon"
+                                className="footer-social-icon"
                             >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                                 </svg>
                             </a>
                         </div>
@@ -237,15 +237,43 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
                     background: rgba(255, 255, 255, 0.25) !important;
                     transform: translateY(-2px);
                 }
+                @media (max-width: 900px) {
+                    footer {
+                        border-radius: 48px 48px 0 0 !important;
+                        padding-top: 80px !important;
+                    }
+                    div[style*="marginTop: -120px"] {
+                        margin-top: -80px !important;
+                    }
+                    div[style*="paddingLeft: clamp(64px, 11vw, 100px)"] {
+                        padding: 32px 20px !important;
+                        padding-top: 60px !important;
+                        text-align: center !important;
+                        justify-content: center !important;
+                    }
+                    div[style*="top: clamp(-44px, -8vw, -64px)"] {
+                        top: -50px !important;
+                        left: 50% !important;
+                        transform: translateX(-50%) !important;
+                    }
+                    p[style*="minWidth: 260px"] {
+                        min-width: 100% !important;
+                    }
+                }
                 @media (max-width: 768px) {
                     .footer-top-row {
-                        flex-direction: column;
-                        align-items: flex-start;
+                        flex-direction: column !important;
+                        align-items: center !important;
+                        text-align: center !important;
+                    }
+                    .footer-top-row > div:first-child {
+                        margin-left: 0 !important;
+                        align-items: center !important;
                     }
                     .footer-top-row > div:last-child {
-                        align-items: flex-start;
+                        align-items: center !important;
                     }
-        }
+                }
       `}</style>
         </footer>
     )

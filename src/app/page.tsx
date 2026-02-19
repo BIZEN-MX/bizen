@@ -125,25 +125,88 @@ export default function WelcomePage() {
 
       {/* Mobile nav overlay */}
       {mobileMenuOpen && (
-        <div className="landing-mobile-nav-overlay" role="dialog" aria-label="Menú de navegación" style={{ position: "fixed", inset: 0, zIndex: 99, background: "rgba(0,0,0,0.4)", display: "flex", alignItems: "flex-start", justifyContent: "flex-end" }} onClick={() => setMobileMenuOpen(false)}>
-          <div className="landing-mobile-nav-drawer" style={{ width: "min(280px, 85vw)", maxWidth: "100%", height: "100%", background: "#fff", boxShadow: "-4px 0 24px rgba(0,0,0,0.15)", padding: "24px 20px", overflowY: "auto" }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "16px" }}>
-              <button type="button" aria-label="Cerrar menú" onClick={() => setMobileMenuOpen(false)} style={{ width: 44, height: 44, padding: 0, border: "none", background: "transparent", cursor: "pointer", color: "#374151" }}>×</button>
+        <div
+          className="landing-mobile-nav-overlay"
+          role="dialog"
+          aria-label="Menú de navegación"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 999,
+            background: "rgba(30, 58, 138, 0.95)", // More premium blue overlay
+            backdropFilter: "blur(12px)", // Modern blur
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div
+            className="landing-mobile-nav-drawer"
+            style={{
+              width: "100%",
+              maxWidth: "400px",
+              padding: "40px 24px",
+              textAlign: "center"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ position: "absolute", top: "20px", right: "20px" }}>
+              <button
+                type="button"
+                aria-label="Cerrar menú"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  width: 44,
+                  height: 44,
+                  padding: 0,
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  color: "#fff",
+                  fontSize: "32px"
+                }}
+              >
+                ×
+              </button>
             </div>
-            <nav style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Link href="#sobre-bizen" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Sobre Bizen</Link>
-              <Link href="#precios" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Implementación</Link>
-              <Link href="#impacto" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Impacto</Link>
-              <Link href="#problema" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Problema</Link>
-              <Link href="/diagnostic" className="header-nav-link" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", padding: "12px 0" }} onClick={() => setMobileMenuOpen(false)}>Quiz diagnóstico</Link>
-            </nav>
-            <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid #e5e7eb", display: "flex", flexDirection: "column", gap: "12px" }}>
-              <Link href="/login" style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }} onClick={() => setMobileMenuOpen(false)}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+
+            <nav style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+              <Link href="/" style={{ marginBottom: "20px", display: "inline-block" }} onClick={() => setMobileMenuOpen(false)}>
+                <span style={{ fontSize: "28px", fontWeight: 700, color: "#fff", letterSpacing: "0.05em" }}>BIZEN</span>
+              </Link>
+              <Link href="#sobre-bizen" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Sobre Bizen</Link>
+              <Link href="#precios" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Implementación</Link>
+              <Link href="#impacto" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Impacto</Link>
+              <Link href="#problema" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Problema</Link>
+              <Link href="/diagnostic" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Quiz diagnóstico</Link>
+
+              <div style={{ height: "2px", background: "rgba(255,255,255,0.1)", margin: "20px 0" }} />
+
+              <Link href="/login" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }} onClick={() => setMobileMenuOpen(false)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
                 <span>Inicia sesión</span>
               </Link>
-              <button type="button" onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }} style={{ fontSize: 16, fontWeight: 500, color: "#2C7BEF", background: "transparent", border: "none", cursor: "pointer", textAlign: "left", padding: "12px 0" }}>Agenda tu DEMO</button>
-            </div>
+              <button
+                type="button"
+                onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }}
+                style={{
+                  marginTop: "12px",
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  color: "#1e3a8a",
+                  background: "#fff",
+                  border: "none",
+                  borderRadius: "16px",
+                  padding: "16px 32px",
+                  cursor: "pointer",
+                  boxShadow: "0 10px 25px rgba(0,0,0,0.15)"
+                }}
+              >
+                Agenda tu DEMO
+              </button>
+            </nav>
           </div>
         </div>
       )}
@@ -453,7 +516,7 @@ export default function WelcomePage() {
         }
 
         /* Landing header: mobile menu – show hamburger, hide nav/actions */
-        @media (max-width: 900px) {
+        @media (max-width: 1100px) {
           .landing-header-mobile-menu-btn {
             display: flex !important;
           }
@@ -462,7 +525,7 @@ export default function WelcomePage() {
             display: none !important;
           }
         }
-        @media (min-width: 901px) {
+        @media (min-width: 1101px) {
           .landing-header-mobile-menu-btn {
             display: none !important;
           }
