@@ -38,29 +38,46 @@ function QuizQuestionCard({
 
   return (
     <div
-      className="quiz-card-container"
+      className="quiz-split-layout"
       style={{
         display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "4rem",
         width: "100%",
-        maxWidth: "1100px",
-        margin: "0 auto",
-        flexWrap: "wrap"
+        maxWidth: "100%", // Truly full width
+        height: "auto",
+        minHeight: "60vh", // Use more vertical space
+        gap: "0",
+        background: "#fff",
+        borderRadius: "24px",
+        overflow: "hidden",
+        boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
+        margin: "0 auto"
       }}
     >
-      {/* Left Column: Question Text */}
-      <div style={{ flex: "1 1 450px", textAlign: "left" }}>
-        <div style={{ marginBottom: "1rem" }}>
+      {/* Left Column: Question Side */}
+      <div
+        className="quiz-col"
+        style={{
+          flex: "1",
+          background: "#f8fafc",
+          padding: "24px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          borderRight: "1px solid #e2e8f0"
+        }}
+      >
+        <div style={{ marginBottom: "12px" }}>
           <span
             style={{
-              fontSize: "14px",
-              color: "#6366f1",
+              display: "inline-block",
+              padding: "3px 10px",
+              background: "#e0e7ff",
+              borderRadius: "6px",
+              fontSize: "10px",
+              color: "#3730a3",
               fontWeight: 700,
               textTransform: "uppercase",
-              letterSpacing: "0.1em",
+              letterSpacing: "0.05em",
             }}
           >
             {question.label}
@@ -69,71 +86,85 @@ function QuizQuestionCard({
 
         <h2
           style={{
-            fontSize: "clamp(28px, 4vw, 42px)",
+            fontSize: "18px",
             fontWeight: 800,
-            color: "#1e293b",
-            lineHeight: 1.2,
+            color: "#0f172a",
+            lineHeight: 1.25,
             margin: 0,
+            letterSpacing: "-0.01em"
           }}
         >
           {question.question}
         </h2>
+
+        <div style={{ marginTop: "20px", height: "3px", width: "32px", background: "#2563eb", borderRadius: "2px" }} />
       </div>
 
-      {/* Right Column: Options */}
-      <div style={{ flex: "1 1 500px", width: "100%" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
+      {/* Right Column: Options Side */}
+      <div
+        className="quiz-col"
+        style={{
+          flex: "1",
+          padding: "24px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          background: "#fff"
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%", maxWidth: "100%" }}>
           {question.options.map((option, index) => {
             const isSelected = selectedValue === option.value
-            let bgColor = "#fff"
+            let bgColor = isSelected ? "#eff6ff" : "#fff"
             let borderColor = isSelected ? "#2563eb" : "#e2e8f0"
             let textColor = "#1e293b"
 
-            if (isSelected) {
-              bgColor = "#eff6ff"
-            }
-
             return (
               <button
-                key={option.value}
+                key={`${question.id}-${option.value}`}
+                type="button"
                 onClick={() => !showResults && onSelect(option.value)}
                 disabled={showResults}
                 style={{
-                  padding: "1.25rem 1.75rem",
-                  fontSize: "clamp(16px, 2.5vw, 18px)",
+                  padding: "10px 14px",
+                  fontSize: "13px",
                   fontWeight: 600,
                   color: textColor,
                   background: bgColor,
-                  border: `3px solid ${borderColor}`,
-                  borderRadius: "24px",
+                  border: `2px solid ${borderColor}`,
+                  borderRadius: "12px",
                   cursor: showResults ? "default" : "pointer",
                   fontFamily: "inherit",
                   textAlign: "left",
                   display: "flex",
                   alignItems: "center",
-                  gap: "1.25rem",
-                  transition: "all 0.2s ease",
-                  boxShadow: isSelected && !showResults ? "0 8px 20px rgba(37, 99, 235, 0.1)" : "0 4px 6px -1px rgba(0,0,0,0.05)",
+                  gap: "10px",
+                  transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                   width: "100%",
+                  outline: "none",
+                  transform: isSelected ? "translateX(4px)" : "none",
+                  position: "relative",
+                  zIndex: isSelected ? 2 : 1
                 }}
               >
                 <span style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: "14px",
-                  background: isSelected ? "#2563eb" : "#f1f5f9",
+                  width: 28,
+                  height: 28,
+                  borderRadius: "8px",
+                  background: isSelected ? "#2563eb" : "#f8fafc",
                   color: isSelected ? "#fff" : "#64748b",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "15px",
+                  fontSize: "12px",
                   fontWeight: 800,
                   flexShrink: 0,
-                  border: isSelected ? "none" : "2px solid #e2e8f0"
+                  border: isSelected ? "none" : "1px solid #e2e8f0",
+                  pointerEvents: "none"
                 }}>
                   {optionLabels[index]}
                 </span>
-                <span style={{ flex: 1, lineHeight: 1.4 }}>{option.text}</span>
+                <span style={{ flex: 1, lineHeight: 1.3, pointerEvents: "none" }}>{option.text}</span>
               </button>
             )
           })}
@@ -141,15 +172,14 @@ function QuizQuestionCard({
       </div>
 
       <style jsx>{`
-        @media (max-width: 900px) {
-          .quiz-card-container {
+        @media (max-width: 800px) {
+          .quiz-split-layout {
             flex-direction: column !important;
-            gap: 2rem !important;
-            text-align: center !important;
+            height: auto !important;
+            min-height: 0 !important;
           }
-          div[style*="text-align: left"] {
-            text-align: center !important;
-            flex: 1 1 100% !important;
+          .quiz-col {
+            padding: 20px !important;
           }
         }
       `}</style>
@@ -180,6 +210,7 @@ export default function DiagnosticQuestionPage() {
 
   const [userAnswers, setUserAnswers] = React.useState<Record<string, QuizOption["value"] | undefined>>({})
   const [quizSubmitted, setQuizSubmitted] = React.useState(false)
+  const [showSuccess, setShowSuccess] = React.useState(false)
   const [userInfo, setUserInfo] = React.useState<UserInfo | undefined>(undefined)
   const [tempUserInfo, setTempUserInfo] = React.useState<UserInfo>({ email: "", fullName: "", institution: "" })
   const [userInfoError, setUserInfoError] = React.useState("")
@@ -244,6 +275,7 @@ export default function DiagnosticQuestionPage() {
   const handleQuizSubmit = React.useCallback(async () => {
     if (!quizIncomplete && userInfo) {
       setQuizSubmitted(true)
+      setShowSuccess(true)
 
       try {
         await fetch("/api/diagnostic-quiz", {
@@ -260,7 +292,10 @@ export default function DiagnosticQuestionPage() {
         console.error("Failed to save diagnostic results:", error)
       }
 
-      router.push("/")
+      // Redirect after showing success message for 3 seconds
+      setTimeout(() => {
+        router.push("/")
+      }, 4000)
     }
   }, [quizIncomplete, router, userInfo, userAnswers])
 
@@ -295,8 +330,8 @@ export default function DiagnosticQuestionPage() {
       <div
         style={{
           flexShrink: 0,
-          minHeight: 100,
-          padding: "16px 20px",
+          minHeight: 80,
+          padding: "12px 20px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -305,14 +340,16 @@ export default function DiagnosticQuestionPage() {
           boxSizing: "border-box",
         }}
       >
-        <LessonProgressHeader
-          currentStepIndex={userInfo ? currentPage - 1 : 0}
-          totalSteps={totalQuestions}
-          streak={0}
-          stars={3}
-          hideStreak={true}
-          hideStars={true}
-        />
+        <div style={{ height: "40px", width: "100%", display: "flex", justifyContent: "center" }}>
+          <LessonProgressHeader
+            currentStepIndex={userInfo ? currentPage - 1 : 0}
+            totalSteps={totalQuestions}
+            streak={0}
+            stars={3}
+            hideStreak={true}
+            hideStars={true}
+          />
+        </div>
       </div>
 
       {/* Content Area */}
@@ -320,17 +357,24 @@ export default function DiagnosticQuestionPage() {
         style={{
           flex: 1,
           minHeight: 0,
-          overflowY: "auto",
-          padding: `${CONTENT_PADDING_Y} ${CONTENT_PADDING_X}`,
+          overflow: "hidden",
+          padding: "40px 20px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start", // Changed to top-aligned to avoid cutoff
           boxSizing: "border-box",
         }}
       >
-        <div style={{ width: "100%", maxWidth: userInfo ? CONTENT_MAX_WIDTH : 1200 }}>
-          {!userInfo ? (
+        <div style={{ width: "100%", maxWidth: "1600px" }}>
+          {showSuccess ? (
+            <div style={{ textAlign: "center", padding: "40px", background: "#fff", borderRadius: "24px", boxShadow: "0 10px 30px rgba(0,0,0,0.08)", maxWidth: "600px", margin: "0 auto" }}>
+              <div style={{ fontSize: "60px", marginBottom: "16px" }}>🎉</div>
+              <h2 style={{ fontSize: "28px", fontWeight: 800, color: "#1e3a8a", marginBottom: "12px" }}>¡Gracias por tu participación!</h2>
+              <p style={{ fontSize: "16px", color: "#64748b", lineHeight: 1.5 }}>Tu respuesta ha sido enviada con éxito. Valoramos mucho tu tiempo e interés.</p>
+              <div style={{ marginTop: "24px", fontSize: "14px", fontStyle: "italic", color: "#94a3b8" }}>Redirigiendo...</div>
+            </div>
+          ) : !userInfo ? (
             <ExamIntro
               userInfo={tempUserInfo}
               onChange={setTempUserInfo}
@@ -359,16 +403,18 @@ export default function DiagnosticQuestionPage() {
           boxSizing: "border-box",
           display: "flex",
           justifyContent: "center",
+          position: "relative",
+          zIndex: 10
         }}
       >
         <div
           style={{
             width: "100%",
-            maxWidth: 1200, // Widened footer container
+            maxWidth: 1600,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            gap: 24, // Increased gap
+            gap: 16,
           }}
         >
           <StickyFooterButton
@@ -381,23 +427,25 @@ export default function DiagnosticQuestionPage() {
               }
             }}
             style={{
-              minWidth: 200, // Wider buttons
-              fontSize: "1.1rem",
-              fontWeight: 800,
+              minWidth: 140,
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              padding: "12px 24px"
             }}
           >
             {!userInfo || currentPage === 1 ? "Salir" : "Anterior"}
           </StickyFooterButton>
 
-          <div style={{ display: "flex", gap: 16 }}>
+          <div style={{ display: "flex", gap: 12 }}>
             {!userInfo ? (
               <StickyFooterButton
                 variant="blue"
                 onClick={handleStartQuiz}
                 style={{
-                  minWidth: 260, // Wider "Start" button
-                  fontSize: "1.2rem",
-                  fontWeight: 900,
+                  minWidth: 180,
+                  fontSize: "1rem",
+                  fontWeight: 800,
+                  padding: "12px 32px"
                 }}
               >
                 Empezar examen
@@ -408,9 +456,10 @@ export default function DiagnosticQuestionPage() {
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={userAnswers[currentQuestion.id] === undefined}
                 style={{
-                  minWidth: 220, // Wider buttons
-                  fontSize: "1.2rem",
+                  minWidth: 160,
+                  fontSize: "1rem",
                   fontWeight: 800,
+                  padding: "12px 32px"
                 }}
               >
                 Siguiente
@@ -421,12 +470,13 @@ export default function DiagnosticQuestionPage() {
                 onClick={handleQuizSubmit}
                 disabled={quizIncomplete || quizSubmitted}
                 style={{
-                  minWidth: 240, // Wider "Finish" button
-                  fontSize: "1.2rem",
-                  fontWeight: 900,
+                  minWidth: 180,
+                  fontSize: "1rem",
+                  fontWeight: 800,
+                  padding: "12px 32px"
                 }}
               >
-                {quizSubmitted ? "Quiz Finalizado" : "Finalizar examen"}
+                {quizSubmitted ? "Enviado" : "Finalizar examen"}
               </StickyFooterButton>
             )}
           </div>

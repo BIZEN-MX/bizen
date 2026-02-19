@@ -35,28 +35,44 @@ export function LessonProgressHeader({
         flexShrink: 0,
       }}
     >
-      {/* Progress bar */}
+      {/* Progress bar container */}
       <div
         style={{
           flex: 1,
-          height: "32px",
-          borderRadius: "20px",
-          border: "3px solid #1e293b",
-          background: "#e2e8f0",
-          overflow: "hidden",
+          height: "36px",
+          borderRadius: "999px",
+          border: "4px solid #1e293b",
+          background: "#f1f5f9",
+          padding: "4px",
           boxSizing: "border-box",
+          position: "relative",
+          boxShadow: "inset 0 2px 4px rgba(0,0,0,0.1), 0 4px 6px -1px rgba(0,0,0,0.05)",
         }}
       >
         <div
           style={{
             width: `${totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0}%`,
             height: "100%",
-            background: "#2563eb",
-            borderRadius: "14px",
-            minWidth: totalSteps > 0 ? 8 : 0,
-            transition: "width 0.3s ease",
+            background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1e40af 100%)",
+            borderRadius: "999px",
+            minWidth: totalSteps > 0 ? 20 : 0,
+            transition: "width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            position: "relative",
+            overflow: "hidden",
+            boxShadow: "0 2px 10px rgba(37, 99, 235, 0.4)",
           }}
-        />
+        >
+          {/* Shine effect */}
+          <div style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "50%",
+            background: "rgba(255, 255, 255, 0.15)",
+            borderRadius: "999px 999px 0 0"
+          }} />
+        </div>
       </div>
 
       {/* Streak + 3 stars - right */}
