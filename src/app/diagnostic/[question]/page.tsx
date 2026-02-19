@@ -59,10 +59,12 @@ function QuizQuestionCard({
         style={{
           flex: "1",
           background: "#f8fafc",
-          padding: "24px",
+          padding: "32px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
           borderRight: "1px solid #e2e8f0"
         }}
       >
@@ -86,12 +88,13 @@ function QuizQuestionCard({
 
         <h2
           style={{
-            fontSize: "18px",
+            fontSize: "22px",
             fontWeight: 800,
             color: "#0f172a",
-            lineHeight: 1.25,
+            lineHeight: 1.3,
             margin: 0,
-            letterSpacing: "-0.01em"
+            letterSpacing: "-0.01em",
+            maxWidth: "500px"
           }}
         >
           {question.question}
@@ -105,14 +108,15 @@ function QuizQuestionCard({
         className="quiz-col"
         style={{
           flex: "1",
-          padding: "24px",
+          padding: "32px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          alignItems: "center",
           background: "#fff"
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%", maxWidth: "100%" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%", maxWidth: "450px", margin: "0 auto" }}>
           {question.options.map((option, index) => {
             const isSelected = selectedValue === option.value
             let bgColor = isSelected ? "#eff6ff" : "#fff"
@@ -126,25 +130,27 @@ function QuizQuestionCard({
                 onClick={() => !showResults && onSelect(option.value)}
                 disabled={showResults}
                 style={{
-                  padding: "10px 14px",
-                  fontSize: "13px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
                   fontWeight: 600,
                   color: textColor,
                   background: bgColor,
                   border: `2px solid ${borderColor}`,
-                  borderRadius: "12px",
+                  borderRadius: "14px",
                   cursor: showResults ? "default" : "pointer",
                   fontFamily: "inherit",
-                  textAlign: "left",
+                  textAlign: "center",
                   display: "flex",
                   alignItems: "center",
-                  gap: "10px",
+                  justifyContent: "center",
+                  gap: "12px",
                   transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                   width: "100%",
                   outline: "none",
-                  transform: isSelected ? "translateX(4px)" : "none",
+                  transform: isSelected ? "translateY(-2px)" : "none",
                   position: "relative",
-                  zIndex: isSelected ? 2 : 1
+                  zIndex: isSelected ? 2 : 1,
+                  boxShadow: isSelected ? "0 8px 20px rgba(37, 99, 235, 0.15)" : "none"
                 }}
               >
                 <span style={{

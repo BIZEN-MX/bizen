@@ -36,7 +36,7 @@ export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
       }}
     >
       {/* Left Column: Text */}
-      <div style={{ flex: "1 1 450px", textAlign: "left" }}>
+      <div style={{ flex: "1 1 450px", textAlign: "center" }}>
         <span
           style={{
             fontSize: "14px",
@@ -52,10 +52,10 @@ export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
         </span>
         <h1
           style={{
-            fontSize: "clamp(36px, 6vw, 56px)",
+            fontSize: "clamp(30px, 5vw, 42px)",
             fontWeight: 900,
             color: "#1e293b",
-            lineHeight: 1.05,
+            lineHeight: 1.1,
             marginBottom: "1.5rem",
             letterSpacing: "-0.02em"
           }}
@@ -65,10 +65,11 @@ export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
         </h1>
         <p
           style={{
-            fontSize: "clamp(18px, 2vw, 20px)",
+            fontSize: "16px",
             color: "#64748b",
-            lineHeight: 1.6,
-            maxWidth: "450px"
+            lineHeight: 1.5,
+            maxWidth: "500px",
+            margin: "0 auto"
           }}
         >
           Antes de comenzar tu aventura, necesitamos conocerte un poco mejor. Completa tu información para personalizar tu experiencia de aprendizaje.
@@ -87,10 +88,10 @@ export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
-          <div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
             <label
               htmlFor="fullName"
-              style={{ display: "block", fontSize: "15px", fontWeight: 700, color: "#475569", marginBottom: "0.6rem" }}
+              style={{ display: "block", fontSize: "14px", fontWeight: 700, color: "#475569" }}
             >
               Nombre Completo
             </label>
@@ -102,22 +103,23 @@ export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
               placeholder="Juan Pérez"
               style={{
                 width: "100%",
-                padding: "1.1rem 1.4rem",
-                borderRadius: "18px",
-                border: "2.5px solid #e2e8f0",
-                fontSize: "17px",
+                padding: "12px 16px",
+                borderRadius: "14px",
+                border: "2px solid #e2e8f0",
+                fontSize: "16px",
                 outline: "none",
                 transition: "all 0.2s",
                 boxSizing: "border-box",
-                fontFamily: "inherit"
+                fontFamily: "inherit",
+                textAlign: "center"
               }}
             />
           </div>
 
-          <div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
             <label
               htmlFor="email"
-              style={{ display: "block", fontSize: "15px", fontWeight: 700, color: "#475569", marginBottom: "0.6rem" }}
+              style={{ display: "block", fontSize: "14px", fontWeight: 700, color: "#475569" }}
             >
               Correo Electrónico
             </label>
@@ -129,22 +131,23 @@ export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
               placeholder="juan@ejemplo.com"
               style={{
                 width: "100%",
-                padding: "1.1rem 1.4rem",
-                borderRadius: "18px",
-                border: "2.5px solid #e2e8f0",
-                fontSize: "17px",
+                padding: "12px 16px",
+                borderRadius: "14px",
+                border: "2px solid #e2e8f0",
+                fontSize: "16px",
                 outline: "none",
                 transition: "all 0.2s",
                 boxSizing: "border-box",
-                fontFamily: "inherit"
+                fontFamily: "inherit",
+                textAlign: "center"
               }}
             />
           </div>
 
-          <div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
             <label
               htmlFor="institution"
-              style={{ display: "block", fontSize: "15px", fontWeight: 700, color: "#475569", marginBottom: "0.6rem" }}
+              style={{ display: "block", fontSize: "14px", fontWeight: 700, color: "#475569" }}
             >
               Institución / Empresa
             </label>
@@ -156,14 +159,15 @@ export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
               placeholder="Ej. Universidad Anáhuac"
               style={{
                 width: "100%",
-                padding: "1.1rem 1.4rem",
-                borderRadius: "18px",
-                border: "2.5px solid #e2e8f0",
-                fontSize: "17px",
+                padding: "12px 16px",
+                borderRadius: "14px",
+                border: "2px solid #e2e8f0",
+                fontSize: "16px",
                 outline: "none",
                 transition: "all 0.2s",
                 boxSizing: "border-box",
-                fontFamily: "inherit"
+                fontFamily: "inherit",
+                textAlign: "center"
               }}
             />
           </div>
