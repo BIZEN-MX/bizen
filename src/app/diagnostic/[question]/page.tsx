@@ -77,26 +77,11 @@ function QuizQuestionCard({
       <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", width: "100%" }}>
         {question.options.map((option, index) => {
           const isSelected = selectedValue === option.value
-          const isAnswer = option.value === question.answer
-
           let bgColor = "#f8fafc"
           let borderColor = isSelected ? "#2563eb" : "#e2e8f0"
           let textColor = "#1e293b"
-          let indicator = null
 
-          if (showResults) {
-            if (isAnswer) {
-              bgColor = "#d1fae5"
-              borderColor = "#10b981"
-              textColor = "#047857"
-              indicator = "✓"
-            } else if (isSelected) {
-              bgColor = "#fee2e2"
-              borderColor = "#ef4444"
-              textColor = "#dc2626"
-              indicator = "✗"
-            }
-          } else if (isSelected) {
+          if (isSelected) {
             bgColor = "#eff6ff"
           }
 
@@ -140,9 +125,6 @@ function QuizQuestionCard({
                 {optionLabels[index]}
               </span>
               <span style={{ flex: 1, lineHeight: 1.4 }}>{option.text}</span>
-              {indicator && (
-                <span style={{ fontSize: "1.5rem", fontWeight: 800 }}>{indicator}</span>
-              )}
             </button>
           )
         })}
@@ -248,10 +230,7 @@ export default function DiagnosticQuestionPage() {
         console.error("Failed to save diagnostic results:", error)
       }
 
-      // Small delay before redirecting after submission
-      setTimeout(() => {
-        router.push("/")
-      }, 3000)
+      router.push("/")
     }
   }, [quizIncomplete, router, userInfo, userAnswers])
 
