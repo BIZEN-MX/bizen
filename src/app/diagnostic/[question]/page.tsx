@@ -38,97 +38,121 @@ function QuizQuestionCard({
 
   return (
     <div
+      className="quiz-card-container"
       style={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
+        gap: "4rem",
         width: "100%",
-        maxWidth: "700px",
+        maxWidth: "1100px",
         margin: "0 auto",
+        flexWrap: "wrap"
       }}
     >
-      <div style={{ marginBottom: 8, textAlign: "center" }}>
-        <span
+      {/* Left Column: Question Text */}
+      <div style={{ flex: "1 1 450px", textAlign: "left" }}>
+        <div style={{ marginBottom: "1rem" }}>
+          <span
+            style={{
+              fontSize: "14px",
+              color: "#6366f1",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+            }}
+          >
+            {question.label}
+          </span>
+        </div>
+
+        <h2
           style={{
-            fontSize: "clamp(13px, 2vw, 15px)",
-            color: "#64748b",
-            fontWeight: 500,
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
+            fontSize: "clamp(28px, 4vw, 42px)",
+            fontWeight: 800,
+            color: "#1e293b",
+            lineHeight: 1.2,
+            margin: 0,
           }}
         >
-          {question.label}
-        </span>
+          {question.question}
+        </h2>
       </div>
 
-      <h2
-        style={{
-          fontSize: "clamp(24px, 5vw, 36px)",
-          fontWeight: 700,
-          marginBottom: "2.5rem",
-          color: "#1e293b",
-          lineHeight: 1.3,
-          textAlign: "center",
-        }}
-      >
-        {question.question}
-      </h2>
+      {/* Right Column: Options */}
+      <div style={{ flex: "1 1 500px", width: "100%" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
+          {question.options.map((option, index) => {
+            const isSelected = selectedValue === option.value
+            let bgColor = "#fff"
+            let borderColor = isSelected ? "#2563eb" : "#e2e8f0"
+            let textColor = "#1e293b"
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", width: "100%" }}>
-        {question.options.map((option, index) => {
-          const isSelected = selectedValue === option.value
-          let bgColor = "#f8fafc"
-          let borderColor = isSelected ? "#2563eb" : "#e2e8f0"
-          let textColor = "#1e293b"
+            if (isSelected) {
+              bgColor = "#eff6ff"
+            }
 
-          if (isSelected) {
-            bgColor = "#eff6ff"
+            return (
+              <button
+                key={option.value}
+                onClick={() => !showResults && onSelect(option.value)}
+                disabled={showResults}
+                style={{
+                  padding: "1.25rem 1.75rem",
+                  fontSize: "clamp(16px, 2.5vw, 18px)",
+                  fontWeight: 600,
+                  color: textColor,
+                  background: bgColor,
+                  border: `3px solid ${borderColor}`,
+                  borderRadius: "24px",
+                  cursor: showResults ? "default" : "pointer",
+                  fontFamily: "inherit",
+                  textAlign: "left",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1.25rem",
+                  transition: "all 0.2s ease",
+                  boxShadow: isSelected && !showResults ? "0 8px 20px rgba(37, 99, 235, 0.1)" : "0 4px 6px -1px rgba(0,0,0,0.05)",
+                  width: "100%",
+                }}
+              >
+                <span style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: "14px",
+                  background: isSelected ? "#2563eb" : "#f1f5f9",
+                  color: isSelected ? "#fff" : "#64748b",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "15px",
+                  fontWeight: 800,
+                  flexShrink: 0,
+                  border: isSelected ? "none" : "2px solid #e2e8f0"
+                }}>
+                  {optionLabels[index]}
+                </span>
+                <span style={{ flex: 1, lineHeight: 1.4 }}>{option.text}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <style jsx>{`
+        @media (max-width: 900px) {
+          .quiz-card-container {
+            flex-direction: column !important;
+            gap: 2rem !important;
+            text-align: center !important;
           }
-
-          return (
-            <button
-              key={option.value}
-              onClick={() => !showResults && onSelect(option.value)}
-              disabled={showResults}
-              style={{
-                padding: "1.25rem 1.75rem",
-                fontSize: "clamp(16px, 3.5vw, 19px)",
-                fontWeight: 600,
-                color: textColor,
-                background: bgColor,
-                border: `3px solid ${borderColor}`,
-                borderRadius: "20px",
-                cursor: showResults ? "default" : "pointer",
-                fontFamily: "inherit",
-                textAlign: "left",
-                display: "flex",
-                alignItems: "center",
-                gap: "1.25rem",
-                transition: "all 0.2s ease",
-                boxShadow: isSelected && !showResults ? "0 4px 12px rgba(37, 99, 235, 0.1)" : "none",
-              }}
-            >
-              <span style={{
-                width: 36,
-                height: 36,
-                borderRadius: "12px",
-                background: isSelected ? "#2563eb" : "#f1f5f9",
-                color: isSelected ? "#fff" : "#64748b",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "15px",
-                fontWeight: 700,
-                flexShrink: 0,
-                border: isSelected ? "none" : "2px solid #e2e8f0"
-              }}>
-                {optionLabels[index]}
-              </span>
-              <span style={{ flex: 1, lineHeight: 1.4 }}>{option.text}</span>
-            </button>
-          )
-        })}
-      </div>
+          div[style*="text-align: left"] {
+            text-align: center !important;
+            flex: 1 1 100% !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }
