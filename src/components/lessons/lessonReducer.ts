@@ -15,6 +15,8 @@ export interface LessonState {
   totalMistakes: number // Track unique initial mistakes for scoring
   hasBuiltReviewSteps: boolean
   isContinueEnabled: boolean
+  isActionEnabled: boolean
+  actionTrigger: number
 }
 
 export type LessonAction =
@@ -23,17 +25,21 @@ export type LessonAction =
   | { type: "ENABLE_CONTINUE" }
   | { type: "DISABLE_CONTINUE" }
   | { type: "NEXT_STEP" }
+  | { type: "PREV_STEP" }
   | { type: "BUILD_REVIEW_STEPS" }
   | { type: "GO_TO_SUMMARY" }
   | { type: "APPEND_REVIEW_STEP"; sourceStepId: string }
   | { type: "GO_TO_SUMMARY_AFTER_REVIEW" }
+  | { type: "SET_ACTION_ENABLED"; enabled: boolean }
+  | { type: "TRIGGER_ACTION" }
 
 export function lessonReducer(state: LessonState, action: LessonAction): LessonState {
   switch (action.type) {
     case "INIT": {
       const firstStep = action.steps[0]
       const firstStepAutoComplete =
-        firstStep?.stepType === "info" || firstStep?.stepType === "summary"
+        (firstStep?.stepType === "info" && !firstStep?.fullScreen) || firstStep?.stepType === "summary"
+      const firstStepIsInfoFullScreen = firstStep?.stepType === "info" && firstStep?.fullScreen
       return {
         originalSteps: action.steps,
         allSteps: action.steps,
@@ -43,6 +49,8 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         totalMistakes: 0,
         hasBuiltReviewSteps: false,
         isContinueEnabled: !!firstStepAutoComplete,
+        isActionEnabled: !!firstStepIsInfoFullScreen,
+        actionTrigger: 0,
       }
     }
 
@@ -99,7 +107,7 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
       const nextIndex = state.currentStepIndex + 1
       const nextStep = state.allSteps[nextIndex]
       const nextStepAutoComplete =
-        nextStep?.stepType === "info" || nextStep?.stepType === "summary"
+        (nextStep?.stepType === "info" && !nextStep?.fullScreen) || nextStep?.stepType === "summary"
       const isLastOriginalStep = nextIndex >= state.originalSteps.length
 
       // If we're at the end of original steps and haven't built review steps yet
@@ -109,13 +117,33 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
           ...state,
           currentStepIndex: nextIndex,
           isContinueEnabled: false,
+          isActionEnabled: false,
+          actionTrigger: 0,
         }
       }
+
+      const nextStepIsInfoFullScreen = nextStep?.stepType === "info" && nextStep?.fullScreen
 
       return {
         ...state,
         currentStepIndex: nextIndex,
         isContinueEnabled: !!nextStepAutoComplete,
+        isActionEnabled: !!nextStepIsInfoFullScreen,
+        actionTrigger: 0,
+      }
+    }
+
+    case "PREV_STEP": {
+      if (state.currentStepIndex <= 0) return state
+      const nextIndex = state.currentStepIndex - 1
+
+      // When going back, continue is almost always enabled because they've already been there
+      return {
+        ...state,
+        currentStepIndex: nextIndex,
+        isContinueEnabled: true,
+        isActionEnabled: false,
+        actionTrigger: 0,
       }
     }
 
@@ -212,6 +240,18 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
       }
       return state
     }
+
+    case "SET_ACTION_ENABLED":
+      return {
+        ...state,
+        isActionEnabled: action.enabled,
+      }
+
+    case "TRIGGER_ACTION":
+      return {
+        ...state,
+        actionTrigger: state.actionTrigger + 1,
+      }
 
     default:
       return state

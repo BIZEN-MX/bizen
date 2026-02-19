@@ -8,18 +8,26 @@ interface StickyFooterProps {
 }
 
 /**
- * Sticky footer that stays at the bottom on all devices
+ * Sticky footer that stays at the absolute bottom of the viewport
+ * - Uses position: fixed to ensure it's always at the screen bottom
  * - Supports safe-area insets for iPhone notch
  * - Centered container with max-width on desktop
- * - Full width button that's maxed on desktop
  */
 export function StickyFooter({ children, className = "" }: StickyFooterProps) {
   return (
     <footer
-      className={`lesson-sticky-footer flex-shrink-0 w-full bg-slate-100 border-t-2 border-slate-300 z-10 mt-auto ${className}`}
-      style={{ paddingTop: 16, paddingBottom: "max(16px, env(safe-area-inset-bottom))", paddingLeft: 20, paddingRight: 20 }}
+      className={`lesson-sticky-footer fixed bottom-0 left-0 right-0 w-full bg-white border-t-2 border-slate-200 z-[100] ${className}`}
+      style={{
+        paddingTop: 16,
+        paddingBottom: "max(16px, env(safe-area-inset-bottom))",
+        paddingLeft: 20,
+        paddingRight: 20,
+        display: "flex",
+        justifyContent: "center",
+        boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.05)"
+      }}
     >
-      <div className="w-full">
+      <div className="w-full" style={{ maxWidth: 1600 }}>
         {children}
       </div>
     </footer>
@@ -34,9 +42,6 @@ interface StickyFooterButtonProps extends React.ButtonHTMLAttributes<HTMLButtonE
 
 /**
  * Responsive button for sticky footer
- * - Mobile: py-3 text-base
- * - Desktop: py-4 text-lg
- * - Full width but maxed at max-w-md
  */
 export function StickyFooterButton({
   children,
@@ -113,4 +118,3 @@ export function StickyFooterButton({
     </button>
   )
 }
-

@@ -4,6 +4,44 @@ import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
+import {
+  BookOpen,
+  ChevronRight,
+  Wallet,
+  Coins,
+  PiggyBank,
+  Receipt,
+  HandCoins,
+  CreditCard,
+  Landmark,
+  TrendingUp,
+  Presentation,
+  BarChart4,
+  Briefcase,
+  Brain,
+  LineChart,
+  AlertTriangle,
+  Lightbulb,
+  Rocket,
+  Search,
+  ShieldCheck,
+  FileText,
+  Calculator,
+  RefreshCw,
+  BadgeDollarSign,
+  Skull,
+  Smile,
+  Heart,
+  ShieldAlert,
+  Coffee,
+  Target,
+  CheckCircle2,
+  Clock,
+  Zap,
+  Layout
+} from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 interface Lesson {
   id: string
@@ -56,7 +94,7 @@ export default function CoursesPage() {
         setLoadingData(true)
         // No legacy courses — only 30 temas principales (topic pages)
         setCourses([])
-        
+
       } catch (error) {
         console.error("Error fetching courses:", error)
       } finally {
@@ -82,12 +120,12 @@ export default function CoursesPage() {
   useEffect(() => {
     const htmlEl = document.documentElement
     const bodyEl = document.body
-    
+
     htmlEl.style.background = "#ffffff"
     htmlEl.style.backgroundAttachment = "scroll"
     bodyEl.style.background = "#ffffff"
     bodyEl.style.backgroundAttachment = "scroll"
-    
+
     return () => {
       htmlEl.style.background = ""
       htmlEl.style.backgroundAttachment = ""
@@ -128,53 +166,53 @@ export default function CoursesPage() {
   }
 
   return (
-      <div style={{
-        position: "relative",
-        top: 0,
-        left: 0,
-        width: "100%",
-        maxWidth: "100%",
-        flex: 1,
-        background: "#ffffff",
-        overflow: "visible",
-        boxSizing: "border-box",
-        paddingBottom: 0,
-        marginBottom: 0,
-        margin: 0,
-        padding: 0
-      }}>
+    <div style={{
+      position: "relative",
+      top: 0,
+      left: 0,
+      width: "100%",
+      maxWidth: "100%",
+      flex: 1,
+      background: "#ffffff",
+      overflow: "visible",
+      boxSizing: "border-box",
+      paddingBottom: 0,
+      marginBottom: 0,
+      margin: 0,
+      padding: 0
+    }}>
       {/* Decorative Orbs */}
-        <div style={{
+      <div style={{
         position: "fixed",
         top: "15%",
         right: "8%",
         width: "400px",
         height: "400px",
         background: "radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(60px)",
+        borderRadius: "50%",
+        filter: "blur(60px)",
         pointerEvents: "none"
-        }} />
-        <div style={{
+      }} />
+      <div style={{
         position: "fixed",
         bottom: "15%",
         left: "8%",
         width: "450px",
         height: "450px",
         background: "radial-gradient(circle, rgba(34, 197, 94, 0.15) 0%, transparent 70%)",
-          borderRadius: "50%",
+        borderRadius: "50%",
         filter: "blur(70px)",
         pointerEvents: "none"
-        }} />
-        <div style={{
+      }} />
+      <div style={{
         position: "fixed",
-          top: "40%",
-          left: "50%",
+        top: "40%",
+        left: "50%",
         width: "500px",
         height: "500px",
         background: "radial-gradient(circle, rgba(147, 197, 253, 0.12) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(80px)",
+        borderRadius: "50%",
+        filter: "blur(80px)",
         pointerEvents: "none"
       }} />
 
@@ -187,26 +225,26 @@ export default function CoursesPage() {
         }
       `}</style>
 
-    <main 
-      data-bizen-tour="courses"
-      style={{ 
-        flex: 1,
-        paddingTop: "clamp(8px, 1.5vw, 16px)",
-        paddingBottom: "clamp(40px, 8vw, 80px)",
-        paddingLeft: "16px",
-        paddingRight: "16px",
-      fontFamily: "'Montserrat', sans-serif",
-        background: "transparent",
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        marginBottom: 0,
-        boxSizing: "border-box",
-        width: "100%"
-      }} className="courses-main-content">
+      <main
+        data-bizen-tour="courses"
+        style={{
+          flex: 1,
+          paddingTop: "clamp(8px, 1.5vw, 16px)",
+          paddingBottom: "clamp(40px, 8vw, 80px)",
+          paddingLeft: "16px",
+          paddingRight: "16px",
+          fontFamily: "'Montserrat', sans-serif",
+          background: "transparent",
+          position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          marginBottom: 0,
+          boxSizing: "border-box",
+          width: "100%"
+        }} className="courses-main-content">
         {/* Same width as course bars (800px) - progress at top, then course list */}
-            <div style={{
+        <div style={{
           width: "100%",
           maxWidth: "800px",
           margin: "0 auto",
@@ -214,7 +252,7 @@ export default function CoursesPage() {
           zIndex: 1,
           padding: "0",
           boxSizing: "border-box",
-                    display: "flex",
+          display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
           gap: 0
@@ -223,161 +261,206 @@ export default function CoursesPage() {
           <div
             style={{
               width: "100%",
-              marginBottom: "clamp(20px, 4vw, 28px)",
-              padding: "clamp(14px, 2.5vw, 18px) clamp(16px, 2.5vw, 20px)",
-              background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
-              border: "2px solid rgba(59, 130, 246, 0.25)",
-              borderRadius: 12,
+              marginBottom: "clamp(40px, 6vw, 60px)",
+              padding: "clamp(24px, 4vw, 32px)",
+              background: "white",
+              border: "1px solid #e2e8f0",
+              borderRadius: 24,
+              boxShadow: "0 10px 40px rgba(0, 0, 0, 0.04)",
               boxSizing: "border-box",
+              position: "relative",
+              overflow: "hidden"
             }}
             aria-label={`Progreso: ${completedCount} lecciones completadas`}
           >
+            {/* Background Decoration for Progress Card */}
+            <div style={{
+              position: "absolute",
+              top: -20,
+              right: -20,
+              width: 120,
+              height: 120,
+              background: "linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%)",
+              borderRadius: "50%",
+              zIndex: 0
+            }} />
+
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 10,
-                flexWrap: "wrap",
-                gap: 8,
+                alignItems: "flex-end",
+                marginBottom: 16,
+                position: "relative",
+                zIndex: 1
               }}
             >
-              <span
-                style={{
-                  fontSize: "clamp(14px, 2.5vw, 16px)",
-                  fontWeight: 700,
-                  color: "#1e40af",
-                }}
-              >
-                {completedCount} lecciones completadas
-              </span>
-              <span
-                style={{
-                  fontSize: "clamp(13px, 2.2vw, 15px)",
-                  fontWeight: 600,
-                  color: "#64748b",
-                }}
-              >
-                {progressPct}%
-              </span>
+              <div>
+                <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: 800, color: "#1e3a5f", margin: "0 0 4px" }}>
+                  Tu Viaje BIZEN
+                </h2>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "#64748b" }}>
+                  {completedCount} de {APPROX_TOTAL_LESSONS} lecciones dominadas
+                </div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <span
+                  style={{
+                    fontSize: "clamp(28px, 5vw, 32px)",
+                    fontWeight: 900,
+                    background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent"
+                  }}
+                >
+                  {progressPct}%
+                </span>
+              </div>
             </div>
             <div
               style={{
                 width: "100%",
-                height: 10,
-                borderRadius: 10,
-                background: "rgba(59, 130, 246, 0.2)",
+                height: 12,
+                borderRadius: 12,
+                background: "#f1f5f9",
                 overflow: "hidden",
+                position: "relative",
+                zIndex: 1
               }}
             >
               <div
                 style={{
                   width: `${progressPct}%`,
                   height: "100%",
-                  borderRadius: 10,
+                  borderRadius: 12,
                   background: "linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)",
-                  transition: "width 0.5s ease",
+                  transition: "width 1s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  boxShadow: "0 0 15px rgba(59, 130, 246, 0.4)"
                 }}
               />
             </div>
           </div>
 
-          {/* 30 topics – single column, scroll down (no stars on course/topic covers) */}
+          {/* Topics Grid */}
           <section
             style={{
               width: "100%",
               marginBottom: "clamp(32px, 6vw, 48px)",
-              display: "flex",
-              flexDirection: "column",
-              gap: "clamp(12px, 2vw, 16px)",
-              overflowY: "auto",
-              maxHeight: "none",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gap: "24px",
+              paddingBottom: 40
             }}
             aria-label="Temas"
           >
             {[
-                  { id: 1, title: "Mi relación con el dinero" },
-              { id: 2, title: "¿Qué es el dinero y por qué existe?" },
-              { id: 3, title: "¿Cómo entra y sale el dinero de mi vida?" },
-                  { id: 4, title: "Presupuesto: tomar control sin ahogarme" },
-                  { id: 5, title: "Ahorro con propósito" },
-              { id: 6, title: "¿Deuda: cuándo ayuda y cuándo destruye?" },
-                  { id: 7, title: "Sistema financiero explicado fácil" },
-                  { id: 8, title: "Impuestos en la vida real" },
-                  { id: 9, title: "Inflación y poder adquisitivo" },
-                  { id: 10, title: "Introducción a la inversión" },
-                  { id: 11, title: "Instrumentos de inversión básicos" },
-                  { id: 12, title: "Psicología del inversionista" },
-                  { id: 13, title: "Construcción de patrimonio a largo plazo" },
-                  { id: 14, title: "Errores financieros comunes" },
-                  { id: 15, title: "Tomar decisiones financieras conscientes" },
-                  { id: 16, title: "Mentalidad emprendedora" },
-                  { id: 17, title: "Identificar problemas y oportunidades de negocio" },
-                  { id: 18, title: "Validar ideas sin gastar dinero" },
-                  { id: 19, title: "Modelo de negocio explicado simple" },
-                  { id: 20, title: "Ingresos, costos y utilidad en un negocio" },
-                  { id: 21, title: "Flujo de efectivo" },
-                  { id: 22, title: "Precios y valor" },
-                  { id: 23, title: "Contabilidad básica para no contadores" },
-                  { id: 24, title: "Errores comunes al emprender" },
-                  { id: 25, title: "Escalar un negocio" },
-                  { id: 26, title: "Dinero y estilo de vida" },
-                  { id: 27, title: "Dinero y decisiones importantes" },
-                  { id: 28, title: "Dinero en crisis" },
-                  { id: 29, title: "Dinero, estrés y bienestar personal" },
-                  { id: 30, title: "Diseñar mi vida financiera a futuro" },
-            ].map((topic) => (
-                        <button
-                          key={topic.id}
-                type="button"
-                          onClick={() => router.push(`/courses/${topic.id}`)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "clamp(14px, 2.5vw, 18px) clamp(16px, 2.5vw, 20px)",
-                  background: "#f8fafc",
-                  border: "2px solid #e2e8f0",
-                  borderRadius: 12,
-                  transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-                  width: "100%",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  fontFamily: "inherit",
-                }}
-                className="course-topic-item"
-              >
-                <span
+              { id: 1, title: "Mi relación con el dinero", icon: Wallet, color: "#3b82f6", lessons: 4 },
+              { id: 2, title: "¿Qué es el dinero y por qué existe?", icon: Coins, color: "#2563eb", lessons: 5 },
+              { id: 3, title: "¿Cómo entra y sale el dinero de mi vida?", icon: RefreshCw, color: "#1d4ed8", lessons: 6 },
+              { id: 4, title: "Presupuesto: tomar control sin ahogarme", icon: Receipt, color: "#1e40af", lessons: 8 },
+              { id: 5, title: "Ahorro con propósito", icon: PiggyBank, color: "#6366f1", lessons: 5 },
+              { id: 6, title: "¿Deuda: cuándo ayuda y cuándo destruye?", icon: CreditCard, color: "#4f46e5", lessons: 7 },
+              { id: 7, title: "Sistema financiero explicado fácil", icon: Landmark, color: "#4338ca", lessons: 6 },
+              { id: 8, title: "Impuestos en la vida real", icon: FileText, color: "#3730a3", lessons: 6 },
+              { id: 9, title: "Inflación y poder adquisitivo", icon: TrendingUp, color: "#2563eb", lessons: 5 },
+              { id: 10, title: "Introducción a la inversión", icon: Presentation, color: "#3b82f6", lessons: 8 },
+              { id: 11, title: "Instrumentos de inversión básicos", icon: BarChart4, color: "#60a5fa", lessons: 10 },
+              { id: 12, title: "Psicología del inversionista", icon: Brain, color: "#818cf8", lessons: 7 },
+              { id: 13, title: "Construcción de patrimonio", icon: ShieldCheck, color: "#10b981", lessons: 9 },
+              { id: 14, title: "Errores financieros comunes", icon: AlertTriangle, color: "#f59e0b", lessons: 6 },
+              { id: 15, title: "Decisiones financieras conscientes", icon: Lightbulb, color: "#facc15", lessons: 5 },
+              { id: 16, title: "Mentalidad emprendedora", icon: Rocket, color: "#ef4444", lessons: 8 },
+              { id: 17, title: "Oportunidades de negocio", icon: Search, color: "#3b82f6", lessons: 6 },
+              { id: 18, title: "Validar ideas rápido", icon: Zap, color: "#f59e0b", lessons: 7 },
+              { id: 19, title: "Modelo de negocio simple", icon: Layout, color: "#6366f1", lessons: 9 },
+              { id: 20, title: "Ingresos, costos y utilidad", icon: Calculator, color: "#10b981", lessons: 8 },
+              { id: 21, title: "Flujo de efectivo", icon: LineChart, color: "#3b82f6", lessons: 6 },
+              { id: 22, title: "Precios y valor", icon: BadgeDollarSign, color: "#2563eb", lessons: 5 },
+              { id: 23, title: "Contabilidad básica", icon: BookOpen, color: "#4f46e5", lessons: 7 },
+              { id: 24, title: "Errores comunes al emprender", icon: Skull, color: "#475569", lessons: 6 },
+              { id: 25, title: "Escalar un negocio", icon: TrendingUp, color: "#10b981", lessons: 8 },
+              { id: 26, title: "Dinero y estilo de vida", icon: Smile, color: "#f59e0b", lessons: 5 },
+              { id: 27, title: "Dinero y decisiones importantes", icon: Heart, color: "#ef4444", lessons: 6 },
+              { id: 28, title: "Dinero en crisis", icon: ShieldAlert, color: "#dc2626", lessons: 7 },
+              { id: 29, title: "Estrés y bienestar financiero", icon: Coffee, color: "#8b5cf6", lessons: 5 },
+              { id: 30, title: "Mi vida financiera a futuro", icon: Target, color: "#0B71FE", lessons: 10 },
+            ].map((topic) => {
+              const IconComp = topic.icon || BookOpen
+              return (
+                <Card
+                  key={topic.id}
+                  onClick={() => router.push(`/courses/${topic.id}`)}
                   style={{
-                    flexShrink: 0,
-                    width: 28,
-                    height: 28,
-                    borderRadius: 8,
-                    background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-                    color: "#fff",
-                    fontSize: 13,
-                    fontWeight: 700,
+                    cursor: "pointer",
+                    border: "1px solid transparent",
+                    borderRadius: "20px",
+                    background: "#ffffff",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.05)",
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    overflow: "hidden",
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    flexDirection: "column",
                   }}
+                  className="course-card-hover"
                 >
-                  {topic.id}
-                </span>
-                <span
-                  style={{
-                    flex: 1,
-                    fontSize: "clamp(14px, 2.5vw, 16px)",
-                    fontWeight: 600,
-                    color: "#334155",
-                    lineHeight: 1.35,
-                  }}
-                >
-                  {topic.title}
-                </span>
-                <span style={{ flexShrink: 0, fontSize: 18, color: "#64748b" }} aria-hidden>→</span>
-              </button>
-            ))}
+                  <CardContent style={{ padding: "24px", position: "relative", flex: 1, display: "flex", flexDirection: "column" }}>
+                    {/* Topic Number Badge */}
+                    <div style={{
+                      position: "absolute",
+                      top: 16,
+                      right: 16,
+                      fontSize: 12,
+                      fontWeight: 800,
+                      color: "#94a3b8",
+                      opacity: 0.5
+                    }}>
+                      #{topic.id.toString().padStart(2, '0')}
+                    </div>
+
+                    {/* Icon Header */}
+                    <div style={{
+                      width: 54,
+                      height: 54,
+                      borderRadius: "16px",
+                      background: `${topic.color}15`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: 20,
+                      color: topic.color
+                    }}>
+                      <IconComp size={28} />
+                    </div>
+
+                    <h3 style={{
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: "#1e3a5f",
+                      marginBottom: 12,
+                      lineHeight: 1.4,
+                      flex: 1
+                    }}>
+                      {topic.title}
+                    </h3>
+
+                    {/* Meta Info */}
+                    <div style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 16,
+                      marginTop: "auto",
+                      paddingTop: 16,
+                      borderTop: "1px solid #f1f5f9"
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "#64748b" }}>
+                        <BookOpen size={16} />
+                        <span>{topic.lessons} lecciones</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
           </section>
 
         </div>
@@ -426,9 +509,12 @@ export default function CoursesPage() {
           background: linear-gradient(135deg, #0A5FD4 0%, #3A8EF7 100%) !important;
         }
 
-        .course-topic-item:hover {
-          border-color: #93c5fd !important;
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
+        .course-card-hover:hover {
+          border-color: #3b82f6 !important;
+        }
+
+        .course-card-hover:active {
+          transform: translateY(-2px) !important;
         }
         
         @keyframes bounce {

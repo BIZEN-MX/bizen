@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useReducer, useEffect, useCallback, useRef } from "react"
+import React, { useReducer, useEffect, useCallback, useRef, useState } from "react"
 import { LessonStep } from "@/types/lessonTypes"
 import { lessonReducer, LessonState } from "./lessonReducer"
-import { LessonScreen, StickyFooterButton } from "./index"
+import { LessonScreen, StickyFooterButton, StickyFooter } from "./index"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X, CONTENT_PADDING_Y } from "./layoutConstants"
 import {
   InfoStep,
@@ -16,6 +16,7 @@ import {
   ImageChoiceStep,
   SummaryStep,
 } from "./steps"
+import { haptic } from "@/utils/hapticFeedback"
 
 interface LessonEngineProps {
   lessonSteps: LessonStep[]
@@ -36,8 +37,11 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     currentStepIndex: 0,
     answersByStepId: {},
     incorrectSteps: [],
+    totalMistakes: 0,
     hasBuiltReviewSteps: false,
     isContinueEnabled: false,
+    isActionEnabled: false,
+    actionTrigger: 0,
   })
 
   const onCompleteRef = useRef(onComplete)
@@ -47,6 +51,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   useEffect(() => {
     dispatch({ type: "INIT", steps: lessonSteps })
   }, [lessonSteps])
+
 
   // After last original step: build review steps for wrong answers, or go to summary if all correct
   useEffect(() => {
@@ -62,7 +67,14 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   }, [state.currentStepIndex, state.originalSteps.length, state.hasBuiltReviewSteps, state.incorrectSteps.length])
 
   const handleAnswered = useCallback(
-    (stepId: string, result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any }) => {
+    (stepId: string, result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => {
+      // Update action enabled state in reducer
+      if (result.canAction !== undefined) {
+        dispatch({ type: "SET_ACTION_ENABLED", enabled: !!result.canAction })
+      } else {
+        dispatch({ type: "SET_ACTION_ENABLED", enabled: true })
+      }
+
       if (result.isCompleted && result.isCorrect !== undefined) {
         const currentStep = state.allSteps.find((s) => s.id === stepId)
         const isReviewStep = !!currentStep?.reviewSourceStepId
@@ -76,8 +88,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         // Only enable Continue when correct (or not a review step). Review: user must get it right before advancing.
         if (result.isCorrect || !isReviewStep) {
           dispatch({ type: "ENABLE_CONTINUE" })
+          if (result.isCorrect) haptic.success()
         } else {
           dispatch({ type: "DISABLE_CONTINUE" })
+          haptic.error()
         }
       } else if (result.isCompleted) {
         dispatch({ type: "ENABLE_CONTINUE" })
@@ -88,7 +102,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     [state.allSteps]
   )
 
-  // Compute streak and stars from state (must be before handleContinue so stars is in scope)
+  const currentStep = state.allSteps[state.currentStepIndex]
+
+  // Compute streak and stars from state
   const originalQuizStepIds = state.originalSteps
     .filter((s) => s.stepType === "mcq" && (s as { isAssessment?: boolean }).isAssessment)
     .map((s) => s.id)
@@ -98,11 +114,6 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     if (result?.isCorrect) streak++
     else break
   }
-  // Stars 0–3 by mistake count: based on TOTAL initial mistakes (tracked in state.totalMistakes)
-  // 0 mistakes = 3 stars
-  // 1 mistake = 2 stars
-  // 2 mistakes = 1 star
-  // 3+ mistakes = 0 stars
   const mistakeCount = state.totalMistakes
   const stars: 0 | 1 | 2 | 3 =
     mistakeCount === 0 ? 3 : mistakeCount === 1 ? 2 : mistakeCount === 2 ? 1 : 0
@@ -116,21 +127,32 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     })
   }, [state.currentStepIndex, state.allSteps.length, streak, stars, onProgressChange])
 
-  const handleContinue = useCallback(() => {
-    const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
-    const currentStepForContinue = state.allSteps[state.currentStepIndex]
-    const isOnSummaryStep = currentStepForContinue?.stepType === "summary"
-    const isOnReviewStep = !!currentStepForContinue?.reviewSourceStepId
+  const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
+  const isSummaryStep = currentStep?.stepType === "summary"
+  const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice"].includes(currentStep?.stepType || "")
 
-    if (isLastStep && isOnSummaryStep) {
+  const handleContinue = useCallback(() => {
+    if (!currentStep) return
+
+    if (isLastStep && isSummaryStep) {
       onCompleteRef.current?.(stars)
       return
     }
+
+    // If step is not completed, trigger the action (Reveal or Check)
+    if (!state.isContinueEnabled && !isSummaryStep && !isLastStep) {
+      if (state.isActionEnabled) {
+        haptic.light()
+        dispatch({ type: "TRIGGER_ACTION" })
+      }
+      return
+    }
+
+    const isOnReviewStep = !!currentStep?.reviewSourceStepId
     if (isLastStep && isOnReviewStep && state.incorrectSteps.length === 0) {
       dispatch({ type: "GO_TO_SUMMARY_AFTER_REVIEW" })
       return
     }
-    if (!state.isContinueEnabled) return
 
     const nextIndex = state.currentStepIndex + 1
     const nextStep = state.originalSteps[nextIndex]
@@ -143,184 +165,115 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         dispatch({ type: "GO_TO_SUMMARY" })
       }
     } else {
+      haptic.light()
       dispatch({ type: "NEXT_STEP" })
     }
-  }, [state.isContinueEnabled, state.currentStepIndex, state.allSteps, state.originalSteps, state.hasBuiltReviewSteps, state.incorrectSteps.length, stars])
+  }, [state.isContinueEnabled, state.currentStepIndex, state.allSteps, state.originalSteps, state.hasBuiltReviewSteps, state.incorrectSteps.length, stars, currentStep, state.isActionEnabled, isLastStep, isSummaryStep])
 
-  const currentStep = state.allSteps[state.currentStepIndex]
-  const pendingReviewOrSummary = state.currentStepIndex >= state.originalSteps.length && !state.hasBuiltReviewSteps
-  if (!currentStep && !pendingReviewOrSummary) {
+  const handleBack = useCallback(() => {
+    if (state.currentStepIndex > 0) {
+      haptic.light()
+      dispatch({ type: "PREV_STEP" })
+    }
+  }, [state.currentStepIndex])
+
+  if (!currentStep) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <p className="text-3xl md:text-4xl font-bold text-slate-900">¡Lección completada!</p>
-          {onComplete && (
-            <button
-              type="button"
-              onClick={() => onCompleteRef.current?.(stars)}
-              className="mt-4 px-6 py-3 text-xl md:text-2xl bg-slate-800 text-white rounded-xl hover:bg-slate-900"
-            >
-              Finalizar
-            </button>
-          )}
         </div>
       </div>
     )
   }
-  if (!currentStep) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <p className="text-xl md:text-2xl text-slate-600">Cargando...</p>
-      </div>
-    )
+
+  // Stabilize the onAnswered callback to prevent infinite render loops in steps
+  const onStepAnswered = useCallback((res: any) => {
+    if (currentStep) {
+      handleAnswered(currentStep.id, res)
+    }
+  }, [currentStep?.id, handleAnswered])
+
+  const stepProps = {
+    step: currentStep as any,
+    onAnswered: onStepAnswered,
+    actionTrigger: state.actionTrigger,
+    isContinueEnabled: state.isContinueEnabled,
   }
 
-  const isReviewStep = !!currentStep.reviewSourceStepId
-  const previousAnswer = currentStep.reviewSourceStepId
-    ? state.answersByStepId[currentStep.reviewSourceStepId]
-    : state.answersByStepId[currentStep.id]
-
-  const isLastStepInEngine = state.currentStepIndex >= state.allSteps.length - 1
-  const isSummaryStepType = currentStep.stepType === "summary"
-  const shouldPassFullScreenProps = currentStep.fullScreen || isSummaryStepType
-  // Match and order steps always get nav props so they can show the same Salir/Continuar buttons as other slides
-  const shouldPassNavProps = shouldPassFullScreenProps || currentStep.stepType === "match" || currentStep.stepType === "order"
-
   const renderStep = () => {
-    const stepProps = {
-      step: currentStep,
-      onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any }) => {
-        handleAnswered(currentStep.id, result)
-      },
-      // For fullScreen steps, summary, and match steps: pass navigation so Salir/Continuar buttons show
-      // Order steps: Continuar disabled until user clicks Comprobar first (then enabled only if correct)
-      ...(shouldPassNavProps
-        ? {
-          onExit: onExit,
-          onContinue: handleContinue,
-          isContinueEnabled: state.isContinueEnabled,
-          isLastStep: isLastStepInEngine,
-          currentStepIndex: state.currentStepIndex,
-          totalSteps: state.allSteps.length,
-          streak,
-          stars,
-        }
-        : {}),
-    }
-
-    // Add previous answer data for review steps
-    const reviewProps = isReviewStep && previousAnswer ? { ...stepProps } : stepProps
-
     switch (currentStep.stepType) {
       case "info":
         return <InfoStep {...stepProps} />
-
       case "mcq":
-        return (
-          <MCQStep
-            key={currentStep.id}
-            {...stepProps}
-            selectedOptionId={undefined}
-          />
-        )
-
+        return <MCQStep {...stepProps} />
       case "multi_select":
-        return (
-          <MultiSelectStep
-            {...reviewProps}
-            selectedOptionIds={
-              isReviewStep && previousAnswer?.answerData?.selectedOptionIds
-                ? previousAnswer.answerData.selectedOptionIds
-                : undefined
-            }
-          />
-        )
-
+        return <MultiSelectStep {...stepProps} />
       case "true_false":
-        return (
-          <TrueFalseStep
-            {...reviewProps}
-            isReviewStep={isReviewStep}
-            selectedValue={
-              isReviewStep && previousAnswer?.answerData?.selectedValue !== undefined
-                ? previousAnswer.answerData.selectedValue
-                : undefined
-            }
-          />
-        )
-
+        return <TrueFalseStep {...stepProps} />
       case "order":
-        return (
-          <OrderStep
-            {...reviewProps}
-            isReviewStep={isReviewStep}
-            orderedItemIds={
-              isReviewStep && previousAnswer?.answerData?.orderedItemIds
-                ? previousAnswer.answerData.orderedItemIds
-                : undefined
-            }
-          />
-        )
-
+        return <OrderStep {...stepProps} />
       case "match":
-        return (
-          <MatchStep
-            {...reviewProps}
-            matches={
-              isReviewStep && previousAnswer?.answerData?.matches
-                ? previousAnswer.answerData.matches
-                : undefined
-            }
-          />
-        )
-
+        return <MatchStep {...stepProps} />
       case "fill_blanks":
-        return (
-          <FillBlanksStep
-            {...reviewProps}
-            blankAnswers={
-              isReviewStep && previousAnswer?.answerData?.blankAnswers
-                ? previousAnswer.answerData.blankAnswers
-                : undefined
-            }
-          />
-        )
-
+        return <FillBlanksStep {...stepProps} />
       case "image_choice":
-        return (
-          <ImageChoiceStep
-            {...reviewProps}
-            selectedImageId={
-              isReviewStep && previousAnswer?.answerData?.selectedImageId
-                ? previousAnswer.answerData.selectedImageId
-                : undefined
-            }
-          />
-        )
-
+        return <ImageChoiceStep {...stepProps} />
       case "summary":
         return <SummaryStep {...stepProps} />
-
-      case "review":
-        // Review type is virtual - review steps reuse the original step's type
-        // This case should rarely be hit, but if it is, render a message
-        return (
-          <div className="text-center p-8">
-            <p className="text-lg text-slate-300">
-              Review step - this should be handled by the step type above
-            </p>
-          </div>
-        )
-
       default:
-        return <div>Unknown step type: {(currentStep as any).stepType}</div>
+        return <div>Unknown step type: {currentStep.stepType}</div>
     }
   }
 
-  const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
-  const isSummaryStep = currentStep.stepType === "summary"
+  const shouldPassFullScreenProps = currentStep.fullScreen || isSummaryStep
 
-  // Full-screen mode: step fills height; content can scroll so buttons stay visible on small screens
+  const footerButtonLabel = (() => {
+    if (isSummaryStep || isLastStep) return "Finalizar lección"
+    if (!state.isContinueEnabled) {
+      if (currentStep.stepType === "info") return "QUIERO VER"
+      if (isAssessment) return "Comprobar"
+    }
+    return (currentStep as any).continueLabel || "Continuar"
+  })()
+
+  const footerButtonDisabled = !state.isContinueEnabled && !state.isActionEnabled && !isSummaryStep && !isLastStep
+
+  const renderFooter = () => (
+    <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+      {/* Back button - only shown if not on first step, not on summary, and not during review building */}
+      {!isSummaryStep && state.currentStepIndex > 0 ? (
+        <StickyFooterButton
+          variant="secondary"
+          onClick={handleBack}
+          style={{ minWidth: 100, fontSize: "1rem", fontWeight: 700, padding: "16px 24px" }}
+        >
+          Anterior
+        </StickyFooterButton>
+      ) : (
+        onExit && (
+          <StickyFooterButton
+            variant="outline"
+            onClick={onExit}
+            style={{ minWidth: 100, fontSize: "1rem", fontWeight: 700, padding: "16px 24px" }}
+          >
+            Salir
+          </StickyFooterButton>
+        )
+      )}
+
+      {/* Main Action Button */}
+      <StickyFooterButton
+        variant={isLastStep || isSummaryStep ? "success" : "blue"}
+        onClick={handleContinue}
+        disabled={footerButtonDisabled}
+        style={{ minWidth: 180, fontSize: "1.1rem", fontWeight: 700, padding: "16px 32px", flex: 1 }}
+      >
+        {footerButtonLabel}
+      </StickyFooterButton>
+    </div>
+  )
+
   if (shouldPassFullScreenProps) {
     return (
       <div
@@ -331,6 +284,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           minHeight: 0,
           height: "100%",
           overflow: "hidden",
+          background: "#f1f5f9"
         }}
       >
         <div
@@ -344,8 +298,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             justifyContent: "flex-start",
             alignItems: "stretch",
             paddingTop: CONTENT_PADDING_Y,
-            paddingBottom: 0,
+            paddingBottom: 110, // ROOM FOR FIXED FOOTER
             boxSizing: "border-box",
+            overflowY: "auto"
           }}
         >
           <div
@@ -367,6 +322,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             {renderStep()}
           </div>
         </div>
+
+        <StickyFooter>
+          {renderFooter()}
+        </StickyFooter>
       </div>
     )
   }
@@ -378,59 +337,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       streak={streak}
       stars={stars}
       showProgressBar={!onProgressChange}
-      footerContent={
-        <div
-          style={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 16,
-          }}
-        >
-          {onExit ? (
-            <StickyFooterButton
-              variant="outline"
-              onClick={onExit}
-              style={{
-                minHeight: 56,
-                minWidth: 140,
-                padding: "14px 24px",
-                fontSize: "1.125rem",
-              }}
-              className="rounded-xl"
-            >
-              Salir
-            </StickyFooterButton>
-          ) : (
-            <span style={{ minWidth: 0 }} aria-hidden />
-          )}
-          <StickyFooterButton
-            variant={isLastStep || isSummaryStep ? "success" : "blue"}
-            onClick={handleContinue}
-            disabled={!state.isContinueEnabled}
-            style={{
-              minHeight: 56,
-              minWidth: 160,
-              padding: "14px 24px",
-              fontSize: "1.125rem",
-            }}
-            className="rounded-xl"
-          >
-            {isSummaryStep || isLastStep ? "Siguiente lección" : ((currentStep as { continueLabel?: string }).continueLabel ?? "Continuar")}
-          </StickyFooterButton>
-        </div>
-      }
+      footerContent={renderFooter()}
     >
-      {isReviewStep && (
-        <div className="mb-4 p-3 bg-indigo-50 border border-indigo-200 rounded-xl">
-          <p className="text-xl md:text-2xl font-semibold text-indigo-900">
-            Otra oportunidad
-          </p>
-        </div>
-      )}
       {renderStep()}
     </LessonScreen>
   )
 }
-

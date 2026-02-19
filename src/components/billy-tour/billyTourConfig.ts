@@ -44,6 +44,20 @@ export const BILLY_TOUR_STEPS: BillyTourStep[] = [
     placement: "auto"
   },
   {
+    id: "tienda",
+    selector: '[data-bizen-tour-menu-item="tienda"]',
+    title: "Tienda",
+    body: "Aquí puedes canjear tus puntos por recompensas increíbles. ¡Sigue aprendiendo para ganar más!",
+    placement: "auto"
+  },
+  {
+    id: "impacto-social",
+    selector: '[data-bizen-tour-menu-item="impacto-social"]',
+    title: "Mi Impacto Social",
+    body: "Descubre cómo tu aprendizaje genera un cambio real. Aquí puedes ver las donaciones y proyectos sociales que apoyamos juntos.",
+    placement: "auto"
+  },
+  {
     id: "progreso",
     selector: '[data-bizen-tour="progreso"]',
     title: "Mi Progreso",
@@ -57,6 +71,13 @@ export const BILLY_TOUR_STEPS: BillyTourStep[] = [
     title: "Foro",
     body: "Es un espacio para preguntar, compartir ideas y aprender con otros. Aquí puedo pedir ayuda, resolver dudas y entrar a conversaciones sobre emprendimiento, finanzas, proyectos y retos.",
     image: "/rightmenuforo.png",
+    placement: "auto"
+  },
+  {
+    id: "puntos",
+    selector: '[data-bizen-tour-menu-item="puntos"]',
+    title: "Mis Puntos",
+    body: "Rastrea tus puntos acumulados, tu nivel y tus rachas. ¡Haz que cada lección cuente!",
     placement: "auto"
   },
   {

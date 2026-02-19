@@ -17,7 +17,7 @@ export default function MobileBottomNav() {
   const [showAuthDialog, setShowAuthDialog] = useState(false)
 
   // Protected routes that require authentication
-  const protectedRoutes = ['/progress', '/forum', '/profile', '/cuenta', '/configuracion']
+  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/puntos', '/impacto-social']
 
   const isActivePath = (path: string) => {
     if (path === '/courses') {
@@ -53,18 +53,18 @@ export default function MobileBottomNav() {
       icon: '🎮',
       path: '/simulador',
       protected: false
+    },
+    {
+      id: 'tienda',
+      label: 'Tienda',
+      icon: '🛍️',
+      path: '/tienda',
+      protected: false
     }
   ]
 
   // Additional navigation items for authenticated users
   const additionalNavItems = user ? [
-    {
-      id: 'progress',
-      label: 'Progreso',
-      icon: '🏆',
-      path: '/progress',
-      protected: true
-    },
     {
       id: 'forum',
       label: 'Foro',
@@ -111,6 +111,13 @@ export default function MobileBottomNav() {
       label: t.nav.impactoSocial,
       icon: "🌍",
       path: "/impacto-social",
+      protected: true
+    },
+    {
+      id: "puntos",
+      label: "Mis Puntos",
+      icon: "⭐",
+      path: "/puntos",
       protected: true
     }
   ] : []

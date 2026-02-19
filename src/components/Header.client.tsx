@@ -71,9 +71,9 @@ export default function Header({
       <div className="container header-inner">
         <a href="#top" className="brand" aria-label={`${brandName} inicio`}>
           {logoImage ? (
-            <img 
-              src={logoImage} 
-              alt={`${brandName} Logo`} 
+            <img
+              src={logoImage}
+              alt={`${brandName} Logo`}
               className="logo-image"
               width={36}
               height={36}
@@ -91,14 +91,14 @@ export default function Header({
           <a href={navPreciosUrl}>{navPreciosLabel}</a>
           <a href={navFaqUrl}>{navFaqLabel}</a>
           <a href={navContactoUrl}>{navContactoLabel}</a>
-          {user && <a href="/progress" style={{ color: '#0F62FE', fontWeight: 700 }}>Mi Progreso</a>}
+
         </nav>
 
         <div className="header-ctas">
           {user ? (
             // Authenticated user - show logout only
-            <button 
-              className="btn primary" 
+            <button
+              className="btn primary"
               onClick={async () => {
                 if (loggingOut) return
                 setLoggingOut(true)
@@ -151,12 +151,12 @@ export default function Header({
           <a href={navPreciosUrl} onClick={() => setOpen(false)}>{navPreciosLabel}</a>
           <a href={navFaqUrl} onClick={() => setOpen(false)}>{navFaqLabel}</a>
           <a href={navContactoUrl} onClick={() => setOpen(false)}>{navContactoLabel}</a>
-          {user && <a href="/progress" onClick={() => setOpen(false)} style={{ color: '#0F62FE', fontWeight: 700 }}>Mi Progreso</a>}
+
           <div className="mobile-nav__ctas">
             {user ? (
               // Authenticated user - show logout only
-              <button 
-                className="btn primary" 
+              <button
+                className="btn primary"
                 onClick={async () => {
                   if (loggingOut) return
                   setLoggingOut(true)

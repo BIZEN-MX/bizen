@@ -5,97 +5,63 @@ import Image from "next/image"
 import { InfoStepFields } from "@/types/lessonTypes"
 import { sharedStyles } from "../sharedStyles"
 import { CONTENT_MAX_WIDTH, CONTENT_GAP } from "../layoutConstants"
-// LessonProgressHeader now shown in LessonScreen for all slides
 
 interface InfoStepProps {
   step: InfoStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; continueLabel?: string; imageAlign?: "left" | "right" }
-  onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any }) => void
-  onExit?: () => void
-  onContinue?: () => void
+  onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => void
+  actionTrigger?: number
   isContinueEnabled?: boolean
-  currentStepIndex?: number
-  totalSteps?: number
-  streak?: number
-  stars?: 0 | 1 | 2 | 3
 }
 
 const FLASHCARD_BORDER_COLOR = "#2563eb" // Blue for flashcard box
 
-export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabled, currentStepIndex = 0, totalSteps = 1, streak = 0, stars = 3 }: InfoStepProps) {
-  const [isRevealed, setIsRevealed] = useState(false)
+export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnabled = false }: InfoStepProps) {
+  const [isRevealed, setIsRevealed] = useState(isContinueEnabled)
 
   useEffect(() => {
-    // Info steps are always completed immediately (no interaction needed). Run once on mount
-    // so we don't re-trigger when parent recreates onAnswered and cause an infinite loop.
-    onAnswered({ isCompleted: true })
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: call once on mount only
-  }, [])
+    if (isContinueEnabled) {
+      setIsRevealed(true)
+      return
+    }
 
-  // Full-screen mode: flashcard layout; content scrolls so buttons stay visible on small screens
-  if (step.fullScreen && onExit && onContinue) {
+    if (step.fullScreen) {
+      // Notify engine that this info step is ready to be revealed via footer button
+      onAnswered({ isCompleted: false, canAction: true })
+    } else {
+      // If NOT fullScreen, it's auto-completed
+      onAnswered({ isCompleted: true })
+    }
+  }, [step.fullScreen, onAnswered, isContinueEnabled])
+
+  const handleReveal = () => {
+    setIsRevealed(true)
+    onAnswered({ isCompleted: true })
+  }
+
+  // Handle action trigger from parent (footer button)
+  useEffect(() => {
+    if (actionTrigger > 0 && !isRevealed && step.fullScreen) {
+      handleReveal()
+    }
+  }, [actionTrigger])
+
+  // Full-screen mode: flashcard layout
+  if (step.fullScreen) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        justifyContent: 'space-between',
-        textAlign: 'center', 
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
         minHeight: 0,
         flex: 1,
-        padding: 'clamp(12px, 2vh, 2rem) 1.5rem',
+        padding: '0 1.5rem',
         background: '#f1f5f9',
         boxSizing: 'border-box',
         gap: 'clamp(12px, 2vh, 24px)',
       }}>
-        {/* Top section: Billy header + Quiero Ver button - shrink on small screens */}
-        <div style={{
-          width: '100%',
-          maxWidth: CONTENT_MAX_WIDTH,
-          display: 'flex',
-          gap: '0.75rem',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          flexShrink: 0,
-        }}>
-          {/* Billy header */}
-          <div style={{
-            padding: '16px 32px',
-            fontSize: 'clamp(16px, 2.5vw, 20px)',
-            fontWeight: 600,
-            color: '#1e293b',
-            background: '#ffffff',
-            border: '3px solid #1e293b',
-            borderRadius: '16px',
-            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-            flex: '1 1 auto',
-            minWidth: '200px',
-          }}>
-            BILLY TE QUIERE ENSEÑAR ALGO
-          </div>
-
-          {/* Quiero Ver button */}
-          <button
-            onClick={() => setIsRevealed(true)}
-            disabled={isRevealed}
-            style={{
-              padding: '16px 48px',
-              fontSize: 'clamp(18px, 3vw, 24px)',
-              fontWeight: 600,
-              color: '#ffffff',
-              background: isRevealed ? '#94a3b8' : '#2563eb',
-              border: 'none',
-              borderRadius: '16px',
-              cursor: isRevealed ? 'default' : 'pointer',
-              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-              minWidth: '180px',
-            }}
-          >
-            QUIERO VER
-          </button>
-        </div>
-
-        {/* Flashcard content box - scrollable so buttons stay visible on small screens */}
+        {/* Flashcard content box */}
         <div style={{
           flex: 1,
           minHeight: 0,
@@ -113,7 +79,6 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
           WebkitOverflowScrolling: 'touch',
         }}>
           {!isRevealed ? (
-            // Placeholder before reveal – hero character only (no "Flashcard" label)
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Image
                 src="/hero4.png"
@@ -122,9 +87,19 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
                 height={120}
                 style={{ width: 120, height: 120, objectFit: 'contain' }}
               />
+              <div style={{
+                marginTop: '1.5rem',
+                padding: '12px 24px',
+                background: '#f8fafc',
+                borderRadius: '12px',
+                border: '2px dashed #cbd5e1'
+              }}>
+                <p style={{ margin: 0, fontSize: '1.1rem', color: '#64748b', fontWeight: 500 }}>
+                  Pulsa "QUIERO VER" en el botón de abajo
+                </p>
+              </div>
             </div>
           ) : (
-            // Content after reveal – rule: image MUST be left or right of content (never above/below)
             (() => {
               const align = (step.imageAlign === 'left' || step.imageAlign === 'right') ? step.imageAlign : 'right'
               const imageBlock = step.imageUrl ? (
@@ -185,62 +160,11 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
             })()
           )}
         </div>
-
-        {/* Bottom navigation buttons - always visible; safe area on notched devices */}
-        {isRevealed && (
-          <div style={{ 
-            width: '100%', 
-            maxWidth: CONTENT_MAX_WIDTH,
-            display: 'flex', 
-            gap: 'clamp(0.75rem, 2vw, 1.5rem)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexShrink: 0,
-            paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
-            paddingTop: '0.5rem',
-          }}>
-            <button
-              onClick={onExit}
-              style={{
-                padding: '16px 48px',
-                fontSize: 'clamp(18px, 3.5vw, 24px)',
-                fontWeight: 500,
-                color: '#2563eb',
-                background: '#f1f5f9',
-                border: '3px solid #1e293b',
-                borderRadius: '9999px',
-                cursor: 'pointer',
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                minWidth: '140px',
-              }}
-            >
-              Salir
-            </button>
-            <button
-              onClick={onContinue}
-              disabled={!isContinueEnabled}
-              style={{
-                padding: '16px 48px',
-                fontSize: 'clamp(18px, 3.5vw, 24px)',
-                fontWeight: 600,
-                color: '#ffffff',
-                background: isContinueEnabled ? '#2563eb' : '#94a3b8',
-                border: 'none',
-                borderRadius: '9999px',
-                cursor: isContinueEnabled ? 'pointer' : 'not-allowed',
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                minWidth: '180px',
-              }}
-            >
-              {step.continueLabel || "Continuar"}
-            </button>
-          </div>
-        )}
       </div>
     )
   }
 
-  // Regular mode: image MUST be left or right of content (never above/below)
+  // Regular mode
   const align = (step.imageAlign === "left" || step.imageAlign === "right") ? step.imageAlign : "right"
   const textBlock = (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minWidth: 0 }}>
@@ -285,4 +209,3 @@ export function InfoStep({ step, onAnswered, onExit, onContinue, isContinueEnabl
     </div>
   )
 }
-

@@ -7,14 +7,16 @@ import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 
 interface FillBlanksStepProps {
   step: FillBlanksStepFields & { id: string; title?: string; description?: string }
-  onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any }) => void
+  onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => void
   blankAnswers?: Record<string, string>
+  actionTrigger?: number
 }
 
 export function FillBlanksStep({
   step,
   onAnswered,
   blankAnswers: initialAnswers = {},
+  actionTrigger = 0,
 }: FillBlanksStepProps) {
   const [blankAnswers, setBlankAnswers] = useState<Record<string, string>>(initialAnswers)
   const [hasEvaluated, setHasEvaluated] = useState(false)
@@ -28,36 +30,53 @@ export function FillBlanksStep({
       .filter((part) => part.type === "blank")
       .map((part) => (part.type === "blank" ? part.id : ""))
 
-    // Check if all blanks are filled
-    const allFilled = blankIds.every((id) => blankAnswers[id])
-    if (allFilled && !hasEvaluated) {
-      const isCorrect = blankIds.every((id) => {
-        const part = step.textParts.find(
-          (p) => p.type === "blank" && p.id === id
-        ) as Extract<typeof step.textParts[number], { type: "blank" }>
-        return part && blankAnswers[id] === part.correctOptionId
-      })
+    // Notify engine about completion state
+    const allFilled = blankIds.every((id) => !!blankAnswers[id])
+    onAnsweredRef.current({
+      isCompleted: false,
+      canAction: allFilled && !hasEvaluated
+    })
+  }, [blankAnswers, hasEvaluated, step.textParts])
 
-      setHasEvaluated(true)
+  const handleCheck = () => {
+    const blankIds = step.textParts
+      .filter((part) => part.type === "blank")
+      .map((part) => (part.type === "blank" ? part.id : ""))
 
-      // Play sound only once
-      if (!hasPlayedSound.current) {
-        if (isCorrect) {
-          playCorrectSound()
-        } else {
-          playIncorrectSound()
-        }
-        hasPlayedSound.current = true
-      }
+    const allFilled = blankIds.every((id) => !!blankAnswers[id])
+    if (!allFilled || hasEvaluated) return
 
-      onAnsweredRef.current({
-        isCompleted: true,
-        isCorrect,
-        answerData: { blankAnswers: { ...blankAnswers } },
-      })
+    const isCorrect = blankIds.every((id) => {
+      const part = step.textParts.find(
+        (p) => p.type === "blank" && p.id === id
+      ) as Extract<typeof step.textParts[number], { type: "blank" }>
+      return part && blankAnswers[id] === part.correctOptionId
+    })
+
+    setHasEvaluated(true)
+    if (!hasPlayedSound.current) {
+      if (isCorrect) playCorrectSound()
+      else playIncorrectSound()
+      hasPlayedSound.current = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onAnswered omitted to avoid infinite loop
-  }, [blankAnswers, step.textParts, hasEvaluated])
+
+    onAnsweredRef.current({
+      isCompleted: true,
+      isCorrect,
+      answerData: { blankAnswers: { ...blankAnswers } },
+    })
+  }
+
+  useEffect(() => {
+    const blankIds = step.textParts
+      .filter((part) => part.type === "blank")
+      .map((part) => (part.type === "blank" ? part.id : ""))
+    const allFilled = blankIds.every((id) => !!blankAnswers[id])
+
+    if (actionTrigger && actionTrigger > 0 && allFilled && !hasEvaluated) {
+      handleCheck()
+    }
+  }, [actionTrigger])
 
   const handleBlankChange = (blankId: string, optionId: string) => {
     if (!hasEvaluated) {
@@ -73,7 +92,7 @@ export function FillBlanksStep({
       (p) => p.type === "blank" && p.id === blankId
     ) as Extract<typeof step.textParts[number], { type: "blank" }>
     if (!part) return ""
-    
+
     const isCorrect = blankAnswers[blankId] === part.correctOptionId
     return isCorrect
       ? "bg-emerald-600/25 border-emerald-500 ring-2 ring-emerald-400"
@@ -95,16 +114,15 @@ export function FillBlanksStep({
               const selectedOptionId = blankAnswers[part.id]
               const partObj = part as Extract<typeof step.textParts[number], { type: "blank" }>
               const isCorrect = hasEvaluated && selectedOptionId === partObj.correctOptionId
-              
+
               return (
                 <span key={part.id} className="inline-block mx-1">
                   <select
                     value={selectedOptionId || ""}
                     onChange={(e) => handleBlankChange(part.id, e.target.value)}
                     disabled={hasEvaluated}
-                    className={`${sharedStyles.blankInput} ${getBlankStyle(part.id)} transition-all duration-300 ${
-                      hasEvaluated ? 'cursor-default' : ''
-                    }`}
+                    className={`${sharedStyles.blankInput} ${getBlankStyle(part.id)} transition-all duration-300 ${hasEvaluated ? 'cursor-default' : ''
+                      }`}
                   >
                     <option value="">---</option>
                     {step.options.map((option) => (

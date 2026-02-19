@@ -7,14 +7,16 @@ import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 
 interface MultiSelectStepProps {
   step: MultiSelectStepFields & { id: string; title?: string; description?: string }
-  onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any }) => void
+  onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => void
   selectedOptionIds?: string[]
+  actionTrigger?: number
 }
 
 export function MultiSelectStep({
   step,
   onAnswered,
   selectedOptionIds: initialSelected = [],
+  actionTrigger = 0,
 }: MultiSelectStepProps) {
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelected)
   const [hasEvaluated, setHasEvaluated] = useState(false)
@@ -23,37 +25,44 @@ export function MultiSelectStep({
   onAnsweredRef.current = onAnswered
 
   useEffect(() => {
-    // Check if at least one option is selected
-    if (selectedOptionIds.length > 0 && !hasEvaluated) {
-      const allSelectedCorrect = selectedOptionIds.every((id) => {
-        const option = step.options.find((opt) => opt.id === id)
-        return option?.isCorrect ?? false
-      })
-      const allCorrectSelected = step.options
-        .filter((opt) => opt.isCorrect)
-        .every((opt) => selectedOptionIds.includes(opt.id))
-      const isCorrect = allSelectedCorrect && allCorrectSelected
+    // Notify engine about selection state
+    onAnsweredRef.current({
+      isCompleted: false,
+      canAction: selectedOptionIds.length > 0 && !hasEvaluated
+    })
+  }, [selectedOptionIds, hasEvaluated])
 
-      setHasEvaluated(true)
+  const handleCheck = () => {
+    if (selectedOptionIds.length === 0 || hasEvaluated) return
 
-      // Play sound only once
-      if (!hasPlayedSound.current) {
-        if (isCorrect) {
-          playCorrectSound()
-        } else {
-          playIncorrectSound()
-        }
-        hasPlayedSound.current = true
-      }
+    const allSelectedCorrect = selectedOptionIds.every((id) => {
+      const option = step.options.find((opt) => opt.id === id)
+      return option?.isCorrect ?? false
+    })
+    const allCorrectSelected = step.options
+      .filter((opt) => opt.isCorrect)
+      .every((opt) => selectedOptionIds.includes(opt.id))
+    const isCorrect = allSelectedCorrect && allCorrectSelected
 
-      onAnsweredRef.current({
-        isCompleted: true,
-        isCorrect,
-        answerData: { selectedOptionIds: [...selectedOptionIds] },
-      })
+    setHasEvaluated(true)
+    if (!hasPlayedSound.current) {
+      if (isCorrect) playCorrectSound()
+      else playIncorrectSound()
+      hasPlayedSound.current = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onAnswered omitted to avoid infinite loop
-  }, [selectedOptionIds, step.options, hasEvaluated])
+
+    onAnsweredRef.current({
+      isCompleted: true,
+      isCorrect,
+      answerData: { selectedOptionIds: [...selectedOptionIds] },
+    })
+  }
+
+  useEffect(() => {
+    if (actionTrigger > 0 && selectedOptionIds.length > 0 && !hasEvaluated) {
+      handleCheck()
+    }
+  }, [actionTrigger])
 
   const handleToggle = (optionId: string) => {
     if (hasEvaluated) return // Don't allow changes after evaluation
@@ -67,7 +76,7 @@ export function MultiSelectStep({
     if (!hasEvaluated) {
       return isSelected ? sharedStyles.optionSelected : ""
     }
-    
+
     // Show feedback colors
     if (isSelected && option.isCorrect) {
       return "bg-emerald-600/25 border-emerald-500 ring-2 ring-emerald-400"
@@ -94,9 +103,8 @@ export function MultiSelectStep({
               key={option.id}
               onClick={() => handleToggle(option.id)}
               disabled={hasEvaluated}
-              className={`${sharedStyles.option} ${getOptionStyle(option)} transition-all duration-300 ${
-                hasEvaluated ? 'cursor-default' : 'cursor-pointer'
-              }`}
+              className={`${sharedStyles.option} ${getOptionStyle(option)} transition-all duration-300 ${hasEvaluated ? 'cursor-default' : 'cursor-pointer'
+                }`}
             >
               <div className="flex items-center justify-between w-full">
                 <span className="text-xl md:text-2xl lg:text-3xl text-left flex-1">{option.label}</span>

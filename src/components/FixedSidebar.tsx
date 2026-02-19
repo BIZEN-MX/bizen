@@ -19,7 +19,9 @@ import {
   User,
   Settings,
   Share2,
-  Heart
+  Heart,
+  ShoppingBag,
+  Star
 } from "lucide-react"
 
 export default function FixedSidebar() {
@@ -141,7 +143,7 @@ export default function FixedSidebar() {
   const isOnLessonPage = pathname?.includes('/learn/')
 
   // Protected routes that require authentication
-  const protectedRoutes = ['/progress', '/forum', '/profile', '/cuenta', '/configuracion']
+  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/puntos', '/tienda', '/impacto-social']
 
   const navigateTo = (path: string) => {
     // Check if route requires auth and user is not authenticated
@@ -206,12 +208,13 @@ export default function FixedSidebar() {
   const retoDiarioActive = isActivePath("/reto-diario")
   const businessLabActive = isActivePath("/business-lab")
   const simuladorActive = isActivePath("/simulador")
-  const progressActive = isActivePath("/progress")
   const forumActive = isActivePath("/forum")
 
   const profileActive = isActivePath("/profile")
   const settingsActive = isActivePath("/configuracion")
   const impactoSocialActive = isActivePath("/impacto-social")
+  const puntosActive = isActivePath("/puntos")
+  const tiendaActive = isActivePath("/tienda")
 
   const iconSize = 24
 
@@ -521,6 +524,84 @@ export default function FixedSidebar() {
                 <span className="nav-item-label">Simulador</span>
               </button>
 
+              <button
+                data-bizen-tour-menu-item="tienda"
+                onClick={() => navigateTo("/tienda")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "12px",
+                  background: isCompactSidebar ? "transparent" : (tiendaActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: 14,
+                  fontWeight: tiendaActive ? 700 : 600,
+                  textAlign: "left",
+                  color: tiendaActive ? "#93C5FD" : "#fff",
+                  ...compactButtonOverrides(tiendaActive)
+                }}
+                onMouseEnter={(e) => {
+                  if (!isCompactSidebar) {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                    e.currentTarget.style.color = "#93C5FD"
+                    e.currentTarget.style.transform = "translateX(-4px)"
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isCompactSidebar) {
+                    e.currentTarget.style.background = tiendaActive ? "rgba(255,255,255,0.15)" : "transparent"
+                    e.currentTarget.style.color = tiendaActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.transform = "translateX(0)"
+                  }
+                }}
+              >
+                <ShoppingBag size={iconSize} strokeWidth={tiendaActive ? 2.5 : 2} />
+                <span className="nav-item-label">Tienda</span>
+              </button>
+
+              <button
+                data-bizen-tour-menu-item="impacto-social"
+                onClick={() => navigateTo("/impacto-social")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "12px",
+                  background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: 14,
+                  fontWeight: impactoSocialActive ? 700 : 600,
+                  textAlign: "left",
+                  color: impactoSocialActive ? "#93C5FD" : "#fff",
+                  ...compactButtonOverrides(impactoSocialActive)
+                }}
+                onMouseEnter={(e) => {
+                  if (!isCompactSidebar) {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                    e.currentTarget.style.color = "#93C5FD"
+                    e.currentTarget.style.transform = "translateX(-4px)"
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isCompactSidebar) {
+                    e.currentTarget.style.background = impactoSocialActive ? "rgba(255,255,255,0.15)" : "transparent"
+                    e.currentTarget.style.color = impactoSocialActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.transform = "translateX(0)"
+                  }
+                }}
+              >
+                <Heart size={iconSize} strokeWidth={impactoSocialActive ? 2.5 : 2} />
+                <span className="nav-item-label">{t.nav.impactoSocial}</span>
+              </button>
+
               {/* Only show these navigation items when mounted and user is authenticated */}
               {mounted && user && (
                 <>
@@ -635,62 +716,26 @@ export default function FixedSidebar() {
                           onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
                           onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
                         >
-                          <button
-                            data-bizen-tour-menu-item="progreso"
-                            onClick={() => navigateTo("/progress")}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                              padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (progressActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                              border: "none",
-                              borderRadius: 8,
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif",
-                              fontSize: 13,
-                              fontWeight: progressActive ? 700 : 600,
-                              textAlign: "left",
-                              color: progressActive ? "#93C5FD" : "#fff",
-                              ...compactButtonOverrides(progressActive)
-                            }}
-                            onMouseEnter={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                                e.currentTarget.style.color = "#93C5FD"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = progressActive ? "rgba(255,255,255,0.15)" : "transparent"
-                                e.currentTarget.style.color = progressActive ? "#93C5FD" : "#fff"
-                              }
-                            }}
-                          >
-                            <BarChart2 size={20} strokeWidth={progressActive ? 2.5 : 2} />
-                            <span className="nav-item-label">{t.nav.myProgress}</span>
-                          </button>
 
                           <button
-                            data-bizen-tour-menu-item="impacto-social"
-                            onClick={() => navigateTo("/impacto-social")}
+                            data-bizen-tour-menu-item="puntos"
+                            onClick={() => navigateTo("/puntos")}
                             style={{
                               display: "flex",
                               alignItems: "center",
                               gap: 12,
                               padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                              background: isCompactSidebar ? "transparent" : (puntosActive ? "rgba(255,255,255,0.15)" : "transparent"),
                               border: "none",
                               borderRadius: 8,
                               cursor: "pointer",
                               transition: "all 0.2s ease",
                               fontFamily: "'Montserrat', sans-serif",
                               fontSize: 13,
-                              fontWeight: impactoSocialActive ? 700 : 600,
+                              fontWeight: puntosActive ? 700 : 600,
                               textAlign: "left",
-                              color: impactoSocialActive ? "#93C5FD" : "#fff",
-                              ...compactButtonOverrides(impactoSocialActive)
+                              color: puntosActive ? "#93C5FD" : "#fff",
+                              ...compactButtonOverrides(puntosActive)
                             }}
                             onMouseEnter={(e) => {
                               if (!isCompactSidebar) {
@@ -700,13 +745,13 @@ export default function FixedSidebar() {
                             }}
                             onMouseLeave={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = impactoSocialActive ? "rgba(255,255,255,0.15)" : "transparent"
-                                e.currentTarget.style.color = impactoSocialActive ? "#93C5FD" : "#fff"
+                                e.currentTarget.style.background = puntosActive ? "rgba(255,255,255,0.15)" : "transparent"
+                                e.currentTarget.style.color = puntosActive ? "#93C5FD" : "#fff"
                               }
                             }}
                           >
-                            <Heart size={20} strokeWidth={impactoSocialActive ? 2.5 : 2} />
-                            <span className="nav-item-label">{t.nav.impactoSocial}</span>
+                            <Star size={20} strokeWidth={puntosActive ? 2.5 : 2} />
+                            <span className="nav-item-label">Mis Puntos</span>
                           </button>
 
 

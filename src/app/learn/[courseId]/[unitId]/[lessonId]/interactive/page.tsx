@@ -200,7 +200,7 @@ export default function InteractiveLessonPage() {
             stars={progress.stars}
           />
         </div>
-        {/* Content area - takes remaining space so footer stays in view */}
+        {/* Content area - takes full space */}
         <div style={{ flex: 1, minHeight: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
           <LessonEngine
             lessonSteps={lessonSteps}
@@ -209,14 +209,6 @@ export default function InteractiveLessonPage() {
             onProgressChange={setProgress}
           />
         </div>
-        {/* Footer nav - in flow at bottom, always visible */}
-        <FooterNav
-          onSkip={handleExit}
-          onContinue={() => {}}
-          disabledContinue={false}
-          skipLabel="Skip"
-          continueLabel="Continue"
-        />
       </div>
 
       {/* Exit confirmation – same as sidebar when leaving lesson via "Courses" */}

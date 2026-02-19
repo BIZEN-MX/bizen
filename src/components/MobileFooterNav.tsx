@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import Image from "next/image"
+import { ShoppingBag, Star, Heart } from "lucide-react"
 
 export default function MobileFooterNav() {
   const router = useRouter()
@@ -16,7 +17,7 @@ export default function MobileFooterNav() {
   const [showProfilePanel, setShowProfilePanel] = useState(false)
 
   const isOnLessonPage = pathname?.includes('/learn/')
-  const protectedRoutes = ['/progress', '/forum', '/profile', '/cuenta', '/configuracion']
+  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/puntos', '/impacto-social']
 
   const navigateTo = (path: string) => {
     if (!user && protectedRoutes.some(route => path.startsWith(route))) {
@@ -55,9 +56,8 @@ export default function MobileFooterNav() {
   // Business Lab hidden for now — add back { path: "/business-lab", ... } to show again
   const navItems = [
     { path: "/courses", icon: "/rightmenucourses.png", active: isActivePath("/courses") },
-    // { path: "/business-lab", icon: "/rightmenubusinesslab.png", active: isActivePath("/business-lab") },
     { path: "/simulador", icon: "/rightmenusimulators.png", active: isActivePath("/simulador") },
-    { path: "/progress", icon: "/rightmenuprogress.png", active: isActivePath("/progress") },
+    { path: "/tienda", icon: "tienda", active: isActivePath("/tienda"), lucideIcon: ShoppingBag },
     { path: "/forum", icon: "/rightmenuforo.png", active: isActivePath("/forum") },
     { path: "/profile", icon: "avatar", active: isActivePath("/profile") || isActivePath("/configuracion"), isProfileButton: true },
   ]
@@ -162,6 +162,8 @@ export default function MobileFooterNav() {
                     size={30}
                   />
                 </div>
+              ) : item.icon === "tienda" && item.lucideIcon ? (
+                <item.lucideIcon size={24} color={item.active ? "#0F62FE" : "#1e3a5f"} />
               ) : item.icon === "avatar" ? (
                 <Image
                   src="/rightmenusettings.png"
@@ -274,6 +276,54 @@ export default function MobileFooterNav() {
                 }}
               >
                 <span>Configuración</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfilePanel(false)
+                  navigateTo("/puntos")
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "16px",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: "#0f172a",
+                  width: "100%",
+                  textAlign: "left"
+                }}
+              >
+                <Star size={20} color="#0F62FE" />
+                <span>Mis Puntos</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfilePanel(false)
+                  navigateTo("/impacto-social")
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "16px",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: "#0f172a",
+                  width: "100%",
+                  textAlign: "left"
+                }}
+              >
+                <Heart size={20} color="#0F62FE" />
+                <span>Mi Impacto Social</span>
               </button>
 
               <button

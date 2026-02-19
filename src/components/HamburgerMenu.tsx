@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-import Card from "@/components/ui/Card"
+import Card from "@/components/ui/card"
 
 interface DashboardStats {
   coursesEnrolled: number
@@ -270,36 +270,6 @@ export default function HamburgerMenu() {
                 <span>Asignaciones</span>
               </button>
 
-              <button
-                onClick={() => navigateTo("/progress")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "16px",
-                  background: "#F9FAFB",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: 12,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 15,
-                  fontWeight: 600
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#0F62FE"
-                  e.currentTarget.style.color = "#fff"
-                  e.currentTarget.style.transform = "translateX(4px)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#F9FAFB"
-                  e.currentTarget.style.color = "#000"
-                  e.currentTarget.style.transform = "translateX(0)"
-                }}
-              >
-                <span style={{ fontSize: 24 }}>🏆</span>
-                <span>Mi Progreso</span>
-              </button>
 
               <button
                 onClick={() => navigateTo("/impacto-social")}
