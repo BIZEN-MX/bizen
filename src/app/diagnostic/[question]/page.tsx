@@ -153,9 +153,12 @@ function readStoredQuizState(): StoredQuizState | null {
 export default function DiagnosticQuestionPage() {
   const router = useRouter()
   const params = useParams()
+
   const [userAnswers, setUserAnswers] = React.useState<Record<string, QuizOption["value"] | undefined>>({})
   const [quizSubmitted, setQuizSubmitted] = React.useState(false)
   const [userInfo, setUserInfo] = React.useState<UserInfo | undefined>(undefined)
+  const [tempUserInfo, setTempUserInfo] = React.useState<UserInfo>({ email: "", fullName: "", institution: "" })
+  const [userInfoError, setUserInfoError] = React.useState("")
   const [isStorageReady, setIsStorageReady] = React.useState(false)
 
   const totalQuestions = diagnosticQuiz.length
@@ -172,6 +175,9 @@ export default function DiagnosticQuestionPage() {
       setUserAnswers(stored.userAnswers)
       setQuizSubmitted(stored.quizSubmitted)
       setUserInfo(stored.userInfo)
+      if (stored.userInfo) {
+        setTempUserInfo(stored.userInfo)
+      }
     }
     setIsStorageReady(true)
   }, [])
@@ -234,18 +240,20 @@ export default function DiagnosticQuestionPage() {
     }
   }, [quizIncomplete, router, userInfo, userAnswers])
 
-  const handleStartQuiz = (info: UserInfo) => {
-    setUserInfo(info)
+  const handleStartQuiz = () => {
+    if (!tempUserInfo.email || !tempUserInfo.fullName || !tempUserInfo.institution) {
+      setUserInfoError("Por favor completa todos los campos.")
+      return
+    }
+    if (!tempUserInfo.email.includes("@")) {
+      setUserInfoError("Por favor ingresa un correo válido.")
+      return
+    }
+    setUserInfo(tempUserInfo)
+    setUserInfoError("")
   }
 
-  // If userInfo is missing, show the intro form
-  if (isStorageReady && !userInfo) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <ExamIntro onStart={handleStartQuiz} />
-      </div>
-    )
-  }
+  if (!isStorageReady) return null
 
   return (
     <div
@@ -274,7 +282,7 @@ export default function DiagnosticQuestionPage() {
         }}
       >
         <LessonProgressHeader
-          currentStepIndex={currentPage - 1}
+          currentStepIndex={userInfo ? currentPage - 1 : 0}
           totalSteps={totalQuestions}
           streak={0}
           stars={3}
@@ -297,13 +305,21 @@ export default function DiagnosticQuestionPage() {
           boxSizing: "border-box",
         }}
       >
-        <div style={{ width: "100%", maxWidth: CONTENT_MAX_WIDTH }}>
-          <QuizQuestionCard
-            question={currentQuestion}
-            selectedValue={userAnswers[currentQuestion.id]}
-            onSelect={(value) => handleQuizAnswer(currentQuestion.id, value)}
-            showResults={quizSubmitted}
-          />
+        <div style={{ width: "100%", maxWidth: userInfo ? CONTENT_MAX_WIDTH : 1200 }}>
+          {!userInfo ? (
+            <ExamIntro
+              userInfo={tempUserInfo}
+              onChange={setTempUserInfo}
+              error={userInfoError}
+            />
+          ) : (
+            <QuizQuestionCard
+              question={currentQuestion}
+              selectedValue={userAnswers[currentQuestion.id]}
+              onSelect={(value) => handleQuizAnswer(currentQuestion.id, value)}
+              showResults={quizSubmitted}
+            />
+          )}
         </div>
       </main>
 
@@ -324,41 +340,53 @@ export default function DiagnosticQuestionPage() {
         <div
           style={{
             width: "100%",
-            maxWidth: CONTENT_MAX_WIDTH,
+            maxWidth: 1200, // Widened footer container
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            gap: 16,
+            gap: 24, // Increased gap
           }}
         >
           <StickyFooterButton
             variant="outline"
             onClick={() => {
-              if (currentPage === 1) {
+              if (!userInfo || currentPage === 1) {
                 router.push("/")
               } else {
                 goToPage(currentPage - 1)
               }
             }}
             style={{
-              minWidth: 140,
+              minWidth: 200, // Wider buttons
               fontSize: "1.1rem",
-              fontWeight: 700,
+              fontWeight: 800,
             }}
           >
-            {currentPage === 1 ? "Salir" : "Anterior"}
+            {!userInfo || currentPage === 1 ? "Salir" : "Anterior"}
           </StickyFooterButton>
 
-          <div style={{ display: "flex", gap: 12 }}>
-            {currentPage < totalQuestions ? (
+          <div style={{ display: "flex", gap: 16 }}>
+            {!userInfo ? (
+              <StickyFooterButton
+                variant="blue"
+                onClick={handleStartQuiz}
+                style={{
+                  minWidth: 260, // Wider "Start" button
+                  fontSize: "1.2rem",
+                  fontWeight: 900,
+                }}
+              >
+                Empezar examen
+              </StickyFooterButton>
+            ) : currentPage < totalQuestions ? (
               <StickyFooterButton
                 variant="blue"
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={userAnswers[currentQuestion.id] === undefined}
                 style={{
-                  minWidth: 160,
-                  fontSize: "1.1rem",
-                  fontWeight: 700,
+                  minWidth: 220, // Wider buttons
+                  fontSize: "1.2rem",
+                  fontWeight: 800,
                 }}
               >
                 Siguiente
@@ -369,12 +397,12 @@ export default function DiagnosticQuestionPage() {
                 onClick={handleQuizSubmit}
                 disabled={quizIncomplete || quizSubmitted}
                 style={{
-                  minWidth: 180,
-                  fontSize: "1.1rem",
-                  fontWeight: 700,
+                  minWidth: 240, // Wider "Finish" button
+                  fontSize: "1.2rem",
+                  fontWeight: 900,
                 }}
               >
-                {quizSubmitted ? "Quiz Finalizado" : "Finalizar"}
+                {quizSubmitted ? "Quiz Finalizado" : "Finalizar examen"}
               </StickyFooterButton>
             )}
           </div>

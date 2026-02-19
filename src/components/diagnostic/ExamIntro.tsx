@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React from "react"
 
 export type UserInfo = {
   email: string
@@ -9,101 +9,195 @@ export type UserInfo = {
 }
 
 type ExamIntroProps = {
-  onStart: (info: UserInfo) => void
+  userInfo: UserInfo
+  onChange: (info: UserInfo) => void
+  error?: string
 }
 
-export function ExamIntro({ onStart }: ExamIntroProps) {
-  const [email, setEmail] = useState("")
-  const [fullName, setFullName] = useState("")
-  const [institution, setInstitution] = useState("")
-  const [error, setError] = useState("")
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email || !fullName || !institution) {
-      setError("Por favor completa todos los campos.")
-      return
-    }
-    if (!email.includes("@")) {
-      setError("Por favor ingresa un correo válido.")
-      return
-    }
-    onStart({ email, fullName, institution })
+export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
+  const handleChange = (field: keyof UserInfo, value: string) => {
+    onChange({ ...userInfo, [field]: value })
   }
 
   return (
-    <div className="exam-intro w-full max-w-xl mx-auto space-y-8 p-6">
-      <div className="text-center space-y-3">
-        <h2 className="text-3xl font-bold text-gray-900">
-          Examen diagnóstico
-        </h2>
-        <p className="text-gray-600 text-lg">
-          Antes de comenzar, por favor completa tu información.
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "4rem",
+        width: "100%",
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: "0 2rem",
+        flexWrap: "wrap",
+        boxSizing: "border-box"
+      }}
+    >
+      {/* Left Column: Text */}
+      <div style={{ flex: "1 1 450px", textAlign: "left" }}>
+        <span
+          style={{
+            fontSize: "14px",
+            fontWeight: 700,
+            color: "#6366f1",
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            display: "block",
+            marginBottom: "1rem"
+          }}
+        >
+          ¡Bienvenido a BIZEN!
+        </span>
+        <h1
+          style={{
+            fontSize: "clamp(36px, 6vw, 56px)",
+            fontWeight: 900,
+            color: "#1e293b",
+            lineHeight: 1.05,
+            marginBottom: "1.5rem",
+            letterSpacing: "-0.02em"
+          }}
+        >
+          Examen <br />
+          <span style={{ color: "#2563eb" }}>Diagnóstico</span>
+        </h1>
+        <p
+          style={{
+            fontSize: "clamp(18px, 2vw, 20px)",
+            color: "#64748b",
+            lineHeight: 1.6,
+            maxWidth: "450px"
+          }}
+        >
+          Antes de comenzar tu aventura, necesitamos conocerte un poco mejor. Completa tu información para personalizar tu experiencia de aprendizaje.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl border-2 border-slate-200 shadow-sm">
-        <div className="space-y-4">
+      {/* Right Column: Form */}
+      <div
+        style={{
+          flex: "1 1 400px",
+          background: "#fff",
+          padding: "3rem",
+          borderRadius: "40px",
+          border: "2px solid #e2e8f0",
+          boxShadow: "0 20px 50px -12px rgba(0, 0, 0, 0.08)"
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
           <div>
-            <label htmlFor="fullName" className="block text-sm font-semibold text-slate-700 mb-2">
+            <label
+              htmlFor="fullName"
+              style={{ display: "block", fontSize: "15px", fontWeight: 700, color: "#475569", marginBottom: "0.6rem" }}
+            >
               Nombre Completo
             </label>
             <input
               id="fullName"
               type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              value={userInfo.fullName}
+              onChange={(e) => handleChange("fullName", e.target.value)}
               placeholder="Juan Pérez"
-              className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none transition shadow-sm"
+              style={{
+                width: "100%",
+                padding: "1.1rem 1.4rem",
+                borderRadius: "18px",
+                border: "2.5px solid #e2e8f0",
+                fontSize: "17px",
+                outline: "none",
+                transition: "all 0.2s",
+                boxSizing: "border-box",
+                fontFamily: "inherit"
+              }}
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">
+            <label
+              htmlFor="email"
+              style={{ display: "block", fontSize: "15px", fontWeight: 700, color: "#475569", marginBottom: "0.6rem" }}
+            >
               Correo Electrónico
             </label>
             <input
               id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={userInfo.email}
+              onChange={(e) => handleChange("email", e.target.value)}
               placeholder="juan@ejemplo.com"
-              className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none transition shadow-sm"
+              style={{
+                width: "100%",
+                padding: "1.1rem 1.4rem",
+                borderRadius: "18px",
+                border: "2.5px solid #e2e8f0",
+                fontSize: "17px",
+                outline: "none",
+                transition: "all 0.2s",
+                boxSizing: "border-box",
+                fontFamily: "inherit"
+              }}
             />
           </div>
 
           <div>
-            <label htmlFor="institution" className="block text-sm font-semibold text-slate-700 mb-2">
-              Institución
+            <label
+              htmlFor="institution"
+              style={{ display: "block", fontSize: "15px", fontWeight: 700, color: "#475569", marginBottom: "0.6rem" }}
+            >
+              Institución / Empresa
             </label>
             <input
               id="institution"
               type="text"
-              value={institution}
-              onChange={(e) => setInstitution(e.target.value)}
-              placeholder="Universidad / Empresa"
-              className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:outline-none transition shadow-sm"
+              value={userInfo.institution}
+              onChange={(e) => handleChange("institution", e.target.value)}
+              placeholder="Ej. Universidad Anáhuac"
+              style={{
+                width: "100%",
+                padding: "1.1rem 1.4rem",
+                borderRadius: "18px",
+                border: "2.5px solid #e2e8f0",
+                fontSize: "17px",
+                outline: "none",
+                transition: "all 0.2s",
+                boxSizing: "border-box",
+                fontFamily: "inherit"
+              }}
             />
           </div>
+
+          {error && (
+            <p style={{ color: "#ef4444", fontSize: "15px", fontWeight: 600, margin: 0 }}>
+              {error}
+            </p>
+          )}
         </div>
-
-        {error && (
-          <p className="text-red-500 text-sm font-medium text-center">{error}</p>
-        )}
-
-        <button
-          type="submit"
-          className="w-full rounded-2xl bg-blue-600 text-white font-bold py-4 px-6 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/30 transition shadow-lg active:scale-[0.98]"
-        >
-          Empezar examen
-        </button>
-      </form>
-
-      <div className="text-center">
-        <p className="text-slate-400 text-sm">
-          Tus resultados nos ayudan a personalizar tu experiencia de aprendizaje.
-        </p>
       </div>
+
+      <style jsx>{`
+        input::placeholder {
+          color: #94a3b8;
+        }
+        input:focus {
+          border-color: #2563eb !important;
+          box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+        @media (max-width: 900px) {
+          div[style*="flex: 1 1 450px"] {
+             text-align: center !important;
+             flex: 1 1 100% !important;
+          }
+           div[style*="flex: 1 1 400px"] {
+             flex: 1 1 100% !important;
+             padding: 2rem !important;
+          }
+          p {
+            margin: 0 auto !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }
