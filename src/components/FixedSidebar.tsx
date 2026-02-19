@@ -18,7 +18,8 @@ import {
   Trophy,
   User,
   Settings,
-  Share2
+  Share2,
+  Heart
 } from "lucide-react"
 
 export default function FixedSidebar() {
@@ -210,6 +211,7 @@ export default function FixedSidebar() {
 
   const profileActive = isActivePath("/profile")
   const settingsActive = isActivePath("/configuracion")
+  const impactoSocialActive = isActivePath("/impacto-social")
 
   const iconSize = 24
 
@@ -668,6 +670,43 @@ export default function FixedSidebar() {
                           >
                             <BarChart2 size={20} strokeWidth={progressActive ? 2.5 : 2} />
                             <span className="nav-item-label">{t.nav.myProgress}</span>
+                          </button>
+
+                          <button
+                            data-bizen-tour-menu-item="impacto-social"
+                            onClick={() => navigateTo("/impacto-social")}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              padding: "10px 12px",
+                              background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                              border: "none",
+                              borderRadius: 8,
+                              cursor: "pointer",
+                              transition: "all 0.2s ease",
+                              fontFamily: "'Montserrat', sans-serif",
+                              fontSize: 13,
+                              fontWeight: impactoSocialActive ? 700 : 600,
+                              textAlign: "left",
+                              color: impactoSocialActive ? "#93C5FD" : "#fff",
+                              ...compactButtonOverrides(impactoSocialActive)
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                                e.currentTarget.style.color = "#93C5FD"
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = impactoSocialActive ? "rgba(255,255,255,0.15)" : "transparent"
+                                e.currentTarget.style.color = impactoSocialActive ? "#93C5FD" : "#fff"
+                              }
+                            }}
+                          >
+                            <Heart size={20} strokeWidth={impactoSocialActive ? 2.5 : 2} />
+                            <span className="nav-item-label">{t.nav.impactoSocial}</span>
                           </button>
 
 

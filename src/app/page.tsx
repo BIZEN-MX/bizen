@@ -11,6 +11,20 @@ import * as React from "react"
 // Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
 
+const modalInputStyle = {
+  width: "100%",
+  padding: "14px 16px",
+  fontSize: "15px",
+  borderRadius: "12px",
+  background: "#fff",
+  border: "1px solid #e2e8f0",
+  color: "#1e293b",
+  fontFamily: "inherit",
+  boxSizing: "border-box" as const,
+  transition: "border-color 0.2s, box-shadow 0.2s",
+  outline: "none"
+}
+
 export default function WelcomePage() {
   const { user, loading } = useAuth()
   const router = useRouter()
@@ -21,6 +35,15 @@ export default function WelcomePage() {
   const [demoModalOpen, setDemoModalOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY })
+    }
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
+  }, [])
 
   const heroCardSummaries: { title: string; summary: string }[] = [
     {
@@ -64,8 +87,6 @@ export default function WelcomePage() {
     return () => observer.disconnect()
   }, [])
 
-  const gradientStyle = { background: "linear-gradient(180deg, #f5f9ff 0%, #eef6ff 18%, #e0efff 40%, #d4e8ff 60%, #dbeafe 75%, #d4e8ff 88%, #bfdbfe 100%)", backgroundAttachment: "scroll" as const, overflow: "visible" }
-
   return (
     <div style={{
       background: "#ffffff",
@@ -79,6 +100,7 @@ export default function WelcomePage() {
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
+      cursor: "none",
     }} className="main-page-container landing-page-root" data-landing-root>
       {/* Header: match reference – blue nav links, house + Inicia sesión, Agenda tu DEMO */}
       <header className="main-header landing-header" style={{
@@ -106,7 +128,7 @@ export default function WelcomePage() {
 
         <nav className="header-bar-nav landing-header-nav" style={{ display: "flex", gap: "clamp(40px, 6vw, 80px)", alignItems: "center", flexShrink: 0 }}>
           <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Sobre Bizen</Link>
-          <Link href="#precios" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Implementación</Link>
+          <Link href="#como-funciona" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Implementación</Link>
           <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Impacto</Link>
           <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Problema</Link>
         </nav>
@@ -177,7 +199,7 @@ export default function WelcomePage() {
                 <span style={{ fontSize: "28px", fontWeight: 700, color: "#fff", letterSpacing: "0.05em" }}>BIZEN</span>
               </Link>
               <Link href="#sobre-bizen" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Sobre Bizen</Link>
-              <Link href="#precios" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Implementación</Link>
+              <Link href="#como-funciona" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Implementación</Link>
               <Link href="#impacto" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Impacto</Link>
               <Link href="#problema" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Problema</Link>
               <Link href="/diagnostic" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Quiz diagnóstico</Link>
@@ -1541,32 +1563,181 @@ export default function WelcomePage() {
         <LandingContent sectionRange="rest" onOpenDemoModal={() => setDemoModalOpen(true)} />
       </main>
 
-      {/* Schedule Demo Modal - compact, enhanced */}
+      {/* Schedule Demo Modal - premium, professional */}
       {demoModalOpen && (
-        <div role="dialog" aria-modal="true" aria-labelledby="demo-modal-title" style={{ position: "fixed", inset: 0, zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", background: "rgba(15, 23, 42, 0.4)", backdropFilter: "blur(4px)", boxSizing: "border-box" }} onClick={(e) => e.target === e.currentTarget && setDemoModalOpen(false)}>
-          <div className="landing-demo-modal-content" style={{ position: "relative", background: "#ffffff", borderRadius: "20px", border: "1px solid rgba(15, 98, 254, 0.12)", boxShadow: "0 20px 40px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(15, 98, 254, 0.04)", padding: "28px 32px", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", maxWidth: "min(98vw, 520px)", width: "100%", maxHeight: "88vh", overflowY: "auto" }} onClick={(e) => e.stopPropagation()}>
-            <button type="button" aria-label="Cerrar" onClick={() => setDemoModalOpen(false)} style={{ position: "absolute", top: "12px", right: "12px", width: "32px", height: "32px", borderRadius: "50%", border: "none", background: "#f1f5f9", cursor: "pointer", fontSize: "18px", lineHeight: 1, color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s, color 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.background = "#e2e8f0"; e.currentTarget.style.color = "#334155"; }} onMouseOut={(e) => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#64748b"; }}>×</button>
-            <div style={{ paddingRight: "36px" }}>
-              <div style={{ width: "40px", height: "4px", borderRadius: "2px", background: "linear-gradient(90deg, #1e3a8a, #60a5fa)", marginBottom: "16px" }} />
-              <h2 id="demo-modal-title" style={{ fontSize: "18px", fontWeight: 500, color: "#1e293b", margin: "0 0 6px 0", lineHeight: 1.3 }}>Solicita tu demo gratis</h2>
-              <p style={{ fontSize: "14px", color: "#64748b", margin: "0 0 16px 0", lineHeight: 1.5 }}>15 min · Sin presión</p>
-              <ul style={{ listStyle: "none", margin: "0 0 16px 0", padding: 0, display: "flex", flexWrap: "wrap", gap: "8px 16px" }}>
-                {["Lecciones prácticas", "Reportes de progreso", "Implementación fácil"].map((item, i) => (
-                  <li key={i} style={{ display: "flex", gap: "6px", alignItems: "center", fontSize: "13px", color: "#475569" }}><span style={{ color: "#1e3a8a", fontWeight: 500, flexShrink: 0 }}>✓</span><span>{item}</span></li>
-                ))}
-              </ul>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="demo-modal-title"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 10000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+            background: "rgba(15, 23, 42, 0.6)",
+            backdropFilter: "blur(8px)",
+            boxSizing: "border-box"
+          }}
+          onClick={(e) => e.target === e.currentTarget && setDemoModalOpen(false)}
+        >
+          <div
+            className="landing-demo-modal-content"
+            style={{
+              position: "relative",
+              background: "#ffffff",
+              borderRadius: "32px",
+              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(15, 98, 254, 0.08)",
+              padding: "40px",
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+              maxWidth: "600px",
+              width: "100%",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
+              gap: "32px"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              aria-label="Cerrar"
+              onClick={() => setDemoModalOpen(false)}
+              style={{
+                position: "absolute",
+                top: "24px",
+                right: "24px",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                border: "none",
+                background: "#f8fafc",
+                cursor: "pointer",
+                fontSize: "24px",
+                color: "#94a3b8",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.2s"
+              }}
+              className="modal-close-hover"
+            >
+              ×
+            </button>
+
+            {/* Header Section */}
+            <div style={{ textAlign: "center" }}>
+              <div style={{ width: "64px", height: "64px", background: "rgba(37, 99, 235, 0.1)", borderRadius: "20px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <h2 id="demo-modal-title" style={{ fontSize: "28px", fontWeight: 800, color: "#1e3a8a", margin: "0 0 12px 0", letterSpacing: "-0.02em" }}>Agenda tu demo gratis</h2>
+              <p style={{ fontSize: "16px", color: "#64748b", margin: 0, lineHeight: 1.5 }}>Descubre cómo BIZEN puede transformar la <br />educación financiera en tu institución.</p>
             </div>
-            <div style={{ background: "#f8fafc", borderRadius: "12px", padding: "16px 20px", border: "1px solid #e2e8f0" }}>
-              <form onSubmit={async (e) => { e.preventDefault(); const form = e.currentTarget; const formData = new FormData(form); const name = formData.get("name") as string; const email = formData.get("email") as string; const school = formData.get("school") as string; const role = formData.get("role") as string; const students = formData.get("students") as string; const parts = [`Escuela: ${school || "—"}`, `Rol: ${role || "—"}`, students ? `Estudiantes: ${students}` : ""].filter(Boolean); const message = parts.join("\n"); const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement; const originalText = submitButton?.textContent; if (submitButton) { submitButton.disabled = true; submitButton.textContent = "Enviando…"; } try { const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, email, message }) }); const data = await res.json(); if (data.success) { alert(data.message || "Gracias. Te contactaremos pronto."); form.reset(); setDemoModalOpen(false); } else { alert(data.message || "Error. Intenta de nuevo."); } } catch { alert("Error al enviar. Intenta de nuevo más tarde."); } finally { if (submitButton) { submitButton.disabled = false; submitButton.textContent = originalText || "Agendar demo"; } } }} style={{ display: "grid", gap: "12px 16px", gridTemplateColumns: "1fr 1fr" }}>
-                {[{ id: "modal-demo-name", name: "name", label: "Nombre", type: "text", required: true }, { id: "modal-demo-email", name: "email", label: "Email", type: "email", required: true }, { id: "modal-demo-school", name: "school", label: "Escuela", type: "text", required: true }, { id: "modal-demo-role", name: "role", label: "Rol", type: "text", required: true, placeholder: "ej. Director" }].map((f) => (
-                  <div key={f.id} style={{ display: "flex", flexDirection: "column", gap: "4px", gridColumn: f.name === "school" || f.name === "role" ? undefined : "1 / -1" }}><label htmlFor={f.id} style={{ fontWeight: 500, fontSize: "12px", color: "#64748b" }}>{f.label}</label><input id={f.id} name={f.name} type={f.type} required={f.required} placeholder={f.placeholder} style={{ width: "100%", padding: "10px 12px", fontSize: "14px", borderRadius: "8px", background: "#fff", border: "1px solid #e2e8f0", color: "#1e293b", fontFamily: "inherit", boxSizing: "border-box" }} /></div>
-                ))}
-                <div style={{ gridColumn: "1 / -1", display: "flex", flexDirection: "column", gap: "4px" }}><label htmlFor="modal-demo-students" style={{ fontWeight: 500, fontSize: "12px", color: "#64748b" }}>Estudiantes (opcional)</label><input id="modal-demo-students" name="students" type="text" placeholder="ej. 250" style={{ width: "100%", padding: "10px 12px", fontSize: "14px", borderRadius: "8px", background: "#fff", border: "1px solid #e2e8f0", color: "#1e293b", fontFamily: "inherit", boxSizing: "border-box" }} /></div>
-                <button type="submit" style={{ width: "100%", marginTop: "4px", gridColumn: "1 / -1", padding: "12px 20px", minHeight: "44px", fontSize: "15px", fontWeight: 600, color: "#ffffff", background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)", border: "none", borderRadius: 9999, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 2px 8px rgba(15, 98, 254, 0.35)" }}>Agendar demo</button>
-              </form>
+
+            {/* Form Section */}
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const formData = new FormData(form);
+                const name = formData.get("name") as string;
+                const email = formData.get("email") as string;
+                const school = formData.get("school") as string;
+                const role = formData.get("role") as string;
+                const students = formData.get("students") as string;
+                const parts = [`Escuela: ${school || "—"}`, `Rol: ${role || "—"}`, students ? `Estudiantes: ${students}` : ""].filter(Boolean);
+                const message = parts.join("\n");
+                const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+                const originalText = submitButton?.textContent;
+                if (submitButton) { submitButton.disabled = true; submitButton.textContent = "Procesando..."; }
+                try {
+                  const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, email, message }) });
+                  const data = await res.json();
+                  if (data.success) {
+                    alert("¡Gracias! Hemos recibido tu solicitud. Nos pondremos en contacto contigo pronto.");
+                    form.reset();
+                    setDemoModalOpen(false);
+                  } else {
+                    alert(data.message || "Algo salió mal. Por favor intenta de nuevo.");
+                  }
+                } catch {
+                  alert("Error al enviar. Por favor intenta de nuevo más tarde.");
+                } finally {
+                  if (submitButton) { submitButton.disabled = false; submitButton.textContent = originalText || "Confirmar Agenda"; }
+                }
+              }}
+              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+            >
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }} className="modal-form-grid">
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <label htmlFor="modal-demo-name" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Nombre completo</label>
+                  <input id="modal-demo-name" name="name" type="text" required placeholder="Tu nombre" style={modalInputStyle} />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <label htmlFor="modal-demo-email" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Correo institucional</label>
+                  <input id="modal-demo-email" name="email" type="email" required placeholder="email@escuela.com" style={modalInputStyle} />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <label htmlFor="modal-demo-school" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Institución</label>
+                  <input id="modal-demo-school" name="school" type="text" required placeholder="Nombre de tu escuela" style={modalInputStyle} />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <label htmlFor="modal-demo-role" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Puesto / Rol</label>
+                  <input id="modal-demo-role" name="role" type="text" required placeholder="ej. Director" style={modalInputStyle} />
+                </div>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <label htmlFor="modal-demo-students" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Número de estudiantes (aproximado)</label>
+                <input id="modal-demo-students" name="students" type="text" placeholder="ej. 500 estudiantes" style={modalInputStyle} />
+              </div>
+
+              <button
+                type="submit"
+                style={{
+                  width: "100%",
+                  marginTop: "12px",
+                  padding: "18px",
+                  fontSize: "16px",
+                  fontWeight: 700,
+                  color: "#ffffff",
+                  background: "#1e3a8a",
+                  border: "none",
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  boxShadow: "0 10px 20px -5px rgba(30, 58, 138, 0.3)",
+                  transition: "all 0.2s"
+                }}
+                className="modal-submit-button"
+              >
+                Confirmar Agenda de Demo
+              </button>
+            </form>
+
+            <div style={{ display: "flex", justifyContent: "center", gap: "24px", opacity: 0.6 }}>
+              {["Incubada por SEDESU", "Google for Startups"].map((badge, i) => (
+                <span key={i} style={{ fontSize: "12px", fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>{badge}</span>
+              ))}
             </div>
-            <p style={{ margin: "12px 0 0 0", fontSize: "11px", color: "#94a3b8", lineHeight: 1.5 }}>Secundaria y preparatoria</p>
           </div>
+
+          <style jsx>{`
+            .modal-close-hover:hover { background: #fee2e2 !important; color: #ef4444 !important; transform: rotate(90deg); }
+            .modal-submit-button:hover { background: #2563eb !important; transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.45) !important; }
+            @media (max-width: 600px) {
+              .modal-form-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+              .landing-demo-modal-content { padding: 32px 20px !important; borderRadius: 24px !important; }
+              h2 { fontSize: 24px !important; }
+            }
+          `}</style>
         </div>
       )}
 
@@ -1775,6 +1946,24 @@ export default function WelcomePage() {
 
       {/* Footer */}
       <LandingWaitlistFooter onOpenDemoModal={() => setDemoModalOpen(true)} />
+
+      {/* Blue Dot Cursor */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "20px",
+          height: "20px",
+          background: "#2563eb",
+          borderRadius: "50%",
+          pointerEvents: "none",
+          zIndex: 9999,
+          transform: `translate3d(${mousePos.x - 10}px, ${mousePos.y - 10}px, 0)`,
+          boxShadow: "0 0 15px rgba(37, 99, 235, 0.4)",
+          transition: "transform 0.05s ease-out"
+        }}
+      />
     </div>
   )
 }

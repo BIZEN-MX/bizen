@@ -40,10 +40,10 @@ export default function MobileBottomNav() {
   // Main navigation items (always visible). Business Lab hidden for now — uncomment to show again.
   const navItems = [
     {
-      id: 'courses',
-      label: 'Cursos',
-      icon: '📚',
-      path: '/courses',
+      id: "courses",
+      label: t.nav.exploreCourses,
+      icon: "📚",
+      path: "/courses",
       protected: false
     },
     // { id: 'business-lab', label: 'Business Lab', icon: '💼', path: '/business-lab', protected: false },
@@ -100,10 +100,17 @@ export default function MobileBottomNav() {
       protected: true
     },
     {
-      id: 'settings',
-      label: 'Configuración',
-      icon: '🔧',
-      path: '/configuracion',
+      id: "settings",
+      label: "Configuración",
+      icon: "🔧",
+      path: "/configuracion",
+      protected: true
+    },
+    {
+      id: "impacto-social",
+      label: t.nav.impactoSocial,
+      icon: "🌍",
+      path: "/impacto-social",
       protected: true
     }
   ] : []

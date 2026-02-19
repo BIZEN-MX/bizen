@@ -17,10 +17,11 @@ export const translations = {
       unlocked: "Desbloqueada",
       completed: "Completado"
     },
-    
+
     // Navigation
     nav: {
-      exploreCourses: "Explorar Cursos",
+      exploreCourses: "Aprende finanzas",
+      impactoSocial: "Mi Impacto social",
       assignments: "Asignaciones",
       myProgress: "Mi Progreso",
       businessLab: "Business Lab",
@@ -29,7 +30,7 @@ export const translations = {
       settings: "Configuración",
       dashboard: "Dashboard"
     },
-    
+
     // Courses Page
     courses: {
       title: "Camino de Aprendizaje",
@@ -52,7 +53,7 @@ export const translations = {
       review: "Revisar →",
       begin: "Comenzar →"
     },
-    
+
     // Assignments Page
     assignments: {
       title: "Mis Asignaciones",
@@ -66,7 +67,7 @@ export const translations = {
       completed: "Completado",
       viewDetails: "Ver Detalles"
     },
-    
+
     // Progress Page
     progress: {
       title: "Mi Progreso",
@@ -82,7 +83,7 @@ export const translations = {
       achievements: "Logros",
       performance: "Rendimiento"
     },
-    
+
     // Profile Page
     profile: {
       title: "Mi Perfil",
@@ -98,7 +99,7 @@ export const translations = {
       newPassword: "Nueva Contraseña",
       confirmPassword: "Confirmar Contraseña"
     },
-    
+
     // Dashboard Page
     dashboard: {
       welcome: "¡Bienvenido de nuevo",
@@ -107,7 +108,7 @@ export const translations = {
       upcomingDeadlines: "Próximas Fechas Límite",
       quickStats: "Estadísticas Rápidas"
     },
-    
+
     // Sidebar Stats
     sidebar: {
       hello: "¡Hola",
@@ -120,7 +121,7 @@ export const translations = {
       quickActions: "Acciones Rápidas"
     }
   },
-  
+
   en: {
     // Common
     common: {
@@ -139,10 +140,11 @@ export const translations = {
       unlocked: "Unlocked",
       completed: "Completed"
     },
-    
+
     // Navigation
     nav: {
-      exploreCourses: "Explore Courses",
+      exploreCourses: "Learn Finance",
+      impactoSocial: "My Social Impact",
       assignments: "Assignments",
       myProgress: "My Progress",
       businessLab: "Business Lab",
@@ -151,7 +153,7 @@ export const translations = {
       settings: "Settings",
       dashboard: "Dashboard"
     },
-    
+
     // Courses Page
     courses: {
       title: "Learning Path",
@@ -174,7 +176,7 @@ export const translations = {
       review: "Review →",
       begin: "Begin →"
     },
-    
+
     // Assignments Page
     assignments: {
       title: "My Assignments",
@@ -188,7 +190,7 @@ export const translations = {
       completed: "Completed",
       viewDetails: "View Details"
     },
-    
+
     // Progress Page
     progress: {
       title: "My Progress",
@@ -204,7 +206,7 @@ export const translations = {
       achievements: "Achievements",
       performance: "Performance"
     },
-    
+
     // Profile Page
     profile: {
       title: "My Profile",
@@ -220,7 +222,7 @@ export const translations = {
       newPassword: "New Password",
       confirmPassword: "Confirm Password"
     },
-    
+
     // Dashboard Page
     dashboard: {
       welcome: "Welcome back",
@@ -229,7 +231,7 @@ export const translations = {
       upcomingDeadlines: "Upcoming Deadlines",
       quickStats: "Quick Stats"
     },
-    
+
     // Sidebar Stats
     sidebar: {
       hello: "Hello",
