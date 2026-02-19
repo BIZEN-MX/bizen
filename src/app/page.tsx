@@ -136,13 +136,21 @@ export default function WelcomePage() {
         </nav>
 
         <div className="landing-header-actions" style={{ display: "flex", alignItems: "center", gap: "clamp(20px, 3vw, 36px)", flexShrink: 0 }}>
-          <Link href="/diagnostic" className="landing-header-quiz">
-            Quiz diagnóstico
+          <Link href="/signup" className="landing-header-quiz">
+            Crear cuenta
           </Link>
           <Link href="/login" className="landing-header-login" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Iniciar sesión">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
             <span>Inicia sesión</span>
           </Link>
+          <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" className="landing-header-reunion" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Agendar reunión">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </a>
           <button type="button" onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }} className="landing-header-demo crear-cuenta-button" style={{ padding: 0, fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", background: "transparent", color: "#2C7BEF", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>Agenda tu DEMO</button>
         </div>
       </header>
@@ -204,7 +212,7 @@ export default function WelcomePage() {
               <Link href="#como-funciona" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Implementación</Link>
               <Link href="#impacto" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Impacto</Link>
               <Link href="#problema" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Problema</Link>
-              <Link href="/diagnostic" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Quiz diagnóstico</Link>
+              <Link href="/signup" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Crear cuenta</Link>
 
               <div style={{ height: "2px", background: "rgba(255,255,255,0.1)", margin: "20px 0" }} />
 
@@ -212,6 +220,15 @@ export default function WelcomePage() {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
                 <span>Inicia sesión</span>
               </Link>
+              <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }} onClick={() => setMobileMenuOpen(false)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>Agendar reunión</span>
+              </a>
               <button
                 type="button"
                 onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }}
@@ -320,7 +337,7 @@ export default function WelcomePage() {
                 color: "#374151",
                 fontWeight: 400,
                 margin: "0 auto",
-                marginTop: "clamp(32px, 5vw, 64px)",
+                marginTop: "clamp(64px, 10vw, 120px)",
                 marginBottom: "clamp(24px, 4vw, 48px)",
                 lineHeight: 1.6,
                 fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
@@ -329,7 +346,7 @@ export default function WelcomePage() {
                 overflowWrap: "break-word",
                 boxSizing: "border-box",
               }}>
-                LA PLATAFORMA EDUCATIVA QUE COMBINA <span style={{ color: "#2C7BEF", fontWeight: 600 }}>GAMIFICACIÓN E INTELIGENCIA ARTIFICIAL</span> PARA ENSEÑAR FINANZAS PERSONALES A ESTUDIANTES DE PREPARATORIA Y UNIVERSIDAD DE FORMA PRÁCTICA, CLARA Y RELEVANTE.
+                LA PLATAFORMA EDUCATIVA QUE COMBINA <span style={{ color: "#000000", fontWeight: 800 }}>GAMIFICACIÓN E INTELIGENCIA ARTIFICIAL</span> PARA ENSEÑAR FINANZAS PERSONALES A ESTUDIANTES DE PREPARATORIA Y UNIVERSIDAD DE FORMA PRÁCTICA, CLARA Y RELEVANTE.
               </p>
             </div>
 
@@ -531,11 +548,15 @@ export default function WelcomePage() {
         }
 
         /* Nav links: hover */
-        .header-nav-link:hover {
+        .header-nav-link:hover,
+        .landing-header-login:hover,
+        .landing-header-reunion:hover {
           color: #1e5bb8 !important;
           transition: color 0.2s ease;
         }
-        .header-nav-link {
+        .header-nav-link,
+        .landing-header-login,
+        .landing-header-reunion {
           transition: color 0.2s ease;
         }
 
@@ -1675,9 +1696,9 @@ export default function WelcomePage() {
                   if (submitButton) { submitButton.disabled = false; submitButton.textContent = originalText || "Confirmar Agenda"; }
                 }
               }}
-              style={{ display: "flex", flexDirection: "column", gap: "20px", alignItems: "center", textAlign: "center" }}
+              style={{ display: "flex", flexDirection: "column", gap: "20px", alignItems: "center", textAlign: "center", width: "100%" }}
             >
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }} className="modal-form-grid">
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", width: "100%" }} className="modal-form-grid">
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
                   <label htmlFor="modal-demo-name" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Nombre completo</label>
                   <input id="modal-demo-name" name="name" type="text" required placeholder="Tu nombre" style={modalInputStyle} />
@@ -1705,7 +1726,8 @@ export default function WelcomePage() {
                 type="submit"
                 style={{
                   width: "100%",
-                  marginTop: "12px",
+                  maxWidth: "320px",
+                  margin: "12px auto 0",
                   padding: "18px",
                   fontSize: "16px",
                   fontWeight: 700,
@@ -1716,6 +1738,10 @@ export default function WelcomePage() {
                   cursor: "pointer",
                   fontFamily: "inherit",
                   boxShadow: "0 10px 20px -5px rgba(30, 58, 138, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
                   transition: "all 0.2s"
                 }}
                 className="modal-submit-button"
@@ -2863,23 +2889,23 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
           </section>
 
           {/* Cada clase, una aventura divertida - Carousel (no scroll; single main page scroll only) */}
-          <section className="section adventure-carousel-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px) clamp(64px, 8vw, 120px)", overflow: "visible", maxHeight: "none", height: "auto" }}>
-            <div style={{ maxWidth: "1200px", margin: "0 auto", overflow: "visible", overflowX: "visible", overflowY: "visible", maxHeight: "none", height: "auto" }} className="adventure-carousel-inner">
+          <section className="section adventure-carousel-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(8px, 1vw, 16px) 0 clamp(48px, 6vw, 80px)", overflow: "visible", maxHeight: "none", height: "auto" }}>
+            <div style={{ width: "100%", margin: "0 auto", overflow: "visible", overflowX: "visible", overflowY: "visible", maxHeight: "none", height: "auto" }} className="adventure-carousel-inner">
               <h2 style={{
                 textAlign: "center",
-                margin: "0 0 clamp(48px, 7vw, 72px)",
-                fontSize: "clamp(32px, 5vw, 48px)",
+                margin: "0 0 clamp(24px, 4vw, 40px)",
+                fontSize: "clamp(24px, 4vw, 36px)",
                 fontWeight: 600,
                 color: "#111",
                 fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
                 lineHeight: 1.2
               }}>
-                Cada clase, una aventura divertida<span style={{ color: "#EF4444" }}>.</span>
+                Cada clase, una aventura divertida
               </h2>
 
-              <div style={{ position: "relative", maxWidth: "1000px", margin: "0 auto", overflow: "visible", overflowY: "visible" }}>
+              <div style={{ position: "relative", maxWidth: "100%", margin: "0 auto", overflow: "visible", overflowY: "visible" }}>
                 {/* Carousel Content - smooth crossfade when changing cards; minHeight reserves space so card doesn't overlap dots */}
-                <div className="adventure-carousel-content-wrap" style={{ position: "relative", minHeight: "clamp(650px, 80vh, 850px)", overflow: "visible", overflowX: "visible", overflowY: "visible", maxHeight: "none", height: "auto" }}>
+                <div className="adventure-carousel-content-wrap" style={{ position: "relative", minHeight: "clamp(450px, 65vh, 700px)", overflow: "visible" }}>
                   {[
                     {
                       title: "Microlearning",
@@ -2903,26 +2929,31 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     <div
                       key={idx}
                       style={{
-                        position: "absolute",
+                        position: activeAdventureSlide === idx ? "relative" : "absolute",
                         top: 0,
                         left: 0,
                         right: 0,
+                        width: "100%",
                         opacity: activeAdventureSlide === idx ? 1 : 0,
+                        visibility: activeAdventureSlide === idx ? "visible" : "hidden",
                         pointerEvents: activeAdventureSlide === idx ? "auto" : "none",
-                        transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                        transition: "opacity 0.6s ease, visibility 0.6s ease",
+                        zIndex: activeAdventureSlide === idx ? 2 : 1,
                       }}
                     >
                       <div style={{
                         background: "linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)",
-                        borderRadius: "32px",
-                        padding: "clamp(48px, 6vw, 72px) clamp(40px, 5vw, 64px)",
+                        width: "100%",
+                        padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 48px)",
                         textAlign: "center",
+                        borderRadius: "24px",
+                        boxSizing: "border-box"
                       }}>
                         {/* Image 1, 2, 3 */}
                         <div style={{
                           width: "100%",
-                          maxWidth: "640px",
-                          margin: "0 auto clamp(32px, 4vw, 48px)",
+                          maxWidth: "700px",
+                          margin: "0 auto clamp(20px, 3vw, 32px)",
                           borderRadius: "16px",
                           overflow: "hidden",
                           position: "relative",
@@ -2933,7 +2964,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             src={slide.imageSrc}
                             alt={slide.imageAlt}
                             fill
-                            sizes="(max-width: 768px) 100vw, 640px"
+                            sizes="(max-width: 768px) 100vw, 900px"
                             style={{
                               objectFit: "contain",
                               borderRadius: "16px",
@@ -2942,8 +2973,8 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                         </div>
 
                         <h3 style={{
-                          margin: "0 0 clamp(16px, 2vw, 24px)",
-                          fontSize: "clamp(28px, 3.5vw, 36px)",
+                          margin: "0 0 clamp(12px, 1.5vw, 16px)",
+                          fontSize: "clamp(22px, 3vw, 28px)",
                           fontWeight: 600,
                           color: "#ffffff",
                           fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
@@ -2958,7 +2989,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                           lineHeight: 1.6,
                           color: "#ffffff",
                           fontFamily: "'Inter', sans-serif",
-                          maxWidth: "720px",
+                          maxWidth: "600px",
                           opacity: 0.95,
                         }}>
                           {slide.description}
@@ -3004,7 +3035,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   ))}
                 </div>
 
-                <div className="carousel-nav-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", width: "max-content", margin: "64px auto 0", position: "relative", zIndex: 5 }}>
+                <div className="carousel-nav-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", width: "max-content", margin: "40px auto 0", position: "relative", zIndex: 5 }}>
                   <button
                     type="button"
                     className="landing-carousel-arrow landing-adventure-arrow prev"
@@ -3520,7 +3551,7 @@ html {
 }
 .main-page-container .adventure-carousel-section {
   overflow: visible !important;
-  padding: clamp(12px, 1.5vw, 20px) clamp(20px, 4vw, 48px) clamp(64px, 8vw, 120px) !important;
+  padding: clamp(12px, 1.5vw, 20px) 0 clamp(64px, 8vw, 120px) !important;
   height: auto !important;
   max-height: none !important;
   min-height: 0 !important;

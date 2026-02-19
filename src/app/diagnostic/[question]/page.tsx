@@ -221,6 +221,7 @@ export default function DiagnosticQuestionPage() {
   const [tempUserInfo, setTempUserInfo] = React.useState<UserInfo>({ email: "", fullName: "", institution: "" })
   const [userInfoError, setUserInfoError] = React.useState("")
   const [isStorageReady, setIsStorageReady] = React.useState(false)
+  const [isCheckingEmail, setIsCheckingEmail] = React.useState(false)
 
   const totalQuestions = diagnosticQuiz.length
   const questionParam = Array.isArray(params.question) ? params.question[0] : params.question
@@ -235,7 +236,7 @@ export default function DiagnosticQuestionPage() {
     if (stored) {
       setUserAnswers(stored.userAnswers)
       setQuizSubmitted(stored.quizSubmitted)
-      setUserInfo(stored.userInfo)
+      // We don't set active userInfo here anymore so it always shows ExamIntro first
       if (stored.userInfo) {
         setTempUserInfo(stored.userInfo)
       }
@@ -305,7 +306,7 @@ export default function DiagnosticQuestionPage() {
     }
   }, [quizIncomplete, router, userInfo, userAnswers])
 
-  const handleStartQuiz = () => {
+  const handleStartQuiz = async () => {
     if (!tempUserInfo.email || !tempUserInfo.fullName || !tempUserInfo.institution) {
       setUserInfoError("Por favor completa todos los campos.")
       return
@@ -314,6 +315,32 @@ export default function DiagnosticQuestionPage() {
       setUserInfoError("Por favor ingresa un correo válido.")
       return
     }
+
+    // Check if this email already submitted
+    setIsCheckingEmail(true)
+    try {
+      const res = await fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(tempUserInfo.email)}`)
+      if (res.ok) {
+        const data = await res.json()
+        if (data.exists) {
+          setUserInfoError("Ya has respondido este examen.")
+          setIsCheckingEmail(false)
+          return
+        }
+      }
+    } catch (e) {
+      console.error("Error checking email:", e)
+    } finally {
+      setIsCheckingEmail(false)
+    }
+
+    // If starting fresh or with a different user, we might want to reset answers
+    // For now, let's keep them if they were partially filled, but reset if it was already submitted
+    if (quizSubmitted) {
+      setUserAnswers({})
+      setQuizSubmitted(false)
+    }
+
     setUserInfo(tempUserInfo)
     setUserInfoError("")
   }
@@ -447,6 +474,7 @@ export default function DiagnosticQuestionPage() {
               <StickyFooterButton
                 variant="blue"
                 onClick={handleStartQuiz}
+                isLoading={isCheckingEmail}
                 style={{
                   minWidth: 180,
                   fontSize: "1rem",

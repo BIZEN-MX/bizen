@@ -43,3 +43,28 @@ export async function POST(request: Request) {
         )
     }
 }
+
+export async function GET(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url)
+        const email = searchParams.get("email")
+
+        if (!email) {
+            return NextResponse.json({ error: "Email is required" }, { status: 400 })
+        }
+
+        const existing = await prisma.diagnosticResult.findFirst({
+            where: {
+                email: {
+                    equals: email,
+                    mode: 'insensitive'
+                }
+            }
+        })
+
+        return NextResponse.json({ exists: !!existing })
+    } catch (error) {
+        console.error("Error checking diagnostic quiz:", error)
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+    }
+}

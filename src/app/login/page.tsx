@@ -230,37 +230,37 @@ function BIZENLoginContent() {
       {/* Decorative science elements - atoms, DNA, molecules */}
       <div aria-hidden style={{ position: "absolute" as const, top: 60, left: 80, opacity: 0.6, zIndex: 0 }}>
         <svg width="80" height="80" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="35" fill="none" stroke="#FF6B9D" strokeWidth="2"/>
-          <circle cx="40" cy="40" r="5" fill="#FF6B9D"/>
-          <circle cx="15" cy="40" r="8" fill="#93C5FD"/>
-          <circle cx="65" cy="40" r="8" fill="#93C5FD"/>
+          <circle cx="40" cy="40" r="35" fill="none" stroke="#FF6B9D" strokeWidth="2" />
+          <circle cx="40" cy="40" r="5" fill="#FF6B9D" />
+          <circle cx="15" cy="40" r="8" fill="#93C5FD" />
+          <circle cx="65" cy="40" r="8" fill="#93C5FD" />
         </svg>
       </div>
       <div aria-hidden style={{ position: "absolute" as const, top: "30%", right: 60, opacity: 0.5, zIndex: 0 }}>
         <svg width="60" height="100" viewBox="0 0 60 100">
-          <path d="M30 10 Q20 30 30 50 T30 90" fill="none" stroke="#FFA500" strokeWidth="3"/>
-          <circle cx="30" cy="10" r="8" fill="#FFA500"/>
-          <circle cx="30" cy="50" r="8" fill="#FFA500"/>
-          <circle cx="30" cy="90" r="8" fill="#FFA500"/>
+          <path d="M30 10 Q20 30 30 50 T30 90" fill="none" stroke="#FFA500" strokeWidth="3" />
+          <circle cx="30" cy="10" r="8" fill="#FFA500" />
+          <circle cx="30" cy="50" r="8" fill="#FFA500" />
+          <circle cx="30" cy="90" r="8" fill="#FFA500" />
         </svg>
       </div>
       <div aria-hidden style={{ position: "absolute" as const, bottom: 100, left: 60, opacity: 0.6, zIndex: 0 }}>
         <svg width="70" height="120" viewBox="0 0 70 120">
-          <ellipse cx="35" cy="30" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2"/>
-          <ellipse cx="35" cy="60" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2"/>
-          <ellipse cx="35" cy="90" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2"/>
-          <line x1="10" y1="30" x2="60" y2="30" stroke="#60A5FA" strokeWidth="2"/>
-          <line x1="10" y1="60" x2="60" y2="60" stroke="#60A5FA" strokeWidth="2"/>
+          <ellipse cx="35" cy="30" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2" />
+          <ellipse cx="35" cy="60" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2" />
+          <ellipse cx="35" cy="90" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2" />
+          <line x1="10" y1="30" x2="60" y2="30" stroke="#60A5FA" strokeWidth="2" />
+          <line x1="10" y1="60" x2="60" y2="60" stroke="#60A5FA" strokeWidth="2" />
         </svg>
       </div>
       <div aria-hidden style={{ position: "absolute" as const, bottom: 80, right: 100, opacity: 0.5, zIndex: 0 }}>
         <svg width="90" height="70" viewBox="0 0 90 70">
-          <path d="M10 35 L30 20 L50 35 L70 20 L80 35" fill="none" stroke="#FFA500" strokeWidth="3"/>
-          <circle cx="10" cy="35" r="6" fill="#FFA500"/>
-          <circle cx="30" cy="20" r="6" fill="#FFA500"/>
-          <circle cx="50" cy="35" r="6" fill="#FFA500"/>
-          <circle cx="70" cy="20" r="6" fill="#FFA500"/>
-          <rect x="70" y="40" width="15" height="25" fill="#FFA500" opacity="0.6"/>
+          <path d="M10 35 L30 20 L50 35 L70 20 L80 35" fill="none" stroke="#FFA500" strokeWidth="3" />
+          <circle cx="10" cy="35" r="6" fill="#FFA500" />
+          <circle cx="30" cy="20" r="6" fill="#FFA500" />
+          <circle cx="50" cy="35" r="6" fill="#FFA500" />
+          <circle cx="70" cy="20" r="6" fill="#FFA500" />
+          <rect x="70" y="40" width="15" height="25" fill="#FFA500" opacity="0.6" />
         </svg>
       </div>
 
@@ -274,12 +274,12 @@ function BIZENLoginContent() {
       }}>
         {/* Character icon at top */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-          <Image 
-            src="/hero1.png" 
-            alt="BIZEN" 
-            width={80} 
-            height={80} 
-            style={{ width: 80, height: 80, objectFit: "contain" }} 
+          <Image
+            src="/hero1.png"
+            alt="BIZEN"
+            width={80}
+            height={80}
+            style={{ width: 80, height: 80, objectFit: "contain" }}
           />
         </div>
 
@@ -301,42 +301,42 @@ function BIZENLoginContent() {
         <form onSubmit={onSubmit} className="auth-form" style={{ display: "grid" as const, gap: 16 }}>
           <div>
             <Label htmlFor="email">Usuario *</Label>
-            <TextField 
-              id="email" 
-              name="email" 
-              type="email" 
-              placeholder="¿Tu correo electrónico?" 
-              required 
+            <TextField
+              id="email"
+              name="email"
+              type="email"
+              placeholder="¿Tu correo electrónico?"
+              required
               autoComplete="email"
-              value={email} 
-              onChange={(e) => setEmail(e.currentTarget.value)} 
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
             />
           </div>
 
           <div>
             <Label htmlFor="password">Contraseña *</Label>
             <div style={{ position: "relative" as const }}>
-              <TextField 
-                id="password" 
-                name="password" 
-                type={showPass ? "text" : "password"} 
+              <TextField
+                id="password"
+                name="password"
+                type={showPass ? "text" : "password"}
                 placeholder="¿Tu contraseña?"
-                required 
-                autoComplete="current-password" 
-                value={password} 
+                required
+                autoComplete="current-password"
+                value={password}
                 onChange={(e) => setPassword(e.currentTarget.value)}
                 style={{ paddingRight: 40 }}
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setShowPass((s) => !s)}
-                style={{ 
-                  position: "absolute" as const, 
-                  right: 12, 
-                  top: "50%", 
-                  transform: "translateY(-50%)", 
-                  background: "transparent", 
-                  border: "none", 
+                style={{
+                  position: "absolute" as const,
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
                   cursor: "pointer",
                   padding: 4
                 }}
@@ -345,13 +345,13 @@ function BIZENLoginContent() {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2">
                   {showPass ? (
                     <>
-                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
-                      <line x1="1" y1="1" x2="23" y2="23"/>
+                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
                     </>
                   ) : (
                     <>
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
                     </>
                   )}
                 </svg>
@@ -370,10 +370,17 @@ function BIZENLoginContent() {
           </Button>
 
           <label style={{ display: "flex" as const, gap: 8, alignItems: "center" as const, fontSize: 14, color: "#444", justifyContent: "center" }}>
-            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.currentTarget.checked)} /> 
+            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.currentTarget.checked)} />
             Mantener la sesión iniciada
           </label>
         </form>
+
+        <div style={{ marginTop: 24, textAlign: "center", fontSize: 14 }}>
+          ¿No tienes cuenta?{" "}
+          <Link href="/signup" style={{ color: "#0B71FE", fontWeight: 700, textDecoration: "none" }}>
+            Regístrate
+          </Link>
+        </div>
 
         {message && (
           <p role="status" style={{ marginTop: 16, textAlign: "center", wordBreak: "break-word", overflowWrap: "anywhere", color: "#dc2626", fontSize: 14 }}>
@@ -382,14 +389,14 @@ function BIZENLoginContent() {
         )}
 
         {/* Help text at bottom */}
-        <div style={{ 
-          marginTop: 32, 
-          textAlign: "center", 
-          fontSize: 12, 
+        <div style={{
+          marginTop: 32,
+          textAlign: "center",
+          fontSize: 12,
           color: "#64748b",
           lineHeight: 1.6
         }}>
-          ¿Necesitas ayuda?<br/>
+          ¿Necesitas ayuda?<br />
           Mándanos un correo a{" "}
           <a href={`mailto:${supportEmail}`} style={{ color: "#0B71FE", textDecoration: "none" }}>
             {supportEmail}
@@ -399,11 +406,11 @@ function BIZENLoginContent() {
       </Card>
 
       {/* Version info bottom left */}
-      <div style={{ 
-        position: "fixed" as const, 
-        bottom: 20, 
-        left: 20, 
-        fontSize: 11, 
+      <div style={{
+        position: "fixed" as const,
+        bottom: 20,
+        left: 20,
+        fontSize: 11,
         color: "#94a3b8",
         fontFamily: "monospace",
         zIndex: 10

@@ -246,7 +246,7 @@ export default function CoursesPage() {
         {/* Same width as course bars (800px) - progress at top, then course list */}
         <div style={{
           width: "100%",
-          maxWidth: "800px",
+          maxWidth: "1280px",
           margin: "0 auto",
           position: "relative",
           zIndex: 1,
@@ -347,11 +347,12 @@ export default function CoursesPage() {
               width: "100%",
               marginBottom: "clamp(32px, 6vw, 48px)",
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "24px",
               paddingBottom: 40
             }}
             aria-label="Temas"
+            className="topics-grid-responsive"
           >
             {[
               { id: 1, title: "Mi relación con el dinero", icon: Wallet, color: "#3b82f6", lessons: 4 },
@@ -467,6 +468,17 @@ export default function CoursesPage() {
       </main>
 
       <style>{`
+        @media (max-width: 1024px) {
+          .topics-grid-responsive {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .topics-grid-responsive {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
         /* Course title separator - use full usable width */
         div[style*="gap: clamp(16px, 3vw, 24px)"][style*="marginBottom: clamp(10px"] {
           width: 100% !important;

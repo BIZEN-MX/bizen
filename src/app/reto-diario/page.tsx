@@ -35,6 +35,11 @@ export default function RetoDiarioPage() {
         @media (min-width: 1161px) {
           .reto-diario-outer { margin-left: 280px !important; }
         }
+        @media (max-width: 480px) {
+          .reto-secondary-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
       <div
         className="reto-diario-outer"
@@ -62,7 +67,7 @@ export default function RetoDiarioPage() {
           }}
         />
 
-        <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: "min(100%, 960px)", margin: "0 auto", boxSizing: "border-box" }}>
+        <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: "min(100%, 1280px)", margin: "0 auto", boxSizing: "border-box" }}>
           {/* Hero: icon + title + tagline */}
           <div
             style={{
@@ -215,60 +220,72 @@ export default function RetoDiarioPage() {
             </Link>
           </div>
 
-          {/* Tip card */}
-          <div
-            style={{
-              display: "flex",
-              gap: 16,
-              padding: "20px 24px",
-              background: "linear-gradient(135deg, rgba(254, 243, 199, 0.6) 0%, rgba(255, 251, 235, 0.8) 100%)",
-              border: "2px solid rgba(251, 191, 36, 0.25)",
-              borderRadius: 20,
-              marginBottom: 24,
-            }}
-          >
-            <span
+          {/* Secondary content grid */}
+          <div className="reto-secondary-grid" style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
+            gap: 24,
+            width: "100%"
+          }}>
+            {/* Tip card */}
+            <div
               style={{
-                width: 44,
-                height: 44,
-                borderRadius: 12,
-                background: "rgba(251, 191, 36, 0.25)",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                fontSize: "22px",
+                gap: 16,
+                padding: "24px",
+                background: "linear-gradient(135deg, rgba(254, 243, 199, 0.6) 0%, rgba(255, 251, 235, 0.8) 100%)",
+                border: "2px solid rgba(251, 191, 36, 0.25)",
+                borderRadius: 24,
+                height: "100%",
+                boxSizing: "border-box"
               }}
-              aria-hidden
             >
-              💡
-            </span>
-            <div>
-              <div style={{ fontSize: "14px", fontWeight: 700, color: "#92400E", marginBottom: 4 }}>Consejo</div>
-              <p style={{ fontSize: "15px", color: "#78350F", lineHeight: 1.6, margin: 0 }}>
-                Completa el reto y anótalo en tu presupuesto o en una nota. La constancia en pequeños pasos mejora tus hábitos financieros.
-              </p>
+              <span
+                style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: 14,
+                  background: "rgba(251, 191, 36, 0.25)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  fontSize: "26px",
+                }}
+                aria-hidden
+              >
+                💡
+              </span>
+              <div>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: "#92400E", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>Consejo del Experto</div>
+                <p style={{ fontSize: "16px", color: "#78350F", lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+                  Completa el reto y anótalo en tu presupuesto o en una nota. La constancia en pequeños pasos mejora tus hábitos financieros.
+                </p>
+              </div>
+            </div>
+
+            {/* Why it matters - short benefits */}
+            <div
+              style={{
+                padding: "24px",
+                background: "rgba(241, 245, 249, 0.8)",
+                border: "1px solid rgba(148, 163, 184, 0.2)",
+                borderRadius: 24,
+                height: "100%",
+                boxSizing: "border-box"
+              }}
+            >
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "#475569", marginBottom: 16, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                Beneficios del Reto Diario
+              </div>
+              <ul style={{ margin: 0, paddingLeft: 20, color: "#475569", fontSize: "16px", lineHeight: 1.8, fontWeight: 500 }}>
+                <li>Refuerza conceptos con práctica breve y constante.</li>
+                <li>Genera el hábito de revisar tus finanzas con frecuencia.</li>
+                <li>Pequeños pasos que evitan la procrastinación.</li>
+              </ul>
             </div>
           </div>
 
-          {/* Why it matters - short benefits */}
-          <div
-            style={{
-              padding: "24px 24px",
-              background: "rgba(241, 245, 249, 0.8)",
-              border: "1px solid rgba(148, 163, 184, 0.2)",
-              borderRadius: 20,
-            }}
-          >
-            <div style={{ fontSize: "14px", fontWeight: 700, color: "#475569", marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-              Por qué el reto diario
-            </div>
-            <ul style={{ margin: 0, paddingLeft: 20, color: "#475569", fontSize: "15px", lineHeight: 1.8 }}>
-              <li>Refuerza conceptos con práctica breve y constante.</li>
-              <li>Genera el hábito de revisar tus finanzas con frecuencia.</li>
-              <li>Pequeños pasos evitan la procrastinación.</li>
-            </ul>
-          </div>
         </div>
       </div>
     </>
