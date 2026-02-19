@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LandingWaitlistFooter } from "@/components/LandingWaitlistFooter"
+import { ClipboardCheck, LogIn } from "lucide-react"
 import * as React from "react"
 
 // Force dynamic rendering to avoid prerendering issues
@@ -136,13 +137,24 @@ export default function WelcomePage() {
         </nav>
 
         <div className="landing-header-actions" style={{ display: "flex", alignItems: "center", gap: "clamp(20px, 3vw, 36px)", flexShrink: 0 }}>
-          <Link href="/signup" className="landing-header-quiz">
-            Crear cuenta
+          <Link href="/diagnostic" className="header-nav-link" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Quiz Diagnóstico">
+            <ClipboardCheck size={20} />
+            <span>Quiz</span>
           </Link>
-          <Link href="/login" className="landing-header-login" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Iniciar sesión">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
-            <span>Inicia sesión</span>
-          </Link>
+          <div className="auth-dropdown-wrapper">
+            <Link href="/signup" className="landing-header-quiz">
+              Crear cuenta
+            </Link>
+            <div className="auth-dropdown-content">
+              <Link href="/signup" className="auth-dropdown-item">
+                Crear cuenta
+              </Link>
+              <Link href="/login" className="auth-dropdown-item">
+                <LogIn size={18} />
+                Iniciar Sesión
+              </Link>
+            </div>
+          </div>
           <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" className="landing-header-reunion" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Agendar reunión">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -212,6 +224,10 @@ export default function WelcomePage() {
               <Link href="#como-funciona" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Implementación</Link>
               <Link href="#impacto" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Impacto</Link>
               <Link href="#problema" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Problema</Link>
+              <Link href="/diagnostic" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", gap: "12px" }} onClick={() => setMobileMenuOpen(false)}>
+                <ClipboardCheck size={24} />
+                <span>Quiz Diagnóstico</span>
+              </Link>
               <Link href="/signup" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Crear cuenta</Link>
 
               <div style={{ height: "2px", background: "rgba(255,255,255,0.1)", margin: "20px 0" }} />
@@ -318,7 +334,7 @@ export default function WelcomePage() {
             }}>
               {/* Main headline */}
               <h1 style={{
-                fontSize: "clamp(28px, 5vw, 56px)",
+                fontSize: "clamp(32px, 6vw, 64px)",
                 color: "#000",
                 fontWeight: 700,
                 margin: "0 0 clamp(48px, 7vw, 80px) 0",
@@ -444,6 +460,51 @@ export default function WelcomePage() {
         body:has([data-landing-root]) {
           overflow-x: hidden !important;
           max-width: 100% !important;
+        }
+
+        .auth-dropdown-wrapper {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+        }
+        .auth-dropdown-content {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          margin-top: 10px;
+          background: white;
+          min-width: 190px;
+          border-radius: 16px;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(10px);
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 1000;
+          border: 1px solid rgba(15, 113, 253, 0.1);
+          padding: 8px;
+        }
+        .auth-dropdown-wrapper:hover .auth-dropdown-content {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+        .auth-dropdown-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 16px;
+          color: #1e3a8a;
+          text-decoration: none;
+          font-size: 14px;
+          font-weight: 600;
+          border-radius: 10px;
+          transition: all 0.2s ease;
+        }
+        .auth-dropdown-item:hover {
+          background: #f1f5f9;
+          color: #2C7BEF;
+          transform: translateX(4px);
         }
         
         /* ELIMINATE left gap - force zero padding on ALL layout ancestors (no sidebar on landing) */
@@ -2903,7 +2964,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                 Cada clase, una aventura divertida
               </h2>
 
-              <div style={{ position: "relative", maxWidth: "100%", margin: "0 auto", overflow: "visible", overflowY: "visible" }}>
+              <div style={{ position: "relative", maxWidth: "min(1240px, 92%)", margin: "0 auto", overflow: "visible", overflowY: "visible" }}>
                 {/* Carousel Content - smooth crossfade when changing cards; minHeight reserves space so card doesn't overlap dots */}
                 <div className="adventure-carousel-content-wrap" style={{ position: "relative", minHeight: "clamp(450px, 65vh, 700px)", overflow: "visible" }}>
                   {[
