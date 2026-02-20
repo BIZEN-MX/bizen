@@ -6,8 +6,9 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LandingWaitlistFooter } from "@/components/LandingWaitlistFooter"
-import { ClipboardCheck, LogIn } from "lucide-react"
+import { ClipboardCheck, LogIn, ChevronRight, Play } from "lucide-react"
 import * as React from "react"
+import Hero3DScene from "@/components/landing/Hero3DScene"
 
 // Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
@@ -106,19 +107,25 @@ export default function WelcomePage() {
       flexDirection: "column",
     }} className="main-page-container landing-page-root" data-landing-root>
       {/* Header: match reference – blue nav links, house + Inicia sesión, Agenda tu DEMO */}
-      <header className="main-header landing-header" style={{
+      <header className="main-header landing-header glass-header" style={{
         width: "100%",
         maxWidth: "100%",
         boxSizing: "border-box",
-        padding: "clamp(14px, 2.5vw, 28px) clamp(20px, 5vw, 56px)",
+        padding: "clamp(12px, 2vw, 20px) clamp(20px, 5vw, 56px)",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         gap: "clamp(24px, 5vw, 56px)",
         flexWrap: "nowrap",
-        background: "#ffffff",
-        position: "relative",
-        zIndex: 100,
+        background: "rgba(255, 255, 255, 0.7)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        borderBottom: "1px solid rgba(255, 255, 255, 0.3)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "clamp(8px, 2vw, 16px)", flexShrink: 0 }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }} aria-label="BIZEN home">
@@ -142,7 +149,7 @@ export default function WelcomePage() {
             <span>Quiz</span>
           </Link>
           <div className="auth-dropdown-wrapper">
-            <Link href="/signup" className="landing-header-quiz">
+            <Link href="/signup" className="landing-header-quiz premium-button">
               Crear cuenta
             </Link>
             <div className="auth-dropdown-content">
@@ -155,15 +162,29 @@ export default function WelcomePage() {
               </Link>
             </div>
           </div>
-          <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" className="landing-header-reunion" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Agendar reunión">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>
-          </a>
-          <button type="button" onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }} className="landing-header-demo crear-cuenta-button" style={{ padding: 0, fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", background: "transparent", color: "#2C7BEF", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>Agenda tu DEMO</button>
+          <div className="calendar-tooltip-container">
+            <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" className="landing-header-reunion" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Agendar llamada">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </a>
+            <span className="calendar-tooltip-text">Agendar llamada</span>
+          </div>
+          <button type="button" onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }} className="landing-header-demo crear-cuenta-button premium-button" style={{
+            padding: "8px 20px",
+            fontSize: "clamp(14px, 1.6vw, 16px)",
+            fontWeight: 600,
+            borderRadius: "9999px",
+            background: "#1e3a8a",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+            boxShadow: "0 4px 12px rgba(30, 58, 138, 0.2)"
+          }}>Agenda tu DEMO</button>
         </div>
       </header>
 
@@ -243,10 +264,11 @@ export default function WelcomePage() {
                   <line x1="8" y1="2" x2="8" y2="6" />
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
-                <span>Agendar reunión</span>
+                <span>Agendar llamada</span>
               </a>
               <button
                 type="button"
+                className="premium-button"
                 onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }}
                 style={{
                   marginTop: "12px",
@@ -272,8 +294,8 @@ export default function WelcomePage() {
         <div className="landing-gradient-wrapper" style={gradientStyle}>
           {/* Hero Section - centered text with geometric shapes */}
           <div className="landing-hero-wrapper" style={{
-            paddingTop: "clamp(40px, 6vw, 80px)",
-            paddingBottom: "clamp(60px, 8vw, 100px)",
+            paddingTop: "clamp(80px, 12vw, 160px)",
+            paddingBottom: "clamp(60px, 10vw, 120px)",
             position: "relative",
             fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
             display: "flex",
@@ -285,7 +307,9 @@ export default function WelcomePage() {
             boxSizing: "border-box",
             minHeight: "auto",
             overflow: "visible",
+            isolation: "isolate"
           }}>
+            <Hero3DScene />
 
             {/* Blue geometric shapes - left side (hidden on small screens to avoid overlap) */}
             <div className="landing-hero-shapes landing-hero-shapes-left" style={{
@@ -320,7 +344,7 @@ export default function WelcomePage() {
             </div>
 
             {/* Main content - centered */}
-            <div className="landing-hero-content" style={{
+            <div className="landing-hero-content reveal-element" style={{
               position: "relative",
               zIndex: 1,
               textAlign: "center",
@@ -419,7 +443,72 @@ export default function WelcomePage() {
 
           </div>
           <style>{`
-        /* Landing page: professional font stack */
+        /* Bento Grid Layout */
+        .bento-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          grid-template-rows: repeat(2, auto);
+          gap: 24px;
+          padding: 24px;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        .bento-item {
+          background: #ffffff;
+          border-radius: 24px;
+          padding: 32px;
+          border: 1px solid rgba(15, 113, 253, 0.1);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          overflow: hidden;
+          position: relative;
+        }
+        .bento-item:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 40px rgba(15, 113, 253, 0.08);
+          border-color: rgba(15, 113, 253, 0.2);
+        }
+        .bento-item-large {
+          grid-column: span 2;
+          grid-row: span 2;
+        }
+        .bento-item-medium {
+          grid-column: span 2;
+        }
+        @media (max-width: 1024px) {
+          .bento-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 640px) {
+          .bento-grid {
+            grid-template-columns: 1fr;
+          }
+          .bento-item-large, .bento-item-medium {
+            grid-column: span 1;
+          }
+        }
+
+
+        /* Magnetic / Premium Button Effects */
+        .premium-button {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          position: relative;
+          overflow: hidden;
+        }
+        .premium-button:hover {
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3) !important;
+        }
+        .premium-button:active {
+          transform: translateY(0) scale(0.98);
+        }
+
+        /* Glass Header Scrolled State */
+        .glass-header {
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
         .main-page-container,
         .main-page-container .section,
         .main-page-container .container {
@@ -748,6 +837,48 @@ export default function WelcomePage() {
         .landing-header-quiz:focus-visible {
           outline: 2px solid rgba(59, 130, 246, 0.7);
           outline-offset: 2px;
+        }
+
+        /* Calendar Tooltip */
+        .calendar-tooltip-container {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+        }
+        .calendar-tooltip-text {
+          visibility: hidden;
+          width: 140px;
+          background-color: #1e3a8a;
+          color: #fff;
+          text-align: center;
+          border-radius: 8px;
+          padding: 8px 12px;
+          position: absolute;
+          z-index: 1001;
+          top: 135%;
+          left: 50%;
+          transform: translateX(-50%) translateY(5px);
+          opacity: 0;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          font-size: 13px;
+          font-weight: 500;
+          pointer-events: none;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        .calendar-tooltip-text::after {
+          content: "";
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          margin-left: -6px;
+          border-width: 6px;
+          border-style: solid;
+          border-color: transparent transparent #1e3a8a transparent;
+        }
+        .calendar-tooltip-container:hover .calendar-tooltip-text {
+          visibility: visible;
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
         }
 
         /* Tablet and desktop (768px+): show decorative accent, scale header and hero */
@@ -2304,28 +2435,15 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
               SOMOS BIZEN
             </h2>
 
-            {/* 4 Cards Grid */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-              gap: "clamp(20px, 3vw, 28px)",
-              maxWidth: "1280px",
-              margin: "0 auto",
-            }}
-              className="somos-bizen-grid"
-            >
-              {/* Card 1: Validación institucional (Gobierno) */}
-              <div className="somos-bizen-card" style={{
-                background: "#1e3a8a",
-                borderRadius: "20px",
-                padding: "clamp(28px, 4vw, 40px) clamp(24px, 3vw, 32px)",
+            {/* Bento Grid Features */}
+            <div className="bento-grid" style={{ maxWidth: "1280px", margin: "0 auto" }}>
+              {/* Card 1: Validación institucional (Gobierno) - LARGE */}
+              <div className="bento-item bento-item-large reveal-element" style={{
+                background: "linear-gradient(135deg, #1e3a8a 0%, #1e1b4b 100%)",
                 color: "#ffffff",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                minHeight: "320px",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                boxShadow: "0 4px 20px rgba(30, 58, 138, 0.4)",
               }}>
                 <div>
                   <h3 style={{
@@ -2360,18 +2478,13 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                 </div>
               </div>
 
-              {/* Card 2: Confianza Big Tech */}
-              <div className="somos-bizen-card" style={{
-                background: "#1e3a8a",
-                borderRadius: "20px",
-                padding: "clamp(28px, 4vw, 40px) clamp(24px, 3vw, 32px)",
+              {/* Card 2: Confianza Big Tech - MEDIUM */}
+              <div className="bento-item bento-item-medium reveal-element" style={{
+                background: "linear-gradient(135deg, #2C7BEF 0%, #1e40af 100%)",
                 color: "#ffffff",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                minHeight: "320px",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                boxShadow: "0 4px 20px rgba(30, 58, 138, 0.4)",
               }}>
                 <div>
                   <h3 style={{
@@ -2407,17 +2520,12 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
               </div>
 
               {/* Card 3: Comunidad EdTech LATAM */}
-              <div className="somos-bizen-card" style={{
-                background: "#1e3a8a",
-                borderRadius: "20px",
-                padding: "clamp(28px, 4vw, 40px) clamp(24px, 3vw, 32px)",
-                color: "#ffffff",
+              <div className="bento-item reveal-element" style={{
+                background: "#ffffff",
+                color: "#0F172A",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                minHeight: "320px",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                boxShadow: "0 4px 20px rgba(30, 58, 138, 0.4)",
               }}>
                 <div>
                   <h3 style={{
@@ -2453,17 +2561,12 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
               </div>
 
               {/* Card 4: Impacto educativo */}
-              <div className="somos-bizen-card" style={{
-                background: "#1e3a8a",
-                borderRadius: "20px",
-                padding: "clamp(28px, 4vw, 40px) clamp(24px, 3vw, 32px)",
-                color: "#ffffff",
+              <div className="bento-item reveal-element" style={{
+                background: "#EFF6FF",
+                color: "#1e3a8a",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                minHeight: "320px",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                boxShadow: "0 4px 20px rgba(30, 58, 138, 0.4)",
               }}>
                 <div>
                   <h3 style={{
@@ -2491,12 +2594,18 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
 
         {/* 4 Perfiles Educativos */}
         <section id="perfiles" className="section perfiles-section reveal-element" style={{
-          background: "linear-gradient(180deg, #D6E4FF 0%, #EDF5FF 60%, #C7DCF8 100%)",
+          background: "#ffffff",
           paddingTop: "clamp(24px, 4vw, 40px)",
           paddingBottom: "clamp(56px, 10vw, 88px)",
           paddingLeft: "clamp(16px, 4vw, 24px)",
           paddingRight: "clamp(16px, 4vw, 24px)",
+          position: "relative",
+          overflow: "hidden"
         }}>
+          {/* Decorative Blobs for Depth */}
+          <div className="perfiles-blob perfiles-blob-1" style={{ position: "absolute", top: "10%", right: "-5%", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(15, 98, 254, 0.08) 0%, transparent 70%)", filter: "blur(60px)", zIndex: 0, animation: "float-perfiles 15s infinite alternate" }} />
+          <div className="perfiles-blob perfiles-blob-2" style={{ position: "absolute", bottom: "5%", left: "-5%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(15, 98, 254, 0.05) 0%, transparent 70%)", filter: "blur(80px)", zIndex: 0, animation: "float-perfiles-reverse 20s infinite alternate" }} />
+
           <div className="container" style={{ maxWidth: "1400px", margin: "0 auto" }}>
             {/* Header */}
             <h2 style={{
@@ -2513,14 +2622,18 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
               <span style={{ color: "#111" }}>.</span>
             </h2>
 
-            {/* Content Card - tabs inside at top */}
-            <div style={{
+            {/* Content Card - refined glassmorphic style */}
+            <div className="glass-card-premium" style={{
               marginTop: "clamp(32px, 5vw, 48px)",
-              background: "rgba(255, 255, 255, 0.95)",
-              borderRadius: "24px",
+              background: "rgba(255, 255, 255, 0.8)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              borderRadius: "32px",
               padding: "clamp(24px, 4vw, 32px) clamp(24px, 4vw, 48px) clamp(32px, 5vw, 56px)",
-              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
-              border: "1px solid rgba(15, 98, 254, 0.12)",
+              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.5)",
+              border: "1px solid rgba(15, 98, 254, 0.1)",
+              position: "relative",
+              zIndex: 1,
             }}>
               {/* Tabs - inside box */}
               <div style={{
@@ -2545,12 +2658,14 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                       fontSize: "clamp(15px, 1.1rem, 18px)",
                       fontWeight: 600,
                       fontFamily: "'Inter', sans-serif",
-                      border: "none",
-                      borderRadius: "12px",
+                      border: "1px solid",
+                      borderColor: activeProfile === profile.id ? "#1e3a8a" : "rgba(15, 98, 254, 0.1)",
+                      borderRadius: "16px",
                       cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      background: activeProfile === profile.id ? "#1e3a8a" : "rgba(15, 98, 254, 0.08)",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      background: activeProfile === profile.id ? "#1e3a8a" : "rgba(255, 255, 255, 0.5)",
                       color: activeProfile === profile.id ? "#ffffff" : "#4b5563",
+                      boxShadow: activeProfile === profile.id ? "0 10px 20px rgba(30, 58, 138, 0.2)" : "none",
                     }}
                     className="profile-tab-button"
                   >
@@ -2919,24 +3034,25 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     { label: "Trabajo colaborativo en el aula", Icon: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> },
                     { label: "Responsabilidad y habilidades socioemocionales", Icon: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></svg> },
                   ].map((item, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                      <div style={{
-                        width: "48px",
-                        height: "48px",
-                        minWidth: "48px",
-                        borderRadius: "50%",
-                        background: "#1e3a8a",
+                    <div key={i} className={`reveal-element reveal-delay-${i % 3 + 1}`} style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                      <div className="skill-icon-container" style={{
+                        width: "56px",
+                        height: "56px",
+                        minWidth: "56px",
+                        borderRadius: "16px",
+                        background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
                         color: "#fff",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        boxShadow: "0 10px 20px rgba(30, 58, 138, 0.1)",
                       }}>
                         <item.Icon />
                       </div>
                       <span style={{
                         fontSize: "clamp(15px, 1.05rem, 17px)",
-                        fontWeight: 500,
-                        color: "#334155",
+                        fontWeight: 600,
+                        color: "#1e293b",
                         fontFamily: "'Inter', sans-serif",
                         lineHeight: 1.3,
                       }}>
@@ -3160,8 +3276,8 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
 
           {/* Convierte la curiosidad - 3 feature cards (El problema link targets here) */}
           <section id="problema" className="section curiosidad-section reveal-element" style={{
-            background: "#ffffff",
-            padding: "clamp(56px, 10vw, 88px) clamp(24px, 4vw, 48px)",
+            background: "linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)",
+            padding: "clamp(56px, 10vw, 104px) clamp(24px, 4vw, 48px)",
           }}>
             <div className="container" style={{ maxWidth: "1400px", margin: "0 auto" }}>
               {/* Heading with navy dot */}
@@ -3197,30 +3313,42 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                 </div>
               </div>
 
-              {/* Three feature cards with vertical dividers */}
+              {/* Three standalone feature cards */}
               <div
                 className="curiosidad-cards-grid"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1px 1fr 1px 1fr",
-                  gap: 0,
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "clamp(24px, 4vw, 40px)",
                   alignItems: "stretch",
                   maxWidth: "1280px",
                   margin: "0 auto",
                 }}>
                 {/* Card 1 - Document/list */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 clamp(20px, 4vw, 48px)" }}>
+                <div className="premium-obstacle-card" style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  padding: "clamp(32px, 5vw, 48px) clamp(24px, 4vw, 32px)",
+                  background: "#fff",
+                  borderRadius: "24px",
+                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+                  border: "1px solid rgba(15, 98, 254, 0.08)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease"
+                }}>
                   <div style={{
-                    width: "72px",
-                    height: "72px",
-                    borderRadius: "16px",
-                    background: "#1e3a8a",
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "20px",
+                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: "clamp(24px, 3vw, 32px)",
+                    boxShadow: "0 10px 20px rgba(30, 58, 138, 0.15)",
                   }}>
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                       <path d="M14 2v6h6" />
                       <path d="M8 13h8" />
@@ -3229,19 +3357,20 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     </svg>
                   </div>
                   <span style={{
-                    marginBottom: "6px",
+                    marginBottom: "8px",
                     fontSize: "clamp(12px, 0.85rem, 14px)",
-                    fontWeight: 500,
-                    color: "#64748b",
+                    fontWeight: 700,
+                    color: "#2563eb",
                     fontFamily: "'Inter', sans-serif",
-                    letterSpacing: "0.02em",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
                   }}>
                     Obstáculo 1
                   </span>
                   <h3 style={{
-                    margin: "0 0 clamp(8px, 1vw, 12px)",
-                    fontSize: "clamp(18px, 1.25rem, 22px)",
-                    fontWeight: 500,
+                    margin: "0 0 clamp(12px, 1.5vw, 16px)",
+                    fontSize: "clamp(20px, 1.35rem, 24px)",
+                    fontWeight: 600,
                     color: "#1e293b",
                     fontFamily: "'Inter', sans-serif",
                     lineHeight: 1.3,
@@ -3250,32 +3379,40 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   </h3>
                   <p style={{
                     margin: 0,
-                    fontSize: "clamp(16px, 1.1rem, 19px)",
-                    lineHeight: 1.55,
-                    color: "#334155",
+                    fontSize: "clamp(16px, 1.1rem, 18px)",
+                    lineHeight: 1.6,
+                    color: "#475569",
                     fontFamily: "'Inter', sans-serif",
-                    fontWeight: 500,
                   }}>
                     Se enseña el concepto pero no se practica con casos reales.
                   </p>
                 </div>
 
-                {/* Divider */}
-                <div className="curiosidad-divider" style={{ background: "#e2e8f0", width: "1px", minHeight: "80px", alignSelf: "stretch" }} />
-
                 {/* Card 2 - Speech bubble / chat */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 clamp(20px, 4vw, 48px)" }}>
+                <div className="premium-obstacle-card" style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  padding: "clamp(32px, 5vw, 48px) clamp(24px, 4vw, 32px)",
+                  background: "#fff",
+                  borderRadius: "24px",
+                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+                  border: "1px solid rgba(15, 98, 254, 0.08)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease"
+                }}>
                   <div style={{
-                    width: "72px",
-                    height: "72px",
-                    borderRadius: "16px",
-                    background: "#1e3a8a",
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "20px",
+                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: "clamp(24px, 3vw, 32px)",
+                    boxShadow: "0 10px 20px rgba(30, 58, 138, 0.15)",
                   }}>
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                       <circle cx="9" cy="12" r="1" fill="#ffffff" />
                       <circle cx="12" cy="12" r="1" fill="#ffffff" />
@@ -3283,19 +3420,20 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     </svg>
                   </div>
                   <span style={{
-                    marginBottom: "6px",
+                    marginBottom: "8px",
                     fontSize: "clamp(12px, 0.85rem, 14px)",
-                    fontWeight: 500,
-                    color: "#64748b",
+                    fontWeight: 700,
+                    color: "#2563eb",
                     fontFamily: "'Inter', sans-serif",
-                    letterSpacing: "0.02em",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
                   }}>
                     Obstáculo 2
                   </span>
                   <h3 style={{
-                    margin: "0 0 clamp(8px, 1vw, 12px)",
-                    fontSize: "clamp(18px, 1.25rem, 22px)",
-                    fontWeight: 500,
+                    margin: "0 0 clamp(12px, 1.5vw, 16px)",
+                    fontSize: "clamp(20px, 1.35rem, 24px)",
+                    fontWeight: 600,
                     color: "#1e293b",
                     fontFamily: "'Inter', sans-serif",
                     lineHeight: 1.3,
@@ -3304,32 +3442,40 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   </h3>
                   <p style={{
                     margin: 0,
-                    fontSize: "clamp(16px, 1.1rem, 19px)",
-                    lineHeight: 1.55,
-                    color: "#334155",
+                    fontSize: "clamp(16px, 1.1rem, 18px)",
+                    lineHeight: 1.6,
+                    color: "#475569",
                     fontFamily: "'Inter', sans-serif",
-                    fontWeight: 500,
                   }}>
                     No hay forma clara de ver el progreso de cada estudiante.
                   </p>
                 </div>
 
-                {/* Divider */}
-                <div className="curiosidad-divider" style={{ background: "#e2e8f0", width: "1px", minHeight: "80px", alignSelf: "stretch" }} />
-
                 {/* Card 3 - Pencil */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 clamp(20px, 4vw, 48px)" }}>
+                <div className="premium-obstacle-card" style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  padding: "clamp(32px, 5vw, 48px) clamp(24px, 4vw, 32px)",
+                  background: "#fff",
+                  borderRadius: "24px",
+                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+                  border: "1px solid rgba(15, 98, 254, 0.08)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease"
+                }}>
                   <div style={{
-                    width: "72px",
-                    height: "72px",
-                    borderRadius: "16px",
-                    background: "#1e3a8a",
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "20px",
+                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: "clamp(24px, 3vw, 32px)",
+                    boxShadow: "0 10px 20px rgba(30, 58, 138, 0.15)",
                   }}>
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 19l7-7 3 3-7 7-3-3z" />
                       <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
                       <path d="M2 2l7.586 7.586" />
@@ -3337,19 +3483,20 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     </svg>
                   </div>
                   <span style={{
-                    marginBottom: "6px",
+                    marginBottom: "8px",
                     fontSize: "clamp(12px, 0.85rem, 14px)",
-                    fontWeight: 500,
-                    color: "#64748b",
+                    fontWeight: 700,
+                    color: "#2563eb",
                     fontFamily: "'Inter', sans-serif",
-                    letterSpacing: "0.02em",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
                   }}>
                     Obstáculo 3
                   </span>
                   <h3 style={{
-                    margin: "0 0 clamp(8px, 1vw, 12px)",
-                    fontSize: "clamp(18px, 1.25rem, 22px)",
-                    fontWeight: 500,
+                    margin: "0 0 clamp(12px, 1.5vw, 16px)",
+                    fontSize: "clamp(20px, 1.35rem, 24px)",
+                    fontWeight: 600,
                     color: "#1e293b",
                     fontFamily: "'Inter', sans-serif",
                     lineHeight: 1.3,
@@ -3358,11 +3505,10 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   </h3>
                   <p style={{
                     margin: 0,
-                    fontSize: "clamp(16px, 1.1rem, 19px)",
-                    lineHeight: 1.55,
-                    color: "#334155",
+                    fontSize: "clamp(16px, 1.1rem, 18px)",
+                    lineHeight: 1.6,
+                    color: "#475569",
                     fontFamily: "'Inter', sans-serif",
-                    fontWeight: 500,
                   }}>
                     Los profesores no tienen tiempo para personalizar la enseñanza.
                   </p>
@@ -3418,40 +3564,61 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                 position: "relative",
               }} className="how-it-works-steps">
                 {howItWorksSteps.map((step, i) => (
-                  <div key={i} className="step-card" style={{
-                    padding: "clamp(28px, 3vw, 36px) clamp(20px, 2.5vw, 28px)",
-                    borderRadius: "20px",
-                    background: "rgba(255, 255, 255, 0.95)",
-                    border: "1px solid rgba(15, 98, 254, 0.14)",
-                    boxShadow: "0 4px 24px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(15, 98, 254, 0.06)",
+                  <div key={i} className={`step-card reveal-element reveal-delay-${i + 1}`} style={{
+                    padding: "clamp(32px, 4vw, 48px) clamp(24px, 3vw, 36px)",
+                    borderRadius: "32px",
+                    background: "rgba(255, 255, 255, 0.7)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    border: "1px solid rgba(15, 98, 254, 0.12)",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.6)",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                     textAlign: "center",
-                    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    cursor: "default"
                   }}>
-                    <div style={{
-                      width: "64px",
-                      height: "64px",
-                      borderRadius: "50%",
-                      background: "linear-gradient(135deg, rgba(15, 98, 254, 0.15) 0%, rgba(15, 98, 254, 0.08) 100%)",
-                      border: "1px solid rgba(15, 98, 254, 0.2)",
+                    <div className="step-number-container" style={{
+                      width: "72px",
+                      height: "72px",
+                      borderRadius: "24px",
+                      background: "linear-gradient(135deg, rgba(15, 98, 254, 0.1) 0%, rgba(15, 98, 254, 0.05) 100%)",
+                      border: "1px solid rgba(15, 98, 254, 0.15)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginBottom: "20px",
+                      marginBottom: "28px",
                       flexShrink: 0,
                       position: "relative",
+                      animation: "float-step 4s ease-in-out infinite"
                     }}>
-                      <span style={{ position: "absolute", top: "-4px", right: "-4px", width: "24px", height: "24px", borderRadius: "50%", background: "#1e3a8a", color: "#fff", fontSize: "12px", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter', sans-serif" }}>
+                      <span style={{
+                        position: "absolute",
+                        top: "-8px",
+                        right: "-8px",
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "10px",
+                        background: "#1e3a8a",
+                        color: "#fff",
+                        fontSize: "14px",
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontFamily: "'Inter', sans-serif",
+                        boxShadow: "0 4px 10px rgba(30, 58, 138, 0.3)"
+                      }}>
                         {i + 1}
                       </span>
                       {i === 0 && (
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>
                       )}
                       {i === 1 && (
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>
                       )}
+
                       {i === 2 && (
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg>
                       )}
@@ -3544,7 +3711,47 @@ const landingCSS = `
   --font-weight-normal:400;
   --font-weight-medium:500;
   --font-weight-semibold:600;
+  --premium-shadow: 0 20px 40px rgba(15, 98, 254, 0.1);
 }
+
+@keyframes float-perfiles {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(30px, -20px) rotate(5deg); }
+}
+@keyframes float-perfiles-reverse {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(-40px, 30px) rotate(-10deg); }
+}
+
+.skill-icon-container {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+}
+.skill-icon-container:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 24px rgba(30, 58, 138, 0.2);
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+}
+
+.perfiles-slide-in {
+  animation: slide-up-soft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes slide-up-soft {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.premium-obstacle-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+  border-color: rgba(15, 98, 254, 0.2) !important;
+}
+
+@keyframes float-step {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
 
 body {
   background: #ffffff !important;

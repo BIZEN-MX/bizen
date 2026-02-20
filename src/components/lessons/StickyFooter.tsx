@@ -5,26 +5,28 @@ import React from "react"
 interface StickyFooterProps {
   children: React.ReactNode
   className?: string
+  /** Whether to use fixed positioning or stay in flex flow. Default true for backward compatibility. */
+  fixed?: boolean
 }
 
 /**
- * Sticky footer that stays at the absolute bottom of the viewport
- * - Uses position: fixed to ensure it's always at the screen bottom
+ * Sticky footer that stays at the bottom of its container or viewport
  * - Supports safe-area insets for iPhone notch
  * - Centered container with max-width on desktop
  */
-export function StickyFooter({ children, className = "" }: StickyFooterProps) {
+export function StickyFooter({ children, className = "", fixed = true }: StickyFooterProps) {
   return (
     <footer
-      className={`lesson-sticky-footer fixed bottom-0 left-0 right-0 w-full bg-white border-t-2 border-slate-200 z-[100] ${className}`}
+      className={`lesson-sticky-footer ${fixed ? "fixed bottom-0 left-0 right-0" : "relative"} w-full bg-white border-t-2 border-slate-200 z-[100] ${className}`}
       style={{
-        paddingTop: 16,
-        paddingBottom: "max(16px, env(safe-area-inset-bottom))",
-        paddingLeft: 20,
-        paddingRight: 20,
+        paddingTop: "clamp(12px, 2vw, 16px)",
+        paddingBottom: "max(clamp(12px, 2vw, 16px), env(safe-area-inset-bottom))",
+        paddingLeft: "clamp(12px, 3vw, 24px)",
+        paddingRight: "clamp(12px, 3vw, 24px)",
         display: "flex",
         justifyContent: "center",
-        boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.05)"
+        boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.05)",
+        flexShrink: 0
       }}
     >
       <div className="w-full" style={{ maxWidth: 1600 }}>
@@ -83,7 +85,7 @@ export function StickyFooterButton({
     inlineBg || propsStyle ? { ...inlineBg, ...(propsStyle as React.CSSProperties) } : undefined
   return (
     <button
-      className={`${baseStyles} ${variantClass} py-4 md:py-5 text-base md:text-lg lg:text-xl ${className}`}
+      className={`${baseStyles} ${variantClass} py-3 md:py-5 px-4 md:px-8 text-sm md:text-lg lg:text-xl ${className}`}
       style={mergedStyle}
       disabled={disabled || isLoading}
       {...restProps}

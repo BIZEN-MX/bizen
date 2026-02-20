@@ -59,21 +59,25 @@ p {
 }
 
 /* All Buttons - Responsive */
-button, .btn {
+button,
+.btn {
   padding: clamp(10px, 2.5vw, 16px) clamp(20px, 4vw, 32px) !important;
   font-size: clamp(14px, 2.5vw, 18px) !important;
   border-radius: clamp(8px, 2vw, 12px) !important;
 }
 
 /* Form Inputs - Responsive */
-input, textarea, select {
+input,
+textarea,
+select {
   font-size: clamp(14px, 2vw, 16px) !important;
   padding: clamp(10px, 2.5vw, 14px) !important;
   border-radius: clamp(6px, 1.5vw, 10px) !important;
 }
 
 /* Cards and Containers - Responsive Padding */
-[class*="card"], [class*="container"], 
+[class*="card"],
+[class*="container"],
 [style*="padding:"][style*="px"] {
   /* This is handled inline with clamp() */
 }
@@ -87,20 +91,21 @@ input, textarea, select {
   html {
     font-size: 12px !important;
   }
-  
+
   h1 {
     font-size: clamp(18px, 10vw, 26px) !important;
   }
-  
+
   h2 {
     font-size: clamp(16px, 9vw, 22px) !important;
   }
-  
+
   h3 {
     font-size: clamp(14px, 8vw, 20px) !important;
   }
-  
-  button, .btn {
+
+  button,
+  .btn {
     padding: 12px 20px !important;
     font-size: 14px !important;
     min-height: 48px !important;
@@ -112,20 +117,21 @@ input, textarea, select {
   html {
     font-size: 14px !important;
   }
-  
+
   h1 {
     font-size: clamp(22px, 8vw, 32px) !important;
   }
-  
+
   h2 {
     font-size: clamp(18px, 7vw, 28px) !important;
   }
-  
+
   h3 {
     font-size: clamp(16px, 6vw, 24px) !important;
   }
-  
-  button, .btn {
+
+  button,
+  .btn {
     padding: 14px 24px !important;
     font-size: 16px !important;
     min-height: 48px !important;
@@ -137,20 +143,21 @@ input, textarea, select {
   html {
     font-size: 13px !important;
   }
-  
+
   h1 {
     font-size: clamp(20px, 5vw, 26px) !important;
   }
-  
+
   h2 {
     font-size: clamp(16px, 4vw, 22px) !important;
   }
-  
+
   h3 {
     font-size: clamp(15px, 3.5vw, 20px) !important;
   }
-  
-  button, .btn {
+
+  button,
+  .btn {
     padding: 10px 18px !important;
     font-size: 14px !important;
     min-height: 40px !important;
@@ -162,20 +169,21 @@ input, textarea, select {
   html {
     font-size: 15px !important;
   }
-  
+
   h1 {
     font-size: clamp(28px, 5vw, 40px) !important;
   }
-  
+
   h2 {
     font-size: clamp(24px, 4vw, 32px) !important;
   }
-  
+
   h3 {
     font-size: clamp(20px, 3vw, 28px) !important;
   }
-  
-  button, .btn {
+
+  button,
+  .btn {
     padding: 14px 28px !important;
     font-size: 16px !important;
     min-height: 48px !important;
@@ -187,20 +195,21 @@ input, textarea, select {
   html {
     font-size: 15px !important;
   }
-  
+
   h1 {
     font-size: clamp(24px, 4vw, 36px) !important;
   }
-  
+
   h2 {
     font-size: clamp(20px, 3.5vw, 28px) !important;
   }
-  
+
   h3 {
     font-size: clamp(18px, 3vw, 24px) !important;
   }
-  
-  button, .btn {
+
+  button,
+  .btn {
     padding: 12px 24px !important;
     font-size: 15px !important;
   }
@@ -211,20 +220,21 @@ input, textarea, select {
   html {
     font-size: 16px !important;
   }
-  
+
   h1 {
     font-size: clamp(32px, 4vw, 48px) !important;
   }
-  
+
   h2 {
     font-size: clamp(26px, 3vw, 36px) !important;
   }
-  
+
   h3 {
     font-size: clamp(22px, 2.5vw, 28px) !important;
   }
-  
-  button, .btn {
+
+  button,
+  .btn {
     padding: 14px 32px !important;
     font-size: 16px !important;
   }
@@ -235,20 +245,21 @@ input, textarea, select {
   html {
     font-size: 16px !important;
   }
-  
+
   h1 {
     font-size: clamp(36px, 4vw, 56px) !important;
   }
-  
+
   h2 {
     font-size: clamp(28px, 3vw, 42px) !important;
   }
-  
+
   h3 {
     font-size: clamp(24px, 2.5vw, 32px) !important;
   }
-  
-  button, .btn {
+
+  button,
+  .btn {
     padding: 16px 40px !important;
     font-size: 18px !important;
   }
@@ -258,12 +269,12 @@ input, textarea, select {
 @media (max-width: 767px) {
   /* Mobile-first: Reduce spacing on small screens */
   /* Body padding handled by components */
-  
+
   /* Stack elements vertically on mobile */
   .responsive-stack-mobile {
     flex-direction: column !important;
   }
-  
+
   /* Hide less important elements on very small screens */
   .hide-mobile {
     display: none !important;
@@ -272,21 +283,16 @@ input, textarea, select {
 
 /* Note: Tablet and Desktop optimizations are handled above */
 
-/* Button Groups - Responsive Spacing */
-@media (max-width: 767px) {
-  button + button {
-    margin-top: 12px !important;
-    width: 100% !important;
-  }
-}
+
 
 /* Grids and Flexbox - Responsive */
 @media (max-width: 767px) {
+
   /* Make multi-column layouts single column on mobile */
   [style*="grid-template-columns"][style*="repeat"] {
     grid-template-columns: 1fr !important;
   }
-  
+
   /* Stack flex containers */
   [style*="display: flex"][style*="row"] {
     flex-direction: column !important;
@@ -300,7 +306,8 @@ img {
 }
 
 /* Prevent horizontal scroll - CRITICAL */
-body, html {
+body,
+html {
   overflow-x: hidden !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -312,15 +319,19 @@ body, html {
 }
 
 /* Force containers to stay within viewport */
-body > * {
+body>* {
   width: 100% !important;
   max-width: 100% !important;
 }
 
 /* Touch-friendly tap targets */
 @media (max-width: 767px) {
-  button, a, [role="button"] {
-    min-height: 44px !important; /* Apple HIG minimum */
+
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px !important;
+    /* Apple HIG minimum */
     min-width: 44px !important;
   }
 }
@@ -344,9 +355,14 @@ body > * {
 
 /* Text Alignment on Mobile - Optional class-based */
 @media (max-width: 767px) {
+
   /* Only apply if classes are used, don't force all headings */
-  .mobile-center h1, .mobile-center h2, .mobile-center h3, 
-  .mobile-center h4, .mobile-center h5, .mobile-center h6 {
+  .mobile-center h1,
+  .mobile-center h2,
+  .mobile-center h3,
+  .mobile-center h4,
+  .mobile-center h5,
+  .mobile-center h6 {
     text-align: center !important;
   }
 }
@@ -386,7 +402,8 @@ body > * {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   background-color: #ffffff !important;
 }
 
@@ -416,6 +433,7 @@ body[data-lesson-interactive="true"] .lesson-screen-root,
 body[data-lesson-interactive="true"] .lesson-container-no-scroll {
   overflow: hidden !important;
 }
+
 /* LOCKED: main page cannot scroll on lesson - one viewport only */
 body[data-lesson-interactive="true"] .app-scroll {
   overflow: hidden !important;
@@ -428,6 +446,7 @@ body[data-lesson-interactive="true"] .app-main {
   padding-left: 0 !important;
   margin-left: 0 !important;
 }
+
 /* Restore centering for lesson content (global tablet/desktop rules override margin:0 auto otherwise) */
 body[data-lesson-interactive="true"] div[style*="margin: 0 auto"],
 body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
@@ -463,11 +482,13 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   justify-content: center;
   align-items: center;
 }
+
 @keyframes lessonStepIn {
   from {
     opacity: 0;
     transform: scale(0.99);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -482,6 +503,7 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
 
 /* iPad/Tablet (768px-1160px): Account for 220px left sidebar (text-only) */
 @media (min-width: 768px) and (max-width: 1160px) {
+
   /* Force body to use full width */
   body {
     margin: 0 !important;
@@ -492,10 +514,10 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* All top-level containers must stretch to full width */
-  body > div,
-  body > main,
+  body>div,
+  body>main,
   #__next,
-  #__next > div {
+  #__next>div {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -542,7 +564,7 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* Landing: no sidebar → no left gap (override above) */
-  body[data-landing-page="true"] > div,
+  body[data-landing-page="true"]>div,
   body[data-landing-page="true"] main,
   body[data-landing-page="true"] .app-shell,
   body[data-landing-page="true"] .app-scroll,
@@ -553,10 +575,10 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* Lesson interactive: no sidebar → no left gap; content centered in viewport */
-  body[data-lesson-interactive="true"] > div,
+  body[data-lesson-interactive="true"]>div,
   body[data-lesson-interactive="true"] main,
   body[data-lesson-interactive="true"] #__next,
-  body[data-lesson-interactive="true"] #__next > div,
+  body[data-lesson-interactive="true"] #__next>div,
   body[data-lesson-interactive="true"] .app-shell,
   body[data-lesson-interactive="true"] .app-scroll,
   body[data-lesson-interactive="true"] .app-main {
@@ -564,10 +586,10 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* Standalone pages: no sidebar reserved space on tablet */
-  body[data-no-sidebar="true"] > div,
+  body[data-no-sidebar="true"]>div,
   body[data-no-sidebar="true"] main,
   body[data-no-sidebar="true"] #__next,
-  body[data-no-sidebar="true"] #__next > div,
+  body[data-no-sidebar="true"] #__next>div,
   body[data-no-sidebar="true"] .app-shell,
   body[data-no-sidebar="true"] .app-scroll,
   body[data-no-sidebar="true"] .app-main {
@@ -578,6 +600,7 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
 
 /* Desktop (1161px+): Account for 280px left sidebar */
 @media (min-width: 1161px) {
+
   /* Force body to use full width */
   body {
     margin: 0 !important;
@@ -588,10 +611,10 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* All top-level containers must stretch to full width */
-  body > div,
-  body > main,
+  body>div,
+  body>main,
   #__next,
-  #__next > div {
+  #__next>div {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -638,7 +661,7 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* Landing: no sidebar → no left gap (override above) */
-  body[data-landing-page="true"] > div,
+  body[data-landing-page="true"]>div,
   body[data-landing-page="true"] main,
   body[data-landing-page="true"] .app-shell,
   body[data-landing-page="true"] .app-scroll,
@@ -649,10 +672,10 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* Lesson interactive: no sidebar → no left gap; content centered in viewport */
-  body[data-lesson-interactive="true"] > div,
+  body[data-lesson-interactive="true"]>div,
   body[data-lesson-interactive="true"] main,
   body[data-lesson-interactive="true"] #__next,
-  body[data-lesson-interactive="true"] #__next > div,
+  body[data-lesson-interactive="true"] #__next>div,
   body[data-lesson-interactive="true"] .app-shell,
   body[data-lesson-interactive="true"] .app-scroll,
   body[data-lesson-interactive="true"] .app-main {
@@ -660,10 +683,10 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* Standalone pages: no sidebar reserved space on desktop */
-  body[data-no-sidebar="true"] > div,
+  body[data-no-sidebar="true"]>div,
   body[data-no-sidebar="true"] main,
   body[data-no-sidebar="true"] #__next,
-  body[data-no-sidebar="true"] #__next > div,
+  body[data-no-sidebar="true"] #__next>div,
   body[data-no-sidebar="true"] .app-shell,
   body[data-no-sidebar="true"] .app-scroll,
   body[data-no-sidebar="true"] .app-main {
@@ -682,15 +705,18 @@ html:has(body[data-landing-page="true"]) {
   height: auto !important;
   min-height: 100% !important;
 }
+
 /* SINGLE SCROLL ONLY: no nested scroll anywhere on landing - main (body) scroll only */
 body[data-landing-page="true"] * {
   overflow-y: visible !important;
 }
+
 /* Exception: demo modal can scroll when content is long */
 body[data-landing-page="true"] .landing-demo-modal-content {
   overflow-y: auto !important;
   overflow-x: hidden !important;
 }
+
 /* Keep existing section/container rules for min-height etc. */
 body[data-landing-page="true"] .main-page-container,
 body[data-landing-page="true"] .main-page-container main,
@@ -702,6 +728,7 @@ body[data-landing-page="true"] .main-header {
   overflow-x: hidden !important;
   min-height: 0 !important;
 }
+
 body[data-landing-page="true"] .main-page-container {
   overflow: visible !important;
   flex: none !important;
@@ -717,11 +744,13 @@ body[data-landing-page="true"] .main-page-container main {
   overflow: visible !important;
   overflow-y: visible !important;
 }
-body[data-landing-page="true"] .main-page-container main > div {
+
+body[data-landing-page="true"] .main-page-container main>div {
   height: auto !important;
   overflow: visible !important;
   overflow-y: visible !important;
 }
+
 body[data-landing-page="true"] .landing-hero-wrapper {
   overflow-y: hidden !important;
   overflow-x: hidden !important;
@@ -731,6 +760,7 @@ body[data-landing-page="true"] .landing-hero-wrapper {
   overflow-scrolling: unset !important;
   -webkit-overflow-scrolling: unset !important;
 }
+
 body[data-landing-page="true"] .main-content-wrapper {
   overflow-y: hidden !important;
   overflow-x: hidden !important;
@@ -743,14 +773,15 @@ body[data-landing-page="true"] .main-content-wrapper {
    Nested scroll can come from the React/Next root (body's first child) or other wrappers
    if they get a fixed height + overflow. Force them to overflow:visible + height:auto
    so only the document (viewport) scrolls. */
-body[data-landing-page="true"] > div,
+body[data-landing-page="true"]>div,
 body[data-landing-page="true"] #__next,
-body[data-landing-page="true"] #__next > div {
+body[data-landing-page="true"] #__next>div {
   overflow: visible !important;
   overflow-x: hidden !important;
   height: auto !important;
   min-height: 100% !important;
 }
+
 body[data-landing-page="true"] .app-shell {
   position: static !important;
   inset: auto !important;
@@ -758,6 +789,7 @@ body[data-landing-page="true"] .app-shell {
   min-height: 100% !important;
   overflow: visible !important;
 }
+
 body[data-landing-page="true"] .app-scroll {
   overflow: visible !important;
   overflow-x: hidden !important;
@@ -765,10 +797,11 @@ body[data-landing-page="true"] .app-scroll {
   min-height: 100% !important;
   -webkit-overflow-scrolling: unset !important;
 }
+
 /* Remove left padding from ALL layout containers on landing */
-body[data-landing-page="true"] > div,
+body[data-landing-page="true"]>div,
 body[data-landing-page="true"] #__next,
-body[data-landing-page="true"] #__next > div,
+body[data-landing-page="true"] #__next>div,
 body[data-landing-page="true"] .app-shell,
 body[data-landing-page="true"] .app-scroll,
 body[data-landing-page="true"] .app-main,
@@ -778,11 +811,13 @@ body[data-landing-page="true"] .main-header {
   padding-left: 0 !important;
   margin-left: 0 !important;
 }
+
 /* Override the centered-container rule that adds 16px left padding */
 body[data-landing-page="true"] div[style*="margin: 0 auto"],
 body[data-landing-page="true"] div[style*="margin:0 auto"] {
   padding-left: 0 !important;
 }
+
 /* Force landing root to fill width (no left gap) */
 body[data-landing-page="true"] .landing-page-root,
 body[data-landing-page="true"] [data-landing-root] {

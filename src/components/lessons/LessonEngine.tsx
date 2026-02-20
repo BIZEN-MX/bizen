@@ -246,7 +246,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         <StickyFooterButton
           variant="secondary"
           onClick={handleBack}
-          style={{ minWidth: 100, fontSize: "1rem", fontWeight: 700, padding: "16px 24px" }}
+          style={{ minWidth: "auto", fontSize: "0.9rem", fontWeight: 700, padding: "12px 16px" }}
         >
           Anterior
         </StickyFooterButton>
@@ -255,7 +255,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           <StickyFooterButton
             variant="outline"
             onClick={onExit}
-            style={{ minWidth: 100, fontSize: "1rem", fontWeight: 700, padding: "16px 24px" }}
+            style={{ minWidth: "auto", fontSize: "0.9rem", fontWeight: 700, padding: "12px 16px" }}
           >
             Salir
           </StickyFooterButton>
@@ -267,7 +267,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         variant={isLastStep || isSummaryStep ? "success" : "blue"}
         onClick={handleContinue}
         disabled={footerButtonDisabled}
-        style={{ minWidth: 180, fontSize: "1.1rem", fontWeight: 700, padding: "16px 32px", flex: 1 }}
+        style={{ minWidth: 140, fontSize: "1rem", fontWeight: 700, padding: "12px 24px", flex: 1 }}
       >
         {footerButtonLabel}
       </StickyFooterButton>
@@ -281,8 +281,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         style={{
           paddingTop: "env(safe-area-inset-top)",
           paddingBottom: "max(0px, env(safe-area-inset-bottom))",
-          minHeight: 0,
-          height: "100%",
+          minHeight: "100dvh",
+          maxHeight: "100dvh",
+          height: "100dvh",
           overflow: "hidden",
           background: "#f1f5f9"
         }}
@@ -298,7 +299,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             justifyContent: "flex-start",
             alignItems: "stretch",
             paddingTop: CONTENT_PADDING_Y,
-            paddingBottom: 110, // ROOM FOR FIXED FOOTER
+            paddingBottom: 24, // Minimal padding as footer is no longer fixed
             boxSizing: "border-box",
             overflowY: "auto"
           }}
@@ -323,7 +324,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           </div>
         </div>
 
-        <StickyFooter>
+        <StickyFooter fixed={false}>
           {renderFooter()}
         </StickyFooter>
       </div>

@@ -42,8 +42,9 @@ export function LessonScreen({
       className="flex flex-col text-slate-900 relative w-full flex-1 min-h-0 lesson-screen-root"
       style={{
         paddingTop: "env(safe-area-inset-top)",
-        minHeight: 0,
-        height: "100%",
+        minHeight: "100dvh",
+        maxHeight: "100dvh",
+        height: "100dvh",
         overflow: "hidden",
         background: "#f1f5f9",
       }}
@@ -79,7 +80,7 @@ export function LessonScreen({
       {/* Content - fills space between progress bar and nav buttons; smooth fade on step change */}
       <LessonContainer
         className={className}
-        bottomPad={footerContent ? 110 : 0}
+        bottomPad={0}
         topPad={0}
         noScroll
       >
@@ -94,9 +95,9 @@ export function LessonScreen({
         </div>
       </LessonContainer>
 
-      {/* Nav buttons - at bottom of slide (in flow, so no empty gap) */}
+      {/* Nav buttons - in different container than content, at bottom of viewport */}
       {footerContent && (
-        <StickyFooter>{footerContent}</StickyFooter>
+        <StickyFooter fixed={false}>{footerContent}</StickyFooter>
       )}
     </div>
   )
