@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LandingWaitlistFooter } from "@/components/LandingWaitlistFooter"
-import { ClipboardCheck, LogIn, ChevronRight, Play } from "lucide-react"
+import { ClipboardCheck, LogIn, ChevronRight, Play, UserPlus, Calendar, User } from "lucide-react"
 import * as React from "react"
 import Hero3DScene from "@/components/landing/Hero3DScene"
 
@@ -38,6 +38,7 @@ export default function WelcomePage() {
   const [demoModalOpen, setDemoModalOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [authDropdownOpen, setAuthDropdownOpen] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
@@ -45,8 +46,20 @@ export default function WelcomePage() {
       setMousePos({ x: e.clientX, y: e.clientY })
     }
     window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [])
+
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (authDropdownOpen && !target.closest('.auth-dropdown-wrapper')) {
+        setAuthDropdownOpen(false);
+      }
+    }
+    window.addEventListener("click", handleClickOutside)
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("click", handleClickOutside)
+    }
+  }, [authDropdownOpen])
 
   const heroCardSummaries: { title: string; summary: string }[] = [
     {
@@ -106,85 +119,131 @@ export default function WelcomePage() {
       display: "flex",
       flexDirection: "column",
     }} className="main-page-container landing-page-root" data-landing-root>
-      {/* Header: match reference – blue nav links, house + Inicia sesión, Agenda tu DEMO */}
+      {/* Header: pill nav design matching reference screenshot */}
       <header className="main-header landing-header glass-header" style={{
         width: "100%",
         maxWidth: "100%",
         boxSizing: "border-box",
-        padding: "clamp(12px, 2vw, 20px) clamp(20px, 5vw, 56px)",
+        padding: "clamp(10px, 1.5vw, 16px) 0",
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
-        gap: "clamp(24px, 5vw, 56px)",
-        flexWrap: "nowrap",
-        background: "rgba(255, 255, 255, 0.7)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        position: "fixed",
+        background: "transparent",
+        backdropFilter: "none",
+        WebkitBackdropFilter: "none",
+        position: "absolute",
         top: 0,
         left: 0,
         right: 0,
         zIndex: 1000,
-        borderBottom: "1px solid rgba(255, 255, 255, 0.3)",
+        borderBottom: "none",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "clamp(8px, 2vw, 16px)", flexShrink: 0 }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }} aria-label="BIZEN home">
-            <span style={{ fontSize: "clamp(18px, 2.2vw, 22px)", fontWeight: 600, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", letterSpacing: "0.02em" }}>BIZEN</span>
+        <div className="landing-header-container" style={{
+          width: "100%",
+          maxWidth: "1200px",
+          padding: "0 clamp(20px, 4vw, 48px)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: "16px",
+        }}>
+          {/* Logo */}
+          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }} aria-label="BIZEN home">
+            <span style={{ fontSize: "clamp(18px, 2vw, 22px)", fontWeight: 700, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", letterSpacing: "0.01em" }}>BIZEN</span>
           </Link>
-          <button type="button" className="landing-header-mobile-menu-btn" aria-label="Abrir menú" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((o) => !o)} style={{ display: "none", alignItems: "center", justifyContent: "center", width: 44, height: 44, padding: 0, border: "none", background: "transparent", cursor: "pointer", color: "#2C7BEF" }}>
+
+          {/* Hamburger (mobile only) */}
+          <button type="button" className="landing-header-mobile-menu-btn" aria-label="Abrir menú" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((o) => !o)} style={{ display: "none", alignItems: "center", justifyContent: "center", width: 44, height: 44, padding: 0, border: "none", background: "transparent", cursor: "pointer", color: "#2C7BEF", order: 2 }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
           </button>
-        </div>
 
-        <nav className="header-bar-nav landing-header-nav" style={{ display: "flex", gap: "clamp(40px, 6vw, 80px)", alignItems: "center", flexShrink: 0 }}>
-          <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Sobre Bizen</Link>
-          <Link href="#como-funciona" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Implementación</Link>
-          <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Impacto</Link>
-          <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(14px, 1.6vw, 16px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Inter', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "12px 16px" }}>Problema</Link>
-        </nav>
+          {/* Centered pill nav */}
+          <nav className="header-bar-nav landing-header-nav" style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+            background: "#ffffff",
+            borderRadius: "9999px",
+            padding: "6px 8px",
+            boxShadow: "0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05)",
+            flexShrink: 0,
+          }}>
+            <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Inicio</Link>
+            <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Somos BIZEN</Link>
+            <Link href="#perfiles" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Perfil educativo</Link>
+            <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Impacto social</Link>
+            <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Blog</Link>
+          </nav>
 
-        <div className="landing-header-actions" style={{ display: "flex", alignItems: "center", gap: "clamp(20px, 3vw, 36px)", flexShrink: 0 }}>
-          <Link href="/diagnostic" className="header-nav-link" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Quiz Diagnóstico">
-            <ClipboardCheck size={20} />
-            <span>Quiz</span>
-          </Link>
-          <div className="auth-dropdown-wrapper">
-            <Link href="/signup" className="landing-header-quiz premium-button">
-              Crear cuenta
-            </Link>
-            <div className="auth-dropdown-content">
-              <Link href="/signup" className="auth-dropdown-item">
-                Crear cuenta
-              </Link>
-              <Link href="/login" className="auth-dropdown-item">
-                <LogIn size={18} />
-                Iniciar Sesión
-              </Link>
+          {/* Header Actions */}
+          <div className="landing-header-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+            {/* Agendar DEMO */}
+            <a
+              href="https://calendly.com/diego-bizen"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="landing-header-demo landing-header-actions-link"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 20px",
+                fontSize: "clamp(13px, 1.3vw, 15px)",
+                fontWeight: 600,
+                color: "#2C7BEF",
+                textDecoration: "none",
+                borderRadius: "9999px",
+                background: "rgba(44, 123, 239, 0.08)",
+                transition: "all 0.2s ease",
+              }}
+            >
+              <Calendar size={16} />
+              <span className="hide-tablet">Agendar DEMO</span>
+            </a>
+
+            {/* Comenzar ahora with Dropdown */}
+            <div className={`auth-dropdown-wrapper ${authDropdownOpen ? 'is-open' : ''}`}>
+              <button
+                className="premium-button landing-header-actions-main"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAuthDropdownOpen(!authDropdownOpen);
+                }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "10px 24px",
+                  fontSize: "clamp(13px, 1.3vw, 15px)",
+                  fontWeight: 600,
+                  borderRadius: "9999px",
+                  background: "#2C7BEF",
+                  color: "#fff",
+                  border: "none",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  boxShadow: "0 4px 14px rgba(44, 123, 239, 0.35)",
+                }}
+              >
+                Comenzar ahora
+              </button>
+              <div className="auth-dropdown-content" style={{
+                opacity: authDropdownOpen ? 1 : 0,
+                visibility: authDropdownOpen ? "visible" : "hidden",
+                transform: authDropdownOpen ? "translateY(0)" : "translateY(10px)",
+              }}>
+                <Link href="/login" className="auth-dropdown-item">
+                  <LogIn size={18} />
+                  <span>Iniciar sesión</span>
+                </Link>
+                <Link href="/signup" className="auth-dropdown-item">
+                  <UserPlus size={18} />
+                  <span>Crear cuenta</span>
+                </Link>
+              </div>
             </div>
           </div>
-          <div className="calendar-tooltip-container">
-            <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" className="landing-header-reunion" style={{ display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none", color: "#2C7BEF", fontWeight: 500, fontSize: "clamp(14px, 1.6vw, 16px)", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }} aria-label="Agendar llamada">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-            </a>
-            <span className="calendar-tooltip-text">Agendar llamada</span>
-          </div>
-          <button type="button" onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }} className="landing-header-demo crear-cuenta-button premium-button" style={{
-            padding: "8px 20px",
-            fontSize: "clamp(14px, 1.6vw, 16px)",
-            fontWeight: 600,
-            borderRadius: "9999px",
-            background: "#1e3a8a",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            boxShadow: "0 4px 12px rgba(30, 58, 138, 0.2)"
-          }}>Agenda tu DEMO</button>
         </div>
       </header>
 
@@ -237,54 +296,27 @@ export default function WelcomePage() {
               </button>
             </div>
 
-            <nav style={{ display: "flex", flexDirection: "column", gap: "24px", alignItems: "center" }}>
-              <Link href="/" style={{ marginBottom: "20px", display: "inline-block" }} onClick={() => setMobileMenuOpen(false)}>
-                <span style={{ fontSize: "28px", fontWeight: 700, color: "#fff", letterSpacing: "0.05em" }}>BIZEN</span>
-              </Link>
-              <Link href="#sobre-bizen" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Sobre Bizen</Link>
-              <Link href="#como-funciona" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Implementación</Link>
-              <Link href="#impacto" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Impacto</Link>
-              <Link href="#problema" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Problema</Link>
-              <Link href="/diagnostic" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", gap: "12px" }} onClick={() => setMobileMenuOpen(false)}>
-                <ClipboardCheck size={24} />
-                <span>Quiz Diagnóstico</span>
-              </Link>
-              <Link href="/signup" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }} onClick={() => setMobileMenuOpen(false)}>Crear cuenta</Link>
+            <nav style={{ display: "flex", flexDirection: "column", gap: "20px", alignItems: "center" }}>
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Inicio</Link>
+              <Link href="#sobre-bizen" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Somos BIZEN</Link>
+              <Link href="#perfiles" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Perfil educativo</Link>
+              <Link href="#impacto" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Impacto social</Link>
+              <Link href="#problema" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Blog</Link>
 
-              <div style={{ height: "2px", background: "rgba(255,255,255,0.1)", margin: "20px 0" }} />
+              <div style={{ height: "1px", width: "100%", background: "rgba(255,255,255,0.1)", margin: "10px 0" }} />
 
-              <Link href="/login" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }} onClick={() => setMobileMenuOpen(false)}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
-                <span>Inicia sesión</span>
+              <Link href="/login" onClick={() => setMobileMenuOpen(false)} style={{ width: "100%", fontSize: "18px", color: "#fff", textDecoration: "none", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", background: "rgba(255,255,255,0.1)", padding: "14px", borderRadius: "12px" }}>
+                <LogIn size={20} />
+                Iniciar sesión
               </Link>
-              <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }} onClick={() => setMobileMenuOpen(false)}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                <span>Agendar llamada</span>
+              <Link href="/signup" onClick={() => setMobileMenuOpen(false)} style={{ width: "100%", fontSize: "18px", color: "#2C7BEF", textDecoration: "none", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", background: "#fff", padding: "14px", borderRadius: "12px" }}>
+                <UserPlus size={20} />
+                Crear cuenta
+              </Link>
+              <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)} style={{ width: "100%", fontSize: "16px", color: "rgba(255,255,255,0.8)", textDecoration: "none", fontWeight: 500, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "10px" }}>
+                <Calendar size={18} />
+                Agendar demo
               </a>
-              <button
-                type="button"
-                className="premium-button"
-                onClick={() => { setDemoModalOpen(true); setMobileMenuOpen(false); }}
-                style={{
-                  marginTop: "12px",
-                  fontSize: "18px",
-                  fontWeight: 700,
-                  color: "#1e3a8a",
-                  background: "#fff",
-                  border: "none",
-                  borderRadius: "16px",
-                  padding: "16px 32px",
-                  cursor: "pointer",
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.15)"
-                }}
-              >
-                Agenda tu DEMO
-              </button>
             </nav>
           </div>
         </div>
@@ -311,37 +343,52 @@ export default function WelcomePage() {
           }}>
             <Hero3DScene />
 
-            {/* Blue geometric shapes - left side (hidden on small screens to avoid overlap) */}
-            <div className="landing-hero-shapes landing-hero-shapes-left" style={{
+            {/* Mascot leaning out from the left - updated character */}
+            <div className="landing-hero-mascot reveal-element" style={{
               position: "absolute",
-              left: "0",
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: "clamp(150px, 20vw, 300px)",
-              height: "clamp(300px, 40vh, 500px)",
-              pointerEvents: "none",
+              left: 0,
+              top: "clamp(80px, 14vw, 200px)", // Precisely aligned with the main title top
               zIndex: 0,
+              width: "clamp(250px, 25vw, 450px)",
+              transform: "translateX(0)", // Show 100% of the image
+              pointerEvents: "none",
+              transition: "all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)",
+              opacity: 0,
             }}>
-              <div style={{ position: "absolute", left: "0", top: "10%", width: "60%", height: "25%", background: "#0066FF", transform: "rotate(-15deg)", opacity: 0.9 }} />
-              <div style={{ position: "absolute", left: "20%", top: "40%", width: "70%", height: "30%", background: "#0052CC", transform: "rotate(25deg)", opacity: 0.85 }} />
-              <div style={{ position: "absolute", left: "10%", bottom: "15%", width: "55%", height: "20%", background: "#0047B3", transform: "rotate(-25deg)", opacity: 0.8 }} />
+              <style dangerouslySetInnerHTML={{
+                __html: `
+                .landing-hero-mascot.revealed {
+                  opacity: 1 !important;
+                  transform: translateX(0) translateY(0) !important;
+                }
+                @media (max-width: 1023px) {
+                  .landing-hero-mascot {
+                    width: 200px !important;
+                    top: 140px !important;
+                  }
+                }
+                @media (max-width: 768px) {
+                  .landing-hero-mascot {
+                    width: 140px !important;
+                    top: 110px !important;
+                  }
+                }
+              `}} />
+              <Image
+                src="/bizen-mascot.png"
+                alt="Bizen Mascot"
+                width={600}
+                height={600}
+                priority
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  filter: "drop-shadow(20px 0 30px rgba(44, 123, 239, 0.15))"
+                }}
+              />
             </div>
 
-            {/* Gray geometric shapes - right side (hidden on small screens to avoid overlap) */}
-            <div className="landing-hero-shapes landing-hero-shapes-right" style={{
-              position: "absolute",
-              right: "0",
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: "clamp(150px, 20vw, 300px)",
-              height: "clamp(300px, 40vh, 500px)",
-              pointerEvents: "none",
-              zIndex: 0,
-            }}>
-              <div style={{ position: "absolute", right: "0", top: "15%", width: "65%", height: "28%", background: "#B8B8B8", transform: "rotate(20deg)", opacity: 0.75 }} />
-              <div style={{ position: "absolute", right: "15%", top: "45%", width: "75%", height: "25%", background: "#999999", transform: "rotate(-18deg)", opacity: 0.7 }} />
-              <div style={{ position: "absolute", right: "5%", bottom: "20%", width: "60%", height: "22%", background: "#CCCCCC", transform: "rotate(15deg)", opacity: 0.65 }} />
-            </div>
+
 
             {/* Main content - centered */}
             <div className="landing-hero-content reveal-element" style={{
@@ -368,7 +415,9 @@ export default function WelcomePage() {
                 wordWrap: "break-word",
                 overflowWrap: "break-word",
               }}>
-                El futuro de la <span style={{ color: "#2C7BEF" }}>Educación Financiera</span> para jóvenes en un click
+                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>El futuro de la <span style={{ color: "#2C7BEF" }}>Educación Financiera</span></span><br />
+                para jóvenes en un click<br />
+                con <span className="brand-highlight-blue">BIZEN</span>
               </h1>
 
               {/* Subheading with highlighted text - responsive, never overlaps */}
@@ -442,6 +491,118 @@ export default function WelcomePage() {
             </div>
 
           </div>
+
+          {/* SOMOS BIZEN Section */}
+          <div style={{
+            background: "#ffffff",
+            width: "100%",
+            padding: "clamp(60px, 8vw, 100px) clamp(24px, 6vw, 80px)",
+            boxSizing: "border-box",
+          }}>
+            <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+
+              {/* Title */}
+              <h2 style={{
+                textAlign: "center",
+                fontSize: "clamp(32px, 5vw, 56px)",
+                fontWeight: 900,
+                color: "#111",
+                fontFamily: "'Inter', sans-serif",
+                letterSpacing: "-0.02em",
+                marginBottom: "clamp(32px, 4vw, 48px)",
+              }}>
+                SOMOS <span style={{
+                  background: "linear-gradient(135deg, #1e3a8a 0%, #2c7bef 50%, #1e40af 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}>BIZEN</span>
+              </h2>
+
+              {/* Description */}
+              <p style={{
+                textAlign: "center",
+                fontSize: "clamp(17px, 1.8vw, 22px)",
+                color: "#374151",
+                lineHeight: 1.75,
+                maxWidth: "1000px",
+                margin: "0 auto clamp(48px, 6vw, 72px)",
+                fontFamily: "'Inter', sans-serif",
+              }}>
+                En <strong>BIZEN</strong> combinamos{" "}
+                <strong style={{ color: "#2C7BEF" }}>aprendizaje gamificado</strong>{" "}
+                para que los alumnos entiendan el dinero practicando, desarrollamos{" "}
+                <strong style={{ color: "#2C7BEF" }}>competencias reales</strong>{" "}
+                a través de decisiones financieras aplicadas al contexto mexicano y generamos{" "}
+                <strong style={{ color: "#2C7BEF" }}>impacto real</strong>{" "}
+                formando jóvenes capaces de organizar su dinero, evitar deudas y generar ingresos desde temprana edad.
+              </p>
+
+              {/* 3-column stats — explicit grid placement for perfect row alignment */}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                columnGap: "clamp(48px, 8vw, 120px)",
+                rowGap: "0px",
+                alignItems: "start",
+              }}>
+
+                {/* ── ROW 1: Big stat numbers ── */}
+                <div style={{ gridRow: 1, gridColumn: 1, fontSize: "clamp(32px, 4vw, 44px)", fontWeight: 900, color: "#111", fontFamily: "'Inter', sans-serif", letterSpacing: "-0.03em", lineHeight: 1, textAlign: "center", paddingBottom: "16px" }}>
+                  +50 startups
+                </div>
+                <div style={{ gridRow: 1, gridColumn: 2, fontSize: "clamp(32px, 4vw, 44px)", fontWeight: 900, color: "#111", fontFamily: "'Inter', sans-serif", letterSpacing: "-0.03em", lineHeight: 1, textAlign: "center", paddingBottom: "16px" }}>
+                  +10 Instituciones
+                </div>
+                <div style={{ gridRow: 1, gridColumn: 3, fontSize: "clamp(32px, 4vw, 44px)", fontWeight: 900, color: "#111", fontFamily: "'Inter', sans-serif", letterSpacing: "-0.03em", lineHeight: 1, textAlign: "center", paddingBottom: "16px" }}>
+                  +25,000 USD
+                </div>
+
+                {/* ── ROW 2: Blue subtitles ── */}
+                <div style={{ gridRow: 2, gridColumn: 1, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#2C7BEF", fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 16px" }}>
+                  Seleccionados entre<br />+50 startups.
+                </div>
+                <div style={{ gridRow: 2, gridColumn: 2, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#2C7BEF", fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 16px" }}>
+                  Mas de 10 instituciones en Querétaro<br />nos respaldan
+                </div>
+                <div style={{ gridRow: 2, gridColumn: 3, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#2C7BEF", fontFamily: "'Inter', sans-serif", textAlign: "center", border: "2px solid #2C7BEF", borderRadius: "8px", padding: "8px 12px 16px", justifySelf: "center" }}>
+                  Mas de 25,000USD en creditos de<br />google invertidos en nosotros
+                </div>
+
+                {/* ── ROW 3: Body text ── */}
+                <p style={{ gridRow: 3, gridColumn: 1, fontSize: "clamp(14px, 1.2vw, 16px)", color: "#6b7280", lineHeight: 1.6, margin: 0, fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 24px" }}>
+                  Seleccionados entre +50 startups. Parte del Programa de Incubación de la Secretaría de Desarrollo Económico.
+                </p>
+                <p style={{ gridRow: 3, gridColumn: 2, fontSize: "clamp(14px, 1.2vw, 16px)", color: "#6b7280", lineHeight: 1.6, margin: 0, fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 24px" }}>
+                  BIZEN enseña ahorro, inversión y emprendimiento con metodología práctica, gamificada y alineada al mundo real.
+                </p>
+                <p style={{ gridRow: 3, gridColumn: 3, fontSize: "clamp(14px, 1.2vw, 16px)", color: "#6b7280", lineHeight: 1.6, margin: 0, fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 24px" }}>
+                  Parte de la comunidad EdTech más grande de LATAM.
+                </p>
+
+                {/* ── ROW 4: Logos ── */}
+                <div style={{ gridRow: 4, gridColumn: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+                  <Image src="/logos/logo-hex.png" alt="BLOQUE" width={240} height={80} style={{ height: "80px", width: "auto", objectFit: "contain" }} />
+                </div>
+                <div style={{ gridRow: 4, gridColumn: 2, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <Image src="/logos/logo-queretaro.png" alt="Querétaro" width={140} height={40} style={{ height: "40px", width: "auto", objectFit: "contain" }} />
+                </div>
+                <div style={{ gridRow: 4, gridColumn: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <Image src="/logos/logo-google.png" alt="Google for Startups" width={140} height={40} style={{ height: "40px", width: "auto", objectFit: "contain" }} />
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <style>{`
+            @media (max-width: 768px) {
+              .somos-bizen-grid {
+                grid-template-columns: 1fr !important;
+              }
+            }
+          `}</style>
+
           <style>{`
         /* Bento Grid Layout */
         .bento-grid {
@@ -497,8 +658,7 @@ export default function WelcomePage() {
           overflow: hidden;
         }
         .premium-button:hover {
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3) !important;
+          opacity: 0.85;
         }
         .premium-button:active {
           transform: translateY(0) scale(0.98);
@@ -509,10 +669,24 @@ export default function WelcomePage() {
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
+        .brand-highlight-blue {
+          background: linear-gradient(135deg, #1e3a8a 0%, #2c7bef 50%, #1e40af 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          display: inline-block;
+          font-weight: 800;
+        }
+        
         .main-page-container,
         .main-page-container .section,
         .main-page-container .container {
-          font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+          font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        }
+        
+        /* Keep Inter for bold text if preferred, but user requested Open Sans for non-bold specifically */
+        b, strong, h1, h2, h3, .bold-text {
+          font-family: 'Inter', sans-serif !important;
         }
         /* FORCE DELETE ALL SCROLLBARS ON LANDING */
         html, body {
@@ -549,6 +723,10 @@ export default function WelcomePage() {
         body:has([data-landing-root]) {
           overflow-x: hidden !important;
           max-width: 100% !important;
+        }
+
+        .landing-header-demo:hover {
+          opacity: 0.7;
         }
 
         .auth-dropdown-wrapper {
@@ -621,6 +799,35 @@ export default function WelcomePage() {
           overflow-x: hidden !important;
           height: auto !important;
           min-height: 100% !important;
+        }
+
+        @media (max-width: 1023px) {
+          .landing-header-nav, .hide-tablet {
+            display: none !important;
+          }
+          .landing-header-mobile-menu-btn {
+            display: flex !important;
+          }
+          .landing-header-demo {
+            padding: 8px 12px !important;
+          }
+          .landing-header-container {
+            padding: 0 24px !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .landing-header-demo {
+            display: none !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .landing-header-container {
+            padding: 0 20px !important;
+          }
+          .landing-header-mobile-menu-btn {
+            width: 36px !important;
+            height: 36px !important;
+          }
         }
         html:has(.main-page-container) *,
         .main-page-container *,
@@ -2376,221 +2583,6 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
       {(sectionRange === 'all' || sectionRange === 'gradient') && (<>
 
         {/* Somos BIZEN - 4 blue cards */}
-        <section id="sobre-bizen" className="section somos-bizen-section reveal-element" style={{
-          background: "#f9fafb",
-          paddingTop: "clamp(64px, 12vw, 120px)",
-          paddingBottom: "clamp(64px, 12vw, 120px)",
-          paddingLeft: "clamp(20px, 5vw, 48px)",
-          paddingRight: "clamp(20px, 5vw, 48px)",
-          position: "relative",
-          overflow: "hidden",
-          overflowX: "hidden",
-          overflowY: "visible",
-        }}>
-          {/* Gray geometric shapes - left side */}
-          <div style={{
-            position: "absolute",
-            left: "0",
-            top: "50%",
-            transform: "translateY(-50%)",
-            width: "clamp(120px, 15vw, 240px)",
-            height: "clamp(250px, 35vh, 400px)",
-            pointerEvents: "none",
-            zIndex: 0,
-          }}>
-            <div style={{ position: "absolute", left: "0", top: "8%", width: "55%", height: "22%", background: "#D1D5DB", transform: "rotate(-18deg)", opacity: 0.7 }} />
-            <div style={{ position: "absolute", left: "15%", top: "35%", width: "65%", height: "28%", background: "#9CA3AF", transform: "rotate(22deg)", opacity: 0.65 }} />
-            <div style={{ position: "absolute", left: "8%", bottom: "12%", width: "50%", height: "20%", background: "#E5E7EB", transform: "rotate(-20deg)", opacity: 0.6 }} />
-          </div>
-
-          {/* Blue geometric shapes - right side */}
-          <div style={{
-            position: "absolute",
-            right: "0",
-            top: "50%",
-            transform: "translateY(-50%)",
-            width: "clamp(120px, 15vw, 240px)",
-            height: "clamp(250px, 35vh, 400px)",
-            pointerEvents: "none",
-            zIndex: 0,
-          }}>
-            <div style={{ position: "absolute", right: "0", top: "12%", width: "60%", height: "25%", background: "#2563EB", transform: "rotate(15deg)", opacity: 0.85 }} />
-            <div style={{ position: "absolute", right: "12%", top: "42%", width: "70%", height: "30%", background: "#1D4ED8", transform: "rotate(-20deg)", opacity: 0.8 }} />
-            <div style={{ position: "absolute", right: "5%", bottom: "18%", width: "55%", height: "22%", background: "#3B82F6", transform: "rotate(18deg)", opacity: 0.75 }} />
-          </div>
-
-          <div className="container" style={{ maxWidth: "1320px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-            {/* Heading - centered */}
-            <h2 style={{
-              textAlign: "center",
-              fontSize: "clamp(36px, 5vw, 56px)",
-              fontWeight: 700,
-              color: "#000",
-              lineHeight: 1.2,
-              marginBottom: "clamp(48px, 8vw, 80px)",
-              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-              textTransform: "uppercase",
-              letterSpacing: "0.01em",
-            }}>
-              SOMOS BIZEN
-            </h2>
-
-            {/* Bento Grid Features */}
-            <div className="bento-grid" style={{ maxWidth: "1280px", margin: "0 auto" }}>
-              {/* Card 1: Validación institucional (Gobierno) - LARGE */}
-              <div className="bento-item bento-item-large reveal-element" style={{
-                background: "linear-gradient(135deg, #1e3a8a 0%, #1e1b4b 100%)",
-                color: "#ffffff",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}>
-                <div>
-                  <h3 style={{
-                    fontSize: "clamp(22px, 2.5vw, 28px)",
-                    fontWeight: 600,
-                    lineHeight: 1.3,
-                    marginBottom: "16px",
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    Validación institucional (Gobierno)
-                  </h3>
-                  <p style={{
-                    fontSize: "clamp(15px, 1.1rem, 17px)",
-                    lineHeight: 1.5,
-                    opacity: 0.95,
-                    fontFamily: "'Inter', sans-serif",
-                    marginBottom: "12px",
-                  }}>
-                    Seleccionados entre <strong>+50 startups</strong>.
-                  </p>
-                  <p style={{
-                    fontSize: "clamp(14px, 1rem, 16px)",
-                    lineHeight: 1.5,
-                    opacity: 0.95,
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    Parte del Programa de Incubación de la Secretaría de Desarrollo Económico, impulsando innovación educativa y emprendimiento juvenil en México.
-                  </p>
-                </div>
-                <div style={{ display: "flex", gap: "12px", alignItems: "center", marginTop: "24px", flexWrap: "wrap" }}>
-                  <div style={{ height: "44px", background: "rgba(255, 255, 255, 0.2)", borderRadius: "10px", padding: "0 14px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 600 }}>SEDESU / SEDEQ</div>
-                </div>
-              </div>
-
-              {/* Card 2: Confianza Big Tech - MEDIUM */}
-              <div className="bento-item bento-item-medium reveal-element" style={{
-                background: "linear-gradient(135deg, #2C7BEF 0%, #1e40af 100%)",
-                color: "#ffffff",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}>
-                <div>
-                  <h3 style={{
-                    fontSize: "clamp(22px, 2.5vw, 28px)",
-                    fontWeight: 600,
-                    lineHeight: 1.3,
-                    marginBottom: "16px",
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    Confianza Big Tech
-                  </h3>
-                  <p style={{
-                    fontSize: "clamp(15px, 1.1rem, 17px)",
-                    lineHeight: 1.5,
-                    opacity: 0.95,
-                    fontFamily: "'Inter', sans-serif",
-                    marginBottom: "12px",
-                  }}>
-                    <strong>Google for Startups</strong> confía en BIZEN.
-                  </p>
-                  <p style={{
-                    fontSize: "clamp(14px, 1rem, 16px)",
-                    lineHeight: 1.5,
-                    opacity: 0.95,
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    Startup EdTech respaldada por programas de Google for Startups, enfocada en educación financiera y emprendimiento para jóvenes.
-                  </p>
-                </div>
-                <div style={{ display: "flex", gap: "12px", alignItems: "center", marginTop: "24px", flexWrap: "wrap" }}>
-                  <div style={{ height: "44px", background: "rgba(255, 255, 255, 0.2)", borderRadius: "10px", padding: "0 14px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 600 }}>Google for Startups</div>
-                </div>
-              </div>
-
-              {/* Card 3: Comunidad EdTech LATAM */}
-              <div className="bento-item reveal-element" style={{
-                background: "#ffffff",
-                color: "#0F172A",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}>
-                <div>
-                  <h3 style={{
-                    fontSize: "clamp(22px, 2.5vw, 28px)",
-                    fontWeight: 600,
-                    lineHeight: 1.3,
-                    marginBottom: "16px",
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    Comunidad EdTech LATAM
-                  </h3>
-                  <p style={{
-                    fontSize: "clamp(15px, 1.1rem, 17px)",
-                    lineHeight: 1.5,
-                    opacity: 0.95,
-                    fontFamily: "'Inter', sans-serif",
-                    marginBottom: "12px",
-                  }}>
-                    Parte de la comunidad EdTech más grande de <strong>LATAM</strong>.
-                  </p>
-                  <p style={{
-                    fontSize: "clamp(14px, 1rem, 16px)",
-                    lineHeight: 1.5,
-                    opacity: 0.95,
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    Conectados con startups, educadores e innovadores que están transformando la educación en América Latina.
-                  </p>
-                </div>
-                <div style={{ display: "flex", gap: "12px", alignItems: "center", marginTop: "24px", flexWrap: "wrap" }}>
-                  <div style={{ height: "44px", background: "rgba(255, 255, 255, 0.2)", borderRadius: "10px", padding: "0 14px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 600 }}>HolonIQ / EdTech</div>
-                </div>
-              </div>
-
-              {/* Card 4: Impacto educativo */}
-              <div className="bento-item reveal-element" style={{
-                background: "#EFF6FF",
-                color: "#1e3a8a",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}>
-                <div>
-                  <h3 style={{
-                    fontSize: "clamp(22px, 2.5vw, 28px)",
-                    fontWeight: 600,
-                    lineHeight: 1.3,
-                    marginBottom: "16px",
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    Educación financiera que sí se usa.
-                  </h3>
-                  <p style={{
-                    fontSize: "clamp(14px, 1rem, 16px)",
-                    lineHeight: 1.5,
-                    opacity: 0.95,
-                    fontFamily: "'Inter', sans-serif",
-                  }}>
-                    BIZEN enseña ahorro, inversión y emprendimiento con metodología práctica, gamificada y alineada al mundo real.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* 4 Perfiles Educativos */}
         <section id="perfiles" className="section perfiles-section reveal-element" style={{
