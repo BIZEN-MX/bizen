@@ -31,7 +31,7 @@ export function Measurement() {
         </ul>
         <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm max-w-md mx-auto">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-4">
-            <BarChart3 className="h-4 w-4 text-blue-600" aria-hidden />
+            <BarChart3 className="h-4 w-4 text-[#0056E7]" aria-hidden />
             Ejemplo de reporte (demo)
           </h3>
           <ul className="space-y-2 text-sm text-gray-600">

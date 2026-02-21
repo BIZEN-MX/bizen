@@ -3,39 +3,39 @@
 import React, { useEffect, useRef } from "react";
 
 export default function Hero3DScene() {
-    const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!containerRef.current) return;
-            const { clientX, clientY } = e;
-            const x = (clientX / window.innerWidth - 0.5) * 20;
-            const y = (clientY / window.innerHeight - 0.5) * 20;
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const { clientX, clientY } = e;
+      const x = (clientX / window.innerWidth - 0.5) * 20;
+      const y = (clientY / window.innerHeight - 0.5) * 20;
 
-            containerRef.current.style.setProperty("--mouse-x", `${x}px`);
-            containerRef.current.style.setProperty("--mouse-y", `${y}px`);
-        };
+      containerRef.current.style.setProperty("--mouse-x", `${x}px`);
+      containerRef.current.style.setProperty("--mouse-y", `${y}px`);
+    };
 
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, []);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
-    return (
-        <div
-            ref={containerRef}
-            className="hero-3d-scene-root"
-            style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                overflow: "hidden",
-                zIndex: 0,
-                pointerEvents: "none",
-            } as React.CSSProperties}
-        >
-            <style>{`
+  return (
+    <div
+      ref={containerRef}
+      className="hero-3d-scene-root"
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+        zIndex: 0,
+        pointerEvents: "none",
+      } as React.CSSProperties}
+    >
+      <style>{`
         .hero-3d-scene-root {
           --mouse-x: 0px;
           --mouse-y: 0px;
@@ -52,7 +52,7 @@ export default function Hero3DScene() {
         .blob-1 {
           width: 600px;
           height: 600px;
-          background: radial-gradient(circle, rgba(37, 99, 235, 0.4) 0%, rgba(37, 99, 235, 0) 70%);
+          background: radial-gradient(circle, rgba(0, 86, 231, 0.4) 0%, rgba(0, 86, 231, 0) 70%);
           top: -100px;
           right: -100px;
           animation: float 20s infinite alternate;
@@ -60,7 +60,7 @@ export default function Hero3DScene() {
         .blob-2 {
           width: 500px;
           height: 500px;
-          background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, rgba(99, 102, 241, 0) 70%);
+          background: radial-gradient(circle, rgba(25, 131, 253, 0.3) 0%, rgba(25, 131, 253, 0) 70%);
           bottom: -50px;
           left: -100px;
           animation: float-reverse 25s infinite alternate;
@@ -93,9 +93,9 @@ export default function Hero3DScene() {
           .blob-3 { width: 200px; height: 200px; }
         }
       `}</style>
-            <div className="blob blob-1" />
-            <div className="blob blob-2" />
-            <div className="blob blob-3" />
-        </div>
-    );
+      <div className="blob blob-1" />
+      <div className="blob blob-2" />
+      <div className="blob blob-3" />
+    </div>
+  );
 }

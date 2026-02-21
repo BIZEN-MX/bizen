@@ -35,7 +35,6 @@ export default function WelcomePage() {
   const [isVisible, setIsVisible] = useState(false)
   const [activeHeroCard, setActiveHeroCard] = useState<number | null>(null)
   const [activeProfile, setActiveProfile] = useState<"docentes" | "estudiantes" | "padres">("docentes")
-  const [demoModalOpen, setDemoModalOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [authDropdownOpen, setAuthDropdownOpen] = useState(false)
@@ -103,7 +102,7 @@ export default function WelcomePage() {
     return () => observer.disconnect()
   }, [])
 
-  const gradientStyle = { background: "linear-gradient(180deg, #f5f9ff 0%, #eef6ff 18%, #e0efff 40%, #d4e8ff 60%, #dbeafe 75%, #d4e8ff 88%, #bfdbfe 100%)", backgroundAttachment: "scroll" as const, overflow: "visible" }
+  const gradientStyle = { background: "linear-gradient(180deg, #ffffff 0%, rgba(0, 86, 231, 0.03) 18%, rgba(0, 86, 231, 0.05) 40%, rgba(25, 131, 253, 0.08) 60%, rgba(25, 131, 253, 0.1) 100%)", backgroundAttachment: "scroll" as const, overflow: "visible" }
 
   return (
     <div style={{
@@ -149,11 +148,11 @@ export default function WelcomePage() {
         }}>
           {/* Logo */}
           <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }} aria-label="BIZEN home">
-            <span style={{ fontSize: "clamp(18px, 2vw, 22px)", fontWeight: 700, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", letterSpacing: "0.01em" }}>BIZEN</span>
+            <span style={{ fontSize: "clamp(18px, 2vw, 22px)", fontWeight: 700, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", letterSpacing: "0.01em" }}>BIZEN</span>
           </Link>
 
           {/* Hamburger (mobile only) */}
-          <button type="button" className="landing-header-mobile-menu-btn" aria-label="Abrir menú" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((o) => !o)} style={{ display: "none", alignItems: "center", justifyContent: "center", width: 44, height: 44, padding: 0, border: "none", background: "transparent", cursor: "pointer", color: "#2C7BEF", order: 2 }}>
+          <button type="button" className="landing-header-mobile-menu-btn" aria-label="Abrir menú" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((o) => !o)} style={{ display: "none", alignItems: "center", justifyContent: "center", width: 44, height: 44, padding: 0, border: "none", background: "transparent", cursor: "pointer", color: "#0056E7", order: 2 }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
           </button>
 
@@ -168,11 +167,11 @@ export default function WelcomePage() {
             boxShadow: "0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05)",
             flexShrink: 0,
           }}>
-            <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Inicio</Link>
-            <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Somos BIZEN</Link>
-            <Link href="#perfiles" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Perfil educativo</Link>
-            <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Impacto social</Link>
-            <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#2C7BEF", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Blog</Link>
+            <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Inicio</Link>
+            <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Somos BIZEN</Link>
+            <Link href="#perfiles" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Perfil educativo</Link>
+            <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Impacto social</Link>
+            <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Blog</Link>
           </nav>
 
           {/* Header Actions */}
@@ -190,10 +189,10 @@ export default function WelcomePage() {
                 padding: "10px 20px",
                 fontSize: "clamp(13px, 1.3vw, 15px)",
                 fontWeight: 600,
-                color: "#2C7BEF",
+                color: "#0056E7",
                 textDecoration: "none",
                 borderRadius: "9999px",
-                background: "rgba(44, 123, 239, 0.08)",
+                background: "rgba(0, 86, 231, 0.08)",
                 transition: "all 0.2s ease",
               }}
             >
@@ -217,13 +216,13 @@ export default function WelcomePage() {
                   fontSize: "clamp(13px, 1.3vw, 15px)",
                   fontWeight: 600,
                   borderRadius: "9999px",
-                  background: "#2C7BEF",
+                  background: "#0056E7",
                   color: "#fff",
                   border: "none",
                   cursor: "pointer",
                   whiteSpace: "nowrap",
                   flexShrink: 0,
-                  boxShadow: "0 4px 14px rgba(44, 123, 239, 0.35)",
+                  boxShadow: "0 4px 14px rgba(0, 86, 231, 0.35)",
                 }}
               >
                 Comenzar ahora
@@ -257,7 +256,7 @@ export default function WelcomePage() {
             position: "fixed",
             inset: 0,
             zIndex: 999,
-            background: "rgba(30, 58, 138, 0.95)", // More premium blue overlay
+            background: "rgba(0, 86, 231, 0.95)", // More premium blue overlay
             backdropFilter: "blur(12px)", // Modern blur
             display: "flex",
             flexDirection: "column",
@@ -309,7 +308,7 @@ export default function WelcomePage() {
                 <LogIn size={20} />
                 Iniciar sesión
               </Link>
-              <Link href="/signup" onClick={() => setMobileMenuOpen(false)} style={{ width: "100%", fontSize: "18px", color: "#2C7BEF", textDecoration: "none", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", background: "#fff", padding: "14px", borderRadius: "12px" }}>
+              <Link href="/signup" onClick={() => setMobileMenuOpen(false)} style={{ width: "100%", fontSize: "18px", color: "#0056E7", textDecoration: "none", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", background: "#fff", padding: "14px", borderRadius: "12px" }}>
                 <UserPlus size={20} />
                 Crear cuenta
               </Link>
@@ -415,7 +414,7 @@ export default function WelcomePage() {
                 wordWrap: "break-word",
                 overflowWrap: "break-word",
               }}>
-                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>El futuro de la <span style={{ color: "#2C7BEF" }}>Educación Financiera</span></span><br />
+                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>El futuro de la <span style={{ color: "#0056E7" }}>Educación Financiera</span></span><br />
                 para jóvenes en un click<br />
                 con <span className="brand-highlight-blue">BIZEN</span>
               </h1>
@@ -512,7 +511,7 @@ export default function WelcomePage() {
                 marginBottom: "clamp(32px, 4vw, 48px)",
               }}>
                 SOMOS <span style={{
-                  background: "linear-gradient(135deg, #1e3a8a 0%, #2c7bef 50%, #1e40af 100%)",
+                  background: "linear-gradient(135deg, #0056E7 0%, #015CF8 50%, #1983FD 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -530,11 +529,11 @@ export default function WelcomePage() {
                 fontFamily: "'Inter', sans-serif",
               }}>
                 En <strong>BIZEN</strong> combinamos{" "}
-                <strong style={{ color: "#2C7BEF" }}>aprendizaje gamificado</strong>{" "}
+                <strong style={{ color: "#0056E7" }}>aprendizaje gamificado</strong>{" "}
                 para que los alumnos entiendan el dinero practicando, desarrollamos{" "}
-                <strong style={{ color: "#2C7BEF" }}>competencias reales</strong>{" "}
+                <strong style={{ color: "#0056E7" }}>competencias reales</strong>{" "}
                 a través de decisiones financieras aplicadas al contexto mexicano y generamos{" "}
-                <strong style={{ color: "#2C7BEF" }}>impacto real</strong>{" "}
+                <strong style={{ color: "#0056E7" }}>impacto real</strong>{" "}
                 formando jóvenes capaces de organizar su dinero, evitar deudas y generar ingresos desde temprana edad.
               </p>
 
@@ -559,13 +558,13 @@ export default function WelcomePage() {
                 </div>
 
                 {/* ── ROW 2: Blue subtitles ── */}
-                <div style={{ gridRow: 2, gridColumn: 1, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#2C7BEF", fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 16px" }}>
+                <div style={{ gridRow: 2, gridColumn: 1, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#0056E7", fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 16px" }}>
                   Seleccionados entre<br />+50 startups.
                 </div>
-                <div style={{ gridRow: 2, gridColumn: 2, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#2C7BEF", fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 16px" }}>
+                <div style={{ gridRow: 2, gridColumn: 2, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#0056E7", fontFamily: "'Inter', sans-serif", textAlign: "center", padding: "0 0 16px" }}>
                   Mas de 10 instituciones en Querétaro<br />nos respaldan
                 </div>
-                <div style={{ gridRow: 2, gridColumn: 3, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#2C7BEF", fontFamily: "'Inter', sans-serif", textAlign: "center", border: "2px solid #2C7BEF", borderRadius: "8px", padding: "8px 12px 16px", justifySelf: "center" }}>
+                <div style={{ gridRow: 2, gridColumn: 3, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 700, color: "#0056E7", fontFamily: "'Inter', sans-serif", textAlign: "center", border: "2px solid #0056E7", borderRadius: "8px", padding: "8px 12px 16px", justifySelf: "center" }}>
                   Mas de 25,000USD en creditos de<br />google invertidos en nosotros
                 </div>
 
@@ -670,7 +669,7 @@ export default function WelcomePage() {
         }
         
         .brand-highlight-blue {
-          background: linear-gradient(135deg, #1e3a8a 0%, #2c7bef 50%, #1e40af 100%);
+          background: linear-gradient(135deg, #0056E7 0%, #015CF8 50%, #1983FD 100%);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
@@ -761,7 +760,7 @@ export default function WelcomePage() {
           align-items: center;
           gap: 12px;
           padding: 12px 16px;
-          color: #1e3a8a;
+          color: #0056E7;
           text-decoration: none;
           font-size: 14px;
           font-weight: 600;
@@ -770,7 +769,7 @@ export default function WelcomePage() {
         }
         .auth-dropdown-item:hover {
           background: #f1f5f9;
-          color: #2C7BEF;
+          color: #0056E7;
           transform: translateX(4px);
         }
         
@@ -1000,12 +999,12 @@ export default function WelcomePage() {
 
         /* Crear cuenta button: solid blue, no shimmer */
         .crear-cuenta-button {
-          background: #1e3a8a !important;
+          background: #0056E7 !important;
           transition: background 0.2s ease, filter 0.2s ease;
           animation: none !important;
         }
         .crear-cuenta-button:hover {
-          background: #1d4ed8 !important;
+          background: #0056E7 !important;
           color: #fff !important;
           filter: brightness(1.05);
           transition: background 0.2s ease, filter 0.2s ease;
@@ -1014,7 +1013,7 @@ export default function WelcomePage() {
         .landing-header .landing-header-demo.crear-cuenta-button,
         .landing-header-demo.crear-cuenta-button {
           background: transparent !important;
-          color: #2C7BEF !important;
+          color: #0056E7 !important;
         }
         .landing-header .landing-header-demo.crear-cuenta-button:hover,
         .landing-header-demo.crear-cuenta-button:hover {
@@ -1023,7 +1022,7 @@ export default function WelcomePage() {
           filter: none !important;
         }
         .landing-header-quiz {
-          background: #1e3a8a;
+          background: #0056E7;
           color: #ffffff;
           border-radius: 999px;
           padding: 10px 20px;
@@ -1039,7 +1038,7 @@ export default function WelcomePage() {
         }
         .landing-header-quiz:hover {
           transform: translateY(-1px);
-          box-shadow: 0 10px 30px rgba(30, 58, 138, 0.3);
+          box-shadow: 0 10px 30px rgba(0, 86, 231, 0.3);
         }
         .landing-header-quiz:focus-visible {
           outline: 2px solid rgba(59, 130, 246, 0.7);
@@ -1055,7 +1054,7 @@ export default function WelcomePage() {
         .calendar-tooltip-text {
           visibility: hidden;
           width: 140px;
-          background-color: #1e3a8a;
+          background-color: #0056E7;
           color: #fff;
           text-align: center;
           border-radius: 8px;
@@ -1080,7 +1079,7 @@ export default function WelcomePage() {
           margin-left: -6px;
           border-width: 6px;
           border-style: solid;
-          border-color: transparent transparent #1e3a8a transparent;
+          border-color: transparent transparent #0056E7 transparent;
         }
         .calendar-tooltip-container:hover .calendar-tooltip-text {
           visibility: visible;
@@ -1492,11 +1491,11 @@ export default function WelcomePage() {
         @keyframes buttonPulse {
           0%, 100% {
             transform: scale(1);
-            box-shadow: 0 8px 24px rgba(15, 98, 254, 0.35);
+            box-shadow: 0 8px 24px rgba(0, 86, 231, 0.35);
           }
           50% {
             transform: scale(1.02);
-            box-shadow: 0 12px 32px rgba(15, 98, 254, 0.5);
+            box-shadow: 0 12px 32px rgba(0, 86, 231, 0.5);
           }
         }
         
@@ -1525,13 +1524,13 @@ export default function WelcomePage() {
           left: 0;
           right: 0;
           bottom: 0;
-          background: #1e3a8a;
+          background: #0056E7;
           border-radius: clamp(7px, 1.2vw, 9px);
           z-index: -1;
         }
         
         .empieza-ya-button {
-          background: #1e3a8a !important;
+          background: #0056E7 !important;
           border: 3px solid transparent !important;
           position: relative;
           animation: buttonPulse 2s ease-in-out infinite;
@@ -1978,198 +1977,13 @@ export default function WelcomePage() {
       `}</style>
 
           {/* Landing Page Content - gradient: hero through perfiles */}
-          <LandingContent sectionRange="gradient" onOpenDemoModal={() => setDemoModalOpen(true)} />
+          <LandingContent sectionRange="gradient" />
         </div>
 
         {/* Rest of landing (white background) */}
-        <LandingContent sectionRange="rest" onOpenDemoModal={() => setDemoModalOpen(true)} />
+        <LandingContent sectionRange="rest" />
       </main>
-
-      {/* Schedule Demo Modal - premium, professional */}
-      {demoModalOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="demo-modal-title"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 10000,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px",
-            background: "rgba(15, 23, 42, 0.6)",
-            backdropFilter: "blur(8px)",
-            boxSizing: "border-box"
-          }}
-          onClick={(e) => e.target === e.currentTarget && setDemoModalOpen(false)}
-        >
-          <div
-            className="landing-demo-modal-content"
-            style={{
-              position: "relative",
-              background: "#ffffff",
-              borderRadius: "32px",
-              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(15, 98, 254, 0.08)",
-              padding: "40px",
-              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-              maxWidth: "600px",
-              width: "100%",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-              gap: "32px"
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button */}
-            <button
-              type="button"
-              aria-label="Cerrar"
-              onClick={() => setDemoModalOpen(false)}
-              style={{
-                position: "absolute",
-                top: "24px",
-                right: "24px",
-                width: "40px",
-                height: "40px",
-                borderRadius: "50%",
-                border: "none",
-                background: "#f8fafc",
-                cursor: "pointer",
-                fontSize: "24px",
-                color: "#94a3b8",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s"
-              }}
-              className="modal-close-hover"
-            >
-              ×
-            </button>
-
-            {/* Header Section */}
-            <div style={{ textAlign: "center" }}>
-              <div style={{ width: "64px", height: "64px", background: "rgba(37, 99, 235, 0.1)", borderRadius: "20px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                  <polyline points="22 4 12 14.01 9 11.01" />
-                </svg>
-              </div>
-              <h2 id="demo-modal-title" style={{ fontSize: "28px", fontWeight: 800, color: "#1e3a8a", margin: "0 0 12px 0", letterSpacing: "-0.02em" }}>Agenda tu demo gratis</h2>
-              <p style={{ fontSize: "16px", color: "#64748b", margin: 0, lineHeight: 1.5 }}>Descubre cómo BIZEN puede transformar la <br />educación financiera en tu institución.</p>
-            </div>
-
-            {/* Form Section */}
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                const form = e.currentTarget;
-                const formData = new FormData(form);
-                const name = formData.get("name") as string;
-                const email = formData.get("email") as string;
-                const school = formData.get("school") as string;
-                const role = formData.get("role") as string;
-                const students = formData.get("students") as string;
-                const parts = [`Escuela: ${school || "—"}`, `Rol: ${role || "—"}`, students ? `Estudiantes: ${students}` : ""].filter(Boolean);
-                const message = parts.join("\n");
-                const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
-                const originalText = submitButton?.textContent;
-                if (submitButton) { submitButton.disabled = true; submitButton.textContent = "Procesando..."; }
-                try {
-                  const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, email, message }) });
-                  const data = await res.json();
-                  if (data.success) {
-                    alert("¡Gracias! Hemos recibido tu solicitud. Nos pondremos en contacto contigo pronto.");
-                    form.reset();
-                    setDemoModalOpen(false);
-                  } else {
-                    alert(data.message || "Algo salió mal. Por favor intenta de nuevo.");
-                  }
-                } catch {
-                  alert("Error al enviar. Por favor intenta de nuevo más tarde.");
-                } finally {
-                  if (submitButton) { submitButton.disabled = false; submitButton.textContent = originalText || "Confirmar Agenda"; }
-                }
-              }}
-              style={{ display: "flex", flexDirection: "column", gap: "20px", alignItems: "center", textAlign: "center", width: "100%" }}
-            >
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", width: "100%" }} className="modal-form-grid">
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
-                  <label htmlFor="modal-demo-name" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Nombre completo</label>
-                  <input id="modal-demo-name" name="name" type="text" required placeholder="Tu nombre" style={modalInputStyle} />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
-                  <label htmlFor="modal-demo-email" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Correo institucional</label>
-                  <input id="modal-demo-email" name="email" type="email" required placeholder="email@escuela.com" style={modalInputStyle} />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
-                  <label htmlFor="modal-demo-school" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Institución</label>
-                  <input id="modal-demo-school" name="school" type="text" required placeholder="Nombre de tu escuela" style={modalInputStyle} />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
-                  <label htmlFor="modal-demo-role" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Puesto / Rol</label>
-                  <input id="modal-demo-role" name="role" type="text" required placeholder="ej. Director" style={modalInputStyle} />
-                </div>
-              </div>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%", alignItems: "center" }}>
-                <label htmlFor="modal-demo-students" style={{ fontWeight: 600, fontSize: "14px", color: "#475569" }}>Número de estudiantes (aproximado)</label>
-                <input id="modal-demo-students" name="students" type="text" placeholder="ej. 500 estudiantes" style={modalInputStyle} />
-              </div>
-
-              <button
-                type="submit"
-                style={{
-                  width: "100%",
-                  maxWidth: "320px",
-                  margin: "12px auto 0",
-                  padding: "18px",
-                  fontSize: "16px",
-                  fontWeight: 700,
-                  color: "#ffffff",
-                  background: "#1e3a8a",
-                  border: "none",
-                  borderRadius: "16px",
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                  boxShadow: "0 10px 20px -5px rgba(30, 58, 138, 0.3)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                  transition: "all 0.2s"
-                }}
-                className="modal-submit-button"
-              >
-                Confirmar Agenda de Demo
-              </button>
-            </form>
-
-            <div style={{ display: "flex", justifyContent: "center", gap: "24px", opacity: 0.6 }}>
-              {["Incubada por SEDESU", "Google for Startups"].map((badge, i) => (
-                <span key={i} style={{ fontSize: "12px", fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>{badge}</span>
-              ))}
-            </div>
-          </div>
-
-          <style jsx>{`
-            .modal-close-hover:hover { background: #fee2e2 !important; color: #ef4444 !important; transform: rotate(90deg); }
-            .modal-submit-button:hover { background: #2563eb !important; transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.45) !important; }
-            @media (max-width: 600px) {
-              .modal-form-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
-              .landing-demo-modal-content { padding: 32px 20px !important; borderRadius: 24px !important; }
-              h2 { fontSize: 24px !important; }
-            }
-          `}</style>
-        </div>
-      )}
-
-      {/* Testimonials Carousel - last section (Impacto link targets here) */}
-      <section id="impacto" className="section testimonials-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(56px, 8vw, 96px) clamp(20px, 4vw, 48px)", marginBottom: "clamp(64px, 10vw, 100px)", overflowX: "hidden", overflowY: "visible" }}>
+      <section id="impacto" className="section testimonials-section reveal-element" style={{ background: "#f8fafc", padding: "clamp(56px, 8vw, 96px) clamp(20px, 4vw, 48px) clamp(24px, 4vw, 48px)", marginBottom: "clamp(12px, 2vw, 24px)", overflowX: "hidden", overflowY: "visible" }}>
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <h2 style={{
             textAlign: "center",
@@ -2184,9 +1998,6 @@ export default function WelcomePage() {
           </h2>
 
           <div style={{ position: "relative", maxWidth: "900px", margin: "0 auto" }}>
-            {/* Left Arrow - disabled on first card; hidden on mobile to avoid overflow */}
-
-
             {/* Testimonial Cards - animated on navigate */}
             <div style={{ position: "relative", perspective: "1000px", minHeight: "320px" }}>
               {[
@@ -2234,8 +2045,8 @@ export default function WelcomePage() {
                     background: "#ffffff",
                     borderRadius: "24px",
                     padding: "clamp(32px, 5vw, 48px)",
-                    border: "1px solid rgba(15, 98, 254, 0.12)",
-                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(15, 98, 254, 0.06)",
+                    border: "1px solid rgba(0, 86, 231, 0.12)",
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 86, 231, 0.06)",
                     display: "grid",
                     gridTemplateColumns: "auto 1fr auto",
                     gap: "clamp(28px, 4vw, 40px)",
@@ -2336,7 +2147,7 @@ export default function WelcomePage() {
                       width: activeTestimonial === idx ? "32px" : "12px",
                       height: "12px",
                       borderRadius: "6px",
-                      background: activeTestimonial === idx ? "#1e3a8a" : "#cbd5e1",
+                      background: activeTestimonial === idx ? "#0056E7" : "#cbd5e1",
                       border: "none",
                       cursor: "pointer",
                       transition: "all 0.3s ease",
@@ -2355,14 +2166,14 @@ export default function WelcomePage() {
                   width: "48px",
                   height: "48px",
                   borderRadius: "50%",
-                  background: activeTestimonial === 2 ? "rgba(203, 213, 225, 0.4)" : "rgba(15, 98, 254, 0.15)",
-                  border: `1px solid ${activeTestimonial === 2 ? "rgba(148, 163, 184, 0.4)" : "rgba(15, 98, 254, 0.3)"}`,
+                  background: activeTestimonial === 2 ? "rgba(203, 213, 225, 0.4)" : "rgba(0, 86, 231, 0.15)",
+                  border: `1px solid ${activeTestimonial === 2 ? "rgba(148, 163, 184, 0.4)" : "rgba(0, 86, 231, 0.3)"}`,
                   cursor: activeTestimonial === 2 ? "not-allowed" : "pointer",
                   opacity: activeTestimonial === 2 ? 0.6 : 1,
                 }}
                 aria-label="Siguiente testimonial"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTestimonial === 2 ? "#94a3b8" : "#1e3a8a"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTestimonial === 2 ? "#94a3b8" : "#0056E7"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 18l6-6-6-6" />
                 </svg>
               </button>
@@ -2371,8 +2182,7 @@ export default function WelcomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <LandingWaitlistFooter onOpenDemoModal={() => setDemoModalOpen(true)} />
+      <LandingWaitlistFooter />
 
       {/* Blue Dot Cursor */}
       <div
@@ -2383,7 +2193,7 @@ export default function WelcomePage() {
           left: 0,
           width: "20px",
           height: "20px",
-          background: "#2563eb",
+          background: "#0056E7",
           borderRadius: "50%",
           pointerEvents: "none",
           zIndex: 9999,
@@ -2571,8 +2381,8 @@ function StepIcon3({ color }: { color: string }) {
   )
 }
 
-function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRange?: 'gradient' | 'rest' | 'all'; onOpenDemoModal?: () => void }) {
-  const primary = "#1e3a8a"
+function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 'rest' | 'all' }) {
+  const primary = "#0056E7"
   const accent = "#10B981"
   const [activeProfile, setActiveProfile] = React.useState<"docentes" | "estudiantes" | "padres">("docentes")
   const [activeAdventureSlide, setActiveAdventureSlide] = React.useState(0)
@@ -2595,8 +2405,8 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
           overflow: "hidden"
         }}>
           {/* Decorative Blobs for Depth */}
-          <div className="perfiles-blob perfiles-blob-1" style={{ position: "absolute", top: "10%", right: "-5%", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(15, 98, 254, 0.08) 0%, transparent 70%)", filter: "blur(60px)", zIndex: 0, animation: "float-perfiles 15s infinite alternate" }} />
-          <div className="perfiles-blob perfiles-blob-2" style={{ position: "absolute", bottom: "5%", left: "-5%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(15, 98, 254, 0.05) 0%, transparent 70%)", filter: "blur(80px)", zIndex: 0, animation: "float-perfiles-reverse 20s infinite alternate" }} />
+          <div className="perfiles-blob perfiles-blob-1" style={{ position: "absolute", top: "10%", right: "-5%", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(0, 86, 231, 0.08) 0%, transparent 70%)", filter: "blur(60px)", zIndex: 0, animation: "float-perfiles 15s infinite alternate" }} />
+          <div className="perfiles-blob perfiles-blob-2" style={{ position: "absolute", bottom: "5%", left: "-5%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(0, 86, 231, 0.05) 0%, transparent 70%)", filter: "blur(80px)", zIndex: 0, animation: "float-perfiles-reverse 20s infinite alternate" }} />
 
           <div className="container" style={{ maxWidth: "1400px", margin: "0 auto" }}>
             {/* Header */}
@@ -2623,7 +2433,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
               borderRadius: "32px",
               padding: "clamp(24px, 4vw, 32px) clamp(24px, 4vw, 48px) clamp(32px, 5vw, 56px)",
               boxShadow: "0 20px 50px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.5)",
-              border: "1px solid rgba(15, 98, 254, 0.1)",
+              border: "1px solid rgba(0, 86, 231, 0.1)",
               position: "relative",
               zIndex: 1,
             }}>
@@ -2651,13 +2461,13 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                       fontWeight: 600,
                       fontFamily: "'Inter', sans-serif",
                       border: "1px solid",
-                      borderColor: activeProfile === profile.id ? "#1e3a8a" : "rgba(15, 98, 254, 0.1)",
+                      borderColor: activeProfile === profile.id ? "#0056E7" : "rgba(0, 86, 231, 0.1)",
                       borderRadius: "16px",
                       cursor: "pointer",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                      background: activeProfile === profile.id ? "#1e3a8a" : "rgba(255, 255, 255, 0.5)",
+                      background: activeProfile === profile.id ? "#0056E7" : "rgba(255, 255, 255, 0.5)",
                       color: activeProfile === profile.id ? "#ffffff" : "#4b5563",
-                      boxShadow: activeProfile === profile.id ? "0 10px 20px rgba(30, 58, 138, 0.2)" : "none",
+                      boxShadow: activeProfile === profile.id ? "0 10px 20px rgba(0, 86, 231, 0.2)" : "none",
                     }}
                     className="profile-tab-button"
                   >
@@ -2680,7 +2490,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     <h3 style={{
                       fontSize: "clamp(28px, 3.5vw, 42px)",
                       fontWeight: 600,
-                      color: "#1e3a8a",
+                      color: "#0056E7",
                       marginBottom: "clamp(16px, 3vw, 24px)",
                       fontFamily: "'Inter', sans-serif",
                     }}>
@@ -2716,7 +2526,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2734,7 +2544,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2752,7 +2562,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2774,7 +2584,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2792,7 +2602,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2810,7 +2620,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2832,7 +2642,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2850,7 +2660,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2868,7 +2678,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             <span style={{
                               width: "24px",
                               height: "24px",
-                              background: "#1e3a8a",
+                              background: "#0056E7",
                               borderRadius: "50%",
                               display: "flex",
                               alignItems: "center",
@@ -2887,15 +2697,16 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     </ul>
 
                     {/* CTA Button - opens demo modal */}
-                    <button
-                      type="button"
-                      onClick={() => onOpenDemoModal?.()}
+                    <a
+                      href="https://calendly.com/diego-bizen"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       style={{
                         padding: "clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 32px)",
                         fontSize: "clamp(14px, 2vw, 18px)",
                         fontWeight: 500,
                         fontFamily: "'Inter', sans-serif",
-                        background: "#1e3a8a",
+                        background: "#0056E7",
                         color: "#ffffff",
                         border: "none",
                         borderRadius: 9999,
@@ -2904,14 +2715,15 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                         display: "inline-flex",
                         alignItems: "center",
                         gap: "clamp(6px, 1.5vw, 10px)",
-                        boxShadow: "0 4px 16px rgba(15, 98, 254, 0.35)",
+                        boxShadow: "0 4px 16px rgba(0, 86, 231, 0.35)",
                         minHeight: 44,
+                        textDecoration: "none",
                       }}
                       className="quiero-demo-button"
                     >
                       Quiero una demo
                       <span className="quiero-demo-arrow" style={{ fontSize: "clamp(16px, 4vw, 20px)" }} aria-hidden>→</span>
-                    </button>
+                    </a>
                   </div>
                 </div>
 
@@ -3032,12 +2844,12 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                         height: "56px",
                         minWidth: "56px",
                         borderRadius: "16px",
-                        background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+                        background: "linear-gradient(135deg, #0056E7 0%, #0056E7 100%)",
                         color: "#fff",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: "0 10px 20px rgba(30, 58, 138, 0.1)",
+                        boxShadow: "0 10px 20px rgba(0, 86, 231, 0.1)",
                       }}>
                         <item.Icon />
                       </div>
@@ -3111,7 +2923,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                       }}
                     >
                       <div style={{
-                        background: "linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)",
+                        background: "linear-gradient(135deg, #0056E7 0%, #0f172a 100%)",
                         width: "100%",
                         padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 48px)",
                         textAlign: "center",
@@ -3166,14 +2978,15 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                       </div>
 
                       <div style={{ textAlign: "center", marginTop: "clamp(24px, 3vw, 32px)" }}>
-                        <button
-                          type="button"
-                          onClick={() => onOpenDemoModal?.()}
+                        <a
+                          href="https://calendly.com/diego-bizen"
+                          target="_blank"
+                          rel="noopener noreferrer"
                           style={{
                             padding: "16px 32px",
                             fontSize: "clamp(16px, 1.1rem, 18px)",
                             fontWeight: 500,
-                            background: "#1e3a8a",
+                            background: "#0056E7",
                             color: "#ffffff",
                             border: "none",
                             borderRadius: 9999,
@@ -3182,23 +2995,24 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                             alignItems: "center",
                             gap: "8px",
                             fontFamily: "'Inter', sans-serif",
-                            boxShadow: "0 4px 16px rgba(15, 98, 254, 0.4)",
+                            boxShadow: "0 4px 16px rgba(0, 86, 231, 0.4)",
                             transition: "all 0.2s ease",
+                            textDecoration: "none",
                           }}
                           onMouseOver={(e) => {
                             e.currentTarget.style.transform = "translateY(-2px)"
-                            e.currentTarget.style.boxShadow = "0 6px 20px rgba(15, 98, 254, 0.5)"
+                            e.currentTarget.style.boxShadow = "0 6px 20px rgba(0, 86, 231, 0.5)"
                           }}
                           onMouseOut={(e) => {
                             e.currentTarget.style.transform = "translateY(0)"
-                            e.currentTarget.style.boxShadow = "0 4px 16px rgba(15, 98, 254, 0.4)"
+                            e.currentTarget.style.boxShadow = "0 4px 16px rgba(0, 86, 231, 0.4)"
                           }}
                         >
                           Solicita tu demo
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M5 12h14M12 5l7 7-7 7" />
                           </svg>
-                        </button>
+                        </a>
                       </div>
                     </div>
                   ))}
@@ -3233,7 +3047,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                           width: activeAdventureSlide === idx ? "32px" : "12px",
                           height: "12px",
                           borderRadius: "6px",
-                          background: activeAdventureSlide === idx ? "#1e3a8a" : "#cbd5e1",
+                          background: activeAdventureSlide === idx ? "#0056E7" : "#cbd5e1",
                           border: "none",
                           cursor: "pointer",
                           transition: "all 0.3s ease",
@@ -3252,12 +3066,12 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                       width: "52px",
                       height: "52px",
                       borderRadius: "50%",
-                      background: "rgba(15, 98, 254, 0.15)",
-                      border: "1px solid rgba(15, 98, 254, 0.3)",
+                      background: "rgba(0, 86, 231, 0.15)",
+                      border: "1px solid rgba(0, 86, 231, 0.3)",
                       cursor: "pointer",
                     }}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0056E7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 18l6-6-6-6" />
                     </svg>
                   </button>
@@ -3278,7 +3092,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   width: "12px",
                   height: "12px",
                   borderRadius: "50%",
-                  background: "#1e3a8a",
+                  background: "#0056E7",
                   flexShrink: 0,
                   marginTop: "clamp(14px, 1.8vw, 22px)",
                 }} aria-hidden />
@@ -3326,19 +3140,19 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   background: "#fff",
                   borderRadius: "24px",
                   boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
-                  border: "1px solid rgba(15, 98, 254, 0.08)",
+                  border: "1px solid rgba(0, 86, 231, 0.08)",
                   transition: "transform 0.3s ease, box-shadow 0.3s ease"
                 }}>
                   <div style={{
                     width: "80px",
                     height: "80px",
                     borderRadius: "20px",
-                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+                    background: "linear-gradient(135deg, #0056E7 0%, #0056E7 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: "clamp(24px, 3vw, 32px)",
-                    boxShadow: "0 10px 20px rgba(30, 58, 138, 0.15)",
+                    boxShadow: "0 10px 20px rgba(0, 86, 231, 0.15)",
                   }}>
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -3352,7 +3166,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     marginBottom: "8px",
                     fontSize: "clamp(12px, 0.85rem, 14px)",
                     fontWeight: 700,
-                    color: "#2563eb",
+                    color: "#0056E7",
                     fontFamily: "'Inter', sans-serif",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
@@ -3390,19 +3204,19 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   background: "#fff",
                   borderRadius: "24px",
                   boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
-                  border: "1px solid rgba(15, 98, 254, 0.08)",
+                  border: "1px solid rgba(0, 86, 231, 0.08)",
                   transition: "transform 0.3s ease, box-shadow 0.3s ease"
                 }}>
                   <div style={{
                     width: "80px",
                     height: "80px",
                     borderRadius: "20px",
-                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+                    background: "linear-gradient(135deg, #0056E7 0%, #0056E7 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: "clamp(24px, 3vw, 32px)",
-                    boxShadow: "0 10px 20px rgba(30, 58, 138, 0.15)",
+                    boxShadow: "0 10px 20px rgba(0, 86, 231, 0.15)",
                   }}>
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -3415,7 +3229,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     marginBottom: "8px",
                     fontSize: "clamp(12px, 0.85rem, 14px)",
                     fontWeight: 700,
-                    color: "#2563eb",
+                    color: "#0056E7",
                     fontFamily: "'Inter', sans-serif",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
@@ -3453,19 +3267,19 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                   background: "#fff",
                   borderRadius: "24px",
                   boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
-                  border: "1px solid rgba(15, 98, 254, 0.08)",
+                  border: "1px solid rgba(0, 86, 231, 0.08)",
                   transition: "transform 0.3s ease, box-shadow 0.3s ease"
                 }}>
                   <div style={{
                     width: "80px",
                     height: "80px",
                     borderRadius: "20px",
-                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+                    background: "linear-gradient(135deg, #0056E7 0%, #0056E7 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: "clamp(24px, 3vw, 32px)",
-                    boxShadow: "0 10px 20px rgba(30, 58, 138, 0.15)",
+                    boxShadow: "0 10px 20px rgba(0, 86, 231, 0.15)",
                   }}>
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 19l7-7 3 3-7 7-3-3z" />
@@ -3478,7 +3292,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     marginBottom: "8px",
                     fontSize: "clamp(12px, 0.85rem, 14px)",
                     fontWeight: 700,
-                    color: "#2563eb",
+                    color: "#0056E7",
                     fontFamily: "'Inter', sans-serif",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
@@ -3511,7 +3325,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                 textAlign: "center",
                 fontSize: "clamp(18px, 1.25rem, 22px)",
                 fontWeight: 600,
-                color: "#1e3a8a",
+                color: "#0056E7",
                 fontFamily: "'Inter', sans-serif",
                 lineHeight: 1.4,
               }}>
@@ -3562,7 +3376,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                     background: "rgba(255, 255, 255, 0.7)",
                     backdropFilter: "blur(12px)",
                     WebkitBackdropFilter: "blur(12px)",
-                    border: "1px solid rgba(15, 98, 254, 0.12)",
+                    border: "1px solid rgba(0, 86, 231, 0.12)",
                     boxShadow: "0 10px 30px rgba(0, 0, 0, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.6)",
                     display: "flex",
                     flexDirection: "column",
@@ -3575,8 +3389,8 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                       width: "72px",
                       height: "72px",
                       borderRadius: "24px",
-                      background: "linear-gradient(135deg, rgba(15, 98, 254, 0.1) 0%, rgba(15, 98, 254, 0.05) 100%)",
-                      border: "1px solid rgba(15, 98, 254, 0.15)",
+                      background: "linear-gradient(135deg, rgba(0, 86, 231, 0.1) 0%, rgba(0, 86, 231, 0.05) 100%)",
+                      border: "1px solid rgba(0, 86, 231, 0.15)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -3592,7 +3406,7 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                         width: "32px",
                         height: "32px",
                         borderRadius: "10px",
-                        background: "#1e3a8a",
+                        background: "#0056E7",
                         color: "#fff",
                         fontSize: "14px",
                         fontWeight: 700,
@@ -3600,19 +3414,19 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
                         alignItems: "center",
                         justifyContent: "center",
                         fontFamily: "'Inter', sans-serif",
-                        boxShadow: "0 4px 10px rgba(30, 58, 138, 0.3)"
+                        boxShadow: "0 4px 10px rgba(0, 86, 231, 0.3)"
                       }}>
                         {i + 1}
                       </span>
                       {i === 0 && (
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0056E7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>
                       )}
                       {i === 1 && (
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0056E7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>
                       )}
 
                       {i === 2 && (
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg>
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0056E7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg>
                       )}
                     </div>
                     <h3 style={{
@@ -3634,8 +3448,8 @@ function LandingContent({ sectionRange = 'all', onOpenDemoModal }: { sectionRang
               </div>
               <style>{`
             .step-card:hover {
-              border-color: rgba(15, 98, 254, 0.28) !important;
-              box-shadow: 0 8px 32px rgba(15, 98, 254, 0.1) !important;
+              border-color: rgba(0, 86, 231, 0.28) !important;
+              box-shadow: 0 8px 32px rgba(0, 86, 231, 0.1) !important;
             }
             @media (max-width: 767px) {
               .how-it-works-steps {
@@ -3689,7 +3503,7 @@ const landingCSS = `
         }
 
 :root{
-  --c-primary:#1e3a8a;
+  --c-primary:#0056E7;
   --c-accent:#10B981;
   --c-text:#1E293B;
   --c-muted:#334155;
@@ -3703,7 +3517,7 @@ const landingCSS = `
   --font-weight-normal:400;
   --font-weight-medium:500;
   --font-weight-semibold:600;
-  --premium-shadow: 0 20px 40px rgba(15, 98, 254, 0.1);
+  --premium-shadow: 0 20px 40px rgba(0, 86, 231, 0.1);
 }
 
 @keyframes float-perfiles {
@@ -3717,12 +3531,12 @@ const landingCSS = `
 
 .skill-icon-container {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 86, 231, 0.1);
 }
 .skill-icon-container:hover {
   transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 8px 24px rgba(30, 58, 138, 0.2);
-  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+  box-shadow: 0 8px 24px rgba(0, 86, 231, 0.2);
+  background: linear-gradient(135deg, #0056E7 0%, #1983FD 100%) !important;
 }
 
 .perfiles-slide-in {
@@ -3736,7 +3550,7 @@ const landingCSS = `
 .premium-obstacle-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
-  border-color: rgba(15, 98, 254, 0.2) !important;
+  border-color: rgba(0, 86, 231, 0.2) !important;
 }
 
 @keyframes float-step {
@@ -3895,16 +3709,16 @@ html {
 .course-title{margin:2px 0 8px}
 .course-body{padding:6px 2px 8px 2px}
 .course-meta{display:flex; align-items:center; gap:8px; color:var(--c-muted)}
-.pill{display:inline-flex; align-items:center; height:28px; padding:0 10px; border-radius:999px; background:rgba(14,165,233,.12); color:#0b77a1; font-weight:500; font-size:13px;}
+.pill{display:inline-flex; align-items:center; height:28px; padding:0 10px; border-radius:999px; background:rgba(0, 86, 231, 0.12); color:#0056E7; font-weight:500; font-size:13px;}
 .dot{opacity:.4}
 .course-actions{padding-top:6px}
 
 .plan{position:relative; padding:32px 24px; display:flex; flex-direction:column; height:auto; min-height:480px; border:1px solid rgba(255, 255, 255, 0.3); background:rgba(255, 255, 255, 0.6); backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%); border-radius:32px; box-shadow:0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5); transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow:visible;}
-.plan:hover{transform:translateY(-8px); box-shadow:0 20px 40px rgba(15, 98, 254, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6); border-color:rgba(15, 98, 254, 0.3);}
-.plan--highlight{background:rgba(240, 247, 255, 0.7); border:2px solid rgba(15, 98, 254, 0.4); box-shadow:0 12px 32px rgba(15, 98, 254, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6); position:relative; overflow:visible;}
-.plan--highlight::before{content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #1e3a8a 0%, #4A90E2 50%, #1e3a8a 100%); background-size:200% auto; animation:shimmer 3s ease-in-out infinite;}
-.tag{position:absolute; top:16px; right:16px; background:linear-gradient(135deg, #1e3a8a 0%, #4A90E2 100%); color:#fff; border-radius:999px; font-weight:500; padding:8px 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 12px rgba(15, 98, 254, 0.3); z-index:2;}
-.plan-name{font-size:clamp(24px, 3vw, 32px); margin:0 0 12px 0; font-weight:600; letter-spacing:-0.02em; background:linear-gradient(135deg, #1e3a8a 0%, #4A90E2 50%, #1e3a8a 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 3s ease-in-out infinite; font-family:'Inter', system-ui, -apple-system, sans-serif; white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
+.plan:hover{transform:translateY(-8px); box-shadow:0 20px 40px rgba(0, 86, 231, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6); border-color:rgba(0, 86, 231, 0.3);}
+.plan--highlight{background:rgba(240, 247, 255, 0.7); border:2px solid rgba(0, 86, 231, 0.4); box-shadow:0 12px 32px rgba(0, 86, 231, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6); position:relative; overflow:visible;}
+.plan--highlight::before{content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #0056E7 0%, #1983FD 50%, #0056E7 100%); background-size:200% auto; animation:shimmer 3s ease-in-out infinite;}
+.tag{position:absolute; top:16px; right:16px; background:linear-gradient(135deg, #0056E7 0%, #1983FD 100%); color:#fff; border-radius:999px; font-weight:500; padding:8px 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 12px rgba(0, 86, 231, 0.3); z-index:2;}
+.plan-name{font-size:clamp(24px, 3vw, 32px); margin:0 0 12px 0; font-weight:600; letter-spacing:-0.02em; background:linear-gradient(135deg, #0056E7 0%, #1983FD 50%, #0056E7 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 3s ease-in-out infinite; font-family:'Inter', system-ui, -apple-system, sans-serif; white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
 .plan-note{font-size:14px; margin:0 0 24px 0; color:var(--c-muted); font-weight:400; white-space:normal;}
 .plan-list{list-style:none; margin:0 0 24px 0; padding:0; display:grid; gap:14px; flex-grow:1; overflow:visible;}
 .plan-list li{display:flex; gap:12px; align-items:flex-start; font-size:15px; line-height:1.6; color:var(--c-text); white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
@@ -4001,7 +3815,7 @@ html {
 /* Somos BIZEN Cards - Hover Effects */
 .somos-bizen-card:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(30, 58, 138, 0.5) !important;
+  box-shadow: 0 12px 40px rgba(0, 86, 231, 0.5) !important;
 }
 
 @media (max-width: 767px) {
@@ -4040,16 +3854,16 @@ html {
 
 /* Profiles Section Responsive */
 .profile-tab-button:hover {
-  background: #1e3a8a !important;
+  background: #0056E7 !important;
   color: #ffffff !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(15, 98, 254, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 86, 231, 0.35);
 }
 
 .quiero-demo-button:hover {
-  background: #1e40af !important;
+  background: #015CF8 !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15, 98, 254, 0.45) !important;
+  box-shadow: 0 6px 20px rgba(0, 86, 231, 0.45) !important;
 }
 
 @media (max-width: 767px) {
@@ -4086,9 +3900,9 @@ html {
 }
 
 .cta-button:hover {
-  background: #1d4ed8 !important;
+  background: #0056E7 !important;
   filter: brightness(1.05);
-  box-shadow: 0 6px 20px rgba(15, 98, 254, 0.45);
+  box-shadow: 0 6px 20px rgba(0, 86, 231, 0.45);
 }
 
 .accordion{display:grid; gap:16px}
@@ -4103,8 +3917,8 @@ html {
 }
 .accordion-item:hover{
   transform:translateY(-2px);
-  box-shadow:0 12px 40px rgba(15, 98, 254, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  border-color:rgba(15, 98, 254, 0.3);
+  box-shadow:0 12px 40px rgba(0, 86, 231, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-color:rgba(0, 86, 231, 0.3);
 }
 .accordion-trigger{
   width:100%;
@@ -4119,7 +3933,7 @@ html {
   font-weight:500;
   font-family:'Inter', system-ui, -apple-system, sans-serif;
   font-size:clamp(16px, 2vw, 20px);
-  color:#1e3a8a;
+  color:#0056E7;
   transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin:center;
   word-wrap:break-word;
@@ -4128,9 +3942,9 @@ html {
   flex-wrap:wrap;
   gap:8px;
 }
-.accordion-trigger:hover, .accordion-trigger:active{transform:none; color:#1e3a8a}
-.accordion-trigger:focus-visible{outline:2px solid rgba(15, 98, 254, 0.6); border-radius:20px}
-.chev{transition:transform var(--transition); color:#1e3a8a}
+.accordion-trigger:hover, .accordion-trigger:active{transform:none; color:#0056E7}
+.accordion-trigger:focus-visible{outline:2px solid rgba(0, 86, 231, 0.6); border-radius:20px}
+.chev{transition:transform var(--transition); color:#0056E7}
 .accordion-item.open .chev{transform:rotate(180deg)}
 .accordion-panel{
   padding:0 20px 18px 20px;
@@ -4290,7 +4104,7 @@ html {
   
   /* Main page container - full width, gradient background on mobile */
   .main-page-container {
-    background: linear-gradient(180deg, #f5f9ff 0%, #eef6ff 18%, #e0efff 40%, #d4e8ff 60%, #dbeafe 75%, #d4e8ff 88%, #bfdbfe 100%) !important;
+    background: linear-gradient(180deg, #ffffff 0%, rgba(0, 86, 231, 0.03) 18%, rgba(0, 86, 231, 0.05) 40%, rgba(25, 131, 253, 0.08) 60%, rgba(25, 131, 253, 0.1) 100%) !important;
     width: 100% !important;
     max-width: 100% !important;
     overflow-x: hidden !important;

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { FINAL_CTA_ESCUELAS, FINAL_CTA_PARTICULARES } from "@/lib/landing-data"
 import { School, User } from "lucide-react"
 
-export function FinalCTA({ onDemo, onBuy }: { onDemo: () => void; onBuy: () => void }) {
+export function FinalCTA({ onBuy }: { onBuy: () => void }) {
   return (
     <section
       className="border-b border-gray-100 bg-gray-50/30 py-12 sm:py-16"
@@ -22,24 +22,26 @@ export function FinalCTA({ onDemo, onBuy }: { onDemo: () => void; onBuy: () => v
           <Card className="rounded-2xl border-gray-200 bg-white shadow-sm flex flex-col">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <School className="h-5 w-5 text-blue-600" aria-hidden />
+                <School className="h-5 w-5 text-[#0056E7]" aria-hidden />
                 <h3 className="text-lg font-semibold text-gray-900">{FINAL_CTA_ESCUELAS.title}</h3>
               </div>
             </CardHeader>
             <CardContent className="pt-0 flex-1 flex flex-col">
               <p className="text-sm text-gray-600 mb-4">{FINAL_CTA_ESCUELAS.sentence}</p>
-              <Button
-                onClick={onDemo}
-                className="mt-auto rounded-full bg-blue-600 hover:bg-blue-700 text-white w-full"
+              <a
+                href="https://calendly.com/diego-bizen"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto rounded-full bg-[#0056E7] hover:bg-[#015CF8] text-white w-full py-2 px-4 text-center text-sm font-medium transition-colors no-underline inline-block"
               >
                 Agendar demo
-              </Button>
+              </a>
             </CardContent>
           </Card>
           <Card className="rounded-2xl border-gray-200 bg-white shadow-sm flex flex-col">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <User className="h-5 w-5 text-blue-600" aria-hidden />
+                <User className="h-5 w-5 text-[#0056E7]" aria-hidden />
                 <h3 className="text-lg font-semibold text-gray-900">{FINAL_CTA_PARTICULARES.title}</h3>
               </div>
             </CardHeader>
@@ -47,7 +49,7 @@ export function FinalCTA({ onDemo, onBuy }: { onDemo: () => void; onBuy: () => v
               <p className="text-sm text-gray-600 mb-4">{FINAL_CTA_PARTICULARES.sentence}</p>
               <Button
                 onClick={onBuy}
-                className="mt-auto rounded-xl bg-blue-600 hover:bg-blue-700 text-white w-full"
+                className="mt-auto rounded-xl bg-[#0056E7] hover:bg-[#015CF8] text-white w-full"
               >
                 Comprar acceso
               </Button>

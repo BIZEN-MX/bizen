@@ -2,14 +2,13 @@
 
 import Image from "next/image"
 
-type Props = { onOpenDemoModal?: () => void }
-
-export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
+type Props = {}
+export function LandingWaitlistFooter({ }: Props) {
     return (
         <footer style={{
             width: "100%",
-            background: "#1e3a8a",
-            padding: "clamp(40px, 6vw, 60px) clamp(24px, 4vw, 48px) clamp(32px, 5vw, 48px)",
+            background: "#0056E7",
+            padding: "clamp(20px, 3vw, 40px) clamp(24px, 4vw, 48px) clamp(32px, 5vw, 48px)",
             boxSizing: "border-box",
             position: "relative",
             zIndex: 10,
@@ -20,83 +19,7 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
                 maxWidth: "1200px",
                 margin: "0 auto",
             }}>
-                {/* Text box - raised above footer */}
-                <div style={{
-                    marginTop: "-120px",
-                    marginBottom: "clamp(32px, 5vw, 48px)",
-                }}>
-                    <div style={{
-                        maxWidth: "900px",
-                        background: "#ffffff",
-                        borderRadius: "32px",
-                        border: "2px solid rgba(15, 98, 254, 0.12)",
-                        padding: "clamp(24px, 4vw, 36px) clamp(28px, 4vw, 40px)",
-                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(15, 98, 254, 0.06)",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "clamp(24px, 4vw, 40px)",
-                        flexWrap: "wrap",
-                        position: "relative",
-                        paddingLeft: "clamp(64px, 11vw, 100px)",
-                    }}>
-                        <div style={{
-                            position: "absolute",
-                            top: "clamp(-44px, -8vw, -64px)",
-                            left: "clamp(-44px, -8vw, -64px)",
-                            width: "clamp(88px, 14vw, 120px)",
-                            height: "clamp(88px, 14vw, 120px)",
-                            borderRadius: "50%",
-                            overflow: "hidden",
-                            border: "2px solid rgba(15, 98, 254, 0.12)",
-                            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(15, 98, 254, 0.06)",
-                            background: "#ffffff",
-                            zIndex: 1,
-                        }}>
-                            <Image src="/billy%20looking%20at%20the%20left.png" alt="BIZEN mascot" fill style={{ objectFit: "contain", objectPosition: "center", transform: "scale(0.75)" }} />
-                        </div>
-                        <p style={{
-                            fontSize: "clamp(18px, 1.8vw, 24px)",
-                            lineHeight: 1.5,
-                            color: "#1f2937",
-                            margin: 0,
-                            fontFamily: "'Inter', sans-serif",
-                            fontWeight: 500,
-                            flex: 1,
-                            minWidth: "260px",
-                        }}>
-                            Hacemos de la <strong>educación</strong> una misión fácil, emocionante y al alcance de todos.
-                        </p>
-                        <button
-                            type="button"
-                            onClick={() => onOpenDemoModal?.()}
-                            style={{
-                                background: "#1e3a8a",
-                                color: "#ffffff",
-                                padding: "12px 24px",
-                                fontSize: "clamp(16px, 1.2rem, 18px)",
-                                fontWeight: 500,
-                                border: "none",
-                                borderRadius: 9999,
-                                cursor: "pointer",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: "12px",
-                                boxShadow: "0 4px 16px rgba(30, 58, 138, 0.4)",
-                                fontFamily: "'Inter', sans-serif",
-                                flexShrink: 0,
-                            }}
-                            className="demo-cta-button"
-                        >
-                            Solicita tu demo gratis
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+
 
                 {/* BIZEN + Phone below text box, Social on right */}
                 <div style={{
@@ -226,9 +149,9 @@ export function LandingWaitlistFooter({ onOpenDemoModal }: Props) {
 
             <style jsx global>{`
                 .demo-cta-button:hover {
-                    background: #1e3a8a !important;
+                    background: #015CF8 !important;
                     transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(30, 58, 138, 0.5) !important;
+                    box-shadow: 0 6px 20px rgba(0, 86, 231, 0.5) !important;
                 }
                 .footer-phone:hover {
                     opacity: 0.8;

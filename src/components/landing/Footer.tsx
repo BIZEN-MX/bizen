@@ -20,7 +20,7 @@ export function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                className="text-sm font-medium text-[#0056E7] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0056E7] rounded"
               >
                 {link.label}
               </Link>
