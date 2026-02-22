@@ -107,7 +107,8 @@ export default function WelcomePage() {
   return (
     <div style={{
       background: "#ffffff",
-      flex: 1,
+      flex: "0 0 auto",
+      height: "auto",
       width: "100%",
       minWidth: "100%",
       maxWidth: "100%",
@@ -321,7 +322,7 @@ export default function WelcomePage() {
         </div>
       )}
 
-      <main className="landing-main" style={{ flex: 1, width: "100%", maxWidth: "100%", display: "flex", flexDirection: "column", overflow: "visible", overflowY: "visible", overflowX: "hidden" }}>
+      <main className="landing-main" style={{ flex: "0 0 auto", width: "100%", maxWidth: "100%", display: "block", overflow: "visible" }}>
         <div className="landing-gradient-wrapper" style={gradientStyle}>
           {/* Hero Section - centered text with geometric shapes */}
           <div className="landing-hero-wrapper" style={{
@@ -362,14 +363,18 @@ export default function WelcomePage() {
                 }
                 @media (max-width: 1023px) {
                   .landing-hero-mascot {
-                    width: 200px !important;
+                    width: 180px !important;
                     top: 140px !important;
+                    transform: translateX(-20%) !important;
+                    opacity: 0.6 !important;
                   }
                 }
                 @media (max-width: 768px) {
                   .landing-hero-mascot {
-                    width: 140px !important;
+                    width: 120px !important;
                     top: 110px !important;
+                    transform: translateX(-40%) !important;
+                    opacity: 0.4 !important;
                   }
                 }
               `}} />
@@ -407,18 +412,19 @@ export default function WelcomePage() {
                 }
                 @media (max-width: 1023px) {
                   .landing-hero-right-mascot {
-                    width: 200px !important;
-                    bottom: 80px !important;
+                    width: 180px !important;
+                    bottom: 40px !important;
                     top: auto !important;
-                    transform: translateX(25%) !important;
+                    transform: translateX(35%) !important;
+                    opacity: 0.6 !important; /* Slightly fade to reduce visual noise on tablets */
                   }
                 }
                 @media (max-width: 768px) {
                   .landing-hero-right-mascot {
-                    width: 140px !important;
-                    bottom: 60px !important;
-                    top: auto !important;
-                    transform: translateX(25%) !important;
+                    width: 120px !important;
+                    bottom: 20px !important;
+                    transform: translateX(45%) !important;
+                    opacity: 0.4 !important; /* More transparent on mobile */
                   }
                 }
               `}} />
@@ -472,22 +478,37 @@ export default function WelcomePage() {
               </h1>
 
               {/* Subheading with highlighted text - responsive, never overlaps */}
-              <p className="landing-hero-sub" style={{
-                fontSize: "clamp(16px, 2vw, 20px)",
-                color: "#374151",
-                fontWeight: 400,
-                margin: "0 auto",
-                marginTop: "clamp(64px, 10vw, 120px)",
-                marginBottom: "clamp(24px, 4vw, 48px)",
-                lineHeight: 1.6,
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                maxWidth: "900px",
-                wordWrap: "break-word",
-                overflowWrap: "break-word",
-                boxSizing: "border-box",
-              }}>
-                LA PLATAFORMA EDUCATIVA QUE COMBINA <span style={{ color: "#000000", fontWeight: 800 }}>GAMIFICACIÓN E INTELIGENCIA ARTIFICIAL</span> PARA ENSEÑAR FINANZAS PERSONALES A ESTUDIANTES DE PREPARATORIA Y UNIVERSIDAD DE FORMA PRÁCTICA, CLARA Y RELEVANTE.
-              </p>
+              <div className="landing-hero-sub-container">
+                <style dangerouslySetInnerHTML={{
+                  __html: `
+                  .landing-hero-sub {
+                    font-size: clamp(14px, 2vw, 20px) !important;
+                    line-height: 1.6;
+                    max-width: 900px;
+                    margin: 0 auto;
+                    color: #374151;
+                    font-family: 'Inter', sans-serif;
+                    text-align: center;
+                  }
+                  @media (max-width: 768px) {
+                    .landing-hero-sub {
+                      font-size: 15px !important;
+                      line-height: 1.5 !important;
+                      padding: 0 16px;
+                    }
+                  }
+                `}} />
+                <p className="landing-hero-sub" style={{
+                  fontWeight: 400,
+                  marginTop: "clamp(64px, 10vw, 120px)",
+                  marginBottom: "clamp(24px, 4vw, 48px)",
+                  wordWrap: "break-word",
+                  overflowWrap: "break-word",
+                  boxSizing: "border-box",
+                }}>
+                  LA PLATAFORMA EDUCATIVA QUE COMBINA <span style={{ color: "#000000", fontWeight: 800 }}>GAMIFICACIÓN E INTELIGENCIA ARTIFICIAL</span> PARA ENSEÑAR FINANZAS PERSONALES A ESTUDIANTES DE PREPARATORIA Y UNIVERSIDAD DE FORMA PRÁCTICA, CLARA Y RELEVANTE.
+                </p>
+              </div>
             </div>
 
             {/* Company logos section - carousel (spacing keeps it clear of sub text on small screens) */}
@@ -964,10 +985,17 @@ export default function WelcomePage() {
         }
         .main-page-container main > div,
         .landing-gradient-wrapper,
-        .landing-rest-wrapper { 
+        .landing-rest-wrapper,
+        .conoce-bizen-section,
+        .how-it-works,
+        .curiosidad-section,
+        .testimonials-section { 
           overflow: visible !important; 
           max-width: 100% !important; 
           width: 100% !important; 
+          height: auto !important;
+          min-height: 0 !important;
+        }
           height: auto !important;
           box-sizing: border-box !important; 
         }
@@ -2439,7 +2467,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
           paddingLeft: "clamp(16px, 4vw, 24px)",
           paddingRight: "clamp(16px, 4vw, 24px)",
           position: "relative",
-          overflow: "hidden"
+          overflow: "visible"
         }}>
           {/* Decorative Blobs for Depth */}
           <div className="perfiles-blob perfiles-blob-1" style={{ position: "absolute", top: "10%", right: "-5%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(0, 86, 231, 0.10) 0%, transparent 70%)", filter: "blur(80px)", zIndex: 0, animation: "float-perfiles 15s infinite alternate" }} />
@@ -2830,7 +2858,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
         <div className="landing-rest-wrapper" style={{
           background: "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, #e8f2ff 65%, #c7e0ff 85%, #93c5fd 100%)",
           width: "100%",
-          minHeight: "100%",
+          minHeight: "auto", // Changed from 100% to fix scroll issues
           paddingBottom: "clamp(12px, 2vw, 24px)",
           overflow: "visible",
           overflowY: "visible",
@@ -2838,9 +2866,11 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
           {/* Conoce BIZEN - enhanced */}
           <section id="conoce-bizen" className="section conoce-bizen-section reveal-element" style={{
             background: "#ffffff",
-            padding: "clamp(72px, 10vw, 112px) clamp(16px, 4vw, 48px)"
+            padding: "clamp(72px, 10vw, 112px) clamp(16px, 4vw, 48px)",
+            overflow: "visible", // Fix internal scroll
+            height: "auto"
           }}>
-            <div className="container" style={{ maxWidth: "1320px", margin: "0 auto" }}>
+            <div className="container" style={{ maxWidth: "1320px", margin: "0 auto", overflow: "visible" }}>
 
               {/* Section label + heading centered */}
               <div style={{ textAlign: "center", marginBottom: "clamp(56px, 7vw, 80px)" }}>
@@ -3242,7 +3272,8 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
             background: "linear-gradient(160deg, #0a1628 0%, #0d1f40 50%, #0a2050 100%)",
             padding: "clamp(64px, 9vw, 112px) clamp(24px, 4vw, 56px)",
             position: "relative",
-            overflow: "hidden",
+            overflow: "visible", // Changed from hidden to prevent scroll issues
+            height: "auto",
           }}>
             {/* Decorative blobs */}
             <div style={{ position: "absolute", top: "-100px", right: "-60px", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(25,131,253,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
@@ -3368,7 +3399,12 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
           </section>
 
           {/* Cómo funciona — enhanced */}
-          <section id="como-funciona" className="section how-it-works reveal-element reveal-delay-2" style={{ background: "#f8faff", padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 24px)" }}>
+          <section id="como-funciona" className="section how-it-works reveal-element reveal-delay-2" style={{
+            background: "#f8faff",
+            padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 24px)",
+            overflow: "visible",
+            height: "auto",
+          }}>
             <div className="container" style={{ maxWidth: "1100px", margin: "0 auto" }}>
               <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 72px)" }}>
                 <span style={{
@@ -3628,7 +3664,9 @@ section#problema {
 .main-page-container .landing-gradient-wrapper,
 .main-page-container .landing-rest-wrapper,
 .landing-gradient-wrapper,
-.landing-rest-wrapper {
+.landing-rest-wrapper,
+.conoce-bizen-section,
+.conoce-skills-grid {
   overflow: visible !important;
   height: auto !important;
   max-height: none !important;
