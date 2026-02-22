@@ -25,7 +25,7 @@ import { currencyMXN, pct } from '@/lib/simulators';
 
 export function InflationCalculatorSimulator() {
   const [result, setResult] = React.useState<InflationCalculatorOutput | null>(null);
-  
+
   const {
     handleSubmit,
     watch,
@@ -40,26 +40,27 @@ export function InflationCalculatorSimulator() {
       currentIncome: undefined,
     },
   });
-  
+
   function onSubmit(data: InflationCalculatorInput) {
     const output = calculateInflation(data);
     setResult(output);
   }
-  
+
   function loadPreset() {
     const preset = PRESET_VALUES.inflationCalculator;
     Object.entries(preset).forEach(([key, value]) => {
       setValue(key as any, value);
     });
   }
-  
+
   React.useEffect(() => {
     const subscription = watch(() => handleSubmit(onSubmit)());
     return () => subscription.unsubscribe();
   }, [handleSubmit, watch]);
-  
-  const hasIncome = watch('currentIncome') !== undefined && watch('currentIncome') > 0;
-  
+
+  const incomeValue = watch('currentIncome');
+  const hasIncome = incomeValue !== undefined && incomeValue > 0;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Left: Input Form */}
@@ -80,7 +81,7 @@ export function InflationCalculatorSimulator() {
               hint="¿Cuánto cuesta hoy?"
               error={errors.currentPrice?.message}
             />
-            
+
             <NumberField
               label="Inflación Anual (%)"
               value={watch('inflationAnnual')}
@@ -89,7 +90,7 @@ export function InflationCalculatorSimulator() {
               hint="Ej: 5 para 5% anual. Meta de Banxico es ~3%"
               error={errors.inflationAnnual?.message}
             />
-            
+
             <NumberField
               label="Años a Proyectar"
               value={watch('years')}
@@ -97,9 +98,9 @@ export function InflationCalculatorSimulator() {
               hint="¿Cuántos años en el futuro?"
               error={errors.years?.message}
             />
-            
+
             <hr className="my-4" />
-            
+
             <NumberField
               label="Ingreso Actual (Opcional)"
               value={watch('currentIncome') || 0}
@@ -109,18 +110,18 @@ export function InflationCalculatorSimulator() {
             />
           </CardContent>
         </Card>
-        
+
         <Alert variant="info">
           <strong>💡 Tip:</strong> La inflación reduce tu poder adquisitivo. Si ganas lo mismo
           pero todo sube de precio, puedes comprar menos.
         </Alert>
       </div>
-      
+
       {/* Right: Results */}
       <div className="space-y-4">
         {result ? (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ResultsCard
                 title="Precio Futuro"
                 value={currencyMXN(result.futurePrice)}
@@ -149,7 +150,7 @@ export function InflationCalculatorSimulator() {
                 </>
               )}
             </div>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Proyección de Precios{hasIncome && ' e Ingresos'}</CardTitle>
@@ -171,7 +172,7 @@ export function InflationCalculatorSimulator() {
                 />
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Ejemplo Práctico</CardTitle>
@@ -197,12 +198,12 @@ export function InflationCalculatorSimulator() {
                 )}
               </CardContent>
             </Card>
-            
+
             <Alert variant="warning">
               <strong>📌 Importante:</strong> Estas proyecciones asumen una tasa de inflación
               constante. En la realidad, la inflación varía año con año.
             </Alert>
-            
+
             <SaveRunButton
               simulatorSlug="inflation-calculator"
               inputs={watch()}

@@ -125,10 +125,17 @@ export default function SimulatorPage() {
           .simulador-detail-outer { width: 100% !important; max-width: 100% !important; }
           .simulador-detail-main {
             width: calc(100% - 220px) !important;
-            max-width: calc(100% - 220px) !important;
+            max-width: 100% !important;
             margin-left: 220px !important;
             margin-right: 0 !important;
-            padding: clamp(24px, 3vw, 40px) !important;
+            padding: clamp(20px, 3vw, 40px) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          .simulador-detail-main > div {
+            width: 100% !important;
+            max-width: 100% !important;
           }
         }
         /* Desktop (1161px+) - left sidebar 280px */
@@ -136,10 +143,17 @@ export default function SimulatorPage() {
           .simulador-detail-outer { width: 100% !important; max-width: 100% !important; }
           .simulador-detail-main {
             width: calc(100% - 280px) !important;
-            max-width: calc(100% - 280px) !important;
+            max-width: 100% !important; /* Allow full width of usable space */
             margin-left: 280px !important;
             margin-right: 0 !important;
-            padding: clamp(24px, 4vw, 40px) !important;
+            padding: clamp(24px, 4vw, 64px) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          .simulador-detail-main > div {
+            width: 100% !important;
+            max-width: 1400px !important; /* Keep content readable but centered */
           }
         }
       `}</style>
@@ -187,7 +201,7 @@ export default function SimulatorPage() {
             <div style={{ display: "flex", gap: 16, alignItems: "start", marginBottom: 20 }}>
               <div style={{ flex: 1 }}>
                 <h1 style={{
-                  fontSize: 42,
+                  fontSize: "clamp(24px, 6vw, 42px)",
                   fontWeight: 900,
                   margin: "0 0 12px",
                   background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",

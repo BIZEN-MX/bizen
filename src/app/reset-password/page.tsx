@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext"
 
 // ===== Brand & Theme
 const brandName = "BIZEN"
-const logoSrc = "/bsmx-logo.png"
+const logoSrc = "/bizen-logo.png"
 const bgColor = "#0B71FE"
 const buttonColor = "#0B71FE"
 const linkColor = "#0E4A7A"
@@ -122,7 +122,7 @@ function ResetPasswordContent() {
     try {
       setLoading(true)
       const { error } = await updatePassword(password)
-      
+
       if (error) {
         return setMessage(`Error: ${error.message}`)
       }
@@ -241,10 +241,10 @@ function ResetPasswordContent() {
           </form>
 
           {message && (
-            <p role="status" style={{ 
-              marginTop: 14, 
-              textAlign: "center", 
-              wordBreak: "break-word", 
+            <p role="status" style={{
+              marginTop: 14,
+              textAlign: "center",
+              wordBreak: "break-word",
               overflowWrap: "anywhere",
               color: message.includes("exitosamente") ? "#059669" : "#dc2626"
             }}>
@@ -265,11 +265,11 @@ function ResetPasswordContent() {
 export default function ResetPasswordPage() {
   return (
     <Suspense fallback={
-      <div style={{ 
-        background: "#0B71FE", 
-        minHeight: "100dvh", 
-        display: "grid" as const, 
-        placeItems: "center", 
+      <div style={{
+        background: "#0B71FE",
+        minHeight: "100dvh",
+        display: "grid" as const,
+        placeItems: "center",
         color: "#fff",
         fontSize: 18
       }}>

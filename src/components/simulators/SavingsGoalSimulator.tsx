@@ -26,7 +26,7 @@ import { currencyMXN, formatMonths } from '@/lib/simulators';
 
 export function SavingsGoalSimulator() {
   const [result, setResult] = React.useState<SavingsGoalOutput | null>(null);
-  
+
   const {
     register,
     handleSubmit,
@@ -43,14 +43,14 @@ export function SavingsGoalSimulator() {
       months: 12,
     },
   });
-  
+
   const mode = watch('mode');
-  
+
   function onSubmit(data: SavingsGoalInput) {
     const output = calculateSavingsGoal(data);
     setResult(output);
   }
-  
+
   function loadPreset() {
     const preset = PRESET_VALUES.savingsGoal;
     setValue('initial', preset.initial);
@@ -59,12 +59,12 @@ export function SavingsGoalSimulator() {
     setValue('months', preset.months);
     setValue('mode', preset.mode);
   }
-  
+
   React.useEffect(() => {
     const subscription = watch(() => handleSubmit(onSubmit)());
     return () => subscription.unsubscribe();
   }, [handleSubmit, watch]);
-  
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Left: Input Form */}
@@ -84,7 +84,7 @@ export function SavingsGoalSimulator() {
               currency
               error={errors.initial?.message}
             />
-            
+
             <NumberField
               label="Aportación Mensual"
               value={watch('monthlyContribution')}
@@ -92,7 +92,7 @@ export function SavingsGoalSimulator() {
               currency
               error={errors.monthlyContribution?.message}
             />
-            
+
             <NumberField
               label="Tasa Anual (%)"
               value={watch('annualRate')}
@@ -101,7 +101,7 @@ export function SavingsGoalSimulator() {
               hint="Ej: 8 para 8% anual"
               error={errors.annualRate?.message}
             />
-            
+
             <div>
               <Label>Modo de Cálculo</Label>
               <select
@@ -112,7 +112,7 @@ export function SavingsGoalSimulator() {
                 <option value="time-to-goal">Tiempo a Meta (calcular meses)</option>
               </select>
             </div>
-            
+
             {mode === 'forecast' && (
               <NumberField
                 label="Número de Meses"
@@ -121,7 +121,7 @@ export function SavingsGoalSimulator() {
                 error={errors.months?.message}
               />
             )}
-            
+
             {mode === 'time-to-goal' && (
               <NumberField
                 label="Meta a Alcanzar"
@@ -134,7 +134,7 @@ export function SavingsGoalSimulator() {
           </CardContent>
         </Card>
       </div>
-      
+
       {/* Right: Results */}
       <div className="space-y-4">
         {result ? (
@@ -142,8 +142,8 @@ export function SavingsGoalSimulator() {
             {result.error && (
               <Alert variant="warning">{result.error}</Alert>
             )}
-            
-            <div className="grid grid-cols-2 gap-4">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ResultsCard
                 title="Valor Futuro"
                 value={currencyMXN(result.futureValue)}
@@ -168,7 +168,7 @@ export function SavingsGoalSimulator() {
                 />
               )}
             </div>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Crecimiento del Ahorro</CardTitle>
@@ -189,7 +189,7 @@ export function SavingsGoalSimulator() {
                 />
               </CardContent>
             </Card>
-            
+
             <SaveRunButton
               simulatorSlug="savings-goal"
               inputs={watch()}

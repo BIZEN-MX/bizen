@@ -126,10 +126,11 @@ function BIZENLoginContent() {
   }, [])
 
   React.useEffect(() => {
+    // Enable scroll if content overflows on mobile
     const prevHtml = document.documentElement.style.overflow
     const prevBody = document.body.style.overflow
-    document.documentElement.style.overflow = "hidden"
-    document.body.style.overflow = "hidden"
+    document.documentElement.style.overflow = "auto"
+    document.body.style.overflow = "auto"
     return () => {
       document.documentElement.style.overflow = prevHtml
       document.body.style.overflow = prevBody
@@ -212,20 +213,41 @@ function BIZENLoginContent() {
   return (
     <main className="auth-page" style={{
       position: "relative" as const,
-      overflow: "hidden" as const,
+      overflowX: "hidden" as const,
+      overflowY: "auto" as const,
       background: "linear-gradient(180deg, #e8f4ff 0%, #f5f9ff 50%, #e8f4ff 100%)",
-      height: "100dvh",
       minHeight: "100dvh",
       display: "flex" as const,
+      flexDirection: "column" as const,
       alignItems: "center" as const,
       justifyContent: "center" as const,
       boxSizing: "border-box" as const,
-      padding: "20px",
+      padding: "clamp(60px, 10vw, 40px) 20px",
     }}>
-      {/* Fixed brand name top left */}
-      <Link href="/" style={{ position: "fixed" as const, left: 24, top: 24, display: "flex" as const, alignItems: "center" as const, textDecoration: "none", color: "inherit", zIndex: 10 }}>
+      {/* Brand name - slightly adjusted for mobile flow */}
+      <Link href="/" style={{
+        position: "absolute" as const,
+        left: "50%",
+        top: 24,
+        transform: "translateX(-50%)",
+        display: "flex" as const,
+        alignItems: "center" as const,
+        textDecoration: "none",
+        color: "inherit",
+        zIndex: 10
+      }} className="auth-logo-top">
         <strong style={{ fontSize: 28, color: "#0B71FE", fontFamily: "Montserrat, sans-serif" }}>{brandName}.</strong>
       </Link>
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @media (min-width: 768px) {
+          .auth-logo-top {
+            left: 24px !important;
+            transform: none !important;
+          }
+        }
+      `}} />
 
       {/* Decorative science elements - atoms, DNA, molecules */}
       <div aria-hidden style={{ position: "absolute" as const, top: 60, left: 80, opacity: 0.6, zIndex: 0 }}>
@@ -268,9 +290,12 @@ function BIZENLoginContent() {
       <Card style={{
         width: "100%",
         maxWidth: 480,
-        padding: "clamp(24px, 5vw, 40px)",
+        padding: "clamp(24px, 6vw, 40px)",
+        margin: "0 auto",
         position: "relative" as const,
         zIndex: 1,
+        marginTop: "clamp(20px, 5vw, 40px)",
+        marginBottom: "20px"
       }}>
         {/* Character icon at top */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>

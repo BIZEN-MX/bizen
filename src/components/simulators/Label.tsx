@@ -25,10 +25,19 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
         {children}
         {required && <span className="text-red-500 ml-1 font-bold">*</span>}
         {tooltip && (
-          <span className="ml-2 text-xs text-gray-500 font-normal italic leading-relaxed">
+          <span className="tooltip-text" style={{ marginLeft: 8, fontSize: '0.75rem', color: '#64748b', fontWeight: 400, fontStyle: 'italic' }}>
             ({tooltip})
           </span>
         )}
+        <style jsx>{`
+          @media (max-width: 640px) {
+            .tooltip-text {
+              display: block !important;
+              margin-left: 0 !important;
+              margin-top: 4px !important;
+            }
+          }
+        `}</style>
       </label>
     );
   }

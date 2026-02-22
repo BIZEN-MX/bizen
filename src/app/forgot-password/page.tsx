@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext"
 
 // ===== Brand & Theme
 const brandName = "BIZEN"
-const logoSrc = "/bsmx-logo.png"
+const logoSrc = "/bizen-logo.png"
 const bgColor = "#FFFFFF"
 const buttonColor = "#0B71FE"
 const linkColor = "#0E4A7A"
@@ -104,19 +104,19 @@ export default function ForgotPasswordPage() {
       "Too many requests": "Demasiados intentos. Espera un momento antes de intentar de nuevo.",
       "For security purposes, you can only request this once every 60 seconds": "Por seguridad, solo puedes solicitar esto una vez cada 60 segundos"
     }
-    
+
     // Check for exact matches first
     if (errorTranslations[errorMessage]) {
       return errorTranslations[errorMessage]
     }
-    
+
     // Check for partial matches
     for (const [english, spanish] of Object.entries(errorTranslations)) {
       if (errorMessage.includes(english)) {
         return spanish
       }
     }
-    
+
     // Default fallback
     return "Error al enviar el email de recuperación"
   }
@@ -132,7 +132,7 @@ export default function ForgotPasswordPage() {
     try {
       setLoading(true)
       const { error } = await resetPassword(email)
-      
+
       if (error) {
         return setMessage(translateAuthError(error.message))
       }
@@ -195,10 +195,10 @@ export default function ForgotPasswordPage() {
             </form>
 
             {message && (
-              <p role="status" style={{ 
-                marginTop: 14, 
-                textAlign: "center", 
-                wordBreak: "break-word", 
+              <p role="status" style={{
+                marginTop: 14,
+                textAlign: "center",
+                wordBreak: "break-word",
                 overflowWrap: "anywhere",
                 color: message.includes("¡Email enviado") || message.includes("Revisa tu correo") ? "#059669" : "#dc2626"
               }}>

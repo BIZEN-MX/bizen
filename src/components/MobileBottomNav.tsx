@@ -7,11 +7,25 @@ import { useTranslation } from "@/lib/translations"
 import Image from "next/image"
 import { useState } from "react"
 import { haptic } from "@/utils/hapticFeedback"
+import {
+  Map as MapIcon,
+  Target,
+  Gamepad2,
+  ShoppingBag,
+  MessageSquare,
+  Heart,
+  Star,
+  User,
+  Settings,
+  UserPlus,
+  MoreHorizontal,
+  LogIn
+} from "lucide-react"
 
 export default function MobileBottomNav() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
   const { settings } = useSettings()
   const t = useTranslation(settings.language)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
@@ -38,37 +52,45 @@ export default function MobileBottomNav() {
   }
 
   // Main navigation items (always visible). Business Lab hidden for now — uncomment to show again.
+  // Main navigation items (always visible). 
   const navItems = [
     {
       id: "courses",
       label: t.nav.exploreCourses,
-      icon: "📚",
+      icon: MapIcon,
       path: "/courses",
       protected: false
     },
-    // { id: 'business-lab', label: 'Business Lab', icon: '💼', path: '/business-lab', protected: false },
+    {
+      id: 'reto-diario',
+      label: 'Reto diario',
+      icon: Target,
+      path: '/reto-diario',
+      protected: false
+    },
     {
       id: 'simulador',
       label: 'Simulador',
-      icon: '🎮',
+      icon: Gamepad2,
       path: '/simulador',
       protected: false
     },
     {
       id: 'tienda',
       label: 'Tienda',
-      icon: '🛍️',
+      icon: ShoppingBag,
       path: '/tienda',
       protected: false
     }
   ]
 
   // Additional navigation items for authenticated users
+  // Additional navigation items for authenticated users
   const additionalNavItems = user ? [
     {
       id: 'forum',
       label: 'Foro',
-      icon: '💬',
+      icon: MessageSquare,
       path: '/forum',
       protected: true
     }
@@ -78,7 +100,7 @@ export default function MobileBottomNav() {
   const accountItem = !user ? {
     id: 'signup',
     label: 'Crear Cuenta',
-    icon: '✨',
+    icon: UserPlus,
     path: '/signup',
     protected: false
   } : null
@@ -88,36 +110,29 @@ export default function MobileBottomNav() {
     {
       id: 'profile',
       label: 'Perfil',
-      icon: '👤',
+      icon: User,
       path: '/profile',
-      protected: true
-    },
-    {
-      id: 'account',
-      label: 'Cuenta',
-      icon: '⚙️',
-      path: '/cuenta',
-      protected: true
-    },
-    {
-      id: "settings",
-      label: "Configuración",
-      icon: "🔧",
-      path: "/configuracion",
       protected: true
     },
     {
       id: "impacto-social",
       label: t.nav.impactoSocial,
-      icon: "🌍",
+      icon: Heart,
       path: "/impacto-social",
       protected: true
     },
     {
       id: "puntos",
       label: "Mis Puntos",
-      icon: "⭐",
+      icon: Star,
       path: "/puntos",
+      protected: true
+    },
+    {
+      id: "settings",
+      label: "Configuración",
+      icon: Settings,
+      path: "/configuracion",
       protected: true
     }
   ] : []
@@ -160,6 +175,7 @@ export default function MobileBottomNav() {
           {/* Main nav items */}
           {navItems.map((item) => {
             const isActive = isActivePath(item.path)
+            const Icon = item.icon
             return (
               <button
                 key={item.id}
@@ -195,11 +211,13 @@ export default function MobileBottomNav() {
                 }}
               >
                 <span className="mobile-nav-icon" style={{
-                  fontSize: 20,
-                  display: "inline-block",
-                  filter: isActive ? "none" : "opacity(0.6)"
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: isActive ? "#0F62FE" : "#64748b",
+                  transition: "color 0.2s ease"
                 }}>
-                  {item.icon}
+                  <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
                 </span>
                 <span style={{
                   fontSize: 9,
@@ -217,6 +235,7 @@ export default function MobileBottomNav() {
           {/* Additional nav items for authenticated users */}
           {additionalNavItems.map((item) => {
             const isActive = isActivePath(item.path)
+            const Icon = item.icon
             return (
               <button
                 key={item.id}
@@ -252,11 +271,13 @@ export default function MobileBottomNav() {
                 }}
               >
                 <span className="mobile-nav-icon" style={{
-                  fontSize: 20,
-                  display: "inline-block",
-                  filter: isActive ? "none" : "opacity(0.6)"
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: isActive ? "#0F62FE" : "#64748b",
+                  transition: "color 0.2s ease"
                 }}>
-                  {item.icon}
+                  <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
                 </span>
                 <span style={{
                   fontSize: 9,
@@ -272,61 +293,62 @@ export default function MobileBottomNav() {
           })}
 
           {/* Account button (only for unauthenticated users) */}
-          {accountItem && (
-            <button
-              onClick={() => navigateTo(accountItem.path)}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 4,
-                padding: "8px 12px",
-                background: isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent",
-                border: "none",
-                borderRadius: 12,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                minWidth: "60px",
-                width: "60px",
-                flexShrink: 0
-              }}
-              onTouchStart={(e) => {
-                e.currentTarget.style.transform = "scale(0.95)"
-                e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.25)" : "rgba(15, 98, 254, 0.1)"
-                e.preventDefault()
-              }}
-              onTouchEnd={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-                e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent"
-              }}
-              onTouchCancel={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-                e.currentTarget.style.background = isActivePath(accountItem.path) ? "rgba(15, 98, 254, 0.15)" : "transparent"
-              }}
-            >
-              <span className="mobile-nav-icon" style={{
-                fontSize: 24,
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                display: "inline-block",
-                filter: isActivePath(accountItem.path) ? "none" : "opacity(0.6)"
-              }}>
-                {accountItem.icon}
-              </span>
-              <span style={{
-                fontSize: 10,
-                fontWeight: isActivePath(accountItem.path) ? 700 : 600,
-                color: isActivePath(accountItem.path) ? "#0F62FE" : "#374151",
-                textAlign: "center",
-                lineHeight: 1.2
-              }}>
-                {accountItem.label}
-              </span>
-            </button>
-          )}
+          {accountItem && (() => {
+            const Icon = accountItem.icon;
+            const isActive = isActivePath(accountItem.path);
+            return (
+              <button
+                onClick={() => navigateTo(accountItem.path)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 4,
+                  padding: "8px 12px",
+                  background: isActive ? "rgba(15, 98, 254, 0.15)" : "transparent",
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  minWidth: "60px",
+                  width: "60px",
+                  flexShrink: 0
+                }}
+                onTouchStart={(e) => {
+                  e.currentTarget.style.transform = "scale(0.95)"
+                  e.currentTarget.style.background = isActive ? "rgba(15, 98, 254, 0.25)" : "rgba(15, 98, 254, 0.1)"
+                  e.preventDefault()
+                }}
+                onTouchEnd={(e) => {
+                  e.currentTarget.style.transform = "scale(1)"
+                  e.currentTarget.style.background = isActive ? "rgba(15, 98, 254, 0.15)" : "transparent"
+                }}
+                onTouchCancel={(e) => {
+                  e.currentTarget.style.transform = "scale(1)"
+                  e.currentTarget.style.background = isActive ? "rgba(15, 98, 254, 0.15)" : "transparent"
+                }}
+              >
+                <span className="mobile-nav-icon" style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: isActive ? "#0B71FE" : "#64748b",
+                }}>
+                  <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
+                </span>
+                <span style={{
+                  fontSize: 10,
+                  fontWeight: isActive ? 700 : 600,
+                  color: isActive ? "#0F62FE" : "#374151",
+                  textAlign: "center",
+                  lineHeight: 1.2
+                }}>
+                  {accountItem.label}
+                </span>
+              </button>
+            );
+          })()}
 
           {/* More menu button for authenticated users (Perfil, Cuenta, Configuración) */}
           {moreMenuItems.length > 0 && (
@@ -363,13 +385,14 @@ export default function MobileBottomNav() {
               }}
             >
               <span className="mobile-nav-icon" style={{
-                fontSize: 20,
-                display: "inline-block",
-                filter: showMoreMenu ? "none" : "opacity(0.6)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: showMoreMenu ? "#0F62FE" : "#64748b",
                 transform: showMoreMenu ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.2s ease"
+                transition: "all 0.2s ease"
               }}>
-                ⋯
+                <MoreHorizontal size={24} strokeWidth={showMoreMenu ? 2.5 : 2} />
               </span>
               <span style={{
                 fontSize: 9,
@@ -405,20 +428,70 @@ export default function MobileBottomNav() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {moreMenuItems.map((item) => (
+            {moreMenuItems.map((item) => {
+              const Icon = item.icon
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    haptic.light()
+                    navigateTo(item.path)
+                    setShowMoreMenu(false)
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "12px 16px",
+                    background: isActivePath(item.path) ? "rgba(15, 98, 254, 0.1)" : "transparent",
+                    border: "none",
+                    borderRadius: 10,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    width: "100%",
+                    textAlign: "left",
+                    fontFamily: "Montserrat, sans-serif",
+                    fontSize: 14,
+                    fontWeight: isActivePath(item.path) ? 700 : 600,
+                    color: isActivePath(item.path) ? "#0F62FE" : "#374151"
+                  }}
+                  onTouchStart={(e) => {
+                    e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
+                  }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.style.background = isActivePath(item.path) ? "rgba(15, 98, 254, 0.1)" : "transparent"
+                  }}
+                >
+                  <span style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: isActivePath(item.path) ? "#0B71FE" : "#64748b",
+                  }}>
+                    <Icon size={20} strokeWidth={isActivePath(item.path) ? 2.5 : 2} />
+                  </span>
+                  <span>{item.label}</span>
+                </button>
+              )
+            })}
+            {user && (
               <button
-                key={item.id}
-                onClick={() => {
-                  haptic.light()
-                  navigateTo(item.path)
-                  setShowMoreMenu(false)
+                onClick={async () => {
+                  try {
+                    haptic.medium();
+                    setShowMoreMenu(false);
+                    await signOut();
+                    router.push("/");
+                  } catch (error) {
+                    console.error("Error signing out:", error);
+                  }
                 }}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: 12,
                   padding: "12px 16px",
-                  background: isActivePath(item.path) ? "rgba(15, 98, 254, 0.1)" : "transparent",
+                  background: "transparent",
                   border: "none",
                   borderRadius: 10,
                   cursor: "pointer",
@@ -427,29 +500,27 @@ export default function MobileBottomNav() {
                   textAlign: "left",
                   fontFamily: "Montserrat, sans-serif",
                   fontSize: 14,
-                  fontWeight: isActivePath(item.path) ? 700 : 600,
-                  color: isActivePath(item.path) ? "#0F62FE" : "#374151"
+                  fontWeight: 600,
+                  color: "#DC2626"
                 }}
                 onTouchStart={(e) => {
-                  e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
+                  e.currentTarget.style.background = "rgba(220, 38, 38, 0.1)"
                 }}
                 onTouchEnd={(e) => {
-                  e.currentTarget.style.background = isActivePath(item.path) ? "rgba(15, 98, 254, 0.1)" : "transparent"
+                  e.currentTarget.style.background = "transparent"
                 }}
               >
                 <span style={{
-                  fontSize: 20,
-                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  display: "inline-block"
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#DC2626",
                 }}>
-                  {item.icon}
+                  <LogIn size={20} strokeWidth={2} />
                 </span>
-                <span>{item.label}</span>
+                <span>Cerrar sesión</span>
               </button>
-            ))}
+            )}
           </div>
 
           {/* Click outside to close more menu */}
@@ -634,7 +705,7 @@ export default function MobileBottomNav() {
             background: #ffffff !important;
           }
           .mobile-nav-icon {
-            font-size: 36px !important;
+            margin-bottom: 2px;
           }
         }
         @media (min-width: 768px) {

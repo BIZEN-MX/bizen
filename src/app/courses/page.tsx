@@ -259,6 +259,7 @@ export default function CoursesPage() {
         }}>
           {/* Progress indicator – lessons completed across all 30 topics */}
           <div
+            className="progress-card-responsive"
             style={{
               width: "100%",
               marginBottom: "clamp(40px, 6vw, 60px)",
@@ -286,6 +287,7 @@ export default function CoursesPage() {
             }} />
 
             <div
+              className="progress-flex-container"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -296,17 +298,19 @@ export default function CoursesPage() {
               }}
             >
               <div>
-                <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: 800, color: "#1e3a5f", margin: "0 0 4px" }}>
-                  Tu Viaje BIZEN
+                <h2 style={{ fontSize: "clamp(16px, 4vw, 24px)", fontWeight: 800, color: "#1e3a5f", margin: "0 0 4px" }} className="progress-title">
+                  <span className="full-text">Tu Viaje BIZEN</span>
+                  <span className="short-text">Mi Viaje</span>
                 </h2>
-                <div style={{ fontSize: 14, fontWeight: 600, color: "#64748b" }}>
-                  {completedCount} de {APPROX_TOTAL_LESSONS} lecciones dominadas
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }} className="progress-subtitle">
+                  <span className="full-text">{completedCount} de {APPROX_TOTAL_LESSONS} lecciones dominadas</span>
+                  <span className="short-text">{completedCount} / {APPROX_TOTAL_LESSONS} lecciones</span>
                 </div>
               </div>
               <div style={{ textAlign: "right" }}>
                 <span
                   style={{
-                    fontSize: "clamp(28px, 5vw, 32px)",
+                    fontSize: "clamp(20px, 5vw, 32px)",
                     fontWeight: 900,
                     background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
                     WebkitBackgroundClip: "text",
@@ -476,6 +480,47 @@ export default function CoursesPage() {
         @media (max-width: 640px) {
           .topics-grid-responsive {
             grid-template-columns: 1fr !important;
+          }
+          .progress-card-responsive {
+            padding: 16px !important;
+            border-radius: 16px !important;
+            margin-bottom: 24px !important;
+          }
+          .progress-flex-container {
+            flex-direction: row !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important; /* Force single row for progress header */
+            gap: 4px !important;
+          }
+          .progress-flex-container > div:first-child {
+            flex: 1 !important;
+            min-width: 0 !important;
+          }
+          .progress-subtitle .full-text {
+            display: none !important;
+          }
+          .progress-subtitle .short-text {
+            display: inline !important;
+          }
+          .progress-title .full-text {
+            display: none !important;
+          }
+          .progress-title .short-text {
+            display: inline !important;
+          }
+        }
+        @media (min-width: 641px) {
+          .progress-subtitle .short-text {
+            display: none !important;
+          }
+          .progress-subtitle .full-text {
+            display: inline !important;
+          }
+          .progress-title .short-text {
+            display: none !important;
+          }
+          .progress-title .full-text {
+            display: inline !important;
           }
         }
 

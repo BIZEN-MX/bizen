@@ -262,6 +262,44 @@ export default function CombinedSimulatorsPage() {
             max-width: 100% !important;
             margin-right: 0 !important;
             padding: 16px !important;
+            margin-top: 0 !important;
+          }
+          .tab-container {
+            width: 100% !important;
+            overflow-x: auto !important;
+            justify-content: flex-start !important;
+            padding: 6px !important;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .tab-container::-webkit-scrollbar {
+            display: none;
+          }
+          .tab-button {
+            padding: 10px 16px !important;
+            font-size: 14px !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+          }
+          .disclaimer-container {
+            flex-direction: column !important;
+            padding: 16px !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
+          }
+          .cashflow-section-card {
+            padding: 20px !important;
+            border-radius: 16px !important;
+          }
+          .simulator-card {
+            padding: 20px !important;
+            border-radius: 20px !important;
+          }
+          .simulador-header {
+            margin-bottom: 32px !important;
+          }
+          .simulador-description {
+            font-size: 16px !important;
           }
         }
 
@@ -295,6 +333,12 @@ export default function CombinedSimulatorsPage() {
         @media (min-width: 1024px) {
           .simuladores-grid {
             grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+          }
+        }
+        @media (min-width: 1600px) {
+          .simuladores-grid {
+            grid-template-columns: repeat(4, 1fr);
             gap: 40px;
           }
         }
@@ -324,13 +368,15 @@ export default function CombinedSimulatorsPage() {
         overflowX: "hidden"
       }}>
         <main className="simulador-main" style={{
-          padding: "40px",
-          maxWidth: "1400px",
-          margin: "0 auto"
+          padding: "clamp(16px, 4vw, 64px)",
+          maxWidth: "1800px",
+          margin: "0 auto",
+          width: "100%",
+          boxSizing: "border-box"
         }}>
 
           {/* Main Title */}
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <div className="simulador-header" style={{ textAlign: "center", marginBottom: "48px" }}>
             <h1 style={{
               fontSize: "clamp(32px, 5vw, 56px)",
               fontWeight: 900,
@@ -342,7 +388,7 @@ export default function CombinedSimulatorsPage() {
             }}>
               Simulador
             </h1>
-            <p style={{
+            <p className="simulador-description" style={{
               fontSize: "19px",
               color: "#64748b",
               maxWidth: "800px",
@@ -354,10 +400,10 @@ export default function CombinedSimulatorsPage() {
           </div>
 
           {/* Tab Selection */}
-          <div style={{
+          <div className="tab-container" style={{
             display: "flex",
             justifyContent: "center",
-            gap: "16px",
+            gap: "12px",
             marginBottom: "40px",
             background: "#f1f5f9",
             padding: "8px",
@@ -385,7 +431,7 @@ export default function CombinedSimulatorsPage() {
             {activeTab === "simulators" && (
               <div key="simulators-tab">
                 {/* Educational Disclaimer */}
-                <div style={{
+                <div className="disclaimer-container" style={{
                   background: "rgba(59, 130, 246, 0.05)",
                   border: "2px solid rgba(59, 130, 246, 0.2)",
                   borderRadius: 20,

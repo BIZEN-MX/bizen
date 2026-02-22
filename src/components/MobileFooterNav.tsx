@@ -5,7 +5,18 @@ import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import Image from "next/image"
-import { ShoppingBag, Star, Heart } from "lucide-react"
+import {
+  Map as MapIcon,
+  Gamepad2,
+  ShoppingBag,
+  MessageSquare,
+  User,
+  Settings,
+  Star,
+  Heart,
+  LogIn,
+  Target
+} from "lucide-react"
 
 export default function MobileFooterNav() {
   const router = useRouter()
@@ -55,11 +66,43 @@ export default function MobileFooterNav() {
 
   // Business Lab hidden for now — add back { path: "/business-lab", ... } to show again
   const navItems = [
-    { path: "/courses", icon: "/rightmenucourses.png", active: isActivePath("/courses") },
-    { path: "/simulador", icon: "/rightmenusimulators.png", active: isActivePath("/simulador") },
-    { path: "/tienda", icon: "tienda", active: isActivePath("/tienda"), lucideIcon: ShoppingBag },
-    { path: "/forum", icon: "/rightmenuforo.png", active: isActivePath("/forum") },
-    { path: "/profile", icon: "avatar", active: isActivePath("/profile") || isActivePath("/configuracion"), isProfileButton: true },
+    {
+      path: "/courses",
+      label: "Cursos",
+      icon: MapIcon,
+      active: isActivePath("/courses")
+    },
+    {
+      path: "/reto-diario",
+      label: "Reto",
+      icon: Target,
+      active: isActivePath("/reto-diario")
+    },
+    {
+      path: "/simulador",
+      label: "Simulador",
+      icon: Gamepad2,
+      active: isActivePath("/simulador")
+    },
+    {
+      path: "/tienda",
+      label: "Tienda",
+      icon: ShoppingBag,
+      active: isActivePath("/tienda")
+    },
+    {
+      path: "/forum",
+      label: "Foro",
+      icon: MessageSquare,
+      active: isActivePath("/forum")
+    },
+    {
+      path: "/profile",
+      label: "Perfil",
+      icon: User,
+      active: isActivePath("/profile") || isActivePath("/configuracion"),
+      isProfileButton: true
+    },
   ]
 
   return (
@@ -144,10 +187,10 @@ export default function MobileFooterNav() {
               }}
               className={`mobile-footer-btn ${item.active ? 'active' : ''}`}
             >
-              {item.icon === "avatar" && user ? (
+              {item.isProfileButton && user ? (
                 <div style={{
-                  width: 30,
-                  height: 30,
+                  width: 32,
+                  height: 32,
                   borderRadius: "50%",
                   background: user?.user_metadata?.avatar?.gradient || user?.user_metadata?.avatar?.bgColor
                     ? "transparent"
@@ -156,31 +199,19 @@ export default function MobileFooterNav() {
                   alignItems: "center",
                   justifyContent: "center",
                   overflow: "hidden",
+                  border: item.active ? "2px solid #0F62FE" : "none",
+                  boxSizing: "border-box"
                 }}>
                   <AvatarDisplay
                     avatar={user?.user_metadata?.avatar || { type: "emoji", value: (user?.user_metadata?.full_name || user?.email || "U")[0].toUpperCase() }}
-                    size={30}
+                    size={32}
                   />
                 </div>
-              ) : item.icon === "tienda" && item.lucideIcon ? (
-                <item.lucideIcon size={24} color={item.active ? "#0F62FE" : "#1e3a5f"} />
-              ) : item.icon === "avatar" ? (
-                <Image
-                  src="/rightmenusettings.png"
-                  alt="Profile"
-                  width={40}
-                  height={40}
-                  className="mobile-footer-icon"
-                  style={{ width: 40, height: 40, objectFit: "contain" }}
-                />
               ) : (
-                <Image
-                  src={item.icon}
-                  alt={item.path}
-                  width={40}
-                  height={40}
-                  className="mobile-footer-icon"
-                  style={{ width: 40, height: 40, objectFit: "contain" }}
+                <item.icon
+                  size={24}
+                  strokeWidth={item.active ? 2.5 : 2}
+                  color={item.active ? "#0F62FE" : "#1e3a5f"}
                 />
               )}
             </button>
@@ -275,6 +306,7 @@ export default function MobileFooterNav() {
                   textAlign: "left"
                 }}
               >
+                <Settings size={20} color="#0F62FE" />
                 <span>Configuración</span>
               </button>
 
@@ -346,6 +378,7 @@ export default function MobileFooterNav() {
                   textAlign: "left"
                 }}
               >
+                <User size={20} color="#0F62FE" />
                 <span>Perfil</span>
               </button>
 
@@ -375,7 +408,8 @@ export default function MobileFooterNav() {
                     textAlign: "left"
                   }}
                 >
-                  <span>Cerrar sesión</span>
+                  <LogIn size={20} color="#DC2626" />
+                  <span style={{ color: "#DC2626" }}>Cerrar sesión</span>
                 </button>
               )}
             </div>

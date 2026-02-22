@@ -21,13 +21,14 @@ import {
   Share2,
   Heart,
   ShoppingBag,
-  Star
+  Star,
+  LogIn
 } from "lucide-react"
 
 export default function FixedSidebar() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, loading } = useAuth()
+  const { user, loading, signOut } = useAuth()
   const { settings } = useSettings()
   const t = useTranslation(settings.language)
   const [showExitDialog, setShowExitDialog] = useState(false)
@@ -867,6 +868,44 @@ export default function FixedSidebar() {
                             <Share2 size={20} strokeWidth={2} />
                             <span className="nav-item-label">Síguenos</span>
                           </a>
+                          <button
+                            onClick={async () => {
+                              try {
+                                hideMasPanel();
+                                await signOut();
+                                router.push("/");
+                              } catch (error) {
+                                console.error("Error signing out:", error);
+                              }
+                            }}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              padding: "10px 12px",
+                              background: "transparent",
+                              border: "none",
+                              borderRadius: 8,
+                              cursor: "pointer",
+                              transition: "all 0.2s ease",
+                              fontFamily: "'Montserrat', sans-serif",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              textAlign: "left",
+                              color: "#DC2626",
+                              width: "100%",
+                              boxSizing: "border-box"
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = "rgba(220, 38, 38, 0.1)"
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "transparent"
+                            }}
+                          >
+                            <LogIn size={20} color="#DC2626" strokeWidth={2} />
+                            <span className="nav-item-label">Cerrar sesión</span>
+                          </button>
                         </div>,
                         document.body
                       )}

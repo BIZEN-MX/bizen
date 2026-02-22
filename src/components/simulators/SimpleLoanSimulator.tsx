@@ -24,14 +24,14 @@ import { currencyMXN, pct } from '@/lib/simulators';
 
 export function SimpleLoanSimulator() {
   const [result, setResult] = React.useState<SimpleLoanOutput | null>(null);
-  
+
   const {
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
   } = useForm<SimpleLoanInput>({
-    resolver: zodResolver(simpleLoanSchema),
+    resolver: zodResolver(simpleLoanSchema) as any,
     defaultValues: {
       principal: 0,
       apr: 0,
@@ -40,24 +40,24 @@ export function SimpleLoanSimulator() {
       monthlyFees: 0,
     },
   });
-  
+
   function onSubmit(data: SimpleLoanInput) {
     const output = calculateSimpleLoan(data);
     setResult(output);
   }
-  
+
   function loadPreset() {
     const preset = PRESET_VALUES.simpleLoan;
     Object.entries(preset).forEach(([key, value]) => {
       setValue(key as any, value);
     });
   }
-  
+
   React.useEffect(() => {
-    const subscription = watch(() => handleSubmit(onSubmit)());
+    const subscription = watch(() => handleSubmit(onSubmit as any)());
     return () => subscription.unsubscribe();
   }, [handleSubmit, watch]);
-  
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Left: Input Form */}
@@ -77,7 +77,7 @@ export function SimpleLoanSimulator() {
               currency
               error={errors.principal?.message}
             />
-            
+
             <NumberField
               label="Tasa Anual (APR %)"
               value={watch('apr')}
@@ -86,14 +86,14 @@ export function SimpleLoanSimulator() {
               hint="Tasa de interés anual"
               error={errors.apr?.message}
             />
-            
+
             <NumberField
               label="Plazo (Meses)"
               value={watch('termMonths')}
               onChange={(val) => setValue('termMonths', Math.round(val))}
               error={errors.termMonths?.message}
             />
-            
+
             <NumberField
               label="Comisiones por Apertura"
               value={watch('upfrontFees')}
@@ -102,7 +102,7 @@ export function SimpleLoanSimulator() {
               hint="Pago único al inicio"
               error={errors.upfrontFees?.message}
             />
-            
+
             <NumberField
               label="Comisiones Mensuales"
               value={watch('monthlyFees')}
@@ -114,12 +114,12 @@ export function SimpleLoanSimulator() {
           </CardContent>
         </Card>
       </div>
-      
+
       {/* Right: Results */}
       <div className="space-y-4">
         {result ? (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ResultsCard
                 title="Pago Mensual"
                 value={currencyMXN(result.monthlyPayment)}
@@ -143,7 +143,7 @@ export function SimpleLoanSimulator() {
                 hint="Incluye capital + intereses + comisiones"
               />
             </div>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Tabla de Amortización</CardTitle>
@@ -186,12 +186,12 @@ export function SimpleLoanSimulator() {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Alert variant="info">
               <strong>¿Qué es el CAT?</strong> El Costo Anual Total (CAT) incluye intereses y
               comisiones, mostrando el costo real del crédito. Entre menor CAT, mejor para ti.
             </Alert>
-            
+
             <SaveRunButton
               simulatorSlug="simple-loan"
               inputs={watch()}

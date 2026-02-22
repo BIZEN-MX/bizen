@@ -7,6 +7,7 @@
 import { useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { Target } from "lucide-react"
 
 export default function RetoDiarioPage() {
   useEffect(() => {
@@ -90,13 +91,7 @@ export default function RetoDiarioPage() {
                 flexShrink: 0,
               }}
             >
-              <Image
-                src="/leftmenudailychallenge.png"
-                alt=""
-                width={44}
-                height={44}
-                style={{ objectFit: "contain" }}
-              />
+              <Target size={44} color="white" strokeWidth={2.5} />
             </div>
             <div>
               <h1

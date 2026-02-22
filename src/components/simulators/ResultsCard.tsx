@@ -35,7 +35,7 @@ export function ResultsCard({
     danger: 'border-red-200 bg-red-50',
     info: 'border-blue-200 bg-blue-50',
   };
-  
+
   const textStyles = {
     default: 'text-gray-900',
     success: 'text-green-900',
@@ -43,7 +43,7 @@ export function ResultsCard({
     danger: 'text-red-900',
     info: 'text-blue-900',
   };
-  
+
   const subtitleStyles = {
     default: 'text-gray-600',
     success: 'text-green-700',
@@ -51,16 +51,16 @@ export function ResultsCard({
     danger: 'text-red-700',
     info: 'text-blue-700',
   };
-  
+
   return (
     <Card className={cn(variantStyles[variant], 'border-2', className)}>
       <CardContent className="p-5">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-600 mb-1">
+            <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">
               {title}
             </p>
-            <p className={cn('text-2xl font-bold', textStyles[variant])}>
+            <p className={cn('text-xl sm:text-2xl font-bold', textStyles[variant])}>
               {value}
             </p>
             {subtitle && (
@@ -84,4 +84,3 @@ export function ResultsCard({
     </Card>
   );
 }
-

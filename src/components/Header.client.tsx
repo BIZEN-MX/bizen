@@ -98,7 +98,8 @@ export default function Header({
           {user ? (
             // Authenticated user - show logout only
             <button
-              className="btn primary"
+              className="btn ghost"
+              style={{ color: "#DC2626", border: "1px solid rgba(220,38,38,0.3)" }}
               onClick={async () => {
                 if (loggingOut) return
                 setLoggingOut(true)
@@ -156,7 +157,8 @@ export default function Header({
             {user ? (
               // Authenticated user - show logout only
               <button
-                className="btn primary"
+                className="btn ghost"
+                style={{ color: "#DC2626", border: "1px solid rgba(220,38,38,0.3)", width: "100%" }}
                 onClick={async () => {
                   if (loggingOut) return
                   setLoggingOut(true)

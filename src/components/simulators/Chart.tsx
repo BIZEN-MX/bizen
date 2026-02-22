@@ -55,7 +55,7 @@ export function Chart({
       return formatNumber(value, 0);
     }
   }
-  
+
   function formatTooltipValue(value: number): string {
     if (formatYAxis === 'currency') {
       return currencyMXN(value, 2);
@@ -65,16 +65,16 @@ export function Chart({
       return formatNumber(value, 2);
     }
   }
-  
-  const CustomTooltip = ({ active, payload, label }: TooltipProps<any, any>) => {
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload || !payload.length) return null;
-    
+
     return (
       <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-md">
         <p className="text-sm font-semibold text-gray-900 mb-2">
           {xAxisLabel || 'Periodo'}: {label}
         </p>
-        {payload.map((entry, index) => (
+        {payload.map((entry: any, index: number) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
             <span className="font-medium">{entry.name}:</span>{' '}
             {formatTooltipValue(entry.value as number)}
@@ -83,9 +83,9 @@ export function Chart({
       </div>
     );
   };
-  
-  const chartMargin = { top: 20, right: 30, left: 10, bottom: 20 };
-  
+
+  const chartMargin = { top: 20, right: 30, left: 20, bottom: 20 };
+
   if (type === 'bar') {
     return (
       <ResponsiveContainer width="100%" height={height}>
@@ -101,11 +101,11 @@ export function Chart({
             tickFormatter={formatYValue}
             tick={{ fontSize: 12, fill: '#374151' }}
             label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft' } : undefined}
-            width={80}
+            width={100}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Legend 
-            wrapperStyle={{ fontSize: '14px', paddingTop: '20px', paddingBottom: '10px' }} 
+          <Legend
+            wrapperStyle={{ fontSize: '14px', paddingTop: '20px', paddingBottom: '10px' }}
             iconType="square"
           />
           {lines.map((line) => (
@@ -120,7 +120,7 @@ export function Chart({
       </ResponsiveContainer>
     );
   }
-  
+
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={data} margin={chartMargin}>
@@ -138,8 +138,8 @@ export function Chart({
           width={80}
         />
         <Tooltip content={<CustomTooltip />} />
-        <Legend 
-          wrapperStyle={{ fontSize: '14px', paddingTop: '20px', paddingBottom: '10px' }} 
+        <Legend
+          wrapperStyle={{ fontSize: '14px', paddingTop: '20px', paddingBottom: '10px' }}
           iconType="circle"
         />
         {lines.map((line) => (

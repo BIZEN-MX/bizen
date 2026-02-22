@@ -27,7 +27,7 @@ import { currencyMXN } from '@/lib/simulators';
 
 export function MonthlyBudgetSimulator() {
   const [result, setResult] = React.useState<MonthlyBudgetOutput | null>(null);
-  
+
   const {
     register,
     control,
@@ -45,25 +45,25 @@ export function MonthlyBudgetSimulator() {
       mode: '50/30/20',
     },
   });
-  
+
   const { fields: fixedFields, append: appendFixed, remove: removeFixed } = useFieldArray({
     control,
     name: 'fixedExpenses',
   });
-  
+
   const { fields: variableFields, append: appendVariable, remove: removeVariable } = useFieldArray({
     control,
     name: 'variableExpenses',
   });
-  
+
   const monthlyIncome = watch('monthlyIncome');
   const mode = watch('mode');
-  
+
   function onSubmit(data: MonthlyBudgetInput) {
     const output = calculateMonthlyBudget(data);
     setResult(output);
   }
-  
+
   function loadPreset() {
     const preset = PRESET_VALUES.monthlyBudget;
     setValue('monthlyIncome', preset.monthlyIncome);
@@ -72,33 +72,33 @@ export function MonthlyBudgetSimulator() {
     setValue('savingsGoal', preset.savingsGoal);
     setValue('mode', preset.mode);
   }
-  
+
   // Auto-calculate on changes
   React.useEffect(() => {
     const subscription = watch(() => handleSubmit(onSubmit)());
     return () => subscription.unsubscribe();
   }, [handleSubmit, watch]);
-  
+
   const chartData = result?.breakdown
     ? [
-        {
-          category: 'Esenciales',
-          target: result.breakdown.essentialTarget || 0,
-          actual: result.breakdown.essentialActual,
-        },
-        {
-          category: 'Deseos',
-          target: result.breakdown.wantsTarget || 0,
-          actual: result.breakdown.wantsActual,
-        },
-        {
-          category: 'Ahorro',
-          target: result.breakdown.savingsTarget || 0,
-          actual: result.breakdown.savingsActual,
-        },
-      ]
+      {
+        category: 'Esenciales',
+        target: result.breakdown.essentialTarget || 0,
+        actual: result.breakdown.essentialActual,
+      },
+      {
+        category: 'Deseos',
+        target: result.breakdown.wantsTarget || 0,
+        actual: result.breakdown.wantsActual,
+      },
+      {
+        category: 'Ahorro',
+        target: result.breakdown.savingsTarget || 0,
+        actual: result.breakdown.savingsActual,
+      },
+    ]
     : [];
-  
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Left: Input Form */}
@@ -120,7 +120,7 @@ export function MonthlyBudgetSimulator() {
               error={errors.monthlyIncome?.message}
               hint="Incluye salario, ingresos extra y cualquier otra fuente de dinero mensual"
             />
-            
+
             {/* Mode */}
             <div style={{ marginTop: 32 }}>
               <Label tooltip="La regla 50/30/20 destina 50% a necesidades, 30% a deseos y 20% a ahorro">
@@ -134,7 +134,7 @@ export function MonthlyBudgetSimulator() {
                 <option value="custom">✏️ Personalizado (Tú decides)</option>
               </select>
             </div>
-            
+
             {/* Fixed Expenses */}
             <div style={{ marginTop: 36 }}>
               <Label tooltip="Gastos que debes pagar cada mes: renta, comida, transporte, servicios">
@@ -142,7 +142,7 @@ export function MonthlyBudgetSimulator() {
               </Label>
               <div className="space-y-4 mt-4">
                 {fixedFields.map((field, index) => (
-                  <div key={field.id} className="flex gap-2">
+                  <div key={field.id} className="flex flex-col sm:flex-row gap-2">
                     <Input
                       {...register(`fixedExpenses.${index}.name`)}
                       placeholder="Ej: Renta, Comida, Transporte"
@@ -174,7 +174,7 @@ export function MonthlyBudgetSimulator() {
                 </Button>
               </div>
             </div>
-            
+
             {/* Variable Expenses */}
             <div style={{ marginTop: 36 }}>
               <Label tooltip="Gastos opcionales que disfrutas: entretenimiento, salidas, compras">
@@ -182,7 +182,7 @@ export function MonthlyBudgetSimulator() {
               </Label>
               <div className="space-y-4 mt-4">
                 {variableFields.map((field, index) => (
-                  <div key={field.id} className="flex gap-2">
+                  <div key={field.id} className="flex flex-col sm:flex-row gap-2">
                     <Input
                       {...register(`variableExpenses.${index}.name`)}
                       placeholder="Ej: Netflix, Restaurantes, Ropa"
@@ -214,7 +214,7 @@ export function MonthlyBudgetSimulator() {
                 </Button>
               </div>
             </div>
-            
+
             {/* Savings Goal */}
             <div style={{ marginTop: 36 }}>
               <NumberField
@@ -229,12 +229,12 @@ export function MonthlyBudgetSimulator() {
           </CardContent>
         </Card>
       </div>
-      
+
       {/* Right: Results */}
       <div className="space-y-4">
         {result ? (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ResultsCard
                 title="💳 Gastos Totales"
                 value={currencyMXN(result.totalExpenses)}
@@ -254,7 +254,7 @@ export function MonthlyBudgetSimulator() {
                 value={currencyMXN(result.totalVariable)}
               />
             </div>
-            
+
             {mode === '50/30/20' && result.breakdown && (
               <Card>
                 <CardHeader>
@@ -275,7 +275,7 @@ export function MonthlyBudgetSimulator() {
                 </CardContent>
               </Card>
             )}
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>💡 Recomendaciones Personalizadas</CardTitle>
@@ -288,7 +288,7 @@ export function MonthlyBudgetSimulator() {
                 ))}
               </CardContent>
             </Card>
-            
+
             <SaveRunButton
               simulatorSlug="monthly-budget"
               inputs={watch()}
