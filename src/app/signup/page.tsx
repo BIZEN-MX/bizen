@@ -8,103 +8,8 @@ import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 
 const brandName = "BIZEN"
-const bgColor = "#FFFFFF"
-const linkColor = "#0E4A7A"
-const AUTH_CONTROL_HEIGHT = 48
-const AUTH_FORM_MAX_WIDTH = 400
 const supportEmail = "soporte@bizen.mx"
-
-function Card(props: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      {...props}
-      style={{
-        borderRadius: 16,
-        border: "1px solid rgba(0,0,0,0.08)",
-        boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
-        background: "#fff",
-        padding: "clamp(20px, 5vw, 24px)",
-        minWidth: 0,
-        overflow: "hidden" as const,
-        ...(props.style || {}),
-      }}
-    />
-  )
-}
-
-function Label({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
-  return <label htmlFor={htmlFor} style={{ display: "block" as const, fontSize: 13, fontWeight: 500, color: "#1e293b", marginBottom: 6 }}>{children}</label>
-}
-
-function TextField(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input
-      {...props}
-      className="auth-input"
-      style={{
-        width: "100%",
-        height: 44,
-        borderRadius: 8,
-        border: "1px solid #cbd5e1",
-        padding: "0 14px",
-        outline: "none",
-        fontSize: 15,
-        color: "#1e293b",
-        background: "#f8fafc",
-        transition: "border-color .2s ease, background .2s ease",
-        ...(props.style || {}),
-      }}
-      onFocus={(e) => {
-        e.currentTarget.style.background = "#fff"
-        e.currentTarget.style.borderColor = "#0B71FE"
-      }}
-      onBlur={(e) => {
-        e.currentTarget.style.background = "#f8fafc"
-        e.currentTarget.style.borderColor = "#cbd5e1"
-      }}
-    />
-  )
-}
-
-function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean }) {
-  const { loading, ...rest } = props
-  return (
-    <button
-      {...rest}
-      style={{
-        height: AUTH_CONTROL_HEIGHT,
-        minHeight: AUTH_CONTROL_HEIGHT,
-        borderRadius: 12,
-        border: "none",
-        width: "100%",
-        minWidth: 0,
-        background: rest.disabled ? "#cfd8e3" : "#0B71FE",
-        color: "#fff",
-        fontWeight: 700,
-        letterSpacing: 0.2,
-        cursor: rest.disabled ? "not-allowed" : "pointer",
-        transform: "translateZ(0)",
-        transition: "transform .06s, background .2s, box-shadow .2s",
-        boxShadow: rest.disabled ? "none" : "0 6px 16px rgba(11, 113, 254, 0.3)",
-        fontFamily: 'Montserrat, sans-serif',
-      }}
-      onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.98)")}
-      onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
-    >
-      {loading ? "Creando cuenta..." : rest.children}
-    </button>
-  )
-}
-
-function Divider({ label = "o" }: { label?: string }) {
-  return (
-    <div style={{ display: "grid" as const, gridTemplateColumns: "1fr auto 1fr", gap: 12, alignItems: "center" }}>
-      <div style={{ height: 1, background: "rgba(11, 113, 254, 0.2)" }} />
-      <span style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>{label}</span>
-      <div style={{ height: 1, background: "rgba(11, 113, 254, 0.2)" }} />
-    </div>
-  )
-}
+const AUTH_CONTROL_HEIGHT = 48
 
 function BIZENSignupContent() {
   const router = useRouter()
@@ -118,72 +23,45 @@ function BIZENSignupContent() {
   const [showPass, setShowPass] = React.useState(false)
 
   React.useEffect(() => {
-    // Enable scroll if content overflows on mobile
-    const prevHtml = document.documentElement.style.overflow
-    const prevBody = document.body.style.overflow
     document.documentElement.style.overflow = "auto"
     document.body.style.overflow = "auto"
+    document.body.style.background = "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)"
     return () => {
-      document.documentElement.style.overflow = prevHtml
-      document.body.style.overflow = prevBody
+      document.documentElement.style.overflow = ""
+      document.body.style.overflow = ""
+      document.body.style.background = ""
     }
   }, [])
-
-  function isNetworkError(err: unknown): boolean {
-    const msg = err instanceof Error ? err.message : String(err)
-    return (
-      msg === "Failed to fetch" ||
-      msg === "Network request failed" ||
-      msg === "Load failed" ||
-      msg.includes("NetworkError") ||
-      msg.includes("fetch")
-    )
-  }
 
   function translateAuthError(errorMessage: string): string {
     const errorTranslations: Record<string, string> = {
       "User already registered": "Este correo ya está registrado. Intenta iniciar sesión.",
-      "Invalid login credentials": "Credenciales inválidas.",
       "Password should be at least 6 characters": "La contraseña debe tener al menos 6 caracteres.",
       "Invalid email": "Email inválido.",
-      "Signup is disabled": "El registro está deshabilitado temporalmente."
+      "Signup is disabled": "El registro está deshabilitado temporalmente.",
     }
-    if (errorTranslations[errorMessage]) return errorTranslations[errorMessage]
-    for (const [english, spanish] of Object.entries(errorTranslations)) {
-      if (errorMessage.includes(english)) return spanish
+    for (const [en, es] of Object.entries(errorTranslations)) {
+      if (errorMessage.includes(en)) return es
     }
+    if (errorMessage.includes("fetch") || errorMessage.includes("Network")) return "Sin conexión. Revisa tu internet."
     return `Error: ${errorMessage}`
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setMessage(null)
-    if (!email || !password || !fullName) {
-      setMessage("Por favor completa todos los campos")
-      return
-    }
+    if (!email || !password || !fullName) { setMessage("Por favor completa todos los campos"); return }
     try {
       setLoading(true)
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName
-          },
-          emailRedirectTo: `${window.location.origin}/auth/callback`
-        }
+        email, password,
+        options: { data: { full_name: fullName }, emailRedirectTo: `${window.location.origin}/auth/callback` }
       })
       if (error) throw error
-
-      // Success - show message and redirect to diagnostic
-      setMessage("¡Cuenta creada con éxito! Redirigiendo al examen diagnóstico...")
-      setTimeout(() => {
-        router.push("/diagnostic")
-      }, 2000)
+      setMessage("¡Cuenta creada con éxito! Redirigiendo...")
+      setTimeout(() => router.push("/diagnostic"), 2000)
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Error al crear cuenta"
-      setMessage(isNetworkError(err) ? "No hay conexión. Revisa tu internet e intenta de nuevo." : translateAuthError(errorMessage))
+      setMessage(translateAuthError(err instanceof Error ? err.message : "Error al crear cuenta"))
     } finally {
       if (!loading) setLoading(false)
     }
@@ -195,278 +73,244 @@ function BIZENSignupContent() {
       setGoogleLoading(true)
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`
-        }
+        options: { redirectTo: `${window.location.origin}/auth/callback` }
       })
       if (error) throw error
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Error al registrarse con Google"
-      setMessage(isNetworkError(err) ? "No hay conexión. Revisa tu internet e intenta de nuevo." : translateAuthError(errorMessage))
+      setMessage(translateAuthError(err instanceof Error ? err.message : "Error con Google"))
       setGoogleLoading(false)
     }
   }
 
+  const isSuccess = message?.includes("éxito")
+
   return (
-    <main className="auth-page" style={{
-      position: "relative" as const,
-      overflowX: "hidden" as const,
-      overflowY: "auto" as const,
-      background: "linear-gradient(180deg, #e8f4ff 0%, #f5f9ff 50%, #e8f4ff 100%)",
+    <main style={{
+      position: "relative",
       minHeight: "100dvh",
-      display: "flex" as const,
-      flexDirection: "column" as const,
-      alignItems: "center" as const,
-      justifyContent: "center" as const,
-      boxSizing: "border-box" as const,
-      padding: "80px 20px 40px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)",
+      overflow: "hidden",
+      padding: "clamp(16px, 4vw, 40px)",
+      boxSizing: "border-box",
     }}>
-      {/* Brand name - slightly adjusted for mobile flow */}
+
+      {/* Grid overlay */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0, zIndex: 0,
+        backgroundImage: "linear-gradient(rgba(0,86,231,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.07) 1px, transparent 1px)",
+        backgroundSize: "48px 48px",
+      }} />
+
+      {/* Blobs */}
+      <div aria-hidden style={{ position: "absolute", top: "-10%", right: "-10%", width: "clamp(280px,50vw,560px)", height: "clamp(280px,50vw,560px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(0,86,231,0.22) 0%, transparent 70%)", filter: "blur(40px)", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "absolute", bottom: "-15%", left: "-10%", width: "clamp(240px,45vw,480px)", height: "clamp(240px,45vw,480px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(25,131,253,0.18) 0%, transparent 70%)", filter: "blur(50px)", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "absolute", top: "30%", left: "15%", width: "clamp(100px,18vw,200px)", height: "clamp(100px,18vw,200px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(96,165,250,0.1) 0%, transparent 70%)", filter: "blur(30px)", zIndex: 0 }} />
+
+      {/* Decorative floating icons */}
+      <div className="deco-icons" aria-hidden>
+        {/* Trending up top-left */}
+        <svg style={{ position: "absolute", top: "10%", left: "5%", opacity: 0.16 }} width="72" height="56" viewBox="0 0 72 56" fill="none">
+          <polyline points="4,50 20,34 36,42 52,18 68,8" stroke="#60a5fa" strokeWidth="2.5" strokeLinejoin="round" />
+          <circle cx="68" cy="8" r="5" fill="#60a5fa" />
+          <path d="M54 8 L68 8 L68 22" stroke="#60a5fa" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+        {/* Coin top-right */}
+        <svg style={{ position: "absolute", top: "8%", right: "6%", opacity: 0.17 }} width="68" height="68" viewBox="0 0 68 68" fill="none">
+          <circle cx="34" cy="34" r="32" stroke="#1983FD" strokeWidth="2.5" />
+          <circle cx="34" cy="34" r="22" stroke="#1983FD" strokeWidth="1.5" strokeDasharray="4 4" />
+          <text x="34" y="42" textAnchor="middle" fill="#1983FD" fontSize="24" fontWeight="700" fontFamily="sans-serif">$</text>
+        </svg>
+        {/* Star left */}
+        <svg style={{ position: "absolute", top: "45%", left: "3%", opacity: 0.18, transform: "translateY(-50%)" }} width="44" height="44" viewBox="0 0 44 44" fill="none">
+          <path d="M22 4 L25 18 L39 18 L28 27 L32 41 L22 33 L12 41 L16 27 L5 18 L19 18 Z" fill="#60a5fa" />
+        </svg>
+        {/* Lightbulb right */}
+        <svg style={{ position: "absolute", top: "40%", right: "4%", opacity: 0.15, transform: "translateY(-50%)" }} width="52" height="64" viewBox="0 0 52 64" fill="none">
+          <path d="M26 2 C14 2 5 11 5 23 C5 32 11 39 19 43 L19 52 L33 52 L33 43 C41 39 47 32 47 23 C47 11 38 2 26 2 Z" stroke="#1983FD" strokeWidth="2.5" fill="none" />
+          <path d="M18 52 L34 52" stroke="#1983FD" strokeWidth="2" />
+          <path d="M20 58 L32 58" stroke="#1983FD" strokeWidth="2" />
+        </svg>
+        {/* Bar chart bottom-left */}
+        <svg style={{ position: "absolute", bottom: "10%", left: "6%", opacity: 0.14 }} width="60" height="52" viewBox="0 0 60 52" fill="none">
+          <rect x="4" y="28" width="12" height="20" rx="3" fill="#60a5fa" />
+          <rect x="22" y="16" width="12" height="32" rx="3" fill="#60a5fa" />
+          <rect x="40" y="6" width="12" height="42" rx="3" fill="#60a5fa" />
+        </svg>
+        {/* Sparkle bottom-right */}
+        <svg style={{ position: "absolute", bottom: "14%", right: "7%", opacity: 0.18 }} width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M20 4 L22 18 L36 20 L22 22 L20 36 L18 22 L4 20 L18 18 Z" fill="#93c5fd" />
+        </svg>
+      </div>
+
+      {/* Logo */}
       <Link href="/" style={{
-        position: "absolute" as const,
-        left: "50%",
-        top: 24,
-        transform: "translateX(-50%)",
-        display: "flex" as const,
-        alignItems: "center" as const,
-        textDecoration: "none",
-        color: "inherit",
-        zIndex: 10
-      }} className="auth-logo-top">
-        <strong style={{ fontSize: 28, color: "#0B71FE", fontFamily: "Montserrat, sans-serif" }}>{brandName}.</strong>
+        position: "absolute", top: 24, left: "clamp(20px, 4vw, 36px)",
+        textDecoration: "none", zIndex: 10, display: "flex", alignItems: "center", gap: 8,
+      }}>
+        <strong style={{ fontSize: "clamp(22px, 3vw, 28px)", color: "#fff", fontFamily: "Montserrat, sans-serif", letterSpacing: "-0.02em" }}>
+          BIZEN<span style={{ color: "#1983FD" }}>.</span>
+        </strong>
       </Link>
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        @media (min-width: 768px) {
-          .auth-logo-top {
-            left: 24px !important;
-            transform: none !important;
-          }
-        }
-      `}} />
-
-      {/* Decorative science elements */}
-      <div className="deco-element" aria-hidden style={{ position: "absolute" as const, top: 60, left: 80, opacity: 0.6, zIndex: 0 }}>
-        <svg width="80" height="80" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="35" fill="none" stroke="#FF6B9D" strokeWidth="2" />
-          <circle cx="40" cy="40" r="5" fill="#FF6B9D" />
-          <circle cx="15" cy="40" r="8" fill="#93C5FD" />
-          <circle cx="65" cy="40" r="8" fill="#93C5FD" />
-        </svg>
-      </div>
-      <div className="deco-element" aria-hidden style={{ position: "absolute" as const, bottom: 80, right: 100, opacity: 0.5, zIndex: 0 }}>
-        <svg width="90" height="70" viewBox="0 0 90 70">
-          <path d="M10 35 L30 20 L50 35 L70 20 L80 35" fill="none" stroke="#FFA500" strokeWidth="3" />
-          <circle cx="10" cy="35" r="6" fill="#FFA500" />
-          <circle cx="30" cy="20" r="6" fill="#FFA500" />
-          <circle cx="50" cy="35" r="6" fill="#FFA500" />
-          <circle cx="70" cy="20" r="6" fill="#FFA500" />
-        </svg>
-      </div>
-
-      <Card className="auth-card" style={{
-        width: "100%",
-        maxWidth: 480,
-        padding: "clamp(24px, 6vw, 40px)",
-        margin: "0 auto",
-        position: "relative" as const,
-        zIndex: 1,
-        marginTop: "clamp(20px, 5vw, 40px)",
-        marginBottom: "20px"
+      {/* Form floating on background */}
+      <div style={{
+        position: "relative", zIndex: 2,
+        width: "100%", maxWidth: "clamp(320px, 90vw, 460px)",
+        display: "flex", flexDirection: "column", alignItems: "center",
+        paddingTop: "clamp(40px, 8vw, 64px)",
       }}>
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-          <Image
-            src="/hero1.png"
-            alt="BIZEN"
-            width={80}
-            height={80}
-            style={{ width: 80, height: 80, objectFit: "contain" }}
-          />
-        </div>
 
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <h1 style={{
-            fontSize: 28,
-            fontWeight: 700,
-            color: "#0B71FE",
-            margin: 0,
-            marginBottom: 8,
-            fontFamily: "Montserrat, sans-serif"
-          }}>
-            Crea tu cuenta en {brandName}
-          </h1>
-          <p style={{ color: "#64748b", fontSize: 14 }}>Únete a la revolución de la educación financiera</p>
-        </div>
 
-        <form onSubmit={onSubmit} className="auth-form" style={{ display: "grid" as const, gap: 16 }}>
+        <h1 style={{ margin: "0 0 6px", fontSize: "clamp(24px, 4.5vw, 34px)", fontWeight: 800, color: "#fff", fontFamily: "Montserrat, sans-serif", textAlign: "center", letterSpacing: "-0.02em" }}>
+          Crea tu cuenta
+        </h1>
+        <p style={{ margin: "0 0 clamp(24px, 4vw, 36px)", fontSize: "clamp(13px, 1.8vw, 15px)", color: "rgba(255,255,255,0.5)", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
+          Únete a la revolución de la educación financiera
+        </p>
+
+        {/* Form */}
+        <form onSubmit={onSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
+          {/* Name */}
           <div>
-            <Label htmlFor="fullName">Nombre completo *</Label>
-            <TextField
-              id="fullName"
-              name="fullName"
-              type="text"
+            <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+              Nombre completo
+            </label>
+            <input
+              id="fullName" name="fullName" type="text" required
               placeholder="¿Cómo te llamas?"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.currentTarget.value)}
+              value={fullName} onChange={(e) => setFullName(e.currentTarget.value)}
+              className="bizen-input"
+              style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 16px", outline: "none", fontSize: 15, color: "#fff", fontFamily: "Inter, sans-serif", transition: "border-color .2s, background .2s" }}
             />
           </div>
 
+          {/* Email */}
           <div>
-            <Label htmlFor="email">Email *</Label>
-            <TextField
-              id="email"
-              name="email"
-              type="email"
+            <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+              Email
+            </label>
+            <input
+              id="email" name="email" type="email" required
               placeholder="tu@email.com"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.currentTarget.value)}
+              value={email} onChange={(e) => setEmail(e.currentTarget.value)}
+              className="bizen-input"
+              style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 16px", outline: "none", fontSize: 15, color: "#fff", fontFamily: "Inter, sans-serif", transition: "border-color .2s, background .2s" }}
             />
           </div>
 
+          {/* Password */}
           <div>
-            <Label htmlFor="password">Contraseña *</Label>
-            <div style={{ position: "relative" as const }}>
-              <TextField
-                id="password"
-                name="password"
-                type={showPass ? "text" : "password"}
+            <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+              Contraseña
+            </label>
+            <div style={{ position: "relative" }}>
+              <input
+                id="password" name="password" type={showPass ? "text" : "password"} required
                 placeholder="Mínimo 6 caracteres"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.currentTarget.value)}
-                style={{ paddingRight: 40 }}
+                value={password} onChange={(e) => setPassword(e.currentTarget.value)}
+                className="bizen-input"
+                style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 44px 0 16px", outline: "none", fontSize: 15, color: "#fff", fontFamily: "Inter, sans-serif", transition: "border-color .2s, background .2s" }}
               />
-              <button
-                type="button"
-                onClick={() => setShowPass((s) => !s)}
-                style={{
-                  position: "absolute" as const,
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 4
-                }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2">
-                  {showPass ? (
-                    <>
-                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
-                      <line x1="1" y1="1" x2="23" y2="23" />
-                    </>
-                  ) : (
-                    <>
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </>
-                  )}
+              <button type="button" onClick={() => setShowPass(s => !s)} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "transparent", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2">
+                  {showPass ? (<><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></>) : (<><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>)}
                 </svg>
               </button>
             </div>
           </div>
 
-          <Button type="submit" disabled={loading || googleLoading} loading={loading}>
-            Registrarme ahora
-          </Button>
-
-          <Divider label="o regístrate con" />
-
+          {/* Submit */}
           <button
-            type="button"
-            className="google-btn"
-            onClick={handleGoogleSignIn}
+            type="submit" disabled={loading || googleLoading}
+            style={{
+              height: 52, borderRadius: 12, border: "none", width: "100%", marginTop: 4,
+              background: (loading || googleLoading) ? "rgba(0,86,231,0.5)" : "linear-gradient(135deg, #0056E7, #1983FD)",
+              color: "#fff", fontWeight: 700, fontSize: 16,
+              cursor: (loading || googleLoading) ? "not-allowed" : "pointer",
+              fontFamily: "Montserrat, sans-serif",
+              boxShadow: (loading || googleLoading) ? "none" : "0 8px 24px rgba(0,86,231,0.4)",
+              transition: "all 0.2s ease",
+            }}
+            onMouseOver={(e) => { if (!loading && !googleLoading) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,86,231,0.5)" } }}
+            onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = (loading || googleLoading) ? "none" : "0 8px 24px rgba(0,86,231,0.4)" }}
+          >
+            {loading ? "Creando cuenta…" : "Registrarme ahora"}
+          </button>
+
+          {/* Divider */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 12, alignItems: "center" }}>
+            <div style={{ height: 1, background: "rgba(255,255,255,0.1)" }} />
+            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "Inter, sans-serif" }}>o regístrate con</span>
+            <div style={{ height: 1, background: "rgba(255,255,255,0.1)" }} />
+          </div>
+
+          {/* Google */}
+          <button
+            type="button" onClick={handleGoogleSignIn}
             disabled={loading || googleLoading}
             style={{
-              height: AUTH_CONTROL_HEIGHT,
-              borderRadius: 12,
-              border: "1px solid #cbd5e1",
-              background: "#fff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              cursor: "pointer",
-              fontWeight: 600,
-              fontSize: 15,
-              color: "#1e293b",
-              transition: "background 0.2s"
+              height: AUTH_CONTROL_HEIGHT, borderRadius: 12,
+              border: "1.5px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.06)",
+              backdropFilter: "blur(8px)",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+              cursor: (loading || googleLoading) ? "not-allowed" : "pointer",
+              fontWeight: 600, fontSize: 15, color: "#fff",
+              fontFamily: "Inter, sans-serif",
+              transition: "background 0.2s, border-color 0.2s",
             }}
-            onMouseOver={(e) => (e.currentTarget.style.background = "#f8fafc")}
-            onMouseOut={(e) => (e.currentTarget.style.background = "#fff")}
+            onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.11)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.22)"; }}
+            onMouseOut={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 12-4.53z" fill="#EA4335" />
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
-            Google
+            {googleLoading ? "Redirigiendo…" : "Google"}
           </button>
         </form>
 
+        {/* Status message */}
         {message && (
-          <p role="status" style={{ marginTop: 16, textAlign: "center", color: message.includes("éxito") ? "#059669" : "#dc2626", fontSize: 14, fontWeight: 500 }}>
+          <p role="status" style={{
+            marginTop: 16, textAlign: "center", fontSize: 13, fontFamily: "Inter, sans-serif",
+            color: isSuccess ? "#4ade80" : "#f87171",
+            background: isSuccess ? "rgba(74,222,128,0.1)" : "rgba(248,113,113,0.1)",
+            border: `1px solid ${isSuccess ? "rgba(74,222,128,0.2)" : "rgba(248,113,113,0.2)"}`,
+            borderRadius: 8, padding: "10px 16px", width: "100%", boxSizing: "border-box",
+          }}>
             {message}
           </p>
         )}
 
-        <div style={{ marginTop: 24, textAlign: "center", fontSize: 14 }}>
+        {/* Login link */}
+        <p style={{ marginTop: 24, fontSize: 14, color: "rgba(255,255,255,0.45)", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
           ¿Ya tienes cuenta?{" "}
-          <Link href="/login" style={{ color: "#0B71FE", fontWeight: 700, textDecoration: "none" }}>
-            Inicia sesión
-          </Link>
-        </div>
-      </Card>
+          <Link href="/login" style={{ color: "#60a5fa", fontWeight: 700, textDecoration: "none" }}>Inicia sesión</Link>
+        </p>
+      </div>
 
-      <style>{`
-        .auth-page .auth-form { box-sizing: border-box; }
-        .auth-page .auth-form > * { min-width: 0; }
-        .auth-page .auth-form .auth-input,
-        .auth-page .auth-form button[type="submit"],
-        .auth-page .auth-form button.google-btn {
-          width: 100% !important;
-          min-width: 0 !important;
-          max-width: 100% !important;
-          box-sizing: border-box !important;
-          margin: 0 !important;
-        }
-        .auth-page .auth-form button[type="submit"] { border: 1px solid transparent !important; }
-        .auth-page .auth-link:hover { text-decoration: underline !important; color: #1e40af !important; }
-        .auth-page .auth-input:hover { border-color: rgba(11, 113, 254, 0.4) !important; background: #ffffff !important; }
-        .auth-page .auth-form button[type="submit"]:hover:not(:disabled) { background: #1e80ff !important; box-shadow: 0 8px 20px rgba(11, 113, 254, 0.35) !important; }
-        .auth-page .auth-form .auth-input:focus { border-color: #0B71FE !important; }
-        
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        .bizen-input::placeholder { color: rgba(255,255,255,0.22) !important; }
+        .bizen-input:focus { border-color: rgba(25,131,253,0.7) !important; background: rgba(255,255,255,0.11) !important; }
+        .bizen-input:hover:not(:focus) { border-color: rgba(255,255,255,0.22) !important; }
         @media (max-width: 640px) {
-          .deco-element { display: none !important; }
-          .auth-card {
-             padding: 24px 20px !important;
-             margin-top: 20px !important;
-          }
-          .auth-page {
-             padding: 60px 16px 20px !important;
-             justify-content: center !important;
-          }
-          .auth-form {
-             gap: 12px !important;
-          }
-          .auth-input {
-             min-height: 48px !important;
-             font-size: 16px !important;
-          }
+          .deco-icons { display: none !important; }
         }
-      `}</style>
+      `}} />
     </main>
   )
 }
 
 export default function BIZENSignupPage() {
   return (
-    <Suspense fallback={<div style={{ background: "#FFFFFF", minHeight: "100dvh", display: "grid", placeItems: "center" }}>Cargando...</div>}>
+    <Suspense fallback={<div style={{ background: "#020e27", minHeight: "100dvh", display: "grid", placeItems: "center", color: "#fff", fontSize: 18 }}>Cargando...</div>}>
       <BIZENSignupContent />
     </Suspense>
   )

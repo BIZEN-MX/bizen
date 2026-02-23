@@ -134,16 +134,16 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     return () => document.body.removeAttribute("data-landing-page")
   }, [pathname])
 
-  // Diagnostic quiz runs as a standalone flow without sidebar/nav chrome.
+  // Pages where nav is hidden run as a standalone flow without sidebar/nav chrome.
   useEffect(() => {
     if (typeof document === "undefined") return
-    if (isDiagnosticPage) {
+    if (hideAppNavigation) {
       document.body.setAttribute("data-no-sidebar", "true")
     } else {
       document.body.removeAttribute("data-no-sidebar")
     }
     return () => document.body.removeAttribute("data-no-sidebar")
-  }, [isDiagnosticPage])
+  }, [hideAppNavigation])
 
   // Flag body on lesson interactive page so CSS can hide app footer (backup)
   useEffect(() => {

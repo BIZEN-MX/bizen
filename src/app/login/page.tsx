@@ -8,165 +8,41 @@ import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 
 const brandName = "BIZEN"
-const bgColor = "#FFFFFF"
-const linkColor = "#0E4A7A"
-const AUTH_CONTROL_HEIGHT = 48
-const AUTH_FORM_MAX_WIDTH = 400
 const supportEmail = "soporte@bizen.mx"
-
-function Card(props: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      {...props}
-      style={{
-        borderRadius: 16,
-        border: "1px solid rgba(0,0,0,0.08)",
-        boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
-        background: "#fff",
-        padding: "clamp(20px, 5vw, 24px)",
-        minWidth: 0,
-        overflow: "hidden" as const,
-        ...(props.style || {}),
-      }}
-    />
-  )
-}
-
-function Label({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
-  return <label htmlFor={htmlFor} style={{ display: "block" as const, fontSize: 13, fontWeight: 500, color: "#1e293b", marginBottom: 6 }}>{children}</label>
-}
-
-function TextField(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input
-      {...props}
-      className="auth-input"
-      style={{
-        width: "100%",
-        height: 44,
-        borderRadius: 8,
-        border: "1px solid #cbd5e1",
-        padding: "0 14px",
-        outline: "none",
-        fontSize: 15,
-        color: "#1e293b",
-        background: "#f8fafc",
-        transition: "border-color .2s ease, background .2s ease",
-        ...(props.style || {}),
-      }}
-      onFocus={(e) => {
-        e.currentTarget.style.background = "#fff"
-        e.currentTarget.style.borderColor = "#0B71FE"
-      }}
-      onBlur={(e) => {
-        e.currentTarget.style.background = "#f8fafc"
-        e.currentTarget.style.borderColor = "#cbd5e1"
-      }}
-    />
-  )
-}
-
-function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean }) {
-  const { loading, ...rest } = props
-  return (
-    <button
-      {...rest}
-      style={{
-        height: AUTH_CONTROL_HEIGHT,
-        minHeight: AUTH_CONTROL_HEIGHT,
-        borderRadius: 12,
-        border: "none",
-        width: "100%",
-        minWidth: 0,
-        background: rest.disabled ? "#cfd8e3" : "#0B71FE",
-        color: "#fff",
-        fontWeight: 700,
-        letterSpacing: 0.2,
-        cursor: rest.disabled ? "not-allowed" : "pointer",
-        transform: "translateZ(0)",
-        transition: "transform .06s, background .2s, box-shadow .2s",
-        boxShadow: rest.disabled ? "none" : "0 6px 16px rgba(11, 113, 254, 0.3)",
-        fontFamily: 'Montserrat, sans-serif',
-      }}
-      onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.98)")}
-      onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
-    >
-      {loading ? "Entrando…" : rest.children}
-    </button>
-  )
-}
-
-function Divider({ label = "o" }: { label?: string }) {
-  return (
-    <div style={{ display: "grid" as const, gridTemplateColumns: "1fr auto 1fr", gap: 12, alignItems: "center" }}>
-      <div style={{ height: 1, background: "rgba(11, 113, 254, 0.2)" }} />
-      <span style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>{label}</span>
-      <div style={{ height: 1, background: "rgba(11, 113, 254, 0.2)" }} />
-    </div>
-  )
-}
 
 function BIZENLoginContent() {
   const router = useRouter()
   const supabase = createClient()
   const [loading, setLoading] = React.useState(false)
-  const [googleLoading, setGoogleLoading] = React.useState(false)
   const [message, setMessage] = React.useState<string | null>(null)
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
   const [showPass, setShowPass] = React.useState(false)
   const [remember, setRemember] = React.useState(true)
-  const [isTablet, setIsTablet] = React.useState(false)
 
   React.useEffect(() => {
-    setIsTablet(window.innerWidth <= 1024)
-    const handleResize = () => setIsTablet(window.innerWidth <= 1024)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  React.useEffect(() => {
-    // Enable scroll if content overflows on mobile
-    const prevHtml = document.documentElement.style.overflow
-    const prevBody = document.body.style.overflow
     document.documentElement.style.overflow = "auto"
     document.body.style.overflow = "auto"
+    document.body.style.background = "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)"
     return () => {
-      document.documentElement.style.overflow = prevHtml
-      document.body.style.overflow = prevBody
+      document.documentElement.style.overflow = ""
+      document.body.style.overflow = ""
+      document.body.style.background = ""
     }
   }, [])
 
-  function isNetworkError(err: unknown): boolean {
-    const msg = err instanceof Error ? err.message : String(err)
-    return (
-      msg === "Failed to fetch" ||
-      msg === "Network request failed" ||
-      msg === "Load failed" ||
-      msg.includes("NetworkError") ||
-      msg.includes("fetch")
-    )
-  }
-
   function translateAuthError(errorMessage: string): string {
-    if (errorMessage === "Failed to fetch" || errorMessage.includes("fetch") || errorMessage.includes("Network")) {
-      return "No hay conexión. Revisa tu internet e intenta de nuevo."
-    }
     const errorTranslations: Record<string, string> = {
-      "Invalid login credentials": "Credenciales de inicio de sesión inválidas. Verifica tu email y contraseña.",
-      "Email not confirmed": "Email no confirmado. Revisa tu correo y haz clic en el enlace de verificación.",
-      "Too many requests": "Demasiados intentos. Espera un momento antes de intentar de nuevo.",
-      "User not found": "Usuario no encontrado. Verifica tu email o crea una cuenta nueva.",
-      "Invalid email": "Email inválido",
-      "Password should be at least 6 characters": "La contraseña debe tener al menos 6 caracteres",
-      "Unable to validate email address: invalid format": "No se puede validar la dirección de email: formato inválido",
-      "Signup is disabled": "El registro está deshabilitado",
-      "Email rate limit exceeded": "Límite de emails excedido. Intenta de nuevo más tarde.",
-      "For security purposes, you can only request this once every 60 seconds": "Por seguridad, solo puedes solicitar esto una vez cada 60 segundos"
+      "Invalid login credentials": "Credenciales inválidas. Verifica tu email y contraseña.",
+      "Email not confirmed": "Email no confirmado. Revisa tu correo.",
+      "Too many requests": "Demasiados intentos. Espera un momento.",
+      "User not found": "Usuario no encontrado.",
     }
-    if (errorTranslations[errorMessage]) return errorTranslations[errorMessage]
-    for (const [english, spanish] of Object.entries(errorTranslations)) {
-      if (errorMessage.includes(english)) return spanish
+    for (const [en, es] of Object.entries(errorTranslations)) {
+      if (errorMessage.includes(en)) return es
+    }
+    if (errorMessage.includes("fetch") || errorMessage.includes("Network")) {
+      return "Sin conexión. Revisa tu internet."
     }
     return `Error: ${errorMessage}`
   }
@@ -174,311 +50,219 @@ function BIZENLoginContent() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setMessage(null)
-    if (!email || !password) {
-      setMessage("Por favor ingresa tu email y contraseña")
-      return
-    }
+    if (!email || !password) { setMessage("Por favor ingresa tu email y contraseña"); return }
     try {
       setLoading(true)
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
       router.replace("/courses")
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Error al iniciar sesión"
-      setMessage(isNetworkError(err) ? "No hay conexión. Revisa tu internet e intenta de nuevo." : translateAuthError(errorMessage))
+      setMessage(translateAuthError(err instanceof Error ? err.message : "Error al iniciar sesión"))
     } finally {
       setLoading(false)
     }
   }
 
-  async function handleGoogleSignIn() {
-    setMessage(null)
-    try {
-      setGoogleLoading(true)
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`
-        }
-      })
-      if (error) throw error
-      // User will be redirected to Google, no need to navigate here
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Error al iniciar sesión con Google"
-      setMessage(isNetworkError(err) ? "No hay conexión. Revisa tu internet e intenta de nuevo." : translateAuthError(errorMessage))
-      setGoogleLoading(false)
-    }
-  }
-
   return (
-    <main className="auth-page" style={{
-      position: "relative" as const,
-      overflowX: "hidden" as const,
-      overflowY: "auto" as const,
-      background: "linear-gradient(180deg, #e8f4ff 0%, #f5f9ff 50%, #e8f4ff 100%)",
+    <main style={{
+      position: "relative",
       minHeight: "100dvh",
-      display: "flex" as const,
-      flexDirection: "column" as const,
-      alignItems: "center" as const,
-      justifyContent: "center" as const,
-      boxSizing: "border-box" as const,
-      padding: "80px 20px 40px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)",
+      overflow: "hidden",
+      padding: "clamp(16px, 4vw, 40px)",
+      boxSizing: "border-box",
     }}>
-      {/* Brand name - slightly adjusted for mobile flow */}
+
+      {/* Grid overlay */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0, zIndex: 0,
+        backgroundImage: "linear-gradient(rgba(0,86,231,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.07) 1px, transparent 1px)",
+        backgroundSize: "48px 48px",
+      }} />
+
+      {/* Blobs */}
+      <div aria-hidden style={{ position: "absolute", top: "-10%", left: "-10%", width: "clamp(280px,50vw,560px)", height: "clamp(280px,50vw,560px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(0,86,231,0.22) 0%, transparent 70%)", filter: "blur(40px)", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "absolute", bottom: "-15%", right: "-10%", width: "clamp(240px,45vw,480px)", height: "clamp(240px,45vw,480px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(25,131,253,0.18) 0%, transparent 70%)", filter: "blur(50px)", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "absolute", top: "40%", right: "20%", width: "clamp(120px,20vw,220px)", height: "clamp(120px,20vw,220px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(96,165,250,0.12) 0%, transparent 70%)", filter: "blur(30px)", zIndex: 0 }} />
+
+      {/* Decorative floating icons (desktop only) */}
+      <div className="deco-icons" aria-hidden>
+        {/* Coin top-left */}
+        <svg style={{ position: "absolute", top: "8%", left: "6%", opacity: 0.18 }} width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" stroke="#60a5fa" strokeWidth="2.5" />
+          <text x="32" y="39" textAnchor="middle" fill="#60a5fa" fontSize="22" fontWeight="700" fontFamily="sans-serif">$</text>
+        </svg>
+        {/* Chart top-right */}
+        <svg style={{ position: "absolute", top: "12%", right: "7%", opacity: 0.15 }} width="72" height="56" viewBox="0 0 72 56" fill="none">
+          <polyline points="4,50 20,34 36,40 52,18 68,8" stroke="#1983FD" strokeWidth="2.5" strokeLinejoin="round" />
+          <circle cx="4" cy="50" r="4" fill="#1983FD" />
+          <circle cx="20" cy="34" r="4" fill="#1983FD" />
+          <circle cx="36" cy="40" r="4" fill="#1983FD" />
+          <circle cx="52" cy="18" r="4" fill="#1983FD" />
+          <circle cx="68" cy="8" r="4" fill="#1983FD" />
+        </svg>
+        {/* Sparkle mid-left */}
+        <svg style={{ position: "absolute", top: "50%", left: "4%", opacity: 0.2, transform: "translateY(-50%)" }} width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M20 4 L22 18 L36 20 L22 22 L20 36 L18 22 L4 20 L18 18 Z" fill="#93c5fd" />
+        </svg>
+        {/* Shield bottom-left */}
+        <svg style={{ position: "absolute", bottom: "12%", left: "7%", opacity: 0.15 }} width="52" height="60" viewBox="0 0 52 60" fill="none">
+          <path d="M26 2 L50 12 L50 32 C50 46 38 56 26 58 C14 56 2 46 2 32 L2 12 Z" stroke="#60a5fa" strokeWidth="2.5" fill="none" />
+          <path d="M16 30 L22 36 L36 22" stroke="#60a5fa" strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+        {/* Percentage bottom-right */}
+        <svg style={{ position: "absolute", bottom: "15%", right: "6%", opacity: 0.18 }} width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <circle cx="20" cy="20" r="10" stroke="#1983FD" strokeWidth="2.5" />
+          <circle cx="44" cy="44" r="10" stroke="#1983FD" strokeWidth="2.5" />
+          <line x1="10" y1="54" x2="54" y2="10" stroke="#1983FD" strokeWidth="2.5" />
+        </svg>
+      </div>
+
+      {/* Logo top-left */}
       <Link href="/" style={{
-        position: "absolute" as const,
-        left: "50%",
-        top: 24,
-        transform: "translateX(-50%)",
-        display: "flex" as const,
-        alignItems: "center" as const,
-        textDecoration: "none",
-        color: "inherit",
-        zIndex: 10
-      }} className="auth-logo-top">
-        <strong style={{ fontSize: 28, color: "#0B71FE", fontFamily: "Montserrat, sans-serif" }}>{brandName}.</strong>
+        position: "absolute", top: 24, left: "clamp(20px, 4vw, 36px)",
+        textDecoration: "none", zIndex: 10, display: "flex", alignItems: "center", gap: 8,
+      }}>
+        <strong style={{ fontSize: "clamp(22px, 3vw, 28px)", color: "#fff", fontFamily: "Montserrat, sans-serif", letterSpacing: "-0.02em" }}>
+          BIZEN<span style={{ color: "#1983FD" }}>.</span>
+        </strong>
       </Link>
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        @media (min-width: 768px) {
-          .auth-logo-top {
-            left: 24px !important;
-            transform: none !important;
-          }
-        }
-      `}} />
-
-      {/* Decorative science elements - atoms, DNA, molecules */}
-      <div className="deco-element" aria-hidden style={{ position: "absolute" as const, top: 60, left: 80, opacity: 0.6, zIndex: 0 }}>
-        <svg width="80" height="80" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="35" fill="none" stroke="#FF6B9D" strokeWidth="2" />
-          <circle cx="40" cy="40" r="5" fill="#FF6B9D" />
-          <circle cx="15" cy="40" r="8" fill="#93C5FD" />
-          <circle cx="65" cy="40" r="8" fill="#93C5FD" />
-        </svg>
-      </div>
-      <div className="deco-element" aria-hidden style={{ position: "absolute" as const, top: "30%", right: 60, opacity: 0.5, zIndex: 0 }}>
-        <svg width="60" height="100" viewBox="0 0 60 100">
-          <path d="M30 10 Q20 30 30 50 T30 90" fill="none" stroke="#FFA500" strokeWidth="3" />
-          <circle cx="30" cy="10" r="8" fill="#FFA500" />
-          <circle cx="30" cy="50" r="8" fill="#FFA500" />
-          <circle cx="30" cy="90" r="8" fill="#FFA500" />
-        </svg>
-      </div>
-      <div className="deco-element" aria-hidden style={{ position: "absolute" as const, bottom: 100, left: 60, opacity: 0.6, zIndex: 0 }}>
-        <svg width="70" height="120" viewBox="0 0 70 120">
-          <ellipse cx="35" cy="30" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2" />
-          <ellipse cx="35" cy="60" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2" />
-          <ellipse cx="35" cy="90" rx="25" ry="15" fill="none" stroke="#60A5FA" strokeWidth="2" />
-          <line x1="10" y1="30" x2="60" y2="30" stroke="#60A5FA" strokeWidth="2" />
-          <line x1="10" y1="60" x2="60" y2="60" stroke="#60A5FA" strokeWidth="2" />
-        </svg>
-      </div>
-      <div className="deco-element" aria-hidden style={{ position: "absolute" as const, bottom: 80, right: 100, opacity: 0.5, zIndex: 0 }}>
-        <svg width="90" height="70" viewBox="0 0 90 70">
-          <path d="M10 35 L30 20 L50 35 L70 20 L80 35" fill="none" stroke="#FFA500" strokeWidth="3" />
-          <circle cx="10" cy="35" r="6" fill="#FFA500" />
-          <circle cx="30" cy="20" r="6" fill="#FFA500" />
-          <circle cx="50" cy="35" r="6" fill="#FFA500" />
-          <circle cx="70" cy="20" r="6" fill="#FFA500" />
-          <rect x="70" y="40" width="15" height="25" fill="#FFA500" opacity="0.6" />
-        </svg>
-      </div>
-
-      {/* Centered login card */}
-      <Card className="auth-card" style={{
-        width: "100%",
-        maxWidth: 480,
-        padding: "clamp(24px, 6vw, 40px)",
-        margin: "0 auto",
-        position: "relative" as const,
-        zIndex: 1,
-        marginTop: "clamp(20px, 5vw, 40px)",
-        marginBottom: "20px"
+      {/* Form — floating directly on background */}
+      <div style={{
+        position: "relative", zIndex: 2,
+        width: "100%", maxWidth: "clamp(320px, 90vw, 440px)",
+        display: "flex", flexDirection: "column", alignItems: "center",
       }}>
-        {/* Character icon at top */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-          <Image
-            src="/hero1.png"
-            alt="BIZEN"
-            width={80}
-            height={80}
-            style={{ width: 80, height: 80, objectFit: "contain" }}
-          />
-        </div>
 
-        {/* Welcome text */}
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <h1 style={{
-            fontSize: 28,
-            fontWeight: 700,
-            color: "#0B71FE",
-            margin: 0,
-            marginBottom: 8,
-            fontFamily: "Montserrat, sans-serif"
-          }}>
-            ¡Bienvenido a {brandName}!
-          </h1>
-        </div>
 
-        {/* Login form */}
-        <form onSubmit={onSubmit} className="auth-form" style={{ display: "grid" as const, gap: 16 }}>
+        {/* Heading */}
+        <h1 style={{ margin: "0 0 6px", fontSize: "clamp(26px, 5vw, 36px)", fontWeight: 800, color: "#fff", fontFamily: "Montserrat, sans-serif", textAlign: "center", letterSpacing: "-0.02em" }}>
+          ¡Bienvenido!
+        </h1>
+        <p style={{ margin: "0 0 clamp(28px, 5vw, 40px)", fontSize: "clamp(14px, 2vw, 16px)", color: "rgba(255,255,255,0.55)", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
+          Inicia sesión en tu cuenta de {brandName}
+        </p>
+
+        {/* Form */}
+        <form onSubmit={onSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Email */}
           <div>
-            <Label htmlFor="email">Usuario *</Label>
-            <TextField
-              id="email"
-              name="email"
-              type="email"
-              placeholder="¿Tu correo electrónico?"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.currentTarget.value)}
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)", marginBottom: 8, letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+              Email
+            </label>
+            <input
+              id="email" name="email" type="email" required autoComplete="email"
+              placeholder="tu@email.com"
+              value={email} onChange={(e) => setEmail(e.currentTarget.value)}
+              className="bizen-input"
+              style={{
+                width: "100%", height: 52, borderRadius: 12, boxSizing: "border-box",
+                border: "1.5px solid rgba(255,255,255,0.12)",
+                background: "rgba(255,255,255,0.07)",
+                backdropFilter: "blur(8px)",
+                padding: "0 16px", outline: "none",
+                fontSize: 15, color: "#fff",
+                fontFamily: "Inter, sans-serif",
+                transition: "border-color .2s, background .2s",
+              }}
             />
           </div>
 
+          {/* Password */}
           <div>
-            <Label htmlFor="password">Contraseña *</Label>
-            <div style={{ position: "relative" as const }}>
-              <TextField
-                id="password"
-                name="password"
-                type={showPass ? "text" : "password"}
-                placeholder="¿Tu contraseña?"
-                required
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.currentTarget.value)}
-                style={{ paddingRight: 40 }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPass((s) => !s)}
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)", marginBottom: 8, letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+              Contraseña
+            </label>
+            <div style={{ position: "relative" }}>
+              <input
+                id="password" name="password" type={showPass ? "text" : "password"} required autoComplete="current-password"
+                placeholder="••••••••"
+                value={password} onChange={(e) => setPassword(e.currentTarget.value)}
+                className="bizen-input"
                 style={{
-                  position: "absolute" as const,
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 4
+                  width: "100%", height: 52, borderRadius: 12, boxSizing: "border-box",
+                  border: "1.5px solid rgba(255,255,255,0.12)",
+                  background: "rgba(255,255,255,0.07)",
+                  backdropFilter: "blur(8px)",
+                  padding: "0 44px 0 16px", outline: "none",
+                  fontSize: 15, color: "#fff",
+                  fontFamily: "Inter, sans-serif",
+                  transition: "border-color .2s, background .2s",
                 }}
-                aria-label={showPass ? "Ocultar contraseña" : "Mostrar contraseña"}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2">
-                  {showPass ? (
-                    <>
-                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
-                      <line x1="1" y1="1" x2="23" y2="23" />
-                    </>
-                  ) : (
-                    <>
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </>
-                  )}
+              />
+              <button type="button" onClick={() => setShowPass(s => !s)} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "transparent", border: "none", cursor: "pointer", padding: 4, display: "flex" }} aria-label={showPass ? "Ocultar" : "Mostrar"}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="2">
+                  {showPass ? (<><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></>) : (<><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>)}
                 </svg>
               </button>
             </div>
           </div>
 
-          <div style={{ display: "flex" as const, justifyContent: "flex-start", alignItems: "center" }}>
-            <a href="/bizen/forgot-password" className="auth-link" style={{ fontSize: 13, color: "#0B71FE", textDecoration: "none", fontWeight: 500 }}>
+          {/* Forgot password */}
+          <div style={{ textAlign: "right", marginTop: -4 }}>
+            <a href="/bizen/forgot-password" style={{ fontSize: 13, color: "#60a5fa", textDecoration: "none", fontFamily: "Inter, sans-serif" }}>
               ¿Olvidaste tu contraseña?
             </a>
           </div>
 
-          <Button type="submit" disabled={loading || googleLoading} loading={loading}>
-            Entrar a {brandName}
-          </Button>
+          {/* Submit */}
+          <button
+            type="submit" disabled={loading}
+            style={{
+              height: 52, borderRadius: 12, border: "none", width: "100%",
+              background: loading ? "rgba(0,86,231,0.5)" : "linear-gradient(135deg, #0056E7, #1983FD)",
+              color: "#fff", fontWeight: 700, fontSize: 16,
+              cursor: loading ? "not-allowed" : "pointer",
+              fontFamily: "Montserrat, sans-serif",
+              letterSpacing: "0.01em",
+              boxShadow: loading ? "none" : "0 8px 24px rgba(0,86,231,0.4)",
+              transition: "all 0.2s ease",
+            }}
+            onMouseOver={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,86,231,0.5)" } }}
+            onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = loading ? "none" : "0 8px 24px rgba(0,86,231,0.4)" }}
+          >
+            {loading ? "Entrando…" : `Entrar a ${brandName}`}
+          </button>
 
-          <label style={{ display: "flex" as const, gap: 8, alignItems: "center" as const, fontSize: 14, color: "#444", justifyContent: "center" }}>
-            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.currentTarget.checked)} />
-            Mantener la sesión iniciada
+          {/* Remember me */}
+          <label style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "center", fontSize: 13, color: "rgba(255,255,255,0.5)", fontFamily: "Inter, sans-serif", cursor: "pointer" }}>
+            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.currentTarget.checked)} style={{ accentColor: "#1983FD", width: 15, height: 15 }} />
+            Mantener sesión iniciada
           </label>
         </form>
 
-        <div style={{ marginTop: 24, textAlign: "center", fontSize: 14 }}>
-          ¿No tienes cuenta?{" "}
-          <Link href="/signup" style={{ color: "#0B71FE", fontWeight: 700, textDecoration: "none" }}>
-            Regístrate
-          </Link>
-        </div>
-
+        {/* Error message */}
         {message && (
-          <p role="status" style={{ marginTop: 16, textAlign: "center", wordBreak: "break-word", overflowWrap: "anywhere", color: "#dc2626", fontSize: 14 }}>
+          <p role="status" style={{ marginTop: 16, textAlign: "center", color: "#f87171", fontSize: 13, fontFamily: "Inter, sans-serif", background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)", borderRadius: 8, padding: "10px 16px", width: "100%", boxSizing: "border-box" }}>
             {message}
           </p>
         )}
 
-        {/* Help text at bottom */}
-        <div style={{
-          marginTop: 32,
-          textAlign: "center",
-          fontSize: 12,
-          color: "#64748b",
-          lineHeight: 1.6
-        }}>
-          ¿Necesitas ayuda?<br />
-          Mándanos un correo a{" "}
-          <a href={`mailto:${supportEmail}`} style={{ color: "#0B71FE", textDecoration: "none" }}>
-            {supportEmail}
-          </a>
-          {" "}como escríbenos por Whatsapp al +52 55 4183 1994
-        </div>
-      </Card>
+        {/* Sign up link */}
+        <p style={{ marginTop: 28, fontSize: 14, color: "rgba(255,255,255,0.45)", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
+          ¿No tienes cuenta?{" "}
+          <Link href="/signup" style={{ color: "#60a5fa", fontWeight: 700, textDecoration: "none" }}>Regístrate</Link>
+        </p>
 
-      {/* Version info bottom left */}
-      <div style={{
-        position: "fixed" as const,
-        bottom: 20,
-        left: 20,
-        fontSize: 11,
-        color: "#94a3b8",
-        fontFamily: "monospace",
-        zIndex: 10
-      }}>
-        <div>Local: 4.5.1</div>
-        <div>Global: 4.5.1</div>
+        {/* Support */}
+        <p style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.3)", textAlign: "center", fontFamily: "Inter, sans-serif", lineHeight: 1.6 }}>
+          ¿Necesitas ayuda? <a href={`mailto:${supportEmail}`} style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>{supportEmail}</a>
+        </p>
       </div>
 
-      <style>{`
-        .auth-page .auth-form { box-sizing: border-box; }
-        .auth-page .auth-form > * { min-width: 0; }
-        .auth-page .auth-form .auth-input,
-        .auth-page .auth-form button[type="submit"] {
-          width: 100% !important;
-          min-width: 0 !important;
-          max-width: 100% !important;
-          box-sizing: border-box !important;
-          margin: 0 !important;
-        }
-        .auth-page .auth-form button[type="submit"] { border: 1px solid transparent !important; }
-        .auth-page .auth-link:hover { color: #1e40af !important; text-decoration: underline !important; }
-        .auth-page .auth-input:hover { border-color: rgba(11, 113, 254, 0.4) !important; background: #ffffff !important; }
-        .auth-page .auth-form button[type="submit"]:hover:not(:disabled) { background: #1e80ff !important; box-shadow: 0 8px 20px rgba(11, 113, 254, 0.35) !important; }
-        
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        .bizen-input::placeholder { color: rgba(255,255,255,0.25) !important; }
+        .bizen-input:focus { border-color: rgba(25,131,253,0.7) !important; background: rgba(255,255,255,0.11) !important; }
+        .bizen-input:hover:not(:focus) { border-color: rgba(255,255,255,0.22) !important; }
         @media (max-width: 640px) {
-          .deco-element { display: none !important; }
-          .auth-card {
-             padding: 24px 20px !important;
-             margin-top: 20px !important;
-          }
-          .auth-page {
-             padding: 60px 16px 20px !important;
-             justify-content: center !important;
-          }
-          .auth-form {
-             gap: 12px !important;
-          }
-          .auth-input {
-             min-height: 48px !important;
-             font-size: 16px !important;
-          }
+          .deco-icons { display: none !important; }
         }
-      `}</style>
+      `}} />
     </main>
   )
 }
@@ -486,14 +270,7 @@ function BIZENLoginContent() {
 export default function BIZENLoginPage() {
   return (
     <Suspense fallback={
-      <div style={{
-        background: "#FFFFFF",
-        minHeight: "100dvh",
-        display: "grid" as const,
-        placeItems: "center",
-        color: "#111",
-        fontSize: 18
-      }}>
+      <div style={{ background: "#020e27", minHeight: "100dvh", display: "grid", placeItems: "center", color: "#fff", fontSize: 18 }}>
         Cargando...
       </div>
     }>
@@ -501,5 +278,3 @@ export default function BIZENLoginPage() {
     </Suspense>
   )
 }
-
-
