@@ -5,10 +5,8 @@ import Link from 'next/link'
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from '@/lib/supabase/client-microcred'
+import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop } from "lucide-react"
 
-/**
- * Types & Interfaces
- */
 interface Simulator {
   id: string;
   slug: string;
@@ -60,19 +58,40 @@ type GameSummary = {
   } | null
 }
 
+const CATEGORY_ICONS: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
+  budgeting: BarChart2,
+  savings: PiggyBank,
+  credit: CreditCard,
+  investment: TrendingUp,
+  inflation: Percent,
+}
+
+const CATEGORY_LABELS: Record<string, string> = {
+  budgeting: 'Presupuesto',
+  savings: 'Ahorro',
+  credit: 'Crédito',
+  investment: 'Inversión',
+  inflation: 'Inflación',
+}
+
+const CATEGORY_ACCENT: Record<string, string> = {
+  budgeting: '#3b82f6',
+  savings: '#10b981',
+  credit: '#f59e0b',
+  investment: '#8b5cf6',
+  inflation: '#ef4444',
+}
+
 export default function CombinedSimulatorsPage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
 
-  // Tabs state
   const [activeTab, setActiveTab] = useState<"simulators" | "cashflow">("simulators")
 
-  // --- Simulators State ---
   const [simulatorsList, setSimulatorsList] = useState<Simulator[]>([])
   const [loadingSims, setLoadingSims] = useState(true)
   const [simsError, setSimsError] = useState(false)
 
-  // --- Cashflow State ---
   const [professions, setProfessions] = useState<Profession[]>([])
   const [selectedProfession, setSelectedProfession] = useState<number | null>(null)
   const [loadingProfessions, setLoadingProfessions] = useState(true)
@@ -82,36 +101,18 @@ export default function CombinedSimulatorsPage() {
   const [showNewGame, setShowNewGame] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
-  // Labels for simulators
-  const categoryLabels: Record<string, string> = {
-    budgeting: 'Presupuesto',
-    savings: 'Ahorro',
-    credit: 'Crédito',
-    investment: 'Inversión',
-    inflation: 'Inflación',
-  };
-
-  /**
-   * Effects
-   */
   useEffect(() => {
-    const updateIsMobile = () => setIsMobile(window.innerWidth <= 767)
-    updateIsMobile()
-    window.addEventListener("resize", updateIsMobile)
-    return () => window.removeEventListener("resize", updateIsMobile)
+    const update = () => setIsMobile(window.innerWidth <= 767)
+    update()
+    window.addEventListener("resize", update)
+    return () => window.removeEventListener("resize", update)
   }, [])
 
-  // Fetch Simulators
   useEffect(() => {
     const fetchSimulators = async () => {
       try {
         const supabase = createClientMicrocred()
-        const { data: simulators } = await supabase
-          .from('simulators')
-          .select('*')
-          .eq('is_active', true)
-          .order('sort_order', { ascending: true })
-
+        const { data: simulators } = await supabase.from('simulators').select('*').eq('is_active', true).order('sort_order', { ascending: true })
         setSimulatorsList(simulators || [])
       } catch (err) {
         console.error('Error fetching simulators:', err)
@@ -120,11 +121,9 @@ export default function CombinedSimulatorsPage() {
         setLoadingSims(false)
       }
     }
-
     fetchSimulators()
   }, [])
 
-  // Fetch Cashflow Data (only if user logged in)
   useEffect(() => {
     if (user) {
       fetchProfessions()
@@ -132,9 +131,6 @@ export default function CombinedSimulatorsPage() {
     }
   }, [user])
 
-  /**
-   * Cashflow Helpers
-   */
   const fetchProfessions = async () => {
     try {
       const response = await fetch("/api/cashflow/professions")
@@ -166,9 +162,7 @@ export default function CombinedSimulatorsPage() {
   const deleteGame = async (gameId: number) => {
     if (!confirm("¿Estás seguro de que quieres eliminar este juego?")) return
     try {
-      const response = await fetch(`/api/cashflow/game/${gameId}/delete`, {
-        method: "DELETE"
-      })
+      const response = await fetch(`/api/cashflow/game/${gameId}/delete`, { method: "DELETE" })
       if (response.ok) fetchGames()
     } catch (error) {
       console.error("Error deleting game:", error)
@@ -211,428 +205,439 @@ export default function CombinedSimulatorsPage() {
     return date.toLocaleDateString("es-ES")
   }
 
-  const calculateTotalExpenses = (prof: Profession) => {
-    return prof.taxes + prof.homeMortgagePayment + prof.schoolLoanPayment +
-      prof.carLoanPayment + prof.creditCardPayment + prof.retailPayment +
-      prof.otherExpenses
-  }
+  const calculateTotalExpenses = (prof: Profession) =>
+    prof.taxes + prof.homeMortgagePayment + prof.schoolLoanPayment +
+    prof.carLoanPayment + prof.creditCardPayment + prof.retailPayment + prof.otherExpenses
 
-  const calculateCashFlow = (prof: Profession) => {
-    return prof.salary - calculateTotalExpenses(prof)
-  }
+  const calculateCashFlow = (prof: Profession) =>
+    prof.salary - calculateTotalExpenses(prof)
 
   if (authLoading) return null
 
   return (
     <>
       <style>{`
-        .tab-button {
-          padding: 12px 24px;
-          border-radius: 12px;
-          font-weight: 700;
-          font-size: 16px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border: 2px solid transparent;
-          font-family: 'Montserrat', sans-serif;
-        }
-        .tab-button.active {
-          background: #0B71FE;
-          color: white;
-          box-shadow: 0 4px 12px rgba(11, 113, 254, 0.3);
-        }
-        .tab-button.inactive {
-          background: white;
-          color: #64748b;
-          border-color: #e2e8f0;
-        }
-        .tab-button.inactive:hover {
+        /* Base layout */
+        .simulador-outer {
+          width: 100%;
+          min-height: 100vh;
           background: #f8fafc;
-          border-color: #cbd5e1;
+          font-family: 'Montserrat', sans-serif;
+          overflow-x: hidden;
         }
-
-        /* Mobile specific adjustments merged from both pages */
         @media (max-width: 767px) {
-          .simulador-outer {
-            padding-bottom: 65px !important;
-            min-height: calc(100vh - 65px) !important;
-          }
-          .simulador-main {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-right: 0 !important;
-            padding: 16px !important;
-            margin-top: 0 !important;
-          }
-          .tab-container {
-            width: 100% !important;
-            overflow-x: auto !important;
-            justify-content: flex-start !important;
-            padding: 6px !important;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-          }
-          .tab-container::-webkit-scrollbar {
-            display: none;
-          }
-          .tab-button {
-            padding: 10px 16px !important;
-            font-size: 14px !important;
-            white-space: nowrap !important;
-            flex-shrink: 0 !important;
-          }
-          .disclaimer-container {
-            flex-direction: column !important;
-            padding: 16px !important;
-            align-items: flex-start !important;
-            gap: 12px !important;
-          }
-          .cashflow-section-card {
-            padding: 20px !important;
-            border-radius: 16px !important;
-          }
-          .simulator-card {
-            padding: 20px !important;
-            border-radius: 20px !important;
-          }
-          .simulador-header {
-            margin-bottom: 32px !important;
-          }
-          .simulador-description {
-            font-size: 16px !important;
-          }
+          .simulador-outer { padding-bottom: 65px !important; }
+          .simulador-main  { padding: 20px 16px !important; }
         }
-
-        /* Responsive sidebar gap adjustments */
         @media (min-width: 768px) and (max-width: 1160px) {
-          .simulador-outer {
-            width: calc(100% - 220px) !important;
-            margin-left: 220px !important;
-          }
+          .simulador-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
         }
         @media (min-width: 1161px) {
-          .simulador-outer {
-            width: calc(100% - 280px) !important;
-            margin-left: 280px !important;
-          }
+          .simulador-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
         }
 
+        /* Simulator cards grid */
         .simuladores-grid {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 32px;
+          gap: 24px;
           width: 100%;
-          align-items: stretch;
         }
-        @media (min-width: 640px) {
-          .simuladores-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 36px;
-          }
-        }
-        @media (min-width: 1024px) {
-          .simuladores-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-          }
-        }
-        @media (min-width: 1600px) {
-          .simuladores-grid {
-            grid-template-columns: repeat(4, 1fr);
-            gap: 40px;
-          }
-        }
+        @media (min-width: 640px)  { .simuladores-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .simuladores-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1600px) { .simuladores-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        .simulator-card {
-          margin: 0 !important;
-          height: 100%;
-          min-height: 280px;
-          box-sizing: border-box;
+        /* Tab button */
+        .tab-btn {
+          padding: 10px 22px;
+          border-radius: 10px;
+          font-weight: 700;
+          font-size: 15px;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          border: none;
+          font-family: 'Montserrat', sans-serif;
+          white-space: nowrap;
         }
+        .tab-btn.active   { background: #0B71FE; color: white; box-shadow: 0 4px 14px rgba(11,113,254,0.35); }
+        .tab-btn.inactive { background: transparent; color: #64748b; }
+        .tab-btn.inactive:hover { background: rgba(255,255,255,0.6); color: #0B71FE; }
 
-        .cashflow-section-card {
-          background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(239,246,255,0.95) 50%, rgba(219,234,254,0.95) 100%);
-          border-radius: 24px;
-          padding: 32px;
-          margin-bottom: 32px;
-          boxShadow: 0 8px 32px rgba(11,113,254,0.15);
-          border: 2px solid rgba(11, 113, 254, 0.1);
+        /* Profession card hover */
+        .prof-card { transition: all 0.2s ease; }
+        .prof-card:hover { transform: translateY(-2px); }
+
+        /* Simulator card hover */
+        .sim-card { transition: all 0.25s ease; }
+        .sim-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(11,113,254,0.15) !important; border-color: #0B71FE !important; }
+
+        /* Game card hover */
+        .game-card { transition: all 0.2s ease; }
+        .game-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.1) !important; }
+
+        @keyframes shimmer-slide {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .start-btn-active {
+          animation: shimmer-slide 2.5s linear infinite;
+          background-size: 200% 100%;
         }
       `}</style>
 
-      <div className="simulador-outer" style={{
-        width: "100%",
-        minHeight: "100vh",
-        background: "#ffffff",
-        fontFamily: "'Montserrat', sans-serif",
-        overflowX: "hidden"
-      }}>
+      <div className="simulador-outer">
         <main className="simulador-main" style={{
-          padding: "clamp(16px, 4vw, 64px)",
+          padding: "clamp(24px, 4vw, 56px) clamp(16px, 4vw, 56px)",
           maxWidth: "1800px",
           margin: "0 auto",
           width: "100%",
           boxSizing: "border-box"
         }}>
 
-          {/* Main Title */}
-          <div className="simulador-header" style={{ textAlign: "center", marginBottom: "48px" }}>
+          {/* Header */}
+          <div style={{ marginBottom: "40px" }}>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              background: "rgba(11,113,254,0.08)",
+              border: "1px solid rgba(11,113,254,0.2)",
+              borderRadius: 999,
+              padding: "6px 16px",
+              marginBottom: 16,
+              fontSize: 12,
+              fontWeight: 700,
+              color: "#0B71FE",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase"
+            }}>
+              <BarChart2 size={14} />
+              Herramientas Interactivas
+            </div>
             <h1 style={{
-              fontSize: "clamp(32px, 5vw, 56px)",
+              fontSize: "clamp(28px, 4vw, 48px)",
               fontWeight: 900,
-              margin: "0 0 16px",
-              background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              letterSpacing: "-0.02em"
+              margin: "0 0 12px",
+              color: "#0f172a",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.15
             }}>
-              Simulador
+              Simulador Financiero
             </h1>
-            <p className="simulador-description" style={{
-              fontSize: "19px",
+            <p style={{
+              fontSize: "clamp(15px, 1.3vw, 18px)",
               color: "#64748b",
-              maxWidth: "800px",
-              margin: "0 auto",
-              lineHeight: 1.6
+              maxWidth: "640px",
+              margin: 0,
+              lineHeight: 1.65
             }}>
-              Explora herramientas interactivas y juegos para dominar tus finanzas personales y construir riqueza.
+              Explora herramientas interactivas y juegos para dominar tus finanzas personales y construir riqueza real.
             </p>
           </div>
 
           {/* Tab Selection */}
-          <div className="tab-container" style={{
+          <div style={{
             display: "flex",
-            justifyContent: "center",
-            gap: "12px",
+            gap: "6px",
             marginBottom: "40px",
             background: "#f1f5f9",
-            padding: "8px",
-            borderRadius: "20px",
+            padding: "6px",
+            borderRadius: "14px",
             width: "fit-content",
-            margin: "0 auto 48px"
+            border: "1px solid #e2e8f0"
           }}>
-            <button
-              className={`tab-button ${activeTab === "simulators" ? "active" : "inactive"}`}
-              onClick={() => setActiveTab("simulators")}
-            >
+            <button className={`tab-btn ${activeTab === "simulators" ? "active" : "inactive"}`} onClick={() => setActiveTab("simulators")}>
               Simuladores Financieros
             </button>
-            <button
-              className={`tab-button ${activeTab === "cashflow" ? "active" : "inactive"}`}
-              onClick={() => setActiveTab("cashflow")}
-            >
+            <button className={`tab-btn ${activeTab === "cashflow" ? "active" : "inactive"}`} onClick={() => setActiveTab("cashflow")}>
               Cashflow Game
             </button>
           </div>
 
-          {/* Content Area */}
-          <div style={{ minHeight: "60vh" }}>
+          {/* Content */}
+          <div style={{ minHeight: "50vh" }}>
 
+            {/* ─── SIMULADORES ─── */}
             {activeTab === "simulators" && (
-              <div key="simulators-tab">
-                {/* Educational Disclaimer */}
-                <div className="disclaimer-container" style={{
-                  background: "rgba(59, 130, 246, 0.05)",
-                  border: "2px solid rgba(59, 130, 246, 0.2)",
-                  borderRadius: 20,
-                  padding: "24px",
-                  marginBottom: "40px",
-                  maxWidth: "1000px",
-                  margin: "0 auto 40px",
+              <div>
+                {/* Disclaimer */}
+                <div style={{
+                  background: "linear-gradient(135deg, rgba(239,246,255,0.8), rgba(219,234,254,0.8))",
+                  border: "1.5px solid rgba(59,130,246,0.25)",
+                  borderRadius: 16,
+                  padding: "18px 22px",
+                  marginBottom: "32px",
+                  maxWidth: "900px",
                   display: "flex",
-                  alignItems: "center",
-                  gap: "16px"
+                  alignItems: "flex-start",
+                  gap: "14px"
                 }}>
-                  <span style={{ fontSize: "24px" }}>💡</span>
-                  <p style={{ fontSize: 15, color: "#1e40af", lineHeight: 1.6, margin: 0 }}>
-                    <strong>Propósito educativo:</strong> Estos simuladores son herramientas de aprendizaje.
-                    Los resultados son aproximaciones y no constituyen asesoría financiera profesional.
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(59,130,246,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                    <BarChart2 size={16} color="#2563eb" />
+                  </div>
+                  <p style={{ fontSize: 14, color: "#1e40af", lineHeight: 1.65, margin: 0 }}>
+                    <strong>Propósito educativo:</strong> Estos simuladores son herramientas de aprendizaje. Los resultados son aproximaciones y no constituyen asesoría financiera profesional.
                   </p>
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "center", marginBottom: "40px" }}>
+                {/* Saved simulations button */}
+                <div style={{ marginBottom: "32px" }}>
                   <Link href="/simulador/history" style={{ textDecoration: "none" }}>
                     <button style={{
-                      padding: "12px 24px",
+                      padding: "11px 22px",
                       background: "white",
                       color: "#0B71FE",
-                      border: "2px solid #0B71FE",
+                      border: "1.5px solid #0B71FE",
                       borderRadius: 12,
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: 700,
                       cursor: "pointer",
-                      transition: "all 0.2s ease"
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      transition: "all 0.2s"
                     }}>
                       Mis Simulaciones Guardadas
+                      <ChevronRight size={16} />
                     </button>
                   </Link>
                 </div>
 
                 {simsError ? (
-                  <div style={{ textAlign: "center", padding: "48px 0", color: "#ef4444" }}>
+                  <div style={{ textAlign: "center", padding: "48px 0", color: "#ef4444", fontSize: 16, fontWeight: 600 }}>
                     Error al cargar los simuladores.
                   </div>
                 ) : loadingSims ? (
-                  <div style={{ textAlign: "center", padding: "48px 0", color: "#64748b" }}>
-                    Cargando simuladores...
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
+                    {Array(6).fill(0).map((_, i) => (
+                      <div key={i} style={{ background: "#f1f5f9", borderRadius: 20, height: 280, animation: "shimmer-slide 1.5s linear infinite", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%" }} />
+                    ))}
                   </div>
                 ) : (
                   <div className="simuladores-grid">
-                    {simulatorsList.map((simulator) => (
-                      <Link
-                        key={simulator.id}
-                        href={`/simulador/${simulator.slug}`}
-                        style={{ textDecoration: "none" }}
-                      >
-                        <div className="simulator-card" style={{
-                          background: "white",
-                          borderRadius: 24,
-                          padding: 28,
-                          boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
-                          border: "2px solid #f1f5f9",
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          transition: "all 0.3s ease"
-                        }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = "translateY(-4px)"
-                            e.currentTarget.style.borderColor = "#0B71FE"
-                            e.currentTarget.style.boxShadow = "0 12px 28px rgba(11, 113, 254, 0.15)"
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = "translateY(0)"
-                            e.currentTarget.style.borderColor = "#f1f5f9"
-                            e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.06)"
+                    {simulatorsList.map((simulator) => {
+                      const IconComponent = CATEGORY_ICONS[simulator.category] || BarChart2
+                      const accent = CATEGORY_ACCENT[simulator.category] || '#0B71FE'
+                      return (
+                        <Link key={simulator.id} href={`/simulador/${simulator.slug}`} style={{ textDecoration: "none" }}>
+                          <div className="sim-card" style={{
+                            background: "white",
+                            borderRadius: 20,
+                            padding: "26px 24px",
+                            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+                            border: "1.5px solid #f1f5f9",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            boxSizing: "border-box"
                           }}>
-                          <div style={{ marginBottom: 12 }}>
-                            <span style={{
-                              fontSize: 11,
+                            {/* Icon + category */}
+                            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 18 }}>
+                              <div style={{ width: 48, height: 48, borderRadius: 14, background: `${accent}15`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <IconComponent size={22} color={accent} />
+                              </div>
+                              <span style={{ fontSize: 11, fontWeight: 700, padding: "4px 10px", background: `${accent}12`, color: accent, borderRadius: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                                {CATEGORY_LABELS[simulator.category] || simulator.category}
+                              </span>
+                            </div>
+                            <h3 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginBottom: 10, lineHeight: 1.25 }}>
+                              {simulator.name}
+                            </h3>
+                            <p style={{ fontSize: 14, color: "#64748b", lineHeight: 1.65, flex: 1, marginBottom: 22 }}>
+                              {simulator.description}
+                            </p>
+                            <button style={{
+                              width: "100%",
+                              padding: "13px",
+                              background: `linear-gradient(135deg, ${accent}, ${accent}cc)`,
+                              color: "white",
+                              border: "none",
+                              borderRadius: 12,
+                              fontSize: 14,
                               fontWeight: 700,
-                              padding: "4px 10px",
-                              background: "#eff6ff",
-                              color: "#1d4ed8",
-                              borderRadius: 8,
-                              textTransform: "uppercase"
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              gap: 8
                             }}>
-                              {categoryLabels[simulator.category] || simulator.category}
-                            </span>
+                              Abrir Simulador
+                              <ChevronRight size={16} />
+                            </button>
                           </div>
-                          <h3 style={{ fontSize: 22, fontWeight: 800, color: "#1e293b", marginBottom: 12 }}>
-                            {simulator.name}
-                          </h3>
-                          <p style={{ fontSize: 15, color: "#64748b", lineHeight: 1.6, flex: 1, marginBottom: 24 }}>
-                            {simulator.description}
-                          </p>
-                          <button style={{
-                            width: "100%",
-                            padding: "14px",
-                            background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 14,
-                            fontSize: 15,
-                            fontWeight: 700,
-                            cursor: "pointer"
-                          }}>
-                            Abrir Simulador
-                          </button>
-                        </div>
-                      </Link>
-                    ))}
+                        </Link>
+                      )
+                    })}
                   </div>
                 )}
               </div>
             )}
 
+            {/* ─── CASHFLOW ─── */}
             {activeTab === "cashflow" && (
-              <div key="cashflow-tab">
+              <div>
                 {isMobile ? (
-                  <div className="cashflow-section-card" style={{ textAlign: "center", maxWidth: "600px", margin: "0 auto" }}>
-                    <div style={{ fontSize: "64px", marginBottom: "20px" }}>💻</div>
-                    <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 16 }}>Mejor experiencia en laptop</h2>
-                    <p style={{ color: "#64748b", lineHeight: 1.6, marginBottom: 20 }}>
+                  /* Mobile: info card */
+                  <div style={{
+                    background: "linear-gradient(135deg, #0f172a, #1e1b4b)",
+                    borderRadius: 24,
+                    padding: "40px 28px",
+                    textAlign: "center",
+                    maxWidth: 480,
+                    margin: "0 auto",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.3)"
+                  }}>
+                    <div style={{ width: 72, height: 72, borderRadius: "50%", background: "rgba(11,113,254,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+                      <Laptop size={36} color="#3b82f6" />
+                    </div>
+                    <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 14, color: "white" }}>Mejor experiencia en laptop</h2>
+                    <p style={{ color: "rgba(255,255,255,0.6)", lineHeight: 1.65, marginBottom: 20, fontSize: 15 }}>
                       Para tener una mejor experiencia de juego, te recomendamos abrir CashFlow en tu computadora.
                     </p>
-                    <div style={{ background: "#f8fafc", padding: "16px", borderRadius: "12px" }}>
-                      📱 En móvil puedes revisar tu progreso y estadísticas
+                    <div style={{ background: "rgba(255,255,255,0.06)", padding: "14px 18px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", gap: 10, justifyContent: "center" }}>
+                      <MonitorSmartphone size={18} color="#64748b" />
+                      <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>En móvil puedes revisar tu progreso y estadísticas</span>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <div className="cashflow-section-card" style={{ textAlign: "center", position: "relative" }}>
-                      <button
-                        onClick={() => router.push("/simulador/stats")}
-                        style={{
-                          position: "absolute",
-                          top: 24,
-                          right: 24,
-                          padding: "10px 20px",
-                          background: "#eff6ff",
-                          color: "#2563eb",
-                          border: "1px solid #3b82f6",
-                          borderRadius: 10,
-                          fontWeight: 700,
-                          cursor: "pointer"
-                        }}
-                      >
-                        📊 Estadísticas
-                      </button>
-                      <h2 style={{ fontSize: 36, fontWeight: 900, marginBottom: 16, color: "#1e293b" }}>CASHFLOW GAME</h2>
-                      <p style={{ fontSize: 17, color: "#64748b", maxWidth: "700px", margin: "0 auto" }}>
-                        Escapa de la "Carrera de Ratas" generando ingresos pasivos.
-                        Aprende a invertir y construir independencia financiera.
-                      </p>
+                    {/* Hero Card */}
+                    <div style={{
+                      background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
+                      borderRadius: 24,
+                      padding: "40px clamp(28px, 5vw, 56px)",
+                      marginBottom: "32px",
+                      position: "relative",
+                      overflow: "hidden",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      boxShadow: "0 20px 60px rgba(0,0,0,0.25)"
+                    }}>
+                      {/* Background decoration */}
+                      <div aria-hidden style={{ position: "absolute", top: "-30%", right: "-5%", width: "45%", height: "200%", background: "radial-gradient(circle, rgba(11,113,254,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+                      <div aria-hidden style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(11,113,254,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(11,113,254,0.04) 1px, transparent 1px)", backgroundSize: "48px 48px", pointerEvents: "none" }} />
+
+                      <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20 }}>
+                        <div>
+                          <div style={{ display: "inline-block", background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 999, padding: "5px 14px", marginBottom: 16, fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                            Juego de Simulación
+                          </div>
+                          <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 900, marginBottom: 12, color: "white", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                            CASHFLOW GAME
+                          </h2>
+                          <p style={{ fontSize: "clamp(14px, 1.3vw, 17px)", color: "rgba(255,255,255,0.6)", maxWidth: 560, lineHeight: 1.65, margin: 0 }}>
+                            Escapa de la Carrera de Ratas generando ingresos pasivos. Aprende a invertir y construir independencia financiera real.
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => router.push("/simulador/stats")}
+                          style={{
+                            padding: "11px 20px",
+                            background: "rgba(255,255,255,0.08)",
+                            color: "rgba(255,255,255,0.8)",
+                            border: "1px solid rgba(255,255,255,0.15)",
+                            borderRadius: 12,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            fontSize: 14,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            transition: "all 0.2s",
+                            whiteSpace: "nowrap",
+                            alignSelf: "flex-start"
+                          }}
+                        >
+                          <BarChart2 size={16} />
+                          Estadísticas
+                        </button>
+                      </div>
                     </div>
 
+                    {/* Existing Games */}
                     {!loadingGames && games.length > 0 && !showNewGame && (
-                      <div className="cashflow-section-card">
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-                          <h2 style={{ fontSize: 28, fontWeight: 800 }}>Mis Partidas</h2>
+                      <div style={{
+                        background: "white",
+                        borderRadius: 20,
+                        padding: "28px 32px",
+                        marginBottom: "28px",
+                        border: "1.5px solid #f1f5f9",
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.05)"
+                      }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
+                          <h2 style={{ fontSize: "clamp(20px, 2vw, 26px)", fontWeight: 800, color: "#0f172a", margin: 0 }}>Mis Partidas</h2>
                           <button
                             onClick={() => setShowNewGame(true)}
                             style={{
-                              padding: "12px 24px",
-                              background: "#10b981",
+                              padding: "10px 20px",
+                              background: "linear-gradient(135deg, #059669, #10b981)",
                               color: "white",
                               border: "none",
                               borderRadius: 12,
                               fontWeight: 700,
-                              cursor: "pointer"
+                              cursor: "pointer",
+                              fontSize: 14,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              boxShadow: "0 4px 14px rgba(16,185,129,0.35)"
                             }}
                           >
-                            + Nueva Partida
+                            <Plus size={16} />
+                            Nueva Partida
                           </button>
                         </div>
 
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
                           {games.map((game) => game.player && (
-                            <div key={game.id} style={{ background: "#f8fafc", borderRadius: 20, padding: 24, border: "2px solid #e2e8f0" }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
+                            <div key={game.id} className="game-card" style={{
+                              background: "#f8fafc",
+                              borderRadius: 16,
+                              padding: 22,
+                              border: "1.5px solid #e2e8f0",
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+                            }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
                                 <div>
-                                  <div style={{ fontSize: 19, fontWeight: 800 }}>{game.player.profession}</div>
-                                  <div style={{ fontSize: 13, color: "#94a3b8" }}>{getTimeSince(game.lastActivityAt)}</div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #1d4ed8, #3b82f6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                      <Briefcase size={15} color="white" />
+                                    </div>
+                                    <div style={{ fontSize: 17, fontWeight: 800, color: "#0f172a" }}>{game.player.profession}</div>
+                                  </div>
+                                  <div style={{ fontSize: 12, color: "#94a3b8", marginLeft: 40 }}>{getTimeSince(game.lastActivityAt)}</div>
                                 </div>
-                                {game.player.hasEscapedRatRace && <span style={{ background: "#10b981", color: "white", padding: "4px 10px", borderRadius: 8, fontSize: 12, fontWeight: 700 }}>✓ Libre</span>}
+                                {game.player.hasEscapedRatRace && (
+                                  <span style={{ background: "linear-gradient(135deg, #059669, #10b981)", color: "white", padding: "4px 10px", borderRadius: 8, fontSize: 11, fontWeight: 700, boxShadow: "0 2px 8px rgba(16,185,129,0.3)" }}>
+                                    Libre
+                                  </span>
+                                )}
                               </div>
 
-                              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
-                                <div><div style={{ fontSize: 12, color: "#64748b" }}>Efectivo</div><div style={{ fontWeight: 700, color: "#10b981" }}>${game.player.cashOnHand.toLocaleString()}</div></div>
-                                <div><div style={{ fontSize: 12, color: "#64748b" }}>Ingreso Pasivo</div><div style={{ fontWeight: 700, color: "#2563eb" }}>${game.player.passiveIncome.toLocaleString()}</div></div>
+                              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 18 }}>
+                                <div style={{ background: "white", padding: "10px 12px", borderRadius: 10, border: "1px solid #f1f5f9" }}>
+                                  <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600, marginBottom: 2 }}>Efectivo</div>
+                                  <div style={{ fontWeight: 800, color: "#059669", fontSize: 16 }}>${game.player.cashOnHand.toLocaleString()}</div>
+                                </div>
+                                <div style={{ background: "white", padding: "10px 12px", borderRadius: 10, border: "1px solid #f1f5f9" }}>
+                                  <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600, marginBottom: 2 }}>Ingreso Pasivo</div>
+                                  <div style={{ fontWeight: 800, color: "#2563eb", fontSize: 16 }}>${game.player.passiveIncome.toLocaleString()}</div>
+                                </div>
                               </div>
 
-                              <div style={{ display: "flex", gap: 12 }}>
+                              <div style={{ display: "flex", gap: 10 }}>
                                 <button
                                   onClick={() => router.push(`/simulador/game/${game.id}`)}
-                                  style={{ flex: 1, padding: "12px", background: "#6366f1", color: "white", border: "none", borderRadius: 10, fontWeight: 700, cursor: "pointer" }}
+                                  style={{ flex: 1, padding: "11px", background: "linear-gradient(135deg, #4f46e5, #6366f1)", color: "white", border: "none", borderRadius: 10, fontWeight: 700, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
                                 >
+                                  <Play size={14} fill="white" />
                                   Continuar
                                 </button>
                                 <button
                                   onClick={() => deleteGame(game.id)}
-                                  style={{ padding: "12px", background: "white", color: "#ef4444", border: "1px solid #ef4444", borderRadius: 10, cursor: "pointer" }}
+                                  style={{ padding: "11px 14px", background: "white", color: "#ef4444", border: "1.5px solid #fecaca", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                                 >
-                                  🗑️
+                                  <Trash2 size={16} />
                                 </button>
                               </div>
                             </div>
@@ -641,36 +646,63 @@ export default function CombinedSimulatorsPage() {
                       </div>
                     )}
 
+                    {/* New Game / Profession Selector */}
                     {(showNewGame || games.length === 0) && (
-                      <div className="cashflow-section-card">
-                        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 24 }}>Selecciona tu Profesión</h2>
-                        {loadingProfessions ? <p>Cargando...</p> : (
-                          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
+                      <div style={{
+                        background: "white",
+                        borderRadius: 20,
+                        padding: "28px 32px",
+                        border: "1.5px solid #f1f5f9",
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.05)"
+                      }}>
+                        <h2 style={{ fontSize: "clamp(18px, 2vw, 24px)", fontWeight: 800, marginBottom: 24, color: "#0f172a" }}>
+                          Selecciona tu Profesión
+                        </h2>
+
+                        {loadingProfessions ? (
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
+                            {Array(4).fill(0).map((_, i) => (
+                              <div key={i} style={{ height: 160, borderRadius: 16, background: "#f1f5f9", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer-slide 1.5s linear infinite" }} />
+                            ))}
+                          </div>
+                        ) : (
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
                             {professions.map((prof) => {
                               const totalExp = calculateTotalExpenses(prof)
                               const cashFlow = calculateCashFlow(prof)
                               const isSel = selectedProfession === prof.id
+                              const cfPositive = cashFlow >= 0
                               return (
                                 <div
                                   key={prof.id}
+                                  className="prof-card"
                                   onClick={() => setSelectedProfession(prof.id)}
                                   style={{
-                                    padding: 24,
-                                    borderRadius: 20,
+                                    padding: 22,
+                                    borderRadius: 16,
                                     cursor: "pointer",
-                                    transition: "all 0.2s",
-                                    border: `3px solid ${isSel ? "#0B71FE" : "#e2e8f0"}`,
-                                    background: isSel ? "#eff6ff" : "white"
+                                    border: isSel ? "2px solid #0B71FE" : "1.5px solid #e2e8f0",
+                                    background: isSel ? "linear-gradient(135deg, rgba(11,113,254,0.06), rgba(11,113,254,0.02))" : "white",
+                                    boxShadow: isSel ? "0 8px 24px rgba(11,113,254,0.15)" : "0 2px 8px rgba(0,0,0,0.04)"
                                   }}
                                 >
-                                  <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>{prof.name}</h3>
-                                  <div style={{ fontSize: 14, color: "#64748b", marginBottom: 16 }}>{prof.description}</div>
-                                  <div style={{ background: "#f8fafc", padding: 12, borderRadius: 12, fontSize: 14 }}>
-                                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                                      <span>Salario:</span><span style={{ fontWeight: 700, color: "#10b981" }}>${prof.salary.toLocaleString()}</span>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                                    <div style={{ width: 36, height: 36, borderRadius: 10, background: isSel ? "rgba(11,113,254,0.12)" : "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                      <Briefcase size={18} color={isSel ? "#0B71FE" : "#64748b"} />
+                                    </div>
+                                    <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: "#0f172a" }}>{prof.name}</h3>
+                                  </div>
+                                  {prof.description && (
+                                    <div style={{ fontSize: 13, color: "#64748b", marginBottom: 14, lineHeight: 1.5 }}>{prof.description}</div>
+                                  )}
+                                  <div style={{ background: "#f8fafc", padding: "12px 14px", borderRadius: 10, fontSize: 13 }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                                      <span style={{ color: "#64748b" }}>Salario</span>
+                                      <span style={{ fontWeight: 800, color: "#059669" }}>${prof.salary.toLocaleString()}</span>
                                     </div>
                                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                      <span>Cash Flow:</span><span style={{ fontWeight: 700, color: cashFlow > 0 ? "#10b981" : "#ef4444" }}>${cashFlow.toLocaleString()}</span>
+                                      <span style={{ color: "#64748b" }}>Cash Flow</span>
+                                      <span style={{ fontWeight: 800, color: cfPositive ? "#059669" : "#ef4444" }}>${cashFlow.toLocaleString()}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -680,14 +712,39 @@ export default function CombinedSimulatorsPage() {
                         )}
 
                         {selectedProfession && (
-                          <div style={{ marginTop: 40, textAlign: "center", display: "flex", justifyContent: "center", gap: 16 }}>
-                            {games.length > 0 && <button onClick={() => setShowNewGame(false)} style={{ padding: "16px 32px", background: "white", border: "2px solid #6366f1", borderRadius: 16, fontWeight: 800, cursor: "pointer" }}>← Volver</button>}
+                          <div style={{ marginTop: 36, display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
+                            {games.length > 0 && (
+                              <button
+                                onClick={() => setShowNewGame(false)}
+                                style={{ padding: "14px 28px", background: "white", border: "1.5px solid #e2e8f0", borderRadius: 14, fontWeight: 700, cursor: "pointer", fontSize: 15, color: "#64748b" }}
+                              >
+                                Volver
+                              </button>
+                            )}
                             <button
                               onClick={startGame}
                               disabled={startingGame}
-                              style={{ padding: "16px 48px", background: "#10b981", color: "white", border: "none", borderRadius: 16, fontSize: 20, fontWeight: 800, cursor: "pointer" }}
+                              className={startingGame ? "" : "start-btn-active"}
+                              style={{
+                                padding: "14px 40px",
+                                background: startingGame
+                                  ? "#94a3b8"
+                                  : "linear-gradient(135deg, #059669 0%, #0B71FE 60%, #059669 100%)",
+                                backgroundSize: "200% 100%",
+                                color: "white",
+                                border: "none",
+                                borderRadius: 14,
+                                fontSize: "clamp(15px, 1.5vw, 18px)",
+                                fontWeight: 800,
+                                cursor: startingGame ? "not-allowed" : "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 10,
+                                boxShadow: startingGame ? "none" : "0 8px 24px rgba(11,113,254,0.35)"
+                              }}
                             >
-                              {startingGame ? "Iniciando..." : "🚀 Comenzar Juego"}
+                              <Play size={20} fill="white" />
+                              {startingGame ? "Iniciando..." : "Comenzar Juego"}
                             </button>
                           </div>
                         )}
@@ -699,7 +756,6 @@ export default function CombinedSimulatorsPage() {
             )}
 
           </div>
-
         </main>
       </div>
     </>
