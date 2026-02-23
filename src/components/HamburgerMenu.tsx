@@ -104,12 +104,13 @@ export default function HamburgerMenu() {
       {/* Menu Panel */}
       <div style={{
         position: "fixed", top: 0, right: isOpen ? 0 : "-420px",
-        width: "min(380px, 90vw)", height: "100dvh",
+        width: "min(380px, 94vw)", height: "100dvh",
         background: "linear-gradient(160deg, #020e27 0%, #041640 50%, #061a4a 100%)",
         boxShadow: "-2px 0 40px rgba(0,0,0,0.5)",
         zIndex: 1000, transition: "right 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
         overflowY: "auto", overflowX: "hidden",
         fontFamily: "Montserrat, sans-serif",
+        boxSizing: "border-box"
       }}>
         {/* Decorative blobs */}
         <div aria-hidden style={{ position: "absolute", top: "-60px", right: "-60px", width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,86,231,0.25) 0%, transparent 70%)", filter: "blur(30px)", pointerEvents: "none" }} />
@@ -139,8 +140,8 @@ export default function HamburgerMenu() {
 
         <div style={{ padding: "72px 24px 32px", position: "relative", zIndex: 1 }}>
           {/* Brand */}
-          <div style={{ marginBottom: 28 }}>
-            <span style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
+          <div style={{ marginBottom: 28, textAlign: "center" }}>
+            <span style={{ fontSize: 24, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
               BIZEN<span style={{ color: "#1983FD" }}>.</span>
             </span>
           </div>
@@ -152,7 +153,8 @@ export default function HamburgerMenu() {
               background: "rgba(255,255,255,0.06)",
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: 14,
-              backdropFilter: "blur(8px)"
+              backdropFilter: "blur(8px)",
+              textAlign: "center"
             }}>
               <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.45)", letterSpacing: "0.05em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
                 Bienvenido de nuevo
@@ -166,7 +168,7 @@ export default function HamburgerMenu() {
           {/* Stats */}
           {stats && (
             <div style={{ marginBottom: 28 }}>
-              <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+              <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", textAlign: "center" }}>
                 Tu Progreso
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -192,7 +194,7 @@ export default function HamburgerMenu() {
 
           {/* Nav Items */}
           <div style={{ marginBottom: 24 }}>
-            <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+            <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", textAlign: "center" }}>
               Acciones Rápidas
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -208,7 +210,7 @@ export default function HamburgerMenu() {
                     borderRadius: 12, cursor: "pointer",
                     transition: "all 0.2s ease",
                     fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: 600,
-                    color: "#fff", textAlign: "left", width: "100%"
+                    color: "#fff", textAlign: "center", width: "100%", justifyContent: "center"
                   }}
                   onMouseOver={(e) => { e.currentTarget.style.background = "rgba(0,86,231,0.2)"; e.currentTarget.style.borderColor = "rgba(25,131,253,0.3)"; e.currentTarget.style.transform = "translateX(4px)" }}
                   onMouseOut={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.transform = "translateX(0)" }}
@@ -222,7 +224,7 @@ export default function HamburgerMenu() {
 
           {/* Account Items */}
           <div style={{ marginBottom: 24 }}>
-            <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+            <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", textAlign: "center" }}>
               Cuenta
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -236,7 +238,7 @@ export default function HamburgerMenu() {
                     background: "transparent", border: "none", borderRadius: 10,
                     cursor: "pointer", transition: "all 0.2s ease",
                     fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: 500,
-                    color: "rgba(255,255,255,0.7)", textAlign: "left", width: "100%"
+                    color: "rgba(255,255,255,0.7)", textAlign: "center", width: "100%", justifyContent: "center"
                   }}
                   onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.transform = "translateX(4px)" }}
                   onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; e.currentTarget.style.transform = "translateX(0)" }}

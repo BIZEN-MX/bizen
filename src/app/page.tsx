@@ -298,11 +298,12 @@ export default function WelcomePage() {
             className="landing-mobile-nav-drawer"
             style={{
               width: "100%",
-              maxWidth: "400px",
-              padding: "40px 24px",
+              maxWidth: "min(400px, 88vw)",
+              padding: "40px clamp(16px, 5vw, 24px)",
               textAlign: "center",
               position: "relative",
-              zIndex: 1
+              zIndex: 1,
+              boxSizing: "border-box"
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -357,7 +358,10 @@ export default function WelcomePage() {
                     padding: "12px",
                     borderRadius: "12px",
                     background: "rgba(255,255,255,0.05)",
-                    transition: "all 0.2s"
+                    transition: "all 0.2s",
+                    display: "block",
+                    boxSizing: "border-box",
+                    textAlign: "center"
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "#fff" }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "rgba(255,255,255,0.9)" }}

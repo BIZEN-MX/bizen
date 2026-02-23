@@ -403,7 +403,8 @@ export default function MobileFooterNav() {
                     fontWeight: 600,
                     color: "#0f172a",
                     width: "100%",
-                    textAlign: "left"
+                    textAlign: "center",
+                    justifyContent: "center"
                   }}
                 >
                   <LogIn size={20} color="#DC2626" />
