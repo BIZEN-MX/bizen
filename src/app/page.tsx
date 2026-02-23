@@ -498,16 +498,83 @@ export default function WelcomePage() {
                     }
                   }
                 `}} />
-                <p className="landing-hero-sub" style={{
-                  fontWeight: 400,
-                  marginTop: "clamp(64px, 10vw, 120px)",
+                <div style={{
+                  marginTop: "clamp(48px, 8vw, 100px)",
                   marginBottom: "clamp(24px, 4vw, 48px)",
-                  wordWrap: "break-word",
-                  overflowWrap: "break-word",
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  padding: "0 clamp(24px, 10vw, 140px)",
                   boxSizing: "border-box",
                 }}>
-                  LA PLATAFORMA EDUCATIVA QUE COMBINA <span style={{ color: "#000000", fontWeight: 800 }}>GAMIFICACIÓN E INTELIGENCIA ARTIFICIAL</span> PARA ENSEÑAR FINANZAS PERSONALES A ESTUDIANTES DE PREPARATORIA Y UNIVERSIDAD DE FORMA PRÁCTICA, CLARA Y RELEVANTE.
-                </p>
+                  {/* Animated gradient border wrapper */}
+                  <div className="hero-tagline-border-wrap" style={{
+                    padding: "2px",
+                    borderRadius: "18px",
+                    background: "linear-gradient(135deg, #0056E7, #1983FD, #93c5fd, #0056E7)",
+                    backgroundSize: "300% 300%",
+                    animation: "border-shimmer 6s ease infinite",
+                    width: "100%",
+                    maxWidth: "600px",
+                  }}>
+                    <div style={{
+                      borderRadius: "16px",
+                      background: "rgba(255, 255, 255, 0.93)",
+                      backdropFilter: "blur(8px)",
+                      padding: "clamp(20px, 3vw, 30px) clamp(24px, 4vw, 40px)",
+                      textAlign: "center",
+                    }}>
+                      {/* Thin accent bar */}
+                      <div style={{
+                        width: "32px",
+                        height: "3px",
+                        borderRadius: "99px",
+                        background: "linear-gradient(90deg, #0056E7, #1983FD)",
+                        margin: "0 auto 16px",
+                      }} />
+
+                      {/* Main text */}
+                      <p style={{
+                        margin: 0,
+                        fontSize: "clamp(13px, 1.15vw, 16px)",
+                        lineHeight: 1.85,
+                        fontWeight: 500,
+                        color: "#374151",
+                        fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+                        letterSpacing: "0.015em",
+                        wordWrap: "break-word",
+                      }}>
+                        La plataforma educativa que combina{" "}
+                        <span style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "5px",
+                          background: "linear-gradient(90deg, #0056E7, #1983FD)",
+                          color: "#fff",
+                          borderRadius: "6px",
+                          padding: "2px 10px 2px 8px",
+                          fontWeight: 700,
+                          fontSize: "0.95em",
+                          letterSpacing: "0.02em",
+                          whiteSpace: "nowrap",
+                        }}>gamificación e IA</span>{" "}
+                        para enseñar finanzas personales a estudiantes de preparatoria y universidad de forma{" "}
+                        <em style={{ fontStyle: "normal", fontWeight: 700, color: "#0056E7" }}>práctica, clara y relevante.</em>
+                      </p>
+                    </div>
+                  </div>
+                  <style dangerouslySetInnerHTML={{
+                    __html: `
+                    @keyframes border-shimmer {
+                      0% { background-position: 0% 50%; }
+                      50% { background-position: 100% 50%; }
+                      100% { background-position: 0% 50%; }
+                    }
+                    @media (max-width: 640px) {
+                      .hero-tagline-border-wrap { border-radius: 14px !important; }
+                    }
+                  `}} />
+                </div>
               </div>
             </div>
 
@@ -2854,127 +2921,123 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
           </div>
         </section>
       </>)}
-      {(sectionRange === 'all' || sectionRange === 'rest') && (
-        <div className="landing-rest-wrapper" style={{
-          background: "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, #e8f2ff 65%, #c7e0ff 85%, #93c5fd 100%)",
-          width: "100%",
-          minHeight: "auto", // Changed from 100% to fix scroll issues
-          paddingBottom: "clamp(12px, 2vw, 24px)",
-          overflow: "visible",
-          overflowY: "visible",
+      {(sectionRange === 'all' || sectionRange === 'rest') && (<>
+        {/* Conoce BIZEN - enhanced */}
+        <section id="conoce-bizen" className="section conoce-bizen-section reveal-element" style={{
+          background: "#ffffff",
+          padding: "clamp(72px, 10vw, 112px) clamp(16px, 4vw, 48px)",
+          maxWidth: "1320px",
+          margin: "0 auto",
+          height: "auto",
+          overflow: "visible"
         }}>
-          {/* Conoce BIZEN - enhanced */}
-          <section id="conoce-bizen" className="section conoce-bizen-section reveal-element" style={{
-            background: "#ffffff",
-            padding: "clamp(72px, 10vw, 112px) clamp(16px, 4vw, 48px)",
-            overflow: "visible", // Fix internal scroll
-            height: "auto"
-          }}>
-            <div className="container" style={{ maxWidth: "1320px", margin: "0 auto", overflow: "visible" }}>
 
-              {/* Section label + heading centered */}
-              <div style={{ textAlign: "center", marginBottom: "clamp(56px, 7vw, 80px)" }}>
-                <span style={{
-                  display: "inline-block",
-                  background: "rgba(0, 86, 231, 0.08)",
-                  color: "#0056E7",
-                  borderRadius: "999px",
-                  padding: "6px 18px",
-                  fontSize: "13px",
-                  fontWeight: 700,
-                  fontFamily: "'Inter', sans-serif",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  marginBottom: "20px",
-                }}>Conoce BIZEN</span>
-                <h2 style={{
-                  fontSize: "clamp(32px, 4.5vw, 56px)",
-                  fontWeight: 800,
-                  color: "#111",
-                  lineHeight: 1.15,
-                  marginBottom: "clamp(16px, 2vw, 20px)",
-                  fontFamily: "'Inter', sans-serif",
-                  letterSpacing: "-0.02em",
+          {/* Section label + heading centered */}
+          <div style={{ textAlign: "center", marginBottom: "clamp(56px, 7vw, 80px)" }}>
+            <span style={{
+              display: "inline-block",
+              background: "rgba(0, 86, 231, 0.08)",
+              color: "#0056E7",
+              borderRadius: "999px",
+              padding: "6px 18px",
+              fontSize: "13px",
+              fontWeight: 700,
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              marginBottom: "20px",
+            }}>Conoce BIZEN</span>
+            <h2 style={{
+              fontSize: "clamp(32px, 4.5vw, 56px)",
+              fontWeight: 800,
+              color: "#111",
+              lineHeight: 1.15,
+              marginBottom: "clamp(16px, 2vw, 20px)",
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: "-0.02em",
+            }}>
+              Aprender finanzas nunca ha sido{" "}
+              <span style={{
+                background: "linear-gradient(90deg, #0056E7, #1983FD)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>tan claro y relevante</span>.
+            </h2>
+            <p style={{
+              fontSize: "clamp(17px, 1.3vw, 20px)",
+              lineHeight: 1.65,
+              color: "#64748b",
+              fontFamily: "'Inter', sans-serif",
+              maxWidth: "600px",
+              margin: "0 auto",
+            }}>
+              Impulsa a tu escuela a desarrollar habilidades clave mientras los estudiantes aprenden de forma práctica y guiada.
+            </p>
+          </div>
+
+          {/* 6 skills — 3-column card grid */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "clamp(16px, 2vw, 24px)",
+          }} className="conoce-skills-grid">
+            {[
+              { label: "Toma de decisiones informadas", desc: "Evalúa opciones y elige con criterio financiero en situaciones reales.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg> },
+              { label: "Pensamiento crítico aplicado", desc: "Analiza información y cuestiona supuestos para resolver mejor.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg> },
+              { label: "Resolución de problemas financieros", desc: "Enfrenta retos económicos reales con herramientas prácticas.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></svg> },
+              { label: "Planeación y visión a futuro", desc: "Establece metas claras y administra recursos con perspectiva.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> },
+              { label: "Trabajo colaborativo en el aula", desc: "Potencia el aprendizaje compartido en equipos.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> },
+              { label: "Responsabilidad socioemocional", desc: "Desarrolla autonomía, empatía y habilidades para la vida.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></svg> },
+            ].map((item, i) => (
+              <div key={i} style={{
+                background: "#f8faff",
+                border: "1px solid rgba(0, 86, 231, 0.1)",
+                borderRadius: "24px",
+                padding: "clamp(24px, 3vw, 32px)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "14px",
+                transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                maxWidth: "340px",
+                margin: "0 auto",
+                width: "100%",
+              }} className={`reveal-element reveal-delay-${i % 3 + 1} conoce-skill-card`}>
+                <div style={{
+                  width: "56px",
+                  height: "56px",
+                  borderRadius: "16px",
+                  background: "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
+                  color: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 8px 20px rgba(0, 86, 231, 0.2)",
+                  flexShrink: 0,
                 }}>
-                  Aprender finanzas nunca ha sido{" "}
-                  <span style={{
-                    background: "linear-gradient(90deg, #0056E7, #1983FD)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}>tan claro y relevante</span>.
-                </h2>
-                <p style={{
-                  fontSize: "clamp(17px, 1.3vw, 20px)",
-                  lineHeight: 1.65,
-                  color: "#64748b",
-                  fontFamily: "'Inter', sans-serif",
-                  maxWidth: "600px",
-                  margin: "0 auto",
-                }}>
-                  Impulsa a tu escuela a desarrollar habilidades clave mientras los estudiantes aprenden de forma práctica y guiada.
-                </p>
+                  <item.Icon />
+                </div>
+                <div>
+                  <div style={{
+                    fontSize: "clamp(15px, 1.1rem, 17px)",
+                    fontWeight: 700,
+                    color: "#111",
+                    fontFamily: "'Inter', sans-serif",
+                    marginBottom: "6px",
+                    lineHeight: 1.3,
+                  }}>{item.label}</div>
+                  <div style={{
+                    fontSize: "clamp(13px, 0.9rem, 15px)",
+                    color: "#64748b",
+                    fontFamily: "'Inter', sans-serif",
+                    lineHeight: 1.6,
+                  }}>{item.desc}</div>
+                </div>
               </div>
+            ))}
+          </div>
 
-              {/* 6 skills — 3-column card grid */}
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "clamp(16px, 2vw, 24px)",
-              }} className="conoce-skills-grid">
-                {[
-                  { label: "Toma de decisiones informadas", desc: "Evalúa opciones y elige con criterio financiero en situaciones reales.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg> },
-                  { label: "Pensamiento crítico aplicado", desc: "Analiza información y cuestiona supuestos para resolver mejor.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg> },
-                  { label: "Resolución de problemas financieros", desc: "Enfrenta retos económicos reales con herramientas prácticas.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></svg> },
-                  { label: "Planeación y visión a futuro", desc: "Establece metas claras y administra recursos con perspectiva.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> },
-                  { label: "Trabajo colaborativo en el aula", desc: "Potencia el aprendizaje compartido en equipos.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> },
-                  { label: "Responsabilidad socioemocional", desc: "Desarrolla autonomía, empatía y habilidades para la vida.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></svg> },
-                ].map((item, i) => (
-                  <div key={i} style={{
-                    background: "#f8faff",
-                    border: "1px solid rgba(0, 86, 231, 0.1)",
-                    borderRadius: "24px",
-                    padding: "clamp(24px, 3vw, 32px)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "14px",
-                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
-                  }} className={`reveal-element reveal-delay-${i % 3 + 1} conoce-skill-card`}>
-                    <div style={{
-                      width: "56px",
-                      height: "56px",
-                      borderRadius: "16px",
-                      background: "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
-                      color: "#fff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 8px 20px rgba(0, 86, 231, 0.2)",
-                      flexShrink: 0,
-                    }}>
-                      <item.Icon />
-                    </div>
-                    <div>
-                      <div style={{
-                        fontSize: "clamp(15px, 1.1rem, 17px)",
-                        fontWeight: 700,
-                        color: "#111",
-                        fontFamily: "'Inter', sans-serif",
-                        marginBottom: "6px",
-                        lineHeight: 1.3,
-                      }}>{item.label}</div>
-                      <div style={{
-                        fontSize: "clamp(13px, 0.9rem, 15px)",
-                        color: "#64748b",
-                        fontFamily: "'Inter', sans-serif",
-                        lineHeight: 1.6,
-                      }}>{item.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <style>{`
+          <style>{`
                 .conoce-skill-card:hover {
                   transform: translateY(-4px);
                   box-shadow: 0 12px 32px rgba(0, 86, 231, 0.1);
@@ -2990,508 +3053,503 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                     grid-template-columns: 1fr !important;
                   }
                 }
+
               `}</style>
+        </section>
 
-            </div>
-          </section>
+        {/* Cada clase, una aventura divertida — enhanced carousel */}
+        <section className="section adventure-carousel-section reveal-element" style={{
+          background: "#f8faff",
+          padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 60px)",
+          maxWidth: "1440px",
+          margin: "0 auto",
+          overflow: "visible",
+          height: "auto"
+        }}>
 
-          {/* Cada clase, una aventura divertida — enhanced carousel */}
-          <section className="section adventure-carousel-section reveal-element" style={{ background: "#f8faff", padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 24px)", overflow: "visible", height: "auto" }}>
-            <div style={{ width: "100%", maxWidth: "1320px", margin: "0 auto", overflow: "visible" }} className="adventure-carousel-inner">
+          {/* Section header */}
+          <div style={{ textAlign: "center", marginBottom: "clamp(40px, 5vw, 60px)" }}>
+            <span style={{
+              display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
+              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 700,
+              fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
+            }}>Metodología</span>
+            <h2 style={{
+              margin: 0,
+              fontSize: "clamp(30px, 4.5vw, 52px)",
+              fontWeight: 800,
+              color: "#111",
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+              lineHeight: 1.15,
+              letterSpacing: "-0.02em",
+            }}>
+              Cada clase,{" "}
+              <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                una aventura divertida
+              </span>
+            </h2>
+          </div>
 
-              {/* Section header */}
-              <div style={{ textAlign: "center", marginBottom: "clamp(40px, 5vw, 60px)" }}>
-                <span style={{
-                  display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
-                  borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 700,
-                  fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
-                }}>Metodología</span>
-                <h2 style={{
-                  margin: 0,
-                  fontSize: "clamp(30px, 4.5vw, 52px)",
-                  fontWeight: 800,
-                  color: "#111",
-                  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                  lineHeight: 1.15,
-                  letterSpacing: "-0.02em",
-                }}>
-                  Cada clase,{" "}
-                  <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-                    una aventura divertida
-                  </span>
-                </h2>
-              </div>
+          {/* Carousel */}
+          <div style={{ position: "relative", overflow: "visible" }}>
+            <div className="adventure-carousel-content-wrap" style={{ position: "relative", minHeight: "clamp(420px, 65vh, 680px)", overflow: "visible" }}>
+              {[
+                {
+                  title: "Microlearning",
+                  tag: "Lecciones cortas",
+                  description: "Utilizamos contenidos digitales y videos cortos interactivos en todas nuestras lecciones, creados por especialistas académicos y de animación infantil (Netflix) para facilitar el aprendizaje de tus estudiantes.",
+                  imageSrc: "/uploads/Landing_page/landing-1.png",
+                  imageAlt: "Microlearning",
+                },
+                {
+                  title: "Gamificación",
+                  tag: "Motivación constante",
+                  description: "Cada lección incluye retos y recompensas que mantienen a los estudiantes motivados y comprometidos con su aprendizaje financiero desde el primer día.",
+                  imageSrc: "/uploads/Landing_page/landing-2.png",
+                  imageAlt: "Gamificación",
+                },
+                {
+                  title: "Contenido Interactivo",
+                  tag: "Aprende haciendo",
+                  description: "Material multimedia diseñado para captar la atención y facilitar la comprensión de conceptos financieros complejos de forma práctica y atractiva.",
+                  imageSrc: "/uploads/Landing_page/landing-3.png",
+                  imageAlt: "Contenido Interactivo",
+                },
+              ].map((slide, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    position: activeAdventureSlide === idx ? "relative" : "absolute",
+                    top: 0, left: 0, right: 0, width: "100%",
+                    opacity: activeAdventureSlide === idx ? 1 : 0,
+                    visibility: activeAdventureSlide === idx ? "visible" : "hidden",
+                    pointerEvents: activeAdventureSlide === idx ? "auto" : "none",
+                    transition: "opacity 0.55s ease, visibility 0.55s ease",
+                    zIndex: activeAdventureSlide === idx ? 2 : 1,
+                  }}
+                >
+                  {/* Two-column card */}
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "clamp(24px, 4vw, 56px)",
+                    alignItems: "center",
+                    background: "linear-gradient(135deg, #0a1628 0%, #0d2050 60%, #0056E7 100%)",
+                    borderRadius: "32px",
+                    padding: "clamp(32px, 5vw, 56px)",
+                    boxSizing: "border-box",
+                    position: "relative",
+                    overflow: "visible", // Changed from hidden to fix internal scroll issue
+                    boxShadow: "0 24px 64px rgba(0, 86, 231, 0.2)",
+                    maxWidth: "1280px",
+                    margin: "0 auto",
+                  }} className="adventure-slide-grid">
+                    {/* Glow blobs */}
+                    <div style={{ position: "absolute", top: "-60px", right: "30%", width: "300px", height: "300px", background: "radial-gradient(circle, rgba(25,131,253,0.15) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                    <div style={{ position: "absolute", bottom: "-40px", left: "10%", width: "240px", height: "240px", background: "radial-gradient(circle, rgba(0,86,231,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
 
-              {/* Carousel */}
-              <div style={{ position: "relative", overflow: "visible" }}>
-                <div className="adventure-carousel-content-wrap" style={{ position: "relative", minHeight: "clamp(380px, 55vh, 560px)", overflow: "visible" }}>
-                  {[
-                    {
-                      title: "Microlearning",
-                      tag: "Lecciones cortas",
-                      description: "Utilizamos contenidos digitales y videos cortos interactivos en todas nuestras lecciones, creados por especialistas académicos y de animación infantil (Netflix) para facilitar el aprendizaje de tus estudiantes.",
-                      imageSrc: "/uploads/Landing_page/landing-1.png",
-                      imageAlt: "Microlearning",
-                    },
-                    {
-                      title: "Gamificación",
-                      tag: "Motivación constante",
-                      description: "Cada lección incluye retos y recompensas que mantienen a los estudiantes motivados y comprometidos con su aprendizaje financiero desde el primer día.",
-                      imageSrc: "/uploads/Landing_page/landing-2.png",
-                      imageAlt: "Gamificación",
-                    },
-                    {
-                      title: "Contenido Interactivo",
-                      tag: "Aprende haciendo",
-                      description: "Material multimedia diseñado para captar la atención y facilitar la comprensión de conceptos financieros complejos de forma práctica y atractiva.",
-                      imageSrc: "/uploads/Landing_page/landing-3.png",
-                      imageAlt: "Contenido Interactivo",
-                    },
-                  ].map((slide, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        position: activeAdventureSlide === idx ? "relative" : "absolute",
-                        top: 0, left: 0, right: 0, width: "100%",
-                        opacity: activeAdventureSlide === idx ? 1 : 0,
-                        visibility: activeAdventureSlide === idx ? "visible" : "hidden",
-                        pointerEvents: activeAdventureSlide === idx ? "auto" : "none",
-                        transition: "opacity 0.55s ease, visibility 0.55s ease",
-                        zIndex: activeAdventureSlide === idx ? 2 : 1,
-                      }}
-                    >
-                      {/* Two-column card */}
-                      <div style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: "clamp(24px, 4vw, 56px)",
-                        alignItems: "center",
-                        background: "linear-gradient(135deg, #0a1628 0%, #0d2050 60%, #0056E7 100%)",
-                        borderRadius: "32px",
-                        padding: "clamp(32px, 5vw, 56px)",
-                        boxSizing: "border-box",
-                        position: "relative",
-                        overflow: "visible", // Changed from hidden to fix internal scroll issue
-                        boxShadow: "0 24px 64px rgba(0, 86, 231, 0.2)",
-                      }} className="adventure-slide-grid">
-                        {/* Glow blobs */}
-                        <div style={{ position: "absolute", top: "-60px", right: "30%", width: "300px", height: "300px", background: "radial-gradient(circle, rgba(25,131,253,0.15) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-                        <div style={{ position: "absolute", bottom: "-40px", left: "10%", width: "240px", height: "240px", background: "radial-gradient(circle, rgba(0,86,231,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                    {/* Left: Text */}
+                    <div style={{ position: "relative", zIndex: 1 }}>
+                      {/* Slide tag */}
+                      <span style={{
+                        display: "inline-block",
+                        background: "rgba(255,255,255,0.1)",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                        color: "#93c5fd",
+                        borderRadius: "999px",
+                        padding: "5px 14px",
+                        fontSize: "12px",
+                        fontWeight: 700,
+                        fontFamily: "'Inter', sans-serif",
+                        letterSpacing: "0.07em",
+                        textTransform: "uppercase",
+                        marginBottom: "20px",
+                      }}>{slide.tag}</span>
 
-                        {/* Left: Text */}
-                        <div style={{ position: "relative", zIndex: 1 }}>
-                          {/* Slide tag */}
-                          <span style={{
-                            display: "inline-block",
-                            background: "rgba(255,255,255,0.1)",
-                            border: "1px solid rgba(255,255,255,0.18)",
-                            color: "#93c5fd",
-                            borderRadius: "999px",
-                            padding: "5px 14px",
-                            fontSize: "12px",
-                            fontWeight: 700,
-                            fontFamily: "'Inter', sans-serif",
-                            letterSpacing: "0.07em",
-                            textTransform: "uppercase",
-                            marginBottom: "20px",
-                          }}>{slide.tag}</span>
+                      <h3 style={{
+                        margin: "0 0 clamp(14px, 2vw, 20px)",
+                        fontSize: "clamp(26px, 3vw, 42px)",
+                        fontWeight: 800,
+                        color: "#fff",
+                        fontFamily: "'Inter', sans-serif",
+                        lineHeight: 1.15,
+                        letterSpacing: "-0.02em",
+                      }}>
+                        {slide.title}
+                      </h3>
 
-                          <h3 style={{
-                            margin: "0 0 clamp(14px, 2vw, 20px)",
-                            fontSize: "clamp(26px, 3vw, 42px)",
-                            fontWeight: 800,
-                            color: "#fff",
-                            fontFamily: "'Inter', sans-serif",
-                            lineHeight: 1.15,
-                            letterSpacing: "-0.02em",
-                          }}>
-                            {slide.title}
-                          </h3>
+                      <p style={{
+                        margin: "0 0 clamp(24px, 3vw, 36px)",
+                        fontSize: "clamp(15px, 1.05vw, 18px)",
+                        lineHeight: 1.75,
+                        color: "rgba(255,255,255,0.72)",
+                        fontFamily: "'Inter', sans-serif",
+                        maxWidth: "480px",
+                      }}>
+                        {slide.description}
+                      </p>
 
-                          <p style={{
-                            margin: "0 0 clamp(24px, 3vw, 36px)",
-                            fontSize: "clamp(15px, 1.05vw, 18px)",
-                            lineHeight: 1.75,
-                            color: "rgba(255,255,255,0.72)",
-                            fontFamily: "'Inter', sans-serif",
-                            maxWidth: "480px",
-                          }}>
-                            {slide.description}
-                          </p>
-
-                          <a
-                            href="https://calendly.com/diego-bizen"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: "10px",
-                              padding: "14px 28px",
-                              fontSize: "clamp(14px, 1rem, 17px)",
-                              fontWeight: 600,
-                              background: "#fff",
-                              color: "#0056E7",
-                              borderRadius: "999px",
-                              cursor: "pointer",
-                              fontFamily: "'Inter', sans-serif",
-                              boxShadow: "0 6px 20px rgba(255,255,255,0.15)",
-                              transition: "all 0.25s ease",
-                              textDecoration: "none",
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.transform = "translateY(-2px)"
-                              e.currentTarget.style.boxShadow = "0 10px 28px rgba(255,255,255,0.22)"
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.transform = "translateY(0)"
-                              e.currentTarget.style.boxShadow = "0 6px 20px rgba(255,255,255,0.15)"
-                            }}
-                          >
-                            Solicita tu demo
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                          </a>
-                        </div>
-
-                        {/* Right: Image */}
-                        <div style={{
-                          position: "relative",
-                          zIndex: 1,
-                          borderRadius: "20px",
-                          overflow: "hidden",
-                          aspectRatio: "4/3",
-                          background: "rgba(0,0,0,0.15)",
-                          boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
-                        }}>
-                          <Image
-                            src={slide.imageSrc}
-                            alt={slide.imageAlt}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 600px"
-                            style={{ objectFit: "cover", borderRadius: "20px" }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Navigation */}
-                <div className="carousel-nav-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px", margin: "clamp(24px, 3vw, 36px) auto 0", position: "relative", zIndex: 5 }}>
-                  {/* Prev */}
-                  <button
-                    type="button"
-                    className="landing-carousel-arrow landing-adventure-arrow prev"
-                    aria-label="Slide anterior"
-                    onClick={() => setActiveAdventureSlide(prev => prev === 0 ? 2 : prev - 1)}
-                    style={{
-                      width: "52px", height: "52px", borderRadius: "50%",
-                      background: "rgba(0, 86, 231, 0.10)",
-                      border: "1.5px solid rgba(0, 86, 231, 0.25)",
-                      cursor: "pointer",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseOver={(e) => { e.currentTarget.style.background = "rgba(0,86,231,0.18)"; e.currentTarget.style.borderColor = "rgba(0,86,231,0.5)"; }}
-                    onMouseOut={(e) => { e.currentTarget.style.background = "rgba(0,86,231,0.10)"; e.currentTarget.style.borderColor = "rgba(0,86,231,0.25)"; }}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0056E7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M15 18l-6-6 6-6" />
-                    </svg>
-                  </button>
-
-                  {/* Dots */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    {[0, 1, 2].map(idx => (
-                      <button
-                        key={idx}
-                        onClick={() => setActiveAdventureSlide(idx)}
+                      <a
+                        href="https://calendly.com/diego-bizen"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{
-                          width: activeAdventureSlide === idx ? "36px" : "12px",
-                          height: "12px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          padding: "14px 28px",
+                          fontSize: "clamp(14px, 1rem, 17px)",
+                          fontWeight: 600,
+                          background: "#fff",
+                          color: "#0056E7",
                           borderRadius: "999px",
-                          background: activeAdventureSlide === idx ? "#0056E7" : "rgba(0, 86, 231, 0.15)",
-                          border: "none",
                           cursor: "pointer",
-                          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                          fontFamily: "'Inter', sans-serif",
+                          boxShadow: "0 6px 20px rgba(255,255,255,0.15)",
+                          transition: "all 0.25s ease",
+                          textDecoration: "none",
                         }}
-                        aria-label={`Ir al slide ${idx + 1}`}
-                      />
-                    ))}
-                  </div>
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = "translateY(-2px)"
+                          e.currentTarget.style.boxShadow = "0 10px 28px rgba(255,255,255,0.22)"
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = "translateY(0)"
+                          e.currentTarget.style.boxShadow = "0 6px 20px rgba(255,255,255,0.15)"
+                        }}
+                      >
+                        Solicita tu demo
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </a>
+                    </div>
 
-                  {/* Next */}
+                    {/* Right: Image */}
+                    <div style={{
+                      position: "relative",
+                      zIndex: 1,
+                      borderRadius: "20px",
+                      overflow: "hidden",
+                      aspectRatio: "4/3",
+                      background: "rgba(0,0,0,0.15)",
+                      boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
+                    }}>
+                      <Image
+                        src={slide.imageSrc}
+                        alt={slide.imageAlt}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 600px"
+                        style={{ objectFit: "cover", borderRadius: "20px" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+
+            {/* Navigation Dots/Counter */}
+            <div className="carousel-nav-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "clamp(20px, 4vw, 32px)", margin: "clamp(24px, 3vw, 40px) auto 0", position: "relative", zIndex: 5 }}>
+              {/* Prev */}
+              <button
+                type="button"
+                onClick={() => setActiveAdventureSlide(prev => prev === 0 ? 2 : prev - 1)}
+                style={{
+                  width: "56px", height: "56px", borderRadius: "50%",
+                  background: "#fff", border: "1.5px solid rgba(0, 86, 231, 0.15)",
+                  boxShadow: "0 4px 12px rgba(0, 86, 231, 0.1)",
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                  transition: "all 0.2s ease"
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "#0056E7"; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "rgba(0, 86, 231, 0.15)"; }}
+                aria-label="Slide anterior"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0056E7" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+              </button>
+
+              {/* Dots */}
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                {[0, 1, 2].map(idx => (
                   <button
-                    type="button"
-                    className="landing-carousel-arrow landing-adventure-arrow next"
-                    aria-label="Siguiente slide"
-                    onClick={() => setActiveAdventureSlide(prev => prev === 2 ? 0 : prev + 1)}
+                    key={idx}
+                    onClick={() => setActiveAdventureSlide(idx)}
                     style={{
-                      width: "52px", height: "52px", borderRadius: "50%",
-                      background: "#0056E7",
+                      width: activeAdventureSlide === idx ? "40px" : "10px",
+                      height: "10px",
+                      borderRadius: "999px",
+                      background: activeAdventureSlide === idx ? "#0056E7" : "rgba(0, 86, 231, 0.15)",
                       border: "none",
                       cursor: "pointer",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      boxShadow: "0 6px 20px rgba(0, 86, 231, 0.3)",
-                      transition: "all 0.2s ease",
+                      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
-                    onMouseOver={(e) => { e.currentTarget.style.background = "#015CF8"; e.currentTarget.style.transform = "scale(1.05)"; }}
-                    onMouseOut={(e) => { e.currentTarget.style.background = "#0056E7"; e.currentTarget.style.transform = "scale(1)"; }}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
-                  </button>
-
-                  {/* Counter */}
-                  <span style={{ fontSize: "14px", fontWeight: 700, color: "rgba(0, 86, 231, 0.4)", fontFamily: "'Inter', sans-serif" }}>
-                    {activeAdventureSlide + 1} / 3
-                  </span>
-                </div>
-
-                <style>{`
-                  @media (max-width: 768px) {
-                    .adventure-slide-grid {
-                      grid-template-columns: 1fr !important;
-                    }
-                    .adventure-slide-grid > div:last-child {
-                      aspect-ratio: 16/9 !important;
-                    }
-                  }
-                `}</style>
-              </div>
-            </div>
-          </section>
-
-
-
-          {/* Tres obstáculos — redesigned */}
-          <section id="problema" className="section curiosidad-section reveal-element" style={{
-            background: "linear-gradient(160deg, #0a1628 0%, #0d1f40 50%, #0a2050 100%)",
-            padding: "clamp(64px, 9vw, 112px) clamp(24px, 4vw, 56px)",
-            position: "relative",
-            overflow: "visible", // Changed from hidden to prevent scroll issues
-            height: "auto",
-          }}>
-            {/* Decorative blobs */}
-            <div style={{ position: "absolute", top: "-100px", right: "-60px", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(25,131,253,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", bottom: "-80px", left: "-80px", width: "420px", height: "420px", background: "radial-gradient(circle, rgba(0,86,231,0.10) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-
-            <div className="container" style={{ maxWidth: "1400px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-
-              {/* Header */}
-              <div style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 72px)" }}>
-                <span style={{
-                  display: "inline-block",
-                  background: "rgba(255,255,255,0.08)",
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  color: "rgba(255,255,255,0.75)",
-                  borderRadius: "999px",
-                  padding: "6px 18px",
-                  fontSize: "13px",
-                  fontWeight: 700,
-                  fontFamily: "'Inter', sans-serif",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  marginBottom: "20px",
-                }}>El reto en educación financiera</span>
-                <h2 style={{
-                  fontSize: "clamp(36px, 5vw, 62px)",
-                  fontWeight: 800,
-                  color: "#fff",
-                  lineHeight: 1.1,
-                  marginBottom: "16px",
-                  fontFamily: "'Inter', sans-serif",
-                  letterSpacing: "-0.02em",
-                }}>
-                  Tres obstáculos{" "}
-                  <span style={{
-                    background: "linear-gradient(90deg, #60a5fa, #1983FD)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}>comunes.</span>
-                </h2>
-                <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "rgba(255,255,255,0.6)", fontFamily: "'Inter', sans-serif", lineHeight: 1.65 }}>
-                  La educación financiera tropieza con lo mismo una y otra vez.
-                </p>
-              </div>
-
-              {/* Cards */}
-              <div className="curiosidad-cards-grid" style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "clamp(20px, 3vw, 32px)",
-                alignItems: "stretch",
-                maxWidth: "1280px",
-                margin: "0 auto clamp(40px, 5vw, 56px)",
-              }}>
-                {[
-                  { n: "01", title: "Teoría sin práctica", desc: "Se enseña el concepto pero no se practica con casos reales.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M8 13h8" /><path d="M8 17h8" /><path d="M10 9H8" /></svg>, delay: "0s" },
-                  { n: "02", title: "Difícil medir avance", desc: "No hay forma clara de ver el progreso de cada estudiante.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><circle cx="9" cy="12" r="1" fill="rgba(255,255,255,0.8)" /><circle cx="12" cy="12" r="1" fill="rgba(255,255,255,0.8)" /><circle cx="15" cy="12" r="1" fill="rgba(255,255,255,0.8)" /></svg>, delay: "1.2s" },
-                  { n: "03", title: "Falta de tiempo del docente", desc: "Los profesores no tienen tiempo para personalizar la enseñanza.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>, delay: "2.4s" },
-                ].map((card, i) => (
-                  <div key={i} style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "28px",
-                    padding: "clamp(28px, 4vw, 44px) clamp(24px, 3vw, 36px)",
-                    backdropFilter: "blur(10px)",
-                    position: "relative",
-                    animation: "float-premium-card 6s ease-in-out infinite",
-                    animationDelay: card.delay,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "20px",
-                  }}>
-                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
-                      <div style={{
-                        width: "64px", height: "64px", borderRadius: "18px",
-                        background: "linear-gradient(135deg, #0056E7, #1983FD)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        boxShadow: "0 8px 24px rgba(0, 86, 231, 0.35)", flexShrink: 0,
-                      }}>{card.icon}</div>
-                      <span style={{
-                        fontSize: "clamp(40px, 5vw, 60px)", fontWeight: 900, color: "rgba(255,255,255,0.07)",
-                        fontFamily: "'Inter', sans-serif", letterSpacing: "-0.04em", lineHeight: 1, userSelect: "none",
-                      }}>{card.n}</span>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: "clamp(11px, 0.8rem, 13px)", fontWeight: 700, color: "#60a5fa", fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "8px" }}>
-                        Obstáculo {card.n}
-                      </div>
-                      <h3 style={{ margin: "0 0 10px", fontSize: "clamp(20px, 1.4rem, 24px)", fontWeight: 700, color: "#fff", fontFamily: "'Inter', sans-serif", lineHeight: 1.25 }}>
-                        {card.title}
-                      </h3>
-                      <p style={{ margin: 0, fontSize: "clamp(15px, 1rem, 17px)", lineHeight: 1.65, color: "rgba(255,255,255,0.55)", fontFamily: "'Inter', sans-serif" }}>
-                        {card.desc}
-                      </p>
-                    </div>
-                  </div>
+                    aria-label={`Ir al slide ${idx + 1}`}
+                  />
                 ))}
               </div>
 
-              {/* CTA bar */}
-              <div style={{
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                borderRadius: "20px",
-                padding: "clamp(20px, 3vw, 28px) clamp(28px, 4vw, 56px)",
-                textAlign: "center",
-                backdropFilter: "blur(8px)",
-                maxWidth: "900px",
-                margin: "0 auto",
-              }}>
-                <p style={{ margin: 0, fontSize: "clamp(17px, 1.4vw, 21px)", color: "#fff", fontFamily: "'Inter', sans-serif", fontWeight: 600, lineHeight: 1.6 }}>
-                  <span style={{ background: "linear-gradient(90deg, #60a5fa, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>BIZEN</span>
-                  {" "}está diseñado para superar estos obstáculos.
-                </p>
-              </div>
+              {/* Next */}
+              <button
+                type="button"
+                onClick={() => setActiveAdventureSlide(prev => prev === 2 ? 0 : prev + 1)}
+                style={{
+                  width: "56px", height: "56px", borderRadius: "50%",
+                  background: "#0056E7", border: "none",
+                  boxShadow: "0 6px 16px rgba(0, 86, 231, 0.3)",
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                  transition: "all 0.2s ease"
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#015cf8"; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = "#0056E7"; }}
+                aria-label="Siguiente slide"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+              </button>
 
-              <style>{`
+              {/* Counter */}
+              <span style={{ fontSize: "14px", fontWeight: 700, color: "rgba(0, 86, 231, 0.4)", fontFamily: "'Inter', sans-serif", minWidth: "40px" }}>
+                {activeAdventureSlide + 1} / 3
+              </span>
+            </div>
+
+
+          </div>
+        </section>
+
+        {/* Tres obstáculos — redesigned */}
+        <section id="problema" className="section curiosidad-section reveal-element" style={{
+          background: "linear-gradient(160deg, #0a1628 0%, #0d1f40 50%, #0a2050 100%)",
+          padding: "clamp(64px, 9vw, 112px) clamp(24px, 4vw, 56px)",
+          position: "relative",
+          overflow: "visible",
+          height: "auto",
+          maxWidth: "1400px",
+          margin: "0 auto",
+        }}>
+          {/* Decorative blobs */}
+          <div style={{ position: "absolute", top: "-100px", right: "-60px", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(25,131,253,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "-80px", left: "-80px", width: "420px", height: "420px", background: "radial-gradient(circle, rgba(0,86,231,0.10) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+
+          {/* Header */}
+          <div style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 72px)", position: "relative", zIndex: 1 }}>
+            <span style={{
+              display: "inline-block",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              color: "rgba(255,255,255,0.75)",
+              borderRadius: "999px",
+              padding: "6px 18px",
+              fontSize: "13px",
+              fontWeight: 700,
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              marginBottom: "20px",
+            }}>El reto en educación financiera</span>
+            <h2 style={{
+              fontSize: "clamp(36px, 5vw, 62px)",
+              fontWeight: 800,
+              color: "#fff",
+              lineHeight: 1.1,
+              marginBottom: "16px",
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: "-0.02em",
+            }}>
+              Tres obstáculos{" "}
+              <span style={{
+                background: "linear-gradient(90deg, #60a5fa, #1983FD)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>comunes.</span>
+            </h2>
+            <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "rgba(255,255,255,0.6)", fontFamily: "'Inter', sans-serif", lineHeight: 1.65 }}>
+              La educación financiera tropieza con lo mismo una y otra vez.
+            </p>
+          </div>
+
+          {/* Cards */}
+          <div className="curiosidad-cards-grid" style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "clamp(32px, 5vw, 64px)",
+            alignItems: "stretch",
+            maxWidth: "1280px",
+            margin: "0 auto clamp(40px, 5vw, 56px)",
+          }}>
+            {
+              [
+                { n: "01", title: "Teoría sin práctica", desc: "Se enseña el concepto pero no se practica con casos reales.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M8 13h8" /><path d="M8 17h8" /><path d="M10 9H8" /></svg>, delay: "0s" },
+                { n: "02", title: "Difícil medir avance", desc: "No hay forma clara de ver el progreso de cada estudiante.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><circle cx="9" cy="12" r="1" fill="rgba(255,255,255,0.8)" /><circle cx="12" cy="12" r="1" fill="rgba(255,255,255,0.8)" /><circle cx="15" cy="12" r="1" fill="rgba(255,255,255,0.8)" /></svg>, delay: "1.2s" },
+                { n: "03", title: "Falta de tiempo del docente", desc: "Los profesores no tienen tiempo para personalizar la enseñanza.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>, delay: "2.4s" },
+              ].map((card, i) => (
+                <div key={i} style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "28px",
+                  padding: "clamp(28px, 4vw, 44px) clamp(24px, 3vw, 36px)",
+                  backdropFilter: "blur(10px)",
+                  position: "relative",
+                  animation: "float-premium-card 6s ease-in-out infinite",
+                  animationDelay: card.delay,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
+                  maxWidth: "360px",
+                  margin: "0 auto",
+                  width: "100%",
+                }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
+                    <div style={{
+                      width: "64px", height: "64px", borderRadius: "18px",
+                      background: "linear-gradient(135deg, #0056E7, #1983FD)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      boxShadow: "0 8px 24px rgba(0, 86, 231, 0.35)", flexShrink: 0,
+                    }}>{card.icon}</div>
+                    <span style={{
+                      fontSize: "clamp(40px, 5vw, 60px)", fontWeight: 900, color: "rgba(255,255,255,0.07)",
+                      fontFamily: "'Inter', sans-serif", letterSpacing: "-0.04em", lineHeight: 1, userSelect: "none",
+                    }}>{card.n}</span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "clamp(11px, 0.8rem, 13px)", fontWeight: 700, color: "#60a5fa", fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "8px" }}>
+                      Obstáculo {card.n}
+                    </div>
+                    <h3 style={{ margin: "0 0 10px", fontSize: "clamp(20px, 1.4rem, 24px)", fontWeight: 700, color: "#fff", fontFamily: "'Inter', sans-serif", lineHeight: 1.25 }}>
+                      {card.title}
+                    </h3>
+                    <p style={{ margin: 0, fontSize: "clamp(15px, 1rem, 17px)", lineHeight: 1.65, color: "rgba(255,255,255,0.55)", fontFamily: "'Inter', sans-serif" }}>
+                      {card.desc}
+                    </p>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+
+          {/* CTA bar */}
+          <div style={{
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: "20px",
+            padding: "clamp(20px, 3vw, 28px) clamp(28px, 4vw, 56px)",
+            textAlign: "center",
+            backdropFilter: "blur(8px)",
+            maxWidth: "900px",
+            margin: "0 auto",
+          }}>
+            <p style={{ margin: 0, fontSize: "clamp(17px, 1.4vw, 21px)", color: "#fff", fontFamily: "'Inter', sans-serif", fontWeight: 600, lineHeight: 1.6 }}>
+              <span style={{ background: "linear-gradient(90deg, #60a5fa, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>BIZEN</span>
+              {" "}está diseñado para superar estos obstáculos.
+            </p>
+          </div>
+
+          <style>{`
                 @media (max-width: 700px) {
                   .curiosidad-cards-grid { grid-template-columns: 1fr !important; }
                 }
               `}</style>
-            </div>
-          </section>
+        </section>
 
-          {/* Cómo funciona — enhanced */}
-          <section id="como-funciona" className="section how-it-works reveal-element reveal-delay-2" style={{
-            background: "#f8faff",
-            padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 24px)",
-            overflow: "visible",
-            height: "auto",
-          }}>
-            <div className="container" style={{ maxWidth: "1100px", margin: "0 auto" }}>
-              <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 72px)" }}>
-                <span style={{
-                  display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
-                  borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 700,
-                  fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
-                }}>Proceso</span>
-                <h2 style={{
-                  margin: "0 0 16px", fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 800, color: "#111",
-                  fontFamily: "'Inter', sans-serif", lineHeight: 1.1, letterSpacing: "-0.02em",
+        {/* Cómo funciona — enhanced */}
+        <section id="como-funciona" className="section how-it-works reveal-element reveal-delay-2" style={{
+          background: "#f8faff",
+          padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 24px)",
+          overflow: "visible",
+          height: "auto",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}>
+          <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 72px)" }}>
+            <span style={{
+              display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
+              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 700,
+              fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
+            }}>Proceso</span>
+            <h2 style={{
+              margin: "0 0 16px", fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 800, color: "#111",
+              fontFamily: "'Inter', sans-serif", lineHeight: 1.1, letterSpacing: "-0.02em",
+            }}>
+              ¿Cómo{" "}
+              <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>funciona?</span>
+            </h2>
+            <p style={{ margin: "0 auto", fontSize: "clamp(16px, 1.2vw, 19px)", color: "#64748b", fontFamily: "'Inter', sans-serif", maxWidth: "480px", lineHeight: 1.65 }}>
+              Tres pasos: empiezas, practicas y mides tu avance.
+            </p>
+          </div>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "clamp(24px, 4vw, 36px)",
+            alignItems: "stretch",
+            position: "relative",
+          }} className="how-it-works-steps">
+            {howItWorksSteps.map((step, i) => (
+              <div key={i} className={`step-card reveal-element reveal-delay-${i + 1}`} style={{
+                padding: "clamp(36px, 4vw, 52px) clamp(28px, 3vw, 40px)",
+                borderRadius: "28px",
+                background: "#fff",
+                border: "1px solid rgba(0, 86, 231, 0.1)",
+                boxShadow: "0 8px 32px rgba(0, 86, 231, 0.06)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                cursor: "default",
+                maxWidth: "320px",
+                margin: "0 auto",
+                width: "100%",
+              }}>
+                <div className="step-number-container" style={{
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "24px",
+                  background: "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: "24px",
+                  flexShrink: 0,
+                  position: "relative",
+                  boxShadow: "0 10px 24px rgba(0, 86, 231, 0.28)",
                 }}>
-                  ¿Cómo{" "}
-                  <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>funciona?</span>
-                </h2>
-                <p style={{ margin: "0 auto", fontSize: "clamp(16px, 1.2vw, 19px)", color: "#64748b", fontFamily: "'Inter', sans-serif", maxWidth: "480px", lineHeight: 1.65 }}>
-                  Tres pasos: empiezas, practicas y mides tu avance.
+                  <span style={{
+                    position: "absolute",
+                    top: "-10px",
+                    right: "-10px",
+                    width: "28px",
+                    height: "28px",
+                    borderRadius: "8px",
+                    background: "#fff",
+                    color: "#0056E7",
+                    fontSize: "13px",
+                    fontWeight: 800,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "'Inter', sans-serif",
+                    boxShadow: "0 2px 8px rgba(0, 86, 231, 0.2)",
+                    border: "1.5px solid rgba(0,86,231,0.12)",
+                  }}>{i + 1}</span>
+                  {i === 0 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>)}
+                  {i === 1 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>)}
+                  {i === 2 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg>)}
+                </div>
+                <h3 style={{
+                  margin: "0 0 12px",
+                  fontSize: "clamp(19px, 1.5vw, 23px)",
+                  fontWeight: 700,
+                  color: "#111",
+                  fontFamily: "'Inter', sans-serif",
+                }}>{step.title}</h3>
+                <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", color: "#64748b", lineHeight: 1.65, fontFamily: "'Inter', sans-serif" }}>
+                  {step.schoolsText}
                 </p>
               </div>
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "clamp(24px, 4vw, 36px)",
-                alignItems: "stretch",
-                position: "relative",
-              }} className="how-it-works-steps">
-                {howItWorksSteps.map((step, i) => (
-                  <div key={i} className={`step-card reveal-element reveal-delay-${i + 1}`} style={{
-                    padding: "clamp(36px, 4vw, 52px) clamp(28px, 3vw, 40px)",
-                    borderRadius: "28px",
-                    background: "#fff",
-                    border: "1px solid rgba(0, 86, 231, 0.1)",
-                    boxShadow: "0 8px 32px rgba(0, 86, 231, 0.06)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    textAlign: "center",
-                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                    cursor: "default",
-                  }}>
-                    <div className="step-number-container" style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "24px",
-                      background: "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginBottom: "24px",
-                      flexShrink: 0,
-                      position: "relative",
-                      boxShadow: "0 10px 24px rgba(0, 86, 231, 0.28)",
-                    }}>
-                      <span style={{
-                        position: "absolute",
-                        top: "-10px",
-                        right: "-10px",
-                        width: "28px",
-                        height: "28px",
-                        borderRadius: "8px",
-                        background: "#fff",
-                        color: "#0056E7",
-                        fontSize: "13px",
-                        fontWeight: 800,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontFamily: "'Inter', sans-serif",
-                        boxShadow: "0 2px 8px rgba(0, 86, 231, 0.2)",
-                        border: "1.5px solid rgba(0,86,231,0.12)",
-                      }}>{i + 1}</span>
-                      {i === 0 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>)}
-                      {i === 1 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>)}
-                      {i === 2 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg>)}
-                    </div>
-                    <h3 style={{
-                      margin: "0 0 12px",
-                      fontSize: "clamp(19px, 1.5vw, 23px)",
-                      fontWeight: 700,
-                      color: "#111",
-                      fontFamily: "'Inter', sans-serif",
-                    }}>{step.title}</h3>
-                    <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", color: "#64748b", lineHeight: 1.65, fontFamily: "'Inter', sans-serif" }}>
-                      {step.schoolsText}
-                    </p>
-                  </div>
-                ))}
-                <style>{`
+            ))}
+            <style>{`
                   .step-card:hover {
                     border-color: rgba(0, 86, 231, 0.25) !important;
                     box-shadow: 0 12px 40px rgba(0, 86, 231, 0.10) !important;
@@ -3507,11 +3565,9 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                     .how-it-works-steps { grid-template-columns: repeat(3, 1fr) !important; }
                   }
                 `}</style>
-              </div>
-            </div>
-          </section>
-
-        </div>
+          </div>
+        </section>
+      </>
       )}
 
     </>

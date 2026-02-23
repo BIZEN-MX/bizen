@@ -116,9 +116,9 @@ export default function MobileFooterNav() {
           width: 100vw !important;
           height: calc(65px + max(env(safe-area-inset-bottom), 0px)) !important;
           padding-bottom: max(env(safe-area-inset-bottom), 0px) !important;
-          background: linear-gradient(180deg, #E0F2FE 0%, #DBEAFE 50%, #BFDBFE 100%) !important;
-          border-top: 2px solid rgba(15, 98, 254, 0.2) !important;
-          box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1) !important;
+          background: #FBFAF5 !important;
+          border-top: 2px solid #0F62FE !important;
+          box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05) !important;
           z-index: 10000 !important;
           font-family: Montserrat, sans-serif !important;
           display: block !important;
@@ -211,7 +211,7 @@ export default function MobileFooterNav() {
                 <item.icon
                   size={24}
                   strokeWidth={item.active ? 2.5 : 2}
-                  color={item.active ? "#0F62FE" : "#1e3a5f"}
+                  color={item.active ? "#0F62FE" : "#4b5563"}
                 />
               )}
             </button>
@@ -264,16 +264,14 @@ export default function MobileFooterNav() {
         >
           <div
             style={{
-              background: "linear-gradient(180deg, rgba(224, 242, 254, 0.95) 0%, rgba(219, 234, 254, 0.95) 50%, rgba(191, 219, 254, 0.95) 100%)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
+              background: "#FBFAF5",
               borderRadius: "20px 20px 0 0",
               padding: "24px",
               width: "100%",
               maxWidth: "100%",
-              boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.2)",
+              boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.15)",
               animation: "slideUp 0.3s ease-out",
-              border: "1px solid rgba(255, 255, 255, 0.3)"
+              borderTop: "2px solid #0F62FE"
             }}
             onClick={(e) => e.stopPropagation()}
           >

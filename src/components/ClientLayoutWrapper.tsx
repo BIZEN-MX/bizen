@@ -40,21 +40,21 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      
+
       // Check if clicked element is a link
       const link = target.closest('a[href]');
-      
+
       if (link) {
         const href = link.getAttribute('href');
-        
+
         // Only trigger for internal links that will actually navigate
-        if (href && 
-            href.startsWith('/') && 
-            !href.startsWith('//') && 
-            !href.startsWith('#') && 
-            href !== pathname &&
-            !link.hasAttribute('target') && // Not opening in new tab
-            !link.hasAttribute('download')) { // Not downloading
+        if (href &&
+          href.startsWith('/') &&
+          !href.startsWith('//') &&
+          !href.startsWith('#') &&
+          href !== pathname &&
+          !link.hasAttribute('target') && // Not opening in new tab
+          !link.hasAttribute('download')) { // Not downloading
           setIsNavigating(true);
         }
       }
@@ -62,7 +62,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
     // Listen for clicks on the document with capture phase for early detection
     document.addEventListener('click', handleClick, true);
-    
+
     return () => {
       document.removeEventListener('click', handleClick, true);
     };
@@ -74,7 +74,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     if (pathname !== previousPathname.current) {
       setIsNavigating(true);
       previousPathname.current = pathname;
-      
+
       // Timeout to allow smooth progress bar animation
       const timer = setTimeout(() => setIsNavigating(false), 400);
       return () => clearTimeout(timer);
@@ -82,16 +82,16 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   }, [pathname]);
 
   // Don't show sidebar on auth pages, landing, payment pages, and legal pages
-  const isAuthPage = pathname === '/login' || 
-                     pathname === '/signup' || 
-                     pathname === '/reset-password' ||
-                     pathname === '/forgot-password' ||
-                     pathname === '/bizen/signup' ||
-                     pathname === '/' || // Landing page
-                     pathname === '/payment' ||
-                     pathname.startsWith('/payment/') || // Payment pages
-                     pathname === '/bizen/privacidad' || // Privacy page
-                     pathname === '/bizen/terminos' // Terms page
+  const isAuthPage = pathname === '/login' ||
+    pathname === '/signup' ||
+    pathname === '/reset-password' ||
+    pathname === '/forgot-password' ||
+    pathname === '/bizen/signup' ||
+    pathname === '/' || // Landing page
+    pathname === '/payment' ||
+    pathname.startsWith('/payment/') || // Payment pages
+    pathname === '/bizen/privacidad' || // Privacy page
+    pathname === '/bizen/terminos' // Terms page
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
   const hideAppNavigation = isAuthPage || isDiagnosticPage
 
@@ -160,13 +160,13 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     <>
       {/* Show FixedSidebar only on larger screens (>767px), hidden during interactive lesson */}
       {!hideAppNavigation && !isMobile && !isLessonInteractivePage && <FixedSidebar />}
-      
+
       {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page */}
       {!hideAppNavigation && isMobile && !isLessonInteractivePage && <MobileFooterNav />}
-      
+
       {/* Only show MobileBottomNav on desktop/tablet, never on mobile */}
       {!hideAppNavigation && !isMobile && <MobileBottomNav />}
-      
+
       <GlobalLogo />
       {children}
       <NavigationLoading isLoading={isNavigating} />

@@ -125,15 +125,15 @@ export default function ThreadDetailPage() {
     if (loadingReplies.has(commentId) || loadedReplies.has(commentId)) {
       return // Already loading or loaded
     }
-    
+
     try {
       setLoadingReplies(prev => new Set(prev).add(commentId))
       const response = await fetch(`/api/forum/comments/${commentId}?limit=20`)
       if (response.ok) {
         const data = await response.json()
         // Update the comment in the comments array with its replies
-        setComments(prev => prev.map(comment => 
-          comment.id === commentId 
+        setComments(prev => prev.map(comment =>
+          comment.id === commentId
             ? { ...comment, replies: data.replies }
             : comment
         ))
@@ -324,7 +324,7 @@ export default function ThreadDetailPage() {
                 e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              <span style={{ 
+              <span style={{
                 background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -365,7 +365,7 @@ export default function ThreadDetailPage() {
                 e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              <span style={{ 
+              <span style={{
                 background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -450,7 +450,7 @@ export default function ThreadDetailPage() {
           {comment.replies.map(reply => renderComment(reply, depth + 1))}
         </div>
       )}
-      
+
       {/* Load Replies Button */}
       {(!comment.replies || comment.replies.length === 0) && comment.replyCount && comment.replyCount > 0 && !loadedReplies.has(comment.id) && (
         <div style={{ marginTop: 12 }}>
@@ -487,8 +487,8 @@ export default function ThreadDetailPage() {
               }
             }}
           >
-            {loadingReplies.has(comment.id) 
-              ? "Cargando..." 
+            {loadingReplies.has(comment.id)
+              ? "Cargando..."
               : `Ver ${comment.replyCount} ${comment.replyCount === 1 ? 'respuesta' : 'respuestas'}`
             }
           </button>
@@ -586,481 +586,481 @@ export default function ThreadDetailPage() {
         width: "100%",
         boxSizing: "border-box"
       }}>
-        <main className="forum-thread-container" style={{ 
-        position: "relative",
-        width: "100%",
-        maxWidth: "100%", 
-        margin: "0", 
-        padding: "clamp(16px, 4vw, 40px)",
-        zIndex: 1,
-        boxSizing: "border-box"
-      }}>
-        {/* Back Button */}
-        <div style={{ marginBottom: 24 }}>
-          <Link href="/forum" style={{ textDecoration: "none" }}>
-            <button style={{
-              padding: "8px 16px",
-              background: "rgba(15, 98, 254, 0.15)",
-              backdropFilter: "blur(10px)",
-              border: "2px solid rgba(15, 98, 254, 0.3)",
-              borderRadius: 8,
-              fontSize: 14,
-              fontWeight: 600,
-              color: "#0F62FE",
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              transition: "all 0.2s ease",
-              boxShadow: "0 2px 8px rgba(15, 98, 254, 0.1)",
-              fontFamily: "Montserrat, sans-serif"
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(15, 98, 254, 0.25)"
-              e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.5)"
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(15, 98, 254, 0.2)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
-              e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.3)"
-              e.currentTarget.style.boxShadow = "0 2px 8px rgba(15, 98, 254, 0.1)"
-            }}
-            >
-              ← Volver al Foro
-            </button>
-          </Link>
-        </div>
+        <main className="forum-thread-container" style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "100%",
+          margin: "0",
+          padding: "clamp(16px, 4vw, 40px)",
+          zIndex: 1,
+          boxSizing: "border-box"
+        }}>
+          {/* Back Button */}
+          <div style={{ marginBottom: 24 }}>
+            <Link href="/forum" style={{ textDecoration: "none" }}>
+              <button style={{
+                padding: "8px 16px",
+                background: "rgba(15, 98, 254, 0.15)",
+                backdropFilter: "blur(10px)",
+                border: "2px solid rgba(15, 98, 254, 0.3)",
+                borderRadius: 8,
+                fontSize: 14,
+                fontWeight: 600,
+                color: "#0F62FE",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                transition: "all 0.2s ease",
+                boxShadow: "0 2px 8px rgba(15, 98, 254, 0.1)",
+                fontFamily: "Montserrat, sans-serif"
+              }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(15, 98, 254, 0.25)"
+                  e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.5)"
+                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(15, 98, 254, 0.2)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
+                  e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.3)"
+                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(15, 98, 254, 0.1)"
+                }}
+              >
+                ← Volver al Foro
+              </button>
+            </Link>
+          </div>
 
-        {/* Thread Card */}
-        {loadingData || !thread ? (
-          <div style={{
-            padding: 32,
-            background: "rgba(255, 255, 255, 0.4)",
-            backdropFilter: "blur(20px)",
-            borderRadius: 20,
-            border: "2px solid rgba(255, 255, 255, 0.6)",
-            marginBottom: 32,
-            animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
-          }}>
+          {/* Thread Card */}
+          {loadingData || !thread ? (
             <div style={{
-              height: 40,
-              background: "rgba(156, 163, 175, 0.3)",
-              borderRadius: 8,
-              marginBottom: 20,
-              width: "80%"
-            }} />
-            <div style={{
-              height: 200,
-              background: "rgba(156, 163, 175, 0.2)",
-              borderRadius: 12
-            }} />
-            <style>{`
+              padding: 32,
+              background: "rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(20px)",
+              borderRadius: 20,
+              border: "2px solid rgba(255, 255, 255, 0.6)",
+              marginBottom: 32,
+              animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+            }}>
+              <div style={{
+                height: 40,
+                background: "rgba(156, 163, 175, 0.3)",
+                borderRadius: 8,
+                marginBottom: 20,
+                width: "80%"
+              }} />
+              <div style={{
+                height: 200,
+                background: "rgba(156, 163, 175, 0.2)",
+                borderRadius: 12
+              }} />
+              <style>{`
               @keyframes pulse {
                 0%, 100% { opacity: 1; }
                 50% { opacity: 0.5; }
               }
             `}</style>
-          </div>
-        ) : (
-        <div style={{
-          padding: 32,
-          background: "rgba(255, 255, 255, 0.4)",
-          backdropFilter: "blur(20px)",
-          borderRadius: 20,
-          border: "2px solid rgba(255, 255, 255, 0.6)",
-          boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
-          marginBottom: 32,
-          animation: "fadeIn 0.4s ease"
-        }}>
-          <style>{`
+            </div>
+          ) : (
+            <div style={{
+              padding: 32,
+              background: "rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(20px)",
+              borderRadius: 20,
+              border: "2px solid rgba(255, 255, 255, 0.6)",
+              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
+              marginBottom: 32,
+              animation: "fadeIn 0.4s ease"
+            }}>
+              <style>{`
             @keyframes fadeIn {
               from { opacity: 0; transform: translateY(10px); }
               to { opacity: 1; transform: translateY(0); }
             }
           `}</style>
-          <h1 style={{ 
-            margin: "0 0 16px", 
-            fontSize: "clamp(24px, 5vw, 32px)", 
-            fontWeight: 800,
-            color: "#1E40AF"
-          }}>
-            {thread.title}
-          </h1>
+              <h1 style={{
+                margin: "0 0 16px",
+                fontSize: "clamp(24px, 5vw, 32px)",
+                fontWeight: 800,
+                color: "#1E40AF"
+              }}>
+                {thread.title}
+              </h1>
 
-          {/* Tags */}
-          {thread.tags.length > 0 && (
-            <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
-              {thread.tags.map(tag => (
-                <span
-                  key={tag.id}
+              {/* Tags */}
+              {thread.tags.length > 0 && (
+                <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
+                  {thread.tags.map(tag => (
+                    <span
+                      key={tag.id}
+                      style={{
+                        padding: "4px 12px",
+                        background: "rgba(59, 130, 246, 0.15)",
+                        color: "#0F62FE",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        borderRadius: 6
+                      }}
+                    >
+                      #{tag.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Meta */}
+              <div style={{
+                display: "flex",
+                gap: 16,
+                fontSize: 13,
+                color: "#9CA3AF",
+                fontWeight: 600,
+                marginBottom: 20,
+                paddingBottom: 20,
+                borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
+              }}>
+                <span>
+                  por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link>
+                </span>
+                <span>Nivel {thread.author.level}</span>
+                <span>{thread.author.reputation} pts</span>
+                <span>{new Date(thread.createdAt).toLocaleDateString('es-ES')}</span>
+                <span>{thread.viewCount} vistas</span>
+              </div>
+
+              {/* Content */}
+              <div style={{
+                fontSize: 15,
+                lineHeight: 1.8,
+                color: "#374151",
+                marginBottom: 24,
+                fontWeight: 500,
+                whiteSpace: "pre-wrap"
+              }}>
+                {thread.body}
+              </div>
+
+              {/* Actions */}
+              <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+                <button
+                  onClick={() => handleVote('thread', thread.id, 1)}
                   style={{
-                    padding: "4px 12px",
-                    background: "rgba(59, 130, 246, 0.15)",
-                    color: "#0F62FE",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    borderRadius: 6
+                    padding: "10px 16px",
+                    background: "rgba(255, 255, 255, 0.6)",
+                    color: "#374151",
+                    border: thread.userVote === 1 ? "2px solid #0B71FE" : "2px solid transparent",
+                    borderRadius: 8,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontFamily: "Montserrat, sans-serif",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    transition: "all 0.2s ease",
+                    boxShadow: thread.userVote === 1 ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.transform = "scale(0.95)"
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.transform = "scale(1)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)"
                   }}
                 >
-                  #{tag.name}
-                </span>
-              ))}
+                  <span style={{
+                    background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    display: "inline-block",
+                    fontSize: 18,
+                    transform: thread.userVote === 1 ? "scale(1.2)" : "scale(1)",
+                    transition: "transform 0.2s ease"
+                  }}>
+                    👍
+                  </span> {thread.score > 0 && thread.score}
+                </button>
+
+                <button
+                  onClick={() => handleVote('thread', thread.id, -1)}
+                  style={{
+                    padding: "10px 16px",
+                    background: "rgba(255, 255, 255, 0.6)",
+                    color: "#374151",
+                    border: thread.userVote === -1 ? "2px solid #0B71FE" : "2px solid transparent",
+                    borderRadius: 8,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontFamily: "Montserrat, sans-serif",
+                    transition: "all 0.2s ease",
+                    boxShadow: thread.userVote === -1 ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.transform = "scale(0.95)"
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.transform = "scale(1)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)"
+                  }}
+                >
+                  <span style={{
+                    background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    display: "inline-block",
+                    fontSize: 18,
+                    transform: thread.userVote === -1 ? "scale(1.2)" : "scale(1)",
+                    transition: "transform 0.2s ease"
+                  }}>
+                    👎
+                  </span>
+                </button>
+
+                <button
+                  onClick={handleBookmark}
+                  style={{
+                    padding: "10px 16px",
+                    background: "rgba(255, 255, 255, 0.6)",
+                    color: "#374151",
+                    border: thread.isBookmarked ? "2px solid #0B71FE" : "2px solid transparent",
+                    borderRadius: 8,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontFamily: "Montserrat, sans-serif",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    transition: "all 0.2s ease",
+                    boxShadow: thread.isBookmarked ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.transform = "scale(0.95)"
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.transform = "scale(1)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)"
+                  }}
+                >
+                  <span style={{
+                    background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    display: "inline-block",
+                    fontSize: 16,
+                    transform: thread.isBookmarked ? "scale(1.2)" : "scale(1)",
+                    transition: "transform 0.2s ease"
+                  }}>
+                    {thread.isBookmarked ? "★" : "☆"}
+                  </span>
+                  {thread.isBookmarked ? "Guardado" : "Guardar"}
+                </button>
+
+                <button
+                  onClick={handleFollow}
+                  style={{
+                    padding: "10px 16px",
+                    background: "rgba(255, 255, 255, 0.6)",
+                    color: "#374151",
+                    border: thread.isFollowing ? "2px solid #0B71FE" : "2px solid transparent",
+                    borderRadius: 8,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontFamily: "Montserrat, sans-serif",
+                    transition: "all 0.2s ease",
+                    boxShadow: thread.isFollowing ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.transform = "scale(0.95)"
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.transform = "scale(1)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)"
+                  }}
+                >
+                  {thread.isFollowing ? "Siguiendo" : "Seguir"}
+                </button>
+
+                {thread.author.userId === user?.id && (
+                  <button
+                    onClick={handleDelete}
+                    style={{
+                      padding: "10px 16px",
+                      background: "rgba(255, 255, 255, 0.6)",
+                      color: "#EF4444",
+                      border: "2px solid transparent",
+                      borderRadius: 8,
+                      fontSize: 14,
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      fontFamily: "Montserrat, sans-serif",
+                      transition: "all 0.2s ease"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"
+                      e.currentTarget.style.borderColor = "#EF4444"
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
+                      e.currentTarget.style.borderColor = "transparent"
+                    }}
+                    onMouseDown={(e) => {
+                      e.currentTarget.style.transform = "scale(0.95)"
+                    }}
+                    onMouseUp={(e) => {
+                      e.currentTarget.style.transform = "scale(1)"
+                    }}
+                  >
+                    Eliminar
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
-          {/* Meta */}
-          <div style={{
-            display: "flex",
-            gap: 16,
-            fontSize: 13,
-            color: "#9CA3AF",
-            fontWeight: 600,
-            marginBottom: 20,
-            paddingBottom: 20,
-            borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
+          {/* Comments Section */}
+          <h2 style={{
+            margin: "0 0 20px",
+            fontSize: 22,
+            fontWeight: 700,
+            color: "#1E40AF"
           }}>
-            <span>
-              por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link>
-            </span>
-            <span>Nivel {thread.author.level}</span>
-            <span>{thread.author.reputation} pts</span>
-            <span>{new Date(thread.createdAt).toLocaleDateString('es-ES')}</span>
-            <span>{thread.viewCount} vistas</span>
-          </div>
+            {comments.length} Respuestas
+          </h2>
 
-          {/* Content */}
+          {/* Comments List */}
           <div style={{
-            fontSize: 15,
-            lineHeight: 1.8,
-            color: "#374151",
-            marginBottom: 24,
-            fontWeight: 500,
-            whiteSpace: "pre-wrap"
+            marginBottom: 32,
+            animation: "fadeIn 0.5s ease 0.2s both"
           }}>
-            {thread.body}
-          </div>
-
-          {/* Actions */}
-          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-            <button
-              onClick={() => handleVote('thread', thread.id, 1)}
-              style={{
-                padding: "10px 16px",
-                background: "rgba(255, 255, 255, 0.6)",
-                color: "#374151",
-                border: thread.userVote === 1 ? "2px solid #0B71FE" : "2px solid transparent",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif",
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                transition: "all 0.2s ease",
-                boxShadow: thread.userVote === 1 ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = "scale(0.95)"
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-              }}
-            >
-              <span style={{ 
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                display: "inline-block",
-                fontSize: 18,
-                transform: thread.userVote === 1 ? "scale(1.2)" : "scale(1)",
-                transition: "transform 0.2s ease"
-              }}>
-                👍
-              </span> {thread.score > 0 && thread.score}
-            </button>
-            
-            <button
-              onClick={() => handleVote('thread', thread.id, -1)}
-              style={{
-                padding: "10px 16px",
-                background: "rgba(255, 255, 255, 0.6)",
-                color: "#374151",
-                border: thread.userVote === -1 ? "2px solid #0B71FE" : "2px solid transparent",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif",
-                transition: "all 0.2s ease",
-                boxShadow: thread.userVote === -1 ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = "scale(0.95)"
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-              }}
-            >
-              <span style={{ 
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                display: "inline-block",
-                fontSize: 18,
-                transform: thread.userVote === -1 ? "scale(1.2)" : "scale(1)",
-                transition: "transform 0.2s ease"
-              }}>
-                👎
-              </span>
-            </button>
-
-            <button
-              onClick={handleBookmark}
-              style={{
-                padding: "10px 16px",
-                background: "rgba(255, 255, 255, 0.6)",
-                color: "#374151",
-                border: thread.isBookmarked ? "2px solid #0B71FE" : "2px solid transparent",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif",
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                transition: "all 0.2s ease",
-                boxShadow: thread.isBookmarked ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = "scale(0.95)"
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-              }}
-            >
-              <span style={{ 
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                display: "inline-block",
-                fontSize: 16,
-                transform: thread.isBookmarked ? "scale(1.2)" : "scale(1)",
-                transition: "transform 0.2s ease"
-              }}>
-                {thread.isBookmarked ? "★" : "☆"}
-              </span>
-              {thread.isBookmarked ? "Guardado" : "Guardar"}
-            </button>
-
-            <button
-              onClick={handleFollow}
-              style={{
-                padding: "10px 16px",
-                background: "rgba(255, 255, 255, 0.6)",
-                color: "#374151",
-                border: thread.isFollowing ? "2px solid #0B71FE" : "2px solid transparent",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif",
-                transition: "all 0.2s ease",
-                boxShadow: thread.isFollowing ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = "scale(0.95)"
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-              }}
-            >
-              {thread.isFollowing ? "Siguiendo" : "Seguir"}
-            </button>
-
-            {thread.author.userId === user?.id && (
-              <button
-                onClick={handleDelete}
-                style={{
-                  padding: "10px 16px",
-                  background: "rgba(255, 255, 255, 0.6)",
-                  color: "#EF4444",
-                  border: "2px solid transparent",
-                  borderRadius: 8,
-                  fontSize: 14,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  fontFamily: "Montserrat, sans-serif",
-                  transition: "all 0.2s ease"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"
-                  e.currentTarget.style.borderColor = "#EF4444"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.6)"
-                  e.currentTarget.style.borderColor = "transparent"
-                }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.transform = "scale(0.95)"
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.transform = "scale(1)"
-                }}
-              >
-                Eliminar
-              </button>
+            {loadingData ? (
+              <>
+                <CommentSkeleton />
+                <CommentSkeleton />
+              </>
+            ) : (
+              comments.map(comment => renderComment(comment))
             )}
           </div>
-        </div>
-        )}
 
-        {/* Comments Section */}
-        <h2 style={{ 
-          margin: "0 0 20px", 
-          fontSize: 22, 
-          fontWeight: 700,
-          color: "#1E40AF"
-        }}>
-          {comments.length} Respuestas
-        </h2>
-
-        {/* Comments List */}
-        <div style={{ 
-          marginBottom: 32,
-          animation: "fadeIn 0.5s ease 0.2s both"
-        }}>
-          {loadingData ? (
-            <>
-              <CommentSkeleton />
-              <CommentSkeleton />
-            </>
-          ) : (
-            comments.map(comment => renderComment(comment))
-          )}
-        </div>
-
-        {/* Reply Form */}
-        {!loadingData && thread && thread.status !== 'locked' && (
-          <div style={{
-            padding: 32,
-            background: "rgba(255, 255, 255, 0.4)",
-            backdropFilter: "blur(20px)",
-            borderRadius: 20,
-            border: "2px solid rgba(255, 255, 255, 0.6)",
-            boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)"
-          }}>
-            <h3 style={{ 
-              margin: "0 0 16px", 
-              fontSize: 18, 
-              fontWeight: 700,
-              color: "#1E40AF"
+          {/* Reply Form */}
+          {!loadingData && thread && thread.status !== 'locked' && (
+            <div style={{
+              padding: 32,
+              background: "rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(20px)",
+              borderRadius: 20,
+              border: "2px solid rgba(255, 255, 255, 0.6)",
+              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)"
             }}>
-              {replyTo ? "Responder al comentario" : "Tu respuesta"}
-            </h3>
+              <h3 style={{
+                margin: "0 0 16px",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#1E40AF"
+              }}>
+                {replyTo ? "Responder al comentario" : "Tu respuesta"}
+              </h3>
 
-            <form onSubmit={handleSubmitComment}>
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="¿Qué quieres compartir? Escribe tu respuesta o ideas..."
-                style={{
-                  width: "100%",
-                  minHeight: 150,
-                  padding: 16,
-                  fontSize: 15,
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 500,
-                  border: "2px solid rgba(255, 255, 255, 0.6)",
-                  borderRadius: 12,
-                  background: "rgba(255, 255, 255, 0.6)",
-                  color: "#374151",
-                  resize: "vertical",
-                  marginBottom: 16,
-                  boxSizing: "border-box"
-                }}
-                required
-              />
-
-              <div style={{ display: "flex", gap: 12 }}>
-                <button
-                  type="submit"
-                  disabled={submitting || !newComment.trim()}
+              <form onSubmit={handleSubmitComment}>
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="¿Qué quieres compartir? Escribe tu respuesta o ideas..."
                   style={{
-                    padding: "14px 28px",
-                    background: submitting || !newComment.trim() 
-                      ? "#9CA3AF" 
-                      : "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 12,
+                    width: "100%",
+                    minHeight: 150,
+                    padding: 16,
                     fontSize: 15,
-                    fontWeight: 700,
-                    cursor: submitting || !newComment.trim() ? "not-allowed" : "pointer",
-                    boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                    fontFamily: "Montserrat, sans-serif"
+                    fontFamily: "Montserrat, sans-serif",
+                    fontWeight: 500,
+                    border: "2px solid rgba(255, 255, 255, 0.6)",
+                    borderRadius: 12,
+                    background: "rgba(255, 255, 255, 0.6)",
+                    color: "#374151",
+                    resize: "vertical",
+                    marginBottom: 16,
+                    boxSizing: "border-box"
                   }}
-                >
-                  {submitting ? "Enviando..." : "Publicar Respuesta"}
-                </button>
+                  required
+                />
 
-                {replyTo && (
+                <div style={{ display: "flex", gap: 12 }}>
                   <button
-                    type="button"
-                    onClick={() => setReplyTo(null)}
+                    type="submit"
+                    disabled={submitting || !newComment.trim()}
                     style={{
                       padding: "14px 28px",
-                      background: "rgba(255, 255, 255, 0.6)",
-                      color: "#374151",
+                      background: submitting || !newComment.trim()
+                        ? "#9CA3AF"
+                        : "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                      color: "white",
                       border: "none",
                       borderRadius: 12,
                       fontSize: 15,
                       fontWeight: 700,
-                      cursor: "pointer",
+                      cursor: submitting || !newComment.trim() ? "not-allowed" : "pointer",
+                      boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
                       fontFamily: "Montserrat, sans-serif"
                     }}
                   >
-                    Cancelar
+                    {submitting ? "Enviando..." : "Publicar Respuesta"}
                   </button>
-                )}
-              </div>
-            </form>
-          </div>
-        )}
 
-        {!loadingData && thread && thread.status === 'locked' && (
-          <div style={{
-            padding: 24,
-            textAlign: "center",
-            background: "rgba(239, 68, 68, 0.1)",
-            backdropFilter: "blur(20px)",
-            borderRadius: 16,
-            border: "2px solid rgba(239, 68, 68, 0.3)"
-          }}>
-            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: "#DC2626" }}>Cerrado</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: "#DC2626" }}>
-              Este tema está cerrado y no acepta nuevas respuestas
+                  {replyTo && (
+                    <button
+                      type="button"
+                      onClick={() => setReplyTo(null)}
+                      style={{
+                        padding: "14px 28px",
+                        background: "rgba(255, 255, 255, 0.6)",
+                        color: "#374151",
+                        border: "none",
+                        borderRadius: 12,
+                        fontSize: 15,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        fontFamily: "Montserrat, sans-serif"
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  )}
+                </div>
+              </form>
             </div>
-          </div>
-        )}
-      </main>
-    </div>
+          )}
+
+          {!loadingData && thread && thread.status === 'locked' && (
+            <div style={{
+              padding: 24,
+              textAlign: "center",
+              background: "rgba(239, 68, 68, 0.1)",
+              backdropFilter: "blur(20px)",
+              borderRadius: 16,
+              border: "2px solid rgba(239, 68, 68, 0.3)"
+            }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: "#DC2626" }}>Cerrado</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "#DC2626" }}>
+                Este tema está cerrado y no acepta nuevas respuestas
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
     </>
   )
 }

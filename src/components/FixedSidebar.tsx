@@ -103,12 +103,12 @@ export default function FixedSidebar() {
         sidebar.style.setProperty('z-index', '10001', 'important') // Lower than hamburger button (10002)
         sidebar.style.setProperty('padding-top', '70px', 'important') // Extra padding to avoid hamburger button
         sidebar.style.setProperty('flex-direction', 'column', 'important')
-        sidebar.style.setProperty('background', '#1e3a5f', 'important')
+        sidebar.style.setProperty('background', '#ffffff', 'important')
         sidebar.style.setProperty('padding', '70px 16px 32px 16px', 'important') // Extra padding at top (70px) to avoid hamburger button
         sidebar.style.setProperty('overflow-y', 'auto', 'important')
         sidebar.style.setProperty('overflow-x', 'hidden', 'important')
-        sidebar.style.setProperty('box-shadow', '2px 0 20px rgba(0, 0, 0, 0.15)', 'important')
-        sidebar.style.setProperty('border-right', '2px solid rgba(147, 197, 253, 0.3)', 'important')
+        sidebar.style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.08)', 'important')
+        sidebar.style.setProperty('border-right', '1px solid rgba(0, 0, 0, 0.08)', 'important')
         sidebar.style.setProperty('border-left', 'none', 'important')
         sidebar.style.setProperty('box-sizing', 'border-box', 'important')
       } else {
@@ -189,7 +189,7 @@ export default function FixedSidebar() {
   }
 
   const compactButtonOverrides = (isActive: boolean) =>
-    isCompactSidebar
+    isMobile
       ? {
         justifyContent: "center" as const,
         alignItems: "center" as const,
@@ -199,7 +199,7 @@ export default function FixedSidebar() {
         width: "100%",
         textAlign: "center" as const,
         background: "transparent",
-        color: isActive ? "#93C5FD" : "#fff"
+        color: isActive ? "#0B71FE" : "#4b5563"
       }
       : {}
 
@@ -250,13 +250,13 @@ export default function FixedSidebar() {
         left: 0,
         width: "clamp(240px, 25vw, 320px)",
         height: "100vh",
-        background: "#1e3a5f",
-        boxShadow: "4px 0 20px rgba(0, 0, 0, 0.2)",
+        background: "#FBFAF5",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
         zIndex: 1000,
         overflowY: "auto",
         overflowX: "hidden",
         fontFamily: "'Montserrat', sans-serif",
-        borderRight: "2px solid rgba(255, 255, 255, 0.1)",
+        borderRight: "2px solid #0F62FE",
         boxSizing: "border-box"
       }}>
         <div style={{ padding: "24px 20px 24px 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", minHeight: "100%" }} className="sidebar-inner-container">
@@ -290,7 +290,7 @@ export default function FixedSidebar() {
               fontFamily: "'Montserrat', sans-serif",
               fontSize: 22,
               fontWeight: 800,
-              color: "#fff",
+              color: "#1e293b",
               letterSpacing: "0.5px"
             }}>
               BIZEN
@@ -375,7 +375,7 @@ export default function FixedSidebar() {
                   alignItems: "center",
                   gap: 12,
                   padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (coursesActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  background: isCompactSidebar ? "transparent" : (coursesActive ? "#eff6ff" : "transparent"),
                   border: "none",
                   borderRadius: 10,
                   cursor: "pointer",
@@ -384,20 +384,20 @@ export default function FixedSidebar() {
                   fontSize: 14,
                   fontWeight: coursesActive ? 700 : 600,
                   textAlign: "left",
-                  color: coursesActive ? "#93C5FD" : "#fff",
+                  color: coursesActive ? "#0B71FE" : "#4b5563",
                   ...compactButtonOverrides(coursesActive)
                 }}
                 onMouseEnter={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                    e.currentTarget.style.color = "#93C5FD"
+                    e.currentTarget.style.background = "#f8fafc"
+                    e.currentTarget.style.color = "#0B71FE"
                     e.currentTarget.style.transform = "translateX(-4px)"
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = coursesActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = coursesActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.background = coursesActive ? "#eff6ff" : "transparent"
+                    e.currentTarget.style.color = coursesActive ? "#0B71FE" : "#4b5563"
                     e.currentTarget.style.transform = "translateX(0)"
                   }
                 }}
@@ -414,7 +414,7 @@ export default function FixedSidebar() {
                   alignItems: "center",
                   gap: 12,
                   padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "#eff6ff" : "transparent"),
                   border: "none",
                   borderRadius: 10,
                   cursor: "pointer",
@@ -423,20 +423,20 @@ export default function FixedSidebar() {
                   fontSize: 14,
                   fontWeight: retoDiarioActive ? 700 : 600,
                   textAlign: "left",
-                  color: retoDiarioActive ? "#93C5FD" : "#fff",
+                  color: retoDiarioActive ? "#0B71FE" : "#4b5563",
                   ...compactButtonOverrides(retoDiarioActive)
                 }}
                 onMouseEnter={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                    e.currentTarget.style.color = "#93C5FD"
+                    e.currentTarget.style.background = "#f8fafc"
+                    e.currentTarget.style.color = "#0B71FE"
                     e.currentTarget.style.transform = "translateX(-4px)"
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = retoDiarioActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = retoDiarioActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.background = retoDiarioActive ? "#eff6ff" : "transparent"
+                    e.currentTarget.style.color = retoDiarioActive ? "#0B71FE" : "#4b5563"
                     e.currentTarget.style.transform = "translateX(0)"
                   }
                 }}
@@ -494,7 +494,7 @@ export default function FixedSidebar() {
                   alignItems: "center",
                   gap: 12,
                   padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (simuladorActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  background: isCompactSidebar ? "transparent" : (simuladorActive ? "#eff6ff" : "transparent"),
                   border: "none",
                   borderRadius: 10,
                   cursor: "pointer",
@@ -503,20 +503,20 @@ export default function FixedSidebar() {
                   fontSize: 14,
                   fontWeight: simuladorActive ? 700 : 600,
                   textAlign: "left",
-                  color: simuladorActive ? "#93C5FD" : "#fff",
+                  color: simuladorActive ? "#0B71FE" : "#4b5563",
                   ...compactButtonOverrides(simuladorActive)
                 }}
                 onMouseEnter={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                    e.currentTarget.style.color = "#93C5FD"
+                    e.currentTarget.style.background = "#f8fafc"
+                    e.currentTarget.style.color = "#0B71FE"
                     e.currentTarget.style.transform = "translateX(-4px)"
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = simuladorActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = simuladorActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.background = simuladorActive ? "#eff6ff" : "transparent"
+                    e.currentTarget.style.color = simuladorActive ? "#0B71FE" : "#4b5563"
                     e.currentTarget.style.transform = "translateX(0)"
                   }
                 }}
@@ -533,7 +533,7 @@ export default function FixedSidebar() {
                   alignItems: "center",
                   gap: 12,
                   padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (tiendaActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  background: isCompactSidebar ? "transparent" : (tiendaActive ? "#eff6ff" : "transparent"),
                   border: "none",
                   borderRadius: 10,
                   cursor: "pointer",
@@ -542,20 +542,20 @@ export default function FixedSidebar() {
                   fontSize: 14,
                   fontWeight: tiendaActive ? 700 : 600,
                   textAlign: "left",
-                  color: tiendaActive ? "#93C5FD" : "#fff",
+                  color: tiendaActive ? "#0B71FE" : "#4b5563",
                   ...compactButtonOverrides(tiendaActive)
                 }}
                 onMouseEnter={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                    e.currentTarget.style.color = "#93C5FD"
+                    e.currentTarget.style.background = "#f8fafc"
+                    e.currentTarget.style.color = "#0B71FE"
                     e.currentTarget.style.transform = "translateX(-4px)"
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = tiendaActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = tiendaActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.background = tiendaActive ? "#eff6ff" : "transparent"
+                    e.currentTarget.style.color = tiendaActive ? "#0B71FE" : "#4b5563"
                     e.currentTarget.style.transform = "translateX(0)"
                   }
                 }}
@@ -572,7 +572,7 @@ export default function FixedSidebar() {
                   alignItems: "center",
                   gap: 12,
                   padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                  background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "#eff6ff" : "transparent"),
                   border: "none",
                   borderRadius: 10,
                   cursor: "pointer",
@@ -581,20 +581,20 @@ export default function FixedSidebar() {
                   fontSize: 14,
                   fontWeight: impactoSocialActive ? 700 : 600,
                   textAlign: "left",
-                  color: impactoSocialActive ? "#93C5FD" : "#fff",
+                  color: impactoSocialActive ? "#0B71FE" : "#4b5563",
                   ...compactButtonOverrides(impactoSocialActive)
                 }}
                 onMouseEnter={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                    e.currentTarget.style.color = "#93C5FD"
+                    e.currentTarget.style.background = "#f8fafc"
+                    e.currentTarget.style.color = "#0B71FE"
                     e.currentTarget.style.transform = "translateX(-4px)"
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isCompactSidebar) {
-                    e.currentTarget.style.background = impactoSocialActive ? "rgba(255,255,255,0.15)" : "transparent"
-                    e.currentTarget.style.color = impactoSocialActive ? "#93C5FD" : "#fff"
+                    e.currentTarget.style.background = impactoSocialActive ? "#eff6ff" : "transparent"
+                    e.currentTarget.style.color = impactoSocialActive ? "#0B71FE" : "#4b5563"
                     e.currentTarget.style.transform = "translateX(0)"
                   }
                 }}
@@ -614,7 +614,7 @@ export default function FixedSidebar() {
                       alignItems: "center",
                       gap: 12,
                       padding: "12px",
-                      background: isCompactSidebar ? "transparent" : (forumActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                      background: isCompactSidebar ? "transparent" : (forumActive ? "#eff6ff" : "transparent"),
                       border: "none",
                       borderRadius: 10,
                       cursor: "pointer",
@@ -623,20 +623,20 @@ export default function FixedSidebar() {
                       fontSize: 14,
                       fontWeight: forumActive ? 700 : 600,
                       textAlign: "left",
-                      color: forumActive ? "#93C5FD" : "#fff",
+                      color: forumActive ? "#0B71FE" : "#4b5563",
                       ...compactButtonOverrides(forumActive)
                     }}
                     onMouseEnter={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                        e.currentTarget.style.color = "#93C5FD"
+                        e.currentTarget.style.background = "#f8fafc"
+                        e.currentTarget.style.color = "#0B71FE"
                         e.currentTarget.style.transform = "translateX(-4px)"
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = forumActive ? "rgba(255,255,255,0.15)" : "transparent"
-                        e.currentTarget.style.color = forumActive ? "#93C5FD" : "#fff"
+                        e.currentTarget.style.background = forumActive ? "#eff6ff" : "transparent"
+                        e.currentTarget.style.color = forumActive ? "#0B71FE" : "#4b5563"
                         e.currentTarget.style.transform = "translateX(0)"
                       }
                     }}
@@ -661,7 +661,7 @@ export default function FixedSidebar() {
                           alignItems: "center",
                           gap: 12,
                           padding: "12px",
-                          background: isCompactSidebar ? "transparent" : (isMasOpen ? "rgba(255,255,255,0.15)" : "transparent"),
+                          background: isCompactSidebar ? "transparent" : (isMasOpen ? "#eff6ff" : "transparent"),
                           border: "none",
                           borderRadius: 10,
                           cursor: "pointer",
@@ -670,7 +670,7 @@ export default function FixedSidebar() {
                           fontSize: 14,
                           fontWeight: 600,
                           textAlign: "left",
-                          color: isMasOpen ? "#93C5FD" : "#fff",
+                          color: isMasOpen ? "#0B71FE" : "#4b5563",
                           width: "100%",
                           minHeight: 0,
                           justifyContent: "flex-start",
@@ -678,15 +678,15 @@ export default function FixedSidebar() {
                         }}
                         onMouseEnter={(e) => {
                           if (!isCompactSidebar) {
-                            e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                            e.currentTarget.style.color = "#93C5FD"
+                            e.currentTarget.style.background = "#f8fafc"
+                            e.currentTarget.style.color = "#0B71FE"
                             e.currentTarget.style.transform = "translateX(-4px)"
                           }
                         }}
                         onMouseLeave={(e) => {
                           if (!isCompactSidebar) {
-                            e.currentTarget.style.background = isMasOpen ? "rgba(255,255,255,0.15)" : "transparent"
-                            e.currentTarget.style.color = isMasOpen ? "#93C5FD" : "#fff"
+                            e.currentTarget.style.background = isMasOpen ? "#eff6ff" : "transparent"
+                            e.currentTarget.style.color = isMasOpen ? "#0B71FE" : "#4b5563"
                             e.currentTarget.style.transform = "translateX(0)"
                           }
                         }}
@@ -708,10 +708,10 @@ export default function FixedSidebar() {
                             flexDirection: "column",
                             gap: 6,
                             padding: "12px",
-                            background: "#1e3a5f",
-                            border: "1px solid rgba(255,255,255,0.15)",
+                            background: "#FBFAF5",
+                            border: "2px solid #0F62FE",
                             borderRadius: 12,
-                            boxShadow: "4px 4px 20px rgba(0,0,0,0.25)",
+                            boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
                             zIndex: 10002,
                           }}
                           onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
@@ -726,7 +726,7 @@ export default function FixedSidebar() {
                               alignItems: "center",
                               gap: 12,
                               padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (puntosActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                              background: isCompactSidebar ? "transparent" : (puntosActive ? "#eff6ff" : "transparent"),
                               border: "none",
                               borderRadius: 8,
                               cursor: "pointer",
@@ -735,19 +735,19 @@ export default function FixedSidebar() {
                               fontSize: 13,
                               fontWeight: puntosActive ? 700 : 600,
                               textAlign: "left",
-                              color: puntosActive ? "#93C5FD" : "#fff",
+                              color: puntosActive ? "#0B71FE" : "#4b5563",
                               ...compactButtonOverrides(puntosActive)
                             }}
                             onMouseEnter={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                                e.currentTarget.style.color = "#93C5FD"
+                                e.currentTarget.style.background = "#f8fafc"
+                                e.currentTarget.style.color = "#0B71FE"
                               }
                             }}
                             onMouseLeave={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = puntosActive ? "rgba(255,255,255,0.15)" : "transparent"
-                                e.currentTarget.style.color = puntosActive ? "#93C5FD" : "#fff"
+                                e.currentTarget.style.background = puntosActive ? "#eff6ff" : "transparent"
+                                e.currentTarget.style.color = puntosActive ? "#0B71FE" : "#4b5563"
                               }
                             }}
                           >
@@ -765,7 +765,7 @@ export default function FixedSidebar() {
                               alignItems: "center",
                               gap: 12,
                               padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (profileActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                              background: isCompactSidebar ? "transparent" : (profileActive ? "#eff6ff" : "transparent"),
                               border: "none",
                               borderRadius: 8,
                               cursor: "pointer",
@@ -774,19 +774,19 @@ export default function FixedSidebar() {
                               fontSize: 13,
                               fontWeight: profileActive ? 700 : 600,
                               textAlign: "left",
-                              color: profileActive ? "#93C5FD" : "#fff",
+                              color: profileActive ? "#0B71FE" : "#4b5563",
                               ...compactButtonOverrides(profileActive)
                             }}
                             onMouseEnter={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                                e.currentTarget.style.color = "#93C5FD"
+                                e.currentTarget.style.background = "#f8fafc"
+                                e.currentTarget.style.color = "#0B71FE"
                               }
                             }}
                             onMouseLeave={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = profileActive ? "rgba(255,255,255,0.15)" : "transparent"
-                                e.currentTarget.style.color = profileActive ? "#93C5FD" : "#fff"
+                                e.currentTarget.style.background = profileActive ? "#eff6ff" : "transparent"
+                                e.currentTarget.style.color = profileActive ? "#0B71FE" : "#4b5563"
                               }
                             }}
                           >
@@ -802,7 +802,7 @@ export default function FixedSidebar() {
                               alignItems: "center",
                               gap: 12,
                               padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (settingsActive ? "rgba(255,255,255,0.15)" : "transparent"),
+                              background: isCompactSidebar ? "transparent" : (settingsActive ? "#eff6ff" : "transparent"),
                               border: "none",
                               borderRadius: 8,
                               cursor: "pointer",
@@ -811,21 +811,21 @@ export default function FixedSidebar() {
                               fontSize: 13,
                               fontWeight: settingsActive ? 700 : 600,
                               textAlign: "left",
-                              color: settingsActive ? "#93C5FD" : "#fff",
+                              color: settingsActive ? "#0B71FE" : "#4b5563",
                               width: "100%",
                               boxSizing: "border-box",
                               ...compactButtonOverrides(settingsActive)
                             }}
                             onMouseEnter={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                                e.currentTarget.style.color = "#93C5FD"
+                                e.currentTarget.style.background = "#f8fafc"
+                                e.currentTarget.style.color = "#0B71FE"
                               }
                             }}
                             onMouseLeave={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = settingsActive ? "rgba(255,255,255,0.15)" : "transparent"
-                                e.currentTarget.style.color = settingsActive ? "#93C5FD" : "#fff"
+                                e.currentTarget.style.background = settingsActive ? "#eff6ff" : "transparent"
+                                e.currentTarget.style.color = settingsActive ? "#0B71FE" : "#4b5563"
                               }
                             }}
                           >
@@ -851,18 +851,18 @@ export default function FixedSidebar() {
                               fontSize: 13,
                               fontWeight: 600,
                               textAlign: "left",
-                              color: "#fff",
+                              color: "#4b5563",
                               textDecoration: "none",
                               width: "100%",
                               boxSizing: "border-box"
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                              e.currentTarget.style.color = "#93C5FD"
+                              e.currentTarget.style.background = "#f8fafc"
+                              e.currentTarget.style.color = "#0B71FE"
                             }}
                             onMouseLeave={(e) => {
                               e.currentTarget.style.background = "transparent"
-                              e.currentTarget.style.color = "#fff"
+                              e.currentTarget.style.color = "#4b5563"
                             }}
                           >
                             <Share2 size={20} strokeWidth={2} />
@@ -1181,7 +1181,7 @@ export default function FixedSidebar() {
       <style>{`
         /* Softer navy sidebar: white text, uppercase, bold */
         [data-fixed-sidebar] {
-          background: #1e3a5f !important;
+          background: #FBFAF5 !important;
         }
         [data-fixed-sidebar] .nav-item-label,
         [data-fixed-sidebar] button span,
@@ -1189,6 +1189,7 @@ export default function FixedSidebar() {
           text-transform: uppercase !important;
           letter-spacing: 0.5px;
           font-weight: 700 !important;
+          color: #4b5563 !important;
         }
         
         /* Ensure Lucide SVG icons in nav buttons render correctly (size, no collapse, inherit color) */
@@ -1231,13 +1232,13 @@ export default function FixedSidebar() {
             max-height: 100vh !important;
             overflow-y: auto !important;
             overflow-x: hidden !important;
-            border-right: 2px solid rgba(255, 255, 255, 0.1) !important;
+            border-right: 2px solid #0F62FE !important;
             border-left: none !important;
             padding: 70px 12px 32px 12px !important; /* Horizontal padding for icon spacing */
             z-index: 10000 !important;
-            background: #1e3a5f !important;
+            background: #FBFAF5 !important;
             backdrop-filter: blur(20px) !important;
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15) !important;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08) !important;
             flex-direction: column !important;
             transform: translateX(-100%) !important;
             transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out !important;
@@ -1271,7 +1272,7 @@ export default function FixedSidebar() {
             max-height: 100vh !important;
             overflow-y: auto !important;
             overflow-x: hidden !important;
-            border-right: 2px solid rgba(255, 255, 255, 0.1) !important;
+            border-right: 2px solid #0F62FE !important;
             border-left: none !important;
             padding: 70px 12px 32px 12px !important; /* Horizontal padding for icon spacing */
             z-index: 10001 !important; /* Lower than hamburger button (10003) - CRITICAL */
@@ -1310,9 +1311,9 @@ export default function FixedSidebar() {
             transition: transform 0.3s ease-in-out !important;
             display: flex !important;
             flex-direction: column !important;
-            background: #1e3a5f !important;
+            background: #FBFAF5 !important;
             backdrop-filter: blur(20px) !important;
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15) !important;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08) !important;
             visibility: visible !important;
             opacity: 1 !important;
             pointer-events: auto !important;
@@ -1367,44 +1368,7 @@ export default function FixedSidebar() {
             background-color: transparent !important;
           }
           
-          /* Make emojis blue on mobile - EXACT SAME AS DESKTOP */
-          /* Use exact same selectors and values as desktop */
-          [data-fixed-sidebar] button span:first-child,
-          [data-fixed-sidebar] button > span:first-child,
-          [data-fixed-sidebar] button span:first-of-type,
-          [data-fixed-sidebar] button span[style*="fontSize: 20"],
-          [data-fixed-sidebar] button span[style*="font-size: 20"],
-          [data-fixed-sidebar] button span[style*="filter"],
-          div[data-fixed-sidebar] button span:first-child,
-          div[data-fixed-sidebar] button > span:first-child {
-            filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-            -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-            transform: none !important; /* Prevent any transforms from interfering */
-          }
-          
-          /* Override any inline filter styles on mobile */
-          [data-fixed-sidebar] button span[style*="filter"],
-          [data-fixed-sidebar] button span[style*="hue-rotate"] {
-            filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-            -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          }
-          
-          /* Additional specificity for emoji spans on mobile */
-          [data-fixed-sidebar] button > span:first-child[style],
-          [data-fixed-sidebar] button span:first-child[style*="display"] {
-            filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-            -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          }
-          
-          /* Override any gradient backgrounds on emojis for mobile */
-          [data-fixed-sidebar] button span:first-child[style*="WebkitBackgroundClip"] {
-            background: none !important;
-            WebkitBackgroundClip: unset !important;
-            WebkitTextFillColor: unset !important;
-            backgroundClip: unset !important;
-            filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-            -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          }
+          /* Removed blue emoji filters for mobile */
           
           /* CRITICAL: Hide hamburger toggle button on ALL devices */
           .global-mobile-sidebar-toggle {
@@ -1472,7 +1436,8 @@ export default function FixedSidebar() {
             height: 100vh !important;
             overflow-x: hidden !important;
             overflow-y: auto !important;
-            background: #1e3a5f !important;
+            background: #FBFAF5 !important;
+            border-right: 2px solid #0F62FE !important;
           }
           
           /* Show text labels on iPad - text only, no images */
@@ -1507,8 +1472,8 @@ export default function FixedSidebar() {
           }
         }
         
-        /* All devices - Ensure icons are perfectly centered */
-        @media (max-width: 1160px) {
+        /* Mobile only - Ensure icons are perfectly centered */
+        @media (max-width: 767px) {
           [data-fixed-sidebar] {
             display: flex !important;
             flex-direction: column !important;
@@ -1575,7 +1540,8 @@ export default function FixedSidebar() {
             height: 100vh !important;
             overflow-x: hidden !important;
             overflow-y: auto !important;
-            background: #1e3a5f !important;
+            background: #FBFAF5 !important;
+            border-right: 2px solid #0F62FE !important;
           }
           
           /* Show text labels on desktop - wrap so full text is visible */
@@ -1596,79 +1562,9 @@ export default function FixedSidebar() {
           }
         }
         
-        /* Make emojis blue on desktop too - FORCE with multiple selectors */
-        [data-fixed-sidebar] button span:first-child,
-          [data-fixed-sidebar] button > span:first-child,
-          [data-fixed-sidebar] button span:first-of-type {
-            filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-            -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          }
-          
-          /* Override any inline filter styles on desktop */
-          [data-fixed-sidebar] button span[style*="filter"] {
-            filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-            -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          }
-          
-          /* Override any gradient backgrounds on emojis for desktop */
-          [data-fixed-sidebar] button span:first-child[style*="WebkitBackgroundClip"] {
-            background: none !important;
-            WebkitBackgroundClip: unset !important;
-            WebkitTextFillColor: unset !important;
-            backgroundClip: unset !important;
-            filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-            -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          }
-        }
+        /* Removed blue emoji filters */
         
-        /* Global rule: Make ALL emojis blue on ALL devices - HIGHEST PRIORITY */
-        /* This applies to ALL screen sizes - mobile, tablet, and desktop */
-        /* Use maximum specificity to override any conflicting styles */
-        [data-fixed-sidebar] button span:first-child,
-        [data-fixed-sidebar] button > span:first-child,
-        [data-fixed-sidebar] button span:first-of-type,
-        [data-fixed-sidebar] button span[style*="fontSize: 20"],
-        [data-fixed-sidebar] button span[style*="font-size: 20"],
-        [data-fixed-sidebar] button span[style*="filter"],
-        [data-fixed-sidebar] button span[style*="hue-rotate"],
-        div[data-fixed-sidebar] button span:first-child,
-        div[data-fixed-sidebar] button > span:first-child,
-        div[data-fixed-sidebar] button span:first-of-type {
-          filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          transform: none !important; /* Prevent any transforms from interfering */
-        }
-        
-        /* Force blue filter on emojis even if they have inline styles */
-        /* This ensures the filter is applied regardless of what's in the inline style */
-        [data-fixed-sidebar] button span[style*="filter"],
-        [data-fixed-sidebar] button span[style*="hue-rotate"],
-        [data-fixed-sidebar] button > span[style*="filter"],
-        [data-fixed-sidebar] button > span[style*="hue-rotate"] {
-          filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-        }
-        
-        /* Additional specificity for emoji spans - ensure they're always blue */
-        /* Target spans with specific inline style attributes */
-        [data-fixed-sidebar] button > span:first-child[style],
-        [data-fixed-sidebar] button span:first-child[style*="display"],
-        [data-fixed-sidebar] button span:first-child[style*="fontSize"],
-        [data-fixed-sidebar] button span:first-child[style*="font-size"] {
-          filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-        }
-        
-        /* Override any gradient backgrounds on emojis globally */
-        [data-fixed-sidebar] button span:first-child[style*="WebkitBackgroundClip"],
-        [data-fixed-sidebar] button span:first-child[style*="backgroundClip"] {
-          background: none !important;
-          WebkitBackgroundClip: unset !important;
-          WebkitTextFillColor: unset !important;
-          backgroundClip: unset !important;
-          filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-          -webkit-filter: hue-rotate(200deg) saturate(1.8) brightness(0.85) !important;
-        }
+        /* Emoji filters removed */
         
         /* Ensure avatar is next to username on ALL devices */
         .sidebar-user-info {

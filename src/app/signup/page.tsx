@@ -219,7 +219,7 @@ function BIZENSignupContent() {
       alignItems: "center" as const,
       justifyContent: "center" as const,
       boxSizing: "border-box" as const,
-      padding: "clamp(60px, 10vw, 40px) 20px",
+      padding: "80px 20px 40px",
     }}>
       {/* Brand name - slightly adjusted for mobile flow */}
       <Link href="/" style={{
@@ -247,7 +247,7 @@ function BIZENSignupContent() {
       `}} />
 
       {/* Decorative science elements */}
-      <div aria-hidden style={{ position: "absolute" as const, top: 60, left: 80, opacity: 0.6, zIndex: 0 }}>
+      <div className="deco-element" aria-hidden style={{ position: "absolute" as const, top: 60, left: 80, opacity: 0.6, zIndex: 0 }}>
         <svg width="80" height="80" viewBox="0 0 80 80">
           <circle cx="40" cy="40" r="35" fill="none" stroke="#FF6B9D" strokeWidth="2" />
           <circle cx="40" cy="40" r="5" fill="#FF6B9D" />
@@ -255,7 +255,7 @@ function BIZENSignupContent() {
           <circle cx="65" cy="40" r="8" fill="#93C5FD" />
         </svg>
       </div>
-      <div aria-hidden style={{ position: "absolute" as const, bottom: 80, right: 100, opacity: 0.5, zIndex: 0 }}>
+      <div className="deco-element" aria-hidden style={{ position: "absolute" as const, bottom: 80, right: 100, opacity: 0.5, zIndex: 0 }}>
         <svg width="90" height="70" viewBox="0 0 90 70">
           <path d="M10 35 L30 20 L50 35 L70 20 L80 35" fill="none" stroke="#FFA500" strokeWidth="3" />
           <circle cx="10" cy="35" r="6" fill="#FFA500" />
@@ -265,7 +265,7 @@ function BIZENSignupContent() {
         </svg>
       </div>
 
-      <Card style={{
+      <Card className="auth-card" style={{
         width: "100%",
         maxWidth: 480,
         padding: "clamp(24px, 6vw, 40px)",
@@ -378,6 +378,7 @@ function BIZENSignupContent() {
 
           <button
             type="button"
+            className="google-btn"
             onClick={handleGoogleSignIn}
             disabled={loading || googleLoading}
             style={{
@@ -423,8 +424,41 @@ function BIZENSignupContent() {
       </Card>
 
       <style>{`
+        .auth-page .auth-form { box-sizing: border-box; }
+        .auth-page .auth-form > * { min-width: 0; }
+        .auth-page .auth-form .auth-input,
+        .auth-page .auth-form button[type="submit"],
+        .auth-page .auth-form button.google-btn {
+          width: 100% !important;
+          min-width: 0 !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+          margin: 0 !important;
+        }
+        .auth-page .auth-form button[type="submit"] { border: 1px solid transparent !important; }
+        .auth-page .auth-link:hover { text-decoration: underline !important; color: #1e40af !important; }
+        .auth-page .auth-input:hover { border-color: rgba(11, 113, 254, 0.4) !important; background: #ffffff !important; }
+        .auth-page .auth-form button[type="submit"]:hover:not(:disabled) { background: #1e80ff !important; box-shadow: 0 8px 20px rgba(11, 113, 254, 0.35) !important; }
         .auth-page .auth-form .auth-input:focus { border-color: #0B71FE !important; }
-        .auth-page .auth-link:hover { text-decoration: underline !important; }
+        
+        @media (max-width: 640px) {
+          .deco-element { display: none !important; }
+          .auth-card {
+             padding: 24px 20px !important;
+             margin-top: 20px !important;
+          }
+          .auth-page {
+             padding: 60px 16px 20px !important;
+             justify-content: center !important;
+          }
+          .auth-form {
+             gap: 12px !important;
+          }
+          .auth-input {
+             min-height: 48px !important;
+             font-size: 16px !important;
+          }
+        }
       `}</style>
     </main>
   )
