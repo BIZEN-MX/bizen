@@ -11,7 +11,10 @@ import {
     Star,
     Info,
     Clock,
-    ArrowRight
+    ArrowRight,
+    GraduationCap,
+    User,
+    BookOpen
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -231,10 +234,10 @@ export default function TiendaPage() {
                             transition: "transform 0.2s"
                         }}>
                             <div style={{ position: "relative", height: "200px", background: "#f8fafc" }}>
-                                <div style={{ display: "grid", placeItems: "center", height: "100%", fontSize: "40px" }}>
-                                    {product.category === "Cursos" && "🎓"}
-                                    {product.category === "Avatar" && "👤"}
-                                    {product.category === "Ebooks" && "📚"}
+                                <div style={{ display: "grid", placeItems: "center", height: "100%", color: "#0B71FE", opacity: 0.8 }}>
+                                    {product.category === "Cursos" && <GraduationCap size={48} />}
+                                    {product.category === "Avatar" && <User size={48} />}
+                                    {product.category === "Ebooks" && <BookOpen size={48} />}
                                 </div>
                                 {product.badge && (
                                     <Badge style={{ position: "absolute", top: "16px", right: "16px", background: product.badge === "Nuevo" ? "#10B981" : "#F59E0B" }}>
