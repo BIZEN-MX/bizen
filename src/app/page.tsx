@@ -102,22 +102,23 @@ export default function WelcomePage() {
     return () => observer.disconnect()
   }, [])
 
-  const gradientStyle = { background: "linear-gradient(180deg, #ffffff 0%, rgba(0, 86, 231, 0.03) 18%, rgba(0, 86, 231, 0.05) 40%, rgba(25, 131, 253, 0.08) 60%, rgba(25, 131, 253, 0.1) 100%)", backgroundAttachment: "scroll" as const, overflow: "visible" }
+  const gradientStyle = { background: "linear-gradient(180deg, #ffffff 0%, rgba(0, 86, 231, 0.03) 18%, rgba(0, 86, 231, 0.05) 40%, rgba(25, 131, 253, 0.08) 60%, rgba(25, 131, 253, 0.1) 100%)", backgroundAttachment: "scroll" as const, overflow: "hidden" }
 
   return (
     <div style={{
       background: "#ffffff",
-      flex: "0 0 auto",
+      flex: "1 0 auto",
       height: "auto",
       width: "100%",
       minWidth: "100%",
-      maxWidth: "100%",
+      maxWidth: "100vw",
       margin: 0,
       padding: 0,
       overflowX: "hidden",
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
+      position: "relative"
     }} className="main-page-container landing-page-root" data-landing-root>
       {/* Header: pill nav design matching reference screenshot */}
       <header className="main-header landing-header glass-header" style={{
@@ -153,8 +154,30 @@ export default function WelcomePage() {
           </Link>
 
           {/* Hamburger (mobile only) */}
-          <button type="button" className="landing-header-mobile-menu-btn" aria-label="Abrir menú" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((o) => !o)} style={{ display: "none", alignItems: "center", justifyContent: "center", width: 44, height: 44, padding: 0, border: "none", background: "transparent", cursor: "pointer", color: "#0056E7", order: 2 }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+          <button
+            type="button"
+            className="landing-header-mobile-menu-btn"
+            aria-label="Abrir menú"
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((o) => !o)}
+            style={{
+              display: "none",
+              flexDirection: "column",
+              gap: "5px",
+              width: 44,
+              height: 44,
+              padding: "12px 10px",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              order: 2,
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <div style={{ width: 24, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(45deg) translateY(10px)" : "none" }} />
+            <div style={{ width: 24, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", opacity: mobileMenuOpen ? 0 : 1 }} />
+            <div style={{ width: 24, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(-45deg) translateY(-10px)" : "none" }} />
           </button>
 
           {/* Centered pill nav */}
@@ -256,27 +279,34 @@ export default function WelcomePage() {
           style={{
             position: "fixed",
             inset: 0,
-            zIndex: 999,
-            background: "rgba(0, 86, 231, 0.95)", // More premium blue overlay
-            backdropFilter: "blur(12px)", // Modern blur
+            zIndex: 9999,
+            background: "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            overflow: "hidden"
           }}
           onClick={() => setMobileMenuOpen(false)}
         >
+          {/* Decorative elements to match login/signup */}
+          <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, backgroundImage: "linear-gradient(rgba(0,86,231,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.06) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
+          <div aria-hidden style={{ position: "absolute", top: "-10%", left: "-10%", width: "70vw", height: "70vw", borderRadius: "50%", background: "radial-gradient(circle, rgba(0,86,231,0.2) 0%, transparent 70%)", filter: "blur(40px)", zIndex: 0 }} />
+          <div aria-hidden style={{ position: "absolute", bottom: "-10%", right: "-10%", width: "60vw", height: "60vw", borderRadius: "50%", background: "radial-gradient(circle, rgba(25,131,253,0.15) 0%, transparent 70%)", filter: "blur(40px)", zIndex: 0 }} />
+
           <div
             className="landing-mobile-nav-drawer"
             style={{
               width: "100%",
               maxWidth: "400px",
               padding: "40px 24px",
-              textAlign: "center"
+              textAlign: "center",
+              position: "relative",
+              zIndex: 1
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ position: "absolute", top: "20px", right: "20px" }}>
+            <div style={{ position: "absolute", top: "-20px", right: "20px" }}>
               <button
                 type="button"
                 aria-label="Cerrar menú"
@@ -286,34 +316,121 @@ export default function WelcomePage() {
                   height: 44,
                   padding: 0,
                   border: "none",
-                  background: "transparent",
+                  background: "rgba(255,255,255,0.1)",
+                  borderRadius: "50%",
                   cursor: "pointer",
                   color: "#fff",
-                  fontSize: "32px"
+                  fontSize: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
                 }}
               >
-                ×
+                ✕
               </button>
             </div>
 
-            <nav style={{ display: "flex", flexDirection: "column", gap: "20px", alignItems: "center" }}>
-              <Link href="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Inicio</Link>
-              <Link href="#sobre-bizen" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Somos BIZEN</Link>
-              <Link href="#perfiles" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Perfil educativo</Link>
-              <Link href="#impacto" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Impacto social</Link>
-              <Link href="#problema" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: "20px", fontWeight: 600, color: "#fff", textDecoration: "none" }}>Blog</Link>
+            <div style={{ marginBottom: "40px" }}>
+              <span style={{ fontSize: "28px", fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
+                BIZEN<span style={{ color: "#1983FD" }}>.</span>
+              </span>
+            </div>
 
-              <div style={{ height: "1px", width: "100%", background: "rgba(255,255,255,0.1)", margin: "10px 0" }} />
+            <nav style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center", width: "100%" }}>
+              {[
+                { label: "Inicio", href: "/" },
+                { label: "Somos BIZEN", href: "#sobre-bizen" },
+                { label: "Perfil educativo", href: "#perfiles" },
+                { label: "Impacto social", href: "#impacto" },
+                { label: "Blog", href: "#problema" }
+              ].map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    width: "100%",
+                    fontSize: "18px",
+                    fontWeight: 600,
+                    color: "rgba(255,255,255,0.9)",
+                    textDecoration: "none",
+                    padding: "12px",
+                    borderRadius: "12px",
+                    background: "rgba(255,255,255,0.05)",
+                    transition: "all 0.2s"
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "#fff" }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "rgba(255,255,255,0.9)" }}
+                >
+                  {link.label}
+                </Link>
+              ))}
 
-              <Link href="/login" onClick={() => setMobileMenuOpen(false)} style={{ width: "100%", fontSize: "18px", color: "#fff", textDecoration: "none", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", background: "rgba(255,255,255,0.1)", padding: "14px", borderRadius: "12px" }}>
+              <div style={{ height: "1px", width: "80%", background: "rgba(255,255,255,0.1)", margin: "10px 0" }} />
+
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  width: "100%",
+                  fontSize: "18px",
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "12px",
+                  background: "rgba(25, 131, 253, 0.2)",
+                  border: "1.5px solid rgba(25, 131, 253, 0.3)",
+                  padding: "16px",
+                  borderRadius: "14px",
+                  backdropFilter: "blur(8px)"
+                }}
+              >
                 <LogIn size={20} />
                 Iniciar sesión
               </Link>
-              <Link href="/signup" onClick={() => setMobileMenuOpen(false)} style={{ width: "100%", fontSize: "18px", color: "#0056E7", textDecoration: "none", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", background: "#fff", padding: "14px", borderRadius: "12px" }}>
+              <Link
+                href="/signup"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  width: "100%",
+                  fontSize: "18px",
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "12px",
+                  background: "linear-gradient(135deg, #0056E7, #1983FD)",
+                  padding: "16px",
+                  borderRadius: "14px",
+                  boxShadow: "0 8px 20px rgba(0, 86, 231, 0.3)"
+                }}
+              >
                 <UserPlus size={20} />
                 Crear cuenta
               </Link>
-              <a href="https://calendly.com/diego-bizen" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)} style={{ width: "100%", fontSize: "16px", color: "rgba(255,255,255,0.8)", textDecoration: "none", fontWeight: 500, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "10px" }}>
+              <a
+                href="https://calendly.com/diego-bizen"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  width: "100%",
+                  fontSize: "15px",
+                  color: "rgba(255,255,255,0.6)",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  marginTop: "16px"
+                }}
+              >
                 <Calendar size={18} />
                 Agendar demo
               </a>
@@ -322,7 +439,7 @@ export default function WelcomePage() {
         </div>
       )}
 
-      <main className="landing-main" style={{ flex: "0 0 auto", width: "100%", maxWidth: "100%", display: "block", overflow: "visible" }}>
+      <main className="landing-main" style={{ flex: "1 0 auto", width: "100%", maxWidth: "100vw", display: "block", overflowX: "hidden" }}>
         <div className="landing-gradient-wrapper" style={gradientStyle}>
           {/* Hero Section - centered text with geometric shapes */}
           <div className="landing-hero-wrapper" style={{
@@ -338,7 +455,7 @@ export default function WelcomePage() {
             maxWidth: "100%",
             boxSizing: "border-box",
             minHeight: "auto",
-            overflow: "visible",
+            overflow: "hidden",
             isolation: "isolate"
           }}>
             <Hero3DScene />
@@ -2572,7 +2689,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                }}>4 perfiles educativos</span>.
+                }}>3 perfiles educativos</span>.
               </h2>
               <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "#64748b", fontFamily: "'Inter', sans-serif", lineHeight: 1.6 }}>
                 Un clic que adapta toda la experiencia a quién eres.
@@ -2879,7 +2996,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                   </div>
                 </div>
 
-                {/* Right: Photo for active profile (1 solución, 4 perfiles educativos) */}
+                {/* Right: Photo for active profile (1 solución, 3 perfiles educativos) */}
                 <div style={{
                   display: "flex",
                   alignItems: "center",

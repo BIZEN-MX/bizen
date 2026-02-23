@@ -75,12 +75,7 @@ select {
   border-radius: clamp(6px, 1.5vw, 10px) !important;
 }
 
-/* Cards and Containers - Responsive Padding */
-[class*="card"],
-[class*="container"],
-[style*="padding:"][style*="px"] {
-  /* This is handled inline with clamp() */
-}
+/* Cards and Containers - Responsive Padding handled inline with clamp() */
 
 /* ==========================================
    COMPREHENSIVE DEVICE SIZE BREAKPOINTS
@@ -318,11 +313,6 @@ html {
   max-width: 100%;
 }
 
-/* Force containers to stay within viewport */
-body>* {
-  width: 100% !important;
-  max-width: 100% !important;
-}
 
 /* Touch-friendly tap targets */
 @media (max-width: 767px) {
