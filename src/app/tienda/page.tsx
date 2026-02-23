@@ -12,7 +12,6 @@ import {
     Info,
     Clock,
     ArrowRight,
-    GraduationCap,
     User,
     BookOpen
 } from "lucide-react"
@@ -21,15 +20,7 @@ import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 
 const PRODUCTS = [
-    {
-        id: 1,
-        name: "Master en Presupuestos",
-        category: "Cursos",
-        price: 500,
-        image: "/courses/placeholder.png",
-        description: "Domina tus finanzas con plantillas exclusivas.",
-        badge: "Nuevo"
-    },
+
     {
         id: 2,
         name: "Insignia de Embajador",
@@ -157,7 +148,7 @@ export default function TiendaPage() {
                     overflowX: "auto",
                     paddingBottom: "8px"
                 }}>
-                    {["Todos", "Cursos", "Avatar", "Ebooks", "Consultoría"].map((cat) => (
+                    {["Todos", "Avatar", "Ebooks", "Consultoría"].map((cat) => (
                         <button
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
@@ -235,7 +226,6 @@ export default function TiendaPage() {
                         }}>
                             <div style={{ position: "relative", height: "200px", background: "#f8fafc" }}>
                                 <div style={{ display: "grid", placeItems: "center", height: "100%", color: "#0B71FE", opacity: 0.8 }}>
-                                    {product.category === "Cursos" && <GraduationCap size={48} />}
                                     {product.category === "Avatar" && <User size={48} />}
                                     {product.category === "Ebooks" && <BookOpen size={48} />}
                                 </div>
