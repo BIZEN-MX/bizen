@@ -21,7 +21,7 @@ CREATE INDEX IF NOT EXISTS idx_daily_challenges_active_date ON daily_challenges(
 CREATE TABLE IF NOT EXISTS evidence_posts (
   id                  TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   daily_challenge_id  TEXT NOT NULL REFERENCES daily_challenges(id) ON DELETE CASCADE,
-  author_user_id      UUID NOT NULL,
+  author_user_id      TEXT NOT NULL,
   school_id           TEXT,
   class_id            TEXT,
   smart_goal          VARCHAR(200) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS evidence_posts (
   change_tomorrow     VARCHAR(300) NOT NULL,
   attachments         JSONB,
   status              TEXT NOT NULL DEFAULT 'submitted',
-  validated_by        UUID,
+  validated_by        TEXT,
   validated_at        TIMESTAMPTZ,
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -44,7 +44,7 @@ CREATE INDEX IF NOT EXISTS idx_evidence_posts_created     ON evidence_posts(crea
 CREATE TABLE IF NOT EXISTS evidence_reactions (
   id                TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   evidence_post_id  TEXT NOT NULL REFERENCES evidence_posts(id) ON DELETE CASCADE,
-  user_id           UUID NOT NULL,
+  user_id           TEXT NOT NULL,
   reaction_type     TEXT NOT NULL,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (evidence_post_id, user_id)
@@ -56,7 +56,7 @@ CREATE INDEX IF NOT EXISTS idx_evidence_reactions_post ON evidence_reactions(evi
 CREATE TABLE IF NOT EXISTS evidence_comments (
   id                TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   evidence_post_id  TEXT NOT NULL REFERENCES evidence_posts(id) ON DELETE CASCADE,
-  user_id           UUID NOT NULL,
+  user_id           TEXT NOT NULL,
   body              VARCHAR(500) NOT NULL,
   parent_comment_id TEXT REFERENCES evidence_comments(id) ON DELETE CASCADE,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -76,28 +76,27 @@ CREATE POLICY "auth_read_daily_challenges" ON daily_challenges
   FOR SELECT USING (auth.role() = 'authenticated');
 
 -- evidence_posts: students read only from own school
--- (school_id must match what's on the user's profile)
 CREATE POLICY "student_read_evidence_own_school" ON evidence_posts
   FOR SELECT USING (
     auth.uid() IS NOT NULL
     AND (
       school_id IS NULL
       OR school_id = (
-        SELECT school_id FROM profiles WHERE user_id = auth.uid()
+        SELECT school_id FROM profiles WHERE user_id::text = auth.uid()::text
       )
     )
   );
 
 -- students insert their own evidence
 CREATE POLICY "student_insert_evidence" ON evidence_posts
-  FOR INSERT WITH CHECK (author_user_id = auth.uid());
+  FOR INSERT WITH CHECK (author_user_id = auth.uid()::text);
 
 -- teachers can update status (validate)
 CREATE POLICY "teacher_update_evidence_status" ON evidence_posts
   FOR UPDATE USING (
     EXISTS (
       SELECT 1 FROM profiles
-      WHERE user_id = auth.uid()
+      WHERE user_id::text = auth.uid()::text
         AND role IN ('teacher', 'school_admin', 'admin', 'moderator')
     )
   );
@@ -107,17 +106,17 @@ CREATE POLICY "auth_read_reactions" ON evidence_reactions
   FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY "auth_insert_reactions" ON evidence_reactions
-  FOR INSERT WITH CHECK (user_id = auth.uid());
+  FOR INSERT WITH CHECK (user_id = auth.uid()::text);
 
 CREATE POLICY "auth_delete_own_reactions" ON evidence_reactions
-  FOR DELETE USING (user_id = auth.uid());
+  FOR DELETE USING (user_id = auth.uid()::text);
 
 CREATE POLICY "auth_update_own_reactions" ON evidence_reactions
-  FOR UPDATE USING (user_id = auth.uid());
+  FOR UPDATE USING (user_id = auth.uid()::text);
 
 -- comments: auth read + insert own
 CREATE POLICY "auth_read_comments" ON evidence_comments
   FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY "auth_insert_comments" ON evidence_comments
-  FOR INSERT WITH CHECK (user_id = auth.uid());
+  FOR INSERT WITH CHECK (user_id = auth.uid()::text);

@@ -74,13 +74,6 @@ export default function MobileBottomNav() {
       icon: Gamepad2,
       path: '/simulador',
       protected: false
-    },
-    {
-      id: 'tienda',
-      label: 'Tienda',
-      icon: ShoppingBag,
-      path: '/tienda',
-      protected: false
     }
   ]
 
@@ -127,6 +120,13 @@ export default function MobileBottomNav() {
       icon: Star,
       path: "/puntos",
       protected: true
+    },
+    {
+      id: 'tienda',
+      label: 'Tienda',
+      icon: ShoppingBag,
+      path: '/tienda',
+      protected: false
     },
     {
       id: "settings",

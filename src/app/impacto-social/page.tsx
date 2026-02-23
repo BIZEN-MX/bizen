@@ -175,7 +175,7 @@ const checkActiveStatus = (sessionsLast30d: number, modulesLast30d: number): boo
 export default function ImpactoSocialPage() {
     const { user, loading } = useAuth()
     const router = useRouter()
-    const [activeTab, setActiveTab] = useState<"student" | "school" | "transparency">("school")
+    const [activeTab, setActiveTab] = useState<"student" | "school" | "transparency" | "logros">("school")
 
     useEffect(() => {
         if (loading) return
@@ -206,9 +206,10 @@ export default function ImpactoSocialPage() {
         <div className="impacto-outer" style={{
             minHeight: "100vh",
             background: "#ffffff",
-            fontFamily: "'Montserrat', sans-serif",
+            fontFamily: "'Inter', sans-serif",
             color: "#1e3a5f",
             width: "100%",
+            overflowX: "hidden",
             boxSizing: "border-box"
         }}>
             <style>{`
@@ -246,7 +247,7 @@ export default function ImpactoSocialPage() {
 
             <div className="impacto-inner" style={{
                 position: "relative",
-                width: "100%",
+                width: "auto",
                 boxSizing: "border-box"
             }}>
                 {/* 
@@ -259,7 +260,7 @@ export default function ImpactoSocialPage() {
                     borderBottom: "1px solid #e2e8f0",
                     padding: "40px 24px"
                 }}>
-                    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+                    <div style={{ width: "100%", margin: "0 auto", padding: "0 24px", boxSizing: "border-box" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 32, flexWrap: "wrap" }}>
                             <div style={{ flex: "1 1 500px" }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
@@ -355,17 +356,24 @@ export default function ImpactoSocialPage() {
         ---------------------------------------------------------
       */}
                 <div style={{
-                    maxWidth: "1200px",
+                    width: "100%",
                     margin: "0 auto",
                     padding: "0 24px"
                 }}>
                     <div style={{
                         display: "flex",
-                        gap: "32px",
+                        gap: "30px",
                         borderBottom: "2px solid #f1f5f9",
                         marginTop: "40px",
-                        marginBottom: "32px"
+                        marginBottom: "32px",
+                        overflowX: "auto",
+                        whiteSpace: "nowrap",
+                        msOverflowStyle: "none",
+                        scrollbarWidth: "none",
                     }}>
+                        <style>{`
+                            .tab-container::-webkit-scrollbar { display: none; }
+                        `}</style>
                         <button
                             onClick={() => setActiveTab("student")}
                             style={{
@@ -413,6 +421,22 @@ export default function ImpactoSocialPage() {
                             }}
                         >
                             Transparencia
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("logros")}
+                            style={{
+                                padding: "12px 0",
+                                borderBottom: activeTab === "logros" ? "3px solid #0F62FE" : "3px solid transparent",
+                                color: activeTab === "logros" ? "#0F62FE" : "#64748b",
+                                fontWeight: 700,
+                                fontSize: 16,
+                                background: "none",
+                                borderTop: "none", borderLeft: "none", borderRight: "none",
+                                cursor: "pointer",
+                                transition: "all 0.2s"
+                            }}
+                        >
+                            Logros
                         </button>
                     </div>
 
@@ -565,24 +589,7 @@ export default function ImpactoSocialPage() {
 
                                 {/* Timeline / Group Ranking */}
                                 <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-                                    <Card style={{ padding: 32 }}>
-                                        <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24 }}>Historial de Logros</h3>
-                                        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                                            {[
-                                                { icon: <CheckCircle2 size={24} color="#10B981" />, title: "Donación ejecutada", date: "15 Dic", desc: "Se entregaron $15,000 MXN" },
-                                                { icon: <TargetIcon size={24} color="#0F62FE" />, title: "Meta de sesiones lograda", date: "02 Feb", desc: "Promedio >3 sesiones" },
-                                                { icon: <Lock size={24} color="#64748b" />, title: "Base asegurada", date: "01 Ene", desc: "Convenio 2026 firmado" }
-                                            ].map((item, i) => (
-                                                <div key={i} style={{ display: "flex", gap: 16 }}>
-                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>{item.icon}</div>
-                                                    <div>
-                                                        <div style={{ fontSize: 15, fontWeight: 700 }}>{item.title}</div>
-                                                        <div style={{ fontSize: 13, color: "#64748b", margin: "2px 0" }}>{item.date} • {item.desc}</div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </Card>
+
 
                                     <Card style={{ padding: 32 }}>
                                         <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>Impacto por Salones</h3>
@@ -703,6 +710,73 @@ export default function ImpactoSocialPage() {
                                             </summary>
                                             <p style={{ marginTop: 12, fontSize: 14, color: "#475569", lineHeight: 1.6 }}>{faq.a}</p>
                                         </details>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 
+                      ---------------------------------------------------------
+                      E) TAB 4: LOGROS (Achievement History)
+                      ---------------------------------------------------------
+                    */}
+                    {activeTab === "logros" && (
+                        <div style={{ paddingBottom: 80, animation: "fadeIn 0.4s ease both" }}>
+                            <div style={{ width: "100%", margin: "0 auto", padding: "0 24px", boxSizing: "border-box" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+                                    <h3 style={{ fontSize: 24, fontWeight: 900, margin: 0 }}>Historial de Logros</h3>
+                                    <button
+                                        onClick={() => router.push("/impacto-social/historial-logros")}
+                                        style={{
+                                            display: "flex", alignItems: "center", gap: 8, padding: "10px 16px",
+                                            background: "#eff6ff", border: "none", borderRadius: "10px",
+                                            color: "#0F62FE", fontSize: 13, fontWeight: 700, cursor: "pointer"
+                                        }}
+                                    >
+                                        Pantalla Completa <ExternalLink size={14} />
+                                    </button>
+                                </div>
+
+                                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                                    {[
+                                        {
+                                            icon: <CheckCircle2 size={22} color="#10B981" />,
+                                            title: "Donación ejecutada",
+                                            date: "15 Dic",
+                                            desc: "Se entregaron $15,000 MXN",
+                                            category: "Financiero"
+                                        },
+                                        {
+                                            icon: <TargetIcon size={22} color="#0F62FE" />,
+                                            title: "Meta de sesiones lograda",
+                                            date: "02 Feb",
+                                            desc: "Promedio >3 sesiones",
+                                            category: "Actividad"
+                                        },
+                                        {
+                                            icon: <Lock size={22} color="#64748b" />,
+                                            title: "Base asegurada",
+                                            date: "01 Ene",
+                                            desc: "Convenio 2026 firmado",
+                                            category: "Institucional"
+                                        }
+                                    ].map((item, i) => (
+                                        <Card key={i} style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, border: "1px solid #f1f5f9" }}>
+                                            <div style={{ width: 40, height: 40, borderRadius: 10, background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                                {item.icon}
+                                            </div>
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, flexWrap: "wrap" }}>
+                                                    <h4 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#111827" }}>{item.title}</h4>
+                                                    <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", whiteSpace: "nowrap" }}>{item.date}</span>
+                                                </div>
+                                                <p style={{ margin: "2px 0 6px", fontSize: 14, color: "#475569" }}>{item.desc}</p>
+                                                <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", padding: "2px 6px", background: "#f1f5f9", borderRadius: 4, color: "#64748b" }}>
+                                                    {item.category}
+                                                </span>
+                                            </div>
+                                        </Card>
                                     ))}
                                 </div>
                             </div>

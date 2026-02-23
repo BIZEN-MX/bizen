@@ -2,6 +2,7 @@
 import type { Metadata } from "next"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { SettingsProvider } from "@/contexts/SettingsContext"
+import { OnboardingProvider } from "@/contexts/OnboardingContext"
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
 import { BillyTourProvider } from "@/components/billy-tour/BillyTourProvider"
@@ -35,13 +36,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SettingsProvider>
           <AuthProvider>
-            <BillyTourProvider>
-              <AppLayout>
-                <ClientLayoutWrapper>
-                  {children}
-                </ClientLayoutWrapper>
-              </AppLayout>
-            </BillyTourProvider>
+            <OnboardingProvider>
+              <BillyTourProvider>
+                <AppLayout>
+                  <ClientLayoutWrapper>
+                    {children}
+                  </ClientLayoutWrapper>
+                </AppLayout>
+              </BillyTourProvider>
+            </OnboardingProvider>
           </AuthProvider>
         </SettingsProvider>
       </body>

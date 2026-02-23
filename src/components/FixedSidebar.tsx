@@ -525,44 +525,7 @@ export default function FixedSidebar() {
                 <span className="nav-item-label">Simulador</span>
               </button>
 
-              <button
-                data-bizen-tour-menu-item="tienda"
-                onClick={() => navigateTo("/tienda")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (tiendaActive ? "#eff6ff" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: tiendaActive ? 700 : 600,
-                  textAlign: "left",
-                  color: tiendaActive ? "#0B71FE" : "#4b5563",
-                  ...compactButtonOverrides(tiendaActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "#f8fafc"
-                    e.currentTarget.style.color = "#0B71FE"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = tiendaActive ? "#eff6ff" : "transparent"
-                    e.currentTarget.style.color = tiendaActive ? "#0B71FE" : "#4b5563"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <ShoppingBag size={iconSize} strokeWidth={tiendaActive ? 2.5 : 2} />
-                <span className="nav-item-label">Tienda</span>
-              </button>
+
 
               <button
                 data-bizen-tour-menu-item="impacto-social"
@@ -756,6 +719,43 @@ export default function FixedSidebar() {
                           </button>
 
 
+
+                          <button
+                            data-bizen-tour-menu-item="tienda"
+                            onClick={() => navigateTo("/tienda")}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              padding: "10px 12px",
+                              background: isCompactSidebar ? "transparent" : (tiendaActive ? "#eff6ff" : "transparent"),
+                              border: "none",
+                              borderRadius: 8,
+                              cursor: "pointer",
+                              transition: "all 0.2s ease",
+                              fontFamily: "'Montserrat', sans-serif",
+                              fontSize: 13,
+                              fontWeight: tiendaActive ? 700 : 600,
+                              textAlign: "left",
+                              color: tiendaActive ? "#0B71FE" : "#4b5563",
+                              ...compactButtonOverrides(tiendaActive)
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = "#f8fafc"
+                                e.currentTarget.style.color = "#0B71FE"
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isCompactSidebar) {
+                                e.currentTarget.style.background = tiendaActive ? "#eff6ff" : "transparent"
+                                e.currentTarget.style.color = tiendaActive ? "#0B71FE" : "#4b5563"
+                              }
+                            }}
+                          >
+                            <ShoppingBag size={20} strokeWidth={tiendaActive ? 2.5 : 2} />
+                            <span className="nav-item-label">Tienda</span>
+                          </button>
 
                           <button
                             data-bizen-tour-menu-item="profile"

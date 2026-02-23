@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
+import { useOnboarding } from "@/contexts/OnboardingContext"
 import Image from "next/image"
 import Button from "../../components/ui/button"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
@@ -18,6 +19,7 @@ interface UserStats {
 
 export default function ProfilePage() {
   const { user, loading, refreshUser } = useAuth()
+  const { startTour } = useOnboarding()
   const router = useRouter()
   const supabase = createClientMicrocred()
   const [showAvatarPicker, setShowAvatarPicker] = useState(false)
@@ -83,7 +85,7 @@ export default function ProfilePage() {
       username: user.user_metadata?.username || "",
       bio: user.user_metadata?.bio || ""
     })
-    
+
     // Initialize avatar - try to find saved avatar or use default
     const savedAvatar = user.user_metadata?.avatar
     if (savedAvatar && typeof savedAvatar === 'object') {
@@ -132,12 +134,12 @@ export default function ProfilePage() {
   useEffect(() => {
     const htmlEl = document.documentElement
     const bodyEl = document.body
-    
+
     htmlEl.style.background = "#ffffff"
     htmlEl.style.backgroundAttachment = "scroll"
     bodyEl.style.background = "#ffffff"
     bodyEl.style.backgroundAttachment = "scroll"
-    
+
     return () => {
       htmlEl.style.background = ""
       htmlEl.style.backgroundAttachment = ""
@@ -149,10 +151,10 @@ export default function ProfilePage() {
   // Auto-save function with debouncing
   const autoSave = async () => {
     if (!user) return
-    
+
     setSaving(true)
     setSaveError(null)
-    
+
     try {
       // Update user metadata in Supabase Auth
       const { error } = await supabase.auth.updateUser({
@@ -170,7 +172,7 @@ export default function ProfilePage() {
 
       // Refresh the user session to get updated metadata
       await supabase.auth.refreshSession()
-      
+
       // Force refresh the AuthContext
       await refreshUser()
 
@@ -178,7 +180,7 @@ export default function ProfilePage() {
       setLastSaved(new Date())
       setShowAvatarPicker(false)
       console.log("✅ Profile auto-saved successfully!")
-      
+
     } catch (error: any) {
       console.error("Error saving profile:", error)
       setSaveError(error.message || "Error al guardar")
@@ -193,27 +195,27 @@ export default function ProfilePage() {
   useEffect(() => {
     // Don't auto-save on initial load or if no user
     if (!user || !formData.fullName) return
-    
+
     // Check if data actually changed from saved values
-    const hasChanges = 
+    const hasChanges =
       formData.fullName !== (user.user_metadata?.full_name || "") ||
       formData.username !== (user.user_metadata?.username || "") ||
       formData.bio !== (user.user_metadata?.bio || "") ||
       JSON.stringify(selectedAvatar) !== JSON.stringify(user.user_metadata?.avatar || { type: "emoji", value: "👤" })
-    
+
     // Only save if there are actual changes
     if (!hasChanges) return
-    
+
     // Clear previous timeout
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current)
     }
-    
+
     // Set new timeout for auto-save (3 seconds delay to avoid rate limiting)
     saveTimeoutRef.current = setTimeout(() => {
       autoSave()
     }, 3000)
-    
+
     // Cleanup
     return () => {
       if (saveTimeoutRef.current) {
@@ -276,7 +278,7 @@ export default function ProfilePage() {
       }} />
 
       {/* Main Content */}
-      <main className="profile-main-content" data-bizen-tour="profile" style={{ 
+      <main className="profile-main-content" data-bizen-tour="profile" style={{
         minHeight: "100vh",
         padding: "40px",
         fontFamily: "Montserrat, sans-serif",
@@ -330,7 +332,7 @@ export default function ProfilePage() {
             marginBottom: 40,
             position: "relative"
           }}>
-            <div 
+            <div
               onClick={() => setShowAvatarPicker(!showAvatarPicker)}
               style={{
                 width: 120,
@@ -397,41 +399,41 @@ export default function ProfilePage() {
                 {avatarOptions.map((avatar, idx) => {
                   const isSelected = JSON.stringify(selectedAvatar) === JSON.stringify(avatar)
                   return (
-                  <div
-                    key={avatar.id || avatar.value || idx}
-                    onClick={() => {
-                      setSelectedAvatar(avatar)
-                      setShowAvatarPicker(false)
-                    }}
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: "50%",
-                      background: isSelected 
-                        ? "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)" 
-                        : "rgba(59, 130, 246, 0.1)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      border: isSelected ? "3px solid #0F62FE" : "2px solid transparent",
-                      overflow: "hidden",
-                      position: "relative"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "scale(1.1)"
-                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(59, 130, 246, 0.3)"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "scale(1)"
-                      e.currentTarget.style.boxShadow = "none"
-                    }}
-                  >
-                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <AvatarDisplay avatar={avatar} size={24} />
+                    <div
+                      key={avatar.id || avatar.value || idx}
+                      onClick={() => {
+                        setSelectedAvatar(avatar)
+                        setShowAvatarPicker(false)
+                      }}
+                      style={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: "50%",
+                        background: isSelected
+                          ? "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)"
+                          : "rgba(59, 130, 246, 0.1)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        border: isSelected ? "3px solid #0F62FE" : "2px solid transparent",
+                        overflow: "hidden",
+                        position: "relative"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.1)"
+                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(59, 130, 246, 0.3)"
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)"
+                        e.currentTarget.style.boxShadow = "none"
+                      }}
+                    >
+                      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <AvatarDisplay avatar={avatar} size={24} />
+                      </div>
                     </div>
-                  </div>
                   )
                 })}
               </div>
@@ -475,10 +477,10 @@ export default function ProfilePage() {
                       color: "#6B7280",
                       fontWeight: 500
                     }}>
-                      Se unió el {new Date(profileStats.joinDate).toLocaleDateString('es-ES', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
+                      Se unió el {new Date(profileStats.joinDate).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
                       })}
                     </p>
                   )}
@@ -547,26 +549,26 @@ export default function ProfilePage() {
                 </p>
               )}
             </div>
-            
+
             {/* Role Badge */}
             <div style={{
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
               padding: "8px 16px",
-              background: user.user_metadata?.plan === "premium" 
+              background: user.user_metadata?.plan === "premium"
                 ? "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)"
                 : user.user_metadata?.plan === "estudiante"
-                ? "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)"
-                : "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+                  ? "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)"
+                  : "linear-gradient(135deg, #10B981 0%, #059669 100%)",
               borderRadius: 20,
               alignSelf: "center",
               marginTop: 8,
-              boxShadow: user.user_metadata?.plan === "premium" 
+              boxShadow: user.user_metadata?.plan === "premium"
                 ? "0 4px 12px rgba(251, 191, 36, 0.3)"
                 : user.user_metadata?.plan === "estudiante"
-                ? "0 4px 12px rgba(59, 130, 246, 0.3)"
-                : "0 4px 12px rgba(16, 185, 129, 0.3)"
+                  ? "0 4px 12px rgba(59, 130, 246, 0.3)"
+                  : "0 4px 12px rgba(16, 185, 129, 0.3)"
             }}>
               <span style={{
                 fontSize: 13,
@@ -575,11 +577,11 @@ export default function ProfilePage() {
                 textTransform: "capitalize",
                 letterSpacing: "0.5px"
               }}>
-                {user.user_metadata?.plan === "premium" 
+                {user.user_metadata?.plan === "premium"
                   ? "Premium"
                   : user.user_metadata?.plan === "estudiante"
-                  ? "Estudiante"
-                  : "Gratuito"}
+                    ? "Estudiante"
+                    : "Gratuito"}
               </span>
             </div>
           </div>
@@ -755,86 +757,86 @@ export default function ProfilePage() {
 
         {/* Level & Progress Section */}
         {userStats && !loadingStats && (
-        <div style={{
-          width: "100%",
-          margin: "32px 0 0",
-          background: "rgba(255, 255, 255, 0.5)",
-          backdropFilter: "blur(10px)",
-          borderRadius: 20,
-          padding: 28,
-          border: "2px solid rgba(147, 197, 253, 0.4)"
-        }}>
           <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 16
+            width: "100%",
+            margin: "32px 0 0",
+            background: "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(10px)",
+            borderRadius: 20,
+            padding: 28,
+            border: "2px solid rgba(147, 197, 253, 0.4)"
           }}>
-            <h3 style={{
-              margin: 0,
-              fontSize: 20,
-              fontWeight: 800,
-              color: "#1E40AF",
+            <div style={{
               display: "flex",
               alignItems: "center",
-              gap: 10
+              justifyContent: "space-between",
+              marginBottom: 16
             }}>
-              ⚡ Nivel & Progreso
-            </h3>
-            <div style={{
-              padding: "8px 16px",
-              background: "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)",
-              borderRadius: 20,
-              fontSize: 18,
-              fontWeight: 800,
-              color: "#fff",
-              boxShadow: "0 4px 12px rgba(251, 191, 36, 0.3)"
-            }}>
+              <h3 style={{
+                margin: 0,
+                fontSize: 20,
+                fontWeight: 800,
+                color: "#1E40AF",
+                display: "flex",
+                alignItems: "center",
+                gap: 10
+              }}>
+                ⚡ Nivel & Progreso
+              </h3>
+              <div style={{
+                padding: "8px 16px",
+                background: "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)",
+                borderRadius: 20,
+                fontSize: 18,
+                fontWeight: 800,
+                color: "#fff",
+                boxShadow: "0 4px 12px rgba(251, 191, 36, 0.3)"
+              }}>
                 Nivel {userStats.level}
               </div>
-          </div>
+            </div>
 
-          {/* XP Progress Bar */}
-          <div style={{ marginBottom: 12 }}>
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: 8,
-              fontSize: 14,
-              fontWeight: 600,
-              color: "#374151"
-            }}>
+            {/* XP Progress Bar */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: 8,
+                fontSize: 14,
+                fontWeight: 600,
+                color: "#374151"
+              }}>
                 <span>{userStats.xpInCurrentLevel} XP</span>
                 <span>{userStats.totalXpForNextLevel} XP</span>
-            </div>
-            <div style={{
-              width: "100%",
-              height: 12,
-              background: "rgba(59, 130, 246, 0.2)",
-              borderRadius: 12,
-              overflow: "hidden",
-              position: "relative"
-            }}>
+              </div>
               <div style={{
-                  width: `${(userStats.xpInCurrentLevel / userStats.totalXpForNextLevel) * 100}%`,
-                height: "100%",
-                background: "linear-gradient(90deg, #10B981 0%, #059669 100%)",
+                width: "100%",
+                height: 12,
+                background: "rgba(59, 130, 246, 0.2)",
                 borderRadius: 12,
-                transition: "width 0.5s ease",
-                boxShadow: "0 0 12px rgba(16, 185, 129, 0.5)"
-              }} />
-            </div>
-            <p style={{
-              margin: "8px 0 0",
-              fontSize: 12,
-              color: "#6B7280",
-              fontWeight: 600,
-              textAlign: "center"
-            }}>
+                overflow: "hidden",
+                position: "relative"
+              }}>
+                <div style={{
+                  width: `${(userStats.xpInCurrentLevel / userStats.totalXpForNextLevel) * 100}%`,
+                  height: "100%",
+                  background: "linear-gradient(90deg, #10B981 0%, #059669 100%)",
+                  borderRadius: 12,
+                  transition: "width 0.5s ease",
+                  boxShadow: "0 0 12px rgba(16, 185, 129, 0.5)"
+                }} />
+              </div>
+              <p style={{
+                margin: "8px 0 0",
+                fontSize: 12,
+                color: "#6B7280",
+                fontWeight: 600,
+                textAlign: "center"
+              }}>
                 {userStats.xpForNextLevel} XP para el siguiente nivel
-            </p>
+              </p>
+            </div>
           </div>
-        </div>
         )}
 
         {loadingStats && (
@@ -851,9 +853,50 @@ export default function ProfilePage() {
             <p style={{ color: "#6B7280", fontSize: 14 }}>Cargando estadísticas...</p>
           </div>
         )}
+        {/* Replay Onboarding Tour */}
+        <div style={{
+          width: "100%",
+          margin: "24px 0 0",
+          background: "linear-gradient(135deg, rgba(15,98,254,0.04) 0%, rgba(59,130,246,0.08) 100%)",
+          borderRadius: 20,
+          padding: "24px 28px",
+          border: "1.5px solid rgba(15,98,254,0.12)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+          flexWrap: "wrap",
+          boxSizing: "border-box"
+        }}>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: "#1e40af", marginBottom: 4, fontFamily: "'Inter', sans-serif" }}>Recorrido por la aplicacion</div>
+            <div style={{ fontSize: 13, color: "#64748b", fontFamily: "'Inter', sans-serif" }}>Repasa qué hace cada sección de BIZEN</div>
+          </div>
+          <button
+            onClick={startTour}
+            style={{
+              padding: "10px 20px",
+              background: "linear-gradient(135deg, #0F62FE, #3B82F6)",
+              color: "white",
+              border: "none",
+              borderRadius: 12,
+              fontWeight: 700,
+              fontSize: 14,
+              cursor: "pointer",
+              fontFamily: "'Inter', sans-serif",
+              boxShadow: "0 4px 14px rgba(15,98,254,0.3)",
+              whiteSpace: "nowrap",
+              transition: "all 0.2s"
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(15,98,254,0.4)" }}
+            onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 14px rgba(15,98,254,0.3)" }}
+          >
+            Repetir tour →
+          </button>
+        </div>
 
       </main>
-      
+
       <style>{`
         /* Mobile (≤767px): No sidebars */
         @media (max-width: 767px) {

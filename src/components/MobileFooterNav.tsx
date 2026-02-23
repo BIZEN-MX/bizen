@@ -84,12 +84,7 @@ export default function MobileFooterNav() {
       icon: Gamepad2,
       active: isActivePath("/simulador")
     },
-    {
-      path: "/tienda",
-      label: "Tienda",
-      icon: ShoppingBag,
-      active: isActivePath("/tienda")
-    },
+
     {
       path: "/forum",
       label: "Foro",
@@ -284,6 +279,30 @@ export default function MobileFooterNav() {
             }} />
 
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <button
+                onClick={() => {
+                  setShowProfilePanel(false)
+                  navigateTo("/tienda")
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "16px",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: "#0f172a",
+                  width: "100%",
+                  textAlign: "left"
+                }}
+              >
+                <ShoppingBag size={20} color="#0F62FE" />
+                <span>Tienda</span>
+              </button>
+
               <button
                 onClick={() => {
                   setShowProfilePanel(false)
