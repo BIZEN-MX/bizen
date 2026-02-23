@@ -119,203 +119,106 @@ export default function HistoryPage() {
   const uniqueSlugs = Array.from(new Set(runs.map((r) => r.simulator_slug)));
 
   return (
-    <main style={{
-      marginRight: "320px",
-      paddingTop: "40px",
-      paddingBottom: "40px",
-      paddingLeft: "40px",
-      paddingRight: "360px",
-      overflowX: "hidden",
-      overflowY: "visible",
-      minHeight: "100vh",
-      background: "#ffffff",
-      fontFamily: "Montserrat, sans-serif",
-      boxSizing: "border-box" as const
-    }}>
-      {/* Header */}
-      <div style={{ marginBottom: 32 }}>
-        <Link href="/simulador" style={{ textDecoration: "none" }}>
-          <button style={{
-            padding: "10px 20px",
-            background: "white",
-            color: "#0B71FE",
-            border: "2px solid #0B71FE",
-            borderRadius: 10,
-            fontSize: 14,
-            fontWeight: 700,
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            fontFamily: "Montserrat, sans-serif",
-            marginBottom: 16
-          }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#0B71FE"
-              e.currentTarget.style.color = "white"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "white"
-              e.currentTarget.style.color = "#0B71FE"
-            }}>
-            ← Volver a Simulador
-          </button>
-        </Link>
-        <h1 style={{
-          fontSize: 42,
-          fontWeight: 900,
-          margin: "0 0 12px",
-          background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text"
+    <>
+      <style>{`
+        .history-outer {
+          width: 100%;
+          min-height: 100vh;
+          background: #ffffff;
+          font-family: 'Montserrat', sans-serif;
+          overflow-x: hidden;
+        }
+        @media (max-width: 767px) {
+          .history-outer { padding-bottom: 65px !important; }
+          .history-main  { padding: 24px 16px !important; }
+        }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .history-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
+        }
+        @media (min-width: 1161px) {
+          .history-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
+        }
+      `}</style>
+      <div className="history-outer">
+        <main className="history-main" style={{
+          padding: "40px clamp(16px, 5vw, 64px)",
+          maxWidth: "1400px",
+          margin: "0 auto",
+          width: "100%",
+          boxSizing: "border-box"
         }}>
-          Mis Simulaciones Guardadas
-        </h1>
-        <p style={{ fontSize: 18, color: "#64748b", margin: 0 }}>
-          Revisa y administra tus simulaciones anteriores
-        </p>
-      </div>
-
-      {/* Filter */}
-      {uniqueSlugs.length > 0 && (
-        <div style={{ marginBottom: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <button
-            onClick={() => setFilterSlug('')}
-            style={{
-              padding: "8px 16px",
-              background: filterSlug === '' ? "linear-gradient(135deg, #0B71FE, #4A9EFF)" : "white",
-              color: filterSlug === '' ? "white" : "#0B71FE",
-              border: `2px solid ${filterSlug === '' ? "#0B71FE" : "#E5E7EB"}`,
-              borderRadius: 10,
-              fontSize: 14,
-              fontWeight: 700,
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-              fontFamily: "Montserrat, sans-serif"
-            }}
-          >
-            Todos
-          </button>
-          {uniqueSlugs.map((slug) => (
-            <button
-              key={slug}
-              onClick={() => setFilterSlug(slug)}
-              style={{
-                padding: "8px 16px",
-                background: filterSlug === slug ? "linear-gradient(135deg, #0B71FE, #4A9EFF)" : "white",
-                color: filterSlug === slug ? "white" : "#0B71FE",
-                border: `2px solid ${filterSlug === slug ? "#0B71FE" : "#E5E7EB"}`,
+          {/* Header */}
+          <div style={{ marginBottom: 32 }}>
+            <Link href="/simulador" style={{ textDecoration: "none" }}>
+              <button style={{
+                padding: "10px 20px",
+                background: "white",
+                color: "#0B71FE",
+                border: "2px solid #0B71FE",
                 borderRadius: 10,
                 fontSize: 14,
                 fontWeight: 700,
                 cursor: "pointer",
                 transition: "all 0.2s ease",
-                fontFamily: "Montserrat, sans-serif"
+                fontFamily: "Montserrat, sans-serif",
+                marginBottom: 16
               }}
-            >
-              {simulatorNames[slug] || slug}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Loading / Error States */}
-      {loading && (
-        <div style={{ textAlign: "center", padding: "48px 0" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
-        </div>
-      )}
-
-      {error && (
-        <div style={{
-          background: "rgba(239, 68, 68, 0.1)",
-          border: "2px solid rgba(239, 68, 68, 0.3)",
-          borderRadius: 16,
-          padding: 20,
-          marginBottom: 24,
-          color: "#991b1b"
-        }}>
-          {error}
-        </div>
-      )}
-
-      {/* Empty State */}
-      {!loading && !error && runs.length === 0 && (
-        <div style={{
-          background: "white",
-          borderRadius: 20,
-          padding: 48,
-          textAlign: "center",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-          border: "2px solid #E5E7EB"
-        }}>
-          <div style={{ fontSize: 64, marginBottom: 16 }}>📭</div>
-          <h3 style={{ fontSize: 24, fontWeight: 700, color: "#111", marginBottom: 12 }}>
-            No tienes simulaciones guardadas
-          </h3>
-          <p style={{ fontSize: 16, color: "#6B7280", marginBottom: 24 }}>
-            Usa cualquiera de los simuladores y guarda tus resultados para consultarlos después
-          </p>
-          <Link href="/simulador" style={{ textDecoration: "none" }}>
-            <button style={{
-              padding: "14px 28px",
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#0B71FE"
+                  e.currentTarget.style.color = "white"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "white"
+                  e.currentTarget.style.color = "#0B71FE"
+                }}>
+                ← Volver a Simulador
+              </button>
+            </Link>
+            <h1 style={{
+              fontSize: 42,
+              fontWeight: 900,
+              margin: "0 0 12px",
               background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
-              color: "white",
-              border: "none",
-              borderRadius: 12,
-              fontSize: 16,
-              fontWeight: 700,
-              cursor: "pointer",
-              transition: "transform 0.2s ease",
-              fontFamily: "Montserrat, sans-serif",
-              boxShadow: "0 4px 12px rgba(11,113,254,0.3)"
-            }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
-              onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>
-              Explorar Simulador
-            </button>
-          </Link>
-        </div>
-      )}
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text"
+            }}>
+              Mis Simulaciones Guardadas
+            </h1>
+            <p style={{ fontSize: 18, color: "#64748b", margin: 0 }}>
+              Revisa y administra tus simulaciones anteriores
+            </p>
+          </div>
 
-      {/* Runs List */}
-      {!loading && !error && runs.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {runs.map((run) => (
-            <div key={run.id} style={{
-              background: "white",
-              borderRadius: 16,
-              padding: 24,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-              border: "2px solid #E5E7EB",
-              transition: "all 0.2s ease"
-            }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
-                e.currentTarget.style.borderColor = "#0B71FE"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
-                e.currentTarget.style.borderColor = "#E5E7EB"
-              }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 6, fontWeight: 600 }}>
-                    {simulatorNames[run.simulator_slug] || run.simulator_slug}
-                  </div>
-                  <h3 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 4 }}>
-                    {run.run_name || 'Sin nombre'}
-                  </h3>
-                  <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-                    {formatDate(run.created_at)}
-                  </div>
-                </div>
+          {/* Filter */}
+          {uniqueSlugs.length > 0 && (
+            <div style={{ marginBottom: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <button
+                onClick={() => setFilterSlug('')}
+                style={{
+                  padding: "8px 16px",
+                  background: filterSlug === '' ? "linear-gradient(135deg, #0B71FE, #4A9EFF)" : "white",
+                  color: filterSlug === '' ? "white" : "#0B71FE",
+                  border: `2px solid ${filterSlug === '' ? "#0B71FE" : "#E5E7EB"}`,
+                  borderRadius: 10,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif"
+                }}
+              >
+                Todos
+              </button>
+              {uniqueSlugs.map((slug) => (
                 <button
-                  onClick={() => handleDelete(run.id)}
+                  key={slug}
+                  onClick={() => setFilterSlug(slug)}
                   style={{
                     padding: "8px 16px",
-                    background: "white",
-                    color: "#ef4444",
-                    border: "2px solid #ef4444",
+                    background: filterSlug === slug ? "linear-gradient(135deg, #0B71FE, #4A9EFF)" : "white",
+                    color: filterSlug === slug ? "white" : "#0B71FE",
+                    border: `2px solid ${filterSlug === slug ? "#0B71FE" : "#E5E7EB"}`,
                     borderRadius: 10,
                     fontSize: 14,
                     fontWeight: 700,
@@ -323,61 +226,175 @@ export default function HistoryPage() {
                     transition: "all 0.2s ease",
                     fontFamily: "Montserrat, sans-serif"
                   }}
+                >
+                  {simulatorNames[slug] || slug}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Loading / Error States */}
+          {loading && (
+            <div style={{ textAlign: "center", padding: "48px 0" }}>
+              <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
+            </div>
+          )}
+
+          {error && (
+            <div style={{
+              background: "rgba(239, 68, 68, 0.1)",
+              border: "2px solid rgba(239, 68, 68, 0.3)",
+              borderRadius: 16,
+              padding: 20,
+              marginBottom: 24,
+              color: "#991b1b"
+            }}>
+              {error}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && runs.length === 0 && (
+            <div style={{
+              background: "white",
+              borderRadius: 20,
+              padding: 48,
+              textAlign: "center",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+              border: "2px solid #E5E7EB"
+            }}>
+              <div style={{ fontSize: 64, marginBottom: 16 }}>📭</div>
+              <h3 style={{ fontSize: 24, fontWeight: 700, color: "#111", marginBottom: 12 }}>
+                No tienes simulaciones guardadas
+              </h3>
+              <p style={{ fontSize: 16, color: "#6B7280", marginBottom: 24 }}>
+                Usa cualquiera de los simuladores y guarda tus resultados para consultarlos después
+              </p>
+              <Link href="/simulador" style={{ textDecoration: "none" }}>
+                <button style={{
+                  padding: "14px 28px",
+                  background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 12,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "transform 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif",
+                  boxShadow: "0 4px 12px rgba(11,113,254,0.3)"
+                }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>
+                  Explorar Simulador
+                </button>
+              </Link>
+            </div>
+          )}
+
+          {/* Runs List */}
+          {!loading && !error && runs.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {runs.map((run) => (
+                <div key={run.id} style={{
+                  background: "white",
+                  borderRadius: 16,
+                  padding: 24,
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                  border: "2px solid #E5E7EB",
+                  transition: "all 0.2s ease"
+                }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#ef4444"
-                    e.currentTarget.style.color = "white"
+                    e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
+                    e.currentTarget.style.borderColor = "#0B71FE"
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "white"
-                    e.currentTarget.style.color = "#ef4444"
-                  }}
-                >
-                  Eliminar
-                </button>
-              </div>
+                    e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
+                    e.currentTarget.style.borderColor = "#E5E7EB"
+                  }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 6, fontWeight: 600 }}>
+                        {simulatorNames[run.simulator_slug] || run.simulator_slug}
+                      </div>
+                      <h3 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 4 }}>
+                        {run.run_name || 'Sin nombre'}
+                      </h3>
+                      <div style={{ fontSize: 12, color: "#9CA3AF" }}>
+                        {formatDate(run.created_at)}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDelete(run.id)}
+                      style={{
+                        padding: "8px 16px",
+                        background: "white",
+                        color: "#ef4444",
+                        border: "2px solid #ef4444",
+                        borderRadius: 10,
+                        fontSize: 14,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        fontFamily: "Montserrat, sans-serif"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "#ef4444"
+                        e.currentTarget.style.color = "white"
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "white"
+                        e.currentTarget.style.color = "#ef4444"
+                      }}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <p style={{ fontSize: 14, color: "#374151", fontWeight: 600 }}>
-                    {getRunSummary(run)}
-                  </p>
-                  {run.notes && (
-                    <p style={{ fontSize: 13, color: "#6B7280", marginTop: 8, fontStyle: "italic" }}>
-                      {run.notes}
-                    </p>
-                  )}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <p style={{ fontSize: 14, color: "#374151", fontWeight: 600 }}>
+                        {getRunSummary(run)}
+                      </p>
+                      {run.notes && (
+                        <p style={{ fontSize: 13, color: "#6B7280", marginTop: 8, fontStyle: "italic" }}>
+                          {run.notes}
+                        </p>
+                      )}
+                    </div>
+                    <Link href={`/simulador/${run.simulator_slug}?runId=${run.id}`} style={{ textDecoration: "none" }}>
+                      <button style={{
+                        padding: "10px 20px",
+                        background: "white",
+                        color: "#0B71FE",
+                        border: "2px solid #0B71FE",
+                        borderRadius: 10,
+                        fontSize: 14,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        fontFamily: "Montserrat, sans-serif",
+                        marginLeft: 16
+                      }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "#0B71FE"
+                          e.currentTarget.style.color = "white"
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "white"
+                          e.currentTarget.style.color = "#0B71FE"
+                        }}>
+                        Ver Detalles
+                      </button>
+                    </Link>
+                  </div>
                 </div>
-                <Link href={`/simulador/${run.simulator_slug}?runId=${run.id}`} style={{ textDecoration: "none" }}>
-                  <button style={{
-                    padding: "10px 20px",
-                    background: "white",
-                    color: "#0B71FE",
-                    border: "2px solid #0B71FE",
-                    borderRadius: 10,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    fontFamily: "Montserrat, sans-serif",
-                    marginLeft: 16
-                  }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#0B71FE"
-                      e.currentTarget.style.color = "white"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "white"
-                      e.currentTarget.style.color = "#0B71FE"
-                    }}>
-                    Ver Detalles
-                  </button>
-                </Link>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
-    </main>
+          )}
+        </main>
+      </div>
+    </>
   );
 }
 
