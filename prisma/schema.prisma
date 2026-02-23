@@ -965,10 +965,6 @@ model LabMentor {
   @@map("lab_mentors")
 }
 
-// ========================================
-// DIAGNOSTIC QUIZ
-// ========================================
-
 model DiagnosticResult {
   id          String   @id @default(cuid())
   email       String
@@ -980,3 +976,83 @@ model DiagnosticResult {
 
   @@map("diagnostic_results")
 }
+
+// ========================================
+// DAILY CHALLENGE + EVIDENCE SYSTEM
+// ========================================
+
+model DailyChallenge {
+  id             String   @id @default(cuid())
+  title          String
+  description    String   @db.Text
+  challengeType  String   @map("challenge_type") // "quiz" | "reflection" | "task" | "simulator"
+  payload        Json?    // optional config
+  activeDate     DateTime @unique @map("active_date") @db.Date
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  evidencePosts EvidencePost[]
+
+  @@index([activeDate])
+  @@map("daily_challenges")
+}
+
+model EvidencePost {
+  id                String    @id @default(cuid())
+  dailyChallengeId  String    @map("daily_challenge_id")
+  authorUserId      String    @map("author_user_id")
+  schoolId          String?   @map("school_id")
+  classId           String?   @map("class_id")
+  smartGoal         String    @map("smart_goal") @db.VarChar(200)
+  didToday          String    @map("did_today") @db.VarChar(300)
+  learned           String    @db.VarChar(300)
+  changeTomorrow    String    @map("change_tomorrow") @db.VarChar(300)
+  attachments       Json?
+  status            String    @default("submitted") // "submitted" | "validated" | "flagged"
+  validatedBy       String?   @map("validated_by")
+  validatedAt       DateTime? @map("validated_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  dailyChallenge DailyChallenge      @relation(fields: [dailyChallengeId], references: [id], onDelete: Cascade)
+  reactions      EvidenceReaction[]
+  comments       EvidenceComment[]
+
+  @@index([dailyChallengeId])
+  @@index([authorUserId])
+  @@index([schoolId])
+  @@index([classId])
+  @@index([createdAt])
+  @@map("evidence_posts")
+}
+
+model EvidenceReaction {
+  id              String   @id @default(cuid())
+  evidencePostId  String   @map("evidence_post_id")
+  userId          String   @map("user_id")
+  reactionType    String   @map("reaction_type") // "Buena meta" | "Tip" | "Te faltó algo" | "Inspirador"
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  evidencePost EvidencePost @relation(fields: [evidencePostId], references: [id], onDelete: Cascade)
+
+  @@unique([evidencePostId, userId])
+  @@index([evidencePostId])
+  @@map("evidence_reactions")
+}
+
+model EvidenceComment {
+  id              String   @id @default(cuid())
+  evidencePostId  String   @map("evidence_post_id")
+  userId          String   @map("user_id")
+  body            String   @db.VarChar(500)
+  parentCommentId String?  @map("parent_comment_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  evidencePost  EvidencePost     @relation(fields: [evidencePostId], references: [id], onDelete: Cascade)
+  parentComment EvidenceComment? @relation("EvidenceCommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  replies       EvidenceComment[] @relation("EvidenceCommentReplies")
+
+  @@index([evidencePostId])
+  @@index([userId])
+  @@map("evidence_comments")
+}
+

@@ -1,899 +1,698 @@
 "use client"
 
-import { useEffect, useState, Suspense, useRef } from "react"
+import { useEffect, useState, Suspense, useRef, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { ThreadCardSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
-import { usePullToRefresh } from "@/hooks/usePullToRefresh"
-import { useSwipeGesture } from "@/hooks/useSwipeGesture"
-import PullToRefreshIndicator from "@/components/PullToRefreshIndicator"
-import { haptic } from "@/utils/hapticFeedback"
+import {
+  Target, MessageCircle, Briefcase, CheckCircle, AlertCircle,
+  ThumbsUp, Lightbulb, AlertTriangle, Zap, ChevronDown, ChevronUp,
+  Send, ExternalLink, X
+} from "lucide-react"
 
-// Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
 
+// ── Types ──────────────────────────────────────────────────────────────────────
 interface ForumThread {
-  id: string
-  title: string
-  body: string
-  status: 'open' | 'resolved' | 'locked'
-  score: number
-  viewCount: number
-  commentCount: number
-  isPinned: boolean
-  createdAt: string
-  author: {
-    userId: string
-    nickname: string
-    reputation: number
-    isMinor?: boolean
-  }
-  topic: {
-    id: string
-    name: string
-    slug: string
-    icon: string
-  }
-  tags: Array<{
-    id: string
-    name: string
-    slug: string
-  }>
+  id: string; title: string; body: string; status: 'open' | 'resolved' | 'locked'
+  score: number; viewCount: number; commentCount: number; isPinned: boolean; createdAt: string
+  author: { userId: string; nickname: string; reputation: number; isMinor?: boolean }
+  topic: { id: string; name: string; slug: string; icon: string }
+  tags: Array<{ id: string; name: string; slug: string }>
   hasAcceptedAnswer: boolean
 }
 
-interface ForumTopic {
-  id: string
-  name: string
-  slug: string
-  icon: string
+interface EvidencePost {
+  id: string; dailyChallengeId: string; authorDisplay: string; isMe: boolean
+  smartGoal: string; didToday: string; learned: string; changeTomorrow: string
+  status: 'submitted' | 'validated' | 'flagged'; authorRole: string
+  createdAt: string
+  reactions: Array<{ id: string; userId: string; reactionType: string }>
+  comments: Array<{ id: string; userId: string; body: string; createdAt: string; authorDisplay?: string }>
 }
 
-type SortOption = 'new' | 'top' | 'unanswered'
+interface DailyChallenge {
+  id: string; title: string; description: string; challengeType: string
+}
 
+type Tab = 'reto-del-dia' | 'preguntas' | 'proyectos'
+
+// ── Reaction config ─────────────────────────────────────────────────────────
+const REACTIONS = [
+  { type: "Buena meta", icon: <ThumbsUp size={13} />, color: "#10b981", bg: "#ecfdf5" },
+  { type: "Tip", icon: <Lightbulb size={13} />, color: "#f59e0b", bg: "#fffbeb" },
+  { type: "Te faltó algo", icon: <AlertTriangle size={13} />, color: "#6366f1", bg: "#eef2ff" },
+  { type: "Inspirador", icon: <Zap size={13} />, color: "#0F62FE", bg: "#eff6ff" },
+]
+
+// ── Evidence Card Component ──────────────────────────────────────────────────
+function EvidenceCard({
+  post,
+  onReact,
+  onValidate,
+  isTeacher,
+  currentUserId,
+}: {
+  post: EvidencePost
+  onReact: (postId: string, type: string) => void
+  onValidate: (postId: string) => void
+  isTeacher: boolean
+  currentUserId: string
+}) {
+  const [expanded, setExpanded] = useState(false)
+  const [showComments, setShowComments] = useState(false)
+  const [commentText, setCommentText] = useState("")
+  const [sendingComment, setSendingComment] = useState(false)
+  const [localComments, setLocalComments] = useState(post.comments)
+  const [localReactions, setLocalReactions] = useState(post.reactions)
+
+  const myReaction = localReactions.find(r => r.userId === currentUserId)
+
+  const handleComment = async () => {
+    if (!commentText.trim()) return
+    setSendingComment(true)
+    try {
+      const res = await fetch(`/api/evidence/${post.id}/comment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: commentText })
+      })
+      if (res.ok) {
+        const comment = await res.json()
+        setLocalComments(c => [...c, comment])
+        setCommentText("")
+      }
+    } finally {
+      setSendingComment(false)
+    }
+  }
+
+  const handleLocalReact = async (type: string) => {
+    // Optimistic update
+    if (myReaction?.reactionType === type) {
+      setLocalReactions(r => r.filter(x => x.userId !== currentUserId))
+    } else if (myReaction) {
+      setLocalReactions(r => r.map(x => x.userId === currentUserId ? { ...x, reactionType: type } : x))
+    } else {
+      setLocalReactions(r => [...r, { id: "tmp", userId: currentUserId, reactionType: type }])
+    }
+    onReact(post.id, type)
+  }
+
+  const formatDate = (d: string) => {
+    const date = new Date(d), now = new Date()
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
+    if (diff < 60) return "hace un momento"
+    if (diff < 3600) return `hace ${Math.floor(diff / 60)}m`
+    if (diff < 86400) return `hace ${Math.floor(diff / 3600)}h`
+    return `hace ${Math.floor(diff / 86400)}d`
+  }
+
+  return (
+    <div style={{
+      background: "white", borderRadius: 16, padding: "20px 22px",
+      border: `1.5px solid ${post.status === "validated" ? "rgba(16,185,129,0.3)" : "#f1f5f9"}`,
+      boxShadow: post.status === "validated" ? "0 4px 16px rgba(16,185,129,0.1)" : "0 2px 8px rgba(0,0,0,0.04)",
+      marginBottom: 12
+    }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14, gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: "50%",
+            background: "linear-gradient(135deg, #0F62FE, #4A9EFF)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 13, fontWeight: 800, color: "white", flexShrink: 0
+          }}>
+            {post.authorDisplay.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>{post.authorDisplay}</span>
+            {post.isMe && <span style={{ fontSize: 11, color: "#0F62FE", fontWeight: 700, marginLeft: 6 }}>Tú</span>}
+            <div style={{ fontSize: 11, color: "#94a3b8" }}>{formatDate(post.createdAt)}</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <span style={{
+            fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 8,
+            background: post.status === "validated" ? "#ecfdf5" : "#f1f5f9",
+            color: post.status === "validated" ? "#065f46" : "#64748b"
+          }}>
+            {post.status === "validated" ? "✓ Validado" : "Enviado"}
+          </span>
+          {isTeacher && post.status !== "validated" && (
+            <button
+              onClick={() => onValidate(post.id)}
+              style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 8, background: "#ecfdf5", color: "#065f46", border: "1px solid rgba(16,185,129,0.4)", cursor: "pointer", fontFamily: "'Montserrat', sans-serif" }}
+            >
+              Validar
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Smart Goal always visible */}
+      <div style={{ marginBottom: 10 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Mi objetivo SMART</div>
+        <p style={{ fontSize: 14, color: "#0f172a", margin: 0, lineHeight: 1.6, fontWeight: 600 }}>{post.smartGoal}</p>
+      </div>
+
+      {/* Expandable fields */}
+      {expanded && (
+        <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 12, display: "grid", gap: 10 }}>
+          {[["¿Qué hice hoy?", post.didToday], ["¿Qué aprendí?", post.learned], ["¿Qué cambiaré mañana?", post.changeTomorrow]].map(([label, val]) => (
+            <div key={label}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 3 }}>{label}</div>
+              <p style={{ fontSize: 13, color: "#334155", margin: 0, lineHeight: 1.6 }}>{val}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      <button onClick={() => setExpanded(e => !e)} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 4, padding: "4px 0", marginTop: 8, fontFamily: "'Montserrat', sans-serif" }}>
+        {expanded ? <><ChevronUp size={14} /> Menos detalles</> : <><ChevronDown size={14} /> Ver más detalles</>}
+      </button>
+
+      {/* Reactions */}
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 12, paddingTop: 12, borderTop: "1px solid #f1f5f9" }}>
+        {REACTIONS.map(r => {
+          const count = localReactions.filter(x => x.reactionType === r.type).length
+          const active = myReaction?.reactionType === r.type
+          return (
+            <button
+              key={r.type}
+              onClick={() => handleLocalReact(r.type)}
+              style={{
+                display: "flex", alignItems: "center", gap: 5,
+                padding: "5px 10px", borderRadius: 8, cursor: "pointer",
+                fontSize: 12, fontWeight: active ? 700 : 600, fontFamily: "'Montserrat', sans-serif",
+                border: active ? `1.5px solid ${r.color}` : "1px solid #e2e8f0",
+                background: active ? r.bg : "white",
+                color: active ? r.color : "#64748b",
+                transition: "all 0.15s"
+              }}
+            >
+              {r.icon}
+              {r.type}
+              {count > 0 && <span style={{ fontWeight: 800 }}>{count}</span>}
+            </button>
+          )
+        })}
+
+        <button onClick={() => setShowComments(s => !s)} style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 600, border: "1px solid #e2e8f0", background: "white", color: "#64748b", fontFamily: "'Montserrat', sans-serif" }}>
+          <MessageCircle size={13} />
+          {localComments.length > 0 ? localComments.length : "Comentar"}
+        </button>
+      </div>
+
+      {/* Comments */}
+      {showComments && (
+        <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid #f1f5f9" }}>
+          {localComments.map(c => (
+            <div key={c.id} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+              <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#f1f5f9", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#64748b" }}>
+                {(c.authorDisplay || "?").charAt(0).toUpperCase()}
+              </div>
+              <div style={{ background: "#f8fafc", borderRadius: 10, padding: "6px 10px", flex: 1 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#374151" }}>{c.authorDisplay || "Usuario"}</span>
+                <p style={{ fontSize: 13, color: "#334155", margin: "2px 0 0", lineHeight: 1.5 }}>{c.body}</p>
+              </div>
+            </div>
+          ))}
+          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+            <input
+              type="text"
+              placeholder="Agrega un comentario..."
+              value={commentText}
+              onChange={e => setCommentText(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter") handleComment() }}
+              style={{ flex: 1, padding: "8px 12px", border: "1.5px solid #e2e8f0", borderRadius: 10, fontSize: 13, outline: "none", fontFamily: "'Montserrat', sans-serif" }}
+            />
+            <button
+              onClick={handleComment}
+              disabled={!commentText.trim() || sendingComment}
+              style={{ padding: "8px 12px", background: commentText.trim() ? "#0F62FE" : "#e2e8f0", color: commentText.trim() ? "white" : "#94a3b8", border: "none", borderRadius: 10, cursor: commentText.trim() ? "pointer" : "not-allowed", transition: "all 0.15s" }}
+            >
+              <Send size={15} />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Main Forum Content ─────────────────────────────────────────────────────────
 function ForumContent() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  
+
+  const initialTab = (searchParams.get("tab") as Tab) || "reto-del-dia"
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab)
+
+  // Reto del día state
+  const [todayChallenge, setTodayChallenge] = useState<DailyChallenge | null>(null)
+  const [evidencePosts, setEvidencePosts] = useState<EvidencePost[]>([])
+  const [loadingEvidence, setLoadingEvidence] = useState(false)
+  const [evidenceSort, setEvidenceSort] = useState<"new" | "validated">("new")
+  const [evidenceScope, setEvidenceScope] = useState<"school" | "all">("school")
+  const [userRole, setUserRole] = useState<string>("student")
+  const challengeIdFromUrl = searchParams.get("challengeId")
+
+  // Q&A + existing forum state
   const [threads, setThreads] = useState<ForumThread[]>([])
-  const [topics, setTopics] = useState<ForumTopic[]>([])
-  const [selectedTopic, setSelectedTopic] = useState<string>('all')
-  const [sortBy, setSortBy] = useState<SortOption>('new')
-  const [loadingData, setLoadingData] = useState(true)
+  const [topics, setTopics] = useState<any[]>([])
+  const [selectedTopic, setSelectedTopic] = useState<string>("all")
+  const [sortBy, setSortBy] = useState<"new" | "top" | "unanswered">("new")
+  const [loadingData, setLoadingData] = useState(false)
   const [fetchError, setFetchError] = useState<string | null>(null)
-  const [showTopicFilter, setShowTopicFilter] = useState(false)
-  const topicFilterRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const bodyEl = document.body
-    if (bodyEl) {
-      bodyEl.style.background = "#ffffff"
-      bodyEl.style.backgroundAttachment = "scroll"
-    }
-    return () => {
-      bodyEl.style.backgroundImage = "none"
-      bodyEl.style.backgroundColor = "#fff"
-      bodyEl.style.backgroundAttachment = "scroll"
-    }
-  }, [])
-
-  useEffect(() => {
-    if (loading) return
-    if (!user) {
-      window.open("/login", "_blank")
-      return
-    }
-    fetchData()
-  }, [selectedTopic, sortBy, user, loading, router])
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const fetchData = async () => {
+  useEffect(() => {
+    document.body.style.background = "#f8fafc"
+    return () => { document.body.style.background = "" }
+  }, [])
+
+  useEffect(() => {
+    if (loading || !user) return
+    fetchUserRole()
+    if (activeTab === "reto-del-dia") {
+      fetchTodayChallenge()
+    } else {
+      fetchForumData()
+    }
+  }, [activeTab, user, loading])
+
+  const fetchUserRole = async () => {
     try {
-      setLoadingData(true)
-      setFetchError(null)
-
-      // Always send credentials so session cookie is included
-      const fetchOpts: RequestInit = { credentials: 'same-origin', cache: 'no-store' }
-
-      const [topicsRes, threadsRes] = await Promise.all([
-        fetch('/api/forum/topics', fetchOpts),
-        fetch(`/api/forum/threads?sort=${sortBy}&topic=${selectedTopic}`, fetchOpts)
-      ])
-
-      if (topicsRes.ok) {
-        const raw = await topicsRes.json()
-        setTopics(Array.isArray(raw) ? raw : [])
-      } else {
-        setTopics([])
+      const res = await fetch("/api/profile/me")
+      if (res.ok) {
+        const data = await res.json()
+        setUserRole(data.role || "student")
       }
+    } catch { }
+  }
 
+  const fetchTodayChallenge = async () => {
+    try {
+      const res = await fetch("/api/daily-challenge/today")
+      if (res.ok) {
+        const data = await res.json()
+        setTodayChallenge(data)
+        fetchEvidence(data.id)
+      }
+    } catch (e) { console.error(e) }
+  }
+
+  const fetchEvidence = async (challengeId: string, scope = evidenceScope) => {
+    setLoadingEvidence(true)
+    try {
+      const res = await fetch(`/api/evidence?challengeId=${challengeId}&scope=${scope}`)
+      if (res.ok) {
+        const data = await res.json()
+        setEvidencePosts(data)
+      }
+    } catch (e) { console.error(e) } finally {
+      setLoadingEvidence(false)
+    }
+  }
+
+  const fetchForumData = async () => {
+    setLoadingData(true); setFetchError(null)
+    try {
+      const [topicsRes, threadsRes] = await Promise.all([
+        fetch('/api/forum/topics', { credentials: 'same-origin', cache: 'no-store' }),
+        fetch(`/api/forum/threads?sort=${sortBy}&topic=${selectedTopic}`, { credentials: 'same-origin', cache: 'no-store' })
+      ])
+      if (topicsRes.ok) setTopics(await topicsRes.json())
       if (threadsRes.ok) {
         const raw = await threadsRes.json()
         setThreads(Array.isArray(raw) ? raw : [])
-      } else {
-        setThreads([])
-        if (threadsRes.status === 401) {
-          setFetchError('Sesión expirada o no válida. Recarga la página o vuelve a iniciar sesión.')
-        } else if (threadsRes.status >= 500) {
-          setFetchError('Error del servidor. Intenta de nuevo en unos momentos.')
-        }
+      } else if (threadsRes.status === 401) {
+        setFetchError("Sesión expirada. Vuelve a iniciar sesión.")
       }
-    } catch (error) {
-      console.error("Error fetching forum data:", error)
-      setThreads([])
-      setTopics([])
-      setFetchError('No se pudieron cargar los datos. Comprueba tu conexión e intenta de nuevo.')
-    } finally {
+    } catch { setFetchError("Error de conexión. Intenta de nuevo.") } finally {
       setLoadingData(false)
     }
   }
 
-  // Pull-to-refresh hook - DISABLED to prevent scroll interference
-  const { isPulling, pullDistance, isRefreshing, attachPullListeners, refreshThreshold } = usePullToRefresh({
-    onRefresh: async () => {
-      haptic.medium()
-      await fetchData()
-      haptic.success()
-    },
-    threshold: 80,
-    disabled: true // Disable pull-to-refresh to allow normal scrolling
-  })
+  const handleReact = async (postId: string, reactionType: string) => {
+    try {
+      await fetch(`/api/evidence/${postId}/react`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reactionType })
+      })
+    } catch { }
+  }
 
-  // Swipe gestures for navigation
-  const { swipeDirection, attachSwipeListeners } = useSwipeGesture({
-    onSwipeLeft: () => {
-      // Swipe left to go to bookmarks
-      haptic.light()
-      router.push('/forum/bookmarks')
-    },
-    onSwipeRight: () => {
-      // Swipe right to create new thread
-      haptic.light()
-      router.push('/forum/new')
-    },
-    threshold: 50,
-    velocity: 0.3
-  })
-
-  // Don't attach pull-to-refresh or swipe listeners to allow browser native refresh
-  // useEffect(() => {
-  //   if (containerRef.current) {
-  //     const cleanupPull = attachPullListeners(containerRef.current)
-  //     const cleanupSwipe = attachSwipeListeners(containerRef.current)
-  //     
-  //     return () => {
-  //       cleanupPull?.()
-  //       cleanupSwipe?.()
-  //     }
-  //   }
-  // }, [attachPullListeners, attachSwipeListeners])
-
-  // Close topic filter dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (topicFilterRef.current && !topicFilterRef.current.contains(event.target as Node)) {
-        setShowTopicFilter(false)
+  const handleValidate = async (postId: string) => {
+    try {
+      const res = await fetch(`/api/evidence/${postId}/validate`, { method: "POST" })
+      if (res.ok) {
+        setEvidencePosts(posts => posts.map(p => p.id === postId ? { ...p, status: "validated" } : p))
       }
-    }
-
-    if (showTopicFilter) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showTopicFilter])
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'resolved': return '#10B981'
-      case 'locked': return '#EF4444'
-      default: return '#0F62FE'
-    }
+    } catch { }
   }
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'resolved': return 'Resuelto'
-      case 'locked': return 'Cerrado'
-      default: return 'Abierto'
-    }
+  const sortedPosts = evidenceSort === "validated"
+    ? [...evidencePosts].sort((a, b) => (b.status === "validated" ? 1 : 0) - (a.status === "validated" ? 1 : 0))
+    : evidencePosts
+
+  const isTeacher = ["teacher", "school_admin", "admin", "moderator"].includes(userRole)
+  const validatedToday = evidencePosts.filter(p => p.status === "validated").length
+  const pendingToday = evidencePosts.filter(p => p.status === "submitted").length
+
+  const formatDate = (d: string) => {
+    const date = new Date(d), now = new Date()
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
+    if (diff < 3600) return `hace ${Math.floor(diff / 60)}m`
+    if (diff < 86400) return `hace ${Math.floor(diff / 3600)}h`
+    return `hace ${Math.floor(diff / 86400)}d`
   }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-
-    if (diffInSeconds < 60) return "hace un momento"
-    if (diffInSeconds < 3600) return `hace ${Math.floor(diffInSeconds / 60)}m`
-    if (diffInSeconds < 86400) return `hace ${Math.floor(diffInSeconds / 3600)}h`
-    if (diffInSeconds < 604800) return `hace ${Math.floor(diffInSeconds / 86400)}d`
-    
-    return date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })
-  }
-
-  if (loading) {
-    return null // Quick flash instead of spinner
-  }
-
+  if (loading) return null
   if (!user) return null
 
   return (
     <>
       <LoadingBar />
-      <PullToRefreshIndicator
-        isPulling={isPulling}
-        pullDistance={pullDistance}
-        threshold={refreshThreshold}
-        isRefreshing={isRefreshing}
-      />
-      <>
-        <style>{`
-          /* Ensure forum-outer doesn't interfere with footer on mobile */
-          @media (max-width: 767px) {
-            .forum-outer {
-              position: relative !important;
-              z-index: 1 !important;
-              overflow-x: hidden !important;
-              background: #ffffff !important;
-              min-height: 100vh !important;
-              padding-bottom: 0 !important;
-            }
-            
-            .forum-container {
-              padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
-              position: relative !important;
-              z-index: 1 !important;
-            }
-            
-            /* Ensure footer stays above everything */
-            [data-mobile-bottom-nav] {
-              z-index: 10000 !important;
-              position: fixed !important;
-            }
-          }
-          
-          /* Tablet/iPad (768px-1160px) - left sidebar (220px text-only) */
-          @media (min-width: 768px) and (max-width: 1160px) {
-            .forum-container {
-              width: calc(100% - 220px) !important;
-              max-width: calc(100% - 220px) !important;
-              margin-left: 220px !important;
-              padding: clamp(24px, 3vw, 40px) !important;
-            }
-          }
-          /* Desktop (1161px+) - left sidebar (full width 280px) */
-          @media (min-width: 1161px) {
-            .forum-container {
-              width: calc(100% - 280px) !important;
-              max-width: calc(100% - 280px) !important;
-              margin-left: 280px !important;
-              padding: clamp(24px, 4vw, 40px) !important;
-            }
-          }
-        `}</style>
-        <div className="forum-outer" data-bizen-tour="foro" style={{
-          position: "relative",
-          flex: 1,
-          fontFamily: "'Montserrat', sans-serif",
-          background: "#ffffff",
-          width: "100%",
-          boxSizing: "border-box",
-          minHeight: "100vh",
-          zIndex: 1
-        }}>
-          <div 
-            ref={containerRef}
-            className="forum-container"
-            style={{
-              position: "relative",
-              flex: 1,
-              paddingTop: 40,
-              paddingBottom: 80,
-              boxSizing: "border-box",
-              width: "100%"
-            }}
-          >
-        <main style={{ 
-        position: "relative",
-        margin: "0", 
-        padding: "clamp(16px, 4vw, 40px)",
-        width: "100%",
-        boxSizing: "border-box"
-      }}>
-        {/* Header */}
-        <div style={{ 
-          marginBottom: 32,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 20
-        }}>
-          <div>
-            <h1 style={{ 
-              margin: 0, 
-              fontSize: "clamp(28px, 6vw, 36px)", 
-              fontWeight: 800,
-              color: "#1E40AF"
-            }}>
-              Foro
-            </h1>
-            <p style={{ margin: "8px 0 0", color: "#374151", fontSize: "clamp(14px, 3vw, 16px)", fontWeight: 600 }}>
-              Comparte ideas, haz preguntas y aprende de otros emprendedores
-            </p>
-          </div>
+      <style>{`
+        @media (max-width: 767px) {
+          .forum-outer { position: relative !important; z-index: 1 !important; overflow-x: hidden !important; background: #f8fafc !important; min-height: 100vh !important; }
+          .forum-container { padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important; }
+        }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .forum-container { width: calc(100% - 220px) !important; max-width: calc(100% - 220px) !important; margin-left: 220px !important; padding: clamp(24px, 3vw, 40px) !important; }
+        }
+        @media (min-width: 1161px) {
+          .forum-container { width: calc(100% - 280px) !important; max-width: calc(100% - 280px) !important; margin-left: 280px !important; padding: clamp(24px, 4vw, 40px) !important; }
+        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
-          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-            <Link
-              href="/forum/bookmarks"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "10px 18px",
-                background: "rgba(255, 255, 255, 0.8)",
-                color: "#374151",
-                borderRadius: 10,
-                fontWeight: 600,
-                textDecoration: "none",
-                fontSize: 14,
-                border: "2px solid #E5E7EB",
-                transition: "all 0.2s ease"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#FEF3C7"
-                e.currentTarget.style.borderColor = "#F59E0B"
-                e.currentTarget.style.color = "#92400E"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(255, 255, 255, 0.8)"
-                e.currentTarget.style.borderColor = "#E5E7EB"
-                e.currentTarget.style.color = "#374151"
-              }}
-            >
-              Guardados
-            </Link>
-            <Link
-              href="/forum/following"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "10px 18px",
-                background: "rgba(255, 255, 255, 0.8)",
-                color: "#374151",
-                borderRadius: 10,
-                fontWeight: 600,
-                textDecoration: "none",
-                fontSize: 14,
-                border: "2px solid #E5E7EB",
-                transition: "all 0.2s ease"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#EDE9FE"
-                e.currentTarget.style.borderColor = "#8B5CF6"
-                e.currentTarget.style.color = "#6D28D9"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(255, 255, 255, 0.8)"
-                e.currentTarget.style.borderColor = "#E5E7EB"
-                e.currentTarget.style.color = "#374151"
-              }}
-            >
-              Siguiendo
-            </Link>
-            <Link
-              href="/forum/new"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "14px 24px",
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                color: "white",
-                borderRadius: 12,
-                fontWeight: 700,
-                textDecoration: "none",
-                fontSize: 15,
-                transition: "transform 0.2s ease",
-                boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-2px)"
-                e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.4)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)"
-                e.currentTarget.style.boxShadow = "0 4px 12px rgba(11, 113, 254, 0.3)"
-              }}
-            >
-              Crear Tema
-            </Link>
-          </div>
-        </div>
+        .forum-tab-btn {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 10px;
+          font-weight: 700;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-family: 'Montserrat', sans-serif;
+          white-space: nowrap;
+          display: flex;
+          align-items: center;
+          gap: 7px;
+        }
+        .forum-tab-btn.active { background: #0F62FE; color: white; box-shadow: 0 4px 12px rgba(15,98,254,0.3); }
+        .forum-tab-btn.inactive { background: white; color: #64748b; border: 1.5px solid #e2e8f0; }
+        .forum-tab-btn.inactive:hover { border-color: #0F62FE; color: #0F62FE; }
+      `}</style>
 
-        {fetchError && (
-          <div style={{
-            marginBottom: 24,
-            padding: "14px 18px",
-            background: "#FEF2F2",
-            border: "1px solid #FECACA",
-            borderRadius: 12,
-            color: "#991B1B",
-            fontSize: 14,
-            lineHeight: 1.5
-          }}>
-            {fetchError}
-            <button
-              type="button"
-              onClick={() => { setFetchError(null); fetchData(); }}
-              style={{
-                marginTop: 10,
-                padding: "8px 16px",
-                background: "#0F62FE",
-                color: "#fff",
-                border: "none",
-                borderRadius: 8,
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer"
-              }}
-            >
-              Reintentar
-            </button>
-          </div>
-        )}
+      <div className="forum-outer" style={{ position: "relative", flex: 1, fontFamily: "'Montserrat', sans-serif", background: "#f8fafc", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
+        <div ref={containerRef} className="forum-container" style={{ position: "relative", flex: 1, paddingTop: 32, paddingBottom: 80, boxSizing: "border-box", width: "100%" }}>
+          <main style={{ position: "relative", margin: 0, padding: "clamp(16px, 4vw, 40px)", width: "100%", boxSizing: "border-box" }}>
 
-        {/* Filters */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr auto",
-          gap: 16,
-          marginBottom: 24,
-          alignItems: "flex-start"
-        }}>
-          {/* Topic Filter - Desktop: show all buttons, Mobile: show filter button */}
-          <div ref={topicFilterRef} className="topic-filter-container" style={{
-            display: "flex",
-            gap: 8,
-            flexWrap: "wrap",
-            alignItems: "center",
-            position: "relative"
-          }}>
-            {/* Mobile Filter Button */}
-            <button
-              onClick={() => setShowTopicFilter(!showTopicFilter)}
-              className="mobile-topic-filter-btn"
-              style={{
-                display: "none", // Hidden by default, shown on mobile via CSS
-                padding: "10px 18px",
-                background: selectedTopic !== 'all' 
-                  ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
-                  : "rgba(255, 255, 255, 0.6)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                color: selectedTopic !== 'all' ? "white" : "#1E40AF",
-                border: selectedTopic !== 'all' 
-                  ? "1px solid rgba(255, 255, 255, 0.3)" 
-                  : "2px solid rgba(255, 255, 255, 0.5)",
-                borderRadius: 10,
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                fontFamily: "Montserrat, sans-serif",
-                boxShadow: selectedTopic !== 'all' 
-                  ? "0 4px 12px rgba(11, 113, 254, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)" 
-                  : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
-                alignItems: "center",
-                gap: 8
-              }}
-            >
-              <span>{selectedTopic === 'all' ? 'Filtrar por Tema' : topics.find(t => t.slug === selectedTopic)?.name || 'Tema'}</span>
-              <span style={{ fontSize: 12 }}>{showTopicFilter ? '▲' : '▼'}</span>
-            </button>
+            {/* ── Page Header ── */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
+              <div>
+                <h1 style={{ margin: 0, fontSize: "clamp(24px, 4vw, 32px)", fontWeight: 900, color: "#0f172a", letterSpacing: "-0.02em" }}>Foro</h1>
+                <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: 15, fontWeight: 500 }}>
+                  Comparte, aprende y conecta con tu grupo
+                </p>
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <Link href="/forum/bookmarks" style={{ padding: "10px 16px", background: "white", color: "#374151", borderRadius: 10, fontWeight: 600, textDecoration: "none", fontSize: 13, border: "1.5px solid #e2e8f0" }}>Guardados</Link>
+                <Link href="/forum/new" style={{ padding: "10px 18px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", borderRadius: 10, fontWeight: 700, textDecoration: "none", fontSize: 13, boxShadow: "0 4px 12px rgba(15,98,254,0.3)" }}>+ Crear Tema</Link>
+              </div>
+            </div>
 
-            {/* Mobile Topic Dropdown */}
-            {showTopicFilter && (
-              <div className="mobile-topic-dropdown" style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                marginTop: 8,
-                background: "rgba(255, 255, 255, 0.95)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                borderRadius: 12,
-                border: "2px solid rgba(255, 255, 255, 0.6)",
-                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
-                padding: 12,
-                zIndex: 1000,
-                minWidth: 200,
-                maxWidth: "90vw",
-                display: "flex",
-                flexDirection: "column",
-                gap: 6
-              }}>
-                <button
-                  onClick={() => {
-                    setSelectedTopic('all')
-                    setShowTopicFilter(false)
-                  }}
-                  style={{
-                    padding: "10px 16px",
-                    background: selectedTopic === 'all' 
-                      ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
-                      : "rgba(255, 255, 255, 0.6)",
-                    color: selectedTopic === 'all' ? "white" : "#1E40AF",
-                    border: selectedTopic === 'all' 
-                      ? "1px solid rgba(255, 255, 255, 0.3)" 
-                      : "2px solid rgba(255, 255, 255, 0.5)",
-                    borderRadius: 8,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    fontFamily: "Montserrat, sans-serif",
-                    textAlign: "left"
-                  }}
-                >
-                  Todos
-                </button>
-                {topics.map(topic => (
-                  <button
-                    key={topic.id}
-                    onClick={() => {
-                      setSelectedTopic(topic.slug)
-                      setShowTopicFilter(false)
-                    }}
-                    style={{
-                      padding: "10px 16px",
-                      background: selectedTopic === topic.slug 
-                        ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
-                        : "rgba(255, 255, 255, 0.6)",
-                      color: selectedTopic === topic.slug ? "white" : "#1E40AF",
-                      border: selectedTopic === topic.slug 
-                        ? "1px solid rgba(255, 255, 255, 0.3)" 
-                        : "2px solid rgba(255, 255, 255, 0.5)",
-                      borderRadius: 8,
-                      fontSize: 14,
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                      fontFamily: "Montserrat, sans-serif",
-                      textAlign: "left"
-                    }}
+            {/* ── 3-Tab Selector ── */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 28, overflowX: "auto", paddingBottom: 4, flexWrap: "nowrap" }}>
+              <button className={`forum-tab-btn ${activeTab === "reto-del-dia" ? "active" : "inactive"}`} onClick={() => setActiveTab("reto-del-dia")}>
+                <Target size={15} /> Reto del día
+              </button>
+              <button className={`forum-tab-btn ${activeTab === "preguntas" ? "active" : "inactive"}`} onClick={() => setActiveTab("preguntas")}>
+                <MessageCircle size={15} /> Preguntas rápidas
+              </button>
+              <button className={`forum-tab-btn ${activeTab === "proyectos" ? "active" : "inactive"}`} onClick={() => setActiveTab("proyectos")}>
+                <Briefcase size={15} /> Proyectos
+              </button>
+            </div>
+
+            {/* ════════════════════════════════════════════
+                TAB 1 — RETO DEL DÍA
+            ════════════════════════════════════════════ */}
+            {activeTab === "reto-del-dia" && (
+              <div>
+                {/* Today's challenge banner */}
+                {todayChallenge && (
+                  <div style={{
+                    background: "linear-gradient(135deg, #0f172a, #1e1b4b)",
+                    borderRadius: 18, padding: "24px 28px", marginBottom: 24,
+                    display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16,
+                    border: "1px solid rgba(255,255,255,0.06)", boxShadow: "0 8px 32px rgba(0,0,0,0.15)"
+                  }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Reto de hoy</div>
+                      <h2 style={{ fontSize: "clamp(16px, 2vw, 20px)", fontWeight: 800, color: "white", margin: "0 0 6px" }}>{todayChallenge.title}</h2>
+                      <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.5, maxWidth: 500 }}>{todayChallenge.description.slice(0, 120)}...</p>
+                    </div>
+                    <Link href="/reto-diario" style={{
+                      display: "flex", alignItems: "center", gap: 7, padding: "11px 20px",
+                      background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white",
+                      borderRadius: 12, fontWeight: 700, fontSize: 13, textDecoration: "none",
+                      boxShadow: "0 4px 14px rgba(15,98,254,0.4)", whiteSpace: "nowrap"
+                    }}>
+                      <Target size={15} /> Hacer el reto
+                    </Link>
+                  </div>
+                )}
+
+                {/* Teacher summary */}
+                {isTeacher && (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 20 }}>
+                    {[
+                      { label: "Evidencias hoy", value: evidencePosts.length, color: "#0F62FE" },
+                      { label: "Validadas", value: validatedToday, color: "#10b981" },
+                      { label: "Pendientes", value: pendingToday, color: "#f59e0b" },
+                    ].map(({ label, value, color }) => (
+                      <div key={label} style={{ background: "white", borderRadius: 14, padding: "16px 20px", border: "1.5px solid #f1f5f9", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                        <div style={{ fontSize: 28, fontWeight: 900, color }}>{value}</div>
+                        <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>{label}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Controls */}
+                <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap", alignItems: "center" }}>
+                  <select
+                    value={evidenceSort}
+                    onChange={e => setEvidenceSort(e.target.value as "new" | "validated")}
+                    style={{ padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif", color: "#374151", cursor: "pointer", background: "white" }}
                   >
-                    {topic.name}
-                  </button>
-                ))}
+                    <option value="new">Más recientes</option>
+                    <option value="validated">Más validadas</option>
+                  </select>
+                  {isTeacher && (
+                    <select
+                      value={evidenceScope}
+                      onChange={e => {
+                        setEvidenceScope(e.target.value as "school" | "all")
+                        if (todayChallenge) fetchEvidence(todayChallenge.id, e.target.value as any)
+                      }}
+                      style={{ padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif", color: "#374151", cursor: "pointer", background: "white" }}
+                    >
+                      <option value="school">Mi escuela</option>
+                      <option value="all">Todas</option>
+                    </select>
+                  )}
+                  <span style={{ fontSize: 13, color: "#94a3b8", marginLeft: "auto" }}>
+                    {evidencePosts.length} publicaciones
+                  </span>
+                </div>
+
+                {/* Evidence feed */}
+                {loadingEvidence ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {[1, 2, 3].map(i => (
+                      <div key={i} style={{ height: 140, borderRadius: 16, background: "#f1f5f9", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
+                    ))}
+                  </div>
+                ) : sortedPosts.length === 0 ? (
+                  <div style={{ textAlign: "center", padding: "60px 24px", background: "white", borderRadius: 20, border: "1.5px solid #f1f5f9" }}>
+                    <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
+                    <h3 style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>Sé el primero en publicar tu evidencia</h3>
+                    <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
+                      Completa el reto de hoy y comparte tu aprendizaje con tu grupo.
+                    </p>
+                    <Link href="/reto-diario" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>
+                      <Target size={16} /> Hacer el reto de hoy
+                    </Link>
+                  </div>
+                ) : (
+                  sortedPosts.map(post => (
+                    <EvidenceCard
+                      key={post.id}
+                      post={post}
+                      onReact={handleReact}
+                      onValidate={handleValidate}
+                      isTeacher={isTeacher}
+                      currentUserId={user.id}
+                    />
+                  ))
+                )}
               </div>
             )}
 
-            {/* Desktop Topic Buttons */}
-            <div className="desktop-topic-buttons" style={{
-              display: "flex",
-              gap: 8,
-              flexWrap: "wrap",
-              alignItems: "center"
-            }}>
-              <button
-                onClick={() => setSelectedTopic('all')}
-                style={{
-                  padding: "8px 16px",
-                  background: selectedTopic === 'all' 
-                    ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
-                    : "rgba(255, 255, 255, 0.4)",
-                  backdropFilter: "blur(20px)",
-                  WebkitBackdropFilter: "blur(20px)",
-                  color: selectedTopic === 'all' ? "white" : "#1E40AF",
-                  border: selectedTopic === 'all' 
-                    ? "1px solid rgba(255, 255, 255, 0.3)" 
-                    : "2px solid rgba(255, 255, 255, 0.5)",
-                  borderRadius: 10,
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                  fontFamily: "Montserrat, sans-serif",
-                  boxShadow: selectedTopic === 'all' 
-                    ? "0 4px 12px rgba(11, 113, 254, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)" 
-                    : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
-                }}
-              >
-                Todos
-              </button>
-              {topics.map(topic => (
-                <button
-                  key={topic.id}
-                  onClick={() => setSelectedTopic(topic.slug)}
-                  style={{
-                    padding: "8px 16px",
-                    background: selectedTopic === topic.slug 
-                      ? "linear-gradient(135deg, rgba(11, 113, 254, 0.9) 0%, rgba(74, 158, 255, 0.9) 100%)" 
-                      : "rgba(255, 255, 255, 0.4)",
-                    backdropFilter: "blur(20px)",
-                    WebkitBackdropFilter: "blur(20px)",
-                    color: selectedTopic === topic.slug ? "white" : "#1E40AF",
-                    border: selectedTopic === topic.slug 
-                      ? "1px solid rgba(255, 255, 255, 0.3)" 
-                      : "2px solid rgba(255, 255, 255, 0.5)",
-                    borderRadius: 10,
-                    fontSize: 13,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    fontFamily: "Montserrat, sans-serif",
-                    boxShadow: selectedTopic === topic.slug 
-                      ? "0 4px 12px rgba(11, 113, 254, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)" 
-                      : "0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
-                  }}
-                >
-                  {topic.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Sort Filter */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
-            style={{
-              padding: "3px 8px",
-              background: "rgba(255, 255, 255, 0.6)",
-              border: "none",
-              borderRadius: 6,
-              fontSize: 11,
-              fontWeight: 600,
-              cursor: "pointer",
-              fontFamily: "Montserrat, sans-serif",
-              color: "#374151",
-              lineHeight: "1.2",
-              alignSelf: "flex-start"
-            }}
-          >
-            <option value="new">Más Recientes</option>
-            <option value="top">Más Votados</option>
-            <option value="unanswered">Sin Responder</option>
-          </select>
-        </div>
-
-        {/* Threads List */}
-        <div style={{ 
-          display: "flex", 
-          flexDirection: "column", 
-          gap: 16,
-          opacity: loadingData ? 0.6 : 1,
-          transition: "opacity 0.3s ease"
-        }}>
-          {loadingData ? (
-            // Show skeleton loaders while loading
-            <>
-              <ThreadCardSkeleton />
-              <ThreadCardSkeleton />
-              <ThreadCardSkeleton />
-            </>
-          ) : threads.map((thread, index) => (
-            <Link
-              key={thread.id}
-              href={`/forum/thread/${thread.id}`}
-              style={{
-                padding: "clamp(16px, 4vw, 24px)",
-                background: "rgba(255, 255, 255, 0.4)",
-                backdropFilter: "blur(20px)",
-                borderRadius: 16,
-                border: "2px solid rgba(255, 255, 255, 0.6)",
-                boxShadow: "0 4px 16px rgba(31, 38, 135, 0.1)",
-                textDecoration: "none",
-                transition: "all 0.3s ease",
-                display: "block",
-                borderLeft: thread.isPinned ? "4px solid #F59E0B" : undefined,
-                animation: `fadeInUp 0.5s ease ${index * 0.05}s both`,
-                width: "100%",
-                maxWidth: "100%",
-                boxSizing: "border-box"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateX(4px)"
-                e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.2)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateX(0)"
-                e.currentTarget.style.boxShadow = "0 4px 16px rgba(31, 38, 135, 0.1)"
-              }}
-            >
-              <div style={{ display: "flex", gap: 20 }}>
-                {/* Vote Score */}
-                <div style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 4,
-                  minWidth: 60
-                }}>
-                  <div style={{
-                    fontSize: 24,
-                    fontWeight: 800,
-                    color: thread.score > 0 ? "#10B981" : thread.score < 0 ? "#EF4444" : "#6B7280"
-                  }}>
-                    {thread.score}
-                  </div>
-                  <div style={{ fontSize: 11, color: "#6B7280", fontWeight: 600 }}>
-                    votos
-                  </div>
+            {/* ════════════════════════════════════════════
+                TAB 2 — PREGUNTAS RÁPIDAS (existing forum)
+            ════════════════════════════════════════════ */}
+            {activeTab === "preguntas" && (
+              <div>
+                {/* Tags quick filter */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+                  {["Todos", "ahorro", "presupuesto", "deuda", "inversión básica", "emprendimiento"].map(tag => (
+                    <button key={tag} style={{
+                      padding: "6px 14px", borderRadius: 999,
+                      background: tag === "Todos" && selectedTopic === "all" ? "#0F62FE" : "#f1f5f9",
+                      color: tag === "Todos" && selectedTopic === "all" ? "white" : "#64748b",
+                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif"
+                    }} onClick={() => { if (tag === "Todos") setSelectedTopic("all"); else setSelectedTopic(tag); fetchForumData() }}>
+                      #{tag === "Todos" ? "all" : tag}
+                    </button>
+                  ))}
+                  <select value={sortBy} onChange={e => { setSortBy(e.target.value as any); fetchForumData() }} style={{ marginLeft: "auto", padding: "6px 10px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", background: "white", color: "#374151" }}>
+                    <option value="new">Más recientes</option>
+                    <option value="top">Más votados</option>
+                    <option value="unanswered">Sin responder</option>
+                  </select>
                 </div>
 
-                {/* Thread Content */}
-                <div style={{ flex: 1 }}>
-                  {/* Title and Status */}
-                  <div style={{ marginBottom: 8, display: "flex", alignItems: "flex-start", gap: 12 }}>
-                    <h3 style={{ 
-                      margin: 0,
-                      flex: 1,
-                      fontSize: 18, 
-                      fontWeight: 700, 
-                      color: "#1E40AF",
-                      lineHeight: 1.4
-                    }}>
-                      {thread.title}
-                    </h3>
-                    <span style={{
-                      padding: "4px 10px",
-                      background: getStatusColor(thread.status) + "22",
-                      color: getStatusColor(thread.status),
-                      fontSize: 11,
-                      fontWeight: 700,
-                      borderRadius: 6,
-                      whiteSpace: "nowrap"
-                    }}>
-                      {getStatusLabel(thread.status)}
-                    </span>
+                {fetchError && (
+                  <div style={{ marginBottom: 20, padding: "12px 16px", background: "#fef2f2", borderRadius: 12, color: "#991b1b", fontSize: 13, display: "flex", gap: 8 }}>
+                    <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                    {fetchError}
                   </div>
+                )}
 
-                  {/* Preview */}
-                  <p style={{ 
-                    margin: "0 0 12px", 
-                    fontSize: 14, 
-                    color: "#6B7280",
-                    lineHeight: 1.5,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    fontWeight: 500
-                  }}>
-                    {thread.body.substring(0, 150)}...
-                  </p>
-
-                  {/* Tags */}
-                  {thread.tags.length > 0 && (
-                    <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
-                      {thread.tags.map(tag => (
-                        <span
-                          key={tag.id}
-                          style={{
-                            padding: "4px 10px",
-                            background: "rgba(59, 130, 246, 0.1)",
-                            color: "#0F62FE",
-                            fontSize: 12,
-                            fontWeight: 600,
-                            borderRadius: 6
-                          }}
-                        >
-                          #{tag.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Meta */}
-                  <div style={{ 
-                    display: "flex", 
-                    gap: 16, 
-                    fontSize: 13, 
-                    color: "#9CA3AF",
-                    fontWeight: 600,
-                    flexWrap: "wrap"
-                  }}>
-                    <span>{thread.topic.name}</span>
-                    <span>por <span 
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        router.push(`/forum/profile/${thread.author.userId}`)
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, opacity: loadingData ? 0.6 : 1, transition: "opacity 0.3s" }}>
+                  {loadingData ? <><ThreadCardSkeleton /><ThreadCardSkeleton /></> :
+                    threads.length === 0 ? (
+                      <div style={{ textAlign: "center", padding: "60px 24px", background: "white", borderRadius: 20, border: "1.5px solid #f1f5f9" }}>
+                        <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>No hay preguntas todavía</h3>
+                        <p style={{ color: "#64748b", fontSize: 14, marginBottom: 20 }}>¡Sé el primero en hacer una pregunta!</p>
+                        <Link href="/forum/new" style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>Hacer pregunta</Link>
+                      </div>
+                    ) : threads.map((thread, i) => (
+                      <Link key={thread.id} href={`/forum/thread/${thread.id}`} style={{
+                        padding: "clamp(14px, 3vw, 22px)", background: "white", borderRadius: 16,
+                        border: `1.5px solid ${thread.isPinned ? "#f59e0b" : "#f1f5f9"}`,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.04)", textDecoration: "none",
+                        display: "block", transition: "all 0.2s ease",
+                        animation: `fadeInUp 0.4s ease ${i * 0.04}s both`
                       }}
-                      style={{ 
-                        color: "#0F62FE", 
-                        textDecoration: "none", 
-                        fontWeight: 700,
-                        cursor: "pointer"
-                      }} 
-                      onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} 
-                      onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}
-                    >{thread.author.nickname}</span> ({thread.author.reputation} pts)
-                    </span>
-                    <span>{formatDate(thread.createdAt)}</span>
-                    <span>{thread.commentCount} respuestas</span>
-                    <span>{thread.viewCount} vistas</span>
-                  </div>
+                        onMouseEnter={e => { e.currentTarget.style.transform = "translateX(4px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(15,98,254,0.12)" }}
+                        onMouseLeave={e => { e.currentTarget.style.transform = "translateX(0)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)" }}>
+                        <div style={{ display: "flex", gap: 16 }}>
+                          <div style={{ minWidth: 48, textAlign: "center" }}>
+                            <div style={{ fontSize: 22, fontWeight: 900, color: thread.score > 0 ? "#10b981" : thread.score < 0 ? "#ef4444" : "#94a3b8" }}>{thread.score}</div>
+                            <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>votos</div>
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 6 }}>
+                              <h3 style={{ margin: 0, flex: 1, fontSize: 16, fontWeight: 700, color: "#1e40af", lineHeight: 1.4 }}>{thread.title}</h3>
+                              <span style={{ padding: "3px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700, background: thread.status === "resolved" ? "#ecfdf5" : "#eff6ff", color: thread.status === "resolved" ? "#065f46" : "#0F62FE", whiteSpace: "nowrap" }}>
+                                {thread.status === "resolved" ? "Resuelto" : thread.status === "locked" ? "Cerrado" : "Abierto"}
+                              </span>
+                            </div>
+                            <p style={{ margin: "0 0 10px", fontSize: 13, color: "#64748b", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                              {thread.body.substring(0, 150)}...
+                            </p>
+                            {thread.tags.length > 0 && (
+                              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 }}>
+                                {thread.tags.map(tag => (
+                                  <span key={tag.id} style={{ padding: "3px 8px", background: "#eff6ff", color: "#0F62FE", fontSize: 11, fontWeight: 600, borderRadius: 6 }}>#{tag.name}</span>
+                                ))}
+                              </div>
+                            )}
+                            <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>
+                              <span>{thread.topic.name}</span>
+                              <span>por {thread.author.nickname}</span>
+                              <span>{formatDate(thread.createdAt)}</span>
+                              <span>{thread.commentCount} resp.</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))
+                  }
                 </div>
               </div>
-            </Link>
-          ))}
-        </div>
+            )}
 
-        {/* Empty State */}
-        {!loadingData && threads.length === 0 && (
-          <div style={{
-            padding: "60px 24px",
-            textAlign: "center",
-            background: "rgba(255, 255, 255, 0.4)",
-            backdropFilter: "blur(20px)",
-            borderRadius: 20,
-            border: "2px solid rgba(255, 255, 255, 0.6)",
-            boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)"
-          }}>
-            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700, color: "#1E40AF" }}>
-              No hay temas todavía
-            </h3>
-            <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 14, fontWeight: 600 }}>
-              Sé el primero en iniciar una conversación
-            </p>
-            <Link
-              href="/forum/new"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "14px 24px",
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                color: "white",
-                borderRadius: 12,
-                fontWeight: 700,
-                textDecoration: "none",
-                fontSize: 15,
-                transition: "transform 0.2s ease",
-                boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-              }}
-            >
-              Crear Primer Tema
-            </Link>
-          </div>
-        )}
-      </main>
-          </div>
+            {/* ════════════════════════════════════════════
+                TAB 3 — PROYECTOS
+            ════════════════════════════════════════════ */}
+            {activeTab === "proyectos" && (
+              <div>
+                {/* Pitch week banner */}
+                <div style={{
+                  background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+                  borderRadius: 18, padding: "24px 28px", marginBottom: 24,
+                  display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
+                  boxShadow: "0 8px 24px rgba(124,58,237,0.3)"
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Esta semana</div>
+                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 24px)", fontWeight: 900, color: "white", margin: "0 0 6px" }}>🚀 Pitch Week</h2>
+                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: 0, lineHeight: 1.5 }}>Comparte tu idea de negocio y recibe feedback de tu grupo. Usa la plantilla estructurada abajo.</p>
+                  </div>
+                  <Link href="/forum/new" style={{ padding: "11px 20px", background: "rgba(255,255,255,0.15)", color: "white", borderRadius: 12, fontWeight: 700, fontSize: 13, textDecoration: "none", border: "1.5px solid rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
+                    Publicar proyecto →
+                  </Link>
+                </div>
+
+                {/* Project template guide */}
+                <div style={{ background: "white", borderRadius: 18, padding: 28, border: "1.5px solid #f1f5f9", marginBottom: 20 }}>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>Plantilla para Proyectos</h3>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
+                    {[
+                      { label: "Idea", desc: "¿Qué problema resuelves?" },
+                      { label: "Costo", desc: "¿Cuánto inviertes?" },
+                      { label: "Precio", desc: "¿Cuánto cobras?" },
+                      { label: "Margen", desc: "¿Cuánto ganas?" },
+                      { label: "Siguiente paso", desc: "¿Qué harás esta semana?" },
+                    ].map(({ label, desc }) => (
+                      <div key={label} style={{ background: "#f8fafc", borderRadius: 12, padding: "14px 16px" }}>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: "#7c3aed", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{label}</div>
+                        <div style={{ fontSize: 13, color: "#64748b" }}>{desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <Link href="/forum/new" style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 20, padding: "12px 22px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", color: "white", borderRadius: 12, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                    <Briefcase size={16} /> Publicar mi proyecto
+                  </Link>
+                </div>
+
+                {/* Placeholder thread list for projects (same feed, filtered by topic if 'proyectos' topic exists) */}
+                <div style={{ textAlign: "center", padding: "40px 24px", background: "white", borderRadius: 18, border: "1.5px solid #f1f5f9" }}>
+                  <div style={{ fontSize: 40, marginBottom: 12 }}>🌱</div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>Aún no hay proyectos</h3>
+                  <p style={{ color: "#64748b", fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>El feed de proyectos aparecerá aquí. ¡Sé el primero en publicar tu idea!</p>
+                  <Link href="/forum/new" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", color: "white", borderRadius: 12, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                    <Briefcase size={16} /> Publicar proyecto
+                  </Link>
+                </div>
+              </div>
+            )}
+
+          </main>
         </div>
-      </>
-    
-      <style>{`
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      
-      /* Hide desktop topic buttons on all devices, show filter button */
-      .desktop-topic-buttons {
-        display: none !important;
-      }
-      .mobile-topic-filter-btn {
-        display: flex !important;
-      }
-    `}</style>
+      </div>
     </>
   )
 }
