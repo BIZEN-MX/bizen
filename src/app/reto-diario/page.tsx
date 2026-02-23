@@ -1,18 +1,13 @@
 "use client"
 
-/**
- * Reto Diario — Daily challenge page.
- * Includes:
- *  1. Static challenge display
- *  2. "Daily Wrap" completion screen with 3 CTAs
- *  3. Evidence submission modal (4-field structured template)
- */
-
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { useAuth } from "@/contexts/AuthContext"
-import { Target, CheckCircle, FileText, Users, Sparkles, X, ChevronRight, AlertCircle } from "lucide-react"
+import {
+  Target, CheckCircle, FileText, Users, Sparkles, X,
+  ChevronRight, AlertCircle, Flame, Zap, BookOpen,
+  TrendingUp, Brain, Clock, Star, Trophy, ArrowRight
+} from "lucide-react"
 
 type DailyChallenge = {
   id: string
@@ -31,6 +26,20 @@ type EvidenceForm = {
 
 const LIMITS = { smartGoal: 180, didToday: 250, learned: 250, changeTomorrow: 250 }
 
+const CHALLENGE_TYPE_META: Record<string, { label: string; icon: any; color: string; accent: string }> = {
+  reflection: { label: "Reflexión", icon: Brain, color: "#818cf8", accent: "rgba(129,140,248,0.15)" },
+  task: { label: "Acción", icon: TrendingUp, color: "#10b981", accent: "rgba(16,185,129,0.15)" },
+  quiz: { label: "Quiz", icon: BookOpen, color: "#f59e0b", accent: "rgba(245,158,11,0.15)" },
+  simulator: { label: "Simulador", icon: Zap, color: "#0F62FE", accent: "rgba(15,98,254,0.15)" },
+}
+
+const EVIDENCE_STEPS = [
+  { key: "smartGoal", emoji: "🎯", label: "Mi objetivo SMART", hint: "Específico, medible, alcanzable, relevante y con tiempo", placeholder: "Ej: Ahorrar $300 en 30 días reduciendo mi gasto en delivery.", limit: 180 },
+  { key: "didToday", emoji: "⚡", label: "¿Qué hice hoy?", hint: "Describe la acción concreta que tomaste", placeholder: "Ej: Revisé mis últimos 10 gastos y detecté $120 en delivery.", limit: 250 },
+  { key: "learned", emoji: "💡", label: "¿Qué aprendí?", hint: "El insight más valioso que te llevas", placeholder: "Ej: Cocinar en casa me puede ahorrar hasta $1,000 al mes.", limit: 250 },
+  { key: "changeTomorrow", emoji: "🔄", label: "¿Qué cambiaré mañana?", hint: "Acción específica para mañana", placeholder: "Ej: Prepararé mi lunch la noche anterior.", limit: 250 },
+]
+
 export default function RetoDiarioPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
@@ -38,22 +47,26 @@ export default function RetoDiarioPage() {
   const [challenge, setChallenge] = useState<DailyChallenge | null>(null)
   const [loadingChallenge, setLoadingChallenge] = useState(true)
   const [phase, setPhase] = useState<"doing" | "wrap">("doing")
+  const [streak] = useState(7) // TODO: fetch from API
 
   // Evidence modal
-  const [showEvidenceModal, setShowEvidenceModal] = useState(false)
+  const [showEvidence, setShowEvidence] = useState(false)
+  const [evidenceStep, setEvidenceStep] = useState(0)
   const [form, setForm] = useState<EvidenceForm>({ smartGoal: "", didToday: "", learned: "", changeTomorrow: "" })
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState("")
   const [submitted, setSubmitted] = useState(false)
 
-  // Quick reflection (30s)
+  // Quick reflection
   const [showReflection, setShowReflection] = useState(false)
   const [quickLearned, setQuickLearned] = useState("")
 
+  // Confetti ref
+  const wrapRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
-    const el = document.body
-    el.style.background = "#f8fafc"
-    return () => { el.style.background = "" }
+    document.body.style.background = "#0c1222"
+    return () => { document.body.style.background = "" }
   }, [])
 
   useEffect(() => {
@@ -65,247 +78,316 @@ export default function RetoDiarioPage() {
     try {
       const res = await fetch("/api/daily-challenge/today")
       if (res.ok) setChallenge(await res.json())
-    } catch (e) {
-      console.error("Error fetching challenge:", e)
-    } finally {
-      setLoadingChallenge(false)
-    }
+    } catch (e) { console.error(e) }
+    finally { setLoadingChallenge(false) }
   }
 
   const today = new Date()
   const dayName = today.toLocaleDateString("es-MX", { weekday: "long" })
   const dateStr = today.toLocaleDateString("es-MX", { day: "numeric", month: "long" })
+  const typeMeta = CHALLENGE_TYPE_META[challenge?.challengeType ?? "task"] ?? CHALLENGE_TYPE_META.task
+  const TypeIcon = typeMeta.icon
 
-  const handleCompletedClick = () => setPhase("wrap")
+  const currentStep = EVIDENCE_STEPS[evidenceStep]
+  const formFilled = form.smartGoal.trim() && form.didToday.trim() && form.learned.trim() && form.changeTomorrow.trim()
+  const currentVal = (form as any)[currentStep?.key ?? "smartGoal"] as string
 
   const handleEvidenceSubmit = async () => {
     if (!challenge) return
-    setSubmitting(true)
-    setSubmitError("")
+    setSubmitting(true); setSubmitError("")
     try {
       const res = await fetch("/api/evidence", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dailyChallengeId: challenge.id, ...form })
       })
-      if (res.ok) {
-        setSubmitted(true)
-        setShowEvidenceModal(false)
-      } else if (res.status === 409) {
-        // Already submitted
-        setSubmitted(true)
-        setShowEvidenceModal(false)
+      if (res.ok || res.status === 409) {
+        setSubmitted(true); setShowEvidence(false); setEvidenceStep(0)
       } else {
-        const data = await res.json()
-        setSubmitError(data.error || "Error al publicar")
+        const d = await res.json()
+        setSubmitError(d.error || "Error al publicar")
       }
-    } catch {
-      setSubmitError("Error de conexión. Intenta de nuevo.")
-    } finally {
-      setSubmitting(false)
-    }
+    } catch { setSubmitError("Error de conexión. Intenta de nuevo.") }
+    finally { setSubmitting(false) }
   }
 
-  const handleViewGroup = () => {
-    if (challenge) {
-      router.push(`/forum?tab=reto-del-dia&challengeId=${challenge.id}`)
-    } else {
-      router.push("/forum?tab=reto-del-dia")
-    }
+  const handleNextStep = () => {
+    if (evidenceStep < EVIDENCE_STEPS.length - 1) setEvidenceStep(s => s + 1)
+    else handleEvidenceSubmit()
   }
 
-  const handleUseReflection = () => {
-    setForm(f => ({ ...f, learned: quickLearned }))
-    setShowReflection(false)
-    setShowEvidenceModal(true)
-  }
-
-  const isFormValid = form.smartGoal.trim() && form.didToday.trim() && form.learned.trim() && form.changeTomorrow.trim()
+  const handleViewGroup = () =>
+    router.push(challenge ? `/forum?tab=reto-del-dia&challengeId=${challenge.id}` : "/forum?tab=reto-del-dia")
 
   if (loading) return null
 
   return (
     <>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
         @media (max-width: 767px) {
-          .reto-diario-outer { margin-left: 0 !important; padding-bottom: 80px !important; }
+          .rd-outer { margin-left: 0 !important; padding-bottom: 100px !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .reto-diario-outer { margin-left: 220px !important; width: calc(100% - 220px) !important; }
+          .rd-outer { margin-left: 220px !important; width: calc(100% - 220px) !important; }
         }
         @media (min-width: 1161px) {
-          .reto-diario-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+          .rd-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; }
         }
 
-        .reto-textarea {
-          width: 100%;
-          padding: 12px 14px;
-          border: 1.5px solid #e2e8f0;
-          border-radius: 12px;
-          font-size: 14px;
-          line-height: 1.6;
-          font-family: 'Montserrat', sans-serif;
-          resize: vertical;
-          outline: none;
-          color: #0f172a;
-          background: #fafafa;
-          transition: border-color 0.2s;
+        @keyframes fadeUp   { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes scaleIn  { from { opacity:0; transform:scale(0.9) }       to { opacity:1; transform:scale(1) } }
+        @keyframes pulse    { 0%,100% { box-shadow: 0 0 0 0 rgba(15,98,254,0.4) } 50% { box-shadow: 0 0 0 12px rgba(15,98,254,0) } }
+        @keyframes float    { 0%,100% { transform: translateY(0px) }          50% { transform: translateY(-6px) } }
+        @keyframes shimmer  { from { background-position: -200% center } to { background-position: 200% center } }
+        @keyframes starPop  { 0% { opacity:0; transform:scale(0) rotate(-20deg) } 60% { opacity:1; transform:scale(1.2) rotate(5deg) } 100% { opacity:1; transform:scale(1) rotate(0deg) } }
+        @keyframes streakGlow { 0%,100% { text-shadow: 0 0 12px rgba(251,146,60,0.8) } 50% { text-shadow: 0 0 24px rgba(251,146,60,1) } }
+
+        .rd-challenge-card {
+          background: linear-gradient(145deg, #111827 0%, #1a1f35 100%);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 24px;
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+          animation: fadeUp 0.5s ease both;
+        }
+        .rd-challenge-card::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: radial-gradient(ellipse at 80% 0%, rgba(15,98,254,0.15) 0%, transparent 60%),
+                      radial-gradient(ellipse at 0% 100%, rgba(124,58,237,0.1) 0%, transparent 50%);
+          pointer-events: none;
+        }
+
+        .rd-complete-btn {
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+          width: 100%; padding: 16px 28px;
+          background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
+          color: white; border: none; border-radius: 16px;
+          font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px;
+          cursor: pointer; transition: all 0.25s ease;
+          box-shadow: 0 8px 32px rgba(15,98,254,0.45);
+          animation: pulse 2.5s ease infinite;
+        }
+        .rd-complete-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(15,98,254,0.55); }
+        .rd-complete-btn:active { transform: translateY(0); }
+
+        .rd-textarea {
+          width: 100%; padding: 14px 16px;
+          border: 1.5px solid rgba(255,255,255,0.1);
+          border-radius: 14px; font-size: 14px; line-height: 1.7;
+          font-family: 'Montserrat', sans-serif; resize: vertical; outline: none;
+          color: #f1f5f9; background: rgba(255,255,255,0.05);
+          transition: all 0.2s; box-sizing: border-box;
+        }
+        .rd-textarea:focus { border-color: #0F62FE; background: rgba(15,98,254,0.05); box-shadow: 0 0 0 3px rgba(15,98,254,0.15); }
+        .rd-textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+        .rd-wrap-card {
+          background: linear-gradient(145deg, #111827 0%, #1a1025 100%);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 24px; padding: clamp(32px, 6vw, 52px) clamp(24px, 5vw, 48px);
+          position: relative; overflow: hidden; text-align: center;
+          box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+          animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+        .rd-wrap-card::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: radial-gradient(ellipse at 50% 0%, rgba(15,98,254,0.2) 0%, transparent 60%),
+                      radial-gradient(ellipse at 30% 100%, rgba(167,139,250,0.15) 0%, transparent 50%);
+          pointer-events: none;
+        }
+
+        .rd-cta-primary {
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+          width: 100%; padding: 18px 28px; border: none; border-radius: 16px;
+          font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px;
+          cursor: pointer; transition: all 0.25s ease;
+          background: linear-gradient(135deg, #0F62FE 0%, #a855f7 100%);
+          color: white; box-shadow: 0 8px 32px rgba(15,98,254,0.4);
+          animation: fadeUp 0.4s ease 0.1s both;
+        }
+        .rd-cta-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(15,98,254,0.5); }
+        .rd-cta-secondary {
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+          width: 100%; padding: 16px 28px; border-radius: 16px;
+          font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px;
+          cursor: pointer; transition: all 0.25s ease;
+          background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12);
+          color: rgba(255,255,255,0.85);
+          animation: fadeUp 0.4s ease 0.18s both;
+        }
+        .rd-cta-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .rd-cta-tertiary {
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          width: 100%; padding: 13px 28px; border-radius: 12px;
+          font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;
+          cursor: pointer; transition: all 0.2s ease;
+          background: transparent; border: 1px solid rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.4);
+          animation: fadeUp 0.4s ease 0.26s both;
+        }
+        .rd-cta-tertiary:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
+
+        .step-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; }
+        .step-dot.active { width: 24px; border-radius: 4px; background: #0F62FE; }
+        .step-dot.done   { background: #10b981; }
+        .step-dot.pending { background: rgba(255,255,255,0.2); }
+
+        .modal-overlay {
+          position: fixed; inset: 0; z-index: 1000;
+          background: rgba(8, 12, 24, 0.85);
+          display: flex; align-items: center; justify-content: center;
+          padding: clamp(16px, 4vw, 40px);
+          backdrop-filter: blur(8px);
+        }
+        .modal-box {
+          background: linear-gradient(145deg, #111827, #0f172a);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 24px; width: 100%; max-width: 540px;
+          max-height: 92vh; overflow-y: auto;
+          padding: clamp(24px, 4vw, 36px);
+          box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+          animation: scaleIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
           box-sizing: border-box;
         }
-        .reto-textarea:focus { border-color: #0F62FE; background: white; }
-
-        .wrap-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          border: none;
-          border-radius: 14px;
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        .wrap-btn:hover { transform: translateY(-2px); }
-        .wrap-btn:active { transform: translateY(0); }
-
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in { animation: fadeInUp 0.4s ease both; }
-        .fade-in-d1 { animation-delay: 0.05s; }
-        .fade-in-d2 { animation-delay: 0.10s; }
-        .fade-in-d3 { animation-delay: 0.15s; }
-        .fade-in-d4 { animation-delay: 0.20s; }
       `}</style>
 
       <div
-        className="reto-diario-outer"
+        className="rd-outer"
         style={{
           minHeight: "100vh",
-          background: "#f8fafc",
+          background: "linear-gradient(160deg, #0c1222 0%, #111827 60%, #0d1525 100%)",
           fontFamily: "'Montserrat', sans-serif",
           padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)",
           boxSizing: "border-box",
         }}
       >
-        {/* ──────────── EVIDENCE MODAL ──────────── */}
-        {showEvidenceModal && (
-          <div style={{
-            position: "fixed", inset: 0,
-            background: "rgba(15,23,42,0.65)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            zIndex: 1000, padding: "clamp(16px, 4vw, 40px)",
-            backdropFilter: "blur(4px)"
-          }}>
-            <div style={{
-              background: "white", borderRadius: 20, width: "100%", maxWidth: 560,
-              maxHeight: "90vh", overflowY: "auto", padding: "clamp(24px, 4vw, 36px)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.3)", boxSizing: "border-box"
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+
+        {/* ══ EVIDENCE MODAL ══ */}
+        {showEvidence && (
+          <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowEvidence(false) }}>
+            <div className="modal-box">
+              {/* Header */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 22 }}>
                 <div>
-                  <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 4px" }}>
+                  <h2 style={{ fontSize: 20, fontWeight: 900, color: "white", margin: "0 0 4px" }}>
                     Publicar Evidencia
                   </h2>
-                  <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>
-                    Comparte tu aprendizaje de hoy con tu grupo
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", margin: 0 }}>
+                    Comparte tu aprendizaje con tu grupo
                   </p>
                 </div>
-                <button onClick={() => setShowEvidenceModal(false)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "#94a3b8" }}>
-                  <X size={22} />
+                <button onClick={() => { setShowEvidence(false); setEvidenceStep(0) }} style={{ background: "rgba(255,255,255,0.07)", border: "none", cursor: "pointer", padding: 8, borderRadius: 10, color: "rgba(255,255,255,0.5)", lineHeight: 0 }}>
+                  <X size={18} />
                 </button>
               </div>
 
-              {submitError && (
-                <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "10px 14px", marginBottom: 18, display: "flex", gap: 8, color: "#991b1b", fontSize: 13 }}>
-                  <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
-                  {submitError}
-                </div>
-              )}
+              {/* Step dots */}
+              <div style={{ display: "flex", gap: 6, marginBottom: 24, alignItems: "center" }}>
+                {EVIDENCE_STEPS.map((_, i) => (
+                  <div key={i} className={`step-dot ${i === evidenceStep ? "active" : i < evidenceStep ? "done" : "pending"}`} />
+                ))}
+                <span style={{ marginLeft: "auto", fontSize: 12, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>
+                  {evidenceStep + 1} / {EVIDENCE_STEPS.length}
+                </span>
+              </div>
 
-              {[
-                { key: "smartGoal", label: "Mi objetivo SMART", placeholder: "Ej: Ahorrar $300 en 30 días reduciendo mis gastos en comida.", limit: LIMITS.smartGoal },
-                { key: "didToday", label: "¿Qué hice hoy?", placeholder: "Ej: Revisé mis últimos 10 gastos y encontré que gasto $120 extras en delivery.", limit: LIMITS.didToday },
-                { key: "learned", label: "¿Qué aprendí?", placeholder: "Ej: Que cocinar en casa puede ahorrarme hasta $1,000 al mes.", limit: LIMITS.learned },
-                { key: "changeTomorrow", label: "¿Qué cambiaré mañana?", placeholder: "Ej: Prepararé mi comida antes de salir para evitar el delivery.", limit: LIMITS.changeTomorrow },
-              ].map(({ key, label, placeholder, limit }, i) => (
-                <div key={key} style={{ marginBottom: 16 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <label style={{ fontSize: 13, fontWeight: 700, color: "#374151" }}>{label} <span style={{ color: "#ef4444" }}>*</span></label>
-                    <span style={{ fontSize: 11, color: (form as any)[key].length > limit * 0.9 ? "#f59e0b" : "#94a3b8" }}>
-                      {(form as any)[key].length}/{limit}
-                    </span>
+              {/* Current step */}
+              <div style={{ animation: "fadeUp 0.3s ease both" }} key={evidenceStep}>
+                <div style={{ fontSize: 28, marginBottom: 10 }}>{currentStep.emoji}</div>
+                <div style={{ fontSize: 17, fontWeight: 800, color: "white", marginBottom: 4 }}>{currentStep.label}</div>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 14 }}>{currentStep.hint}</div>
+
+                {submitError && evidenceStep === EVIDENCE_STEPS.length - 1 && (
+                  <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 8, color: "#fca5a5", fontSize: 13 }}>
+                    <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
+                    {submitError}
                   </div>
-                  <textarea
-                    className="reto-textarea"
-                    rows={3}
-                    placeholder={placeholder}
-                    maxLength={limit}
-                    value={(form as any)[key]}
-                    onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                  />
-                </div>
-              ))}
+                )}
 
-              <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Tu respuesta *</label>
+                  <span style={{ fontSize: 11, color: currentVal.length > currentStep.limit * 0.85 ? "#f59e0b" : "rgba(255,255,255,0.25)", fontWeight: 600 }}>
+                    {currentVal.length}/{currentStep.limit}
+                  </span>
+                </div>
+                <textarea
+                  className="rd-textarea"
+                  rows={4}
+                  placeholder={currentStep.placeholder}
+                  maxLength={currentStep.limit}
+                  value={currentVal}
+                  autoFocus
+                  onChange={e => setForm(f => ({ ...f, [currentStep.key]: e.target.value }))}
+                />
+              </div>
+
+              {/* Navigation */}
+              <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
                 <button
-                  onClick={() => setShowEvidenceModal(false)}
-                  style={{ flex: 1, padding: "13px", background: "white", border: "1.5px solid #e2e8f0", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 14, color: "#64748b", fontFamily: "'Montserrat', sans-serif" }}
+                  onClick={() => evidenceStep > 0 ? setEvidenceStep(s => s - 1) : setShowEvidence(false)}
+                  style={{ flex: 1, padding: "13px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 14, color: "rgba(255,255,255,0.5)", fontFamily: "'Montserrat', sans-serif" }}
                 >
-                  Cancelar
+                  {evidenceStep > 0 ? "← Atrás" : "Cancelar"}
                 </button>
                 <button
-                  onClick={handleEvidenceSubmit}
-                  disabled={!isFormValid || submitting}
+                  onClick={handleNextStep}
+                  disabled={!currentVal.trim() || submitting}
                   style={{
-                    flex: 2, padding: "13px", background: isFormValid && !submitting ? "linear-gradient(135deg, #0F62FE, #2563EB)" : "#94a3b8",
-                    color: "white", border: "none", borderRadius: 12, fontWeight: 700, cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
-                    fontSize: 14, fontFamily: "'Montserrat', sans-serif"
+                    flex: 2, padding: "13px",
+                    background: currentVal.trim() && !submitting ? "linear-gradient(135deg, #0F62FE, #4A9EFF)" : "rgba(255,255,255,0.08)",
+                    color: currentVal.trim() && !submitting ? "white" : "rgba(255,255,255,0.25)",
+                    border: "none", borderRadius: 12, fontWeight: 800, cursor: currentVal.trim() ? "pointer" : "not-allowed",
+                    fontSize: 14, fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s",
+                    boxShadow: currentVal.trim() ? "0 6px 20px rgba(15,98,254,0.35)" : "none"
                   }}
                 >
-                  {submitting ? "Publicando..." : "Publicar evidencia"}
+                  {submitting ? "Publicando..." : evidenceStep < EVIDENCE_STEPS.length - 1 ? "Siguiente →" : "✓ Publicar evidencia"}
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* ──────────── QUICK REFLECTION MODAL ──────────── */}
+        {/* ══ QUICK REFLECTION MODAL ══ */}
         {showReflection && (
-          <div style={{
-            position: "fixed", inset: 0,
-            background: "rgba(15,23,42,0.65)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            zIndex: 1000, padding: 24,
-            backdropFilter: "blur(4px)"
-          }}>
-            <div style={{ background: "white", borderRadius: 20, width: "100%", maxWidth: 440, padding: 32, boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+          <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowReflection(false) }}>
+            <div className="modal-box" style={{ maxWidth: 460 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", margin: 0 }}>⏱ Reflexión de 30 segundos</h2>
-                <button onClick={() => setShowReflection(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }}>
-                  <X size={20} />
+                <div>
+                  <h2 style={{ fontSize: 18, fontWeight: 900, color: "white", margin: 0 }}>⏱ Reflexión rápida</h2>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", margin: "4px 0 0" }}>Escribe en 30 segundos o menos</p>
+                </div>
+                <button onClick={() => setShowReflection(false)} style={{ background: "rgba(255,255,255,0.07)", border: "none", cursor: "pointer", padding: 8, borderRadius: 10, color: "rgba(255,255,255,0.5)", lineHeight: 0 }}>
+                  <X size={18} />
                 </button>
               </div>
-              <p style={{ fontSize: 14, color: "#64748b", marginBottom: 16, lineHeight: 1.6 }}>
-                ¿Qué fue lo más importante que aprendiste hoy? (no más de 30 segundos)
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: 1.65, marginBottom: 14 }}>
+                ¿Cuál fue tu aprendizaje más valioso de hoy?
               </p>
               <textarea
-                className="reto-textarea"
+                className="rd-textarea"
                 rows={4}
-                placeholder="Ej: Aprendí que revisar mis gastos semanalmente me ayuda a detectar fugas de dinero antes de que se acumulen."
+                placeholder="Ej: Aprendí que revisar mis gastos una vez a la semana me evita sorpresas al final del mes."
                 value={quickLearned}
                 maxLength={250}
+                autoFocus
                 onChange={e => setQuickLearned(e.target.value)}
               />
-              <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
-                <button onClick={() => setShowReflection(false)} style={{ flex: 1, padding: "11px", background: "white", border: "1.5px solid #e2e8f0", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 13, color: "#64748b", fontFamily: "'Montserrat', sans-serif" }}>
+              <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+                <button onClick={() => setShowReflection(false)} style={{ flex: 1, padding: "12px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 13, color: "rgba(255,255,255,0.4)", fontFamily: "'Montserrat', sans-serif" }}>
                   Cerrar
                 </button>
                 {quickLearned.trim() && (
-                  <button onClick={handleUseReflection} style={{ flex: 2, padding: "11px", background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white", border: "none", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 13, fontFamily: "'Montserrat', sans-serif" }}>
-                    Usar para mi evidencia →
+                  <button
+                    onClick={() => { setForm(f => ({ ...f, learned: quickLearned })); setShowReflection(false); setEvidenceStep(0); setShowEvidence(true) }}
+                    style={{ flex: 2, padding: "12px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", border: "none", borderRadius: 12, fontWeight: 800, cursor: "pointer", fontSize: 13, fontFamily: "'Montserrat', sans-serif" }}
+                  >
+                    Usar en mi evidencia →
                   </button>
                 )}
               </div>
@@ -313,178 +395,242 @@ export default function RetoDiarioPage() {
           </div>
         )}
 
-        <div style={{ maxWidth: 800, margin: "0 auto", width: "100%" }}>
+        {/* ══ MAIN CONTENT ══ */}
+        <div style={{ maxWidth: 760, margin: "0 auto", width: "100%" }}>
 
+          {/* ── PHASE: DOING ── */}
           {phase === "doing" && (
             <>
-              {/* Hero header */}
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}>
-                <div style={{
-                  width: 60, height: 60, borderRadius: 16,
-                  background: "linear-gradient(135deg, #0F62FE, #2563EB)",
-                  boxShadow: "0 8px 20px rgba(15,98,254,0.3)",
-                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-                }}>
-                  <Target size={32} color="white" strokeWidth={2.5} />
-                </div>
+              {/* Top bar */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, animation: "fadeUp 0.4s ease both" }}>
                 <div>
-                  <h1 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: 800, color: "#0f172a", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+                  <h1 style={{ fontSize: "clamp(22px, 3.5vw, 30px)", fontWeight: 900, color: "white", margin: "0 0 2px", letterSpacing: "-0.02em" }}>
                     Reto diario
                   </h1>
-                  <p style={{ fontSize: 15, color: "#64748b", margin: 0, fontWeight: 500 }}>
-                    Un pequeño desafío cada día para reforzar tus finanzas.
+                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", margin: 0, fontWeight: 500, textTransform: "capitalize" }}>
+                    {dayName}, {dateStr}
                   </p>
                 </div>
+
+                {/* Streak badge */}
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 8,
+                  padding: "10px 16px",
+                  background: "rgba(251,146,60,0.12)",
+                  border: "1px solid rgba(251,146,60,0.3)",
+                  borderRadius: 14,
+                }}>
+                  <Flame size={18} style={{ color: "#fb923c", animation: "float 2s ease infinite" }} />
+                  <div>
+                    <div style={{ fontSize: 16, fontWeight: 900, color: "#fb923c", lineHeight: 1, animation: "streakGlow 2s ease infinite" }}>{streak}</div>
+                    <div style={{ fontSize: 10, color: "rgba(251,146,60,0.6)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>racha</div>
+                  </div>
+                </div>
               </div>
 
-              {/* Challenge card */}
-              <div className="fade-in" style={{
-                background: "white", borderRadius: 20,
-                border: "1.5px solid rgba(15,98,254,0.15)",
-                padding: "clamp(24px, 4vw, 36px)", marginBottom: 24,
-                boxShadow: "0 4px 20px rgba(15,98,254,0.08)"
-              }}>
-                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                    {dayName}, {dateStr}
-                  </span>
-                  <span style={{ padding: "4px 12px", background: "rgba(15,98,254,0.1)", color: "#0F62FE", borderRadius: 999, fontSize: 12, fontWeight: 700 }}>
-                    ~5 min
-                  </span>
-                  {loadingChallenge && (
-                    <span style={{ fontSize: 12, color: "#94a3b8" }}>Cargando...</span>
+              {/* ── Challenge hero card ── */}
+              <div className="rd-challenge-card" style={{ padding: "clamp(28px, 5vw, 44px)", marginBottom: 20 }}>
+                {/* Decorative orbs */}
+                <div style={{ position: "absolute", top: 0, right: 0, width: 280, height: 280, borderRadius: "50%", background: `radial-gradient(circle, ${typeMeta.accent}, transparent 70%)`, pointerEvents: "none", transform: "translate(30%, -30%)" }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(167,139,250,0.08), transparent 70%)", pointerEvents: "none", transform: "translate(-30%, 30%)" }} />
+
+                <div style={{ position: "relative", zIndex: 1 }}>
+                  {/* Type badge + XP pill */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
+                    <div style={{
+                      display: "inline-flex", alignItems: "center", gap: 7,
+                      padding: "6px 14px",
+                      background: typeMeta.accent,
+                      border: `1px solid ${typeMeta.color}40`,
+                      borderRadius: 999, fontSize: 12, fontWeight: 700, color: typeMeta.color
+                    }}>
+                      <TypeIcon size={13} />
+                      {typeMeta.label}
+                    </div>
+                    <div style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      padding: "6px 14px",
+                      background: "rgba(245,158,11,0.1)",
+                      border: "1px solid rgba(245,158,11,0.3)",
+                      borderRadius: 999, fontSize: 12, fontWeight: 700, color: "#fbbf24"
+                    }}>
+                      <Zap size={12} />
+                      +50 XP
+                    </div>
+                    <div style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      padding: "6px 12px",
+                      background: "rgba(255,255,255,0.05)",
+                      borderRadius: 999, fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.4)"
+                    }}>
+                      <Clock size={12} />
+                      ~5 min
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  {loadingChallenge ? (
+                    <div style={{ height: 28, borderRadius: 8, marginBottom: 12, background: "linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: 420 }} />
+                  ) : (
+                    <h2 style={{ fontSize: "clamp(20px, 3vw, 26px)", fontWeight: 900, color: "white", margin: "0 0 16px", letterSpacing: "-0.015em", lineHeight: 1.25 }}>
+                      {challenge?.title ?? "Reto del día"}
+                    </h2>
+                  )}
+
+                  {/* Description */}
+                  {loadingChallenge ? (
+                    <>
+                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "rgba(255,255,255,0.05)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
+                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "rgba(255,255,255,0.05)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: "75%" }} />
+                    </>
+                  ) : (
+                    <p style={{ fontSize: "clamp(14px, 1.2vw, 16px)", color: "rgba(255,255,255,0.6)", lineHeight: 1.75, margin: "0 0 32px", maxWidth: 580 }}>
+                      {challenge?.description ?? "Cargando el reto de hoy..."}
+                    </p>
+                  )}
+
+                  {/* CTA */}
+                  {submitted ? (
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 20px", background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 14, color: "#6ee7b7" }}>
+                      <CheckCircle size={20} />
+                      <span style={{ fontWeight: 700, fontSize: 15 }}>¡Evidencia publicada! Tu grupo ya puede verla en el Foro.</span>
+                    </div>
+                  ) : (
+                    <button className="rd-complete-btn" onClick={() => setPhase("wrap")}>
+                      <CheckCircle size={18} strokeWidth={2.5} />
+                      Completé el reto
+                      <ChevronRight size={16} />
+                    </button>
                   )}
                 </div>
-
-                <h2 style={{ fontSize: "clamp(20px, 2.5vw, 24px)", fontWeight: 800, color: "#0f172a", margin: "0 0 12px", letterSpacing: "-0.01em" }}>
-                  {challenge?.title ?? "Reto del día"}
-                </h2>
-                <p style={{ fontSize: "clamp(15px, 1.1rem, 17px)", color: "#334155", lineHeight: 1.65, margin: "0 0 28px" }}>
-                  {challenge?.description ?? "Cargando descripción del reto de hoy..."}
-                </p>
-
-                {submitted ? (
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 20px", background: "rgba(16,185,129,0.1)", border: "1.5px solid rgba(16,185,129,0.3)", borderRadius: 12, color: "#065f46" }}>
-                    <CheckCircle size={20} />
-                    <span style={{ fontWeight: 700, fontSize: 15 }}>¡Evidencia publicada! Tu grupo puede verla en el Foro.</span>
-                  </div>
-                ) : (
-                  <button
-                    onClick={handleCompletedClick}
-                    className="wrap-btn"
-                    style={{
-                      padding: "14px 28px", fontSize: 15, color: "white",
-                      background: "linear-gradient(135deg, #0F62FE, #2563EB)",
-                      boxShadow: "0 6px 20px rgba(15,98,254,0.35)"
-                    }}
-                  >
-                    <CheckCircle size={18} />
-                    Completé el reto
-                    <ChevronRight size={16} />
-                  </button>
-                )}
               </div>
 
-              {/* Secondary cards */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-                <div className="fade-in fade-in-d1" style={{ padding: 22, background: "rgba(254,243,199,0.7)", border: "1.5px solid rgba(251,191,36,0.25)", borderRadius: 18, display: "flex", gap: 14 }}>
-                  <span style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(251,191,36,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 22 }} aria-hidden>💡</span>
-                  <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#92400E", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>Consejo del Experto</div>
-                    <p style={{ fontSize: 14, color: "#78350F", lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
-                      Anota tu reflexión en tu cuaderno o notas. La constancia en pequeños pasos mejora tus hábitos financieros en semanas.
-                    </p>
+              {/* ── Info cards row ── */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+                {/* Tip */}
+                <div style={{
+                  padding: "20px 22px",
+                  background: "rgba(251,191,36,0.07)",
+                  border: "1px solid rgba(251,191,36,0.15)",
+                  borderRadius: 18,
+                  animation: "fadeUp 0.5s ease 0.05s both"
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                    <span style={{ fontSize: 20 }}>💡</span>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.07em" }}>Consejo del experto</span>
                   </div>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.65, margin: 0 }}>
+                    La constancia vence al talento. Completar este reto diario te pone en el top 10% de estudiantes que mejoran su situación financiera este año.
+                  </p>
                 </div>
 
-                <div className="fade-in fade-in-d2" style={{ padding: 22, background: "white", border: "1.5px solid #f1f5f9", borderRadius: 18 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#475569", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>Beneficios del Reto Diario</div>
-                  <ul style={{ margin: 0, paddingLeft: 18, color: "#475569", fontSize: 14, lineHeight: 1.8, fontWeight: 500 }}>
-                    <li>Refuerza conceptos con práctica breve y constante.</li>
-                    <li>Genera el hábito de revisar tus finanzas con frecuencia.</li>
-                    <li>Pequeños pasos que evitan la procrastinación.</li>
-                  </ul>
+                {/* Stats mini */}
+                <div style={{
+                  padding: "20px 22px",
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  borderRadius: 18,
+                  animation: "fadeUp 0.5s ease 0.1s both"
+                }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 14 }}>¿Por qué hacerlo?</div>
+                  {[
+                    { icon: "⚡", text: "5 min = un hábito financiero sólido" },
+                    { icon: "🎯", text: "Cada reto refuerza lo aprendido en clase" },
+                    { icon: "🏆", text: "Acumula XP y sube de nivel" },
+                  ].map(({ icon, text }) => (
+                    <div key={text} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
+                      <span style={{ fontSize: 14, marginTop: 1 }}>{icon}</span>
+                      <span style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.5 }}>{text}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </>
           )}
 
-          {/* ──────────── DAILY WRAP SCREEN ──────────── */}
+          {/* ── PHASE: DAILY WRAP ── */}
           {phase === "wrap" && (
-            <div className="fade-in" style={{ textAlign: "center" }}>
-              {/* Celebration header */}
-              <div style={{
-                background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
-                borderRadius: 24, padding: "clamp(32px, 6vw, 56px) clamp(24px, 5vw, 48px)",
-                marginBottom: 28, position: "relative", overflow: "hidden",
-                boxShadow: "0 20px 60px rgba(0,0,0,0.25)"
-              }}>
-                <div aria-hidden style={{ position: "absolute", top: "-20%", right: "-5%", width: "50%", height: "200%", background: "radial-gradient(circle, rgba(15,98,254,0.2) 0%, transparent 70%)", pointerEvents: "none" }} />
+            <div ref={wrapRef}>
+              {/* Stars decoration */}
+              <div aria-hidden style={{ textAlign: "center", marginBottom: -20, position: "relative", zIndex: 2 }}>
+                {["⭐", "🌟", "✨", "⭐", "🌟"].map((s, i) => (
+                  <span key={i} style={{
+                    fontSize: 22 + (i === 2 ? 12 : i === 1 || i === 3 ? 6 : 0),
+                    marginRight: 4,
+                    display: "inline-block",
+                    animation: `starPop 0.5s ease ${0.05 * i}s both, float ${2 + i * 0.3}s ease infinite`
+                  }}>{s}</span>
+                ))}
+              </div>
+
+              <div className="rd-wrap-card">
                 <div style={{ position: "relative", zIndex: 1 }}>
-                  <div style={{ fontSize: "clamp(40px, 8vw, 64px)", marginBottom: 12 }} aria-hidden>🎉</div>
-                  <h2 style={{ fontSize: "clamp(22px, 4vw, 32px)", fontWeight: 900, color: "white", margin: "0 0 12px", letterSpacing: "-0.02em" }}>
+                  {/* Trophy */}
+                  <div style={{
+                    width: 72, height: 72, borderRadius: "50%",
+                    background: "linear-gradient(135deg, #f59e0b, #fbbf24)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    margin: "0 auto 20px",
+                    boxShadow: "0 12px 40px rgba(245,158,11,0.4)",
+                    animation: "float 3s ease infinite"
+                  }}>
+                    <Trophy size={34} color="white" strokeWidth={2.5} />
+                  </div>
+
+                  <h2 style={{ fontSize: "clamp(24px, 4vw, 34px)", fontWeight: 900, color: "white", margin: "0 0 10px", letterSpacing: "-0.02em" }}>
                     ¡Reto completado!
                   </h2>
-                  <p style={{ fontSize: "clamp(14px, 1.2vw, 17px)", color: "rgba(255,255,255,0.65)", maxWidth: 480, margin: "0 auto", lineHeight: 1.65 }}>
+
+                  {/* XP earned */}
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", background: "rgba(245,158,11,0.15)", border: "1px solid rgba(245,158,11,0.3)", borderRadius: 999, marginBottom: 16 }}>
+                    <Star size={14} style={{ color: "#fbbf24" }} fill="#fbbf24" />
+                    <span style={{ fontSize: 14, fontWeight: 900, color: "#fbbf24" }}>+50 XP ganados</span>
+                    <Flame size={14} style={{ color: "#fb923c" }} />
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#fb923c" }}>{streak} días seguidos</span>
+                  </div>
+
+                  <p style={{ fontSize: "clamp(13px, 1.2vw, 15px)", color: "rgba(255,255,255,0.5)", maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.7 }}>
                     Cada día que practicas es un paso hacia la libertad financiera. ¿Qué quieres hacer ahora?
                   </p>
+
+                  {/* Divider */}
+                  <div style={{ height: 1, background: "rgba(255,255,255,0.07)", marginBottom: 28 }} />
+
+                  {/* 3 CTAs */}
+                  <div style={{ display: "grid", gap: 12 }}>
+                    <button
+                      className="rd-cta-primary"
+                      onClick={() => submitted ? null : (setEvidenceStep(0), setShowEvidence(true))}
+                      style={submitted ? { background: "rgba(16,185,129,0.2)", boxShadow: "none", cursor: "default" } : undefined}
+                    >
+                      {submitted ? <CheckCircle size={18} /> : <FileText size={18} />}
+                      {submitted ? "✓ Evidencia publicada en el Foro" : "Publicar mi evidencia"}
+                      {!submitted && <ArrowRight size={16} style={{ marginLeft: "auto" }} />}
+                    </button>
+
+                    <button className="rd-cta-secondary" onClick={handleViewGroup}>
+                      <Users size={17} />
+                      Ver cómo le fue a mi grupo
+                      <ArrowRight size={15} style={{ marginLeft: "auto" }} />
+                    </button>
+
+                    <button className="rd-cta-tertiary" onClick={() => setShowReflection(true)}>
+                      <Sparkles size={15} />
+                      Reflexión rápida de 30 segundos
+                    </button>
+                  </div>
+
+                  {/* Back */}
+                  <button
+                    onClick={() => setPhase("doing")}
+                    style={{ marginTop: 24, background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.25)", fontSize: 13, fontFamily: "'Montserrat', sans-serif', transition: 'color 0.2s'" }}
+                    onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.5)")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.25)")}
+                  >
+                    ← Ver el reto de nuevo
+                  </button>
                 </div>
               </div>
-
-              {/* 3 CTA Buttons */}
-              <div style={{ display: "grid", gap: 14 }}>
-                {/* Primary: Post evidence */}
-                <button
-                  className="wrap-btn fade-in fade-in-d1"
-                  onClick={() => submitted ? null : setShowEvidenceModal(true)}
-                  style={{
-                    padding: "18px 28px", fontSize: 16, color: "white", width: "100%",
-                    background: submitted ? "rgba(16,185,129,0.8)" : "linear-gradient(135deg, #0F62FE, #2563EB)",
-                    boxShadow: submitted ? "0 4px 16px rgba(16,185,129,0.3)" : "0 6px 24px rgba(15,98,254,0.35)",
-                    cursor: submitted ? "default" : "pointer"
-                  }}
-                >
-                  <FileText size={20} />
-                  {submitted ? "✓ Evidencia publicada" : "Publicar evidencia"}
-                  {!submitted && <ChevronRight size={18} />}
-                </button>
-
-                {/* Secondary: View group feed */}
-                <button
-                  className="wrap-btn fade-in fade-in-d2"
-                  onClick={handleViewGroup}
-                  style={{
-                    padding: "16px 28px", fontSize: 15, color: "#1e3a5f", width: "100%",
-                    background: "white", border: "1.5px solid rgba(15,98,254,0.2)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.05)"
-                  }}
-                >
-                  <Users size={18} />
-                  Ver cómo le fue a mi grupo
-                  <ChevronRight size={16} />
-                </button>
-
-                {/* Tertiary: Quick reflection */}
-                <button
-                  className="wrap-btn fade-in fade-in-d3"
-                  onClick={() => setShowReflection(true)}
-                  style={{
-                    padding: "14px 28px", fontSize: 14, color: "#64748b", width: "100%",
-                    background: "rgba(241,245,249,0.8)", border: "1px solid #e2e8f0"
-                  }}
-                >
-                  <Sparkles size={16} />
-                  Reflexión de 30 segundos
-                </button>
-              </div>
-
-              {/* Back link */}
-              <button
-                onClick={() => setPhase("doing")}
-                style={{ marginTop: 20, background: "none", border: "none", cursor: "pointer", color: "#94a3b8", fontSize: 13, fontFamily: "'Montserrat', sans-serif" }}
-              >
-                ← Volver al reto
-              </button>
             </div>
           )}
         </div>
