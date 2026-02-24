@@ -114,13 +114,6 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
         }, 300)
     }, [navigating, stepIndex, router, onEnd])
 
-    const handleSkip = useCallback(() => {
-        setCardVisible(false)
-        setTimeout(() => {
-            setVisible(false)
-            onEnd()
-        }, 300)
-    }, [onEnd])
 
     if (!visible) return null
 
@@ -147,11 +140,11 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
           bottom: clamp(16px, 3vw, 32px);
           left: 50%;
           transform: translateX(-50%);
-          z-index: 10000;
+          z-index: 100001;
           width: calc(100% - 32px);
-          max-width: 520px;
+          max-width: 640px;
           background: #ffffff;
-          border-radius: 24px;
+          border-radius: 28px;
           box-shadow:
             0 32px 80px rgba(0,0,0,0.22),
             0 0 0 1px rgba(0,0,0,0.06);
@@ -167,58 +160,49 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
         .tour-backdrop {
           position: fixed;
           inset: 0;
-          z-index: 9999;
-          pointer-events: none;
+          z-index: 100000;
+          pointer-events: auto;
           background: transparent;
         }
         /* On mobile, account for bottom nav */
         @media (max-width: 767px) {
           .tour-card {
-            bottom: calc(65px + env(safe-area-inset-bottom) + 8px);
+            bottom: calc(75px + env(safe-area-inset-bottom));
           }
         }
       `}</style>
 
-            {/* Non-blocking backdrop — just z-index layer, no click-block */}
+            {/* Blocking backdrop — forces user to interact ONLY with the tour card */}
             <div className="tour-backdrop" />
 
             <div className={`tour-card ${cardVisible ? "enter" : "exit"}`}>
                 {/* Color accent stripe */}
                 <div style={{ height: 4, background: `linear-gradient(90deg, ${current.color}, ${current.color}99)`, width: `${progressPct}%`, transition: "width 0.5s cubic-bezier(0.34,1.56,0.64,1)" }} />
 
-                <div style={{ padding: "20px 24px" }}>
+                <div style={{ padding: "clamp(20px, 4vw, 32px) clamp(24px, 5vw, 40px)" }}>
                     {/* Header row */}
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "clamp(14px, 3vw, 20px)", marginBottom: "clamp(14px, 3vw, 20px)" }}>
                         {/* Mascot */}
-                        <div style={{ width: 56, height: 56, flexShrink: 0, animation: "tour-mascotBob 3s ease infinite" }}>
+                        <div style={{ width: "clamp(56px, 12vw, 76px)", height: "clamp(56px, 12vw, 76px)", flexShrink: 0, animation: "tour-mascotBob 3s ease infinite" }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src="/hero4.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                         </div>
 
                         <div style={{ flex: 1, minWidth: 0 }}>
                             {/* Step badge */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                                <span style={{ fontSize: 11, fontWeight: 700, color: current.color, background: current.accent, padding: "3px 10px", borderRadius: 999, border: `1px solid ${current.color}25`, letterSpacing: "0.04em" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                                <span style={{ fontSize: "clamp(11px, 2.5vw, 13px)", fontWeight: 700, color: current.color, background: current.accent, padding: "4px 12px", borderRadius: 999, border: `1px solid ${current.color}25`, letterSpacing: "0.04em" }}>
                                     {current.label} — {stepIndex + 1} / {TOUR_STEPS.length}
                                 </span>
                             </div>
-                            <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>
+                            <h3 style={{ margin: 0, fontSize: "clamp(18px, 4vw, 24px)", fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>
                                 {current.title}
                             </h3>
                         </div>
-
-                        {/* Skip */}
-                        <button
-                            onClick={handleSkip}
-                            style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", fontSize: 20, lineHeight: 1, padding: 4, flexShrink: 0 }}
-                            title="Saltar tour"
-                        >
-                            ×
-                        </button>
                     </div>
 
                     {/* Description */}
-                    <p style={{ margin: "0 0 18px", fontSize: 14, color: "#475569", lineHeight: 1.7 }}>
+                    <p style={{ margin: "0 0 clamp(18px, 4vw, 28px)", fontSize: "clamp(15px, 3.5vw, 18px)", color: "#475569", lineHeight: 1.7 }}>
                         {current.description}
                     </p>
 
@@ -241,7 +225,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                         </div>
 
                         {/* Navigation */}
-                        <div style={{ display: "flex", gap: 8 }}>
+                        <div style={{ display: "flex", gap: "clamp(8px, 2vw, 12px)" }}>
                             {stepIndex > 0 && (
                                 <button
                                     onClick={() => {
@@ -252,7 +236,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                                             router.push(TOUR_STEPS[stepIndex - 1].path)
                                         }, 280)
                                     }}
-                                    style={{ padding: "9px 16px", borderRadius: 10, border: "1.5px solid #e5e7eb", background: "white", fontSize: 13, fontWeight: 600, color: "#6b7280", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
+                                    style={{ padding: "clamp(10px, 2vw, 14px) clamp(16px, 3vw, 24px)", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "white", fontSize: "clamp(14px, 3vw, 16px)", fontWeight: 600, color: "#6b7280", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
                                 >
                                     Anterior
                                 </button>
@@ -261,12 +245,12 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                                 onClick={goToNext}
                                 disabled={navigating}
                                 style={{
-                                    padding: "9px 20px",
-                                    borderRadius: 10,
+                                    padding: "clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px)",
+                                    borderRadius: 12,
                                     border: "none",
                                     background: isLast ? "#0f172a" : `linear-gradient(135deg, ${current.color}, ${current.color}cc)`,
                                     color: "white",
-                                    fontSize: 13,
+                                    fontSize: "clamp(14px, 3vw, 16px)",
                                     fontWeight: 700,
                                     cursor: navigating ? "not-allowed" : "pointer",
                                     fontFamily: "'Inter', sans-serif",

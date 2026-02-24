@@ -257,60 +257,104 @@ export default function CoursesPage() {
           alignItems: "stretch",
           gap: 0
         }}>
+          {/* Hero Header */}
+          <div
+            className="courses-hero"
+            style={{
+              background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
+              borderRadius: 28,
+              padding: "clamp(32px, 5vw, 52px) clamp(28px, 5vw, 48px)",
+              marginBottom: "clamp(28px, 5vw, 40px)",
+              position: "relative",
+              overflow: "hidden",
+              boxShadow: "0 20px 60px rgba(15, 98, 254, 0.25)"
+            }}
+          >
+            {/* Glowing orbs inside hero */}
+            <div style={{ position: "absolute", top: "-30%", right: "-5%", width: 300, height: 300, background: "radial-gradient(circle, rgba(96,165,250,0.25) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", bottom: "-20%", left: "5%", width: 250, height: 250, background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Zap size={13} color="#60a5fa" />
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>30 Temas · Educación Financiera</span>
+                </div>
+              </div>
+              <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 900, color: "#ffffff", margin: "0 0 10px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+                Tu Camino Financiero
+              </h1>
+              <p style={{ fontSize: "clamp(14px, 2vw, 17px)", color: "#93c5fd", margin: "0 0 32px", lineHeight: 1.6, maxWidth: 500 }}>
+                Domina el dinero paso a paso. Desde las bases hasta invertir y emprender con confianza.
+              </p>
+
+              {/* Stats row */}
+              <div style={{ display: "flex", gap: "clamp(16px, 4vw, 32px)", flexWrap: "wrap" }}>
+                {[
+                  { label: "Temas", value: "30", icon: BookOpen },
+                  { label: "Lecciones", value: `${APPROX_TOTAL_LESSONS}+`, icon: CheckCircle2 },
+                  { label: "Completadas", value: completedCount.toString(), icon: Zap },
+                ].map((stat) => {
+                  const StatIcon = stat.icon
+                  return (
+                    <div key={stat.label} style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "12px 18px" }}>
+                      <StatIcon size={18} color="#60a5fa" />
+                      <div>
+                        <div style={{ fontSize: "clamp(18px, 3vw, 24px)", fontWeight: 900, color: "#fff", lineHeight: 1 }}>{stat.value}</div>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>{stat.label}</div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
           {/* Progress indicator – lessons completed across all 30 topics */}
           <div
             className="progress-card-responsive"
             style={{
               width: "100%",
-              marginBottom: "clamp(40px, 6vw, 60px)",
-              padding: "clamp(24px, 4vw, 32px)",
+              marginBottom: "clamp(28px, 5vw, 44px)",
+              padding: "clamp(20px, 3vw, 28px) clamp(24px, 4vw, 32px)",
               background: "white",
               border: "1px solid #e2e8f0",
-              borderRadius: 24,
-              boxShadow: "0 10px 40px rgba(0, 0, 0, 0.04)",
+              borderRadius: 20,
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.04)",
               boxSizing: "border-box",
               position: "relative",
               overflow: "hidden"
             }}
             aria-label={`Progreso: ${completedCount} lecciones completadas`}
           >
-            {/* Background Decoration for Progress Card */}
-            <div style={{
-              position: "absolute",
-              top: -20,
-              right: -20,
-              width: 120,
-              height: 120,
-              background: "linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%)",
-              borderRadius: "50%",
-              zIndex: 0
-            }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #3b82f6, #2563eb, #6366f1)", borderRadius: "20px 20px 0 0" }} />
+            <div style={{ position: "absolute", top: -30, right: -30, width: 150, height: 150, background: "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)", borderRadius: "50%" }} />
 
             <div
               className="progress-flex-container"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "flex-end",
+                alignItems: "center",
                 marginBottom: 16,
                 position: "relative",
                 zIndex: 1
               }}
             >
               <div>
-                <h2 style={{ fontSize: "clamp(16px, 4vw, 24px)", fontWeight: 800, color: "#1e3a5f", margin: "0 0 4px" }} className="progress-title">
+                <h2 style={{ fontSize: "clamp(15px, 3vw, 20px)", fontWeight: 800, color: "#1e3a5f", margin: "0 0 3px" }} className="progress-title">
                   <span className="full-text">Tu Viaje BIZEN</span>
                   <span className="short-text">Mi Viaje</span>
                 </h2>
                 <div style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }} className="progress-subtitle">
                   <span className="full-text">{completedCount} de {APPROX_TOTAL_LESSONS} lecciones dominadas</span>
-                  <span className="short-text">{completedCount} / {APPROX_TOTAL_LESSONS} lecciones</span>
+                  <span className="short-text">{completedCount} / {APPROX_TOTAL_LESSONS}</span>
                 </div>
               </div>
-              <div style={{ textAlign: "right" }}>
+              <div style={{ textAlign: "right", display: "flex", alignItems: "center", gap: 12 }}>
                 <span
                   style={{
-                    fontSize: "clamp(20px, 5vw, 32px)",
+                    fontSize: "clamp(22px, 5vw, 34px)",
                     fontWeight: 900,
                     background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
                     WebkitBackgroundClip: "text",
@@ -324,8 +368,8 @@ export default function CoursesPage() {
             <div
               style={{
                 width: "100%",
-                height: 12,
-                borderRadius: 12,
+                height: 10,
+                borderRadius: 10,
                 background: "#f1f5f9",
                 overflow: "hidden",
                 position: "relative",
@@ -336,10 +380,10 @@ export default function CoursesPage() {
                 style={{
                   width: `${progressPct}%`,
                   height: "100%",
-                  borderRadius: 12,
-                  background: "linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)",
-                  transition: "width 1s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                  boxShadow: "0 0 15px rgba(59, 130, 246, 0.4)"
+                  borderRadius: 10,
+                  background: "linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%)",
+                  transition: "width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  boxShadow: "0 0 12px rgba(59, 130, 246, 0.5)"
                 }}
               />
             </div>
@@ -397,10 +441,10 @@ export default function CoursesPage() {
                   onClick={() => router.push(`/courses/${topic.id}`)}
                   style={{
                     cursor: "pointer",
-                    border: "1px solid transparent",
+                    border: "1.5px solid #e8f0fe",
                     borderRadius: "20px",
                     background: "#ffffff",
-                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.05)",
+                    boxShadow: "0 4px 20px rgba(37, 99, 235, 0.06)",
                     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     overflow: "hidden",
                     display: "flex",
@@ -408,40 +452,53 @@ export default function CoursesPage() {
                   }}
                   className="course-card-hover"
                 >
-                  <CardContent style={{ padding: "24px", position: "relative", flex: 1, display: "flex", flexDirection: "column" }}>
+                  {/* Colored top accent bar */}
+                  <div style={{
+                    height: 4,
+                    background: `linear-gradient(90deg, ${topic.color}, ${topic.color}88)`,
+                    width: "100%",
+                    flexShrink: 0
+                  }} />
+
+                  <CardContent style={{ padding: "22px 24px", position: "relative", flex: 1, display: "flex", flexDirection: "column" }}>
                     {/* Topic Number Badge */}
                     <div style={{
                       position: "absolute",
-                      top: 16,
+                      top: 14,
                       right: 16,
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: 800,
-                      color: "#94a3b8",
-                      opacity: 0.5
+                      color: topic.color,
+                      background: `${topic.color}12`,
+                      padding: "2px 8px",
+                      borderRadius: 999,
+                      letterSpacing: "0.04em"
                     }}>
                       #{topic.id.toString().padStart(2, '0')}
                     </div>
 
                     {/* Icon Header */}
                     <div style={{
-                      width: 54,
-                      height: 54,
-                      borderRadius: "16px",
-                      background: `${topic.color}15`,
+                      width: 52,
+                      height: 52,
+                      borderRadius: "15px",
+                      background: `linear-gradient(135deg, ${topic.color}20 0%, ${topic.color}10 100%)`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginBottom: 20,
-                      color: topic.color
+                      marginBottom: 16,
+                      color: topic.color,
+                      boxShadow: `0 4px 14px ${topic.color}25`,
+                      border: `1px solid ${topic.color}18`
                     }}>
-                      <IconComp size={28} />
+                      <IconComp size={26} strokeWidth={2} />
                     </div>
 
                     <h3 style={{
-                      fontSize: 18,
+                      fontSize: "clamp(14px, 2vw, 16px)",
                       fontWeight: 700,
                       color: "#1e3a5f",
-                      marginBottom: 12,
+                      marginBottom: 14,
                       lineHeight: 1.4,
                       flex: 1
                     }}>
@@ -452,14 +509,17 @@ export default function CoursesPage() {
                     <div style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 16,
+                      justifyContent: "space-between",
                       marginTop: "auto",
-                      paddingTop: 16,
-                      borderTop: "1px solid #f1f5f9"
+                      paddingTop: 14,
+                      borderTop: `1px solid ${topic.color}18`
                     }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "#64748b" }}>
-                        <BookOpen size={16} />
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: topic.color, background: `${topic.color}10`, padding: "4px 10px", borderRadius: 999 }}>
+                        <BookOpen size={13} />
                         <span>{topic.lessons} lecciones</span>
+                      </div>
+                      <div style={{ width: 28, height: 28, borderRadius: "50%", background: `${topic.color}15`, display: "flex", alignItems: "center", justifyContent: "center", color: topic.color }}>
+                        <ChevronRight size={16} strokeWidth={2.5} />
                       </div>
                     </div>
                   </CardContent>
@@ -568,10 +628,12 @@ export default function CoursesPage() {
 
         .course-card-hover:hover {
           border-color: #3b82f6 !important;
+          transform: translateY(-4px) !important;
+          box-shadow: 0 12px 32px rgba(37, 99, 235, 0.14) !important;
         }
 
         .course-card-hover:active {
-          transform: translateY(-2px) !important;
+          transform: translateY(-1px) !important;
         }
         
         @keyframes bounce {

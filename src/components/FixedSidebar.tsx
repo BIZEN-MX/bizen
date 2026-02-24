@@ -7,6 +7,7 @@ import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { useSettings } from "@/contexts/SettingsContext"
 import { useTranslation } from "@/lib/translations"
+import { AvatarDisplay } from "@/components/AvatarDisplay"
 import {
   Map as MapIcon,
   Target,
@@ -757,42 +758,7 @@ export default function FixedSidebar() {
                             <span className="nav-item-label">Tienda</span>
                           </button>
 
-                          <button
-                            data-bizen-tour-menu-item="profile"
-                            onClick={() => navigateTo("/profile")}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                              padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (profileActive ? "#eff6ff" : "transparent"),
-                              border: "none",
-                              borderRadius: 8,
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif",
-                              fontSize: 13,
-                              fontWeight: profileActive ? 700 : 600,
-                              textAlign: "left",
-                              color: profileActive ? "#0B71FE" : "#4b5563",
-                              ...compactButtonOverrides(profileActive)
-                            }}
-                            onMouseEnter={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = "#f8fafc"
-                                e.currentTarget.style.color = "#0B71FE"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = profileActive ? "#eff6ff" : "transparent"
-                                e.currentTarget.style.color = profileActive ? "#0B71FE" : "#4b5563"
-                              }
-                            }}
-                          >
-                            <User size={20} strokeWidth={profileActive ? 2.5 : 2} />
-                            <span className="nav-item-label">{t.nav.profile}</span>
-                          </button>
+
 
                           <button
                             data-bizen-tour-menu-item="configuracion"
@@ -915,6 +881,68 @@ export default function FixedSidebar() {
               )}
             </div>
           </div>
+
+          {/* User Profile Footer */}
+          {mounted && user && (
+            <div
+              onClick={() => navigateTo("/profile")}
+              style={{
+                marginTop: "auto",
+                padding: "20px 0",
+                borderTop: "1px solid rgba(15, 98, 254, 0.1)",
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                cursor: "pointer",
+                transition: "all 0.2s ease"
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = "translateY(-2px)"
+                e.currentTarget.style.background = "rgba(15, 98, 254, 0.03)"
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = ""
+                e.currentTarget.style.background = "transparent"
+              }}
+            >
+              <div style={{
+                width: 44,
+                height: 44,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #0F62FE, #6366f1)",
+                padding: 2,
+                boxShadow: "0 4px 12px rgba(15, 98, 254, 0.15)",
+                flexShrink: 0
+              }}>
+                <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "white", overflow: "hidden" }}>
+                  <AvatarDisplay avatar={user.user_metadata?.avatar} size={40} />
+                </div>
+              </div>
+              {!isCompactSidebar && (
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontSize: 14,
+                    fontWeight: 800,
+                    color: "#0f172a",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}>
+                    {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                  </div>
+                  <div style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: "#0F62FE",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em"
+                  }}>
+                    Mi Perfil
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

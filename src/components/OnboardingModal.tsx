@@ -8,31 +8,22 @@ import { useAuth } from "@/contexts/AuthContext"
 // ─── Avatar Options ───────────────────────────────────────────────────────────
 
 const AVATAR_OPTIONS = [
-    { type: "emoji", value: "👤" },
-    { type: "emoji", value: "😀" },
-    { type: "emoji", value: "😎" },
-    { type: "emoji", value: "🤓" },
-    { type: "emoji", value: "🦁" },
-    { type: "emoji", value: "🐯" },
-    { type: "emoji", value: "🦊" },
-    { type: "emoji", value: "🐼" },
-    { type: "custom", id: "char-robot", character: "robot", bgColor: "#E0F2FE" },
-    { type: "custom", id: "char-astronaut", character: "astronaut", bgColor: "#E0E7FF" },
-    { type: "custom", id: "char-wizard", character: "wizard", bgColor: "#F3E8FF" },
-    { type: "custom", id: "char-cat", character: "cat", bgColor: "#FEF3C7" },
-    { type: "custom", id: "char-dog", character: "dog", bgColor: "#FED7AA" },
-    { type: "custom", id: "gradient-blue", gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" },
-    { type: "custom", id: "gradient-sunset", gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" },
-    { type: "custom", id: "gradient-ocean", gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" },
-    { type: "custom", id: "gradient-forest", gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" },
-    { type: "custom", id: "gradient-gold", gradient: "linear-gradient(135deg, #f7971e 0%, #ffd200 100%)" },
-    { type: "custom", id: "pattern-dots", pattern: "dots", color: "#3B82F6" },
-    { type: "custom", id: "pattern-waves", pattern: "waves", color: "#10B981" },
+    { type: "mascot", id: "fox", label: "Zorro" },
+    { type: "mascot", id: "owl", label: "Búho" },
+    { type: "mascot", id: "dolphin", label: "Delfín" },
+    { type: "mascot", id: "turtle", label: "Tortuga" },
+    { type: "mascot", id: "beaver", label: "Castor" },
+    { type: "mascot", id: "squirrel", label: "Ardilla" },
+    { type: "mascot", id: "dog", label: "Perro" },
+    { type: "mascot", id: "cat", label: "Gato" },
+    { type: "mascot", id: "lion", label: "León" },
+    { type: "mascot", id: "koala", label: "Koala" },
+    { type: "mascot", id: "penguin", label: "Pingüino" },
 ]
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Step = "welcome" | "avatar" | "username"
+type Step = "welcome" | "avatar" | "username" | "birthday"
 
 interface OnboardingModalProps {
     /** Called when the user finishes profile setup — should then start the app tour */
@@ -46,9 +37,10 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const supabase = createClientMicrocred()
 
     const [step, setStep] = useState<Step>("welcome")
-    const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "emoji", value: "😎" })
+    const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "mascot", id: "fox", label: "Zorro" })
     const [username, setUsername] = useState("")
     const [bio, setBio] = useState("")
+    const [birthDate, setBirthDate] = useState("")
     const [usernameError, setUsernameError] = useState("")
     const [saving, setSaving] = useState(false)
     const [exiting, setExiting] = useState(false)
@@ -90,7 +82,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             const res = await fetch("/api/onboarding/complete", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, bio, avatar: selectedAvatar }),
+                body: JSON.stringify({ username, bio, avatar: selectedAvatar, birthDate: birthDate || null }),
             })
 
             if (!res.ok) {
@@ -114,7 +106,18 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     }
 
     const profileName = user?.user_metadata?.full_name?.split(" ")[0] || "nuevo estudiante"
-    const progressPct = step === "welcome" ? 0 : step === "avatar" ? 50 : 100
+    const progressPct = step === "welcome" ? 0 : step === "avatar" ? 33 : step === "username" ? 66 : 100
+
+    // Helper: calculate age from date string
+    const calcAge = (dateStr: string): number | null => {
+        if (!dateStr) return null
+        const bd = new Date(dateStr)
+        const today = new Date()
+        let age = today.getFullYear() - bd.getFullYear()
+        const m = today.getMonth() - bd.getMonth()
+        if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--
+        return age
+    }
 
     return (
         <>
@@ -155,14 +158,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         }
         .ob-avatar-grid {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 12px;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 14px;
         }
         @media (max-width: 480px) {
-          .ob-avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+          .ob-avatar-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
         }
         .ob-avatar-btn {
-          width: 56px; height: 56px;
+          width: 72px; height: 72px;
           border-radius: 50%; cursor: pointer;
           border: 3px solid transparent;
           display: flex; align-items: center; justify-content: center;
@@ -259,20 +262,36 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                 {AVATAR_OPTIONS.map((av, idx) => {
                                     const isSelected = JSON.stringify(selectedAvatar) === JSON.stringify(av)
                                     return (
-                                        <button
+                                        <div
                                             key={(av as any).id || (av as any).value || idx}
-                                            className={`ob-avatar-btn${isSelected ? " selected" : ""}`}
-                                            onClick={() => setSelectedAvatar(av)}
+                                            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}
                                         >
-                                            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                <AvatarDisplay avatar={av} size={28} />
-                                            </div>
-                                        </button>
+                                            <button
+                                                className={`ob-avatar-btn${isSelected ? " selected" : ""}`}
+                                                onClick={() => setSelectedAvatar(av)}
+                                            >
+                                                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <AvatarDisplay avatar={av} size={48} />
+                                                </div>
+                                            </button>
+                                            {(av as any).label && (
+                                                <span style={{
+                                                    fontSize: 10,
+                                                    fontWeight: isSelected ? 700 : 500,
+                                                    color: isSelected ? "#0F62FE" : "#64748b",
+                                                    textAlign: "center",
+                                                    lineHeight: 1.2,
+                                                    transition: "color 0.2s"
+                                                }}>
+                                                    {(av as any).label}
+                                                </span>
+                                            )}
+                                        </div>
                                     )
                                 })}
                             </div>
 
-                            <button className="ob-btn-primary" onClick={() => goToStep("username")}>
+                            <button className="ob-btn-primary" onClick={() => goToStep("birthday")}>
                                 Continuar
                             </button>
                         </div>
@@ -283,7 +302,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                         <div style={{ padding: "clamp(24px, 5vw, 40px)" }}>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                                 <button className="ob-btn-ghost" onClick={() => goToStep("avatar")}>Atras</button>
-                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 2 de 2</span>
+                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 2 de 3</span>
                             </div>
 
                             {/* Mini avatar preview */}
@@ -343,7 +362,65 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                             <button
                                 className="ob-btn-primary"
-                                disabled={saving || !!usernameError || username.length < 3}
+                                disabled={!!usernameError || username.length < 3}
+                                onClick={() => goToStep("birthday")}
+                            >
+                                Continuar
+                            </button>
+                        </div>
+                    )}
+
+                    {/* ─── BIRTHDAY ───────────────────────────────────────────────── */}
+                    {step === "birthday" && (
+                        <div style={{ padding: "clamp(24px, 5vw, 40px)" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                                <button className="ob-btn-ghost" onClick={() => goToStep("username")}>Atras</button>
+                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 3 de 3</span>
+                            </div>
+
+                            {/* Birthday illustration */}
+                            <div style={{ textAlign: "center", marginBottom: 28 }}>
+                                <div style={{ fontSize: 52, marginBottom: 12 }}>🎂</div>
+                                <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 6px" }}>¿Cuándo es tu cumpleaños?</h2>
+                                <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>Nos ayuda a personalizar tu experiencia. Es opcional.</p>
+                            </div>
+
+                            {/* Date picker */}
+                            <div style={{ marginBottom: 24 }}>
+                                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
+                                    Fecha de nacimiento{" "}
+                                    <span style={{ fontWeight: 500, color: "#9ca3af", textTransform: "none" as const, letterSpacing: 0 }}>(opcional)</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    className="ob-input"
+                                    value={birthDate}
+                                    max={new Date().toISOString().split('T')[0]}
+                                    onChange={e => setBirthDate(e.target.value)}
+                                    style={{ colorScheme: "light" }}
+                                />
+                                {birthDate && (() => {
+                                    const age = calcAge(birthDate)
+                                    return age !== null && age >= 0 && age <= 120 ? (
+                                        <div style={{
+                                            marginTop: 12, padding: "12px 16px",
+                                            background: "linear-gradient(135deg, #eff6ff, #dbeafe)",
+                                            border: "1.5px solid #bfdbfe",
+                                            borderRadius: 12, display: "flex", alignItems: "center", gap: 10
+                                        }}>
+                                            <span style={{ fontSize: 22 }}>🎉</span>
+                                            <div>
+                                                <div style={{ fontSize: 13, fontWeight: 800, color: "#1e40af" }}>Tienes {age} años</div>
+                                                <div style={{ fontSize: 11, color: "#3b82f6" }}>Bienvenido a BIZEN</div>
+                                            </div>
+                                        </div>
+                                    ) : null
+                                })()}
+                            </div>
+
+                            <button
+                                className="ob-btn-primary"
+                                disabled={saving}
                                 onClick={handleSaveAndStartTour}
                             >
                                 {saving ? (
@@ -355,6 +432,16 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                     "Guardar y ver el tour de la app"
                                 )}
                             </button>
+                            {!birthDate && (
+                                <button
+                                    className="ob-btn-ghost"
+                                    style={{ width: "100%", marginTop: 12, fontSize: 13, color: "#94a3b8" }}
+                                    onClick={handleSaveAndStartTour}
+                                    disabled={saving}
+                                >
+                                    Saltar este paso
+                                </button>
+                            )}
                         </div>
                     )}
 

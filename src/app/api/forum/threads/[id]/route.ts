@@ -36,16 +36,17 @@ export async function GET(
         createdAt: true,
         authorId: true,
         topicId: true,
-            author: {
-              select: {
-                userId: true,
-                nickname: true,
-                fullName: true,
-                reputation: true,
-                level: true,
-                isMinor: true
-              }
-            },
+        author: {
+          select: {
+            userId: true,
+            nickname: true,
+            fullName: true,
+            reputation: true,
+            level: true,
+            isMinor: true,
+            avatar: true
+          }
+        },
         topic: {
           select: {
             id: true,
@@ -97,16 +98,17 @@ export async function GET(
             }
           }
         },
-            author: {
-              select: {
-                userId: true,
-                nickname: true,
-                fullName: true,
-                reputation: true,
-                level: true,
-                isMinor: true
-              }
-            },
+        author: {
+          select: {
+            userId: true,
+            nickname: true,
+            fullName: true,
+            reputation: true,
+            level: true,
+            isMinor: true,
+            avatar: true
+          }
+        },
         // Only include replies if explicitly requested and limit to 10 per comment
         ...(includeReplies ? {
           replies: {
@@ -125,7 +127,8 @@ export async function GET(
                   nickname: true,
                   fullName: true,
                   reputation: true,
-                  level: true
+                  level: true,
+                  avatar: true
                 }
               }
             },
@@ -179,10 +182,10 @@ export async function GET(
     ])
 
     // Get user votes for all comments in a single optimized query
-    const commentIds = includeReplies 
-      ? comments.flatMap(c => [c.id, ...(c.replies || []).map((r: any) => r.id)])
-      : comments.map(c => c.id)
-    
+    const commentIds = includeReplies
+      ? (comments as any[]).flatMap(c => [c.id, ...(c.replies || []).map((r: any) => r.id)])
+      : (comments as any[]).map(c => c.id)
+
     const commentVotes = commentIds.length > 0 ? await prisma.forumVote.findMany({
       where: {
         userId: user.id,
@@ -198,7 +201,7 @@ export async function GET(
     const voteMap = new Map(commentVotes.map(v => [v.targetId, v.value]))
 
     // Format response
-    const formattedComments = comments.map(c => ({
+    const formattedComments = (comments as any[]).map(c => ({
       id: c.id,
       body: c.body,
       score: c.score,
@@ -231,12 +234,12 @@ export async function GET(
     })
 
     return NextResponse.json({
-      ...thread,
+      ...(thread as any),
       author: {
-        ...thread.author,
-        nickname: thread.author.nickname || thread.author.fullName.split(' ')[0]
+        ...(thread as any).author,
+        nickname: (thread as any).author.nickname || (thread as any).author.fullName.split(' ')[0]
       },
-      tags: thread.tags.map(tt => tt.tag),
+      tags: (thread as any).tags.map((tt: any) => tt.tag),
       comments: formattedComments,
       userVote: userVote?.value || null,
       isBookmarked: !!bookmark,

@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense, useRef, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
+import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { ThreadCardSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
 import {
@@ -18,7 +19,15 @@ export const dynamic = 'force-dynamic'
 interface ForumThread {
   id: string; title: string; body: string; status: 'open' | 'resolved' | 'locked'
   score: number; viewCount: number; commentCount: number; isPinned: boolean; createdAt: string
-  author: { userId: string; nickname: string; reputation: number; isMinor?: boolean }
+  author: {
+    userId: string
+    nickname: string
+    reputation: number
+    isMinor?: boolean
+    level?: number
+    fullName?: string
+    avatar?: any
+  }
   topic: { id: string; name: string; slug: string; icon: string }
   tags: Array<{ id: string; name: string; slug: string }>
   hasAcceptedAnswer: boolean
@@ -28,7 +37,7 @@ interface EvidencePost {
   id: string; dailyChallengeId: string; authorDisplay: string; isMe: boolean
   smartGoal: string; didToday: string; learned: string; changeTomorrow: string
   status: 'submitted' | 'validated' | 'flagged'; authorRole: string
-  createdAt: string
+  createdAt: string; avatar?: any
   reactions: Array<{ id: string; userId: string; reactionType: string }>
   comments: Array<{ id: string; userId: string; body: string; createdAt: string; authorDisplay?: string }>
 }
@@ -122,11 +131,13 @@ function EvidenceCard({
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{
             width: 36, height: 36, borderRadius: "50%",
-            background: "linear-gradient(135deg, #0F62FE, #4A9EFF)",
+            background: "white",
+            border: "1.5px solid #f1f5f9",
+            overflow: "hidden",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 13, fontWeight: 800, color: "white", flexShrink: 0
+            flexShrink: 0
           }}>
-            {post.authorDisplay.charAt(0).toUpperCase()}
+            <AvatarDisplay avatar={post.avatar} size={36} />
           </div>
           <div>
             <span style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>{post.authorDisplay}</span>
@@ -619,9 +630,14 @@ function ForumContent() {
                                 ))}
                               </div>
                             )}
-                            <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>
+                            <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 600, alignItems: "center" }}>
                               <span>{thread.topic.name}</span>
-                              <span>por {thread.author.nickname}</span>
+                              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                <div style={{ width: 22, height: 22, borderRadius: "50%", background: "white", border: "1px solid #f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                  <AvatarDisplay avatar={thread.author.avatar} size={20} />
+                                </div>
+                                <span>por {thread.author.nickname}</span>
+                              </div>
                               <span>{formatDate(thread.createdAt)}</span>
                               <span>{thread.commentCount} resp.</span>
                             </div>

@@ -65,7 +65,7 @@ export default function RetoDiarioPage() {
   const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    document.body.style.background = "#ffffff"
+    document.body.style.background = "#f8faff"
     return () => { document.body.style.background = "" }
   }, [])
 
@@ -144,32 +144,32 @@ export default function RetoDiarioPage() {
 
         .rd-challenge-card {
           background: #ffffff;
-          border: 1px solid rgba(0,0,0,0.08);
+          border: 1px solid #e2e8f0;
           border-radius: 24px;
           position: relative;
           overflow: hidden;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1);
+          box-shadow: 0 10px 40px rgba(15,98,254,0.06);
           animation: fadeUp 0.5s ease both;
         }
         .rd-challenge-card::before {
           content: '';
           position: absolute; inset: 0;
-          background: radial-gradient(ellipse at 80% 0%, rgba(15,98,254,0.08) 0%, transparent 60%),
-                      radial-gradient(ellipse at 0% 100%, rgba(124,58,237,0.05) 0%, transparent 50%);
+          background: radial-gradient(ellipse at 80% 0%, rgba(15,98,254,0.06) 0%, transparent 60%),
+                      radial-gradient(ellipse at 0% 100%, rgba(124,58,237,0.04) 0%, transparent 50%);
           pointer-events: none;
         }
 
         .rd-complete-btn {
           display: flex; align-items: center; justify-content: center; gap: 10px;
-          width: fit-content; padding: 14px 32px; margin: 0 auto;
+          width: fit-content; padding: 16px 36px; margin: 0 auto;
           background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
           color: white; border: none; border-radius: 16px;
-          font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px;
+          font-family: 'Inter', sans-serif; font-weight: 800; font-size: 17px;
           cursor: pointer; transition: all 0.25s ease;
-          box-shadow: 0 8px 32px rgba(15,98,254,0.45);
+          box-shadow: 0 8px 40px rgba(15,98,254,0.6);
           animation: pulse 2.5s ease infinite;
         }
-        .rd-complete-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(15,98,254,0.55); }
+        .rd-complete-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 50px rgba(15,98,254,0.7); }
         .rd-complete-btn:active { transform: translateY(0); }
 
         .rd-textarea {
@@ -185,17 +185,17 @@ export default function RetoDiarioPage() {
 
         .rd-wrap-card {
           background: #ffffff;
-          border: 1px solid rgba(0,0,0,0.08);
+          border: 1px solid #e2e8f0;
           border-radius: 24px; padding: clamp(32px, 6vw, 52px) clamp(24px, 5vw, 48px);
           position: relative; overflow: hidden; text-align: center;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+          box-shadow: 0 20px 60px rgba(15,98,254,0.1);
           animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
         .rd-wrap-card::before {
           content: '';
           position: absolute; inset: 0;
-          background: radial-gradient(ellipse at 50% 0%, rgba(15,98,254,0.1) 0%, transparent 60%),
-                      radial-gradient(ellipse at 30% 100%, rgba(167,139,250,0.07) 0%, transparent 50%);
+          background: radial-gradient(ellipse at 50% 0%, rgba(15,98,254,0.08) 0%, transparent 60%),
+                      radial-gradient(ellipse at 30% 100%, rgba(167,139,250,0.05) 0%, transparent 50%);
           pointer-events: none;
         }
 
@@ -206,31 +206,31 @@ export default function RetoDiarioPage() {
           font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px;
           cursor: pointer; transition: all 0.25s ease;
           background: linear-gradient(135deg, #0F62FE 0%, #a855f7 100%);
-          color: white; box-shadow: 0 8px 32px rgba(15,98,254,0.4);
+          color: white; box-shadow: 0 8px 32px rgba(15,98,254,0.5);
           animation: fadeUp 0.4s ease 0.1s both;
         }
-        .rd-cta-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(15,98,254,0.5); }
+        .rd-cta-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(15,98,254,0.6); }
         .rd-cta-secondary {
           display: flex; align-items: center; justify-content: center; gap: 10px;
           width: fit-content; padding: 12px 24px; border-radius: 16px;
           margin: 0 auto;
           font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px;
           cursor: pointer; transition: all 0.25s ease;
-          background: #f3f4f6; border: 1.5px solid #e5e7eb;
-          color: #374151;
+          background: #f8fafc; border: 1.5px solid #e2e8f0;
+          color: #475569;
           animation: fadeUp 0.4s ease 0.18s both;
         }
-        .rd-cta-secondary:hover { background: #e5e7eb; border-color: #d1d5db; transform: translateY(-2px); }
+        .rd-cta-secondary:hover { background: #f1f5f9; border-color: #cbd5e1; transform: translateY(-2px); }
         .rd-cta-tertiary {
           display: flex; align-items: center; justify-content: center; gap: 8px;
           width: 100%; padding: 13px 28px; border-radius: 12px;
           font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
           cursor: pointer; transition: all 0.2s ease;
-          background: transparent; border: 1px solid rgba(0,0,0,0.05);
-          color: #6b7280;
+          background: transparent; border: 1px solid #e2e8f0;
+          color: #64748b;
           animation: fadeUp 0.4s ease 0.26s both;
         }
-        .rd-cta-tertiary:hover { color: #374151; border-color: rgba(0,0,0,0.1); }
+        .rd-cta-tertiary:hover { color: #1e293b; border-color: #cbd5e1; }
 
         .step-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; }
         .step-dot.active { width: 24px; border-radius: 4px; background: #0F62FE; }
@@ -260,12 +260,18 @@ export default function RetoDiarioPage() {
         className="rd-outer"
         style={{
           minHeight: "100vh",
-          background: "#ffffff",
+          background: "#f8faff",
           fontFamily: "'Inter', sans-serif",
           padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)",
           boxSizing: "border-box",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
+        {/* Background decorative orbs */}
+        <div style={{ position: "fixed", top: "5%", right: "10%", width: 500, height: 500, background: "radial-gradient(circle, rgba(15,98,254,0.06) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "fixed", bottom: "10%", left: "5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "fixed", top: "40%", left: "40%", width: 600, height: 600, background: "radial-gradient(circle, rgba(15,98,254,0.03) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
 
         {/* ══ EVIDENCE MODAL ══ */}
         {showEvidence && (
@@ -396,7 +402,7 @@ export default function RetoDiarioPage() {
         )}
 
         {/* ══ MAIN CONTENT ══ */}
-        <div style={{ margin: "0 auto", width: "100%" }}>
+        <div style={{ margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
 
           {/* ── PHASE: DOING ── */}
           {phase === "doing" && (
@@ -407,7 +413,7 @@ export default function RetoDiarioPage() {
                   <h1 style={{ fontSize: "clamp(22px, 3.5vw, 30px)", fontWeight: 900, color: "#111827", margin: "0 0 2px", letterSpacing: "-0.02em" }}>
                     Reto diario
                   </h1>
-                  <p style={{ fontSize: 14, color: "rgba(0,0,0,0.5)", margin: 0, fontWeight: 500, textTransform: "capitalize" }}>
+                  <p style={{ fontSize: 14, color: "#64748b", margin: 0, fontWeight: 500, textTransform: "capitalize" }}>
                     {dayName}, {dateStr}
                   </p>
                 </div>
@@ -416,14 +422,14 @@ export default function RetoDiarioPage() {
                 <div style={{
                   display: "flex", alignItems: "center", gap: 8,
                   padding: "10px 16px",
-                  background: "rgba(251,146,60,0.12)",
-                  border: "1px solid rgba(251,146,60,0.3)",
+                  background: "#fff7ed",
+                  border: "1px solid #ffedd5",
                   borderRadius: 14,
                 }}>
                   <Flame size={18} style={{ color: "#fb923c", animation: "float 2s ease infinite" }} />
                   <div>
                     <div style={{ fontSize: 16, fontWeight: 900, color: "#fb923c", lineHeight: 1, animation: "streakGlow 2s ease infinite" }}>{streak}</div>
-                    <div style={{ fontSize: 10, color: "rgba(251,146,60,0.6)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>racha</div>
+                    <div style={{ fontSize: 10, color: "#f97316", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>racha</div>
                   </div>
                 </div>
               </div>
@@ -470,9 +476,9 @@ export default function RetoDiarioPage() {
 
                   {/* Title */}
                   {loadingChallenge ? (
-                    <div style={{ height: 28, borderRadius: 8, marginBottom: 12, background: "linear-gradient(90deg, rgba(0,0,0,0.03) 25%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.03) 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: 420 }} />
+                    <div style={{ height: 28, borderRadius: 8, marginBottom: 12, background: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: 420 }} />
                   ) : (
-                    <h2 style={{ fontSize: "clamp(20px, 3vw, 26px)", fontWeight: 900, color: "#111827", margin: "0 0 16px", letterSpacing: "-0.015em", lineHeight: 1.25 }}>
+                    <h2 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 900, color: "#111827", margin: "0 0 16px", letterSpacing: "-0.015em", lineHeight: 1.25 }}>
                       {challenge?.title ?? "Reto del día"}
                     </h2>
                   )}
@@ -480,11 +486,11 @@ export default function RetoDiarioPage() {
                   {/* Description */}
                   {loadingChallenge ? (
                     <>
-                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "rgba(0,0,0,0.03)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
-                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "rgba(0,0,0,0.03)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: "75%" }} />
+                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "#f1f5f9", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
+                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "#f1f5f9", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: "75%" }} />
                     </>
                   ) : (
-                    <p style={{ fontSize: "clamp(14px, 1.2vw, 16px)", color: "rgba(0,0,0,0.6)", lineHeight: 1.75, margin: "0 0 32px", maxWidth: 580 }}>
+                    <p style={{ fontSize: "clamp(14px, 1.2vw, 16px)", color: "#4b5563", lineHeight: 1.75, margin: "0 0 32px", maxWidth: 580 }}>
                       {challenge?.description ?? "Cargando el reto de hoy..."}
                     </p>
                   )}
@@ -510,16 +516,17 @@ export default function RetoDiarioPage() {
                 {/* Tip */}
                 <div style={{
                   padding: "20px 22px",
-                  background: "rgba(251,191,36,0.07)",
-                  border: "1px solid rgba(251,191,36,0.15)",
+                  background: "#fffbeb",
+                  border: "1px solid #fef3c7",
                   borderRadius: 18,
+                  borderLeft: "4px solid #f59e0b",
                   animation: "fadeUp 0.5s ease 0.05s both"
                 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                     <span style={{ fontSize: 20 }}>💡</span>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.07em" }}>Consejo del experto</span>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: "#d97706", textTransform: "uppercase", letterSpacing: "0.07em" }}>Consejo del experto</span>
                   </div>
-                  <p style={{ fontSize: 13, color: "rgba(0,0,0,0.6)", lineHeight: 1.65, margin: 0 }}>
+                  <p style={{ fontSize: 13, color: "#78350f", lineHeight: 1.65, margin: 0 }}>
                     La constancia vence al talento. Completar este reto diario te pone en el top 10% de estudiantes que mejoran su situación financiera este año.
                   </p>
                 </div>
@@ -527,12 +534,13 @@ export default function RetoDiarioPage() {
                 {/* Stats mini */}
                 <div style={{
                   padding: "20px 22px",
-                  background: "rgba(0,0,0,0.02)",
-                  border: "1px solid rgba(0,0,0,0.05)",
+                  background: "#ffffff",
+                  border: "1px solid #e2e8f0",
+                  borderLeft: "4px solid #0F62FE",
                   borderRadius: 18,
                   animation: "fadeUp 0.5s ease 0.1s both"
                 }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 14 }}>¿Por qué hacerlo?</div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 14 }}>¿Por qué hacerlo?</div>
                   {[
                     { icon: "⚡", text: "5 min = un hábito financiero sólido" },
                     { icon: "🎯", text: "Cada reto refuerza lo aprendido en clase" },
@@ -540,7 +548,7 @@ export default function RetoDiarioPage() {
                   ].map(({ icon, text }) => (
                     <div key={text} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
                       <span style={{ fontSize: 14, marginTop: 1 }}>{icon}</span>
-                      <span style={{ fontSize: 13, color: "rgba(0,0,0,0.55)", lineHeight: 1.5 }}>{text}</span>
+                      <span style={{ fontSize: 13, color: "#475569", lineHeight: 1.5 }}>{text}</span>
                     </div>
                   ))}
                 </div>
@@ -572,19 +580,19 @@ export default function RetoDiarioPage() {
                   </h2>
 
                   {/* XP earned */}
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", background: "rgba(245,158,11,0.15)", border: "1px solid rgba(245,158,11,0.3)", borderRadius: 999, marginBottom: 16 }}>
-                    <Star size={14} style={{ color: "#fbbf24" }} fill="#fbbf24" />
-                    <span style={{ fontSize: 14, fontWeight: 900, color: "#fbbf24" }}>+50 XP ganados</span>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", background: "#ecfdf5", border: "1px solid #d1fae5", borderRadius: 999, marginBottom: 16 }}>
+                    <Star size={14} style={{ color: "#10b981" }} fill="#10b981" />
+                    <span style={{ fontSize: 14, fontWeight: 900, color: "#10b981" }}>+50 XP ganados</span>
                     <Flame size={14} style={{ color: "#fb923c" }} />
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#fb923c" }}>{streak} días seguidos</span>
                   </div>
 
-                  <p style={{ fontSize: "clamp(13px, 1.2vw, 15px)", color: "rgba(0,0,0,0.6)", maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.7 }}>
+                  <p style={{ fontSize: "clamp(13px, 1.2vw, 15px)", color: "#4b5563", maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.7 }}>
                     Cada día que practicas es un paso hacia la libertad financiera. ¿Qué quieres hacer ahora?
                   </p>
 
                   {/* Divider */}
-                  <div style={{ height: 1, background: "rgba(0,0,0,0.06)", marginBottom: 28 }} />
+                  <div style={{ height: 1, background: "#f1f5f9", marginBottom: 28 }} />
 
                   {/* 3 CTAs */}
                   <div style={{ display: "grid", gap: 12 }}>
@@ -613,9 +621,9 @@ export default function RetoDiarioPage() {
                   {/* Back */}
                   <button
                     onClick={() => setPhase("doing")}
-                    style={{ marginTop: 24, background: "none", border: "none", cursor: "pointer", color: "rgba(0,0,0,0.3)", fontSize: 13, fontFamily: "'Inter', sans-serif", transition: "color 0.2s" }}
-                    onMouseEnter={e => (e.currentTarget.style.color = "rgba(0,0,0,0.6)")}
-                    onMouseLeave={e => (e.currentTarget.style.color = "rgba(0,0,0,0.3)")}
+                    style={{ marginTop: 24, background: "none", border: "none", cursor: "pointer", color: "#94a3b8", fontSize: 13, fontFamily: "'Inter', sans-serif", transition: "color 0.2s" }}
+                    onMouseEnter={e => (e.currentTarget.style.color = "#475569")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "#94a3b8")}
                   >
                     ← Ver el reto de nuevo
                   </button>

@@ -4,6 +4,35 @@ export const AvatarDisplay = ({ avatar, size = 64 }: { avatar: any; size?: numbe
     return <span style={{ fontSize: size * 0.6 }}>👤</span>
   }
 
+  // Mascot image avatars (local PNGs in /public/avatars/)
+  if (avatar.type === "mascot") {
+    return (
+      <div style={{
+        width: "100%",
+        height: "100%",
+        background: "#ffffff",
+        borderRadius: "50%",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`/avatars/${avatar.id}.png`}
+          alt={avatar.label || avatar.id}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transform: "scale(1.1)", // Slight zoom to remove any edge artifacts
+            mixBlendMode: "multiply" // Blends the white background away
+          }}
+        />
+      </div>
+    )
+  }
+
   if (avatar.type === "emoji") {
     return <span style={{ fontSize: size * 0.6 }}>{avatar.value}</span>
   }
@@ -66,10 +95,10 @@ export const AvatarDisplay = ({ avatar, size = 64 }: { avatar: any; size?: numbe
           <polygon points="50,20 75,35 75,65 50,80 25,65 25,35" fill={avatar.color} opacity="0.9" />
         )}
         {avatar.shape === "star" && (
-          <polygon 
-            points="50,15 58,40 85,40 63,55 70,80 50,65 30,80 37,55 15,40 42,40" 
-            fill={avatar.color} 
-            opacity="0.9" 
+          <polygon
+            points="50,15 58,40 85,40 63,55 70,80 50,65 30,80 37,55 15,40 42,40"
+            fill={avatar.color}
+            opacity="0.9"
           />
         )}
       </svg>
@@ -104,7 +133,7 @@ export const AvatarDisplay = ({ avatar, size = 64 }: { avatar: any; size?: numbe
     return (
       <svg width="100%" height="100%" viewBox="0 0 100 100">
         <circle cx="50" cy="50" r="48" fill={avatar.bgColor || "#E0F2FE"} />
-        
+
         {/* Robot */}
         {avatar.character === "robot" && (
           <>
@@ -118,7 +147,7 @@ export const AvatarDisplay = ({ avatar, size = 64 }: { avatar: any; size?: numbe
             <circle cx="60" cy="28" r="2" fill="#FBBF24" />
           </>
         )}
-        
+
         {/* Astronaut */}
         {avatar.character === "astronaut" && (
           <>
@@ -131,7 +160,7 @@ export const AvatarDisplay = ({ avatar, size = 64 }: { avatar: any; size?: numbe
             <circle cx="50" cy="30" r="3" fill="#FBBF24" />
           </>
         )}
-        
+
         {/* Add other characters as needed - keeping it shorter for performance */}
         {avatar.character === "wizard" && (
           <>

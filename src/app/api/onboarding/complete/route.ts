@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json()
-        const { username, bio, avatar } = body
+        const { username, bio, avatar, birthDate } = body
 
         // Validate username
         if (!username || username.trim().length < 3) {
@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
                 username: username.trim(),
                 bio: bio?.trim() || "",
                 avatar: avatar || { type: "emoji", value: "👤" },
+                birth_date: birthDate || null,
                 onboarding_complete: true,
             }
         })
@@ -44,7 +45,10 @@ export async function POST(request: NextRequest) {
             const { prisma } = await import("@/lib/prisma")
             await prisma.profile.updateMany({
                 where: { userId: user.id },
-                data: { nickname: username.trim() }
+                data: {
+                    nickname: username.trim(),
+                    ...(birthDate ? { birthDate: new Date(birthDate) } : {})
+                } as any
             })
         } catch (prismaError) {
             // Non-fatal — profile table update failure shouldn't block onboarding

@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { CommentSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
+import { AvatarDisplay } from "@/components/AvatarDisplay"
 
 interface ThreadDetail {
   id: string
@@ -23,6 +24,7 @@ interface ThreadDetail {
     reputation: number
     level: number
     isMinor?: boolean
+    avatar?: any
   }
   topic: {
     id: string
@@ -53,6 +55,7 @@ interface Comment {
     reputation: number
     level: number
     isMinor?: boolean
+    avatar?: any
   }
   replies?: Comment[]
   userVote: number | null
@@ -403,9 +406,12 @@ export default function ThreadDetailPage() {
               fontWeight: 600,
               flexWrap: "wrap"
             }}>
-              <span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ width: 20, height: 20, borderRadius: "50%", background: "white", border: "1px solid #f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <AvatarDisplay avatar={comment.author.avatar} size={18} />
+                </div>
                 <Link href={`/forum/profile/${comment.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{comment.author.nickname}</Link> ({comment.author.reputation} pts)
-              </span>
+              </div>
               <span>{new Date(comment.createdAt).toLocaleDateString('es-ES')}</span>
               <button
                 onClick={() => setReplyTo(comment.id)}

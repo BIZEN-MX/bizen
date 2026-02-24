@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     console.log("📡 GET /api/forum/threads called")
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       console.error("❌ Auth error:", authError)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const sort = searchParams.get("sort") || "new"
     const topicSlug = searchParams.get("topic")
-    
+
     console.log("📊 Query params:", { sort, topicSlug })
 
     let orderBy: any = { createdAt: 'desc' }
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log("🔍 Fetching threads with where:", where)
-    
+
     // Optimize: Only select necessary fields and limit results
     const threads = await prisma.forumThread.findMany({
       where,
@@ -72,7 +72,8 @@ export async function GET(request: NextRequest) {
             userId: true,
             nickname: true,
             reputation: true,
-            fullName: true
+            fullName: true,
+            avatar: true
           }
         },
         topic: {
@@ -84,7 +85,7 @@ export async function GET(request: NextRequest) {
           }
         },
         tags: {
-          include: { 
+          include: {
             tag: {
               select: {
                 id: true,
@@ -100,14 +101,14 @@ export async function GET(request: NextRequest) {
 
     console.log(`✅ Found ${threads.length} threads`)
 
-    const formatted = threads.map(t => ({
+    const formatted = (threads as any[]).map(t => ({
       ...t,
       author: {
         ...t.author,
         nickname: t.author.nickname || t.author.fullName?.split(' ')[0] || 'Usuario',
         isMinor: false // Default to false, will be populated if field exists in DB
       },
-      tags: t.tags.map(tt => tt.tag),
+      tags: t.tags.map((tt: any) => tt.tag),
       hasAcceptedAnswer: !!t.acceptedCommentId
     }))
 
@@ -117,7 +118,7 @@ export async function GET(request: NextRequest) {
     console.error("❌ Error fetching threads:", error)
     console.error("Error details:", error instanceof Error ? error.message : String(error))
     console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace")
-    return NextResponse.json({ 
+    return NextResponse.json({
       error: "Failed to fetch threads",
       details: error instanceof Error ? error.message : String(error)
     }, { status: 500 })
@@ -129,13 +130,13 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     console.log("🔍 Auth check:", { user: user?.id, error: authError?.message })
-    
+
     if (authError || !user) {
       console.error("❌ Unauthorized:", authError?.message || "No user")
-      return NextResponse.json({ 
-        error: "Unauthorized", 
+      return NextResponse.json({
+        error: "Unauthorized",
         details: authError?.message || "No user found. Please log in."
       }, { status: 401 })
     }
@@ -218,8 +219,8 @@ export async function POST(request: NextRequest) {
     // Check rate limit
     const rateLimit = await checkRateLimit(user.id, 'create_thread', 5, 60)
     if (!rateLimit.allowed) {
-      return NextResponse.json({ 
-        error: `Límite de temas alcanzado. Intenta de nuevo en ${Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 60000)} minutos` 
+      return NextResponse.json({
+        error: `Límite de temas alcanzado. Intenta de nuevo en ${Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 60000)} minutos`
       }, { status: 429 })
     }
 
@@ -274,7 +275,8 @@ export async function POST(request: NextRequest) {
         author: {
           select: {
             nickname: true,
-            fullName: true
+            fullName: true,
+            avatar: true
           }
         }
       }
@@ -293,42 +295,42 @@ export async function POST(request: NextRequest) {
     console.error("❌ Error creating thread:", error)
     console.error("Error details:", error instanceof Error ? error.message : String(error))
     console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace")
-    
+
     // Provide detailed error information for debugging
     const errorMessage = error instanceof Error ? error.message : String(error)
     const errorCode = (error as any)?.code || "UNKNOWN_ERROR"
-    
+
     // Handle specific Prisma errors
     if (errorCode === "P2021" || errorMessage.includes("does not exist")) {
       // Extract which table is missing from the error message - try multiple patterns
       let tableName = "unknown"
-      
+
       // Pattern 1: relation "table_name" does not exist
       let match = errorMessage.match(/relation "(.+?)" does not exist/i)
       if (match) tableName = match[1]
-      
+
       // Pattern 2: Table 'table_name' does not exist
       if (tableName === "unknown") {
         match = errorMessage.match(/Table ['"](.+?)['"] does not exist/i)
         if (match) tableName = match[1]
       }
-      
+
       // Pattern 3: table_name in various formats
       if (tableName === "unknown") {
         match = errorMessage.match(/`(.+?)`/i)
         if (match) tableName = match[1]
       }
-      
+
       // Pattern 4: Check for model name from Prisma
       if (tableName === "unknown") {
         match = errorMessage.match(/model (Forum\w+)/i)
         if (match) tableName = match[1].toLowerCase().replace(/([A-Z])/g, '_$1').toLowerCase()
       }
-      
+
       console.error(`❌ Missing table: ${tableName}`)
       console.error(`❌ Full error message: ${errorMessage}`)
-      
-      return NextResponse.json({ 
+
+      return NextResponse.json({
         error: "Forum database tables not set up",
         details: `The table "${tableName}" does not exist. Full error: ${errorMessage}`,
         code: errorCode,
@@ -337,17 +339,17 @@ export async function POST(request: NextRequest) {
           : `The ${tableName} table is missing. Run the forum_tables.sql script again or check your database.`
       }, { status: 503 })
     }
-    
+
     if (errorMessage.includes("DATABASE_URL") || errorMessage.includes("Prisma") || !errorCode) {
-      return NextResponse.json({ 
+      return NextResponse.json({
         error: "Database connection issue",
         details: "Unable to connect to the database. Check your DATABASE_URL configuration.",
         code: errorCode,
         hint: "Verify that DATABASE_URL is set correctly in your environment variables."
       }, { status: 503 })
     }
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       error: "Failed to create thread",
       details: errorMessage,
       code: errorCode,

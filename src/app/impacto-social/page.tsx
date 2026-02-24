@@ -243,6 +243,53 @@ export default function ImpactoSocialPage() {
                         margin-right: 0 !important;
                     }
                 }
+
+                /* --- NEW ANIMATIONS --- */
+                @keyframes impact-fadeInUp {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes impact-shimmer {
+                    0% { background-position: -200% center; }
+                    100% { background-position: 200% center; }
+                }
+                @keyframes impact-pulse-soft {
+                    0%, 100% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(1.05); opacity: 0.9; }
+                }
+                @keyframes impact-float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-3px); }
+                }
+                @keyframes impact-glow {
+                    0%, 100% { filter: drop-shadow(0 0 4px rgba(15, 98, 254, 0.4)); }
+                    50% { filter: drop-shadow(0 0 12px rgba(15, 98, 254, 0.7)); }
+                }
+                @keyframes impact-dash {
+                    from { stroke-dashoffset: 628; }
+                    to { stroke-dashoffset: 238; } /* (1 - 0.62) * 628 = 238 approx */
+                }
+
+                .impact-entrance { animation: impact-fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+                .impact-delay-1 { animation-delay: 0.1s; }
+                .impact-delay-2 { animation-delay: 0.2s; }
+                .impact-delay-3 { animation-delay: 0.3s; }
+
+                .impact-shimmer-text {
+                    background: linear-gradient(90deg, #1e3a5f, #0F62FE, #1e3a5f);
+                    background-size: 200% auto;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    animation: impact-shimmer 4s linear infinite;
+                }
+
+                .impact-status-badge {
+                    animation: impact-float 3s ease-in-out infinite;
+                }
+                .impact-status-badge:hover {
+                    transform: scale(1.05) !important;
+                    transition: all 0.3s ease;
+                }
             `}</style>
 
             <div className="impacto-inner" style={{
@@ -258,92 +305,178 @@ export default function ImpactoSocialPage() {
                 <div style={{
                     background: "linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)",
                     borderBottom: "1px solid #e2e8f0",
-                    padding: "40px 24px"
+                    padding: "60px 24px",
+                    position: "relative",
+                    overflow: "hidden"
                 }}>
-                    <div style={{ width: "100%", margin: "0 auto", padding: "0 24px", boxSizing: "border-box" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 32, flexWrap: "wrap" }}>
+                    {/* Decorative background circle */}
+                    <div style={{
+                        position: "absolute",
+                        top: "-10%",
+                        right: "-5%",
+                        width: "400px",
+                        height: "400px",
+                        background: "radial-gradient(circle, rgba(15, 98, 254, 0.05) 0%, transparent 70%)",
+                        borderRadius: "50%",
+                        zIndex: 0
+                    }} />
+
+                    <div style={{ width: "100%", margin: "0 auto", padding: "0 24px", boxSizing: "border-box", position: "relative", zIndex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
                             <div style={{ flex: "1 1 500px" }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                                <div className="impact-entrance impact-delay-1" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
                                     <span style={{
-                                        background: "#0F62FE",
+                                        background: "linear-gradient(135deg, #0F62FE 0%, #3b82f6 100%)",
                                         color: "#fff",
-                                        padding: "4px 12px",
+                                        padding: "6px 14px",
                                         borderRadius: "20px",
-                                        fontSize: 12,
-                                        fontWeight: 700,
-                                        textTransform: "uppercase"
+                                        fontSize: 11,
+                                        fontWeight: 800,
+                                        textTransform: "uppercase",
+                                        letterSpacing: "0.05em",
+                                        boxShadow: "0 4px 12px rgba(15, 98, 254, 0.2)"
                                     }}>
                                         Causa: {MOCK_SCHOOL_IMPACT.causeCategory}
                                     </span>
-                                    <span style={{ color: "#64748b", fontSize: 13, fontWeight: 600 }}>
-                                        Fundación Verificada ✓
+                                    <span style={{
+                                        color: "#166534",
+                                        fontSize: 13,
+                                        fontWeight: 700,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 5,
+                                        background: "#dcfce7",
+                                        padding: "4px 10px",
+                                        borderRadius: "8px"
+                                    }}>
+                                        Fundación Verificada
+                                        <CheckCircle2 size={14} />
                                     </span>
                                 </div>
-                                <h1 style={{ fontSize: "clamp(24px, 5vw, 40px)", fontWeight: 800, margin: "0 0 16px" }}>
-                                    Nuestro Impacto en {MOCK_FOUNDATION.name}
+
+                                <h1 className="impact-entrance impact-delay-2" style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 900, color: "#0f172a", margin: "0 0 20px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+                                    Nuestro Impacto en <br />
+                                    <span style={{ color: "#0F62FE" }}>{MOCK_FOUNDATION.name}</span>
                                 </h1>
-                                <p style={{ fontSize: 18, color: "#475569", margin: "0 0 24px", lineHeight: 1.6 }}>
-                                    Llevamos donados <strong>${MOCK_SCHOOL_IMPACT.totalDonatedMXN.toLocaleString()} MXN</strong>.
-                                    Esto equivale a <strong>≈ {renderEquivalence(MOCK_SCHOOL_IMPACT.totalDonatedMXN)}</strong> entregadas.
+
+                                <p className="impact-entrance impact-delay-3" style={{ fontSize: 20, color: "#475569", margin: "0 0 32px", lineHeight: 1.6 }}>
+                                    Llevamos donados <strong className="impact-shimmer-text" style={{ fontSize: "1.2em", fontWeight: 900 }}>${MOCK_SCHOOL_IMPACT.totalDonatedMXN.toLocaleString()} MXN</strong>.
+                                    <br />
+                                    <span style={{ fontSize: "0.95em", color: "#64748b" }}>
+                                        Esto equivale a ≈ <strong style={{ color: "#0f172a" }}>{renderEquivalence(MOCK_SCHOOL_IMPACT.totalDonatedMXN)}</strong> entregadas.
+                                    </span>
                                 </p>
 
-                                {/* Status Indicator */}
-                                <div style={{ display: "flex", gap: 12 }}>
-                                    <div style={{
+                                {/* Status Indicators */}
+                                <div className="impact-entrance impact-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 24 }}>
+                                    <div className="impact-status-badge" style={{
                                         display: "flex",
                                         alignItems: "center",
-                                        gap: 8,
-                                        background: "#dcfce7",
+                                        gap: 10,
+                                        background: "#ffffff",
                                         color: "#166534",
-                                        padding: "8px 16px",
-                                        borderRadius: "12px",
+                                        padding: "12px 20px",
+                                        borderRadius: "16px",
                                         fontSize: 14,
-                                        fontWeight: 700
+                                        fontWeight: 800,
+                                        boxShadow: "0 4px 15px rgba(0,0,0,0.05)",
+                                        border: "1px solid #dcfce7"
                                     }}>
-                                        <CheckCircle2 size={18} /> Base Asegurada
+                                        <div style={{ width: 28, height: 28, background: "#dcfce7", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                            <CheckCircle2 size={18} />
+                                        </div>
+                                        Base Asegurada
                                     </div>
-                                    <div style={{
+                                    <div className="impact-status-badge" style={{
                                         display: "flex",
                                         alignItems: "center",
-                                        gap: 8,
-                                        background: MOCK_SCHOOL_IMPACT.status === "risk" ? "#fef3c7" : "#f1f5f9",
-                                        color: MOCK_SCHOOL_IMPACT.status === "risk" ? "#92400e" : "#64748b",
-                                        padding: "8px 16px",
-                                        borderRadius: "12px",
+                                        gap: 10,
+                                        background: "#ffffff",
+                                        color: MOCK_SCHOOL_IMPACT.status === "risk" ? "#92400e" : "#0F62FE",
+                                        padding: "12px 20px",
+                                        borderRadius: "16px",
                                         fontSize: 14,
-                                        fontWeight: 700
+                                        fontWeight: 800,
+                                        boxShadow: "0 4px 15px rgba(0,0,0,0.05)",
+                                        border: MOCK_SCHOOL_IMPACT.status === "risk" ? "1px solid #fef3c7" : "1px solid #e0e7ff"
                                     }}>
-                                        {MOCK_SCHOOL_IMPACT.status === "risk" ? <AlertTriangle size={18} /> : <Lock size={18} />}
+                                        <div style={{
+                                            width: 28, height: 28,
+                                            background: MOCK_SCHOOL_IMPACT.status === "risk" ? "#fef3c7" : "#eff6ff",
+                                            borderRadius: "50%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            color: MOCK_SCHOOL_IMPACT.status === "risk" ? "#d97706" : "#0F62FE"
+                                        }}>
+                                            {MOCK_SCHOOL_IMPACT.status === "risk" ? <AlertTriangle size={18} /> : <Lock size={18} />}
+                                        </div>
                                         Bono de ${MOCK_SCHOOL_IMPACT.bonusAmountMXN.toLocaleString()} Protegido
                                     </div>
                                 </div>
                             </div>
 
                             {/* Two-layer progress circle or bar placeholder */}
-                            <div style={{ flex: "0 0 300px", textAlign: "center" }}>
+                            <div className="impact-entrance impact-delay-3" style={{ flex: "0 0 320px", textAlign: "center", display: "flex", justifyContent: "center" }}>
                                 <div style={{
-                                    width: "200px",
-                                    height: "200px",
-                                    margin: "0 auto",
-                                    border: "12px solid #e2e8f0",
-                                    borderRadius: "50%",
+                                    width: "240px",
+                                    height: "240px",
+                                    background: "#fff",
+                                    borderRadius: "40px",
+                                    boxShadow: "0 20px 40px rgba(15, 98, 254, 0.08)",
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    position: "relative"
+                                    position: "relative",
+                                    border: "1px solid rgba(15, 98, 254, 0.1)"
                                 }}>
+                                    <svg width="180" height="180" viewBox="0 0 220 220">
+                                        <circle
+                                            cx="110" cy="110" r="100"
+                                            stroke="#f1f5f9"
+                                            strokeWidth="20"
+                                            fill="transparent"
+                                        />
+                                        <circle
+                                            cx="110" cy="110" r="100"
+                                            stroke="#0F62FE"
+                                            strokeWidth="20"
+                                            fill="transparent"
+                                            strokeDasharray="628" /* 2 * PI * 100 */
+                                            strokeDashoffset="238"
+                                            strokeLinecap="round"
+                                            style={{
+                                                animation: "impact-dash 2s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+                                                filter: "drop-shadow(0 0 8px rgba(15, 98, 254, 0.3))"
+                                            }}
+                                        />
+                                    </svg>
+
                                     <div style={{
                                         position: "absolute",
-                                        top: -12, left: -12, right: -12, bottom: -12,
+                                        top: "50%",
+                                        left: "50%",
+                                        transform: "translate(-50%, -50%)",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center"
+                                    }}>
+                                        <span style={{ fontSize: 44, fontWeight: 900, color: "#0f172a", marginBottom: -4 }}>62%</span>
+                                        <span style={{ fontSize: 11, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em" }}>Meta</span>
+                                    </div>
+
+                                    {/* Small pulsing dot at the end of progress */}
+                                    <div style={{
+                                        position: "absolute",
+                                        width: 12, height: 12,
+                                        background: "#0F62FE",
                                         borderRadius: "50%",
-                                        border: "12px solid #0F62FE",
-                                        borderBottomColor: "transparent",
-                                        borderLeftColor: "transparent",
-                                        transform: "rotate(45deg)"
+                                        top: "14px",
+                                        left: "148px",
+                                        boxShadow: "0 0 15px #0F62FE",
+                                        animation: "impact-pulse-soft 2s infinite"
                                     }} />
-                                    <span style={{ fontSize: 32, fontWeight: 800 }}>62%</span>
-                                    <span style={{ fontSize: 12, fontWeight: 700, color: "#64748b" }}>DEL RETO</span>
                                 </div>
                             </div>
                         </div>

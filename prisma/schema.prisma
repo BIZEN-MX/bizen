@@ -60,6 +60,7 @@ model ContactMessage {
 model Profile {
   userId            String   @id @map("user_id") // FK to auth.users.id
   fullName          String   @map("full_name")
+  avatar            Json?    // { type: 'mascot', id: 'fox', label: 'Zorro' }
   role              String // "student" | "teacher" | "school_admin" | "moderator"
   schoolId          String?  @map("school_id")
   xp                Int      @default(0) // Experience points
