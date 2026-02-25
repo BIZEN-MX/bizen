@@ -132,16 +132,24 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     return (
         <>
             <style>{`
-        @keyframes ob-fadeIn   { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes ob-slideUp  { from { opacity: 0; transform: translateY(40px) scale(0.96) } to { opacity: 1; transform: translateY(0) scale(1) } }
-        @keyframes ob-slideOut { from { opacity: 1; transform: translateY(0) scale(1) } to { opacity: 0; transform: translateY(-24px) scale(0.96) } }
-        @keyframes ob-float    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
-        @keyframes ob-spin     { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+        @keyframes ob-fadeIn    { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes ob-slideUp   { from { opacity: 0; transform: translateY(40px) scale(0.96) } to { opacity: 1; transform: translateY(0) scale(1) } }
+        @keyframes ob-slideOut  { from { opacity: 1; transform: translateY(0) scale(1) } to { opacity: 0; transform: translateY(-24px) scale(0.96) } }
+        @keyframes ob-float     { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
+        @keyframes ob-spin      { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+        @keyframes ob-breathe   {
+          0%, 100% { box-shadow: 0 6px 20px rgba(15,98,254,0.30); transform: scale(1); }
+          50%       { box-shadow: 0 10px 32px rgba(15,98,254,0.60); transform: scale(1.03); }
+        }
+        @keyframes ob-shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position:  200% center; }
+        }
 
         .ob-overlay {
           position: fixed; inset: 0; z-index: 9999;
-          background: rgba(2, 14, 39, 0.85);
-          backdrop-filter: blur(12px);
+          background: rgba(2, 14, 39, 0.88);
+          backdrop-filter: blur(14px);
           display: flex; align-items: center; justify-content: center;
           padding: clamp(12px, 4vw, 32px);
           animation: ob-fadeIn 0.4s ease both;
@@ -153,18 +161,20 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           width: 100%; max-width: 560px;
           max-height: 94vh;
           overflow-y: auto;
-          box-shadow: 0 40px 100px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08);
+          box-shadow: 0 40px 100px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08);
           animation: ob-slideUp 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
         .ob-card.exit { animation: ob-slideOut 0.35s ease forwards; }
 
         .ob-progress-bar {
-          height: 3px; background: #f1f5f9; border-radius: 3px; overflow: hidden;
+          height: 4px; background: #f1f5f9; border-radius: 4px; overflow: hidden;
         }
         .ob-progress-fill {
-          height: 100%; border-radius: 3px;
-          background: linear-gradient(90deg, #0F62FE, #3B82F6);
-          transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          height: 100%; border-radius: 4px;
+          background: linear-gradient(90deg, #0F62FE 0%, #6366f1 50%, #0F62FE 100%);
+          background-size: 200% auto;
+          animation: ob-shimmer 2.5s linear infinite;
+          transition: width 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .ob-avatar-grid {
           display: grid;
@@ -180,14 +190,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           border: 3px solid transparent;
           display: flex; align-items: center; justify-content: center;
           overflow: hidden;
-          transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+          transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
           background: rgba(15,98,254,0.06);
         }
-        .ob-avatar-btn:hover { transform: scale(1.15); }
+        .ob-avatar-btn:hover { transform: scale(1.18); border-color: rgba(15,98,254,0.3); }
         .ob-avatar-btn.selected {
           border-color: #0F62FE;
-          box-shadow: 0 0 0 4px rgba(15,98,254,0.16);
-          transform: scale(1.08);
+          box-shadow: 0 0 0 4px rgba(15,98,254,0.18);
+          transform: scale(1.1);
         }
         .ob-input {
           width: 100%; padding: 13px 16px;
@@ -200,22 +210,38 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         .ob-input:focus { border-color: #0F62FE; background: #fff; box-shadow: 0 0 0 4px rgba(15,98,254,0.1); }
         .ob-input.error { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.1); }
         .ob-btn-primary {
-          width: 100%; padding: 14px 24px;
+          width: 100%; padding: 15px 24px;
           background: linear-gradient(135deg, #0F62FE 0%, #3B82F6 100%);
           color: white; border: none; border-radius: 14px;
-          font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif;
-          cursor: pointer; transition: all 0.25s ease;
+          font-size: 15px; font-weight: 800; font-family: 'Inter', sans-serif;
+          cursor: pointer;
           box-shadow: 0 6px 20px rgba(15,98,254,0.3);
           display: flex; align-items: center; justify-content: center; gap: 8px;
+          letter-spacing: 0.01em;
+          animation: ob-breathe 2.2s ease-in-out infinite;
+          transition: opacity 0.2s, filter 0.2s;
         }
-        .ob-btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(15,98,254,0.4); }
-        .ob-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+        .ob-btn-primary:hover:not(:disabled) {
+          filter: brightness(1.1);
+          animation-play-state: paused;
+        }
+        .ob-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; animation: none; }
         .ob-btn-ghost {
           background: none; border: none; cursor: pointer;
           color: #9ca3af; font-size: 13px; font-family: 'Inter', sans-serif;
           padding: 6px; transition: color 0.2s;
         }
         .ob-btn-ghost:hover { color: #64748b; }
+        .ob-step-dots {
+          display: flex; gap: 6px; justify-content: center; margin-top: 20px;
+        }
+        .ob-step-dot {
+          height: 6px; border-radius: 99px;
+          transition: all 0.35s ease;
+          background: #e2e8f0;
+        }
+        .ob-step-dot.active { background: #0F62FE; width: 22px !important; }
+        .ob-step-dot.done   { background: rgba(15,98,254,0.35); }
       `}</style>
 
             <div className="ob-overlay">
@@ -229,25 +255,46 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                     {/* ─── WELCOME ───────────────────────────────────────────────────── */}
                     {step === "welcome" && (
                         <div style={{ padding: "clamp(32px, 6vw, 48px)", textAlign: "center" }}>
-                            {/* Mascot */}
-                            <div style={{ width: 110, height: 110, margin: "0 auto 24px", animation: "ob-float 3s ease infinite" }}>
+                            {/* Mascot — floating with glow */}
+                            <div style={{ position: "relative", width: 120, height: 120, margin: "0 auto 28px" }}>
+                                <div style={{
+                                    position: "absolute", inset: -12,
+                                    borderRadius: "50%",
+                                    background: "radial-gradient(circle, rgba(15,98,254,0.18) 0%, transparent 70%)",
+                                    animation: "ob-float 3.5s ease infinite"
+                                }} />
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src="/hero4.png" alt="Mascota BIZEN" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                                <img
+                                    src="/hero4.png"
+                                    alt="Mascota BIZEN"
+                                    style={{ width: "100%", height: "100%", objectFit: "contain", animation: "ob-float 3s ease infinite", position: "relative", zIndex: 1 }}
+                                />
                             </div>
 
-                            <h1 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: 900, color: "#0f172a", margin: "0 0 10px", letterSpacing: "-0.02em" }}>
-                                Bienvenido a BIZEN
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(15,98,254,0.08)", border: "1px solid rgba(15,98,254,0.2)", borderRadius: 99, padding: "5px 14px", marginBottom: 16 }}>
+                                <span style={{ fontSize: 11, fontWeight: 800, color: "#0F62FE", letterSpacing: "0.05em", textTransform: "uppercase" }}>Bienvenido a BIZEN</span>
+                            </div>
+
+                            <h1 style={{ fontSize: "clamp(22px, 4vw, 30px)", fontWeight: 900, color: "#0f172a", margin: "0 0 12px", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+                                Hola, <span style={{ color: "#0F62FE" }}>{profileName}</span>
                             </h1>
-                            <p style={{ fontSize: 15, color: "#64748b", margin: "0 0 8px", lineHeight: 1.7 }}>
-                                Hola, <strong style={{ color: "#0f172a" }}>{profileName}</strong>. Antes de empezar vamos a configurar tu perfil. Solo toma un minuto.
+                            <p style={{ fontSize: 14.5, color: "#64748b", margin: "0 0 6px", lineHeight: 1.75 }}>
+                                Antes de explorar la plataforma vamos a configurar tu perfil. Solo toma un minuto.
                             </p>
-                            <p style={{ fontSize: 13, color: "#94a3b8", margin: "0 0 36px" }}>
-                                Cuando termines te daremos un recorrido por la plataforma.
+                            <p style={{ fontSize: 12.5, color: "#94a3b8", margin: "0 0 36px" }}>
+                                Al terminar, Billy te dara un recorrido completo por la app.
                             </p>
 
                             <button className="ob-btn-primary" onClick={() => goToStep("avatar")}>
-                                Comenzar configuracion
+                                Comenzar configuracion →
                             </button>
+
+                            {/* Step dots */}
+                            <div className="ob-step-dots">
+                                {["welcome", "avatar", "username", "school", "birthday"].map((s, i) => (
+                                    <div key={s} className={`ob-step-dot${s === step ? " active" : i < ["welcome", "avatar", "username", "school", "birthday"].indexOf(step) ? " done" : ""}`} style={{ width: s === step ? 22 : 8 }} />
+                                ))}
+                            </div>
                         </div>
                     )}
 

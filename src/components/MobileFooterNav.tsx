@@ -15,20 +15,24 @@ import {
   Star,
   Heart,
   LogIn,
-  Target
+  Target,
+  BarChart2
 } from "lucide-react"
 
 export default function MobileFooterNav() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, signOut } = useAuth()
+  const { user, dbProfile, signOut } = useAuth()
   const [showExitDialog, setShowExitDialog] = useState(false)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null)
   const [showProfilePanel, setShowProfilePanel] = useState(false)
 
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const isStudentOrGuest = !isAdminOrTeacher
+
   const isOnLessonPage = pathname?.includes('/learn/')
-  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/puntos', '/impacto-social']
+  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/puntos', '/impacto-social', '/teacher/dashboard', '/teacher/courses']
 
   const navigateTo = (path: string) => {
     if (!user && protectedRoutes.some(route => path.startsWith(route))) {
@@ -65,7 +69,7 @@ export default function MobileFooterNav() {
   }
 
   // Business Lab hidden for now — add back { path: "/business-lab", ... } to show again
-  const navItems = [
+  const navItems = isStudentOrGuest ? [
     {
       path: "/courses",
       label: "Cursos",
@@ -84,7 +88,6 @@ export default function MobileFooterNav() {
       icon: Gamepad2,
       active: isActivePath("/simulador")
     },
-
     {
       path: "/forum",
       label: "Foro",
@@ -97,7 +100,27 @@ export default function MobileFooterNav() {
       icon: User,
       active: isActivePath("/profile") || isActivePath("/configuracion"),
       isProfileButton: true
+    }
+  ] : [
+    {
+      path: "/teacher/dashboard",
+      label: "Panel escolar",
+      icon: BarChart2,
+      active: isActivePath("/teacher/dashboard")
     },
+    {
+      path: "/teacher/courses",
+      label: "Mis cursos",
+      icon: MapIcon,
+      active: isActivePath("/teacher/courses")
+    },
+    {
+      path: "/profile",
+      label: "Perfil",
+      icon: User,
+      active: isActivePath("/profile") || isActivePath("/configuracion"),
+      isProfileButton: true
+    }
   ]
 
   return (
@@ -167,8 +190,7 @@ export default function MobileFooterNav() {
           }
         }
       `}</style>
-
-      <div className="mobile-footer-container" data-bizen-tour="navigation">
+      <div className="mobile-footer-container">
         <div className="mobile-footer-inner">
           {navItems.map((item, index) => (
             <button
@@ -279,29 +301,31 @@ export default function MobileFooterNav() {
             }} />
 
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <button
-                onClick={() => {
-                  setShowProfilePanel(false)
-                  navigateTo("/tienda")
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  padding: "16px",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: "#0f172a",
-                  width: "100%",
-                  textAlign: "left"
-                }}
-              >
-                <ShoppingBag size={20} color="#0F62FE" />
-                <span>Tienda</span>
-              </button>
+              {isStudentOrGuest && (
+                <button
+                  onClick={() => {
+                    setShowProfilePanel(false)
+                    navigateTo("/tienda")
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "16px",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    color: "#0f172a",
+                    width: "100%",
+                    textAlign: "left"
+                  }}
+                >
+                  <ShoppingBag size={20} color="#0F62FE" />
+                  <span>Tienda</span>
+                </button>
+              )}
 
               <button
                 onClick={() => {
@@ -327,29 +351,31 @@ export default function MobileFooterNav() {
                 <span>Configuración</span>
               </button>
 
-              <button
-                onClick={() => {
-                  setShowProfilePanel(false)
-                  navigateTo("/puntos")
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  padding: "16px",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: "#0f172a",
-                  width: "100%",
-                  textAlign: "left"
-                }}
-              >
-                <Star size={20} color="#0F62FE" />
-                <span>Mis Puntos</span>
-              </button>
+              {isStudentOrGuest && (
+                <button
+                  onClick={() => {
+                    setShowProfilePanel(false)
+                    navigateTo("/puntos")
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "16px",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    color: "#0f172a",
+                    width: "100%",
+                    textAlign: "left"
+                  }}
+                >
+                  <Star size={20} color="#0F62FE" />
+                  <span>Mis Puntos</span>
+                </button>
+              )}
 
               <button
                 onClick={() => {

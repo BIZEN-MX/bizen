@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { createSupabaseServerMicrocred } from '@/lib/supabase/server-microcred'
+import { createSupabaseServer } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 
 // GET /api/profiles - Get current user profile
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServerMicrocred()
+    const supabase = await createSupabaseServer()
 
     const { data: { user }, error } = await supabase.auth.getUser()
 
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 // PATCH /api/profiles - Update current user profile
 export async function PATCH(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServerMicrocred()
+    const supabase = await createSupabaseServer()
 
     const { data: { user }, error } = await supabase.auth.getUser()
 

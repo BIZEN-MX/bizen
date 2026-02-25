@@ -19,19 +19,23 @@ import {
   Settings,
   UserPlus,
   MoreHorizontal,
-  LogIn
+  LogIn,
+  BarChart2
 } from "lucide-react"
 
 export default function MobileBottomNav() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, signOut } = useAuth()
+  const { user, dbProfile, signOut } = useAuth()
   const { settings } = useSettings()
   const t = useTranslation(settings.language)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
 
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const isStudentOrGuest = !isAdminOrTeacher
+
   // Protected routes that require authentication
-  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/puntos', '/impacto-social']
+  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/puntos', '/impacto-social', '/teacher/dashboard', '/teacher/courses']
 
   const isActivePath = (path: string) => {
     if (path === '/courses') {
@@ -53,7 +57,7 @@ export default function MobileBottomNav() {
 
   // Main navigation items (always visible). Business Lab hidden for now — uncomment to show again.
   // Main navigation items (always visible). 
-  const navItems = [
+  const navItems = isStudentOrGuest ? [
     {
       id: "courses",
       label: t.nav.exploreCourses,
@@ -75,11 +79,25 @@ export default function MobileBottomNav() {
       path: '/simulador',
       protected: false
     }
+  ] : [
+    {
+      id: "teacher-dashboard",
+      label: "Panel escolar",
+      icon: BarChart2,
+      path: "/teacher/dashboard",
+      protected: true
+    },
+    {
+      id: "teacher-courses",
+      label: "Cursos de la escuela",
+      icon: MapIcon,
+      path: "/teacher/courses",
+      protected: true
+    }
   ]
 
   // Additional navigation items for authenticated users
-  // Additional navigation items for authenticated users
-  const additionalNavItems = user ? [
+  const additionalNavItems = user && isStudentOrGuest ? [
     {
       id: 'forum',
       label: 'Foro',
@@ -107,27 +125,29 @@ export default function MobileBottomNav() {
       path: '/profile',
       protected: true
     },
-    {
-      id: "impacto-social",
-      label: t.nav.impactoSocial,
-      icon: Heart,
-      path: "/impacto-social",
-      protected: true
-    },
-    {
-      id: "puntos",
-      label: "Mis Puntos",
-      icon: Star,
-      path: "/puntos",
-      protected: true
-    },
-    {
-      id: 'tienda',
-      label: 'Tienda',
-      icon: ShoppingBag,
-      path: '/tienda',
-      protected: false
-    },
+    ...(isStudentOrGuest ? [
+      {
+        id: "impacto-social",
+        label: t.nav.impactoSocial,
+        icon: Heart,
+        path: "/impacto-social",
+        protected: true
+      },
+      {
+        id: "puntos",
+        label: "Mis Puntos",
+        icon: Star,
+        path: "/puntos",
+        protected: true
+      },
+      {
+        id: 'tienda',
+        label: 'Tienda',
+        icon: ShoppingBag,
+        path: '/tienda',
+        protected: false
+      }
+    ] : []),
     {
       id: "settings",
       label: "Configuración",

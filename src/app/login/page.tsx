@@ -55,6 +55,20 @@ function BIZENLoginContent() {
       setLoading(true)
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
+
+      try {
+        const profileRes = await fetch("/api/profiles")
+        if (profileRes.ok) {
+          const profile = await profileRes.json()
+          if (profile.role === 'teacher' || profile.role === 'school_admin') {
+            router.replace('/teacher/dashboard')
+            return
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile on login", err)
+      }
+
       router.replace("/courses")
     } catch (err: unknown) {
       setMessage(translateAuthError(err instanceof Error ? err.message : "Error al iniciar sesión"))

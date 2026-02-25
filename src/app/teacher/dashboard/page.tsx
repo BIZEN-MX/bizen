@@ -90,7 +90,32 @@ export default function AdminDashboardPage() {
     )
 
     return (
-        <div style={{ padding: "clamp(20px, 4vw, 40px)", maxWidth: 1200, margin: "0 auto" }}>
+        <div
+            className="dashboard-container"
+            style={{
+                padding: "clamp(20px, 4vw, 40px)",
+                width: "100%",
+                maxWidth: "none",
+                margin: 0,
+                boxSizing: "border-box",
+                minHeight: "100vh"
+            }}
+        >
+            <style jsx>{`
+                .dashboard-container {
+                    padding-left: 280px !important;
+                }
+                @media (max-width: 1160px) {
+                    .dashboard-container {
+                        padding-left: 220px !important;
+                    }
+                }
+                @media (max-width: 767px) {
+                    .dashboard-container {
+                        padding-left: clamp(20px, 4vw, 40px) !important;
+                    }
+                }
+            `}</style>
 
             {/* Header */}
             <div style={{ marginBottom: 40 }}>
@@ -127,7 +152,7 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Database View / Roster */}
-            <Card style={{ border: "1px solid #e2e8f0", overflow: "hidden" }}>
+            <Card style={{ border: "1px solid #e2e8f0", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
 
                 {/* Table Toolbar */}
                 <div style={{ padding: "24px", borderBottom: "1px solid #raw_e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>

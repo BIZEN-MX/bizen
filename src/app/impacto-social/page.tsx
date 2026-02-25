@@ -191,9 +191,12 @@ const checkActiveStatus = (sessionsLast30d: number, modulesLast30d: number): boo
 
 
 export default function ImpactoSocialPage() {
-    const { user, loading } = useAuth()
+    const { user, loading, dbProfile } = useAuth()
     const router = useRouter()
     const [activeTab, setActiveTab] = useState<"student" | "school" | "transparency" | "logros">("school")
+
+    const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+    const isStudentOrGuest = !isAdminOrTeacher
 
     useEffect(() => {
         if (loading) return
@@ -477,23 +480,25 @@ export default function ImpactoSocialPage() {
                         <style>{`
                             .tab-nav::-webkit-scrollbar { display: none; }
                         `}</style>
-                        <button
-                            className="tab-btn"
-                            onClick={() => setActiveTab("student")}
-                            style={{
-                                padding: "12px 0",
-                                borderBottom: activeTab === "student" ? "3px solid #0F62FE" : "3px solid transparent",
-                                color: activeTab === "student" ? "#0F62FE" : "#64748b",
-                                fontWeight: 700,
-                                fontSize: 16,
-                                background: "none",
-                                borderTop: "none", borderLeft: "none", borderRight: "none",
-                                cursor: "pointer",
-                                transition: "all 0.2s"
-                            }}
-                        >
-                            Mi Impacto
-                        </button>
+                        {isStudentOrGuest && (
+                            <button
+                                className="tab-btn"
+                                onClick={() => setActiveTab("student")}
+                                style={{
+                                    padding: "12px 0",
+                                    borderBottom: activeTab === "student" ? "3px solid #0F62FE" : "3px solid transparent",
+                                    color: activeTab === "student" ? "#0F62FE" : "#64748b",
+                                    fontWeight: 700,
+                                    fontSize: 16,
+                                    background: "none",
+                                    borderTop: "none", borderLeft: "none", borderRight: "none",
+                                    cursor: "pointer",
+                                    transition: "all 0.2s"
+                                }}
+                            >
+                                Mi Impacto
+                            </button>
+                        )}
                         <button
                             className="tab-btn"
                             onClick={() => setActiveTab("school")}

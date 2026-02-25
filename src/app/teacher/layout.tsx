@@ -16,9 +16,9 @@ export default function TeacherLayout({
         }}>
             {/* We can add a simple header or use the existing sidebar if applicable, 
           but for now, a clean layout wrapper is sufficient. */}
-            <main style={{ flex: 1 }}>
+            <div style={{ flex: 1 }}>
                 {children}
-            </main>
+            </div>
         </div>
     )
 }

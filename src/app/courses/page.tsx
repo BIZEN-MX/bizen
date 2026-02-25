@@ -226,7 +226,6 @@ export default function CoursesPage() {
       `}</style>
 
       <main
-        data-bizen-tour="courses"
         style={{
           flex: 1,
           paddingTop: "clamp(8px, 1.5vw, 16px)",

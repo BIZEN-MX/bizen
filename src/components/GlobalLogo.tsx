@@ -31,7 +31,6 @@ export default function GlobalLogo() {
   return (
     <div 
       className="global-logo-container"
-      data-bizen-tour="header"
       style={{
         position: "fixed",
         top: topPosition,

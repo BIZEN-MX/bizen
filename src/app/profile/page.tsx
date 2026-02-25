@@ -18,7 +18,7 @@ interface UserStats {
 }
 
 export default function ProfilePage() {
-  const { user, loading, refreshUser } = useAuth()
+  const { user, loading, refreshUser, dbProfile } = useAuth()
   const { startTour } = useOnboarding()
   const router = useRouter()
   const supabase = createClientMicrocred()
@@ -45,6 +45,9 @@ export default function ProfilePage() {
     schoolId: ""
   })
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const isStudentOrGuest = !isAdminOrTeacher
 
   // Custom avatar options with emojis, custom designs, and cartoon characters
   const avatarOptions = [
@@ -287,275 +290,282 @@ export default function ProfilePage() {
         <div style={{ position: "fixed", top: "10%", right: "5%", width: 500, height: 500, background: "radial-gradient(circle, rgba(15,98,254,0.06) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
         <div style={{ position: "fixed", bottom: "10%", left: "5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
         {/* Main Content */}
-        <main className="profile-main-content" data-bizen-tour="profile" style={{
+        <main className="profile-main-content" style={{
           minHeight: "100vh",
           padding: "0 0 40px",
           fontFamily: "'Inter', Montserrat, sans-serif",
           width: "100%",
           maxWidth: "100%",
-          boxSizing: "border-box" as const,
+          boxSizing: "border-box",
           display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
-          overflowX: "hidden" as const,
-          position: "relative" as const,
+          overflowX: "hidden",
+          position: "relative",
           zIndex: 1
-        }}>
-          {/* ── HERO BANNER ── */}
-          <div style={{
-            background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%)",
-            padding: "clamp(28px,4vw,44px) clamp(24px,4vw,48px) clamp(56px,7vw,72px)",
-            position: "relative",
-            marginBottom: "clamp(36px,5vw,52px)"
-          }}>
-            {/* Hero orbs */}
-            <div style={{ position: "absolute", top: "-20%", right: "-5%", width: 350, height: 350, background: "radial-gradient(circle,rgba(96,165,250,0.2) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", bottom: "-30%", left: "3%", width: 280, height: 280, background: "radial-gradient(circle,rgba(139,92,246,0.15) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Mi Perfil BIZEN</span>
-              </div>
-              <h1 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 900, color: "#fff", margin: "0 0 8px", letterSpacing: "-0.02em" }}>
-                {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario'}
-              </h1>
-              <p style={{ fontSize: 14, color: "#93c5fd", margin: 0 }}>Administra tu información personal y progreso</p>
-            </div>
-            {/* Avatar floating at bottom of banner */}
-            <div style={{ position: "absolute", bottom: "-48px", left: "clamp(24px,4vw,48px)", zIndex: 10 }}>
-              <div
-                onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-                style={{ width: 96, height: 96, borderRadius: "50%", background: "linear-gradient(135deg,#0F62FE,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 32px rgba(15,98,254,0.4), 0 0 0 4px #fff", cursor: "pointer", position: "relative", transition: "transform 0.2s" }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.06)" }}
-                onMouseLeave={e => { e.currentTarget.style.transform = "" }}
-              >
-                <AvatarDisplay avatar={selectedAvatar} size={52} />
-                <div style={{ position: "absolute", bottom: 2, right: 2, width: 28, height: 28, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>✏️</div>
-              </div>
-              {/* Avatar Picker */}
-              {showAvatarPicker && (
-                <div style={{
-                  position: "absolute",
-                  top: "108px",
-                  left: 0,
-                  background: "white",
-                  borderRadius: 20,
-                  padding: "16px",
-                  boxShadow: "0 12px 48px rgba(0,0,0,0.18)",
-                  border: "1px solid #e2e8f0",
-                  zIndex: 100,
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
-                  gap: 12,
-                  width: "280px",
-                  animation: "prof-fadeUp 0.3s ease-out"
-                }}>
-                  {avatarOptions.map((av, idx) => {
-                    const isSelected = JSON.stringify(selectedAvatar) === JSON.stringify(av)
-                    return (
-                      <div
-                        key={av.id || idx}
-                        onClick={() => { setSelectedAvatar(av); setShowAvatarPicker(false) }}
-                        style={{
-                          width: 54,
-                          height: 54,
-                          borderRadius: "50%",
-                          background: isSelected ? "rgba(15,98,254,0.1)" : "#f8fafc",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          cursor: "pointer",
-                          border: isSelected ? "3.5px solid #0F62FE" : "2px solid #f1f5f9",
-                          overflow: "hidden",
-                          transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)"
-                        }}
-                        onMouseEnter={e => {
-                          e.currentTarget.style.transform = "scale(1.15)"
-                          e.currentTarget.style.borderColor = isSelected ? "#0F62FE" : "#cbd5e1"
-                        }}
-                        onMouseLeave={e => {
-                          e.currentTarget.style.transform = ""
-                          e.currentTarget.style.borderColor = isSelected ? "#0F62FE" : "#f1f5f9"
-                        }}
-                      >
-                        <AvatarDisplay avatar={av} size={32} />
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* ── CONTENT AREA ── */}
-          <div style={{ padding: "0 clamp(16px,4vw,48px)", display: "flex", flexDirection: "column", gap: 24 }}>
-
-            {/* Name / username / badges row (below banner) */}
-            <div style={{ paddingLeft: "clamp(110px,14vw,120px)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-              <div>
-                {(user.user_metadata?.username || formData.username) && (
-                  <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#64748b" }}>@{user.user_metadata?.username || formData.username}</p>
-                )}
-                {profileStats?.joinDate && (
-                  <p style={{ margin: "4px 0 0", fontSize: 12, color: "#94a3b8" }}>Se unió en {new Date(profileStats.joinDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}</p>
-                )}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                {profileStats && (
-                  <>
-                    <div style={{ textAlign: "center" }}><div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats.followersCount}</div><div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Seguidores</div></div>
-                    <div style={{ width: 1, height: 32, background: "#e2e8f0" }} />
-                    <div style={{ textAlign: "center" }}><div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats.followingCount}</div><div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Siguiendo</div></div>
-                  </>
-                )}
-                <div style={{ display: "inline-flex", alignItems: "center", padding: "7px 16px", background: user.user_metadata?.plan === "premium" ? "linear-gradient(135deg,#FBBF24,#F59E0B)" : user.user_metadata?.plan === "estudiante" ? "linear-gradient(135deg,#3B82F6,#2563EB)" : "linear-gradient(135deg,#10B981,#059669)", borderRadius: 20, boxShadow: "0 4px 12px rgba(0,0,0,0.12)" }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#fff", textTransform: "capitalize" }}>{user.user_metadata?.plan === "premium" ? "Premium" : user.user_metadata?.plan === "estudiante" ? "Estudiante" : "Gratuito"}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Profile Card */}
+        }}
+        >
+          <div style={{ flex: "1 1 auto" }}>
+            {/* ── HERO BANNER ── */}
             <div style={{
-              width: "100%",
-              background: "white",
-              borderRadius: 24,
-              padding: "clamp(24px, 4vw, 36px)",
-              boxShadow: "0 4px 20px rgba(15,98,254,0.06)",
-              border: "1px solid #e8f0fe",
-              boxSizing: "border-box"
+              background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%)",
+              padding: "clamp(28px,4vw,44px) clamp(24px,4vw,48px) clamp(56px,7vw,72px)",
+              position: "relative",
+              marginBottom: "clamp(36px,5vw,52px)"
             }}>
-              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ width: 4, height: 18, background: "linear-gradient(180deg,#0F62FE,#6366f1)", borderRadius: 2, display: "inline-block" }} />
-                Información Personal
-              </h2>
-              {/* Form Fields */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20 }}>
-                <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Nombre Completo</label>
-                  <input type="text" className="prof-input" value={formData.fullName} onChange={e => setFormData({ ...formData, fullName: e.target.value })} placeholder="Tu nombre completo" />
+              {/* Hero orbs */}
+              <div style={{ position: "absolute", top: "-20%", right: "-5%", width: 350, height: 350, background: "radial-gradient(circle,rgba(96,165,250,0.2) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+              <div style={{ position: "absolute", bottom: "-30%", left: "3%", width: 280, height: 280, background: "radial-gradient(circle,rgba(139,92,246,0.15) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Mi Perfil BIZEN</span>
                 </div>
-                <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Nombre de Usuario</label>
-                  <input type="text" className="prof-input" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} placeholder="tunombredeusuario" />
+                <h1 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 900, color: "#fff", margin: "0 0 8px", letterSpacing: "-0.02em" }}>
+                  {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario'}
+                </h1>
+                <p style={{ fontSize: 14, color: "#93c5fd", margin: 0 }}>Administra tu información personal y progreso</p>
+              </div>
+              {/* Avatar floating at bottom of banner */}
+              <div style={{ position: "absolute", bottom: "-48px", left: "clamp(24px,4vw,48px)", zIndex: 10 }}>
+                <div
+                  onClick={() => setShowAvatarPicker(!showAvatarPicker)}
+                  style={{ width: 96, height: 96, borderRadius: "50%", background: "linear-gradient(135deg,#0F62FE,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 32px rgba(15,98,254,0.4), 0 0 0 4px #fff", cursor: "pointer", position: "relative", transition: "transform 0.2s" }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.06)" }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = "" }}
+                >
+                  <AvatarDisplay avatar={selectedAvatar} size={52} />
+                  <div style={{ position: "absolute", bottom: 2, right: 2, width: 28, height: 28, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>✏️</div>
                 </div>
-                <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Fecha de Nacimiento</label>
-                  <div style={{ position: "relative" }}>
-                    <input
-                      type="date"
-                      className="prof-input"
-                      value={formData.birthDate}
-                      max={new Date().toISOString().split('T')[0]}
-                      onChange={e => setFormData({ ...formData, birthDate: e.target.value })}
-                      style={{ colorScheme: "light" }}
-                    />
-                    {formData.birthDate && (() => {
-                      const bd = new Date(formData.birthDate)
-                      const today = new Date()
-                      let age = today.getFullYear() - bd.getFullYear()
-                      const m = today.getMonth() - bd.getMonth()
-                      if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--
+                {/* Avatar Picker */}
+                {showAvatarPicker && (
+                  <div style={{
+                    position: "absolute",
+                    top: "108px",
+                    left: 0,
+                    background: "white",
+                    borderRadius: 20,
+                    padding: "16px",
+                    boxShadow: "0 12px 48px rgba(0,0,0,0.18)",
+                    border: "1px solid #e2e8f0",
+                    zIndex: 100,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gap: 12,
+                    width: "280px",
+                    animation: "prof-fadeUp 0.3s ease-out"
+                  }}>
+                    {avatarOptions.map((av, idx) => {
+                      const isSelected = JSON.stringify(selectedAvatar) === JSON.stringify(av)
                       return (
-                        <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em" }}>Edad:</span>
-                          <span style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE" }}>{age} años</span>
+                        <div
+                          key={av.id || idx}
+                          onClick={() => { setSelectedAvatar(av); setShowAvatarPicker(false) }}
+                          style={{
+                            width: 54,
+                            height: 54,
+                            borderRadius: "50%",
+                            background: isSelected ? "rgba(15,98,254,0.1)" : "#f8fafc",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            cursor: "pointer",
+                            border: isSelected ? "3.5px solid #0F62FE" : "2px solid #f1f5f9",
+                            overflow: "hidden",
+                            transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)"
+                          }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.transform = "scale(1.15)"
+                            e.currentTarget.style.borderColor = isSelected ? "#0F62FE" : "#cbd5e1"
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.transform = ""
+                            e.currentTarget.style.borderColor = isSelected ? "#0F62FE" : "#f1f5f9"
+                          }}
+                        >
+                          <AvatarDisplay avatar={av} size={32} />
                         </div>
                       )
-                    })()}
+                    })}
                   </div>
-                </div>
-                <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Mi Escuela</label>
-                  <select
-                    className="prof-input"
-                    value={formData.schoolId}
-                    onChange={e => setFormData({ ...formData, schoolId: e.target.value })}
-                  >
-                    <option value="">Selecciona tu escuela</option>
-                    {schools.map(school => (
-                      <option key={school.id} value={school.id}>
-                        {school.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div style={{ gridColumn: "1 / -1" }}>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Intereses Financieros</label>
-                  <textarea className="prof-input" value={formData.bio} onChange={e => setFormData({ ...formData, bio: e.target.value })} placeholder="¿Qué es lo que más te llama la atención del mundo de las finanzas?" rows={3} style={{ resize: "vertical" }} />
-                </div>
+                )}
               </div>
-
-              {/* Save Status (Success message hidden per request) */}
-              {saving && <div style={{ marginTop: 20, padding: "11px 16px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#2563eb" }}>Guardando cambios...</div>}
-              {saveError && <div style={{ marginTop: 20, padding: "11px 16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#dc2626" }}>⚠ {saveError}</div>}
             </div>
 
-            {/* Level & Progress Section */}
-            {userStats && !loadingStats && (
-              <div style={{ background: "white", borderRadius: 24, padding: "clamp(22px,4vw,32px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.06)" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-                  <div>
-                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ width: 4, height: 18, background: "linear-gradient(180deg,#f59e0b,#d97706)", borderRadius: 2, display: "inline-block" }} />
-                      Nivel & Progreso
-                    </h3>
-                    <p style={{ margin: "4px 0 0", fontSize: 13, color: "#64748b" }}>{userStats.xpForNextLevel} XP para el siguiente nivel</p>
+            {/* ── CONTENT AREA ── */}
+            <div style={{ padding: "0 clamp(16px,4vw,48px)", display: "flex", flexDirection: "column", gap: 24 }}>
+
+              {/* Name / username / badges row (below banner) */}
+              <div style={{ paddingLeft: "clamp(110px,14vw,120px)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+                <div>
+                  {(user.user_metadata?.username || formData.username) && (
+                    <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#64748b" }}>@{user.user_metadata?.username || formData.username}</p>
+                  )}
+                  {profileStats?.joinDate && (
+                    <p style={{ margin: "4px 0 0", fontSize: 12, color: "#94a3b8" }}>Se unió en {new Date(profileStats.joinDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}</p>
+                  )}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  {profileStats && (
+                    <>
+                      <div style={{ textAlign: "center" }}><div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats.followersCount}</div><div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Seguidores</div></div>
+                      <div style={{ width: 1, height: 32, background: "#e2e8f0" }} />
+                      <div style={{ textAlign: "center" }}><div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats.followingCount}</div><div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Siguiendo</div></div>
+                    </>
+                  )}
+                  <div style={{ display: "inline-flex", alignItems: "center", padding: "7px 16px", background: user.user_metadata?.plan === "premium" ? "linear-gradient(135deg,#FBBF24,#F59E0B)" : user.user_metadata?.plan === "estudiante" ? "linear-gradient(135deg,#3B82F6,#2563EB)" : "linear-gradient(135deg,#10B981,#059669)", borderRadius: 20, boxShadow: "0 4px 12px rgba(0,0,0,0.12)" }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#fff", textTransform: "capitalize" }}>{user.user_metadata?.plan === "premium" ? "Premium" : user.user_metadata?.plan === "estudiante" ? "Estudiante" : "Gratuito"}</span>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", background: "linear-gradient(135deg,#fef3c7,#fde68a)", border: "1px solid #fcd34d", borderRadius: 18, padding: "10px 20px", boxShadow: "0 4px 14px rgba(245,158,11,0.2)" }}>
-                    <span style={{ fontSize: 26, fontWeight: 900, color: "#92400e", lineHeight: 1 }}>{userStats.level}</span>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: "#b45309", textTransform: "uppercase", letterSpacing: "0.05em" }}>Nivel</span>
-                  </div>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, fontWeight: 700, color: "#64748b", marginBottom: 8 }}>
-                  <span>{userStats.xpInCurrentLevel} XP</span>
-                  <span style={{ color: "#0F62FE" }}>{Math.round((userStats.xpInCurrentLevel / userStats.totalXpForNextLevel) * 100)}%</span>
-                  <span>{userStats.totalXpForNextLevel} XP</span>
-                </div>
-                <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 10, overflow: "hidden" }}>
-                  <div style={{ width: `${(userStats.xpInCurrentLevel / userStats.totalXpForNextLevel) * 100}%`, height: "100%", background: "linear-gradient(90deg,#60a5fa,#0F62FE)", borderRadius: 10, transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: "0 0 12px rgba(15,98,254,0.4)" }} />
-                </div>
-                {/* XP Source pills */}
-                <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap" }}>
-                  {[{ label: "Total XP", val: userStats.xp, color: "#0F62FE" }, { label: "Nivel", val: userStats.level, color: "#f59e0b" }].map(item => (
-                    <div key={item.label} style={{ background: `${item.color}10`, border: `1px solid ${item.color}25`, borderRadius: 12, padding: "10px 18px", display: "flex", flexDirection: "column" }}>
-                      <span style={{ fontSize: 20, fontWeight: 900, color: item.color, lineHeight: 1 }}>{item.val}</span>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em" }}>{item.label}</span>
-                    </div>
-                  ))}
                 </div>
               </div>
-            )}
 
-            {loadingStats && (
+              {/* Profile Card */}
               <div style={{
                 width: "100%",
-                margin: "32px 0 0",
-                background: "rgba(255, 255, 255, 0.5)",
-                backdropFilter: "blur(10px)",
-                borderRadius: 20,
-                padding: 28,
-                border: "2px solid rgba(147, 197, 253, 0.4)",
-                textAlign: "center"
+                background: "white",
+                borderRadius: 24,
+                padding: "clamp(24px, 4vw, 36px)",
+                boxShadow: "0 4px 20px rgba(15,98,254,0.06)",
+                border: "1px solid #e8f0fe",
+                boxSizing: "border-box"
               }}>
-                <p style={{ color: "#6B7280", fontSize: 14 }}>Cargando estadísticas...</p>
-              </div>
-            )}
-            {/* Replay Onboarding Tour */}
-            <div style={{ background: "white", borderRadius: 24, padding: "clamp(20px,3vw,28px) clamp(22px,4vw,32px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg,#eff6ff,#dbeafe)", border: "1px solid #bfdbfe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>🗺️</div>
-                <div>
-                  <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", marginBottom: 3 }}>Recorrido por la aplicación</div>
-                  <div style={{ fontSize: 13, color: "#64748b" }}>Repasa qué hace cada sección de BIZEN</div>
+                <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ width: 4, height: 18, background: "linear-gradient(180deg,#0F62FE,#6366f1)", borderRadius: 2, display: "inline-block" }} />
+                  Información Personal
+                </h2>
+                {/* Form Fields */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20 }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Nombre Completo</label>
+                    <input type="text" className="prof-input" value={formData.fullName} onChange={e => setFormData({ ...formData, fullName: e.target.value })} placeholder="Tu nombre completo" />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Nombre de Usuario</label>
+                    <input type="text" className="prof-input" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} placeholder="tunombredeusuario" />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Fecha de Nacimiento</label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        type="date"
+                        className="prof-input"
+                        value={formData.birthDate}
+                        max={new Date().toISOString().split('T')[0]}
+                        onChange={e => setFormData({ ...formData, birthDate: e.target.value })}
+                        style={{ colorScheme: "light" }}
+                      />
+                      {formData.birthDate && (() => {
+                        const bd = new Date(formData.birthDate)
+                        const today = new Date()
+                        let age = today.getFullYear() - bd.getFullYear()
+                        const m = today.getMonth() - bd.getMonth()
+                        if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--
+                        return (
+                          <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em" }}>Edad:</span>
+                            <span style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE" }}>{age} años</span>
+                          </div>
+                        )
+                      })()}
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Mi Escuela</label>
+                    <select
+                      className="prof-input"
+                      value={formData.schoolId}
+                      onChange={e => setFormData({ ...formData, schoolId: e.target.value })}
+                    >
+                      <option value="">Selecciona tu escuela</option>
+                      {schools.map(school => (
+                        <option key={school.id} value={school.id}>
+                          {school.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div style={{ gridColumn: "1 / -1" }}>
+                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Intereses Financieros</label>
+                    <textarea className="prof-input" value={formData.bio} onChange={e => setFormData({ ...formData, bio: e.target.value })} placeholder="¿Qué es lo que más te llama la atención del mundo de las finanzas?" rows={3} style={{ resize: "vertical" }} />
+                  </div>
                 </div>
-              </div>
-              <button onClick={startTour}
-                style={{ padding: "11px 22px", background: "linear-gradient(135deg,#0F62FE,#3B82F6)", color: "white", border: "none", borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'Inter',sans-serif", boxShadow: "0 6px 20px rgba(15,98,254,0.35)", whiteSpace: "nowrap", transition: "all 0.2s" }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(15,98,254,0.45)" }}
-                onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 6px 20px rgba(15,98,254,0.35)" }}
-              >Repetir tour →</button>
-            </div>
 
-          </div>{/* end content area */}
+                {/* Save Status (Success message hidden per request) */}
+                {saving && <div style={{ marginTop: 20, padding: "11px 16px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#2563eb" }}>Guardando cambios...</div>}
+                {saveError && <div style={{ marginTop: 20, padding: "11px 16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#dc2626" }}>⚠ {saveError}</div>}
+              </div>
+
+              {/* Level & Progress Section */}
+              {userStats && !loadingStats && isStudentOrGuest && (
+                <div style={{ background: "white", borderRadius: 24, padding: "clamp(22px,4vw,32px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.06)" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ width: 4, height: 18, background: "linear-gradient(180deg,#f59e0b,#d97706)", borderRadius: 2, display: "inline-block" }} />
+                        Nivel & Progreso
+                      </h3>
+                      <p style={{ margin: "4px 0 0", fontSize: 13, color: "#64748b" }}>{userStats.xpForNextLevel} XP para el siguiente nivel</p>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", background: "linear-gradient(135deg,#fef3c7,#fde68a)", border: "1px solid #fcd34d", borderRadius: 18, padding: "10px 20px", boxShadow: "0 4px 14px rgba(245,158,11,0.2)" }}>
+                      <span style={{ fontSize: 26, fontWeight: 900, color: "#92400e", lineHeight: 1 }}>{userStats.level}</span>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#b45309", textTransform: "uppercase", letterSpacing: "0.05em" }}>Nivel</span>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, fontWeight: 700, color: "#64748b", marginBottom: 8 }}>
+                    <span>{userStats.xpInCurrentLevel} XP</span>
+                    <span style={{ color: "#0F62FE" }}>{Math.round((userStats.xpInCurrentLevel / userStats.totalXpForNextLevel) * 100)}%</span>
+                    <span>{userStats.totalXpForNextLevel} XP</span>
+                  </div>
+                  <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 10, overflow: "hidden" }}>
+                    <div style={{ width: `${(userStats.xpInCurrentLevel / userStats.totalXpForNextLevel) * 100}%`, height: "100%", background: "linear-gradient(90deg,#60a5fa,#0F62FE)", borderRadius: 10, transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: "0 0 12px rgba(15,98,254,0.4)" }} />
+                  </div>
+                  {/* XP Source pills */}
+                  <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap" }}>
+                    {[{ label: "Total XP", val: userStats.xp, color: "#0F62FE" }, { label: "Nivel", val: userStats.level, color: "#f59e0b" }].map(item => (
+                      <div key={item.label} style={{ background: `${item.color}10`, border: `1px solid ${item.color}25`, borderRadius: 12, padding: "10px 18px", display: "flex", flexDirection: "column" }}>
+                        <span style={{ fontSize: 20, fontWeight: 900, color: item.color, lineHeight: 1 }}>{item.val}</span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em" }}>{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {loadingStats && (
+                <div style={{
+                  width: "100%",
+                  margin: "32px 0 0",
+                  background: "rgba(255, 255, 255, 0.5)",
+                  backdropFilter: "blur(10px)",
+                  borderRadius: 20,
+                  padding: 28,
+                  border: "2px solid rgba(147, 197, 253, 0.4)",
+                  textAlign: "center"
+                }}>
+                  <p style={{ color: "#6B7280", fontSize: 14 }}>Cargando estadísticas...</p>
+                </div>
+              )}
+              {isStudentOrGuest && (
+                <>
+                  {/* Replay Onboarding Tour */}
+                  <div style={{ background: "white", borderRadius: 24, padding: "clamp(20px,3vw,28px) clamp(22px,4vw,32px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                      <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg,#eff6ff,#dbeafe)", border: "1px solid #bfdbfe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>🗺️</div>
+                      <div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", marginBottom: 3 }}>Recorrido por la aplicación</div>
+                        <div style={{ fontSize: 13, color: "#64748b" }}>Repasa qué hace cada sección de BIZEN</div>
+                      </div>
+                    </div>
+                    <button onClick={startTour}
+                      style={{ padding: "11px 22px", background: "linear-gradient(135deg,#0F62FE,#3B82F6)", color: "white", border: "none", borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'Inter',sans-serif", boxShadow: "0 6px 20px rgba(15,98,254,0.35)", whiteSpace: "nowrap", transition: "all 0.2s" }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(15,98,254,0.45)" }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 6px 20px rgba(15,98,254,0.35)" }}
+                    >Repetir tour →</button>
+                  </div>
+                </>
+              )}
+
+            </div>
+          </div>
         </main >
       </div >
     </>

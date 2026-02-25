@@ -15,6 +15,7 @@ export const TOUR_STEPS = [
         color: "#0F62FE",
         accent: "rgba(15,98,254,0.08)",
         step: 1,
+        placement: "bottom-left"
     },
     {
         path: "/reto-diario",
@@ -25,6 +26,7 @@ export const TOUR_STEPS = [
         color: "#10b981",
         accent: "rgba(16,185,129,0.08)",
         step: 2,
+        placement: "bottom-left"
     },
     {
         path: "/forum",
@@ -35,6 +37,7 @@ export const TOUR_STEPS = [
         color: "#8b5cf6",
         accent: "rgba(139,92,246,0.08)",
         step: 3,
+        placement: "bottom-left"
     },
     {
         path: "/impacto-social",
@@ -45,6 +48,29 @@ export const TOUR_STEPS = [
         color: "#f59e0b",
         accent: "rgba(245,158,11,0.08)",
         step: 4,
+        placement: "bottom-left"
+    },
+    {
+        path: "/puntos",
+        label: "Mis Puntos",
+        title: "Tu progreso financiero",
+        description:
+            "Monitorea tus XP, rachas y el historial de tus ganancias. Aquí verás cómo cada pequeña acción suma para convertirte en un experto de tus finanzas.",
+        color: "#f59e0b",
+        accent: "rgba(245,158,11,0.08)",
+        step: 5,
+        placement: "bottom-right"
+    },
+    {
+        path: "/tienda",
+        label: "Bizen Tienda",
+        title: "Canjea tus recompensas",
+        description:
+            "Usa tus monedas Bizens para comprar artículos exclusivos, avatares especiales y beneficios reales. Tu esfuerzo se traduce en premios que puedes disfrutar.",
+        color: "#8b5cf6",
+        accent: "rgba(139,92,246,0.08)",
+        step: 6,
+        placement: "bottom-right"
     },
     {
         path: "/profile",
@@ -54,9 +80,16 @@ export const TOUR_STEPS = [
             "Aquí vives: tus puntos XP, tu nivel, tus rachas y tus seguidores. Personaliza tu avatar y tu bio. Cada logro que desbloquees aparecerá en tu perfil para que el mundo vea tu progreso.",
         color: "#ef4444",
         accent: "rgba(239,68,68,0.08)",
-        step: 5,
+        step: 7,
+        placement: "bottom-right"
     },
 ]
+
+const PLACEMENTS: Record<string, any> = {
+    "center": { bottom: "clamp(16px, 3vw, 32px)", left: "50%", transform: "translateX(-50%)" },
+    "bottom-left": { bottom: "clamp(16px, 3vw, 32px)", left: "clamp(16px, 3vw, 40px)", transform: "translateX(0)" },
+    "bottom-right": { bottom: "clamp(16px, 3vw, 32px)", left: "auto", right: "clamp(16px, 3vw, 40px)", transform: "translateX(0)" },
+}
 
 interface AppTourOverlayProps {
     onEnd: () => void
@@ -84,6 +117,36 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
         return () => clearTimeout(t)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    // Highlight sidebar item if it exists
+    useEffect(() => {
+        if (!visible || !current) return
+
+        // Remove highlight from all
+        const allItems = document.querySelectorAll('[data-tour-id]');
+        allItems.forEach(el => {
+            (el as HTMLElement).style.boxShadow = "";
+            (el as HTMLElement).style.transform = "";
+            (el as HTMLElement).style.zIndex = "";
+        })
+
+        // Highlight current
+        const target = document.querySelector(`[data-tour-id="${current.path}"]`) as HTMLElement
+        if (target) {
+            target.style.boxShadow = `0 0 0 3px ${current.color}60, 0 8px 24px ${current.color}40`;
+            target.style.transform = "scale(1.05) translateX(4px)";
+            target.style.zIndex = "100002";
+            target.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        return () => {
+            allItems.forEach(el => {
+                (el as HTMLElement).style.boxShadow = "";
+                (el as HTMLElement).style.transform = "";
+                (el as HTMLElement).style.zIndex = "";
+            });
+        }
+    }, [visible, current, pathname])
 
     // Animate card back in when path matches current step
     useEffect(() => {
@@ -135,14 +198,15 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
           0%,100% { transform: translateY(0) rotate(-2deg); }
           50%     { transform: translateY(-6px) rotate(2deg); }
         }
+        @keyframes tour-breathe {
+          0%, 100% { transform: scale(1); box-shadow: 0 4px 14px var(--tour-color-alpha); }
+          50%      { transform: scale(1.05); box-shadow: 0 8px 28px var(--tour-color-beta); }
+        }
         .tour-card {
           position: fixed;
-          bottom: clamp(16px, 3vw, 32px);
-          left: 50%;
-          transform: translateX(-50%);
           z-index: 100001;
           width: calc(100% - 32px);
-          max-width: 640px;
+          max-width: 600px;
           background: #ffffff;
           border-radius: 28px;
           box-shadow:
@@ -150,6 +214,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
             0 0 0 1px rgba(0,0,0,0.06);
           overflow: hidden;
           font-family: 'Inter', sans-serif;
+          transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .tour-card.enter {
           animation: tour-slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -237,6 +302,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
             padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px);
             border: none;
             color: white;
+            animation: tour-breathe 2.5s ease-in-out infinite;
         }
 
         /* Responsive Mobile Layout */
@@ -291,7 +357,14 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
             {/* Blocking backdrop — forces user to interact ONLY with the tour card */}
             <div className="tour-backdrop" />
 
-            <div className={`tour-card ${cardVisible ? "enter" : "exit"}`}>
+            <div
+                className={`tour-card ${cardVisible ? "enter" : "exit"}`}
+                style={{
+                    ...PLACEMENTS[(current as any).placement || "center"],
+                    "--tour-color-alpha": `${current.color}40`,
+                    "--tour-color-beta": `${current.color}70`,
+                } as any}
+            >
                 {/* Color accent stripe */}
                 <div style={{ height: 4, background: `linear-gradient(90deg, ${current.color}, ${current.color}99)`, width: `${progressPct}%`, transition: "width 0.5s cubic-bezier(0.34,1.56,0.64,1)" }} />
 

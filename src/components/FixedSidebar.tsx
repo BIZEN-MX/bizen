@@ -218,6 +218,8 @@ export default function FixedSidebar() {
   const puntosActive = isActivePath("/puntos")
   const tiendaActive = isActivePath("/tienda")
 
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const isStudentOrGuest = !isAdminOrTeacher
   const iconSize = 24
 
   return (
@@ -242,24 +244,27 @@ export default function FixedSidebar() {
       )}
 
       {/* Fixed Sidebar Panel */}
-      <div data-fixed-sidebar data-bizen-tour="navigation" className={isMobile ? (isSidebarOpen ? "mobile-sidebar-open" : "") : ""} style={isMobile ? {
-        // Mobile styles - CSS will control visibility and position, but set width here too
-        // Width will be overridden by CSS, but this ensures base width is correct
-      } : {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "clamp(240px, 25vw, 320px)",
-        height: "100vh",
-        background: "#FBFAF5",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-        zIndex: 1000,
-        overflowY: "auto",
-        overflowX: "hidden",
-        fontFamily: "'Montserrat', sans-serif",
-        borderRight: "2px solid #0F62FE",
-        boxSizing: "border-box"
-      }}>
+      <div
+        data-fixed-sidebar
+        className={isMobile ? (isSidebarOpen ? "mobile-sidebar-open" : "") : ""}
+        style={isMobile ? {
+          // Mobile styles - CSS will control visibility and position, but set width here too
+          // Width will be overridden by CSS, but this ensures base width is correct
+        } : {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "clamp(240px, 25vw, 320px)",
+          height: "100vh",
+          background: "#FBFAF5",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+          zIndex: 1000,
+          overflowY: "auto",
+          overflowX: "hidden",
+          fontFamily: "'Montserrat', sans-serif",
+          borderRight: "2px solid #0F62FE",
+          boxSizing: "border-box"
+        }}>
         <div style={{ padding: "24px 20px 24px 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", minHeight: "100%" }} className="sidebar-inner-container">
           {/* Bizen logo and brand name */}
           <button
@@ -368,227 +373,27 @@ export default function FixedSidebar() {
           {/* Quick Actions */}
           <div style={{ marginBottom: 24, flex: "1 1 auto" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: stackAlignment }}>
-              <button
-                data-bizen-tour-menu-item="courses"
-                onClick={() => navigateTo("/courses")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (coursesActive ? "#eff6ff" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: coursesActive ? 700 : 600,
-                  textAlign: "left",
-                  color: coursesActive ? "#0B71FE" : "#4b5563",
-                  ...compactButtonOverrides(coursesActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "#f8fafc"
-                    e.currentTarget.style.color = "#0B71FE"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = coursesActive ? "#eff6ff" : "transparent"
-                    e.currentTarget.style.color = coursesActive ? "#0B71FE" : "#4b5563"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <MapIcon size={iconSize} strokeWidth={coursesActive ? 2.5 : 2} />
-                <span className="nav-item-label">{t.nav.exploreCourses}</span>
-              </button>
-
-              <button
-                data-bizen-tour-menu-item="reto-diario"
-                onClick={() => navigateTo("/reto-diario")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "#eff6ff" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: retoDiarioActive ? 700 : 600,
-                  textAlign: "left",
-                  color: retoDiarioActive ? "#0B71FE" : "#4b5563",
-                  ...compactButtonOverrides(retoDiarioActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "#f8fafc"
-                    e.currentTarget.style.color = "#0B71FE"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = retoDiarioActive ? "#eff6ff" : "transparent"
-                    e.currentTarget.style.color = retoDiarioActive ? "#0B71FE" : "#4b5563"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <Target size={iconSize} strokeWidth={retoDiarioActive ? 2.5 : 2} />
-                <span className="nav-item-label">Reto diario</span>
-              </button>
-
-              {/* Business Lab hidden for now — remove this block to show again */}
-              {false && (
-                <button
-                  data-bizen-tour-menu-item="business-lab"
-                  onClick={() => navigateTo("/business-lab")}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    padding: "12px",
-                    background: isCompactSidebar ? "transparent" : (businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                    border: "none",
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontSize: 14,
-                    fontWeight: businessLabActive ? 700 : 600,
-                    textAlign: "left",
-                    color: businessLabActive ? "#93C5FD" : "#fff",
-                    ...compactButtonOverrides(businessLabActive)
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isCompactSidebar) {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                      e.currentTarget.style.color = "#93C5FD"
-                      e.currentTarget.style.transform = "translateX(-4px)"
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isCompactSidebar) {
-                      e.currentTarget.style.background = businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"
-                      e.currentTarget.style.color = businessLabActive ? "#93C5FD" : "#fff"
-                      e.currentTarget.style.transform = "translateX(0)"
-                    }
-                  }}
-                >
-                  <span className="nav-item-label">Business Lab</span>
-                </button>
-              )}
-
-              <button
-                data-bizen-tour-menu-item="simulador"
-                onClick={() => navigateTo("/simulador")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (simuladorActive ? "#eff6ff" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: simuladorActive ? 700 : 600,
-                  textAlign: "left",
-                  color: simuladorActive ? "#0B71FE" : "#4b5563",
-                  ...compactButtonOverrides(simuladorActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "#f8fafc"
-                    e.currentTarget.style.color = "#0B71FE"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = simuladorActive ? "#eff6ff" : "transparent"
-                    e.currentTarget.style.color = simuladorActive ? "#0B71FE" : "#4b5563"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <Gamepad2 size={iconSize} strokeWidth={simuladorActive ? 2.5 : 2} />
-                <span className="nav-item-label">Simulador</span>
-              </button>
-
-
-
-              <button
-                data-bizen-tour-menu-item="impacto-social"
-                onClick={() => navigateTo("/impacto-social")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "12px",
-                  background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "#eff6ff" : "transparent"),
-                  border: "none",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 14,
-                  fontWeight: impactoSocialActive ? 700 : 600,
-                  textAlign: "left",
-                  color: impactoSocialActive ? "#0B71FE" : "#4b5563",
-                  ...compactButtonOverrides(impactoSocialActive)
-                }}
-                onMouseEnter={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = "#f8fafc"
-                    e.currentTarget.style.color = "#0B71FE"
-                    e.currentTarget.style.transform = "translateX(-4px)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isCompactSidebar) {
-                    e.currentTarget.style.background = impactoSocialActive ? "#eff6ff" : "transparent"
-                    e.currentTarget.style.color = impactoSocialActive ? "#0B71FE" : "#4b5563"
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }
-                }}
-              >
-                <Heart size={iconSize} strokeWidth={impactoSocialActive ? 2.5 : 2} />
-                <span className="nav-item-label">{t.nav.impactoSocial}</span>
-              </button>
-
-              {/* Only show these navigation items when mounted and user is authenticated */}
-              {mounted && user && (
+              {isStudentOrGuest && (
                 <>
                   <button
-                    data-bizen-tour-menu-item="foro"
-                    onClick={() => navigateTo("/forum")}
+                    data-tour-id="/courses"
+                    onClick={() => navigateTo("/courses")}
                     style={{
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
                       padding: "12px",
-                      background: isCompactSidebar ? "transparent" : (forumActive ? "#eff6ff" : "transparent"),
+                      background: isCompactSidebar ? "transparent" : (coursesActive ? "#eff6ff" : "transparent"),
                       border: "none",
                       borderRadius: 10,
                       cursor: "pointer",
                       transition: "all 0.2s ease",
                       fontFamily: "'Montserrat', sans-serif",
                       fontSize: 14,
-                      fontWeight: forumActive ? 700 : 600,
+                      fontWeight: coursesActive ? 700 : 600,
                       textAlign: "left",
-                      color: forumActive ? "#0B71FE" : "#4b5563",
-                      ...compactButtonOverrides(forumActive)
+                      color: coursesActive ? "#0B71FE" : "#4b5563",
+                      ...compactButtonOverrides(coursesActive)
                     }}
                     onMouseEnter={(e) => {
                       if (!isCompactSidebar) {
@@ -599,36 +404,200 @@ export default function FixedSidebar() {
                     }}
                     onMouseLeave={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = forumActive ? "#eff6ff" : "transparent"
-                        e.currentTarget.style.color = forumActive ? "#0B71FE" : "#4b5563"
+                        e.currentTarget.style.background = coursesActive ? "#eff6ff" : "transparent"
+                        e.currentTarget.style.color = coursesActive ? "#0B71FE" : "#4b5563"
                         e.currentTarget.style.transform = "translateX(0)"
                       }
                     }}
                   >
-                    <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
-                    <span className="nav-item-label">Foro</span>
+                    <MapIcon size={iconSize} strokeWidth={coursesActive ? 2.5 : 2} />
+                    <span className="nav-item-label">{t.nav.exploreCourses}</span>
                   </button>
 
-                  {/* Panel Escolar for teachers/admins - TOP LEVEL for visibility */}
-                  {(dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') && (
+                  <button
+                    data-tour-id="/reto-diario"
+                    onClick={() => navigateTo("/reto-diario")}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "12px",
+                      background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "#eff6ff" : "transparent"),
+                      border: "none",
+                      borderRadius: 10,
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontSize: 14,
+                      fontWeight: retoDiarioActive ? 700 : 600,
+                      textAlign: "left",
+                      color: retoDiarioActive ? "#0B71FE" : "#4b5563",
+                      ...compactButtonOverrides(retoDiarioActive)
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isCompactSidebar) {
+                        e.currentTarget.style.background = "#f8fafc"
+                        e.currentTarget.style.color = "#0B71FE"
+                        e.currentTarget.style.transform = "translateX(-4px)"
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isCompactSidebar) {
+                        e.currentTarget.style.background = retoDiarioActive ? "#eff6ff" : "transparent"
+                        e.currentTarget.style.color = retoDiarioActive ? "#0B71FE" : "#4b5563"
+                        e.currentTarget.style.transform = "translateX(0)"
+                      }
+                    }}
+                  >
+                    <Target size={iconSize} strokeWidth={retoDiarioActive ? 2.5 : 2} />
+                    <span className="nav-item-label">Reto diario</span>
+                  </button>
+
+                  {/* Business Lab hidden for now — remove this block to show again */}
+                  {false && (
                     <button
-                      onClick={() => navigateTo("/teacher/dashboard")}
+                      onClick={() => navigateTo("/business-lab")}
                       style={{
                         display: "flex",
                         alignItems: "center",
                         gap: 12,
                         padding: "12px",
-                        background: isCompactSidebar ? "transparent" : (pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"),
+                        background: isCompactSidebar ? "transparent" : (businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"),
                         border: "none",
                         borderRadius: 10,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
                         fontFamily: "'Montserrat', sans-serif",
                         fontSize: 14,
-                        fontWeight: pathname === "/teacher/dashboard" ? 700 : 600,
+                        fontWeight: businessLabActive ? 700 : 600,
                         textAlign: "left",
-                        color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563",
-                        ...compactButtonOverrides(pathname === "/teacher/dashboard")
+                        color: businessLabActive ? "#93C5FD" : "#fff",
+                        ...compactButtonOverrides(businessLabActive)
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isCompactSidebar) {
+                          e.currentTarget.style.background = "rgba(255,255,255,0.1)"
+                          e.currentTarget.style.color = "#93C5FD"
+                          e.currentTarget.style.transform = "translateX(-4px)"
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isCompactSidebar) {
+                          e.currentTarget.style.background = businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"
+                          e.currentTarget.style.color = businessLabActive ? "#93C5FD" : "#fff"
+                          e.currentTarget.style.transform = "translateX(0)"
+                        }
+                      }}
+                    >
+                      <span className="nav-item-label">Business Lab</span>
+                    </button>
+                  )}
+
+                  <button
+                    data-tour-id="/simulador"
+                    onClick={() => navigateTo("/simulador")}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "12px",
+                      background: isCompactSidebar ? "transparent" : (simuladorActive ? "#eff6ff" : "transparent"),
+                      border: "none",
+                      borderRadius: 10,
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontSize: 14,
+                      fontWeight: simuladorActive ? 700 : 600,
+                      textAlign: "left",
+                      color: simuladorActive ? "#0B71FE" : "#4b5563",
+                      ...compactButtonOverrides(simuladorActive)
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isCompactSidebar) {
+                        e.currentTarget.style.background = "#f8fafc"
+                        e.currentTarget.style.color = "#0B71FE"
+                        e.currentTarget.style.transform = "translateX(-4px)"
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isCompactSidebar) {
+                        e.currentTarget.style.background = simuladorActive ? "#eff6ff" : "transparent"
+                        e.currentTarget.style.color = simuladorActive ? "#0B71FE" : "#4b5563"
+                        e.currentTarget.style.transform = "translateX(0)"
+                      }
+                    }}
+                  >
+                    <Gamepad2 size={iconSize} strokeWidth={simuladorActive ? 2.5 : 2} />
+                    <span className="nav-item-label">Simulador</span>
+                  </button>
+
+
+
+                  <button
+                    data-tour-id="/impacto-social"
+                    onClick={() => navigateTo("/impacto-social")}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "12px",
+                      background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "#eff6ff" : "transparent"),
+                      border: "none",
+                      borderRadius: 10,
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontSize: 14,
+                      fontWeight: impactoSocialActive ? 700 : 600,
+                      textAlign: "left",
+                      color: impactoSocialActive ? "#0B71FE" : "#4b5563",
+                      ...compactButtonOverrides(impactoSocialActive)
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isCompactSidebar) {
+                        e.currentTarget.style.background = "#f8fafc"
+                        e.currentTarget.style.color = "#0B71FE"
+                        e.currentTarget.style.transform = "translateX(-4px)"
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isCompactSidebar) {
+                        e.currentTarget.style.background = impactoSocialActive ? "#eff6ff" : "transparent"
+                        e.currentTarget.style.color = impactoSocialActive ? "#0B71FE" : "#4b5563"
+                        e.currentTarget.style.transform = "translateX(0)"
+                      }
+                    }}
+                  >
+                    <Heart size={iconSize} strokeWidth={impactoSocialActive ? 2.5 : 2} />
+                    <span className="nav-item-label">{t.nav.impactoSocial}</span>
+                  </button>
+
+                  {/* Only show these navigation items when mounted and user is authenticated */}
+                </>
+              )}
+              {mounted && user && (
+                <>
+                  {isStudentOrGuest && (
+                    <button
+                      data-tour-id="/forum"
+                      onClick={() => navigateTo("/forum")}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "12px",
+                        background: isCompactSidebar ? "transparent" : (forumActive ? "#eff6ff" : "transparent"),
+                        border: "none",
+                        borderRadius: 10,
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: 14,
+                        fontWeight: forumActive ? 700 : 600,
+                        textAlign: "left",
+                        color: forumActive ? "#0B71FE" : "#4b5563",
+                        ...compactButtonOverrides(forumActive)
                       }}
                       onMouseEnter={(e) => {
                         if (!isCompactSidebar) {
@@ -639,15 +608,97 @@ export default function FixedSidebar() {
                       }}
                       onMouseLeave={(e) => {
                         if (!isCompactSidebar) {
-                          e.currentTarget.style.background = pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"
-                          e.currentTarget.style.color = pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563"
+                          e.currentTarget.style.background = forumActive ? "#eff6ff" : "transparent"
+                          e.currentTarget.style.color = forumActive ? "#0B71FE" : "#4b5563"
                           e.currentTarget.style.transform = "translateX(0)"
                         }
                       }}
                     >
-                      <BarChart2 size={iconSize} strokeWidth={pathname === "/teacher/dashboard" ? 2.5 : 2} />
-                      <span className="nav-item-label">Panel escolar</span>
+                      <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
+                      <span className="nav-item-label">Foro</span>
                     </button>
+                  )}
+
+
+                  {/* Panel Escolar for teachers/admins - TOP LEVEL for visibility */}
+                  {isAdminOrTeacher && (
+                    <>
+                      <button
+                        onClick={() => navigateTo("/teacher/dashboard")}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 12,
+                          padding: "12px",
+                          background: isCompactSidebar ? "transparent" : (pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"),
+                          border: "none",
+                          borderRadius: 10,
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontFamily: "'Montserrat', sans-serif",
+                          fontSize: 14,
+                          fontWeight: pathname === "/teacher/dashboard" ? 700 : 600,
+                          textAlign: "left",
+                          color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563",
+                          ...compactButtonOverrides(pathname === "/teacher/dashboard")
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isCompactSidebar) {
+                            e.currentTarget.style.background = "#f8fafc"
+                            e.currentTarget.style.color = "#0B71FE"
+                            e.currentTarget.style.transform = "translateX(-4px)"
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isCompactSidebar) {
+                            e.currentTarget.style.background = pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"
+                            e.currentTarget.style.color = pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563"
+                            e.currentTarget.style.transform = "translateX(0)"
+                          }
+                        }}
+                      >
+                        <BarChart2 size={iconSize} strokeWidth={pathname === "/teacher/dashboard" ? 2.5 : 2} />
+                        <span className="nav-item-label">Panel escolar</span>
+                      </button>
+
+                      <button
+                        onClick={() => navigateTo("/teacher/courses")}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 12,
+                          padding: "12px",
+                          background: isCompactSidebar ? "transparent" : (pathname === "/teacher/courses" ? "#eff6ff" : "transparent"),
+                          border: "none",
+                          borderRadius: 10,
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontFamily: "'Montserrat', sans-serif",
+                          fontSize: 14,
+                          fontWeight: pathname === "/teacher/courses" ? 700 : 600,
+                          textAlign: "left",
+                          color: pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563",
+                          ...compactButtonOverrides(pathname === "/teacher/courses")
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isCompactSidebar) {
+                            e.currentTarget.style.background = "#f8fafc"
+                            e.currentTarget.style.color = "#0B71FE"
+                            e.currentTarget.style.transform = "translateX(-4px)"
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isCompactSidebar) {
+                            e.currentTarget.style.background = pathname === "/teacher/courses" ? "#eff6ff" : "transparent"
+                            e.currentTarget.style.color = pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563"
+                            e.currentTarget.style.transform = "translateX(0)"
+                          }
+                        }}
+                      >
+                        <MapIcon size={iconSize} strokeWidth={pathname === "/teacher/courses" ? 2.5 : 2} />
+                        <span className="nav-item-label">Cursos de la escuela</span>
+                      </button>
+                    </>
                   )}
 
                   {/* Más: below Foro; flyout to the right; desktop = hover, mobile/compact = click */}
@@ -723,86 +774,88 @@ export default function FixedSidebar() {
                           onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
                         >
 
+                          {isStudentOrGuest && (
+                            <>
+                              <button
+                                data-tour-id="/puntos"
+                                onClick={() => navigateTo("/puntos")}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 12,
+                                  padding: "10px 12px",
+                                  background: isCompactSidebar ? "transparent" : (puntosActive ? "#eff6ff" : "transparent"),
+                                  border: "none",
+                                  borderRadius: 8,
+                                  cursor: "pointer",
+                                  transition: "all 0.2s ease",
+                                  fontFamily: "'Montserrat', sans-serif",
+                                  fontSize: 13,
+                                  fontWeight: puntosActive ? 700 : 600,
+                                  textAlign: "left",
+                                  color: puntosActive ? "#0B71FE" : "#4b5563",
+                                  ...compactButtonOverrides(puntosActive)
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (!isCompactSidebar) {
+                                    e.currentTarget.style.background = "#f8fafc"
+                                    e.currentTarget.style.color = "#0B71FE"
+                                  }
+                                }}
+                                onMouseLeave={(e) => {
+                                  if (!isCompactSidebar) {
+                                    e.currentTarget.style.background = puntosActive ? "#eff6ff" : "transparent"
+                                    e.currentTarget.style.color = puntosActive ? "#0B71FE" : "#4b5563"
+                                  }
+                                }}
+                              >
+                                <Star size={20} strokeWidth={puntosActive ? 2.5 : 2} />
+                                <span className="nav-item-label">Mis Puntos</span>
+                              </button>
+
+
+
+                              <button
+                                data-tour-id="/tienda"
+                                onClick={() => navigateTo("/tienda")}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 12,
+                                  padding: "10px 12px",
+                                  background: isCompactSidebar ? "transparent" : (tiendaActive ? "#eff6ff" : "transparent"),
+                                  border: "none",
+                                  borderRadius: 8,
+                                  cursor: "pointer",
+                                  transition: "all 0.2s ease",
+                                  fontFamily: "'Montserrat', sans-serif",
+                                  fontSize: 13,
+                                  fontWeight: tiendaActive ? 700 : 600,
+                                  textAlign: "left",
+                                  color: tiendaActive ? "#0B71FE" : "#4b5563",
+                                  ...compactButtonOverrides(tiendaActive)
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (!isCompactSidebar) {
+                                    e.currentTarget.style.background = "#f8fafc"
+                                    e.currentTarget.style.color = "#0B71FE"
+                                  }
+                                }}
+                                onMouseLeave={(e) => {
+                                  if (!isCompactSidebar) {
+                                    e.currentTarget.style.background = tiendaActive ? "#eff6ff" : "transparent"
+                                    e.currentTarget.style.color = tiendaActive ? "#0B71FE" : "#4b5563"
+                                  }
+                                }}
+                              >
+                                <ShoppingBag size={20} strokeWidth={tiendaActive ? 2.5 : 2} />
+                                <span className="nav-item-label">Tienda</span>
+                              </button>
+                            </>
+                          )}
+
+
                           <button
-                            data-bizen-tour-menu-item="puntos"
-                            onClick={() => navigateTo("/puntos")}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                              padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (puntosActive ? "#eff6ff" : "transparent"),
-                              border: "none",
-                              borderRadius: 8,
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif",
-                              fontSize: 13,
-                              fontWeight: puntosActive ? 700 : 600,
-                              textAlign: "left",
-                              color: puntosActive ? "#0B71FE" : "#4b5563",
-                              ...compactButtonOverrides(puntosActive)
-                            }}
-                            onMouseEnter={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = "#f8fafc"
-                                e.currentTarget.style.color = "#0B71FE"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = puntosActive ? "#eff6ff" : "transparent"
-                                e.currentTarget.style.color = puntosActive ? "#0B71FE" : "#4b5563"
-                              }
-                            }}
-                          >
-                            <Star size={20} strokeWidth={puntosActive ? 2.5 : 2} />
-                            <span className="nav-item-label">Mis Puntos</span>
-                          </button>
-
-
-
-                          <button
-                            data-bizen-tour-menu-item="tienda"
-                            onClick={() => navigateTo("/tienda")}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                              padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (tiendaActive ? "#eff6ff" : "transparent"),
-                              border: "none",
-                              borderRadius: 8,
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif",
-                              fontSize: 13,
-                              fontWeight: tiendaActive ? 700 : 600,
-                              textAlign: "left",
-                              color: tiendaActive ? "#0B71FE" : "#4b5563",
-                              ...compactButtonOverrides(tiendaActive)
-                            }}
-                            onMouseEnter={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = "#f8fafc"
-                                e.currentTarget.style.color = "#0B71FE"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = tiendaActive ? "#eff6ff" : "transparent"
-                                e.currentTarget.style.color = tiendaActive ? "#0B71FE" : "#4b5563"
-                              }
-                            }}
-                          >
-                            <ShoppingBag size={20} strokeWidth={tiendaActive ? 2.5 : 2} />
-                            <span className="nav-item-label">Tienda</span>
-                          </button>
-
-
-
-                          <button
-                            data-bizen-tour-menu-item="configuracion"
                             onClick={() => navigateTo("/configuracion")}
                             style={{
                               display: "flex",
@@ -925,6 +978,7 @@ export default function FixedSidebar() {
           {/* User Profile Footer */}
           {mounted && user && (
             <div
+              data-tour-id="/profile"
               onClick={() => navigateTo("/profile")}
               style={{
                 marginTop: "auto",
@@ -984,266 +1038,270 @@ export default function FixedSidebar() {
             </div>
           )}
         </div>
-      </div>
+      </div >
 
       {/* Exit Confirmation Dialog */}
-      {showExitDialog && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0, 0, 0, 0.5)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1100,
-          padding: 20,
-          fontFamily: "'Montserrat', sans-serif"
-        }}>
+      {
+        showExitDialog && (
           <div style={{
-            background: "white",
-            borderRadius: 16,
-            padding: "32px",
-            maxWidth: 450,
-            width: "100%",
-            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)"
-          }}>
-            <div style={{
-              fontSize: 24,
-              fontWeight: 800,
-              marginBottom: 16,
-              background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text"
-            }}>
-              ⚠️ ¿Estás seguro?
-            </div>
-
-            <p style={{
-              fontSize: 16,
-              color: "#374151",
-              lineHeight: 1.6,
-              marginBottom: 24
-            }}>
-              Si sales ahora, se perderá tu progreso de la lección actual. ¿Deseas continuar?
-            </p>
-
-            <div style={{
-              display: "flex",
-              gap: 12,
-              flexDirection: "column"
-            }}>
-              <button
-                onClick={cancelExit}
-                style={{
-                  padding: "14px 24px",
-                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 12,
-                  fontSize: 15,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "transform 0.2s ease",
-                  boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                  fontFamily: "'Montserrat', sans-serif"
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
-                onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-              >
-                Continuar con la lección
-              </button>
-
-              <button
-                onClick={confirmExit}
-                style={{
-                  padding: "14px 24px",
-                  background: "white",
-                  color: "#DC2626",
-                  border: "1px solid rgba(220, 38, 38, 0.3)",
-                  borderRadius: 12,
-                  fontSize: 15,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#FEF2F2"
-                  e.currentTarget.style.transform = "scale(1.02)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "white"
-                  e.currentTarget.style.transform = "scale(1)"
-                }}
-              >
-                Salir de la lección
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Authentication Required Dialog */}
-      {showAuthDialog && (
-        <div
-          style={{
             position: "fixed",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            background: "rgba(0, 0, 0, 0.6)",
+            background: "rgba(0, 0, 0, 0.5)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             zIndex: 1100,
             padding: 20,
-            fontFamily: "'Montserrat', sans-serif",
-            backdropFilter: "blur(4px)"
-          }}
-          onClick={() => setShowAuthDialog(false)}
-        >
+            fontFamily: "'Montserrat', sans-serif"
+          }}>
+            <div style={{
+              background: "white",
+              borderRadius: 16,
+              padding: "32px",
+              maxWidth: 450,
+              width: "100%",
+              boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)"
+            }}>
+              <div style={{
+                fontSize: 24,
+                fontWeight: 800,
+                marginBottom: 16,
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text"
+              }}>
+                ⚠️ ¿Estás seguro?
+              </div>
+
+              <p style={{
+                fontSize: 16,
+                color: "#374151",
+                lineHeight: 1.6,
+                marginBottom: 24
+              }}>
+                Si sales ahora, se perderá tu progreso de la lección actual. ¿Deseas continuar?
+              </p>
+
+              <div style={{
+                display: "flex",
+                gap: 12,
+                flexDirection: "column"
+              }}>
+                <button
+                  onClick={cancelExit}
+                  style={{
+                    padding: "14px 24px",
+                    background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 12,
+                    fontSize: 15,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "transform 0.2s ease",
+                    boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
+                    fontFamily: "'Montserrat', sans-serif"
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                >
+                  Continuar con la lección
+                </button>
+
+                <button
+                  onClick={confirmExit}
+                  style={{
+                    padding: "14px 24px",
+                    background: "white",
+                    color: "#DC2626",
+                    border: "1px solid rgba(220, 38, 38, 0.3)",
+                    borderRadius: 12,
+                    fontSize: 15,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    fontFamily: "'Montserrat', sans-serif"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#FEF2F2"
+                    e.currentTarget.style.transform = "scale(1.02)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "white"
+                    e.currentTarget.style.transform = "scale(1)"
+                  }}
+                >
+                  Salir de la lección
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      {/* Authentication Required Dialog */}
+      {
+        showAuthDialog && (
           <div
             style={{
-              background: "white",
-              borderRadius: 20,
-              padding: "40px",
-              maxWidth: 480,
-              width: "100%",
-              boxShadow: "0 25px 70px rgba(0, 0, 0, 0.4)",
-              position: "relative"
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Icon */}
-            <div style={{
-              width: 80,
-              height: 80,
-              margin: "0 auto 24px",
-              background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-              borderRadius: "50%",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0, 0, 0, 0.6)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 40,
-              boxShadow: "0 8px 20px rgba(11, 113, 254, 0.3)"
-            }}>
-              🔒
-            </div>
+              zIndex: 1100,
+              padding: 20,
+              fontFamily: "'Montserrat', sans-serif",
+              backdropFilter: "blur(4px)"
+            }}
+            onClick={() => setShowAuthDialog(false)}
+          >
+            <div
+              style={{
+                background: "white",
+                borderRadius: 20,
+                padding: "40px",
+                maxWidth: 480,
+                width: "100%",
+                boxShadow: "0 25px 70px rgba(0, 0, 0, 0.4)",
+                position: "relative"
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Icon */}
+              <div style={{
+                width: 80,
+                height: 80,
+                margin: "0 auto 24px",
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 40,
+                boxShadow: "0 8px 20px rgba(11, 113, 254, 0.3)"
+              }}>
+                🔒
+              </div>
 
-            <div style={{
-              fontSize: 26,
-              fontWeight: 800,
-              marginBottom: 16,
-              textAlign: "center",
-              background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text"
-            }}>
-              ¡Crea tu cuenta gratis!
-            </div>
+              <div style={{
+                fontSize: 26,
+                fontWeight: 800,
+                marginBottom: 16,
+                textAlign: "center",
+                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text"
+              }}>
+                ¡Crea tu cuenta gratis!
+              </div>
 
-            <p style={{
-              fontSize: 16,
-              color: "#374151",
-              lineHeight: 1.7,
-              marginBottom: 28,
-              textAlign: "center"
-            }}>
-              ¿Necesitas una cuenta? Crea tu cuenta gratis para acceder a esta función y desbloquear todas las herramientas de BIZEN, incluyendo asignaciones, seguimiento de progreso, foro y más.
-            </p>
+              <p style={{
+                fontSize: 16,
+                color: "#374151",
+                lineHeight: 1.7,
+                marginBottom: 28,
+                textAlign: "center"
+              }}>
+                ¿Necesitas una cuenta? Crea tu cuenta gratis para acceder a esta función y desbloquear todas las herramientas de BIZEN, incluyendo asignaciones, seguimiento de progreso, foro y más.
+              </p>
 
-            <div style={{
-              display: "flex",
-              gap: 12,
-              flexDirection: "column"
-            }}>
-              <button
-                onClick={() => {
-                  setShowAuthDialog(false)
-                  window.open("/signup", "_blank")
-                }}
-                style={{
-                  padding: "16px 24px",
-                  background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 12,
-                  fontSize: 16,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
-                  fontFamily: "'Montserrat', sans-serif"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)"
-                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.5)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)"
-                  e.currentTarget.style.boxShadow = "0 4px 15px rgba(11, 113, 254, 0.4)"
-                }}
-              >
-                Crear Cuenta Gratis
-              </button>
+              <div style={{
+                display: "flex",
+                gap: 12,
+                flexDirection: "column"
+              }}>
+                <button
+                  onClick={() => {
+                    setShowAuthDialog(false)
+                    window.open("/signup", "_blank")
+                  }}
+                  style={{
+                    padding: "16px 24px",
+                    background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 12,
+                    fontSize: 16,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
+                    fontFamily: "'Montserrat', sans-serif"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-2px)"
+                    e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.5)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)"
+                    e.currentTarget.style.boxShadow = "0 4px 15px rgba(11, 113, 254, 0.4)"
+                  }}
+                >
+                  Crear Cuenta Gratis
+                </button>
 
-              <button
-                onClick={() => {
-                  setShowAuthDialog(false)
-                  window.open("/login", "_blank")
-                }}
-                style={{
-                  padding: "16px 24px",
-                  background: "transparent",
-                  color: "#0B71FE",
-                  border: "2px solid #0B71FE",
-                  borderRadius: 12,
-                  fontSize: 16,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#EFF6FF"
-                  e.currentTarget.style.transform = "translateY(-1px)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "transparent"
-                  e.currentTarget.style.transform = "translateY(0)"
-                }}
-              >
-                Ya tengo cuenta
-              </button>
+                <button
+                  onClick={() => {
+                    setShowAuthDialog(false)
+                    window.open("/login", "_blank")
+                  }}
+                  style={{
+                    padding: "16px 24px",
+                    background: "transparent",
+                    color: "#0B71FE",
+                    border: "2px solid #0B71FE",
+                    borderRadius: 12,
+                    fontSize: 16,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    fontFamily: "'Montserrat', sans-serif"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#EFF6FF"
+                    e.currentTarget.style.transform = "translateY(-1px)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent"
+                    e.currentTarget.style.transform = "translateY(0)"
+                  }}
+                >
+                  Ya tengo cuenta
+                </button>
 
-              <button
-                onClick={() => setShowAuthDialog(false)}
-                style={{
-                  padding: "12px",
-                  background: "transparent",
-                  color: "#6B7280",
-                  border: "none",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "color 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif"
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = "#374151"}
-                onMouseLeave={(e) => e.currentTarget.style.color = "#6B7280"}
-              >
-                Cancelar
-              </button>
+                <button
+                  onClick={() => setShowAuthDialog(false)}
+                  style={{
+                    padding: "12px",
+                    background: "transparent",
+                    color: "#6B7280",
+                    border: "none",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    transition: "color 0.2s ease",
+                    fontFamily: "'Montserrat', sans-serif"
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = "#374151"}
+                  onMouseLeave={(e) => e.currentTarget.style.color = "#6B7280"}
+                >
+                  Cancelar
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Mobile Styles */}
       <style>{`

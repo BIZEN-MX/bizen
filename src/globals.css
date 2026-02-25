@@ -389,6 +389,7 @@ html {
   flex-direction: column;
   min-height: 100%;
   width: 100%;
+  max-width: 100% !important;
   box-sizing: border-box;
 }
 
@@ -506,10 +507,10 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* All top-level containers must stretch to full width */
-  body>div,
-  body>main,
-  #__next,
-  #__next>div {
+  .app-shell,
+  .app-scroll,
+  .app-main,
+  main:not([data-mobile-bottom-nav]) {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -603,10 +604,10 @@ body[data-lesson-interactive="true"] div[style*="margin:0 auto"] {
   }
 
   /* All top-level containers must stretch to full width */
-  body>div,
-  body>main,
-  #__next,
-  #__next>div {
+  .app-shell,
+  .app-scroll,
+  .app-main,
+  main:not([data-mobile-bottom-nav]) {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -832,4 +833,27 @@ body[data-landing-page="true"] .adventure-carousel-section [style*="minHeight"] 
   overflow-x: visible !important;
   max-height: none !important;
   -webkit-overflow-scrolling: unset !important;
+}
+
+/* ============================================
+   EXPLICIT SIDEBAR OFFSET FIX
+   Ensures content is never covered by the fixed sidebar
+   ============================================ */
+@media (min-width: 1161px) {
+  .app-main {
+    padding-left: 280px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1160px) {
+  .app-main {
+    padding-left: 220px !important;
+  }
+}
+
+/* Exceptions: No sidebar needed for landing, interactive lessons or standalone pages */
+body[data-landing-page="true"] .app-main,
+body[data-lesson-interactive="true"] .app-main,
+body[data-no-sidebar="true"] .app-main {
+  padding-left: 0 !important;
 }

@@ -86,7 +86,6 @@ export default function LabPage() {
           }
         }
       `}</style>
-      <div className="business-lab-outer" data-bizen-tour="business-lab" style={{
         width: "100%",
         maxWidth: "none",
         flex: 1,
