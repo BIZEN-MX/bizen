@@ -6,11 +6,10 @@ import { cookies } from 'next/headers'
 // GET /api/profiles - Get current user profile
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-    
+    const supabase = await createSupabaseServerMicrocred()
+
     const { data: { user }, error } = await supabase.auth.getUser()
-    
+
     if (error || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -50,11 +49,10 @@ export async function GET(request: NextRequest) {
 // PATCH /api/profiles - Update current user profile
 export async function PATCH(request: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-    
+    const supabase = await createSupabaseServerMicrocred()
+
     const { data: { user }, error } = await supabase.auth.getUser()
-    
+
     if (error || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
