@@ -29,7 +29,7 @@ import {
 export default function FixedSidebar() {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, loading, signOut } = useAuth()
+  const { user, dbProfile, loading, signOut } = useAuth()
   const { settings } = useSettings()
   const t = useTranslation(settings.language)
   const [showExitDialog, setShowExitDialog] = useState(false)
@@ -609,6 +609,47 @@ export default function FixedSidebar() {
                     <span className="nav-item-label">Foro</span>
                   </button>
 
+                  {/* Panel Escolar for teachers/admins - TOP LEVEL for visibility */}
+                  {(dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') && (
+                    <button
+                      onClick={() => navigateTo("/teacher/dashboard")}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "12px",
+                        background: isCompactSidebar ? "transparent" : (pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"),
+                        border: "none",
+                        borderRadius: 10,
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontSize: 14,
+                        fontWeight: pathname === "/teacher/dashboard" ? 700 : 600,
+                        textAlign: "left",
+                        color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563",
+                        ...compactButtonOverrides(pathname === "/teacher/dashboard")
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isCompactSidebar) {
+                          e.currentTarget.style.background = "#f8fafc"
+                          e.currentTarget.style.color = "#0B71FE"
+                          e.currentTarget.style.transform = "translateX(-4px)"
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isCompactSidebar) {
+                          e.currentTarget.style.background = pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"
+                          e.currentTarget.style.color = pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563"
+                          e.currentTarget.style.transform = "translateX(0)"
+                        }
+                      }}
+                    >
+                      <BarChart2 size={iconSize} strokeWidth={pathname === "/teacher/dashboard" ? 2.5 : 2} />
+                      <span className="nav-item-label">Panel escolar</span>
+                    </button>
+                  )}
+
                   {/* Más: below Foro; flyout to the right; desktop = hover, mobile/compact = click */}
                   {mounted && user && (
                     <div
@@ -798,7 +839,6 @@ export default function FixedSidebar() {
                             <Settings size={20} strokeWidth={settingsActive ? 2.5 : 2} />
                             <span className="nav-item-label">Configuración</span>
                           </button>
-
                           <a
                             href="https://www.instagram.com/bizen.mx?igsh=ZmJmYmdxZHg1Z2E3"
                             target="_blank"

@@ -23,7 +23,7 @@ const AVATAR_OPTIONS = [
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Step = "welcome" | "avatar" | "username" | "birthday"
+type Step = "welcome" | "avatar" | "username" | "school" | "birthday"
 
 interface OnboardingModalProps {
     /** Called when the user finishes profile setup — should then start the app tour */
@@ -41,9 +41,19 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const [username, setUsername] = useState("")
     const [bio, setBio] = useState("")
     const [birthDate, setBirthDate] = useState("")
+    const [selectedSchool, setSelectedSchool] = useState("")
+    const [schools, setSchools] = useState<{ id: string, name: string }[]>([])
     const [usernameError, setUsernameError] = useState("")
     const [saving, setSaving] = useState(false)
     const [exiting, setExiting] = useState(false)
+
+    // Fetch schools for the school selection step
+    useEffect(() => {
+        fetch("/api/schools")
+            .then(res => res.json())
+            .then(data => setSchools(data || []))
+            .catch(err => console.error("Error loading schools in onboarding:", err))
+    }, [])
 
     // Pre-fill username from full name
     useEffect(() => {
@@ -82,7 +92,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             const res = await fetch("/api/onboarding/complete", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, bio, avatar: selectedAvatar, birthDate: birthDate || null }),
+                body: JSON.stringify({ username, bio, avatar: selectedAvatar, birthDate: birthDate || null, schoolId: selectedSchool }),
             })
 
             if (!res.ok) {
@@ -106,7 +116,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     }
 
     const profileName = user?.user_metadata?.full_name?.split(" ")[0] || "nuevo estudiante"
-    const progressPct = step === "welcome" ? 0 : step === "avatar" ? 33 : step === "username" ? 66 : 100
+    const progressPct = step === "welcome" ? 0 : step === "avatar" ? 25 : step === "username" ? 50 : step === "school" ? 75 : 100
 
     // Helper: calculate age from date string
     const calcAge = (dateStr: string): number | null => {
@@ -291,7 +301,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                 })}
                             </div>
 
-                            <button className="ob-btn-primary" onClick={() => goToStep("birthday")}>
+                            <button className="ob-btn-primary" onClick={() => goToStep("username")}>
                                 Continuar
                             </button>
                         </div>
@@ -363,6 +373,47 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                             <button
                                 className="ob-btn-primary"
                                 disabled={!!usernameError || username.length < 3}
+                                onClick={() => goToStep("school")}
+                            >
+                                Continuar
+                            </button>
+                        </div>
+                    )}
+
+                    {/* ─── SCHOOL SELECTION ─────────────────────────────────────────── */}
+                    {step === "school" && (
+                        <div style={{ padding: "clamp(24px, 5vw, 40px)" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                                <button className="ob-btn-ghost" onClick={() => goToStep("username")}>Atras</button>
+                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 3 de 4</span>
+                            </div>
+
+                            <div style={{ textAlign: "center", marginBottom: 28 }}>
+                                <div style={{ fontSize: 52, marginBottom: 12 }}>🏫</div>
+                                <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 6px" }}>¿Cuál es tu escuela?</h2>
+                                <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>Para mostrarte el progreso de tus compañeros.</p>
+                            </div>
+
+                            <div style={{ marginBottom: 32 }}>
+                                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
+                                    Selecciona tu institución *
+                                </label>
+                                <select
+                                    className="ob-input"
+                                    value={selectedSchool}
+                                    onChange={e => setSelectedSchool(e.target.value)}
+                                    required
+                                >
+                                    <option value="" disabled>Selecciona tu escuela...</option>
+                                    {schools.map(s => (
+                                        <option key={s.id} value={s.id}>{s.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <button
+                                className="ob-btn-primary"
+                                disabled={!selectedSchool}
                                 onClick={() => goToStep("birthday")}
                             >
                                 Continuar
@@ -374,8 +425,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                     {step === "birthday" && (
                         <div style={{ padding: "clamp(24px, 5vw, 40px)" }}>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                                <button className="ob-btn-ghost" onClick={() => goToStep("username")}>Atras</button>
-                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 3 de 3</span>
+                                <button className="ob-btn-ghost" onClick={() => goToStep("school")}>Atras</button>
+                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 4 de 4</span>
                             </div>
 
                             {/* Birthday illustration */}

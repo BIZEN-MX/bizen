@@ -14,6 +14,7 @@ interface AuthContextType {
   signOut: () => Promise<{ error: AuthError | null }>
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>
   updatePassword: (newPassword: string) => Promise<{ error: AuthError | null }>
+  dbProfile: any | null
   refreshUser: () => Promise<void>
 }
 
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
+  const [dbProfile, setDbProfile] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
@@ -64,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string) => {
     // Add small delay to prevent rate limiting during development
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
     const origin = typeof window !== 'undefined' ? window.location.origin : ''
     const { error } = await supabase.auth.signUp({
       email,
@@ -115,20 +117,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error }
   }
 
+  const fetchDbProfile = async () => {
+    try {
+      const res = await fetch('/api/profiles')
+      if (res.ok) {
+        const data = await res.json()
+        setDbProfile(data)
+      } else {
+        setDbProfile(null)
+      }
+    } catch (err) {
+      console.error('Error fetching DB profile:', err)
+      setDbProfile(null)
+    }
+  }
+
+  useEffect(() => {
+    if (user) {
+      fetchDbProfile()
+    } else {
+      setDbProfile(null)
+    }
+  }, [user])
+
   const refreshUser = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       setSession(session)
       setUser(session?.user ?? null)
+      if (session?.user) {
+        await fetchDbProfile()
+      }
     } catch {
       setSession(null)
       setUser(null)
+      setDbProfile(null)
     }
   }
 
   const value = {
     user,
     session,
+    dbProfile,
     loading,
     signUp,
     signIn,

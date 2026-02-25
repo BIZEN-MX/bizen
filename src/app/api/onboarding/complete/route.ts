@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json()
-        const { username, bio, avatar, birthDate } = body
+        const { username, bio, avatar, birthDate, schoolId } = body
 
         // Validate username
         if (!username || username.trim().length < 3) {
@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
                 bio: bio?.trim() || "",
                 avatar: avatar || { type: "emoji", value: "👤" },
                 birth_date: birthDate || null,
+                school_id: schoolId || null,
                 onboarding_complete: true,
             }
         })
@@ -47,7 +48,8 @@ export async function POST(request: NextRequest) {
                 where: { userId: user.id },
                 data: {
                     nickname: username.trim(),
-                    ...(birthDate ? { birthDate: new Date(birthDate) } : {})
+                    ...(birthDate ? { birthDate: new Date(birthDate) } : {}),
+                    ...(schoolId ? { schoolId } : {})
                 } as any
             })
         } catch (prismaError) {

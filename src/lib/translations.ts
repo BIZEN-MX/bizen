@@ -28,7 +28,8 @@ export const translations = {
       profile: "Perfil",
       account: "Cuenta",
       settings: "Configuración",
-      dashboard: "Dashboard"
+      dashboard: "Dashboard",
+      schoolDashboard: "Panel escolar"
     },
 
     // Courses Page
@@ -151,7 +152,8 @@ export const translations = {
       profile: "Profile",
       account: "Account",
       settings: "Settings",
-      dashboard: "Dashboard"
+      dashboard: "Dashboard",
+      schoolDashboard: "School Panel"
     },
 
     // Courses Page
