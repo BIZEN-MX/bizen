@@ -11,13 +11,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
-        const { fullName, avatar, birthDate } = await req.json()
+        const { fullName, avatar, birthDate, schoolId } = await req.json()
 
         const updatedProfile = await prisma.profile.update({
             where: { userId: user.id },
             data: {
                 fullName,
                 avatar,
+                schoolId,
                 ...(birthDate ? { birthDate: new Date(birthDate) } : { birthDate: null })
             } as any
         })

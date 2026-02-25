@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const { origin, searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const type = searchParams.get("type");
-  
+
   if (!code) {
     return NextResponse.redirect(`${origin}/login?error=no_code`);
   }
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
 
   try {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-    
+
     if (error) {
       console.error('Auth callback error:', error);
       return NextResponse.redirect(`${origin}/login?error=auth_failed`);
@@ -48,6 +48,37 @@ export async function GET(request: Request) {
 
     console.log('✅ Email verified successfully! User:', data.user?.email);
     console.log('✅ Session created:', !!data.session);
+
+    // Auto-create/Update profile if data exists in user_metadata
+    if (data.user) {
+      try {
+        const metadata = data.user.user_metadata || {};
+        const cookieSchoolId = cookieStore.get('bizen_pending_school_id')?.value;
+        const schoolId = metadata.school_id || cookieSchoolId || null;
+        const fullName = metadata.full_name || data.user.email?.split('@')[0] || 'Estudiante';
+
+        await prisma.profile.upsert({
+          where: { userId: data.user.id },
+          create: {
+            userId: data.user.id,
+            fullName: fullName,
+            role: 'student',
+            schoolId: schoolId,
+          },
+          update: {
+            // Only update schoolId if it was provided in sign up
+            ...(schoolId ? { schoolId } : {})
+          }
+        });
+
+        // Clear the cookie by setting it to expire
+        if (cookieSchoolId) {
+          cookieStore.set('bizen_pending_school_id', '', { path: '/', maxAge: 0 });
+        }
+      } catch (err) {
+        console.error('Failed to auto-create profile:', err);
+      }
+    }
 
     // Handle different auth flows
     if (type === 'recovery') {

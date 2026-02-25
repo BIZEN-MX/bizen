@@ -36,11 +36,13 @@ export default function ProfilePage() {
     followingCount: number
   } | null>(null)
   const [loadingProfileStats, setLoadingProfileStats] = useState(true)
+  const [schools, setSchools] = useState<{ id: string, name: string }[]>([])
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
     bio: "",
-    birthDate: ""
+    birthDate: "",
+    schoolId: ""
   })
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -71,7 +73,8 @@ export default function ProfilePage() {
       fullName: user.user_metadata?.full_name || "",
       username: user.user_metadata?.username || "",
       bio: user.user_metadata?.bio || "",
-      birthDate: user.user_metadata?.birth_date || ""
+      birthDate: user.user_metadata?.birth_date || "",
+      schoolId: user.user_metadata?.school_id || ""
     })
 
     // Initialize avatar - try to find saved avatar or use default
@@ -114,8 +117,22 @@ export default function ProfilePage() {
       }
     }
 
+    // Fetch available schools
+    const fetchSchools = async () => {
+      try {
+        const response = await fetch('/api/schools')
+        if (response.ok) {
+          const data = await response.json()
+          setSchools(data)
+        }
+      } catch (error) {
+        console.error('Error fetching schools:', error)
+      }
+    }
+
     fetchStats()
     fetchProfileStats()
+    fetchSchools()
   }, [user, loading, router])
 
   // Mounted guard: prevents SSR/client hydration mismatch
@@ -154,7 +171,8 @@ export default function ProfilePage() {
           username: formData.username,
           bio: formData.bio,
           avatar: selectedAvatar,
-          birth_date: formData.birthDate
+          birth_date: formData.birthDate,
+          school_id: formData.schoolId
         }
       })
 
@@ -169,7 +187,8 @@ export default function ProfilePage() {
         body: JSON.stringify({
           fullName: formData.fullName,
           avatar: selectedAvatar,
-          birthDate: formData.birthDate || null
+          birthDate: formData.birthDate || null,
+          schoolId: formData.schoolId
         })
       })
 
@@ -205,6 +224,7 @@ export default function ProfilePage() {
       formData.username !== (user.user_metadata?.username || "") ||
       formData.bio !== (user.user_metadata?.bio || "") ||
       formData.birthDate !== (user.user_metadata?.birth_date || "") ||
+      formData.schoolId !== (user.user_metadata?.school_id || "") ||
       JSON.stringify(selectedAvatar) !== JSON.stringify(user.user_metadata?.avatar || { type: "emoji", value: "👤" })
 
     // Only save if there are actual changes
@@ -443,6 +463,21 @@ export default function ProfilePage() {
                     })()}
                   </div>
                 </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Mi Escuela</label>
+                  <select
+                    className="prof-input"
+                    value={formData.schoolId}
+                    onChange={e => setFormData({ ...formData, schoolId: e.target.value })}
+                  >
+                    <option value="">Selecciona tu escuela</option>
+                    {schools.map(school => (
+                      <option key={school.id} value={school.id}>
+                        {school.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div style={{ gridColumn: "1 / -1" }}>
                   <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Intereses Financieros</label>
                   <textarea className="prof-input" value={formData.bio} onChange={e => setFormData({ ...formData, bio: e.target.value })} placeholder="¿Qué es lo que más te llama la atención del mundo de las finanzas?" rows={3} style={{ resize: "vertical" }} />
@@ -521,8 +556,8 @@ export default function ProfilePage() {
             </div>
 
           </div>{/* end content area */}
-        </main>
-      </div>
+        </main >
+      </div >
     </>
   )
 }

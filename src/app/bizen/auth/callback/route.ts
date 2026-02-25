@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = await createSupabaseServer()
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-    
+
     if (error) {
       console.error('[BIZEN Callback] Auth error:', error)
       return NextResponse.redirect(`${origin}/login?error=auth_error`)
@@ -19,22 +19,23 @@ export async function GET(request: NextRequest) {
     // Auto-create profile if doesn't exist
     if (data?.user) {
       try {
-        const existingProfile = await prisma.profile.findUnique({
-          where: { userId: data.user.id }
-        })
+        const metadata = data.user.user_metadata || {};
+        const schoolId = metadata.school_id || null;
+        const fullName = metadata.full_name || data.user.email?.split('@')[0] || 'Student';
 
-        if (!existingProfile) {
-          console.log('[BIZEN Callback] Creating profile for new user:', data.user.email)
-          await prisma.profile.create({
-            data: {
-              userId: data.user.id,
-              fullName: data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || 'Student',
-              role: 'student', // Default role
-              schoolId: null // Can be set later by admin
-            }
-          })
-          console.log('[BIZEN Callback] ✅ Profile created')
-        }
+        await prisma.profile.upsert({
+          where: { userId: data.user.id },
+          create: {
+            userId: data.user.id,
+            fullName: fullName,
+            role: 'student',
+            schoolId: schoolId
+          },
+          update: {
+            ...(schoolId ? { schoolId } : {})
+          }
+        })
+        console.log('[BIZEN Callback] ✅ Profile auto-upserted')
       } catch (profileError) {
         console.error('[BIZEN Callback] Profile creation error:', profileError)
         // Don't block login if profile creation fails

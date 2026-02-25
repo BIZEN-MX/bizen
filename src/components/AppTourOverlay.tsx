@@ -164,10 +164,126 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
           pointer-events: auto;
           background: transparent;
         }
-        /* On mobile, account for bottom nav */
+
+        .tour-card-inner {
+            padding: clamp(20px, 4vw, 32px) clamp(24px, 5vw, 40px);
+        }
+        .tour-header-row {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(14px, 3vw, 20px);
+            margin-bottom: clamp(14px, 3vw, 20px);
+        }
+        .tour-mascot {
+            width: clamp(56px, 12vw, 76px);
+            height: clamp(56px, 12vw, 76px);
+            flex-shrink: 0;
+            animation: tour-mascotBob 3s ease infinite;
+        }
+        .tour-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: clamp(11px, 2.5vw, 13px);
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+            letter-spacing: 0.04em;
+        }
+        .tour-title {
+            margin: 0;
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.3;
+        }
+        .tour-desc {
+            margin: 0 0 clamp(18px, 4vw, 28px);
+            font-size: clamp(15px, 3.5vw, 18px);
+            color: #475569;
+            line-height: 1.6;
+        }
+        .tour-bottom-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .tour-actions {
+            display: flex;
+            gap: clamp(8px, 2vw, 12px);
+        }
+        .tour-btn {
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tour-btn-prev {
+            padding: clamp(10px, 2vw, 14px) clamp(16px, 3vw, 24px);
+            border: 1.5px solid #e5e7eb;
+            background: white;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        .tour-btn-next {
+            padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px);
+            border: none;
+            color: white;
+        }
+
+        /* Responsive Mobile Layout */
         @media (max-width: 767px) {
           .tour-card {
             bottom: calc(75px + env(safe-area-inset-bottom));
+            width: calc(100% - 24px);
+            border-radius: 20px;
+          }
+          .tour-card-inner {
+            padding: 20px 20px;
+          }
+          .tour-header-row {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+            margin-bottom: 12px;
+          }
+          .tour-mascot {
+            width: 58px;
+            height: 58px;
+          }
+          .tour-badge {
+            justify-content: center;
+            display: inline-flex;
+          }
+          .tour-title {
+            font-size: 18px;
+          }
+          .tour-desc {
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+          }
+          .tour-bottom-row {
+            flex-direction: column-reverse; /* Dots below buttons */
+            gap: 16px;
+          }
+          .tour-actions {
+            width: 100%;
+          }
+          .tour-btn {
+            flex: 1; /* Stretch buttons equally on mobile */
+            padding: 12px 14px;
+            font-size: 14px;
           }
         }
       `}</style>
@@ -179,37 +295,37 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                 {/* Color accent stripe */}
                 <div style={{ height: 4, background: `linear-gradient(90deg, ${current.color}, ${current.color}99)`, width: `${progressPct}%`, transition: "width 0.5s cubic-bezier(0.34,1.56,0.64,1)" }} />
 
-                <div style={{ padding: "clamp(20px, 4vw, 32px) clamp(24px, 5vw, 40px)" }}>
+                <div className="tour-card-inner">
                     {/* Header row */}
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: "clamp(14px, 3vw, 20px)", marginBottom: "clamp(14px, 3vw, 20px)" }}>
+                    <div className="tour-header-row">
                         {/* Mascot */}
-                        <div style={{ width: "clamp(56px, 12vw, 76px)", height: "clamp(56px, 12vw, 76px)", flexShrink: 0, animation: "tour-mascotBob 3s ease infinite" }}>
+                        <div className="tour-mascot">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src="/hero4.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                         </div>
 
-                        <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ flex: 1, minWidth: 0, width: "100%" }}>
                             {/* Step badge */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                                <span style={{ fontSize: "clamp(11px, 2.5vw, 13px)", fontWeight: 700, color: current.color, background: current.accent, padding: "4px 12px", borderRadius: 999, border: `1px solid ${current.color}25`, letterSpacing: "0.04em" }}>
+                            <div style={{ textAlign: "center" }}>
+                                <div className="tour-badge" style={{ color: current.color, background: current.accent, border: `1px solid ${current.color}25` }}>
                                     {current.label} — {stepIndex + 1} / {TOUR_STEPS.length}
-                                </span>
+                                </div>
                             </div>
-                            <h3 style={{ margin: 0, fontSize: "clamp(18px, 4vw, 24px)", fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>
+                            <h3 className="tour-title">
                                 {current.title}
                             </h3>
                         </div>
                     </div>
 
                     {/* Description */}
-                    <p style={{ margin: "0 0 clamp(18px, 4vw, 28px)", fontSize: "clamp(15px, 3.5vw, 18px)", color: "#475569", lineHeight: 1.7 }}>
+                    <p className="tour-desc">
                         {current.description}
                     </p>
 
                     {/* Step dots + action */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div className="tour-bottom-row">
                         {/* Dots */}
-                        <div style={{ display: "flex", gap: 6, alignItems: "center", flex: 1 }}>
+                        <div style={{ display: "flex", gap: 6, alignItems: "center", justifyContent: "center", width: "100%", flex: 1 }}>
                             {TOUR_STEPS.map((_, i) => (
                                 <div
                                     key={i}
@@ -225,7 +341,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                         </div>
 
                         {/* Navigation */}
-                        <div style={{ display: "flex", gap: "clamp(8px, 2vw, 12px)" }}>
+                        <div className="tour-actions">
                             {stepIndex > 0 && (
                                 <button
                                     onClick={() => {
@@ -236,7 +352,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                                             router.push(TOUR_STEPS[stepIndex - 1].path)
                                         }, 280)
                                     }}
-                                    style={{ padding: "clamp(10px, 2vw, 14px) clamp(16px, 3vw, 24px)", borderRadius: 12, border: "1.5px solid #e5e7eb", background: "white", fontSize: "clamp(14px, 3vw, 16px)", fontWeight: 600, color: "#6b7280", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
+                                    className="tour-btn tour-btn-prev"
                                 >
                                     Anterior
                                 </button>
@@ -244,20 +360,12 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                             <button
                                 onClick={goToNext}
                                 disabled={navigating}
+                                className="tour-btn tour-btn-next"
                                 style={{
-                                    padding: "clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px)",
-                                    borderRadius: 12,
-                                    border: "none",
                                     background: isLast ? "#0f172a" : `linear-gradient(135deg, ${current.color}, ${current.color}cc)`,
-                                    color: "white",
-                                    fontSize: "clamp(14px, 3vw, 16px)",
-                                    fontWeight: 700,
-                                    cursor: navigating ? "not-allowed" : "pointer",
-                                    fontFamily: "'Inter', sans-serif",
                                     boxShadow: `0 4px 14px ${current.color}40`,
-                                    transition: "all 0.2s",
                                     opacity: navigating ? 0.7 : 1,
-                                    whiteSpace: "nowrap",
+                                    cursor: navigating ? "not-allowed" : "pointer"
                                 }}
                             >
                                 {navigating ? "..." : isLast ? "Finalizar tour" : "Siguiente"}

@@ -21,6 +21,23 @@ function BIZENSignupContent() {
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
   const [showPass, setShowPass] = React.useState(false)
+  const [schools, setSchools] = React.useState<{ id: string, name: string }[]>([])
+  const [selectedSchool, setSelectedSchool] = React.useState("")
+
+  React.useEffect(() => {
+    async function fetchSchools() {
+      try {
+        const res = await fetch('/api/schools')
+        if (res.ok) {
+          const data = await res.json()
+          setSchools(data || [])
+        }
+      } catch (e) {
+        console.error("Failed to load schools", e)
+      }
+    }
+    fetchSchools()
+  }, [])
 
   React.useEffect(() => {
     document.documentElement.style.overflow = "auto"
@@ -50,12 +67,12 @@ function BIZENSignupContent() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setMessage(null)
-    if (!email || !password || !fullName) { setMessage("Por favor completa todos los campos"); return }
+    if (!email || !password || !fullName || !selectedSchool) { setMessage("Por favor completa todos los campos (incluyendo la escuela)"); return }
     try {
       setLoading(true)
       const { error } = await supabase.auth.signUp({
         email, password,
-        options: { data: { full_name: fullName }, emailRedirectTo: `${window.location.origin}/auth/callback` }
+        options: { data: { full_name: fullName, school_id: selectedSchool }, emailRedirectTo: `${window.location.origin}/auth/callback` }
       })
       if (error) throw error
       setMessage("¡Cuenta creada con éxito! Redirigiendo...")
@@ -69,8 +86,14 @@ function BIZENSignupContent() {
 
   async function handleGoogleSignIn() {
     setMessage(null)
+    if (!selectedSchool) {
+      setMessage("Por favor selecciona tu escuela primero")
+      return
+    }
     try {
       setGoogleLoading(true)
+      // Set a cookie so the callback knows which school to assign
+      document.cookie = `bizen_pending_school_id=${selectedSchool}; path=/; max-age=3600; samesite=lax`
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo: `${window.location.origin}/auth/callback` }
@@ -185,6 +208,26 @@ function BIZENSignupContent() {
               className="bizen-input"
               style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 16px", outline: "none", fontSize: 15, color: "#fff", fontFamily: "Inter, sans-serif", transition: "border-color .2s, background .2s" }}
             />
+          </div>
+
+          {/* School */}
+          <div>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+              Escuela
+            </label>
+            <select
+              id="school" name="school" required
+              value={selectedSchool} onChange={(e) => setSelectedSchool(e.currentTarget.value)}
+              className="bizen-input"
+              style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 16px", outline: "none", fontSize: 15, color: "#fff", fontFamily: "Inter, sans-serif", transition: "border-color .2s, background .2s", appearance: "none" }}
+            >
+              <option value="" disabled style={{ color: "#000" }}>Selecciona tu escuela</option>
+              {schools.map(s => (
+                <option key={s.id} value={s.id} style={{ color: "#000" }}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Email */}

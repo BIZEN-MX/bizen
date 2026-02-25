@@ -256,6 +256,10 @@ export default function WelcomePage() {
                 visibility: authDropdownOpen ? "visible" : "hidden",
                 transform: authDropdownOpen ? "translateY(0)" : "translateY(10px)",
               }}>
+                <Link href="/diagnostic" className="auth-dropdown-item">
+                  <ClipboardCheck size={18} />
+                  <span>Quiz diagnóstico</span>
+                </Link>
                 <Link href="/login" className="auth-dropdown-item">
                   <LogIn size={18} />
                   <span>Iniciar sesión</span>
@@ -371,6 +375,30 @@ export default function WelcomePage() {
               ))}
 
               <div style={{ height: "1px", width: "80%", background: "rgba(255,255,255,0.1)", margin: "10px 0" }} />
+
+              <Link
+                href="/diagnostic"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  width: "100%",
+                  fontSize: "18px",
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "12px",
+                  background: "rgba(255, 255, 255, 0.1)",
+                  border: "1.5px solid rgba(255, 255, 255, 0.2)",
+                  padding: "16px",
+                  borderRadius: "14px",
+                  backdropFilter: "blur(8px)"
+                }}
+              >
+                <ClipboardCheck size={20} />
+                Quiz diagnóstico
+              </Link>
 
               <Link
                 href="/login"
