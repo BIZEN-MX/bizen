@@ -38,7 +38,7 @@ export default function StepDetailPage() {
   const params = useParams()
   const router = useRouter()
   const stepId = params.id as string
-  
+
   const [stepData, setStepData] = useState<StepData | null>(null)
   const [loading, setLoading] = useState(true)
   const [newChecklistText, setNewChecklistText] = useState("")
@@ -87,7 +87,7 @@ export default function StepDetailPage() {
 
   const addChecklist = async () => {
     if (!newChecklistText.trim()) return
-    
+
     try {
       await fetch("/api/lab/checklists", {
         method: "POST",
@@ -107,7 +107,7 @@ export default function StepDetailPage() {
 
   const saveArtifact = async () => {
     if (!newArtifact.title.trim()) return
-    
+
     try {
       await fetch("/api/lab/artifacts", {
         method: "POST",
@@ -131,17 +131,17 @@ export default function StepDetailPage() {
       alert("Por favor completa todos los items de la checklist primero")
       return
     }
-    
+
     alert("¡Paso completado! Avanzando al siguiente...")
     router.push(`/business-lab/track/${stepData?.lab_tracks.key}`)
   }
 
   if (loading) {
     return (
-      <div style={{ 
-        minHeight: "100vh", 
-        display: "flex", 
-        alignItems: "center", 
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
         justifyContent: "center",
         background: "#ffffff",
         marginRight: "320px"
@@ -157,10 +157,10 @@ export default function StepDetailPage() {
 
   if (!stepData) {
     return (
-      <div style={{ 
-        minHeight: "100vh", 
-        display: "flex", 
-        alignItems: "center", 
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
         justifyContent: "center",
         background: "#ffffff",
         marginRight: "320px",
@@ -200,33 +200,33 @@ export default function StepDetailPage() {
         paddingRight: "360px",
         fontFamily: "Montserrat, sans-serif",
         width: "100%",
-        boxSizing: "border-box" as const,
+        boxSizing: "border-box",
         overflowX: "hidden",
         overflowY: "visible"
       }}>
-      {/* Back Button */}
-      <button 
-        onClick={() => router.push(`/business-lab/track/${stepData.lab_tracks.key}`)}
-        style={{
-          padding: "8px 16px",
-          background: "white",
-          border: "2px solid #E5E7EB",
-          borderRadius: 8,
-          fontSize: 14,
-          fontWeight: 600,
-          color: "#374151",
-          cursor: "pointer",
-          marginBottom: 24,
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          transition: "all 0.2s ease"
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.borderColor = "#0B71FE"}
-        onMouseLeave={(e) => e.currentTarget.style.borderColor = "#E5E7EB"}
-      >
-        ← Volver a {stepData.lab_tracks.title}
-      </button>
+        {/* Back Button */}
+        <button
+          onClick={() => router.push(`/business-lab/track/${stepData.lab_tracks.key}`)}
+          style={{
+            padding: "8px 16px",
+            background: "white",
+            border: "2px solid #E5E7EB",
+            borderRadius: 8,
+            fontSize: 14,
+            fontWeight: 600,
+            color: "#374151",
+            cursor: "pointer",
+            marginBottom: 24,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            transition: "all 0.2s ease"
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.borderColor = "#0B71FE"}
+          onMouseLeave={(e) => e.currentTarget.style.borderColor = "#E5E7EB"}
+        >
+          ← Volver a {stepData.lab_tracks.title}
+        </button>
 
         {/* Step Header */}
         <div style={{ marginBottom: 32, width: "100%" }}>
@@ -267,7 +267,7 @@ export default function StepDetailPage() {
           width: "100%"
         }}>
           {/* Main Content */}
-          <div style={{ display: "flex", flexDirection: "column" as const, gap: 24 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Checklist */}
             <div style={{
               background: "white",
@@ -283,7 +283,7 @@ export default function StepDetailPage() {
               <p style={{ fontSize: 14, color: "#6B7280", marginBottom: 20 }}>
                 Completa estos items para avanzar
               </p>
-              
+
               <div style={{ marginBottom: 20 }}>
                 {stepData.checklists.map((item) => (
                   <div key={item.id} style={{
@@ -314,7 +314,7 @@ export default function StepDetailPage() {
                   </div>
                 ))}
               </div>
-              
+
               <div style={{ display: "flex", gap: 8 }}>
                 <input
                   type="text"
@@ -380,13 +380,13 @@ export default function StepDetailPage() {
                   + Nuevo
                 </button>
               </div>
-              
+
               {stepData.artifacts.length === 0 ? (
                 <p style={{ textAlign: "center", color: "#9CA3AF", padding: "40px 0", fontSize: 14 }}>
                   Aún no has creado ningún artefacto. Usa las herramientas AI o crea uno manualmente.
                 </p>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   {stepData.artifacts.map((artifact) => (
                     <div key={artifact.id} style={{
                       padding: 16,
@@ -451,7 +451,7 @@ export default function StepDetailPage() {
           </div>
 
           {/* Sidebar */}
-          <div style={{ display: "flex", flexDirection: "column" as const, gap: 20 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {/* AI Helpers */}
             <div style={{
               background: "white",
@@ -469,8 +469,8 @@ export default function StepDetailPage() {
               <p style={{ fontSize: 13, color: "#6B7280", marginBottom: 16 }}>
                 Asistentes inteligentes para este paso
               </p>
-              
-              <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <button onClick={() => alert("AI Helper en desarrollo")} style={{
                   padding: "10px 16px",
                   background: "white",
@@ -483,14 +483,14 @@ export default function StepDetailPage() {
                   textAlign: "left",
                   transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#7C3AED"
-                  e.currentTarget.style.background = "#F5F3FF"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#E5E7EB"
-                  e.currentTarget.style.background = "white"
-                }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#7C3AED"
+                    e.currentTarget.style.background = "#F5F3FF"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "#E5E7EB"
+                    e.currentTarget.style.background = "white"
+                  }}
                 >
                   Refinar Idea
                 </button>
@@ -506,14 +506,14 @@ export default function StepDetailPage() {
                   textAlign: "left",
                   transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#7C3AED"
-                  e.currentTarget.style.background = "#F5F3FF"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#E5E7EB"
-                  e.currentTarget.style.background = "white"
-                }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#7C3AED"
+                    e.currentTarget.style.background = "#F5F3FF"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "#E5E7EB"
+                    e.currentTarget.style.background = "white"
+                  }}
                 >
                   Generar Entrevista
                 </button>
@@ -529,14 +529,14 @@ export default function StepDetailPage() {
                   textAlign: "left",
                   transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#7C3AED"
-                  e.currentTarget.style.background = "#F5F3FF"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#E5E7EB"
-                  e.currentTarget.style.background = "white"
-                }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#7C3AED"
+                    e.currentTarget.style.background = "#F5F3FF"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "#E5E7EB"
+                    e.currentTarget.style.background = "white"
+                  }}
                 >
                   Crear Lean Canvas
                 </button>
@@ -573,14 +573,14 @@ export default function StepDetailPage() {
                   cursor: "pointer",
                   transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#0B71FE"
-                  e.currentTarget.style.color = "white"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "white"
-                  e.currentTarget.style.color = "#0B71FE"
-                }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#0B71FE"
+                    e.currentTarget.style.color = "white"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "white"
+                    e.currentTarget.style.color = "#0B71FE"
+                  }}
                 >
                   Preguntar en el Foro
                 </button>
@@ -611,8 +611,8 @@ export default function StepDetailPage() {
                   cursor: "pointer",
                   transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.borderColor = "#0B71FE"}
-                onMouseLeave={(e) => e.currentTarget.style.borderColor = "#E5E7EB"}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = "#0B71FE"}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = "#E5E7EB"}
                 >
                   Ver Templates
                 </button>
@@ -636,7 +636,7 @@ export default function StepDetailPage() {
             zIndex: 1000,
             padding: 20
           }}
-          onClick={() => setShowArtifactDialog(false)}
+            onClick={() => setShowArtifactDialog(false)}
           >
             <div style={{
               background: "white",
@@ -646,7 +646,7 @@ export default function StepDetailPage() {
               width: "100%",
               boxShadow: "0 20px 60px rgba(0,0,0,0.3)"
             }}
-            onClick={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
                 Crear Nuevo Artefacto
@@ -654,7 +654,7 @@ export default function StepDetailPage() {
               <p style={{ fontSize: 14, color: "#6B7280", marginBottom: 24 }}>
                 Guarda tu trabajo, ideas o documentos relacionados con este paso
               </p>
-              
+
               <div style={{ marginBottom: 16 }}>
                 <label style={{ display: "block", fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
                   Título
@@ -662,7 +662,7 @@ export default function StepDetailPage() {
                 <input
                   type="text"
                   value={newArtifact.title}
-                  onChange={(e) => setNewArtifact({...newArtifact, title: e.target.value})}
+                  onChange={(e) => setNewArtifact({ ...newArtifact, title: e.target.value })}
                   placeholder="Ej: Mi Lean Canvas v1"
                   style={{
                     width: "100%",
@@ -681,7 +681,7 @@ export default function StepDetailPage() {
                 </label>
                 <select
                   value={newArtifact.type}
-                  onChange={(e) => setNewArtifact({...newArtifact, type: e.target.value})}
+                  onChange={(e) => setNewArtifact({ ...newArtifact, type: e.target.value })}
                   style={{
                     width: "100%",
                     padding: "10px 14px",
@@ -705,7 +705,7 @@ export default function StepDetailPage() {
                 </label>
                 <textarea
                   value={newArtifact.content}
-                  onChange={(e) => setNewArtifact({...newArtifact, content: e.target.value})}
+                  onChange={(e) => setNewArtifact({ ...newArtifact, content: e.target.value })}
                   placeholder="Escribe tu contenido aquí..."
                   rows={6}
                   style={{
@@ -715,7 +715,7 @@ export default function StepDetailPage() {
                     borderRadius: 8,
                     fontSize: 14,
                     outline: "none",
-                    resize: "vertical" as const,
+                    resize: "vertical",
                     fontFamily: "inherit"
                   }}
                 />

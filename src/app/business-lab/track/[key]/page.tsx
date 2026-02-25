@@ -1,7 +1,7 @@
 import React from "react"
 import { redirect, notFound } from "next/navigation"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { getTrackByKey, getUserLabProgress } from "@/lib/lab/db"
+import { getTrackByKey, getUserLabProgress, LabTrack, LabStep, LabStepProgress } from "@/lib/lab/db"
 import Link from "next/link"
 import BackButton from "@/components/business-lab/BackButton"
 import StepCard from "@/components/business-lab/StepCard"
@@ -14,32 +14,28 @@ interface Props {
 
 export default async function TrackPage({ params }: Props) {
   const supabase = await createSupabaseServer()
-  
+
   const { data: { user }, error: authError } = await supabase.auth.getUser()
-  
+
   if (authError || !user) {
     redirect("/login")
   }
 
   // Fetch track data
-  let track
-  try {
-    track = await getTrackByKey(params.key)
-  } catch (error) {
-    notFound()
-  }
+  const track = await getTrackByKey(params.key) as any
+  if (!track) notFound()
 
   // Fetch user progress
-  const progress = await getUserLabProgress(user.id)
+  const progress = await getUserLabProgress(user.id) as any[]
   const progressMap = new Map(progress.map(p => [p.step_id, p]))
-  
+
   // Enrich steps with progress
-  const stepsWithProgress = track.steps.map(step => ({
+  const stepsWithProgress = (track.steps as any[]).map((step: any) => ({
     ...step,
-    isCompleted: progressMap.get(step.id)?.is_completed || false
+    isCompleted: (progressMap.get(step.id) as any)?.is_completed || false
   }))
-  
-  const completedCount = stepsWithProgress.filter(s => s.isCompleted).length
+
+  const completedCount = stepsWithProgress.filter((s: any) => s.isCompleted).length
   const progressPercentage = track.steps.length > 0 ? Math.round((completedCount / track.steps.length) * 100) : 0
 
   return (
@@ -88,8 +84,8 @@ export default async function TrackPage({ params }: Props) {
       `}</style>
       <div className="track-outer" style={{
         width: "100%",
-      flex: 1,
-      background: "#ffffff",
+        flex: 1,
+        background: "#ffffff",
         fontFamily: "Montserrat, sans-serif",
         overflowX: "hidden",
         overflowY: "auto",
@@ -98,139 +94,139 @@ export default async function TrackPage({ params }: Props) {
         <main className="track-main" style={{
           margin: "0 auto",
           flex: 1,
-      fontFamily: "Montserrat, sans-serif",
-      width: "100%",
-      boxSizing: "border-box" as const,
-      overflowX: "hidden",
-      overflowY: "visible"
-    }}>
-      {/* Back Button */}
-      <BackButton />
-
-      {/* Track Header */}
-      <div style={{ marginBottom: 32, width: "100%" }}>
-        <h1 style={{
-          fontSize: 42,
-          fontWeight: 900,
-          background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: 12
+          fontFamily: "Montserrat, sans-serif",
+          width: "100%",
+          boxSizing: "border-box",
+          overflowX: "hidden",
+          overflowY: "visible"
         }}>
-          🎯 {track.title}
-        </h1>
-        {track.description && (
-          <p style={{ fontSize: 16, color: "#6B7280", lineHeight: 1.6 }}>
-            {track.description}
-          </p>
-        )}
-      </div>
+          {/* Back Button */}
+          <BackButton />
 
-      {/* Progress Card */}
-      <div style={{
-        background: "white",
-        borderRadius: 16,
-        padding: 24,
-        boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-        marginBottom: 32,
-        border: "2px solid #e5e7eb",
-        width: "100%"
-      }}>
-        <h2 style={{ fontSize: 20, fontWeight: 700, color: "#1E40AF", marginBottom: 8 }}>
-          Progreso en esta Ruta
-        </h2>
-        <p style={{ color: "#6B7280", marginBottom: 16, fontSize: 14 }}>
-          Has completado {completedCount} de {track.steps.length} pasos
-        </p>
-        <div style={{
-          background: "#ffffff",
-          borderRadius: 12,
-          height: 24,
-          overflow: "hidden",
-          position: "relative"
-        }}>
-          <div style={{
-            background: "linear-gradient(90deg, #0B71FE, #4A9EFF)",
-            height: "100%",
-            width: `${progressPercentage}%`,
-            transition: "width 0.5s ease",
-            borderRadius: 12
-          }} />
-          <span style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            fontSize: 12,
-            fontWeight: 700,
-            color: progressPercentage > 50 ? "white" : "#0B71FE"
-          }}>
-            {progressPercentage}%
-          </span>
-        </div>
-      </div>
-
-      {/* Steps List */}
-      <div style={{ marginBottom: 32, width: "100%" }}>
-        <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, color: "#111" }}>
-          Pasos de esta Ruta
-        </h2>
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
-          {stepsWithProgress.map((step) => (
-            <StepCard key={step.id} step={step} isCompleted={step.isCompleted} />
-          ))}
-        </div>
-      </div>
-
-      {/* Completion Message */}
-      {completedCount === track.steps.length && (
-        <div style={{
-          background: "#D1FAE5",
-          borderRadius: 16,
-          padding: 24,
-          border: "2px solid #6EE7B7",
-          boxShadow: "0 4px 20px rgba(16,185,129,0.15)",
-          width: "100%"
-        }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: "#065F46", marginBottom: 8 }}>
-            🎉 ¡Felicidades! Has completado esta ruta
-          </h2>
-          <p style={{ fontSize: 14, color: "#047857", marginBottom: 16 }}>
-            Estás listo para avanzar a la siguiente ruta o explorar herramientas adicionales.
-          </p>
-          <div style={{ display: "flex", gap: 12 }}>
-            <Link href="/business-lab">
-              <button style={{
-                padding: "10px 20px",
-                background: "white",
-                border: "2px solid #10B981",
-                color: "#10B981",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: "pointer"
-              }}>
-                Ver todas las rutas
-              </button>
-            </Link>
-            <Link href="/business-lab/simulators">
-              <button style={{
-                padding: "10px 20px",
-                background: "#10B981",
-                border: "none",
-                color: "white",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: "pointer"
-              }}>
-                Explorar Simuladores
-              </button>
-            </Link>
+          {/* Track Header */}
+          <div style={{ marginBottom: 32, width: "100%" }}>
+            <h1 style={{
+              fontSize: 42,
+              fontWeight: 900,
+              background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              marginBottom: 12
+            }}>
+              🎯 {track.title}
+            </h1>
+            {track.description && (
+              <p style={{ fontSize: 16, color: "#6B7280", lineHeight: 1.6 }}>
+                {track.description}
+              </p>
+            )}
           </div>
-        </div>
-      )}
-    </main>
+
+          {/* Progress Card */}
+          <div style={{
+            background: "white",
+            borderRadius: 16,
+            padding: 24,
+            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+            marginBottom: 32,
+            border: "2px solid #e5e7eb",
+            width: "100%"
+          }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: "#1E40AF", marginBottom: 8 }}>
+              Progreso en esta Ruta
+            </h2>
+            <p style={{ color: "#6B7280", marginBottom: 16, fontSize: 14 }}>
+              Has completado {completedCount} de {track.steps.length} pasos
+            </p>
+            <div style={{
+              background: "#ffffff",
+              borderRadius: 12,
+              height: 24,
+              overflow: "hidden",
+              position: "relative"
+            }}>
+              <div style={{
+                background: "linear-gradient(90deg, #0B71FE, #4A9EFF)",
+                height: "100%",
+                width: `${progressPercentage}%`,
+                transition: "width 0.5s ease",
+                borderRadius: 12
+              }} />
+              <span style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: 12,
+                fontWeight: 700,
+                color: progressPercentage > 50 ? "white" : "#0B71FE"
+              }}>
+                {progressPercentage}%
+              </span>
+            </div>
+          </div>
+
+          {/* Steps List */}
+          <div style={{ marginBottom: 32, width: "100%" }}>
+            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, color: "#111" }}>
+              Pasos de esta Ruta
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {stepsWithProgress.map((step: any) => (
+                <StepCard key={step.id} step={step} isCompleted={step.isCompleted} />
+              ))}
+            </div>
+          </div>
+
+          {/* Completion Message */}
+          {completedCount === track.steps.length && (
+            <div style={{
+              background: "#D1FAE5",
+              borderRadius: 16,
+              padding: 24,
+              border: "2px solid #6EE7B7",
+              boxShadow: "0 4px 20px rgba(16,185,129,0.15)",
+              width: "100%"
+            }}>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: "#065F46", marginBottom: 8 }}>
+                🎉 ¡Felicidades! Has completado esta ruta
+              </h2>
+              <p style={{ fontSize: 14, color: "#047857", marginBottom: 16 }}>
+                Estás listo para avanzar a la siguiente ruta o explorar herramientas adicionales.
+              </p>
+              <div style={{ display: "flex", gap: 12 }}>
+                <Link href="/business-lab">
+                  <button style={{
+                    padding: "10px 20px",
+                    background: "white",
+                    border: "2px solid #10B981",
+                    color: "#10B981",
+                    borderRadius: 8,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: "pointer"
+                  }}>
+                    Ver todas las rutas
+                  </button>
+                </Link>
+                <Link href="/business-lab/simulators">
+                  <button style={{
+                    padding: "10px 20px",
+                    background: "#10B981",
+                    border: "none",
+                    color: "white",
+                    borderRadius: 8,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: "pointer"
+                  }}>
+                    Explorar Simuladores
+                  </button>
+                </Link>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </>
   )

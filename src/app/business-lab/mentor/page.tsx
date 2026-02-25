@@ -11,9 +11,9 @@ export const metadata = {
 
 export default async function MentorPage() {
   const supabase = await createSupabaseServer()
-  
+
   const { data: { user }, error: authError } = await supabase.auth.getUser()
-  
+
   if (authError || !user) {
     redirect("/login")
   }
@@ -29,7 +29,7 @@ export default async function MentorPage() {
       paddingRight: "360px",
       fontFamily: "Montserrat, sans-serif",
       width: "100%",
-      boxSizing: "border-box" as const,
+      boxSizing: "border-box",
       overflowX: "hidden",
       overflowY: "visible"
     }}>
@@ -49,8 +49,8 @@ export default async function MentorPage() {
           gap: 8,
           transition: "all 0.2s ease"
         }}
-        onMouseEnter={(e: any) => e.currentTarget.style.borderColor = "#0B71FE"}
-        onMouseLeave={(e: any) => e.currentTarget.style.borderColor = "#E5E7EB"}
+          onMouseEnter={(e: any) => e.currentTarget.style.borderColor = "#0B71FE"}
+          onMouseLeave={(e: any) => e.currentTarget.style.borderColor = "#E5E7EB"}
         >
           ← Volver al Lab
         </button>
@@ -88,21 +88,21 @@ export default async function MentorPage() {
               border: "2px solid #E5E7EB",
               transition: "all 0.2s ease"
             }}
-            onMouseEnter={(e: any) => {
-              e.currentTarget.style.transform = "translateY(-4px)"
-              e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
-              e.currentTarget.style.borderColor = "#0B71FE"
-            }}
-            onMouseLeave={(e: any) => {
-              e.currentTarget.style.transform = "translateY(0)"
-              e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
-              e.currentTarget.style.borderColor = "#E5E7EB"
-            }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.transform = "translateY(-4px)"
+                e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
+                e.currentTarget.style.borderColor = "#0B71FE"
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.transform = "translateY(0)"
+                e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
+                e.currentTarget.style.borderColor = "#E5E7EB"
+              }}
             >
-              <div style={{ fontSize: 48, marginBottom: 16, textAlign: "center" as const }}>
+              <div style={{ fontSize: 48, marginBottom: 16, textAlign: "center" }}>
                 👤
               </div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 8, textAlign: "center" as const }}>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 8, textAlign: "center" }}>
                 {mentor.profiles?.nickname || "Mentor"}
               </h3>
               {mentor.bio && (
@@ -149,7 +149,7 @@ export default async function MentorPage() {
           padding: 60,
           boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
           border: "2px solid #E5E7EB",
-          textAlign: "center" as const,
+          textAlign: "center",
           width: "100%"
         }}>
           <div style={{ fontSize: 64, marginBottom: 20 }}>🚧</div>
