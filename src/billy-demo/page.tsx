@@ -2,6 +2,18 @@
 
 import React, { useState } from 'react'
 import TalkingCharacter from '@/components/TalkingCharacter'
+import {
+  AudioIcon,
+  AssignmentIcon,
+  GameIcon,
+  EyeIcon,
+  IdeaIcon,
+  WarningIcon,
+  BotIcon,
+  PartyIcon,
+  BookIcon,
+  TrophyIcon
+} from '@/components/CustomIcons'
 
 export default function BillyDemoPage() {
   const [selectedDemo, setSelectedDemo] = useState<'text' | 'audio' | 'interactive'>('text')
@@ -26,16 +38,19 @@ export default function BillyDemoPage() {
         boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
       }}>
         <h1 style={{
-          fontSize: 48,
+          fontSize: "clamp(32px, 5vw, 48px)",
           fontWeight: 900,
           marginBottom: 16,
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 16
         }}>
-          🎙️ Billy - Talking Character Demo
+          <AudioIcon size={42} color="#667eea" /> Billy - Talking Character Demo
         </h1>
-        
+
         <p style={{ fontSize: 18, color: '#666', marginBottom: 32 }}>
           Experimenta con diferentes modos de habla para Billy
         </p>
@@ -60,9 +75,9 @@ export default function BillyDemoPage() {
               transition: 'all 0.2s ease',
             }}
           >
-            📝 Text-to-Speech
+            <AssignmentIcon size={18} style={{ marginRight: 8 }} /> Text-to-Speech
           </button>
-          
+
           <button
             onClick={() => setSelectedDemo('audio')}
             style={{
@@ -76,9 +91,9 @@ export default function BillyDemoPage() {
               transition: 'all 0.2s ease',
             }}
           >
-            🎵 Audio File
+            <AudioIcon size={18} style={{ marginRight: 8 }} /> Audio File
           </button>
-          
+
           <button
             onClick={() => setSelectedDemo('interactive')}
             style={{
@@ -92,7 +107,7 @@ export default function BillyDemoPage() {
               transition: 'all 0.2s ease',
             }}
           >
-            🎮 Interactive
+            <GameIcon size={18} style={{ marginRight: 8 }} /> Interactive
           </button>
 
           <button
@@ -108,7 +123,11 @@ export default function BillyDemoPage() {
               marginLeft: 'auto',
             }}
           >
-            {showCharacter ? '👁️ Ocultar Billy' : '👁️ Mostrar Billy'}
+            {showCharacter ? (
+              <><EyeIcon size={18} style={{ marginRight: 8 }} /> Ocultar Billy</>
+            ) : (
+              <><EyeIcon size={18} style={{ marginRight: 8 }} /> Mostrar Billy</>
+            )}
           </button>
         </div>
 
@@ -127,7 +146,7 @@ export default function BillyDemoPage() {
               <p style={{ color: '#666', marginBottom: 24 }}>
                 Escribe cualquier texto y Billy lo dirá usando la voz del navegador.
               </p>
-              
+
               <textarea
                 value={customText}
                 onChange={(e) => setCustomText(e.target.value)}
@@ -143,7 +162,7 @@ export default function BillyDemoPage() {
                   resize: 'vertical',
                 }}
               />
-              
+
               <div style={{
                 marginTop: 16,
                 padding: 16,
@@ -151,7 +170,7 @@ export default function BillyDemoPage() {
                 borderRadius: 12,
                 border: '1px solid #e5e7eb',
               }}>
-                <strong>💡 Tip:</strong> Billy usará la voz predeterminada del navegador.
+                <IdeaIcon size={18} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 8 }} /> <strong>Tip:</strong> Billy usará la voz predeterminada del navegador.
                 Puedes cambiarla en la configuración de tu navegador.
               </div>
 
@@ -180,7 +199,7 @@ export default function BillyDemoPage() {
               <p style={{ color: '#666', marginBottom: 24 }}>
                 Billy sincroniza su boca con un archivo de audio real.
               </p>
-              
+
               <div style={{
                 background: '#fff',
                 borderRadius: 12,
@@ -203,9 +222,15 @@ export default function BillyDemoPage() {
                 background: '#FEF3C7',
                 borderRadius: 12,
                 border: '1px solid #FCD34D',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12
               }}>
-                <strong>⚠️ Nota:</strong> Necesitas agregar archivos de audio en{' '}
-                <code>/public/audio/</code> para que este demo funcione.
+                <WarningIcon size={24} color="#D97706" />
+                <span>
+                  <strong>Nota:</strong> Necesitas agregar archivos de audio en{' '}
+                  <code>/public/audio/</code> para que este demo funcione.
+                </span>
               </div>
 
               {showCharacter && (
@@ -239,17 +264,17 @@ export default function BillyDemoPage() {
                 gap: 16,
               }}>
                 {[
-                  { text: '¡Hola! Bienvenido a BIZEN', emoji: '👋' },
-                  { text: '¡Excelente trabajo! Sigue así.', emoji: '🎉' },
-                  { text: 'Recuerda revisar tus lecciones.', emoji: '📚' },
-                  { text: '¿Necesitas ayuda? Estoy aquí para ti.', emoji: '💡' },
-                  { text: '¡Has completado este módulo!', emoji: '🏆' },
-                  { text: 'Tómate un descanso, lo mereces.', emoji: '☕' },
+                  { text: '¡Hola! Bienvenido a BIZEN', icon: <BotIcon size={24} /> },
+                  { text: '¡Excelente trabajo! Sigue así.', icon: <PartyIcon size={24} /> },
+                  { text: 'Recuerda revisar tus lecciones.', icon: <BookIcon size={24} /> },
+                  { text: '¿Necesitas ayuda? Estoy aquí para ti.', icon: <IdeaIcon size={24} /> },
+                  { text: '¡Has completado este módulo!', icon: <TrophyIcon size={24} /> },
+                  { text: 'Tómate un descanso, lo mereces.', icon: <IdeaIcon size={24} /> },
                 ].map((item, idx) => (
                   <InteractiveButton
                     key={idx}
                     text={item.text}
-                    emoji={item.emoji}
+                    icon={item.icon}
                   />
                 ))}
               </div>
@@ -287,7 +312,7 @@ export default function BillyDemoPage() {
             fontSize: 14,
             lineHeight: 1.6,
           }}>
-{`import TalkingCharacter from '@/components/TalkingCharacter'
+            {`import TalkingCharacter from '@/components/TalkingCharacter'
 
 // Uso básico con text-to-speech
 <TalkingCharacter
@@ -320,7 +345,7 @@ export default function BillyDemoPage() {
 }
 
 // Interactive Button Component
-function InteractiveButton({ text, emoji }: { text: string; emoji: string }) {
+function InteractiveButton({ text, icon }: { text: string; icon: React.ReactNode }) {
   const [key, setKey] = useState(0)
 
   const handleClick = () => {
@@ -355,10 +380,10 @@ function InteractiveButton({ text, emoji }: { text: string; emoji: string }) {
           e.currentTarget.style.boxShadow = 'none'
         }}
       >
-        <span style={{ fontSize: 24 }}>{emoji}</span>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#667eea' }}>{icon}</span>
         <span>{text}</span>
       </button>
-      
+
       {key > 0 && (
         <TalkingCharacter
           key={key}

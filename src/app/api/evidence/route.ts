@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { createSupabaseServer } from "@/lib/supabase/server"
+import { awardXp } from "@/lib/rewards"
 
 /**
  * POST /api/evidence
@@ -49,7 +50,10 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        return NextResponse.json(post, { status: 201 })
+        // Give XP for submitting the daily challenge logic
+        const rewards = await awardXp(user.id, 25)
+
+        return NextResponse.json({ ...post, rewards }, { status: 201 })
     } catch (err) {
         console.error("POST /api/evidence:", err)
         return NextResponse.json({ error: "Error al publicar evidencia" }, { status: 500 })

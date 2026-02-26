@@ -193,7 +193,11 @@ const checkActiveStatus = (sessionsLast30d: number, modulesLast30d: number): boo
 export default function ImpactoSocialPage() {
     const { user, loading, dbProfile } = useAuth()
     const router = useRouter()
-    const [activeTab, setActiveTab] = useState<"student" | "school" | "transparency" | "logros">("school")
+    const [activeTab, setActiveTab] = useState<"student" | "school" | "transparency">("school")
+
+    // Dynamic states
+    const [stats, setStats] = useState<any>(null)
+    const [isLoadingStats, setIsLoadingStats] = useState(true)
 
     const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
     const isStudentOrGuest = !isAdminOrTeacher
@@ -204,9 +208,25 @@ export default function ImpactoSocialPage() {
             router.push("/login")
             return
         }
+
+        const fetchStats = async () => {
+            try {
+                const res = await fetch("/api/impact/stats")
+                if (res.ok) {
+                    const data = await res.json()
+                    setStats(data)
+                }
+            } catch (error) {
+                console.error("Error fetching impact stats", error)
+            } finally {
+                setIsLoadingStats(false)
+            }
+        }
+
+        fetchStats()
     }, [user, loading, router])
 
-    if (loading) {
+    if (loading || isLoadingStats) {
         return (
             <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ width: 40, height: 40, border: "3px solid #0F62FE22", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
@@ -215,6 +235,22 @@ export default function ImpactoSocialPage() {
     }
 
     if (!user) return null
+
+    // Helper references to real data
+    const impactData = stats?.schoolImpacts?.[0] || MOCK_SCHOOL_IMPACT
+    const studentStats = stats?.studentStats || { usefulSessions: 0, modulesCompleted: 0, quizzesTaken: 0, simulatorsPlayed: 0 }
+    const targetsData = (stats?.targets?.length ? stats.targets : MOCK_TARGETS).map((t: any) => ({
+        ...t,
+        label: t.title || t.label,
+        status: t.status || (t.currentValue >= t.targetValue ? "unlocked" : "near"),
+        howToHelpCTA: t.howToHelpCTA || "Completa más lecciones para ayudar"
+    }))
+
+    // Calculate dynamic equivalents based on live user stats
+    const equivalenceFood = Math.floor(studentStats.usefulSessions / 5) || 0; // arbitrary mapping
+    const equivalenceBooks = Math.floor(studentStats.modulesCompleted / 2) || 0;
+    const equivalenceTrees = Math.floor(studentStats.quizzesTaken / 10) || 0;
+    const equivalenceTutoring = studentStats.simulatorsPlayed * 2 || 0;
 
     // --- RENDERING HELPERS ---
 
@@ -247,22 +283,25 @@ export default function ImpactoSocialPage() {
                         padding: 0 16px !important;
                     }
                     .tab-nav {
-                        gap: 16px !important;
-                        padding: 0 4px !important;
+                        gap: 20px !important;
+                        padding: 0 16px !important;
                     }
                     .tab-btn {
                         font-size: 14px !important;
                         padding: 10px 0 !important;
                     }
                 }
-                /* Desktop/Tablet - account for left sidebar (clamp(240px, 25vw, 320px)) */
-                @media (min-width: 768px) {
+                /* Desktop/Tablet - account for left sidebar */
+                @media (min-width: 768px) and (max-width: 1160px) {
                     .impacto-inner {
-                        width: calc(100% - (clamp(240px, 25vw, 320px) + 2px)) !important;
-                        max-width: calc(100% - (clamp(240px, 25vw, 320px) + 2px)) !important;
-                        margin-left: calc(clamp(240px, 25vw, 320px) + 2px) !important;
-                        margin-right: 0 !important;
-                        padding: 0 24px !important;
+                        margin-left: 220px !important;
+                        padding: 0 !important;
+                    }
+                }
+                @media (min-width: 1161px) {
+                    .impacto-inner {
+                        margin-left: 280px !important;
+                        padding: 0 !important;
                     }
                 }
 
@@ -327,20 +366,10 @@ export default function ImpactoSocialPage() {
                 <div style={{
                     background: "linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)",
                     borderBottom: "1px solid #e2e8f0",
-                    padding: "60px 20px",
+                    padding: "clamp(40px, 8vw, 80px) 0",
                     position: "relative",
-                    overflow: "hidden",
-                    marginLeft: "-24px", /* Offset parent padding for true full width */
-                    marginRight: "-24px"
+                    overflow: "hidden"
                 }}>
-                    <style>{`
-                        @media (min-width: 768px) {
-                            .impacto-inner > div:first-child { margin-left: -24px !important; margin-right: -24px !important; }
-                        }
-                        @media (max-width: 767px) {
-                            .impacto-inner > div:first-child { margin-left: -16px !important; margin-right: -16px !important; }
-                        }
-                    `}</style>
 
                     {/* Decorative background circle */}
                     <div style={{
@@ -354,7 +383,7 @@ export default function ImpactoSocialPage() {
                         zIndex: 0
                     }} />
 
-                    <div style={{ width: "100%", margin: "0 auto", padding: "0 24px", boxSizing: "border-box", position: "relative", zIndex: 1 }}>
+                    <div style={{ width: "100%", maxWidth: "1440px", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px)", boxSizing: "border-box", position: "relative", zIndex: 1 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
                             <div style={{ flex: "1 1 500px" }}>
                                 <div className="impact-entrance impact-delay-1" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
@@ -458,13 +487,15 @@ export default function ImpactoSocialPage() {
 
                 {/* 
         ---------------------------------------------------------
-        TABS NAVIGATION
+        TABS NAVIGATION & CONTENT Wrapper
         ---------------------------------------------------------
       */}
                 <div className="impacto-tabs-container" style={{
                     width: "100%",
+                    maxWidth: "1440px",
                     margin: "0 auto",
-                    padding: "0"
+                    padding: "0 clamp(16px, 5vw, 48px)",
+                    boxSizing: "border-box"
                 }}>
                     <div className="tab-nav" style={{
                         display: "flex",
@@ -634,10 +665,10 @@ export default function ImpactoSocialPage() {
                                 </div>
                                 <div className="student-grid">
                                     {[
-                                        { value: 4, label: "Sesiones Útiles", icon: <Zap size={18} color="#0F62FE" />, color: "#0F62FE", bg: "#eff6ff", trend: "+1 vs sem. pasada", up: true },
-                                        { value: 1, label: "Módulos", icon: <Book size={18} color="#0F62FE" />, color: "#10b981", bg: "#ecfdf5", trend: "¡Meta cumplida!", up: true },
-                                        { value: 12, label: "Quizzes", icon: <Brain size={18} color="#0F62FE" />, color: "#8b5cf6", bg: "#f5f3ff", trend: "+4 vs sem. pasada", up: true },
-                                        { value: 2, label: "Simuladores", icon: <Gamepad2 size={18} color="#0F62FE" />, color: "#f59e0b", bg: "#fffbeb", trend: "Igual que antes", up: false },
+                                        { value: studentStats.usefulSessions, label: "Sesiones Útiles", icon: <Zap size={18} color="#0F62FE" />, color: "#0F62FE", bg: "#eff6ff", trend: "Reciente", up: true },
+                                        { value: studentStats.modulesCompleted, label: "Módulos", icon: <Book size={18} color="#0F62FE" />, color: "#10b981", bg: "#ecfdf5", trend: "Reciente", up: true },
+                                        { value: studentStats.quizzesTaken, label: "Quizzes", icon: <Brain size={18} color="#0F62FE" />, color: "#8b5cf6", bg: "#f5f3ff", trend: "Constante", up: true },
+                                        { value: studentStats.simulatorsPlayed, label: "Simuladores", icon: <Gamepad2 size={18} color="#0F62FE" />, color: "#f59e0b", bg: "#fffbeb", trend: "Constante", up: false },
                                     ].map((stat, i) => (
                                         <div key={i} className="student-stat-card" style={{ animationDelay: `${i * 0.07}s` }}>
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
@@ -751,10 +782,10 @@ export default function ImpactoSocialPage() {
                                 </div>
                                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14 }}>
                                     {[
-                                        { icon: <ShoppingBasket size={32} color="#0F62FE" />, value: "6", label: "Canastas alimentarias", desc: "financiadas con tu actividad" },
-                                        { icon: <BookOpen size={32} color="#0F62FE" />, value: "3", label: "Libros de texto", desc: "para niños en zonas vulnerables" },
-                                        { icon: <TreeDeciduous size={32} color="#0F62FE" />, value: "2", label: "Árboles plantados", desc: "gracias a tu participación" },
-                                        { icon: <Clock size={32} color="#0F62FE" />, value: "18 h", label: "De tutoría", desc: "equivalente en impacto social" },
+                                        { icon: <ShoppingBasket size={32} color="#0F62FE" />, value: equivalenceFood, label: "Canastas alimentarias", desc: "financiadas virtualmente" },
+                                        { icon: <BookOpen size={32} color="#0F62FE" />, value: equivalenceBooks, label: "Libros de texto", desc: "para estudiantes" },
+                                        { icon: <TreeDeciduous size={32} color="#0F62FE" />, value: equivalenceTrees, label: "Árboles plantados", desc: "meta virtual" },
+                                        { icon: <Clock size={32} color="#0F62FE" />, value: `${equivalenceTutoring} h`, label: "De tutoría", desc: "equivalente en tiempo" },
                                     ].map((eq, i) => (
                                         <div key={i} style={{
                                             background: "#fff", border: "1.5px solid #f1f5f9",
@@ -1039,8 +1070,9 @@ export default function ImpactoSocialPage() {
                                             <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Metas para desbloquear el Bono</h3>
                                         </div>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                                            {MOCK_TARGETS.map((target, ti) => {
+                                            {targetsData.map((target: any, ti: number) => {
                                                 const pct = Math.min(100, (target.currentValue / target.targetValue) * 100)
+                                                // ... (keep the rest)
                                                 const statusColor = target.status === "unlocked" ? "#10b981" : target.status === "near" ? "#f59e0b" : "#0F62FE"
                                                 const statusBg = target.status === "unlocked" ? "#ecfdf5" : target.status === "near" ? "#fffbeb" : "#eff6ff"
                                                 const statusText = target.status === "unlocked" ? "✓ Logrado" : target.status === "near" ? "⚡ Cerca" : "En progreso"

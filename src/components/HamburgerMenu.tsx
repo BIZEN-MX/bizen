@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
+import { BookIcon, AssignmentIcon, GlobeIcon, UserIcon, SettingsIcon, ToolIcon, PartyIcon, FireIcon, WarningIcon } from "./CustomIcons"
 
 interface DashboardStats {
   coursesEnrolled: number
@@ -49,15 +50,15 @@ export default function HamburgerMenu() {
   const cancelExit = () => { setShowExitDialog(false); setPendingNavigation(null) }
 
   const navItems = [
-    { icon: "📚", label: "Aprende finanzas", path: "/courses" },
-    { icon: "📝", label: "Asignaciones", path: "/assignments" },
-    { icon: "🌍", label: "Mi Impacto social", path: "/impacto-social" },
+    { icon: <BookIcon size={20} />, label: "Aprende finanzas", path: "/courses" },
+    { icon: <AssignmentIcon size={20} />, label: "Asignaciones", path: "/assignments" },
+    { icon: <GlobeIcon size={20} />, label: "Mi Impacto social", path: "/impacto-social" },
   ]
 
   const accountItems = [
-    { icon: "👤", label: "Perfil", path: "/profile" },
-    { icon: "⚙️", label: "Cuenta", path: "/account" },
-    { icon: "🔧", label: "Configuración", path: "/settings" },
+    { icon: <UserIcon size={18} />, label: "Perfil", path: "/profile" },
+    { icon: <SettingsIcon size={18} />, label: "Cuenta", path: "/account" },
+    { icon: <ToolIcon size={18} />, label: "Configuración", path: "/settings" },
   ]
 
   return (
@@ -159,8 +160,8 @@ export default function HamburgerMenu() {
               <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.45)", letterSpacing: "0.05em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
                 Bienvenido de nuevo
               </p>
-              <p style={{ margin: "4px 0 0", fontSize: 17, fontWeight: 700, color: "#fff" }}>
-                {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Estudiante'} 👋
+              <p style={{ margin: "4px 0 0", fontSize: 17, fontWeight: 700, color: "#fff", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Estudiante'} <PartyIcon size={20} />
               </p>
             </div>
           )}
@@ -175,7 +176,7 @@ export default function HamburgerMenu() {
                 {[
                   { value: stats.coursesEnrolled, label: "Cursos", color: "#1983FD" },
                   { value: stats.lessonsCompleted, label: "Lecciones", color: "#22c55e" },
-                  { value: `🔥 ${stats.currentStreak}`, label: "Racha", color: "#f59e0b" },
+                  { value: <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}><FireIcon size={20} /> {stats.currentStreak}</div>, label: "Racha", color: "#f59e0b" },
                   { value: stats.totalPoints, label: "Puntos", color: "#a78bfa" },
                 ].map((stat, i) => (
                   <div key={i} style={{
@@ -277,8 +278,8 @@ export default function HamburgerMenu() {
             maxWidth: 420, width: "100%",
             boxShadow: "0 24px 64px rgba(0,0,0,0.5)"
           }}>
-            <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 12, color: "#fff" }}>
-              ⚠️ ¿Estás seguro?
+            <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 12, color: "#fff", display: 'flex', alignItems: 'center', gap: 10 }}>
+              <WarningIcon size={24} color="#f59e0b" /> ¿Estás seguro?
             </div>
             <p style={{ fontSize: 15, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, marginBottom: 24 }}>
               Si sales ahora, se perderá tu progreso de la lección actual. ¿Deseas continuar?

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
+import { BotIcon } from "@/components/CustomIcons"
 
 interface Message {
   role: "user" | "assistant"
@@ -205,7 +206,7 @@ export default function BillyChatbot() {
                     fontSize: "18px",
                   }}
                 >
-                  🤖
+                  <BotIcon size={20} color="white" />
                 </div>
                 <div>
                   <h3 style={{ fontSize: "16px", fontWeight: 600, margin: 0, lineHeight: 1.2 }}>Asistente BIZEN</h3>
@@ -289,7 +290,7 @@ export default function BillyChatbot() {
                       justifyContent: "center",
                     }}
                   >
-                    <span style={{ color: "#3b82f6", fontSize: "11px" }}>🤖</span>
+                    <BotIcon size={12} color="#3b82f6" />
                   </div>
                   <p style={{ margin: 0, fontSize: "11px" }}>¿En qué puedo ayudarte hoy?</p>
                 </div>

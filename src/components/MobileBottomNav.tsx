@@ -76,7 +76,7 @@ export default function MobileBottomNav() {
       id: 'simulador',
       label: 'Simulador',
       icon: Gamepad2,
-      path: '/simulador',
+      path: '/cash-flow',
       protected: false
     }
   ] : [

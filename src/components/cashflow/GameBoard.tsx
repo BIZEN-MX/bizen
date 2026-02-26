@@ -1,7 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useAuth } from "@/contexts/AuthContext"
 import Dice from "@/components/cashflow/Dice"
+import { AvatarDisplay } from "@/components/AvatarDisplay"
+import { CompassIcon, MoneyIcon, BarChartIcon, ShoppingCartIcon, HeartIcon, UserIcon } from "@/components/CustomIcons"
 
 type SpaceType = 'opportunity' | 'payday' | 'market' | 'doodad' | 'charity' | 'baby'
 
@@ -73,15 +76,25 @@ const FAST_TRACK_SPACES: BoardSpace[] = [
 
 // Space type label info for legend
 const LEGEND_ITEMS = [
-  { type: 'opportunity' as SpaceType, label: 'Oportunidad' },
-  { type: 'payday' as SpaceType, label: 'Payday' },
-  { type: 'market' as SpaceType, label: 'Mercado' },
-  { type: 'doodad' as SpaceType, label: 'Lujo' },
-  { type: 'charity' as SpaceType, label: 'Caridad' },
-  { type: 'baby' as SpaceType, label: 'Bebé' },
+  { type: 'opportunity' as SpaceType, label: 'Oportunidad', icon: CompassIcon },
+  { type: 'payday' as SpaceType, label: 'Payday', icon: MoneyIcon },
+  { type: 'market' as SpaceType, label: 'Mercado', icon: BarChartIcon },
+  { type: 'doodad' as SpaceType, label: 'Lujo', icon: ShoppingCartIcon },
+  { type: 'charity' as SpaceType, label: 'Caridad', icon: HeartIcon },
+  { type: 'baby' as SpaceType, label: 'Bebé', icon: UserIcon },
 ]
 
+const SPACE_ICONS: Record<SpaceType, React.ElementType> = {
+  opportunity: CompassIcon,
+  payday: MoneyIcon,
+  market: BarChartIcon,
+  doodad: ShoppingCartIcon,
+  charity: HeartIcon,
+  baby: UserIcon,
+}
+
 export default function GameBoard({ playerPosition, isRolling, onRollDice, canRoll, isOnFastTrack, diceResult }: GameBoardProps) {
+  const { user, dbProfile } = useAuth()
   const spaces = isOnFastTrack ? FAST_TRACK_SPACES : RAT_RACE_SPACES
   const [isMobile, setIsMobile] = useState(false)
 
@@ -335,39 +348,44 @@ export default function GameBoard({ playerPosition, isRolling, onRollDice, canRo
 
                   {/* Space label */}
                   <div style={{
-                    fontSize: isCorner ? 8 : 7.5,
+                    fontSize: isCorner ? 7 : 6.5,
                     fontWeight: 800,
                     color: isPlayerHere ? '#92400e' : spStyle.text,
                     textAlign: 'center',
-                    lineHeight: 1.2,
-                    letterSpacing: '0.04em',
-                    padding: '0 3px',
+                    lineHeight: 1.1,
+                    letterSpacing: '0.02em',
+                    padding: '0 2px',
                     fontFamily: "'Montserrat', sans-serif",
                     textTransform: 'uppercase',
-                    marginTop: isCorner ? 0 : 2
+                    position: 'absolute',
+                    top: 6
                   }}>
                     {space.label}
                   </div>
 
+                  {/* Space Icon */}
+                  {!isPlayerHere && (() => {
+                    const Icon = SPACE_ICONS[space.type]
+                    return <Icon size={isCorner ? 22 : 20} color={spStyle.text} />
+                  })()}
+
                   {/* Player indicator */}
                   {isPlayerHere && (
                     <div style={{
-                      width: 22,
-                      height: 22,
+                      width: 28,
+                      height: 28,
                       borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #1d4ed8, #2563eb)',
-                      border: '2.5px solid white',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                      background: 'white',
+                      border: '2px solid #fbbf24',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      marginTop: 3,
-                      fontSize: 11,
-                      fontWeight: 900,
-                      color: 'white',
-                      fontFamily: "'Montserrat', sans-serif"
+                      overflow: 'hidden',
+                      zIndex: 10,
+                      marginTop: 4
                     }}>
-                      TU
+                      <AvatarDisplay avatar={dbProfile?.avatar} size={isMobile ? 24 : 32} />
                     </div>
                   )}
                 </div>

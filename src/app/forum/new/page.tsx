@@ -4,6 +4,19 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
+import {
+  ChevronLeft,
+  Tag,
+  FileText,
+  Lightbulb,
+  Zap,
+  CheckCircle2,
+  Eye,
+  Edit3,
+  MessageSquarePlus,
+  X,
+  Plus
+} from "lucide-react"
 
 interface ForumTopic {
   id: string
@@ -18,12 +31,27 @@ interface ForumTag {
   slug: string
 }
 
+const TOPIC_ACCENT: Record<string, string> = {
+  "ahorro": "#10b981",
+  "presupuesto": "#2563eb",
+  "deuda": "#ef4444",
+  "inversion": "#d97706",
+  "emprendimiento": "#7c3aed",
+  "proyectos": "#4f46e5",
+  "negocios": "#0284c7",
+  "reto-del-dia": "#fbbf24",
+  "preguntas": "#0F62FE",
+}
+function topicColor(slug: string) {
+  const key = Object.keys(TOPIC_ACCENT).find(k => slug?.startsWith(k) || k?.startsWith(slug))
+  return key ? TOPIC_ACCENT[key] : "#0F62FE"
+}
+
 export default function NewThreadPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
 
   const [topics, setTopics] = useState<ForumTopic[]>([])
-  const [existingTags, setExistingTags] = useState<ForumTag[]>([])
   const [title, setTitle] = useState("")
   const [body, setBody] = useState("")
   const [selectedTopicId, setSelectedTopicId] = useState("")
@@ -33,100 +61,56 @@ export default function NewThreadPage() {
   const [loadingData, setLoadingData] = useState(true)
   const [showPreview, setShowPreview] = useState(false)
 
+  const selectedTopic = topics.find(t => t.id === selectedTopicId)
+  const accent = selectedTopic ? topicColor(selectedTopic.slug) : "#0F62FE"
+  const canSubmit = title.trim().length > 5 && body.trim().length > 10 && !!selectedTopicId
+
   useEffect(() => {
-    const bodyEl = document.body
-    if (bodyEl) {
-      bodyEl.style.background = "#ffffff"
-      bodyEl.style.backgroundAttachment = "fixed"
-    }
-    return () => {
-      bodyEl.style.background = "#fff"
-      bodyEl.style.backgroundAttachment = "scroll"
-    }
+    document.body.style.background = "#f8fafc"
+    return () => { document.body.style.background = "#fff" }
   }, [])
 
   useEffect(() => {
     if (loading) return
-    if (!user) {
-      window.open("/login", "_blank")
-      return
-    }
+    if (!user) { window.open("/login", "_blank"); return }
     fetchData()
-  }, [user, loading, router])
+  }, [user, loading])
 
   const fetchData = async () => {
     try {
       setLoadingData(true)
-      const [topicsRes, tagsRes] = await Promise.all([
-        fetch('/api/forum/topics'),
-        fetch('/api/forum/tags')
-      ])
-
-      if (topicsRes.ok) {
-        const topicsData = await topicsRes.json()
-        setTopics(topicsData)
-      }
-
-      if (tagsRes.ok) {
-        const tagsData = await tagsRes.json()
-        setExistingTags(tagsData)
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error)
-    } finally {
-      setLoadingData(false)
-    }
+      const [topicsRes] = await Promise.all([fetch("/api/forum/topics")])
+      if (topicsRes.ok) setTopics(await topicsRes.json())
+    } catch (e) { console.error(e) } finally { setLoadingData(false) }
   }
 
   const handleAddTag = () => {
     if (newTagInput.trim() && selectedTags.length < 5) {
-      const slug = newTagInput.trim().toLowerCase().replace(/\s+/g, '-')
-      if (!selectedTags.includes(slug)) {
-        setSelectedTags([...selectedTags, slug])
-      }
+      const slug = newTagInput.trim().toLowerCase().replace(/\s+/g, "-")
+      if (!selectedTags.includes(slug)) setSelectedTags([...selectedTags, slug])
       setNewTagInput("")
     }
   }
 
-  const handleRemoveTag = (tag: string) => {
-    setSelectedTags(selectedTags.filter(t => t !== tag))
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!title.trim() || !body.trim() || !selectedTopicId || submitting) return
-
+    if (!canSubmit || submitting) return
     try {
       setSubmitting(true)
-      const response = await fetch('/api/forum/threads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: title.trim(),
-          body: body.trim(),
-          topicId: selectedTopicId,
-          tagSlugs: selectedTags
-        })
+      const res = await fetch("/api/forum/threads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: title.trim(), body: body.trim(), topicId: selectedTopicId, tagSlugs: selectedTags })
       })
-
-      if (response.ok) {
-        const data = await response.json()
+      if (res.ok) {
+        const data = await res.json()
         router.push(`/forum/thread/${data.id}`)
       } else {
-        const error = await response.json()
-        console.error("Error creating thread:", error)
-        const errorMessage = error.details 
-          ? `${error.error}: ${error.details}` 
-          : error.error || "Error al crear el tema"
-        if (error.hint) {
-          console.warn("Hint:", error.hint)
-        }
-        alert(errorMessage)
+        const err = await res.json()
+        alert(err.error || "Error al crear el tema")
       }
-    } catch (error) {
-      console.error("Error creating thread:", error)
-      const errorMessage = error instanceof Error ? error.message : "Error al crear el tema"
-      alert(errorMessage)
+    } catch (e) {
+      alert("Error al crear el tema")
     } finally {
       setSubmitting(false)
     }
@@ -134,14 +118,16 @@ export default function NewThreadPage() {
 
   if (loading || loadingData) {
     return (
-      <div style={{ 
-        display: "grid", 
-        placeItems: "center", 
-        minHeight: "60vh", 
-        fontFamily: "Montserrat, sans-serif",
-        background: "#ffffff"
-      }} className="forum-new-outer">
-        <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
+      <div className="fn-outer" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc" }}>
+        <style>{`
+          @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 220px !important; } }
+          @media (min-width: 1161px) { .fn-outer { margin-left: 280px !important; } }
+        `}</style>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+          <div style={{ width: 44, height: 44, border: "3px solid #0F62FE22", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          <span style={{ fontSize: 14, fontWeight: 600, color: "#64748b", fontFamily: "'Montserrat', sans-serif" }}>Cargando formulario...</span>
+        </div>
       </div>
     )
   }
@@ -149,415 +135,341 @@ export default function NewThreadPage() {
   if (!user) return null
 
   return (
-    <div style={{
-      position: "relative",
-      minHeight: "100vh",
-      paddingTop: 40,
-      paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "#ffffff",
-      backgroundAttachment: "fixed",
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat"
-    }} className="forum-new-outer">
+    <div className="fn-outer" style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "'Montserrat', sans-serif" }}>
       <style>{`
-        @media (max-width: 767px) {
-          .forum-new-outer { margin-left: 0 !important; max-width: 100% !important; }
-        }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .forum-new-outer { margin-left: 220px !important; max-width: calc(100% - 220px) !important; width: auto !important; }
-        }
-        @media (min-width: 1161px) {
-          .forum-new-outer { margin-left: 280px !important; max-width: calc(100% - 280px) !important; width: auto !important; }
-        }
+        @media (max-width: 767px) { .fn-outer { margin-left: 0 !important; } .fn-layout { flex-direction: column !important; } }
+        @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 220px !important; } }
+        @media (min-width: 1161px) { .fn-outer { margin-left: 280px !important; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        .fn-input:focus { outline: none; border-color: ${accent} !important; box-shadow: 0 0 0 3px ${accent}18 !important; }
+        .fn-tag-remove:hover { background: rgba(255,255,255,0.5) !important; }
+        .fn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px ${accent}55 !important; }
+        .fn-submit:active:not(:disabled) { transform: translateY(0); }
+        .fn-cancel:hover { background: #f1f5f9 !important; border-color: #cbd5e1 !important; }
       `}</style>
-      <main style={{ 
-        position: "relative",
-        maxWidth: "100%", 
-        margin: "0", 
-        padding: "40px",
-        paddingRight: "40px",
-        zIndex: 1
+
+      {/* ── HERO ────────────────────────────────────────────────── */}
+      <div style={{
+        background: `linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, ${accent} 100%)`,
+        padding: "clamp(28px, 5vw, 48px) clamp(20px, 5vw, 44px)",
+        position: "relative", overflow: "hidden",
+        borderRadius: "clamp(0px, 3vw, 32px)",
+        margin: "clamp(0px, 2vw, 24px) clamp(0px, 2vw, 24px) 0",
+        boxShadow: `0 20px 50px ${accent}33`
       }}>
-        {/* Back Button */}
-        <div style={{ marginBottom: 24 }}>
-          <Link href="/forum" style={{ textDecoration: "none" }}>
-            <button style={{
-              padding: "8px 16px",
-              background: "rgba(15, 98, 254, 0.15)",
-              backdropFilter: "blur(10px)",
-              border: "2px solid rgba(15, 98, 254, 0.3)",
-              borderRadius: 8,
-              fontSize: 14,
-              fontWeight: 600,
-              color: "#0F62FE",
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              transition: "all 0.2s ease",
-              boxShadow: "0 2px 8px rgba(15, 98, 254, 0.1)"
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(15, 98, 254, 0.25)"
-              e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.5)"
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(15, 98, 254, 0.2)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
-              e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.3)"
-              e.currentTarget.style.boxShadow = "0 2px 8px rgba(15, 98, 254, 0.1)"
-            }}
-            >
-              ← Volver al Foro
-            </button>
-          </Link>
+        <div style={{ position: "absolute", top: "-20%", right: "-4%", width: 320, height: 320, background: `radial-gradient(circle, ${accent}30 0%, transparent 70%)`, borderRadius: "50%", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "-30%", left: "10%", width: 240, height: 240, background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+
+        <div style={{ position: "relative", zIndex: 1, animation: "fadeUp 0.5s ease both" }}>
+          <button
+            onClick={() => router.push("/forum")}
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 14px", color: "#93c5fd", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", marginBottom: 20 }}
+          >
+            <ChevronLeft size={13} /> Volver al Foro
+          </button>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(255,255,255,0.1)", border: "1.5px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <MessageSquarePlus size={26} color="#93c5fd" />
+            </div>
+            <div>
+              <h1 style={{ margin: "0 0 6px", fontSize: "clamp(22px, 4vw, 34px)", fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                Crear Nuevo Tema
+              </h1>
+              <p style={{ margin: 0, fontSize: 14, color: "#93c5fd", fontWeight: 600 }}>
+                Comparte una pregunta, idea o proyecto con la comunidad
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <h1 style={{ 
-          margin: "0 0 8px", 
-          fontSize: "clamp(24px, 5vw, 32px)", 
-          fontWeight: 800,
-          color: "#1E40AF"
-        }}>
-          Crear Nuevo Tema
-        </h1>
-        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 600 }}>
-          Comparte una pregunta, idea o proyecto
-        </p>
+      {/* ── BODY ─────────────────────────────────────────────────── */}
+      <div style={{ padding: "clamp(20px, 4vw, 36px) clamp(16px, 4vw, 36px)", maxWidth: 1200, margin: "0 auto" }}>
+        <div className="fn-layout" style={{ display: "flex", gap: "clamp(20px, 3vw, 32px)", alignItems: "flex-start" }}>
 
-        {/* Form */}
-        <div style={{
-          padding: 32,
-          background: "rgba(255, 255, 255, 0.4)",
-          backdropFilter: "blur(20px)",
-          borderRadius: 20,
-          border: "2px solid rgba(255, 255, 255, 0.6)",
-          boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)"
-        }}>
-          <form onSubmit={handleSubmit}>
-            {/* Title */}
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ 
-                display: "block",
-                marginBottom: 8,
-                fontSize: 15,
-                fontWeight: 700,
-                color: "#1E40AF"
-              }}>
-                Título
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="¿Cuál es el título de tu tema?"
-                maxLength={150}
-                required
-                style={{
-                  width: "100%",
-                  padding: "14px 16px",
-                  fontSize: 15,
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 600,
-                  border: "2px solid rgba(255, 255, 255, 0.6)",
-                  borderRadius: 12,
-                  background: "rgba(255, 255, 255, 0.6)",
-                  color: "#374151",
-                  boxSizing: "border-box"
-                }}
-              />
-              <div style={{ marginTop: 6, fontSize: 12, color: "#6B7280", fontWeight: 600, textAlign: "right" }}>
-                {title.length}/150
-              </div>
-            </div>
+          {/* ── FORM (left) ─────────────────────────────────────── */}
+          <div style={{ flex: 1, minWidth: 0, animation: "fadeUp 0.5s ease 0.1s both" }}>
+            <form onSubmit={handleSubmit}>
 
-            {/* Topic */}
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ 
-                display: "block",
-                marginBottom: 8,
-                fontSize: 15,
-                fontWeight: 700,
-                color: "#1E40AF"
-              }}>
-                Categoría
-              </label>
-              <select
-                value={selectedTopicId}
-                onChange={(e) => setSelectedTopicId(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "14px 16px",
-                  fontSize: 15,
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 600,
-                  border: "2px solid rgba(255, 255, 255, 0.6)",
-                  borderRadius: 12,
-                  background: "rgba(255, 255, 255, 0.6)",
-                  color: "#374151",
-                  cursor: "pointer",
-                  boxSizing: "border-box"
-                }}
-              >
-                <option value="">Selecciona una categoría</option>
-                {topics.map(topic => (
-                  <option key={topic.id} value={topic.id}>
-                    {topic.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Tags */}
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ 
-                display: "block",
-                marginBottom: 8,
-                fontSize: 15,
-                fontWeight: 700,
-                color: "#1E40AF"
-              }}>
-                Etiquetas (máx. 5)
-              </label>
-              
-              <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-                {selectedTags.map(tag => (
-                  <span
-                    key={tag}
-                    style={{
-                      padding: "6px 12px",
-                      background: "#0F62FE",
-                      color: "white",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      borderRadius: 6,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6
-                    }}
-                  >
-                    #{tag}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveTag(tag)}
-                      style={{
-                        background: "rgba(255, 255, 255, 0.3)",
-                        border: "none",
-                        color: "white",
-                        cursor: "pointer",
-                        padding: "2px 6px",
-                        borderRadius: 4,
-                        fontSize: 11,
-                        fontWeight: 700
-                      }}
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-
-              <div style={{ display: "flex", gap: 8 }}>
-                <input
-                  type="text"
-                  value={newTagInput}
-                  onChange={(e) => setNewTagInput(e.target.value)}
-                  placeholder="Agregar etiqueta"
-                  disabled={selectedTags.length >= 5}
-                  style={{
-                    flex: 1,
-                    padding: "10px 14px",
-                    fontSize: 14,
-                    fontFamily: "Montserrat, sans-serif",
-                    fontWeight: 600,
-                    border: "2px solid rgba(255, 255, 255, 0.6)",
-                    borderRadius: 10,
-                    background: "rgba(255, 255, 255, 0.6)",
-                    color: "#374151",
-                    boxSizing: "border-box"
-                  }}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      handleAddTag()
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={handleAddTag}
-                  disabled={!newTagInput.trim() || selectedTags.length >= 5}
-                  style={{
-                    padding: "10px 20px",
-                    background: newTagInput.trim() && selectedTags.length < 5 ? "#0F62FE" : "#9CA3AF",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 10,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    cursor: newTagInput.trim() && selectedTags.length < 5 ? "pointer" : "not-allowed",
-                    fontFamily: "Montserrat, sans-serif"
-                  }}
-                >
-                  Agregar
-                </button>
-              </div>
-            </div>
-
-            {/* Body */}
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <label style={{ 
-                  fontSize: 15,
-                  fontWeight: 700,
-                  color: "#1E40AF"
-                }}>
-                  Contenido
+              {/* Card: Título */}
+              <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
+                  Título *
                 </label>
-                <button
-                  type="button"
-                  onClick={() => setShowPreview(!showPreview)}
-                  style={{
-                    padding: "6px 12px",
-                    background: "rgba(255, 255, 255, 0.6)",
-                    border: "none",
-                    borderRadius: 6,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: "#0F62FE",
-                    cursor: "pointer",
-                    fontFamily: "Montserrat, sans-serif"
-                  }}
-                >
-                  {showPreview ? "Editar" : "Vista Previa"}
-                </button>
-              </div>
-
-              {!showPreview ? (
-                <textarea
-                  value={body}
-                  onChange={(e) => setBody(e.target.value)}
-                  placeholder="¿Cuál es tu pregunta o idea? Descríbela en detalle. Usa texto plano o Markdown."
+                <input
+                  className="fn-input"
+                  type="text"
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                  placeholder="¿Cuál es el título de tu tema? Sé específico..."
+                  maxLength={150}
                   required
                   style={{
-                    width: "100%",
-                    minHeight: 300,
-                    padding: 16,
-                    fontSize: 15,
-                    fontFamily: "Montserrat, sans-serif",
-                    fontWeight: 500,
-                    lineHeight: 1.7,
-                    border: "2px solid rgba(255, 255, 255, 0.6)",
-                    borderRadius: 12,
-                    background: "rgba(255, 255, 255, 0.6)",
-                    color: "#374151",
-                    resize: "vertical",
-                    boxSizing: "border-box"
+                    width: "100%", padding: "14px 16px", fontSize: 15,
+                    fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
+                    border: "2px solid #f1f5f9", borderRadius: 12,
+                    background: "#f8fafc", color: "#0f172a",
+                    boxSizing: "border-box", transition: "all 0.2s"
                   }}
                 />
-              ) : (
-                <div style={{
-                  width: "100%",
-                  minHeight: 300,
-                  padding: 16,
-                  fontSize: 15,
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 500,
-                  lineHeight: 1.7,
-                  border: "2px solid rgba(255, 255, 255, 0.6)",
-                  borderRadius: 12,
-                  background: "rgba(255, 255, 255, 0.6)",
-                  color: "#374151",
-                  boxSizing: "border-box",
-                  whiteSpace: "pre-wrap"
-                }}>
-                  {body || <span style={{ color: "#9CA3AF" }}>La vista previa aparecerá aquí...</span>}
+                <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  {title.length > 5
+                    ? <span style={{ fontSize: 11, color: "#10b981", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}><CheckCircle2 size={11} /> Buen título</span>
+                    : <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>Mínimo 6 caracteres</span>
+                  }
+                  <span style={{ fontSize: 11, color: title.length > 120 ? "#ef4444" : "#94a3b8", fontWeight: 700 }}>{title.length}/150</span>
                 </div>
-              )}
-            </div>
-
-            {/* Tips */}
-            <div style={{
-              padding: 20,
-              background: "rgba(59, 130, 246, 0.1)",
-              borderRadius: 12,
-              border: "1px solid rgba(59, 130, 246, 0.2)",
-              marginBottom: 24
-            }}>
-              <div style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1E40AF",
-                marginBottom: 8 
-              }}>
-                Consejos:
               </div>
-              <ul style={{ 
-                margin: 0, 
-                paddingLeft: 20,
-                fontSize: 13,
-                color: "#374151",
-                lineHeight: 1.8,
-                fontWeight: 600
-              }}>
-                <li>Usa un título específico y claro</li>
-                <li>Explica el contexto y detalles</li>
-                <li>Sé respetuoso con la comunidad</li>
-                <li>Solo texto - no imágenes ni archivos</li>
-                <li>No compartas información personal</li>
-              </ul>
+
+              {/* Card: Categoría */}
+              <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
+                  Categoría *
+                </label>
+                <div style={{ position: "relative" }}>
+                  <select
+                    className="fn-input"
+                    value={selectedTopicId}
+                    onChange={e => setSelectedTopicId(e.target.value)}
+                    required
+                    style={{
+                      width: "100%", padding: "14px 16px", fontSize: 15,
+                      fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
+                      border: `2px solid ${selectedTopicId ? accent : "#f1f5f9"}`, borderRadius: 12,
+                      background: selectedTopicId ? `${accent}08` : "#f8fafc",
+                      color: selectedTopicId ? "#0f172a" : "#94a3b8",
+                      cursor: "pointer", boxSizing: "border-box",
+                      appearance: "none", transition: "all 0.2s"
+                    }}
+                  >
+                    <option value="">Selecciona una categoría...</option>
+                    {topics.map(topic => (
+                      <option key={topic.id} value={topic.id}>{topic.name}</option>
+                    ))}
+                  </select>
+                  {selectedTopic && (
+                    <div style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", width: 10, height: 10, borderRadius: "50%", background: accent }} />
+                  )}
+                </div>
+              </div>
+
+              {/* Card: Etiquetas */}
+              <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <label style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                    Etiquetas
+                  </label>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8" }}>{selectedTags.length}/5</span>
+                </div>
+
+                {selectedTags.length > 0 && (
+                  <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+                    {selectedTags.map(tag => (
+                      <span key={tag} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px 5px 12px", background: `${accent}15`, color: accent, fontSize: 12, fontWeight: 700, borderRadius: 999, border: `1.5px solid ${accent}30` }}>
+                        #{tag}
+                        <button
+                          type="button"
+                          className="fn-tag-remove"
+                          onClick={() => setSelectedTags(selectedTags.filter(t => t !== tag))}
+                          style={{ background: "rgba(0,0,0,0.06)", border: "none", color: accent, cursor: "pointer", padding: "1px 4px", borderRadius: "50%", display: "flex", alignItems: "center", lineHeight: 1, transition: "all 0.15s" }}
+                        >
+                          <X size={10} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div style={{ display: "flex", gap: 10 }}>
+                  <div style={{ flex: 1, position: "relative" }}>
+                    <Tag size={14} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+                    <input
+                      className="fn-input"
+                      type="text"
+                      value={newTagInput}
+                      onChange={e => setNewTagInput(e.target.value)}
+                      onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); handleAddTag() } }}
+                      placeholder={selectedTags.length >= 5 ? "Límite alcanzado" : "Escribe y presiona Enter..."}
+                      disabled={selectedTags.length >= 5}
+                      style={{
+                        width: "100%", padding: "11px 14px 11px 34px", fontSize: 13,
+                        fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
+                        border: "2px solid #f1f5f9", borderRadius: 10,
+                        background: "#f8fafc", color: "#0f172a",
+                        boxSizing: "border-box", transition: "all 0.2s",
+                        opacity: selectedTags.length >= 5 ? 0.5 : 1
+                      }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAddTag}
+                    disabled={!newTagInput.trim() || selectedTags.length >= 5}
+                    style={{
+                      padding: "11px 18px", borderRadius: 10, border: "none",
+                      background: newTagInput.trim() && selectedTags.length < 5 ? accent : "#f1f5f9",
+                      color: newTagInput.trim() && selectedTags.length < 5 ? "#fff" : "#94a3b8",
+                      fontWeight: 700, fontSize: 13, cursor: newTagInput.trim() && selectedTags.length < 5 ? "pointer" : "not-allowed",
+                      display: "flex", alignItems: "center", gap: 5, fontFamily: "'Montserrat', sans-serif",
+                      transition: "all 0.2s", flexShrink: 0
+                    }}
+                  >
+                    <Plus size={14} /> Agregar
+                  </button>
+                </div>
+              </div>
+
+              {/* Card: Contenido */}
+              <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 20 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <label style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                    Contenido *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowPreview(!showPreview)}
+                    style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 14px", background: showPreview ? `${accent}15` : "#f8fafc", border: `1.5px solid ${showPreview ? accent : "#e2e8f0"}`, borderRadius: 999, fontSize: 12, fontWeight: 700, color: showPreview ? accent : "#64748b", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
+                  >
+                    {showPreview ? <><Edit3 size={12} /> Editar</> : <><Eye size={12} /> Vista Previa</>}
+                  </button>
+                </div>
+
+                {!showPreview ? (
+                  <textarea
+                    className="fn-input"
+                    value={body}
+                    onChange={e => setBody(e.target.value)}
+                    placeholder={"¿Cuál es tu pregunta o idea?\n\nDescríbela con suficiente detalle para que la comunidad pueda ayudarte.\nUsa este espacio para explicar el contexto, lo que ya has intentado, etc."}
+                    required
+                    style={{
+                      width: "100%", minHeight: 280, padding: "16px",
+                      fontSize: 14, fontFamily: "'Montserrat', sans-serif",
+                      fontWeight: 500, lineHeight: 1.75,
+                      border: "2px solid #f1f5f9", borderRadius: 12,
+                      background: "#f8fafc", color: "#0f172a",
+                      resize: "vertical", boxSizing: "border-box", transition: "all 0.2s"
+                    }}
+                  />
+                ) : (
+                  <div style={{
+                    width: "100%", minHeight: 280, padding: "16px",
+                    fontSize: 14, fontFamily: "'Montserrat', sans-serif",
+                    fontWeight: 500, lineHeight: 1.75,
+                    border: "2px solid #f1f5f9", borderRadius: 12,
+                    background: "#f8fafc", color: "#0f172a",
+                    boxSizing: "border-box", whiteSpace: "pre-wrap", overflowY: "auto"
+                  }}>
+                    {body || <span style={{ color: "#94a3b8" }}>Escribe algo para ver la vista previa...</span>}
+                  </div>
+                )}
+
+                <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between" }}>
+                  {body.trim().length > 10
+                    ? <span style={{ fontSize: 11, color: "#10b981", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}><CheckCircle2 size={11} /> Contenido listo</span>
+                    : <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>Mínimo 10 caracteres</span>
+                  }
+                  <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700 }}>{body.length} caracteres</span>
+                </div>
+              </div>
+
+              {/* ── CTA Buttons ─────────────────────────────────────── */}
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <button
+                  type="submit"
+                  className="fn-submit"
+                  disabled={submitting || !canSubmit}
+                  style={{
+                    flex: 1, minWidth: 160, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    padding: "15px 28px",
+                    background: canSubmit && !submitting ? `linear-gradient(135deg, ${accent} 0%, ${accent}cc 100%)` : "#cbd5e1",
+                    color: "white", border: "none", borderRadius: 14,
+                    fontSize: 15, fontWeight: 800, letterSpacing: "-0.01em",
+                    cursor: canSubmit && !submitting ? "pointer" : "not-allowed",
+                    boxShadow: canSubmit && !submitting ? `0 4px 14px ${accent}40` : "none",
+                    fontFamily: "'Montserrat', sans-serif", transition: "all 0.25s"
+                  }}
+                >
+                  {submitting
+                    ? <><div style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} /> Publicando...</>
+                    : <><Zap size={16} /> Publicar Tema</>
+                  }
+                </button>
+                <Link href="/forum" style={{ textDecoration: "none", flex: "0 0 auto" }}>
+                  <button
+                    type="button"
+                    className="fn-cancel"
+                    style={{ padding: "15px 24px", background: "#fff", border: "2px solid #e2e8f0", borderRadius: 14, fontSize: 14, fontWeight: 700, color: "#64748b", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
+                  >
+                    Cancelar
+                  </button>
+                </Link>
+              </div>
+            </form>
+          </div>
+
+          {/* ── TIPS SIDEBAR (right) ─────────────────────────────── */}
+          <div style={{ width: 280, flexShrink: 0, display: "flex", flexDirection: "column", gap: 16, animation: "fadeUp 0.5s ease 0.2s both" }}>
+
+            {/* Progress Card */}
+            <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Estado del Tema</div>
+              {[
+                { label: "Título", done: title.trim().length > 5 },
+                { label: "Categoría", done: !!selectedTopicId },
+                { label: "Contenido", done: body.trim().length > 10 },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 0", borderBottom: i < 2 ? "1px solid #f8fafc" : "none" }}>
+                  <div style={{ width: 22, height: 22, borderRadius: "50%", background: item.done ? "#10b981" : "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.3s" }}>
+                    <CheckCircle2 size={12} color={item.done ? "#fff" : "#94a3b8"} />
+                  </div>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: item.done ? "#0f172a" : "#94a3b8", transition: "color 0.3s" }}>{item.label}</span>
+                </div>
+              ))}
             </div>
 
-            {/* Buttons */}
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <button
-                type="submit"
-                disabled={submitting || !title.trim() || !body.trim() || !selectedTopicId}
-                style={{
-                  padding: "14px 28px",
-                  background: submitting || !title.trim() || !body.trim() || !selectedTopicId
-                    ? "#9CA3AF" 
-                    : "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 12,
-                  fontSize: 15,
-                  fontWeight: 700,
-                  cursor: submitting || !title.trim() || !body.trim() || !selectedTopicId 
-                    ? "not-allowed" 
-                    : "pointer",
-                  boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
-              >
-                {submitting ? "Publicando..." : "Publicar Tema"}
-              </button>
-
-              <Link
-                href="/forum"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  padding: "14px 28px",
-                  background: "rgba(255, 255, 255, 0.6)",
-                  color: "#374151",
-                  border: "none",
-                  borderRadius: 12,
-                  fontSize: 15,
-                  fontWeight: 700,
-                  textDecoration: "none",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
-              >
-                Cancelar
-              </Link>
+            {/* Tips Card */}
+            <div style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)", borderRadius: 20, padding: 20, boxShadow: "0 4px 18px rgba(15,98,254,0.2)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                <Lightbulb size={16} color="#60a5fa" />
+                <span style={{ fontSize: 12, fontWeight: 800, color: "#93c5fd", letterSpacing: "0.04em", textTransform: "uppercase" }}>Consejos para un buen tema</span>
+              </div>
+              {[
+                "Usa un título específico y claro",
+                "Explica el contexto y detalles",
+                "Sé respetuoso con la comunidad",
+                "Solo texto — no imágenes ni archivos",
+                "No compartas información personal",
+              ].map((tip, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: i < 4 ? 10 : 0 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#60a5fa", flexShrink: 0, marginTop: 6 }} />
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", fontWeight: 600, lineHeight: 1.5 }}>{tip}</span>
+                </div>
+              ))}
             </div>
-          </form>
+
+            {/* Quick Actions */}
+            <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Ver antes de publicar</div>
+              {[
+                { label: "Explorar temas", href: "/forum", icon: <FileText size={14} /> },
+                { label: "Reto del día", href: "/forum/topic/reto-del-dia", icon: <Zap size={14} /> },
+              ].map((link, i) => (
+                <Link key={i} href={link.href} style={{ textDecoration: "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, background: "#f8fafc", marginBottom: i === 0 ? 8 : 0, transition: "all 0.2s", cursor: "pointer" }}
+                    onMouseEnter={e => (e.currentTarget.style.background = "#eff6ff")}
+                    onMouseLeave={e => (e.currentTarget.style.background = "#f8fafc")}
+                  >
+                    <span style={{ color: "#0F62FE" }}>{link.icon}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#374151" }}>{link.label}</span>
+                    <ChevronLeft size={13} style={{ marginLeft: "auto", transform: "rotate(180deg)", color: "#94a3b8" }} />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
-

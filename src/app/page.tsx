@@ -6,7 +6,8 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LandingWaitlistFooter } from "@/components/LandingWaitlistFooter"
-import { ClipboardCheck, LogIn, ChevronRight, Play, UserPlus, Calendar, User } from "lucide-react"
+import { ClipboardCheck, LogIn, ChevronRight, Play, UserPlus, Calendar, User, Check, X } from "lucide-react"
+import { CheckIcon, CrossIcon } from "@/components/CustomIcons"
 import * as React from "react"
 import Hero3DScene from "@/components/landing/Hero3DScene"
 
@@ -331,7 +332,7 @@ export default function WelcomePage() {
                   justifyContent: "center"
                 }}
               >
-                ✕
+                <CrossIcon size={20} />
               </button>
             </div>
 
@@ -2871,7 +2872,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                                 fontSize: "13px",
                                 flexShrink: 0,
                                 boxShadow: "0 4px 10px rgba(0, 86, 231, 0.3)",
-                              }}>✓</span>
+                              }}><CheckIcon size={14} color="white" /></span>
                               <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.6, color: "#374151" }}>
                                 {item.text}
                               </span>
@@ -2894,7 +2895,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                               fontWeight: 500,
                               fontSize: "14px",
                               flexShrink: 0,
-                            }}>✓</span>
+                            }}><CheckIcon size={14} color="white" /></span>
                             <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
                               Aprende con <strong>gamificación</strong> y recompensas.
                             </span>
@@ -2912,7 +2913,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                               fontWeight: 500,
                               fontSize: "14px",
                               flexShrink: 0,
-                            }}>✓</span>
+                            }}><CheckIcon size={14} color="white" /></span>
                             <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
                               Practica con <strong>simuladores reales</strong> sin riesgo.
                             </span>
@@ -2930,7 +2931,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                               fontWeight: 500,
                               fontSize: "14px",
                               flexShrink: 0,
-                            }}>✓</span>
+                            }}><CheckIcon size={14} color="white" /></span>
                             <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
                               Rastrea tu <strong>progreso</strong> y gana certificaciones.
                             </span>
@@ -2952,7 +2953,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                               fontWeight: 500,
                               fontSize: "14px",
                               flexShrink: 0,
-                            }}>✓</span>
+                            }}><CheckIcon size={14} color="white" /></span>
                             <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
                               Visualiza el <strong>progreso</strong> de tus hijos en tiempo real.
                             </span>
@@ -2970,7 +2971,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                               fontWeight: 500,
                               fontSize: "14px",
                               flexShrink: 0,
-                            }}>✓</span>
+                            }}><CheckIcon size={14} color="white" /></span>
                             <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
                               Accede a <strong>recursos compartidos</strong> y actividades familiares.
                             </span>

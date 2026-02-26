@@ -9,9 +9,10 @@ import { ThreadCardSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
 import {
   Target, MessageCircle, Briefcase, CheckCircle, AlertCircle,
-  ThumbsUp, Lightbulb, AlertTriangle, Zap, ChevronDown, ChevronUp,
+  ChevronDown, ChevronUp,
   Send, ExternalLink, X
 } from "lucide-react"
+import { RocketIcon, LeafIcon, NoteIcon, ThumbsUpIcon, IdeaIcon, WarningIcon, ZapIcon } from "@/components/CustomIcons"
 
 export const dynamic = 'force-dynamic'
 
@@ -50,11 +51,33 @@ type Tab = 'reto-del-dia' | 'preguntas' | 'proyectos'
 
 // ── Reaction config ─────────────────────────────────────────────────────────
 const REACTIONS = [
-  { type: "Buena meta", icon: <ThumbsUp size={13} />, color: "#10b981", bg: "#ecfdf5" },
-  { type: "Tip", icon: <Lightbulb size={13} />, color: "#f59e0b", bg: "#fffbeb" },
-  { type: "Te faltó algo", icon: <AlertTriangle size={13} />, color: "#6366f1", bg: "#eef2ff" },
-  { type: "Inspirador", icon: <Zap size={13} />, color: "#0F62FE", bg: "#eff6ff" },
+  { type: "Buena meta", icon: <ThumbsUpIcon size={13} />, color: "#10b981", bg: "#ecfdf5" },
+  { type: "Tip", icon: <IdeaIcon size={13} />, color: "#f59e0b", bg: "#fffbeb" },
+  { type: "Te faltó algo", icon: <WarningIcon size={13} />, color: "#6366f1", bg: "#eef2ff" },
+  { type: "Inspirador", icon: <ZapIcon size={13} />, color: "#0F62FE", bg: "#eff6ff" },
 ]
+
+// ── Topic colour palette ──────────────────────────────────────────────────────
+const TOPIC_COLORS: Record<string, { accent: string; light: string; shadow: string }> = {
+  "ahorro": { accent: "#10b981", light: "#ecfdf5", shadow: "rgba(16,185,129,0.15)" },
+  "presupuesto": { accent: "#2563eb", light: "#eff6ff", shadow: "rgba(37,99,235,0.15)" },
+  "deuda": { accent: "#ef4444", light: "#fef2f2", shadow: "rgba(239,68,68,0.15)" },
+  "inversion": { accent: "#d97706", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)" },
+  "inversion-basica": { accent: "#d97706", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)" },
+  "emprendimiento": { accent: "#7c3aed", light: "#f5f3ff", shadow: "rgba(124,58,237,0.15)" },
+  "proyectos": { accent: "#4f46e5", light: "#eef2ff", shadow: "rgba(79,70,229,0.15)" },
+  "negocios": { accent: "#0284c7", light: "#f0f9ff", shadow: "rgba(2,132,199,0.15)" },
+  "finanzas": { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)" },
+  "reto-del-dia": { accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.15)" },
+  "preguntas": { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)" },
+}
+const DEFAULT_TOPIC = { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)" }
+
+function getTopicColors(slug: string) {
+  if (TOPIC_COLORS[slug]) return TOPIC_COLORS[slug]
+  const key = Object.keys(TOPIC_COLORS).find(k => slug?.startsWith(k) || k?.startsWith(slug))
+  return key ? TOPIC_COLORS[key] : DEFAULT_TOPIC
+}
 
 // ── Evidence Card Component ──────────────────────────────────────────────────
 function EvidenceCard({
@@ -462,9 +485,9 @@ function ForumContent() {
                 {todayChallenge && (
                   <div style={{
                     background: "linear-gradient(135deg, #0f172a, #1e1b4b)",
-                    borderRadius: 18, padding: "24px 28px", marginBottom: 24,
+                    borderRadius: 28, padding: "24px 32px", marginBottom: 24,
                     display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16,
-                    border: "1px solid rgba(255,255,255,0.06)", boxShadow: "0 8px 32px rgba(0,0,0,0.15)"
+                    border: "1px solid rgba(255,255,255,0.06)", boxShadow: "0 16px 40px rgba(0,0,0,0.25)"
                   }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Reto de hoy</div>
@@ -535,7 +558,9 @@ function ForumContent() {
                   </div>
                 ) : sortedPosts.length === 0 ? (
                   <div style={{ textAlign: "center", padding: "60px 24px", background: "white", borderRadius: 20, border: "1.5px solid #f1f5f9" }}>
-                    <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
+                    <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
+                      <NoteIcon size={48} color="#94a3b8" />
+                    </div>
                     <h3 style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>Sé el primero en publicar tu evidencia</h3>
                     <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
                       Completa el reto de hoy y comparte tu aprendizaje con tu grupo.
@@ -598,53 +623,78 @@ function ForumContent() {
                         <p style={{ color: "#64748b", fontSize: 14, marginBottom: 20 }}>¡Sé el primero en hacer una pregunta!</p>
                         <Link href="/forum/new" style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>Hacer pregunta</Link>
                       </div>
-                    ) : threads.map((thread, i) => (
-                      <Link key={thread.id} href={`/forum/thread/${thread.id}`} style={{
-                        padding: "clamp(14px, 3vw, 22px)", background: "white", borderRadius: 16,
-                        border: `1.5px solid ${thread.isPinned ? "#f59e0b" : "#f1f5f9"}`,
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.04)", textDecoration: "none",
-                        display: "block", transition: "all 0.2s ease",
-                        animation: `fadeInUp 0.4s ease ${i * 0.04}s both`
-                      }}
-                        onMouseEnter={e => { e.currentTarget.style.transform = "translateX(4px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(15,98,254,0.12)" }}
-                        onMouseLeave={e => { e.currentTarget.style.transform = "translateX(0)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)" }}>
-                        <div style={{ display: "flex", gap: 16 }}>
-                          <div style={{ minWidth: 48, textAlign: "center" }}>
-                            <div style={{ fontSize: 22, fontWeight: 900, color: thread.score > 0 ? "#10b981" : thread.score < 0 ? "#ef4444" : "#94a3b8" }}>{thread.score}</div>
-                            <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>votos</div>
-                          </div>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 6 }}>
-                              <h3 style={{ margin: 0, flex: 1, fontSize: 16, fontWeight: 700, color: "#1e40af", lineHeight: 1.4 }}>{thread.title}</h3>
-                              <span style={{ padding: "3px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700, background: thread.status === "resolved" ? "#ecfdf5" : "#eff6ff", color: thread.status === "resolved" ? "#065f46" : "#0F62FE", whiteSpace: "nowrap" }}>
-                                {thread.status === "resolved" ? "Resuelto" : thread.status === "locked" ? "Cerrado" : "Abierto"}
-                              </span>
+                    ) : threads.map((thread, i) => {
+                      const tc = getTopicColors(thread.topic?.slug || "")
+                      const accentBorder = thread.isPinned ? "#f59e0b" : tc.accent
+                      return (
+                        <Link key={thread.id} href={`/forum/thread/${thread.id}`} style={{
+                          padding: "clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px) 0",
+                          background: "white", borderRadius: 16,
+                          border: "1.5px solid #f1f5f9",
+                          borderLeft: `4px solid ${accentBorder}`,
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.04)", textDecoration: "none",
+                          display: "block", transition: "all 0.2s ease",
+                          overflow: "hidden",
+                          animation: `fadeInUp 0.4s ease ${i * 0.04}s both`
+                        }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.transform = "translateX(4px)"
+                            e.currentTarget.style.boxShadow = `0 6px 20px ${tc.shadow}`
+                            e.currentTarget.style.borderColor = tc.accent
+                            e.currentTarget.style.borderLeftColor = accentBorder
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.transform = "translateX(0)"
+                            e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)"
+                            e.currentTarget.style.borderColor = "#f1f5f9"
+                            e.currentTarget.style.borderLeftColor = accentBorder
+                          }}>
+                          <div style={{ display: "flex", gap: 16, paddingLeft: 20 }}>
+                            {/* Vote score */}
+                            <div style={{ minWidth: 44, textAlign: "center", paddingTop: 2 }}>
+                              <div style={{ fontSize: 22, fontWeight: 900, color: thread.score > 0 ? tc.accent : thread.score < 0 ? "#ef4444" : "#94a3b8", lineHeight: 1 }}>{thread.score}</div>
+                              <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600, marginTop: 2 }}>votos</div>
                             </div>
-                            <p style={{ margin: "0 0 10px", fontSize: 13, color: "#64748b", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                              {thread.body.substring(0, 150)}...
-                            </p>
-                            {thread.tags.length > 0 && (
-                              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 }}>
-                                {thread.tags.map(tag => (
-                                  <span key={tag.id} style={{ padding: "3px 8px", background: "#eff6ff", color: "#0F62FE", fontSize: 11, fontWeight: 600, borderRadius: 6 }}>#{tag.name}</span>
-                                ))}
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 6 }}>
+                                <h3 style={{ margin: 0, flex: 1, fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>{thread.title}</h3>
+                                <span style={{
+                                  padding: "3px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
+                                  background: thread.status === "resolved" ? "#ecfdf5" : thread.status === "locked" ? "#fef2f2" : tc.light,
+                                  color: thread.status === "resolved" ? "#065f46" : thread.status === "locked" ? "#dc2626" : tc.accent,
+                                }}>
+                                  {thread.status === "resolved" ? "Resuelto" : thread.status === "locked" ? "Cerrado" : "Abierto"}
+                                </span>
                               </div>
-                            )}
-                            <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 600, alignItems: "center" }}>
-                              <span>{thread.topic.name}</span>
-                              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                <div style={{ width: 22, height: 22, borderRadius: "50%", background: "white", border: "1px solid #f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                  <AvatarDisplay avatar={thread.author.avatar} size={20} />
+                              <p style={{ margin: "0 0 10px", fontSize: 13, color: "#64748b", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                {thread.body.substring(0, 150)}...
+                              </p>
+                              {thread.tags.length > 0 && (
+                                <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 }}>
+                                  {thread.tags.map(tag => (
+                                    <span key={tag.id} style={{ padding: "3px 8px", background: tc.light, color: tc.accent, fontSize: 11, fontWeight: 600, borderRadius: 6 }}>#{tag.name}</span>
+                                  ))}
                                 </div>
-                                <span>por {thread.author.nickname}</span>
+                              )}
+                              <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 600, alignItems: "center", flexWrap: "wrap" }}>
+                                {/* Topic chip */}
+                                <span style={{ padding: "2px 8px", background: tc.light, color: tc.accent, borderRadius: 999, fontSize: 11, fontWeight: 700 }}>
+                                  {thread.topic.name}
+                                </span>
+                                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                  <div style={{ width: 22, height: 22, borderRadius: "50%", background: "white", border: "1px solid #f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    <AvatarDisplay avatar={thread.author.avatar} size={20} />
+                                  </div>
+                                  <span>por {thread.author.nickname}</span>
+                                </div>
+                                <span>{formatDate(thread.createdAt)}</span>
+                                <span>{thread.commentCount} resp.</span>
                               </div>
-                              <span>{formatDate(thread.createdAt)}</span>
-                              <span>{thread.commentCount} resp.</span>
                             </div>
                           </div>
-                        </div>
-                      </Link>
-                    ))
+                        </Link>
+                      )
+                    })
                   }
                 </div>
               </div>
@@ -664,7 +714,10 @@ function ForumContent() {
                 }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Esta semana</div>
-                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 24px)", fontWeight: 900, color: "white", margin: "0 0 6px" }}>🚀 Pitch Week</h2>
+                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 24px)", fontWeight: 900, color: "white", margin: "0 0 6px" }}>
+                      <RocketIcon size={24} color="white" style={{ verticalAlign: "middle", marginRight: 8 }} />
+                      Pitch Week
+                    </h2>
                     <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: 0, lineHeight: 1.5 }}>Comparte tu idea de negocio y recibe feedback de tu grupo. Usa la plantilla estructurada abajo.</p>
                   </div>
                   <Link href="/forum/new" style={{ padding: "11px 20px", background: "rgba(255,255,255,0.15)", color: "white", borderRadius: 12, fontWeight: 700, fontSize: 13, textDecoration: "none", border: "1.5px solid rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
@@ -696,7 +749,9 @@ function ForumContent() {
 
                 {/* Placeholder thread list for projects (same feed, filtered by topic if 'proyectos' topic exists) */}
                 <div style={{ textAlign: "center", padding: "40px 24px", background: "white", borderRadius: 18, border: "1.5px solid #f1f5f9" }}>
-                  <div style={{ fontSize: 40, marginBottom: 12 }}>🌱</div>
+                  <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>
+                    <LeafIcon size={40} color="#10b981" />
+                  </div>
                   <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>Aún no hay proyectos</h3>
                   <p style={{ color: "#64748b", fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>El feed de proyectos aparecerá aquí. ¡Sé el primero en publicar tu idea!</p>
                   <Link href="/forum/new" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", color: "white", borderRadius: 12, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>

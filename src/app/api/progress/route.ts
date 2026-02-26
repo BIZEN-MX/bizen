@@ -2,15 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { createSupabaseServerMicrocred } from '@/lib/supabase/server-microcred'
 import { cookies } from 'next/headers'
+import { awardXp } from '@/lib/rewards'
+import { createSupabaseServer } from '@/lib/supabase/server'
 
 // GET /api/progress - Get user's progress (optionally by lessonId or courseId)
 export async function GET(request: NextRequest) {
   try {
     const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-    
+    const supabase = await createSupabaseServer()
+
     const { data: { user }, error } = await supabase.auth.getUser()
-    
+
     if (error || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -101,10 +103,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-    
+    const supabase = await createSupabaseServer()
+
     const { data: { user }, error } = await supabase.auth.getUser()
-    
+
     if (error || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -152,7 +154,13 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(progress)
+    // Award XP if completed (100%) and newly created or updated to 100% just now
+    let rewards = null
+    if (percent === 100 && completedAt) {
+      rewards = await awardXp(user.id, 50) // 50 XP per completed lesson
+    }
+
+    return NextResponse.json({ ...progress, rewards })
   } catch (error) {
     console.error('Error upserting progress:', error)
     return NextResponse.json(

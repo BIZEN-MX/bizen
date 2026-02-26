@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
+import { CheckIcon } from "@/components/CustomIcons"
 import { ThreadCardSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
 
@@ -41,7 +42,7 @@ interface ForumThread {
 export default function FollowingPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
-  
+
   const [threads, setThreads] = useState<ForumThread[]>([])
   const [loadingData, setLoadingData] = useState(true)
 
@@ -109,7 +110,7 @@ export default function FollowingPage() {
     if (diffInSeconds < 3600) return `hace ${Math.floor(diffInSeconds / 60)}m`
     if (diffInSeconds < 86400) return `hace ${Math.floor(diffInSeconds / 3600)}h`
     if (diffInSeconds < 604800) return `hace ${Math.floor(diffInSeconds / 86400)}d`
-    
+
     return date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })
   }
 
@@ -135,11 +136,11 @@ export default function FollowingPage() {
         maxWidth: "100vw",
         boxSizing: "border-box"
       }}>
-        <main style={{ 
+        <main style={{
           position: "relative",
           width: "100%",
-          maxWidth: "100%", 
-          margin: "0 auto", 
+          maxWidth: "100%",
+          margin: "0 auto",
           padding: "clamp(24px, 4vw, 40px)",
           boxSizing: "border-box",
           zIndex: 1
@@ -163,9 +164,9 @@ export default function FollowingPage() {
                 ← Volver al Foro
               </button>
             </Link>
-            <h1 style={{ 
-              margin: "16px 0 8px", 
-              fontSize: "clamp(28px, 6vw, 36px)", 
+            <h1 style={{
+              margin: "16px 0 8px",
+              fontSize: "clamp(28px, 6vw, 36px)",
               fontWeight: 800,
               color: "#1E40AF"
             }}>
@@ -177,9 +178,9 @@ export default function FollowingPage() {
           </div>
 
           {/* Threads List */}
-          <div style={{ 
-            display: "flex", 
-            flexDirection: "column", 
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
             gap: 16,
             opacity: loadingData ? 0.6 : 1,
             transition: "opacity 0.3s ease"
@@ -271,11 +272,11 @@ export default function FollowingPage() {
                   {/* Thread Content */}
                   <div style={{ flex: 1 }}>
                     <div style={{ marginBottom: 8, display: "flex", alignItems: "flex-start", gap: 12 }}>
-                      <h3 style={{ 
+                      <h3 style={{
                         margin: 0,
                         flex: 1,
-                        fontSize: 18, 
-                        fontWeight: 700, 
+                        fontSize: 18,
+                        fontWeight: 700,
                         color: "#1E40AF",
                         lineHeight: 1.4
                       }}>
@@ -294,11 +295,11 @@ export default function FollowingPage() {
                       </span>
                     </div>
 
-                    <div style={{ 
-                      display: "flex", 
-                      gap: 16, 
-                      flexWrap: "nowrap", 
-                      alignItems: "center", 
+                    <div style={{
+                      display: "flex",
+                      gap: 16,
+                      flexWrap: "nowrap",
+                      alignItems: "center",
                       marginTop: 12,
                       overflowX: "auto",
                       width: "100%"
@@ -325,7 +326,8 @@ export default function FollowingPage() {
                           fontWeight: 600,
                           whiteSpace: "nowrap"
                         }}>
-                          ✓ Resuelto
+                          <CheckIcon size={12} color="#10B981" style={{ marginRight: 4 }} />
+                          Resuelto
                         </span>
                       )}
                     </div>

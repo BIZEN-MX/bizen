@@ -1,0 +1,405 @@
+src/landing/page.tsx:                  <h1>Bienvenido de nuevo, {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Estudiante'}! 👋</h1>
+src/landing/page.tsx:                <li>📈 Progreso gamificado</li>
+src/landing/page.tsx:                <li>🎓 Certificación BIZEN</li>
+src/billy-demo/page.tsx:            📝 Text-to-Speech
+src/billy-demo/page.tsx:                <strong>💡 Tip:</strong> Billy usará la voz predeterminada del navegador.
+src/billy-demo/page.tsx:                <strong>⚠️ Nota:</strong> Necesitas agregar archivos de audio en{' '}
+src/billy-demo/page.tsx:                  { text: '¡Hola! Bienvenido a BIZEN', emoji: '👋' },
+src/billy-demo/page.tsx:                  { text: '¡Excelente trabajo! Sigue así.', emoji: '🎉' },
+src/billy-demo/page.tsx:                  { text: 'Recuerda revisar tus lecciones.', emoji: '📚' },
+src/billy-demo/page.tsx:                  { text: '¿Necesitas ayuda? Estoy aquí para ti.', emoji: '💡' },
+src/billy-demo/page.tsx:                  { text: '¡Has completado este módulo!', emoji: '🏆' },
+src/course-complete/page.tsx:          🎉
+src/course-complete/page.tsx:                ¡Felicidades, Dragón! Has demostrado excelencia en tu aprendizaje y has completado exitosamente tu jornada BIZEN 🎓
+src/app/test-interactive/page.tsx:        <div style={{ fontSize: 64, marginBottom: 24 }}>🚀</div>
+src/app/test-interactive/page.tsx:              📚 Courses Page (Click first lesson)
+src/app/test-interactive/page.tsx:              ✨ Direct to Interactive Lesson
+src/app/learn/course-1/unit-1/l3-fisico-vs-digital/page.tsx:        💵💳
+src/app/learn/course-1/unit-1/l3-fisico-vs-digital/page.tsx:        🌍💸
+src/app/learn/course-1/unit-1/l3-fisico-vs-digital/page.tsx:        🔍📊
+src/app/learn/course-1/unit-1/l3-fisico-vs-digital/page.tsx:        🔌❌
+src/app/learn/course-1/unit-1/l3-fisico-vs-digital/page.tsx:            🏆 Insignia desbloqueada: Navegante del Dinero
+src/app/learn/course-1/unit-1/l3-fisico-vs-digital/page.tsx:            <span style={{ fontSize: 24 }}>💳</span>
+src/app/learn/course-1/unit-1/l3-fisico-vs-digital/page.tsx:            <span style={{ fontSize: 24 }}>🎯</span>
+src/app/simulador/game/[gameId]/page.tsx:        console.log("✅ Card drawn:", data)
+src/app/simulador/game/[gameId]/page.tsx:          console.log("📉 Market event:", data.marketEvent?.name)
+src/app/simulador/game/[gameId]/page.tsx:        console.error("❌ Failed to draw card:", errorData)
+src/app/simulador/game/[gameId]/page.tsx:        alert(`❌ Error al sacar carta:\n\n${errorData.error || 'Error desconocido'}\n\n${errorData.details ? `Detalles: ${errorData.details}` : 'Revisa la consola del navegador para más información.'}`)
+src/app/simulador/game/[gameId]/page.tsx:      console.error("❌ Error drawing card:", error)
+src/app/simulador/game/[gameId]/page.tsx:      alert(`❌ Error de red al sacar carta.\n\n${error instanceof Error ? error.message : 'Error desconocido'}\n\nRevisa tu conexión y la consola del navegador.`)
+src/app/simulador/game/[gameId]/page.tsx:    console.log("💰 Taking loan:", loanAmount)
+src/app/simulador/game/[gameId]/page.tsx:        console.log("✅ Loan taken successfully:", data)
+src/app/simulador/game/[gameId]/page.tsx:        alert(`✅ ¡Préstamo aprobado!\n\n💰 Recibiste: $${data.amount?.toLocaleString() || loanAmount.toLocaleString()}\n💳 Pago mensual: $${data.monthlyPayment?.toLocaleString()}/mes\n💵 Nuevo efectivo: $${data.newCash?.toLocaleString()}`)
+src/app/simulador/game/[gameId]/page.tsx:        console.error("❌ Failed to take loan:", errorData)
+src/app/simulador/game/[gameId]/page.tsx:        alert(`❌ Error al solicitar préstamo:\n\n${errorData.error || 'Error desconocido'}\n\n${errorData.details ? `Detalles: ${errorData.details}` : 'Revisa la consola del navegador para más información.'}`)
+src/app/simulador/game/[gameId]/page.tsx:      console.error("❌ Error taking loan:", error)
+src/app/simulador/game/[gameId]/page.tsx:      alert(`❌ Error de red al solicitar el préstamo.\n\n${error instanceof Error ? error.message : 'Error desconocido'}\n\nRevisa tu conexión y la consola del navegador.`)
+src/app/simulador/game/[gameId]/page.tsx:          {currentCard?.type === "real_estate" && "🏠"}
+src/app/simulador/game/[gameId]/page.tsx:          {currentCard?.type === "stock" && "📈"}
+src/app/simulador/game/[gameId]/page.tsx:          {currentCard?.type === "business" && "💼"}
+src/app/simulador/game/[gameId]/page.tsx:            💰 Comprar
+src/app/simulador/game/[gameId]/page.tsx:            ❌ Pasar
+src/app/simulador/game/[gameId]/page.tsx:          {!currentDoodad?.category && "💎"} {currentDoodad?.name}
+src/app/simulador/game/[gameId]/page.tsx:            ⚠️ <strong>ADVERTENCIA:</strong> Este es un gasto de lujo que NO genera ningún ingreso.
+src/app/simulador/game/[gameId]/page.tsx:            ✅ Pasar (Decisión Inteligente)
+src/app/simulador/game/[gameId]/page.tsx:                      ? "🎉 ¡Libre!"
+src/app/simulador/game/[gameId]/page.tsx:                      💳 Préstamos Activos
+src/app/simulador/game/[gameId]/page.tsx:                              {inv.opportunityCard.type === "real_estate" && "🏠"}
+src/app/simulador/game/[gameId]/page.tsx:                              {inv.opportunityCard.type === "stock" && "📈"}
+src/app/simulador/game/[gameId]/page.tsx:                              {inv.opportunityCard.type === "business" && "💼"}
+src/app/simulador/game/[gameId]/page.tsx:                      👋
+src/app/simulador/game/[gameId]/page.tsx:                      📊
+src/app/simulador/game/[gameId]/page.tsx:                        <strong style={{ color: "#2563eb" }}>📊 CASH FLOW:</strong>
+src/app/simulador/game/[gameId]/page.tsx:                        <strong>2. 💰 Tomar Decisiones:</strong> Comprar inversiones que generen ingreso pasivo o pasar
+src/app/simulador/game/[gameId]/page.tsx:                        <strong style={{ color: "#059669" }}>🎯 GANAR:</strong> Cuando tu ingreso pasivo
+src/app/simulador/game/[gameId]/page.tsx:                      🏠💼📈
+src/app/simulador/game/[gameId]/page.tsx:                        <strong style={{ color: "#059669" }}>🏠 Bienes Raíces:</strong>
+src/app/simulador/game/[gameId]/page.tsx:                        <strong style={{ color: "#1e40af" }}>📈 Acciones:</strong>
+src/app/simulador/game/[gameId]/page.tsx:                        <strong style={{ color: "#92400e" }}>💼 Negocios:</strong>
+src/app/simulador/game/[gameId]/page.tsx:                      💡
+src/app/simulador/game/[gameId]/page.tsx:                        <strong style={{ color: "#059669" }}>✅ HACER:</strong>
+src/app/simulador/game/[gameId]/page.tsx:                        <strong style={{ color: "#dc2626" }}>❌ EVITAR:</strong>
+src/app/simulador/game/[gameId]/page.tsx:                    {tutorialStep === 4 ? "🚀 ¡Empezar a Jugar!" : "Siguiente →"}
+src/app/simulador/game/[gameId]/page.tsx:                  {marketEventData.marketEvent.type === "downsized" && "📉"}
+src/app/simulador/game/[gameId]/page.tsx:                  💳 Pagar Préstamo
+src/app/simulador/game/[gameId]/page.tsx:                      ✅ <strong>Beneficio:</strong> Al pagar este préstamo, tus gastos mensuales
+src/app/simulador/game/[gameId]/page.tsx:                      ❌ <strong>Fondos insuficientes:</strong> Necesitas $
+src/app/simulador/game/[gameId]/page.tsx:                    💰 Pagar ${selectedLoan.remainingBalance.toLocaleString()}
+src/app/simulador/game/[gameId]/page.tsx:                    ⚠️ <strong>Recuerda:</strong> Los préstamos aumentan tus gastos mensuales.
+src/app/simulador/game/[gameId]/page.tsx:                    💰 Solicitar Préstamo
+src/app/simulador/game/[gameId]/page.tsx:                  {selectedInvestment.opportunityCard.type === "real_estate" && "🏠"}
+src/app/simulador/game/[gameId]/page.tsx:                  {selectedInvestment.opportunityCard.type === "stock" && "📈"}
+src/app/simulador/game/[gameId]/page.tsx:                  {selectedInvestment.opportunityCard.type === "business" && "💼"}
+src/app/simulador/game/[gameId]/page.tsx:                    💰 Vender
+src/app/simulador/stats/page.tsx:                  📊 Estadísticas
+src/app/simulador/stats/page.tsx:              <div style={{ fontSize: 48, marginBottom: 8 }}>🏆</div>
+src/app/simulador/stats/page.tsx:              <div style={{ fontSize: 48, marginBottom: 8 }}>📈</div>
+src/app/simulador/stats/page.tsx:              🎯 Rendimiento
+src/app/simulador/stats/page.tsx:                  📊 Turnos Promedio para Ganar
+src/app/simulador/stats/page.tsx:                  👤 Mejor Profesión
+src/app/simulador/stats/page.tsx:                  💰 Dinero Total Ganado
+src/app/simulador/stats/page.tsx:                  🏠 Inversiones Totales
+src/app/simulador/stats/page.tsx:                🚀 Empezar a Jugar
+src/app/auth/callback/route.ts:    console.log('✅ Email verified successfully! User:', data.user?.email);
+src/app/auth/callback/route.ts:    console.log('✅ Session created:', !!data.session);
+src/app/payment/page.tsx:              💳 Aceptamos todas las tarjetas principales. Tu información está protegida con encriptación de nivel bancario.
+src/app/signup/actions.ts:    message: '✅ Test: Server action is working!',
+src/app/diagnostic/[question]/page.tsx:              <div style={{ fontSize: "60px", marginBottom: "16px" }}>🎉</div>
+src/app/reto-diario/page.tsx:  { key: "smartGoal", emoji: "🎯", label: "Mi objetivo SMART", hint: "Específico, medible, alcanzable, relevante y con tiempo", placeholder: "Ej: Ahorrar $300 en 30 días reduciendo mi gasto en delivery.", limit: 180 },
+src/app/reto-diario/page.tsx:  { key: "learned", emoji: "💡", label: "¿Qué aprendí?", hint: "El insight más valioso que te llevas", placeholder: "Ej: Cocinar en casa me puede ahorrar hasta $1,000 al mes.", limit: 250 },
+src/app/reto-diario/page.tsx:                    <span style={{ fontSize: 20 }}>💡</span>
+src/app/reto-diario/page.tsx:                    { icon: "🎯", text: "Cada reto refuerza lo aprendido en clase" },
+src/app/reto-diario/page.tsx:                    { icon: "🏆", text: "Acumula XP y sube de nivel" },
+src/app/admin/licenses/page.tsx:          💎 Planes Disponibles
+src/app/admin/courses/page.tsx:          📚 Gestión de Cursos
+src/app/admin/courses/page.tsx:          <div style={{ fontSize: 64, marginBottom: 16 }}>📚</div>
+src/app/admin/schools/[schoolId]/page.tsx:          📊 Actividad Reciente
+src/app/business-lab/track/[key]/page.tsx:              🎯 {track.title}
+src/app/business-lab/track/[key]/page.tsx:                🎉 ¡Felicidades! Has completado esta ruta
+src/app/business-lab/simulators/page.tsx:      icon: "💰",
+src/app/business-lab/simulators/page.tsx:      icon: "📈",
+src/app/business-lab/simulators/page.tsx:      icon: "📊",
+src/app/business-lab/simulators/page.tsx:          <span style={{ fontSize: 24 }}>💡</span>
+src/app/business-lab/step/[id]/page.tsx:              🎯 <span>Objetivo:</span> {stepData.goal}
+src/app/business-lab/step/[id]/page.tsx:                          {artifact.type === "canvas" ? "📊" : artifact.type === "persona" ? "👤" : "📝"}
+src/app/business-lab/step/[id]/page.tsx:                <span style={{ fontSize: 20 }}>✨</span>
+src/app/business-lab/step/[id]/page.tsx:                📄 Templates
+src/app/business-lab/mentor/page.tsx:          👨‍🏫 Mentores
+src/app/business-lab/mentor/page.tsx:                👤
+src/app/business-lab/score/page.tsx:          📈 Investment Readiness Score
+src/app/business-lab/templates/page.tsx:          📄 Templates
+src/app/business-lab/templates/page.tsx:                      {template.icon || "📋"}
+src/app/business-lab/templates/page.tsx:          <span style={{ fontSize: 24 }}>💡</span>
+src/app/business-lab/page.tsx:              🚀 Business Lab
+src/app/business-lab/page.tsx:              <span style={{ fontSize: 24 }}>🎯</span>
+src/app/business-lab/page.tsx:                <span style={{ fontSize: 24 }}>💡</span>
+src/app/business-lab/page.tsx:                  🎯 {nextStep.goal}
+src/app/business-lab/page.tsx:                <div style={{ fontSize: 32, marginBottom: 12 }}>📄</div>
+src/app/business-lab/page.tsx:                <div style={{ fontSize: 32, marginBottom: 12 }}>📈</div>
+src/app/business-lab/page.tsx:              <span style={{ fontSize: 28 }}>🎯</span>
+src/app/business-lab/page.tsx:              <span style={{ fontSize: 24 }}>⚠️</span>
+src/app/test-email/page.tsx:        setResult({ success: true, message: "✅ Email enviado correctamente!" })
+src/app/test-email/page.tsx:            <p>Si ves este mensaje, ¡Resend está funcionando correctamente! 🎉</p>
+src/app/test-email/page.tsx:        setResult({ success: true, message: "✅ Email de prueba enviado correctamente!" })
+src/app/test-email/page.tsx:          <strong>📋 Estado de configuración:</strong>
+src/app/test-email/page.tsx:            {loading ? "Enviando..." : "✉️ Email Simple"}
+src/app/test-email/page.tsx:            {result.error ? `❌ ${result.error}` : result.message}
+src/app/test-email/page.tsx:            📚 Instrucciones:
+src/app/forum/page.tsx:                    <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
+src/app/forum/page.tsx:                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 24px)", fontWeight: 900, color: "white", margin: "0 0 6px" }}>🚀 Pitch Week</h2>
+src/app/profile/page.tsx:      console.log("✅ Profile auto-saved successfully!")
+src/app/bizen/auth/callback/route.ts:        console.log('[BIZEN Callback] ✅ Profile auto-upserted')
+src/app/api/signup/route.ts:    console.log('📝 Parsed form data:', {
+src/app/api/signup/route.ts:      console.error('❌ Missing required fields:', missingFields)
+src/app/api/signup/route.ts:      console.error('❌ Missing Supabase environment variables:', {
+src/app/api/signup/route.ts:    console.log('✅ Supabase keys found:', {
+src/app/api/signup/route.ts:        console.warn('⚠️ reCAPTCHA verification failed:', recaptchaResult)
+src/app/api/signup/route.ts:    console.log('🔧 Creating Supabase client for BIZEN')
+src/app/api/signup/route.ts:    console.log('🔧 Supabase URL:', supabaseUrl.substring(0, 30) + '...')
+src/app/api/signup/route.ts:    console.log('🔧 Supabase Key (first 30):', supabaseKey.substring(0, 30))
+src/app/api/signup/route.ts:    console.log('🔧 Supabase Key (last 20):', supabaseKey.substring(supabaseKey.length - 20))
+src/app/api/signup/route.ts:    console.log('🔧 Key length:', supabaseKey.length)
+src/app/api/signup/route.ts:    console.log('🔧 Key from process.env directly:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 30) || 'NOT IN PROCESS.ENV')
+src/app/api/signup/route.ts:      console.log('✅ Supabase client created successfully')
+src/app/api/signup/route.ts:      console.error('❌ Failed to create Supabase client:', clientError)
+src/app/api/signup/route.ts:        console.error('❌ CRITICAL: Invalid Supabase API key detected!')
+src/app/api/signup/route.ts:        console.log('👤 Creating profile for user:', data.user.id)
+src/app/api/signup/route.ts:          console.log('✅ Profile created successfully')
+src/app/api/signup/route.ts:        console.error('❌ Failed to create user profile:', profileError)
+src/app/api/signup/route.ts:      console.log('✅ User signed up and session created - auto-login successful')
+src/app/api/signup/route.ts:        message: '✅ ¡Cuenta creada exitosamente! Redirigiendo...',
+src/app/api/signup/route.ts:        message: '✅ Cuenta creada. Te enviamos un correo de verificación.\n\n📧 Revisa tu bandeja de entrada y carpeta de spam.\n\n⚠️ Si no recibes el correo en 5 minutos, usa "Reenviar verificación".',
+src/app/api/signup/route.ts:        message: '✅ ¡Cuenta creada exitosamente! Puedes iniciar sesión ahora.',
+src/app/api/signup/route.ts:        message: '✅ Cuenta creada. Verifica tu correo para continuar.',
+src/app/api/signup/route.ts:    console.error('❌ Signup exception:', {
+src/app/api/admin/files/delete/route.ts:        console.log('✅ Physical file deleted:', filePath);
+src/app/api/admin/files/delete/route.ts:        console.error('⚠️ Error deleting physical file:', error);
+src/app/api/admin/files/delete/route.ts:      console.log('⚠️ Physical file not found:', filePath);
+src/app/api/admin/files/delete/route.ts:    console.log('✅ Database record deleted for file:', fileId);
+src/app/api/admin/files/delete/route.ts:    console.error('❌ Error deleting file:', error);
+src/app/api/admin/files/route.ts:    console.log('✅ Files fetched:', files.length);
+src/app/api/admin/files/route.ts:      console.log('📄 First file sample:', JSON.stringify(files[0], null, 2));
+src/app/api/admin/files/route.ts:      console.log('📄 userName:', files[0].userName);
+src/app/api/admin/files/route.ts:      console.log('📄 userEmail:', files[0].userEmail);
+src/app/api/admin/files/route.ts:    console.log('✅ Returning success response');
+src/app/api/admin/files/route.ts:    console.error('❌ Error fetching files:', error);
+src/app/api/admin/files/route.ts:    console.error('❌ Error details:', {
+src/app/api/admin/files/view/route.ts:            <h1>📄 ${fileName}</h1>
+src/app/api/admin/files/view/route.ts:              ❌ Cerrar
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:      console.error("❌ Auth error:", authError)
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:    console.log("💰 Loan request:", { amount, type, description, interestRate })
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:      console.error("❌ Player fetch error:", playerError)
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:    console.log("✅ Player found:", { playerId: player.id, currentCash: player.cash_on_hand })
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:    console.log("📊 Calculated monthly payment:", monthlyPayment)
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:      console.error("❌ Error creating liability:", liabilityError)
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:    console.log("✅ Liability created:", liability.id)
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:      console.error("❌ Error updating player cash:", updateError)
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:    console.log("✅ Player cash updated:", { oldCash: player.cash_on_hand, newCash })
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:      console.warn("⚠️ Error logging event (non-critical):", eventError.message)
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:    console.log(`✅ Loan taken successfully:`, { amount, newCash, monthlyPayment })
+src/app/api/cashflow/game/[gameId]/take-loan/route.ts:    console.error("❌ Error taking loan:", error)
+src/app/api/cashflow/game/[gameId]/roll-dice/route.ts:      console.error("❌ Auth error:", authError)
+src/app/api/cashflow/game/[gameId]/roll-dice/route.ts:      console.error("❌ Player fetch error:", playerError)
+src/app/api/cashflow/game/[gameId]/roll-dice/route.ts:    console.log("✅ Player found:", { currentPosition })
+src/app/api/cashflow/game/[gameId]/roll-dice/route.ts:      console.error("❌ Error updating player:", updateError)
+src/app/api/cashflow/game/[gameId]/roll-dice/route.ts:    console.log("✅ Player updated successfully")
+src/app/api/cashflow/game/[gameId]/roll-dice/route.ts:    console.error("❌ Error rolling dice:", error)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:      console.error("❌ Auth error:", authError)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:      console.error("❌ Game session error:", sessionError)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:    console.log("✅ Game session found")
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:      console.error("❌ Player fetch error:", playersError)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:    console.log("✅ Player found:", { playerId: player.id, isOnFastTrack: player.is_on_fast_track })
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:        console.error("❌ Error fetching doodads:", doodadError)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:        console.log("✅ Doodad drawn:", randomDoodad.name)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:        console.warn("⚠️ No doodads found, falling through to opportunity cards")
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:      console.log("📉 Drawing market event...")
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:        console.error("❌ Error fetching market cards:", marketError)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:        console.log(`✅ Found ${marketCards.length} market cards`)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:      console.error("❌ Error fetching opportunity cards:", cardsError)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:      console.error("❌ No opportunity cards available")
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:    console.log(`✅ Found ${cards.length} opportunity cards`)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:      console.warn("⚠️ Error logging event (non-critical):", eventError.message)
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:    console.log(`✅ Card drawn successfully:`, { cardId: card.id, cardName: card.name, cardType: card.type })
+src/app/api/cashflow/game/[gameId]/draw-card/route.ts:    console.error("❌ Error drawing card:", error)
+src/app/api/user/award-xp/route.ts:    console.log(`✅ Awarded ${xpAmount} XP to user ${user.id} for: ${reason || 'unknown'}`)
+src/app/api/free-chatbot/route.ts:    return '¡Hola! Soy tu asistente de BIZEN. Puedo ayudarte con:\n\n📚 BIZEN: 6 módulos de educación financiera (Identidad Digital, Finanzas, Presupuestos, Inversiones, Créditos, Temas Avanzados)\n🔐 Registro, login y recuperación de contraseña\n📊 Tu progreso y certificaciones\n💬 Soporte técnico y navegación\n🎯 Quizzes y desbloqueo de secciones\n\n¿En qué puedo ayudarte hoy?'
+src/app/api/free-chatbot/route.ts:    return 'Para desbloquear secciones en BIZEN:\n\n✅ Completa la sección anterior al 100%\n✅ Aproba todos los quizzes de la sección\n✅ El sistema desbloquea automáticamente la siguiente\n✅ Tu progreso se guarda, siempre puedes continuar después\n\nSi una sección no se desbloquea, verifica que completaste todos los pasos anteriores.'
+src/app/api/free-chatbot/route.ts:    return 'Parece que tu pregunta es muy corta. Puedo ayudarte con:\n\n📚 BIZEN: Módulos de educación financiera (Identidad Digital, Finanzas, Presupuestos, Inversiones, Créditos, Temas Avanzados)\n🔐 Registro, login, progreso, certificaciones\n💬 Soporte técnico\n\n¿Podrías ser más específico sobre qué necesitas?'
+src/app/api/free-chatbot/route.ts:  return 'Entiendo tu pregunta, pero necesito más detalles para ayudarte mejor. Puedo ayudarte con:\n\n📚 BIZEN: 6 módulos de educación financiera (Identidad Digital, Finanzas, Presupuestos, Inversiones, Créditos, Temas Avanzados)\n🔐 Registro, login, recuperación de contraseña\n📊 Progreso, certificaciones, desbloqueo de secciones\n💬 Problemas técnicos y soporte\n\n¿Podrías reformular tu pregunta o ser más específico sobre qué módulo o tema te interesa?'
+src/app/api/forum/comments/route.ts:      console.log(`✅ Auto-created profile for user ${user.id}`)
+src/app/api/forum/comments/route.ts:    console.log(`✅ Created comment on thread ${threadId} by user ${user.id}`)
+src/app/api/forum/parental-override/route.ts:    console.log(`✅ Parental override requested for user ${user.id} by ${parentName} (${parentEmail})`)
+src/app/api/forum/seed-topics/route.ts:      { id: 'topic-ideas', name: 'Ideas de Negocio', slug: 'ideas-negocio', description: 'Comparte y discute nuevas ideas de emprendimiento', icon: '💡', orderIndex: 1 },
+src/app/api/forum/seed-topics/route.ts:      { id: 'topic-finance', name: 'Finanzas', slug: 'finanzas', description: 'Gestión financiera y contabilidad', icon: '💰', orderIndex: 3 },
+src/app/api/forum/seed-topics/route.ts:      { id: 'topic-legal', name: 'Legal', slug: 'legal', description: 'Aspectos legales y regulatorios', icon: '⚖️', orderIndex: 5 },
+src/app/api/forum/seed-topics/route.ts:      { id: 'topic-showcase', name: 'Proyectos', slug: 'proyectos', description: 'Muestra tu proyecto y recibe feedback', icon: '🚀', orderIndex: 7 },
+src/app/api/forum/seed-topics/route.ts:        console.log(`✅ Created topic: ${topic.name}`)
+src/app/api/forum/check-age-graduation/route.ts:        console.log(`✅ User ${user.userId} graduated to adult status (turned 18)`)
+src/app/api/forum/accepted/route.ts:    console.log(`✅ Accepted answer ${commentId} for thread ${threadId}`)
+src/app/api/forum/tags/route.ts:    console.warn("⚠️ DATABASE_URL not configured. Returning empty forum tags list.")
+src/app/api/forum/tags/route.ts:    console.log(`✅ Found ${tags.length} tags`)
+src/app/api/forum/tags/route.ts:    console.warn("⚠️ Error fetching tags (returning empty list):", error.message || String(error))
+src/app/api/forum/bookmarks/route.ts:    console.log(`✅ Returning ${threads.length} bookmarked threads`)
+src/app/api/forum/threads/route.ts:      console.error("❌ Auth error:", authError)
+src/app/api/forum/threads/route.ts:    console.log("✅ User authenticated:", user.id)
+src/app/api/forum/threads/route.ts:    console.log("📊 Query params:", { sort, topicSlug })
+src/app/api/forum/threads/route.ts:        console.log("✅ Topic found:", topic.name)
+src/app/api/forum/threads/route.ts:        console.warn("⚠️ Topic not found:", topicSlug)
+src/app/api/forum/threads/route.ts:    console.log(`✅ Found ${threads.length} threads`)
+src/app/api/forum/threads/route.ts:    console.log("✅ Returning formatted threads")
+src/app/api/forum/threads/route.ts:    console.error("❌ Error fetching threads:", error)
+src/app/api/forum/threads/route.ts:      console.error("❌ Unauthorized:", authError?.message || "No user")
+src/app/api/forum/threads/route.ts:      console.error("❌ Error fetching profile:", profileError)
+src/app/api/forum/threads/route.ts:      console.log(`✅ Auto-created profile for user ${user.id}`)
+src/app/api/forum/threads/route.ts:    console.log(`✅ Created thread: "${title}" by user ${user.id}`)
+src/app/api/forum/threads/route.ts:    console.error("❌ Error creating thread:", error)
+src/app/api/forum/threads/route.ts:      console.error(`❌ Missing table: ${tableName}`)
+src/app/api/forum/threads/route.ts:      console.error(`❌ Full error message: ${errorMessage}`)
+src/app/api/forum/follows/route.ts:    console.log(`✅ Returning ${threads.length} followed threads`)
+src/app/api/forum/verify-age/route.ts:    console.log(`✅ Age verified for user ${user.id}: ${actualAge} years old, isMinor: ${isMinor}`)
+src/app/api/forum/topics/route.ts:    console.warn("⚠️ DATABASE_URL not configured. Returning empty forum topics list.")
+src/app/api/forum/topics/route.ts:    console.log(`✅ Found ${topics.length} topics`)
+src/app/api/forum/topics/route.ts:    console.warn("⚠️ Error fetching topics (returning empty list):", error.message || String(error))
+src/app/api/forum/reports/route.ts:      console.log(`⚠️ Auto-hidden ${targetType} ${targetId} due to 3+ reports`)
+src/app/api/forum/reports/route.ts:    console.log(`✅ Report created by user ${user.id} for ${targetType} ${targetId}`)
+src/app/api/onboarding/complete/route.ts:                avatar: avatar || { type: "emoji", value: "👤" },
+src/app/account/settings/page.tsx:        setMessage("✅ Configuración guardada")
+src/app/account/settings/page.tsx:        setMessage(`❌ ${error.error || 'Error al guardar'}`)
+src/app/account/settings/page.tsx:      setMessage("❌ Error al guardar")
+src/app/account/settings/page.tsx:                background: message.includes('✅') ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)",
+src/app/account/settings/page.tsx:                color: message.includes('✅') ? "#10B981" : "#EF4444"
+src/app/teacher/dashboard/page.tsx:                <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
+src/app/teacher/courses/[courseId]/page.tsx:          { key: "units", label: "Unidades y Lecciones", icon: "📚" },
+src/app/teacher/courses/[courseId]/page.tsx:          { key: "settings", label: "Configuración", icon: "⚙️" },
+src/app/teacher/courses/page.tsx:            👨‍🏫 Mis Cursos
+src/app/teacher/courses/page.tsx:            📝 Borradores
+src/app/teacher/courses/page.tsx:          <div style={{ fontSize: 64, marginBottom: 16 }}>📚</div>
+src/app/teacher/analytics/page.tsx:          📊 Análisis y Desempeño
+src/app/teacher/analytics/page.tsx:          📚 Desempeño por Curso
+src/app/teacher/analytics/page.tsx:            ✅ Resultados Recientes de Quizzes
+src/progress/page.tsx:                          ? "✅"
+src/progress/page.tsx:                          ? "📝"
+src/auth/callback/route.ts:    console.log('✅ Email verified successfully! User:', data.user?.email);
+src/auth/callback/route.ts:    console.log('✅ Session created:', !!data.session);
+src/signup/actions.ts:    message: '✅ Test: Server action is working!',
+src/admin/manage-users/page.tsx:        alert(`✅ Datos del usuario eliminados correctamente!\n\nRegistros eliminados:\n${JSON.stringify(data.deletedRecords, null, 2)}`);
+src/admin/manage-users/page.tsx:        alert(`❌ Error: ${data.error}`);
+src/admin/manage-users/page.tsx:      alert("❌ Error al eliminar usuario");
+src/admin/manage-users/page.tsx:          <strong>⚠️ Importante:</strong> Al eliminar un usuario, se borran TODOS sus datos:<br />
+src/admin/manage-users/page.tsx:                    👤 {userData.diagnosticQuiz?.studentName || userData.email || "Usuario sin nombre"}
+src/admin/manage-users/page.tsx:                      <strong>📝 Quiz Diagnóstico:</strong>{" "}
+src/admin/manage-users/page.tsx:                      <strong>🎯 Quiz de Módulos:</strong> {userData.quizAttempts}
+src/admin/manage-users/page.tsx:                      <strong>✅ Secciones:</strong> {userData.sectionsCompleted}
+src/admin/module-quiz-results/page.tsx:        alert(`✅ Datos de ${userEmail} eliminados correctamente`)
+src/admin/module-quiz-results/page.tsx:        alert(`❌ Error: ${data.error}`)
+src/admin/module-quiz-results/page.tsx:      alert(`❌ Error al eliminar: ${err}`)
+src/admin/module-quiz-results/page.tsx:          <div style={{ fontSize: 24, marginBottom: 12 }}>❌</div>
+src/admin/module-quiz-results/page.tsx:                📚 Resultados de Quizzes por Módulo
+src/admin/module-quiz-results/page.tsx:                📊 Quiz Diagnóstico
+src/admin/quiz-results/page.tsx:        alert(`✅ Datos de ${userEmail} eliminados correctamente`)
+src/admin/quiz-results/page.tsx:        alert(`❌ Error: ${data.error}`)
+src/admin/quiz-results/page.tsx:      alert(`❌ Error al eliminar: ${err}`)
+src/admin/quiz-results/page.tsx:          <div style={{ fontSize: 24, marginBottom: 12 }}>❌</div>
+src/admin/quiz-results/page.tsx:                📊 Resultados del Quiz Diagnóstico
+src/admin/mark-complete/page.tsx:        setResult(`✅ Success! Section ${sectionId} of Module ${moduleId} marked as complete. Found ${data.quizCount} completed quizzes.`)
+src/admin/mark-complete/page.tsx:        setResult(`❌ Error: ${data.error}`)
+src/admin/mark-complete/page.tsx:      setResult(`❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
+src/admin/mark-complete/page.tsx:            background: result.startsWith("✅") ? "#d4edda" : "#f8d7da",
+src/admin/mark-complete/page.tsx:            color: result.startsWith("✅") ? "#155724" : "#721c24",
+src/admin/files/page.tsx:                      <span style={{ fontSize: '12px', color: '#666' }}>👤</span>
+src/admin/files/page.tsx:                        ⚠️ Archivo antiguo
+src/admin/files/page.tsx:                  📄 Ver Archivo
+src/admin/final-test-results/page.tsx:          ❌ {error}
+src/admin/final-test-results/page.tsx:          🏆 Resultados del Examen Final
+src/admin/final-test-results/page.tsx:          <div style={{ fontSize: '48px', marginBottom: '20px' }}>📝</div>
+src/admin/final-test-results/page.tsx:                    📄 Ver Respuestas
+src/admin/final-test-results/page.tsx:                    📊 Descargar Resumen
+src/admin/overall-results/page.tsx:          <div style={{ fontSize: 24, marginBottom: 12 }}>❌</div>
+src/admin/overall-results/page.tsx:                📊 Resultados Generales - Todos los Módulos
+src/admin/overall-results/page.tsx:            <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
+src/admin/overall-results/page.tsx:                              ✅ Completado
+src/components/simulators/InvestmentComparisonSimulator.tsx:                📝 Valores de Prueba
+src/components/simulators/InvestmentComparisonSimulator.tsx:                🚀 Optimista
+src/components/simulators/InvestmentComparisonSimulator.tsx:              <strong>🏆 Ganador:</strong> Opción {result.winner} -{' '}
+src/components/simulators/MonthlyBudgetSimulator.tsx:            <CardTitle>📊 Tu Información Financiera</CardTitle>
+src/components/simulators/MonthlyBudgetSimulator.tsx:              label="💰 Ingreso Mensual Total"
+src/components/simulators/MonthlyBudgetSimulator.tsx:                📋 Método de Presupuesto
+src/components/simulators/MonthlyBudgetSimulator.tsx:                <option value="50/30/20">📊 Regla 50/30/20 (Recomendado)</option>
+src/components/simulators/MonthlyBudgetSimulator.tsx:                🏠 Gastos Fijos (Necesidades)
+src/components/simulators/MonthlyBudgetSimulator.tsx:                🎉 Gastos Variables (Deseos)
+src/components/simulators/MonthlyBudgetSimulator.tsx:                label="💎 Meta de Ahorro Mensual"
+src/components/simulators/MonthlyBudgetSimulator.tsx:                title="💳 Gastos Totales"
+src/components/simulators/MonthlyBudgetSimulator.tsx:                title="💰 Ahorro Real"
+src/components/simulators/MonthlyBudgetSimulator.tsx:                title="🏠 Necesidades"
+src/components/simulators/MonthlyBudgetSimulator.tsx:                title="🎉 Deseos"
+src/components/simulators/MonthlyBudgetSimulator.tsx:                  <CardTitle>📊 Comparación con la Regla 50/30/20</CardTitle>
+src/components/simulators/MonthlyBudgetSimulator.tsx:                <CardTitle>💡 Recomendaciones Personalizadas</CardTitle>
+src/components/simulators/MonthlyBudgetSimulator.tsx:                  <Alert key={i} variant={rec.includes('⚠️') ? 'warning' : 'info'}>
+src/components/simulators/CreditCardPayoffSimulator.tsx:              📝 Cargar Valores de Prueba
+src/components/simulators/CreditCardPayoffSimulator.tsx:                <CardTitle className="text-blue-900">💰 Ahorro con Pago Fijo</CardTitle>
+src/components/simulators/Alert.tsx:    warning: '⚠️',
+src/components/simulators/Alert.tsx:    success: '✅',
+src/components/simulators/Alert.tsx:    danger: '❌',
+src/components/simulators/NumberField.tsx:            <span>⚠️</span> {error}
+src/components/simulators/InflationCalculatorSimulator.tsx:              📝 Cargar Valores de Prueba
+src/components/simulators/InflationCalculatorSimulator.tsx:          <strong>💡 Tip:</strong> La inflación reduce tu poder adquisitivo. Si ganas lo mismo
+src/components/simulators/SimpleLoanSimulator.tsx:              📝 Cargar Valores de Prueba
+src/components/simulators/SavingsGoalSimulator.tsx:              📝 Cargar Valores de Prueba
+src/components/simulators/SavingsGoalSimulator.tsx:                icon="💰"
+src/components/simulators/SavingsGoalSimulator.tsx:                icon="📈"
+src/components/QuizTracker.tsx:      console.log(`📊 Quiz completed status from DB:`, completed);
+src/components/QuizTracker.tsx:      console.log(`🎯 Final completion status (DB only):`, isCompleted);
+src/components/QuizTracker.tsx:        console.log("✅ Found attempt:", attempt);
+src/components/QuizTracker.tsx:          console.log("🎯 Setting completedScore to:", attempt.score, "type:", typeof attempt.score);
+src/components/QuizTracker.tsx:          console.log("❌ No attempt found for quiz completion");
+src/components/QuizTracker.tsx:            console.log("❌ No score found in localStorage either");
+src/components/QuizTracker.tsx:      console.log(`✅ onCompletionStatusChange called`);
+src/components/QuizTracker.tsx:    console.log(`📝 [QUIZ_TRACKER] Answer submitted for Q${questionIndex}:`, { questionText, userAnswer, correctAnswer, isCorrect });
+src/components/QuizTracker.tsx:      console.log(`📊 [QUIZ_TRACKER] Total answers collected so far:`, newAnswers.length, newAnswers);
+src/components/QuizTracker.tsx:    console.log(`🎯 [QUIZ_TRACKER] Quiz completion triggered with score: ${score}`);
+src/components/QuizTracker.tsx:    console.log(`📊 [QUIZ_TRACKER] Current answers state:`, answers);
+src/components/QuizTracker.tsx:      console.log(`⚠️ [QUIZ_TRACKER] Quiz already completed or submitting, skipping`);
+src/components/QuizTracker.tsx:        console.error("❌ [QUIZ_TRACKER] Missing quiz metadata");
+src/components/QuizTracker.tsx:      console.log(`📝 [QUIZ_TRACKER] Collected answers:`, quizAnswers);
+src/components/QuizTracker.tsx:        console.log(`⚠️ [QUIZ_TRACKER] No answers collected, creating empty answers for ${questions.length} questions`);
+src/components/QuizTracker.tsx:            <div style={{ fontSize: 64, marginBottom: 20 }}>✅</div>
+src/components/QuizTracker.tsx:              ✨ Usa el botón &ldquo;Continuar →&rdquo; abajo para seguir
+src/components/QuizTracker.tsx:                💡 Busca el botón azul &ldquo;Continuar →&rdquo; en la parte inferior de la pantalla
+src/components/QuizTracker.tsx:                📊 Resultados del Quiz
+src/components/QuizTracker.tsx:                    {answer.isCorrect ? '✅' : '❌'}
+src/components/AppHeader.tsx:              👋
+src/components/SectionLayout.tsx:      console.log(`⚠️ Blocking navigation - quiz not completed`);
+src/components/SectionLayout.tsx:      alert(`⚠️ Debes completar el quiz en esta página antes de continuar.\n\nEl quiz es necesario para desbloquear la siguiente sección.`);
+src/components/SectionLayout.tsx:      console.log(`🎯 Last page reached, calling completion API for M${moduleId}S${section}`);
+src/components/SectionLayout.tsx:          console.error("❌ Completion API failed - Status:", response.status);
+src/components/SectionLayout.tsx:          console.error("❌ Response data:", data);
+src/components/SectionLayout.tsx:          console.error("❌ Response text:", responseText);
+src/components/SectionLayout.tsx:            alert(`⚠️ ${errorMessage}`);
+src/components/SectionLayout.tsx:            alert(`⚠️ Error al completar la sección: ${errorMessage}`);
+src/components/SectionLayout.tsx:        console.log("✅ Section completion successful:", data);
+src/components/SectionLayout.tsx:        console.error("❌ Error calling completion API:", error);
+src/components/SectionLayout.tsx:        alert(`⚠️ Error al completar la sección: ${errorMsg}`);
+src/components/SectionLayout.tsx:    console.log("✅ Navigation allowed - quiz completed or not a quiz page");
+src/components/SectionLayout.tsx:    console.log(`📄 [PAGE] M${moduleId}S${section}P${page}/${totalPages} ${isLast ? '(LAST)' : ''} ${isQuizPage ? '(QUIZ)' : ''}`)
+src/components/SectionLayout.tsx:              📚 Módulos
+src/hooks/useProgress.ts:          console.error("❌ Server returned non-JSON response:", text);
+src/hooks/useProgress.ts:          console.error("❌ Submission failed:", data);
+src/hooks/useProgress.ts:        console.log("✅ Quiz submitted successfully!");
+src/hooks/useProgress.ts:            console.error("❌ Server returned non-JSON response:", text);
+src/hooks/useProgress.ts:          console.error("❌ Check access failed:", data);
+src/hooks/useProgress.ts:            console.error("❌ Server returned non-JSON response:", text);
+src/hooks/useProgress.ts:          console.error("❌ Server returned non-JSON response:", text);
+src/hooks/useProgress.ts:      console.log(`📋 Available quiz attempts (${progress.quizAttempts.length}):`, progress.quizAttempts);
+src/hooks/useProgress.ts:        console.log(`  ✨ Attempt ${index} parsed:`, {
+src/hooks/useProgress.ts:      console.log(`🎯 Quiz completion result: ${result}`);
+src/forgot-password/page.tsx:              <div style={{ fontSize: 48, marginBottom: 16 }}>✉️</div>
+src/lib/emails/password-reset-email.tsx:            <div class="greeting">Hola ${name} 👋</div>
+src/lib/emails/password-reset-email.tsx:              <strong>⚠️ ¿No solicitaste este cambio?</strong>
+src/lib/emails/welcome-email.tsx:            <div class="greeting">¡Hola ${name}! 👋</div>
+src/lib/emails/welcome-email.tsx:              <strong>🎯 ¿Qué puedes hacer ahora?</strong>
+src/lib/emails/welcome-email.tsx:                <div class="feature-icon">📚</div>
+src/lib/emails/welcome-email.tsx:                <div class="feature-icon">📈</div>
+src/lib/emails/welcome-email.tsx:                <div class="feature-icon">🎓</div>
+src/lib/emails/welcome-email.tsx:              ¡Feliz aprendizaje! 🚀
+src/lib/emails/welcome-email.tsx:    subject: `${name}, ¡tu viaje con BIZEN comienza ahora! 🚀`,
+src/lib/emails/course-completion-email.tsx:            <div class="celebration-icon">🎉</div>
+src/lib/emails/course-completion-email.tsx:            <div class="greeting">¡Excelente trabajo, ${name}! 🌟</div>
+src/lib/emails/course-completion-email.tsx:              <div style="font-size: 48px; margin-bottom: 15px;">🏆</div>
+src/lib/emails/course-completion-email.tsx:                <div class="stat-icon">✅</div>
+src/lib/emails/course-completion-email.tsx:                <div class="stat-icon">🎯</div>
+src/lib/emails/course-completion-email.tsx:                <div class="stat-icon">📈</div>
+src/lib/emails/course-completion-email.tsx:              ¿Qué sigue? 🚀
+src/lib/emails/course-completion-email.tsx:                Ver mi Dashboard 📊
+src/lib/emails/course-completion-email.tsx:    subject: `🎉 ¡Felicidades! Completaste ${moduleName}`,
+src/lib/simulators/engines.ts:        `📊 Tus necesidades básicas representan el ${percentage}% de tu ingreso (${totalFixed.toFixed(0)} MXN). La regla recomienda mantenerlas al 50%. Considera reducir ${excess.toFixed(0)} MXN buscando opciones más económicas en renta, servicios o transporte.`
+src/lib/simulators/engines.ts:        `🎯 Tus gastos en deseos son del ${percentage}% (${totalVariable.toFixed(0)} MXN), cuando lo ideal es 30%. Podrías recortar ${excess.toFixed(0)} MXN en entretenimiento, salidas o compras no esenciales.`
+src/lib/simulators/engines.ts:        `💰 Tu capacidad de ahorro actual es del ${percentage}% (${actualSavings.toFixed(0)} MXN), por debajo del 20% recomendado. Para llegar a la meta, necesitas liberar ${shortfall.toFixed(0)} MXN mensuales reduciendo gastos o aumentando ingresos.`
+src/lib/simulators/engines.ts:        `🎉 ¡Excelente trabajo! Estás ahorrando ${actualSavings.toFixed(0)} MXN al mes (${percentage}% de tus ingresos). Superas el 20% recomendado y estás construyendo un futuro financiero sólido.`
+src/lib/simulators/engines.ts:      `⚠️ ¡Alerta! Tus gastos totales (${totalExpenses.toFixed(0)} MXN) superan tu ingreso mensual por ${deficit.toFixed(0)} MXN. Esto significa que estás gastando más de lo que ganas. Es urgente ajustar tu presupuesto para evitar deudas.`
+src/lib/simulators/engines.ts:      `🎯 Estás cerca de tu meta. Para ahorrar ${input.savingsGoal.toFixed(0)} MXN mensuales, necesitas liberar ${gapToGoal.toFixed(0)} MXN adicionales (aproximadamente ${percentageNeeded}% de tus gastos actuales).`
+src/lib/simulators/engines.ts:        `✨ ¡Felicidades! No solo cumples tu meta de ahorro de ${input.savingsGoal.toFixed(0)} MXN, sino que tienes ${surplus.toFixed(0)} MXN extra. Considera invertir este excedente para acelerar tu crecimiento financiero.`
+src/lib/simulators/engines.ts:        `✅ ¡Perfecto! Estás cumpliendo exactamente tu meta de ahorro de ${input.savingsGoal.toFixed(0)} MXN mensual. Mantén este ritmo y alcanzarás tus objetivos financieros.`
+src/lib/forum/gamification.ts:    console.log(`✅ Awarded ${amount} XP to ${userId} for: ${reason}`)
+src/lib/forum/gamification.ts:          console.log(`🏆 Awarded badge "${badge.name}" to ${userId}`)
+src/lib/env-validator.ts:      console.log('✅ Environment variables validated successfully')
+src/lib/env-validator.ts:    console.error('❌ Environment variable validation failed:')

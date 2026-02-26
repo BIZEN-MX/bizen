@@ -4,6 +4,20 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
+import {
+  MoneyIcon,
+  CreditCardIcon,
+  TrophyIcon,
+  TargetIcon,
+  GlobeIcon,
+  BarChartIcon,
+  CrossIcon,
+  EyeIcon,
+  ShieldIcon,
+  CompassIcon,
+  ShoppingCartIcon,
+  HeartIcon
+} from "@/components/CustomIcons"
 
 // Light sound effects using Web Audio API
 const playSound = (soundName: string, volume = 0.3) => {
@@ -84,13 +98,15 @@ function Card1({ onComplete }: CardProps) {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.3 }}
         style={{
-          fontSize: 80,
           marginBottom: 32
         }}
       >
-        💵💳
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+          <MoneyIcon size={80} color="#0B71FE" />
+          <CreditCardIcon size={80} color="#4A9EFF" />
+        </div>
       </motion.div>
-      
+
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -106,7 +122,7 @@ function Card1({ onComplete }: CardProps) {
       >
         Dinero físico vs dinero digital
       </motion.h2>
-      
+
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -120,7 +136,7 @@ function Card1({ onComplete }: CardProps) {
       >
         Hoy usamos dos formas principales: dinero físico (efectivo/monedas) y dinero digital (tarjetas, transferencias, apps).
       </motion.p>
-      
+
       <motion.button
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -215,7 +231,7 @@ function Card2({ onComplete, onXpEarned }: CardProps) {
             disabled={showFeedback}
             style={{
               padding: "20px",
-              background: selected === index 
+              background: selected === index
                 ? (isCorrect ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)")
                 : "white",
               border: selected === index
@@ -287,12 +303,12 @@ function Card2({ onComplete, onXpEarned }: CardProps) {
 
 // CARD 3: Match (Drag-match pairs)
 function Card3({ onComplete, onXpEarned }: CardProps) {
-  const [matches, setMatches] = useState<{[key: string]: string}>({})
+  const [matches, setMatches] = useState<{ [key: string]: string }>({})
   const [showFeedback, setShowFeedback] = useState(false)
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null)
   const [showHint, setShowHint] = useState(false)
 
-  const pairs = {
+  const pairs: Record<string, string> = {
     "Billete/moneda": "Se entrega físicamente",
     "Transferencia": "Mueve saldos entre cuentas",
     "Tarjeta": "Autoriza un cargo electrónico"
@@ -309,7 +325,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
   const handleRightClick = (item: string) => {
     if (!selectedLeft) return
     playSound('click')
-    setMatches({...matches, [selectedLeft]: item})
+    setMatches({ ...matches, [selectedLeft]: item })
     setSelectedLeft(null)
   }
 
@@ -526,7 +542,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
 
 // CARD 4: Costs & speed (True/False)
 function Card4({ onComplete, onXpEarned }: CardProps) {
-  const [answers, setAnswers] = useState<{[key: number]: boolean | null}>({ 0: null, 1: null })
+  const [answers, setAnswers] = useState<{ [key: number]: boolean | null }>({ 0: null, 1: null })
   const [showFeedback, setShowFeedback] = useState(false)
   const [allCorrect, setAllCorrect] = useState(false)
 
@@ -538,7 +554,7 @@ function Card4({ onComplete, onXpEarned }: CardProps) {
   const handleAnswer = (index: number, answer: boolean) => {
     if (showFeedback) return
     playSound('click')
-    setAnswers({...answers, [index]: answer})
+    setAnswers({ ...answers, [index]: answer })
   }
 
   const checkAnswers = () => {
@@ -755,12 +771,13 @@ function Card5({ onComplete, onXpEarned }: CardProps) {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.3 }}
         style={{
-          fontSize: 60,
-          textAlign: "center",
           marginBottom: 24
         }}
       >
-        🌍💸
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+          <GlobeIcon size={60} color="#0B71FE" />
+          <MoneyIcon size={60} color="#4A9EFF" />
+        </div>
       </motion.div>
 
       <motion.h3
@@ -805,7 +822,7 @@ function Card5({ onComplete, onXpEarned }: CardProps) {
             disabled={showFeedback}
             style={{
               padding: "20px",
-              background: selected === index 
+              background: selected === index
                 ? (isCorrect ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)")
                 : "white",
               border: selected === index
@@ -891,7 +908,7 @@ function Card6({ onComplete, onXpEarned }: CardProps) {
   const handleToggle = (index: number) => {
     if (showFeedback) return
     playSound('click')
-    setSelected(prev => 
+    setSelected(prev =>
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
     )
   }
@@ -899,7 +916,7 @@ function Card6({ onComplete, onXpEarned }: CardProps) {
   const checkAnswers = () => {
     playSound('click')
     const correctIndices = options.map((opt, i) => opt.correct ? i : -1).filter(i => i !== -1)
-    const correct = correctIndices.length === selected.length && 
+    const correct = correctIndices.length === selected.length &&
       correctIndices.every(i => selected.includes(i))
     setAllCorrect(correct)
     setShowFeedback(true)
@@ -1106,7 +1123,10 @@ function Card7({ onComplete, onXpEarned }: CardProps) {
           marginBottom: 24
         }}
       >
-        🔍📊
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+          <EyeIcon size={60} color="#0B71FE" />
+          <BarChartIcon size={60} color="#4A9EFF" />
+        </div>
       </motion.div>
 
       <motion.h3
@@ -1137,7 +1157,7 @@ function Card7({ onComplete, onXpEarned }: CardProps) {
             disabled={showFeedback}
             style={{
               padding: "20px",
-              background: selected === index 
+              background: selected === index
                 ? (isCorrect ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)")
                 : "white",
               border: selected === index
@@ -1479,7 +1499,10 @@ function Card9({ onComplete, onXpEarned }: CardProps) {
           marginBottom: 24
         }}
       >
-        🔌❌
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+          <ShieldIcon size={60} color="#EF4444" />
+          <CrossIcon size={60} color="#DC2626" />
+        </div>
       </motion.div>
 
       <motion.h3
@@ -1524,7 +1547,7 @@ function Card9({ onComplete, onXpEarned }: CardProps) {
             disabled={showFeedback}
             style={{
               padding: "20px",
-              background: selected === index 
+              background: selected === index
                 ? (isCorrect ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)")
                 : "white",
               border: selected === index
@@ -1610,7 +1633,7 @@ function Card10({ onComplete, onXpEarned }: CardProps) {
   const handleToggle = (index: number) => {
     if (showFeedback) return
     playSound('click')
-    setSelected(prev => 
+    setSelected(prev =>
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
     )
   }
@@ -1618,7 +1641,7 @@ function Card10({ onComplete, onXpEarned }: CardProps) {
   const checkAnswers = () => {
     playSound('click')
     const correctIndices = options.map((opt, i) => opt.correct ? i : -1).filter(i => i !== -1)
-    const correct = correctIndices.length === selected.length && 
+    const correct = correctIndices.length === selected.length &&
       correctIndices.every(i => selected.includes(i))
     setAllCorrect(correct)
     setShowFeedback(true)
@@ -1652,7 +1675,10 @@ function Card10({ onComplete, onXpEarned }: CardProps) {
           marginBottom: 24
         }}
       >
-        🔒🛡️
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+          <ShieldIcon size={60} color="#10B981" />
+          <TargetIcon size={60} color="#0B71FE" />
+        </div>
       </motion.div>
 
       <motion.h3
@@ -1839,7 +1865,10 @@ function Card11({ onComplete, onXpEarned }: CardProps) {
           marginBottom: 24
         }}
       >
-        🌐🛒
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+          <GlobeIcon size={60} color="#0B71FE" />
+          <ShoppingCartIcon size={60} color="#4A9EFF" />
+        </div>
       </motion.div>
 
       <motion.h3
@@ -1884,7 +1913,7 @@ function Card11({ onComplete, onXpEarned }: CardProps) {
             disabled={showFeedback}
             style={{
               padding: "20px",
-              background: selected === index 
+              background: selected === index
                 ? (isCorrect ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)")
                 : "white",
               border: selected === index
@@ -1993,7 +2022,7 @@ function Card12({ onComplete, onXpEarned }: CardProps) {
           boxShadow: "0 8px 32px rgba(251, 191, 36, 0.4)"
         }}
       >
-        🧭
+        <CompassIcon size={64} color="white" />
       </motion.div>
 
       <motion.h2
@@ -2069,7 +2098,7 @@ function Card12({ onComplete, onXpEarned }: CardProps) {
               alignItems: "flex-start"
             }}
           >
-            <span style={{ fontSize: 24 }}>💵</span>
+            <MoneyIcon size={24} color="#0B71FE" />
             <p style={{ margin: 0, fontSize: 16, color: "#374151", lineHeight: 1.6 }}>
               Físico: objeto en mano; útil offline y en efectivo.
             </p>
@@ -2085,7 +2114,7 @@ function Card12({ onComplete, onXpEarned }: CardProps) {
               alignItems: "flex-start"
             }}
           >
-            <span style={{ fontSize: 24 }}>💳</span>
+            <CreditCardIcon size={24} color="#4A9EFF" />
             <p style={{ margin: 0, fontSize: 16, color: "#374151", lineHeight: 1.6 }}>
               Digital: registros; útil a distancia, trazable y escalable.
             </p>
@@ -2101,7 +2130,7 @@ function Card12({ onComplete, onXpEarned }: CardProps) {
               alignItems: "flex-start"
             }}
           >
-            <span style={{ fontSize: 24 }}>🎯</span>
+            <TargetIcon size={24} color="#EAB308" />
             <p style={{ margin: 0, fontSize: 16, color: "#374151", lineHeight: 1.6 }}>
               Elige según contexto: cercanía, red, seguridad y costo.
             </p>
@@ -2213,12 +2242,7 @@ export default function L3FisicoVsDigitalPage() {
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             {[...Array(3)].map((_, i) => (
-              <div key={i} style={{
-                fontSize: 24,
-                opacity: i < hearts ? 1 : 0.3
-              }}>
-                ❤️
-              </div>
+              <HeartIcon size={24} fill={i < hearts ? "#EF4444" : "none"} color={i < hearts ? "#EF4444" : "#9CA3AF"} />
             ))}
           </div>
           <div style={{

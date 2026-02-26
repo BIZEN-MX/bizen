@@ -5,2128 +5,703 @@ import { useRouter } from "next/navigation"
 import { useSettings, Language, Theme, TextSize, ContrastMode } from "@/contexts/SettingsContext"
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
+import {
+  SettingsIcon, UserIcon, BellIcon, ShieldIcon, TVIcon, LinkIcon,
+  AccessibilityIcon, SpainIcon, USIcon, SunIcon, MoonIcon, AutoIcon,
+  StarIcon, CheckIcon, CrossIcon, WarningIcon, ResetIcon
+} from "@/components/CustomIcons"
 
-// Force dynamic rendering to avoid prerendering issues
 export const dynamic = 'force-dynamic'
 
+// ─── Custom Toggle ────────────────────────────────────────────────────────────
+function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button type="button" onClick={() => onChange(!checked)} aria-checked={checked} role="switch"
+      style={{
+        position: "relative", display: "inline-flex", alignItems: "center", width: 50, height: 27,
+        borderRadius: 999, border: "none", cursor: "pointer", flexShrink: 0, outline: "none",
+        background: checked ? "#0B71FE" : "#D1D5DB", transition: "background .2s",
+        boxShadow: checked ? "0 0 0 3px rgba(11,113,254,.18)" : "none"
+      }}>
+      <span style={{
+        position: "absolute", left: checked ? 25 : 3, width: 21, height: 21,
+        borderRadius: "50%", background: "#fff", transition: "left .2s",
+        boxShadow: "0 1px 3px rgba(0,0,0,.2)"
+      }} />
+    </button>
+  )
+}
+
+// ─── Toggle Row ───────────────────────────────────────────────────────────────
+function ToggleRow({ label, desc, checked, onChange }: {
+  label: string; desc?: string; checked: boolean; onChange: (v: boolean) => void
+}) {
+  return (
+    <div onClick={() => onChange(!checked)} style={{
+      display: "flex", alignItems: "center",
+      justifyContent: "space-between", padding: "14px 18px", background: "#F8FAFF",
+      borderRadius: 12, border: "1.5px solid #EEF2FF", marginBottom: 10, gap: 16, cursor: "pointer",
+      transition: "background .15s"
+    }}
+      onMouseEnter={e => (e.currentTarget.style.background = "#EFF4FF")}
+      onMouseLeave={e => (e.currentTarget.style.background = "#F8FAFF")}>
+      <div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>{label}</div>
+        {desc && <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>{desc}</div>}
+      </div>
+      <Toggle checked={checked} onChange={onChange} />
+    </div>
+  )
+}
+
+// ─── Section card header ──────────────────────────────────────────────────────
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 style={{
+      margin: "0 0 20px", fontSize: 20, fontWeight: 800, color: "#0F172A",
+      display: "flex", alignItems: "center", gap: 10
+    }}>{children}</h2>
+  )
+}
+
+// ─── Pill select (Language / Difficulty / TextSize / Contrast) ───────────────
+function PillSelect({ options, value, onChange }: {
+  options: { v: string; l: string }[]; value: string; onChange: (v: string) => void
+}) {
+  return (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      {options.map(({ v, l }) => (
+        <button key={v} onClick={() => onChange(v)} style={{
+          padding: "9px 18px", borderRadius: 999,
+          border: `2px solid ${value === v ? "#0B71FE" : "#E2E8F0"}`,
+          background: value === v ? "#0B71FE" : "#fff",
+          color: value === v ? "#fff" : "#64748B",
+          fontSize: 13, fontWeight: 700, cursor: "pointer",
+          fontFamily: "'Inter','Montserrat',sans-serif", transition: "all .2s"
+        }}>
+          {l}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+// ─── Main ────────────────────────────────────────────────────────────────────
 function SettingsContent() {
   const router = useRouter()
   const { user, dbProfile } = useAuth()
   const { settings, updateSettings, resetSettings } = useSettings()
   const [supabase, setSupabase] = useState<ReturnType<typeof createClientMicrocred> | null>(null)
-  const [activeSection, setActiveSection] = useState<string>("general")
-
-  // Create Supabase client only on the client (avoid "window is not defined" during prerender)
-  useEffect(() => {
-    setSupabase(createClientMicrocred())
-  }, [])
+  const [activeSection, setActiveSection] = useState("general")
   const [showResetConfirm, setShowResetConfirm] = useState(false)
-
-  // Account page state
-  const [showPasswordFields, setShowPasswordFields] = useState(false)
-  const [passwords, setPasswords] = useState({
-    current: "",
-    new: "",
-    confirm: ""
-  })
+  const [showPwFields, setShowPwFields] = useState(false)
+  const [pw, setPw] = useState({ new: "", confirm: "" })
   const [saving, setSaving] = useState(false)
-  const [saveError, setSaveError] = useState<string | null>(null)
-  const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [selectedPlan, setSelectedPlan] = useState<"gratuito" | "estudiante" | "premium">("gratuito")
+  const [toast, setToast] = useState<{ ok: boolean; msg: string } | null>(null)
+  const [phone, setPhone] = useState("")
+  const [plan, setPlan] = useState<"gratuito" | "estudiante" | "premium">("gratuito")
 
-  useEffect(() => {
-    // Set blue gradient background for this page
-    const bodyEl = document.body
-    if (bodyEl) {
-      bodyEl.style.background = "#ffffff"
-      bodyEl.style.backgroundAttachment = "fixed"
-    }
-    return () => {
-      bodyEl.style.background = "#fff"
-      bodyEl.style.backgroundAttachment = "scroll"
-    }
-  }, [])
+  useEffect(() => { setSupabase(createClientMicrocred()) }, [])
+  useEffect(() => { if (user) { setPhone(user.user_metadata?.phone || ""); setPlan(user.user_metadata?.plan || "gratuito") } }, [user])
+  useEffect(() => { if (typeof window !== "undefined" && !user) router.push("/login") }, [user, router])
+  if (!user) return null
 
-  // Load account data
-  useEffect(() => {
-    if (user) {
-      setPhoneNumber(user.user_metadata?.phone || "")
-      setSelectedPlan(user.user_metadata?.plan || "gratuito")
-    }
-  }, [user])
+  const isAdmin = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const flash = (ok: boolean, msg: string) => { setToast({ ok, msg }); setTimeout(() => setToast(null), 3500) }
 
-  // Redirect to login when not authenticated (client-only to avoid "window is not defined")
-  useEffect(() => {
-    if (typeof window !== "undefined" && !user) {
-      router.push("/login")
-    }
-  }, [user, router])
-
-  if (!user) {
-    return null
+  const doSave = async (fn: () => Promise<void>) => {
+    if (!supabase) return; setSaving(true)
+    try { await fn(); flash(true, "Guardado correctamente") }
+    catch (e: any) { flash(false, e?.message || "Error al guardar") }
+    finally { setSaving(false) }
   }
 
-  // Translations
-  const t = {
-    es: {
-      backButton: "← Volver",
-      title: "Configuración",
-      subtitle: "Personaliza tu experiencia en BIZEN",
-      sections: {
-        general: "General",
-        account: "Cuenta",
-        notifications: "Notificaciones",
-        privacy: "Privacidad",
-        content: "Contenido",
-        accounts: "Cuentas Vinculadas",
-        accessibility: "Accesibilidad"
-      },
-      general: {
-        language: "Idioma / Language",
-        sounds: "Sonidos",
-        soundsDesc: "Activar efectos de sonido en la aplicación",
-        animations: "Animaciones",
-        animationsDesc: "Mostrar animaciones y transiciones"
-      },
-      notifications: {
-        push: "Notificaciones Push",
-        pushDesc: "Recibir notificaciones en el dispositivo",
-        email: "Correo Electrónico",
-        emailDesc: "Recibir notificaciones por email",
-        sound: "Sonido de Notificaciones",
-        soundDesc: "Reproducir sonido al recibir notificaciones",
-        courseUpdates: "Actualizaciones de Cursos",
-        courseUpdatesDesc: "Nuevo contenido en tus cursos",
-        achievements: "Logros",
-        achievementsDesc: "Cuando obtienes un nuevo logro",
-        reminders: "Recordatorios",
-        remindersDesc: "Recordatorios de estudio"
-      },
-      privacy: {
-        profileVisibility: "Visibilidad del Perfil",
-        activityVisibility: "Visibilidad de Actividad",
-        showProgress: "Mostrar Progreso",
-        showProgressDesc: "Permitir que otros vean tu progreso de aprendizaje",
-        allowMessages: "Permitir Mensajes",
-        allowMessagesDesc: "Recibir mensajes directos de otros usuarios",
-        public: "Público",
-        friends: "Solo Amigos",
-        private: "Privado"
-      },
-      content: {
-        showSubtitles: "Mostrar Subtítulos",
-        showSubtitlesDesc: "Activar subtítulos en videos",
-        autoplayVideos: "Reproducción Automática",
-        autoplayVideosDesc: "Reproducir videos automáticamente",
-        difficultyLevel: "Nivel de Dificultad Preferido",
-        beginner: "Principiante",
-        intermediate: "Intermedio",
-        advanced: "Avanzado",
-        showHints: "Mostrar Pistas",
-        showHintsDesc: "Ver pistas y ayuda durante los ejercicios"
-      },
-      accounts: {
-        google: "Google",
-        facebook: "Facebook",
-        apple: "Apple",
-        connected: "Conectado",
-        notConnected: "No conectado",
-        link: "Vincular",
-        unlink: "Desvincular",
-        linkAlert: "Vinculación con",
-        linkAlertEnd: "iniciada. Esta función requiere OAuth configurado.",
-        unlinkConfirm: "¿Desvincular cuenta de"
-      },
-      accessibility: {
-        textSize: "Tamaño de Texto",
-        small: "Pequeño",
-        medium: "Mediano",
-        large: "Grande",
-        extraLarge: "Extra Grande",
-        contrastMode: "Modo de Contraste",
-        normal: "Normal",
-        highContrast: "Alto Contraste",
-        reducedMotion: "Reducir Movimiento",
-        reducedMotionDesc: "Minimizar animaciones y efectos de movimiento",
-        screenReader: "Optimizado para Lector de Pantalla",
-        screenReaderDesc: "Mejorar experiencia con lectores de pantalla",
-        keyboardNav: "Navegación por Teclado",
-        keyboardNavDesc: "Mejorar navegación con teclado"
-      },
-      reset: {
-        button: "Restaurar Configuración Predeterminada",
-        title: "¿Restaurar Configuración?",
-        message: "Esto restablecerá todas tus preferencias a los valores predeterminados. Esta acción no se puede deshacer.",
-        cancel: "Cancelar",
-        confirm: "Restaurar"
-      }
-    },
-    en: {
-      backButton: "← Back",
-      title: "Settings",
-      subtitle: "Customize your BIZEN experience",
-      sections: {
-        general: "General",
-        account: "Account",
-        notifications: "Notifications",
-        privacy: "Privacy",
-        content: "Content",
-        accounts: "Linked Accounts",
-        accessibility: "Accessibility"
-      },
-      general: {
-        language: "Language / Idioma",
-        sounds: "Sounds",
-        soundsDesc: "Enable sound effects in the app",
-        animations: "Animations",
-        animationsDesc: "Show animations and transitions"
-      },
-      notifications: {
-        push: "Push Notifications",
-        pushDesc: "Receive notifications on device",
-        email: "Email",
-        emailDesc: "Receive email notifications",
-        sound: "Notification Sound",
-        soundDesc: "Play sound when receiving notifications",
-        courseUpdates: "Course Updates",
-        courseUpdatesDesc: "New content in your courses",
-        achievements: "Achievements",
-        achievementsDesc: "When you earn a new achievement",
-        reminders: "Reminders",
-        remindersDesc: "Study reminders"
-      },
-      privacy: {
-        profileVisibility: "Profile Visibility",
-        activityVisibility: "Activity Visibility",
-        showProgress: "Show Progress",
-        showProgressDesc: "Allow others to see your learning progress",
-        allowMessages: "Allow Messages",
-        allowMessagesDesc: "Receive direct messages from other users",
-        public: "Public",
-        friends: "Friends Only",
-        private: "Private"
-      },
-      content: {
-        showSubtitles: "Show Subtitles",
-        showSubtitlesDesc: "Enable subtitles in videos",
-        autoplayVideos: "Autoplay Videos",
-        autoplayVideosDesc: "Play videos automatically",
-        difficultyLevel: "Preferred Difficulty Level",
-        beginner: "Beginner",
-        intermediate: "Intermediate",
-        advanced: "Advanced",
-        showHints: "Show Hints",
-        showHintsDesc: "View hints and help during exercises"
-      },
-      accounts: {
-        google: "Google",
-        facebook: "Facebook",
-        apple: "Apple",
-        connected: "Connected",
-        notConnected: "Not connected",
-        link: "Link",
-        unlink: "Unlink",
-        linkAlert: "Linking with",
-        linkAlertEnd: "initiated. This feature requires OAuth configuration.",
-        unlinkConfirm: "Unlink account from"
-      },
-      accessibility: {
-        textSize: "Text Size",
-        small: "Small",
-        medium: "Medium",
-        large: "Large",
-        extraLarge: "Extra Large",
-        contrastMode: "Contrast Mode",
-        normal: "Normal",
-        highContrast: "High Contrast",
-        reducedMotion: "Reduce Motion",
-        reducedMotionDesc: "Minimize animations and motion effects",
-        screenReader: "Screen Reader Optimized",
-        screenReaderDesc: "Improve experience with screen readers",
-        keyboardNav: "Keyboard Navigation",
-        keyboardNavDesc: "Improve keyboard navigation"
-      },
-      reset: {
-        button: "Reset to Default Settings",
-        title: "Reset settings?",
-        message: "This will reset all your preferences to default values. This action cannot be undone.",
-        cancel: "Cancel",
-        confirm: "Reset"
-      }
-    }
-  }
+  const savePw = () => doSave(async () => {
+    if (!pw.new || pw.new.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres")
+    if (pw.new !== pw.confirm) throw new Error("Las contraseñas no coinciden")
+    const { error } = await supabase!.auth.updateUser({ password: pw.new })
+    if (error) throw error
+    setPw({ new: "", confirm: "" }); setShowPwFields(false)
+  })
+  const savePhone = () => doSave(async () => {
+    const { error } = await supabase!.auth.updateUser({ data: { phone } })
+    if (error) throw error
+  })
+  const savePlan = (p: "gratuito" | "estudiante" | "premium") => doSave(async () => {
+    const { error } = await supabase!.auth.updateUser({ data: { plan: p } })
+    if (error) throw error; setPlan(p)
+  })
 
-  const currentLang = t[settings.language]
-
-  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
-  const isStudentOrGuest = !isAdminOrTeacher
-
-  const sections = [
-    { id: "general", name: currentLang.sections.general, icon: "" },
-    { id: "account", name: currentLang.sections.account, icon: "" },
-    ...(isStudentOrGuest ? [{ id: "notifications", name: currentLang.sections.notifications, icon: "" }] : []),
-    ...(isStudentOrGuest ? [{ id: "privacy", name: currentLang.sections.privacy, icon: "" }] : []),
-    ...(isStudentOrGuest ? [{ id: "content", name: currentLang.sections.content, icon: "" }] : []),
-    ...(isStudentOrGuest ? [{ id: "accounts", name: currentLang.sections.accounts, icon: "" }] : []),
-    { id: "accessibility", name: currentLang.sections.accessibility, icon: "" },
+  const nav = [
+    { id: "general", label: "General", icon: <SettingsIcon size={18} /> },
+    { id: "account", label: "Cuenta", icon: <UserIcon size={18} /> },
+    ...(!isAdmin ? [
+      { id: "notifications", label: "Notificaciones", icon: <BellIcon size={18} /> },
+      { id: "privacy", label: "Privacidad", icon: <ShieldIcon size={18} /> },
+      { id: "content", label: "Contenido", icon: <TVIcon size={18} /> },
+      { id: "accounts", label: "Cuentas Vinculadas", icon: <LinkIcon size={18} /> },
+    ] : []),
+    { id: "accessibility", label: "Accesibilidad", icon: <AccessibilityIcon size={18} /> },
   ]
 
-  // Account page functions
-  const handlePasswordChange = async () => {
-    if (!supabase) return
-    if (!passwords.new || !passwords.confirm) {
-      setSaveError("Por favor completa todos los campos")
-      return
-    }
-
-    if (passwords.new !== passwords.confirm) {
-      setSaveError("Las contraseñas no coinciden")
-      return
-    }
-
-    if (passwords.new.length < 6) {
-      setSaveError("La contraseña debe tener al menos 6 caracteres")
-      return
-    }
-
-    setSaving(true)
-    setSaveError(null)
-    setSaveSuccess(null)
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: passwords.new
-      })
-
-      if (error) throw error
-
-      setSaveSuccess("Contraseña actualizada exitosamente")
-      setPasswords({ current: "", new: "", confirm: "" })
-      setShowPasswordFields(false)
-
-      setTimeout(() => setSaveSuccess(null), 3000)
-    } catch (error: any) {
-      console.error("Error updating password:", error)
-      setSaveError(error.message || "Error al actualizar contraseña")
-    } finally {
-      setSaving(false)
-    }
+  // ── Field style helpers
+  const inputStyle: React.CSSProperties = {
+    width: "100%", padding: "12px 14px", fontSize: 14, fontWeight: 600,
+    border: "2px solid #E2E8F0", borderRadius: 10, background: "#F8FAFF",
+    color: "#0F172A", fontFamily: "'Inter','Montserrat',sans-serif",
+    outline: "none", boxSizing: "border-box", transition: "border-color .15s"
   }
-
-  const handlePhoneUpdate = async () => {
-    if (!supabase) return
-    setSaving(true)
-    setSaveError(null)
-    setSaveSuccess(null)
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          phone: phoneNumber
-        }
-      })
-
-      if (error) throw error
-
-      setSaveSuccess("Teléfono actualizado exitosamente")
-
-      setTimeout(() => setSaveSuccess(null), 3000)
-    } catch (error: any) {
-      console.error("Error updating phone:", error)
-      setSaveError(error.message || "Error al actualizar teléfono")
-    } finally {
-      setSaving(false)
-    }
+  const btnPrimary: React.CSSProperties = {
+    padding: "11px 22px", background: "#0B71FE", border: "none", borderRadius: 10,
+    color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer",
+    fontFamily: "'Inter','Montserrat',sans-serif", transition: "opacity .15s",
+    opacity: saving ? .6 : 1
   }
-
-  const handlePlanUpdate = async (plan: "gratuito" | "estudiante" | "premium") => {
-    if (!supabase) return
-    setSaving(true)
-    setSaveError(null)
-    setSaveSuccess(null)
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          plan: plan
-        }
-      })
-
-      if (error) throw error
-
-      setSelectedPlan(plan)
-      setSaveSuccess("Plan actualizado exitosamente")
-
-      setTimeout(() => setSaveSuccess(null), 3000)
-    } catch (error: any) {
-      console.error("Error updating plan:", error)
-      setSaveError(error.message || "Error al actualizar plan")
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const handleLinkAccount = async (provider: 'google' | 'facebook' | 'apple') => {
-    // Simulate account linking
-    alert(`${currentLang.accounts.linkAlert} ${provider} ${currentLang.accounts.linkAlertEnd}`)
-    updateSettings({
-      linkedAccounts: {
-        ...settings.linkedAccounts,
-        [provider]: true
-      }
-    })
-  }
-
-  const handleUnlinkAccount = (provider: 'google' | 'facebook' | 'apple') => {
-    if (confirm(`${currentLang.accounts.unlinkConfirm} ${provider}?`)) {
-      updateSettings({
-        linkedAccounts: {
-          ...settings.linkedAccounts,
-          [provider]: false
-        }
-      })
-    }
+  const btnGhost: React.CSSProperties = {
+    padding: "11px 22px", background: "#F1F5F9", border: "1.5px solid #E2E8F0",
+    borderRadius: 10, color: "#374151", fontSize: 14, fontWeight: 700,
+    cursor: "pointer", fontFamily: "'Inter','Montserrat',sans-serif"
   }
 
   return (
-    <div className="configuracion-outer" style={{
-      width: "100%",
-      flex: 1,
-      background: "#ffffff",
-      backgroundAttachment: "fixed",
-      fontFamily: "'Montserrat', sans-serif",
-      overflowX: "hidden",
-      overflowY: "auto",
-      boxSizing: "border-box"
+    <div className="cfg-root-container" style={{
+      width: "100%", background: "#ffffff", minHeight: "100vh",
+      fontFamily: "'Inter','Montserrat',sans-serif", boxSizing: "border-box"
     }}>
-      <div className="settings-container" style={{
-        position: "relative",
-        flex: 1,
-        padding: "40px",
-        overflowX: "hidden",
-        boxSizing: "border-box"
+
+      {/* ── Page header (blue stripe) */}
+      <div style={{
+        background: "linear-gradient(135deg,#0B71FE 0%,#4F46E5 100%)",
+        padding: "32px 32px 56px", position: "relative", overflow: "hidden"
       }}>
-        {/* Decorative Orbs */}
         <div style={{
-          position: "fixed",
-          top: "10%",
-          left: "5%",
-          width: 300,
-          height: 300,
-          background: "radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-          zIndex: 0
+          position: "absolute", top: -60, right: -60, width: 200, height: 200,
+          borderRadius: "50%", background: "rgba(255,255,255,.07)", pointerEvents: "none"
         }} />
         <div style={{
-          position: "fixed",
-          top: "60%",
-          right: "8%",
-          width: 400,
-          height: 400,
-          background: "radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(80px)",
-          pointerEvents: "none",
-          zIndex: 0
+          position: "absolute", bottom: -80, left: "35%", width: 260, height: 260,
+          borderRadius: "50%", background: "rgba(255,255,255,.05)", pointerEvents: "none"
         }} />
-        <div style={{
-          position: "fixed",
-          bottom: "5%",
-          left: "15%",
-          width: 350,
-          height: 350,
-          background: "radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(70px)",
-          pointerEvents: "none",
-          zIndex: 0
-        }} />
-        <div style={{
-          maxWidth: "100%",
-          margin: "0",
-          position: "relative",
-          zIndex: 1
-        }}>
-          {/* Header */}
-          <div style={{ marginBottom: 40 }}>
-            <h1 style={{
-              fontSize: 36,
-              fontWeight: 900,
-              color: "#1E40AF",
-              margin: "0 0 8px"
-            }}>
-              {currentLang.title}
-            </h1>
-            <p style={{
-              fontSize: 16,
-              color: "#374151",
-              fontWeight: 600,
-              margin: 0
-            }}>
-              {currentLang.subtitle}
-            </p>
-          </div>
-
-          <div className="settings-grid" style={{
-            display: "grid",
-            gridTemplateColumns: "250px 1fr",
-            gap: 30
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h1 style={{
+            margin: "0 0 6px", fontSize: "clamp(24px,4vw,34px)", fontWeight: 900,
+            color: "#fff", letterSpacing: -.5
+          }}>Configuración</h1>
+          <p style={{ margin: 0, fontSize: 15, color: "rgba(255,255,255,.75)", fontWeight: 600 }}>
+            Personaliza tu experiencia en BIZEN
+          </p>
+          <div style={{
+            marginTop: 18, display: "inline-flex", alignItems: "center", gap: 10,
+            background: "rgba(255,255,255,.15)", backdropFilter: "blur(10px)",
+            border: "1.5px solid rgba(255,255,255,.25)", borderRadius: 40, padding: "8px 18px"
           }}>
-            {/* Sidebar Navigation */}
             <div style={{
-              background: "rgba(255, 255, 255, 0.4)",
-              backdropFilter: "blur(20px)",
-              borderRadius: 20,
-              padding: 20,
-              border: "2px solid rgba(255, 255, 255, 0.6)",
-              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
-              height: "fit-content",
-              position: "sticky",
-              top: 20
+              width: 30, height: 30, borderRadius: "50%",
+              background: "linear-gradient(135deg,#60A5FA,#A78BFA)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 13, fontWeight: 800, color: "#fff"
             }}>
-              {sections.map(section => (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    background: activeSection === section.id ? "rgba(15, 98, 254, 0.15)" : "transparent",
-                    border: "none",
-                    borderRadius: 12,
-                    textAlign: "left",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    marginBottom: 8,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    fontSize: 14,
-                    fontWeight: activeSection === section.id ? 700 : 600,
-                    color: activeSection === section.id ? "#0F62FE" : "#6B7280",
-                    fontFamily: "'Montserrat', sans-serif"
-                  }}
-                  onMouseEnter={(e) => {
-                    if (activeSection !== section.id) {
-                      e.currentTarget.style.background = "rgba(255, 255, 255, 0.3)"
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activeSection !== section.id) {
-                      e.currentTarget.style.background = "transparent"
-                    }
-                  }}
-                >
-                  <span style={{ fontSize: 20 }}>{section.icon}</span>
-                  {section.name}
-                </button>
-              ))}
+              {(user.email || "?")[0].toUpperCase()}
             </div>
-
-            {/* Content Area */}
-            <div style={{
-              background: "rgba(255, 255, 255, 0.4)",
-              backdropFilter: "blur(20px)",
-              borderRadius: 20,
-              padding: 40,
-              border: "2px solid rgba(255, 255, 255, 0.6)",
-              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)"
+            <span style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>{user.email}</span>
+            <span style={{
+              fontSize: 11, color: "rgba(255,255,255,.8)", background: "rgba(255,255,255,.2)",
+              padding: "2px 10px", borderRadius: 20, fontWeight: 700, textTransform: "uppercase"
             }}>
-              {/* Success/Error Messages */}
-              {saveSuccess && (
-                <div style={{
-                  marginBottom: 24,
-                  padding: "16px 20px",
-                  background: "rgba(16, 185, 129, 0.1)",
-                  backdropFilter: "blur(10px)",
-                  border: "2px solid rgba(16, 185, 129, 0.3)",
-                  borderRadius: 16,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  color: "#065F46",
-                  fontWeight: 600,
-                  fontSize: 14
-                }}>
-                  <span>✅</span>
-                  <span>{saveSuccess}</span>
-                </div>
-              )}
-
-              {saveError && (
-                <div style={{
-                  marginBottom: 24,
-                  padding: "16px 20px",
-                  background: "rgba(239, 68, 68, 0.1)",
-                  backdropFilter: "blur(10px)",
-                  border: "2px solid rgba(239, 68, 68, 0.3)",
-                  borderRadius: 16,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  color: "#991B1B",
-                  fontWeight: 600,
-                  fontSize: 14
-                }}>
-                  <span>❌</span>
-                  <span>{saveError}</span>
-                </div>
-              )}
-
-              {/* GENERAL SECTION */}
-              {activeSection === "general" && (
-                <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1E40AF", marginBottom: 24 }}>
-                    {currentLang.sections.general}
-                  </h2>
-
-                  {/* Language */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{ fontSize: 14, fontWeight: 700, color: "#374151", display: "block", marginBottom: 12 }}>
-                      {currentLang.general.language}
-                    </label>
-                    <select
-                      value={settings.language}
-                      onChange={(e) => updateSettings({ language: e.target.value as Language })}
-                      style={{
-                        width: "100%",
-                        maxWidth: 300,
-                        padding: "12px 16px",
-                        borderRadius: 12,
-                        border: "2px solid #E5E7EB",
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <option value="es">🇪🇸 Español</option>
-                      <option value="en">🇺🇸 English</option>
-                    </select>
-                  </div>
-
-                  {/* Sounds */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.general.sounds}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.general.soundsDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.soundsEnabled}
-                        onChange={(e) => updateSettings({ soundsEnabled: e.target.checked })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-
-                  {/* Animations */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.general.animations}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.general.animationsDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.animationsEnabled}
-                        onChange={(e) => updateSettings({ animationsEnabled: e.target.checked })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {/* ACCOUNT SECTION */}
-              {activeSection === "account" && user && (
-                <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1E40AF", marginBottom: 24 }}>
-                    {currentLang.sections.account}
-                  </h2>
-
-                  {/* Account Credentials */}
-                  <div style={{ marginBottom: 32 }}>
-                    <h3 style={{
-                      fontSize: 18,
-                      fontWeight: 800,
-                      color: "#1E40AF",
-                      marginBottom: 20
-                    }}>
-                      Credenciales de Cuenta
-                    </h3>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                      {/* Email Address */}
-                      <div>
-                        <label style={{
-                          display: "block",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "#374151",
-                          marginBottom: 8
-                        }}>
-                          Dirección de Email
-                        </label>
-                        <div style={{
-                          padding: "14px 18px",
-                          background: "rgba(255, 255, 255, 0.5)",
-                          borderRadius: 12,
-                          border: "2px solid rgba(147, 197, 253, 0.4)",
-                          fontSize: 16,
-                          color: "#1E40AF",
-                          fontWeight: 600
-                        }}>
-                          {user.email}
-                        </div>
-                        <p style={{
-                          margin: "6px 0 0",
-                          fontSize: 12,
-                          color: "#6B7280"
-                        }}>
-                          Tu email es tu identificador principal y no puede ser modificado
-                        </p>
-                      </div>
-
-                      {/* Phone Number */}
-                      <div>
-                        <label style={{
-                          display: "block",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "#374151",
-                          marginBottom: 8
-                        }}>
-                          Teléfono (Verificación)
-                        </label>
-                        <div style={{ display: "flex", gap: 12 }}>
-                          <input
-                            type="tel"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                            placeholder="+52 123 456 7890"
-                            style={{
-                              flex: 1,
-                              padding: "14px 18px",
-                              fontSize: 16,
-                              border: "2px solid rgba(59, 130, 246, 0.3)",
-                              borderRadius: 12,
-                              background: "rgba(255, 255, 255, 0.7)",
-                              color: "#1E40AF",
-                              fontWeight: 600,
-                              fontFamily: "'Montserrat', sans-serif",
-                              outline: "none",
-                              transition: "all 0.2s ease",
-                            }}
-                            onFocus={(e) => {
-                              e.currentTarget.style.borderColor = "#0F62FE"
-                              e.currentTarget.style.boxShadow = "0 0 0 3px rgba(15, 98, 254, 0.1)"
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.3)"
-                              e.currentTarget.style.boxShadow = "none"
-                            }}
-                          />
-                          <button
-                            onClick={handlePhoneUpdate}
-                            disabled={saving}
-                            style={{
-                              padding: "14px 24px",
-                              background: saving ? "#9CA3AF" : "linear-gradient(135deg, #10B981 0%, #059669 100%)",
-                              border: "none",
-                              borderRadius: 12,
-                              color: "#fff",
-                              fontSize: 14,
-                              fontWeight: 700,
-                              cursor: saving ? "not-allowed" : "pointer",
-                              transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif",
-                              whiteSpace: "nowrap"
-                            }}
-                            onMouseEnter={(e) => {
-                              if (!saving) {
-                                e.currentTarget.style.transform = "translateY(-2px)"
-                                e.currentTarget.style.boxShadow = "0 4px 12px rgba(16, 185, 129, 0.4)"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = "translateY(0)"
-                              e.currentTarget.style.boxShadow = "none"
-                            }}
-                          >
-                            Guardar
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Change Password */}
-                      <div>
-                        <label style={{
-                          display: "block",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "#374151",
-                          marginBottom: 8
-                        }}>
-                          Contraseña
-                        </label>
-
-                        {!showPasswordFields ? (
-                          <button
-                            onClick={() => setShowPasswordFields(true)}
-                            style={{
-                              width: "100%",
-                              padding: "14px 24px",
-                              background: "linear-gradient(135deg, #0F62FE 0%, #0353E9 100%)",
-                              border: "none",
-                              borderRadius: 12,
-                              color: "#fff",
-                              fontSize: 15,
-                              fontWeight: 700,
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif"
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.transform = "translateY(-2px)"
-                              e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.4)"
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = "translateY(0)"
-                              e.currentTarget.style.boxShadow = "none"
-                            }}
-                          >
-                            Cambiar Contraseña
-                          </button>
-                        ) : (
-                          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                            <input
-                              type="password"
-                              value={passwords.new}
-                              onChange={(e) => setPasswords({ ...passwords, new: e.target.value })}
-                              placeholder="Nueva contraseña (mín. 6 caracteres)"
-                              style={{
-                                width: "100%",
-                                padding: "14px 18px",
-                                fontSize: 15,
-                                border: "2px solid rgba(59, 130, 246, 0.3)",
-                                borderRadius: 12,
-                                background: "rgba(255, 255, 255, 0.7)",
-                                color: "#1E40AF",
-                                fontWeight: 600,
-                                fontFamily: "'Montserrat', sans-serif",
-                                outline: "none",
-                                transition: "all 0.2s ease",
-                                boxSizing: "border-box"
-                              }}
-                              onFocus={(e) => {
-                                e.currentTarget.style.borderColor = "#0F62FE"
-                                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(15, 98, 254, 0.1)"
-                              }}
-                              onBlur={(e) => {
-                                e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.3)"
-                                e.currentTarget.style.boxShadow = "none"
-                              }}
-                            />
-
-                            <input
-                              type="password"
-                              value={passwords.confirm}
-                              onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
-                              placeholder="Confirmar nueva contraseña"
-                              style={{
-                                width: "100%",
-                                padding: "14px 18px",
-                                fontSize: 15,
-                                border: "2px solid rgba(59, 130, 246, 0.3)",
-                                borderRadius: 12,
-                                background: "rgba(255, 255, 255, 0.7)",
-                                color: "#1E40AF",
-                                fontWeight: 600,
-                                fontFamily: "'Montserrat', sans-serif",
-                                outline: "none",
-                                transition: "all 0.2s ease",
-                                boxSizing: "border-box"
-                              }}
-                              onFocus={(e) => {
-                                e.currentTarget.style.borderColor = "#0F62FE"
-                                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(15, 98, 254, 0.1)"
-                              }}
-                              onBlur={(e) => {
-                                e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.3)"
-                                e.currentTarget.style.boxShadow = "none"
-                              }}
-                            />
-
-                            <div style={{ display: "flex", gap: 12 }}>
-                              <button
-                                onClick={handlePasswordChange}
-                                disabled={saving}
-                                style={{
-                                  flex: 1,
-                                  padding: "12px 20px",
-                                  background: saving ? "#9CA3AF" : "linear-gradient(135deg, #10B981 0%, #059669 100%)",
-                                  border: "none",
-                                  borderRadius: 12,
-                                  color: "#fff",
-                                  fontSize: 14,
-                                  fontWeight: 700,
-                                  cursor: saving ? "not-allowed" : "pointer",
-                                  transition: "all 0.2s ease",
-                                  fontFamily: "'Montserrat', sans-serif"
-                                }}
-                                onMouseEnter={(e) => {
-                                  if (!saving) {
-                                    e.currentTarget.style.transform = "translateY(-2px)"
-                                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(16, 185, 129, 0.4)"
-                                  }
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.transform = "translateY(0)"
-                                  e.currentTarget.style.boxShadow = "none"
-                                }}
-                              >
-                                {saving ? "Guardando..." : "Guardar"}
-                              </button>
-
-                              <button
-                                onClick={() => {
-                                  setShowPasswordFields(false)
-                                  setPasswords({ current: "", new: "", confirm: "" })
-                                  setSaveError(null)
-                                }}
-                                style={{
-                                  flex: 1,
-                                  padding: "12px 20px",
-                                  background: "rgba(107, 114, 128, 0.2)",
-                                  border: "2px solid rgba(107, 114, 128, 0.3)",
-                                  borderRadius: 12,
-                                  color: "#374151",
-                                  fontSize: 14,
-                                  fontWeight: 700,
-                                  cursor: "pointer",
-                                  transition: "all 0.2s ease",
-                                  fontFamily: "'Montserrat', sans-serif"
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.background = "rgba(107, 114, 128, 0.3)"
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = "rgba(107, 114, 128, 0.2)"
-                                }}
-                              >
-                                Cancelar
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Login Method */}
-                      <div>
-                        <label style={{
-                          display: "block",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "#374151",
-                          marginBottom: 8
-                        }}>
-                          Método de Inicio de Sesión
-                        </label>
-                        <div style={{
-                          padding: "14px 18px",
-                          background: "rgba(255, 255, 255, 0.5)",
-                          borderRadius: 12,
-                          border: "2px solid rgba(147, 197, 253, 0.4)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10
-                        }}>
-                          <span style={{ fontSize: 15, color: "#1E40AF", fontWeight: 600 }}>
-                            Email y Contraseña
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Subscription Status */}
-                      <div>
-                        <label style={{
-                          display: "block",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "#374151",
-                          marginBottom: 12
-                        }}>
-                          Plan de Suscripción
-                        </label>
-
-                        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                          {/* Gratuito Plan */}
-                          <div
-                            onClick={() => handlePlanUpdate("gratuito")}
-                            style={{
-                              padding: "16px 20px",
-                              background: selectedPlan === "gratuito"
-                                ? "linear-gradient(135deg, #10B981 0%, #059669 100%)"
-                                : "rgba(16, 185, 129, 0.1)",
-                              borderRadius: 12,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              boxShadow: selectedPlan === "gratuito" ? "0 4px 12px rgba(16, 185, 129, 0.3)" : "none",
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              border: selectedPlan === "gratuito" ? "2px solid #10B981" : "2px solid rgba(16, 185, 129, 0.3)"
-                            }}
-                            onMouseEnter={(e) => {
-                              if (selectedPlan !== "gratuito") {
-                                e.currentTarget.style.background = "rgba(16, 185, 129, 0.2)"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (selectedPlan !== "gratuito") {
-                                e.currentTarget.style.background = "rgba(16, 185, 129, 0.1)"
-                              }
-                            }}
-                          >
-                            <div>
-                              <div style={{
-                                fontSize: 16,
-                                color: selectedPlan === "gratuito" ? "#fff" : "#059669",
-                                fontWeight: 800,
-                                marginBottom: 2
-                              }}>
-                                Plan Gratuito
-                              </div>
-                              <div style={{
-                                fontSize: 12,
-                                color: selectedPlan === "gratuito" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                                fontWeight: 600
-                              }}>
-                                Acceso ilimitado a todos los cursos
-                              </div>
-                            </div>
-                            {selectedPlan === "gratuito" && (
-                              <div style={{
-                                padding: "6px 12px",
-                                background: "rgba(255, 255, 255, 0.2)",
-                                borderRadius: 8,
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#fff"
-                              }}>
-                                ACTIVO
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Estudiante Plan */}
-                          <div
-                            onClick={() => handlePlanUpdate("estudiante")}
-                            style={{
-                              padding: "16px 20px",
-                              background: selectedPlan === "estudiante"
-                                ? "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)"
-                                : "rgba(59, 130, 246, 0.1)",
-                              borderRadius: 12,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              boxShadow: selectedPlan === "estudiante" ? "0 4px 12px rgba(59, 130, 246, 0.3)" : "none",
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              border: selectedPlan === "estudiante" ? "2px solid #3B82F6" : "2px solid rgba(59, 130, 246, 0.3)"
-                            }}
-                            onMouseEnter={(e) => {
-                              if (selectedPlan !== "estudiante") {
-                                e.currentTarget.style.background = "rgba(59, 130, 246, 0.2)"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (selectedPlan !== "estudiante") {
-                                e.currentTarget.style.background = "rgba(59, 130, 246, 0.1)"
-                              }
-                            }}
-                          >
-                            <div>
-                              <div style={{
-                                fontSize: 16,
-                                color: selectedPlan === "estudiante" ? "#fff" : "#2563EB",
-                                fontWeight: 800,
-                                marginBottom: 2
-                              }}>
-                                Plan Estudiante
-                              </div>
-                              <div style={{
-                                fontSize: 12,
-                                color: selectedPlan === "estudiante" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                                fontWeight: 600
-                              }}>
-                                Funciones adicionales para estudiantes
-                              </div>
-                            </div>
-                            {selectedPlan === "estudiante" && (
-                              <div style={{
-                                padding: "6px 12px",
-                                background: "rgba(255, 255, 255, 0.2)",
-                                borderRadius: 8,
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#fff"
-                              }}>
-                                ACTIVO
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Premium Plan */}
-                          <div
-                            onClick={() => handlePlanUpdate("premium")}
-                            style={{
-                              padding: "16px 20px",
-                              background: selectedPlan === "premium"
-                                ? "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)"
-                                : "rgba(251, 191, 36, 0.1)",
-                              borderRadius: 12,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              boxShadow: selectedPlan === "premium" ? "0 4px 12px rgba(251, 191, 36, 0.3)" : "none",
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              border: selectedPlan === "premium" ? "2px solid #FBBF24" : "2px solid rgba(251, 191, 36, 0.3)"
-                            }}
-                            onMouseEnter={(e) => {
-                              if (selectedPlan !== "premium") {
-                                e.currentTarget.style.background = "rgba(251, 191, 36, 0.2)"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (selectedPlan !== "premium") {
-                                e.currentTarget.style.background = "rgba(251, 191, 36, 0.1)"
-                              }
-                            }}
-                          >
-                            <div>
-                              <div style={{
-                                fontSize: 16,
-                                color: selectedPlan === "premium" ? "#fff" : "#F59E0B",
-                                fontWeight: 800,
-                                marginBottom: 2
-                              }}>
-                                Plan Premium
-                              </div>
-                              <div style={{
-                                fontSize: 12,
-                                color: selectedPlan === "premium" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                                fontWeight: 600
-                              }}>
-                                Acceso completo + certificados + soporte prioritario
-                              </div>
-                            </div>
-                            {selectedPlan === "premium" && (
-                              <div style={{
-                                padding: "6px 12px",
-                                background: "rgba(255, 255, 255, 0.2)",
-                                borderRadius: 8,
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#fff"
-                              }}>
-                                ACTIVO
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Account Creation Date */}
-                      <div>
-                        <label style={{
-                          display: "block",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "#374151",
-                          marginBottom: 8
-                        }}>
-                          Cuenta Creada
-                        </label>
-                        <div style={{
-                          padding: "14px 18px",
-                          background: "rgba(255, 255, 255, 0.5)",
-                          borderRadius: 12,
-                          border: "2px solid rgba(147, 197, 253, 0.4)",
-                          fontSize: 16,
-                          color: "#1E40AF",
-                          fontWeight: 600
-                        }}>
-                          {new Date(user.created_at || Date.now()).toLocaleDateString('es-MX', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Logout Section */}
-                  <div style={{
-                    background: "rgba(255, 255, 255, 0.4)",
-                    backdropFilter: "blur(20px)",
-                    borderRadius: 20,
-                    padding: 32,
-                    border: "2px solid rgba(255, 255, 255, 0.6)",
-                    boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
-                    marginTop: 24
-                  }}>
-                    <h3 style={{
-                      margin: 0,
-                      marginBottom: 16,
-                      fontSize: 18,
-                      fontWeight: 800,
-                      color: "#1E40AF"
-                    }}>
-                      Sesión
-                    </h3>
-
-                    <p style={{
-                      margin: 0,
-                      marginBottom: 20,
-                      fontSize: 14,
-                      color: "#374151",
-                      fontWeight: 600
-                    }}>
-                      Cierra sesión de forma segura en este dispositivo.
-                    </p>
-
-                    <button
-                      onClick={async () => {
-                        if (!supabase) return
-                        setSaving(true)
-                        try {
-                          await supabase.auth.signOut()
-                          router.push("/login")
-                        } catch (error) {
-                          console.error("Error signing out:", error)
-                          setSaveError("Error al cerrar sesión")
-                        } finally {
-                          setSaving(false)
-                        }
-                      }}
-                      disabled={saving}
-                      style={{
-                        width: "100%",
-                        padding: "16px 24px",
-                        background: saving ? "#9CA3AF" : "linear-gradient(135deg, #EF4444 0%, #DC2626 100%)",
-                        border: "none",
-                        borderRadius: 12,
-                        color: "#fff",
-                        fontSize: 16,
-                        fontWeight: 700,
-                        cursor: saving ? "not-allowed" : "pointer",
-                        transition: "all 0.2s ease",
-                        fontFamily: "'Montserrat', sans-serif"
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!saving) {
-                          e.currentTarget.style.transform = "translateY(-2px)"
-                          e.currentTarget.style.boxShadow = "0 8px 24px rgba(239, 68, 68, 0.4)"
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "translateY(0)"
-                        e.currentTarget.style.boxShadow = "none"
-                      }}
-                    >
-                      {saving ? "Cerrando sesión..." : "Cerrar Sesión"}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* NOTIFICATIONS SECTION */}
-              {activeSection === "notifications" && (
-                <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1E40AF", marginBottom: 24 }}>
-                    {currentLang.sections.notifications}
-                  </h2>
-
-                  {[
-                    { key: 'push', label: currentLang.notifications.push, desc: currentLang.notifications.pushDesc },
-                    { key: 'email', label: currentLang.notifications.email, desc: currentLang.notifications.emailDesc },
-                    { key: 'sound', label: currentLang.notifications.sound, desc: currentLang.notifications.soundDesc },
-                    { key: 'courseUpdates', label: currentLang.notifications.courseUpdates, desc: currentLang.notifications.courseUpdatesDesc },
-                    { key: 'achievements', label: currentLang.notifications.achievements, desc: currentLang.notifications.achievementsDesc },
-                    { key: 'reminders', label: currentLang.notifications.reminders, desc: currentLang.notifications.remindersDesc },
-                  ].map(({ key, label, desc }) => (
-                    <label
-                      key={key}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "16px",
-                        background: "#F9FAFB",
-                        borderRadius: 12,
-                        cursor: "pointer",
-                        marginBottom: 12
-                      }}
-                    >
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {label}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {desc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.notifications[key as keyof typeof settings.notifications] as boolean}
-                        onChange={(e) => updateSettings({
-                          notifications: {
-                            ...settings.notifications,
-                            [key]: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  ))}
-                </div>
-              )}
-
-              {/* PRIVACY SECTION */}
-              {activeSection === "privacy" && (
-                <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1E40AF", marginBottom: 24 }}>
-                    {currentLang.sections.privacy}
-                  </h2>
-
-                  {/* Profile Visibility */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{ fontSize: 14, fontWeight: 700, color: "#374151", display: "block", marginBottom: 12 }}>
-                      {currentLang.privacy.profileVisibility}
-                    </label>
-                    <select
-                      value={settings.privacy.profileVisibility}
-                      onChange={(e) => updateSettings({
-                        privacy: {
-                          ...settings.privacy,
-                          profileVisibility: e.target.value as 'public' | 'friends' | 'private'
-                        }
-                      })}
-                      style={{
-                        width: "100%",
-                        maxWidth: 300,
-                        padding: "12px 16px",
-                        borderRadius: 12,
-                        border: "2px solid #E5E7EB",
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <option value="public">{currentLang.privacy.public}</option>
-                      <option value="friends">{currentLang.privacy.friends}</option>
-                      <option value="private">{currentLang.privacy.private}</option>
-                    </select>
-                  </div>
-
-                  {/* Activity Visibility */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{ fontSize: 14, fontWeight: 700, color: "#374151", display: "block", marginBottom: 12 }}>
-                      {currentLang.privacy.activityVisibility}
-                    </label>
-                    <select
-                      value={settings.privacy.activityVisibility}
-                      onChange={(e) => updateSettings({
-                        privacy: {
-                          ...settings.privacy,
-                          activityVisibility: e.target.value as 'public' | 'friends' | 'private'
-                        }
-                      })}
-                      style={{
-                        width: "100%",
-                        maxWidth: 300,
-                        padding: "12px 16px",
-                        borderRadius: 12,
-                        border: "2px solid #E5E7EB",
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <option value="public">{currentLang.privacy.public}</option>
-                      <option value="friends">{currentLang.privacy.friends}</option>
-                      <option value="private">{currentLang.privacy.private}</option>
-                    </select>
-                  </div>
-
-                  {/* Show Progress */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.privacy.showProgress}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.privacy.showProgressDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.privacy.showProgress}
-                        onChange={(e) => updateSettings({
-                          privacy: {
-                            ...settings.privacy,
-                            showProgress: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-
-                  {/* Allow Messages */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.privacy.allowMessages}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.privacy.allowMessagesDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.privacy.allowMessages}
-                        onChange={(e) => updateSettings({
-                          privacy: {
-                            ...settings.privacy,
-                            allowMessages: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {/* CONTENT PREFERENCES SECTION */}
-              {activeSection === "content" && (
-                <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1E40AF", marginBottom: 24 }}>
-                    {currentLang.sections.content}
-                  </h2>
-
-                  {/* Show Subtitles */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.content.showSubtitles}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.content.showSubtitlesDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.contentPreferences.showSubtitles}
-                        onChange={(e) => updateSettings({
-                          contentPreferences: {
-                            ...settings.contentPreferences,
-                            showSubtitles: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-
-                  {/* Autoplay Videos */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.content.autoplayVideos}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.content.autoplayVideosDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.contentPreferences.autoplayVideos}
-                        onChange={(e) => updateSettings({
-                          contentPreferences: {
-                            ...settings.contentPreferences,
-                            autoplayVideos: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-
-                  {/* Difficulty Level */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{ fontSize: 14, fontWeight: 700, color: "#374151", display: "block", marginBottom: 12 }}>
-                      {currentLang.content.difficultyLevel}
-                    </label>
-                    <select
-                      value={settings.contentPreferences.difficultyLevel}
-                      onChange={(e) => updateSettings({
-                        contentPreferences: {
-                          ...settings.contentPreferences,
-                          difficultyLevel: e.target.value as 'beginner' | 'intermediate' | 'advanced'
-                        }
-                      })}
-                      style={{
-                        width: "100%",
-                        maxWidth: 300,
-                        padding: "12px 16px",
-                        borderRadius: 12,
-                        border: "2px solid #E5E7EB",
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <option value="beginner">{currentLang.content.beginner}</option>
-                      <option value="intermediate">{currentLang.content.intermediate}</option>
-                      <option value="advanced">{currentLang.content.advanced}</option>
-                    </select>
-                  </div>
-
-                  {/* Show Hints */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.content.showHints}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.content.showHintsDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.contentPreferences.showHints}
-                        onChange={(e) => updateSettings({
-                          contentPreferences: {
-                            ...settings.contentPreferences,
-                            showHints: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {/* LINKED ACCOUNTS SECTION */}
-              {activeSection === "accounts" && (
-                <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1E40AF", marginBottom: 24 }}>
-                    {currentLang.sections.accounts}
-                  </h2>
-
-                  {/* Google */}
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "16px",
-                    background: "#F9FAFB",
-                    borderRadius: 12,
-                    marginBottom: 12
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151" }}>
-                          Google
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {settings.linkedAccounts.google ? currentLang.accounts.connected : currentLang.accounts.notConnected}
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => settings.linkedAccounts.google
-                        ? handleUnlinkAccount('google')
-                        : handleLinkAccount('google')
-                      }
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: 8,
-                        border: "none",
-                        background: settings.linkedAccounts.google ? "#EF4444" : "#0F62FE",
-                        color: "#fff",
-                        fontSize: 14,
-                        fontWeight: 700,
-                        cursor: "pointer"
-                      }}
-                    >
-                      {settings.linkedAccounts.google ? currentLang.accounts.unlink : currentLang.accounts.link}
-                    </button>
-                  </div>
-
-                  {/* Facebook */}
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "16px",
-                    background: "#F9FAFB",
-                    borderRadius: 12,
-                    marginBottom: 12
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151" }}>
-                          Facebook
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {settings.linkedAccounts.facebook ? currentLang.accounts.connected : currentLang.accounts.notConnected}
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => settings.linkedAccounts.facebook
-                        ? handleUnlinkAccount('facebook')
-                        : handleLinkAccount('facebook')
-                      }
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: 8,
-                        border: "none",
-                        background: settings.linkedAccounts.facebook ? "#EF4444" : "#0F62FE",
-                        color: "#fff",
-                        fontSize: 14,
-                        fontWeight: 700,
-                        cursor: "pointer"
-                      }}
-                    >
-                      {settings.linkedAccounts.facebook ? currentLang.accounts.unlink : currentLang.accounts.link}
-                    </button>
-                  </div>
-
-                  {/* Apple */}
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "16px",
-                    background: "#F9FAFB",
-                    borderRadius: 12,
-                    marginBottom: 12
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151" }}>
-                          Apple
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {settings.linkedAccounts.apple ? currentLang.accounts.connected : currentLang.accounts.notConnected}
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => settings.linkedAccounts.apple
-                        ? handleUnlinkAccount('apple')
-                        : handleLinkAccount('apple')
-                      }
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: 8,
-                        border: "none",
-                        background: settings.linkedAccounts.apple ? "#EF4444" : "#0F62FE",
-                        color: "#fff",
-                        fontSize: 14,
-                        fontWeight: 700,
-                        cursor: "pointer"
-                      }}
-                    >
-                      {settings.linkedAccounts.apple ? currentLang.accounts.unlink : currentLang.accounts.link}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* ACCESSIBILITY SECTION */}
-              {activeSection === "accessibility" && (
-                <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1E40AF", marginBottom: 24 }}>
-                    {currentLang.sections.accessibility}
-                  </h2>
-
-                  {/* Text Size */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{ fontSize: 14, fontWeight: 700, color: "#374151", display: "block", marginBottom: 12 }}>
-                      {currentLang.accessibility.textSize}
-                    </label>
-                    <select
-                      value={settings.accessibility.textSize}
-                      onChange={(e) => updateSettings({
-                        accessibility: {
-                          ...settings.accessibility,
-                          textSize: e.target.value as TextSize
-                        }
-                      })}
-                      style={{
-                        width: "100%",
-                        maxWidth: 300,
-                        padding: "12px 16px",
-                        borderRadius: 12,
-                        border: "2px solid #E5E7EB",
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <option value="small">{currentLang.accessibility.small}</option>
-                      <option value="medium">{currentLang.accessibility.medium}</option>
-                      <option value="large">{currentLang.accessibility.large}</option>
-                      <option value="extra-large">{currentLang.accessibility.extraLarge}</option>
-                    </select>
-                  </div>
-
-                  {/* Contrast Mode */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{ fontSize: 14, fontWeight: 700, color: "#374151", display: "block", marginBottom: 12 }}>
-                      {currentLang.accessibility.contrastMode}
-                    </label>
-                    <div style={{ display: "flex", gap: 12 }}>
-                      {(['normal', 'high'] as ContrastMode[]).map(mode => (
-                        <button
-                          key={mode}
-                          onClick={() => updateSettings({
-                            accessibility: {
-                              ...settings.accessibility,
-                              contrastMode: mode
-                            }
-                          })}
-                          style={{
-                            padding: "12px 24px",
-                            borderRadius: 12,
-                            border: `2px solid ${settings.accessibility.contrastMode === mode ? '#0F62FE' : '#E5E7EB'}`,
-                            background: settings.accessibility.contrastMode === mode ? '#EFF6FF' : '#fff',
-                            color: settings.accessibility.contrastMode === mode ? '#0F62FE' : '#6B7280',
-                            fontSize: 14,
-                            fontWeight: 700,
-                            cursor: "pointer"
-                          }}
-                        >
-                          {mode === 'normal' ? currentLang.accessibility.normal : currentLang.accessibility.highContrast}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Reduced Motion */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.accessibility.reducedMotion}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.accessibility.reducedMotionDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.accessibility.reducedMotion}
-                        onChange={(e) => updateSettings({
-                          accessibility: {
-                            ...settings.accessibility,
-                            reducedMotion: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-
-                  {/* Screen Reader */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.accessibility.screenReader}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.accessibility.screenReaderDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.accessibility.screenReaderOptimized}
-                        onChange={(e) => updateSettings({
-                          accessibility: {
-                            ...settings.accessibility,
-                            screenReaderOptimized: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-
-                  {/* Keyboard Navigation */}
-                  <div style={{ marginBottom: 32 }}>
-                    <label style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "16px",
-                      background: "#F9FAFB",
-                      borderRadius: 12,
-                      cursor: "pointer"
-                    }}>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
-                          {currentLang.accessibility.keyboardNav}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#6B7280" }}>
-                          {currentLang.accessibility.keyboardNavDesc}
-                        </div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={settings.accessibility.keyboardNavigation}
-                        onChange={(e) => updateSettings({
-                          accessibility: {
-                            ...settings.accessibility,
-                            keyboardNavigation: e.target.checked
-                          }
-                        })}
-                        style={{ width: 20, height: 20, cursor: "pointer" }}
-                      />
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {/* Reset Button */}
-              <div style={{
-                borderTop: "2px solid #E5E7EB",
-                paddingTop: 32,
-                marginTop: 40
-              }}>
-                <button
-                  onClick={() => setShowResetConfirm(true)}
-                  style={{
-                    padding: "12px 24px",
-                    borderRadius: 12,
-                    border: "2px solid #EF4444",
-                    background: "#fff",
-                    color: "#EF4444",
-                    fontSize: 14,
-                    fontWeight: 700,
-                    cursor: "pointer"
-                  }}
-                >
-                  {currentLang.reset.button}
-                </button>
-              </div>
-
-              {/* Reset Confirmation Modal */}
-              {showResetConfirm && (
-                <div style={{
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: "rgba(0, 0, 0, 0.5)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  zIndex: 9999
-                }}>
-                  <div style={{
-                    background: "#fff",
-                    borderRadius: 16,
-                    padding: 32,
-                    maxWidth: 400,
-                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)"
-                  }}>
-                    <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>
-                      {currentLang.reset.title}
-                    </h3>
-                    <p style={{ fontSize: 14, color: "#6B7280", marginBottom: 24 }}>
-                      {currentLang.reset.message}
-                    </p>
-                    <div style={{ display: "flex", gap: 12 }}>
-                      <button
-                        onClick={() => setShowResetConfirm(false)}
-                        style={{
-                          flex: 1,
-                          padding: "12px",
-                          borderRadius: 12,
-                          border: "2px solid #E5E7EB",
-                          background: "#fff",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          cursor: "pointer"
-                        }}
-                      >
-                        {currentLang.reset.cancel}
-                      </button>
-                      <button
-                        onClick={() => {
-                          resetSettings()
-                          setShowResetConfirm(false)
-                        }}
-                        style={{
-                          flex: 1,
-                          padding: "12px",
-                          borderRadius: 12,
-                          border: "none",
-                          background: "#EF4444",
-                          color: "#fff",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          cursor: "pointer"
-                        }}
-                      >
-                        {currentLang.reset.confirm}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+              {dbProfile?.role || "Estudiante"}
+            </span>
           </div>
         </div>
       </div>
 
+      {/* ── Two-column layout: sidebar + content */}
+      <div className="cfg-body" style={{
+        display: "grid", gridTemplateColumns: "220px 1fr",
+        gap: 24, padding: "0 24px 60px", marginTop: -24, position: "relative", zIndex: 2
+      }}>
+
+        {/* Sidebar */}
+        <div style={{
+          background: "#fff", borderRadius: 16, padding: 14,
+          boxShadow: "0 4px 20px rgba(11,113,254,.08)", border: "1.5px solid #EEF2FF",
+          height: "fit-content", position: "sticky", top: 16, alignSelf: "start"
+        }}>
+          <div style={{
+            fontSize: 10, fontWeight: 800, color: "#94A3B8", letterSpacing: 1.5,
+            padding: "0 6px 10px", borderBottom: "1.5px solid #F0F4FF",
+            marginBottom: 8, textTransform: "uppercase"
+          }}>Configuración</div>
+          {nav.map(s => (
+            <button key={s.id} onClick={() => setActiveSection(s.id)} style={{
+              width: "100%", padding: "10px 12px", textAlign: "left", display: "flex",
+              alignItems: "center", gap: 10, borderRadius: 10, border: "none",
+              fontFamily: "'Inter','Montserrat',sans-serif",
+              background: activeSection === s.id ? "#EFF6FF" : "transparent",
+              color: activeSection === s.id ? "#0B71FE" : "#4B5563",
+              fontSize: 14, fontWeight: activeSection === s.id ? 700 : 600,
+              cursor: "pointer", transition: "all .15s", marginBottom: 2,
+              borderLeft: activeSection === s.id ? "3px solid #0B71FE" : "3px solid transparent"
+            }}
+              onMouseEnter={e => { if (activeSection !== s.id) e.currentTarget.style.background = "#F8FAFF" }}
+              onMouseLeave={e => { if (activeSection !== s.id) e.currentTarget.style.background = "transparent" }}>
+              <span style={{ fontSize: 16 }}>{s.icon}</span>
+              {s.label}
+            </button>
+          ))}
+          <div style={{ borderTop: "1.5px solid #F0F4FF", marginTop: 10, paddingTop: 10 }}>
+            <button onClick={() => setShowResetConfirm(true)} style={{
+              width: "100%",
+              padding: "9px 12px", background: "#FEF2F2", border: "1.5px solid #FECACA",
+              borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700,
+              color: "#EF4444", fontFamily: "'Inter','Montserrat',sans-serif",
+              display: "flex", alignItems: "center", gap: 8
+            }}>
+              <ResetIcon size={14} color="#EF4444" /> Restaurar defaults
+            </button>
+          </div>
+        </div>
+
+        {/* Content Panel */}
+        <div style={{
+          background: "#fff", borderRadius: 16, padding: "28px 32px",
+          boxShadow: "0 4px 20px rgba(11,113,254,.08)", border: "1.5px solid #EEF2FF",
+          minWidth: 0
+        }}>
+
+          {/* Toast */}
+          {toast && (
+            <div style={{
+              marginBottom: 18, padding: "12px 18px", borderRadius: 12,
+              display: "flex", alignItems: "center", gap: 10, fontSize: 14, fontWeight: 700,
+              background: toast.ok ? "#F0FDF4" : "#FEF2F2",
+              border: `1.5px solid ${toast.ok ? "#86EFAC" : "#FECACA"}`,
+              color: toast.ok ? "#15803D" : "#DC2626"
+            }}>
+              {toast.ok ? <CheckIcon size={18} color="#15803D" /> : <CrossIcon size={18} color="#DC2626" />} {toast.msg}
+            </div>
+          )}
+
+          {/* ── GENERAL */}
+          {activeSection === "general" && (<div>
+            <SectionHeading><SettingsIcon size={20} style={{ marginRight: 8 }} /> General</SectionHeading>
+            <div style={{ marginBottom: 24 }}>
+              <div style={{
+                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                textTransform: "uppercase", marginBottom: 10
+              }}>Idioma / Language</div>
+              <PillSelect
+                options={[{ v: "es", l: <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><SpainIcon size={16} /> Español</span> as any }, { v: "en", l: <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><USIcon size={16} /> English</span> as any }]}
+                value={settings.language} onChange={v => updateSettings({ language: v as Language })} />
+            </div>
+            <div style={{ marginBottom: 24 }}>
+              <div style={{
+                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                textTransform: "uppercase", marginBottom: 10
+              }}>Tema Visual</div>
+              <div style={{ display: "flex", gap: 12 }}>
+                {[
+                  { v: "light", l: "Claro", icon: <SunIcon size={16} /> },
+                  { v: "dark", l: "Oscuro", icon: <MoonIcon size={16} /> },
+                  { v: "auto", l: "Auto", icon: <AutoIcon size={16} /> }
+                ].map(({ v, l, icon }) => (
+                  <div key={v} onClick={() => updateSettings({ theme: v as Theme })} style={{
+                    flex: 1, padding: "14px 10px", textAlign: "center", borderRadius: 12, cursor: "pointer",
+                    border: `2px solid ${settings.theme === v ? "#0B71FE" : "#E2E8F0"}`,
+                    background: settings.theme === v ? "#EFF6FF" : "#F8FAFF", transition: "all .2s",
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6
+                  }}>
+                    <div style={{ color: settings.theme === v ? "#0B71FE" : "#94A3B8" }}>{icon}</div>
+                    <div style={{
+                      fontSize: 13, fontWeight: 700,
+                      color: settings.theme === v ? "#0B71FE" : "#64748B"
+                    }}>{l}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <ToggleRow label="Efectos de Sonido" desc="Activar efectos de sonido en la app"
+              checked={settings.soundsEnabled} onChange={v => updateSettings({ soundsEnabled: v })} />
+            <ToggleRow label="Animaciones" desc="Mostrar animaciones y transiciones"
+              checked={settings.animationsEnabled} onChange={v => updateSettings({ animationsEnabled: v })} />
+          </div>)}
+
+          {/* ── ACCOUNT */}
+          {activeSection === "account" && user && (<div>
+            <SectionHeading><UserIcon size={20} style={{ marginRight: 8 }} /> Mi Cuenta</SectionHeading>
+
+            {/* Email */}
+            <div style={{
+              background: "#F8FAFF", borderRadius: 12, padding: "14px 18px",
+              border: "1.5px solid #EEF2FF", marginBottom: 14, display: "flex",
+              alignItems: "center", gap: 12
+            }}>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontSize: 11, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                  textTransform: "uppercase", marginBottom: 4
+                }}>Correo electrónico</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#0F172A" }}>{user.email}</div>
+              </div>
+              <span style={{
+                fontSize: 11, fontWeight: 800, color: "#15803D", background: "#F0FDF4",
+                border: "1.5px solid #86EFAC", padding: "3px 10px", borderRadius: 20,
+                display: 'flex', alignItems: 'center', gap: 4
+              }}><CheckIcon size={12} /> Verificado</span>
+            </div>
+
+            {/* Phone */}
+            <div style={{ marginBottom: 16 }}>
+              <div style={{
+                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                textTransform: "uppercase", marginBottom: 8
+              }}>Teléfono</div>
+              <div style={{ display: "flex", gap: 10 }}>
+                <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+                  placeholder="+52 123 456 7890" style={inputStyle}
+                  onFocus={e => { e.currentTarget.style.borderColor = "#0B71FE"; e.currentTarget.style.background = "#fff" }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "#E2E8F0"; e.currentTarget.style.background = "#F8FAFF" }} />
+                <button onClick={savePhone} disabled={saving} style={btnPrimary}>
+                  {saving ? "..." : "Guardar"}
+                </button>
+              </div>
+            </div>
+
+            {/* Password */}
+            <div style={{
+              background: "#F8FAFF", borderRadius: 12, padding: "16px 18px",
+              border: "1.5px solid #EEF2FF", marginBottom: 20
+            }}>
+              <div style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                marginBottom: showPwFields ? 14 : 0
+              }}>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>Contraseña</div>
+                  <div style={{ fontSize: 12, color: "#64748B" }}>Seguridad de tu cuenta</div>
+                </div>
+                <button onClick={() => { setShowPwFields(!showPwFields); setPw({ new: "", confirm: "" }) }}
+                  style={btnGhost}>{showPwFields ? "Cancelar" : "Cambiar"}</button>
+              </div>
+              {showPwFields && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <input type="password" value={pw.new} onChange={e => setPw({ ...pw, new: e.target.value })}
+                    placeholder="Nueva contraseña (mín. 6 caracteres)" style={{ ...inputStyle, background: "#fff" }}
+                    onFocus={e => e.currentTarget.style.borderColor = "#0B71FE"}
+                    onBlur={e => e.currentTarget.style.borderColor = "#E2E8F0"} />
+                  <input type="password" value={pw.confirm} onChange={e => setPw({ ...pw, confirm: e.target.value })}
+                    placeholder="Confirmar nueva contraseña" style={{ ...inputStyle, background: "#fff" }}
+                    onFocus={e => e.currentTarget.style.borderColor = "#0B71FE"}
+                    onBlur={e => e.currentTarget.style.borderColor = "#E2E8F0"} />
+                  <button onClick={savePw} disabled={saving}
+                    style={{ ...btnPrimary, padding: "12px", textAlign: "center" as const }}>
+                    {saving ? "Guardando..." : "Actualizar Contraseña"}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Plans */}
+            <div style={{ marginBottom: 20 }}>
+              <div style={{
+                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                textTransform: "uppercase", marginBottom: 12
+              }}>Plan de Suscripción</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {([
+                  { id: "gratuito", l: "Plan Gratuito", d: "Acceso a todos los cursos básicos", c: "#10B981" },
+                  { id: "estudiante", l: "Plan Estudiante", d: "Herramientas adicionales para estudiantes", c: "#0B71FE" },
+                  { id: "premium", l: "Plan Premium", d: "Acceso completo + certificados + soporte prioritario", c: "#F59E0B", icon: true },
+                ] as { id: "gratuito" | "estudiante" | "premium", l: string, d: string, c: string, icon?: boolean }[]).map(({ id, l, d, c, icon }) => (
+                  <div key={id} onClick={() => savePlan(id)} style={{
+                    padding: "14px 18px", borderRadius: 12, cursor: "pointer", transition: "all .2s",
+                    border: `2px solid ${plan === id ? c : "#E2E8F0"}`,
+                    background: plan === id ? `${c}12` : "#F8FAFF",
+                    display: "flex", alignItems: "center", justifyContent: "space-between"
+                  }}>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: plan === id ? c : "#0F172A", display: 'flex', alignItems: 'center', gap: 6 }}>
+                        {l} {icon && <StarIcon size={14} color={c} fill={c} />}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>{d}</div>
+                    </div>
+                    {plan === id && <span style={{
+                      fontSize: 11, fontWeight: 800, color: c,
+                      background: `${c}20`, padding: "3px 12px", borderRadius: 20
+                    }}>ACTIVO</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Meta info */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+              {[
+                { l: "Cuenta creada", v: new Date(user.created_at || Date.now()).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }) },
+                { l: "Método de acceso", v: "Email y Contraseña" },
+              ].map(({ l, v }) => (
+                <div key={l} style={{
+                  background: "#F8FAFF", borderRadius: 12, padding: "14px 16px",
+                  border: "1.5px solid #EEF2FF"
+                }}>
+                  <div style={{
+                    fontSize: 11, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                    textTransform: "uppercase", marginBottom: 4
+                  }}>{l}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>{v}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Logout */}
+            <div style={{
+              background: "#FEF2F2", borderRadius: 12, padding: "16px 18px",
+              border: "1.5px solid #FECACA"
+            }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A", marginBottom: 4 }}>Cerrar Sesión</div>
+              <div style={{ fontSize: 13, color: "#64748B", marginBottom: 12 }}>
+                Cierra tu sesión de forma segura en este dispositivo.
+              </div>
+              <button disabled={saving} onClick={async () => {
+                if (!supabase) return; setSaving(true)
+                try { await supabase.auth.signOut(); router.push("/login") }
+                catch (e) { flash(false, "Error al cerrar sesión") } finally { setSaving(false) }
+              }} style={{
+                padding: "11px 26px", background: "#EF4444", border: "none", borderRadius: 10,
+                color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer",
+                fontFamily: "'Inter','Montserrat',sans-serif", opacity: saving ? .6 : 1
+              }}>
+                {saving ? "Saliendo..." : "Cerrar Sesión"}
+              </button>
+            </div>
+          </div>)}
+
+          {/* ── NOTIFICATIONS */}
+          {activeSection === "notifications" && (<div>
+            <SectionHeading><BellIcon size={20} style={{ marginRight: 8 }} /> Notificaciones</SectionHeading>
+            {[
+              { k: "push", l: "Notificaciones Push", d: "Recibir notificaciones en tu dispositivo" },
+              { k: "email", l: "Correo Electrónico", d: "Recibir notificaciones por email" },
+              { k: "sound", l: "Sonido", d: "Reproducir sonido al recibir notificaciones" },
+              { k: "courseUpdates", l: "Actualizaciones de Cursos", d: "Nuevo contenido en tus cursos" },
+              { k: "achievements", l: "Logros", d: "Cuando obtienes un nuevo logro" },
+              { k: "reminders", l: "Recordatorios", d: "Recordatorios de estudio programados" },
+            ].map(({ k, l, d }) => (
+              <ToggleRow key={k} label={l} desc={d}
+                checked={settings.notifications[k as keyof typeof settings.notifications] as boolean}
+                onChange={v => updateSettings({ notifications: { ...settings.notifications, [k]: v } })} />
+            ))}
+          </div>)}
+
+          {/* ── PRIVACY */}
+          {activeSection === "privacy" && (<div>
+            <SectionHeading><ShieldIcon size={20} style={{ marginRight: 8 }} /> Privacidad</SectionHeading>
+            {[
+              { k: "profileVisibility", l: "Visibilidad del Perfil" },
+              { k: "activityVisibility", l: "Visibilidad de Actividad" },
+            ].map(({ k, l }) => (
+              <div key={k} style={{ marginBottom: 20 }}>
+                <div style={{
+                  fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                  textTransform: "uppercase", marginBottom: 8
+                }}>{l}</div>
+                <select value={(settings.privacy as any)[k]}
+                  onChange={e => updateSettings({ privacy: { ...settings.privacy, [k]: e.target.value as any } })}
+                  style={{ ...inputStyle, maxWidth: 280, cursor: "pointer" }}>
+                  <option value="public">Público</option>
+                  <option value="friends">Solo amigos</option>
+                  <option value="private">Privado</option>
+                </select>
+              </div>
+            ))}
+            <ToggleRow label="Mostrar Progreso" desc="Permitir que otros vean tu progreso"
+              checked={settings.privacy.showProgress}
+              onChange={v => updateSettings({ privacy: { ...settings.privacy, showProgress: v } })} />
+            <ToggleRow label="Permitir Mensajes" desc="Recibir mensajes directos de otros usuarios"
+              checked={settings.privacy.allowMessages}
+              onChange={v => updateSettings({ privacy: { ...settings.privacy, allowMessages: v } })} />
+          </div>)}
+
+          {/* ── CONTENT */}
+          {activeSection === "content" && (<div>
+            <SectionHeading><TVIcon size={20} style={{ marginRight: 8 }} /> Contenido</SectionHeading>
+            <div style={{ marginBottom: 20 }}>
+              <div style={{
+                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                textTransform: "uppercase", marginBottom: 10
+              }}>Nivel de Dificultad</div>
+              <PillSelect
+                options={[{ v: "beginner", l: "Principiante" }, { v: "intermediate", l: "Intermedio" }, { v: "advanced", l: "Avanzado" }]}
+                value={settings.contentPreferences.difficultyLevel}
+                onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, difficultyLevel: v as any } })} />
+            </div>
+            <ToggleRow label="Subtítulos" desc="Activar subtítulos en videos"
+              checked={settings.contentPreferences.showSubtitles}
+              onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, showSubtitles: v } })} />
+            <ToggleRow label="Reproducción Automática" desc="Reproducir videos automáticamente"
+              checked={settings.contentPreferences.autoplayVideos}
+              onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, autoplayVideos: v } })} />
+            <ToggleRow label="Mostrar Pistas" desc="Ver pistas durante los ejercicios"
+              checked={settings.contentPreferences.showHints}
+              onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, showHints: v } })} />
+          </div>)}
+
+          {/* ── LINKED ACCOUNTS */}
+          {activeSection === "accounts" && (<div>
+            <SectionHeading><LinkIcon size={20} style={{ marginRight: 8 }} /> Cuentas Vinculadas</SectionHeading>
+            {([
+              { p: "google" as const, l: "Google", color: "#EA4335", letter: "G" },
+              { p: "facebook" as const, l: "Facebook", color: "#1877F2", letter: "f" },
+              { p: "apple" as const, l: "Apple", color: "#111", letter: "" },
+            ] as { p: 'google' | 'facebook' | 'apple', l: string, color: string, letter: string }[]).map(({ p, l, color, letter }) => (
+              <div key={p} style={{
+                display: "flex", alignItems: "center", padding: "14px 18px",
+                background: "#F8FAFF", borderRadius: 12, border: "1.5px solid #EEF2FF", marginBottom: 10
+              }}>
+                <div style={{
+                  width: 38, height: 38, borderRadius: 10, background: `${color}15`,
+                  border: `1.5px solid ${color}30`, display: "flex", alignItems: "center",
+                  justifyContent: "center", marginRight: 14, fontSize: 16, fontWeight: 800,
+                  color, fontFamily: "serif"
+                }}>{letter}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>{l}</div>
+                  <div style={{
+                    fontSize: 12, fontWeight: 600,
+                    color: settings.linkedAccounts[p] ? "#15803D" : "#94A3B8"
+                  }}>
+                    {settings.linkedAccounts[p] ? "Conectado" : "No conectado"}
+                  </div>
+                </div>
+                <button onClick={() => {
+                  if (settings.linkedAccounts[p]) {
+                    updateSettings({ linkedAccounts: { ...settings.linkedAccounts, [p]: false } }); flash(true, `${l} desvinculado`)
+                  } else {
+                    updateSettings({ linkedAccounts: { ...settings.linkedAccounts, [p]: true } }); flash(true, `${l} vinculado`)
+                  }
+                }} style={{
+                  padding: "8px 18px", borderRadius: 9,
+                  border: `2px solid ${settings.linkedAccounts[p] ? "#FECACA" : "#0B71FE"}`,
+                  background: settings.linkedAccounts[p] ? "#FEF2F2" : "transparent",
+                  color: settings.linkedAccounts[p] ? "#EF4444" : "#0B71FE",
+                  fontSize: 13, fontWeight: 700, cursor: "pointer",
+                  fontFamily: "'Inter','Montserrat',sans-serif"
+                }}>
+                  {settings.linkedAccounts[p] ? "Desvincular" : "Vincular"}
+                </button>
+              </div>
+            ))}
+          </div>)}
+
+          {/* ── ACCESSIBILITY */}
+          {activeSection === "accessibility" && (<div>
+            <SectionHeading><AccessibilityIcon size={20} style={{ marginRight: 8 }} /> Accesibilidad</SectionHeading>
+            <div style={{ marginBottom: 20 }}>
+              <div style={{
+                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                textTransform: "uppercase", marginBottom: 10
+              }}>Tamaño de Texto</div>
+              <PillSelect
+                options={[{ v: "small", l: "Pequeño" }, { v: "medium", l: "Mediano" }, { v: "large", l: "Grande" }, { v: "extra-large", l: "XL" }]}
+                value={settings.accessibility.textSize}
+                onChange={v => updateSettings({ accessibility: { ...settings.accessibility, textSize: v as TextSize } })} />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <div style={{
+                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
+                textTransform: "uppercase", marginBottom: 10
+              }}>Modo de Contraste</div>
+              <PillSelect
+                options={[{ v: "normal", l: "Normal" }, { v: "high", l: "Alto Contraste" }]}
+                value={settings.accessibility.contrastMode}
+                onChange={v => updateSettings({ accessibility: { ...settings.accessibility, contrastMode: v as ContrastMode } })} />
+            </div>
+            <ToggleRow label="Reducir Movimiento" desc="Minimizar animaciones y efectos de movimiento"
+              checked={settings.accessibility.reducedMotion}
+              onChange={v => updateSettings({ accessibility: { ...settings.accessibility, reducedMotion: v } })} />
+            <ToggleRow label="Optimizar para Lector de Pantalla"
+              desc="Mejorar experiencia con lectores de pantalla"
+              checked={settings.accessibility.screenReaderOptimized}
+              onChange={v => updateSettings({ accessibility: { ...settings.accessibility, screenReaderOptimized: v } })} />
+            <ToggleRow label="Navegación por Teclado"
+              desc="Mejorar la navegación con teclado"
+              checked={settings.accessibility.keyboardNavigation}
+              onChange={v => updateSettings({ accessibility: { ...settings.accessibility, keyboardNavigation: v } })} />
+          </div>)}
+
+        </div>{/* /content panel */}
+      </div>{/* /cfg-body */}
+
+      {/* ── Reset Modal */}
+      {showResetConfirm && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(15,23,42,.6)",
+          backdropFilter: "blur(5px)", display: "flex", alignItems: "center",
+          justifyContent: "center", zIndex: 9999, padding: 24
+        }}>
+          <div style={{
+            background: "#fff", borderRadius: 20, padding: 36, maxWidth: 420,
+            width: "100%", boxShadow: "0 20px 60px rgba(0,0,0,.2)"
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+              <div style={{
+                width: 64, height: 64, borderRadius: '50%', background: '#FEF2F2',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <WarningIcon size={32} color="#EF4444" />
+              </div>
+            </div>
+            <h3 style={{ margin: "0 0 10px", fontSize: 20, fontWeight: 800, color: "#0F172A" }}>
+              ¿Restaurar configuración?
+            </h3>
+            <p style={{ margin: "0 0 24px", fontSize: 14, color: "#64748B", lineHeight: 1.6 }}>
+              Esto restablecerá todas tus preferencias a los valores predeterminados.
+              Esta acción no se puede deshacer.
+            </p>
+            <div style={{ display: "flex", gap: 12 }}>
+              <button onClick={() => setShowResetConfirm(false)}
+                style={{ ...btnGhost, flex: 1, padding: "13px", textAlign: "center" as const }}>
+                Cancelar
+              </button>
+              <button onClick={() => { resetSettings(); setShowResetConfirm(false); flash(true, "Configuración restaurada") }}
+                style={{
+                  flex: 1, padding: "13px", background: "#EF4444", border: "none",
+                  borderRadius: 10, color: "#fff", fontSize: 14, fontWeight: 700,
+                  cursor: "pointer", fontFamily: "'Inter','Montserrat',sans-serif"
+                }}>
+                Restaurar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
-        /* Mobile - account for footer */
+        /* Mobile */
         @media (max-width: 767px) {
-          .configuracion-outer {
-            padding-bottom: 65px !important;
-            min-height: calc(100vh - 65px) !important;
+          .cfg-body {
+            grid-template-columns: 1fr !important;
+            padding: 0 12px 80px !important;
+            margin-top: -12px !important;
           }
-          .settings-container {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-right: 0 !important;
-            padding: 20px 16px !important;
-            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-            overflow-x: hidden !important;
-            overflow-y: visible !important;
-            box-sizing: border-box !important;
-          }
-          
-          .settings-grid {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 20px !important;
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-          
-          /* Sidebar navigation - make it horizontal scrollable on mobile */
-          .settings-grid > div:first-child {
+          .cfg-body > div:first-child {
             position: relative !important;
             top: auto !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            height: auto !important;
-            overflow-x: auto !important;
-            overflow-y: visible !important;
-            padding: 16px !important;
-            display: flex !important;
-            flex-direction: row !important;
-            gap: 8px !important;
-            -webkit-overflow-scrolling: touch !important;
-            scrollbar-width: thin !important;
           }
-          
-          /* Sidebar buttons - adjust for horizontal layout */
-          .settings-grid > div:first-child > button {
-            min-width: 140px !important;
-            width: auto !important;
-            flex-shrink: 0 !important;
-            white-space: nowrap !important;
-            margin-bottom: 0 !important;
-          }
-          
-          /* Content area - full width on mobile */
-          .settings-grid > div:last-child {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 20px 16px !important;
-            box-sizing: border-box !important;
-            overflow-x: hidden !important;
-            overflow-y: visible !important;
-          }
-          
-          /* Header adjustments */
-          .settings-container > div[style*="maxWidth: 100%"] {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 0 !important;
-            margin: 0 !important;
-          }
-          
-          .settings-container h1 {
-            font-size: clamp(24px, 6vw, 32px) !important;
-            margin-bottom: 8px !important;
-          }
-          
-          .settings-container p {
-            font-size: clamp(14px, 3vw, 16px) !important;
-          }
-          
-          /* Ensure body can scroll on mobile */
-          body {
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            -webkit-overflow-scrolling: touch !important;
-            position: relative !important;
-            height: auto !important;
-            min-height: 100vh !important;
-          }
-          
-          /* Ensure html can scroll on mobile */
-          html {
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            -webkit-overflow-scrolling: touch !important;
-            height: auto !important;
-            min-height: 100vh !important;
-          }
+          .cfg-root-container { padding-left: 0 !important; }
         }
         
-        /* Tablet/iPad (768px-1160px) - left sidebar (220px text-only) */
+        /* Tablet – app-main padding seems unreliable, applying directly to container */
         @media (min-width: 768px) and (max-width: 1160px) {
-          .configuracion-outer {
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-          .settings-container {
-            width: calc(100% - 220px) !important;
-            max-width: calc(100% - 220px) !important;
-            margin-left: 220px !important;
-            padding: clamp(24px, 3vw, 40px) !important;
-          }
-          .settings-grid {
-            width: 100% !important;
-            max-width: 100% !important;
-            box-sizing: border-box !important;
-          }
+          .cfg-root-container { padding-left: 220px !important; }
+          .cfg-body { padding: 0 20px 60px !important; }
         }
         
-        /* Desktop (1161px+) - left sidebar (full width 280px) */
+        /* Desktop – app-main padding seems unreliable, applying directly to container */
         @media (min-width: 1161px) {
-          .configuracion-outer {
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-          .settings-container {
-            width: calc(100% - 280px) !important;
-            max-width: calc(100% - 280px) !important;
-            margin-left: 280px !important;
-            padding: clamp(24px, 4vw, 40px) !important;
-          }
-          .settings-grid {
-            width: 100% !important;
-            max-width: 100% !important;
-            box-sizing: border-box !important;
-          }
+          .cfg-root-container { padding-left: 280px !important; }
+          .cfg-body { padding: 0 28px 60px !important; }
         }
+        select { -webkit-appearance: none; appearance: none; }
       `}</style>
     </div>
   )
@@ -2134,9 +709,16 @@ function SettingsContent() {
 
 export default function SettingsPage() {
   return (
-    <Suspense fallback={<div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: "#ffffff", padding: "40px", maxWidth: "100%", overflowX: "hidden" }}>Cargando configuración...</div>}>
+    <Suspense fallback={
+      <div style={{
+        flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
+        fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: "#0B71FE",
+        background: "#fff"
+      }}>
+        Cargando configuración...
+      </div>
+    }>
       <SettingsContent />
     </Suspense>
   )
 }
-

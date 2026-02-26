@@ -86,7 +86,7 @@ export default function CombinedSimulatorsPage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
 
-  const [activeTab, setActiveTab] = useState<"simulators" | "cashflow">("simulators")
+  const [activeTab, setActiveTab] = useState<"simulators" | "cashflow">("cashflow")
 
   const [simulatorsList, setSimulatorsList] = useState<Simulator[]>([])
   const [loadingSims, setLoadingSims] = useState(true)
@@ -382,7 +382,7 @@ export default function CombinedSimulatorsPage() {
 
                 {/* Saved simulations button */}
                 <div style={{ marginBottom: "32px" }}>
-                  <Link href="/simulador/history" style={{ textDecoration: "none" }}>
+                  <Link href="/cash-flow/history" style={{ textDecoration: "none" }}>
                     <button style={{
                       padding: "11px 22px",
                       background: "white",
@@ -419,7 +419,7 @@ export default function CombinedSimulatorsPage() {
                       const IconComponent = CATEGORY_ICONS[simulator.category] || BarChart2
                       const accent = CATEGORY_ACCENT[simulator.category] || '#0B71FE'
                       return (
-                        <Link key={simulator.id} href={`/simulador/${simulator.slug}`} style={{ textDecoration: "none" }}>
+                        <Link key={simulator.id} href={`/cash-flow/${simulator.slug}`} style={{ textDecoration: "none" }}>
                           <div className="sim-card" style={{
                             background: "white",
                             borderRadius: 20,
@@ -530,7 +530,7 @@ export default function CombinedSimulatorsPage() {
                           </p>
                         </div>
                         <button
-                          onClick={() => router.push("/simulador/stats")}
+                          onClick={() => router.push("/cash-flow/stats")}
                           style={{
                             padding: "11px 20px",
                             background: "rgba(255,255,255,0.08)",
@@ -627,7 +627,7 @@ export default function CombinedSimulatorsPage() {
 
                               <div style={{ display: "flex", gap: 10 }}>
                                 <button
-                                  onClick={() => router.push(`/simulador/game/${game.id}`)}
+                                  onClick={() => router.push(`/cash-flow/game/${game.id}`)}
                                   style={{ flex: 1, padding: "11px", background: "linear-gradient(135deg, #4f46e5, #6366f1)", color: "white", border: "none", borderRadius: 10, fontWeight: 700, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
                                 >
                                   <Play size={14} fill="white" />

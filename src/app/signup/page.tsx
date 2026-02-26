@@ -11,6 +11,8 @@ const brandName = "BIZEN"
 const supportEmail = "soporte@bizen.mx"
 const AUTH_CONTROL_HEIGHT = 48
 
+import { CheckIcon, WarningIcon } from "@/components/CustomIcons"
+
 function BIZENSignupContent() {
   const router = useRouter()
   const supabase = createClient()
@@ -282,10 +284,12 @@ function BIZENSignupContent() {
           <p role="status" style={{
             marginTop: 16, textAlign: "center", fontSize: 13, fontFamily: "Inter, sans-serif",
             color: isSuccess ? "#4ade80" : "#f87171",
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             background: isSuccess ? "rgba(74,222,128,0.1)" : "rgba(248,113,113,0.1)",
             border: `1px solid ${isSuccess ? "rgba(74,222,128,0.2)" : "rgba(248,113,113,0.2)"}`,
             borderRadius: 8, padding: "10px 16px", width: "100%", boxSizing: "border-box",
           }}>
+            {isSuccess ? <CheckIcon size={16} color="#4ade80" /> : <WarningIcon size={16} color="#f87171" />}
             {message}
           </p>
         )}

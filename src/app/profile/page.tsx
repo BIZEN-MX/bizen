@@ -8,6 +8,7 @@ import Image from "next/image"
 import Button from "../../components/ui/button"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import { WarningIcon, PencilIcon, MapIcon } from "@/components/CustomIcons"
 
 interface UserStats {
   xp: number
@@ -24,7 +25,7 @@ export default function ProfilePage() {
   const supabase = createClientMicrocred()
   const [mounted, setMounted] = React.useState(false)
   const [showAvatarPicker, setShowAvatarPicker] = useState(false)
-  const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "emoji", value: "👤" })
+  const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "mascot", id: "fox", label: "Zorro" })
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
@@ -228,7 +229,7 @@ export default function ProfilePage() {
       formData.bio !== (user.user_metadata?.bio || "") ||
       formData.birthDate !== (user.user_metadata?.birth_date || "") ||
       formData.schoolId !== (user.user_metadata?.school_id || "") ||
-      JSON.stringify(selectedAvatar) !== JSON.stringify(user.user_metadata?.avatar || { type: "emoji", value: "👤" })
+      JSON.stringify(selectedAvatar) !== JSON.stringify(user.user_metadata?.avatar || { type: "mascot", id: "fox", label: "Zorro" })
 
     // Only save if there are actual changes
     if (!hasChanges) return
@@ -334,7 +335,9 @@ export default function ProfilePage() {
                   onMouseLeave={e => { e.currentTarget.style.transform = "" }}
                 >
                   <AvatarDisplay avatar={selectedAvatar} size={52} />
-                  <div style={{ position: "absolute", bottom: 2, right: 2, width: 28, height: 28, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>✏️</div>
+                  <div style={{ position: "absolute", bottom: 2, right: 2, width: 28, height: 28, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
+                    <PencilIcon size={14} color="#0F62FE" />
+                  </div>
                 </div>
                 {/* Avatar Picker */}
                 {showAvatarPicker && (
@@ -491,7 +494,7 @@ export default function ProfilePage() {
 
                 {/* Save Status (Success message hidden per request) */}
                 {saving && <div style={{ marginTop: 20, padding: "11px 16px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#2563eb" }}>Guardando cambios...</div>}
-                {saveError && <div style={{ marginTop: 20, padding: "11px 16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#dc2626" }}>⚠ {saveError}</div>}
+                {saveError && <div style={{ marginTop: 20, padding: "11px 16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#dc2626", display: "flex", alignItems: "center", gap: 8 }}><WarningIcon size={18} /> {saveError}</div>}
               </div>
 
               {/* Level & Progress Section */}
@@ -549,7 +552,9 @@ export default function ProfilePage() {
                   {/* Replay Onboarding Tour */}
                   <div style={{ background: "white", borderRadius: 24, padding: "clamp(20px,3vw,28px) clamp(22px,4vw,32px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                      <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg,#eff6ff,#dbeafe)", border: "1px solid #bfdbfe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>🗺️</div>
+                      <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg,#eff6ff,#dbeafe)", border: "1px solid #bfdbfe", display: "flex", alignItems: "center", justifyContent: "center", color: "#0F62FE", flexShrink: 0 }}>
+                        <MapIcon size={24} />
+                      </div>
                       <div>
                         <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", marginBottom: 3 }}>Recorrido por la aplicación</div>
                         <div style={{ fontSize: 13, color: "#64748b" }}>Repasa qué hace cada sección de BIZEN</div>

@@ -7,6 +7,7 @@ import Link from "next/link"
 import { CommentSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import { ThumbsUpIcon, ThumbsDownIcon } from "@/components/CustomIcons"
 
 interface ThreadDetail {
   id: string
@@ -327,17 +328,7 @@ export default function ThreadDetailPage() {
                 e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              <span style={{
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                display: "inline-block",
-                transform: comment.userVote === 1 ? "scale(1.3)" : "scale(1)",
-                transition: "transform 0.2s ease"
-              }}>
-                👍
-              </span>
+              <ThumbsUpIcon size={20} color={comment.userVote === 1 ? "#0B71FE" : "#94a3b8"} />
             </button>
             <span style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 700, color: "#374151" }}>
               {comment.score}
@@ -368,17 +359,7 @@ export default function ThreadDetailPage() {
                 e.currentTarget.style.transform = "scale(1)"
               }}
             >
-              <span style={{
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                display: "inline-block",
-                transform: comment.userVote === -1 ? "scale(1.3)" : "scale(1)",
-                transition: "transform 0.2s ease"
-              }}>
-                👎
-              </span>
+              <ThumbsDownIcon size={20} color={comment.userVote === -1 ? "#0B71FE" : "#94a3b8"} />
             </button>
           </div>
 
@@ -776,18 +757,8 @@ export default function ThreadDetailPage() {
                     e.currentTarget.style.transform = "scale(1)"
                   }}
                 >
-                  <span style={{
-                    background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    display: "inline-block",
-                    fontSize: 18,
-                    transform: thread.userVote === 1 ? "scale(1.2)" : "scale(1)",
-                    transition: "transform 0.2s ease"
-                  }}>
-                    👍
-                  </span> {thread.score > 0 && thread.score}
+                  <ThumbsUpIcon size={20} color={thread.userVote === 1 ? "#0B71FE" : "#94a3b8"} />
+                  {thread.score > 0 && thread.score}
                 </button>
 
                 <button
@@ -815,18 +786,7 @@ export default function ThreadDetailPage() {
                     e.currentTarget.style.transform = "scale(1)"
                   }}
                 >
-                  <span style={{
-                    background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    display: "inline-block",
-                    fontSize: 18,
-                    transform: thread.userVote === -1 ? "scale(1.2)" : "scale(1)",
-                    transition: "transform 0.2s ease"
-                  }}>
-                    👎
-                  </span>
+                  <ThumbsDownIcon size={20} color={thread.userVote === -1 ? "#0B71FE" : "#94a3b8"} />
                 </button>
 
                 <button

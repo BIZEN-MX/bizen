@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
+import { PartyIcon, RocketIcon, BookIcon, StarIcon } from "@/components/CustomIcons"
 
 interface BillyWelcomeScreenProps {
   userName: string
@@ -33,10 +34,10 @@ export default function BillyWelcomeScreen({
   const [isRedirecting, setIsRedirecting] = useState(false)
   const router = useRouter()
 
-  const message = titleMessage 
+  const message = titleMessage
     || (isReturningUser
-      ? `¡Bienvenido de nuevo, ${userName}! 🎉`
-      : `¡Bienvenido, ${userName}! 🚀`)
+      ? <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>¡Bienvenido de nuevo, {userName}! <PartyIcon size={40} color="#0F62FE" /></span> as any
+      : <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>¡Bienvenido, {userName}! <RocketIcon size={40} color="#0F62FE" /></span> as any)
 
   // Generate stable random values for particles
   const particleData = useState(() =>
@@ -64,7 +65,7 @@ export default function BillyWelcomeScreen({
   useEffect(() => {
     // Fade in animation with appearing effect
     setTimeout(() => setIsVisible(true), 100)
-    
+
     // Show message after Billy appears
     setTimeout(() => setShowMessage(true), 400)
   }, [])
@@ -156,7 +157,7 @@ export default function BillyWelcomeScreen({
           }}
         />
       ))}
-      
+
       {/* Decorative gradient orbs */}
       {[
         { colors: ["rgba(102, 126, 234, 0.6)", "rgba(118, 75, 162, 0.4)"], size: 180 },
@@ -242,7 +243,6 @@ export default function BillyWelcomeScreen({
               maxWidth: "90vw",
               textAlign: "center",
               animation: "popIn 0.5s ease-out",
-              position: "relative" as const,
               overflow: "hidden" as const,
             }}
           >
@@ -298,9 +298,17 @@ export default function BillyWelcomeScreen({
                 fontFamily: 'Montserrat, sans-serif',
               }}
             >
-              {description || (isReturningUser ? '¡Continuemos tu aprendizaje! 📚' : '¡Empecemos esta aventura juntos! 🌟')}
+              {description || (isReturningUser ? (
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                  ¡Continuemos tu aprendizaje! <BookIcon size={24} color="#0F62FE" />
+                </span>
+              ) : (
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                  ¡Empecemos esta aventura juntos! <StarIcon size={24} color="#0F62FE" />
+                </span>
+              ))}
             </motion.p>
-            
+
             {/* Speech bubble tail */}
             <div
               style={{
@@ -386,20 +394,20 @@ export default function BillyWelcomeScreen({
             onClick={handleSkip}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-              style={{
-                padding: "14px 40px",
-                background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7))",
-                backdropFilter: "blur(10px)",
-                border: "2px solid rgba(255, 255, 255, 0.5)",
-                borderRadius: 30,
-                color: "#0F62FE",
-                fontSize: "clamp(18px, 4vw, 22px)",
-                fontWeight: 700,
-                cursor: "pointer",
-                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
-                transition: "all 0.3s ease",
-                fontFamily: 'Montserrat, sans-serif',
-              }}
+            style={{
+              padding: "14px 40px",
+              background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7))",
+              backdropFilter: "blur(10px)",
+              border: "2px solid rgba(255, 255, 255, 0.5)",
+              borderRadius: 30,
+              color: "#0F62FE",
+              fontSize: "clamp(18px, 4vw, 22px)",
+              fontWeight: 700,
+              cursor: "pointer",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
+              transition: "all 0.3s ease",
+              fontFamily: 'Montserrat, sans-serif',
+            }}
           >
             {timeRemaining > 0 ? `Continuar en ${timeRemaining}s` : 'Continuar →'}
           </motion.button>

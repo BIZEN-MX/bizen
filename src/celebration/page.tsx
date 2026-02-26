@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
+import { PartyIcon, RocketIcon, TrophyIcon, TargetIcon } from "@/components/CustomIcons"
 
 export default function CelebrationPage() {
   const router = useRouter()
@@ -194,7 +195,11 @@ export default function CelebrationPage() {
               backgroundClip: "text"
             }}
           >
-            🎉 ¡FELICITACIONES! 🎉
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+              <PartyIcon size={64} color="#FFD700" />
+              <span>¡FELICITACIONES!</span>
+              <PartyIcon size={64} color="#FFD700" style={{ transform: 'scaleX(-1)' }} />
+            </div>
           </motion.h1>
 
           {/* Characters */}
@@ -212,11 +217,11 @@ export default function CelebrationPage() {
           >
             {/* Billy */}
             <motion.div
-              animate={{ 
+              animate={{
                 y: [0, -10, 0],
                 rotate: [0, 5, 0, -5, 0]
               }}
-              transition={{ 
+              transition={{
                 duration: 2,
                 repeat: Infinity,
                 ease: "easeInOut"
@@ -241,11 +246,11 @@ export default function CelebrationPage() {
 
             {/* Drago */}
             <motion.div
-              animate={{ 
+              animate={{
                 y: [0, -15, 0],
                 rotate: [0, -3, 0, 3, 0]
               }}
-              transition={{ 
+              transition={{
                 duration: 2.5,
                 repeat: Infinity,
                 ease: "easeInOut",
@@ -296,18 +301,20 @@ export default function CelebrationPage() {
                     lineHeight: 1.6,
                     margin: 0
                   }}
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.02, 1],
                   }}
-                  transition={{ 
+                  transition={{
                     duration: 2,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
                 >
-                  <span style={{ color: "#0F62FE", fontSize: "2rem" }}>Dragón</span>, eres un crack! 🚀<br />
+                  <span style={{ color: "#0F62FE", fontSize: "2rem" }}>Dragón</span>, eres un crack! <RocketIcon size={32} color="#0F62FE" style={{ display: 'inline', verticalAlign: 'middle' }} /><br />
                   Acabas de terminar la <strong style={{ color: "#0F62FE" }}>microcredencial Mondragón</strong> con un desempeño excelente!<br />
-                  <span style={{ fontSize: "1.5rem", color: "#666" }}>Aquí tienes tu trofeo, campeón! 🏆</span>
+                  <span style={{ fontSize: "1.5rem", color: "#666", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                    Aquí tienes tu trofeo, campeón! <TrophyIcon size={32} color="#FFD700" />
+                  </span>
                 </motion.p>
               </motion.div>
             )}
@@ -318,12 +325,12 @@ export default function CelebrationPage() {
             {showTrophy && (
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
-                animate={{ 
-                  scale: 1, 
+                animate={{
+                  scale: 1,
                   rotate: 0,
                   y: [0, -20, 0]
                 }}
-                transition={{ 
+                transition={{
                   duration: 1.5,
                   ease: "easeOut",
                   y: {
@@ -338,7 +345,7 @@ export default function CelebrationPage() {
                   filter: "drop-shadow(0 10px 30px rgba(255,215,0,0.5))"
                 }}
               >
-                🏆
+                <TrophyIcon size={128} color="#FFD700" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -348,8 +355,8 @@ export default function CelebrationPage() {
             {showFinalButton && (
               <motion.button
                 initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ 
-                  opacity: 1, 
+                animate={{
+                  opacity: 1,
                   scale: 1,
                   boxShadow: [
                     "0 0 0 0 rgba(15, 98, 254, 0.4)",
@@ -357,7 +364,7 @@ export default function CelebrationPage() {
                     "0 0 0 0 rgba(15, 98, 254, 0)"
                   ]
                 }}
-                transition={{ 
+                transition={{
                   duration: 0.5,
                   boxShadow: {
                     duration: 2,
@@ -365,7 +372,7 @@ export default function CelebrationPage() {
                     ease: "easeOut"
                   }
                 }}
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   boxShadow: "0 10px 30px rgba(15, 98, 254, 0.3)"
                 }}
@@ -386,7 +393,7 @@ export default function CelebrationPage() {
                   transition: "all 0.3s ease"
                 }}
               >
-                🎯 Finalizar
+                <TargetIcon size={32} style={{ marginRight: 12, display: 'inline', verticalAlign: 'middle' }} /> Finalizar
               </motion.button>
             )}
           </AnimatePresence>

@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -27,7 +27,8 @@ export async function GET(request: NextRequest) {
                 userId: true,
                 nickname: true,
                 fullName: true,
-                reputation: true
+                reputation: true,
+                avatar: true
               }
             },
             topic: true,
@@ -60,7 +61,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Failed to fetch bookmarks" }, { status: 500 })
   } finally {
     if (prisma) {
-      await prisma.$disconnect().catch(() => {})
+      await prisma.$disconnect().catch(() => { })
     }
   }
 }
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -117,7 +118,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to bookmark", details: errorMessage }, { status: 500 })
   } finally {
     if (prisma) {
-      await prisma.$disconnect().catch(() => {})
+      await prisma.$disconnect().catch(() => { })
     }
   }
 }
@@ -130,7 +131,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -157,7 +158,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Failed to remove bookmark" }, { status: 500 })
   } finally {
     if (prisma) {
-      await prisma.$disconnect().catch(() => {})
+      await prisma.$disconnect().catch(() => { })
     }
   }
 }

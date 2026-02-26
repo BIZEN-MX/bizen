@@ -23,8 +23,18 @@ import {
   Heart,
   ShoppingBag,
   Star,
-  LogIn
+  LogIn,
+  ChevronDown,
+  ChevronRight as ChevronRightIcon
 } from "lucide-react"
+
+import {
+  SpainIcon,
+  USIcon,
+  WarningIcon,
+  CheckIcon,
+  ShieldIcon
+} from "@/components/CustomIcons"
 
 export default function FixedSidebar() {
   const router = useRouter()
@@ -254,7 +264,7 @@ export default function FixedSidebar() {
           position: "fixed",
           top: 0,
           left: 0,
-          width: "clamp(240px, 25vw, 320px)",
+          width: isCompactSidebar ? "220px" : "280px",
           height: "100vh",
           background: "#FBFAF5",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
@@ -495,7 +505,7 @@ export default function FixedSidebar() {
 
                   <button
                     data-tour-id="/simulador"
-                    onClick={() => navigateTo("/simulador")}
+                    onClick={() => navigateTo("/cash-flow")}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -749,7 +759,9 @@ export default function FixedSidebar() {
                       >
                         <MoreHorizontal size={iconSize} />
                         <span className="nav-item-label">Más</span>
-                        {isCompactSidebar && <span style={{ marginLeft: "auto", fontSize: 12, opacity: 0.9 }}>{isMasOpen ? "▼" : "▶"}</span>}
+                        {isCompactSidebar && <span style={{ marginLeft: "auto", display: "flex", alignItems: "center", opacity: 0.9 }}>
+                          {isMasOpen ? <ChevronDown size={14} /> : <ChevronRightIcon size={14} />}
+                        </span>}
                       </button>
 
                       {isMasOpen && typeof document !== "undefined" && createPortal(
@@ -1065,16 +1077,9 @@ export default function FixedSidebar() {
               width: "100%",
               boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)"
             }}>
-              <div style={{
-                fontSize: 24,
-                fontWeight: 800,
-                marginBottom: 16,
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text"
-              }}>
-                ⚠️ ¿Estás seguro?
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                <WarningIcon size={24} color="#0B71FE" style={{ filter: 'drop-shadow(0 0 8px rgba(11, 113, 254, 0.3))' }} />
+                <span>¿Estás seguro?</span>
               </div>
 
               <p style={{
@@ -1186,10 +1191,9 @@ export default function FixedSidebar() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 40,
                 boxShadow: "0 8px 20px rgba(11, 113, 254, 0.3)"
               }}>
-                🔒
+                <ShieldIcon size={40} color="white" />
               </div>
 
               <div style={{

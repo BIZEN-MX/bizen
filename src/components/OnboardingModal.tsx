@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import { useAuth } from "@/contexts/AuthContext"
+import { SchoolIcon, CakeIcon, PartyIcon } from "@/components/CustomIcons"
 
 // ─── Avatar Options ───────────────────────────────────────────────────────────
 
@@ -436,7 +437,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                             </div>
 
                             <div style={{ textAlign: "center", marginBottom: 28 }}>
-                                <div style={{ fontSize: 52, marginBottom: 12 }}>🏫</div>
+                                <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+                                    <div style={{
+                                        width: 80, height: 80, borderRadius: "50%", background: "#EFF6FF",
+                                        display: "flex", alignItems: "center", justifyContent: "center", color: "#0B71FE"
+                                    }}>
+                                        <SchoolIcon size={44} />
+                                    </div>
+                                </div>
                                 <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 6px" }}>¿Cuál es tu escuela?</h2>
                                 <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>Para mostrarte el progreso de tus compañeros.</p>
                             </div>
@@ -478,7 +486,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                             {/* Birthday illustration */}
                             <div style={{ textAlign: "center", marginBottom: 28 }}>
-                                <div style={{ fontSize: 52, marginBottom: 12 }}>🎂</div>
+                                <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+                                    <div style={{
+                                        width: 80, height: 80, borderRadius: "50%", background: "#FFF1F2",
+                                        display: "flex", alignItems: "center", justifyContent: "center", color: "#F43F5E"
+                                    }}>
+                                        <CakeIcon size={44} />
+                                    </div>
+                                </div>
                                 <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 6px" }}>¿Cuándo es tu cumpleaños?</h2>
                                 <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>Nos ayuda a personalizar tu experiencia. Es opcional.</p>
                             </div>
@@ -506,7 +521,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                             border: "1.5px solid #bfdbfe",
                                             borderRadius: 12, display: "flex", alignItems: "center", gap: 10
                                         }}>
-                                            <span style={{ fontSize: 22 }}>🎉</span>
+                                            <PartyIcon size={24} color="#1e40af" />
                                             <div>
                                                 <div style={{ fontSize: 13, fontWeight: 800, color: "#1e40af" }}>Tienes {age} años</div>
                                                 <div style={{ fontSize: 11, color: "#3b82f6" }}>Bienvenido a BIZEN</div>

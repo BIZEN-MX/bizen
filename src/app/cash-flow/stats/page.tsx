@@ -139,7 +139,7 @@ export default function CashFlowStatsPage() {
               </div>
 
               <Link
-                href="/simulador"
+                href="/cash-flow"
                 style={{
                   padding: "12px 24px",
                   background: "linear-gradient(135deg, #667eea, #764ba2)",
@@ -430,7 +430,7 @@ export default function CashFlowStatsPage() {
                       </div>
 
                       <Link
-                        href={`/simulador/game/${game.id}`}
+                        href={`/cash-flow/game/${game.id}`}
                         style={{
                           padding: "10px 20px",
                           background: "linear-gradient(135deg, #667eea, #764ba2)",
@@ -478,7 +478,7 @@ export default function CashFlowStatsPage() {
                 ¡Comienza tu primera partida de Cashflow y aparecerán tus estadísticas aquí!
               </p>
               <Link
-                href="/simulador"
+                href="/cash-flow"
                 style={{
                   display: "inline-block",
                   padding: "16px 32px",

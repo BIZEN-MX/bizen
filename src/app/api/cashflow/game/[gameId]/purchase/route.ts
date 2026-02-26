@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
+import { awardXp } from "@/lib/rewards"
 
 export async function POST(
   request: NextRequest,
@@ -41,7 +42,7 @@ export async function POST(
     }
 
     const purchaseCost = card.down_payment || card.cost
-    
+
     if (player.cash_on_hand < purchaseCost) {
       return NextResponse.json({ error: "Not enough cash" }, { status: 400 })
     }
@@ -62,7 +63,7 @@ export async function POST(
       .single()
 
     const newPassiveIncome = player.passive_income + (card.cash_flow || 0)
-    
+
     // Update player
     await supabase
       .from('players')
@@ -91,7 +92,7 @@ export async function POST(
 
     // Check if escaped rat race
     const profession = player.professions
-    const totalExpenses = 
+    const totalExpenses =
       profession.taxes +
       profession.home_mortgage_payment +
       profession.school_loan_payment +
@@ -101,6 +102,7 @@ export async function POST(
       profession.other_expenses +
       (profession.child_expense * player.num_children)
 
+    let rewards = null
     if (newPassiveIncome > totalExpenses && !player.has_escaped_rat_race) {
       await supabase
         .from('players')
@@ -118,13 +120,16 @@ export async function POST(
         event_data: { passiveIncome: newPassiveIncome, totalExpenses },
         turn_number: player.current_turn
       })
+
+      rewards = await awardXp(user.id, 150) // Massive bonus for winning cashflow
     }
 
     return NextResponse.json({
       message: "Investment purchased successfully",
       investment,
       newCash: player.cash_on_hand - purchaseCost,
-      newPassiveIncome
+      newPassiveIncome,
+      rewards
     })
 
   } catch (error) {

@@ -83,10 +83,10 @@ export default function MobileFooterNav() {
       active: isActivePath("/reto-diario")
     },
     {
-      path: "/simulador",
+      path: "/cash-flow",
       label: "Simulador",
       icon: Gamepad2,
-      active: isActivePath("/simulador")
+      active: isActivePath("/cash-flow")
     },
     {
       path: "/forum",

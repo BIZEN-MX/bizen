@@ -1,7 +1,8 @@
 // Reusable Avatar Display Component
+import { UserIcon } from "./CustomIcons"
 export const AvatarDisplay = ({ avatar, size = 64 }: { avatar: any; size?: number }) => {
   if (!avatar) {
-    return <span style={{ fontSize: size * 0.6 }}>👤</span>
+    return <UserIcon size={size * 0.6} />
   }
 
   // Mascot image avatars (local PNGs in /public/avatars/)
@@ -200,7 +201,7 @@ export const AvatarDisplay = ({ avatar, size = 64 }: { avatar: any; size?: numbe
     )
   }
 
-  return <span style={{ fontSize: size * 0.6 }}>👤</span>
+  return <UserIcon size={size * 0.6} />
 }
 
 

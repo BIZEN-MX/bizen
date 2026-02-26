@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
+import { MailIcon } from "@/components/CustomIcons"
 
 // ===== Brand & Theme
 const brandName = "BIZEN"
@@ -214,16 +215,22 @@ export default function ForgotPasswordPage() {
           </Card>
         ) : (
           <Card style={{ textAlign: "center" }}>
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>✉️</div>
-              <h1 style={{ margin: "0 0 12px 0", fontSize: 24, color: "#111" }}>¡Revisa tu email!</h1>
-              <p style={{ margin: "0 0 8px 0", fontSize: 14, color: "#525252" }}>
-                Te enviamos un link de recuperación a <strong>{email}</strong>
-              </p>
-              <p style={{ margin: 0, fontSize: 14, color: "#525252" }}>
-                Haz clic en el link para resetear tu contraseña.
-              </p>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+              <div style={{
+                width: 80, height: 80, borderRadius: "50%", background: "#EFF6FF",
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}>
+                <MailIcon size={40} color="#0B71FE" />
+              </div>
             </div>
+
+            <h1 style={{ margin: "0 0 12px 0", fontSize: 24, color: "#111" }}>¡Revisa tu email!</h1>
+            <p style={{ margin: "0 0 8px 0", fontSize: 14, color: "#525252" }}>
+              Te enviamos un link de recuperación a <strong>{email}</strong>
+            </p>
+            <p style={{ margin: "0 0 24px 0", fontSize: 14, color: "#525252" }}>
+              Haz clic en el link para resetear tu contraseña.
+            </p>
 
             <div style={{ display: "grid" as const, gap: 12 }}>
               <div style={{ fontSize: 12, color: "#666" }}>
@@ -249,7 +256,7 @@ export default function ForgotPasswordPage() {
           © {new Date().getFullYear()} {brandName}. Todos los derechos reservados.
         </div>
       </div>
-    </main>
+    </main >
   )
 }
 

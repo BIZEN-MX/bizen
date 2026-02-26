@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Image from "next/image"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
+import { CheckIcon, CrossIcon, ShieldIcon, StarIcon, RocketIcon, BotIcon, MailIcon, PhoneIcon, CreditCardIcon, WarningIcon } from "@/components/CustomIcons"
 
 export default function CuentaPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const supabase = createClientMicrocred()
-  
+
   const [showPasswordFields, setShowPasswordFields] = useState(false)
   const [passwords, setPasswords] = useState({
     current: "",
@@ -102,7 +103,7 @@ export default function CuentaPage() {
       if (error) throw error
 
       setSaveSuccess("Teléfono actualizado exitosamente")
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(null), 3000)
     } catch (error: any) {
@@ -129,7 +130,7 @@ export default function CuentaPage() {
 
       setSelectedPlan(plan)
       setSaveSuccess("Plan actualizado exitosamente")
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(null), 3000)
     } catch (error: any) {
@@ -231,7 +232,7 @@ export default function CuentaPage() {
             fontWeight: 600,
             fontSize: 14
           }}>
-            <span>✅</span>
+            <CheckIcon size={16} color="#065F46" />
             <span>{saveSuccess}</span>
           </div>
         )}
@@ -251,7 +252,7 @@ export default function CuentaPage() {
             fontWeight: 600,
             fontSize: 14
           }}>
-            <span>❌</span>
+            <CrossIcon size={16} color="#991B1B" />
             <span>{saveError}</span>
           </div>
         )}
@@ -393,7 +394,7 @@ export default function CuentaPage() {
               }}>
                 Contraseña
               </label>
-              
+
               {!showPasswordFields ? (
                 <button
                   onClick={() => setShowPasswordFields(true)}
@@ -451,7 +452,7 @@ export default function CuentaPage() {
                       e.currentTarget.style.boxShadow = "none"
                     }}
                   />
-                  
+
                   <input
                     type="password"
                     value={passwords.confirm}
@@ -582,15 +583,15 @@ export default function CuentaPage() {
               }}>
                 Plan de Suscripción
               </label>
-              
+
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {/* Gratuito Plan */}
                 <div
                   onClick={() => handlePlanUpdate("gratuito")}
                   style={{
                     padding: "16px 20px",
-                    background: selectedPlan === "gratuito" 
-                      ? "linear-gradient(135deg, #10B981 0%, #059669 100%)" 
+                    background: selectedPlan === "gratuito"
+                      ? "linear-gradient(135deg, #10B981 0%, #059669 100%)"
                       : "rgba(16, 185, 129, 0.1)",
                     borderRadius: 12,
                     display: "flex",
@@ -613,18 +614,18 @@ export default function CuentaPage() {
                   }}
                 >
                   <div>
-                    <div style={{ 
-                      fontSize: 16, 
-                      color: selectedPlan === "gratuito" ? "#fff" : "#059669", 
-                      fontWeight: 800, 
-                      marginBottom: 2 
+                    <div style={{
+                      fontSize: 16,
+                      color: selectedPlan === "gratuito" ? "#fff" : "#059669",
+                      fontWeight: 800,
+                      marginBottom: 2
                     }}>
                       Plan Gratuito
                     </div>
-                    <div style={{ 
-                      fontSize: 12, 
-                      color: selectedPlan === "gratuito" ? "rgba(255, 255, 255, 0.8)" : "#6B7280", 
-                      fontWeight: 600 
+                    <div style={{
+                      fontSize: 12,
+                      color: selectedPlan === "gratuito" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
+                      fontWeight: 600
                     }}>
                       Acceso ilimitado a todos los cursos
                     </div>
@@ -648,8 +649,8 @@ export default function CuentaPage() {
                   onClick={() => handlePlanUpdate("estudiante")}
                   style={{
                     padding: "16px 20px",
-                    background: selectedPlan === "estudiante" 
-                      ? "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)" 
+                    background: selectedPlan === "estudiante"
+                      ? "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)"
                       : "rgba(59, 130, 246, 0.1)",
                     borderRadius: 12,
                     display: "flex",
@@ -672,18 +673,18 @@ export default function CuentaPage() {
                   }}
                 >
                   <div>
-                    <div style={{ 
-                      fontSize: 16, 
-                      color: selectedPlan === "estudiante" ? "#fff" : "#2563EB", 
-                      fontWeight: 800, 
-                      marginBottom: 2 
+                    <div style={{
+                      fontSize: 16,
+                      color: selectedPlan === "estudiante" ? "#fff" : "#2563EB",
+                      fontWeight: 800,
+                      marginBottom: 2
                     }}>
                       Plan Estudiante
                     </div>
-                    <div style={{ 
-                      fontSize: 12, 
-                      color: selectedPlan === "estudiante" ? "rgba(255, 255, 255, 0.8)" : "#6B7280", 
-                      fontWeight: 600 
+                    <div style={{
+                      fontSize: 12,
+                      color: selectedPlan === "estudiante" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
+                      fontWeight: 600
                     }}>
                       Funciones adicionales para estudiantes
                     </div>
@@ -707,8 +708,8 @@ export default function CuentaPage() {
                   onClick={() => handlePlanUpdate("premium")}
                   style={{
                     padding: "16px 20px",
-                    background: selectedPlan === "premium" 
-                      ? "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)" 
+                    background: selectedPlan === "premium"
+                      ? "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)"
                       : "rgba(251, 191, 36, 0.1)",
                     borderRadius: 12,
                     display: "flex",
@@ -731,18 +732,18 @@ export default function CuentaPage() {
                   }}
                 >
                   <div>
-                    <div style={{ 
-                      fontSize: 16, 
-                      color: selectedPlan === "premium" ? "#fff" : "#F59E0B", 
-                      fontWeight: 800, 
-                      marginBottom: 2 
+                    <div style={{
+                      fontSize: 16,
+                      color: selectedPlan === "premium" ? "#fff" : "#F59E0B",
+                      fontWeight: 800,
+                      marginBottom: 2
                     }}>
                       Plan Premium
                     </div>
-                    <div style={{ 
-                      fontSize: 12, 
-                      color: selectedPlan === "premium" ? "rgba(255, 255, 255, 0.8)" : "#6B7280", 
-                      fontWeight: 600 
+                    <div style={{
+                      fontSize: 12,
+                      color: selectedPlan === "premium" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
+                      fontWeight: 600
                     }}>
                       Acceso completo + certificados + soporte prioritario
                     </div>
@@ -783,10 +784,10 @@ export default function CuentaPage() {
                 color: "#1E40AF",
                 fontWeight: 600
               }}>
-                {new Date(user.created_at || Date.now()).toLocaleDateString('es-MX', { 
+                {new Date(user.created_at || Date.now()).toLocaleDateString('es-MX', {
                   day: 'numeric',
-                  month: 'long', 
-                  year: 'numeric' 
+                  month: 'long',
+                  year: 'numeric'
                 })}
               </div>
             </div>
@@ -814,7 +815,7 @@ export default function CuentaPage() {
           }}>
             Sesión
           </h2>
-          
+
           <p style={{
             margin: 0,
             marginBottom: 20,

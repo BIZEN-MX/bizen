@@ -149,7 +149,7 @@ export default function HistoryPage() {
         }}>
           {/* Header */}
           <div style={{ marginBottom: 32 }}>
-            <Link href="/simulador" style={{ textDecoration: "none" }}>
+            <Link href="/cash-flow" style={{ textDecoration: "none" }}>
               <button style={{
                 padding: "10px 20px",
                 background: "white",
@@ -270,7 +270,7 @@ export default function HistoryPage() {
               <p style={{ fontSize: 16, color: "#6B7280", marginBottom: 24 }}>
                 Usa cualquiera de los simuladores y guarda tus resultados para consultarlos después
               </p>
-              <Link href="/simulador" style={{ textDecoration: "none" }}>
+              <Link href="/cash-flow" style={{ textDecoration: "none" }}>
                 <button style={{
                   padding: "14px 28px",
                   background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
@@ -362,7 +362,7 @@ export default function HistoryPage() {
                         </p>
                       )}
                     </div>
-                    <Link href={`/simulador/${run.simulator_slug}?runId=${run.id}`} style={{ textDecoration: "none" }}>
+                    <Link href={`/cash-flow/${run.simulator_slug}?runId=${run.id}`} style={{ textDecoration: "none" }}>
                       <button style={{
                         padding: "10px 20px",
                         background: "white",

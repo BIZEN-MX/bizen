@@ -4,6 +4,15 @@
 
 import * as React from "react"
 import { useAuth } from "@/contexts/AuthContext"
+import {
+  BarChartIcon,
+  TrophyIcon,
+  StarIcon,
+  MailIcon,
+  MapPinIcon,
+  ClockIcon,
+  PuzzleIcon
+} from "@/components/CustomIcons"
 
 type Level = "Principiante" | "Intermedio" | "Avanzado"
 
@@ -763,9 +772,9 @@ export default function LandingPage(p: LandingPageProps) {
       <header className="site-header">
         <div className="container header-inner">
           <a href="#top" className="brand" aria-label={`${brandName} inicio`}>
-            <img 
-              src="/bizen-logo.png" 
-              alt="BIZEN Logo" 
+            <img
+              src="/bizen-logo.png"
+              alt="BIZEN Logo"
               className="logo-image"
               width={36}
               height={36}
@@ -825,7 +834,9 @@ export default function LandingPage(p: LandingPageProps) {
             <div className="hero-copy">
               {user ? (
                 <>
-                  <h1>Bienvenido de nuevo, {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Estudiante'}! 👋</h1>
+                  <h1 style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    Bienvenido de nuevo, {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Estudiante'}!
+                  </h1>
                   <p className="sub">Continúa tu aprendizaje donde lo dejaste. Tienes nuevos módulos esperándote.</p>
                 </>
               ) : (
@@ -837,8 +848,8 @@ export default function LandingPage(p: LandingPageProps) {
               <div className="hero-actions">
                 {loading ? (
                   // Loading state
-                  <button 
-                    className="btn primary large" 
+                  <button
+                    className="btn primary large"
                     disabled
                     style={{ cursor: "not-allowed", opacity: 0.6 }}
                   >
@@ -871,9 +882,18 @@ export default function LandingPage(p: LandingPageProps) {
               </div>
 
               <ul className="badges" aria-label="Ventajas">
-                <li>🧩 Aprendizaje práctico</li>
-                <li>📈 Progreso gamificado</li>
-                <li>🎓 Certificación BIZEN</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <PuzzleIcon size={18} color={primary} />
+                  Aprendizaje práctico
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <BarChartIcon size={18} color={primary} />
+                  Progreso gamificado
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <TrophyIcon size={18} color={primary} />
+                  Certificación BIZEN
+                </li>
               </ul>
             </div>
 
@@ -945,7 +965,7 @@ export default function LandingPage(p: LandingPageProps) {
                 (title, i) => (
                   <article className="card benefit" key={i}>
                     <div className="benefit-icon" aria-hidden="true">
-                      ★
+                      <StarIcon size={20} fill="#065F46" color="#065F46" />
                     </div>
                     <h3>{title}</h3>
                     <p>
@@ -1102,9 +1122,15 @@ export default function LandingPage(p: LandingPageProps) {
             <aside className="contact-aside">
               <h3>Datos de contacto</h3>
               <ul>
-                <li>📧 {contactEmail}</li>
-                <li>📍 {contactLocation}</li>
-                <li>🕘 {contactHours}</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <MailIcon size={18} color={muted} /> {contactEmail}
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <MapPinIcon size={18} color={muted} /> {contactLocation}
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <ClockIcon size={18} color={muted} /> {contactHours}
+                </li>
               </ul>
               <div className="socials" aria-label="Redes sociales">
                 <a href={igUrl} aria-label="Instagram" className="social">
@@ -1129,9 +1155,9 @@ export default function LandingPage(p: LandingPageProps) {
       <footer className="site-footer">
         <div className="container footer-inner">
           <div className="footer-brand">
-            <img 
-              src="/bizen-mondragonlogo.png" 
-              alt="BIZEN Logo" 
+            <img
+              src="/bizen-mondragonlogo.png"
+              alt="BIZEN Logo"
               className="footer-logo-image"
               width={24}
               height={24}
@@ -1207,9 +1233,8 @@ function QuizQuestionCard({ question, selectedValue, onSelect, showResults }: Qu
 
   return (
     <article
-      className={`card quiz-card ${isCorrect ? "quiz-card--correct" : ""} ${
-        isIncorrect ? "quiz-card--incorrect" : ""
-      }`}
+      className={`card quiz-card ${isCorrect ? "quiz-card--correct" : ""} ${isIncorrect ? "quiz-card--incorrect" : ""
+        }`}
     >
       <header className="quiz-card-head">
         <span className="quiz-label">{question.label}</span>
@@ -1229,9 +1254,8 @@ function QuizQuestionCard({ question, selectedValue, onSelect, showResults }: Qu
           return (
             <label
               key={option.value}
-              className={`quiz-option ${isSelected ? "quiz-option--selected" : ""} ${
-                showResults && isAnswer ? "quiz-option--answer" : ""
-              }`}
+              className={`quiz-option ${isSelected ? "quiz-option--selected" : ""} ${showResults && isAnswer ? "quiz-option--answer" : ""
+                }`}
             >
               <input
                 type="radio"

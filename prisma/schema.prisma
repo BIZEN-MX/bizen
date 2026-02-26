@@ -3,11 +3,13 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["public", "auth"]
 }
 
 // ========================================
@@ -25,7 +27,10 @@ model School {
   profiles      Profile[]
   schoolCourses SchoolCourse[]
 
-  @@map("schools")
+  
+  schoolImpacts SchoolImpact[]
+@@map("schools")
+  @@schema("public")
 }
 
 model License {
@@ -40,6 +45,7 @@ model License {
   school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
   @@map("licenses")
+  @@schema("public")
 }
 
 model ContactMessage {
@@ -50,6 +56,7 @@ model ContactMessage {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("contact_messages")
+  @@schema("public")
 }
 
 // ========================================
@@ -65,6 +72,9 @@ model Profile {
   schoolId          String?  @map("school_id")
   xp                Int      @default(0) // Experience points
   level             Int      @default(1) // Current level
+  currentStreak     Int      @default(0) @map("current_streak")
+  longestStreak     Int      @default(0) @map("longest_streak")
+  lastActive        DateTime? @map("last_active")
   nickname          String?  @unique // Forum pseudonym
   reputation        Int      @default(0) // Forum reputation
   postsCreated      Int      @default(0) @map("posts_created")
@@ -95,6 +105,7 @@ model Profile {
   following            UserFollow[]         @relation("UserFollowing")
 
   @@map("profiles")
+  @@schema("public")
 }
 
 // ========================================
@@ -115,6 +126,7 @@ model Course {
   schoolCourses SchoolCourse[]
 
   @@map("courses")
+  @@schema("public")
 }
 
 model SchoolCourse {
@@ -127,6 +139,7 @@ model SchoolCourse {
 
   @@id([schoolId, courseId])
   @@map("school_courses")
+  @@schema("public")
 }
 
 model Unit {
@@ -144,6 +157,7 @@ model Unit {
   unlocks       Prerequisite[] @relation("UnlocksUnit")
 
   @@map("units")
+  @@schema("public")
 }
 
 model Lesson {
@@ -161,6 +175,7 @@ model Lesson {
   lessonObjectives LessonObjective[]
 
   @@map("lessons")
+  @@schema("public")
 }
 
 model Quiz {
@@ -176,6 +191,7 @@ model Quiz {
   attempts  Attempt[]
 
   @@map("quizzes")
+  @@schema("public")
 }
 
 model Question {
@@ -189,6 +205,7 @@ model Question {
   options Option[]
 
   @@map("questions")
+  @@schema("public")
 }
 
 model Option {
@@ -200,6 +217,7 @@ model Option {
   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@map("options")
+  @@schema("public")
 }
 
 model Objective {
@@ -211,6 +229,7 @@ model Objective {
   lessonObjectives LessonObjective[]
 
   @@map("objectives")
+  @@schema("public")
 }
 
 model LessonObjective {
@@ -222,6 +241,7 @@ model LessonObjective {
 
   @@id([lessonId, objectiveId])
   @@map("lesson_objectives")
+  @@schema("public")
 }
 
 model Prerequisite {
@@ -234,6 +254,7 @@ model Prerequisite {
   requiresUnit Unit @relation("RequiresUnit", fields: [requiresUnitId], references: [id], onDelete: Cascade)
 
   @@map("prerequisites")
+  @@schema("public")
 }
 
 model Assignment {
@@ -249,6 +270,7 @@ model Assignment {
   submissions Submission[]
 
   @@map("assignments")
+  @@schema("public")
 }
 
 model Submission {
@@ -264,6 +286,7 @@ model Submission {
   user       Profile    @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@map("submissions")
+  @@schema("public")
 }
 
 // ========================================
@@ -281,6 +304,7 @@ model Enrollment {
 
   @@unique([userId, courseId])
   @@map("enrollments")
+  @@schema("public")
 }
 
 model Progress {
@@ -296,6 +320,7 @@ model Progress {
 
   @@unique([userId, lessonId])
   @@map("progress")
+  @@schema("public")
 }
 
 model Attempt {
@@ -309,6 +334,7 @@ model Attempt {
   quiz Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
   @@map("attempts")
+  @@schema("public")
 }
 
 model Certificate {
@@ -323,6 +349,7 @@ model Certificate {
 
   @@unique([userId, courseId])
   @@map("certificates")
+  @@schema("public")
 }
 
 // ========================================
@@ -341,6 +368,7 @@ model ForumTopic {
   threads ForumThread[]
 
   @@map("forum_topics")
+  @@schema("public")
 }
 
 model ForumTag {
@@ -353,6 +381,7 @@ model ForumTag {
   threadTags ForumThreadTag[]
 
   @@map("forum_tags")
+  @@schema("public")
 }
 
 model ForumThread {
@@ -386,6 +415,7 @@ model ForumThread {
   @@index([score])
   @@index([moderationStatus])
   @@map("forum_threads")
+  @@schema("public")
 }
 
 model ForumThreadTag {
@@ -398,6 +428,7 @@ model ForumThreadTag {
   @@id([threadId, tagId])
   @@index([tagId])
   @@map("forum_thread_tags")
+  @@schema("public")
 }
 
 model ForumComment {
@@ -423,6 +454,7 @@ model ForumComment {
   @@index([authorId])
   @@index([createdAt])
   @@map("forum_comments")
+  @@schema("public")
 }
 
 model ForumVote {
@@ -439,6 +471,7 @@ model ForumVote {
   @@index([userId])
   @@index([targetType, targetId])
   @@map("forum_votes")
+  @@schema("public")
 }
 
 model ForumBookmark {
@@ -452,6 +485,7 @@ model ForumBookmark {
   @@id([userId, threadId])
   @@index([threadId])
   @@map("forum_bookmarks")
+  @@schema("public")
 }
 
 model ForumFollow {
@@ -467,6 +501,7 @@ model ForumFollow {
   @@id([userId, threadId])
   @@index([threadId])
   @@map("forum_follows")
+  @@schema("public")
 }
 
 model ForumReport {
@@ -490,6 +525,7 @@ model ForumReport {
   @@index([status])
   @@index([createdAt])
   @@map("forum_reports")
+  @@schema("public")
 }
 
 model ForumNotification {
@@ -506,6 +542,7 @@ model ForumNotification {
   @@index([createdAt])
   @@index([readAt])
   @@map("forum_notifications")
+  @@schema("public")
 }
 
 model ForumBadge {
@@ -520,6 +557,7 @@ model ForumBadge {
   userBadges ForumUserBadge[]
 
   @@map("forum_badges")
+  @@schema("public")
 }
 
 model ForumUserBadge {
@@ -533,6 +571,7 @@ model ForumUserBadge {
   @@id([userId, badgeId])
   @@index([badgeId])
   @@map("forum_user_badges")
+  @@schema("public")
 }
 
 // ========================================
@@ -552,6 +591,7 @@ model UserFollow {
   @@index([followingId])
   @@index([createdAt])
   @@map("user_follows")
+  @@schema("public")
 }
 
 // ========================================
@@ -583,6 +623,7 @@ model Profession {
   players Player[]
 
   @@map("professions")
+  @@schema("public")
 }
 
 model GameSession {
@@ -600,6 +641,7 @@ model GameSession {
   gameEvents GameEvent[]
 
   @@map("game_sessions")
+  @@schema("public")
 }
 
 model Player {
@@ -631,6 +673,7 @@ model Player {
 
   @@unique([gameSessionId, userId])
   @@map("players")
+  @@schema("public")
 }
 
 model OpportunityCard {
@@ -654,6 +697,7 @@ model OpportunityCard {
   playerInvestments PlayerInvestment[]
 
   @@map("opportunity_cards")
+  @@schema("public")
 }
 
 model PlayerInvestment {
@@ -676,6 +720,7 @@ model PlayerInvestment {
   opportunityCard OpportunityCard @relation(fields: [opportunityCardId], references: [id])
 
   @@map("player_investments")
+  @@schema("public")
 }
 
 model PlayerLiability {
@@ -695,6 +740,7 @@ model PlayerLiability {
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@map("player_liabilities")
+  @@schema("public")
 }
 
 model PlayerDoodad {
@@ -711,6 +757,7 @@ model PlayerDoodad {
   doodad Doodad? @relation("DoodadPurchases", fields: [doodadId], references: [id])
 
   @@map("player_doodads")
+  @@schema("public")
 }
 
 model MarketCard {
@@ -725,6 +772,7 @@ model MarketCard {
   createdAt             DateTime @default(now()) @map("created_at")
 
   @@map("market_cards")
+  @@schema("public")
 }
 
 model GameEvent {
@@ -745,6 +793,7 @@ model GameEvent {
   @@index([playerId])
   @@index([turnNumber])
   @@map("game_events")
+  @@schema("public")
 }
 
 model Doodad {
@@ -760,6 +809,7 @@ model Doodad {
   playerDoodads PlayerDoodad[] @relation("DoodadPurchases")
 
   @@map("doodads")
+  @@schema("public")
 }
 
 // ============================================
@@ -781,6 +831,7 @@ model LabTrack {
   steps LabStep[]
 
   @@map("lab_tracks")
+  @@schema("public")
 }
 
 model LabStep {
@@ -803,6 +854,7 @@ model LabStep {
 
   @@index([trackId])
   @@map("lab_steps")
+  @@schema("public")
 }
 
 model LabStepProgress {
@@ -820,6 +872,7 @@ model LabStepProgress {
   @@index([userId])
   @@index([stepId])
   @@map("lab_step_progress")
+  @@schema("public")
 }
 
 model LabChecklist {
@@ -837,6 +890,7 @@ model LabChecklist {
   @@unique([stepId, userId, text])
   @@index([stepId, userId])
   @@map("lab_checklists")
+  @@schema("public")
 }
 
 model LabArtifact {
@@ -857,6 +911,7 @@ model LabArtifact {
   @@index([userId])
   @@index([stepId])
   @@map("lab_artifacts")
+  @@schema("public")
 }
 
 model LabTemplate {
@@ -872,6 +927,7 @@ model LabTemplate {
   updatedAt   DateTime @default(now()) @map("updated_at")
 
   @@map("lab_templates")
+  @@schema("public")
 }
 
 model LabExperiment {
@@ -894,6 +950,7 @@ model LabExperiment {
   @@index([userId])
   @@index([stepId])
   @@map("lab_experiments")
+  @@schema("public")
 }
 
 model LabScore {
@@ -905,6 +962,7 @@ model LabScore {
   updatedAt      DateTime @default(now()) @map("updated_at")
 
   @@map("lab_scores")
+  @@schema("public")
 }
 
 model LabAiJob {
@@ -920,6 +978,7 @@ model LabAiJob {
 
   @@index([userId])
   @@map("lab_ai_jobs")
+  @@schema("public")
 }
 
 model LabSimInput {
@@ -933,6 +992,7 @@ model LabSimInput {
 
   @@index([userId])
   @@map("lab_sim_inputs")
+  @@schema("public")
 }
 
 model LabSimOutput {
@@ -947,6 +1007,7 @@ model LabSimOutput {
 
   @@index([inputId])
   @@map("lab_sim_outputs")
+  @@schema("public")
 }
 
 model LabMentor {
@@ -964,6 +1025,7 @@ model LabMentor {
 
   @@index([userId])
   @@map("lab_mentors")
+  @@schema("public")
 }
 
 model DiagnosticResult {
@@ -976,6 +1038,7 @@ model DiagnosticResult {
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("diagnostic_results")
+  @@schema("public")
 }
 
 // ========================================
@@ -996,6 +1059,7 @@ model DailyChallenge {
 
   @@index([activeDate])
   @@map("daily_challenges")
+  @@schema("public")
 }
 
 model EvidencePost {
@@ -1024,6 +1088,7 @@ model EvidencePost {
   @@index([classId])
   @@index([createdAt])
   @@map("evidence_posts")
+  @@schema("public")
 }
 
 model EvidenceReaction {
@@ -1038,6 +1103,7 @@ model EvidenceReaction {
   @@unique([evidencePostId, userId])
   @@index([evidencePostId])
   @@map("evidence_reactions")
+  @@schema("public")
 }
 
 model EvidenceComment {
@@ -1055,5 +1121,73 @@ model EvidenceComment {
   @@index([evidencePostId])
   @@index([userId])
   @@map("evidence_comments")
+  @@schema("public")
 }
 
+
+
+// ==========================================
+// IMPACTO SOCIAL
+// ==========================================
+
+model Foundation {
+  id          String   @id @default(cuid())
+  name        String
+  logo        String?
+  description String?
+  website     String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  impacts     SchoolImpact[]
+
+  @@map("foundations")
+  @@schema("public")
+}
+
+model SchoolImpact {
+  id              String   @id @default(cuid())
+  schoolId        String   @map("school_id")
+  foundationId    String   @map("foundation_id")
+  season          String   // e.g., "Primavera 2024"
+  donatedAmount   Float    @map("donated_amount")
+  beneficiaryCount Int     @map("beneficiary_count")
+  reportUrl       String?  @map("report_url")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  school          School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  foundation      Foundation @relation(fields: [foundationId], references: [id], onDelete: Cascade)
+  evidence        DonationEvidence[]
+
+  @@map("school_impacts")
+  @@schema("public")
+}
+
+model ImpactTarget {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  currentValue    Float    @map("current_value")
+  targetValue     Float    @map("target_value")
+  unit            String   // e.g., "despensas", "becas"
+  deadline        DateTime?
+  schoolId        String?  @map("school_id") // If null, it's a global target
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("impact_targets")
+  @@schema("public")
+}
+
+model DonationEvidence {
+  id              String   @id @default(cuid())
+  schoolImpactId  String   @map("school_impact_id")
+  title           String
+  description     String?
+  imageUrl        String   @map("image_url")
+  date            DateTime
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  schoolImpact    SchoolImpact @relation(fields: [schoolImpactId], references: [id], onDelete: Cascade)
+
+  @@map("donation_evidence")
+  @@schema("public")
+}

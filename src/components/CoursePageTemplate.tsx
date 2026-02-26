@@ -104,6 +104,23 @@ const LEVEL_COLORS: Record<string, { bg: string; text: string; border: string }>
     Avanzado: { bg: "#ede9fe", text: "#5b21b6", border: "#ddd6fe" },
 }
 
+/** Blend a hex colour toward near-black to build a dark-to-vivid hero gradient. */
+function buildHeroGradient(hex: string): string {
+    // Parse hex -> RGB
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    // Deep dark version (very low luminance)
+    const dr = Math.round(r * 0.12)
+    const dg = Math.round(g * 0.12)
+    const db = Math.round(b * 0.18)
+    // Mid version
+    const mr = Math.round(r * 0.4)
+    const mg = Math.round(g * 0.4)
+    const mb = Math.round(b * 0.45)
+    return `linear-gradient(135deg, rgb(${dr},${dg},${db}) 0%, rgb(${mr},${mg},${mb}) 50%, ${hex} 100%)`
+}
+
 // ─── Props ───────────────────────────────────────────────────────────────────
 
 interface CoursePageTemplateProps {
@@ -188,13 +205,13 @@ export default function CoursePageTemplate({
                     {/* ── HERO BANNER (mirrors /courses hero) ───────────────────────── */}
                     <div
                         style={{
-                            background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
+                            background: buildHeroGradient(topic.color),
                             borderRadius: 28,
                             padding: "clamp(28px, 4vw, 48px) clamp(24px, 4vw, 44px)",
                             marginBottom: "clamp(20px, 4vw, 32px)",
                             position: "relative",
                             overflow: "hidden",
-                            boxShadow: "0 20px 60px rgba(15, 98, 254, 0.25)",
+                            boxShadow: `0 20px 60px ${topic.color}55`,
                         }}
                     >
                         {/* Orbs inside hero */}
@@ -237,7 +254,6 @@ export default function CoursePageTemplate({
                             {/* Stats row */}
                             <div style={{ display: "flex", gap: "clamp(12px, 3vw, 24px)", flexWrap: "wrap", marginBottom: 20 }}>
                                 {[
-                                    { label: "Subtemas", value: subtemas.length.toString(), icon: BookOpen },
                                     { label: "Lecciones", value: totalInTopic.toString(), icon: CheckCircle2 },
                                     { label: "Completadas", value: completedInTopic.toString(), icon: Zap },
                                 ].map((stat) => {
@@ -260,8 +276,8 @@ export default function CoursePageTemplate({
                                     <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd" }}>Progreso de este tema</span>
                                     <span style={{ fontSize: 14, fontWeight: 900, color: "#fff" }}>{topicPct}%</span>
                                 </div>
-                                <div style={{ width: "100%", height: 8, borderRadius: 8, background: "rgba(255,255,255,0.15)", overflow: "hidden" }}>
-                                    <div style={{ width: `${topicPct}%`, height: "100%", borderRadius: 8, background: "linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%)", transition: "width 1s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: "0 0 10px rgba(59,130,246,0.5)" }} />
+                                <div style={{ width: "100%", height: 8, borderRadius: 8, background: "rgba(255,255,255,0.18)", overflow: "hidden" }}>
+                                    <div style={{ width: `${topicPct}%`, height: "100%", borderRadius: 8, background: "rgba(255,255,255,0.9)", transition: "width 1s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: "0 0 10px rgba(255,255,255,0.5)" }} />
                                 </div>
                             </div>
                         </div>
@@ -274,14 +290,21 @@ export default function CoursePageTemplate({
                             const subTotal = sub.lessons.length
                             const subPct = subTotal > 0 ? Math.round((subCompleted / subTotal) * 100) : 0
 
-                            // Use a rotating shade from the topic color for each subtema bar
-                            const opacity = 1 - subIdx * 0.07
-                            const barBg = `linear-gradient(135deg, ${topic.color}${Math.round(opacity * 255).toString(16).padStart(2, "0")} 0%, ${topic.color}cc 100%)`
+                            // Subtema bar: vivid gradient matching the topic colour —
+                            // each bar shifts slightly toward the complementary dark tone
+                            const darkFactor = 1 - subIdx * 0.04
+                            const r = parseInt(topic.color.slice(1, 3), 16)
+                            const g = parseInt(topic.color.slice(3, 5), 16)
+                            const b = parseInt(topic.color.slice(5, 7), 16)
+                            const dr = Math.round(r * (0.45 * darkFactor))
+                            const dg = Math.round(g * (0.45 * darkFactor))
+                            const db = Math.round(b * (0.55 * darkFactor))
+                            const barBg = `linear-gradient(135deg, rgb(${dr},${dg},${db}) 0%, ${topic.color} 100%)`
 
                             return (
                                 <div key={subIdx} id={`tema${topicId}-subtema-${subIdx + 1}`} style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }}>
                                     {/* Subtema header bar */}
-                                    <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: barBg, borderRadius: 18, boxShadow: `0 8px 24px ${topic.color}40`, border: "1.5px solid rgba(255,255,255,0.2)", marginBottom: 20 }}>
+                                    <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: barBg, borderRadius: 18, boxShadow: `0 8px 28px ${topic.color}50`, border: `1.5px solid ${topic.color}40`, marginBottom: 20 }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
                                             <div style={{ width: "clamp(48px,10vw,60px)", height: "clamp(48px,10vw,60px)", minWidth: "clamp(48px,10vw,60px)", borderRadius: 14, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "clamp(18px,4vw,22px)", fontWeight: 900, color: "#fff", backdropFilter: "blur(4px)" }}>
                                                 {subIdx + 1}
