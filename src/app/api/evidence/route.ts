@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         })
 
         // Give XP for submitting the daily challenge logic
-        const rewards = await awardXp(user.id, 25)
+        const rewards = await awardXp(user.id, 50)
 
         return NextResponse.json({ ...post, rewards }, { status: 201 })
     } catch (err) {

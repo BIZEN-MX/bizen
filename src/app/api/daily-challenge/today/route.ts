@@ -55,7 +55,15 @@ export async function GET() {
             })
         }
 
-        return NextResponse.json(challenge)
+        // Check if current user has already submitted evidence for this challenge
+        const existingEvidence = await prisma.evidencePost.findFirst({
+            where: { dailyChallengeId: challenge.id, authorUserId: user.id }
+        })
+
+        return NextResponse.json({
+            ...challenge,
+            isCompleted: !!existingEvidence
+        })
     } catch (err) {
         console.error("GET /api/daily-challenge/today:", err)
         return NextResponse.json({ error: "Error al cargar el reto" }, { status: 500 })

@@ -8,6 +8,7 @@ import {
   ChevronRight, AlertCircle, Flame, Zap, BookOpen,
   TrendingUp, Brain, Clock, Star, Trophy, ArrowRight
 } from "lucide-react"
+import confetti from "canvas-confetti"
 
 type DailyChallenge = {
   id: string
@@ -15,6 +16,7 @@ type DailyChallenge = {
   description: string
   challengeType: string
   activeDate: string
+  isCompleted?: boolean
 }
 
 type EvidenceForm = {
@@ -41,13 +43,13 @@ const EVIDENCE_STEPS = [
 ]
 
 export default function RetoDiarioPage() {
-  const { user, loading } = useAuth()
+  const { user, loading, dbProfile } = useAuth()
   const router = useRouter()
 
-  const [challenge, setChallenge] = useState<DailyChallenge | null>(null)
+  const [challenge, setChallenge] = useState<(DailyChallenge & { isCompleted?: boolean }) | null>(null)
   const [loadingChallenge, setLoadingChallenge] = useState(true)
   const [phase, setPhase] = useState<"doing" | "wrap">("doing")
-  const [streak] = useState(7) // TODO: fetch from API
+  const streak = dbProfile?.currentStreak || 0
 
   // Evidence modal
   const [showEvidence, setShowEvidence] = useState(false)
@@ -77,7 +79,14 @@ export default function RetoDiarioPage() {
   const fetchChallenge = async () => {
     try {
       const res = await fetch("/api/daily-challenge/today")
-      if (res.ok) setChallenge(await res.json())
+      if (res.ok) {
+        const data = await res.json()
+        setChallenge(data)
+        if (data.isCompleted) {
+          setSubmitted(true)
+          setPhase("wrap")
+        }
+      }
     } catch (e) { console.error(e) }
     finally { setLoadingChallenge(false) }
   }
@@ -103,6 +112,12 @@ export default function RetoDiarioPage() {
       })
       if (res.ok || res.status === 409) {
         setSubmitted(true); setShowEvidence(false); setEvidenceStep(0)
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#0F62FE', '#4A9EFF', '#fb923c', '#10b981']
+        })
       } else {
         const d = await res.json()
         setSubmitError(d.error || "Error al publicar")
