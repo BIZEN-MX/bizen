@@ -6,9 +6,10 @@ import { useSettings, Language, Theme, TextSize, ContrastMode } from "@/contexts
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import {
-  SettingsIcon, UserIcon, BellIcon, ShieldIcon, TVIcon, LinkIcon,
-  AccessibilityIcon, StarIcon, CheckIcon, CrossIcon, WarningIcon, ResetIcon
-} from "@/components/CustomIcons"
+  Settings, User, Bell, Shield, Tv, Link, Accessibility,
+  Star, Check, X, AlertTriangle, RotateCcw, ChevronRight,
+  Volume2, Zap, Globe, Eye, MessageSquare, Award, Lock, LogOut
+} from "lucide-react"
 
 export const dynamic = 'force-dynamic'
 
@@ -17,15 +18,15 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
   return (
     <button type="button" onClick={() => onChange(!checked)} aria-checked={checked} role="switch"
       style={{
-        position: "relative", display: "inline-flex", alignItems: "center", width: 50, height: 27,
+        position: "relative", display: "inline-flex", alignItems: "center", width: 52, height: 28,
         borderRadius: 999, border: "none", cursor: "pointer", flexShrink: 0, outline: "none",
-        background: checked ? "#0B71FE" : "#D1D5DB", transition: "background .2s",
-        boxShadow: checked ? "0 0 0 3px rgba(11,113,254,.18)" : "none"
+        background: checked ? "linear-gradient(135deg, #0F62FE, #4A9EFF)" : "#CBD5E1",
+        transition: "all .25s", boxShadow: checked ? "0 4px 12px rgba(15,98,254,.35)" : "none"
       }}>
       <span style={{
-        position: "absolute", left: checked ? 25 : 3, width: 21, height: 21,
-        borderRadius: "50%", background: "#FBFAF5", transition: "left .2s",
-        boxShadow: "0 1px 3px rgba(0,0,0,.2)"
+        position: "absolute", left: checked ? 26 : 3, width: 22, height: 22,
+        borderRadius: "50%", background: "#fff", transition: "left .25s",
+        boxShadow: "0 2px 6px rgba(0,0,0,.2)"
       }} />
     </button>
   )
@@ -38,32 +39,42 @@ function ToggleRow({ label, desc, checked, onChange }: {
   return (
     <div onClick={() => onChange(!checked)} style={{
       display: "flex", alignItems: "center",
-      justifyContent: "space-between", padding: "14px 18px", background: "#FBFAF5",
-      borderRadius: 12, border: "1.5px solid #EEF2FF", marginBottom: 10, gap: 16, cursor: "pointer",
-      transition: "background .15s"
+      justifyContent: "space-between", padding: "16px 20px",
+      background: "#ffffff",
+      borderRadius: 16, border: "1.5px solid #f1f5f9", marginBottom: 10,
+      gap: 16, cursor: "pointer", transition: "all .2s",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
     }}
-      onMouseEnter={e => (e.currentTarget.style.background = "#EFF4FF")}
-      onMouseLeave={e => (e.currentTarget.style.background = "#F8FAFF")}>
+      onMouseEnter={e => { e.currentTarget.style.background = "#f8faff"; e.currentTarget.style.borderColor = "#bfdbfe" }}
+      onMouseLeave={e => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.borderColor = "#f1f5f9" }}>
       <div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>{label}</div>
-        {desc && <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>{desc}</div>}
+        <div style={{ fontSize: 15, fontWeight: 700, color: "#0F172A" }}>{label}</div>
+        {desc && <div style={{ fontSize: 13, color: "#64748B", marginTop: 3, lineHeight: 1.4 }}>{desc}</div>}
       </div>
       <Toggle checked={checked} onChange={onChange} />
     </div>
   )
 }
 
-// ─── Section card header ──────────────────────────────────────────────────────
-function SectionHeading({ children }: { children: React.ReactNode }) {
+// ─── Section heading ──────────────────────────────────────────────────────────
+function SectionHeading({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <h2 style={{
-      margin: "0 0 20px", fontSize: 20, fontWeight: 800, color: "#0F172A",
-      display: "flex", alignItems: "center", gap: 10
-    }}>{children}</h2>
+    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+      <div style={{
+        width: 40, height: 40, borderRadius: 12,
+        background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
+        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+      }}>
+        {icon}
+      </div>
+      <h2 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#0F172A", letterSpacing: "-0.02em" }}>
+        {children}
+      </h2>
+    </div>
   )
 }
 
-// ─── Pill select (Language / Difficulty / TextSize / Contrast) ───────────────
+// ─── Pill select ──────────────────────────────────────────────────────────────
 function PillSelect({ options, value, onChange }: {
   options: { v: string; l: string }[]; value: string; onChange: (v: string) => void
 }) {
@@ -71,17 +82,28 @@ function PillSelect({ options, value, onChange }: {
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
       {options.map(({ v, l }) => (
         <button key={v} onClick={() => onChange(v)} style={{
-          padding: "9px 18px", borderRadius: 999,
-          border: `2px solid ${value === v ? "#0B71FE" : "#E2E8F0"}`,
-          background: value === v ? "#0B71FE" : "#fff",
+          padding: "10px 20px", borderRadius: 999,
+          border: `2px solid ${value === v ? "#0F62FE" : "#E2E8F0"}`,
+          background: value === v ? "linear-gradient(135deg, #0F62FE, #4A9EFF)" : "#fff",
           color: value === v ? "#fff" : "#64748B",
-          fontSize: 13, fontWeight: 700, cursor: "pointer",
-          fontFamily: "'Inter','Montserrat',sans-serif", transition: "all .2s"
+          fontSize: 14, fontWeight: 700, cursor: "pointer",
+          fontFamily: "'Inter','Montserrat',sans-serif", transition: "all .2s",
+          boxShadow: value === v ? "0 4px 12px rgba(15,98,254,0.3)" : "none"
         }}>
           {l}
         </button>
       ))}
     </div>
+  )
+}
+
+// ─── Field label ─────────────────────────────────────────────────────────────
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{
+      fontSize: 11, fontWeight: 800, color: "#94A3B8", letterSpacing: "0.1em",
+      textTransform: "uppercase", marginBottom: 10
+    }}>{children}</div>
   )
 }
 
@@ -132,33 +154,33 @@ function SettingsContent() {
   })
 
   const nav = [
-    { id: "general", label: "General", icon: <SettingsIcon size={18} /> },
-    { id: "account", label: "Cuenta", icon: <UserIcon size={18} /> },
+    { id: "general", label: "General", icon: <Settings size={16} color="white" /> },
+    { id: "account", label: "Cuenta", icon: <User size={16} color="white" /> },
     ...(!isAdmin ? [
-      { id: "notifications", label: "Notificaciones", icon: <BellIcon size={18} /> },
-      { id: "privacy", label: "Privacidad", icon: <ShieldIcon size={18} /> },
-      { id: "content", label: "Contenido", icon: <TVIcon size={18} /> },
-      { id: "accounts", label: "Cuentas Vinculadas", icon: <LinkIcon size={18} /> },
+      { id: "notifications", label: "Notificaciones", icon: <Bell size={16} color="white" /> },
+      { id: "privacy", label: "Privacidad", icon: <Shield size={16} color="white" /> },
+      { id: "content", label: "Contenido", icon: <Tv size={16} color="white" /> },
     ] : []),
-    { id: "accessibility", label: "Accesibilidad", icon: <AccessibilityIcon size={18} /> },
+    { id: "accessibility", label: "Accesibilidad", icon: <Eye size={16} color="white" /> },
   ]
 
-  // ── Field style helpers
   const inputStyle: React.CSSProperties = {
-    width: "100%", padding: "12px 14px", fontSize: 14, fontWeight: 600,
-    border: "2px solid #E2E8F0", borderRadius: 10, background: "#FBFAF5",
+    width: "100%", padding: "13px 16px", fontSize: 15, fontWeight: 600,
+    border: "2px solid #E2E8F0", borderRadius: 12, background: "#ffffff",
     color: "#0F172A", fontFamily: "'Inter','Montserrat',sans-serif",
-    outline: "none", boxSizing: "border-box", transition: "border-color .15s"
+    outline: "none", boxSizing: "border-box", transition: "all .2s"
   }
   const btnPrimary: React.CSSProperties = {
-    padding: "11px 22px", background: "#0B71FE", border: "none", borderRadius: 10,
+    padding: "12px 24px",
+    background: "linear-gradient(135deg, #0F62FE, #4A9EFF)",
+    border: "none", borderRadius: 12,
     color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer",
-    fontFamily: "'Inter','Montserrat',sans-serif", transition: "opacity .15s",
-    opacity: saving ? .6 : 1
+    fontFamily: "'Inter','Montserrat',sans-serif", transition: "all .2s",
+    opacity: saving ? .6 : 1, boxShadow: "0 4px 14px rgba(15,98,254,.35)"
   }
   const btnGhost: React.CSSProperties = {
-    padding: "11px 22px", background: "#F1F5F9", border: "1.5px solid #E2E8F0",
-    borderRadius: 10, color: "#374151", fontSize: 14, fontWeight: 700,
+    padding: "12px 24px", background: "#F8FAFF", border: "1.5px solid #E2E8F0",
+    borderRadius: 12, color: "#374151", fontSize: 14, fontWeight: 700,
     cursor: "pointer", fontFamily: "'Inter','Montserrat',sans-serif"
   }
 
@@ -168,46 +190,53 @@ function SettingsContent() {
       fontFamily: "'Inter','Montserrat',sans-serif", boxSizing: "border-box"
     }}>
 
-      {/* ── Page header (blue stripe) */}
+      {/* ── Decorative orbs */}
+      <div style={{ position: "fixed", top: "5%", right: "10%", width: 500, height: 500, background: "radial-gradient(circle, rgba(15,98,254,0.06) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+      <div style={{ position: "fixed", bottom: "10%", left: "5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+
+      {/* ── Page header */}
       <div className="cfg-page-header" style={{
-        background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)",
-        padding: "clamp(20px, 4vw, 32px) clamp(16px, 4vw, 32px) clamp(40px, 6vw, 56px)",
-        position: "relative", overflow: "hidden",
-        borderRadius: 24, margin: "16px 24px 0"
+        background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
+        padding: "clamp(28px, 5vw, 44px) clamp(20px, 4vw, 40px) clamp(52px, 7vw, 68px)",
+        position: "relative",
+        overflow: "hidden",
+        width: "100%",
+        margin: 0
       }}>
-        <div style={{
-          position: "absolute", top: -60, right: -60, width: 200, height: 200,
-          borderRadius: "50%", background: "rgba(255,255,255,.07)", pointerEvents: "none"
-        }} />
-        <div style={{
-          position: "absolute", bottom: -80, left: "35%", width: 260, height: 260,
-          borderRadius: "50%", background: "rgba(255,255,255,.05)", pointerEvents: "none"
-        }} />
+        {/* Decorative circles */}
+        <div style={{ position: "absolute", top: -80, right: -80, width: 280, height: 280, borderRadius: "50%", background: "rgba(255,255,255,.06)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 20, right: 140, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,.04)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -60, left: "30%", width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,.04)", pointerEvents: "none" }} />
+
         <div style={{ position: "relative", zIndex: 1 }}>
           <h1 style={{
-            margin: "0 0 6px", fontSize: "clamp(24px,4vw,34px)", fontWeight: 900,
-            color: "#fff", letterSpacing: -.5
+            margin: "0 0 8px",
+            fontSize: "clamp(28px, 5vw, 44px)",
+            fontWeight: 900,
+            color: "#fff",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.05
           }}>Configuración</h1>
-          <p style={{ margin: 0, fontSize: 15, color: "rgba(255,255,255,.75)", fontWeight: 600 }}>
+          <p style={{ margin: "0 0 20px", fontSize: 15, color: "rgba(255,255,255,.7)", fontWeight: 500 }}>
             Personaliza tu experiencia en BIZEN
           </p>
           <div style={{
-            marginTop: 18, display: "inline-flex", alignItems: "center", gap: 10,
-            background: "rgba(255,255,255,.15)", backdropFilter: "blur(10px)",
-            border: "1.5px solid rgba(255,255,255,.25)", borderRadius: 40, padding: "8px 18px"
+            display: "inline-flex", alignItems: "center", gap: 10,
+            background: "rgba(255,255,255,.12)", backdropFilter: "blur(12px)",
+            border: "1.5px solid rgba(255,255,255,.2)", borderRadius: 40, padding: "8px 16px"
           }}>
             <div style={{
-              width: 30, height: 30, borderRadius: "50%",
+              width: 32, height: 32, borderRadius: "50%",
               background: "linear-gradient(135deg,#60A5FA,#A78BFA)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 13, fontWeight: 800, color: "#fff"
+              fontSize: 14, fontWeight: 800, color: "#fff", flexShrink: 0
             }}>
               {(user.email || "?")[0].toUpperCase()}
             </div>
             <span style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>{user.email}</span>
             <span style={{
-              fontSize: 11, color: "rgba(255,255,255,.8)", background: "rgba(255,255,255,.2)",
-              padding: "2px 10px", borderRadius: 20, fontWeight: 700, textTransform: "uppercase"
+              fontSize: 11, color: "rgba(255,255,255,.85)", background: "rgba(255,255,255,.18)",
+              padding: "3px 10px", borderRadius: 20, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em"
             }}>
               {dbProfile?.role || "Estudiante"}
             </span>
@@ -215,127 +244,139 @@ function SettingsContent() {
         </div>
       </div>
 
-      {/* ── Two-column layout: sidebar + content */}
+      {/* ── Two-column layout */}
       <div className="cfg-body" style={{
-        display: "grid", gridTemplateColumns: "220px 1fr",
-        gap: 24, padding: "0 24px 60px", marginTop: -24, position: "relative", zIndex: 2
+        display: "grid", gridTemplateColumns: "240px 1fr",
+        gap: 24, padding: "0 28px 80px", marginTop: -28, position: "relative", zIndex: 2
       }}>
 
-        {/* Sidebar */}
+        {/* Sidebar nav */}
         <div style={{
-          background: "#FBFAF5", borderRadius: 16, padding: 14,
-          boxShadow: "0 4px 20px rgba(11,113,254,.08)", border: "1.5px solid #EEF2FF",
+          background: "#ffffff", borderRadius: 20, padding: "16px 12px",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.08)", border: "1.5px solid #f1f5f9",
           height: "fit-content", position: "sticky", top: 16, alignSelf: "start"
         }}>
           <div style={{
-            fontSize: 10, fontWeight: 800, color: "#94A3B8", letterSpacing: 1.5,
-            padding: "0 6px 10px", borderBottom: "1.5px solid #F0F4FF",
-            marginBottom: 8, textTransform: "uppercase"
-          }}>Configuración</div>
-          {nav.map(s => (
-            <button key={s.id} onClick={() => setActiveSection(s.id)} style={{
-              width: "100%", padding: "10px 12px", textAlign: "left", display: "flex",
-              alignItems: "center", gap: 10, borderRadius: 10, border: "none",
-              fontFamily: "'Inter','Montserrat',sans-serif",
-              background: activeSection === s.id ? "#EFF6FF" : "transparent",
-              color: activeSection === s.id ? "#0B71FE" : "#4B5563",
-              fontSize: 14, fontWeight: activeSection === s.id ? 700 : 600,
-              cursor: "pointer", transition: "all .15s", marginBottom: 2,
-              borderLeft: activeSection === s.id ? "3px solid #0B71FE" : "3px solid transparent"
-            }}
-              onMouseEnter={e => { if (activeSection !== s.id) e.currentTarget.style.background = "#F8FAFF" }}
-              onMouseLeave={e => { if (activeSection !== s.id) e.currentTarget.style.background = "transparent" }}>
-              <span style={{ fontSize: 16 }}>{s.icon}</span>
-              {s.label}
-            </button>
-          ))}
-          <div style={{ borderTop: "1.5px solid #F0F4FF", marginTop: 10, paddingTop: 10 }}>
+            fontSize: 10, fontWeight: 900, color: "#94A3B8", letterSpacing: "0.12em",
+            padding: "0 8px 12px", borderBottom: "1.5px solid #f1f5f9",
+            marginBottom: 10, textTransform: "uppercase"
+          }}>Menú</div>
+          {nav.map(s => {
+            const isActive = activeSection === s.id
+            return (
+              <button key={s.id} onClick={() => setActiveSection(s.id)} style={{
+                width: "100%", padding: "11px 14px", textAlign: "left", display: "flex",
+                alignItems: "center", gap: 12, borderRadius: 12, border: "none",
+                fontFamily: "'Inter','Montserrat',sans-serif",
+                background: isActive ? "linear-gradient(135deg, #eff6ff, #dbeafe)" : "transparent",
+                color: isActive ? "#0F62FE" : "#4B5563",
+                fontSize: 14, fontWeight: isActive ? 700 : 600,
+                cursor: "pointer", transition: "all .2s", marginBottom: 4,
+                boxShadow: isActive ? "0 2px 8px rgba(15,98,254,0.15)" : "none"
+              }}
+                onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = "#f8faff" }}
+                onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = "transparent" }}>
+                <div style={{
+                  width: 30, height: 30, borderRadius: 9,
+                  background: isActive ? "linear-gradient(135deg, #0F62FE, #4A9EFF)" : "#f1f5f9",
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                  transition: "all .2s"
+                }}>
+                  <div style={{ color: isActive ? "white" : "#64748b" }}>{s.icon}</div>
+                </div>
+                {s.label}
+                {isActive && <ChevronRight size={14} color="#0F62FE" style={{ marginLeft: "auto" }} />}
+              </button>
+            )
+          })}
+
+          <div style={{ borderTop: "1.5px solid #f1f5f9", marginTop: 12, paddingTop: 12 }}>
             <button onClick={() => setShowResetConfirm(true)} style={{
-              width: "100%",
-              padding: "9px 12px", background: "#FEF2F2", border: "1.5px solid #FECACA",
-              borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700,
+              width: "100%", padding: "10px 14px",
+              background: "#fff5f5", border: "1.5px solid #fecaca",
+              borderRadius: 12, cursor: "pointer", fontSize: 13, fontWeight: 700,
               color: "#EF4444", fontFamily: "'Inter','Montserrat',sans-serif",
-              display: "flex", alignItems: "center", gap: 8
-            }}>
-              <ResetIcon size={14} color="#EF4444" /> Restaurar defaults
+              display: "flex", alignItems: "center", gap: 10, transition: "all .2s"
+            }}
+              onMouseEnter={e => e.currentTarget.style.background = "#fee2e2"}
+              onMouseLeave={e => e.currentTarget.style.background = "#fff5f5"}>
+              <RotateCcw size={14} /> Restaurar defaults
             </button>
           </div>
         </div>
 
-        {/* Content Panel */}
+        {/* Content panel */}
         <div className="cfg-content-panel" style={{
-          background: "#FBFAF5", borderRadius: 16, padding: "28px 32px",
-          boxShadow: "0 4px 20px rgba(11,113,254,.08)", border: "1.5px solid #EEF2FF",
+          background: "#ffffff", borderRadius: 20, padding: "32px 36px",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.08)", border: "1.5px solid #f1f5f9",
           minWidth: 0
         }}>
 
           {/* Toast */}
           {toast && (
             <div style={{
-              marginBottom: 18, padding: "12px 18px", borderRadius: 12,
+              marginBottom: 20, padding: "14px 20px", borderRadius: 14,
               display: "flex", alignItems: "center", gap: 10, fontSize: 14, fontWeight: 700,
-              background: toast.ok ? "#F0FDF4" : "#FEF2F2",
-              border: `1.5px solid ${toast.ok ? "#86EFAC" : "#FECACA"}`,
-              color: toast.ok ? "#15803D" : "#DC2626"
+              background: toast.ok ? "#f0fdf4" : "#fef2f2",
+              border: `1.5px solid ${toast.ok ? "#86efac" : "#fecaca"}`,
+              color: toast.ok ? "#15803D" : "#DC2626",
+              animation: "fadeUp 0.3s ease both"
             }}>
-              {toast.ok ? <CheckIcon size={18} color="#15803D" /> : <CrossIcon size={18} color="#DC2626" />} {toast.msg}
+              {toast.ok ? <Check size={18} color="#15803D" /> : <X size={18} color="#DC2626" />} {toast.msg}
             </div>
           )}
 
           {/* ── GENERAL */}
           {activeSection === "general" && (<div>
-            <SectionHeading><SettingsIcon size={20} style={{ marginRight: 8 }} /> General</SectionHeading>
-            <div style={{ marginBottom: 24 }}>
-              <div style={{
-                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                textTransform: "uppercase", marginBottom: 10
-              }}>Idioma / Language</div>
+            <SectionHeading icon={<Settings size={20} color="white" />}>General</SectionHeading>
+            <div style={{ marginBottom: 28 }}>
+              <FieldLabel>Idioma / Language</FieldLabel>
               <PillSelect
                 options={[{ v: "es", l: "Español" }, { v: "en", l: "English" }]}
                 value={settings.language} onChange={v => updateSettings({ language: v as Language })} />
             </div>
 
-            <ToggleRow label="Efectos de Sonido" desc="Activar efectos de sonido en la app"
-              checked={settings.soundsEnabled} onChange={v => updateSettings({ soundsEnabled: v })} />
-            <ToggleRow label="Animaciones" desc="Mostrar animaciones y transiciones"
-              checked={settings.animationsEnabled} onChange={v => updateSettings({ animationsEnabled: v })} />
+            <div style={{
+              background: "#f8faff", borderRadius: 16, padding: "20px 24px", marginBottom: 16,
+              border: "1.5px solid #e0eaff"
+            }}>
+              <FieldLabel>Preferencias del sistema</FieldLabel>
+              <ToggleRow label="Efectos de Sonido" desc="Activar efectos de sonido en la app"
+                checked={settings.soundsEnabled} onChange={v => updateSettings({ soundsEnabled: v })} />
+              <ToggleRow label="Animaciones" desc="Mostrar animaciones y transiciones suaves"
+                checked={settings.animationsEnabled} onChange={v => updateSettings({ animationsEnabled: v })} />
+            </div>
           </div>)}
 
           {/* ── ACCOUNT */}
           {activeSection === "account" && user && (<div>
-            <SectionHeading><UserIcon size={20} style={{ marginRight: 8 }} /> Mi Cuenta</SectionHeading>
+            <SectionHeading icon={<User size={20} color="white" />}>Mi Cuenta</SectionHeading>
 
             {/* Email */}
             <div style={{
-              background: "#FBFAF5", borderRadius: 12, padding: "14px 18px",
-              border: "1.5px solid #EEF2FF", marginBottom: 14, display: "flex",
-              alignItems: "center", gap: 12
+              background: "#f8faff", borderRadius: 16, padding: "18px 22px",
+              border: "1.5px solid #e0eaff", marginBottom: 16, display: "flex",
+              alignItems: "center", gap: 14
             }}>
               <div style={{ flex: 1 }}>
-                <div style={{
-                  fontSize: 11, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                  textTransform: "uppercase", marginBottom: 4
-                }}>Correo electrónico</div>
+                <FieldLabel>Correo electrónico</FieldLabel>
                 <div style={{ fontSize: 15, fontWeight: 700, color: "#0F172A" }}>{user.email}</div>
               </div>
               <span style={{
-                fontSize: 11, fontWeight: 800, color: "#15803D", background: "#F0FDF4",
-                border: "1.5px solid #86EFAC", padding: "3px 10px", borderRadius: 20,
-                display: 'flex', alignItems: 'center', gap: 4
-              }}><CheckIcon size={12} /> Verificado</span>
+                fontSize: 12, fontWeight: 800, color: "#15803D", background: "#f0fdf4",
+                border: "1.5px solid #86efac", padding: "5px 12px", borderRadius: 20,
+                display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0
+              }}><Check size={13} /> Verificado</span>
             </div>
 
             {/* Phone */}
             <div style={{ marginBottom: 16 }}>
-              <div style={{
-                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                textTransform: "uppercase", marginBottom: 8
-              }}>Teléfono</div>
+              <FieldLabel>Teléfono</FieldLabel>
               <div style={{ display: "flex", gap: 10 }}>
                 <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
                   placeholder="+52 123 456 7890" style={inputStyle}
-                  onFocus={e => { e.currentTarget.style.borderColor = "#0B71FE"; e.currentTarget.style.background = "#fff" }}
-                  onBlur={e => { e.currentTarget.style.borderColor = "#E2E8F0"; e.currentTarget.style.background = "#F8FAFF" }} />
+                  onFocus={e => { e.currentTarget.style.borderColor = "#0F62FE"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(15,98,254,0.1)" }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "#E2E8F0"; e.currentTarget.style.boxShadow = "none" }} />
                 <button onClick={savePhone} disabled={saving} style={btnPrimary}>
                   {saving ? "..." : "Guardar"}
                 </button>
@@ -344,16 +385,18 @@ function SettingsContent() {
 
             {/* Password */}
             <div style={{
-              background: "#FBFAF5", borderRadius: 12, padding: "16px 18px",
-              border: "1.5px solid #EEF2FF", marginBottom: 20
+              background: "#f8faff", borderRadius: 16, padding: "20px 22px",
+              border: "1.5px solid #e0eaff", marginBottom: 20
             }}>
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
-                marginBottom: showPwFields ? 14 : 0
+                marginBottom: showPwFields ? 16 : 0
               }}>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>Contraseña</div>
-                  <div style={{ fontSize: 12, color: "#64748B" }}>Seguridad de tu cuenta</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "#0F172A", display: "flex", alignItems: "center", gap: 8 }}>
+                    <Lock size={16} color="#64748b" /> Contraseña
+                  </div>
+                  <div style={{ fontSize: 13, color: "#64748B", marginTop: 2 }}>Seguridad de tu cuenta</div>
                 </div>
                 <button onClick={() => { setShowPwFields(!showPwFields); setPw({ new: "", confirm: "" }) }}
                   style={btnGhost}>{showPwFields ? "Cancelar" : "Cambiar"}</button>
@@ -361,15 +404,15 @@ function SettingsContent() {
               {showPwFields && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   <input type="password" value={pw.new} onChange={e => setPw({ ...pw, new: e.target.value })}
-                    placeholder="Nueva contraseña (mín. 6 caracteres)" style={{ ...inputStyle, background: "#FBFAF5" }}
-                    onFocus={e => e.currentTarget.style.borderColor = "#0B71FE"}
-                    onBlur={e => e.currentTarget.style.borderColor = "#E2E8F0"} />
+                    placeholder="Nueva contraseña (mín. 6 caracteres)" style={inputStyle}
+                    onFocus={e => { e.currentTarget.style.borderColor = "#0F62FE"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(15,98,254,0.1)" }}
+                    onBlur={e => { e.currentTarget.style.borderColor = "#E2E8F0"; e.currentTarget.style.boxShadow = "none" }} />
                   <input type="password" value={pw.confirm} onChange={e => setPw({ ...pw, confirm: e.target.value })}
-                    placeholder="Confirmar nueva contraseña" style={{ ...inputStyle, background: "#FBFAF5" }}
-                    onFocus={e => e.currentTarget.style.borderColor = "#0B71FE"}
-                    onBlur={e => e.currentTarget.style.borderColor = "#E2E8F0"} />
+                    placeholder="Confirmar nueva contraseña" style={inputStyle}
+                    onFocus={e => { e.currentTarget.style.borderColor = "#0F62FE"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(15,98,254,0.1)" }}
+                    onBlur={e => { e.currentTarget.style.borderColor = "#E2E8F0"; e.currentTarget.style.boxShadow = "none" }} />
                   <button onClick={savePw} disabled={saving}
-                    style={{ ...btnPrimary, padding: "12px", textAlign: "center" as const }}>
+                    style={{ ...btnPrimary, width: "100%", textAlign: "center" as const }}>
                     {saving ? "Guardando..." : "Actualizar Contraseña"}
                   </button>
                 </div>
@@ -378,63 +421,64 @@ function SettingsContent() {
 
             {/* Plans */}
             <div style={{ marginBottom: 20 }}>
-              <div style={{
-                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                textTransform: "uppercase", marginBottom: 12
-              }}>Plan de Suscripción</div>
+              <FieldLabel>Plan de Suscripción</FieldLabel>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {([
-                  { id: "gratuito", l: "Plan Gratuito", d: "Acceso a todos los cursos básicos", c: "#10B981" },
-                  { id: "estudiante", l: "Plan Estudiante", d: "Herramientas adicionales para estudiantes", c: "#0B71FE" },
-                  { id: "premium", l: "Plan Premium", d: "Acceso completo + certificados + soporte prioritario", c: "#F59E0B", icon: true },
-                ] as { id: "gratuito" | "estudiante" | "premium", l: string, d: string, c: string, icon?: boolean }[]).map(({ id, l, d, c, icon }) => (
+                  { id: "gratuito", l: "Plan Gratuito", d: "Acceso a todos los cursos básicos", c: "#10B981", grad: "linear-gradient(135deg,#10b981,#34d399)" },
+                  { id: "estudiante", l: "Plan Estudiante", d: "Herramientas adicionales para estudiantes", c: "#0F62FE", grad: "linear-gradient(135deg,#0F62FE,#4A9EFF)" },
+                  { id: "premium", l: "Plan Premium ⭐", d: "Acceso completo + certificados + soporte prioritario", c: "#F59E0B", grad: "linear-gradient(135deg,#F59E0B,#FCD34D)" },
+                ] as { id: "gratuito" | "estudiante" | "premium", l: string, d: string, c: string, grad: string }[]).map(({ id, l, d, c, grad }) => (
                   <div key={id} onClick={() => savePlan(id)} style={{
-                    padding: "14px 18px", borderRadius: 12, cursor: "pointer", transition: "all .2s",
-                    border: `2px solid ${plan === id ? c : "#E2E8F0"}`,
-                    background: plan === id ? `${c}12` : "#F8FAFF",
-                    display: "flex", alignItems: "center", justifyContent: "space-between"
+                    padding: "16px 20px", borderRadius: 16, cursor: "pointer", transition: "all .2s",
+                    border: `2px solid ${plan === id ? c : "#f1f5f9"}`,
+                    background: plan === id ? `${c}10` : "#f8faff",
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    boxShadow: plan === id ? `0 4px 16px ${c}25` : "none"
                   }}>
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: plan === id ? c : "#0F172A", display: 'flex', alignItems: 'center', gap: 6 }}>
-                        {l} {icon && <StarIcon size={14} color={c} fill={c} />}
+                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: grad, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Award size={18} color="white" />
                       </div>
-                      <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>{d}</div>
+                      <div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: plan === id ? c : "#0F172A" }}>{l}</div>
+                        <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>{d}</div>
+                      </div>
                     </div>
                     {plan === id && <span style={{
                       fontSize: 11, fontWeight: 800, color: c,
-                      background: `${c}20`, padding: "3px 12px", borderRadius: 20
+                      background: `${c}18`, padding: "4px 12px", borderRadius: 20, border: `1.5px solid ${c}40`
                     }}>ACTIVO</span>}
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Meta info */}
+            {/* Account meta */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
               {[
                 { l: "Cuenta creada", v: new Date(user.created_at || Date.now()).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }) },
                 { l: "Método de acceso", v: "Email y Contraseña" },
               ].map(({ l, v }) => (
                 <div key={l} style={{
-                  background: "#FBFAF5", borderRadius: 12, padding: "14px 16px",
-                  border: "1.5px solid #EEF2FF"
+                  background: "#f8faff", borderRadius: 14, padding: "16px 18px",
+                  border: "1.5px solid #e0eaff"
                 }}>
-                  <div style={{
-                    fontSize: 11, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                    textTransform: "uppercase", marginBottom: 4
-                  }}>{l}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>{v}</div>
+                  <FieldLabel>{l}</FieldLabel>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>{v}</div>
                 </div>
               ))}
             </div>
 
             {/* Logout */}
             <div style={{
-              background: "#FEF2F2", borderRadius: 12, padding: "16px 18px",
-              border: "1.5px solid #FECACA"
+              background: "#fff5f5", borderRadius: 16, padding: "20px 24px",
+              border: "1.5px solid #fecaca"
             }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A", marginBottom: 4 }}>Cerrar Sesión</div>
-              <div style={{ fontSize: 13, color: "#64748B", marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                <LogOut size={16} color="#ef4444" />
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#0F172A" }}>Cerrar Sesión</div>
+              </div>
+              <div style={{ fontSize: 13, color: "#64748B", marginBottom: 14 }}>
                 Cierra tu sesión de forma segura en este dispositivo.
               </div>
               <button disabled={saving} onClick={async () => {
@@ -442,9 +486,10 @@ function SettingsContent() {
                 try { await supabase.auth.signOut(); router.push("/login") }
                 catch (e) { flash(false, "Error al cerrar sesión") } finally { setSaving(false) }
               }} style={{
-                padding: "11px 26px", background: "#EF4444", border: "none", borderRadius: 10,
+                padding: "12px 28px", background: "#EF4444", border: "none", borderRadius: 12,
                 color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer",
-                fontFamily: "'Inter','Montserrat',sans-serif", opacity: saving ? .6 : 1
+                fontFamily: "'Inter','Montserrat',sans-serif", opacity: saving ? .6 : 1,
+                boxShadow: "0 4px 12px rgba(239,68,68,0.35)"
               }}>
                 {saving ? "Saliendo..." : "Cerrar Sesión"}
               </button>
@@ -453,155 +498,105 @@ function SettingsContent() {
 
           {/* ── NOTIFICATIONS */}
           {activeSection === "notifications" && (<div>
-            <SectionHeading><BellIcon size={20} style={{ marginRight: 8 }} /> Notificaciones</SectionHeading>
-            {[
-              { k: "push", l: "Notificaciones Push", d: "Recibir notificaciones en tu dispositivo" },
-              { k: "email", l: "Correo Electrónico", d: "Recibir notificaciones por email" },
-              { k: "sound", l: "Sonido", d: "Reproducir sonido al recibir notificaciones" },
-              { k: "courseUpdates", l: "Actualizaciones de Cursos", d: "Nuevo contenido en tus cursos" },
-              { k: "achievements", l: "Logros", d: "Cuando obtienes un nuevo logro" },
-              { k: "reminders", l: "Recordatorios", d: "Recordatorios de estudio programados" },
-            ].map(({ k, l, d }) => (
-              <ToggleRow key={k} label={l} desc={d}
-                checked={settings.notifications[k as keyof typeof settings.notifications] as boolean}
-                onChange={v => updateSettings({ notifications: { ...settings.notifications, [k]: v } })} />
-            ))}
+            <SectionHeading icon={<Bell size={20} color="white" />}>Notificaciones</SectionHeading>
+            <div style={{ background: "#f8faff", borderRadius: 16, padding: "20px 24px", border: "1.5px solid #e0eaff" }}>
+              {[
+                { k: "push", l: "Notificaciones Push", d: "Recibir notificaciones en tu dispositivo" },
+                { k: "email", l: "Correo Electrónico", d: "Recibir notificaciones por email" },
+                { k: "sound", l: "Sonido", d: "Reproducir sonido al recibir notificaciones" },
+                { k: "courseUpdates", l: "Actualizaciones de Cursos", d: "Nuevo contenido en tus cursos" },
+                { k: "achievements", l: "Logros", d: "Cuando obtienes un nuevo logro" },
+                { k: "reminders", l: "Recordatorios", d: "Recordatorios de estudio programados" },
+              ].map(({ k, l, d }) => (
+                <ToggleRow key={k} label={l} desc={d}
+                  checked={settings.notifications[k as keyof typeof settings.notifications] as boolean}
+                  onChange={v => updateSettings({ notifications: { ...settings.notifications, [k]: v } })} />
+              ))}
+            </div>
           </div>)}
 
           {/* ── PRIVACY */}
           {activeSection === "privacy" && (<div>
-            <SectionHeading><ShieldIcon size={20} style={{ marginRight: 8 }} /> Privacidad</SectionHeading>
+            <SectionHeading icon={<Shield size={20} color="white" />}>Privacidad</SectionHeading>
             {[
               { k: "profileVisibility", l: "Visibilidad del Perfil" },
               { k: "activityVisibility", l: "Visibilidad de Actividad" },
             ].map(({ k, l }) => (
               <div key={k} style={{ marginBottom: 20 }}>
-                <div style={{
-                  fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                  textTransform: "uppercase", marginBottom: 8
-                }}>{l}</div>
+                <FieldLabel>{l}</FieldLabel>
                 <select value={(settings.privacy as any)[k]}
                   onChange={e => updateSettings({ privacy: { ...settings.privacy, [k]: e.target.value as any } })}
-                  style={{ ...inputStyle, maxWidth: 280, cursor: "pointer" }}>
+                  style={{ ...inputStyle, maxWidth: 300, cursor: "pointer" }}>
                   <option value="public">Público</option>
                   <option value="friends">Solo amigos</option>
                   <option value="private">Privado</option>
                 </select>
               </div>
             ))}
-            <ToggleRow label="Mostrar Progreso" desc="Permitir que otros vean tu progreso"
-              checked={settings.privacy.showProgress}
-              onChange={v => updateSettings({ privacy: { ...settings.privacy, showProgress: v } })} />
-            <ToggleRow label="Permitir Mensajes" desc="Recibir mensajes directos de otros usuarios"
-              checked={settings.privacy.allowMessages}
-              onChange={v => updateSettings({ privacy: { ...settings.privacy, allowMessages: v } })} />
+            <div style={{ background: "#f8faff", borderRadius: 16, padding: "20px 24px", border: "1.5px solid #e0eaff" }}>
+              <ToggleRow label="Mostrar Progreso" desc="Permitir que otros vean tu progreso"
+                checked={settings.privacy.showProgress}
+                onChange={v => updateSettings({ privacy: { ...settings.privacy, showProgress: v } })} />
+              <ToggleRow label="Permitir Mensajes" desc="Recibir mensajes directos de otros usuarios"
+                checked={settings.privacy.allowMessages}
+                onChange={v => updateSettings({ privacy: { ...settings.privacy, allowMessages: v } })} />
+            </div>
           </div>)}
 
           {/* ── CONTENT */}
           {activeSection === "content" && (<div>
-            <SectionHeading><TVIcon size={20} style={{ marginRight: 8 }} /> Contenido</SectionHeading>
-            <div style={{ marginBottom: 20 }}>
-              <div style={{
-                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                textTransform: "uppercase", marginBottom: 10
-              }}>Nivel de Dificultad</div>
+            <SectionHeading icon={<Tv size={20} color="white" />}>Contenido</SectionHeading>
+            <div style={{ marginBottom: 24 }}>
+              <FieldLabel>Nivel de Dificultad</FieldLabel>
               <PillSelect
                 options={[{ v: "beginner", l: "Principiante" }, { v: "intermediate", l: "Intermedio" }, { v: "advanced", l: "Avanzado" }]}
                 value={settings.contentPreferences.difficultyLevel}
                 onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, difficultyLevel: v as any } })} />
             </div>
-            <ToggleRow label="Subtítulos" desc="Activar subtítulos en videos"
-              checked={settings.contentPreferences.showSubtitles}
-              onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, showSubtitles: v } })} />
-            <ToggleRow label="Reproducción Automática" desc="Reproducir videos automáticamente"
-              checked={settings.contentPreferences.autoplayVideos}
-              onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, autoplayVideos: v } })} />
-            <ToggleRow label="Mostrar Pistas" desc="Ver pistas durante los ejercicios"
-              checked={settings.contentPreferences.showHints}
-              onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, showHints: v } })} />
+            <div style={{ background: "#f8faff", borderRadius: 16, padding: "20px 24px", border: "1.5px solid #e0eaff" }}>
+              <ToggleRow label="Subtítulos" desc="Activar subtítulos en videos"
+                checked={settings.contentPreferences.showSubtitles}
+                onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, showSubtitles: v } })} />
+              <ToggleRow label="Reproducción Automática" desc="Reproducir videos automáticamente"
+                checked={settings.contentPreferences.autoplayVideos}
+                onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, autoplayVideos: v } })} />
+              <ToggleRow label="Mostrar Pistas" desc="Ver pistas durante los ejercicios"
+                checked={settings.contentPreferences.showHints}
+                onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, showHints: v } })} />
+            </div>
           </div>)}
 
-          {/* ── LINKED ACCOUNTS */}
-          {activeSection === "accounts" && (<div>
-            <SectionHeading><LinkIcon size={20} style={{ marginRight: 8 }} /> Cuentas Vinculadas</SectionHeading>
-            {([
-              { p: "google" as const, l: "Google", color: "#EA4335", letter: "G" },
-              { p: "facebook" as const, l: "Facebook", color: "#1877F2", letter: "f" },
-              { p: "apple" as const, l: "Apple", color: "#111", letter: "" },
-            ] as { p: 'google' | 'facebook' | 'apple', l: string, color: string, letter: string }[]).map(({ p, l, color, letter }) => (
-              <div key={p} style={{
-                display: "flex", alignItems: "center", padding: "14px 18px",
-                background: "#FBFAF5", borderRadius: 12, border: "1.5px solid #EEF2FF", marginBottom: 10
-              }}>
-                <div style={{
-                  width: 38, height: 38, borderRadius: 10, background: `${color}15`,
-                  border: `1.5px solid ${color}30`, display: "flex", alignItems: "center",
-                  justifyContent: "center", marginRight: 14, fontSize: 16, fontWeight: 800,
-                  color, fontFamily: "serif"
-                }}>{letter}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>{l}</div>
-                  <div style={{
-                    fontSize: 12, fontWeight: 600,
-                    color: settings.linkedAccounts[p] ? "#15803D" : "#94A3B8"
-                  }}>
-                    {settings.linkedAccounts[p] ? "Conectado" : "No conectado"}
-                  </div>
-                </div>
-                <button onClick={() => {
-                  if (settings.linkedAccounts[p]) {
-                    updateSettings({ linkedAccounts: { ...settings.linkedAccounts, [p]: false } }); flash(true, `${l} desvinculado`)
-                  } else {
-                    updateSettings({ linkedAccounts: { ...settings.linkedAccounts, [p]: true } }); flash(true, `${l} vinculado`)
-                  }
-                }} style={{
-                  padding: "8px 18px", borderRadius: 9,
-                  border: `2px solid ${settings.linkedAccounts[p] ? "#FECACA" : "#0B71FE"}`,
-                  background: settings.linkedAccounts[p] ? "#FEF2F2" : "transparent",
-                  color: settings.linkedAccounts[p] ? "#EF4444" : "#0B71FE",
-                  fontSize: 13, fontWeight: 700, cursor: "pointer",
-                  fontFamily: "'Inter','Montserrat',sans-serif"
-                }}>
-                  {settings.linkedAccounts[p] ? "Desvincular" : "Vincular"}
-                </button>
-              </div>
-            ))}
-          </div>)}
 
           {/* ── ACCESSIBILITY */}
           {activeSection === "accessibility" && (<div>
-            <SectionHeading><AccessibilityIcon size={20} style={{ marginRight: 8 }} /> Accesibilidad</SectionHeading>
-            <div style={{ marginBottom: 20 }}>
-              <div style={{
-                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                textTransform: "uppercase", marginBottom: 10
-              }}>Tamaño de Texto</div>
+            <SectionHeading icon={<Eye size={20} color="white" />}>Accesibilidad</SectionHeading>
+            <div style={{ marginBottom: 24 }}>
+              <FieldLabel>Tamaño de Texto</FieldLabel>
               <PillSelect
                 options={[{ v: "small", l: "Pequeño" }, { v: "medium", l: "Mediano" }, { v: "large", l: "Grande" }, { v: "extra-large", l: "XL" }]}
                 value={settings.accessibility.textSize}
                 onChange={v => updateSettings({ accessibility: { ...settings.accessibility, textSize: v as TextSize } })} />
             </div>
-            <div style={{ marginBottom: 20 }}>
-              <div style={{
-                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                textTransform: "uppercase", marginBottom: 10
-              }}>Modo de Contraste</div>
+            <div style={{ marginBottom: 24 }}>
+              <FieldLabel>Modo de Contraste</FieldLabel>
               <PillSelect
                 options={[{ v: "normal", l: "Normal" }, { v: "high", l: "Alto Contraste" }]}
                 value={settings.accessibility.contrastMode}
                 onChange={v => updateSettings({ accessibility: { ...settings.accessibility, contrastMode: v as ContrastMode } })} />
             </div>
-            <ToggleRow label="Reducir Movimiento" desc="Minimizar animaciones y efectos de movimiento"
-              checked={settings.accessibility.reducedMotion}
-              onChange={v => updateSettings({ accessibility: { ...settings.accessibility, reducedMotion: v } })} />
-            <ToggleRow label="Optimizar para Lector de Pantalla"
-              desc="Mejorar experiencia con lectores de pantalla"
-              checked={settings.accessibility.screenReaderOptimized}
-              onChange={v => updateSettings({ accessibility: { ...settings.accessibility, screenReaderOptimized: v } })} />
-            <ToggleRow label="Navegación por Teclado"
-              desc="Mejorar la navegación con teclado"
-              checked={settings.accessibility.keyboardNavigation}
-              onChange={v => updateSettings({ accessibility: { ...settings.accessibility, keyboardNavigation: v } })} />
+            <div style={{ background: "#f8faff", borderRadius: 16, padding: "20px 24px", border: "1.5px solid #e0eaff" }}>
+              <ToggleRow label="Reducir Movimiento" desc="Minimizar animaciones y efectos de movimiento"
+                checked={settings.accessibility.reducedMotion}
+                onChange={v => updateSettings({ accessibility: { ...settings.accessibility, reducedMotion: v } })} />
+              <ToggleRow label="Optimizar para Lector de Pantalla"
+                desc="Mejorar experiencia con lectores de pantalla"
+                checked={settings.accessibility.screenReaderOptimized}
+                onChange={v => updateSettings({ accessibility: { ...settings.accessibility, screenReaderOptimized: v } })} />
+              <ToggleRow label="Navegación por Teclado"
+                desc="Mejorar la navegación con teclado"
+                checked={settings.accessibility.keyboardNavigation}
+                onChange={v => updateSettings({ accessibility: { ...settings.accessibility, keyboardNavigation: v } })} />
+            </div>
           </div>)}
 
         </div>{/* /content panel */}
@@ -611,38 +606,41 @@ function SettingsContent() {
       {showResetConfirm && (
         <div style={{
           position: "fixed", inset: 0, background: "rgba(15,23,42,.6)",
-          backdropFilter: "blur(5px)", display: "flex", alignItems: "center",
+          backdropFilter: "blur(8px)", display: "flex", alignItems: "center",
           justifyContent: "center", zIndex: 9999, padding: 24
         }}>
           <div style={{
-            background: "#FBFAF5", borderRadius: 20, padding: 36, maxWidth: 420,
-            width: "100%", boxShadow: "0 20px 60px rgba(0,0,0,.2)"
+            background: "#ffffff", borderRadius: 24, padding: 40, maxWidth: 420,
+            width: "100%", boxShadow: "0 32px 80px rgba(0,0,0,.25)",
+            animation: "scaleIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both"
           }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
               <div style={{
-                width: 64, height: 64, borderRadius: '50%', background: '#FEF2F2',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                width: 68, height: 68, borderRadius: '50%', background: '#FEF2F2',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: "0 8px 24px rgba(239,68,68,0.2)"
               }}>
-                <WarningIcon size={32} color="#EF4444" />
+                <AlertTriangle size={32} color="#EF4444" />
               </div>
             </div>
-            <h3 style={{ margin: "0 0 10px", fontSize: 20, fontWeight: 800, color: "#0F172A" }}>
+            <h3 style={{ margin: "0 0 10px", fontSize: 22, fontWeight: 900, color: "#0F172A", textAlign: "center" }}>
               ¿Restaurar configuración?
             </h3>
-            <p style={{ margin: "0 0 24px", fontSize: 14, color: "#64748B", lineHeight: 1.6 }}>
+            <p style={{ margin: "0 0 28px", fontSize: 14, color: "#64748B", lineHeight: 1.65, textAlign: "center" }}>
               Esto restablecerá todas tus preferencias a los valores predeterminados.
               Esta acción no se puede deshacer.
             </p>
             <div style={{ display: "flex", gap: 12 }}>
               <button onClick={() => setShowResetConfirm(false)}
-                style={{ ...btnGhost, flex: 1, padding: "13px", textAlign: "center" as const }}>
+                style={{ ...btnGhost, flex: 1, padding: "14px", textAlign: "center" as const }}>
                 Cancelar
               </button>
               <button onClick={() => { resetSettings(); setShowResetConfirm(false); flash(true, "Configuración restaurada") }}
                 style={{
-                  flex: 1, padding: "13px", background: "#EF4444", border: "none",
-                  borderRadius: 10, color: "#fff", fontSize: 14, fontWeight: 700,
-                  cursor: "pointer", fontFamily: "'Inter','Montserrat',sans-serif"
+                  flex: 1, padding: "14px", background: "#EF4444", border: "none",
+                  borderRadius: 12, color: "#fff", fontSize: 14, fontWeight: 700,
+                  cursor: "pointer", fontFamily: "'Inter','Montserrat',sans-serif",
+                  boxShadow: "0 4px 14px rgba(239,68,68,0.35)"
                 }}>
                 Restaurar
               </button>
@@ -652,49 +650,29 @@ function SettingsContent() {
       )}
 
       <style>{`
-        /* Mobile */
+        @keyframes fadeUp { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes scaleIn { from { opacity:0; transform:scale(0.9) } to { opacity:1; transform:scale(1) } }
+
         @media (max-width: 767px) {
           .cfg-root-container { padding-left: 0 !important; }
           .cfg-page-header {
-            padding: 20px 16px 40px !important;
-            margin: 12px 12px 0 !important;
-            border-radius: 20px !important;
-          }
-          .cfg-page-header h1 {
-            font-size: 22px !important;
-          }
-          .cfg-page-header p {
-            font-size: 13px !important;
-          }
-          .cfg-user-badge {
-            font-size: 11px !important;
-            padding: 6px 12px !important;
+            padding: 24px 16px 52px !important;
+            border-radius: 0 0 24px 24px !important;
           }
           .cfg-body {
             grid-template-columns: 1fr !important;
             padding: 0 12px 100px !important;
-            margin-top: -12px !important;
-            gap: 12px !important;
+            margin-top: -20px !important;
+            gap: 14px !important;
           }
-          .cfg-body > div:first-child {
-            position: relative !important;
-            top: auto !important;
-          }
-          .cfg-content-panel {
-            padding: 20px 16px !important;
-          }
+          .cfg-body > div:first-child { position: relative !important; top: auto !important; }
+          .cfg-content-panel { padding: 20px 16px !important; }
         }
-        
-        /* Tablet – app-main padding seems unreliable, applying directly to container */
         @media (min-width: 768px) and (max-width: 1160px) {
-          .cfg-root-container { padding-left: 220px !important; }
           .cfg-body { padding: 0 20px 60px !important; }
         }
-        
-        /* Desktop – app-main padding seems unreliable, applying directly to container */
         @media (min-width: 1161px) {
-          .cfg-root-container { padding-left: 280px !important; }
-          .cfg-body { padding: 0 28px 60px !important; }
+          .cfg-body { padding: 0 32px 80px !important; }
         }
         select { -webkit-appearance: none; appearance: none; }
       `}</style>
@@ -707,7 +685,7 @@ export default function SettingsPage() {
     <Suspense fallback={
       <div style={{
         flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
-        fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: "#0B71FE",
+        fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: "#0F62FE",
         background: "#FBFAF5"
       }}>
         Cargando configuración...

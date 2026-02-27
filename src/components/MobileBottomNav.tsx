@@ -100,7 +100,7 @@ export default function MobileBottomNav() {
   const additionalNavItems = user && isStudentOrGuest ? [
     {
       id: 'forum',
-      label: '',
+      label: 'Foro',
       icon: MessageSquare,
       path: '/forum',
       protected: true

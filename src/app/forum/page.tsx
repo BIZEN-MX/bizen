@@ -453,9 +453,19 @@ function ForumContent() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
               <div>
 
-                <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: 15, fontWeight: 500 }}>
+                <h1 style={{
+                  margin: 0,
+                  fontSize: "clamp(26px, 5vw, 40px)",
+                  fontWeight: 900,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.025em",
+                  background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  maxWidth: "700px"
+                }}>
                   Comparte, aprende y conecta con tu grupo
-                </p>
+                </h1>
               </div>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 <Link href="/forum/bookmarks" style={{ padding: "10px 16px", background: "white", color: "#374151", borderRadius: 10, fontWeight: 600, textDecoration: "none", fontSize: 13, border: "1.5px solid #e2e8f0" }}>Guardados</Link>

@@ -90,7 +90,7 @@ export default function MobileFooterNav() {
     },
     {
       path: "/forum",
-      label: "",
+      label: "Foro",
       icon: MessageSquare,
       active: isActivePath("/forum")
     },

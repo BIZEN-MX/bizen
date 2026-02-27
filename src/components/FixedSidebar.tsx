@@ -283,33 +283,37 @@ export default function FixedSidebar() {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "flex-end",
-              gap: 12,
+              justifyContent: "center",
               marginBottom: 32,
-              padding: "8px 0",
+              padding: "12px 0",
               background: "transparent",
               border: "none",
               cursor: "pointer",
-              textAlign: "right",
+              textAlign: "center",
               width: "100%"
             }}
             className="sidebar-brand"
           >
-            <Image
-              src="/bizen-logo.png"
-              alt="Bizen"
-              width={40}
-              height={40}
-              style={{ flexShrink: 0, objectFit: "contain" }}
-            />
             <span style={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontSize: 22,
-              fontWeight: 800,
+              fontFamily: "'Helvetica', 'Arial', sans-serif",
+              fontSize: 30,
+              fontWeight: 900,
               color: "#1e293b",
-              letterSpacing: "0.5px"
+              letterSpacing: "-1px",
+              lineHeight: 1,
+              display: "flex",
+              alignItems: "baseline",
+              gap: "2px"
             }}>
               BIZEN
+              <span style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#0F62FE",
+                display: "inline-block",
+                marginBottom: 3
+              }} />
             </span>
           </button>
 
@@ -625,7 +629,7 @@ export default function FixedSidebar() {
                       }}
                     >
                       <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
-                      <span className="nav-item-label"></span>
+                      <span className="nav-item-label">Foro</span>
                     </button>
                   )}
 

@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import {
   Target, CheckCircle, FileText, Users, Sparkles, X,
   ChevronRight, AlertCircle, Flame, Zap, BookOpen,
-  TrendingUp, Brain, Clock, Star, Trophy, ArrowRight
+  TrendingUp, Brain, Clock, Star, Trophy, ArrowRight, Lightbulb, Award
 } from "lucide-react"
 import confetti from "canvas-confetti"
 
@@ -434,26 +434,34 @@ export default function RetoDiarioPage() {
               {/* Top bar */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, animation: "fadeUp 0.4s ease both" }}>
                 <div>
-                  <h1 style={{ fontSize: "clamp(22px, 3.5vw, 30px)", fontWeight: 900, color: "#111827", margin: "0 0 2px", letterSpacing: "-0.02em" }}>
-                    Reto diario
-                  </h1>
-                  <p style={{ fontSize: 14, color: "#64748b", margin: 0, fontWeight: 500, textTransform: "capitalize" }}>
+                  <h1 style={{
+                    fontSize: "clamp(28px, 5vw, 44px)",
+                    fontWeight: 900,
+                    margin: 0,
+                    letterSpacing: "-0.03em",
+                    lineHeight: 1,
+                    background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    textTransform: "capitalize"
+                  }}>
                     {dayName}, {dateStr}
-                  </p>
+                  </h1>
                 </div>
 
                 {/* Streak badge */}
                 <div style={{
-                  display: "flex", alignItems: "center", gap: 8,
-                  padding: "10px 16px",
-                  background: "#fff7ed",
-                  border: "1px solid #ffedd5",
-                  borderRadius: 14,
+                  display: "flex", alignItems: "center", gap: 12,
+                  padding: "14px 22px",
+                  background: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
+                  border: "2.5px solid #fb923c40",
+                  borderRadius: 20,
+                  boxShadow: "0 10px 25px rgba(251,146,60,0.15)"
                 }}>
-                  <Flame size={18} style={{ color: "#fb923c", animation: "float 2s ease infinite" }} />
+                  <Flame size={28} style={{ color: "#fb923c", animation: "float 2s ease infinite" }} />
                   <div>
-                    <div style={{ fontSize: 16, fontWeight: 900, color: "#fb923c", lineHeight: 1, animation: "streakGlow 2s ease infinite" }}>{streak}</div>
-                    <div style={{ fontSize: 10, color: "#f97316", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>racha</div>
+                    <div style={{ fontSize: 26, fontWeight: 950, color: "#fb923c", lineHeight: 0.9, animation: "streakGlow 2s ease infinite" }}>{streak}</div>
+                    <div style={{ fontSize: 11, color: "#f97316", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 2 }}>racha</div>
                   </div>
                 </div>
               </div>
@@ -551,40 +559,44 @@ export default function RetoDiarioPage() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
                 {/* Tip */}
                 <div style={{
-                  padding: "20px 22px",
+                  padding: "24px 28px",
                   background: "#fffbeb",
-                  border: "1px solid #fef3c7",
-                  borderRadius: 18,
-                  borderLeft: "4px solid #f59e0b",
+                  border: "1.5px solid #fef3c7",
+                  borderRadius: 24,
+                  borderLeft: "6px solid #f59e0b",
                   animation: "fadeUp 0.5s ease 0.05s both"
                 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                    <span style={{ fontSize: 20 }}>💡</span>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: "#d97706", textTransform: "uppercase", letterSpacing: "0.07em" }}>Consejo del experto</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: "#f59e0b", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Lightbulb size={20} color="white" />
+                    </div>
+                    <span style={{ fontSize: 12, fontWeight: 850, color: "#d97706", textTransform: "uppercase", letterSpacing: "0.1em" }}>Consejo del experto</span>
                   </div>
-                  <p style={{ fontSize: 13, color: "#78350f", lineHeight: 1.65, margin: 0 }}>
-                    La constancia vence al talento. Completar este reto diario te pone en el top 10% de estudiantes que mejoran su situación financiera este año.
+                  <p style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
+                    La constancia vence al talento. Completar este reto diario te pone en el <strong>top 10%</strong> de estudiantes que mejoran su situación financiera este año.
                   </p>
                 </div>
 
                 {/* Stats mini */}
                 <div style={{
-                  padding: "20px 22px",
+                  padding: "24px 28px",
                   background: "#FBFAF5",
-                  border: "1px solid #e2e8f0",
-                  borderLeft: "4px solid #0F62FE",
-                  borderRadius: 18,
+                  border: "1.5px solid #e2e8f0",
+                  borderLeft: "6px solid #0F62FE",
+                  borderRadius: 24,
                   animation: "fadeUp 0.5s ease 0.1s both"
                 }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 14 }}>¿Por qué hacerlo?</div>
+                  <div style={{ fontSize: 12, fontWeight: 850, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 18 }}>¿Por qué hacerlo?</div>
                   {[
-                    { icon: "⚡", text: "5 min = un hábito financiero sólido" },
-                    { icon: "🎯", text: "Cada reto refuerza lo aprendido en clase" },
-                    { icon: "🏆", text: "Acumula XP y sube de nivel" },
-                  ].map(({ icon, text }) => (
-                    <div key={text} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
-                      <span style={{ fontSize: 14, marginTop: 1 }}>{icon}</span>
-                      <span style={{ fontSize: 13, color: "#475569", lineHeight: 1.5 }}>{text}</span>
+                    { icon: <Zap size={16} color="#0F62FE" />, text: "5 min = un hábito financiero sólido", bg: "#eff6ff" },
+                    { icon: <Target size={16} color="#0F62FE" />, text: "Cada reto refuerza lo aprendido en clase", bg: "#eff6ff" },
+                    { icon: <Award size={16} color="#0F62FE" />, text: "Acumula XP y sube de nivel", bg: "#eff6ff" },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: 8, background: item.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        {item.icon}
+                      </div>
+                      <span style={{ fontSize: 14, color: "#475569", lineHeight: 1.4, fontWeight: 600 }}>{item.text}</span>
                     </div>
                   ))}
                 </div>
