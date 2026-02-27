@@ -12,8 +12,15 @@ const globalForPrisma = globalThis as unknown as {
  * pooler (port 6543), add to your DATABASE_URL: &connection_limit=1
  * Example: ...?pgbouncer=true&sslmode=require&connection_limit=1
  */
+// Dynamically fix the DATABASE_URL for Vercel + Supabase Pooler issues (s0 already exists)
+let customUrl = process.env.DATABASE_URL
+if (customUrl && (customUrl.includes('pooler.supabase.com') || customUrl.includes('supabase.co')) && !customUrl.includes('pgbouncer=true')) {
+  customUrl += (customUrl.includes('?') ? '&' : '?') + 'pgbouncer=true'
+}
+
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+  datasourceUrl: customUrl,
 })
 
 // Prevent multiple instances in all environments
