@@ -625,7 +625,7 @@ export default function FixedSidebar() {
                       }}
                     >
                       <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
-                      <span className="nav-item-label">Foro</span>
+                      <span className="nav-item-label"></span>
                     </button>
                   )}
 

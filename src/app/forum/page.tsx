@@ -452,7 +452,7 @@ function ForumContent() {
             {/* ── Page Header ── */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
               <div>
-                <h1 style={{ margin: 0, fontSize: "clamp(24px, 4vw, 32px)", fontWeight: 900, color: "#0f172a", letterSpacing: "-0.02em" }}>Foro</h1>
+
                 <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: 15, fontWeight: 500 }}>
                   Comparte, aprende y conecta con tu grupo
                 </p>
