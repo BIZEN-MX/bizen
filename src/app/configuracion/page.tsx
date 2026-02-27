@@ -7,8 +7,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import {
   SettingsIcon, UserIcon, BellIcon, ShieldIcon, TVIcon, LinkIcon,
-  AccessibilityIcon, SpainIcon, USIcon, SunIcon, MoonIcon, AutoIcon,
-  StarIcon, CheckIcon, CrossIcon, WarningIcon, ResetIcon
+  AccessibilityIcon, StarIcon, CheckIcon, CrossIcon, WarningIcon, ResetIcon
 } from "@/components/CustomIcons"
 
 export const dynamic = 'force-dynamic'
@@ -170,9 +169,11 @@ function SettingsContent() {
     }}>
 
       {/* ── Page header (blue stripe) */}
-      <div style={{
-        background: "linear-gradient(135deg,#0B71FE 0%,#4F46E5 100%)",
-        padding: "32px 32px 56px", position: "relative", overflow: "hidden"
+      <div className="cfg-page-header" style={{
+        background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)",
+        padding: "clamp(20px, 4vw, 32px) clamp(16px, 4vw, 32px) clamp(40px, 6vw, 56px)",
+        position: "relative", overflow: "hidden",
+        borderRadius: 24, margin: "16px 24px 0"
       }}>
         <div style={{
           position: "absolute", top: -60, right: -60, width: 200, height: 200,
@@ -262,7 +263,7 @@ function SettingsContent() {
         </div>
 
         {/* Content Panel */}
-        <div style={{
+        <div className="cfg-content-panel" style={{
           background: "#FBFAF5", borderRadius: 16, padding: "28px 32px",
           boxShadow: "0 4px 20px rgba(11,113,254,.08)", border: "1.5px solid #EEF2FF",
           minWidth: 0
@@ -290,35 +291,10 @@ function SettingsContent() {
                 textTransform: "uppercase", marginBottom: 10
               }}>Idioma / Language</div>
               <PillSelect
-                options={[{ v: "es", l: <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><SpainIcon size={16} /> Español</span> as any }, { v: "en", l: <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><USIcon size={16} /> English</span> as any }]}
+                options={[{ v: "es", l: "Español" }, { v: "en", l: "English" }]}
                 value={settings.language} onChange={v => updateSettings({ language: v as Language })} />
             </div>
-            <div style={{ marginBottom: 24 }}>
-              <div style={{
-                fontSize: 12, fontWeight: 800, color: "#94A3B8", letterSpacing: 1,
-                textTransform: "uppercase", marginBottom: 10
-              }}>Tema Visual</div>
-              <div style={{ display: "flex", gap: 12 }}>
-                {[
-                  { v: "light", l: "Claro", icon: <SunIcon size={16} /> },
-                  { v: "dark", l: "Oscuro", icon: <MoonIcon size={16} /> },
-                  { v: "auto", l: "Auto", icon: <AutoIcon size={16} /> }
-                ].map(({ v, l, icon }) => (
-                  <div key={v} onClick={() => updateSettings({ theme: v as Theme })} style={{
-                    flex: 1, padding: "14px 10px", textAlign: "center", borderRadius: 12, cursor: "pointer",
-                    border: `2px solid ${settings.theme === v ? "#0B71FE" : "#E2E8F0"}`,
-                    background: settings.theme === v ? "#EFF6FF" : "#F8FAFF", transition: "all .2s",
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6
-                  }}>
-                    <div style={{ color: settings.theme === v ? "#0B71FE" : "#94A3B8" }}>{icon}</div>
-                    <div style={{
-                      fontSize: 13, fontWeight: 700,
-                      color: settings.theme === v ? "#0B71FE" : "#64748B"
-                    }}>{l}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+
             <ToggleRow label="Efectos de Sonido" desc="Activar efectos de sonido en la app"
               checked={settings.soundsEnabled} onChange={v => updateSettings({ soundsEnabled: v })} />
             <ToggleRow label="Animaciones" desc="Mostrar animaciones y transiciones"
@@ -678,16 +654,35 @@ function SettingsContent() {
       <style>{`
         /* Mobile */
         @media (max-width: 767px) {
+          .cfg-root-container { padding-left: 0 !important; }
+          .cfg-page-header {
+            padding: 20px 16px 40px !important;
+            margin: 12px 12px 0 !important;
+            border-radius: 20px !important;
+          }
+          .cfg-page-header h1 {
+            font-size: 22px !important;
+          }
+          .cfg-page-header p {
+            font-size: 13px !important;
+          }
+          .cfg-user-badge {
+            font-size: 11px !important;
+            padding: 6px 12px !important;
+          }
           .cfg-body {
             grid-template-columns: 1fr !important;
-            padding: 0 12px 80px !important;
+            padding: 0 12px 100px !important;
             margin-top: -12px !important;
+            gap: 12px !important;
           }
           .cfg-body > div:first-child {
             position: relative !important;
             top: auto !important;
           }
-          .cfg-root-container { padding-left: 0 !important; }
+          .cfg-content-panel {
+            padding: 20px 16px !important;
+          }
         }
         
         /* Tablet – app-main padding seems unreliable, applying directly to container */
