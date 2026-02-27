@@ -1211,63 +1211,7 @@ export default function ImpactoSocialPage() {
                                 {/* RIGHT COLUMN */}
                                 <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
 
-                                    {/* CLASSROOM BAR CHART LEADERBOARD */}
-                                    <div>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                                            <Users size={17} color="#64748b" />
-                                            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Ranking por Salón</h3>
-                                        </div>
-                                        <div style={{
-                                            background: "#FBFAF5", border: "1.5px solid #f1f5f9",
-                                            borderRadius: 20, padding: "20px 24px",
-                                            boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
-                                        }}>
-                                            <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600, marginBottom: 16 }}>Puntos de impacto colectivos este ciclo</div>
-                                            {[
-                                                { rank: 1, name: "602 - Ciencias", points: 12450, maxPoints: 12450, active: true, change: "+420 esta sem" },
-                                                { rank: 2, name: "604 - Negocios", points: 10200, maxPoints: 12450, active: false, change: "+215 esta sem" },
-                                                { rank: 3, name: "501 - Economía", points: 8900, maxPoints: 12450, active: false, change: "+180 esta sem" },
-                                                { rank: 4, name: "503 - Historia", points: 6300, maxPoints: 12450, active: false, change: "+90 esta sem" },
-                                            ].map((room, i) => (
-                                                <div key={i} style={{ marginBottom: i < 3 ? 18 : 0 }}>
-                                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                                                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                                            <span style={{
-                                                                width: 22, height: 22, borderRadius: "50%", fontSize: 11, fontWeight: 900,
-                                                                display: "flex", alignItems: "center", justifyContent: "center",
-                                                                background: room.rank === 1 ? "#fef3c7" : room.rank === 2 ? "#f1f5f9" : "#fff",
-                                                                color: room.rank === 1 ? "#92400e" : "#64748b",
-                                                                border: room.rank === 1 ? "1.5px solid #fbbf24" : "1.5px solid #e2e8f0",
-                                                                flexShrink: 0
-                                                            }}>{room.rank}</span>
-                                                            <span style={{ fontSize: 13, fontWeight: room.active ? 800 : 600, color: room.active ? "#0F62FE" : "#374151" }}>
-                                                                {room.name}{room.active && <span style={{ marginLeft: 4 }}><TargetIcon size={14} color="#0F62FE" /></span>}
-                                                            </span>
-                                                        </div>
-                                                        <div style={{ textAlign: "right" }}>
-                                                            <div style={{ fontSize: 13, fontWeight: 900, color: "#0f172a" }}>{room.points.toLocaleString()}</div>
-                                                            <div style={{ fontSize: 10, color: "#10b981", fontWeight: 700 }}>{room.change}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div style={{ width: "100%", height: 8, background: "#f1f5f9", borderRadius: 99, overflow: "hidden" }}>
-                                                        <div
-                                                            className="classroom-bar"
-                                                            style={{
-                                                                background: room.active
-                                                                    ? "linear-gradient(90deg, #0F62FE, #60a5fa)"
-                                                                    : room.rank === 1
-                                                                        ? "linear-gradient(90deg, #f59e0b, #fbbf24)"
-                                                                        : "linear-gradient(90deg, #cbd5e1, #e2e8f0)",
-                                                                ["--bar-w" as any]: `${(room.points / room.maxPoints) * 100}%`,
-                                                                width: `${(room.points / room.maxPoints) * 100}%`,
-                                                                animationDelay: `${0.2 + i * 0.1}s`
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+
 
                                     {/* ACTIVE STUDENTS RING */}
                                     <div style={{
