@@ -180,7 +180,7 @@ export default function FreeAIChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-6 z-50 w-80 h-96 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col overflow-hidden"
+            className="fixed bottom-24 right-6 z-50 w-80 h-96 bg-[#FBFAF5] rounded-lg shadow-xl border border-gray-200 flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 flex justify-between items-center">
@@ -226,7 +226,7 @@ export default function FreeAIChatbot() {
                     }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${useAI ? 'translate-x-6' : 'translate-x-1'
+                    className={`inline-block h-4 w-4 transform rounded-full bg-[#FBFAF5] transition-transform ${useAI ? 'translate-x-6' : 'translate-x-1'
                       }`}
                   />
                 </button>

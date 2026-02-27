@@ -157,14 +157,14 @@ export default function SimulatorPage() {
           }
         }
       `}</style>
-      <div className="simulador-detail-outer" style={{ width: '100%', flex: 1, background: '#ffffff', fontFamily: 'Montserrat, sans-serif', overflowX: 'hidden', overflowY: 'auto', boxSizing: 'border-box' }}>
+      <div className="simulador-detail-outer" style={{ width: '100%', flex: 1, background: '#FBFAF5', fontFamily: 'Montserrat, sans-serif', overflowX: 'hidden', overflowY: 'auto', boxSizing: 'border-box' }}>
         <main className="simulador-detail-main" style={{
           paddingTop: "40px",
           paddingBottom: "40px",
           paddingLeft: "40px",
           paddingRight: "40px",
           minHeight: "100vh",
-          background: "#ffffff",
+          background: "#FBFAF5",
           fontFamily: "Montserrat, sans-serif",
           boxSizing: "border-box" as const,
           overflowX: "hidden",

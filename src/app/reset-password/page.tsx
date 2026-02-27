@@ -23,7 +23,7 @@ function Card(props: React.HTMLAttributes<HTMLDivElement>) {
         borderRadius: 16,
         border: "1px solid rgba(0,0,0,0.08)",
         boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
-        background: "#fff",
+        background: "#FBFAF5",
         padding: 24,
         minWidth: 0,
         overflow: "hidden" as const,
@@ -50,7 +50,7 @@ function TextField(props: React.InputHTMLAttributes<HTMLInputElement>) {
         outline: "none",
         fontSize: 14,
         color: "#111",
-        background: "#fff",
+        background: "#FBFAF5",
         transition: "box-shadow .2s ease, border-color .2s ease",
       }}
       onFocus={(e) => (e.currentTarget.style.boxShadow = `0 0 0 4px ${linkColor}26`)}

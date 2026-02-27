@@ -19,7 +19,7 @@ const modalInputStyle = {
   padding: "14px 16px",
   fontSize: "15px",
   borderRadius: "12px",
-  background: "#fff",
+  background: "#FBFAF5",
   border: "1px solid #e2e8f0",
   color: "#1e293b",
   fontFamily: "inherit",
@@ -107,7 +107,7 @@ export default function WelcomePage() {
 
   return (
     <div style={{
-      background: "#ffffff",
+      background: "#FBFAF5",
       flex: "1 0 auto",
       height: "auto",
       width: "100%",
@@ -186,7 +186,7 @@ export default function WelcomePage() {
             display: "flex",
             alignItems: "center",
             gap: "4px",
-            background: "#ffffff",
+            background: "#FBFAF5",
             borderRadius: "9999px",
             padding: "6px 8px",
             boxShadow: "0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05)",
@@ -2390,7 +2390,7 @@ export default function WelcomePage() {
                   className="testimonial-card-animate"
                 >
                   <div className="testimonial-premium-card" style={{
-                    background: "#fff",
+                    background: "#FBFAF5",
                     borderRadius: "28px",
                     padding: "clamp(28px, 4vw, 48px)",
                     border: "1px solid rgba(0, 86, 231, 0.1)",
@@ -3074,7 +3074,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
       {(sectionRange === 'all' || sectionRange === 'rest') && (<>
         {/* Conoce BIZEN - enhanced */}
         <section id="conoce-bizen" className="section conoce-bizen-section reveal-element" style={{
-          background: "#ffffff",
+          background: "#FBFAF5",
           padding: "clamp(72px, 10vw, 112px) clamp(16px, 4vw, 48px)",
           maxWidth: "1320px",
           margin: "0 auto",
@@ -3141,7 +3141,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               { label: "Responsabilidad socioemocional", desc: "Desarrolla autonomía, empatía y habilidades para la vida.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></svg> },
             ].map((item, i) => (
               <div key={i} style={{
-                background: "#f8faff",
+                background: "#FBFAF5",
                 border: "1px solid rgba(0, 86, 231, 0.1)",
                 borderRadius: "24px",
                 padding: "clamp(24px, 3vw, 32px)",
@@ -3209,7 +3209,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
 
         {/* Cada clase, una aventura divertida — enhanced carousel */}
         <section className="section adventure-carousel-section reveal-element" style={{
-          background: "#f8faff",
+          background: "#FBFAF5",
           padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 60px)",
           maxWidth: "1440px",
           margin: "0 auto",
@@ -3350,7 +3350,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                           padding: "14px 28px",
                           fontSize: "clamp(14px, 1rem, 17px)",
                           fontWeight: 600,
-                          background: "#fff",
+                          background: "#FBFAF5",
                           color: "#0056E7",
                           borderRadius: "999px",
                           cursor: "pointer",
@@ -3407,7 +3407,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 onClick={() => setActiveAdventureSlide(prev => prev === 0 ? 2 : prev - 1)}
                 style={{
                   width: "56px", height: "56px", borderRadius: "50%",
-                  background: "#fff", border: "1.5px solid rgba(0, 86, 231, 0.15)",
+                  background: "#FBFAF5", border: "1.5px solid rgba(0, 86, 231, 0.15)",
                   boxShadow: "0 4px 12px rgba(0, 86, 231, 0.1)",
                   cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.2s ease"
@@ -3604,7 +3604,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
 
         {/* Cómo funciona — enhanced */}
         <section id="como-funciona" className="section how-it-works reveal-element reveal-delay-2" style={{
-          background: "#f8faff",
+          background: "#FBFAF5",
           padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 24px)",
           overflow: "visible",
           height: "auto",
@@ -3639,7 +3639,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               <div key={i} className={`step-card reveal-element reveal-delay-${i + 1}`} style={{
                 padding: "clamp(36px, 4vw, 52px) clamp(28px, 3vw, 40px)",
                 borderRadius: "28px",
-                background: "#fff",
+                background: "#FBFAF5",
                 border: "1px solid rgba(0, 86, 231, 0.1)",
                 boxShadow: "0 8px 32px rgba(0, 86, 231, 0.06)",
                 display: "flex",
@@ -3672,7 +3672,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                     width: "28px",
                     height: "28px",
                     borderRadius: "8px",
-                    background: "#fff",
+                    background: "#FBFAF5",
                     color: "#0056E7",
                     fontSize: "13px",
                     fontWeight: 800,

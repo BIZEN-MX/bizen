@@ -6,7 +6,7 @@ import { FOOTER } from "@/lib/landing-data"
 export function Footer() {
   return (
     <footer
-      className="border-t border-gray-200 bg-white py-10"
+      className="border-t border-gray-200 bg-[#FBFAF5] py-10"
       role="contentinfo"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6">

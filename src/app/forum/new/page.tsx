@@ -66,8 +66,8 @@ export default function NewThreadPage() {
   const canSubmit = title.trim().length > 5 && body.trim().length > 10 && !!selectedTopicId
 
   useEffect(() => {
-    document.body.style.background = "#f8fafc"
-    return () => { document.body.style.background = "#fff" }
+    document.body.style.background = "#FBFAF5"
+    return () => { document.body.style.background = "#FBFAF5" }
   }, [])
 
   useEffect(() => {
@@ -118,7 +118,7 @@ export default function NewThreadPage() {
 
   if (loading || loadingData) {
     return (
-      <div className="fn-outer" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc" }}>
+      <div className="fn-outer" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5" }}>
         <style>{`
           @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 220px !important; } }
           @media (min-width: 1161px) { .fn-outer { margin-left: 280px !important; } }
@@ -135,7 +135,7 @@ export default function NewThreadPage() {
   if (!user) return null
 
   return (
-    <div className="fn-outer" style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "'Montserrat', sans-serif" }}>
+    <div className="fn-outer" style={{ minHeight: "100vh", background: "#FBFAF5", fontFamily: "'Montserrat', sans-serif" }}>
       <style>{`
         @media (max-width: 767px) { .fn-outer { margin-left: 0 !important; } .fn-layout { flex-direction: column !important; } }
         @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 220px !important; } }
@@ -193,7 +193,7 @@ export default function NewThreadPage() {
             <form onSubmit={handleSubmit}>
 
               {/* Card: Título */}
-              <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
                 <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
                   Título *
                 </label>
@@ -209,7 +209,7 @@ export default function NewThreadPage() {
                     width: "100%", padding: "14px 16px", fontSize: 15,
                     fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
                     border: "2px solid #f1f5f9", borderRadius: 12,
-                    background: "#f8fafc", color: "#0f172a",
+                    background: "#FBFAF5", color: "#0f172a",
                     boxSizing: "border-box", transition: "all 0.2s"
                   }}
                 />
@@ -223,7 +223,7 @@ export default function NewThreadPage() {
               </div>
 
               {/* Card: Categoría */}
-              <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
                 <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
                   Categoría *
                 </label>
@@ -255,7 +255,7 @@ export default function NewThreadPage() {
               </div>
 
               {/* Card: Etiquetas */}
-              <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <label style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
                     Etiquetas
@@ -296,7 +296,7 @@ export default function NewThreadPage() {
                         width: "100%", padding: "11px 14px 11px 34px", fontSize: 13,
                         fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
                         border: "2px solid #f1f5f9", borderRadius: 10,
-                        background: "#f8fafc", color: "#0f172a",
+                        background: "#FBFAF5", color: "#0f172a",
                         boxSizing: "border-box", transition: "all 0.2s",
                         opacity: selectedTags.length >= 5 ? 0.5 : 1
                       }}
@@ -321,7 +321,7 @@ export default function NewThreadPage() {
               </div>
 
               {/* Card: Contenido */}
-              <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 20 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <label style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
                     Contenido *
@@ -347,7 +347,7 @@ export default function NewThreadPage() {
                       fontSize: 14, fontFamily: "'Montserrat', sans-serif",
                       fontWeight: 500, lineHeight: 1.75,
                       border: "2px solid #f1f5f9", borderRadius: 12,
-                      background: "#f8fafc", color: "#0f172a",
+                      background: "#FBFAF5", color: "#0f172a",
                       resize: "vertical", boxSizing: "border-box", transition: "all 0.2s"
                     }}
                   />
@@ -357,7 +357,7 @@ export default function NewThreadPage() {
                     fontSize: 14, fontFamily: "'Montserrat', sans-serif",
                     fontWeight: 500, lineHeight: 1.75,
                     border: "2px solid #f1f5f9", borderRadius: 12,
-                    background: "#f8fafc", color: "#0f172a",
+                    background: "#FBFAF5", color: "#0f172a",
                     boxSizing: "border-box", whiteSpace: "pre-wrap", overflowY: "auto"
                   }}>
                     {body || <span style={{ color: "#94a3b8" }}>Escribe algo para ver la vista previa...</span>}
@@ -399,7 +399,7 @@ export default function NewThreadPage() {
                   <button
                     type="button"
                     className="fn-cancel"
-                    style={{ padding: "15px 24px", background: "#fff", border: "2px solid #e2e8f0", borderRadius: 14, fontSize: 14, fontWeight: 700, color: "#64748b", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
+                    style={{ padding: "15px 24px", background: "#FBFAF5", border: "2px solid #e2e8f0", borderRadius: 14, fontSize: 14, fontWeight: 700, color: "#64748b", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
                   >
                     Cancelar
                   </button>
@@ -412,7 +412,7 @@ export default function NewThreadPage() {
           <div style={{ width: 280, flexShrink: 0, display: "flex", flexDirection: "column", gap: 16, animation: "fadeUp 0.5s ease 0.2s both" }}>
 
             {/* Progress Card */}
-            <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
+            <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Estado del Tema</div>
               {[
                 { label: "Título", done: title.trim().length > 5 },
@@ -449,14 +449,14 @@ export default function NewThreadPage() {
             </div>
 
             {/* Quick Actions */}
-            <div style={{ background: "#fff", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
+            <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Ver antes de publicar</div>
               {[
                 { label: "Explorar temas", href: "/forum", icon: <FileText size={14} /> },
                 { label: "Reto del día", href: "/forum/topic/reto-del-dia", icon: <Zap size={14} /> },
               ].map((link, i) => (
                 <Link key={i} href={link.href} style={{ textDecoration: "none" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, background: "#f8fafc", marginBottom: i === 0 ? 8 : 0, transition: "all 0.2s", cursor: "pointer" }}
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, background: "#FBFAF5", marginBottom: i === 0 ? 8 : 0, transition: "all 0.2s", cursor: "pointer" }}
                     onMouseEnter={e => (e.currentTarget.style.background = "#eff6ff")}
                     onMouseLeave={e => (e.currentTarget.style.background = "#f8fafc")}
                   >

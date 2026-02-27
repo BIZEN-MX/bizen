@@ -70,7 +70,7 @@ export default function AgeVerificationModal({ isOpen, onVerified }: AgeVerifica
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8"
+              className="bg-[#FBFAF5] rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="text-center mb-6">

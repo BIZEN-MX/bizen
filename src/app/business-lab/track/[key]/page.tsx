@@ -85,7 +85,7 @@ export default async function TrackPage({ params }: Props) {
       <div className="track-outer" style={{
         width: "100%",
         flex: 1,
-        background: "#ffffff",
+        background: "#FBFAF5",
         fontFamily: "Montserrat, sans-serif",
         overflowX: "hidden",
         overflowY: "auto",
@@ -139,7 +139,7 @@ export default async function TrackPage({ params }: Props) {
               Has completado {completedCount} de {track.steps.length} pasos
             </p>
             <div style={{
-              background: "#ffffff",
+              background: "#FBFAF5",
               borderRadius: 12,
               height: 24,
               overflow: "hidden",

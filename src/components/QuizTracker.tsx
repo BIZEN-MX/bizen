@@ -303,7 +303,7 @@ export function QuizTracker({
           justifyContent: 'center',
           padding: 40,
           paddingBottom: 120, // Extra space for navigation buttons
-          background: '#FFFFFF',
+          background: '#FBFAF5',
         }}>
           <div style={{
             maxWidth: 600,

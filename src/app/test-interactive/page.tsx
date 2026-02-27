@@ -19,11 +19,11 @@ export default function TestInteractivePage() {
       justifyContent: "center",
       minHeight: "100vh",
       fontFamily: "Montserrat, sans-serif",
-      background: "#ffffff",
+      background: "#FBFAF5",
       padding: 40
     }}>
       <div style={{
-        background: "#fff",
+        background: "#FBFAF5",
         padding: 48,
         borderRadius: 24,
         boxShadow: "0 20px 60px rgba(0, 0, 0, 0.1)",
@@ -68,7 +68,7 @@ export default function TestInteractivePage() {
               href="/courses"
               style={{
                 padding: "10px 16px",
-                background: "#fff",
+                background: "#FBFAF5",
                 border: "2px solid #0F62FE",
                 borderRadius: 8,
                 textDecoration: "none",

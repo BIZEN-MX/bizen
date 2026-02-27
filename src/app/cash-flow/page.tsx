@@ -591,7 +591,7 @@ export default function CombinedSimulatorsPage() {
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
                           {games.map((game) => game.player && (
                             <div key={game.id} className="game-card" style={{
-                              background: "#f8fafc",
+                              background: "#FBFAF5",
                               borderRadius: 16,
                               padding: 22,
                               border: "1.5px solid #e2e8f0",
@@ -695,7 +695,7 @@ export default function CombinedSimulatorsPage() {
                                   {prof.description && (
                                     <div style={{ fontSize: 13, color: "#64748b", marginBottom: 14, lineHeight: 1.5 }}>{prof.description}</div>
                                   )}
-                                  <div style={{ background: "#f8fafc", padding: "12px 14px", borderRadius: 10, fontSize: 13 }}>
+                                  <div style={{ background: "#FBFAF5", padding: "12px 14px", borderRadius: 10, fontSize: 13 }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                                       <span style={{ color: "#64748b" }}>Salario</span>
                                       <span style={{ fontWeight: 800, color: "#059669" }}>${prof.salary.toLocaleString()}</span>

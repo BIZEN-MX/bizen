@@ -10,7 +10,7 @@ export default function TeacherLayout({
     return (
         <div style={{
             minHeight: "100vh",
-            background: "#f8fafc",
+            background: "#FBFAF5",
             display: "flex",
             flexDirection: "column",
         }}>

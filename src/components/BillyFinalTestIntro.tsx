@@ -58,7 +58,7 @@ export default function BillyFinalTestIntro({ onContinue }: BillyFinalTestIntroP
           {/* Speech Bubble */}
           <div style={{
             position: "relative" as const,
-            background: "#fff",
+            background: "#FBFAF5",
             borderRadius: "clamp(16px, 3vw, 24px)",
             padding: "clamp(20px, 4vw, 32px) clamp(24px, 5vw, 40px)",
             boxShadow: "0 12px 48px rgba(0,0,0,0.2)",

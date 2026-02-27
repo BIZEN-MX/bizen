@@ -12,7 +12,7 @@ const supportEmail = "diego@bizen.mx"
 export default function PrivacidadPage() {
   return (
     <main style={{ 
-      background: "#f8fafc", 
+      background: "#FBFAF5", 
       minHeight: "100vh", 
       paddingBottom: 60 
     }}>
@@ -67,7 +67,7 @@ export default function PrivacidadPage() {
         padding: "40px 24px" 
       }}>
         <article style={{ 
-          background: "#fff", 
+          background: "#FBFAF5", 
           borderRadius: 16, 
           padding: "40px", 
           boxShadow: "0 4px 20px rgba(0,0,0,0.08)",

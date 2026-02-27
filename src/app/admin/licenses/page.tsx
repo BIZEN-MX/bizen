@@ -156,7 +156,7 @@ export default function AdminLicensesPage() {
             <div style={{
               height: "100%",
               width: `${usagePercent}%`,
-              background: "#fff",
+              background: "#FBFAF5",
               borderRadius: 10,
               transition: "width 0.5s ease"
             }} />
@@ -192,7 +192,7 @@ export default function AdminLicensesPage() {
           <Button 
             onClick={handleAddSeats}
             style={{ 
-              background: "#fff",
+              background: "#FBFAF5",
               color: "#0F62FE",
               minWidth: 180
             }}

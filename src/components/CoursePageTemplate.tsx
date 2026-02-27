@@ -176,7 +176,7 @@ export default function CoursePageTemplate({
     const topicPct = totalInTopic > 0 ? Math.round((completedInTopic / totalInTopic) * 100) : 0
 
     return (
-        <div style={{ position: "relative", width: "100%", maxWidth: "100%", flex: 1, background: "#ffffff", boxSizing: "border-box" }}>
+        <div style={{ position: "relative", width: "100%", maxWidth: "100%", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>
             {/* Decorative orbs (match /courses) */}
             <div style={{ position: "fixed", top: "10%", right: "6%", width: 350, height: 350, background: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(60px)", pointerEvents: "none", zIndex: 0 }} />
             <div style={{ position: "fixed", bottom: "10%", left: "5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(70px)", pointerEvents: "none", zIndex: 0 }} />
@@ -411,7 +411,7 @@ export default function CoursePageTemplate({
                             <button
                                 onClick={() => router.push(`/courses/${prevTopic.id}`)}
                                 className="cpt-nav-btn"
-                                style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 22px", background: "#fff", border: "1.5px solid #e2e8f0", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", fontSize: 13, fontWeight: 700, color: "#374151", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", transition: "all 0.2s" }}
+                                style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 22px", background: "#FBFAF5", border: "1.5px solid #e2e8f0", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", fontSize: 13, fontWeight: 700, color: "#374151", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", transition: "all 0.2s" }}
                             >
                                 <ChevronLeft size={16} />
                                 <span>Tema {prevTopic.id.toString().padStart(2, "0")}: {prevTopic.title}</span>

@@ -207,7 +207,7 @@ export default function ForumProfilePage() {
   }, [user, userId])
 
   if (loading || loadingData) {
-    return <div style={{ minHeight: "50vh", background: "#ffffff" }} />
+    return <div style={{ minHeight: "50vh", background: "#FBFAF5" }} />
   }
 
   if (!user || !profile) return null
@@ -267,7 +267,7 @@ export default function ForumProfilePage() {
         paddingTop: "clamp(20px, 4vw, 40px)",
         paddingBottom: "clamp(80px, 12vw, 120px)",
       fontFamily: "Montserrat, sans-serif",
-      background: "#ffffff",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed",
       backgroundSize: "cover",
         backgroundRepeat: "no-repeat",

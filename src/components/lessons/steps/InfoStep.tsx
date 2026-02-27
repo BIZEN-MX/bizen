@@ -69,7 +69,7 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
           maxWidth: CONTENT_MAX_WIDTH,
           border: `4px solid ${FLASHCARD_BORDER_COLOR}`,
           borderRadius: '24px',
-          background: '#ffffff',
+          background: '#FBFAF5',
           padding: 'clamp(16px, 3vw, 48px)',
           display: 'flex',
           flexDirection: 'column',
@@ -90,7 +90,7 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
               <div style={{
                 marginTop: '1.5rem',
                 padding: '12px 24px',
-                background: '#f8fafc',
+                background: '#FBFAF5',
                 borderRadius: '12px',
                 border: '2px dashed #cbd5e1'
               }}>

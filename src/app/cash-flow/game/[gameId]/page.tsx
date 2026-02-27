@@ -683,7 +683,7 @@ export default function CashFlowGamePage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#ffffff",
+            background: "#FBFAF5",
             boxSizing: "border-box"
           }}
         >
@@ -1004,7 +1004,7 @@ export default function CashFlowGamePage() {
       <div className="cashflow-game-page" style={{
         width: "100%",
         minHeight: "100vh",
-        background: "#ffffff",
+        background: "#FBFAF5",
         fontFamily: "'Montserrat', sans-serif",
         overflowX: "hidden"
       }}>
@@ -1253,7 +1253,7 @@ export default function CashFlowGamePage() {
                     maxHeight: 250, overflowY: "auto", display: "flex", flexDirection: "column", gap: 10, paddingRight: 4
                   }}>
                     {!player.investments?.length ? (
-                      <div style={{ textAlign: "center", padding: "32px 16px", background: "#f8fafc", borderRadius: 16, border: "1.5px dashed #e2e8f0" }}>
+                      <div style={{ textAlign: "center", padding: "32px 16px", background: "#FBFAF5", borderRadius: 16, border: "1.5px dashed #e2e8f0" }}>
                         <p style={{ fontSize: 13, color: "#94a3b8", margin: 0 }}>Aún no tienes inversiones. ¡Saca una carta de oportunidad!</p>
                       </div>
                     ) : (

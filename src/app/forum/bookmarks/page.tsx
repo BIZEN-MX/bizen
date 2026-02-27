@@ -64,8 +64,8 @@ export default function BookmarksPage() {
   const [search, setSearch] = useState("")
 
   useEffect(() => {
-    document.body.style.background = "#f8fafc"
-    return () => { document.body.style.background = "#fff" }
+    document.body.style.background = "#FBFAF5"
+    return () => { document.body.style.background = "#FBFAF5" }
   }, [])
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export default function BookmarksPage() {
   return (
     <>
       <LoadingBar />
-      <div className="fb-outer" style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "'Montserrat', sans-serif" }}>
+      <div className="fb-outer" style={{ minHeight: "100vh", background: "#FBFAF5", fontFamily: "'Montserrat', sans-serif" }}>
         <style>{`
           @media (max-width: 767px) { .fb-outer { margin-left: 0 !important; } }
           @media (min-width: 768px) and (max-width: 1160px) { .fb-outer { margin-left: 220px !important; } }
@@ -175,7 +175,7 @@ export default function BookmarksPage() {
                   width: "100%", padding: "13px 16px 13px 42px",
                   fontSize: 14, fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
                   border: "2px solid #f1f5f9", borderRadius: 14,
-                  background: "#fff", color: "#0f172a",
+                  background: "#FBFAF5", color: "#0f172a",
                   boxSizing: "border-box", transition: "all 0.2s"
                 }}
               />
@@ -200,7 +200,7 @@ export default function BookmarksPage() {
               /* Empty state */
               <div style={{ animation: "fadeUp 0.5s ease both" }}>
                 <div style={{
-                  background: "#fff", borderRadius: 24,
+                  background: "#FBFAF5", borderRadius: 24,
                   border: "1.5px solid #f1f5f9",
                   boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
                   padding: "clamp(40px, 8vw, 72px) 32px",
@@ -221,7 +221,7 @@ export default function BookmarksPage() {
                     {search && (
                       <button
                         onClick={() => setSearch("")}
-                        style={{ padding: "12px 22px", background: "#f8fafc", border: "2px solid #e2e8f0", borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", color: "#374151" }}
+                        style={{ padding: "12px 22px", background: "#FBFAF5", border: "2px solid #e2e8f0", borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", color: "#374151" }}
                       >
                         Limpiar búsqueda
                       </button>
@@ -244,7 +244,7 @@ export default function BookmarksPage() {
                   className="fb-card"
                   style={{
                     display: "block", textDecoration: "none",
-                    background: "#fff", borderRadius: 18,
+                    background: "#FBFAF5", borderRadius: 18,
                     border: "1.5px solid #f1f5f9",
                     borderLeft: `4px solid ${accentBorder}`,
                     boxShadow: "0 2px 12px rgba(0,0,0,0.04)",

@@ -54,7 +54,7 @@ function TextField(props: React.InputHTMLAttributes<HTMLInputElement> & { linkCo
         outline: "none",
         fontSize: 14,
         color: "#111",
-        background: "#fff",
+        background: "#FBFAF5",
         transition: "box-shadow .2s ease, border-color .2s ease",
         ...props.style,
       }}

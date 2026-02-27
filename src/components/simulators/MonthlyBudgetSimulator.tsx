@@ -128,7 +128,7 @@ export function MonthlyBudgetSimulator() {
               </Label>
               <select
                 {...register('mode')}
-                className="flex h-12 w-full rounded-lg border-2 border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-900 transition-all duration-200 ease-in-out hover:border-blue-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:shadow-lg cursor-pointer"
+                className="flex h-12 w-full rounded-lg border-2 border-gray-200 bg-[#FBFAF5] px-4 py-3 text-sm font-medium text-gray-900 transition-all duration-200 ease-in-out hover:border-blue-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:shadow-lg cursor-pointer"
               >
                 <option value="50/30/20">📊 Regla 50/30/20 (Recomendado)</option>
                 <option value="custom">✏️ Personalizado (Tú decides)</option>

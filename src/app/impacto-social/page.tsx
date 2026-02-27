@@ -262,7 +262,7 @@ export default function ImpactoSocialPage() {
     return (
         <div className="impacto-outer" style={{
             minHeight: "100vh",
-            background: "#ffffff",
+            background: "#FBFAF5",
             fontFamily: "'Inter', sans-serif",
             color: "#1e3a5f",
             width: "100%",
@@ -423,7 +423,7 @@ export default function ImpactoSocialPage() {
                                 <div style={{
                                     width: "240px",
                                     height: "240px",
-                                    background: "#fff",
+                                    background: "#FBFAF5",
                                     borderRadius: "40px",
                                     boxShadow: "0 20px 40px rgba(15, 98, 254, 0.08)",
                                     display: "flex",
@@ -730,7 +730,7 @@ export default function ImpactoSocialPage() {
                                     <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Tu huella últimas 4 semanas</h3>
                                 </div>
                                 <div style={{
-                                    background: "#fff", border: "1.5px solid #f1f5f9",
+                                    background: "#FBFAF5", border: "1.5px solid #f1f5f9",
                                     borderRadius: 20, padding: "20px 24px",
                                     boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
                                 }}>
@@ -788,7 +788,7 @@ export default function ImpactoSocialPage() {
                                         { icon: <Clock size={32} color="#0F62FE" />, value: `${equivalenceTutoring} h`, label: "De tutoría", desc: "equivalente en tiempo" },
                                     ].map((eq, i) => (
                                         <div key={i} style={{
-                                            background: "#fff", border: "1.5px solid #f1f5f9",
+                                            background: "#FBFAF5", border: "1.5px solid #f1f5f9",
                                             borderRadius: 18, padding: "20px",
                                             textAlign: "center",
                                             boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
@@ -812,7 +812,7 @@ export default function ImpactoSocialPage() {
                                         <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Insignias Sociales</h3>
                                     </div>
                                     <div style={{
-                                        background: "#fff", border: "1.5px solid #f1f5f9",
+                                        background: "#FBFAF5", border: "1.5px solid #f1f5f9",
                                         borderRadius: 20, padding: "16px",
                                         boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
                                     }}>
@@ -921,7 +921,7 @@ export default function ImpactoSocialPage() {
 
                                         {/* Secondary: active student rule explanation */}
                                         <div style={{
-                                            background: "#fff", border: "1.5px solid #f1f5f9",
+                                            background: "#FBFAF5", border: "1.5px solid #f1f5f9",
                                             borderRadius: 16, padding: "18px 20px",
                                             boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
                                         }}>
@@ -1119,7 +1119,7 @@ export default function ImpactoSocialPage() {
                                                             </div>
                                                             <div style={{
                                                                 fontSize: 12, fontWeight: 600, color: "#64748b",
-                                                                background: "#f8fafc", borderRadius: 8,
+                                                                background: "#FBFAF5", borderRadius: 8,
                                                                 padding: "4px 10px", border: "1px solid #f1f5f9"
                                                             }}>
                                                                 <Lightbulb size={12} color="#0F62FE" /> {target.howToHelpCTA}
@@ -1218,7 +1218,7 @@ export default function ImpactoSocialPage() {
                                             <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Ranking por Salón</h3>
                                         </div>
                                         <div style={{
-                                            background: "#fff", border: "1.5px solid #f1f5f9",
+                                            background: "#FBFAF5", border: "1.5px solid #f1f5f9",
                                             borderRadius: 20, padding: "20px 24px",
                                             boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
                                         }}>
@@ -1271,7 +1271,7 @@ export default function ImpactoSocialPage() {
 
                                     {/* ACTIVE STUDENTS RING */}
                                     <div style={{
-                                        background: "#fff", border: "1.5px solid #f1f5f9",
+                                        background: "#FBFAF5", border: "1.5px solid #f1f5f9",
                                         borderRadius: 20, padding: "24px",
                                         boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
                                         display: "flex", alignItems: "center", gap: 20
@@ -1328,11 +1328,11 @@ export default function ImpactoSocialPage() {
                                             {MOCK_FOUNDATION.description}
                                         </p>
                                         <div style={{ display: "flex", gap: 8 }}>
-                                            <div style={{ flex: 1, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", textAlign: "center" }}>
+                                            <div style={{ flex: 1, background: "#FBFAF5", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", textAlign: "center" }}>
                                                 <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>90</div>
                                                 <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 700 }}>canastas equiv.</div>
                                             </div>
-                                            <div style={{ flex: 1, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", textAlign: "center" }}>
+                                            <div style={{ flex: 1, background: "#FBFAF5", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", textAlign: "center" }}>
                                                 <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>3</div>
                                                 <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 700 }}>donaciones exec.</div>
                                             </div>

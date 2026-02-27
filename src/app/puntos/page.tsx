@@ -59,7 +59,7 @@ export default function PuntosPage() {
     return (
         <div className="puntos-outer" style={{
             minHeight: "100vh",
-            background: "#f8faff",
+            background: "#FBFAF5",
             fontFamily: "'Inter', sans-serif",
             width: "100%",
             boxSizing: "border-box"
@@ -374,7 +374,7 @@ export default function PuntosPage() {
                             { IconComp: Target, label: "Quizzes", xp: "+30 XP", color: "#f59e0b", desc: "Responde preguntas correctamente" },
                             { IconComp: Flame, label: "Racha 7 días", xp: "+100 XP", color: "#ef4444", desc: "Mantén tu racha una semana" },
                         ].map(item => (
-                            <div key={item.label} style={{ background: "#f8faff", borderRadius: 16, padding: "20px", border: `1px solid ${item.color}18`, borderLeft: `3px solid ${item.color}` }}>
+                            <div key={item.label} style={{ background: "#FBFAF5", borderRadius: 16, padding: "20px", border: `1px solid ${item.color}18`, borderLeft: `3px solid ${item.color}` }}>
                                 <div style={{ width: 42, height: 42, borderRadius: 12, background: `${item.color}15`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14, border: `1px solid ${item.color}20` }}>
                                     <item.IconComp size={22} color={item.color} strokeWidth={2.2} />
                                 </div>

@@ -357,9 +357,9 @@ html {
   }
 }
 
-/* App Shell and Scroll Containers - Layout + White Background */
+/* App Shell and Scroll Containers - Layout + Base Background */
 .app-shell {
-  background-color: #ffffff !important;
+  background-color: transparent !important;
   position: fixed;
   inset: 0;
   width: 100%;
@@ -370,7 +370,7 @@ html {
 }
 
 .app-scroll {
-  background-color: #ffffff !important;
+  background-color: transparent !important;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -383,7 +383,7 @@ html {
 }
 
 .app-main {
-  background-color: #ffffff !important;
+  background-color: transparent !important;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -393,11 +393,19 @@ html {
   box-sizing: border-box;
 }
 
+/* Force top-level page containers to be transparent so the body's #FBFAF5 shows through, 
+   thus unifying all pages to the sidebar's specific beige/white color. */
+.app-main>div,
+.app-main>main {
+  background-color: transparent !important;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #ffffff;
+  background-color: #FBFAF5;
+  /* NO !important so login/signup gradients can override it */
 }
 
 @media (max-width: 767px) {

@@ -67,7 +67,7 @@ export default function HistorialLogrosPage() {
     return (
         <div style={{
             minHeight: "100vh",
-            background: "#ffffff",
+            background: "#FBFAF5",
             fontFamily: "'Inter', sans-serif",
             color: "#1e3a5f",
             width: "100%",
@@ -134,7 +134,7 @@ export default function HistorialLogrosPage() {
                                     width: 48,
                                     height: 48,
                                     borderRadius: 12,
-                                    background: "#f8fafc",
+                                    background: "#FBFAF5",
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
@@ -187,12 +187,12 @@ export default function HistorialLogrosPage() {
                         marginTop: 24,
                         animation: "fadeIn 0.5s ease 0.4s both"
                     }}>
-                        <div style={{ padding: 20, background: "#f8fafc", borderRadius: 20 }}>
+                        <div style={{ padding: 20, background: "#FBFAF5", borderRadius: 20 }}>
                             <div style={{ color: "#0F62FE", marginBottom: 8 }}><Calendar size={20} /></div>
                             <div style={{ fontSize: 20, fontWeight: 800, color: "#111827" }}>2026</div>
                             <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Ciclo Escolar</div>
                         </div>
-                        <div style={{ padding: 20, background: "#f8fafc", borderRadius: 20 }}>
+                        <div style={{ padding: 20, background: "#FBFAF5", borderRadius: 20 }}>
                             <div style={{ color: "#F59E0B", marginBottom: 8 }}><Trophy size={20} /></div>
                             <div style={{ fontSize: 20, fontWeight: 800, color: "#111827" }}>3</div>
                             <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Logros Clave</div>

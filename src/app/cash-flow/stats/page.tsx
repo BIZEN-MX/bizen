@@ -83,7 +83,7 @@ export default function CashFlowStatsPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#f8fafc",
+        background: "#FBFAF5",
         paddingRight: "340px"
       }}>
         <div style={{ color: "#333", fontSize: 24, fontWeight: 700 }}>
@@ -97,7 +97,7 @@ export default function CashFlowStatsPage() {
     <div style={{
       display: "flex",
       minHeight: "100vh",
-      background: "#ffffff",
+      background: "#FBFAF5",
       fontFamily: "Montserrat, sans-serif"
     }}>
       <main style={{

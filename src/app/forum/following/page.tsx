@@ -129,7 +129,7 @@ export default function FollowingPage() {
         paddingTop: 40,
         paddingBottom: 80,
         fontFamily: "Montserrat, sans-serif",
-        background: "#ffffff",
+        background: "#FBFAF5",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         width: "100%",

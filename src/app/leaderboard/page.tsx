@@ -73,7 +73,7 @@ export default function LeaderboardPage() {
         placeItems: "center", 
         minHeight: "60vh", 
         fontFamily: "Montserrat, sans-serif",
-        background: "#ffffff"
+        background: "#FBFAF5"
       }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
@@ -91,7 +91,7 @@ export default function LeaderboardPage() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "#ffffff",
+      background: "#FBFAF5",
     }}>
       <main style={{ 
         position: "relative",

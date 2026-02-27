@@ -143,7 +143,7 @@ export default function StepDetailPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#ffffff",
+        background: "#FBFAF5",
         marginRight: "320px"
       }}>
         <div style={{ textAlign: "center" }}>
@@ -162,7 +162,7 @@ export default function StepDetailPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#ffffff",
+        background: "#FBFAF5",
         marginRight: "320px",
         fontFamily: "Montserrat, sans-serif"
       }}>
@@ -195,7 +195,7 @@ export default function StepDetailPage() {
       <main style={{
         marginRight: "320px",
         minHeight: "100vh",
-        background: "#ffffff",
+        background: "#FBFAF5",
         padding: "40px",
         paddingRight: "360px",
         fontFamily: "Montserrat, sans-serif",
@@ -248,7 +248,7 @@ export default function StepDetailPage() {
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              background: "#ffffff",
+              background: "#FBFAF5",
               color: "#1E40AF",
               padding: "10px 20px",
               borderRadius: 24,

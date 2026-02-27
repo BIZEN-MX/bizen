@@ -284,7 +284,7 @@ export default function RetoDiarioPage() {
         className="rd-outer"
         style={{
           minHeight: "100vh",
-          background: "#f8faff",
+          background: "#FBFAF5",
           fontFamily: "'Inter', sans-serif",
           padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)",
           boxSizing: "border-box",
@@ -570,7 +570,7 @@ export default function RetoDiarioPage() {
                 {/* Stats mini */}
                 <div style={{
                   padding: "20px 22px",
-                  background: "#ffffff",
+                  background: "#FBFAF5",
                   border: "1px solid #e2e8f0",
                   borderLeft: "4px solid #0F62FE",
                   borderRadius: 18,

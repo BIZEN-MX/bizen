@@ -77,7 +77,7 @@ export function SectionGate({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#FFFFFF",
+          background: "#FBFAF5",
         }}
       >
         <motion.div
@@ -115,7 +115,7 @@ export function SectionGate({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#FFFFFF",
+          background: "#FBFAF5",
           fontFamily:
             "Montserrat, Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
         }}
@@ -126,7 +126,7 @@ export function SectionGate({
           style={{
             maxWidth: 600,
             padding: 40,
-            background: "#fff",
+            background: "#FBFAF5",
             borderRadius: 16,
             boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
             textAlign: "center",

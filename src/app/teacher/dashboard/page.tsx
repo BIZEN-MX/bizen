@@ -177,7 +177,7 @@ export default function AdminDashboardPage() {
                         </div>
                         <button style={{
                             display: "flex", alignItems: "center", gap: 8, padding: "0 16px",
-                            height: 42, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0",
+                            height: 42, borderRadius: 12, background: "#FBFAF5", border: "1px solid #e2e8f0",
                             color: "#475569", fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "background 0.2s"
                         }}>
                             <Filter size={16} /> Filtros
@@ -189,7 +189,7 @@ export default function AdminDashboardPage() {
                 <div style={{ overflowX: "auto" }}>
                     <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 800 }}>
                         <thead>
-                            <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0", textAlign: "left" }}>
+                            <tr style={{ background: "#FBFAF5", borderBottom: "1px solid #e2e8f0", textAlign: "left" }}>
                                 <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Alumno</th>
                                 <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Nivel</th>
                                 <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>XP Acumulada</th>

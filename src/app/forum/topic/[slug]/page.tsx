@@ -135,7 +135,7 @@ export default function TopicFeedPage() {
         placeItems: "center",
         minHeight: "60vh",
         fontFamily: "Montserrat, sans-serif",
-        background: "#f8fafc"
+        background: "#FBFAF5"
       }}>
         <p style={{ color: "#64748b", fontSize: 15, fontWeight: 600 }}>Cargando...</p>
       </div>
@@ -153,7 +153,7 @@ export default function TopicFeedPage() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "#f8fafc",
+      background: "#FBFAF5",
     }} className="forum-topic-outer">
       <style>{`
         @media (max-width: 767px) {

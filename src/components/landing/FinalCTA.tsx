@@ -19,7 +19,7 @@ export function FinalCTA({ onBuy }: { onBuy: () => void }) {
           Listo para empezar
         </h2>
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          <Card className="rounded-2xl border-gray-200 bg-white shadow-sm flex flex-col">
+          <Card className="rounded-2xl border-gray-200 bg-[#FBFAF5] shadow-sm flex flex-col">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <School className="h-5 w-5 text-[#0056E7]" aria-hidden />
@@ -38,7 +38,7 @@ export function FinalCTA({ onBuy }: { onBuy: () => void }) {
               </a>
             </CardContent>
           </Card>
-          <Card className="rounded-2xl border-gray-200 bg-white shadow-sm flex flex-col">
+          <Card className="rounded-2xl border-gray-200 bg-[#FBFAF5] shadow-sm flex flex-col">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <User className="h-5 w-5 text-[#0056E7]" aria-hidden />

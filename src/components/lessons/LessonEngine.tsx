@@ -179,7 +179,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   if (!currentStep) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-[#FBFAF5]">
         <div className="text-center">
           <p className="text-3xl md:text-4xl font-bold text-slate-900">¡Lección completada!</p>
         </div>
@@ -277,7 +277,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   if (shouldPassFullScreenProps) {
     return (
       <div
-        className="flex flex-col bg-white text-slate-900 relative w-full flex-1 min-h-0"
+        className="flex flex-col bg-[#FBFAF5] text-slate-900 relative w-full flex-1 min-h-0"
         style={{
           paddingTop: "env(safe-area-inset-top)",
           paddingBottom: "max(0px, env(safe-area-inset-bottom))",

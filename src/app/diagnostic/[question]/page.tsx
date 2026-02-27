@@ -46,7 +46,7 @@ function QuizQuestionCard({
         height: "auto",
         minHeight: "60vh", // Use more vertical space
         gap: "0",
-        background: "#fff",
+        background: "#FBFAF5",
         borderRadius: "24px",
         overflow: "hidden",
         boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
@@ -58,7 +58,7 @@ function QuizQuestionCard({
         className="quiz-col"
         style={{
           flex: "1",
-          background: "#f8fafc",
+          background: "#FBFAF5",
           padding: "32px",
           display: "flex",
           flexDirection: "column",
@@ -113,7 +113,7 @@ function QuizQuestionCard({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          background: "#fff"
+          background: "#FBFAF5"
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%", maxWidth: "450px", margin: "0 auto" }}>
@@ -401,7 +401,7 @@ export default function DiagnosticQuestionPage() {
       >
         <div style={{ width: "100%", maxWidth: "1600px" }}>
           {showSuccess ? (
-            <div style={{ textAlign: "center", padding: "40px", background: "#fff", borderRadius: "24px", boxShadow: "0 10px 30px rgba(0,0,0,0.08)", maxWidth: "600px", margin: "0 auto" }}>
+            <div style={{ textAlign: "center", padding: "40px", background: "#FBFAF5", borderRadius: "24px", boxShadow: "0 10px 30px rgba(0,0,0,0.08)", maxWidth: "600px", margin: "0 auto" }}>
               <div style={{ fontSize: "60px", marginBottom: "16px" }}>🎉</div>
               <h2 style={{ fontSize: "28px", fontWeight: 800, color: "#1e3a8a", marginBottom: "12px" }}>¡Gracias por tu participación!</h2>
               <p style={{ fontSize: "16px", color: "#64748b", lineHeight: 1.5 }}>Tu respuesta ha sido enviada con éxito. Valoramos mucho tu tiempo e interés.</p>
@@ -431,7 +431,7 @@ export default function DiagnosticQuestionPage() {
           width: "100%",
           padding: "20px",
           paddingBottom: "max(20px, env(safe-area-inset-bottom))",
-          background: "#fff",
+          background: "#FBFAF5",
           borderTop: "2px solid #cbd5e1",
           boxSizing: "border-box",
           display: "flex",

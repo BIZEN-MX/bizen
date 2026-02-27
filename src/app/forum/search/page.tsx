@@ -93,7 +93,7 @@ function ForumSearchContent() {
         placeItems: "center", 
         minHeight: "60vh", 
         fontFamily: "Montserrat, sans-serif",
-        background: "#ffffff"
+        background: "#FBFAF5"
       }}>
         <p style={{ color: "#666", fontSize: 16 }}>Buscando...</p>
       </div>
@@ -109,7 +109,7 @@ function ForumSearchContent() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "#ffffff",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed",
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat"
@@ -280,7 +280,7 @@ function ForumSearchContent() {
 
 export default function ForumSearchPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#ffffff" }}>Buscando...</div>}>
+    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5" }}>Buscando...</div>}>
       <ForumSearchContent />
     </Suspense>
   )

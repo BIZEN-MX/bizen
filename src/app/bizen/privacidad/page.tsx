@@ -28,7 +28,7 @@ export default function BIZENPrivacidadPage() {
 
   return (
     <main style={{ 
-      background: "#ffffff", 
+      background: "#FBFAF5", 
       minHeight: "100vh", 
       paddingBottom: 60,
       fontFamily: "Arial, sans-serif"
@@ -78,7 +78,7 @@ export default function BIZENPrivacidadPage() {
         padding: "32px 40px" 
       }}>
         <article style={{ 
-          background: "#fff", 
+          background: "#FBFAF5", 
           borderRadius: 8, 
           padding: "32px", 
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",

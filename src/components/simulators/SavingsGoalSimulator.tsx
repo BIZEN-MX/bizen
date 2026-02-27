@@ -106,7 +106,7 @@ export function SavingsGoalSimulator() {
               <Label>Modo de Cálculo</Label>
               <select
                 {...register('mode')}
-                className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                className="flex h-10 w-full rounded-md border border-gray-300 bg-[#FBFAF5] px-3 py-2 text-sm"
               >
                 <option value="forecast">Pronóstico (calcular valor futuro)</option>
                 <option value="time-to-goal">Tiempo a Meta (calcular meses)</option>

@@ -64,7 +64,7 @@ export default async function PitchPage() {
       <div className="pitch-outer" style={{
         width: "100%",
       flex: 1,
-      background: "#ffffff",
+      background: "#FBFAF5",
         fontFamily: "Montserrat, sans-serif",
         overflowX: "hidden",
         overflowY: "auto",

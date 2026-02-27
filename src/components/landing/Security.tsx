@@ -22,7 +22,7 @@ export function Security() {
           {SECURITY_BULLETS.map((b, i) => (
             <li
               key={i}
-              className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700"
+              className="flex items-center gap-3 rounded-xl border border-gray-200 bg-[#FBFAF5] px-4 py-3 text-sm text-gray-700"
             >
               <span className="h-2 w-2 rounded-full bg-[#1983FD] shrink-0" />
               {b}

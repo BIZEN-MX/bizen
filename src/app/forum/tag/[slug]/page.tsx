@@ -82,7 +82,7 @@ export default function TagFeedPage() {
         placeItems: "center", 
         minHeight: "60vh", 
         fontFamily: "Montserrat, sans-serif",
-        background: "#ffffff"
+        background: "#FBFAF5"
       }}>
         <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
       </div>
@@ -98,7 +98,7 @@ export default function TagFeedPage() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "#ffffff",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed",
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat"

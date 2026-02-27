@@ -83,7 +83,7 @@ export default function TestEmailPage() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#ffffff",
+      background: "#FBFAF5",
       padding: "40px 20px",
       fontFamily: "Arial, sans-serif"
     }}>
@@ -231,7 +231,7 @@ export default function TestEmailPage() {
             <li>Revisa tu bandeja de entrada (y spam)</li>
           </ol>
           
-          <div style={{ marginTop: "16px", padding: "12px", background: "#fff", borderRadius: "4px" }}>
+          <div style={{ marginTop: "16px", padding: "12px", background: "#FBFAF5", borderRadius: "4px" }}>
             <strong>🔑 ¿No tienes API Key?</strong>
             <ol style={{ marginLeft: "20px", marginTop: "8px" }}>
               <li>Ve a <a href="https://resend.com/api-keys" target="_blank" style={{ color: "#0B71FE" }}>resend.com/api-keys</a></li>

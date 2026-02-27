@@ -80,7 +80,7 @@ export default function HamburgerMenu() {
         ].map((style, i) => (
           <div key={i} style={{
             width: 26, height: 2.5,
-            background: "#fff",
+            background: "#FBFAF5",
             borderRadius: 2,
             transition: "all 0.3s ease",
             ...style

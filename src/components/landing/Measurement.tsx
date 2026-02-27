@@ -23,13 +23,13 @@ export function Measurement() {
           {MEASUREMENT_ITEMS.map((item, i) => (
             <li
               key={i}
-              className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm"
+              className="rounded-xl border border-gray-200 bg-[#FBFAF5] px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm"
             >
               {item}
             </li>
           ))}
         </ul>
-        <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm max-w-md mx-auto">
+        <div className="mt-10 rounded-2xl border border-gray-200 bg-[#FBFAF5] p-6 shadow-sm max-w-md mx-auto">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-4">
             <BarChart3 className="h-4 w-4 text-[#0056E7]" aria-hidden />
             Ejemplo de reporte (demo)

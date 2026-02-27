@@ -17,7 +17,7 @@ function Card(props: React.HTMLAttributes<HTMLDivElement>) {
         borderRadius: 16,
         border: "1px solid rgba(0,0,0,0.08)",
         boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
-        background: "#fff",
+        background: "#FBFAF5",
         padding: "clamp(24px, 5vw, 32px)",
         minWidth: 0,
         overflow: "hidden" as const,
@@ -44,7 +44,7 @@ function TextField(props: React.InputHTMLAttributes<HTMLInputElement>) {
         outline: "none",
         fontSize: 14,
         color: "#111",
-        background: "#fff",
+        background: "#FBFAF5",
         transition: "box-shadow .2s ease, border-color .2s ease",
         ...(props.style || {}),
       }}
@@ -161,7 +161,7 @@ export default function PaymentPage() {
           position: "sticky",
           top: 0,
           zIndex: 1000,
-          background: "#ffffff",
+          background: "#FBFAF5",
           borderBottom: "1px solid rgba(0,0,0,0.06)",
           padding: "16px 0",
         }}
@@ -275,7 +275,7 @@ export default function PaymentPage() {
               <div
                 style={{
                   padding: 16,
-                  background: "#ffffff",
+                  background: "#FBFAF5",
                   borderRadius: 12,
                   marginBottom: 16,
                 }}
@@ -392,7 +392,7 @@ export default function PaymentPage() {
                 <div
                   style={{
                     padding: 16,
-                    background: "#ffffff",
+                    background: "#FBFAF5",
                     borderRadius: 12,
                     border: "1px solid rgba(15, 98, 254, 0.1)",
                   }}
@@ -446,7 +446,7 @@ export default function PaymentPage() {
       <footer
         style={{
           borderTop: "1px solid rgba(0,0,0,0.06)",
-          background: "#ffffff",
+          background: "#FBFAF5",
           padding: "24px clamp(16px, 4vw, 32px)",
         }}
       >

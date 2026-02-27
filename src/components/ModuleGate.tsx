@@ -60,7 +60,7 @@ export function ModuleGate({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#FFFFFF",
+          background: "#FBFAF5",
         }}
       >
         <div style={{ padding: 32, textAlign: "center" }}>
@@ -79,7 +79,7 @@ export function ModuleGate({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#FFFFFF",
+          background: "#FBFAF5",
           fontFamily:
             "Montserrat, Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
         }}
@@ -88,7 +88,7 @@ export function ModuleGate({
           style={{
             maxWidth: 600,
             padding: 40,
-            background: "#fff",
+            background: "#FBFAF5",
             borderRadius: 16,
             boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
             textAlign: "center",

@@ -47,7 +47,7 @@ export default function TiendaPage() {
     return (
         <div className="tienda-outer" style={{
             minHeight: "100vh",
-            background: "#ffffff",
+            background: "#FBFAF5",
             fontFamily: "'Montserrat', sans-serif",
             width: "100%",
             boxSizing: "border-box"
@@ -224,7 +224,7 @@ export default function TiendaPage() {
                             overflow: "hidden",
                             transition: "transform 0.2s"
                         }}>
-                            <div style={{ position: "relative", height: "200px", background: "#f8fafc" }}>
+                            <div style={{ position: "relative", height: "200px", background: "#FBFAF5" }}>
                                 <div style={{ display: "grid", placeItems: "center", height: "100%", color: "#0B71FE", opacity: 0.8 }}>
                                     {product.category === "Avatar" && <User size={48} />}
                                     {product.category === "Ebooks" && <BookOpen size={48} />}

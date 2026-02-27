@@ -84,7 +84,7 @@ export default async function TemplatesPage() {
       <div className="templates-outer" style={{
         width: "100%",
       flex: 1,
-      background: "#ffffff",
+      background: "#FBFAF5",
         fontFamily: "Montserrat, sans-serif",
         overflowX: "hidden",
         overflowY: "auto",
@@ -242,7 +242,7 @@ export default async function TemplatesPage() {
 
       {/* Tip Card */}
       <div style={{
-        background: "#ffffff",
+        background: "#FBFAF5",
         borderRadius: 16,
         padding: 20,
         border: "2px solid #e5e7eb",

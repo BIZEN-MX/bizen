@@ -248,7 +248,7 @@ function EvidenceCard({
               <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#f1f5f9", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#64748b" }}>
                 {(c.authorDisplay || "?").charAt(0).toUpperCase()}
               </div>
-              <div style={{ background: "#f8fafc", borderRadius: 10, padding: "6px 10px", flex: 1 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 10, padding: "6px 10px", flex: 1 }}>
                 <span style={{ fontSize: 12, fontWeight: 700, color: "#374151" }}>{c.authorDisplay || "Usuario"}</span>
                 <p style={{ fontSize: 13, color: "#334155", margin: "2px 0 0", lineHeight: 1.5 }}>{c.body}</p>
               </div>
@@ -306,7 +306,7 @@ function ForumContent() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    document.body.style.background = "#f8fafc"
+    document.body.style.background = "#FBFAF5"
     return () => { document.body.style.background = "" }
   }, [])
 
@@ -445,7 +445,7 @@ function ForumContent() {
         .forum-tab-btn.inactive:hover { border-color: #0F62FE; color: #0F62FE; }
       `}</style>
 
-      <div className="forum-outer" style={{ position: "relative", flex: 1, fontFamily: "'Montserrat', sans-serif", background: "#f8fafc", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
+      <div className="forum-outer" style={{ position: "relative", flex: 1, fontFamily: "'Montserrat', sans-serif", background: "#FBFAF5", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
         <div ref={containerRef} className="forum-container" style={{ position: "relative", flex: 1, paddingTop: 32, paddingBottom: 80, boxSizing: "border-box", width: "100%" }}>
           <main style={{ position: "relative", margin: 0, padding: "clamp(16px, 4vw, 40px)", width: "100%", boxSizing: "border-box" }}>
 
@@ -736,7 +736,7 @@ function ForumContent() {
                       { label: "Margen", desc: "¿Cuánto ganas?" },
                       { label: "Siguiente paso", desc: "¿Qué harás esta semana?" },
                     ].map(({ label, desc }) => (
-                      <div key={label} style={{ background: "#f8fafc", borderRadius: 12, padding: "14px 16px" }}>
+                      <div key={label} style={{ background: "#FBFAF5", borderRadius: 12, padding: "14px 16px" }}>
                         <div style={{ fontSize: 12, fontWeight: 800, color: "#7c3aed", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{label}</div>
                         <div style={{ fontSize: 13, color: "#64748b" }}>{desc}</div>
                       </div>

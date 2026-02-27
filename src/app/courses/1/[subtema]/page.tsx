@@ -60,7 +60,7 @@ export default function Tema1SubtemaPage() {
             padding: "10px 18px",
             border: "2px solid #E5E7EB",
             color: "#374151",
-            background: "#fff",
+            background: "#FBFAF5",
             borderRadius: 10,
             cursor: "pointer",
           }}
@@ -80,7 +80,7 @@ export default function Tema1SubtemaPage() {
         position: "relative",
         width: "100%",
         flex: 1,
-        background: "#ffffff",
+        background: "#FBFAF5",
         boxSizing: "border-box",
       }}
     >
@@ -124,7 +124,7 @@ export default function Tema1SubtemaPage() {
                 padding: "10px 18px",
                 border: "2px solid #E5E7EB",
                 color: "#374151",
-                background: "#fff",
+                background: "#FBFAF5",
                 borderRadius: 10,
                 cursor: "pointer",
               }}

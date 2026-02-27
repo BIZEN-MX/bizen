@@ -67,7 +67,7 @@ export default function LabPage() {
   }
 
   if (loading || loadingData) {
-    return <div style={{ minHeight: "50vh", flex: 1, background: "#ffffff" }} />
+    return <div style={{ minHeight: "50vh", flex: 1, background: "#FBFAF5" }} />
   }
 
   // Calculate progress stats
@@ -90,7 +90,7 @@ export default function LabPage() {
         width: "100%",
         maxWidth: "none",
         flex: 1,
-        background: "#ffffff",
+        background: "#FBFAF5",
         fontFamily: "Montserrat, sans-serif",
         overflowX: "hidden",
         overflowY: "auto",

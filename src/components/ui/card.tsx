@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 // Main Card component (supports both old and new style)
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("rounded-xl border-2 border-gray-100 bg-white shadow-lg hover:shadow-xl transition-shadow duration-200", className)} {...props} />
+    <div ref={ref} className={cn("rounded-xl border-2 border-gray-100 bg-[#FBFAF5] shadow-lg hover:shadow-xl transition-shadow duration-200", className)} {...props} />
   )
 )
 Card.displayName = "Card"

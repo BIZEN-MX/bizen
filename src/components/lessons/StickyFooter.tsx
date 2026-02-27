@@ -17,7 +17,7 @@ interface StickyFooterProps {
 export function StickyFooter({ children, className = "", fixed = true }: StickyFooterProps) {
   return (
     <footer
-      className={`lesson-sticky-footer ${fixed ? "fixed bottom-0 left-0 right-0" : "relative"} w-full bg-white border-t-2 border-slate-200 z-[100] ${className}`}
+      className={`lesson-sticky-footer ${fixed ? "fixed bottom-0 left-0 right-0" : "relative"} w-full bg-[#FBFAF5] border-t-2 border-slate-200 z-[100] ${className}`}
       style={{
         paddingTop: "clamp(12px, 2vw, 16px)",
         paddingBottom: "max(clamp(12px, 2vw, 16px), env(safe-area-inset-bottom))",
@@ -60,7 +60,7 @@ export function StickyFooterButton({
     primary:
       "bg-green-500 hover:bg-green-600 text-white focus:ring-green-400 shadow-[0_4px_0_0_#15803d] active:shadow-none active:translate-y-[4px]",
     secondary:
-      "bg-white border-2 border-indigo-400 hover:bg-indigo-50 text-slate-800 focus:ring-indigo-400 shadow-[0_4px_0_0_#818cf8] active:shadow-none active:translate-y-[4px]",
+      "bg-[#FBFAF5] border-2 border-indigo-400 hover:bg-indigo-50 text-slate-800 focus:ring-indigo-400 shadow-[0_4px_0_0_#818cf8] active:shadow-none active:translate-y-[4px]",
     success:
       "bg-green-500 hover:bg-green-600 text-white focus:ring-green-400 shadow-[0_4px_0_0_#15803d] active:shadow-none active:translate-y-[4px]",
     danger:
@@ -68,7 +68,7 @@ export function StickyFooterButton({
     blue:
       "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-400 shadow-[0_4px_0_0_#1e40af] active:shadow-none active:translate-y-[4px]",
     outline:
-      "bg-white border-2 border-slate-900 hover:bg-slate-50 text-slate-900 focus:ring-slate-400 shadow-[0_4px_0_0_#1e293b] active:shadow-none active:translate-y-[4px]",
+      "bg-[#FBFAF5] border-2 border-slate-900 hover:bg-[#FBFAF5] text-slate-900 focus:ring-slate-400 shadow-[0_4px_0_0_#1e293b] active:shadow-none active:translate-y-[4px]",
   }
 
   const variantClass = variantStyles[variant] ?? variantStyles.primary

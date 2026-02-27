@@ -27,7 +27,7 @@ export default function ProtectedRoute({
         justifyContent: "center" as const,
         alignItems: "center" as const,
         minHeight: "100vh",
-        background: "#f8fafc"
+        background: "#FBFAF5"
       }}>
         <div style={{
           textAlign: "center",

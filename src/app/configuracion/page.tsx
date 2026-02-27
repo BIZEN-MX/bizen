@@ -25,7 +25,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       }}>
       <span style={{
         position: "absolute", left: checked ? 25 : 3, width: 21, height: 21,
-        borderRadius: "50%", background: "#fff", transition: "left .2s",
+        borderRadius: "50%", background: "#FBFAF5", transition: "left .2s",
         boxShadow: "0 1px 3px rgba(0,0,0,.2)"
       }} />
     </button>
@@ -39,7 +39,7 @@ function ToggleRow({ label, desc, checked, onChange }: {
   return (
     <div onClick={() => onChange(!checked)} style={{
       display: "flex", alignItems: "center",
-      justifyContent: "space-between", padding: "14px 18px", background: "#F8FAFF",
+      justifyContent: "space-between", padding: "14px 18px", background: "#FBFAF5",
       borderRadius: 12, border: "1.5px solid #EEF2FF", marginBottom: 10, gap: 16, cursor: "pointer",
       transition: "background .15s"
     }}
@@ -147,7 +147,7 @@ function SettingsContent() {
   // ── Field style helpers
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 14px", fontSize: 14, fontWeight: 600,
-    border: "2px solid #E2E8F0", borderRadius: 10, background: "#F8FAFF",
+    border: "2px solid #E2E8F0", borderRadius: 10, background: "#FBFAF5",
     color: "#0F172A", fontFamily: "'Inter','Montserrat',sans-serif",
     outline: "none", boxSizing: "border-box", transition: "border-color .15s"
   }
@@ -165,7 +165,7 @@ function SettingsContent() {
 
   return (
     <div className="cfg-root-container" style={{
-      width: "100%", background: "#ffffff", minHeight: "100vh",
+      width: "100%", background: "#FBFAF5", minHeight: "100vh",
       fontFamily: "'Inter','Montserrat',sans-serif", boxSizing: "border-box"
     }}>
 
@@ -222,7 +222,7 @@ function SettingsContent() {
 
         {/* Sidebar */}
         <div style={{
-          background: "#fff", borderRadius: 16, padding: 14,
+          background: "#FBFAF5", borderRadius: 16, padding: 14,
           boxShadow: "0 4px 20px rgba(11,113,254,.08)", border: "1.5px solid #EEF2FF",
           height: "fit-content", position: "sticky", top: 16, alignSelf: "start"
         }}>
@@ -263,7 +263,7 @@ function SettingsContent() {
 
         {/* Content Panel */}
         <div style={{
-          background: "#fff", borderRadius: 16, padding: "28px 32px",
+          background: "#FBFAF5", borderRadius: 16, padding: "28px 32px",
           boxShadow: "0 4px 20px rgba(11,113,254,.08)", border: "1.5px solid #EEF2FF",
           minWidth: 0
         }}>
@@ -331,7 +331,7 @@ function SettingsContent() {
 
             {/* Email */}
             <div style={{
-              background: "#F8FAFF", borderRadius: 12, padding: "14px 18px",
+              background: "#FBFAF5", borderRadius: 12, padding: "14px 18px",
               border: "1.5px solid #EEF2FF", marginBottom: 14, display: "flex",
               alignItems: "center", gap: 12
             }}>
@@ -368,7 +368,7 @@ function SettingsContent() {
 
             {/* Password */}
             <div style={{
-              background: "#F8FAFF", borderRadius: 12, padding: "16px 18px",
+              background: "#FBFAF5", borderRadius: 12, padding: "16px 18px",
               border: "1.5px solid #EEF2FF", marginBottom: 20
             }}>
               <div style={{
@@ -385,11 +385,11 @@ function SettingsContent() {
               {showPwFields && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   <input type="password" value={pw.new} onChange={e => setPw({ ...pw, new: e.target.value })}
-                    placeholder="Nueva contraseña (mín. 6 caracteres)" style={{ ...inputStyle, background: "#fff" }}
+                    placeholder="Nueva contraseña (mín. 6 caracteres)" style={{ ...inputStyle, background: "#FBFAF5" }}
                     onFocus={e => e.currentTarget.style.borderColor = "#0B71FE"}
                     onBlur={e => e.currentTarget.style.borderColor = "#E2E8F0"} />
                   <input type="password" value={pw.confirm} onChange={e => setPw({ ...pw, confirm: e.target.value })}
-                    placeholder="Confirmar nueva contraseña" style={{ ...inputStyle, background: "#fff" }}
+                    placeholder="Confirmar nueva contraseña" style={{ ...inputStyle, background: "#FBFAF5" }}
                     onFocus={e => e.currentTarget.style.borderColor = "#0B71FE"}
                     onBlur={e => e.currentTarget.style.borderColor = "#E2E8F0"} />
                   <button onClick={savePw} disabled={saving}
@@ -440,7 +440,7 @@ function SettingsContent() {
                 { l: "Método de acceso", v: "Email y Contraseña" },
               ].map(({ l, v }) => (
                 <div key={l} style={{
-                  background: "#F8FAFF", borderRadius: 12, padding: "14px 16px",
+                  background: "#FBFAF5", borderRadius: 12, padding: "14px 16px",
                   border: "1.5px solid #EEF2FF"
                 }}>
                   <div style={{
@@ -555,7 +555,7 @@ function SettingsContent() {
             ] as { p: 'google' | 'facebook' | 'apple', l: string, color: string, letter: string }[]).map(({ p, l, color, letter }) => (
               <div key={p} style={{
                 display: "flex", alignItems: "center", padding: "14px 18px",
-                background: "#F8FAFF", borderRadius: 12, border: "1.5px solid #EEF2FF", marginBottom: 10
+                background: "#FBFAF5", borderRadius: 12, border: "1.5px solid #EEF2FF", marginBottom: 10
               }}>
                 <div style={{
                   width: 38, height: 38, borderRadius: 10, background: `${color}15`,
@@ -639,7 +639,7 @@ function SettingsContent() {
           justifyContent: "center", zIndex: 9999, padding: 24
         }}>
           <div style={{
-            background: "#fff", borderRadius: 20, padding: 36, maxWidth: 420,
+            background: "#FBFAF5", borderRadius: 20, padding: 36, maxWidth: 420,
             width: "100%", boxShadow: "0 20px 60px rgba(0,0,0,.2)"
           }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
@@ -713,7 +713,7 @@ export default function SettingsPage() {
       <div style={{
         flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
         fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: "#0B71FE",
-        background: "#fff"
+        background: "#FBFAF5"
       }}>
         Cargando configuración...
       </div>

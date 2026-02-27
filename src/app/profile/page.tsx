@@ -254,7 +254,7 @@ export default function ProfilePage() {
   }, [formData, selectedAvatar])
 
   if (loading || !mounted) {
-    return <div style={{ minHeight: "100vh", background: "#f8faff" }} />
+    return <div style={{ minHeight: "100vh", background: "#FBFAF5" }} />
   }
 
   if (!user) return null
@@ -283,7 +283,7 @@ export default function ProfilePage() {
         left: 0,
         width: "100%",
         height: "100%",
-        background: "#f8faff",
+        background: "#FBFAF5",
         overflowY: "auto",
         overflowX: "hidden"
       }}>
@@ -335,7 +335,7 @@ export default function ProfilePage() {
                   onMouseLeave={e => { e.currentTarget.style.transform = "" }}
                 >
                   <AvatarDisplay avatar={selectedAvatar} size={52} />
-                  <div style={{ position: "absolute", bottom: 2, right: 2, width: 28, height: 28, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
+                  <div style={{ position: "absolute", bottom: 2, right: 2, width: 28, height: 28, borderRadius: "50%", background: "#FBFAF5", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
                     <PencilIcon size={14} color="#0F62FE" />
                   </div>
                 </div>

@@ -24,7 +24,7 @@ export default async function MentorPage() {
     <main style={{
       marginRight: "320px",
       minHeight: "100vh",
-      background: "#ffffff",
+      background: "#FBFAF5",
       padding: "40px",
       paddingRight: "360px",
       fontFamily: "Montserrat, sans-serif",
@@ -116,7 +116,7 @@ export default async function MentorPage() {
                     <span key={i} style={{
                       fontSize: 12,
                       padding: "4px 10px",
-                      background: "#ffffff",
+                      background: "#FBFAF5",
                       color: "#0B71FE",
                       borderRadius: 6,
                       fontWeight: 600

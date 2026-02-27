@@ -170,8 +170,8 @@ export default function MobileBottomNav() {
           left: 0,
           right: 0,
           height: "70px",
-          background: "#ffffff",
-          backgroundColor: "#ffffff",
+          background: "#FBFAF5",
+          backgroundColor: "#FBFAF5",
           borderTop: "2px solid rgba(15, 98, 254, 0.2)",
           boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.1)",
           zIndex: 10000, // Higher than FixedSidebar (1000) and GlobalLogo (1001)

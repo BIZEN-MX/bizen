@@ -38,7 +38,7 @@ export function FooterNav({
 }: FooterNavProps) {
   return (
     <footer
-      className="flex-shrink-0 w-full z-50 bg-white border-t-2 border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]"
+      className="flex-shrink-0 w-full z-50 bg-[#FBFAF5] border-t-2 border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]"
       style={{
         paddingTop: "1.5rem",
         paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
@@ -72,7 +72,7 @@ export function FooterNav({
             <button
               type="button"
               onClick={onSkip}
-              className="bg-white border-4 border-black rounded-full text-blue-600 font-medium px-8 sm:px-10 h-14 min-h-[56px] transition-all hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="bg-[#FBFAF5] border-4 border-black rounded-full text-blue-600 font-medium px-8 sm:px-10 h-14 min-h-[56px] transition-all hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               aria-label={skipLabel}
             >
               {skipLabel}

@@ -70,7 +70,7 @@ export function Chart({
     if (!active || !payload || !payload.length) return null;
 
     return (
-      <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-md">
+      <div className="bg-[#FBFAF5] p-3 border border-gray-200 rounded-lg shadow-md">
         <p className="text-sm font-semibold text-gray-900 mb-2">
           {xAxisLabel || 'Periodo'}: {label}
         </p>

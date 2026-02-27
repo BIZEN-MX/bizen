@@ -92,7 +92,7 @@ export default function AccountSettingsPage() {
         placeItems: "center", 
         minHeight: "60vh", 
         fontFamily: "Montserrat, sans-serif",
-        background: "#ffffff"
+        background: "#FBFAF5"
       }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
@@ -110,7 +110,7 @@ export default function AccountSettingsPage() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "#ffffff",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed"
     }}>
       <main style={{ 

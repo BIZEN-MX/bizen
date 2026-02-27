@@ -67,7 +67,7 @@ export default async function ScorePage() {
       <div className="score-outer" style={{
         width: "100%",
       flex: 1,
-      background: "#ffffff",
+      background: "#FBFAF5",
         fontFamily: "Montserrat, sans-serif",
         overflowX: "hidden",
         overflowY: "auto",
@@ -183,7 +183,7 @@ export default async function ScorePage() {
 
       {/* Action Card */}
       <div style={{
-        background: "#ffffff",
+        background: "#FBFAF5",
         borderRadius: 16,
         padding: 24,
         border: "2px solid #e5e7eb",

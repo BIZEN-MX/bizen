@@ -11,7 +11,7 @@ export const AvatarDisplay = ({ avatar, size = 64 }: { avatar: any; size?: numbe
       <div style={{
         width: "100%",
         height: "100%",
-        background: "#ffffff",
+        background: "#FBFAF5",
         borderRadius: "50%",
         overflow: "hidden",
         display: "flex",

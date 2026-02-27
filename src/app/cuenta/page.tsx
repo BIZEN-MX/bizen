@@ -165,7 +165,7 @@ export default function CuentaPage() {
       paddingTop: 40,
       paddingBottom: 80,
       fontFamily: "Montserrat, sans-serif",
-      background: "#ffffff",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed",
       marginRight: "340px"
     }}>

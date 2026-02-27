@@ -17,7 +17,7 @@ export default function PaymentCancelPage() {
         position: "sticky",
         top: 0,
         zIndex: 1000,
-        background: "#ffffff",
+        background: "#FBFAF5",
         borderBottom: "1px solid rgba(0,0,0,0.06)",
         padding: "16px 0",
       }}>

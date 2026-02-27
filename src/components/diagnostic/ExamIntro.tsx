@@ -80,7 +80,7 @@ export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
       <div
         style={{
           flex: "1 1 400px",
-          background: "#fff",
+          background: "#FBFAF5",
           padding: "3rem",
           borderRadius: "40px",
           border: "2px solid #e2e8f0",

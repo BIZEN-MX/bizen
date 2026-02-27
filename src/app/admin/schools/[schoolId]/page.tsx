@@ -189,7 +189,7 @@ export default function AdminSchoolDetailPage() {
               <div style={{
                 height: "100%",
                 width: `${licenseUsagePercent}%`,
-                background: "#fff",
+                background: "#FBFAF5",
                 borderRadius: 10
               }} />
             </div>
@@ -220,7 +220,7 @@ export default function AdminSchoolDetailPage() {
           <Button 
             onClick={() => router.push("/admin/licenses")}
             style={{ 
-              background: "#fff",
+              background: "#FBFAF5",
               color: "#0F62FE",
               minWidth: 200
             }}
