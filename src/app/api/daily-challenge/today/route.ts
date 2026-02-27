@@ -16,8 +16,18 @@ export async function GET() {
         const today = new Date()
         today.setUTCHours(0, 0, 0, 0)
 
+        // We use a range to be safe with DateTime fields that might have time info,
+        // although Prisma with @db.Date usually handles it.
+        const tomorrow = new Date(today)
+        tomorrow.setUTCDate(today.getUTCDate() + 1)
+
         let challenge = await prisma.dailyChallenge.findFirst({
-            where: { activeDate: today }
+            where: {
+                activeDate: {
+                    gte: today,
+                    lt: tomorrow
+                }
+            }
         })
 
         // Auto-seed a placeholder challenge if none exists for today

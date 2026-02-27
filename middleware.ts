@@ -71,7 +71,7 @@ export async function middleware(request: NextRequest) {
 
   // Refresh session if expired - this is critical for SSR
   const { data: { session } } = await supabase.auth.getSession()
-  
+
   const pathname = request.nextUrl.pathname
 
   // Debug logging (can be removed in production)
@@ -102,7 +102,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protected student routes (require login)
-  const protectedRoutes = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum']
+  const protectedRoutes = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum', '/reto-diario']
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
   if (isProtectedRoute && !session) {

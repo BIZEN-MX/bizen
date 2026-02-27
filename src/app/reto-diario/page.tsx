@@ -58,6 +58,7 @@ export default function RetoDiarioPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState("")
   const [submitted, setSubmitted] = useState(false)
+  const [errorDetails, setErrorDetails] = useState<string | null>(null)
 
   // Quick reflection
   const [showReflection, setShowReflection] = useState(false)
@@ -86,9 +87,17 @@ export default function RetoDiarioPage() {
           setSubmitted(true)
           setPhase("wrap")
         }
+      } else {
+        const errData = await res.json().catch(() => ({}))
+        console.error("Fetch challenge failed:", res.status, errData)
+        setErrorDetails(errData.error || `Error ${res.status}`)
       }
-    } catch (e) { console.error(e) }
-    finally { setLoadingChallenge(false) }
+    } catch (e) {
+      console.error(e)
+      setErrorDetails("Error de conexión al servidor")
+    } finally {
+      setLoadingChallenge(false)
+    }
   }
 
   const today = new Date()
@@ -504,6 +513,18 @@ export default function RetoDiarioPage() {
                       <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "#f1f5f9", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
                       <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "#f1f5f9", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: "75%" }} />
                     </>
+                  ) : errorDetails ? (
+                    <div style={{ padding: "16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "12px", marginBottom: "24px" }}>
+                      <p style={{ color: "#b91c1c", fontSize: "14px", fontWeight: 600, margin: "0 0 8px" }}>
+                        Ocurrió un error al cargar el reto: {errorDetails}
+                      </p>
+                      <button
+                        onClick={() => { setErrorDetails(null); setLoadingChallenge(true); fetchChallenge(); }}
+                        style={{ background: "#b91c1c", color: "white", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: 700, cursor: "pointer" }}
+                      >
+                        Reintentar
+                      </button>
+                    </div>
                   ) : (
                     <p style={{ fontSize: "clamp(14px, 1.2vw, 16px)", color: "#4b5563", lineHeight: 1.75, margin: "0 0 32px", maxWidth: 580 }}>
                       {challenge?.description ?? "Cargando el reto de hoy..."}

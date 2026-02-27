@@ -45,20 +45,21 @@ export async function awardXp(userId: string, amount: number): Promise<RewardsRe
     const newLevel = calculateLevelFromXp(newTotalXp)
     const leveledUp = newLevel > oldLevel
 
-    // Handle Streak Logic
+    // Handle Streak Logic using UTC to be consistent with the Daily Challenge system
     const now = new Date()
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const today = new Date(now)
+    today.setUTCHours(0, 0, 0, 0)
 
     let newStreak = profile.currentStreak || 0
     let newLongestStreak = profile.longestStreak || 0
     let streakUpdated = false
 
     if (profile.lastActive) {
-        const lastActiveDate = new Date(profile.lastActive)
-        const lastActiveDay = new Date(lastActiveDate.getFullYear(), lastActiveDate.getMonth(), lastActiveDate.getDate())
+        const lastActiveDay = new Date(profile.lastActive)
+        lastActiveDay.setUTCHours(0, 0, 0, 0)
 
-        const diffTime = Math.abs(today.getTime() - lastActiveDay.getTime())
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        const diffTime = today.getTime() - lastActiveDay.getTime()
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
 
         if (diffDays === 1) {
             // Last active was yesterday, increment streak
