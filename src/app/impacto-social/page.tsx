@@ -128,16 +128,7 @@ const MOCK_TARGETS: ImpactTarget[] = [
         status: "near",
         howToHelpCTA: "Invita a un compañero a realizar su reto diario"
     },
-    {
-        id: "t2",
-        label: "Sesiones útiles por mes (promedio)",
-        metricKey: "avg_sessions",
-        currentValue: 3.2,
-        targetValue: 3,
-        unit: "sesiones",
-        status: "unlocked",
-        howToHelpCTA: "Sigue manteniendo tu racha de aprendizaje"
-    },
+
     {
         id: "t3",
         label: "Módulos completados (promedio)",
@@ -665,7 +656,7 @@ export default function ImpactoSocialPage() {
                                 </div>
                                 <div className="student-grid">
                                     {[
-                                        { value: studentStats.usefulSessions, label: "Sesiones Útiles", icon: <Zap size={18} color="#0F62FE" />, color: "#0F62FE", bg: "#eff6ff", trend: "Reciente", up: true },
+
                                         { value: studentStats.modulesCompleted, label: "Módulos", icon: <Book size={18} color="#0F62FE" />, color: "#10b981", bg: "#ecfdf5", trend: "Reciente", up: true },
                                         { value: studentStats.quizzesTaken, label: "Quizzes", icon: <Brain size={18} color="#0F62FE" />, color: "#8b5cf6", bg: "#f5f3ff", trend: "Constante", up: true },
                                         { value: studentStats.simulatorsPlayed, label: "Simuladores", icon: <Gamepad2 size={18} color="#0F62FE" />, color: "#f59e0b", bg: "#fffbeb", trend: "Constante", up: false },
@@ -1039,7 +1030,7 @@ export default function ImpactoSocialPage() {
                                 {[
                                     { icon: <School size={24} color="#0F62FE" />, value: "62%", label: "Alumnos Activos", sub: "meta: 70%", color: "#f59e0b", bg: "#fffbeb" },
                                     { icon: <CircleDollarSign size={24} color="#0F62FE" />, value: "$45K", label: "Donado (MXN)", sub: "este ciclo", color: "#10b981", bg: "#ecfdf5" },
-                                    { icon: <TrendingUp size={24} color="#0F62FE" />, value: "3.2", label: "Ses. / Alumno", sub: "meta: ≥ 3", color: "#0F62FE", bg: "#eff6ff" },
+
                                     { icon: <Book size={24} color="#0F62FE" />, value: "0.4", label: "Módulos / Alum.", sub: "meta: 1", color: "#8b5cf6", bg: "#f5f3ff" },
                                 ].map((kpi, i) => (
                                     <div key={i} className="school-kpi-card" style={{ animationDelay: `${i * 0.07}s` }}>
