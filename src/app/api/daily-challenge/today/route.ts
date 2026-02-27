@@ -16,18 +16,9 @@ export async function GET() {
         const today = new Date()
         today.setUTCHours(0, 0, 0, 0)
 
-        // We use a range to be safe with DateTime fields that might have time info,
-        // although Prisma with @db.Date usually handles it.
-        const tomorrow = new Date(today)
-        tomorrow.setUTCDate(today.getUTCDate() + 1)
-
+        // We revert to direct equality match since Prisma handles @db.Date using exactly UTC midnight Dates.
         let challenge = await prisma.dailyChallenge.findFirst({
-            where: {
-                activeDate: {
-                    gte: today,
-                    lt: tomorrow
-                }
-            }
+            where: { activeDate: today }
         })
 
         // Auto-seed a placeholder challenge if none exists for today
@@ -60,9 +51,27 @@ export async function GET() {
                 },
             ]
             const pick = placeholders[today.getUTCDay() % placeholders.length]
-            challenge = await prisma.dailyChallenge.create({
-                data: { ...pick, activeDate: today }
-            })
+            try {
+                challenge = await prisma.dailyChallenge.create({
+                    data: { ...pick, activeDate: today }
+                })
+            } catch (createErr) {
+                // If it fails (likely due to unique constraint from a concurrent request), fetch it again
+                console.warn("Failed to create placeholder challenge, trying to fetch again...", createErr)
+                challenge = await prisma.dailyChallenge.findFirst({
+                    where: { activeDate: today }
+                })
+
+                // If STILL not found, fetch the most recent one to avoid breaking the page
+                if (!challenge) {
+                    challenge = await prisma.dailyChallenge.findFirst({
+                        orderBy: { activeDate: "desc" }
+                    })
+                }
+
+                // If absolutely no challenge exists and we couldn't create one, throw
+                if (!challenge) throw createErr
+            }
         }
 
         // Check if current user has already submitted evidence for this challenge
@@ -74,8 +83,11 @@ export async function GET() {
             ...challenge,
             isCompleted: !!existingEvidence
         })
-    } catch (err) {
+    } catch (err: any) {
         console.error("GET /api/daily-challenge/today:", err)
-        return NextResponse.json({ error: "Error al cargar el reto" }, { status: 500 })
+        return NextResponse.json({
+            error: "Error al cargar el reto",
+            details: err?.message || String(err)
+        }, { status: 500 })
     }
 }
