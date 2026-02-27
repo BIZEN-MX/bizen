@@ -68,7 +68,7 @@ export default function RetoDiarioPage() {
   const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    document.body.style.background = "#f8faff"
+    document.body.style.background = "#FBFAF5"
     return () => { document.body.style.background = "" }
   }, [])
 
