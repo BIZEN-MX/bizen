@@ -21,9 +21,14 @@ export async function GET(request: NextRequest) {
       where: { userId: user.id },
       include: {
         school: {
-          select: {
-            id: true,
-            name: true
+          include: {
+            licenses: {
+              where: {
+                status: 'active',
+                endDate: { gt: new Date() }
+              },
+              take: 1
+            }
           }
         }
       }
@@ -36,7 +41,21 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    return NextResponse.json(profile)
+    // If user has school with active license, set/renew paywall bypass cookie
+    const hasActiveLicense = profile?.school?.licenses?.length && profile.school.licenses.length > 0;
+    const response = NextResponse.json(profile);
+
+    if (hasActiveLicense) {
+      response.cookies.set('bizen_has_access', '1', {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      });
+    }
+
+    return response
   } catch (error) {
     console.error('Error fetching profile:', error)
     return NextResponse.json(
