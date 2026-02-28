@@ -9,6 +9,7 @@ import {
   TrendingUp, Brain, Clock, Star, Trophy, ArrowRight, Lightbulb, Award
 } from "lucide-react"
 import confetti from "canvas-confetti"
+import StreakWidget from "@/components/StreakWidget"
 
 type DailyChallenge = {
   id: string
@@ -50,6 +51,7 @@ export default function RetoDiarioPage() {
   const [loadingChallenge, setLoadingChallenge] = useState(true)
   const [phase, setPhase] = useState<"doing" | "wrap">("doing")
   const streak = dbProfile?.currentStreak || 0
+  const [weeklyActiveDays, setWeeklyActiveDays] = useState<string[]>([])
 
   // Evidence modal
   const [showEvidence, setShowEvidence] = useState(false)
@@ -75,6 +77,11 @@ export default function RetoDiarioPage() {
   useEffect(() => {
     if (loading || !user) return
     fetchChallenge()
+    // Fetch weekly active days for calendar
+    fetch("/api/user/stats")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.weeklyActiveDays) setWeeklyActiveDays(data.weeklyActiveDays) })
+      .catch(() => { })
   }, [user, loading])
 
   const fetchChallenge = async () => {
@@ -167,20 +174,37 @@ export default function RetoDiarioPage() {
         @keyframes streakGlow { 0%,100% { text-shadow: 0 0 12px rgba(251,146,60,0.8) } 50% { text-shadow: 0 0 24px rgba(251,146,60,1) } }
 
         .rd-challenge-card {
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
+          background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%) !important;
+          border: 1px solid rgba(255,255,255,0.1);
           border-radius: 24px;
           position: relative;
           overflow: hidden;
-          box-shadow: 0 10px 40px rgba(15,98,254,0.06);
+          box-shadow: 0 20px 60px rgba(15,98,254,0.25);
           animation: fadeUp 0.5s ease both;
         }
         .rd-challenge-card::before {
           content: '';
           position: absolute; inset: 0;
-          background: radial-gradient(ellipse at 80% 0%, rgba(15,98,254,0.06) 0%, transparent 60%),
-                      radial-gradient(ellipse at 0% 100%, rgba(124,58,237,0.04) 0%, transparent 50%);
+          background: radial-gradient(ellipse at 80% 0%, rgba(99,179,255,0.15) 0%, transparent 60%),
+                      radial-gradient(ellipse at 0% 100%, rgba(139,92,246,0.12) 0%, transparent 50%);
           pointer-events: none;
+        }
+        .rd-card-title {
+          color: #ffffff !important;
+          -webkit-text-fill-color: #ffffff !important;
+          font-size: clamp(20px, 3vw, 28px) !important;
+          font-weight: 900 !important;
+          margin: 0 0 16px !important;
+          letter-spacing: -0.015em !important;
+          line-height: 1.25 !important;
+        }
+        .rd-card-desc {
+          color: rgba(255,255,255,0.80) !important;
+          -webkit-text-fill-color: rgba(255,255,255,0.80) !important;
+          font-size: clamp(14px, 1.2vw, 16px) !important;
+          line-height: 1.75 !important;
+          margin: 0 0 32px !important;
+          max-width: 580px;
         }
 
         .rd-complete-btn {
@@ -449,21 +473,8 @@ export default function RetoDiarioPage() {
                   </h1>
                 </div>
 
-                {/* Streak badge */}
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 12,
-                  padding: "14px 22px",
-                  background: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
-                  border: "2.5px solid #fb923c40",
-                  borderRadius: 20,
-                  boxShadow: "0 10px 25px rgba(251,146,60,0.15)"
-                }}>
-                  <Flame size={28} style={{ color: "#fb923c", animation: "float 2s ease infinite" }} />
-                  <div>
-                    <div style={{ fontSize: 26, fontWeight: 950, color: "#fb923c", lineHeight: 0.9, animation: "streakGlow 2s ease infinite" }}>{streak}</div>
-                    <div style={{ fontSize: 11, color: "#f97316", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 2 }}>racha</div>
-                  </div>
-                </div>
+                {/* Streak badge + Weekly Calendar */}
+                <StreakWidget streak={streak} showCalendar activeDays={weeklyActiveDays} />
               </div>
 
               {/* ── Challenge hero card ── */}
@@ -478,9 +489,9 @@ export default function RetoDiarioPage() {
                     <div style={{
                       display: "inline-flex", alignItems: "center", gap: 7,
                       padding: "6px 14px",
-                      background: typeMeta.accent,
-                      border: `1px solid ${typeMeta.color}40`,
-                      borderRadius: 999, fontSize: 12, fontWeight: 700, color: typeMeta.color
+                      background: "rgba(255,255,255,0.15)",
+                      border: "1px solid rgba(255,255,255,0.25)",
+                      borderRadius: 999, fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.95)"
                     }}>
                       <TypeIcon size={13} />
                       {typeMeta.label}
@@ -488,8 +499,8 @@ export default function RetoDiarioPage() {
                     <div style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 14px",
-                      background: "rgba(245,158,11,0.1)",
-                      border: "1px solid rgba(245,158,11,0.3)",
+                      background: "rgba(251,191,36,0.2)",
+                      border: "1px solid rgba(251,191,36,0.4)",
                       borderRadius: 999, fontSize: 12, fontWeight: 700, color: "#fbbf24"
                     }}>
                       <Zap size={12} />
@@ -498,8 +509,8 @@ export default function RetoDiarioPage() {
                     <div style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 12px",
-                      background: "rgba(0,0,0,0.03)",
-                      borderRadius: 999, fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.4)"
+                      background: "rgba(255,255,255,0.1)",
+                      borderRadius: 999, fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)"
                     }}>
                       <Clock size={12} />
                       ~5 min
@@ -508,9 +519,9 @@ export default function RetoDiarioPage() {
 
                   {/* Title */}
                   {loadingChallenge ? (
-                    <div style={{ height: 28, borderRadius: 8, marginBottom: 12, background: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: 420 }} />
+                    <div style={{ height: 28, borderRadius: 8, marginBottom: 12, background: "rgba(255,255,255,0.1)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: 420 }} />
                   ) : (
-                    <h2 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 900, color: "#111827", margin: "0 0 16px", letterSpacing: "-0.015em", lineHeight: 1.25 }}>
+                    <h2 className="rd-card-title">
                       {challenge?.title ?? "Reto del día"}
                     </h2>
                   )}
@@ -534,14 +545,14 @@ export default function RetoDiarioPage() {
                       </button>
                     </div>
                   ) : (
-                    <p style={{ fontSize: "clamp(14px, 1.2vw, 16px)", color: "#4b5563", lineHeight: 1.75, margin: "0 0 32px", maxWidth: 580 }}>
+                    <p className="rd-card-desc">
                       {challenge?.description ?? "Cargando el reto de hoy..."}
                     </p>
                   )}
 
                   {/* CTA */}
                   {submitted ? (
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 20px", background: "#ecfdf5", border: "1px solid #10b98140", borderRadius: 14, color: "#059669" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 20px", background: "rgba(16,185,129,0.2)", border: "1px solid rgba(16,185,129,0.4)", borderRadius: 14, color: "#6ee7b7" }}>
                       <CheckCircle size={20} />
                       <span style={{ fontWeight: 700, fontSize: 15 }}>¡Evidencia publicada! Tu grupo ya puede verla en el Foro.</span>
                     </div>

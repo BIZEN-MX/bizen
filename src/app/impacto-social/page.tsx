@@ -384,7 +384,7 @@ export default function ImpactoSocialPage() {
                                         padding: "6px 14px",
                                         borderRadius: "20px",
                                         fontSize: 11,
-                                        fontWeight: 800,
+                                        fontWeight: 600,
                                         textTransform: "uppercase",
                                         letterSpacing: "0.05em",
                                         boxShadow: "0 4px 12px rgba(15, 98, 254, 0.2)"
@@ -393,16 +393,16 @@ export default function ImpactoSocialPage() {
                                     </span>
                                 </div>
 
-                                <h1 className="impact-entrance impact-delay-2" style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 900, color: "#0f172a", margin: "0 0 20px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+                                <h1 className="impact-entrance impact-delay-2" style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, color: "#0f172a", margin: "0 0 20px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
                                     Nuestro Impacto en <br />
                                     <span style={{ color: "#0F62FE" }}>{MOCK_FOUNDATION.name}</span>
                                 </h1>
 
                                 <p className="impact-entrance impact-delay-3" style={{ fontSize: 20, color: "#475569", margin: "0 0 32px", lineHeight: 1.6 }}>
-                                    Llevamos donados <strong className="impact-shimmer-text" style={{ fontSize: "1.2em", fontWeight: 900 }}>${MOCK_SCHOOL_IMPACT.totalDonatedMXN.toLocaleString()} MXN</strong>.
+                                    Llevamos donados <strong className="impact-shimmer-text" style={{ fontSize: "1.2em", fontWeight: 700 }}>${MOCK_SCHOOL_IMPACT.totalDonatedMXN.toLocaleString()} MXN</strong>.
                                     <br />
                                     <span style={{ fontSize: "0.95em", color: "#64748b" }}>
-                                        Esto equivale a ≈ <strong style={{ color: "#0f172a" }}>{renderEquivalence(MOCK_SCHOOL_IMPACT.totalDonatedMXN)}</strong> entregadas.
+                                        Esto equivale a ≈ <strong style={{ color: "#0f172a", fontWeight: 700 }}>{renderEquivalence(MOCK_SCHOOL_IMPACT.totalDonatedMXN)}</strong> entregadas.
                                     </span>
                                 </p>
 
@@ -455,8 +455,8 @@ export default function ImpactoSocialPage() {
                                         flexDirection: "column",
                                         alignItems: "center"
                                     }}>
-                                        <span style={{ fontSize: 44, fontWeight: 900, color: "#0f172a", marginBottom: -4 }}>62%</span>
-                                        <span style={{ fontSize: 11, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em" }}>Meta</span>
+                                        <span style={{ fontSize: 44, fontWeight: 700, color: "#0f172a", marginBottom: -4 }}>62%</span>
+                                        <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em" }}>Meta</span>
                                     </div>
 
                                     {/* Small pulsing dot at the end of progress */}
@@ -652,7 +652,7 @@ export default function ImpactoSocialPage() {
                             <div style={{ marginBottom: 32 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
                                     <Zap size={18} color="#0F62FE" />
-                                    <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#0f172a" }}>Tu contribución esta semana</h3>
+                                    <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>Tu contribución esta semana</h3>
                                 </div>
                                 <div className="student-grid">
                                     {[
@@ -680,7 +680,7 @@ export default function ImpactoSocialPage() {
                                                     {stat.up ? "↑" : "→"} {stat.trend}
                                                 </span>
                                             </div>
-                                            <div style={{ fontSize: 36, fontWeight: 900, color: "#0f172a", lineHeight: 1, marginBottom: 4 }}>
+                                            <div style={{ fontSize: 36, fontWeight: 700, color: "#0f172a", lineHeight: 1, marginBottom: 4 }}>
                                                 {stat.value}
                                             </div>
                                             <div style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{stat.label}</div>
@@ -704,7 +704,7 @@ export default function ImpactoSocialPage() {
                                         <CheckCircle2 size={20} color="#fff" />
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: 14, fontWeight: 800, color: "#065f46", marginBottom: 2 }}>
+                                        <div style={{ fontSize: 14, fontWeight: 600, color: "#065f46", marginBottom: 2 }}>
                                             Eres alumno activo este mes
                                         </div>
                                         <div style={{ fontSize: 13, color: "#047857" }}>
@@ -718,7 +718,7 @@ export default function ImpactoSocialPage() {
                             <div style={{ marginBottom: 32 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                     <Clock size={17} color="#64748b" />
-                                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Tu huella últimas 4 semanas</h3>
+                                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#0f172a" }}>Tu huella últimas 4 semanas</h3>
                                 </div>
                                 <div style={{
                                     background: "#FBFAF5", border: "1.5px solid #f1f5f9",
@@ -768,7 +768,7 @@ export default function ImpactoSocialPage() {
                             <div style={{ marginBottom: 32 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                     <Globe size={17} color="#64748b" />
-                                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Tu aporte en el mundo real</h3>
+                                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#0f172a" }}>Tu aporte en el mundo real</h3>
                                     <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>estimado acumulado</span>
                                 </div>
                                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14 }}>
@@ -786,8 +786,8 @@ export default function ImpactoSocialPage() {
                                             animation: `stat-countup 0.5s ${i * 0.08}s ease both`
                                         }}>
                                             <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>{eq.icon}</div>
-                                            <div style={{ fontSize: 26, fontWeight: 900, color: "#0f172a", lineHeight: 1, marginBottom: 4 }}>{eq.value}</div>
-                                            <div style={{ fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 3 }}>{eq.label}</div>
+                                            <div style={{ fontSize: 26, fontWeight: 700, color: "#0f172a", lineHeight: 1, marginBottom: 4 }}>{eq.value}</div>
+                                            <div style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 3 }}>{eq.label}</div>
                                             <div style={{ fontSize: 11, color: "#94a3b8" }}>{eq.desc}</div>
                                         </div>
                                     ))}
@@ -800,7 +800,7 @@ export default function ImpactoSocialPage() {
                                 <div>
                                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                         <Award size={17} color="#64748b" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Insignias Sociales</h3>
+                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Insignias Sociales</h3>
                                     </div>
                                     <div style={{
                                         background: "#FBFAF5", border: "1.5px solid #f1f5f9",
@@ -847,7 +847,7 @@ export default function ImpactoSocialPage() {
                                                     {badge.unlocked ? badge.icon : <Lock size={20} color="#cbd5e1" />}
                                                 </div>
                                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <div style={{ fontSize: 13, fontWeight: 800, color: badge.unlocked ? "#0f172a" : "#94a3b8", marginBottom: 2 }}>
+                                                    <div style={{ fontSize: 13, fontWeight: 600, color: badge.unlocked ? "#0f172a" : "#94a3b8", marginBottom: 2 }}>
                                                         {badge.name}
                                                         {badge.unlocked && <span style={{ marginLeft: 6, fontSize: 10, fontWeight: 700, color: badge.color, background: `${badge.color}15`, padding: "1px 6px", borderRadius: 99 }}>✓ Ganada</span>}
                                                     </div>
@@ -862,7 +862,7 @@ export default function ImpactoSocialPage() {
                                 <div>
                                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                         <TrendingUp size={17} color="#64748b" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>¿Cómo puedes ayudar hoy?</h3>
+                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#0f172a" }}>¿Cómo puedes ayudar hoy?</h3>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                                         {/* Main CTA card */}
@@ -875,7 +875,7 @@ export default function ImpactoSocialPage() {
                                                 <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
                                                     Acción prioritaria
                                                 </div>
-                                                <div style={{ fontSize: 16, fontWeight: 800, color: "#fff", lineHeight: 1.3 }}>
+                                                <div style={{ fontSize: 16, fontWeight: 600, color: "#fff", lineHeight: 1.3 }}>
                                                     Estás a 8% de que tu escuela desbloquee el bono del mes
                                                 </div>
                                             </div>
@@ -918,7 +918,7 @@ export default function ImpactoSocialPage() {
                                         }}>
                                             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                                                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", flexShrink: 0 }} />
-                                                <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a" }}>¿Qué es un alumno activo?</span>
+                                                <span style={{ fontSize: 13, fontWeight: 600, color: "#0f172a" }}>¿Qué es un alumno activo?</span>
                                             </div>
                                             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                                                 {[
@@ -1035,10 +1035,10 @@ export default function ImpactoSocialPage() {
                                 ].map((kpi, i) => (
                                     <div key={i} className="school-kpi-card" style={{ animationDelay: `${i * 0.07}s` }}>
                                         <div style={{ marginBottom: 8, display: "flex" }}>{kpi.icon}</div>
-                                        <div style={{ fontSize: 28, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{kpi.value}</div>
-                                        <div style={{ fontSize: 13, fontWeight: 700, color: "#374151" }}>{kpi.label}</div>
+                                        <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", lineHeight: 1 }}>{kpi.value}</div>
+                                        <div style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>{kpi.label}</div>
                                         <div style={{
-                                            fontSize: 11, fontWeight: 700,
+                                            fontSize: 11, fontWeight: 600,
                                             color: kpi.color,
                                             background: kpi.bg,
                                             padding: "2px 8px", borderRadius: 99,
@@ -1058,7 +1058,7 @@ export default function ImpactoSocialPage() {
                                     <div>
                                         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                             <TargetIcon size={17} color="#0F62FE" />
-                                            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Metas para desbloquear el Bono</h3>
+                                            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#0f172a" }}>Metas para desbloquear el Bono</h3>
                                         </div>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                                             {targetsData.map((target: any, ti: number) => {
@@ -1071,11 +1071,11 @@ export default function ImpactoSocialPage() {
                                                     <div key={target.id} className="target-card" style={{ animationDelay: `${0.1 + ti * 0.08}s` }}>
                                                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                                                             <div style={{ flex: 1, minWidth: 0 }}>
-                                                                <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", marginBottom: 3 }}>{target.label}</div>
+                                                                <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a", marginBottom: 3 }}>{target.label}</div>
                                                                 <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Objetivo: {target.targetValue} {target.unit}</div>
                                                             </div>
                                                             <span style={{
-                                                                fontSize: 11, fontWeight: 800,
+                                                                fontSize: 11, fontWeight: 700,
                                                                 color: statusColor, background: statusBg,
                                                                 border: `1px solid ${statusColor}33`,
                                                                 padding: "4px 10px", borderRadius: 99, whiteSpace: "nowrap", marginLeft: 12
@@ -1100,7 +1100,7 @@ export default function ImpactoSocialPage() {
                                                             </div>
                                                             <div style={{
                                                                 position: "absolute", right: 0, top: -18,
-                                                                fontSize: 11, fontWeight: 800, color: statusColor
+                                                                fontSize: 11, fontWeight: 600, color: statusColor
                                                             }}>{Math.round(pct)}%</div>
                                                         </div>
 
@@ -1131,7 +1131,7 @@ export default function ImpactoSocialPage() {
                                     }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
                                             <TrendingUp size={20} color="#10b981" />
-                                            <span style={{ fontSize: 16, fontWeight: 800 }}>Proyección del Bono</span>
+                                            <span style={{ fontSize: 16, fontWeight: 700 }}>Proyección del Bono</span>
                                         </div>
 
                                         {/* Base vs bonus meter */}
@@ -1190,7 +1190,7 @@ export default function ImpactoSocialPage() {
                                                         marginTop: 2
                                                     }} />
                                                     <div style={{ flex: 1 }}>
-                                                        <span style={{ fontSize: 12, fontWeight: 800, color: tl.done ? "#10b981" : "rgba(255,255,255,0.4)", marginRight: 8 }}>{tl.month}</span>
+                                                        <span style={{ fontSize: 12, fontWeight: 600, color: tl.done ? "#10b981" : "rgba(255,255,255,0.4)", marginRight: 8 }}>{tl.month}</span>
                                                         <span style={{ fontSize: 13, color: tl.done ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.4)" }}>{tl.label}</span>
                                                     </div>
                                                 </div>
@@ -1227,12 +1227,12 @@ export default function ImpactoSocialPage() {
                                                 />
                                             </svg>
                                             <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-                                                <span style={{ fontSize: 16, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>62%</span>
+                                                <span style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1 }}>62%</span>
                                             </div>
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", marginBottom: 4 }}>Alumnos Activos</div>
-                                            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 8 }}>Faltan <strong style={{ color: "#f59e0b" }}>8 puntos porcentuales</strong> para el bono</div>
+                                            <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a", marginBottom: 4 }}>Alumnos Activos</div>
+                                            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 8 }}>Faltan <strong style={{ color: "#f59e0b", fontWeight: 600 }}>8 puntos porcentuales</strong> para el bono</div>
                                             <div style={{ height: 6, width: "100%", background: "#f1f5f9", borderRadius: 99 }}>
                                                 <div style={{ height: "100%", width: "62%", background: "linear-gradient(90deg,#f59e0b,#fbbf24)", borderRadius: 99 }} />
                                             </div>
@@ -1256,7 +1256,7 @@ export default function ImpactoSocialPage() {
                                                 <CheckCircle2 size={20} color="#10b981" />
                                             </div>
                                             <div>
-                                                <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a" }}>{MOCK_FOUNDATION.name}</div>
+                                                <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a" }}>{MOCK_FOUNDATION.name}</div>
                                             </div>
                                         </div>
                                         <p style={{ fontSize: 13, color: "#475569", margin: "0 0 14px", lineHeight: 1.5 }}>
@@ -1264,12 +1264,12 @@ export default function ImpactoSocialPage() {
                                         </p>
                                         <div style={{ display: "flex", gap: 8 }}>
                                             <div style={{ flex: 1, background: "#FBFAF5", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", textAlign: "center" }}>
-                                                <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>90</div>
-                                                <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 700 }}>canastas equiv.</div>
+                                                <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a" }}>90</div>
+                                                <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>canastas equiv.</div>
                                             </div>
                                             <div style={{ flex: 1, background: "#FBFAF5", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", textAlign: "center" }}>
-                                                <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>3</div>
-                                                <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 700 }}>donaciones exec.</div>
+                                                <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a" }}>3</div>
+                                                <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>donaciones exec.</div>
                                             </div>
                                         </div>
                                         <a href={MOCK_FOUNDATION.website} target="_blank" rel="noopener noreferrer" style={{
@@ -1454,7 +1454,7 @@ export default function ImpactoSocialPage() {
                                             BIZEN Transparency Score
                                         </div>
                                         <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
-                                            <span style={{ fontSize: 52, fontWeight: 900, lineHeight: 1 }}>9.4</span>
+                                            <span style={{ fontSize: 52, fontWeight: 700, lineHeight: 1 }}>9.4</span>
                                             <span style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>/10</span>
                                         </div>
                                         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", margin: "0 0 20px", lineHeight: 1.6, maxWidth: 380 }}>
@@ -1489,7 +1489,7 @@ export default function ImpactoSocialPage() {
                                             />
                                         </svg>
                                         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                                            <span style={{ fontSize: 22, fontWeight: 900 }}>94%</span>
+                                            <span style={{ fontSize: 22, fontWeight: 700 }}>94%</span>
                                             <span style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase" }}>Score</span>
                                         </div>
                                     </div>
@@ -1503,7 +1503,7 @@ export default function ImpactoSocialPage() {
                                 <div>
                                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                         <FileText size={17} color="#0F62FE" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Informes de Desempeño</h3>
+                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Informes de Desempeño</h3>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                                         {[
@@ -1523,10 +1523,10 @@ export default function ImpactoSocialPage() {
                                                         <FileText size={20} color="#0F62FE" />
                                                     </div>
                                                     <div>
-                                                        <div style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", marginBottom: 3, display: "flex", alignItems: "center", gap: 8 }}>
+                                                        <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a", marginBottom: 3, display: "flex", alignItems: "center", gap: 8 }}>
                                                             {rep.period}
                                                             {rep.badge && (
-                                                                <span style={{ fontSize: 10, fontWeight: 800, color: "#fff", background: rep.badgeColor, padding: "2px 7px", borderRadius: 99 }}>
+                                                                <span style={{ fontSize: 10, fontWeight: 600, color: "#fff", background: rep.badgeColor, padding: "2px 7px", borderRadius: 99 }}>
                                                                     {rep.badge}
                                                                 </span>
                                                             )}
@@ -1547,7 +1547,7 @@ export default function ImpactoSocialPage() {
                                 <div>
                                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                         <CheckCircle2 size={17} color="#10b981" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Evidencia de Donaciones</h3>
+                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Evidencia de Donaciones</h3>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                                         {MOCK_EVIDENCE.concat([
@@ -1570,17 +1570,17 @@ export default function ImpactoSocialPage() {
                                                 </div>
                                                 <div className="evidence-inner" style={{ marginBottom: i < arr.length - 1 ? 12 : 0 }}>
                                                     <div>
-                                                        <div style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", marginBottom: 4 }}>
+                                                        <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a", marginBottom: 4 }}>
                                                             {ev.foundation}
                                                         </div>
                                                         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                                                            <span style={{ fontSize: 14, fontWeight: 900, color: "#0F62FE" }}>${ev.amount.toLocaleString()} MXN</span>
+                                                            <span style={{ fontSize: 14, fontWeight: 700, color: "#0F62FE" }}>${ev.amount.toLocaleString()} MXN</span>
                                                             <span style={{ fontSize: 11, color: "#94a3b8" }}>{ev.date}</span>
                                                         </div>
                                                     </div>
                                                     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                                                         <span style={{
-                                                            fontSize: 11, fontWeight: 800,
+                                                            fontSize: 11, fontWeight: 600,
                                                             color: "#166534", background: "#dcfce7",
                                                             border: "1px solid #a7f3d0",
                                                             padding: "3px 8px", borderRadius: 99
@@ -1607,7 +1607,7 @@ export default function ImpactoSocialPage() {
                             <div style={{ marginBottom: 32 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                     <Globe size={17} color="#8b5cf6" />
-                                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>¿Cómo funciona el sistema?</h3>
+                                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>¿Cómo funciona el sistema?</h3>
                                 </div>
                                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, marginBottom: 24 }}>
                                     {[
@@ -1623,11 +1623,11 @@ export default function ImpactoSocialPage() {
                                                     background: s.bg,
                                                     display: "flex", alignItems: "center", justifyContent: "center",
                                                 }}>{s.icon}</div>
-                                                <span style={{ fontSize: 11, fontWeight: 900, color: s.color, background: s.bg, border: `1px solid ${s.color}22`, padding: "2px 8px", borderRadius: 99 }}>
+                                                <span style={{ fontSize: 11, fontWeight: 700, color: s.color, background: s.bg, border: `1px solid ${s.color}22`, padding: "2px 8px", borderRadius: 99 }}>
                                                     Paso {s.step}
                                                 </span>
                                             </div>
-                                            <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", marginBottom: 6 }}>{s.title}</div>
+                                            <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", marginBottom: 6 }}>{s.title}</div>
                                             <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.5 }}>{s.desc}</div>
                                         </div>
                                     ))}
@@ -1639,7 +1639,7 @@ export default function ImpactoSocialPage() {
                                 <div>
                                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                                         <AlertTriangle size={17} color="#f59e0b" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Preguntas frecuentes</h3>
+                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Preguntas frecuentes</h3>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                                         {[
@@ -1686,7 +1686,7 @@ export default function ImpactoSocialPage() {
                                             <div style={{ width: 40, height: 40, borderRadius: 12, background: "#ede9fe", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                                 <Lock size={20} color="#0F62FE" />
                                             </div>
-                                            <div style={{ fontSize: 15, fontWeight: 800, color: "#4c1d95" }}>Privacidad garantizada</div>
+                                            <div style={{ fontSize: 15, fontWeight: 600, color: "#4c1d95" }}>Privacidad garantizada</div>
                                         </div>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                                             {[

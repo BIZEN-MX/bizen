@@ -275,7 +275,7 @@ export default function FixedSidebar() {
           borderRight: "2px solid #0F62FE",
           boxSizing: "border-box"
         }}>
-        <div style={{ padding: "24px 20px 24px 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", minHeight: "100%" }} className="sidebar-inner-container">
+        <div style={{ padding: "24px 20px 0 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", minHeight: "100%" }} className="sidebar-inner-container">
           {/* Bizen logo and brand name */}
           <button
             type="button"
@@ -999,12 +999,13 @@ export default function FixedSidebar() {
               style={{
                 marginTop: "auto",
                 padding: "20px 0",
-                borderTop: "1px solid rgba(15, 98, 254, 0.1)",
                 display: "flex",
                 alignItems: "center",
                 gap: 12,
                 cursor: "pointer",
-                transition: "all 0.2s ease"
+                transition: "transform 0.2s ease, background 0.2s ease",
+                WebkitTapHighlightColor: "transparent",
+                userSelect: "none"
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = "translateY(-2px)"
@@ -1028,7 +1029,7 @@ export default function FixedSidebar() {
                   <AvatarDisplay avatar={user.user_metadata?.avatar} size={40} />
                 </div>
               </div>
-              {!isCompactSidebar && (
+              {!isMobile && (
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{
                     fontSize: 14,
@@ -1368,7 +1369,7 @@ export default function FixedSidebar() {
             overflow-x: hidden !important;
             border-right: 2px solid #0F62FE !important;
             border-left: none !important;
-            padding: 70px 12px 32px 12px !important; /* Horizontal padding for icon spacing */
+            padding: 70px 12px 0 12px !important; /* Horizontal padding for icon spacing */
             z-index: 10000 !important;
             background: #FBFAF5 !important;
             backdrop-filter: blur(20px) !important;
@@ -1408,7 +1409,7 @@ export default function FixedSidebar() {
             overflow-x: hidden !important;
             border-right: 2px solid #0F62FE !important;
             border-left: none !important;
-            padding: 70px 12px 32px 12px !important; /* Horizontal padding for icon spacing */
+            padding: 70px 12px 0 12px !important; /* Horizontal padding for icon spacing */
             z-index: 10001 !important; /* Lower than hamburger button (10003) - CRITICAL */
           }
           
@@ -1592,7 +1593,7 @@ export default function FixedSidebar() {
           }
           
           [data-fixed-sidebar] .sidebar-inner-container {
-            padding: 24px 16px !important;
+            padding: 24px 16px 0 16px !important;
           }
           
           [data-fixed-sidebar] button {

@@ -8,7 +8,9 @@ import Image from "next/image"
 import Button from "../../components/ui/button"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
-import { WarningIcon, PencilIcon, MapIcon } from "@/components/CustomIcons"
+import { WarningIcon, MapIcon } from "@/components/CustomIcons"
+import StreakWidget from "@/components/StreakWidget"
+import { Settings as SettingsIcon, Camera, X as CloseIcon } from "lucide-react"
 
 interface UserStats {
   xp: number
@@ -23,12 +25,9 @@ export default function ProfilePage() {
   const { startTour } = useOnboarding()
   const router = useRouter()
   const supabase = createClientMicrocred()
-  const [mounted, setMounted] = React.useState(false)
-  const [showAvatarPicker, setShowAvatarPicker] = useState(false)
-  const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "mascot", id: "fox", label: "Zorro" })
-  const [saving, setSaving] = useState(false)
-  const [saveError, setSaveError] = useState<string | null>(null)
-  const [lastSaved, setLastSaved] = useState<Date | null>(null)
+  const [mounted, setMounted] = useState(false)
+  const [isPickerOpen, setIsPickerOpen] = useState(false)
+  const [savingAvatar, setSavingAvatar] = useState(false)
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [loadingStats, setLoadingStats] = useState(true)
   const [profileStats, setProfileStats] = useState<{
@@ -45,25 +44,9 @@ export default function ProfilePage() {
     birthDate: "",
     schoolId: ""
   })
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
   const isStudentOrGuest = !isAdminOrTeacher
-
-  // Custom avatar options with emojis, custom designs, and cartoon characters
-  const avatarOptions = [
-    { type: "mascot", id: "fox", label: "Zorro" },
-    { type: "mascot", id: "owl", label: "Búho" },
-    { type: "mascot", id: "dolphin", label: "Delfín" },
-    { type: "mascot", id: "turtle", label: "Tortuga" },
-    { type: "mascot", id: "beaver", label: "Castor" },
-    { type: "mascot", id: "squirrel", label: "Ardilla" },
-    { type: "mascot", id: "dog", label: "Perro" },
-    { type: "mascot", id: "cat", label: "Gato" },
-    { type: "mascot", id: "lion", label: "León" },
-    { type: "mascot", id: "koala", label: "Koala" },
-    { type: "mascot", id: "penguin", label: "Pingüino" },
-  ]
 
   useEffect(() => {
     if (loading) return
@@ -80,14 +63,6 @@ export default function ProfilePage() {
       birthDate: user.user_metadata?.birth_date || "",
       schoolId: user.user_metadata?.school_id || ""
     })
-
-    // Initialize avatar - try to find saved avatar or use default
-    const savedAvatar = user.user_metadata?.avatar
-    if (savedAvatar && typeof savedAvatar === 'object') {
-      setSelectedAvatar(savedAvatar)
-    } else {
-      setSelectedAvatar({ type: "mascot", id: "fox", label: "Zorro" })
-    }
 
     // Fetch real user stats
     const fetchStats = async () => {
@@ -142,6 +117,43 @@ export default function ProfilePage() {
   // Mounted guard: prevents SSR/client hydration mismatch
   useEffect(() => { setMounted(true) }, [])
 
+  const inputStyle: React.CSSProperties = {
+    width: "100%", padding: "13px 16px", borderRadius: "12px", border: "1.5px solid #e2e8f0",
+    background: "#f8fafc", fontSize: "15px", fontFamily: "'Inter', sans-serif", color: "#475569"
+  }
+
+  const avatarOptions = [
+    { type: "mascot", id: "fox", label: "Zorro" },
+    { type: "mascot", id: "owl", label: "Búho" },
+    { type: "mascot", id: "dolphin", label: "Delfín" },
+    { type: "mascot", id: "turtle", label: "Tortuga" },
+    { type: "mascot", id: "beaver", label: "Castor" },
+    { type: "mascot", id: "squirrel", label: "Ardilla" },
+    { type: "mascot", id: "dog", label: "Perro" },
+    { type: "mascot", id: "cat", label: "Gato" },
+    { type: "mascot", id: "lion", label: "León" },
+    { type: "mascot", id: "koala", label: "Koala" },
+    { type: "mascot", id: "penguin", label: "Pingüino" },
+  ]
+
+  const updateAvatar = async (newAvatar: any) => {
+    if (!supabase) return
+    setSavingAvatar(true)
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: { avatar: newAvatar }
+      })
+      if (error) throw error
+      setIsPickerOpen(false)
+      router.refresh()
+    } catch (err) {
+      console.error("Error updating avatar:", err)
+      alert("No se pudo actualizar el avatar")
+    } finally {
+      setSavingAvatar(false)
+    }
+  }
+
   // Set body background for this page
   useEffect(() => {
     const htmlEl = document.documentElement
@@ -160,98 +172,6 @@ export default function ProfilePage() {
     }
   }, [])
 
-  // Auto-save function with debouncing
-  const autoSave = async () => {
-    if (!user) return
-
-    setSaving(true)
-    setSaveError(null)
-
-    try {
-      // Update user metadata in Supabase Auth
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          full_name: formData.fullName,
-          username: formData.username,
-          bio: formData.bio,
-          avatar: selectedAvatar,
-          birth_date: formData.birthDate,
-          school_id: formData.schoolId
-        }
-      })
-
-      if (error) {
-        throw error
-      }
-
-      // Also update the Prisma profile
-      await fetch('/api/profile/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fullName: formData.fullName,
-          avatar: selectedAvatar,
-          birthDate: formData.birthDate || null,
-          schoolId: formData.schoolId
-        })
-      })
-
-      // Refresh the user session to get updated metadata
-      await supabase.auth.refreshSession()
-
-      // Force refresh the AuthContext
-      await refreshUser()
-
-      // Success!
-      setLastSaved(new Date())
-      setShowAvatarPicker(false)
-      console.log("✅ Profile auto-saved successfully!")
-
-    } catch (error: any) {
-      console.error("Error saving profile:", error)
-      setSaveError(error.message || "Error al guardar")
-      // Clear error after 3 seconds
-      setTimeout(() => setSaveError(null), 3000)
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  // Trigger auto-save when form data or avatar changes (debounced)
-  useEffect(() => {
-    // Don't auto-save on initial load or if no user
-    if (!user || !formData.fullName) return
-
-    // Check if data actually changed from saved values
-    const hasChanges =
-      formData.fullName !== (user.user_metadata?.full_name || "") ||
-      formData.username !== (user.user_metadata?.username || "") ||
-      formData.bio !== (user.user_metadata?.bio || "") ||
-      formData.birthDate !== (user.user_metadata?.birth_date || "") ||
-      formData.schoolId !== (user.user_metadata?.school_id || "") ||
-      JSON.stringify(selectedAvatar) !== JSON.stringify(user.user_metadata?.avatar || { type: "mascot", id: "fox", label: "Zorro" })
-
-    // Only save if there are actual changes
-    if (!hasChanges) return
-
-    // Clear previous timeout
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current)
-    }
-
-    // Set new timeout for auto-save (3 seconds delay to avoid rate limiting)
-    saveTimeoutRef.current = setTimeout(() => {
-      autoSave()
-    }, 3000)
-
-    // Cleanup
-    return () => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData, selectedAvatar])
 
   if (loading || !mounted) {
     return <div style={{ minHeight: "100vh", background: "#FBFAF5" }} />
@@ -265,8 +185,7 @@ export default function ProfilePage() {
         __html: `
         @keyframes prof-fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
         @keyframes prof-float  { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-5px) } }
-        .prof-input { width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid #e2e8f0; background:#fff; font-size:15px; font-family:'Inter',sans-serif; color:#1f2937; outline:none; transition:all 0.2s; box-sizing:border-box; }
-        .prof-input:focus { border-color:#0F62FE; box-shadow:0 0 0 3px rgba(15,98,254,0.1); }
+        .prof-input { width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid #e2e8f0; background:#f8fafc; font-size:15px; font-family:'Inter',sans-serif; color:#475569; outline:none; transition:all 0.2s; box-sizing:border-box; cursor:default; }
         @media (max-width: 767px) {
           .profile-main-content { width:100% !important; max-width:100% !important; padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
         }
@@ -326,102 +245,68 @@ export default function ProfilePage() {
                 </h1>
                 <p style={{ fontSize: 14, color: "#93c5fd", margin: 0 }}>Administra tu información personal y progreso</p>
               </div>
-              {/* Avatar floating at bottom of banner */}
               <div style={{ position: "absolute", bottom: "-48px", left: "clamp(24px,4vw,48px)", zIndex: 10 }}>
                 <div
-                  onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-                  style={{ width: 96, height: 96, borderRadius: "50%", background: "linear-gradient(135deg,#0F62FE,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 32px rgba(15,98,254,0.4), 0 0 0 4px #fff", cursor: "pointer", position: "relative", transition: "transform 0.2s" }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.06)" }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = "" }}
+                  onClick={() => setIsPickerOpen(true)}
+                  style={{
+                    width: 96, height: 96, borderRadius: "50%",
+                    background: "linear-gradient(135deg,#0F62FE,#6366f1)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    boxShadow: "0 8px 32px rgba(15,98,254,0.4), 0 0 0 4px #fff",
+                    position: "relative", cursor: "pointer", transition: "transform 0.2s",
+                    overflow: "hidden"
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
+                  onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
                 >
-                  <AvatarDisplay avatar={selectedAvatar} size={52} />
-                  <div style={{ position: "absolute", bottom: 2, right: 2, width: 28, height: 28, borderRadius: "50%", background: "#FBFAF5", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
-                    <PencilIcon size={14} color="#0F62FE" />
+                  <AvatarDisplay avatar={user.user_metadata?.avatar || { type: "mascot", id: "fox" }} size={52} />
+                  <div style={{
+                    position: "absolute", bottom: 0, left: 0, width: "100%", height: "30%",
+                    background: "rgba(15,98,254,0.6)", display: "flex", alignItems: "center", justifyContent: "center",
+                    backdropFilter: "blur(4px)"
+                  }}>
+                    <Camera size={14} color="white" />
                   </div>
                 </div>
-                {/* Avatar Picker */}
-                {showAvatarPicker && (
-                  <div style={{
-                    position: "absolute",
-                    top: "108px",
-                    left: 0,
-                    background: "white",
-                    borderRadius: 20,
-                    padding: "16px",
-                    boxShadow: "0 12px 48px rgba(0,0,0,0.18)",
-                    border: "1px solid #e2e8f0",
-                    zIndex: 100,
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
-                    gap: 12,
-                    width: "280px",
-                    animation: "prof-fadeUp 0.3s ease-out"
-                  }}>
-                    {avatarOptions.map((av, idx) => {
-                      const isSelected = JSON.stringify(selectedAvatar) === JSON.stringify(av)
-                      return (
-                        <div
-                          key={av.id || idx}
-                          onClick={() => { setSelectedAvatar(av); setShowAvatarPicker(false) }}
-                          style={{
-                            width: 54,
-                            height: 54,
-                            borderRadius: "50%",
-                            background: isSelected ? "rgba(15,98,254,0.1)" : "#f8fafc",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            border: isSelected ? "3.5px solid #0F62FE" : "2px solid #f1f5f9",
-                            overflow: "hidden",
-                            transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)"
-                          }}
-                          onMouseEnter={e => {
-                            e.currentTarget.style.transform = "scale(1.15)"
-                            e.currentTarget.style.borderColor = isSelected ? "#0F62FE" : "#cbd5e1"
-                          }}
-                          onMouseLeave={e => {
-                            e.currentTarget.style.transform = ""
-                            e.currentTarget.style.borderColor = isSelected ? "#0F62FE" : "#f1f5f9"
-                          }}
-                        >
-                          <AvatarDisplay avatar={av} size={32} />
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
               </div>
             </div>
 
             {/* ── CONTENT AREA ── */}
             <div style={{ padding: "0 clamp(16px,4vw,48px)", display: "flex", flexDirection: "column", gap: 24 }}>
 
-              {/* Name / username / badges row (below banner) */}
-              <div style={{ paddingLeft: "clamp(110px,14vw,120px)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+              {/* Stats bar — premium pill row */}
+              <div style={{ paddingLeft: "clamp(110px,14vw,120px)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+                {/* Left: username + join date */}
                 <div>
                   {(user.user_metadata?.username || formData.username) && (
-                    <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#64748b" }}>@{user.user_metadata?.username || formData.username}</p>
+                    <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: "#64748b" }}>@{user.user_metadata?.username || formData.username}</p>
                   )}
                   {profileStats?.joinDate && (
-                    <p style={{ margin: "4px 0 0", fontSize: 12, color: "#94a3b8" }}>Se unió en {new Date(profileStats.joinDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}</p>
+                    <p style={{ margin: "4px 0 0", fontSize: 12, color: "#94a3b8", fontWeight: 400 }}>Se unió en {new Date(profileStats.joinDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}</p>
                   )}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+
+                {/* Right: stat pills */}
+                <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+                  <StreakWidget streak={dbProfile?.currentStreak || 0} />
+
                   {profileStats && (
                     <>
-                      <div style={{ textAlign: "center" }}><div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats.followersCount}</div><div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Seguidores</div></div>
-                      <div style={{ width: 1, height: 32, background: "#e2e8f0" }} />
-                      <div style={{ textAlign: "center" }}><div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats.followingCount}</div><div style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>Siguiendo</div></div>
+                      <div style={{ textAlign: "center" }}>
+                        <div style={{ fontSize: 18, fontWeight: 600, color: "#0f172a" }}>{profileStats.followersCount}</div>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b" }}>Seguidores</div>
+                      </div>
+                      <div style={{ width: 1, height: 24, background: "#e2e8f0" }} />
+                      <div style={{ textAlign: "center" }}>
+                        <div style={{ fontSize: 18, fontWeight: 600, color: "#0f172a" }}>{profileStats.followingCount}</div>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b" }}>Siguiendo</div>
+                      </div>
                     </>
                   )}
-                  <div style={{ display: "inline-flex", alignItems: "center", padding: "7px 16px", background: user.user_metadata?.plan === "premium" ? "linear-gradient(135deg,#FBBF24,#F59E0B)" : user.user_metadata?.plan === "estudiante" ? "linear-gradient(135deg,#3B82F6,#2563EB)" : "linear-gradient(135deg,#10B981,#059669)", borderRadius: 20, boxShadow: "0 4px 12px rgba(0,0,0,0.12)" }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#fff", textTransform: "capitalize" }}>{user.user_metadata?.plan === "premium" ? "Premium" : user.user_metadata?.plan === "estudiante" ? "Estudiante" : "Gratuito"}</span>
-                  </div>
                 </div>
               </div>
 
-              {/* Profile Card */}
+              {/* Profile Card – Premium Info Layout */}
               <div style={{
                 width: "100%",
                 background: "white",
@@ -431,70 +316,62 @@ export default function ProfilePage() {
                 border: "1px solid #e8f0fe",
                 boxSizing: "border-box"
               }}>
-                <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 8 }}>
+                <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", margin: "0 0 24px", display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ width: 4, height: 18, background: "linear-gradient(180deg,#0F62FE,#6366f1)", borderRadius: 2, display: "inline-block" }} />
                   Información Personal
                 </h2>
-                {/* Form Fields */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20 }}>
-                  <div>
-                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Nombre Completo</label>
-                    <input type="text" className="prof-input" value={formData.fullName} onChange={e => setFormData({ ...formData, fullName: e.target.value })} placeholder="Tu nombre completo" />
+
+                {/* Stat Pills Row */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginBottom: 20 }}>
+
+                  {/* Full Name */}
+                  <div style={{ background: "linear-gradient(135deg,#eff6ff,#dbeafe)", borderRadius: 18, padding: "16px 20px", border: "1.5px solid #bfdbfe", display: "flex", flexDirection: "column", gap: 4 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase", letterSpacing: "0.1em" }}>👤 Nombre</div>
+                    <div style={{ fontSize: 16, fontWeight: 500, color: "#0f172a", lineHeight: 1.2 }}>{formData.fullName || "Sin nombre"}</div>
                   </div>
-                  <div>
-                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Nombre de Usuario</label>
-                    <input type="text" className="prof-input" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} placeholder="tunombredeusuario" />
-                  </div>
-                  <div>
-                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Fecha de Nacimiento</label>
-                    <div style={{ position: "relative" }}>
-                      <input
-                        type="date"
-                        className="prof-input"
-                        value={formData.birthDate}
-                        max={new Date().toISOString().split('T')[0]}
-                        onChange={e => setFormData({ ...formData, birthDate: e.target.value })}
-                        style={{ colorScheme: "light" }}
-                      />
-                      {formData.birthDate && (() => {
-                        const bd = new Date(formData.birthDate)
-                        const today = new Date()
-                        let age = today.getFullYear() - bd.getFullYear()
-                        const m = today.getMonth() - bd.getMonth()
-                        if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--
-                        return (
-                          <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em" }}>Edad:</span>
-                            <span style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE" }}>{age} años</span>
-                          </div>
-                        )
-                      })()}
+
+                  {/* Username */}
+                  <div style={{ background: "linear-gradient(135deg,#f0f7ff,#e0eeff)", borderRadius: 18, padding: "16px 20px", border: "1.5px solid #bdd7ff", display: "flex", flexDirection: "column", gap: 4 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase", letterSpacing: "0.1em" }}>✦ Usuario</div>
+                    <div style={{ fontSize: 16, fontWeight: 500, color: "#0f172a", lineHeight: 1.2 }}>
+                      {formData.username ? `@${formData.username.replace('@', '')}` : "Sin usuario"}
                     </div>
                   </div>
-                  <div>
-                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Mi Escuela</label>
-                    <select
-                      className="prof-input"
-                      value={formData.schoolId}
-                      onChange={e => setFormData({ ...formData, schoolId: e.target.value })}
-                    >
-                      <option value="">Selecciona tu escuela</option>
-                      {schools.map(school => (
-                        <option key={school.id} value={school.id}>
-                          {school.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div style={{ gridColumn: "1 / -1" }}>
-                    <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Intereses Financieros</label>
-                    <textarea className="prof-input" value={formData.bio} onChange={e => setFormData({ ...formData, bio: e.target.value })} placeholder="¿Qué es lo que más te llama la atención del mundo de las finanzas?" rows={3} style={{ resize: "vertical" }} />
+
+                  {/* Birth Date */}
+                  {formData.birthDate && (() => {
+                    const bd = new Date(formData.birthDate)
+                    const today = new Date()
+                    let age = today.getFullYear() - bd.getFullYear()
+                    const m = today.getMonth() - bd.getMonth()
+                    if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--
+                    return (
+                      <div style={{ background: "linear-gradient(135deg,#eff6ff,#dbeafe)", borderRadius: 18, padding: "16px 20px", border: "1.5px solid #bfdbfe", display: "flex", flexDirection: "column", gap: 4 }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase", letterSpacing: "0.1em" }}>🎂 Edad</div>
+                        <div style={{ fontSize: 22, fontWeight: 600, color: "#0f172a", lineHeight: 1 }}>{age} <span style={{ fontSize: 13, fontWeight: 500, color: "#6b7280" }}>años</span></div>
+                        <div style={{ fontSize: 12, color: "#3b82f6", fontWeight: 500 }}>
+                          {bd.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* School */}
+                  <div style={{ background: "linear-gradient(135deg,#f0f7ff,#e0eeff)", borderRadius: 18, padding: "16px 20px", border: "1.5px solid #bdd7ff", display: "flex", flexDirection: "column", gap: 4 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase", letterSpacing: "0.1em" }}>🏫 Escuela</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", lineHeight: 1.3 }}>
+                      {schools.find(s => s.id === formData.schoolId)?.name || "Sin escuela asignada"}
+                    </div>
                   </div>
                 </div>
 
-                {/* Save Status (Success message hidden per request) */}
-                {saving && <div style={{ marginTop: 20, padding: "11px 16px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#2563eb" }}>Guardando cambios...</div>}
-                {saveError && <div style={{ marginTop: 20, padding: "11px 16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, fontSize: 14, fontWeight: 600, color: "#dc2626", display: "flex", alignItems: "center", gap: 8 }}><WarningIcon size={18} /> {saveError}</div>}
+                {/* Bio */}
+                <div style={{ background: "linear-gradient(135deg,#f8fafc,#f1f5f9)", borderRadius: 18, padding: "20px 24px", border: "1.5px solid #e2e8f0" }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>💡 Intereses Financieros</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: formData.bio ? "#1e293b" : "#94a3b8", lineHeight: 1.7, fontStyle: formData.bio ? "normal" : "italic" }}>
+                    {formData.bio || "Aún no has compartido tus intereses financieros. Ve a Configuración → Perfil para actualizarlos."}
+                  </div>
+                </div>
               </div>
 
               {/* Level & Progress Section */}
@@ -572,6 +449,64 @@ export default function ProfilePage() {
             </div>
           </div>
         </main >
+
+        {/* Mascot Picker Modal */}
+        {isPickerOpen && (
+          <div style={{
+            position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+            background: "rgba(15,23,42,0.6)", backdropFilter: "blur(8px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            zIndex: 9999, padding: 20
+          }} onClick={() => setIsPickerOpen(false)}>
+            <div style={{
+              background: "white", borderRadius: 28, width: "100%", maxWidth: 440,
+              padding: 32, boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+              position: "relative", animation: "modalIn 0.3s ease-out"
+            }} onClick={e => e.stopPropagation()}>
+              <button onClick={() => setIsPickerOpen(false)} style={{
+                position: "absolute", top: 20, right: 20, border: "none",
+                background: "#f1f5f9", borderRadius: "50%", padding: 8, cursor: "pointer",
+                color: "#64748b"
+              }}>
+                <CloseIcon size={20} />
+              </button>
+
+              <h3 style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", margin: "0 0 8px" }}>Elige tu Mascota</h3>
+              <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 24px" }}>Selecciona el avatar que más te represente en BIZEN</p>
+
+              <div style={{
+                display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(76px, 1fr))",
+                gap: 16, marginBottom: 10
+              }}>
+                {avatarOptions.map(av => {
+                  const isSelected = (user.user_metadata?.avatar?.id || "robot") === av.id
+                  return (
+                    <div key={av.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                      <button onClick={() => updateAvatar(av)} disabled={savingAvatar} style={{
+                        width: 70, height: 70, borderRadius: "50%", border: `2.5px solid ${isSelected ? "#0F62FE" : "#f1f5f9"}`,
+                        background: isSelected ? "#eff6ff" : "white", cursor: "pointer", transition: "all 0.2s",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        padding: 0, outline: "none", overflow: "hidden"
+                      }} onMouseEnter={e => !isSelected && (e.currentTarget.style.borderColor = "#bfdbfe")}
+                        onMouseLeave={e => !isSelected && (e.currentTarget.style.borderColor = "#f1f5f9")}>
+                        <AvatarDisplay avatar={av} size={48} />
+                      </button>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: isSelected ? "#0F62FE" : "#64748b" }}>{av.label}</span>
+                    </div>
+                  )
+                })}
+              </div>
+              {savingAvatar && <div style={{ textAlign: "center", marginTop: 10, fontSize: 13, color: "#0F62FE", fontWeight: 700 }}>Guardando...</div>}
+            </div>
+
+            <style jsx>{`
+              @keyframes modalIn {
+                from { opacity: 0; transform: scale(0.95) translateY(10px); }
+                to { opacity: 1; transform: scale(1) translateY(0); }
+              }
+            `}</style>
+          </div>
+        )}
       </div >
     </>
   )

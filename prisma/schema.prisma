@@ -113,12 +113,14 @@ model Profile {
 // ========================================
 
 model Course {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  level       String // "Beginner" | "Intermediate" | "Advanced"
-  isActive    Boolean  @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id            String   @id @default(cuid())
+  title         String   // "Tu Camino Financiero"
+  description   String?  // "Domina el dinero paso a paso..."
+  bannerUrl     String?  @map("banner_url") // Para el fondo azul degradado
+  icon          String?  // Icono principal del curso
+  level         String   // "Beginner" | "Intermediate" | "Advanced"
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
 
   units         Unit[]
   enrollments   Enrollment[]
@@ -143,15 +145,17 @@ model SchoolCourse {
 }
 
 model Unit {
-  id        String   @id @default(cuid())
-  courseId  String   @map("course_id")
-  title     String
-  order     Int
-  isLocked  Boolean  @default(false) @map("is_locked")
-  createdAt DateTime @default(now()) @map("created_at")
+  id          String   @id @default(cuid())
+  courseId    String   @map("course_id")
+  title       String
+  description String?  // Para el texto descriptivo del encabezado
+  icon        String?  // Ej: "wallet", "coins" para el icono de la tarjeta
+  order       Int
+  isLocked    Boolean  @default(false) @map("is_locked")
+  createdAt   DateTime @default(now()) @map("created_at")
 
   course        Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  lessons       Lesson[]
+  sections      Section[]      // Nueva relación con Secciones
   assignments   Assignment[]
   prerequisites Prerequisite[] @relation("RequiresUnit")
   unlocks       Prerequisite[] @relation("UnlocksUnit")
@@ -160,16 +164,30 @@ model Unit {
   @@schema("public")
 }
 
+model Section {
+  id        String   @id @default(cuid())
+  unitId    String   @map("unit_id")
+  title     String   // Ej: "¿Qué significa el dinero para mí?"
+  order     Int      // Para el número grande (1, 2, 3...)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  unit      Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+
+  @@map("sections")
+  @@schema("public")
+}
+
 model Lesson {
   id          String   @id @default(cuid())
-  unitId      String   @map("unit_id")
+  sectionId   String   @map("section_id") // Ahora pertenece a una sección
   title       String
   contentType String   @map("content_type") // "video" | "reading" | "exercise"
   order       Int
-  xpReward    Int      @default(50) @map("xp_reward") // XP awarded on completion
+  xpReward    Int      @default(50) @map("xp_reward") 
   createdAt   DateTime @default(now()) @map("created_at")
 
-  unit             Unit              @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  section          Section           @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   quizzes          Quiz[]
   progress         Progress[]
   lessonObjectives LessonObjective[]
@@ -312,6 +330,7 @@ model Progress {
   userId      String    @map("user_id")
   lessonId    String    @map("lesson_id")
   percent     Int       @default(0)
+  starsEarned Int       @default(0) @map("stars_earned") // Las 3 estrellas de la Imagen 2
   completedAt DateTime? @map("completed_at")
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
 
@@ -812,221 +831,7 @@ model Doodad {
   @@schema("public")
 }
 
-// ============================================
-// BUSINESS LAB MODELS
-// ============================================
-
-model LabTrack {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  key         String    @unique
-  title       String
-  description String?
-  icon        String?
-  color       String?
-  order       Int       @default(0)
-  isActive    Boolean   @default(true) @map("is_active")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
-
-  steps LabStep[]
-
-  @@map("lab_tracks")
-  @@schema("public")
-}
-
-model LabStep {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  trackId       String    @map("track_id") @db.Uuid
-  title         String
-  description   String?
-  goal          String?
-  order         Int       @default(0)
-  required      Boolean   @default(true)
-  estimatedTime String?   @map("estimated_time")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @default(now()) @map("updated_at")
-
-  track       LabTrack            @relation(fields: [trackId], references: [id], onDelete: Cascade)
-  progress    LabStepProgress[]
-  checklists  LabChecklist[]
-  artifacts   LabArtifact[]
-  experiments LabExperiment[]
-
-  @@index([trackId])
-  @@map("lab_steps")
-  @@schema("public")
-}
-
-model LabStepProgress {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId      String    @map("user_id") @db.Uuid
-  stepId      String    @map("step_id") @db.Uuid
-  isCompleted Boolean   @default(false) @map("is_completed")
-  completedAt DateTime? @map("completed_at")
-  notes       String?
-  updatedAt   DateTime  @default(now()) @map("updated_at")
-
-  step LabStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, stepId])
-  @@index([userId])
-  @@index([stepId])
-  @@map("lab_step_progress")
-  @@schema("public")
-}
-
-model LabChecklist {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  stepId    String   @map("step_id") @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  text      String
-  done      Boolean  @default(false)
-  order     Int      @default(0)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
-
-  step LabStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
-
-  @@unique([stepId, userId, text])
-  @@index([stepId, userId])
-  @@map("lab_checklists")
-  @@schema("public")
-}
-
-model LabArtifact {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  stepId    String   @map("step_id") @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  type      String
-  title     String
-  content   String?
-  url       String?
-  metadata  Json?
-  isShared  Boolean  @default(false) @map("is_shared")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
-
-  step LabStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([stepId])
-  @@map("lab_artifacts")
-  @@schema("public")
-}
-
-model LabTemplate {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  code        String   @unique
-  title       String
-  description String?
-  category    String?
-  schema      Json?
-  sample      String?
-  icon        String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @map("updated_at")
-
-  @@map("lab_templates")
-  @@schema("public")
-}
-
-model LabExperiment {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  stepId      String    @map("step_id") @db.Uuid
-  userId      String    @map("user_id") @db.Uuid
-  hypothesis  String
-  metric      String?
-  targetValue String?   @map("target_value")
-  result      String?
-  decision    String?
-  status      String    @default("planning")
-  startDate   DateTime? @map("start_date") @db.Date
-  endDate     DateTime? @map("end_date") @db.Date
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
-
-  step LabStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([stepId])
-  @@map("lab_experiments")
-  @@schema("public")
-}
-
-model LabScore {
-  userId         String   @id @map("user_id") @db.Uuid
-  readinessScore Int      @default(0) @map("readiness_score")
-  breakdown      Json?
-  notes          String?
-  calculatedAt   DateTime @default(now()) @map("calculated_at")
-  updatedAt      DateTime @default(now()) @map("updated_at")
-
-  @@map("lab_scores")
-  @@schema("public")
-}
-
-model LabAiJob {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId       String    @map("user_id") @db.Uuid
-  tool         String
-  status       String    @default("pending")
-  input        Json?
-  output       Json?
-  errorMessage String?   @map("error_message")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  completedAt  DateTime? @map("completed_at")
-
-  @@index([userId])
-  @@map("lab_ai_jobs")
-  @@schema("public")
-}
-
-model LabSimInput {
-  id        String   @id @default(cuid())
-  userId    String   @map("user_id") @db.Uuid
-  kind      String
-  params    Json
-  createdAt DateTime @default(now()) @map("created_at")
-
-  outputs LabSimOutput[]
-
-  @@index([userId])
-  @@map("lab_sim_inputs")
-  @@schema("public")
-}
-
-model LabSimOutput {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  inputId         String   @map("input_id")
-  results         Json
-  charts          Json?
-  recommendations String?
-  createdAt       DateTime @default(now()) @map("created_at")
-
-  input LabSimInput @relation(fields: [inputId], references: [id], onDelete: Cascade)
-
-  @@index([inputId])
-  @@map("lab_sim_outputs")
-  @@schema("public")
-}
-
-model LabMentor {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId        String    @map("user_id") @db.Uuid
-  bio           String?
-  expertise     String[]  @default([])
-  hourlyRate    Decimal?  @map("hourly_rate") @db.Decimal(10, 2)
-  availability  String?
-  isActive      Boolean   @default(true) @map("is_active")
-  rating        Decimal?  @default(0) @map("rating") @db.Decimal(3, 2)
-  totalSessions Int       @default(0) @map("total_sessions")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @default(now()) @map("updated_at")
-
-  @@index([userId])
-  @@map("lab_mentors")
-  @@schema("public")
-}
+// Business Lab models removed from Prisma as they are managed via Supabase SDK directly.
 
 model DiagnosticResult {
   id          String   @id @default(cuid())

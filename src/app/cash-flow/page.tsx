@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from '@/lib/supabase/client-microcred'
 import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop } from "lucide-react"
+import StreakWidget from "@/components/StreakWidget"
 
 interface Simulator {
   id: string;
@@ -83,7 +84,8 @@ const CATEGORY_ACCENT: Record<string, string> = {
 }
 
 export default function CombinedSimulatorsPage() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, dbProfile } = useAuth()
+  const streak = dbProfile?.currentStreak || 0
   const router = useRouter()
 
   const [activeTab, setActiveTab] = useState<"simulators" | "cashflow">("cashflow")
@@ -100,6 +102,7 @@ export default function CombinedSimulatorsPage() {
   const [startingGame, setStartingGame] = useState(false)
   const [showNewGame, setShowNewGame] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [weeklyActiveDays, setWeeklyActiveDays] = useState<string[]>([])
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth <= 767)
@@ -128,6 +131,11 @@ export default function CombinedSimulatorsPage() {
     if (user) {
       fetchProfessions()
       fetchGames()
+      // Fetch weekly active days for calendar
+      fetch("/api/user/stats")
+        .then(r => r.ok ? r.json() : null)
+        .then(data => { if (data?.weeklyActiveDays) setWeeklyActiveDays(data.weeklyActiveDays) })
+        .catch(() => { })
     }
   }, [user])
 
@@ -297,42 +305,54 @@ export default function CombinedSimulatorsPage() {
           {/* Header */}
           <div style={{ marginBottom: "40px" }}>
             <div style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              background: "rgba(11,113,254,0.08)",
-              border: "1px solid rgba(11,113,254,0.2)",
-              borderRadius: 999,
-              padding: "6px 16px",
-              marginBottom: 16,
-              fontSize: 12,
-              fontWeight: 700,
-              color: "#0B71FE",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase"
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              flexWrap: "wrap",
+              gap: 16,
+              marginBottom: 0,
             }}>
-              <BarChart2 size={14} />
-              Herramientas Interactivas
+              <div>
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  background: "rgba(11,113,254,0.08)",
+                  border: "1px solid rgba(11,113,254,0.2)",
+                  borderRadius: 999,
+                  padding: "6px 16px",
+                  marginBottom: 16,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: "#0B71FE",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase"
+                }}>
+                  <BarChart2 size={14} />
+                  Herramientas Interactivas
+                </div>
+                <h1 style={{
+                  fontSize: "clamp(28px, 4vw, 48px)",
+                  fontWeight: 900,
+                  margin: "0 0 12px",
+                  color: "#0f172a",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.15
+                }}>
+                  Simulador Financiero
+                </h1>
+                <p style={{
+                  fontSize: "clamp(15px, 1.3vw, 18px)",
+                  color: "#64748b",
+                  maxWidth: "640px",
+                  margin: 0,
+                  lineHeight: 1.65
+                }}>
+                  Explora herramientas interactivas y juegos para dominar tus finanzas personales y construir riqueza real.
+                </p>
+              </div>
+              <StreakWidget streak={streak} showCalendar activeDays={weeklyActiveDays} />
             </div>
-            <h1 style={{
-              fontSize: "clamp(28px, 4vw, 48px)",
-              fontWeight: 900,
-              margin: "0 0 12px",
-              color: "#0f172a",
-              letterSpacing: "-0.02em",
-              lineHeight: 1.15
-            }}>
-              Simulador Financiero
-            </h1>
-            <p style={{
-              fontSize: "clamp(15px, 1.3vw, 18px)",
-              color: "#64748b",
-              maxWidth: "640px",
-              margin: 0,
-              lineHeight: 1.65
-            }}>
-              Explora herramientas interactivas y juegos para dominar tus finanzas personales y construir riqueza real.
-            </p>
           </div>
 
           {/* Tab Selection */}

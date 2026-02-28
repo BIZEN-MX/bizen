@@ -266,13 +266,13 @@ export default function PuntosPage() {
                     </div>
 
                     {/* Streak */}
-                    <div className="puntos-stat-card" style={{ background: "white", borderRadius: 24, padding: "28px 32px", border: "1px solid #fee2e2", boxShadow: "0 4px 20px rgba(239,68,68,0.06)", display: "flex", alignItems: "center", gap: 20 }}>
-                        <div style={{ width: 60, height: 60, background: "linear-gradient(135deg, #fee2e2, #fecaca)", borderRadius: "18px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 14px rgba(239,68,68,0.3)", animation: "puntos-float 3s ease-in-out infinite" }}>
-                            <Flame size={28} color="#ef4444" />
+                    <div className="puntos-stat-card" style={{ background: "white", borderRadius: 24, padding: "28px 32px", border: "1px solid #e0e7ff", boxShadow: "0 4px 20px rgba(15,98,254,0.06)", display: "flex", alignItems: "center", gap: 20 }}>
+                        <div style={{ width: 60, height: 60, background: "linear-gradient(135deg, #e0e7ff, #c7d2fe)", borderRadius: "18px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 14px rgba(15,98,254,0.25)", animation: "puntos-float 3s ease-in-out infinite" }}>
+                            <Flame size={28} color="#0F62FE" />
                         </div>
                         <div>
                             <div style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Racha actual</div>
-                            <div style={{ fontSize: 38, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{stats?.currentStreak || 0}<span style={{ fontSize: 16, fontWeight: 600, color: "#ef4444", marginLeft: 4 }}>días</span></div>
+                            <div style={{ fontSize: 38, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{stats?.currentStreak || 0}<span style={{ fontSize: 16, fontWeight: 600, color: "#0F62FE", marginLeft: 4 }}>días</span></div>
                             <div style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>¡No la rompas!</div>
                         </div>
                     </div>
@@ -372,7 +372,7 @@ export default function PuntosPage() {
                             { IconComp: Zap, label: "Reto Diario", xp: "+50 XP", color: "#0F62FE", desc: "Completa el reto del día" },
                             { IconComp: BookOpen, label: "Lecciones", xp: "+25 XP", color: "#10b981", desc: "Termina una lección del curso" },
                             { IconComp: Target, label: "Quizzes", xp: "+30 XP", color: "#f59e0b", desc: "Responde preguntas correctamente" },
-                            { IconComp: Flame, label: "Racha 7 días", xp: "+100 XP", color: "#ef4444", desc: "Mantén tu racha una semana" },
+                            { IconComp: Flame, label: "Racha 7 días", xp: "+100 XP", color: "#0F62FE", desc: "Mantén tu racha una semana" },
                         ].map(item => (
                             <div key={item.label} style={{ background: "#FBFAF5", borderRadius: 16, padding: "20px", border: `1px solid ${item.color}18`, borderLeft: `3px solid ${item.color}` }}>
                                 <div style={{ width: 42, height: 42, borderRadius: 12, background: `${item.color}15`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14, border: `1px solid ${item.color}20` }}>

@@ -7,6 +7,7 @@ import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { ThreadCardSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
+import StreakWidget from "@/components/StreakWidget"
 import {
   Target, MessageCircle, Briefcase, CheckCircle, AlertCircle,
   ChevronDown, ChevronUp,
@@ -279,7 +280,8 @@ function EvidenceCard({
 
 // ── Main Forum Content ─────────────────────────────────────────────────────────
 function ForumContent() {
-  const { user, loading } = useAuth()
+  const { user, loading, dbProfile } = useAuth()
+  const streak = dbProfile?.currentStreak || 0
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -467,7 +469,8 @@ function ForumContent() {
                   Comparte, aprende y conecta con tu grupo
                 </h1>
               </div>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                <StreakWidget streak={streak} />
                 <Link href="/forum/bookmarks" style={{ padding: "10px 16px", background: "white", color: "#374151", borderRadius: 10, fontWeight: 600, textDecoration: "none", fontSize: 13, border: "1.5px solid #e2e8f0" }}>Guardados</Link>
                 <Link href="/forum/new" style={{ padding: "10px 18px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", borderRadius: 10, fontWeight: 700, textDecoration: "none", fontSize: 13, boxShadow: "0 4px 12px rgba(15,98,254,0.3)" }}>+ Crear Tema</Link>
               </div>
