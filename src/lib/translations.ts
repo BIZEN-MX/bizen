@@ -39,12 +39,6 @@ export const translations = {
       course: "CURSO",
       lessons: "lecciones",
       hours: "horas",
-      levels: {
-        beginner: "Principiante",
-        intermediate: "Intermedio",
-        advanced: "Avanzado",
-        courses: "Cursos"
-      },
       progress: {
         yourProgress: "Tu Progreso",
         coursesCompleted: "Cursos completados"
@@ -163,12 +157,6 @@ export const translations = {
       course: "COURSE",
       lessons: "lessons",
       hours: "hours",
-      levels: {
-        beginner: "Beginner",
-        intermediate: "Intermediate",
-        advanced: "Advanced",
-        courses: "Courses"
-      },
       progress: {
         yourProgress: "Your Progress",
         coursesCompleted: "Courses completed"

@@ -546,13 +546,6 @@ function SettingsContent() {
           {/* ── CONTENT */}
           {activeSection === "content" && (<div>
             <SectionHeading icon={<Tv size={20} color="white" />}>Contenido</SectionHeading>
-            <div style={{ marginBottom: 24 }}>
-              <FieldLabel>Nivel de Dificultad</FieldLabel>
-              <PillSelect
-                options={[{ v: "beginner", l: "Principiante" }, { v: "intermediate", l: "Intermedio" }, { v: "advanced", l: "Avanzado" }]}
-                value={settings.contentPreferences.difficultyLevel}
-                onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, difficultyLevel: v as any } })} />
-            </div>
             <div style={{ background: "#f8faff", borderRadius: 16, padding: "20px 24px", border: "1.5px solid #e0eaff" }}>
               <ToggleRow label="Subtítulos" desc="Activar subtítulos en videos"
                 checked={settings.contentPreferences.showSubtitles}

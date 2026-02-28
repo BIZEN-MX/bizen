@@ -56,7 +56,6 @@ interface Course {
   id: string
   title: string
   description: string
-  level: string
   order: number
   isLocked: boolean
   isCompleted: boolean
@@ -219,7 +218,7 @@ export default function CoursesPage() {
       {/* Hide MobileBottomNav on courses page */}
       <style>{`
         @media (max-width: 767px) {
-          [data-mobile-bottom-nav] {
+          [data-mobile-bottom-nav], .progress-card-mobile-hide {
             display: none !important;
           }
         }
@@ -277,7 +276,7 @@ export default function CoursesPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                 <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
                   <Zap size={13} color="#60a5fa" />
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>30 Temas · Educación Financiera</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>30 Temas</span>
                 </div>
               </div>
               <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 900, color: "#ffffff", margin: "0 0 10px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
@@ -311,7 +310,7 @@ export default function CoursesPage() {
 
           {/* Progress indicator – lessons completed across all 30 topics */}
           <div
-            className="progress-card-responsive"
+            className="progress-card-responsive progress-card-mobile-hide"
             style={{
               width: "100%",
               marginBottom: "clamp(28px, 5vw, 44px)",

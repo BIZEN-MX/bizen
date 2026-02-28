@@ -14,11 +14,8 @@ import {
   PuzzleIcon
 } from "@/components/CustomIcons"
 
-type Level = "Principiante" | "Intermedio" | "Avanzado"
-
 export type Course = {
   title: string
-  level: Level
   duration: string
   image: string
   url: string
@@ -463,7 +460,6 @@ export type LandingPageProps = {
 const defaultCourses: Course[] = [
   {
     title: "Finanzas personales desde cero",
-    level: "Principiante",
     duration: "4h",
     image:
       "https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=1200&auto=format&fit=crop",
@@ -471,7 +467,6 @@ const defaultCourses: Course[] = [
   },
   {
     title: "Presupuesto 50/30/20 en la vida real",
-    level: "Principiante",
     duration: "2h",
     image:
       "https://images.unsplash.com/photo-1559066653-e8b5f22f1f83?q=80&w=1200&auto=format&fit=crop",
@@ -479,7 +474,6 @@ const defaultCourses: Course[] = [
   },
   {
     title: "Inversión básica y fondos índice",
-    level: "Intermedio",
     duration: "5h",
     image:
       "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop",
@@ -487,7 +481,6 @@ const defaultCourses: Course[] = [
   },
   {
     title: "Crédito responsable y score",
-    level: "Intermedio",
     duration: "3h",
     image:
       "https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=1200&auto=format&fit=crop",
@@ -495,7 +488,6 @@ const defaultCourses: Course[] = [
   },
   {
     title: "Fraudes comunes y protección digital",
-    level: "Principiante",
     duration: "1.5h",
     image:
       "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=1200&auto=format&fit=crop",
@@ -503,7 +495,6 @@ const defaultCourses: Course[] = [
   },
   {
     title: "Impuestos básicos para estudiantes",
-    level: "Intermedio",
     duration: "2.5h",
     image:
       "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop",
@@ -1005,11 +996,9 @@ export default function LandingPage(p: LandingPageProps) {
                   <div className="course-body">
                     <h3 className="course-title">{c.title}</h3>
                     <div className="course-meta">
-                      <span className="pill">{c.level}</span>
-                      <span className="dot" aria-hidden="true">
-                        ·
+                      <span className="course-duration">
+                        <ClockIcon size={14} /> {c.duration}
                       </span>
-                      <span className="meta">{c.duration}</span>
                     </div>
                   </div>
                   <div className="course-actions">

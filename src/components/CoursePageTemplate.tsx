@@ -46,7 +46,6 @@ import {
 
 export interface GenericLesson {
     title: string
-    level: string
     slug: string
 }
 
@@ -98,11 +97,6 @@ const ALL_TOPICS: TopicMeta[] = [
     { id: 30, title: "Mi vida financiera a futuro", icon: Target, color: "#0B71FE", lessons: 10 },
 ]
 
-const LEVEL_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-    Básico: { bg: "#dcfce7", text: "#166534", border: "#bbf7d0" },
-    Intermedio: { bg: "#fef3c7", text: "#92400e", border: "#fde68a" },
-    Avanzado: { bg: "#ede9fe", text: "#5b21b6", border: "#ddd6fe" },
-}
 
 /** Blend a hex colour toward near-black to build a dark-to-vivid hero gradient. */
 function buildHeroGradient(hex: string): string {
@@ -231,7 +225,7 @@ export default function CoursePageTemplate({
                                 <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
                                     <Zap size={12} color="#60a5fa" />
                                     <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                                        Tema {topicId.toString().padStart(2, "0")} · Educación Financiera
+                                        Tema {topicId.toString().padStart(2, "0")}
                                     </span>
                                 </div>
                             </div>
@@ -331,7 +325,6 @@ export default function CoursePageTemplate({
                                         style={{ display: "flex", flexDirection: "row", gap: 16, overflowX: "auto", overflowY: "hidden", paddingBottom: 10, paddingTop: 4, scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "thin" }}
                                     >
                                         {sub.lessons.map((lesson, lessonIdx) => {
-                                            const levelColors = LEVEL_COLORS[lesson.level] || LEVEL_COLORS["Básico"]
                                             const isDone = completedLessons.includes(lesson.slug)
                                             const stars = isDone ? (lessonStars[lesson.slug] ?? 0) : 0
 
@@ -380,11 +373,8 @@ export default function CoursePageTemplate({
                                                         {lesson.title}
                                                     </div>
 
-                                                    {/* Footer: level + stars */}
-                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto" }}>
-                                                        <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 6, background: levelColors.bg, color: levelColors.text, border: `1px solid ${levelColors.border}` }}>
-                                                            {lesson.level}
-                                                        </span>
+                                                    {/* Footer: stars */}
+                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
                                                         <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
                                                             {[1, 2, 3].map((i) => (
                                                                 <img
