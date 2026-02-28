@@ -131,9 +131,9 @@ export default function MobileFooterNav() {
           bottom: 0 !important;
           left: 0 !important;
           right: 0 !important;
-          width: 100vw !important;
-          height: calc(65px + max(env(safe-area-inset-bottom), 0px)) !important;
-          padding-bottom: max(env(safe-area-inset-bottom), 0px) !important;
+          height: 65px !important;
+          padding-bottom: env(safe-area-inset-bottom) !important;
+          box-sizing: content-box !important;
           background: #FBFAF5 !important;
           border-top: 2px solid #0F62FE !important;
           box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05) !important;
@@ -143,6 +143,8 @@ export default function MobileFooterNav() {
           margin: 0 !important;
           transform: translateZ(0) !important;
           -webkit-transform: translateZ(0) !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
           will-change: transform !important;
         }
         .mobile-footer-inner {

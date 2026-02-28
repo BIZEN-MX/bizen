@@ -61,6 +61,18 @@ export default function WelcomePage() {
     }
   }, [authDropdownOpen])
 
+  // Fix body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [mobileMenuOpen])
+
   const heroCardSummaries: { title: string; summary: string }[] = [
     {
       title: "Finanzas personales",
@@ -289,8 +301,11 @@ export default function WelcomePage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
-            overflow: "hidden"
+            justifyContent: "flex-start",
+            overflowY: "auto",
+            overflowX: "hidden",
+            padding: "min(12vh, 100px) 0 60px",
+            boxSizing: "border-box"
           }}
           onClick={() => setMobileMenuOpen(false)}
         >
@@ -304,7 +319,7 @@ export default function WelcomePage() {
             style={{
               width: "100%",
               maxWidth: "min(400px, 88vw)",
-              padding: "40px clamp(16px, 5vw, 24px)",
+              padding: "20px clamp(16px, 5vw, 24px)",
               textAlign: "center",
               position: "relative",
               zIndex: 1,

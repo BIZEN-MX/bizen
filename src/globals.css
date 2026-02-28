@@ -367,6 +367,8 @@ html {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Hardware acceleration for background layers */
+  transform: translateZ(0);
 }
 
 .app-scroll {
@@ -410,7 +412,8 @@ body {
 
 @media (max-width: 767px) {
   body[data-mobile-footer="true"] .app-scroll {
-    padding-bottom: calc(65px + env(safe-area-inset-bottom)) !important;
+    /* Stable padding to account for fixed bottom nav */
+    padding-bottom: calc(65px + env(safe-area-inset-bottom) + 16px) !important;
   }
 }
 
