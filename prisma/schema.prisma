@@ -352,25 +352,6 @@ model Progress {
   @@schema("public")
 }
 
-model EvidencePost {
-  id               String   @id @default(cuid())
-  userId           String   @map("user_id")
-  dailyChallengeId String   @map("daily_challenge_id")
-  content          String   @db.Text
-  imageUrl         String?  @map("image_url")  // Foto de la evidencia
-  isVerified       Boolean  @default(false) @map("is_verified") // Si cuenta para el bono escolar
-  likesCount       Int      @default(0) @map("likes_count")
-  createdAt        DateTime @default(now()) @map("created_at")
-
-  user           Profile        @relation(fields: [userId], references: [userId], onDelete: Cascade)
-  dailyChallenge DailyChallenge @relation(fields: [dailyChallengeId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([dailyChallengeId])
-  @@map("evidence_posts")
-  @@schema("public")
-}
-
 model Attempt {
   id          String   @id @default(cuid())
   userId      String   @map("user_id")
