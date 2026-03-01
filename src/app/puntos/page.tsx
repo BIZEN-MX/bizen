@@ -153,7 +153,7 @@ export default function PuntosPage() {
                         <div style={{ textAlign: "center", marginBottom: 24 }}>
                             <div style={{ fontSize: 48, marginBottom: 12 }}>🎁</div>
                             <h2 style={{ fontSize: 24, fontWeight: 900, color: "#0f172a", margin: "0 0 8px" }}>¿Canjear tarjeta?</h2>
-                            <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>Esto descontará {selectedGC.points.toLocaleString()} XP de tu saldo</p>
+                            <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>Esto descontará {selectedGC.points.toLocaleString()} BIZCOINS de tu saldo</p>
                         </div>
 
                         {/* Mini gift card preview */}
@@ -163,13 +163,13 @@ export default function PuntosPage() {
                                 <div style={{ fontSize: 22, fontWeight: 900, color: selectedGC.color }}>{selectedGC.value}</div>
                             </div>
                             <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: "10px 14px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.8)" }}>
-                                -{selectedGC.points.toLocaleString()} XP
+                                -{selectedGC.points.toLocaleString()} BIZCOINS
                             </div>
                         </div>
 
                         {userPoints < selectedGC.points && (
                             <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: "12px 16px", marginBottom: 16, display: "flex", gap: 8, alignItems: "center", color: "#dc2626", fontSize: 13, fontWeight: 600 }}>
-                                <Lock size={15} /> No tienes suficientes XP para este canje.
+                                <Lock size={15} /> No tienes suficientes BIZCOINS para este canje.
                             </div>
                         )}
 
@@ -216,17 +216,17 @@ export default function PuntosPage() {
                         <div>
                             <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
                                 <Zap size={13} color="#60a5fa" />
-                                <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tu saldo de puntos</span>
+                                <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tu saldo de BIZCOINS</span>
                             </div>
                             <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 900, color: "#ffffff", margin: "0 0 8px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-                                Mis Puntos BIZEN
+                                Mis BIZCOINS
                             </h1>
                             <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "#93c5fd", margin: 0 }}>
-                                Aprende, acumula XP y canjéalos por premios reales
+                                Aprende, acumula BIZCOINS y canjéalos por premios reales
                             </p>
                         </div>
 
-                        {/* Big XP balloon */}
+                        {/* Big BIZCOINS balloon */}
                         <div style={{
                             background: "rgba(255,255,255,0.1)",
                             border: "1px solid rgba(255,255,255,0.15)",
@@ -246,7 +246,7 @@ export default function PuntosPage() {
                             }}>
                                 {(userPoints).toLocaleString()}
                             </div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4 }}>XP disponibles</div>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4 }}>BIZCOINS disponibles</div>
                         </div>
                     </div>
                 </div>
@@ -282,7 +282,7 @@ export default function PuntosPage() {
                         <div style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>Progreso nivel {(stats?.level || 1) + 1}</div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
                             <span style={{ fontSize: 28, fontWeight: 900, color: "#0f172a" }}>{stats?.xpInCurrentLevel || 0}</span>
-                            <span style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8" }}>/ {stats?.xpNeeded || 500} XP</span>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8" }}>/ {stats?.xpNeeded || 500} BIZCOINS</span>
                         </div>
                         <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 10, overflow: "hidden" }}>
                             <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 500)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #60a5fa, #0F62FE)", borderRadius: 10, boxShadow: "0 0 10px rgba(15,98,254,0.5)", transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)" }} />
@@ -296,10 +296,10 @@ export default function PuntosPage() {
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
                         <div>
                             <h2 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 900, color: "#0f172a", margin: "0 0 4px" }}>
-                                Canjea tus puntos
+                                Canjea tus BIZCOINS
                             </h2>
                             <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
-                                Convierte tu XP en tarjetas de regalo para usar en tiendas reales
+                                Convierte tus BIZCOINS en tarjetas de regalo para usar en tiendas reales
                             </p>
                         </div>
                         <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "1px solid #bfdbfe", borderRadius: 999, padding: "8px 16px" }}>
@@ -336,7 +336,7 @@ export default function PuntosPage() {
                                             <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Costo</div>
                                             <div style={{ fontSize: 18, fontWeight: 900, color: canAfford ? "#0F62FE" : "#94a3b8", display: "flex", alignItems: "center", gap: 5 }}>
                                                 <Star size={14} fill={canAfford ? "#0F62FE" : "#94a3b8"} color={canAfford ? "#0F62FE" : "#94a3b8"} />
-                                                {card.points.toLocaleString()} XP
+                                                {card.points.toLocaleString()} BIZCOINS
                                             </div>
                                         </div>
                                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -369,10 +369,10 @@ export default function PuntosPage() {
                     <h2 style={{ fontSize: "clamp(18px, 2.5vw, 22px)", fontWeight: 800, color: "#0f172a", margin: "0 0 20px" }}>Cómo ganar más XP</h2>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
                         {[
-                            { IconComp: Zap, label: "Reto Diario", xp: "+50 XP", color: "#0F62FE", desc: "Completa el reto del día" },
-                            { IconComp: BookOpen, label: "Lecciones", xp: "+25 XP", color: "#10b981", desc: "Termina una lección del curso" },
-                            { IconComp: Target, label: "Quizzes", xp: "+30 XP", color: "#f59e0b", desc: "Responde preguntas correctamente" },
-                            { IconComp: Flame, label: "Racha 7 días", xp: "+100 XP", color: "#0F62FE", desc: "Mantén tu racha una semana" },
+                            { IconComp: Zap, label: "Reto Diario", xp: "+50 BIZCOINS", color: "#0F62FE", desc: "Completa el reto del día" },
+                            { IconComp: BookOpen, label: "Lecciones", xp: "+25 BIZCOINS", color: "#10b981", desc: "Termina una lección del curso" },
+                            { IconComp: Target, label: "Quizzes", xp: "+30 BIZCOINS", color: "#f59e0b", desc: "Responde preguntas correctamente" },
+                            { IconComp: Flame, label: "Racha 7 días", xp: "+100 BIZCOINS", color: "#0F62FE", desc: "Mantén tu racha una semana" },
                         ].map(item => (
                             <div key={item.label} style={{ background: "#FBFAF5", borderRadius: 16, padding: "20px", border: `1px solid ${item.color}18`, borderLeft: `3px solid ${item.color}` }}>
                                 <div style={{ width: 42, height: 42, borderRadius: 12, background: `${item.color}15`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14, border: `1px solid ${item.color}20` }}>

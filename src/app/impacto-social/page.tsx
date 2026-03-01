@@ -714,55 +714,6 @@ export default function ImpactoSocialPage() {
                                 </div>
                             </div>
 
-                            {/* ── SECTION 2: WEEKLY ACTIVITY HEATMAP ──────────── */}
-                            <div style={{ marginBottom: 32 }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                                    <Clock size={17} color="#64748b" />
-                                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#0f172a" }}>Tu huella últimas 4 semanas</h3>
-                                </div>
-                                <div style={{
-                                    background: "#FBFAF5", border: "1.5px solid #f1f5f9",
-                                    borderRadius: 20, padding: "20px 24px",
-                                    boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
-                                }}>
-                                    {/* Day labels */}
-                                    <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
-                                        {["L", "M", "X", "J", "V", "S", "D"].map(d => (
-                                            <div key={d} style={{ flex: 1, textAlign: "center", fontSize: 10, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase" }}>{d}</div>
-                                        ))}
-                                    </div>
-                                    {/* 4 weeks of dots */}
-                                    {[
-                                        [3, 2, 0, 1, 3, 0, 0],
-                                        [1, 3, 2, 3, 2, 1, 0],
-                                        [2, 0, 3, 2, 1, 0, 0],
-                                        [3, 2, 1, 0, 3, 0, 0],
-                                    ].map((week, wi) => (
-                                        <div key={wi} style={{ display: "flex", gap: 6, marginBottom: 6 }}>
-                                            {week.map((level, di) => (
-                                                <div
-                                                    key={di}
-                                                    className="day-dot"
-                                                    title={level === 0 ? "Sin actividad" : `${level} actividad${level > 1 ? "es" : ""}`}
-                                                    style={{
-                                                        flex: 1, height: 14,
-                                                        background: level === 0 ? "#f1f5f9" : level === 1 ? "#bfdbfe" : level === 2 ? "#60a5fa" : "#0F62FE",
-                                                        borderRadius: 3,
-                                                        cursor: "default"
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                    ))}
-                                    <div style={{ display: "flex", gap: 12, marginTop: 10, justifyContent: "flex-end", alignItems: "center" }}>
-                                        <span style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>Menos</span>
-                                        {["#f1f5f9", "#bfdbfe", "#60a5fa", "#0F62FE"].map(c => (
-                                            <div key={c} style={{ width: 10, height: 10, borderRadius: 2, background: c }} />
-                                        ))}
-                                        <span style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>Más</span>
-                                    </div>
-                                </div>
-                            </div>
 
                             {/* ── SECTION 3: REAL-WORLD EQUIVALENCES ──────────── */}
                             <div style={{ marginBottom: 32 }}>
@@ -796,67 +747,6 @@ export default function ImpactoSocialPage() {
 
                             {/* ── SECTION 4: SOCIAL BADGES + CTAs ─────────────── */}
                             <div className="student-main-layout">
-                                {/* Badges */}
-                                <div>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                                        <Award size={17} color="#64748b" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Insignias Sociales</h3>
-                                    </div>
-                                    <div style={{
-                                        background: "#FBFAF5", border: "1.5px solid #f1f5f9",
-                                        borderRadius: 20, padding: "16px",
-                                        boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
-                                    }}>
-                                        {[
-                                            {
-                                                icon: <Users size={22} color="#0F62FE" />,
-                                                bg: "#eff6ff", name: "Compañero Activo",
-                                                desc: "Mantuviste 3+ sesiones/mes durante 2 meses seguidos",
-                                                unlocked: true, color: "#0F62FE"
-                                            },
-                                            {
-                                                icon: <Award size={22} color="#10b981" />,
-                                                bg: "#ecfdf5", name: "Módulo Estrella",
-                                                desc: "Completaste 1 módulo completo en el ciclo",
-                                                unlocked: true, color: "#10b981"
-                                            },
-                                            {
-                                                icon: <TargetIcon size={22} color="#f59e0b" />,
-                                                bg: "#fffbeb", name: "Racha de Impacto",
-                                                desc: "Logra 7 días consecutivos activos para desbloquear",
-                                                unlocked: false, color: "#f59e0b"
-                                            },
-                                            {
-                                                icon: <Heart size={22} color="#ef4444" />,
-                                                bg: "#fef2f2", name: "Corazón Comunidad",
-                                                desc: "Participa en el Foro con 5 posts este mes",
-                                                unlocked: false, color: "#ef4444"
-                                            },
-                                        ].map((badge, i) => (
-                                            <div key={i} className="badge-chip" style={{
-                                                opacity: badge.unlocked ? 1 : 0.55,
-                                                borderBottom: i < 3 ? "1px solid #f8fafc" : "none"
-                                            }}>
-                                                <div style={{
-                                                    width: 44, height: 44, borderRadius: 14,
-                                                    background: badge.unlocked ? badge.bg : "#f8fafc",
-                                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                                    flexShrink: 0,
-                                                    border: badge.unlocked ? `1.5px solid ${badge.color}22` : "1.5px solid #e2e8f0"
-                                                }}>
-                                                    {badge.unlocked ? badge.icon : <Lock size={20} color="#cbd5e1" />}
-                                                </div>
-                                                <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <div style={{ fontSize: 13, fontWeight: 600, color: badge.unlocked ? "#0f172a" : "#94a3b8", marginBottom: 2 }}>
-                                                        {badge.name}
-                                                        {badge.unlocked && <span style={{ marginLeft: 6, fontSize: 10, fontWeight: 700, color: badge.color, background: `${badge.color}15`, padding: "1px 6px", borderRadius: 99 }}>✓ Ganada</span>}
-                                                    </div>
-                                                    <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.4 }}>{badge.desc}</div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
 
                                 {/* CTA Actions */}
                                 <div>
@@ -1025,6 +915,68 @@ export default function ImpactoSocialPage() {
                                 }
                             `}</style>
 
+                            {/* ── BIZEN TRANSPARENCY SCORE HERO (Moved) ─────────── */}
+                            <div style={{
+                                background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
+                                borderRadius: 24, padding: "32px", marginBottom: 32,
+                                color: "#fff", position: "relative", overflow: "hidden",
+                                animation: "school-fade-in 0.5s ease both"
+                            }}>
+                                {/* BG glow */}
+                                <div style={{
+                                    position: "absolute", top: -60, right: -60,
+                                    width: 240, height: 240,
+                                    background: "radial-gradient(circle, rgba(15,98,254,0.3) 0%, transparent 70%)",
+                                    borderRadius: "50%", pointerEvents: "none"
+                                }} />
+                                <div className="transp-hero-layout" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24 }}>
+                                    <div>
+                                        <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
+                                            BIZEN Transparency Score
+                                        </div>
+                                        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
+                                            <span style={{ fontSize: 52, fontWeight: 700, lineHeight: 1 }}>9.4</span>
+                                            <span style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>/10</span>
+                                        </div>
+                                        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", margin: "0 0 20px", lineHeight: 1.6, maxWidth: 380 }}>
+                                            Tu escuela tiene un nivel de transparencia financiera <strong style={{ color: "#fff" }}>Excepcional</strong>. Toda donación cuenta con evidencia verificada y auditable.
+                                        </p>
+                                        <div className="trust-badge-container" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                                            {[
+                                                { label: "Auditoría Independiente", color: "#10b981" },
+                                                { label: "Reportes Públicos", color: "#8b5cf6" },
+                                            ].map((b, i) => (
+                                                <span key={i} className="trust-badge" style={{ border: `1.5px solid ${b.color}44`, background: `${b.color}15`, color: "#fff", fontSize: 11, display: "flex", alignItems: "center", gap: 8 }}>
+                                                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: b.color }} />
+                                                    {b.label}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    {/* Score ring */}
+                                    <div style={{ position: "relative", flexShrink: 0 }}>
+                                        <svg width="120" height="120" viewBox="0 0 120 120">
+                                            <circle cx="60" cy="60" r="50" stroke="rgba(255,255,255,0.08)" strokeWidth="12" fill="none" />
+                                            <circle
+                                                cx="60" cy="60" r="50"
+                                                stroke="#10b981"
+                                                strokeWidth="12"
+                                                fill="none"
+                                                strokeDasharray="314"
+                                                strokeDashoffset={314 * (1 - 0.94)}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 60 60)"
+                                                style={{ filter: "drop-shadow(0 0 8px rgba(16,185,129,0.6))" }}
+                                            />
+                                        </svg>
+                                        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                                            <span style={{ fontSize: 22, fontWeight: 700 }}>94%</span>
+                                            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase" }}>Score</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* ── SECTION 1: SCHOOL KPI STRIP ─────────────────── */}
                             <div className="school-kpi-grid">
                                 {[
@@ -1122,81 +1074,6 @@ export default function ImpactoSocialPage() {
                                         </div>
                                     </div>
 
-                                    {/* DONATION METER */}
-                                    <div style={{
-                                        background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
-                                        borderRadius: 24, padding: "28px 32px", color: "#fff",
-                                        boxShadow: "0 20px 40px rgba(15,23,42,0.2)",
-                                        animation: "school-fade-in 0.6s 0.3s ease both"
-                                    }}>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                                            <TrendingUp size={20} color="#10b981" />
-                                            <span style={{ fontSize: 16, fontWeight: 700 }}>Proyección del Bono</span>
-                                        </div>
-
-                                        {/* Base vs bonus meter */}
-                                        <div style={{ marginBottom: 20 }}>
-                                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginBottom: 8 }}>
-                                                <span>Base garantizada</span>
-                                                <span>Bono máximo</span>
-                                            </div>
-                                            <div style={{ height: 12, background: "rgba(255,255,255,0.12)", borderRadius: 99, overflow: "hidden", position: "relative" }}>
-                                                {/* Base bar (always green) */}
-                                                <div style={{
-                                                    position: "absolute", left: 0, top: 0, bottom: 0,
-                                                    width: `${(MOCK_SCHOOL_IMPACT.baseAmountMXN / (MOCK_SCHOOL_IMPACT.baseAmountMXN + MOCK_SCHOOL_IMPACT.bonusAmountMXN)) * 100}%`,
-                                                    background: "linear-gradient(90deg, #10b981, #34d399)",
-                                                    borderRadius: 99
-                                                }} />
-                                                {/* Bonus unlocked bar (blue) */}
-                                                <div style={{
-                                                    position: "absolute",
-                                                    left: `${(MOCK_SCHOOL_IMPACT.baseAmountMXN / (MOCK_SCHOOL_IMPACT.baseAmountMXN + MOCK_SCHOOL_IMPACT.bonusAmountMXN)) * 100}%`,
-                                                    top: 0, bottom: 0,
-                                                    width: `${(MOCK_SCHOOL_IMPACT.projectedBonusMXN / (MOCK_SCHOOL_IMPACT.baseAmountMXN + MOCK_SCHOOL_IMPACT.bonusAmountMXN)) * 100}%`,
-                                                    background: "linear-gradient(90deg, #3b82f6, #60a5fa)",
-                                                    borderRadius: 99
-                                                }} />
-                                            </div>
-                                            <div style={{ display: "flex", gap: 16, marginTop: 10, flexWrap: "wrap" }}>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
-                                                    <div style={{ width: 10, height: 10, borderRadius: 3, background: "#10b981" }} />
-                                                    Base: ${MOCK_SCHOOL_IMPACT.baseAmountMXN.toLocaleString()} MXN
-                                                </div>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
-                                                    <div style={{ width: 10, height: 10, borderRadius: 3, background: "#3b82f6" }} />
-                                                    Bono proyectado: +${MOCK_SCHOOL_IMPACT.projectedBonusMXN.toLocaleString()} MXN
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <p style={{ fontSize: 14, lineHeight: 1.6, margin: "0 0 20px", color: "rgba(255,255,255,0.8)" }}>
-                                            Si mantenemos el ritmo, desbloquearemos <strong style={{ color: "#fff" }}>+${MOCK_SCHOOL_IMPACT.projectedBonusMXN.toLocaleString()} MXN</strong> adicionales para <strong style={{ color: "#fff" }}>Fundación Semillas de Éxito</strong> el 31 de marzo.
-                                        </p>
-
-                                        {/* Monthly milestone timeline */}
-                                        <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 18 }}>
-                                            <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>Línea de tiempo</div>
-                                            {[
-                                                { month: "Ene", done: true, label: "Base asegurada" },
-                                                { month: "Feb", done: true, label: "62% alumnos activos" },
-                                                { month: "Mar", done: false, label: "Meta: 70% activos → bono" },
-                                                { month: "Dic", done: false, label: "Ejecución final de donación" },
-                                            ].map((tl, i) => (
-                                                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
-                                                    <div className="timeline-dot" style={{
-                                                        background: tl.done ? "#10b981" : "transparent",
-                                                        borderColor: tl.done ? "#10b981" : "rgba(255,255,255,0.2)",
-                                                        marginTop: 2
-                                                    }} />
-                                                    <div style={{ flex: 1 }}>
-                                                        <span style={{ fontSize: 12, fontWeight: 600, color: tl.done ? "#10b981" : "rgba(255,255,255,0.4)", marginRight: 8 }}>{tl.month}</span>
-                                                        <span style={{ fontSize: 13, color: tl.done ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.4)" }}>{tl.label}</span>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
                                 </div>
 
                                 {/* RIGHT COLUMN */}
@@ -1204,43 +1081,6 @@ export default function ImpactoSocialPage() {
 
 
 
-                                    {/* ACTIVE STUDENTS RING */}
-                                    <div style={{
-                                        background: "#FBFAF5", border: "1.5px solid #f1f5f9",
-                                        borderRadius: 20, padding: "24px",
-                                        boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                                        display: "flex", alignItems: "center", gap: 20
-                                    }}>
-                                        <div style={{ position: "relative", flexShrink: 0 }}>
-                                            <svg width="80" height="80" viewBox="0 0 80 80">
-                                                <circle cx="40" cy="40" r="32" stroke="#f1f5f9" strokeWidth="8" fill="none" />
-                                                <circle
-                                                    cx="40" cy="40" r="32"
-                                                    stroke="#0F62FE"
-                                                    strokeWidth="8"
-                                                    fill="none"
-                                                    strokeDasharray="201"
-                                                    strokeDashoffset={200 - (201 * 0.62)}
-                                                    strokeLinecap="round"
-                                                    transform="rotate(-90 40 40)"
-                                                    style={{ filter: "drop-shadow(0 0 4px rgba(15,98,254,0.4))" }}
-                                                />
-                                            </svg>
-                                            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-                                                <span style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1 }}>62%</span>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a", marginBottom: 4 }}>Alumnos Activos</div>
-                                            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 8 }}>Faltan <strong style={{ color: "#f59e0b", fontWeight: 600 }}>8 puntos porcentuales</strong> para el bono</div>
-                                            <div style={{ height: 6, width: "100%", background: "#f1f5f9", borderRadius: 99 }}>
-                                                <div style={{ height: "100%", width: "62%", background: "linear-gradient(90deg,#f59e0b,#fbbf24)", borderRadius: 99 }} />
-                                            </div>
-                                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#94a3b8", fontWeight: 700, marginTop: 4 }}>
-                                                <span>0%</span><span>Meta: 70%</span>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     {/* FOUNDATION TRUST CARD */}
                                     <div style={{
@@ -1434,282 +1274,133 @@ export default function ImpactoSocialPage() {
                                 }
                             `}</style>
 
-                            {/* ── SECTION 1: TRUST SCORE HERO ─────────────────── */}
-                            <div style={{
-                                background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)",
-                                borderRadius: 24, padding: "32px", marginBottom: 32,
-                                color: "#fff", position: "relative", overflow: "hidden",
-                                animation: "transp-fade-in 0.5s ease both"
-                            }}>
-                                {/* BG glow */}
-                                <div style={{
-                                    position: "absolute", top: -60, right: -60,
-                                    width: 240, height: 240,
-                                    background: "radial-gradient(circle, rgba(15,98,254,0.3) 0%, transparent 70%)",
-                                    borderRadius: "50%", pointerEvents: "none"
-                                }} />
-                                <div className="transp-hero-layout">
+
+                            {/* ── SECTION 2: REPORTS + EVIDENCE GRID ─────────── */}
+                            {/* ── CONSOLIDATED TRANSPARENCY SECTION ─────────── */}
+                            <div className="transp-grid">
+
+                                {/* LEFT COLUMN: REPORTS + MAIN FAQ */}
+                                <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                                    {/* REPORTS */}
                                     <div>
-                                        <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
-                                            BIZEN Transparency Score
+                                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                                            <FileText size={17} color="#0F62FE" />
+                                            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Informes de Desempeño</h3>
                                         </div>
-                                        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
-                                            <span style={{ fontSize: 52, fontWeight: 700, lineHeight: 1 }}>9.4</span>
-                                            <span style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>/10</span>
-                                        </div>
-                                        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", margin: "0 0 20px", lineHeight: 1.6, maxWidth: 380 }}>
-                                            Tu escuela tiene un nivel de transparencia financiera <strong style={{ color: "#fff" }}>Excepcional</strong>. Toda donación cuenta con evidencia verificada y auditable.
-                                        </p>
-                                        <div className="trust-badge-container" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                                             {[
-                                                { label: "Auditoría Independiente", color: "#10b981" },
-                                                { label: "Reportes Públicos", color: "#8b5cf6" },
-                                            ].map((b, i) => (
-                                                <span key={i} className="trust-badge" style={{ border: `1.5px solid ${b.color}44`, background: `${b.color}15`, color: "#fff", fontSize: 11 }}>
-                                                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: b.color }} />
-                                                    {b.label}
-                                                </span>
+                                                { title: "Reporte Mensual - Febrero 2026", period: "Feb 2026", size: "1.4 MB", type: "pdf", badge: "Nuevo", badgeColor: "#0F62FE" },
+                                                { title: "Reporte Mensual - Enero 2026", period: "Ene 2026", size: "1.2 MB", type: "pdf", badge: "", badgeColor: "" },
+                                                { title: "Reporte Trimestral Q4", period: "Oct–Dic 2025", size: "3.1 MB", type: "pdf", badge: "", badgeColor: "" },
+                                                { title: "Impacto Anual 2025", period: "Año 2025", size: "5.8 MB", type: "pdf", badge: "Auditado", badgeColor: "#10b981" },
+                                            ].map((rep, i) => (
+                                                <div key={i} className="report-card" style={{ animationDelay: `${i * 0.06}s` }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                                                        <div style={{
+                                                            width: 42, height: 42, borderRadius: 12,
+                                                            background: "linear-gradient(135deg, #eff6ff, #dbeafe)",
+                                                            display: "flex", alignItems: "center", justifyContent: "center",
+                                                            flexShrink: 0
+                                                        }}>
+                                                            <FileText size={20} color="#0F62FE" />
+                                                        </div>
+                                                        <div>
+                                                            <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a", marginBottom: 3, display: "flex", alignItems: "center", gap: 8 }}>
+                                                                {rep.period}
+                                                                {rep.badge && (
+                                                                    <span style={{ fontSize: 10, fontWeight: 600, color: "#fff", background: rep.badgeColor, padding: "2px 7px", borderRadius: 99 }}>
+                                                                        {rep.badge}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>PDF • {rep.size}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                                        <span style={{ fontSize: 12, fontWeight: 700, color: "#0F62FE" }}>Descargar</span>
+                                                        <ChevronRight size={16} color="#bfdbfe" />
+                                                    </div>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
-                                    {/* Score ring */}
-                                    <div style={{ position: "relative", flexShrink: 0 }}>
-                                        <svg width="120" height="120" viewBox="0 0 120 120">
-                                            <circle cx="60" cy="60" r="50" stroke="rgba(255,255,255,0.08)" strokeWidth="12" fill="none" />
-                                            <circle
-                                                cx="60" cy="60" r="50"
-                                                stroke="#10b981"
-                                                strokeWidth="12"
-                                                fill="none"
-                                                strokeDasharray="314"
-                                                strokeDashoffset={314 * (1 - 0.94)}
-                                                strokeLinecap="round"
-                                                transform="rotate(-90 60 60)"
-                                                style={{ filter: "drop-shadow(0 0 8px rgba(16,185,129,0.6))" }}
-                                            />
-                                        </svg>
-                                        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                                            <span style={{ fontSize: 22, fontWeight: 700 }}>94%</span>
-                                            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase" }}>Score</span>
+
+                                    {/* MAIN FAQ */}
+                                    <div>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                                            <AlertTriangle size={17} color="#f59e0b" />
+                                            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Preguntas frecuentes</h3>
+                                        </div>
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                                            {[
+                                                {
+                                                    q: "¿De dónde viene el dinero?",
+                                                    a: "BIZEN destina un porcentaje definido en contrato con tu instituto a un fondo social gestionado de forma transparente. El porcentaje base está siempre garantizado; el bono se activa si la escuela cumple sus metas colectivas.",
+                                                    icon: <Briefcase size={18} color="#0F62FE" />
+                                                },
+                                                {
+                                                    q: "¿Cómo se desbloquea el bono?",
+                                                    a: "Cumpliendo 3 metas colectivas simultáneamente: (1) ≥70% de alumnos activos, (2) promedio ≥3 sesiones útiles/mes por alumno, y (3) ≥1 módulo completo por alumno en el ciclo.",
+                                                    icon: <Unlock size={18} color="#0F62FE" />
+                                                },
+                                                {
+                                                    q: "¿Cómo se miden las métricas?",
+                                                    a: "Una sesión útil requiere ≥10 minutos activos y al menos 1 acción completada (lección, quiz, reto o simulador). Un alumno activo mantiene ≥3 sesiones útiles en los últimos 30 días, o completó ≥1 módulo en el mismo período.",
+                                                    icon: <Ruler size={18} color="#0F62FE" />
+                                                },
+                                            ].map((faq, i) => (
+                                                <details key={i} className="faq-item" style={{ animationDelay: `${i * 0.06}s` }}>
+                                                    <summary>
+                                                        <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                                            {faq.icon}
+                                                            {faq.q}
+                                                        </span>
+                                                        <span className="faq-toggle">+</span>
+                                                    </summary>
+                                                    <div className="faq-body">{faq.a}</div>
+                                                </details>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* ── SECTION 2: REPORTS + EVIDENCE GRID ─────────── */}
-                            <div className="transp-grid">
-
-                                {/* REPORTS */}
-                                <div>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                                        <FileText size={17} color="#0F62FE" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Informes de Desempeño</h3>
-                                    </div>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                                        {[
-                                            { title: "Reporte Mensual - Febrero 2026", period: "Feb 2026", size: "1.4 MB", type: "pdf", badge: "Nuevo", badgeColor: "#0F62FE" },
-                                            { title: "Reporte Mensual - Enero 2026", period: "Ene 2026", size: "1.2 MB", type: "pdf", badge: "", badgeColor: "" },
-                                            { title: "Reporte Trimestral Q4", period: "Oct–Dic 2025", size: "3.1 MB", type: "pdf", badge: "", badgeColor: "" },
-                                            { title: "Impacto Anual 2025", period: "Año 2025", size: "5.8 MB", type: "pdf", badge: "Auditado", badgeColor: "#10b981" },
-                                        ].map((rep, i) => (
-                                            <div key={i} className="report-card" style={{ animationDelay: `${i * 0.06}s` }}>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                                                    <div style={{
-                                                        width: 42, height: 42, borderRadius: 12,
-                                                        background: "linear-gradient(135deg, #eff6ff, #dbeafe)",
-                                                        display: "flex", alignItems: "center", justifyContent: "center",
-                                                        flexShrink: 0
-                                                    }}>
-                                                        <FileText size={20} color="#0F62FE" />
-                                                    </div>
-                                                    <div>
-                                                        <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a", marginBottom: 3, display: "flex", alignItems: "center", gap: 8 }}>
-                                                            {rep.period}
-                                                            {rep.badge && (
-                                                                <span style={{ fontSize: 10, fontWeight: 600, color: "#fff", background: rep.badgeColor, padding: "2px 7px", borderRadius: 99 }}>
-                                                                    {rep.badge}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                        <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>PDF • {rep.size}</div>
-                                                    </div>
-                                                </div>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                                    <span style={{ fontSize: 12, fontWeight: 700, color: "#0F62FE" }}>Descargar</span>
-                                                    <ChevronRight size={16} color="#bfdbfe" />
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* DONATION EVIDENCE TIMELINE */}
-                                <div>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                                        <CheckCircle2 size={17} color="#10b981" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Evidencia de Donaciones</h3>
-                                    </div>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-                                        {MOCK_EVIDENCE.concat([
-                                            { id: "ev3", date: "2025-03-20", amount: 9500, foundation: "Nutriendo Futuro", status: "Completado", evidenceUrl: "#", type: "image" },
-                                            { id: "ev4", date: "2024-12-05", amount: 8000, foundation: "Fundación Semillas", status: "Completado", evidenceUrl: "#", type: "pdf" },
-                                        ] as any).map((ev: any, i: number, arr: any[]) => (
-                                            <div key={ev.id} className="evidence-row" style={{ animationDelay: `${i * 0.08}s`, paddingBottom: i < arr.length - 1 ? 0 : 0 }}>
-                                                {/* Timeline stem */}
-                                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, paddingTop: 20 }}>
-                                                    <div style={{
-                                                        width: 12, height: 12, borderRadius: "50%",
-                                                        background: ev.status === "Completado" ? "#10b981" : "#f59e0b",
-                                                        border: "2px solid #fff",
-                                                        boxShadow: `0 0 0 3px ${ev.status === "Completado" ? "#a7f3d044" : "#fde68a44"}`,
-                                                        flexShrink: 0
-                                                    }} />
-                                                    {i < arr.length - 1 && (
-                                                        <div style={{ width: 2, flex: 1, minHeight: 20, background: "#f1f5f9", marginTop: 4, marginBottom: -8 }} />
-                                                    )}
-                                                </div>
-                                                <div className="evidence-inner" style={{ marginBottom: i < arr.length - 1 ? 12 : 0 }}>
-                                                    <div>
-                                                        <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a", marginBottom: 4 }}>
-                                                            {ev.foundation}
-                                                        </div>
-                                                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                                                            <span style={{ fontSize: 14, fontWeight: 700, color: "#0F62FE" }}>${ev.amount.toLocaleString()} MXN</span>
-                                                            <span style={{ fontSize: 11, color: "#94a3b8" }}>{ev.date}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                                                        <span style={{
-                                                            fontSize: 11, fontWeight: 600,
-                                                            color: "#166534", background: "#dcfce7",
-                                                            border: "1px solid #a7f3d0",
-                                                            padding: "3px 8px", borderRadius: 99
-                                                        }}>{ev.status}</span>
-                                                        <button style={{
-                                                            display: "flex", alignItems: "center", gap: 4,
-                                                            background: "#eff6ff", border: "none",
-                                                            color: "#0F62FE", cursor: "pointer",
-                                                            fontSize: 12, fontWeight: 700,
-                                                            padding: "5px 10px", borderRadius: 8
-                                                        }}>
-                                                            {ev.type === "pdf" ? <FileText size={12} /> : <Globe size={12} />}
-                                                            Ver
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* ── SECTION 3: METHODOLOGY EXPLAINER ────────────── */}
-                            <div style={{ marginBottom: 32 }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                                    <Globe size={17} color="#8b5cf6" />
-                                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>¿Cómo funciona el sistema?</h3>
-                                </div>
-                                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, marginBottom: 24 }}>
-                                    {[
-                                        { step: "1", icon: <ClipboardList size={18} color="#0F62FE" />, title: "BIZEN firma contrato", desc: "Se acuerda el % del contrato destinado al fondo social", color: "#0F62FE", bg: "#eff6ff" },
-                                        { step: "2", icon: <BarChart3 size={18} color="#0F62FE" />, title: "Se miden métricas", desc: "Actividad agregada por escuela, sin datos individuales", color: "#8b5cf6", bg: "#f5f3ff" },
-                                        { step: "3", icon: <Unlock size={18} color="#0F62FE" />, title: "Se desbloquea el bono", desc: "Si la escuela cumple las 3 metas colectivas", color: "#f59e0b", bg: "#fffbeb" },
-                                        { step: "4", icon: <Handshake size={18} color="#0F62FE" />, title: "Se ejecuta la donación", desc: "Transferencia verificada a fundación aliada", color: "#10b981", bg: "#ecfdf5" },
-                                    ].map((s, i) => (
-                                        <div key={i} className="transp-card" style={{ padding: "20px", animationDelay: `${i * 0.07}s` }}>
-                                            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                                                <div style={{
-                                                    width: 32, height: 32, borderRadius: 10,
-                                                    background: s.bg,
-                                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                                }}>{s.icon}</div>
-                                                <span style={{ fontSize: 11, fontWeight: 700, color: s.color, background: s.bg, border: `1px solid ${s.color}22`, padding: "2px 8px", borderRadius: 99 }}>
-                                                    Paso {s.step}
-                                                </span>
-                                            </div>
-                                            <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", marginBottom: 6 }}>{s.title}</div>
-                                            <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.5 }}>{s.desc}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* ── SECTION 4: FAQ ───────────────────────────────── */}
-                            <div className="transp-grid" style={{ marginBottom: 0 }}>
-                                <div>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                                        <AlertTriangle size={17} color="#f59e0b" />
-                                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "#0f172a" }}>Preguntas frecuentes</h3>
-                                    </div>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                                        {[
-                                            {
-                                                q: "¿De dónde viene el dinero?",
-                                                a: "BIZEN destina un porcentaje definido en contrato con tu instituto a un fondo social gestionado de forma transparente. El porcentaje base está siempre garantizado; el bono se activa si la escuela cumple sus metas colectivas.",
-                                                icon: <Briefcase size={18} color="#0F62FE" />
-                                            },
-                                            {
-                                                q: "¿Cómo se desbloquea el bono?",
-                                                a: "Cumpliendo 3 metas colectivas simultáneamente: (1) ≥70% de alumnos activos, (2) promedio ≥3 sesiones útiles/mes por alumno, y (3) ≥1 módulo completo por alumno en el ciclo.",
-                                                icon: <Unlock size={18} color="#0F62FE" />
-                                            },
-                                            {
-                                                q: "¿Cómo se miden las métricas?",
-                                                a: "Una sesión útil requiere ≥10 minutos activos y al menos 1 acción completada (lección, quiz, reto o simulador). Un alumno activo mantiene ≥3 sesiones útiles en los últimos 30 días, o completó ≥1 módulo en el mismo período.",
-                                                icon: <Ruler size={18} color="#0F62FE" />
-                                            },
-                                        ].map((faq, i) => (
-                                            <details key={i} className="faq-item" style={{ animationDelay: `${i * 0.06}s` }}>
-                                                <summary>
-                                                    <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                                                        {faq.icon}
-                                                        {faq.q}
-                                                    </span>
-                                                    <span className="faq-toggle">+</span>
-                                                </summary>
-                                                <div className="faq-body">{faq.a}</div>
-                                            </details>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* PRIVACY + COMMITMENT CARD */}
-                                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                                    {/* Privacy */}
+                                {/* RIGHT COLUMN: PRIVACY + EXTRA FAQ */}
+                                <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                                    {/* PRIVACY */}
                                     <div style={{
                                         background: "linear-gradient(135deg, #f5f3ff, #ede9fe)",
                                         border: "1.5px solid #ddd6fe",
-                                        borderRadius: 20, padding: "24px",
+                                        borderRadius: 20, padding: "28px",
                                         animation: "transp-fade-in 0.5s 0.2s ease both"
                                     }}>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-                                            <div style={{ width: 40, height: 40, borderRadius: 12, background: "#ede9fe", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                <Lock size={20} color="#0F62FE" />
+                                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+                                            <div style={{ width: 44, height: 44, borderRadius: 14, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(124,58,237,0.1)" }}>
+                                                <ShieldCheck size={24} color="#7c3aed" />
                                             </div>
-                                            <div style={{ fontSize: 15, fontWeight: 600, color: "#4c1d95" }}>Privacidad garantizada</div>
+                                            <div style={{ fontSize: 16, fontWeight: 700, color: "#4c1d95" }}>Privacidad garantizada</div>
                                         </div>
-                                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                                             {[
                                                 "Datos solo en forma agregada por escuela",
                                                 "No se publican nombres de menores",
                                                 "Sin perfiles individuales expuestos",
                                                 "Cumplimiento con LFPDPPP (México)",
                                             ].map((point, i) => (
-                                                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13, color: "#5b21b6" }}>
-                                                    <CheckCircle2 size={14} color="#7c3aed" style={{ marginTop: 1, flexShrink: 0 } as any} />
+                                                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 14, color: "#5b21b6", fontWeight: 500 }}>
+                                                    <CheckCircle2 size={16} color="#7c3aed" style={{ marginTop: 2, flexShrink: 0 } as any} />
                                                     {point}
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* More FAQs */}
+                                    {/* MORE FAQ */}
                                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                                         {[
                                             {
                                                 q: "¿Privacidad de datos?",
                                                 a: "Solo usamos métricas agregadas. Nunca publicamos nombres ni datos personales de alumnos. Todo cumple con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.",
-                                                icon: <ShieldCheck size={18} color="#0F62FE" />
+                                                icon: <Lock size={18} color="#0F62FE" />
                                             },
                                             {
                                                 q: "¿Puedo ver el contrato de mi escuela?",

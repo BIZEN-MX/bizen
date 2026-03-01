@@ -9,6 +9,11 @@ import { SchoolIcon, CakeIcon, PartyIcon } from "@/components/CustomIcons"
 // ─── Avatar Options ───────────────────────────────────────────────────────────
 
 const AVATAR_OPTIONS = [
+    // characters
+    { type: "character", id: "robot", character: "robot", label: "Robot" },
+    { type: "character", id: "astronaut", character: "astronaut", label: "Astronauta" },
+
+    // mascots (the blue ones)
     { type: "mascot", id: "fox", label: "Zorro" },
     { type: "mascot", id: "owl", label: "Búho" },
     { type: "mascot", id: "dolphin", label: "Delfín" },
@@ -20,6 +25,13 @@ const AVATAR_OPTIONS = [
     { type: "mascot", id: "lion", label: "León" },
     { type: "mascot", id: "koala", label: "Koala" },
     { type: "mascot", id: "penguin", label: "Pingüino" },
+
+    // design themed
+    { type: "gradient", id: "grad1", gradient: "linear-gradient(135deg, #0F62FE, #6366f1)", label: "Azure" },
+    { type: "pattern", id: "patt1", pattern: "dots", color: "#0F62FE", label: "Puntos" },
+    { type: "pattern", id: "patt2", pattern: "waves", color: "#0F62FE", label: "Ondas" },
+    { type: "shape", id: "shape1", shape: "star", color: "#0F62FE", label: "Estrella" },
+    { type: "abstract", id: "abst1", abstract: "circles", colors: ["#0F62FE", "#6366f1", "#93c5fd"], label: "Abstract" }
 ]
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -38,7 +50,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const supabase = createClientMicrocred()
 
     const [step, setStep] = useState<Step>("welcome")
-    const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "mascot", id: "fox", label: "Zorro" })
+    const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "character", id: "robot", character: "robot", label: "Robot" })
     const [username, setUsername] = useState("")
     const [bio, setBio] = useState("")
     const [birthDate, setBirthDate] = useState("")

@@ -20,7 +20,7 @@ model School {
   id           String   @id @default(cuid())
   name         String
   region       String?
-  contactEmail String   @map("contact_email")
+  contactEmail String?  @map("contact_email")
   createdAt    DateTime @default(now()) @map("created_at")
 
   licenses      License[]
@@ -29,7 +29,9 @@ model School {
 
   
   schoolImpacts SchoolImpact[]
-@@map("schools")
+  cycleGoals    SchoolCycleGoal[]
+
+  @@map("schools")
   @@schema("public")
 }
 
@@ -72,6 +74,7 @@ model Profile {
   schoolId          String?  @map("school_id")
   xp                Int      @default(0) // Experience points
   level             Int      @default(1) // Current level
+  bizcoins          Int      @default(0) // Currency for the store
   currentStreak     Int      @default(0) @map("current_streak")
   longestStreak     Int      @default(0) @map("longest_streak")
   lastActive        DateTime? @map("last_active")
@@ -103,6 +106,12 @@ model Profile {
   forumUserBadges      ForumUserBadge[]     @relation("ForumUserBadges")
   followers            UserFollow[]         @relation("UserFollowers")
   following            UserFollow[]         @relation("UserFollowing")
+  redemptions          Redemption[]
+  notifications        Notification[]
+  achievements         UserAchievement[]
+  authUser             AuthUser?            @relation(fields: [userId], references: [id])
+  settings             UserSettings?
+  simulations          UserSimulation[]
 
   @@map("profiles")
   @@schema("public")
@@ -180,14 +189,15 @@ model Section {
 
 model Lesson {
   id          String   @id @default(cuid())
-  sectionId   String   @map("section_id") // Ahora pertenece a una sección
+  sectionId   String?  @map("section_id") // Ahora pertenece a una sección
   title       String
   contentType String   @map("content_type") // "video" | "reading" | "exercise"
   order       Int
   xpReward    Int      @default(50) @map("xp_reward") 
+  duration    Int?     @default(5)    // Tiempo en minutos (ej: 5 min)
   createdAt   DateTime @default(now()) @map("created_at")
 
-  section          Section           @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  section          Section?           @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   quizzes          Quiz[]
   progress         Progress[]
   lessonObjectives LessonObjective[]
@@ -339,6 +349,25 @@ model Progress {
 
   @@unique([userId, lessonId])
   @@map("progress")
+  @@schema("public")
+}
+
+model EvidencePost {
+  id               String   @id @default(cuid())
+  userId           String   @map("user_id")
+  dailyChallengeId String   @map("daily_challenge_id")
+  content          String   @db.Text
+  imageUrl         String?  @map("image_url")  // Foto de la evidencia
+  isVerified       Boolean  @default(false) @map("is_verified") // Si cuenta para el bono escolar
+  likesCount       Int      @default(0) @map("likes_count")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  user           Profile        @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  dailyChallenge DailyChallenge @relation(fields: [dailyChallengeId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([dailyChallengeId])
+  @@map("evidence_posts")
   @@schema("public")
 }
 
@@ -855,10 +884,14 @@ model DailyChallenge {
   title          String
   description    String   @db.Text
   challengeType  String   @map("challenge_type") // "quiz" | "reflection" | "task" | "simulator"
+  xpReward       Int      @default(50) @map("xp_reward") 
+  estimatedTime  String?  @default("5 min") @map("estimated_time")
+  expertAdvice   String?  @map("expert_advice")  @db.Text
+  benefits       Json?    
   payload        Json?    // optional config
   activeDate     DateTime @unique @map("active_date") @db.Date
   createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
 
   evidencePosts EvidencePost[]
 
@@ -938,6 +971,7 @@ model EvidenceComment {
 model Foundation {
   id          String   @id @default(cuid())
   name        String
+  cause       String?  // Ej: "Educación", "Salud"
   logo        String?
   description String?
   website     String?
@@ -956,6 +990,7 @@ model SchoolImpact {
   season          String   // e.g., "Primavera 2024"
   donatedAmount   Float    @map("donated_amount")
   beneficiaryCount Int     @map("beneficiary_count")
+  beneficiaryUnit String?  @map("beneficiary_unit") // Ej: "canastas alimentarias"
   reportUrl       String?  @map("report_url")
   createdAt       DateTime @default(now()) @map("created_at")
 
@@ -994,5 +1029,276 @@ model DonationEvidence {
   schoolImpact    SchoolImpact @relation(fields: [schoolImpactId], references: [id], onDelete: Cascade)
 
   @@map("donation_evidence")
+  @@schema("public")
+}
+
+// ==========================================
+// REWARDS & GAMIFICATION
+// ==========================================
+
+model Reward {
+  id          String   @id @default(cuid())
+  title       String
+  rewardValue String   @map("reward_value")
+  description String?
+  category    String   @default("General") // "Avatar", "Ebooks", etc.
+  badge       String?  // "POPULAR", "NUEVO", etc.
+  xpCost      Int      @map("xp_cost")
+  colorHex    String?  @map("color_hex")
+  iconUrl     String?  @map("icon_url")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  redemptions Redemption[]
+
+  @@map("rewards")
+  @@schema("public")
+}
+
+model Redemption {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  rewardId  String   @map("reward_id")
+  status    String   @default("pending") // 'pending', 'sent', 'cancelled'
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   Profile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  reward Reward  @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("redemptions")
+  @@schema("public")
+}
+
+// ==========================================
+// AUTH SCHEMA MODELS (Supabase managed)
+// We define them here so Prisma doesn't try to drop them
+// during a 'db push', but we don't actually manage them.
+// ==========================================
+
+model AuthUser {
+  id    String @id @db.Uuid
+  email String?
+
+  profile Profile?
+
+  @@map("users")
+  @@schema("auth")
+}
+
+model AuthAuditLog {
+  id      String   @id @db.Uuid
+  payload Json?
+  @@map("audit_log_entries")
+  @@schema("auth")
+}
+
+model AuthIdentity {
+  id      String   @id @db.Uuid
+  @@map("identities")
+  @@schema("auth")
+}
+
+model AuthSession {
+  id      String   @id @db.Uuid
+  @@map("sessions")
+  @@schema("auth")
+}
+
+model AuthRefreshToken {
+  id      String   @id @db.Uuid
+  @@map("refresh_tokens")
+  @@schema("auth")
+}
+
+model AuthFlowState {
+  id      String   @id @db.Uuid
+  @@map("flow_state")
+  @@schema("auth")
+}
+
+model AuthMfaAmrClaim {
+  id      String   @id @db.Uuid
+  @@map("mfa_amr_claims")
+  @@schema("auth")
+}
+
+model AuthMfaChallenge {
+  id      String   @id @db.Uuid
+  @@map("mfa_challenges")
+  @@schema("auth")
+}
+
+model AuthMfaFactor {
+  id      String   @id @db.Uuid
+  @@map("mfa_factors")
+  @@schema("auth")
+}
+
+model AuthSamlProvider {
+  id      String   @id @db.Uuid
+  @@map("saml_providers")
+  @@schema("auth")
+}
+
+model AuthSamlRelayState {
+  id      String   @id @db.Uuid
+  @@map("saml_relay_states")
+  @@schema("auth")
+}
+
+model AuthSsoDomain {
+  id      String   @id @db.Uuid
+  @@map("sso_domains")
+  @@schema("auth")
+}
+
+model AuthSsoProvider {
+  id      String   @id @db.Uuid
+  @@map("sso_providers")
+  @@schema("auth")
+}
+
+model AuthSchemaMigration {
+  version String @id @db.VarChar(255)
+  @@map("schema_migrations")
+  @@schema("auth")
+}
+
+model AuthInstance {
+  id      String   @id @db.Uuid
+  @@map("instances")
+  @@schema("auth")
+}
+
+model UserSettings {
+  userId               String   @id @map("user_id")
+  language             String   @default("es")
+  soundEffectsEnabled  Boolean  @default(true) @map("sound_effects_enabled")
+  animationsEnabled    Boolean  @default(true) @map("animations_enabled")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  profile              Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("user_settings")
+  @@schema("public")
+}
+
+model ImpactCycle {
+  id        String   @id @default(cuid())
+  name      String
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  isActive  Boolean  @default(false) @map("is_active")
+
+  goals     SchoolCycleGoal[]
+
+  @@map("impact_cycles")
+  @@schema("public")
+}
+
+model SchoolCycleGoal {
+  schoolId                String  @map("school_id")
+  cycleId                 String  @map("cycle_id")
+  targetActiveRate        Float   @default(0.70) @map("target_active_rate")
+  targetModulesPerStudent Float   @default(1.0) @map("target_modules_per_student")
+
+  school School      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  cycle  ImpactCycle @relation(fields: [cycleId], references: [id], onDelete: Cascade)
+
+  @@id([schoolId, cycleId])
+  @@map("school_cycle_goals")
+  @@schema("public")
+}
+
+model TransparencyReport {
+  id        String   @id @default(cuid())
+  title     String
+  period    String
+  reportUrl String   @map("report_url")
+  badgeType String?  @map("badge_type")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("transparency_reports")
+  @@schema("public")
+}
+
+model Simulator {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String?  // "PRESUPUESTO", "AHORRO", "CRÉDITO"
+  iconName    String?  @map("icon_name")
+  buttonColor String?  @map("button_color")
+  slug        String   @unique
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  userSimulations UserSimulation[]
+
+  @@map("simulators")
+  @@schema("public")
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  title     String    // Ej: "¡Nueva Racha!"
+  message   String    @db.Text
+  type      String    @default("system") // "achievement", "streak", "reward", "system", "level_up"
+  priority  String    @default("normal") // "low", "normal", "high"
+  link      String?   // A dónde llevar al usuario al hacer clic
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user Profile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("notifications")
+  @@schema("public")
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  title       String   // Ej: "Ahorrador Experto"
+  description String   @db.Text
+  icon        String   // Ej: "trophy", "piggy-bank"
+  category    String   @default("general") // "learning", "social", "financial", "consistency"
+  xpReward    Int      @default(100) @map("xp_reward")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  userAchievements UserAchievement[]
+
+  @@map("achievements")
+  @@schema("public")
+}
+
+model UserAchievement {
+  userId        String   @map("user_id")
+  achievementId String   @map("achievement_id")
+  earnedAt      DateTime @default(now()) @map("earned_at")
+
+  user        Profile     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@id([userId, achievementId])
+  @@map("user_achievements")
+  @@schema("public")
+}
+
+model UserSimulation {
+  id             String   @id @default(cuid())
+  userId         String   @map("user_id")
+  simulatorId    String   @map("simulator_id")
+  simulationName String?  @map("simulation_name")
+  data           Json     // Input and result data
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user      Profile   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  simulator Simulator @relation(fields: [simulatorId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_simulations")
   @@schema("public")
 }

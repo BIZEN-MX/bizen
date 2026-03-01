@@ -25,7 +25,8 @@ import {
   Star,
   LogIn,
   ChevronDown,
-  ChevronRight as ChevronRightIcon
+  ChevronRight as ChevronRightIcon,
+  Medal
 } from "lucide-react"
 
 import {
@@ -227,6 +228,7 @@ export default function FixedSidebar() {
   const impactoSocialActive = isActivePath("/impacto-social")
   const puntosActive = isActivePath("/puntos")
   const tiendaActive = isActivePath("/tienda")
+  const rankingsActive = isActivePath("/rankings")
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
   const isStudentOrGuest = !isAdminOrTeacher
@@ -793,6 +795,39 @@ export default function FixedSidebar() {
                           {isStudentOrGuest && (
                             <>
                               <button
+                                onClick={() => { hideMasPanel(); navigateTo("/rankings") }}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 12,
+                                  padding: "10px 12px",
+                                  background: rankingsActive ? "#eff6ff" : "transparent",
+                                  border: "none",
+                                  borderRadius: 8,
+                                  cursor: "pointer",
+                                  transition: "all 0.2s ease",
+                                  fontFamily: "'Montserrat', sans-serif",
+                                  fontSize: 13,
+                                  fontWeight: rankingsActive ? 700 : 600,
+                                  textAlign: "left",
+                                  color: rankingsActive ? "#0B71FE" : "#4b5563",
+                                  width: "100%",
+                                  boxSizing: "border-box"
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = "#f8fafc"
+                                  e.currentTarget.style.color = "#0B71FE"
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = rankingsActive ? "#eff6ff" : "transparent"
+                                  e.currentTarget.style.color = rankingsActive ? "#0B71FE" : "#4b5563"
+                                }}
+                              >
+                                <Medal size={20} strokeWidth={rankingsActive ? 2.5 : 2} />
+                                <span className="nav-item-label">Rankings</span>
+                              </button>
+
+                              <button
                                 data-tour-id="/puntos"
                                 onClick={() => navigateTo("/puntos")}
                                 style={{
@@ -826,7 +861,7 @@ export default function FixedSidebar() {
                                 }}
                               >
                                 <Star size={20} strokeWidth={puntosActive ? 2.5 : 2} />
-                                <span className="nav-item-label">Mis Puntos</span>
+                                <span className="nav-item-label">Mis BIZCOINS</span>
                               </button>
 
 

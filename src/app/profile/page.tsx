@@ -123,6 +123,11 @@ export default function ProfilePage() {
   }
 
   const avatarOptions = [
+    // characters
+    { type: "character", id: "robot", character: "robot", label: "Robot" },
+    { type: "character", id: "astronaut", character: "astronaut", label: "Astronauta" },
+
+    // mascots (the blue ones)
     { type: "mascot", id: "fox", label: "Zorro" },
     { type: "mascot", id: "owl", label: "Búho" },
     { type: "mascot", id: "dolphin", label: "Delfín" },
@@ -134,6 +139,13 @@ export default function ProfilePage() {
     { type: "mascot", id: "lion", label: "León" },
     { type: "mascot", id: "koala", label: "Koala" },
     { type: "mascot", id: "penguin", label: "Pingüino" },
+
+    // design themed
+    { type: "gradient", id: "grad1", gradient: "linear-gradient(135deg, #0F62FE, #6366f1)", label: "Azure" },
+    { type: "pattern", id: "patt1", pattern: "dots", color: "#0F62FE", label: "Puntos" },
+    { type: "pattern", id: "patt2", pattern: "waves", color: "#0F62FE", label: "Ondas" },
+    { type: "shape", id: "shape1", shape: "star", color: "#0F62FE", label: "Estrella" },
+    { type: "abstract", id: "abst1", abstract: "circles", colors: ["#0F62FE", "#6366f1", "#93c5fd"], label: "Abstract" }
   ]
 
   const updateAvatar = async (newAvatar: any) => {
@@ -259,7 +271,7 @@ export default function ProfilePage() {
                   onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
                   onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
                 >
-                  <AvatarDisplay avatar={user.user_metadata?.avatar || { type: "mascot", id: "fox" }} size={52} />
+                  <AvatarDisplay avatar={user.user_metadata?.avatar || { type: "character", id: "robot", character: "robot" }} size={52} />
                   <div style={{
                     position: "absolute", bottom: 0, left: 0, width: "100%", height: "30%",
                     background: "rgba(15,98,254,0.6)", display: "flex", alignItems: "center", justifyContent: "center",
