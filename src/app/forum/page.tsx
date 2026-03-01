@@ -566,7 +566,7 @@ function ForumContent() {
                 {loadingEvidence ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {[1, 2, 3].map(i => (
-                      <div key={i} style={{ height: 140, borderRadius: 16, background: "#f1f5f9", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
+                      <div key={i} style={{ height: 140, borderRadius: 16, backgroundColor: "#f1f5f9", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
                     ))}
                   </div>
                 ) : sortedPosts.length === 0 ? (

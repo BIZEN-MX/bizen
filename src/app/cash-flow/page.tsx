@@ -430,7 +430,7 @@ export default function CombinedSimulatorsPage() {
                 ) : loadingSims ? (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
                     {Array(6).fill(0).map((_, i) => (
-                      <div key={i} style={{ background: "#f1f5f9", borderRadius: 20, height: 280, animation: "shimmer-slide 1.5s linear infinite", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%" }} />
+                      <div key={i} style={{ backgroundColor: "#f1f5f9", borderRadius: 20, height: 280, animation: "shimmer-slide 1.5s linear infinite", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%" }} />
                     ))}
                   </div>
                 ) : (
@@ -682,7 +682,7 @@ export default function CombinedSimulatorsPage() {
                         {loadingProfessions ? (
                           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
                             {Array(4).fill(0).map((_, i) => (
-                              <div key={i} style={{ height: 160, borderRadius: 16, background: "#f1f5f9", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer-slide 1.5s linear infinite" }} />
+                              <div key={i} style={{ height: 160, borderRadius: 16, backgroundColor: "#f1f5f9", backgroundImage: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer-slide 1.5s linear infinite" }} />
                             ))}
                           </div>
                         ) : (
@@ -747,8 +747,9 @@ export default function CombinedSimulatorsPage() {
                               className={startingGame ? "" : "start-btn-active"}
                               style={{
                                 padding: "14px 40px",
-                                background: startingGame
-                                  ? "#94a3b8"
+                                backgroundColor: startingGame ? "#94a3b8" : "transparent",
+                                backgroundImage: startingGame
+                                  ? "none"
                                   : "linear-gradient(135deg, #059669 0%, #0B71FE 60%, #059669 100%)",
                                 backgroundSize: "200% 100%",
                                 color: "white",

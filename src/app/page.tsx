@@ -676,7 +676,7 @@ export default function WelcomePage() {
                   <div className="hero-tagline-border-wrap" style={{
                     padding: "2px",
                     borderRadius: "18px",
-                    background: "linear-gradient(135deg, #0056E7, #1983FD, #93c5fd, #0056E7)",
+                    backgroundImage: "linear-gradient(135deg, #0056E7, #1983FD, #93c5fd, #0056E7)",
                     backgroundSize: "300% 300%",
                     animation: "border-shimmer 6s ease infinite",
                     width: "100%",

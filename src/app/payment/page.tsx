@@ -64,7 +64,8 @@ function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { loading
         borderRadius: 12,
         border: "none",
         width: "100%",
-        background: rest.disabled ? "#cfd8e3" : "linear-gradient(90deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+        backgroundColor: rest.disabled ? "#cfd8e3" : "transparent",
+        backgroundImage: rest.disabled ? "none" : "linear-gradient(90deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
         backgroundSize: rest.disabled ? "auto" : "200% auto",
         backgroundPosition: rest.disabled ? "left" : "0% 0%",
         color: "#fff",
@@ -111,7 +112,7 @@ export default function PaymentPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    
+
     try {
       // Create Stripe Checkout Session
       const response = await fetch('/api/payment/create-checkout', {
@@ -400,7 +401,7 @@ export default function PaymentPage() {
                   <p style={{ fontSize: 14, color: "#475569", margin: 0, lineHeight: 1.6 }}>
                     <strong style={{ color: "#0F62FE" }}>🔒 Pago seguro con Stripe</strong>
                     <br />
-                    Serás redirigido a Stripe Checkout para completar el pago de forma segura. 
+                    Serás redirigido a Stripe Checkout para completar el pago de forma segura.
                     No almacenamos información de tarjeta en nuestros servidores.
                   </p>
                 </div>

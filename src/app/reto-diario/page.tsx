@@ -519,7 +519,7 @@ export default function RetoDiarioPage() {
 
                   {/* Title */}
                   {loadingChallenge ? (
-                    <div style={{ height: 28, borderRadius: 8, marginBottom: 12, background: "rgba(255,255,255,0.1)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: 420 }} />
+                    <div style={{ height: 28, borderRadius: 8, marginBottom: 12, backgroundColor: "rgba(255,255,255,0.1)", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: 420 }} />
                   ) : (
                     <h2 className="rd-card-title">
                       {challenge?.title ?? "Reto del día"}
@@ -529,8 +529,8 @@ export default function RetoDiarioPage() {
                   {/* Description */}
                   {loadingChallenge ? (
                     <>
-                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "#f1f5f9", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
-                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, background: "#f1f5f9", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: "75%" }} />
+                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, backgroundColor: "#f1f5f9", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite" }} />
+                      <div style={{ height: 16, borderRadius: 6, marginBottom: 8, backgroundColor: "#f1f5f9", backgroundSize: "200% 100%", animation: "shimmer 1.5s linear infinite", maxWidth: "75%" }} />
                     </>
                   ) : errorDetails ? (
                     <div style={{ padding: "16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "12px", marginBottom: "24px" }}>
