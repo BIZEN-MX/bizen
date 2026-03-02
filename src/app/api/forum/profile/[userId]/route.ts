@@ -27,6 +27,7 @@ export async function GET(
         commentsCreated: true,
         acceptedAnswers: true,
         createdAt: true,
+        avatar: true,
         forumUserBadges: {
           include: {
             badge: true
