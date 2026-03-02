@@ -326,7 +326,7 @@ export default function LabPage() {
                   Simuladores
                 </h3>
                 <p style={{ fontSize: 13, color: "#6B7280" }}>
-                  Cashflow, Breakeven, Pricing
+                  6 Simuladores financieros interactivos
                 </p>
               </div>
             </Link>

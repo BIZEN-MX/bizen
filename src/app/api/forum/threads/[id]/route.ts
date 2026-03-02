@@ -44,7 +44,8 @@ export async function GET(
             reputation: true,
             level: true,
             isMinor: true,
-            avatar: true
+            avatar: true,
+            inventory: { select: { productId: true } }
           }
         },
         topic: {
@@ -106,7 +107,8 @@ export async function GET(
             reputation: true,
             level: true,
             isMinor: true,
-            avatar: true
+            avatar: true,
+            inventory: { select: { productId: true } }
           }
         },
         // Only include replies if explicitly requested and limit to 10 per comment
@@ -128,7 +130,8 @@ export async function GET(
                   fullName: true,
                   reputation: true,
                   level: true,
-                  avatar: true
+                  avatar: true,
+                  inventory: { select: { productId: true } }
                 }
               }
             },
@@ -210,13 +213,15 @@ export async function GET(
       replyCount: c._count.replies,
       author: {
         ...c.author,
-        nickname: c.author.nickname || c.author.fullName.split(' ')[0]
+        nickname: c.author.nickname || c.author.fullName.split(' ')[0],
+        inventory: c.author.inventory?.map((i: any) => i.productId) || []
       },
       replies: includeReplies && (c as any).replies ? (c as any).replies.map((r: any) => ({
         ...r,
         author: {
           ...r.author,
-          nickname: r.author.nickname || r.author.fullName.split(' ')[0]
+          nickname: r.author.nickname || r.author.fullName.split(' ')[0],
+          inventory: r.author.inventory?.map((i: any) => i.productId) || []
         },
         userVote: voteMap.get(r.id) || null
       })) : [],
@@ -237,7 +242,8 @@ export async function GET(
       ...(thread as any),
       author: {
         ...(thread as any).author,
-        nickname: (thread as any).author.nickname || (thread as any).author.fullName.split(' ')[0]
+        nickname: (thread as any).author.nickname || (thread as any).author.fullName.split(' ')[0],
+        inventory: (thread as any).author.inventory?.map((i: any) => i.productId) || []
       },
       tags: (thread as any).tags.map((tt: any) => tt.tag),
       comments: formattedComments,

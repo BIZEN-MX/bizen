@@ -73,7 +73,12 @@ export async function GET(request: NextRequest) {
             nickname: true,
             reputation: true,
             fullName: true,
-            avatar: true
+            avatar: true,
+            inventory: {
+              select: {
+                productId: true
+              }
+            }
           }
         },
         topic: {
@@ -106,7 +111,8 @@ export async function GET(request: NextRequest) {
       author: {
         ...t.author,
         nickname: t.author.nickname || t.author.fullName?.split(' ')[0] || 'Usuario',
-        isMinor: false // Default to false, will be populated if field exists in DB
+        isMinor: false,
+        inventory: t.author.inventory?.map((i: any) => i.productId) || []
       },
       tags: t.tags.map((tt: any) => tt.tag),
       hasAcceptedAnswer: !!t.acceptedCommentId

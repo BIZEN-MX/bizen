@@ -21,7 +21,7 @@ interface ForumThread {
   commentCount: number
   isPinned: boolean
   createdAt: string
-  author: { userId: string; nickname: string; reputation: number; avatar: any }
+  author: { userId: string; nickname: string; reputation: number; avatar: any; inventory?: string[] }
   topic: { id: string; name: string; slug: string; icon: string }
   tags: Array<{ id: string; name: string; slug: string }>
   hasAcceptedAnswer: boolean
@@ -304,7 +304,11 @@ export default function BookmarksPage() {
                         </span>
                         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                           <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <AvatarDisplay avatar={thread.author.avatar} size={18} />
+                            <AvatarDisplay
+                              avatar={thread.author.avatar}
+                              size={18}
+                              frame={thread.author.inventory?.includes("2") ? "vip" : thread.author.inventory?.includes("1") ? "ambassador" : null}
+                            />
                           </div>
                           <span>{thread.author.nickname}</span>
                         </div>

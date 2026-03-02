@@ -501,7 +501,11 @@ function SettingsContent() {
                 <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 800, color: "#0F172A" }}>Vista previa del perfil</h3>
                 <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                   <div style={{ width: 64, height: 64, borderRadius: "50%", background: "linear-gradient(135deg,#0F62FE,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(15,98,254,0.2)" }}>
-                    <AvatarDisplay avatar={avatar || { type: "character", id: "robot", character: "robot" }} size={42} />
+                    <AvatarDisplay
+                      avatar={avatar || { type: "character", id: "robot", character: "robot" }}
+                      size={42}
+                      frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
+                    />
                   </div>
                   <div>
                     <div style={{ fontSize: 18, fontWeight: 900, color: "#0F172A" }}>{fullName || "Sin nombre"}</div>

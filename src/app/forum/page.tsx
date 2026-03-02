@@ -29,6 +29,7 @@ interface ForumThread {
     level?: number
     fullName?: string
     avatar?: any
+    inventory?: string[]
   }
   topic: { id: string; name: string; slug: string; icon: string }
   tags: Array<{ id: string; name: string; slug: string }>
@@ -39,7 +40,7 @@ interface EvidencePost {
   id: string; dailyChallengeId: string; authorDisplay: string; isMe: boolean; authorUserId: string
   smartGoal: string; didToday: string; learned: string; changeTomorrow: string
   status: 'submitted' | 'validated' | 'flagged'; authorRole: string
-  createdAt: string; avatar?: any
+  createdAt: string; avatar?: any; inventory?: string[]
   reactions: Array<{ id: string; userId: string; reactionType: string }>
   comments: Array<{ id: string; userId: string; body: string; createdAt: string; authorDisplay?: string }>
 }
@@ -161,7 +162,11 @@ function EvidenceCard({
             display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0
           }}>
-            <AvatarDisplay avatar={post.avatar} size={36} />
+            <AvatarDisplay
+              avatar={post.avatar}
+              size={36}
+              frame={post.inventory?.includes("2") ? "vip" : post.inventory?.includes("1") ? "ambassador" : null}
+            />
           </div>
           <div>
             <span style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>{post.authorDisplay}</span>
@@ -703,7 +708,11 @@ function ForumContent() {
                                   </span>
                                   <Link href={`/forum/profile/${thread.author.userId}`} style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", color: "inherit" }}>
                                     <div style={{ width: 22, height: 22, borderRadius: "50%", background: "white", border: "1px solid #f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                      <AvatarDisplay avatar={thread.author.avatar} size={20} />
+                                      <AvatarDisplay
+                                        avatar={thread.author.avatar}
+                                        size={20}
+                                        frame={thread.author.inventory?.includes("2") ? "vip" : thread.author.inventory?.includes("1") ? "ambassador" : null}
+                                      />
                                     </div>
                                     <span style={{ color: "#94a3b8" }}>por {thread.author.nickname}</span>
                                   </Link>

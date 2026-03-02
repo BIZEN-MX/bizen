@@ -12,12 +12,24 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const userProfile = (await prisma.profile.findUnique({
-      where: { userId: user.id }
+    const userProfileRaw = (await prisma.profile.findUnique({
+      where: { userId: user.id },
+      include: {
+        inventory: {
+          select: {
+            productId: true
+          }
+        }
+      }
     })) as any
 
-    if (!userProfile) {
+    if (!userProfileRaw) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 })
+    }
+
+    const userProfile = {
+      ...userProfileRaw,
+      inventory: userProfileRaw.inventory?.map((i: any) => i.productId) || []
     }
 
     // Ensure level is synced with XP

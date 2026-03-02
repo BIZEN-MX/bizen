@@ -35,6 +35,39 @@ const FollowIllustration = () => (
   </svg>
 )
 
+const CustomFollowingIcon = ({ active }: { active: boolean }) => (
+  <div style={{
+    width: 44, height: 44, borderRadius: "50%",
+    background: active ? "rgba(15,98,254,0.12)" : "rgba(148,163,184,0.06)",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+    transform: active ? "scale(1.1)" : "scale(1)"
+  }}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: active ? "tienda-bounce 2s infinite" : "none" }}>
+      <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M17 11L19 13L23 9" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </div>
+)
+
+const CustomFollowersIcon = ({ active }: { active: boolean }) => (
+  <div style={{
+    width: 44, height: 44, borderRadius: "50%",
+    background: active ? "rgba(15,98,254,0.12)" : "rgba(148,163,184,0.06)",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+    transform: active ? "scale(1.1)" : "scale(1)"
+  }}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: active ? "tienda-wiggle 2s infinite" : "none" }}>
+      <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </div>
+)
+
 interface UserStats {
   xp: number
   level: number
@@ -43,6 +76,7 @@ interface UserStats {
   xpForNextLevel: number
   currentStreak?: number
   weeklyActiveDays?: string[]
+  inventory?: string[]
 }
 
 
@@ -283,6 +317,9 @@ export default function ProfilePage() {
           background: radial-gradient(circle, rgba(15,98,254,0.06) 0%, transparent 70%);
           border-radius: 50%; z-index: -1; animation: blobRotate 20s infinite linear;
         }
+
+        @keyframes tienda-bounce  { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        @keyframes tienda-wiggle  { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
         `
       }} />
 
@@ -295,6 +332,15 @@ export default function ProfilePage() {
         {/* Decorative elements */}
         <div className="blob" style={{ top: "-100px", right: "-100px" }} />
         <div className="blob" style={{ bottom: "-100px", left: "-100px", animationDelay: "-10s" }} />
+
+        {/* Banner Section */}
+        <div style={{
+          height: 180, width: "100%",
+          background: "linear-gradient(135deg, #0F62FE 0%, #6366f1 50%, #4f46e5 100%)",
+          position: "absolute", top: 0, left: 0, zIndex: 0
+        }}>
+          <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+        </div>
 
         <div className="prof-two-col" style={{
           display: "flex", gap: 32,
@@ -329,7 +375,8 @@ export default function ProfilePage() {
                 <div style={{ position: "relative", zIndex: 1 }}>
                   <AvatarDisplay
                     avatar={user.user_metadata?.avatar || { type: "character", id: "robot", character: "robot" }}
-                    size={145}
+                    size={155}
+                    frame={userStats?.inventory?.includes("2") ? "vip" : userStats?.inventory?.includes("1") ? "ambassador" : null}
                   />
                 </div>
 
@@ -377,17 +424,23 @@ export default function ProfilePage() {
               <div style={{ display: "inline-flex", gap: 32, marginBottom: 24, justifyContent: "center" }}>
                 <button
                   onClick={() => { setRightTab("following"); fetchFollowingList() }}
-                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "4px 0" }}
+                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
                 >
-                  <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats?.followingCount ?? 0}</div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.05em" }}>Siguiendo</div>
+                  <CustomFollowingIcon active={rightTab === "following"} />
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats?.followingCount ?? 0}</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: rightTab === "following" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Siguiendo</div>
+                  </div>
                 </button>
                 <button
                   onClick={() => { setRightTab("followers"); fetchFollowersList() }}
-                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "4px 0" }}
+                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
                 >
-                  <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats?.followersCount ?? 0}</div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.05em" }}>Seguidores</div>
+                  <CustomFollowersIcon active={rightTab === "followers"} />
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats?.followersCount ?? 0}</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: rightTab === "followers" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Seguidores</div>
+                  </div>
                 </button>
               </div>
 
@@ -539,8 +592,12 @@ export default function ProfilePage() {
                         onMouseEnter={e => (e.currentTarget.style.background = "#f1f5f9")}
                         onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                       >
-                        <div style={{ width: 38, height: 38, borderRadius: "50%", background: "linear-gradient(135deg,#0F62FE,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, color: "white", flexShrink: 0 }}>
-                          {f.nickname ? f.nickname[0].toUpperCase() : "U"}
+                        <div style={{ width: 38, height: 38, borderRadius: "50%", background: "#f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <AvatarDisplay
+                            avatar={f.avatar}
+                            size={34}
+                            frame={f.inventory?.includes("2") ? "vip" : f.inventory?.includes("1") ? "ambassador" : null}
+                          />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.nickname}</div>

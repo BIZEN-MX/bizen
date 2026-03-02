@@ -47,6 +47,7 @@ interface UserProfile {
     commentCount?: number
   }>
   weeklyActiveDays?: string[]
+  inventory?: string[]
 }
 
 export default function ForumProfilePage() {
@@ -318,7 +319,11 @@ export default function ForumProfilePage() {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   boxShadow: "0 0 0 6px rgba(15,98,254,0.15)"
                 }}>
-                  <AvatarDisplay avatar={profile.avatar} size={88} />
+                  <AvatarDisplay
+                    avatar={profile.avatar}
+                    size={88}
+                    frame={profile.inventory?.includes("2") ? "vip" : profile.inventory?.includes("1") ? "ambassador" : null}
+                  />
                 </div>
 
                 {/* Name + meta */}

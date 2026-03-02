@@ -224,6 +224,7 @@ export default function MobileFooterNav() {
                   <AvatarDisplay
                     avatar={user?.user_metadata?.avatar || { type: "emoji", value: (user?.user_metadata?.full_name || user?.email || "U")[0].toUpperCase() }}
                     size={32}
+                    frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
                   />
                 </div>
               ) : (

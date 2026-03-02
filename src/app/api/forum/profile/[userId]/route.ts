@@ -15,7 +15,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const profile = await prisma.profile.findUnique({
+    const profile = (await prisma.profile.findUnique({
       where: { userId },
       select: {
         userId: true,
@@ -35,9 +35,14 @@ export async function GET(
           orderBy: {
             earnedAt: 'desc'
           }
+        },
+        inventory: {
+          select: {
+            productId: true
+          }
         }
       }
-    })
+    })) as any
 
     if (!profile) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 })
@@ -132,6 +137,7 @@ export async function GET(
       ...profile,
       nickname: profile.nickname || profile.fullName.split(' ')[0],
       badges: profile.forumUserBadges,
+      inventory: profile.inventory.map((item: any) => item.productId),
       recentActivity: allActivity,
       weeklyActiveDays,
     })

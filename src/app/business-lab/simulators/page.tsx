@@ -10,9 +10,9 @@ export const metadata = {
 
 export default async function SimulatorsPage() {
   const supabase = await createSupabaseServer()
-  
+
   const { data: { user }, error: authError } = await supabase.auth.getUser()
-  
+
   if (authError || !user) {
     redirect("/login")
   }
@@ -45,6 +45,20 @@ export default async function SimulatorsPage() {
       description: "Analiza tus métricas de adquisición y CAC/LTV",
       icon: "📊",
       color: "#F59E0B"
+    },
+    {
+      id: "market-size",
+      title: "TAM / SAM / SOM",
+      description: "Calcula el tamaño de tu oportunidad de mercado y potencial",
+      icon: "🌍",
+      color: "#EC4899"
+    },
+    {
+      id: "val-equity",
+      title: "Valuación y Cap Table",
+      description: "Modelado de capital social, dilución y rondas de inversión",
+      icon: "🏦",
+      color: "#06B6D4"
     }
   ]
 
@@ -94,8 +108,8 @@ export default async function SimulatorsPage() {
       `}</style>
       <div className="simulators-outer" style={{
         width: "100%",
-      flex: 1,
-      background: "#FBFAF5",
+        flex: 1,
+        background: "#FBFAF5",
         fontFamily: "Montserrat, sans-serif",
         overflowX: "hidden",
         overflowY: "auto",
@@ -104,145 +118,145 @@ export default async function SimulatorsPage() {
         <main className="simulators-main" style={{
           margin: "0 auto",
           flex: 1,
-      fontFamily: "Montserrat, sans-serif",
-      width: "100%",
-      boxSizing: "border-box" as const,
-      overflowX: "hidden",
-      overflowY: "visible"
-    }}>
-      <Link href="/business-lab" style={{ textDecoration: "none" }}>
-        <button style={{
-          padding: "8px 16px",
-          background: "white",
-          border: "2px solid #E5E7EB",
-          borderRadius: 8,
-          fontSize: 14,
-          fontWeight: 600,
-          color: "#374151",
-          cursor: "pointer",
-          marginBottom: 24,
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          transition: "all 0.2s ease"
-        }}
-        onMouseEnter={(e: any) => e.currentTarget.style.borderColor = "#0B71FE"}
-        onMouseLeave={(e: any) => e.currentTarget.style.borderColor = "#E5E7EB"}
-        >
-          ← Volver al Lab
-        </button>
-      </Link>
-
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{
-          fontSize: 42,
-          fontWeight: 900,
-          background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: 12
+          fontFamily: "Montserrat, sans-serif",
+          width: "100%",
+          boxSizing: "border-box" as const,
+          overflowX: "hidden",
+          overflowY: "visible"
         }}>
-          🧮 Simuladores Financieros
-        </h1>
-        <p style={{ fontSize: 16, color: "#6B7280", lineHeight: 1.6 }}>
-          Herramientas para modelar y validar los números de tu startup
-        </p>
-      </div>
-
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-        gap: 20,
-        marginBottom: 32,
-        width: "100%"
-      }}>
-        {simulators.map((simulator) => (
-          <div key={simulator.id} style={{
-            background: "white",
-            borderRadius: 16,
-            padding: 24,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-            border: "2px solid #E5E7EB",
-            transition: "all 0.2s ease",
-            cursor: "pointer"
-          }}
-          onMouseEnter={(e: any) => {
-            e.currentTarget.style.transform = "translateY(-4px)"
-            e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
-            e.currentTarget.style.borderColor = simulator.color
-          }}
-          onMouseLeave={(e: any) => {
-            e.currentTarget.style.transform = "translateY(0)"
-            e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
-            e.currentTarget.style.borderColor = "#E5E7EB"
-          }}
-          >
-            <div style={{
-              width: 56,
-              height: 56,
-              borderRadius: 16,
-              background: `${simulator.color}15`,
-              display: "flex",
+          <Link href="/business-lab" style={{ textDecoration: "none" }}>
+            <button style={{
+              padding: "8px 16px",
+              background: "white",
+              border: "2px solid #E5E7EB",
+              borderRadius: 8,
+              fontSize: 14,
+              fontWeight: 600,
+              color: "#374151",
+              cursor: "pointer",
+              marginBottom: 24,
+              display: "inline-flex",
               alignItems: "center",
-              justifyContent: "center",
-              fontSize: 28,
-              marginBottom: 16
-            }}>
-              {simulator.icon}
-            </div>
-            
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 8 }}>
-              {simulator.title}
-            </h3>
-            <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, marginBottom: 20 }}>
-              {simulator.description}
-            </p>
-            
-            <Link href={`/business-lab/simulators/${simulator.id}`}>
-              <button style={{
-                width: "100%",
-                padding: "12px 20px",
-                background: simulator.color,
-                border: "none",
-                color: "white",
-                borderRadius: 12,
-                fontSize: 15,
-                fontWeight: 700,
-                cursor: "pointer",
-                transition: "opacity 0.2s ease"
-              }}
-              onMouseEnter={(e: any) => e.currentTarget.style.opacity = "0.9"}
-              onMouseLeave={(e: any) => e.currentTarget.style.opacity = "1"}
-              >
-                Abrir Simulador
-              </button>
-            </Link>
-          </div>
-        ))}
-      </div>
+              gap: 8,
+              transition: "all 0.2s ease"
+            }}
+              onMouseEnter={(e: any) => e.currentTarget.style.borderColor = "#0B71FE"}
+              onMouseLeave={(e: any) => e.currentTarget.style.borderColor = "#E5E7EB"}
+            >
+              ← Volver al Lab
+            </button>
+          </Link>
 
-      {/* Tip Card */}
-      <div style={{
-        background: "#FBFAF5",
-        borderRadius: 16,
-        padding: 20,
-        border: "2px solid #e5e7eb",
-        width: "100%"
-      }}>
-        <div style={{ display: "flex", alignItems: "start", gap: 12 }}>
-          <span style={{ fontSize: 24 }}>💡</span>
-          <div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1E40AF", marginBottom: 6 }}>
-              Tip
-            </h3>
-            <p style={{ fontSize: 14, color: "#1E3A8A", lineHeight: 1.6 }}>
-              Todos tus cálculos se guardan automáticamente. Puedes volver a revisar
-              escenarios anteriores en cualquier momento.
+          <div style={{ marginBottom: 32 }}>
+            <h1 style={{
+              fontSize: 42,
+              fontWeight: 900,
+              background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              marginBottom: 12
+            }}>
+              🧮 Simuladores Financieros
+            </h1>
+            <p style={{ fontSize: 16, color: "#6B7280", lineHeight: 1.6 }}>
+              Herramientas para modelar y validar los números de tu startup
             </p>
           </div>
-        </div>
-      </div>
-    </main>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: 20,
+            marginBottom: 32,
+            width: "100%"
+          }}>
+            {simulators.map((simulator) => (
+              <div key={simulator.id} style={{
+                background: "white",
+                borderRadius: 16,
+                padding: 24,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                border: "2px solid #E5E7EB",
+                transition: "all 0.2s ease",
+                cursor: "pointer"
+              }}
+                onMouseEnter={(e: any) => {
+                  e.currentTarget.style.transform = "translateY(-4px)"
+                  e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
+                  e.currentTarget.style.borderColor = simulator.color
+                }}
+                onMouseLeave={(e: any) => {
+                  e.currentTarget.style.transform = "translateY(0)"
+                  e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
+                  e.currentTarget.style.borderColor = "#E5E7EB"
+                }}
+              >
+                <div style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 16,
+                  background: `${simulator.color}15`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 28,
+                  marginBottom: 16
+                }}>
+                  {simulator.icon}
+                </div>
+
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 8 }}>
+                  {simulator.title}
+                </h3>
+                <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, marginBottom: 20 }}>
+                  {simulator.description}
+                </p>
+
+                <Link href={`/business-lab/simulators/${simulator.id}`}>
+                  <button style={{
+                    width: "100%",
+                    padding: "12px 20px",
+                    background: simulator.color,
+                    border: "none",
+                    color: "white",
+                    borderRadius: 12,
+                    fontSize: 15,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "opacity 0.2s ease"
+                  }}
+                    onMouseEnter={(e: any) => e.currentTarget.style.opacity = "0.9"}
+                    onMouseLeave={(e: any) => e.currentTarget.style.opacity = "1"}
+                  >
+                    Abrir Simulador
+                  </button>
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* Tip Card */}
+          <div style={{
+            background: "#FBFAF5",
+            borderRadius: 16,
+            padding: 20,
+            border: "2px solid #e5e7eb",
+            width: "100%"
+          }}>
+            <div style={{ display: "flex", alignItems: "start", gap: 12 }}>
+              <span style={{ fontSize: 24 }}>💡</span>
+              <div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1E40AF", marginBottom: 6 }}>
+                  Tip
+                </h3>
+                <p style={{ fontSize: 14, color: "#1E3A8A", lineHeight: 1.6 }}>
+                  Todos tus cálculos se guardan automáticamente. Puedes volver a revisar
+                  escenarios anteriores en cualquier momento.
+                </p>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     </>
   )

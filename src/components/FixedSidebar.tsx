@@ -1061,7 +1061,11 @@ export default function FixedSidebar() {
                 flexShrink: 0
               }}>
                 <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "white", overflow: "hidden" }}>
-                  <AvatarDisplay avatar={user.user_metadata?.avatar} size={40} />
+                  <AvatarDisplay
+                    avatar={user.user_metadata?.avatar}
+                    size={40}
+                    frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
+                  />
                 </div>
               </div>
               {!isMobile && (

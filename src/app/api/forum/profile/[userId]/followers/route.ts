@@ -29,7 +29,9 @@ export async function GET(
             nickname: true,
             fullName: true,
             reputation: true,
-            level: true
+            level: true,
+            avatar: true,
+            inventory: { select: { productId: true } }
           }
         }
       },
@@ -42,11 +44,13 @@ export async function GET(
       where: { followingId: userId }
     })
 
-    const formatted = followers.map(f => ({
+    const formatted = (followers as any[]).map(f => ({
       userId: f.follower.userId,
       nickname: f.follower.nickname || f.follower.fullName.split(' ')[0] || 'Usuario',
       reputation: f.follower.reputation,
       level: f.follower.level,
+      avatar: f.follower.avatar,
+      inventory: f.follower.inventory?.map((i: any) => i.productId) || [],
       followedAt: f.createdAt
     }))
 

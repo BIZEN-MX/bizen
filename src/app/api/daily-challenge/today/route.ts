@@ -12,9 +12,21 @@ export async function GET() {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-        // Today in YYYY-MM-DD (UTC)
-        const today = new Date()
-        today.setUTCHours(0, 0, 0, 0)
+        // Today in YYYY-MM-DD (Mexico City Time)
+        // We use Intl.DateTimeFormat to get the date parts in the correct timezone
+        const mxFormatter = new Intl.DateTimeFormat("en-US", {
+            timeZone: "America/Mexico_City",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        })
+        const parts = mxFormatter.formatToParts(new Date())
+        const year = parts.find(p => p.type === "year")?.value
+        const month = parts.find(p => p.type === "month")?.value
+        const day = parts.find(p => p.type === "day")?.value
+
+        // Create a UTC midnight date for that specific YYYY-MM-DD
+        const today = new Date(`${year}-${month}-${day}T00:00:00Z`)
 
         // We revert to direct equality match since Prisma handles @db.Date using exactly UTC midnight Dates.
         let challenge = await prisma.dailyChallenge.findFirst({

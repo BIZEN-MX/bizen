@@ -385,7 +385,11 @@ export default function GameBoard({ playerPosition, isRolling, onRollDice, canRo
                       zIndex: 10,
                       marginTop: 4
                     }}>
-                      <AvatarDisplay avatar={dbProfile?.avatar} size={isMobile ? 24 : 32} />
+                      <AvatarDisplay
+                        avatar={dbProfile?.avatar}
+                        size={isMobile ? 24 : 32}
+                        frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
+                      />
                     </div>
                   )}
                 </div>

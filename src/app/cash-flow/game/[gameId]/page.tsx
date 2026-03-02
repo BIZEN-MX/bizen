@@ -1059,7 +1059,11 @@ export default function CashFlowGamePage() {
                   border: "1px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center",
                   justifyContent: "center", overflow: "hidden", backdropFilter: "blur(10px)"
                 }}>
-                  <AvatarDisplay size={56} avatar={dbProfile?.avatar} />
+                  <AvatarDisplay
+                    size={56}
+                    avatar={dbProfile?.avatar}
+                    frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
+                  />
                 </div>
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>

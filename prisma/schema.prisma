@@ -81,6 +81,7 @@ model Profile {
   progress         Progress[]
   school           School?          @relation(fields: [schoolId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   forumUserBadges  ForumUserBadge[]
+  inventory        UserInventoryItem[]
   followers        UserFollow[]     @relation("following")
   following        UserFollow[]     @relation("follower")
 
@@ -451,6 +452,19 @@ model ForumUserBadge {
   @@id([userId, badgeId])
   @@index([badgeId])
   @@map("forum_user_badges")
+  @@schema("public")
+}
+
+model UserInventoryItem {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  productId   String   @map("product_id")
+  purchasedAt DateTime @default(now()) @map("purchased_at")
+  pricePaid   Int      @map("price_paid")
+  profile     Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_inventory")
   @@schema("public")
 }
 

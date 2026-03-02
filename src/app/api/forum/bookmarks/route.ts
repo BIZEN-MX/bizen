@@ -28,7 +28,8 @@ export async function GET(request: NextRequest) {
                 nickname: true,
                 fullName: true,
                 reputation: true,
-                avatar: true
+                avatar: true,
+                inventory: { select: { productId: true } }
               }
             },
             topic: true,
@@ -42,15 +43,16 @@ export async function GET(request: NextRequest) {
     })
 
     // Filter out any bookmarks with deleted/null threads
-    const threads = bookmarks
+    const threads = (bookmarks as any[])
       .filter(b => b.thread !== null)
       .map(b => ({
         ...b.thread,
         author: {
           ...b.thread.author,
-          nickname: b.thread.author.nickname || b.thread.author.fullName?.split(' ')[0] || 'Usuario'
+          nickname: b.thread.author.nickname || b.thread.author.fullName?.split(' ')[0] || 'Usuario',
+          inventory: b.thread.author.inventory?.map((i: any) => i.productId) || []
         },
-        tags: b.thread.tags.map(tt => tt.tag),
+        tags: b.thread.tags.map((tt: any) => tt.tag),
         hasAcceptedAnswer: !!b.thread.acceptedCommentId
       }))
 

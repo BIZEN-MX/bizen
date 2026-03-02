@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { createSupabaseServer } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
@@ -17,22 +18,11 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const profile = await prisma.profile.findUnique({
-      where: { userId: user.id },
-      include: {
-        school: {
-          include: {
-            licenses: {
-              where: {
-                status: 'active',
-                endDate: { gt: new Date() }
-              },
-              take: 1
-            }
-          }
-        }
-      }
-    })
+    // Use raw query for profile to ensure we get bizcoins and ignore Prisma mapping issues
+    const profileResult: any[] = await prisma.$queryRaw`
+      SELECT * FROM public.profiles WHERE user_id = ${user.id} LIMIT 1
+    `
+    const profile = profileResult[0]
 
     if (!profile) {
       return NextResponse.json(
@@ -41,13 +31,39 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // If user has school with active license, set/renew paywall bypass cookie
-    const hasActiveLicense = profile?.school?.licenses?.length && profile.school.licenses.length > 0;
-    // Ensure we send back the bizcoins field and defaults to 0
-    const response = NextResponse.json({
+    // Fetch inventory via raw query
+    const inventoryResult: any[] = await prisma.$queryRaw`
+      SELECT product_id FROM public.user_inventory WHERE user_id = ${user.id}
+    `
+
+    // Fetch school separately if needed
+    const school = profile.school_id ? await prisma.school.findUnique({
+      where: { id: profile.school_id },
+      include: {
+        licenses: {
+          where: {
+            status: 'active',
+            endDate: { gt: new Date() }
+          },
+          take: 1
+        }
+      }
+    }) : null
+
+    const profileData = {
       ...profile,
-      bizcoins: (profile as any).bizcoins || 0
-    });
+      userId: profile.user_id, // Map snake_case to camelCase for frontend
+      fullName: profile.full_name,
+      schoolId: profile.school_id,
+      bizcoins: profile.bizcoins || 0,
+      inventory: inventoryResult.map(i => i.product_id),
+      school
+    };
+
+    // If user has school with active license, set/renew paywall bypass cookie
+    const hasActiveLicense = (profile as any)?.school?.licenses?.length && (profile as any).school.licenses.length > 0;
+
+    const response = NextResponse.json(profileData);
 
     if (hasActiveLicense) {
       response.cookies.set('bizen_has_access', '1', {

@@ -71,8 +71,8 @@ export async function GET(req: NextRequest) {
         const authorIds = [...new Set(posts.map(p => p.authorUserId))]
         const profiles = await prisma.profile.findMany({
             where: { userId: { in: authorIds } },
-            select: { userId: true, fullName: true, role: true, avatar: true }
-        })
+            select: { userId: true, fullName: true, role: true, avatar: true, inventory: { select: { productId: true } } }
+        }) as any[]
         const profileMap = Object.fromEntries(profiles.map(p => [p.userId, p]))
 
         const formatted = posts.map(p => {
@@ -87,7 +87,8 @@ export async function GET(req: NextRequest) {
                 authorDisplay: displayName,
                 isMe: p.authorUserId === user.id,
                 authorRole: authorProfile?.role ?? "student",
-                avatar: authorProfile?.avatar
+                avatar: authorProfile?.avatar,
+                inventory: (authorProfile as any)?.inventory?.map((i: any) => i.productId) || []
             }
         })
 

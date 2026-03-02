@@ -20,6 +20,9 @@ import {
     Flame,
     Shield,
     Palette,
+    PartyPopper,
+    Trophy,
+    Target,
 } from "lucide-react"
 
 // ─────────────────────────────────────────
@@ -118,7 +121,7 @@ const BADGE_COLORS: Record<string, { bg: string; text: string }> = {
 
 // ─────────────────────────────────────────
 export default function TiendaPage() {
-    const { user, loading } = useAuth()
+    const { user, loading, refreshUser } = useAuth()
     const router = useRouter()
 
     const [stats, setStats] = useState<any>(null)
@@ -128,6 +131,10 @@ export default function TiendaPage() {
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [searchFocused, setSearchFocused] = useState(false)
     const [purchaseSuccess, setPurchaseSuccess] = useState(false)
+
+    const [inventory, setInventory] = useState<string[]>([])
+    const [purchasing, setPurchasing] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
         if (loading) return
@@ -139,8 +146,58 @@ export default function TiendaPage() {
             } catch { /* silent */ }
             finally { setLoadingStats(false) }
         }
+        const fetchInventory = async () => {
+            try {
+                const res = await fetch("/api/tienda/inventory")
+                if (res.ok) {
+                    const data = await res.json()
+                    setInventory(data.inventory || [])
+                }
+            } catch { /* silent */ }
+        }
         fetchStats()
+        fetchInventory()
     }, [user, loading, router])
+
+    const handleConfirmPurchase = async () => {
+        if (!selectedProduct) return
+        setPurchasing(true)
+        setError(null)
+        try {
+            const res = await fetch("/api/tienda/purchase", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    productId: selectedProduct.id,
+                    price: selectedProduct.price,
+                    name: selectedProduct.name
+                })
+            })
+            const data = await res.json()
+            if (res.ok) {
+                setPurchaseSuccess(true)
+                // Update local stats immediately
+                if (data.bizcoins !== undefined) {
+                    setStats((s: any) => ({ ...s, bizcoins: data.bizcoins }))
+                }
+                // Add to local inventory so the button disables immediately
+                setInventory(prev => [...prev, String(selectedProduct.id)])
+
+                // Refresh global profile (Avatar frames, Sidebar points, etc.)
+                try {
+                    await refreshUser()
+                } catch (e) {
+                    console.error("Error refreshing global user state:", e)
+                }
+            } else {
+                setError(data.error || "Error al completar la compra")
+            }
+        } catch {
+            setError("Error de conexión al servidor")
+        } finally {
+            setPurchasing(false)
+        }
+    }
 
     const bizcoins = stats?.bizcoins ?? 0
 
@@ -194,6 +251,8 @@ export default function TiendaPage() {
           50%      { box-shadow: 0 4px 28px rgba(15,98,254,0.65); }
         }
         @keyframes tienda-spin    { to { transform: rotate(360deg); } }
+        @keyframes tienda-bounce  { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        @keyframes tienda-wiggle  { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
 
         /* ── product card ── */
         .tienda-card {
@@ -282,7 +341,14 @@ export default function TiendaPage() {
                         {purchaseSuccess ? (
                             /* SUCCESS STATE */
                             <div style={{ textAlign: "center" }}>
-                                <div style={{ fontSize: 64, marginBottom: 12 }}>🎉</div>
+                                <div style={{
+                                    width: 80, height: 80, background: "#f0fdf4", borderRadius: "50%",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    margin: "0 auto 20px", color: "#16a34a",
+                                    animation: "tienda-bounce 1s ease infinite"
+                                }}>
+                                    <PartyPopper size={48} />
+                                </div>
                                 <h2 style={{ fontSize: 22, fontWeight: 900, color: "#0f172a", marginBottom: 8 }}>¡Canje exitoso!</h2>
                                 <p style={{ fontSize: 14, color: "#64748b", marginBottom: 28 }}>
                                     <strong>{selectedProduct.name}</strong> ya está en tu perfil.
@@ -293,9 +359,10 @@ export default function TiendaPage() {
                                         padding: "13px 32px", background: "linear-gradient(135deg,#0F62FE,#4A9EFF)",
                                         color: "white", border: "none", borderRadius: 12,
                                         fontWeight: 800, fontFamily: "'Montserrat',sans-serif", fontSize: 14, cursor: "pointer",
+                                        display: "inline-flex", alignItems: "center", gap: 8
                                     }}
                                 >
-                                    ¡Genial! →
+                                    ¡Genial! <CheckCircle2 size={16} />
                                 </button>
                             </div>
                         ) : (
@@ -348,27 +415,44 @@ export default function TiendaPage() {
                                     </div>
                                 )}
 
+                                {error && (
+                                    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: "11px 16px", marginBottom: 18, color: "#dc2626", fontSize: 12, fontWeight: 600 }}>
+                                        {error}
+                                    </div>
+                                )}
+
                                 <div style={{ display: "flex", gap: 10 }}>
                                     <button
-                                        onClick={() => { setSelectedProduct(null); setPurchaseSuccess(false) }}
+                                        onClick={() => { setSelectedProduct(null); setPurchaseSuccess(false); setError(null) }}
+                                        disabled={purchasing}
                                         style={{ flex: 1, padding: "13px", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 14, color: "#64748b", fontFamily: "'Montserrat',sans-serif" }}
                                     >
                                         Cancelar
                                     </button>
                                     <button
-                                        disabled={bizcoins < selectedProduct.price}
-                                        onClick={() => setPurchaseSuccess(true)}
+                                        disabled={bizcoins < selectedProduct.price || purchasing}
+                                        onClick={handleConfirmPurchase}
                                         style={{
                                             flex: 2, padding: "13px", borderRadius: 12, border: "none",
-                                            background: bizcoins >= selectedProduct.price
+                                            background: bizcoins >= selectedProduct.price && !purchasing
                                                 ? "linear-gradient(135deg,#0F62FE,#4A9EFF)"
                                                 : "#e2e8f0",
-                                            color: bizcoins >= selectedProduct.price ? "white" : "#94a3b8",
-                                            fontWeight: 800, fontSize: 14, cursor: bizcoins >= selectedProduct.price ? "pointer" : "not-allowed",
+                                            color: bizcoins >= selectedProduct.price && !purchasing ? "white" : "#94a3b8",
+                                            fontWeight: 800, fontSize: 14, cursor: (bizcoins >= selectedProduct.price && !purchasing) ? "pointer" : "not-allowed",
                                             fontFamily: "'Montserrat',sans-serif",
+                                            display: "flex", alignItems: "center", justifyContent: "center", gap: 8
                                         }}
                                     >
-                                        Confirmar canje →
+                                        {purchasing ? (
+                                            <>
+                                                <div style={{ width: 14, height: 14, border: "2px solid white", borderTopColor: "transparent", borderRadius: "50%", animation: "tienda-spin 0.6s linear infinite" }} />
+                                                Procesando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Confirmar canje <ChevronRight size={16} />
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                             </>
@@ -461,9 +545,11 @@ export default function TiendaPage() {
                 }}>
                     {/* Shine sweep */}
                     <div style={{ position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%", background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)", animation: "tienda-shine 4s ease-in-out infinite", pointerEvents: "none" }} />
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "white" }}>
-                        <Sparkles size={22} color="#fbbf24" />
-                        <span style={{ fontWeight: 800, fontSize: "clamp(14px,2vw,17px)" }}>¡Oferta de la semana! Doble beneficios en todos los Accesorios 🎁</span>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 12, color: "white" }}>
+                        <div style={{ animation: "tienda-wiggle 2s ease infinite" }}>
+                            <Gift size={28} color="#fbbf24" fill="#fbbf2430" />
+                        </div>
+                        <span style={{ fontWeight: 800, fontSize: "clamp(14px,2vw,17px)" }}>¡Oferta de la semana! Doble beneficios en todos los Accesorios</span>
                     </div>
                     <button
                         onClick={() => setActiveCategory("Accesorios")}
@@ -544,8 +630,9 @@ export default function TiendaPage() {
 
                 {/* ── PRODUCT GRID ── */}
                 {filtered.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: "70px 24px", color: "#94a3b8", fontSize: 15, fontWeight: 600 }}>
-                        No encontramos productos que coincidan. 🔍
+                    <div style={{ textAlign: "center", padding: "80px 24px", color: "#94a3b8", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                        <Search size={48} strokeWidth={1} style={{ opacity: 0.5 }} />
+                        <div style={{ fontSize: 15, fontWeight: 600 }}>No encontramos productos que coincidan.</div>
                     </div>
                 ) : (
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 24 }}>
@@ -600,8 +687,8 @@ export default function TiendaPage() {
                                             <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                                                 {product.category}
                                             </span>
-                                            <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 900, fontSize: 15, color: canAfford ? product.accent : "#94a3b8" }}>
-                                                <Zap size={13} fill={canAfford ? product.accent : "#94a3b8"} color={canAfford ? product.accent : "#94a3b8"} />
+                                            <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 900, fontSize: 15, color: inventory.includes(String(product.id)) ? "#10b981" : (canAfford ? product.accent : "#94a3b8") }}>
+                                                {inventory.includes(String(product.id)) ? <CheckCircle2 size={13} color="#10b981" /> : <Zap size={13} fill={canAfford ? product.accent : "#94a3b8"} color={canAfford ? product.accent : "#94a3b8"} />}
                                                 {product.price.toLocaleString()}
                                                 <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.05em" }}>BIZCOINS</span>
                                             </div>
@@ -619,10 +706,17 @@ export default function TiendaPage() {
 
                                         {/* CTA */}
                                         <button
-                                            className={`canjear-btn ${canAfford ? "can-afford" : "locked"}`}
+                                            className={`canjear-btn ${inventory.includes(String(product.id)) ? "locked" : (canAfford ? "can-afford" : "locked")}`}
+                                            disabled={inventory.includes(String(product.id))}
                                             onClick={() => canAfford && setSelectedProduct(product)}
+                                            style={inventory.includes(String(product.id)) ? { background: "#ecfdf5", color: "#10b981", cursor: "default" } : {}}
                                         >
-                                            {canAfford ? (
+                                            {inventory.includes(String(product.id)) ? (
+                                                <>
+                                                    <CheckCircle2 size={16} />
+                                                    Ya canjeado
+                                                </>
+                                            ) : canAfford ? (
                                                 <>
                                                     <Gift size={16} />
                                                     Canjear ahora
@@ -650,13 +744,19 @@ export default function TiendaPage() {
                     </h2>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
                         {[
-                            { label: "Reto Diario", xp: "+50", color: "#0F62FE", desc: "Completa el reto del día", emoji: "⚡" },
-                            { label: "Lecciones", xp: "+25", color: "#10b981", desc: "Termina una lección del curso", emoji: "📖" },
-                            { label: "Quizzes", xp: "+30", color: "#f59e0b", desc: "Acierta las preguntas correctas", emoji: "🎯" },
-                            { label: "Racha 7 días", xp: "+100", color: "#7c3aed", desc: "Mantén tu racha una semana", emoji: "🔥" },
+                            { label: "Reto Diario", xp: "+50", color: "#0F62FE", desc: "Completa el reto del día", icon: <Zap size={22} /> },
+                            { label: "Lecciones", xp: "+25", color: "#10b981", desc: "Termina una lección del curso", icon: <BookOpen size={22} /> },
+                            { label: "Quizzes", xp: "+30", color: "#f59e0b", desc: "Acierta las preguntas correctas", icon: <Target size={22} /> },
+                            { label: "Racha 7 días", xp: "+100", color: "#7c3aed", desc: "Mantén tu racha una semana", icon: <Flame size={22} /> },
                         ].map(item => (
-                            <div key={item.label} style={{ background: "#FBFAF5", borderRadius: 14, padding: "18px 16px", border: `1px solid ${item.color}20`, borderLeft: `3px solid ${item.color}` }}>
-                                <div style={{ fontSize: 24, marginBottom: 8 }}>{item.emoji}</div>
+                            <div key={item.label} style={{ background: "#FBFAF5", borderRadius: 14, padding: "18px 16px", border: `1px solid ${item.color}20`, borderLeft: `3px solid ${item.color}`, transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
+                                <div style={{
+                                    width: 40, height: 40, borderRadius: 10, background: `${item.color}15`,
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    color: item.color, marginBottom: 12
+                                }}>
+                                    {item.icon}
+                                </div>
                                 <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", marginBottom: 4 }}>{item.label}</div>
                                 <div style={{ fontSize: 12, color: "#64748b", marginBottom: 10, lineHeight: 1.5 }}>{item.desc}</div>
                                 <div style={{ fontSize: 16, fontWeight: 900, color: item.color }}>{item.xp} BIZCOINS</div>

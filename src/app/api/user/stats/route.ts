@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
+export const dynamic = 'force-dynamic'
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel } from "@/lib/xp"
@@ -17,23 +18,32 @@ export async function GET() {
       )
     }
 
-    // Get user profile with XP data
-    const userProfile = (await prisma.profile.findUnique({
-      where: { userId: user.id },
-      select: {
-        xp: true,
-        bizcoins: true,
-        level: true,
-        createdAt: true,
-        currentStreak: true,
-      }
-    })) as any
+    // Get user profile with XP data using Raw SQL for reliability
+    const profileResult: any[] = await prisma.$queryRaw`
+      SELECT xp, bizcoins, level, created_at, current_streak 
+      FROM public.profiles 
+      WHERE user_id = ${user.id} 
+      LIMIT 1
+    `
 
-    if (!userProfile) {
+    if (!profileResult || profileResult.length === 0) {
       return NextResponse.json(
         { error: "Profile not found" },
         { status: 404 }
       )
+    }
+
+    const inventoryResult: any[] = await prisma.$queryRaw`
+      SELECT product_id FROM public.user_inventory WHERE user_id = ${user.id}
+    `
+
+    const userProfile = {
+      xp: profileResult[0].xp || 0,
+      bizcoins: profileResult[0].bizcoins || 0,
+      level: profileResult[0].level || 1,
+      createdAt: profileResult[0].created_at,
+      currentStreak: profileResult[0].current_streak || 0,
+      inventory: inventoryResult.map(i => ({ productId: i.product_id }))
     }
 
     // Get lessons completed count
@@ -109,7 +119,7 @@ export async function GET() {
     }
     const weeklyActiveDays = Array.from(activeDatesSet)
 
-    return NextResponse.json({
+    const result = {
       xp: userProfile.xp,
       level: currentLevel,
       xpInCurrentLevel: xpInLevel,
@@ -121,8 +131,14 @@ export async function GET() {
       certificatesCount,
       totalPoints: (userProfile as any).bizcoins || 0,
       bizcoins: (userProfile as any).bizcoins || 0,
+      inventory: (userProfile as any).inventory?.map((i: any) => i.productId) || [],
       weeklyActiveDays,
-    })
+    }
+
+    const { logToFile } = require("@/lib/debugLogger")
+    logToFile(`STATS API: user=${user.id} bizcoins=${result.bizcoins}`)
+
+    return NextResponse.json(result)
 
 
   } catch (error) {
