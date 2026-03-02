@@ -232,7 +232,7 @@ export default function RetoDiarioPage() {
         .rd-textarea::placeholder { color: rgba(0,0,0,0.4); }
 
         .rd-wrap-card {
-          background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+          background: #0f172a;
           border: 1px solid rgba(255,255,255,0.07);
           border-radius: 28px; padding: clamp(40px, 6vw, 60px) clamp(24px, 5vw, 48px);
           position: relative; overflow: hidden; text-align: center;
@@ -242,17 +242,8 @@ export default function RetoDiarioPage() {
         .rd-wrap-card::before {
           content: '';
           position: absolute; inset: 0;
-          background-image: linear-gradient(rgba(15,98,254,0.05) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(15,98,254,0.05) 1px, transparent 1px);
-          background-size: 48px 48px;
-          pointer-events: none;
-        }
-        .rd-wrap-card::after {
-          content: '';
-          position: absolute;
-          top: -30%; right: -5%;
-          width: 50%; height: 200%;
-          background: radial-gradient(circle, rgba(15,98,254,0.22) 0%, transparent 70%);
+          background: radial-gradient(ellipse at 75% 0%, rgba(15,98,254,0.18) 0%, transparent 65%),
+                      radial-gradient(ellipse at 15% 100%, rgba(99,102,241,0.12) 0%, transparent 55%);
           pointer-events: none;
         }
 
