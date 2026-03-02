@@ -61,15 +61,44 @@ export async function GET(
       }
     })
 
+    // Get recent evidence posts (Daily Challenges)
+    const recentEvidence = await prisma.evidencePost.findMany({
+      where: { authorUserId: userId },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      include: {
+        dailyChallenge: {
+          select: { title: true }
+        }
+      }
+    })
+
+    const allActivity = [
+      ...recentThreads.map(t => ({
+        id: t.id,
+        title: t.title,
+        createdAt: t.createdAt,
+        type: 'thread',
+        score: t.score,
+        commentCount: t.commentCount
+      })),
+      ...recentEvidence.map(e => ({
+        id: e.id,
+        title: `Reto: ${e.dailyChallenge?.title || "Evidencia"}`,
+        createdAt: e.createdAt,
+        type: 'evidence'
+      }))
+    ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 15)
+
     return NextResponse.json({
       ...profile,
       nickname: profile.nickname || profile.fullName.split(' ')[0],
       badges: profile.forumUserBadges,
-      recentThreads
+      recentActivity: allActivity
     })
   } catch (error) {
     console.error("Error fetching forum profile:", error)
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 })
   }
 }
-

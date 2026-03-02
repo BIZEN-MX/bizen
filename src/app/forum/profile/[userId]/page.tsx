@@ -37,12 +37,13 @@ interface UserProfile {
     }
     earnedAt: string
   }>
-  recentThreads: Array<{
+  recentActivity: Array<{
     id: string
     title: string
-    score: number
-    commentCount: number
     createdAt: string
+    type: 'thread' | 'evidence'
+    score?: number
+    commentCount?: number
   }>
 }
 
@@ -460,14 +461,14 @@ export default function ForumProfilePage() {
             </div>
           </div>
 
-          {/* ── RECENT THREADS ── */}
+          {/* ── RECENT ACTIVITY ── */}
           <div style={{ animation: "fadeInUp 0.45s ease 0.1s both" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
               <div style={{ width: 4, height: 22, borderRadius: 3, background: "linear-gradient(180deg, #0F62FE, #6366f1)" }} />
-              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>Temas Recientes</h2>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>Actividad Reciente</h2>
             </div>
 
-            {profile.recentThreads.length === 0 ? (
+            {profile.recentActivity.length === 0 ? (
               <div style={{
                 background: "white", borderRadius: 20, padding: "56px 32px",
                 textAlign: "center", border: "1.5px solid #f1f5f9",
@@ -480,24 +481,46 @@ export default function ForumProfilePage() {
                 }}>
                   <Inbox size={32} />
                 </div>
-                <p style={{ fontSize: 16, color: "#64748b", margin: 0, fontWeight: 600 }}>Este usuario aún no ha creado temas</p>
+                <p style={{ fontSize: 16, color: "#64748b", margin: 0, fontWeight: 600 }}>Este usuario aún no tiene actividad pública</p>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {profile.recentThreads.map(thread => (
-                  <Link key={thread.id} href={`/forum/thread/${thread.id}`} className="fp-thread-card">
-                    <h3 style={{ margin: "0 0 10px", fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>
-                      {thread.title}
-                    </h3>
-                    <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        <span>▲</span> {thread.score} votos
-                      </span>
-                      <span>💬 {thread.commentCount} respuestas</span>
-                      <span>{new Date(thread.createdAt).toLocaleDateString("es-ES")}</span>
-                    </div>
-                  </Link>
-                ))}
+                {profile.recentActivity.map(item => {
+                  const isThread = item.type === 'thread';
+                  return (
+                    <Link
+                      key={item.id}
+                      href={isThread ? `/forum/thread/${item.id}` : "/forum"}
+                      className="fp-thread-card"
+                      style={{ borderLeftColor: isThread ? "#0F62FE" : "#10b981" }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                        <h3 style={{ margin: "0 0 10px", fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1.4, flex: 1 }}>
+                          {item.title}
+                        </h3>
+                        <span style={{
+                          fontSize: 10, fontWeight: 800, padding: "3px 8px", borderRadius: 6,
+                          textTransform: "uppercase",
+                          background: isThread ? "rgba(15,98,254,0.1)" : "rgba(16,185,129,0.1)",
+                          color: isThread ? "#0F62FE" : "#10b981"
+                        }}>
+                          {isThread ? "Foro" : "Reto"}
+                        </span>
+                      </div>
+                      <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>
+                        {isThread && (
+                          <>
+                            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                              <span>▲</span> {item.score} votos
+                            </span>
+                            <span>💬 {item.commentCount} respuestas</span>
+                          </>
+                        )}
+                        <span>{new Date(item.createdAt).toLocaleDateString("es-ES")}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
