@@ -281,16 +281,24 @@ export default function PuntosPage() {
                                 height: "auto",
                                 borderBottom: "none"
                             }}
-                            textStyle={{ fontSize: 38, fontWeight: 900, color: "#0f172a" }}
+                            iconStyle={{
+                                color: "#f97316", // Orange-500
+                                background: "rgba(249,115,22,0.1)", // Light orange box
+                                padding: "8px",
+                                borderRadius: "12px",
+                                width: 44,
+                                height: 44
+                            }}
+                            textStyle={{ fontSize: 38, fontWeight: 900, color: "#0f172a", animation: "none" }}
                             labelStyle={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}
                         />
                         <style>{`
                             .puntos-stat-card:nth-child(2) {
                                 padding: 0 !important;
-                                border: 1px solid #e0e7ff;
+                                border: 1px solid #ffedd5;
                                 border-radius: 24px;
                                 background: white;
-                                box-shadow: 0 4px 20px rgba(15,98,254,0.06);
+                                box-shadow: 0 4px 20px rgba(249,115,22,0.06);
                                 display: flex;
                                 align-items: center;
                                 height: 100%;

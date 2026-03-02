@@ -10,6 +10,7 @@ interface StreakWidgetProps {
     activeDays?: string[]
     containerStyle?: React.CSSProperties
     badgeStyle?: React.CSSProperties
+    iconStyle?: React.CSSProperties
     textStyle?: React.CSSProperties
     labelStyle?: React.CSSProperties
 }
@@ -43,6 +44,7 @@ export default function StreakWidget({
     activeDays = [],
     containerStyle = {},
     badgeStyle = {},
+    iconStyle = {},
     textStyle = {},
     labelStyle = {}
 }: StreakWidgetProps) {
@@ -67,9 +69,10 @@ export default function StreakWidget({
                 <Flame
                     size={26}
                     style={{
-                        color: streak > 0 ? "#0F62FE" : "#94a3b8",
-                        animation: streak > 0 ? "streakFloat 2s ease infinite" : "none",
+                        color: streak > 0 ? (iconStyle.color || "#0F62FE") : "#94a3b8",
+                        animation: streak > 0 ? (iconStyle.animation || "streakFloat 2s ease infinite") : "none",
                         flexShrink: 0,
+                        ...iconStyle
                     }}
                 />
                 <div style={{ display: "flex", flexDirection: "column", alignItems: badgeStyle.alignItems || "flex-start" }}>
