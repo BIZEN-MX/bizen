@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
+import { calculateLevel } from "@/lib/xp"
 
 export async function GET() {
   try {
@@ -17,6 +18,16 @@ export async function GET() {
 
     if (!profile) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 })
+    }
+
+    // Ensure level is synced with XP
+    const calculatedLevel = calculateLevel(profile.xp)
+    if (calculatedLevel !== profile.level) {
+      await prisma.profile.update({
+        where: { userId: user.id },
+        data: { level: calculatedLevel }
+      })
+      profile.level = calculatedLevel
     }
 
     // Get active days this week (Sun–Sat)

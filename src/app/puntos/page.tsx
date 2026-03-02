@@ -308,15 +308,15 @@ export default function PuntosPage() {
 
                     {/* Progress to next level */}
                     <div className="puntos-stat-card" style={{ background: "white", borderRadius: 24, padding: "28px 32px", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.06)" }}>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>Progreso nivel {(stats?.level || 1) + 1}</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>Siguiente: Nivel {(stats?.level || 1) + 1}</div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
                             <span style={{ fontSize: 28, fontWeight: 900, color: "#0f172a" }}>{stats?.xpInCurrentLevel || 0}</span>
-                            <span style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8" }}>/ {stats?.xpNeeded || 500} BIZCOINS</span>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8" }}>/ {stats?.xpNeeded || 150} XP</span>
                         </div>
                         <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 10, overflow: "hidden" }}>
-                            <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 500)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #60a5fa, #0F62FE)", borderRadius: 10, boxShadow: "0 0 10px rgba(15,98,254,0.5)", transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)" }} />
+                            <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 150)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #60a5fa, #0F62FE)", borderRadius: 10, boxShadow: "0 0 10px rgba(15,98,254,0.5)", transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)" }} />
                         </div>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: "#64748b", marginTop: 8 }}>{(stats?.xpNeeded || 500) - (stats?.xpInCurrentLevel || 0)} XP para el siguiente nivel</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "#64748b", marginTop: 8 }}>{(stats?.xpNeeded || 150) - (stats?.xpInCurrentLevel || 0)} XP para el siguiente nivel</div>
                     </div>
                 </div>
 
