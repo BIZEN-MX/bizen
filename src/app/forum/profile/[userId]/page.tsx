@@ -56,26 +56,14 @@ export default function ForumProfilePage() {
   const [loadingFollowing, setLoadingFollowing] = useState(false)
 
   useEffect(() => {
-    const bodyEl = document.body
-    if (bodyEl) {
-      bodyEl.style.background = "#ffffff"
-      bodyEl.style.backgroundAttachment = "fixed"
-    }
-    return () => {
-      bodyEl.style.background = "#fff"
-      bodyEl.style.backgroundAttachment = "scroll"
-    }
+    document.body.style.background = "#FBFAF5"
+    return () => { document.body.style.background = "" }
   }, [])
 
   useEffect(() => {
     if (loading) return
-    if (!user) {
-      router.push("/login")
-      return
-    }
-    if (userId) {
-      fetchProfile()
-    }
+    if (!user) { router.push("/login"); return }
+    if (userId) fetchProfile()
   }, [user, loading, router, userId])
 
   const fetchProfile = async () => {
@@ -84,149 +72,99 @@ export default function ForumProfilePage() {
       setErrorProfile(false)
       const response = await fetch(`/api/forum/profile/${userId}`)
       if (response.ok) {
-        const data = await response.json()
-        setProfile(data)
+        setProfile(await response.json())
       } else {
         setErrorProfile(true)
       }
-    } catch (error) {
-      console.error("Error fetching profile:", error)
+    } catch {
       setErrorProfile(true)
     } finally {
       setLoadingData(false)
     }
   }
 
-  // Check if current user is following this profile
   const checkFollowStatus = async () => {
     if (!user || !userId || userId === user.id) return
-
     try {
-      const response = await fetch(`/api/profile/follow?userId=${userId}`)
-      if (response.ok) {
-        const data = await response.json()
-        setIsFollowing(data.isFollowing)
-      }
-    } catch (error) {
-      console.error("Error checking follow status:", error)
-    }
+      const r = await fetch(`/api/profile/follow?userId=${userId}`)
+      if (r.ok) { const d = await r.json(); setIsFollowing(d.isFollowing) }
+    } catch { }
   }
 
-  // Fetch follow stats for this user
   const fetchFollowStats = async () => {
     if (!userId) return
-
     try {
-      // We'll need to create an endpoint to get stats for any user
-      // For now, we'll use a workaround
-      const response = await fetch(`/api/forum/profile/${userId}/stats`)
-      if (response.ok) {
-        const data = await response.json()
-        setFollowStats(data)
-      }
-    } catch (error) {
-      console.error("Error fetching follow stats:", error)
-    }
+      const r = await fetch(`/api/forum/profile/${userId}/stats`)
+      if (r.ok) setFollowStats(await r.json())
+    } catch { }
   }
 
   const fetchFollowers = async () => {
     if (!userId || loadingFollowers) return
     setLoadingFollowers(true)
     try {
-      const response = await fetch(`/api/forum/profile/${userId}/followers`)
-      if (response.ok) {
-        const data = await response.json()
-        setFollowers(data.followers || [])
-      }
-    } catch (error) {
-      console.error("Error fetching followers:", error)
-    } finally {
-      setLoadingFollowers(false)
-    }
+      const r = await fetch(`/api/forum/profile/${userId}/followers`)
+      if (r.ok) { const d = await r.json(); setFollowers(d.followers || []) }
+    } catch { } finally { setLoadingFollowers(false) }
   }
 
   const fetchFollowing = async () => {
     if (!userId || loadingFollowing) return
     setLoadingFollowing(true)
     try {
-      const response = await fetch(`/api/forum/profile/${userId}/following`)
-      if (response.ok) {
-        const data = await response.json()
-        setFollowing(data.following || [])
-      }
-    } catch (error) {
-      console.error("Error fetching following:", error)
-    } finally {
-      setLoadingFollowing(false)
-    }
+      const r = await fetch(`/api/forum/profile/${userId}/following`)
+      if (r.ok) { const d = await r.json(); setFollowing(d.following || []) }
+    } catch { } finally { setLoadingFollowing(false) }
   }
 
-  // Handle follow/unfollow
   const handleFollowToggle = async () => {
     if (!user || !userId || userId === user.id || isLoadingFollow) return
-
     setIsLoadingFollow(true)
     try {
       if (isFollowing) {
-        // Unfollow
-        const response = await fetch(`/api/profile/follow?followingId=${userId}`, {
-          method: 'DELETE'
-        })
-        if (response.ok) {
+        const r = await fetch(`/api/profile/follow?followingId=${userId}`, { method: "DELETE" })
+        if (r.ok) {
           setIsFollowing(false)
-          if (followStats) {
-            setFollowStats({
-              ...followStats,
-              followersCount: Math.max(0, followStats.followersCount - 1)
-            })
-          }
+          if (followStats) setFollowStats({ ...followStats, followersCount: Math.max(0, followStats.followersCount - 1) })
         }
       } else {
-        // Follow
-        const response = await fetch('/api/profile/follow', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const r = await fetch("/api/profile/follow", {
+          method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ followingId: userId })
         })
-        if (response.ok) {
+        if (r.ok) {
           setIsFollowing(true)
-          if (followStats) {
-            setFollowStats({
-              ...followStats,
-              followersCount: followStats.followersCount + 1
-            })
-          }
+          if (followStats) setFollowStats({ ...followStats, followersCount: followStats.followersCount + 1 })
         }
       }
-    } catch (error) {
-      console.error("Error toggling follow:", error)
-    } finally {
-      setIsLoadingFollow(false)
-    }
+    } catch { } finally { setIsLoadingFollow(false) }
   }
 
   useEffect(() => {
-    if (user && userId) {
-      if (userId !== user.id) {
-        checkFollowStatus()
-      }
+    if (user && userId && userId !== user.id) {
+      checkFollowStatus()
       fetchFollowStats()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, userId])
 
   if (loading || loadingData) {
-    return <div style={{ minHeight: "50vh", background: "#FBFAF5" }} />
+    return (
+      <div style={{ minHeight: "100vh", background: "#FBFAF5", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: 40, height: 40, border: "3px solid rgba(15,98,254,0.2)", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    )
   }
 
   if (errorProfile) {
     return (
       <div style={{ minHeight: "100vh", background: "#FBFAF5", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-        <div style={{ textAlign: "center", background: "white", padding: 40, borderRadius: 20, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
-          <div style={{ fontSize: 48, marginBottom: 20 }}>👤❌</div>
-          <h2 style={{ fontSize: 24, fontWeight: 700, color: "#1e293b", marginBottom: 12 }}>Perfil no encontrado</h2>
-          <p style={{ color: "#64748b", marginBottom: 24 }}>No pudimos encontrar la información de este usuario en el foro.</p>
-          <Link href="/forum" style={{ display: "inline-block", background: "#0F62FE", color: "white", padding: "12px 24px", borderRadius: 12, fontWeight: 700, textDecoration: "none" }}>
+        <div style={{ textAlign: "center", background: "white", padding: 48, borderRadius: 24, boxShadow: "0 4px 24px rgba(0,0,0,0.07)", maxWidth: 400 }}>
+          <div style={{ fontSize: 56, marginBottom: 20 }}>👤</div>
+          <h2 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 12 }}>Perfil no encontrado</h2>
+          <p style={{ color: "#64748b", marginBottom: 28, lineHeight: 1.6 }}>No pudimos encontrar la información de este usuario en el foro.</p>
+          <Link href="/forum" style={{ display: "inline-block", background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white", padding: "13px 28px", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 15 }}>
             Volver al Foro
           </Link>
         </div>
@@ -236,416 +174,357 @@ export default function ForumProfilePage() {
 
   if (!user || !profile) return null
 
+  const memberSince = new Date(profile.createdAt).toLocaleDateString("es-ES", { year: "numeric", month: "long" })
+
   return (
     <>
       <style>{`
-        /* Mobile (≤767px): Full width */
+        @keyframes float-bg { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
         @media (max-width: 767px) {
-          .forum-profile-outer {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding-top: 20px !important;
-            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-          }
-          .forum-profile-container {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-right: 0 !important;
-            padding: clamp(16px, 4vw, 24px) !important;
-          }
+          .fp-outer { padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
+          .fp-wrap { padding: 16px !important; }
+          .fp-hero-inner { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+          .fp-stats-grid { grid-template-columns: repeat(3,1fr) !important; }
+          .fp-follow-btns { justify-content: center !important; }
         }
-        
-        /* Tablet/iPad (768px-1160px): Account for left sidebar (220px text-only) */
         @media (min-width: 768px) and (max-width: 1160px) {
-          .forum-profile-outer {
-            width: calc(100% - 220px) !important;
-            max-width: calc(100% - 220px) !important;
-            margin-left: 220px !important;
-          }
-          .forum-profile-container {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-left: 0 !important;
-            padding: clamp(24px, 3vw, 40px) !important;
-          }
+          .fp-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
         }
-        
-        /* Desktop (≥1161px): Account for left sidebar (full width 280px) */
         @media (min-width: 1161px) {
-          .forum-profile-outer {
-            width: calc(100% - 280px) !important;
-            max-width: calc(100% - 280px) !important;
-            margin-left: 280px !important;
-          }
-          .forum-profile-container {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-left: 0 !important;
-            padding: clamp(24px, 4vw, 40px) !important;
-          }
+          .fp-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
+        }
+
+        .fp-thread-card {
+          padding: 20px 24px;
+          background: white;
+          border-radius: 16px;
+          border: 1.5px solid #f1f5f9;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+          text-decoration: none;
+          display: block;
+          transition: all 0.2s ease;
+          border-left: 4px solid #0F62FE;
+        }
+        .fp-thread-card:hover {
+          transform: translateX(6px);
+          box-shadow: 0 8px 24px rgba(15,98,254,0.12);
+          border-color: #0F62FE;
+        }
+
+        .fp-badge-pill {
+          padding: 10px 18px;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.15);
+          border-radius: 999px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          backdrop-filter: blur(8px);
+          transition: all 0.2s;
+        }
+        .fp-badge-pill:hover {
+          background: rgba(255,255,255,0.14);
+          border-color: rgba(255,255,255,0.3);
+          transform: translateY(-2px);
+        }
+
+        .fp-follow-btn {
+          transition: all 0.2s ease !important;
+        }
+        .fp-follow-btn:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 8px 20px rgba(255,255,255,0.2) !important;
         }
       `}</style>
-      <div className="forum-profile-outer" style={{
+
+      <div className="fp-outer" style={{
         position: "relative",
         minHeight: "100vh",
-        paddingTop: "clamp(20px, 4vw, 40px)",
-        paddingBottom: "clamp(80px, 12vw, 120px)",
-        fontFamily: "Montserrat, sans-serif",
+        paddingBottom: "clamp(60px, 10vw, 100px)",
+        fontFamily: "'Montserrat', sans-serif",
         background: "#FBFAF5",
-        backgroundAttachment: "fixed",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
         width: "100%",
         boxSizing: "border-box"
       }}>
-        <main className="forum-profile-container" style={{
-          position: "relative",
+        <main className="fp-wrap" style={{
           width: "100%",
-          maxWidth: "100%",
-          margin: "0",
+          maxWidth: 980,
+          margin: "0 auto",
           padding: "clamp(20px, 4vw, 40px)",
-          zIndex: 1,
           boxSizing: "border-box"
         }}>
+
           {/* Breadcrumb */}
-          <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
-            <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none" }}>
-              Foro
-            </Link>
-            <span style={{ color: "#9CA3AF" }}>→</span>
-            <span style={{ color: "#374151" }}>Perfil</span>
+          <div style={{ marginBottom: 28, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
+            <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none" }}>Foro</Link>
+            <span style={{ color: "#94a3b8" }}>→</span>
+            <span style={{ color: "#64748b" }}>Perfil</span>
           </div>
 
-          {/* Profile Header */}
+          {/* ── HERO CARD ── */}
           <div style={{
-            padding: 32,
-            background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
-            color: "#fff",
-            borderRadius: 20,
-            boxShadow: "0 8px 32px rgba(15, 98, 254, 0.3)",
-            marginBottom: 32
+            background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
+            borderRadius: 28,
+            padding: "40px clamp(24px, 5vw, 48px)",
+            marginBottom: 28,
+            position: "relative",
+            overflow: "hidden",
+            border: "1px solid rgba(255,255,255,0.07)",
+            boxShadow: "0 24px 64px rgba(0,0,0,0.35)",
+            animation: "fadeInUp 0.45s ease both"
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 20 }}>
-              <div style={{
-                width: 80,
-                height: 80,
-                borderRadius: "50%",
-                background: "#fff",
-                border: "4px solid rgba(255, 255, 255, 0.4)",
-                overflow: "hidden",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0
-              }}>
-                <AvatarDisplay avatar={profile.avatar} size={80} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 800 }}>
-                  {profile.nickname}
-                </h1>
-                <div style={{ fontSize: 15, opacity: 0.9, marginBottom: 12 }}>
-                  Nivel {profile.level} • {profile.reputation} puntos de reputación
+            {/* Grid overlay */}
+            <div aria-hidden style={{
+              position: "absolute", inset: 0,
+              backgroundImage: "linear-gradient(rgba(15,98,254,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(15,98,254,0.05) 1px, transparent 1px)",
+              backgroundSize: "48px 48px",
+              pointerEvents: "none"
+            }} />
+            {/* Radial glow top-right */}
+            <div aria-hidden style={{
+              position: "absolute", top: "-30%", right: "-5%",
+              width: "45%", height: "200%",
+              background: "radial-gradient(circle, rgba(15,98,254,0.22) 0%, transparent 70%)",
+              pointerEvents: "none"
+            }} />
+            {/* Radial glow bottom-left */}
+            <div aria-hidden style={{
+              position: "absolute", bottom: "-20%", left: "-5%",
+              width: "40%", height: "160%",
+              background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)",
+              pointerEvents: "none"
+            }} />
+
+            <div style={{ position: "relative", zIndex: 1 }}>
+              {/* Avatar + identity row */}
+              <div className="fp-hero-inner" style={{ display: "flex", alignItems: "flex-start", gap: 24, marginBottom: 32, flexWrap: "wrap" }}>
+                {/* Avatar */}
+                <div style={{
+                  width: 88, height: 88, borderRadius: "50%",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "3px solid rgba(255,255,255,0.2)",
+                  overflow: "hidden", flexShrink: 0,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: "0 0 0 6px rgba(15,98,254,0.15)"
+                }}>
+                  <AvatarDisplay avatar={profile.avatar} size={88} />
                 </div>
 
-                {/* Follow Stats */}
-                {followStats && (
-                  <div style={{ display: "flex", gap: 20, fontSize: 14, opacity: 0.9 }}>
-                    <button
-                      onClick={() => {
-                        setShowFollowers(true)
-                        fetchFollowers()
-                      }}
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "rgba(255, 255, 255, 0.9)",
-                        cursor: "pointer",
-                        padding: "4px 8px",
-                        borderRadius: 6,
-                        transition: "all 0.2s ease",
-                        fontWeight: 600
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)"
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "transparent"
-                      }}
-                    >
-                      <strong>{followStats.followersCount}</strong> seguidores
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowFollowing(true)
-                        fetchFollowing()
-                      }}
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "rgba(255, 255, 255, 0.9)",
-                        cursor: "pointer",
-                        padding: "4px 8px",
-                        borderRadius: 6,
-                        transition: "all 0.2s ease",
-                        fontWeight: 600
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)"
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "transparent"
-                      }}
-                    >
-                      <strong>{followStats.followingCount}</strong> siguiendo
-                    </button>
+                {/* Name + meta */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {/* Level badge */}
+                  <div style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)",
+                    borderRadius: 999, padding: "4px 12px", marginBottom: 10,
+                    fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: "0.07em", textTransform: "uppercase"
+                  }}>
+                    ⭐ Nivel {profile.level}
                   </div>
+
+                  <h1 style={{ margin: "0 0 6px", fontSize: "clamp(20px, 3vw, 30px)", fontWeight: 900, color: "white", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                    {profile.nickname}
+                  </h1>
+
+                  <div style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", marginBottom: 14 }}>
+                    {profile.reputation} puntos de reputación &bull; Desde {memberSince}
+                  </div>
+
+                  {/* Follow stats */}
+                  {followStats && (
+                    <div className="fp-follow-btns" style={{ display: "flex", gap: 6 }}>
+                      <button
+                        onClick={() => { setShowFollowers(true); fetchFollowers() }}
+                        style={{
+                          background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
+                          color: "rgba(255,255,255,0.9)", borderRadius: 8, padding: "6px 14px",
+                          fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
+                          fontFamily: "'Montserrat', sans-serif"
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
+                        onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+                      >
+                        <strong>{followStats.followersCount}</strong> seguidores
+                      </button>
+                      <button
+                        onClick={() => { setShowFollowing(true); fetchFollowing() }}
+                        style={{
+                          background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
+                          color: "rgba(255,255,255,0.9)", borderRadius: 8, padding: "6px 14px",
+                          fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
+                          fontFamily: "'Montserrat', sans-serif"
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
+                        onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+                      >
+                        <strong>{followStats.followingCount}</strong> siguiendo
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Follow / Siguiendo button */}
+                {user && userId !== user.id && (
+                  <button
+                    className="fp-follow-btn"
+                    onClick={handleFollowToggle}
+                    disabled={isLoadingFollow}
+                    style={{
+                      padding: "12px 26px",
+                      background: isFollowing
+                        ? "rgba(255,255,255,0.1)"
+                        : "linear-gradient(135deg, #0F62FE, #2563EB)",
+                      color: "white",
+                      border: isFollowing ? "1.5px solid rgba(255,255,255,0.25)" : "none",
+                      borderRadius: 14,
+                      fontSize: 15, fontWeight: 800,
+                      cursor: isLoadingFollow ? "not-allowed" : "pointer",
+                      opacity: isLoadingFollow ? 0.65 : 1,
+                      whiteSpace: "nowrap",
+                      letterSpacing: "-0.01em",
+                      boxShadow: isFollowing ? "none" : "0 4px 18px rgba(15,98,254,0.45)",
+                      fontFamily: "'Montserrat', sans-serif",
+                      alignSelf: "flex-start"
+                    }}
+                  >
+                    {isLoadingFollow ? "..." : isFollowing ? "✓ Siguiendo" : "+ Seguir"}
+                  </button>
                 )}
               </div>
 
-              {/* Follow User Button */}
-              {user && userId !== user.id && (
-                <button
-                  onClick={handleFollowToggle}
-                  disabled={isLoadingFollow}
-                  title={isFollowing ? "Dejar de seguir a este usuario" : "Seguir a este usuario"}
-                  style={{
-                    padding: "12px 24px",
-                    background: isFollowing
-                      ? "rgba(255, 255, 255, 0.2)"
-                      : "rgba(255, 255, 255, 0.9)",
-                    color: isFollowing ? "#fff" : "#0F62FE",
-                    border: isFollowing ? "2px solid rgba(255, 255, 255, 0.4)" : "none",
-                    borderRadius: 12,
-                    fontSize: 15,
-                    fontWeight: 700,
-                    cursor: isLoadingFollow ? "not-allowed" : "pointer",
-                    opacity: isLoadingFollow ? 0.6 : 1,
-                    transition: "all 0.2s ease",
-                    whiteSpace: "nowrap",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isLoadingFollow) {
-                      e.currentTarget.style.transform = "scale(1.05)"
-                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)"
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "scale(1)"
-                    e.currentTarget.style.boxShadow = "none"
-                  }}
-                >
-                  {isLoadingFollow ? (
-                    <>
-                      <span>Cargando...</span>
-                    </>
-                  ) : isFollowing ? (
-                    <>
-                      <span>Siguiendo</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Seguir Usuario</span>
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
-
-            {/* Stats */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-              gap: 16
-            }}>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 32, fontWeight: 800 }}>{profile.postsCreated}</div>
-                <div style={{ fontSize: 14, opacity: 0.9 }}>Temas Creados</div>
-              </div>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 32, fontWeight: 800 }}>{profile.commentsCreated}</div>
-                <div style={{ fontSize: 14, opacity: 0.9 }}>Respuestas</div>
-              </div>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 32, fontWeight: 800 }}>{profile.acceptedAnswers}</div>
-                <div style={{ fontSize: 14, opacity: 0.9 }}>Respuestas Aceptadas</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Badges */}
-          {profile.badges.length > 0 && (
-            <div style={{ marginBottom: 32 }}>
-              <h2 style={{ margin: "0 0 16px", fontSize: 22, fontWeight: 700, color: "#1E40AF" }}>
-                Insignias
-              </h2>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                {profile.badges.map(ub => (
-                  <div
-                    key={ub.badge.name}
-                    title={ub.badge.description}
-                    style={{
-                      padding: "12px 20px",
-                      background: "rgba(255, 255, 255, 0.4)",
-                      backdropFilter: "blur(20px)",
-                      borderRadius: 12,
-                      border: "2px solid rgba(255, 255, 255, 0.6)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8
-                    }}
-                  >
-                    <span style={{ fontSize: 24 }}>{ub.badge.icon}</span>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: "#1E40AF" }}>
-                      {ub.badge.name}
-                    </span>
+              {/* Stats row */}
+              <div className="fp-stats-grid" style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 12
+              }}>
+                {[
+                  { value: profile.postsCreated, label: "Temas Creados", icon: "📝" },
+                  { value: profile.commentsCreated, label: "Respuestas", icon: "💬" },
+                  { value: profile.acceptedAnswers, label: "Aceptadas", icon: "✅" },
+                ].map(({ value, label, icon }) => (
+                  <div key={label} style={{
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    borderRadius: 16, padding: "18px 16px",
+                    textAlign: "center", backdropFilter: "blur(8px)"
+                  }}>
+                    <div style={{ fontSize: 20, marginBottom: 4 }}>{icon}</div>
+                    <div style={{ fontSize: 28, fontWeight: 900, color: "white", lineHeight: 1, marginBottom: 6 }}>{value}</div>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
 
-          {/* Recent Threads */}
-          <div>
-            <h2 style={{ margin: "0 0 16px", fontSize: 22, fontWeight: 700, color: "#1E40AF" }}>
-              Temas Recientes
-            </h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {profile.recentThreads.map(thread => (
-                <Link
-                  key={thread.id}
-                  href={`/forum/thread/${thread.id}`}
-                  style={{
-                    padding: 20,
-                    background: "rgba(255, 255, 255, 0.4)",
-                    backdropFilter: "blur(20px)",
-                    borderRadius: 12,
-                    border: "2px solid rgba(255, 255, 255, 0.6)",
-                    boxShadow: "0 4px 16px rgba(31, 38, 135, 0.1)",
-                    textDecoration: "none",
-                    transition: "all 0.3s ease",
-                    display: "block"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateX(4px)"
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateX(0)"
-                  }}
-                >
-                  <h3 style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 700, color: "#1E40AF" }}>
-                    {thread.title}
-                  </h3>
-                  <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#9CA3AF", fontWeight: 600 }}>
-                    <span>{thread.score} votos</span>
-                    <span>{thread.commentCount} respuestas</span>
-                    <span>{new Date(thread.createdAt).toLocaleDateString('es-ES')}</span>
+              {/* Badges inside hero */}
+              {profile.badges.length > 0 && (
+                <div style={{ marginTop: 24, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Insignias</div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {profile.badges.map(ub => (
+                      <div key={ub.badge.name} className="fp-badge-pill" title={ub.badge.description}>
+                        <span style={{ fontSize: 18 }}>{ub.badge.icon}</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>{ub.badge.name}</span>
+                      </div>
+                    ))}
                   </div>
-                </Link>
-              ))}
+                </div>
+              )}
             </div>
+          </div>
+
+          {/* ── RECENT THREADS ── */}
+          <div style={{ animation: "fadeInUp 0.45s ease 0.1s both" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+              <div style={{ width: 4, height: 22, borderRadius: 3, background: "linear-gradient(180deg, #0F62FE, #6366f1)" }} />
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>Temas Recientes</h2>
+            </div>
+
+            {profile.recentThreads.length === 0 ? (
+              <div style={{
+                background: "white", borderRadius: 20, padding: "48px 32px",
+                textAlign: "center", border: "1.5px solid #f1f5f9",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
+              }}>
+                <div style={{ fontSize: 40, marginBottom: 16 }}>🗒️</div>
+                <p style={{ fontSize: 16, color: "#64748b", margin: 0, fontWeight: 600 }}>Este usuario aún no ha creado temas</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {profile.recentThreads.map(thread => (
+                  <Link key={thread.id} href={`/forum/thread/${thread.id}`} className="fp-thread-card">
+                    <h3 style={{ margin: "0 0 10px", fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>
+                      {thread.title}
+                    </h3>
+                    <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <span>▲</span> {thread.score} votos
+                      </span>
+                      <span>💬 {thread.commentCount} respuestas</span>
+                      <span>{new Date(thread.createdAt).toLocaleDateString("es-ES")}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </main>
 
-        {/* Followers Modal */}
+        {/* ── FOLLOWERS MODAL ── */}
         {showFollowers && (
           <div style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0, 0, 0, 0.5)",
-            backdropFilter: "blur(4px)",
-            zIndex: 1000,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 20
+            position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(6px)", zIndex: 1000,
+            display: "flex", alignItems: "center", justifyContent: "center", padding: 20
           }} onClick={() => setShowFollowers(false)}>
             <div style={{
-              background: "white",
-              borderRadius: 20,
-              padding: 24,
-              maxWidth: 500,
-              width: "100%",
-              maxHeight: "80vh",
-              overflow: "auto",
-              boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)"
-            }} onClick={(e) => e.stopPropagation()}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: "#1E40AF" }}>
-                  Seguidores ({followStats?.followersCount || 0})
+              background: "linear-gradient(135deg, #0f172a, #1e1b4b)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 24, padding: 28,
+              maxWidth: 480, width: "100%", maxHeight: "80vh", overflow: "auto",
+              boxShadow: "0 24px 64px rgba(0,0,0,0.5)"
+            }} onClick={e => e.stopPropagation()}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "white" }}>
+                  Seguidores <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 18 }}>({followStats?.followersCount || 0})</span>
                 </h2>
-                <button
-                  onClick={() => setShowFollowers(false)}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    fontSize: 24,
-                    cursor: "pointer",
-                    color: "#9CA3AF",
-                    padding: 4
-                  }}
-                >
-                  ×
-                </button>
+                <button onClick={() => setShowFollowers(false)} style={{
+                  background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
+                  color: "rgba(255,255,255,0.7)", width: 36, height: 36, borderRadius: 10,
+                  cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center"
+                }}>×</button>
               </div>
               {loadingFollowers ? (
-                <div style={{ textAlign: "center", padding: 40 }}>
-                  <div style={{ fontSize: 14, color: "#9CA3AF" }}>Cargando...</div>
-                </div>
+                <div style={{ textAlign: "center", padding: 40, color: "rgba(255,255,255,0.4)" }}>Cargando...</div>
               ) : followers.length === 0 ? (
-                <div style={{ textAlign: "center", padding: 40, color: "#9CA3AF" }}>
-                  No hay seguidores aún
-                </div>
+                <div style={{ textAlign: "center", padding: 40, color: "rgba(255,255,255,0.35)", fontSize: 15 }}>No hay seguidores aún</div>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {followers.map((follower: any) => (
-                    <Link
-                      key={follower.userId}
-                      href={`/forum/profile/${follower.userId}`}
+                    <Link key={follower.userId} href={`/forum/profile/${follower.userId}`}
                       onClick={() => setShowFollowers(false)}
                       style={{
-                        padding: 16,
-                        background: "#F9FAFB",
-                        borderRadius: 12,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        textDecoration: "none",
-                        transition: "all 0.2s ease"
+                        padding: "14px 16px",
+                        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: 14, display: "flex", alignItems: "center", gap: 14,
+                        textDecoration: "none", transition: "all 0.2s"
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#F3F4F6"
-                        e.currentTarget.style.transform = "translateX(4px)"
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "#F9FAFB"
-                        e.currentTarget.style.transform = "translateX(0)"
-                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.10)"; e.currentTarget.style.transform = "translateX(4px)" }}
+                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.transform = "translateX(0)" }}
                     >
                       <div style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: "50%",
-                        background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: 20,
-                        fontWeight: 700,
-                        color: "white"
+                        width: 44, height: 44, borderRadius: "50%",
+                        background: "linear-gradient(135deg, #0F62FE, #6366f1)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 18, fontWeight: 800, color: "white", flexShrink: 0
                       }}>
                         {follower.nickname[0].toUpperCase()}
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 16, fontWeight: 700, color: "#1E40AF", marginBottom: 4 }}>
-                          {follower.nickname}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-                          Nivel {follower.level} • {follower.reputation} pts
-                        </div>
+                      <div>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: "white", marginBottom: 2 }}>{follower.nickname}</div>
+                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Nivel {follower.level} • {follower.reputation} pts</div>
                       </div>
                     </Link>
                   ))}
@@ -655,102 +534,59 @@ export default function ForumProfilePage() {
           </div>
         )}
 
-        {/* Following Modal */}
+        {/* ── FOLLOWING MODAL ── */}
         {showFollowing && (
           <div style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0, 0, 0, 0.5)",
-            backdropFilter: "blur(4px)",
-            zIndex: 1000,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 20
+            position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(6px)", zIndex: 1000,
+            display: "flex", alignItems: "center", justifyContent: "center", padding: 20
           }} onClick={() => setShowFollowing(false)}>
             <div style={{
-              background: "white",
-              borderRadius: 20,
-              padding: 24,
-              maxWidth: 500,
-              width: "100%",
-              maxHeight: "80vh",
-              overflow: "auto",
-              boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)"
-            }} onClick={(e) => e.stopPropagation()}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: "#1E40AF" }}>
-                  Siguiendo ({followStats?.followingCount || 0})
+              background: "linear-gradient(135deg, #0f172a, #1e1b4b)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 24, padding: 28,
+              maxWidth: 480, width: "100%", maxHeight: "80vh", overflow: "auto",
+              boxShadow: "0 24px 64px rgba(0,0,0,0.5)"
+            }} onClick={e => e.stopPropagation()}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "white" }}>
+                  Siguiendo <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 18 }}>({followStats?.followingCount || 0})</span>
                 </h2>
-                <button
-                  onClick={() => setShowFollowing(false)}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    fontSize: 24,
-                    cursor: "pointer",
-                    color: "#9CA3AF",
-                    padding: 4
-                  }}
-                >
-                  ×
-                </button>
+                <button onClick={() => setShowFollowing(false)} style={{
+                  background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
+                  color: "rgba(255,255,255,0.7)", width: 36, height: 36, borderRadius: 10,
+                  cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center"
+                }}>×</button>
               </div>
               {loadingFollowing ? (
-                <div style={{ textAlign: "center", padding: 40 }}>
-                  <div style={{ fontSize: 14, color: "#9CA3AF" }}>Cargando...</div>
-                </div>
+                <div style={{ textAlign: "center", padding: 40, color: "rgba(255,255,255,0.4)" }}>Cargando...</div>
               ) : following.length === 0 ? (
-                <div style={{ textAlign: "center", padding: 40, color: "#9CA3AF" }}>
-                  No está siguiendo a nadie aún
-                </div>
+                <div style={{ textAlign: "center", padding: 40, color: "rgba(255,255,255,0.35)", fontSize: 15 }}>No sigue a nadie aún</div>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {following.map((followed: any) => (
-                    <Link
-                      key={followed.userId}
-                      href={`/forum/profile/${followed.userId}`}
+                    <Link key={followed.userId} href={`/forum/profile/${followed.userId}`}
                       onClick={() => setShowFollowing(false)}
                       style={{
-                        padding: 16,
-                        background: "#F9FAFB",
-                        borderRadius: 12,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        textDecoration: "none",
-                        transition: "all 0.2s ease"
+                        padding: "14px 16px",
+                        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: 14, display: "flex", alignItems: "center", gap: 14,
+                        textDecoration: "none", transition: "all 0.2s"
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#F3F4F6"
-                        e.currentTarget.style.transform = "translateX(4px)"
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "#F9FAFB"
-                        e.currentTarget.style.transform = "translateX(0)"
-                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.10)"; e.currentTarget.style.transform = "translateX(4px)" }}
+                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.transform = "translateX(0)" }}
                     >
                       <div style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: "50%",
-                        background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: 20,
-                        fontWeight: 700,
-                        color: "white"
+                        width: 44, height: 44, borderRadius: "50%",
+                        background: "linear-gradient(135deg, #0F62FE, #6366f1)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 18, fontWeight: 800, color: "white", flexShrink: 0
                       }}>
                         {followed.nickname[0].toUpperCase()}
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 16, fontWeight: 700, color: "#1E40AF", marginBottom: 4 }}>
-                          {followed.nickname}
-                        </div>
-                        <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-                          Nivel {followed.level} • {followed.reputation} pts
-                        </div>
+                      <div>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: "white", marginBottom: 2 }}>{followed.nickname}</div>
+                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Nivel {followed.level} • {followed.reputation} pts</div>
                       </div>
                     </Link>
                   ))}
@@ -763,4 +599,3 @@ export default function ForumProfilePage() {
     </>
   )
 }
-
