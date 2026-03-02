@@ -59,17 +59,17 @@ export default function StreakWidget({
             <div style={{
                 display: "flex", alignItems: "center", gap: 10,
                 padding: "12px 18px",
-                background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
-                border: "2px solid rgba(15,98,254,0.25)",
+                background: "linear-gradient(135deg, #fffaf5 0%, #fff7ed 100%)",
+                border: "2px solid rgba(249,115,22,0.25)",
                 borderRadius: showCalendar ? "20px 20px 0 0" : "20px",
-                boxShadow: showCalendar ? "none" : "0 8px 20px rgba(15,98,254,0.12)",
-                borderBottom: showCalendar ? "1px solid rgba(15,98,254,0.15)" : undefined,
+                boxShadow: showCalendar ? "none" : "0 8px 20px rgba(249,115,22,0.12)",
+                borderBottom: showCalendar ? "1px solid rgba(249,115,22,0.15)" : undefined,
                 ...badgeStyle
             }}>
                 <Flame
                     size={26}
                     style={{
-                        color: streak > 0 ? (iconStyle.color || "#0F62FE") : "#94a3b8",
+                        color: streak > 0 ? (iconStyle.color || "#f97316") : "#94a3b8",
                         animation: streak > 0 ? (iconStyle.animation || "streakFloat 2s ease infinite") : "none",
                         flexShrink: 0,
                         ...iconStyle
@@ -79,7 +79,7 @@ export default function StreakWidget({
                     <div style={{
                         fontSize: 24,
                         fontWeight: 950,
-                        color: streak > 0 ? "#0F62FE" : "#94a3b8",
+                        color: streak > 0 ? "#ea580c" : "#94a3b8",
                         lineHeight: 0.9,
                         animation: streak > 0 ? "streakGlow 2s ease infinite" : "none",
                         ...textStyle
@@ -88,7 +88,7 @@ export default function StreakWidget({
                     </div>
                     <div style={{
                         fontSize: 10,
-                        color: streak > 0 ? "#2563eb" : "#94a3b8",
+                        color: streak > 0 ? "#f97316" : "#94a3b8",
                         fontWeight: 800,
                         textTransform: "uppercase" as const,
                         letterSpacing: "0.08em",
@@ -103,12 +103,12 @@ export default function StreakWidget({
             {/* ── Weekly Calendar (only when showCalendar=true) ── */}
             {showCalendar && (
                 <div style={{
-                    background: "linear-gradient(135deg, #f0f7ff 0%, #eff6ff 100%)",
-                    border: "2px solid rgba(15,98,254,0.25)",
+                    background: "linear-gradient(135deg, #fff7ed 0%, #fffaf5 100%)",
+                    border: "2px solid rgba(249,115,22,0.25)",
                     borderTop: "none",
                     borderRadius: "0 0 20px 20px",
                     padding: "12px 16px 14px",
-                    boxShadow: "0 8px 20px rgba(15,98,254,0.10)",
+                    boxShadow: "0 8px 20px rgba(249,115,22,0.10)",
                 }}>
                     <div style={{
                         display: "flex",
@@ -139,18 +139,18 @@ export default function StreakWidget({
                                         alignItems: "center",
                                         justifyContent: "center",
                                         background: isActive
-                                            ? "linear-gradient(135deg, #0F62FE, #4A9EFF)"
+                                            ? "linear-gradient(135deg, #f97316, #fb923c)"
                                             : isToday
-                                                ? "rgba(15,98,254,0.12)"
+                                                ? "rgba(249,115,22,0.12)"
                                                 : "transparent",
                                         border: isActive
-                                            ? "2px solid #0F62FE"
+                                            ? "2px solid #ea580c"
                                             : isToday
-                                                ? "2px dashed #0F62FE"
+                                                ? "2px dashed #f97316"
                                                 : isFuture
                                                     ? "1.5px solid #d1d5db"
                                                     : "1.5px solid #9ca3af",
-                                        boxShadow: isActive ? "0 3px 10px rgba(15,98,254,0.35)" : "none",
+                                        boxShadow: isActive ? "0 3px 10px rgba(249,115,22,0.35)" : "none",
                                         transition: "all 0.2s ease",
                                         position: "relative" as const,
                                     }}>
@@ -163,7 +163,7 @@ export default function StreakWidget({
                                     <span style={{
                                         fontSize: 9,
                                         fontWeight: isToday ? 800 : 600,
-                                        color: isToday ? "#0F62FE" : isFuture ? "#d1d5db" : "#6b7280",
+                                        color: isToday ? "#ea580c" : isFuture ? "#d1d5db" : "#6b7280",
                                         textTransform: "uppercase" as const,
                                         letterSpacing: "0.04em",
                                     }}>
@@ -179,7 +179,7 @@ export default function StreakWidget({
             {/* Keyframes */}
             <style>{`
         @keyframes streakFloat { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
-        @keyframes streakGlow  { 0%,100% { text-shadow: 0 0 10px rgba(15,98,254,0.5) } 50% { text-shadow: 0 0 20px rgba(15,98,254,0.9) } }
+        @keyframes streakGlow  { 0%,100% { text-shadow: 0 0 10px rgba(249,115,22,0.3) } 50% { text-shadow: 0 0 20px rgba(249,115,22,0.6) } }
       `}</style>
         </div>
     )

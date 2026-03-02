@@ -33,7 +33,7 @@ const CHALLENGE_TYPE_META: Record<string, { label: string; icon: any; color: str
   reflection: { label: "Reflexión", icon: Brain, color: "#818cf8", accent: "rgba(129,140,248,0.15)" },
   task: { label: "Acción", icon: TrendingUp, color: "#10b981", accent: "rgba(16,185,129,0.15)" },
   quiz: { label: "Quiz", icon: BookOpen, color: "#f59e0b", accent: "rgba(245,158,11,0.15)" },
-  simulator: { label: "Simulador", icon: Zap, color: "#0F62FE", accent: "rgba(15,98,254,0.15)" },
+  simulator: { label: "Simulador", icon: Zap, color: "#f97316", accent: "rgba(249,115,22,0.15)" },
 }
 
 const EVIDENCE_STEPS = [
@@ -465,7 +465,7 @@ export default function RetoDiarioPage() {
                     letterSpacing: "-0.03em",
                     lineHeight: 1.2,
                     paddingBottom: "10px",
-                    background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
+                    background: "linear-gradient(135deg, #0f172a 0%, #f97316 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     textTransform: "capitalize"
