@@ -156,7 +156,16 @@ export default function ProfilePage() {
         data: { avatar: newAvatar }
       })
       if (error) throw error
+
+      // Sync with public.profiles table
+      await fetch('/api/profiles', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatar: newAvatar })
+      })
+
       setIsPickerOpen(false)
+      if (refreshUser) refreshUser()
       router.refresh()
     } catch (err) {
       console.error("Error updating avatar:", err)

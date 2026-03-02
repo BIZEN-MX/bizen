@@ -3,10 +3,6 @@ import { prisma } from "@/lib/prisma"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { awardXp } from "@/lib/rewards"
 
-/**
- * POST /api/evidence
- * Create a new EvidencePost linked to today's DailyChallenge.
- */
 export async function POST(req: NextRequest) {
     try {
         const supabase = await createSupabaseServer()
@@ -20,17 +16,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Todos los campos son requeridos" }, { status: 400 })
         }
 
-        // Fetch school_id from profile (if available)
         const profile = await prisma.profile.findUnique({
             where: { userId: user.id },
             select: { schoolId: true }
         })
 
-        // Check that the challenge exists
         const challenge = await prisma.dailyChallenge.findUnique({ where: { id: dailyChallengeId } })
         if (!challenge) return NextResponse.json({ error: "Reto no encontrado" }, { status: 404 })
 
-        // Prevent duplicate submissions for same user+challenge
         const existing = await prisma.evidencePost.findFirst({
             where: { dailyChallengeId, authorUserId: user.id }
         })
@@ -50,9 +43,7 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        // Give XP for submitting the daily challenge logic
         const rewards = await awardXp(user.id, 50)
-
         return NextResponse.json({ ...post, rewards }, { status: 201 })
     } catch (err) {
         console.error("POST /api/evidence:", err)
@@ -60,39 +51,15 @@ export async function POST(req: NextRequest) {
     }
 }
 
-/**
- * GET /api/evidence?challengeId=...&scope=class|school|all
- * Fetch evidence posts for a given daily challenge, scoped by the requesting user's school.
- */
 export async function GET(req: NextRequest) {
     try {
         const supabase = await createSupabaseServer()
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-        const { searchParams } = new URL(req.url)
-        const challengeId = searchParams.get("challengeId")
-        const scope = searchParams.get("scope") || "school" // "class" | "school" | "all"
-
-        if (!challengeId) {
-            return NextResponse.json({ error: "Falta challengeId" }, { status: 400 })
-        }
-
-        // Get user role + schoolId
-        const profile = await prisma.profile.findUnique({
-            where: { userId: user.id },
-            select: { schoolId: true, role: true }
-        })
-
-        const where: any = { dailyChallengeId: challengeId }
-
-        // Scope restriction: students can only see their school
-        if (profile?.role !== "admin" && scope !== "all") {
-            where.schoolId = profile?.schoolId ?? "none"
-        }
-
+        // VISIBILIDAD GLOBAL FORZADA: Traemos todo sin filtros
         const posts = await prisma.evidencePost.findMany({
-            where,
+            where: {},
             orderBy: { createdAt: "desc" },
             take: 50,
             include: {
@@ -101,7 +68,6 @@ export async function GET(req: NextRequest) {
             }
         })
 
-        // Anonymize author display: fetch first name + last initial from profiles
         const authorIds = [...new Set(posts.map(p => p.authorUserId))]
         const profiles = await prisma.profile.findMany({
             where: { userId: { in: authorIds } },

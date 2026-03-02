@@ -80,14 +80,15 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { fullName, role, schoolId } = body
+    const { fullName, role, schoolId, avatar } = body
 
     const profile = await prisma.profile.update({
       where: { userId: user.id },
       data: {
         ...(fullName && { fullName }),
         ...(role && { role }),
-        ...(schoolId !== undefined && { schoolId })
+        ...(schoolId !== undefined && { schoolId }),
+        ...(avatar !== undefined && { avatar })
       },
       include: {
         school: true

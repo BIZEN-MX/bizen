@@ -111,7 +111,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 // ─── Main ────────────────────────────────────────────────────────────────────
 function SettingsContent() {
   const router = useRouter()
-  const { user, dbProfile } = useAuth()
+  const { user, dbProfile, refreshUser } = useAuth()
   const { settings, updateSettings, resetSettings } = useSettings()
   const [supabase, setSupabase] = useState<ReturnType<typeof createClientMicrocred> | null>(null)
   const [activeSection, setActiveSection] = useState("general")
@@ -190,6 +190,19 @@ function SettingsContent() {
       }
     })
     if (error) throw error
+
+    // Sync with public.profiles table
+    await fetch('/api/profiles', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fullName,
+        schoolId,
+        avatar
+      })
+    })
+
+    if (refreshUser) refreshUser()
   })
   const savePhone = () => doSave(async () => {
     const { error } = await supabase!.auth.updateUser({ data: { phone } })
