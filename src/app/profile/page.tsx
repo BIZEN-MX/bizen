@@ -289,6 +289,12 @@ export default function ProfilePage() {
           .prof-left-col { width: 100% !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
           .prof-right-col { width: 100% !important; }
         }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .prof-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
+        }
+        @media (min-width: 1161px) {
+          .prof-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
+        }
         .prof-tab-btn {
           flex: 1; padding: 14px; font-size: 13px; font-weight: 800;
           font-family: inherit; border: none; cursor: pointer;
@@ -350,7 +356,7 @@ export default function ProfilePage() {
         <div className="prof-two-col" style={{
           display: "flex", gap: 32,
           padding: "clamp(24px, 5vw, 48px) clamp(16px, 4vw, 40px)",
-          maxWidth: 1140, margin: "0 auto",
+          maxWidth: 1400, margin: "0 auto",
           boxSizing: "border-box", width: "100%",
           alignItems: "flex-start",
           animation: "fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both"

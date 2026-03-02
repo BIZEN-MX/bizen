@@ -138,14 +138,21 @@ export default function StepDetailPage() {
 
   if (loading) {
     return (
-      <div style={{
+      <div className="step-loading-container" style={{
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#FBFAF5",
-        marginRight: "320px"
+        background: "#FBFAF5"
       }}>
+        <style>{`
+          @media (min-width: 1161px) {
+            .step-loading-container { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+          }
+          @media (min-width: 768px) and (max-width: 1160px) {
+            .step-loading-container { margin-left: 220px !important; width: calc(100% - 220px) !important; }
+          }
+        `}</style>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16, fontFamily: "Montserrat, sans-serif" }}>
             Cargando paso...
@@ -157,15 +164,22 @@ export default function StepDetailPage() {
 
   if (!stepData) {
     return (
-      <div style={{
+      <div className="step-notfound-container" style={{
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         background: "#FBFAF5",
-        marginRight: "320px",
         fontFamily: "Montserrat, sans-serif"
       }}>
+        <style>{`
+          @media (min-width: 1161px) {
+            .step-notfound-container { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+          }
+          @media (min-width: 768px) and (max-width: 1160px) {
+            .step-notfound-container { margin-left: 220px !important; width: calc(100% - 220px) !important; }
+          }
+        `}</style>
         <div style={{ textAlign: "center" }}>
           <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16 }}>Paso no encontrado</h2>
           <Link href="/business-lab">
@@ -192,12 +206,40 @@ export default function StepDetailPage() {
 
   return (
     <>
-      <main style={{
-        marginRight: "320px",
+      <style>{`
+        /* Mobile - account for footer */
+        @media (max-width: 767px) {
+          .step-detail-main {
+            padding: clamp(20px, 5vw, 40px) 16px !important;
+            padding-bottom: calc(40px + env(safe-area-inset-bottom)) !important;
+          }
+        }
+        
+        /* Tablet/iPad (768px-1160px): Account for left sidebar (220px) */
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .step-detail-main {
+            width: calc(100% - 220px) !important;
+            max-width: calc(100% - 220px) !important;
+            margin-left: 220px !important;
+            padding: clamp(24px, 3vw, 40px) !important;
+          }
+        }
+        
+        /* Desktop (≥1161px): Account for left sidebar (280px) */
+        @media (min-width: 1161px) {
+          .step-detail-main {
+            width: calc(100% - 280px) !important;
+            max-width: calc(100% - 280px) !important;
+            margin-left: 280px !important;
+            padding: clamp(24px, 4vw, 40px) !important;
+          }
+        }
+      `}</style>
+      <main className="step-detail-main" style={{
+        margin: "0 auto",
         minHeight: "100vh",
         background: "#FBFAF5",
         padding: "40px",
-        paddingRight: "360px",
         fontFamily: "Montserrat, sans-serif",
         width: "100%",
         boxSizing: "border-box",

@@ -62,7 +62,21 @@ export default function PuntosPage() {
             <style>{`
                 @media (max-width: 767px) {
                     .puntos-outer { padding-bottom: 80px !important; }
-                    .puntos-inner { width: 100% !important; max-width: 100% !important; margin-right: 0 !important; }
+                    .puntos-inner { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
+                }
+                @media (min-width: 768px) and (max-width: 1160px) {
+                    .puntos-inner { 
+                        width: calc(100% - 220px) !important; 
+                        max-width: calc(100% - 220px) !important; 
+                        margin-left: 220px !important; 
+                    }
+                }
+                @media (min-width: 1161px) {
+                    .puntos-inner { 
+                        width: calc(100% - 280px) !important; 
+                        max-width: calc(100% - 280px) !important; 
+                        margin-left: 280px !important; 
+                    }
                 }
 
                 @keyframes puntos-fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -192,9 +206,7 @@ export default function PuntosPage() {
 
             <div className="puntos-inner" style={{
                 position: "relative",
-                width: "100%",
-                maxWidth: "1200px",
-                margin: "0 auto",
+                zIndex: 1,
                 padding: "clamp(20px, 5vw, 48px)",
                 boxSizing: "border-box"
             }}>

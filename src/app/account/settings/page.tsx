@@ -87,10 +87,10 @@ export default function AccountSettingsPage() {
 
   if (loading || loadingData) {
     return (
-      <div style={{ 
-        display: "grid", 
-        placeItems: "center", 
-        minHeight: "60vh", 
+      <div style={{
+        display: "grid",
+        placeItems: "center",
+        minHeight: "60vh",
         fontFamily: "Montserrat, sans-serif",
         background: "#FBFAF5"
       }}>
@@ -104,7 +104,7 @@ export default function AccountSettingsPage() {
   if (!user) return null
 
   return (
-    <div style={{
+    <div className="settings-outer" style={{
       position: "relative",
       minHeight: "100vh",
       paddingTop: 40,
@@ -113,10 +113,34 @@ export default function AccountSettingsPage() {
       background: "#FBFAF5",
       backgroundAttachment: "fixed"
     }}>
-      <main style={{ 
+      <style>{`
+        /* Mobile - no special offset */
+        @media (max-width: 767px) {
+          .settings-main { width: 100% !important; max-width: 100% !important; padding: 20px 16px !important; }
+        }
+        
+        /* Tablet/iPad (768px-1160px): Account for left sidebar (220px) */
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .settings-main {
+            width: calc(100% - 220px) !important;
+            max-width: calc(100% - 220px) !important;
+            margin-left: 220px !important;
+          }
+        }
+        
+        /* Desktop (≥1161px): Account for left sidebar (280px) */
+        @media (min-width: 1161px) {
+          .settings-main {
+            width: calc(100% - 280px) !important;
+            max-width: calc(100% - 280px) !important;
+            margin-left: 280px !important;
+          }
+        }
+      `}</style>
+      <main className="settings-main" style={{
         position: "relative",
-        maxWidth: 800, 
-        margin: "0 auto", 
+        maxWidth: 800,
+        margin: "0 auto",
         padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1
       }}>
@@ -138,7 +162,7 @@ export default function AccountSettingsPage() {
           <form onSubmit={handleSave}>
             {/* Nickname */}
             <div style={{ marginBottom: 24 }}>
-              <label style={{ 
+              <label style={{
                 display: "block",
                 marginBottom: 8,
                 fontSize: 15,

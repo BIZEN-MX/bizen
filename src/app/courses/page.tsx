@@ -152,7 +152,12 @@ export default function CoursesPage() {
         className="courses-loading-placeholder"
       >
         <style>{`
-          /* Handled globally */
+          @media (min-width: 768px) and (max-width: 1160px) {
+            .courses-loading-placeholder { margin-left: 220px; }
+          }
+          @media (min-width: 1161px) {
+            .courses-loading-placeholder { margin-left: 280px; }
+          }
         `}</style>
         {/* No spinner - blank or redirect handles it */}
       </div>
@@ -766,7 +771,7 @@ export default function CoursesPage() {
             padding-left: 16px !important;
             padding-right: 16px !important;
           }
-          
+          }
           
           /* Desktop (1161px and up) - left fixed sidebar only */
           @media (min-width: 1161px) {
@@ -823,7 +828,6 @@ export default function CoursesPage() {
               max-width: 100% !important;
             }
           }
-        }
       `}</style>
     </div>
   )

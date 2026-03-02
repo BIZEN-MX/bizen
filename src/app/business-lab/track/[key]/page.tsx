@@ -55,16 +55,16 @@ export default async function TrackPage({ params }: Props) {
           }
         }
         /* Tablet/iPad - no gap, sidebar overlays */
-        /* Tablet/iPad (768px-1160px) - no gap, sidebar overlays (narrow 160px) */
+        /* Tablet/iPad (768px-1160px) - no gap, sidebar overlays (narrow 220px) */
         @media (min-width: 768px) and (max-width: 1160px) {
           .track-outer {
             width: 100% !important;
             max-width: 100% !important;
           }
           .track-main {
-            width: calc(100% - 160px) !important;
-            max-width: calc(100% - 160px) !important;
-            margin-right: 0 !important;
+            width: calc(100% - 220px) !important;
+            max-width: calc(100% - 220px) !important;
+            margin-left: 220px !important;
             padding: clamp(24px, 3vw, 40px) !important;
           }
         }
@@ -77,7 +77,7 @@ export default async function TrackPage({ params }: Props) {
           .track-main {
             width: calc(100% - 280px) !important;
             max-width: calc(100% - 280px) !important;
-            margin-right: 0 !important;
+            margin-left: 280px !important;
             padding: clamp(24px, 4vw, 40px) !important;
           }
         }

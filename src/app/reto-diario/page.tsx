@@ -158,6 +158,12 @@ export default function RetoDiarioPage() {
         @media (max-width: 767px) {
           .rd-outer { margin-left: 0 !important; padding-bottom: 100px !important; }
         }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .rd-outer { margin-left: 220px !important; width: calc(100% - 220px) !important; }
+        }
+        @media (min-width: 1161px) {
+          .rd-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+        }
 
         @keyframes fadeUp   { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
         @keyframes scaleIn  { from { opacity:0; transform:scale(0.9) }       to { opacity:1; transform:scale(1) } }
