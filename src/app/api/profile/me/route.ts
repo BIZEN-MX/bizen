@@ -12,22 +12,22 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const profile = await prisma.profile.findUnique({
+    const userProfile = (await prisma.profile.findUnique({
       where: { userId: user.id }
-    })
+    })) as any
 
-    if (!profile) {
+    if (!userProfile) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 })
     }
 
     // Ensure level is synced with XP
-    const calculatedLevel = calculateLevel(profile.xp)
-    if (calculatedLevel !== profile.level) {
+    const calculatedLevel = calculateLevel(userProfile.xp)
+    if (calculatedLevel !== userProfile.level) {
       await prisma.profile.update({
         where: { userId: user.id },
         data: { level: calculatedLevel }
       })
-      profile.level = calculatedLevel
+      userProfile.level = calculatedLevel
     }
 
     // Get active days this week (Sun–Sat)
@@ -61,7 +61,7 @@ export async function GET() {
     const weeklyActiveDays = Array.from(activeDatesSet)
 
     return NextResponse.json({
-      ...profile,
+      ...userProfile,
       weeklyActiveDays
     })
   } catch (error) {

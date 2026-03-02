@@ -44,7 +44,7 @@ export default function PuntosPage() {
         fetchStats()
     }, [user, loading, router])
 
-    const userPoints = stats?.xp || 0
+    const userPoints = stats?.bizcoins || 0
 
     if (loading || loadingStats) {
         return (
@@ -395,7 +395,7 @@ export default function PuntosPage() {
 
                 {/* === HOW TO EARN MORE === */}
                 <div style={{ background: "white", borderRadius: 24, padding: "clamp(24px,4vw,36px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.04)", marginBottom: 32 }}>
-                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 22px)", fontWeight: 800, color: "#0f172a", margin: "0 0 20px" }}>Cómo ganar más XP</h2>
+                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 22px)", fontWeight: 800, color: "#0f172a", margin: "0 0 20px" }}>Cómo ganar más BIZCOINS y XP</h2>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
                         {[
                             { IconComp: Zap, label: "Reto Diario", xp: "+50 BIZCOINS", color: "#0F62FE", desc: "Completa el reto del día" },

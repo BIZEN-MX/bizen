@@ -18,17 +18,18 @@ export async function GET() {
     }
 
     // Get user profile with XP data
-    const profile = await prisma.profile.findUnique({
+    const userProfile = (await prisma.profile.findUnique({
       where: { userId: user.id },
       select: {
         xp: true,
+        bizcoins: true,
         level: true,
         createdAt: true,
         currentStreak: true,
       }
-    })
+    })) as any
 
-    if (!profile) {
+    if (!userProfile) {
       return NextResponse.json(
         { error: "Profile not found" },
         { status: 404 }
@@ -55,16 +56,16 @@ export async function GET() {
     })
 
     // Use currentStreak from profile
-    const currentStreak = profile.currentStreak || 0
+    const currentStreak = userProfile.currentStreak || 0
 
     // Calculate level from XP
-    const currentLevel = calculateLevel(profile.xp)
-    const xpInLevel = xpInCurrentLevel(profile.xp)
-    const totalXpNeeded = totalXpForNextLevel(profile.xp)
-    const xpNeeded = xpForNextLevel(profile.xp)
+    const currentLevel = calculateLevel(userProfile.xp)
+    const xpInLevel = xpInCurrentLevel(userProfile.xp)
+    const totalXpNeeded = totalXpForNextLevel(userProfile.xp)
+    const xpNeeded = xpForNextLevel(userProfile.xp)
 
     // Update level in database if it changed
-    if (currentLevel !== profile.level) {
+    if (currentLevel !== userProfile.level) {
       await prisma.profile.update({
         where: { userId: user.id },
         data: { level: currentLevel }
@@ -100,16 +101,16 @@ export async function GET() {
     }).catch(() => [] as { completedAt: Date | null }[])
 
     const activeDatesSet = new Set<string>()
-    for (const e of weeklyEvidence) {
-      if (e.createdAt) activeDatesSet.add(e.createdAt.toISOString().split("T")[0])
+    for (const e of (weeklyEvidence as any[])) {
+      if (e.createdAt) activeDatesSet.add(new Date(e.createdAt).toISOString().split("T")[0])
     }
-    for (const p of weeklyProgress) {
-      if (p.completedAt) activeDatesSet.add(p.completedAt.toISOString().split("T")[0])
+    for (const p of (weeklyProgress as any[])) {
+      if (p.completedAt) activeDatesSet.add(new Date(p.completedAt).toISOString().split("T")[0])
     }
     const weeklyActiveDays = Array.from(activeDatesSet)
 
     return NextResponse.json({
-      xp: profile.xp,
+      xp: userProfile.xp,
       level: currentLevel,
       xpInCurrentLevel: xpInLevel,
       xpNeeded: totalXpNeeded,
@@ -118,7 +119,8 @@ export async function GET() {
       coursesEnrolled,
       currentStreak,
       certificatesCount,
-      totalPoints: profile.xp, // XP is the same as points
+      totalPoints: (userProfile as any).bizcoins || 0,
+      bizcoins: (userProfile as any).bizcoins || 0,
       weeklyActiveDays,
     })
 

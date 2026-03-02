@@ -10,7 +10,7 @@ import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { WarningIcon, MapIcon } from "@/components/CustomIcons"
 import StreakWidget from "@/components/StreakWidget"
-import { Settings as SettingsIcon, Camera, X as CloseIcon } from "lucide-react"
+import { Settings as SettingsIcon, Camera, X as CloseIcon, Star } from "lucide-react"
 
 interface UserStats {
   xp: number
@@ -342,6 +342,14 @@ export default function ProfilePage() {
 
                   {profileStats && (
                     <>
+                      <div onClick={() => router.push('/puntos')} style={{ textAlign: "center", cursor: "pointer" }}>
+                        <div style={{ fontSize: 18, fontWeight: 600, color: "#0F62FE", display: "flex", alignItems: "center", gap: 4 }}>
+                          <Star size={16} fill="#0F62FE" />
+                          {((dbProfile as any)?.bizcoins || 0).toLocaleString()}
+                        </div>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b" }}>BIZCOINS</div>
+                      </div>
+                      <div style={{ width: 1, height: 24, background: "#e2e8f0" }} />
                       <div onClick={() => { setShowFollowers(true); fetchFollowersList() }} style={{ textAlign: "center", cursor: "pointer" }}>
                         <div style={{ fontSize: 18, fontWeight: 600, color: "#0f172a" }}>{profileStats.followersCount}</div>
                         <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b" }}>Seguidores</div>

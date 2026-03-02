@@ -1,23 +1,11 @@
 import { prisma } from "./prisma"
-
-/**
- * Calculates a player's level based on their XP.
- * Simple curve: Level = floor(sqrt(XP / 100)) + 1
- * e.g.,
- * XP 0-99 -> Lvl 1
- * XP 100-399 -> Lvl 2
- * XP 400-899 -> Lvl 3
- * XP 900-1599 -> Lvl 4
- * XP 1600-2499 -> Lvl 5
- */
-export function calculateLevelFromXp(xp: number): number {
-    if (xp < 0) return 1
-    return Math.floor(Math.sqrt(xp / 100)) + 1
-}
+import { calculateLevel } from "./xp"
 
 export interface RewardsResult {
     xpAwarded: number
     newTotalXp: number
+    bizcoinsAwarded: number
+    newTotalBizcoins: number
     oldLevel: number
     newLevel: number
     leveledUp: boolean
@@ -26,9 +14,9 @@ export interface RewardsResult {
 }
 
 /**
- * Awards XP to a user and updates their daily streak if applicable.
+ * Awards XP and Bizcoins to a user and updates their daily streak if applicable.
  * @param userId - the ID of the user receiving the reward
- * @param amount - the amount of XP to award
+ * @param amount - the amount of XP and Bizcoins to award (usually 1:1)
  */
 export async function awardXp(userId: string, amount: number): Promise<RewardsResult> {
     const profile = await prisma.profile.findUnique({
@@ -41,8 +29,10 @@ export async function awardXp(userId: string, amount: number): Promise<RewardsRe
 
     // Calculate new XP and Level
     const newTotalXp = profile.xp + amount
+    const bizcoinsAwarded = amount // Default 1:1 ratio
+    const newTotalBizcoins = ((profile as any).bizcoins || 0) + bizcoinsAwarded
     const oldLevel = profile.level
-    const newLevel = calculateLevelFromXp(newTotalXp)
+    const newLevel = calculateLevel(newTotalXp)
     const leveledUp = newLevel > oldLevel
 
     // Handle Streak Logic using UTC to be consistent with the Daily Challenge system
@@ -86,16 +76,19 @@ export async function awardXp(userId: string, amount: number): Promise<RewardsRe
         where: { userId },
         data: {
             xp: newTotalXp,
+            bizcoins: newTotalBizcoins,
             level: newLevel,
             currentStreak: newStreak,
             longestStreak: newLongestStreak,
             lastActive: now
-        }
+        } as any
     })
 
     return {
         xpAwarded: amount,
         newTotalXp,
+        bizcoinsAwarded,
+        newTotalBizcoins,
         oldLevel,
         newLevel,
         leveledUp,
