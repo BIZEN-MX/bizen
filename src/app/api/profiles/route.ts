@@ -43,7 +43,11 @@ export async function GET(request: NextRequest) {
 
     // If user has school with active license, set/renew paywall bypass cookie
     const hasActiveLicense = profile?.school?.licenses?.length && profile.school.licenses.length > 0;
-    const response = NextResponse.json(profile);
+    // Ensure we send back the bizcoins field and defaults to 0
+    const response = NextResponse.json({
+      ...profile,
+      bizcoins: (profile as any).bizcoins || 0
+    });
 
     if (hasActiveLicense) {
       response.cookies.set('bizen_has_access', '1', {

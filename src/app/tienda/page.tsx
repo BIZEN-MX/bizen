@@ -121,7 +121,7 @@ export default function TiendaPage() {
     const { user, loading } = useAuth()
     const router = useRouter()
 
-    const [stats, setStats] = useState<{ xp: number; level: number } | null>(null)
+    const [stats, setStats] = useState<any>(null)
     const [loadingStats, setLoadingStats] = useState(true)
     const [activeCategory, setActiveCategory] = useState<Category | "Todo">("Todo")
     const [search, setSearch] = useState("")
@@ -142,7 +142,7 @@ export default function TiendaPage() {
         fetchStats()
     }, [user, loading, router])
 
-    const bizcoins = stats?.xp ?? 0
+    const bizcoins = stats?.bizcoins ?? 0
 
     const filtered = PRODUCTS.filter(p => {
         const matchCat = activeCategory === "Todo" || p.category === activeCategory
@@ -151,25 +151,7 @@ export default function TiendaPage() {
         return matchCat && matchSearch
     })
 
-    if (loading || loadingStats) {
-        return (
-            <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", background: "#FBFAF5" }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-                    <div style={{
-                        width: 44, height: 44,
-                        border: "4px solid rgba(15,98,254,0.15)",
-                        borderTop: "4px solid #0F62FE",
-                        borderRadius: "50%",
-                        animation: "tienda-spin 0.9s linear infinite"
-                    }} />
-                    <span style={{ fontSize: 14, color: "#94a3b8", fontWeight: 600, fontFamily: "'Montserrat', sans-serif" }}>
-                        Cargando tienda...
-                    </span>
-                </div>
-                <style>{`@keyframes tienda-spin { to { transform: rotate(360deg); } }`}</style>
-            </div>
-        )
-    }
+    // No longer returning early for loading to keep navbar visible and show skeletons
 
     return (
         <div
@@ -448,7 +430,11 @@ export default function TiendaPage() {
                             flexShrink: 0,
                         }}>
                             <div style={{ fontSize: "clamp(40px,8vw,62px)", fontWeight: 900, lineHeight: 1, background: "linear-gradient(135deg,#fff,#93c5fd)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                                {bizcoins.toLocaleString()}
+                                {loadingStats ? (
+                                    <div style={{ width: 120, height: 50, background: "rgba(255,255,255,0.1)", borderRadius: 12, animation: "tienda-fadeUp 1.5s infinite" }} />
+                                ) : (
+                                    bizcoins.toLocaleString()
+                                )}
                             </div>
                             <div style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4, display: "flex", alignItems: "center", gap: 5, justifyContent: "center" }}>
                                 <Zap size={12} color="#93c5fd" />
@@ -530,7 +516,6 @@ export default function TiendaPage() {
                                 style={{
                                     padding: "10px 20px",
                                     borderRadius: 999,
-                                    border: "none",
                                     fontFamily: "'Montserrat',sans-serif",
                                     fontWeight: 700,
                                     fontSize: 13,

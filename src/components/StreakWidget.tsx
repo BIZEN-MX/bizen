@@ -13,6 +13,10 @@ interface StreakWidgetProps {
     iconStyle?: React.CSSProperties
     textStyle?: React.CSSProperties
     labelStyle?: React.CSSProperties
+    /** Custom size for the Flame icon */
+    iconSize?: number
+    /** Custom font size for the streak number */
+    fontSize?: number
 }
 
 const WEEK_DAYS = [
@@ -46,7 +50,9 @@ export default function StreakWidget({
     badgeStyle = {},
     iconStyle = {},
     textStyle = {},
-    labelStyle = {}
+    labelStyle = {},
+    iconSize = 26,
+    fontSize = 24
 }: StreakWidgetProps) {
     const weekDates = getWeekDates()
     const todayStr = new Date().toISOString().split("T")[0]
@@ -67,7 +73,7 @@ export default function StreakWidget({
                 ...badgeStyle
             }}>
                 <Flame
-                    size={26}
+                    size={iconSize}
                     style={{
                         color: streak > 0 ? (iconStyle.color || "#f97316") : "#94a3b8",
                         animation: streak > 0 ? (iconStyle.animation || "streakFloat 2s ease infinite") : "none",
@@ -75,9 +81,9 @@ export default function StreakWidget({
                         ...iconStyle
                     }}
                 />
-                <div style={{ display: "flex", flexDirection: "column", alignItems: badgeStyle.alignItems || "flex-start" }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: badgeStyle.alignItems || "center" }}>
                     <div style={{
-                        fontSize: 24,
+                        fontSize: fontSize,
                         fontWeight: 950,
                         color: streak > 0 ? "#ea580c" : "#94a3b8",
                         lineHeight: 0.9,

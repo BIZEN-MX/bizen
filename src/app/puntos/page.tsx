@@ -46,14 +46,8 @@ export default function PuntosPage() {
 
     const userPoints = stats?.bizcoins || 0
 
-    if (loading || loadingStats) {
-        return (
-            <div style={{ display: "grid", placeItems: "center", minHeight: "60vh" }}>
-                <div style={{ width: 40, height: 40, border: "4px solid rgba(15,98,254,0.2)", borderTop: "4px solid #0F62FE", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-                <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
-            </div>
-        )
-    }
+    // No longer returning early for loading to avoid "ugly" center screens
+    // Instead we will render skeletons in the main UI
 
     const selectedGC = GIFT_CARDS.find(c => c.id === selectedCard)
 
@@ -245,7 +239,11 @@ export default function PuntosPage() {
                                 WebkitBackgroundClip: "text",
                                 WebkitTextFillColor: "transparent"
                             }}>
-                                {(userPoints).toLocaleString()}
+                                {loadingStats ? (
+                                    <div style={{ width: 120, height: 60, background: "rgba(255,255,255,0.1)", borderRadius: 12, animation: "puntos-shimmer 2s infinite linear", backgroundSize: "200% 100%", backgroundImage: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)" }} />
+                                ) : (
+                                    (userPoints).toLocaleString()
+                                )}
                             </div>
                             <div style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4 }}>BIZCOINS disponibles</div>
                         </div>
@@ -255,58 +253,83 @@ export default function PuntosPage() {
                 {/* === STATS GRID === */}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, marginBottom: 40 }}>
                     {/* Level */}
-                    <div className="puntos-stat-card" style={{ background: "white", borderRadius: 24, padding: "28px 32px", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.06)", display: "flex", alignItems: "center", gap: 20 }}>
-                        <div style={{ width: 60, height: 60, background: "linear-gradient(135deg, #fef3c7, #fde68a)", borderRadius: "18px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 14px rgba(245,158,11,0.3)" }}>
-                            <Trophy size={28} color="#d97706" />
-                        </div>
-                        <div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Nivel actual</div>
-                            <div style={{ fontSize: 38, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{stats?.level || 1}</div>
-                            <div style={{ fontSize: 12, fontWeight: 700, color: "#f59e0b", textTransform: "uppercase" }}>Bizen Explorer</div>
-                        </div>
+                    <div className="puntos-stat-card" style={{
+                        background: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
+                        borderRadius: 24,
+                        padding: "32px 20px",
+                        border: "1.5px solid #fde68a",
+                        boxShadow: "0 8px 30px rgba(217,119,6,0.06)",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center"
+                    }}>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Nivel actual</div>
+                        <div style={{ fontSize: 52, fontWeight: 950, color: "#b45309", lineHeight: 1, marginBottom: 6, textShadow: "0 2px 10px rgba(180,83,9,0.2)" }}>{stats?.level || 1}</div>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: "#d97706", textTransform: "uppercase", letterSpacing: "0.06em" }}>Bizen Explorer</div>
                     </div>
 
                     {/* Streak */}
-                    <div className="puntos-stat-card">
-                        <StreakWidget
-                            streak={stats?.currentStreak || 0}
-                            showCalendar={false}
-                            containerStyle={{ width: "100%" }}
-                            badgeStyle={{
-                                background: "white",
-                                border: "none",
-                                borderRadius: "24px",
-                                boxShadow: "none",
-                                padding: "28px 32px",
-                                height: "auto",
-                                borderBottom: "none"
-                            }}
-                        />
-                        <style>{`
-                            .puntos-stat-card:nth-child(2) {
-                                padding: 0 !important;
-                                border: 1px solid #ffedd5;
-                                border-radius: 24px;
-                                background: white;
-                                box-shadow: 0 4px 20px rgba(249,115,22,0.06);
-                                display: flex;
-                                align-items: center;
-                                height: 100%;
-                            }
-                        `}</style>
+                    <div className="puntos-stat-card" style={{
+                        background: "linear-gradient(135deg, #fffaf5 0%, #fff7ed 100%)",
+                        borderRadius: 24,
+                        padding: "32px 20px",
+                        border: "1.5px solid #ffedd5",
+                        boxShadow: "0 8px 30px rgba(249,115,22,0.08)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        overflow: "hidden",
+                        position: "relative"
+                    }}>
+                        {loadingStats ? (
+                            <div style={{ width: 80, height: 40, background: "#f1f5f9", borderRadius: 12, animation: "puntos-shimmer 2s infinite" }} />
+                        ) : (
+                            <StreakWidget
+                                streak={stats?.currentStreak || 0}
+                                showCalendar={false}
+                                iconSize={34}
+                                fontSize={52}
+                                badgeStyle={{
+                                    background: "transparent",
+                                    border: "none",
+                                    boxShadow: "none",
+                                    padding: "0",
+                                    gap: "12px",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}
+                            />
+                        )}
                     </div>
 
                     {/* Progress to next level */}
-                    <div className="puntos-stat-card" style={{ background: "white", borderRadius: 24, padding: "28px 32px", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.06)" }}>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>Siguiente: Nivel {(stats?.level || 1) + 1}</div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
-                            <span style={{ fontSize: 28, fontWeight: 900, color: "#0f172a" }}>{stats?.xpInCurrentLevel || 0}</span>
-                            <span style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8" }}>/ {stats?.xpNeeded || 150} XP</span>
+                    <div className="puntos-stat-card" style={{
+                        background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
+                        borderRadius: 24,
+                        padding: "32px 20px",
+                        border: "1.5px solid #bae6fd",
+                        boxShadow: "0 8px 30px rgba(14,165,233,0.06)",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center"
+                    }}>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Siguiente: Nivel {(stats?.level || 1) + 1}</div>
+
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
+                            <span style={{ fontSize: 52, fontWeight: 950, color: "#0c4a6e", lineHeight: 1 }}>{stats?.xpInCurrentLevel || 0}</span>
+                            <span style={{ fontSize: 14, fontWeight: 700, color: "#38bdf8" }}>/ {stats?.xpNeeded || 150} XP</span>
                         </div>
-                        <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 10, overflow: "hidden" }}>
-                            <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 150)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #60a5fa, #0F62FE)", borderRadius: 10, boxShadow: "0 0 10px rgba(15,98,254,0.5)", transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)" }} />
+
+                        <div style={{ width: "80%", maxWidth: "160px", height: 10, background: "rgba(255,255,255,0.5)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(14,165,233,0.2)", marginBottom: 10 }}>
+                            <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 150)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #38bdf8, #0F62FE)", borderRadius: 10, boxShadow: "0 0 10px rgba(15,98,254,0.3)", transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)" }} />
                         </div>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: "#64748b", marginTop: 8 }}>{(stats?.xpNeeded || 150) - (stats?.xpInCurrentLevel || 0)} XP para el siguiente nivel</div>
+
+                        <div style={{ fontSize: 11, fontWeight: 800, color: "#075985", textTransform: "uppercase", letterSpacing: "0.05em" }}>{(stats?.xpNeeded || 150) - (stats?.xpInCurrentLevel || 0)} XP para subir</div>
                     </div>
                 </div>
 
@@ -406,6 +429,6 @@ export default function PuntosPage() {
                 </div>
 
             </div>
-        </div>
+        </div >
     )
 }

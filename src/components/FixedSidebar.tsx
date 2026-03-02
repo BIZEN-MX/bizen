@@ -1081,9 +1081,24 @@ export default function FixedSidebar() {
                     fontWeight: 700,
                     color: "#0F62FE",
                     textTransform: "uppercase",
-                    letterSpacing: "0.05em"
+                    letterSpacing: "0.05em",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6
                   }}>
-                    Mi Perfil
+                    <div style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                      background: "rgba(15,98,254,0.08)",
+                      padding: "2px 8px",
+                      borderRadius: 6,
+                      border: "1px solid rgba(15,98,254,0.15)"
+                    }}>
+                      <Star size={10} fill="#0F62FE" />
+                      {((dbProfile as any)?.bizcoins || 0).toLocaleString()}
+                    </div>
+                    <span>Mi Perfil</span>
                   </div>
                 </div>
               )}
