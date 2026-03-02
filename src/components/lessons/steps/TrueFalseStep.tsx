@@ -6,6 +6,7 @@ import { sharedStyles } from "../sharedStyles"
 import { CONTENT_MAX_WIDTH, CONTENT_GAP } from "../layoutConstants"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
+import { Check, X, CheckCircle2, XCircle } from "lucide-react"
 
 interface TrueFalseStepProps {
   step: TrueFalseStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; continueLabel?: string; imageUrl?: string; imageAlign?: "left" | "right" }
@@ -120,11 +121,18 @@ export function TrueFalseStep({
           disabled={hasChecked}
           style={getButtonStyle(true)}
         >
-          <span style={{ fontFamily: "'Montserrat', sans-serif" }}>Verdadero</span>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === true ? "#0F62FE15" : "#F3F4F6", border: selectedValue === true ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
+            <Check size={20} strokeWidth={3} />
+          </div>
+          <span style={{ flex: 1, textAlign: "left", fontFamily: "'Montserrat', sans-serif" }}>Verdadero</span>
           {showFeedback && selectedValue === true && (
-            <span style={{ fontSize: '20px', fontFamily: "'Montserrat', sans-serif" }}>
-              {step.correctValue === true ? '✓' : '✗'}
-            </span>
+            <div style={{ flexShrink: 0 }}>
+              {step.correctValue === true ? (
+                <CheckCircle2 size={24} color="#10B981" strokeWidth={3} />
+              ) : (
+                <XCircle size={24} color="#EF4444" strokeWidth={3} />
+              )}
+            </div>
           )}
         </button>
         <button
@@ -132,11 +140,18 @@ export function TrueFalseStep({
           disabled={hasChecked}
           style={getButtonStyle(false)}
         >
-          <span style={{ fontFamily: "'Montserrat', sans-serif" }}>Falso</span>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === false ? "#0F62FE15" : "#F3F4F6", border: selectedValue === false ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
+            <X size={20} strokeWidth={3} />
+          </div>
+          <span style={{ flex: 1, textAlign: "left", fontFamily: "'Montserrat', sans-serif" }}>Falso</span>
           {showFeedback && selectedValue === false && (
-            <span style={{ fontSize: '20px', fontFamily: "'Montserrat', sans-serif" }}>
-              {step.correctValue === false ? '✓' : '✗'}
-            </span>
+            <div style={{ flexShrink: 0 }}>
+              {step.correctValue === false ? (
+                <CheckCircle2 size={24} color="#10B981" strokeWidth={3} />
+              ) : (
+                <XCircle size={24} color="#EF4444" strokeWidth={3} />
+              )}
+            </div>
           )}
         </button>
       </div>

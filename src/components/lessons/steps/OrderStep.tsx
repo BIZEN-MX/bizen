@@ -1,10 +1,11 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
-import { motion, Reorder } from "framer-motion"
+import { motion, Reorder, AnimatePresence } from "framer-motion"
 import { OrderStepFields } from "@/types/lessonTypes"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
+import { Hand, MoveVertical, CheckCircle2, XCircle, ListOrdered, AlignJustify, Star, Zap, Target, Sparkles, Heart } from "lucide-react"
 
 interface OrderStepProps {
   step: OrderStepFields & { id: string; title?: string; description?: string }
@@ -81,8 +82,10 @@ export function OrderStep({
     }
   }, [actionTrigger])
 
+  const ITEM_ICONS = [Star, Zap, Target, Sparkles, Heart, Star]
+
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 32 }}>
+    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <ExerciseInstruction type="order" />
         <h3 style={{
@@ -96,6 +99,35 @@ export function OrderStep({
           {step.question || "Pon los elementos en el orden correcto"}
         </h3>
       </div>
+
+      {/* Status hint - Explanatory UI */}
+      <AnimatePresence mode="wait">
+        {!hasChecked && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            style={{
+              background: hasInteracted ? "#F0FDF4" : "#EFF6FF",
+              border: `1.5px solid ${hasInteracted ? "#10B981" : "#93C5FD"}`,
+              borderRadius: 12,
+              padding: "10px 16px",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: 13,
+              fontWeight: 700,
+              color: hasInteracted ? "#065F46" : "#1D4ED8",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "50%", background: hasInteracted ? "#10B98120" : "#3B82F620" }}>
+              {hasInteracted ? <MoveVertical size={16} color="#10B981" /> : <Hand size={16} color="#3B82F6" />}
+            </div>
+            {hasInteracted ? "¡Eso es! Sigue ordenando hasta terminar" : "Mantén presionado y arrastra para cambiar el orden"}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <Reorder.Group
         axis="y"
@@ -150,19 +182,25 @@ export function OrderStep({
               }}
             >
               <div style={{
-                width: 32,
-                height: 32,
-                borderRadius: "50%",
-                background: "#E5E7EB",
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                background: showFeedback ? (item.correctOrder === index + 1 ? "#3B82F620" : "#EF444420") : "#F3F4F6",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 14,
-                fontWeight: 900,
-                color: "#6B7280",
-                flexShrink: 0
+                flexShrink: 0,
+                border: `1.5px solid ${borderColor}`,
+                position: "relative",
               }}>
-                {index + 1}
+                <span style={{ fontSize: 13, fontWeight: 900, color: color, position: "absolute", top: -8, left: -8, background: "white", width: 18, height: 18, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", border: `1.5px solid ${borderColor}`, boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
+                  {index + 1}
+                </span>
+                {Math.min(index, ITEM_ICONS.length - 1) >= 0 && React.createElement(ITEM_ICONS[index % ITEM_ICONS.length], {
+                  size: 18,
+                  color: color,
+                  strokeWidth: 2.5
+                })}
               </div>
               <span style={{ flex: 1, fontSize: 18, fontWeight: 700, color, fontFamily: "'Montserrat', sans-serif" }}>
                 {item.label}
@@ -175,9 +213,13 @@ export function OrderStep({
                 </div>
               )}
               {showFeedback && (
-                <span style={{ fontSize: 20, fontFamily: "'Montserrat', sans-serif" }}>
-                  {item.correctOrder === index + 1 ? "✓" : "✗"}
-                </span>
+                <div style={{ flexShrink: 0 }}>
+                  {item.correctOrder === index + 1 ? (
+                    <CheckCircle2 size={22} color="#10B981" strokeWidth={3} />
+                  ) : (
+                    <XCircle size={22} color="#EF4444" strokeWidth={3} />
+                  )}
+                </div>
               )}
             </Reorder.Item>
           )

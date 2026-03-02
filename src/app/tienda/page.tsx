@@ -126,6 +126,7 @@ export default function TiendaPage() {
 
     const [stats, setStats] = useState<any>(null)
     const [loadingStats, setLoadingStats] = useState(true)
+    const [activeTab, setActiveTab] = useState<"catalogo" | "inventario">("catalogo")
     const [activeCategory, setActiveCategory] = useState<Category | "Todo">("Todo")
     const [search, setSearch] = useState("")
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -139,24 +140,25 @@ export default function TiendaPage() {
     useEffect(() => {
         if (loading) return
         if (!user) { router.push("/login"); return }
-        const fetchStats = async () => {
+
+        const fetchAll = async () => {
+            setLoadingStats(true)
             try {
-                const res = await fetch("/api/user/stats")
-                if (res.ok) setStats(await res.json())
-            } catch { /* silent */ }
-            finally { setLoadingStats(false) }
-        }
-        const fetchInventory = async () => {
-            try {
-                const res = await fetch("/api/tienda/inventory")
-                if (res.ok) {
-                    const data = await res.json()
+                // Fetch stats (bizcoins, etc.)
+                const statsRes = await fetch("/api/user/stats")
+                if (statsRes.ok) setStats(await statsRes.json())
+
+                // Fetch inventory separately to ensure 'inventory' state is populated
+                const invRes = await fetch("/api/tienda/inventory")
+                if (invRes.ok) {
+                    const data = await invRes.json()
                     setInventory(data.inventory || [])
                 }
             } catch { /* silent */ }
+            finally { setLoadingStats(false) }
         }
-        fetchStats()
-        fetchInventory()
+
+        fetchAll()
     }, [user, loading, router])
 
     const handleConfirmPurchase = async () => {
@@ -181,11 +183,19 @@ export default function TiendaPage() {
                     setStats((s: any) => ({ ...s, bizcoins: data.bizcoins }))
                 }
                 // Add to local inventory so the button disables immediately
-                setInventory(prev => [...prev, String(selectedProduct.id)])
+                setInventory(prev => [...new Set([...prev, String(selectedProduct.id)])])
 
                 // Refresh global profile (Avatar frames, Sidebar points, etc.)
                 try {
                     await refreshUser()
+                    // Add confetti celebration
+                    const confetti = (await import("canvas-confetti")).default
+                    confetti({
+                        particleCount: 150,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ["#0F62FE", "#4A9EFF", "#10b981", "#fbbf24"]
+                    })
                 } catch (e) {
                     console.error("Error refreshing global user state:", e)
                 }
@@ -207,6 +217,8 @@ export default function TiendaPage() {
             p.description.toLowerCase().includes(search.toLowerCase())
         return matchCat && matchSearch
     })
+
+    const ownedProducts = PRODUCTS.filter(p => inventory.includes(String(p.id)))
 
     // No longer returning early for loading to keep navbar visible and show skeletons
 
@@ -559,6 +571,58 @@ export default function TiendaPage() {
                     </button>
                 </div>
 
+                {/* ── NAVIGATION TABS ── */}
+                <div style={{
+                    display: "flex",
+                    gap: 0,
+                    marginBottom: 32,
+                    borderBottom: "2px solid #e2e8f0",
+                    animation: "tienda-fadeUp 0.5s ease 0.12s both"
+                }}>
+                    {[
+                        { id: "catalogo", label: "Catálogo", icon: <ShoppingBag size={18} /> },
+                        { id: "inventario", label: "Mis Compras", icon: <ShoppingBag size={18} /> },
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 10,
+                                padding: "14px 28px",
+                                background: "none",
+                                border: "none",
+                                borderBottom: activeTab === tab.id ? "3px solid #0F62FE" : "3px solid transparent",
+                                color: activeTab === tab.id ? "#0F62FE" : "#64748b",
+                                fontFamily: "'Montserrat', sans-serif",
+                                fontWeight: 800,
+                                fontSize: 15,
+                                cursor: "pointer",
+                                transition: "all 0.2s ease",
+                                marginBottom: -2,
+                                position: "relative"
+                            }}
+                        >
+                            {tab.id === "catalogo" ? <Search size={18} /> : <ShoppingBag size={18} />}
+                            {tab.label}
+                            {tab.id === "inventario" && ownedProducts.length > 0 && (
+                                <span style={{
+                                    marginLeft: 4,
+                                    background: activeTab === "inventario" ? "#0F62FE" : "#94a3b8",
+                                    color: "white",
+                                    fontSize: 10,
+                                    padding: "2px 7px",
+                                    borderRadius: 10,
+                                    fontWeight: 900
+                                }}>
+                                    {ownedProducts.length}
+                                </span>
+                            )}
+                        </button>
+                    ))}
+                </div>
+
                 {/* ── SEARCH + CATEGORIES ── */}
                 <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", marginBottom: 32, animation: "tienda-fadeUp 0.55s ease 0.15s both" }}>
                     {/* Search */}
@@ -626,112 +690,140 @@ export default function TiendaPage() {
                     {filtered.length} producto{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
                 </div>
 
-                {/* ── PRODUCT GRID ── */}
-                {filtered.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: "80px 24px", color: "#94a3b8", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-                        <Search size={48} strokeWidth={1} style={{ opacity: 0.5 }} />
-                        <div style={{ fontSize: 15, fontWeight: 600 }}>No encontramos productos que coincidan.</div>
-                    </div>
-                ) : (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 24 }}>
-                        {filtered.map((product, idx) => {
-                            const canAfford = bizcoins >= product.price
-                            const badgeStyle = product.badge ? BADGE_COLORS[product.badge] : null
-                            return (
-                                <div
-                                    key={product.id}
-                                    className="tienda-card"
-                                    style={{ animationDelay: `${Math.min(idx * 0.06, 0.4)}s` }}
-                                >
-                                    {/* Card visual top */}
-                                    <div style={{ position: "relative", height: 160, background: product.bg, display: "flex", alignItems: "center", justifyContent: "center", color: product.accent }}>
-                                        {/* Floating icon */}
-                                        <div style={{ animation: "tienda-float 3s ease-in-out infinite", animationDelay: `${idx * 0.3}s` }}>
-                                            {product.icon}
-                                        </div>
-
-                                        {/* Badge */}
-                                        {product.badge && badgeStyle && (
-                                            <div style={{
-                                                position: "absolute", top: 14, right: 14,
-                                                background: badgeStyle.bg, color: badgeStyle.text,
-                                                fontSize: 10, fontWeight: 800, padding: "4px 10px",
-                                                borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.05em",
-                                                boxShadow: `0 3px 10px ${badgeStyle.bg}60`,
-                                            }}>
-                                                {product.badge}
+                {/* ── PRODUCT GRID (CATALOGO OR INVENTORY) ── */}
+                {activeTab === "catalogo" ? (
+                    filtered.length === 0 ? (
+                        <div style={{ textAlign: "center", padding: "80px 24px", color: "#94a3b8", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                            <Search size={48} strokeWidth={1} style={{ opacity: 0.5 }} />
+                            <div style={{ fontSize: 15, fontWeight: 600 }}>No encontramos productos que coincidan.</div>
+                        </div>
+                    ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 24 }}>
+                            {filtered.map((product, idx) => {
+                                const canAfford = bizcoins >= product.price
+                                const isOwned = inventory.includes(String(product.id))
+                                const badgeStyle = product.badge ? BADGE_COLORS[product.badge] : null
+                                return (
+                                    <div
+                                        key={product.id}
+                                        className="tienda-card"
+                                        style={{ animationDelay: `${Math.min(idx * 0.06, 0.4)}s` }}
+                                    >
+                                        <div style={{ position: "relative", height: 160, background: product.bg, display: "flex", alignItems: "center", justifyContent: "center", color: product.accent }}>
+                                            <div style={{ animation: "tienda-float 3s ease-in-out infinite", animationDelay: `${idx * 0.3}s` }}>
+                                                {product.icon}
                                             </div>
-                                        )}
 
-                                        {/* Not affordable lock overlay */}
-                                        {!canAfford && (
-                                            <div style={{
-                                                position: "absolute", top: 14, left: 14,
-                                                background: "rgba(0,0,0,0.55)", color: "#fff",
-                                                fontSize: 11, fontWeight: 700, padding: "4px 10px",
-                                                borderRadius: 999, display: "flex", alignItems: "center", gap: 5,
-                                                backdropFilter: "blur(4px)",
-                                            }}>
-                                                <Lock size={11} />
-                                                Sin saldo
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Card body */}
-                                    <div style={{ padding: "22px 22px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
-                                        {/* Category + Price */}
-                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                                            <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                                                {product.category}
-                                            </span>
-                                            <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 900, fontSize: 15, color: inventory.includes(String(product.id)) ? "#10b981" : (canAfford ? product.accent : "#94a3b8") }}>
-                                                {inventory.includes(String(product.id)) ? <CheckCircle2 size={13} color="#10b981" /> : <Zap size={13} fill={canAfford ? product.accent : "#94a3b8"} color={canAfford ? product.accent : "#94a3b8"} />}
-                                                {product.price.toLocaleString()}
-                                                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.05em" }}>BIZCOINS</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Name */}
-                                        <h3 style={{ fontSize: 17, fontWeight: 800, color: "#0f172a", marginBottom: 8, lineHeight: 1.3 }}>
-                                            {product.name}
-                                        </h3>
-
-                                        {/* Description */}
-                                        <p style={{ fontSize: 13, color: "#64748b", marginBottom: 20, lineHeight: 1.6, flex: 1 }}>
-                                            {product.description}
-                                        </p>
-
-                                        {/* CTA */}
-                                        <button
-                                            className={`canjear-btn ${inventory.includes(String(product.id)) ? "locked" : (canAfford ? "can-afford" : "locked")}`}
-                                            disabled={inventory.includes(String(product.id))}
-                                            onClick={() => canAfford && setSelectedProduct(product)}
-                                            style={inventory.includes(String(product.id)) ? { background: "#ecfdf5", color: "#10b981", cursor: "default" } : {}}
-                                        >
-                                            {inventory.includes(String(product.id)) ? (
-                                                <>
-                                                    <CheckCircle2 size={16} />
-                                                    Ya canjeado
-                                                </>
-                                            ) : canAfford ? (
-                                                <>
-                                                    <Gift size={16} />
-                                                    Canjear ahora
-                                                    <ChevronRight size={15} />
-                                                </>
+                                            {isOwned ? (
+                                                <div style={{ position: "absolute", top: 14, right: 14, background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 800, padding: "4px 10px", borderRadius: 999 }}>
+                                                    ADQUIRIDO
+                                                </div>
                                             ) : (
-                                                <>
-                                                    <Lock size={14} />
-                                                    Necesitas {(product.price - bizcoins).toLocaleString()} más
-                                                </>
+                                                product.badge && badgeStyle && (
+                                                    <div style={{
+                                                        position: "absolute", top: 14, right: 14,
+                                                        background: badgeStyle.bg, color: badgeStyle.text,
+                                                        fontSize: 10, fontWeight: 800, padding: "4px 10px",
+                                                        borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.05em",
+                                                        boxShadow: `0 3px 10px ${badgeStyle.bg}60`,
+                                                    }}>
+                                                        {product.badge}
+                                                    </div>
+                                                )
                                             )}
-                                        </button>
+
+                                            {!canAfford && !isOwned && (
+                                                <div style={{
+                                                    position: "absolute", top: 14, left: 14,
+                                                    background: "rgba(0,0,0,0.55)", color: "#fff",
+                                                    fontSize: 11, fontWeight: 700, padding: "4px 10px",
+                                                    borderRadius: 999, display: "flex", alignItems: "center", gap: 5,
+                                                    backdropFilter: "blur(4px)",
+                                                }}>
+                                                    <Lock size={11} />
+                                                    Sin saldo
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div style={{ padding: "22px 22px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                                                <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                                    {product.category}
+                                                </span>
+                                                <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 900, fontSize: 15, color: isOwned ? "#10b981" : (canAfford ? product.accent : "#94a3b8") }}>
+                                                    {isOwned ? <CheckCircle2 size={13} color="#10b981" /> : <Zap size={13} fill={canAfford ? product.accent : "#94a3b8"} color={canAfford ? product.accent : "#94a3b8"} />}
+                                                    {isOwned ? "Canjeado" : product.price.toLocaleString()}
+                                                    {!isOwned && <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.05em" }}> BIZCOINS</span>}
+                                                </div>
+                                            </div>
+
+                                            <h3 style={{ fontSize: 17, fontWeight: 800, color: "#0f172a", marginBottom: 8, lineHeight: 1.3 }}>
+                                                {product.name}
+                                            </h3>
+
+                                            <p style={{ fontSize: 13, color: "#64748b", marginBottom: 20, lineHeight: 1.6, flex: 1 }}>
+                                                {product.description}
+                                            </p>
+
+                                            <button
+                                                className={`canjear-btn ${isOwned ? "locked" : (canAfford ? "can-afford" : "locked")}`}
+                                                disabled={isOwned}
+                                                onClick={() => !isOwned && canAfford && setSelectedProduct(product)}
+                                                style={isOwned ? { background: "#ecfdf5", color: "#10b981", cursor: "default" } : {}}
+                                            >
+                                                {isOwned ? (
+                                                    <><CheckCircle2 size={16} /> Ya canjeado</>
+                                                ) : canAfford ? (
+                                                    <><Gift size={16} /> Canjear ahora <ChevronRight size={15} /></>
+                                                ) : (
+                                                    <><Lock size={14} /> Necesitas {(product.price - bizcoins).toLocaleString()} más</>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )
+                ) : (
+                    /* INVENTARIO TAB */
+                    ownedProducts.length === 0 ? (
+                        <div style={{ textAlign: "center", padding: "80px 24px", background: "white", borderRadius: 28, border: "2px dashed #e2e8f0" }}>
+                            <div style={{ marginBottom: 20, color: "#cbd5e1" }}><ShoppingBag size={64} style={{ margin: "0 auto" }} /></div>
+                            <h3 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginBottom: 8 }}>Aún no tienes compras</h3>
+                            <p style={{ fontSize: 14, color: "#64748b", maxWidth: 320, margin: "0 auto 24px" }}>
+                                Recorre el catálogo y canjea tus BIZCOINS por marcos exclusivos y herramientas para tu estudio.
+                            </p>
+                            <button
+                                onClick={() => setActiveTab("catalogo")}
+                                style={{ padding: "12px 24px", background: "#0F62FE", color: "white", border: "none", borderRadius: 12, fontWeight: 800, cursor: "pointer", fontFamily: "'Montserrat', sans-serif" }}
+                            >
+                                Explorar catálogo
+                            </button>
+                        </div>
+                    ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 24 }}>
+                            {ownedProducts.map((product, idx) => (
+                                <div key={product.id} className="tienda-card" style={{ animationDelay: `${idx * 0.05}s` }}>
+                                    <div style={{ height: 140, background: product.bg, display: "flex", alignItems: "center", justifyContent: "center", color: product.accent, position: "relative" }}>
+                                        {product.icon}
+                                        <div style={{ position: "absolute", top: 12, right: 12, background: "#10b981", color: "white", fontSize: 10, fontWeight: 900, padding: "4px 10px", borderRadius: 999 }}>
+                                            ARTÍCULO ADQUIRIDO
+                                        </div>
+                                    </div>
+                                    <div style={{ padding: 20 }}>
+                                        <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", marginBottom: 6 }}>{product.category}</div>
+                                        <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 12 }}>{product.name}</h3>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#10b981", fontSize: 13, fontWeight: 700 }}>
+                                            <CheckCircle2 size={16} />
+                                            Disponible en tu perfil
+                                        </div>
                                     </div>
                                 </div>
-                            )
-                        })}
-                    </div>
+                            ))}
+                        </div>
+                    )
                 )}
 
                 {/* ── HOW TO EARN MORE ── */}

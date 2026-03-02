@@ -5,6 +5,7 @@ import { McqStepFields } from "@/types/lessonTypes"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
 import { motion, AnimatePresence } from "framer-motion"
+import { CheckCircle2, XCircle } from "lucide-react"
 
 interface MCQStepProps {
   step: McqStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; reviewSourceStepId?: string; imageUrl?: string; imageAlign?: "left" | "right" }
@@ -209,15 +210,19 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
               </span>
 
               {/* Feedback icon */}
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {showFeedback && isChecked && (
-                  <motion.span
+                  <motion.div
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    style={{ fontSize: 20, flexShrink: 0, fontFamily: "'Montserrat', sans-serif" }}
+                    style={{ flexShrink: 0 }}
                   >
-                    {isCorrect ? "✓" : "✗"}
-                  </motion.span>
+                    {isCorrect ? (
+                      <CheckCircle2 size={24} color="#10B981" strokeWidth={3} />
+                    ) : (
+                      <XCircle size={24} color="#EF4444" strokeWidth={3} />
+                    )}
+                  </motion.div>
                 )}
               </AnimatePresence>
             </motion.button>

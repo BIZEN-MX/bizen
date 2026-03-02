@@ -14,7 +14,7 @@ const globalForPrisma = globalThis as unknown as {
  */
 // Dynamically fix the DATABASE_URL for Vercel + Supabase Pooler issues
 let customUrl = process.env.DATABASE_URL
-if (customUrl && customUrl.includes('pooler.supabase.com')) {
+if (customUrl && (customUrl.includes('supabase.com') || customUrl.includes('supabase.co'))) {
   // Switch from direct port 5432 to pooler port 6543
   customUrl = customUrl.replace(':5432', ':6543')
 

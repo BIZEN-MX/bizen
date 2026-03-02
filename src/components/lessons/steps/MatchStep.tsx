@@ -5,6 +5,7 @@ import { MatchStepFields } from "@/types/lessonTypes"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
 import { motion, AnimatePresence } from "framer-motion"
+import { Hand, ArrowRight, Star, Zap, Target, Sparkles, Brain, Heart, Shield, Award } from "lucide-react"
 
 interface MatchStepProps {
   step: MatchStepFields & { id: string; title?: string; description?: string }
@@ -15,11 +16,14 @@ interface MatchStepProps {
 
 // Vivid, distinct colors per pair index
 const PAIR_COLORS = [
-  { bg: "#EFF6FF", border: "#3B82F6", text: "#1D4ED8", shadow: "#93C5FD", line: "#3B82F6" },
-  { bg: "#FAF5FF", border: "#8B5CF6", text: "#6D28D9", shadow: "#C4B5FD", line: "#8B5CF6" },
-  { bg: "#FFF7ED", border: "#F97316", text: "#C2410C", shadow: "#FED7AA", line: "#F97316" },
-  { bg: "#ECFDF5", border: "#10B981", text: "#065F46", shadow: "#A7F3D0", line: "#10B981" },
-  { bg: "#FFF1F2", border: "#F43F5E", text: "#BE123C", shadow: "#FCA5A5", line: "#F43F5E" },
+  { bg: "#EFF6FF", border: "#3B82F6", text: "#1D4ED8", shadow: "#93C5FD", line: "#3B82F6", Icon: Star },
+  { bg: "#FAF5FF", border: "#8B5CF6", text: "#6D28D9", shadow: "#C4B5FD", line: "#8B5CF6", Icon: Zap },
+  { bg: "#FFF7ED", border: "#F97316", text: "#C2410C", shadow: "#FED7AA", line: "#F97316", Icon: Target },
+  { bg: "#ECFDF5", border: "#10B981", text: "#065F46", shadow: "#A7F3D0", line: "#10B981", Icon: Sparkles },
+  { bg: "#FFF1F2", border: "#F43F5E", text: "#BE123C", shadow: "#FCA5A5", line: "#F43F5E", Icon: Heart },
+  { bg: "#F0FDFA", border: "#0D9488", text: "#0F766E", shadow: "#99F6E4", line: "#0D9488", Icon: Brain },
+  { bg: "#FEFCE8", border: "#CA8A04", text: "#A16207", shadow: "#FEF08A", line: "#CA8A04", Icon: Shield },
+  { bg: "#FDF4FF", border: "#A21CAF", text: "#86198F", shadow: "#F5D0FE", line: "#A21CAF", Icon: Award },
 ]
 
 const ITEM_HEIGHT = 64 // fixed height for all boxes
@@ -339,7 +343,9 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
               color: selectedLeftId ? "#065F46" : "#1D4ED8",
             }}
           >
-            <span style={{ fontSize: 18 }}>{selectedLeftId ? "➜" : "👈"}</span>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "50%", background: selectedLeftId ? "#10B98120" : "#3B82F620" }}>
+              {selectedLeftId ? <ArrowRight size={18} color="#10B981" /> : <Hand size={18} color="#3B82F6" />}
+            </div>
             {selectedLeftId
               ? `Ahora selecciona el par: "${step.leftItems.find(l => l.id === selectedLeftId)?.label}"`
               : "Toca un elemento de la izquierda para empezar"}
@@ -424,17 +430,21 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
                   whileHover={!hasChecked ? { scale: 1.02 } : {}}
                   whileTap={!hasChecked ? { scale: 0.98 } : {}}
                 >
-                  {/* Colored dot */}
-                  <span style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    background: colors.border,
+                  {/* Pair-specific Icon */}
+                  <div style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 10,
+                    background: `${colors.border}15`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     flexShrink: 0,
-                    marginRight: 10,
-                    display: "inline-block",
-                    boxShadow: isSelected ? `0 0 0 3px ${colors.border}40` : "none",
-                  }} />
+                    marginRight: 12,
+                    border: `1px solid ${colors.border}30`,
+                  }}>
+                    <colors.Icon size={16} color={colors.border} strokeWidth={2.5} />
+                  </div>
                   {item.label}
                 </motion.button>
               )
@@ -462,20 +472,30 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
                   whileTap={selectedLeftId && !hasChecked ? { scale: 0.98 } : {}}
                 >
                   {item.label}
-                  {/* Colored dot on right side */}
+                  {/* Pair-specific Icon on right side */}
                   {isMatched && matchColors && (
-                    <span style={{
-                      width: 10,
-                      height: 10,
-                      borderRadius: "50%",
+                    <div style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 8,
                       background: showFeedback
-                        ? (step.correctPairs.some(p => p.rightId === item.id && matches.find(m => m.rightId === item.id)?.leftId === p.leftId)
-                          ? "#10B981" : "#EF4444")
-                        : matchColors.border,
+                        ? (step.correctPairs.some(p => p.rightId === item.id && matches.find(m => m.rightId === item.id)?.leftId === p.leftId) ? "#10B98120" : "#EF444420")
+                        : `${matchColors.border}15`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       flexShrink: 0,
                       marginLeft: 10,
-                      display: "inline-block",
-                    }} />
+                    }}>
+                      <matchColors.Icon
+                        size={14}
+                        color={showFeedback
+                          ? (step.correctPairs.some(p => p.rightId === item.id && matches.find(m => m.rightId === item.id)?.leftId === p.leftId) ? "#059669" : "#DC2626")
+                          : matchColors.border
+                        }
+                        strokeWidth={3}
+                      />
+                    </div>
                   )}
                 </motion.button>
               )

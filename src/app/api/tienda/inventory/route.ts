@@ -11,13 +11,13 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
-        const inventory: any[] = await prisma.$queryRaw`
-            SELECT product_id FROM public.user_inventory 
-            WHERE user_id = ${user.id}
-        `
+        const inventoryItems = await prisma.userInventoryItem.findMany({
+            where: { userId: user.id },
+            select: { productId: true }
+        })
 
         return NextResponse.json({
-            inventory: inventory.map(item => item.product_id)
+            inventory: inventoryItems.map(item => item.productId)
         })
 
     } catch (error: any) {

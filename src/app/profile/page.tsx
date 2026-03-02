@@ -112,6 +112,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     document.body.style.background = "#FBFAF5"
+    // Refresh user profile whenever page mounts to ensure inventory is fresh
+    if (refreshUser) refreshUser()
     return () => { document.body.style.background = "" }
   }, [])
 
@@ -387,7 +389,10 @@ export default function ProfilePage() {
                   <AvatarDisplay
                     avatar={user.user_metadata?.avatar || { type: "character", id: "robot", character: "robot" }}
                     size={155}
-                    frame={userStats?.inventory?.includes("2") ? "vip" : userStats?.inventory?.includes("1") ? "ambassador" : null}
+                    frame={
+                      (userStats?.inventory?.includes("2") || dbProfile?.inventory?.includes("2")) ? "vip" :
+                        (userStats?.inventory?.includes("1") || dbProfile?.inventory?.includes("1")) ? "ambassador" : null
+                    }
                   />
                 </div>
 
@@ -523,6 +528,53 @@ export default function ProfilePage() {
                 ))}
               </div>
             </div>
+
+            {/* Inventory / Purchases Section */}
+            {(userStats?.inventory?.length || dbProfile?.inventory?.length) ? (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.01em" }}>
+                    Mis Compras
+                  </h2>
+                  <Link href="/tienda" style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    VER TIENDA
+                  </Link>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 12 }}>
+                  {(() => {
+                    // Merged inventory from both sources to ensure freshness
+                    const fullInventory = Array.from(new Set([
+                      ...(userStats?.inventory || []),
+                      ...(dbProfile?.inventory || [])
+                    ]));
+
+                    // Define product details for inventory items (should ideally match PRODUCTS in tienda/page.tsx)
+                    const INVENTORY_DETAILS: Record<string, { name: string; icon: string; color: string }> = {
+                      "1": { name: "Marco Embajador", icon: "💎", color: "#0F62FE" },
+                      "2": { name: "Marco VIP", icon: "👑", color: "#d97706" },
+                      "3": { name: "Guía Inversión", icon: "📚", color: "#10b981" },
+                      "4": { name: "Cash Flow Pro", icon: "🔥", color: "#ef4444" },
+                      "5": { name: "Tema Premium", icon: "🎨", color: "#7c3aed" },
+                      "6": { name: "Escudo Racha", icon: "🛡️", color: "#0891b2" },
+                    };
+
+                    return fullInventory.map(id => {
+                      const details = INVENTORY_DETAILS[id] || { name: `Producto #${id}`, icon: "📦", color: "#64748b" };
+                      return (
+                        <div key={id} className="prof-card-hover" style={{
+                          background: "white", padding: "16px", borderRadius: 16, border: "1.5px solid rgba(15,98,254,0.1)",
+                          display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 8
+                        }}>
+                          <div style={{ fontSize: 24 }}>{details.icon}</div>
+                          <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", lineHeight: 1.2 }}>{details.name}</div>
+                          <div style={{ fontSize: 10, fontWeight: 700, color: "#10b981", background: "#f0fdf4", padding: "2px 8px", borderRadius: 10 }}>ADQUIRIDO</div>
+                        </div>
+                      );
+                    });
+                  })()}
+                </div>
+              </div>
+            ) : null}
 
 
             {/* Achievements - Hidden until real ones exist */}

@@ -45,31 +45,23 @@ const STAR_COLORS = {
 }
 
 function AnimatedStar({ filled, delay }: { filled: boolean; delay: number }) {
+  if (!filled) return null; // Only show filled stars as per new stars.png instruction usually
   return (
     <motion.div
       initial={{ scale: 0, rotate: -30, opacity: 0 }}
       animate={{ scale: 1, rotate: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 18, delay }}
-      style={{ filter: filled ? "drop-shadow(0 0 12px #FFB80080)" : "none" }}
+      style={{ filter: filled ? "drop-shadow(0 0 12px #FFB80040)" : "none" }}
     >
-      <svg width={52} height={52} viewBox="0 0 52 52" fill="none">
-        <defs>
-          <linearGradient id="starGold" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#FFD700" />
-            <stop offset="100%" stopColor="#F59E0B" />
-          </linearGradient>
-        </defs>
-        <motion.path
-          d="M26 4l5.5 11.1 12.3 1.8-8.9 8.7 2.1 12.2L26 32.1l-11 5.8 2.1-12.2-8.9-8.7 12.3-1.8z"
-          fill={filled ? "url(#starGold)" : "#E5E7EB"}
-          stroke={filled ? "#F59E0B" : "#D1D5DB"}
-          strokeWidth={1.5}
-          strokeLinejoin="round"
-          initial={{ scale: 0 }}
-          animate={{ scale: filled ? [1, 1.25, 1] : 1 }}
-          transition={{ delay: delay + 0.1, duration: 0.4 }}
-        />
-      </svg>
+      <img
+        src="/stars.png"
+        alt="Star"
+        style={{
+          width: 52,
+          height: 52,
+          objectFit: "contain",
+        }}
+      />
     </motion.div>
   )
 }
@@ -243,7 +235,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
           fontFamily: "'Montserrat', sans-serif",
           fontWeight: 600,
         }}>
-          {stars} ⭐ × {XP_PER_STAR} XP = {xpEarned} XP
+          ¡Gran progreso! Sigue así
         </span>
       </motion.div>
 
