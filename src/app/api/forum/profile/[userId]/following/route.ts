@@ -4,12 +4,13 @@ import { prisma } from "@/lib/prisma"
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId } = await params
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -20,7 +21,7 @@ export async function GET(
 
     // Get following (users that this userId is following)
     const following = await prisma.userFollow.findMany({
-      where: { followerId: params.userId },
+      where: { followerId: userId },
       include: {
         following: {
           select: {
@@ -38,7 +39,7 @@ export async function GET(
     })
 
     const total = await prisma.userFollow.count({
-      where: { followerId: params.userId }
+      where: { followerId: userId }
     })
 
     const formatted = following.map(f => ({
@@ -63,4 +64,3 @@ export async function GET(
     return NextResponse.json({ error: "Failed to fetch following" }, { status: 500 })
   }
 }
-
