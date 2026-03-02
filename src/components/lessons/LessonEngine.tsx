@@ -277,7 +277,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   if (shouldPassFullScreenProps) {
     return (
       <div
-        className="flex flex-col bg-[#FBFAF5] text-slate-900 relative w-full flex-1 min-h-0"
+        className="flex flex-col text-slate-900 relative w-full flex-1 min-h-0"
         style={{
           paddingTop: "env(safe-area-inset-top)",
           paddingBottom: "max(0px, env(safe-area-inset-bottom))",
@@ -285,38 +285,28 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           maxHeight: "100dvh",
           height: "100dvh",
           overflow: "hidden",
-          background: "#f1f5f9"
+          background: "linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%)", // Matches LessonScreen
         }}
       >
         <div
           key={state.currentStepIndex}
-          className="lesson-step-transition"
-          style={{
-            flex: 1,
-            minHeight: 0,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: "stretch",
-            paddingTop: CONTENT_PADDING_Y,
-            paddingBottom: 24, // Minimal padding as footer is no longer fixed
-            boxSizing: "border-box",
-            overflowY: "auto"
-          }}
+          className="lesson-step-transition flex-1 min-h-0 flex flex-col justify-center items-stretch overflow-y-auto"
+          style={{ paddingTop: 20, paddingBottom: 20 }}
         >
           <div
             className="lesson-slide-content-center"
             style={{
               width: "100%",
-              maxWidth: CONTENT_MAX_WIDTH,
+              maxWidth: 1000,
               marginLeft: "auto",
               marginRight: "auto",
-              paddingLeft: CONTENT_PADDING_X,
-              paddingRight: CONTENT_PADDING_X,
+              paddingLeft: "clamp(16px, 4vw, 32px)",
+              paddingRight: "clamp(16px, 4vw, 32px)",
               flex: 1,
               minHeight: 0,
               display: "flex",
               flexDirection: "column",
+              justifyContent: "center",
               boxSizing: "border-box",
             }}
           >

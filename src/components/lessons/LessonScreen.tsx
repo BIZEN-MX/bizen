@@ -46,7 +46,7 @@ export function LessonScreen({
         maxHeight: "100dvh",
         height: "100dvh",
         overflow: "hidden",
-        background: "#f1f5f9",
+        background: "linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%)", // Soft, premium background
       }}
     >
       {/* Progress bar - shown unless parent renders its own (e.g. interactive page) */}
@@ -55,16 +55,17 @@ export function LessonScreen({
           className="lesson-progress-bar-fixed"
           style={{
             flexShrink: 0,
-            minHeight: 90,
-            paddingTop: 8,
-            paddingBottom: 12,
-            paddingLeft: 12,
-            paddingRight: 12,
+            minHeight: 100,
+            paddingTop: 12,
+            paddingBottom: 16,
+            paddingLeft: 24,
+            paddingRight: 24,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            background: "#f1f5f9",
-            borderBottom: "2px solid #cbd5e1",
+            background: "rgba(255, 255, 255, 0.6)", // Glassmorphism-lite
+            backdropFilter: "blur(8px)",
+            borderBottom: "1px solid rgba(11, 113, 254, 0.1)",
             boxSizing: "border-box",
           }}
         >

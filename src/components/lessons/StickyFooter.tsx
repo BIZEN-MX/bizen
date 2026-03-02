@@ -17,19 +17,19 @@ interface StickyFooterProps {
 export function StickyFooter({ children, className = "", fixed = true }: StickyFooterProps) {
   return (
     <footer
-      className={`lesson-sticky-footer ${fixed ? "fixed bottom-0 left-0 right-0" : "relative"} w-full bg-[#FBFAF5] border-t-2 border-slate-200 z-[100] ${className}`}
+      className={`lesson-sticky-footer ${fixed ? "fixed bottom-0 left-0 right-0" : "relative"} w-full bg-white/70 backdrop-blur-xl border-t-2 border-[#F1F5F9] z-[100] ${className}`}
       style={{
-        paddingTop: "clamp(12px, 2vw, 16px)",
-        paddingBottom: "max(clamp(12px, 2vw, 16px), env(safe-area-inset-bottom))",
-        paddingLeft: "clamp(12px, 3vw, 24px)",
-        paddingRight: "clamp(12px, 3vw, 24px)",
+        paddingTop: "clamp(16px, 2.5vw, 24px)",
+        paddingBottom: "max(clamp(16px, 2.5vw, 24px), env(safe-area-inset-bottom))",
+        paddingLeft: "clamp(16px, 4vw, 32px)",
+        paddingRight: "clamp(16px, 4vw, 32px)",
         display: "flex",
         justifyContent: "center",
-        boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.05)",
+        boxShadow: "0 -8px 32px rgba(0, 0, 0, 0.04)",
         flexShrink: 0
       }}
     >
-      <div className="w-full" style={{ maxWidth: 1600 }}>
+      <div className="w-full" style={{ maxWidth: 1000 }}>
         {children}
       </div>
     </footer>
@@ -58,31 +58,24 @@ export function StickyFooterButton({
 
   const variantStyles = {
     primary:
-      "bg-green-500 hover:bg-green-600 text-white focus:ring-green-400 shadow-[0_4px_0_0_#15803d] active:shadow-none active:translate-y-[4px]",
+      "bg-gradient-to-r from-[#0B71FE] to-[#4A9EFF] hover:brightness-110 text-white shadow-[0_4px_0_0_#0558ca] active:shadow-none active:translate-y-[4px]",
     secondary:
-      "bg-[#FBFAF5] border-2 border-indigo-400 hover:bg-indigo-50 text-slate-800 focus:ring-indigo-400 shadow-[0_4px_0_0_#818cf8] active:shadow-none active:translate-y-[4px]",
+      "bg-slate-50 border-2 border-slate-200 hover:bg-slate-100 text-slate-700 shadow-[0_4px_0_0_#e2e8f0] active:shadow-none active:translate-y-[4px]",
     success:
-      "bg-green-500 hover:bg-green-600 text-white focus:ring-green-400 shadow-[0_4px_0_0_#15803d] active:shadow-none active:translate-y-[4px]",
+      "bg-emerald-500 hover:bg-emerald-600 text-white shadow-[0_4px_0_0_#059669] active:shadow-none active:translate-y-[4px]",
     danger:
-      "bg-red-500 hover:bg-red-600 text-white focus:ring-red-400 shadow-[0_4px_0_0_#b91c1c] active:shadow-none active:translate-y-[4px]",
+      "bg-rose-500 hover:bg-rose-600 text-white shadow-[0_4px_0_0_#be123c] active:shadow-none active:translate-y-[4px]",
     blue:
-      "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-400 shadow-[0_4px_0_0_#1e40af] active:shadow-none active:translate-y-[4px]",
+      "bg-gradient-to-r from-[#0B71FE] to-[#4A9EFF] hover:brightness-110 text-white shadow-[0_4px_0_0_#0558ca] active:shadow-none active:translate-y-[4px]",
     outline:
-      "bg-[#FBFAF5] border-2 border-slate-900 hover:bg-[#FBFAF5] text-slate-900 focus:ring-slate-400 shadow-[0_4px_0_0_#1e293b] active:shadow-none active:translate-y-[4px]",
+      "bg-transparent border-2 border-slate-200 hover:bg-slate-50 text-slate-600 active:translate-y-[2px]",
   }
 
   const variantClass = variantStyles[variant] ?? variantStyles.primary
-  const inlineBg =
-    variant === "danger"
-      ? { backgroundColor: "#EF4444", color: "#fff" }
-      : variant === "blue"
-        ? { backgroundColor: "#2563eb", color: "#fff" }
-        : variant === "outline"
-          ? { backgroundColor: "#f1f5f9", color: "#2563eb", border: "3px solid #1e293b" }
-          : undefined
+  const inlineStyles = variant === "blue" || variant === "primary" ? { background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)" } : undefined
   const { style: propsStyle, ...restProps } = props
   const mergedStyle =
-    inlineBg || propsStyle ? { ...inlineBg, ...(propsStyle as React.CSSProperties) } : undefined
+    inlineStyles || propsStyle ? { ...inlineStyles, ...(propsStyle as React.CSSProperties) } : undefined
   return (
     <button
       className={`${baseStyles} ${variantClass} py-3 md:py-5 px-4 md:px-8 text-sm md:text-lg lg:text-xl ${className}`}

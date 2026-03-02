@@ -13,7 +13,7 @@ interface InfoStepProps {
   isContinueEnabled?: boolean
 }
 
-const FLASHCARD_BORDER_COLOR = "#2563eb" // Blue for flashcard box
+import { motion, AnimatePresence } from "framer-motion"
 
 export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnabled = false }: InfoStepProps) {
   const [isRevealed, setIsRevealed] = useState(isContinueEnabled)
@@ -25,10 +25,8 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
     }
 
     if (step.fullScreen) {
-      // Notify engine that this info step is ready to be revealed via footer button
       onAnswered({ isCompleted: false, canAction: true })
     } else {
-      // If NOT fullScreen, it's auto-completed
       onAnswered({ isCompleted: true })
     }
   }, [step.fullScreen, onAnswered, isContinueEnabled])
@@ -38,129 +36,135 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
     onAnswered({ isCompleted: true })
   }
 
-  // Handle action trigger from parent (footer button)
   useEffect(() => {
     if (actionTrigger > 0 && !isRevealed && step.fullScreen) {
       handleReveal()
     }
   }, [actionTrigger])
 
-  // Full-screen mode: flashcard layout
   if (step.fullScreen) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        minHeight: 0,
-        flex: 1,
-        padding: '0 1.5rem',
-        background: '#f1f5f9',
-        boxSizing: 'border-box',
-        gap: 'clamp(12px, 2vh, 24px)',
-      }}>
-        {/* Flashcard content box */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          minHeight: 0,
+          flex: 1,
+          width: '100%',
+          maxWidth: CONTENT_MAX_WIDTH,
+          padding: '0 1rem',
+          boxSizing: 'border-box',
+          gap: '24px',
+        }}
+      >
         <div style={{
           flex: 1,
           minHeight: 0,
           width: '100%',
-          maxWidth: CONTENT_MAX_WIDTH,
-          border: `4px solid ${FLASHCARD_BORDER_COLOR}`,
-          borderRadius: '24px',
-          background: '#FBFAF5',
-          padding: 'clamp(16px, 3vw, 48px)',
+          borderRadius: '32px',
+          background: 'white',
+          border: '2px solid #F1F5F9',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.05)',
+          padding: 'clamp(24px, 5vw, 64px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
           justifyContent: 'center',
           overflowY: 'auto',
-          WebkitOverflowScrolling: 'touch',
+          position: 'relative'
         }}>
-          {!isRevealed ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Image
-                src="/hero4.png"
-                alt="BIZEN"
-                width={120}
-                height={120}
-                style={{ width: 120, height: 120, objectFit: 'contain' }}
-              />
-              <div style={{
-                marginTop: '1.5rem',
-                padding: '12px 24px',
-                background: '#FBFAF5',
-                borderRadius: '12px',
-                border: '2px dashed #cbd5e1'
-              }}>
-                <p style={{ margin: 0, fontSize: '1.1rem', color: '#64748b', fontWeight: 500 }}>
-                  Pulsa "QUIERO VER" en el botón de abajo
-                </p>
-              </div>
-            </div>
-          ) : (
-            (() => {
-              const align = (step.imageAlign === 'left' || step.imageAlign === 'right') ? step.imageAlign : 'right'
-              const imageBlock = step.imageUrl ? (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, minWidth: '120px', maxWidth: 'min(40%, 320px)' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={step.imageUrl}
-                    alt=""
-                    style={{
-                      maxWidth: '100%',
-                      width: 'auto',
-                      height: 'auto',
-                      maxHeight: 'clamp(120px, 20vh, 260px)',
-                      objectFit: 'contain',
-                    }}
-                  />
+          <AnimatePresence mode="wait">
+            {!isRevealed ? (
+              <motion.div
+                key="placeholder"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}
+              >
+                <div style={{
+                  width: 160,
+                  height: 160,
+                  background: 'linear-gradient(135deg, rgba(11, 113, 254, 0.05) 0%, rgba(74, 158, 255, 0.1) 100%)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Image src="/hero4.png" alt="Billy" width={120} height={120} style={{ objectFit: 'contain' }} />
                 </div>
-              ) : null
-              const textBlock = (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(8px, 1.5vh, 16px)', minWidth: 0 }}>
-                  {step.title && (
-                    <h2 style={{ fontSize: 'clamp(32px, 6vw, 48px)', fontWeight: 700, margin: 0, color: '#1e293b' }}>
-                      {step.title}
-                    </h2>
-                  )}
-                  {step.description && (
-                    <p style={{ fontSize: 'clamp(18px, 3vw, 24px)', margin: 0, color: '#475569', fontWeight: 500 }}>
-                      {step.description}
-                    </p>
-                  )}
-                  <div style={{ fontSize: 'clamp(20px, 3.5vw, 28px)', lineHeight: 1.6, maxWidth: '700px', color: '#1e293b' }}>
-                    {step.body.split('\n\n').map((line, i) => (
-                      <p key={i} style={{ margin: '0.8rem 0' }}>{line}</p>
-                    ))}
-                  </div>
+                <div style={{
+                  padding: '20px 32px',
+                  background: '#F8FAFC',
+                  borderRadius: '20px',
+                  border: '2px dashed rgba(11, 113, 254, 0.2)'
+                }}>
+                  <p style={{ margin: 0, fontSize: '1.25rem', color: '#0B71FE', fontWeight: 700, fontFamily: 'Montserrat, sans-serif' }}>
+                    Toca en continuar para descubrir el contenido
+                  </p>
                 </div>
-              )
-              if (imageBlock) {
-                const contentSide = <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{textBlock}</div>
-                return (
-                  <div style={{
-                    width: '100%',
-                    height: '100%',
-                    minHeight: 0,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'stretch',
-                    justifyContent: 'center',
-                    gap: CONTENT_GAP,
-                    flexWrap: 'nowrap',
-                  }}>
-                    {align === 'left' ? imageBlock : contentSide}
-                    {align === 'left' ? contentSide : imageBlock}
-                  </div>
-                )
-              }
-              return textBlock
-            })()
-          )}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="content"
+                initial={{ opacity: 0, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, filter: 'blur(0px)' }}
+                transition={{ duration: 0.5 }}
+                style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+              >
+                {(() => {
+                  const align = (step.imageAlign === 'left' || step.imageAlign === 'right') ? step.imageAlign : 'right'
+                  const imageBlock = step.imageUrl ? (
+                    <motion.div
+                      initial={{ scale: 0.8 }}
+                      animate={{ scale: 1 }}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, maxHeight: '300px' }}
+                    >
+                      <img src={step.imageUrl} alt="" style={{ maxWidth: '100%', maxHeight: 'clamp(180px, 30vh, 280px)', objectFit: 'contain', borderRadius: 24, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
+                    </motion.div>
+                  ) : null
+
+                  const textBlock = (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+                      {step.title && (
+                        <h2 className={sharedStyles.title} style={{ marginBottom: 12 }}>{step.title}</h2>
+                      )}
+                      {step.description && (
+                        <p className={sharedStyles.description} style={{ marginBottom: 16 }}>{step.description}</p>
+                      )}
+                      <div className={sharedStyles.body} style={{ textAlign: 'center' }}>
+                        {step.body.split('\n\n').map((line, i) => (
+                          <p key={i} style={{ margin: '0.8rem 0' }}>{line}</p>
+                        ))}
+                      </div>
+                    </div>
+                  )
+
+                  if (imageBlock) {
+                    return (
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 40
+                      }}>
+                        {imageBlock}
+                        {textBlock}
+                      </div>
+                    )
+                  }
+                  return textBlock
+                })()}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
     )
   }
 

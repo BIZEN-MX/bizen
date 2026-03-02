@@ -49,7 +49,7 @@ export function LessonContainer({ children, className = "", bottomPad, topPad = 
   return (
     <div
       className={`flex-1 min-h-0 overflow-hidden ${className} lesson-container-no-scroll`}
-      style={{ background: "#f1f5f9", display: "flex", flexDirection: "column" }}
+      style={{ background: "transparent", display: "flex", flexDirection: "column" }}
     >
       <div style={{ overflow: "hidden", minHeight: 0, flex: 1, display: "flex", flexDirection: "column" }}>
         {inner}

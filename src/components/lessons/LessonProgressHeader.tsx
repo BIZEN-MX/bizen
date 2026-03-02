@@ -39,37 +39,37 @@ export function LessonProgressHeader({
       <div
         style={{
           flex: 1,
-          height: "36px",
+          height: "24px", // Slimmer, more modern
           borderRadius: "999px",
-          border: "4px solid #1e293b",
-          background: "#f1f5f9",
-          padding: "4px",
+          background: "rgba(255, 255, 255, 0.4)",
+          border: "1px solid rgba(11, 113, 254, 0.1)",
+          padding: "3px",
           boxSizing: "border-box",
           position: "relative",
-          boxShadow: "inset 0 2px 4px rgba(0,0,0,0.1), 0 4px 6px -1px rgba(0,0,0,0.05)",
+          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.05)",
         }}
       >
         <div
           style={{
             width: `${totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0}%`,
             height: "100%",
-            background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1e40af 100%)",
+            background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)", // BIZEN Blue Gradient
             borderRadius: "999px",
-            minWidth: totalSteps > 0 ? 20 : 0,
-            transition: "width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            minWidth: totalSteps > 0 ? 12 : 0,
+            transition: "width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)", // Smoother bounce
             position: "relative",
             overflow: "hidden",
-            boxShadow: "0 2px 10px rgba(37, 99, 235, 0.4)",
+            boxShadow: "0 2px 10px rgba(11, 113, 254, 0.3)",
           }}
         >
-          {/* Shine effect */}
+          {/* Subtle Shine */}
           <div style={{
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            height: "50%",
-            background: "rgba(255, 255, 255, 0.15)",
+            height: "40%",
+            background: "linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%)",
             borderRadius: "999px 999px 0 0"
           }} />
         </div>

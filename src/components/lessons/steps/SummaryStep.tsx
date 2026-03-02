@@ -10,53 +10,62 @@ interface SummaryStepProps {
   onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => void
 }
 
+import { motion } from "framer-motion"
+
 export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
   useEffect(() => {
-    // Summary steps are always completed immediately (run once on mount)
     onAnswered({ isCompleted: true })
   }, [onAnswered])
 
-  // Full-screen mode or Regular mode is unified now
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center',
-      minHeight: step.fullScreen ? 'auto' : '60vh',
-      flex: 1,
-      width: '100%',
-      padding: '1rem',
-      boxSizing: 'border-box',
-    }}>
-      <h2 style={{
-        fontSize: 'clamp(40px, 8vw, 64px)',
-        fontWeight: 700,
-        marginBottom: '2rem',
-        color: '#1e293b',
-      }}>
-        {step.title}
-      </h2>
-      <div style={{ fontSize: 'clamp(22px, 4.5vw, 30px)', lineHeight: 1.8, maxWidth: '700px', color: '#1e293b' }}>
-        {step.body.split('\n\n').map((line, i) => (
-          <p key={i} style={{ margin: '0.8rem 0' }}>{line}</p>
-        ))}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="w-full flex flex-col items-center justify-center text-center p-6 flex-1 min-h-[60vh]"
+      style={{ gap: 40 }}
+    >
+      <div className="space-y-6">
+        <motion.h2
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className={sharedStyles.title}
+          style={{ fontSize: 'clamp(32px, 8vw, 64px)' }}
+        >
+          {step.title}
+        </motion.h2>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className={sharedStyles.body}
+        >
+          {step.body.split('\n\n').map((line, i) => (
+            <p key={i} style={{ margin: '0.8rem 0' }}>{line}</p>
+          ))}
+        </motion.div>
       </div>
-      {/* Lesson-completed image */}
-      <div style={{ marginTop: '1.5rem', flexShrink: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 0 }}>
+
+      <motion.div
+        initial={{ scale: 0, rotate: -20 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 20,
+          delay: 0.6
+        }}
+        className="relative"
+      >
+        <div className="absolute inset-0 bg-blue-400 blur-[80px] opacity-20 rounded-full" />
         <img
           src={(step as { imageUrl?: string }).imageUrl || "/Lección%20completada.png"}
           alt="Lección completada"
-          style={{
-            maxWidth: 'min(280px, 75vw)',
-            maxHeight: 'min(200px, 35vh)',
-            width: 'auto',
-            height: 'auto',
-            objectFit: 'contain',
-          }}
+          className="relative z-10 w-full max-w-[320px] h-auto object-contain drop-shadow-2xl"
         />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
+

@@ -5,97 +5,56 @@
 
 export const sharedStyles = {
   // Container styles
-  container: "w-full space-y-5 md:space-y-8",
+  container: "w-full space-y-6 md:space-y-10",
 
-  // Typography - readable, not oversized
+  // BIZEN Brand Gradients & Colors
+  brand: {
+    blueGradient: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+    blueText: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+    softBlue: "#F0F7FF",
+    borderBlue: "rgba(11, 113, 254, 0.2)",
+    shadowBlue: "0 10px 30px -10px rgba(11, 113, 254, 0.3)",
+    premiumShadow: "0 4px 0 0 rgba(11, 113, 254, 0.8)",
+  },
+
+  // Typography - Montserrat preferred for BIZEN
   title:
-    "text-xl md:text-2xl font-bold text-slate-800 mb-3 tracking-tight",
+    "text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#0B71FE] to-[#4A9EFF] mb-4 tracking-tight text-center",
   question:
-    "text-lg md:text-xl font-semibold text-slate-800 mb-4 leading-snug",
+    "text-xl md:text-2xl font-bold text-slate-800 mb-6 leading-tight text-center",
   body:
-    "text-base md:text-lg text-slate-700 leading-relaxed",
+    "text-lg md:text-xl text-slate-700 leading-relaxed font-medium text-center max-w-2xl mx-auto",
   description:
-    "text-sm md:text-base text-slate-600 mb-3 font-medium",
+    "text-base md:text-lg text-slate-500 mb-4 font-semibold text-center uppercase tracking-wider",
 
-  // Card/Button styles - rounded, friendly
+  // Card/Button styles - High quality, 3D effect
   card:
-    "rounded-2xl bg-slate-50/80 hover:bg-slate-100/80 transition-all duration-200 border-2 border-slate-200",
-  button:
-    "rounded-2xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-white",
+    "rounded-2xl bg-white/80 backdrop-blur-sm border-2 border-slate-100 shadow-xl transition-all duration-300",
+
+  // High-quality interactive option
+  option:
+    "p-5 md:p-6 rounded-2xl bg-white border-2 border-slate-200 transition-all duration-200 cursor-pointer text-left text-slate-800 text-lg md:text-xl font-bold shadow-[0_4px_0_0_#e2e8f0] hover:shadow-[0_2px_0_0_#e2e8f0] hover:translate-y-[2px] active:shadow-none active:translate-y-[4px]",
+  optionSelected: "border-[#0B71FE] bg-[#F0F7FF] text-[#0B71FE] shadow-[0_4px_0_0_rgba(11,113,254,0.3)]",
+  optionCorrect: "bg-emerald-50 border-emerald-500 text-emerald-700 shadow-[0_4px_0_0_#10b981]",
+  optionIncorrect: "bg-red-50 border-red-500 text-red-700 shadow-[0_4px_0_0_#ef4444]",
 
   // Grid layouts
-  grid1Col: "grid grid-cols-1 gap-4 md:gap-5",
-  grid2Col: "grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6",
-  grid3Col: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5",
+  grid1Col: "grid grid-cols-1 gap-4 md:gap-6",
+  grid2Col: "grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8",
 
   // Flex layouts
-  flexCol: "flex flex-col gap-4 md:gap-5",
-  flexRow: "flex flex-col md:flex-row gap-4 md:gap-5",
-  flexCenter: "flex items-center justify-center",
-
-  // Spacing
-  spacing: {
-    xs: "p-4 md:p-5",
-    sm: "p-5 md:p-6",
-    md: "p-6 md:p-8",
-    lg: "p-8 md:p-10",
-  },
+  flexCol: "flex flex-col gap-6 md:gap-8Items-center",
 
   // Image styles
   image:
-    "w-full h-auto max-w-xs mx-auto rounded-xl object-contain",
-  imageContainer:
-    "flex items-center justify-center mb-4 rounded-xl overflow-hidden",
-
-  // Text alignment
-  textCenter: "text-center md:text-left",
-  textLeft: "text-left",
-  textRight: "text-right",
-
-  // Option/Choice styles - primary green correct, red incorrect
-  option:
-    "p-4 md:p-5 rounded-xl bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 transition-all duration-200 cursor-pointer text-left text-slate-800 text-base md:text-lg",
-  optionSelected: "bg-indigo-100 border-indigo-500",
-  optionCorrect: "bg-green-100 border-2 border-green-500 text-green-900",
-  optionIncorrect: "bg-red-100 border-2 border-red-500 text-red-900",
-
-  // Input styles
-  input:
-    "w-full px-4 py-3 rounded-xl bg-slate-100 border-2 border-slate-300 focus:border-indigo-500 focus:outline-none text-slate-800 text-base md:text-lg",
-
-  // Drag and drop styles
-  dragItem:
-    "p-4 rounded-xl bg-slate-100 border-2 border-slate-300 cursor-move transition-all duration-200 text-slate-800 text-base md:text-lg",
-  dragItemDragging: "opacity-50 scale-95",
-  dropZone:
-    "min-h-[80px] rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4",
-
-  // Match pair styles
-  matchContainer: "grid grid-cols-1 md:grid-cols-2 gap-4",
-  matchItem:
-    "p-4 rounded-xl bg-slate-100 border-2 border-slate-300 cursor-pointer transition-all duration-200 text-slate-800 text-base md:text-lg",
-  matchItemMatched: "bg-green-100 border-2 border-green-500",
-
-  // Order list styles
-  orderList: "space-y-3",
-  orderItem:
-    "p-4 rounded-xl bg-slate-100 border-2 border-slate-300 cursor-move transition-all duration-200 text-slate-800 text-base md:text-lg",
-
-  // Fill blanks styles
-  blankText: "inline-block text-base md:text-lg text-slate-800",
-  blankInput:
-    "inline-block min-w-[140px] px-3 py-2 rounded-lg bg-slate-100 border-2 border-slate-300 focus:border-indigo-500 focus:outline-none text-slate-800 text-base mx-1",
+    "w-full h-auto max-w-sm mx-auto rounded-3xl object-contain shadow-2xl",
 
   // Feedback - correct green, incorrect red
-  feedback: "mt-5 md:mt-6 p-5 md:p-6 rounded-2xl",
-  feedbackCorrect: "bg-green-100 border-2 border-green-500 text-green-900",
-  feedbackIncorrect: "bg-red-100 border-2 border-red-500 text-red-900",
-  feedbackInfo: "bg-indigo-50 border-2 border-indigo-300 text-indigo-900",
-
-  // Loading/Disabled states
-  disabled: "opacity-50 cursor-not-allowed",
-  loading: "animate-pulse",
+  feedback: "mt-8 md:mt-10 p-6 md:p-8 rounded-3xl",
+  feedbackCorrect: "bg-emerald-50 border-2 border-emerald-500 text-emerald-800",
+  feedbackIncorrect: "bg-red-50 border-2 border-red-500 text-red-800",
 }
+
 
 /**
  * Responsive text size utilities

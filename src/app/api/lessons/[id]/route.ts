@@ -4,13 +4,15 @@ import { prisma } from '@/lib/prisma'
 // GET /api/lessons/[id] - Get lesson by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } // In Next.js 15, params is a Promise
 ) {
   try {
+    const { id } = await params
+
     const lesson = await prisma.lesson.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
-        unit: {
+        units: { // Correct relation name from schema
           include: {
             course: {
               select: {
@@ -32,11 +34,12 @@ export async function GET(
             }
           }
         },
-        lessonObjectives: {
-          include: {
-            objective: true
+        steps: {
+          orderBy: {
+            order: 'asc'
           }
-        }
+        },
+        resources: true
       }
     })
 

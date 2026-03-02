@@ -224,28 +224,28 @@ export default function CoursesPage() {
         }
       `}</style>
 
-      <main
+      <div
         style={{
           flex: 1,
           paddingTop: "clamp(8px, 1.5vw, 16px)",
           paddingBottom: "clamp(40px, 8vw, 80px)",
-          paddingLeft: "16px",
+          paddingLeft: "280px", // Desktop default offset
           paddingRight: "16px",
           fontFamily: "'Montserrat', sans-serif",
           background: "transparent",
           position: "relative",
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           alignItems: "flex-start",
           marginBottom: 0,
           boxSizing: "border-box",
           width: "100%"
         }} className="courses-main-content">
         {/* Same width as course bars (800px) - progress at top, then course list */}
-        <div style={{
+        <section style={{
           width: "100%",
-          maxWidth: "1280px",
-          margin: "0 auto",
+          maxWidth: "100%",
+          margin: "0",
           position: "relative",
           zIndex: 1,
           padding: "0",
@@ -393,7 +393,7 @@ export default function CoursesPage() {
               width: "100%",
               marginBottom: "clamp(32px, 6vw, 48px)",
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))",
               gap: "24px",
               paddingBottom: 40
             }}
@@ -530,9 +530,8 @@ export default function CoursesPage() {
               )
             })}
           </section>
-
-        </div>
-      </main>
+        </section>
+      </div>
 
       <style>{`
         @media (max-width: 1024px) {
@@ -649,35 +648,7 @@ export default function CoursesPage() {
           100% { transform: rotateY(360deg); }
         }
         
-        /* Tablet (768px–1160px): content to the right of left sidebar (220px) */
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .courses-main-content {
-            padding-left: 220px !important;
-            padding-right: 16px !important;
-            display: flex !important;
-            justify-content: center !important;
-          }
-          .courses-main-content > div {
-            max-width: calc(100vw - 220px - 32px) !important;
-            width: 100% !important;
-            margin: 0 auto !important;
-          }
-        }
-        
-        /* Desktop (1161px+): content to the right of left sidebar (280px) */
-        @media (min-width: 1161px) {
-          .courses-main-content {
-            padding-left: 280px !important;
-            padding-right: 16px !important;
-            display: flex !important;
-            justify-content: center !important;
-          }
-          .courses-main-content > div {
-            max-width: calc(100vw - 280px - 48px) !important;
-            width: 100% !important;
-            margin: 0 auto !important;
-          }
-        }
+        /* Removed redundant padding media queries handled globally */
         
         @media (max-width: 768px) {
           /* Ensure app-shell and app-scroll use full width on mobile */
@@ -773,62 +744,35 @@ export default function CoursesPage() {
           }
           }
           
-          /* Desktop (1161px and up) - left fixed sidebar only */
-          @media (min-width: 1161px) {
-            main {
-              padding-left: 280px !important;
-              padding-right: 16px !important;
-              display: flex !important;
-              justify-content: center !important;
-              align-items: flex-start !important;
-            }
-            
-            .courses-main-content {
-              padding-left: 280px !important;
-              padding-right: 16px !important;
-            }
-            .courses-main-content > div {
-              max-width: calc(100vw - 280px - 48px) !important;
-              width: 100% !important;
-              margin: 0 auto !important;
-            }
-            
-            div[style*="flexDirection: column"][style*="alignItems: center"] {
-              overflow-x: hidden !important;
-              overflow-y: visible !important;
-              width: 100% !important;
-              max-width: 100% !important;
-            }
+        /* Responsive sidebar offsets */
+        @media (min-width: 1161px) {
+          .courses-main-content {
+            padding-left: 280px !important;
+            padding-right: 32px !important;
           }
-          
-          /* iPad (768px to 1160px) - left fixed sidebar only */
-          @media (min-width: 768px) and (max-width: 1160px) {
-            main {
-              padding-left: 220px !important;
-              padding-right: 16px !important;
-              display: "flex" !important;
-              justify-content: center !important;
-              align-items: flex-start !important;
-            }
-            
-            .courses-main-content {
-              padding-left: 220px !important;
-              padding-right: 16px !important;
-            }
-            .courses-main-content > div {
-              max-width: calc(100vw - 220px - 32px) !important;
-              width: 100% !important;
-              margin: 0 auto !important;
-            }
-            
-            div[style*="flexDirection: column"][style*="alignItems: center"] {
-              overflow-x: hidden !important;
-              overflow-y: visible !important;
-              width: 100% !important;
-              max-width: 100% !important;
-            }
+        }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .courses-main-content {
+            padding-left: 220px !important;
+            padding-right: 24px !important;
           }
-      `}</style>
+        }
+        @media (max-width: 767px) {
+          .courses-main-content {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            padding-top: 80px !important;
+          }
+        }
+        
+        /* Ensure app-shell and containers allow full width */
+        .app-shell, .app-scroll, .app-main {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        
+          /* Content area is already offset by app-main padding in globals.css */
+        `}</style>
     </div>
   )
 }

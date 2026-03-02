@@ -94,8 +94,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
   const hideAppNavigation = isAuthPage || isDiagnosticPage
 
-  // Hide app footer on interactive lesson page (lesson has its own Salir/Continuar bar)
-  const isLessonInteractivePage = pathname?.includes('/learn/') && pathname?.includes('/interactive')
+  // Hide app navigation (sidebar/mobile footer) when the user is inside any lesson module
+  const isLessonInteractivePage = pathname?.startsWith('/learn/')
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {

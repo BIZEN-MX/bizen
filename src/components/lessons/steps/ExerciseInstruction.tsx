@@ -11,12 +11,14 @@ const INSTRUCTIONS: Record<string, string> = {
 }
 
 const STYLE: React.CSSProperties = {
-  fontSize: "clamp(13px, 2vw, 15px)",
-  color: "#64748b",
-  marginBottom: 8,
+  fontSize: "clamp(12px, 1.5vw, 14px)",
+  color: "#0B71FE",
+  marginBottom: 12,
   marginTop: 0,
-  fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-  fontWeight: 500,
+  fontFamily: "'Montserrat', sans-serif",
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "0.05em",
 }
 
 export type ExerciseInstructionType = keyof typeof INSTRUCTIONS
