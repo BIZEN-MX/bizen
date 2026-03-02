@@ -333,7 +333,12 @@ export default function ProfilePage() {
 
                 {/* Right: stat pills */}
                 <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-                  <StreakWidget streak={dbProfile?.currentStreak || 0} />
+                  <StreakWidget
+                    streak={dbProfile?.currentStreak || 0}
+                    showCalendar={true}
+                    activeDays={(dbProfile as any)?.weeklyActiveDays || []}
+                    badgeStyle={{ padding: "8px 14px", borderRadius: 12 }}
+                  />
 
                   {profileStats && (
                     <>

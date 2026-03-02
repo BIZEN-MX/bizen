@@ -46,6 +46,7 @@ interface UserProfile {
     score?: number
     commentCount?: number
   }>
+  weeklyActiveDays?: string[]
 }
 
 export default function ForumProfilePage() {
@@ -432,11 +433,13 @@ export default function ForumProfilePage() {
                 <div style={{ animation: "fadeInUp 0.45s ease 0.15s both", display: "flex", alignItems: "stretch" }}>
                   <StreakWidget
                     streak={profile.currentStreak || 0}
+                    showCalendar={true}
+                    activeDays={profile.weeklyActiveDays || []}
                     containerStyle={{ width: "100%" }}
                     badgeStyle={{
                       background: "rgba(255,255,255,0.05)",
                       border: "1px solid rgba(255,255,255,0.10)",
-                      borderRadius: 16,
+                      borderRadius: "16px 16px 0 0",
                       padding: "18px 16px",
                       textAlign: "center",
                       backdropFilter: "blur(8px)",
@@ -445,8 +448,9 @@ export default function ForumProfilePage() {
                       justifyContent: "center",
                       alignItems: "center",
                       gap: 4,
-                      height: "100%",
-                      boxShadow: "none"
+                      height: "auto",
+                      boxShadow: "none",
+                      borderBottom: "1px solid rgba(255,255,255,0.15)"
                     }}
                     textStyle={{
                       fontSize: 28,
@@ -460,6 +464,15 @@ export default function ForumProfilePage() {
                       fontWeight: "600"
                     }}
                   />
+                  <style>{`
+                    /* Adjust for the shared widget calendar style in forum theme */
+                    .fp-stats-grid > div:last-child > div > div:last-child {
+                        background: rgba(255,255,255,0.03) !important;
+                        border: 1px solid rgba(255,255,255,0.10) !important;
+                        border-top: none !important;
+                        border-radius: 0 0 16px 16px !important;
+                    }
+                  `}</style>
                 </div>
               </div>
 
