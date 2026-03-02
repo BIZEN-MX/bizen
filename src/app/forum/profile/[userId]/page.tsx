@@ -5,6 +5,19 @@ import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import {
+  User,
+  Star,
+  FileText,
+  MessageSquare,
+  CheckCircle2,
+  Check,
+  X,
+  Inbox,
+  ChevronRight,
+  TrendingUp,
+  Award
+} from "lucide-react"
 
 interface UserProfile {
   userId: string
@@ -161,7 +174,13 @@ export default function ForumProfilePage() {
     return (
       <div style={{ minHeight: "100vh", background: "#FBFAF5", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
         <div style={{ textAlign: "center", background: "white", padding: 48, borderRadius: 24, boxShadow: "0 4px 24px rgba(0,0,0,0.07)", maxWidth: 400 }}>
-          <div style={{ fontSize: 56, marginBottom: 20 }}>👤</div>
+          <div style={{
+            width: 80, height: 80, background: "#f1f5f9", borderRadius: "50%",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            margin: "0 auto 24px", color: "#94a3b8"
+          }}>
+            <User size={40} />
+          </div>
           <h2 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 12 }}>Perfil no encontrado</h2>
           <p style={{ color: "#64748b", marginBottom: 28, lineHeight: 1.6 }}>No pudimos encontrar la información de este usuario en el foro.</p>
           <Link href="/forum" style={{ display: "inline-block", background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white", padding: "13px 28px", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 15 }}>
@@ -257,10 +276,12 @@ export default function ForumProfilePage() {
         }}>
 
           {/* Breadcrumb */}
-          <div style={{ marginBottom: 28, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
-            <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none" }}>Foro</Link>
-            <span style={{ color: "#94a3b8" }}>→</span>
-            <span style={{ color: "#64748b" }}>Perfil</span>
+          <div style={{ marginBottom: 28, display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700 }}>
+            <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+              <TrendingUp size={14} /> Foro
+            </Link>
+            <ChevronRight size={14} style={{ color: "#cbd5e1" }} />
+            <span style={{ color: "#94a3b8" }}>Perfil de Usuario</span>
           </div>
 
           {/* ── HERO CARD ── */}
@@ -321,7 +342,7 @@ export default function ForumProfilePage() {
                     borderRadius: 999, padding: "4px 12px", marginBottom: 10,
                     fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: "0.07em", textTransform: "uppercase"
                   }}>
-                    ⭐ Nivel {profile.level}
+                    <Star size={12} fill="#fbbf24" strokeWidth={0} /> Nivel {profile.level}
                   </div>
 
                   <h1 style={{ margin: "0 0 6px", fontSize: "clamp(20px, 3vw, 30px)", fontWeight: 900, color: "white", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
@@ -389,7 +410,9 @@ export default function ForumProfilePage() {
                       alignSelf: "flex-start"
                     }}
                   >
-                    {isLoadingFollow ? "..." : isFollowing ? "✓ Siguiendo" : "+ Seguir"}
+                    {isLoadingFollow ? "..." : isFollowing ? (
+                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Check size={16} /> Siguiendo</span>
+                    ) : "+ Seguir"}
                   </button>
                 )}
               </div>
@@ -401,9 +424,9 @@ export default function ForumProfilePage() {
                 gap: 12
               }}>
                 {[
-                  { value: profile.postsCreated, label: "Temas Creados", icon: "📝" },
-                  { value: profile.commentsCreated, label: "Respuestas", icon: "💬" },
-                  { value: profile.acceptedAnswers, label: "Aceptadas", icon: "✅" },
+                  { value: profile.postsCreated, label: "Temas Creados", icon: <FileText size={20} color="#60a5fa" /> },
+                  { value: profile.commentsCreated, label: "Respuestas", icon: <MessageSquare size={20} color="#818cf8" /> },
+                  { value: profile.acceptedAnswers, label: "Aceptadas", icon: <CheckCircle2 size={20} color="#34d399" /> },
                 ].map(({ value, label, icon }) => (
                   <div key={label} style={{
                     background: "rgba(255,255,255,0.05)",
@@ -411,7 +434,7 @@ export default function ForumProfilePage() {
                     borderRadius: 16, padding: "18px 16px",
                     textAlign: "center", backdropFilter: "blur(8px)"
                   }}>
-                    <div style={{ fontSize: 20, marginBottom: 4 }}>{icon}</div>
+                    <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, opacity: 0.8 }}>{icon}</div>
                     <div style={{ fontSize: 28, fontWeight: 900, color: "white", lineHeight: 1, marginBottom: 6 }}>{value}</div>
                     <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
                   </div>
@@ -421,7 +444,9 @@ export default function ForumProfilePage() {
               {/* Badges inside hero */}
               {profile.badges.length > 0 && (
                 <div style={{ marginTop: 24, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Insignias</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+                    <Award size={12} /> Insignias
+                  </div>
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     {profile.badges.map(ub => (
                       <div key={ub.badge.name} className="fp-badge-pill" title={ub.badge.description}>
@@ -444,11 +469,17 @@ export default function ForumProfilePage() {
 
             {profile.recentThreads.length === 0 ? (
               <div style={{
-                background: "white", borderRadius: 20, padding: "48px 32px",
+                background: "white", borderRadius: 20, padding: "56px 32px",
                 textAlign: "center", border: "1.5px solid #f1f5f9",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
               }}>
-                <div style={{ fontSize: 40, marginBottom: 16 }}>🗒️</div>
+                <div style={{
+                  width: 64, height: 64, background: "#f8fafc", borderRadius: "50%",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  margin: "0 auto 20px", color: "#cbd5e1"
+                }}>
+                  <Inbox size={32} />
+                </div>
                 <p style={{ fontSize: 16, color: "#64748b", margin: 0, fontWeight: 600 }}>Este usuario aún no ha creado temas</p>
               </div>
             ) : (
@@ -493,8 +524,8 @@ export default function ForumProfilePage() {
                 <button onClick={() => setShowFollowers(false)} style={{
                   background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
                   color: "rgba(255,255,255,0.7)", width: 36, height: 36, borderRadius: 10,
-                  cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center"
-                }}>×</button>
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center"
+                }}><X size={18} /></button>
               </div>
               {loadingFollowers ? (
                 <div style={{ textAlign: "center", padding: 40, color: "rgba(255,255,255,0.4)" }}>Cargando...</div>
@@ -555,8 +586,8 @@ export default function ForumProfilePage() {
                 <button onClick={() => setShowFollowing(false)} style={{
                   background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
                   color: "rgba(255,255,255,0.7)", width: 36, height: 36, borderRadius: 10,
-                  cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center"
-                }}>×</button>
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center"
+                }}><X size={18} /></button>
               </div>
               {loadingFollowing ? (
                 <div style={{ textAlign: "center", padding: 40, color: "rgba(255,255,255,0.4)" }}>Cargando...</div>
