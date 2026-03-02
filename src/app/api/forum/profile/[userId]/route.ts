@@ -25,7 +25,7 @@ export async function GET(
         level: true,
         postsCreated: true,
         commentsCreated: true,
-        acceptedAnswers: true,
+        currentStreak: true,
         createdAt: true,
         avatar: true,
         forumUserBadges: {

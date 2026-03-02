@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Trophy, Users, School, Zap, Star, TrendingUp, Medal, Crown } from "lucide-react"
+import Link from "next/link"
 
 interface UserRank {
     rank: number
@@ -312,10 +313,16 @@ export default function RankingsPage() {
                                     const lc = getLevelColor(user.level)
                                     const isTop3 = user.rank <= 3
                                     return (
-                                        <div
+                                        <Link
                                             key={user.userId}
+                                            href={`/forum/profile/${user.userId}`}
                                             className={`rk-row ${isTop3 ? "top3" : ""}`}
-                                            style={{ animationDelay: `${Math.min(idx * 0.04, 0.5)}s` }}
+                                            style={{
+                                                animationDelay: `${Math.min(idx * 0.04, 0.5)}s`,
+                                                cursor: "pointer",
+                                                textDecoration: "none",
+                                                display: "flex"
+                                            }}
                                         >
                                             {/* Rank */}
                                             <div style={{ minWidth: 36, textAlign: "center", flexShrink: 0 }}>
@@ -385,7 +392,7 @@ export default function RankingsPage() {
                                                 </div>
                                                 <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>XP</div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     )
                                 })}
                             </div>
@@ -438,10 +445,19 @@ export default function RankingsPage() {
                                         ? Math.round((school.xpPerCapita / schools[0].xpPerCapita) * 100)
                                         : 100
                                     return (
-                                        <div
+                                        <Link
                                             key={school.schoolId}
+                                            href={`/rankings/escuela/${school.schoolId}`}
                                             className={`rk-row ${isTop3 ? "top3" : ""}`}
-                                            style={{ animationDelay: `${Math.min(idx * 0.04, 0.5)}s`, flexDirection: "column", alignItems: "stretch", gap: 12 }}
+                                            style={{
+                                                animationDelay: `${Math.min(idx * 0.04, 0.5)}s`,
+                                                flexDirection: "column",
+                                                alignItems: "stretch",
+                                                gap: 12,
+                                                cursor: "pointer",
+                                                textDecoration: "none",
+                                                display: "flex"
+                                            }}
                                         >
                                             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                                                 {/* Rank */}
@@ -507,7 +523,7 @@ export default function RankingsPage() {
                                                     }}
                                                 />
                                             </div>
-                                        </div>
+                                        </Link>
                                     )
                                 })}
                             </div>

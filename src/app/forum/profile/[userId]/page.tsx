@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import StreakWidget from "@/components/StreakWidget"
 import {
   User,
   Star,
@@ -26,7 +27,7 @@ interface UserProfile {
   level: number
   postsCreated: number
   commentsCreated: number
-  acceptedAnswers: number
+  currentStreak: number
   createdAt: string
   avatar?: any
   badges: Array<{
@@ -422,24 +423,59 @@ export default function ForumProfilePage() {
               <div className="fp-stats-grid" style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 12
+                gap: 12,
+                alignItems: "stretch"
               }}>
                 {[
                   { value: profile.postsCreated, label: "Temas Creados", icon: <FileText size={20} color="#60a5fa" /> },
                   { value: profile.commentsCreated, label: "Respuestas", icon: <MessageSquare size={20} color="#818cf8" /> },
-                  { value: profile.acceptedAnswers, label: "Aceptadas", icon: <CheckCircle2 size={20} color="#34d399" /> },
                 ].map(({ value, label, icon }) => (
                   <div key={label} style={{
                     background: "rgba(255,255,255,0.05)",
                     border: "1px solid rgba(255,255,255,0.10)",
                     borderRadius: 16, padding: "18px 16px",
-                    textAlign: "center", backdropFilter: "blur(8px)"
+                    textAlign: "center", backdropFilter: "blur(8px)",
+                    display: "flex", flexDirection: "column", justifyContent: "center"
                   }}>
                     <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, opacity: 0.8 }}>{icon}</div>
                     <div style={{ fontSize: 28, fontWeight: 900, color: "white", lineHeight: 1, marginBottom: 6 }}>{value}</div>
                     <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
                   </div>
                 ))}
+
+                {/* Racha Widget — Ahora al lado de los otros cuadros, con el mismo estilo */}
+                <div style={{ animation: "fadeInUp 0.45s ease 0.15s both", display: "flex", alignItems: "stretch" }}>
+                  <StreakWidget
+                    streak={profile.currentStreak || 0}
+                    containerStyle={{ width: "100%" }}
+                    badgeStyle={{
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      borderRadius: 16,
+                      padding: "18px 16px",
+                      textAlign: "center",
+                      backdropFilter: "blur(8px)",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: 4,
+                      height: "100%",
+                      boxShadow: "none"
+                    }}
+                    textStyle={{
+                      fontSize: 28,
+                      color: "white",
+                      fontWeight: "900",
+                      marginBottom: 6
+                    }}
+                    labelStyle={{
+                      color: "rgba(255,255,255,0.5)",
+                      fontSize: 12,
+                      fontWeight: "600"
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Badges inside hero */}

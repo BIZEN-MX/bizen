@@ -8,6 +8,10 @@ interface StreakWidgetProps {
     showCalendar?: boolean
     /** Array of ISO date strings (YYYY-MM-DD) for days the user was active this week */
     activeDays?: string[]
+    containerStyle?: React.CSSProperties
+    badgeStyle?: React.CSSProperties
+    textStyle?: React.CSSProperties
+    labelStyle?: React.CSSProperties
 }
 
 const WEEK_DAYS = [
@@ -33,14 +37,22 @@ function getWeekDates(): string[] {
     })
 }
 
-export default function StreakWidget({ streak, showCalendar = false, activeDays = [] }: StreakWidgetProps) {
+export default function StreakWidget({
+    streak,
+    showCalendar = false,
+    activeDays = [],
+    containerStyle = {},
+    badgeStyle = {},
+    textStyle = {},
+    labelStyle = {}
+}: StreakWidgetProps) {
     const weekDates = getWeekDates()
     const todayStr = new Date().toISOString().split("T")[0]
     const todayDayOfWeek = new Date().getDay()
     const activeSet = new Set(activeDays)
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0, ...containerStyle }}>
             {/* ── Streak Badge ── */}
             <div style={{
                 display: "flex", alignItems: "center", gap: 10,
@@ -50,6 +62,7 @@ export default function StreakWidget({ streak, showCalendar = false, activeDays 
                 borderRadius: showCalendar ? "20px 20px 0 0" : "20px",
                 boxShadow: showCalendar ? "none" : "0 8px 20px rgba(15,98,254,0.12)",
                 borderBottom: showCalendar ? "1px solid rgba(15,98,254,0.15)" : undefined,
+                ...badgeStyle
             }}>
                 <Flame
                     size={26}
@@ -59,13 +72,14 @@ export default function StreakWidget({ streak, showCalendar = false, activeDays 
                         flexShrink: 0,
                     }}
                 />
-                <div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: badgeStyle.alignItems || "flex-start" }}>
                     <div style={{
                         fontSize: 24,
                         fontWeight: 950,
                         color: streak > 0 ? "#0F62FE" : "#94a3b8",
                         lineHeight: 0.9,
                         animation: streak > 0 ? "streakGlow 2s ease infinite" : "none",
+                        ...textStyle
                     }}>
                         {streak}
                     </div>
@@ -76,6 +90,7 @@ export default function StreakWidget({ streak, showCalendar = false, activeDays 
                         textTransform: "uppercase" as const,
                         letterSpacing: "0.08em",
                         marginTop: 2,
+                        ...labelStyle
                     }}>
                         racha
                     </div>
