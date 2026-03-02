@@ -36,7 +36,7 @@ interface ForumThread {
 }
 
 interface EvidencePost {
-  id: string; dailyChallengeId: string; authorDisplay: string; isMe: boolean
+  id: string; dailyChallengeId: string; authorDisplay: string; isMe: boolean; authorUserId: string
   smartGoal: string; didToday: string; learned: string; changeTomorrow: string
   status: 'submitted' | 'validated' | 'flagged'; authorRole: string
   createdAt: string; avatar?: any
@@ -152,7 +152,7 @@ function EvidenceCard({
     }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14, gap: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <Link href={`/forum/profile/${post.authorUserId}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <div style={{
             width: 36, height: 36, borderRadius: "50%",
             background: "white",
@@ -168,7 +168,7 @@ function EvidenceCard({
             {post.isMe && <span style={{ fontSize: 11, color: "#0F62FE", fontWeight: 700, marginLeft: 6 }}>Tú</span>}
             <div style={{ fontSize: 11, color: "#94a3b8" }}>{formatDate(post.createdAt)}</div>
           </div>
-        </div>
+        </Link>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           <span style={{
             fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 8,
@@ -246,11 +246,15 @@ function EvidenceCard({
         <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid #f1f5f9" }}>
           {localComments.map(c => (
             <div key={c.id} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-              <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#f1f5f9", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#64748b" }}>
-                {(c.authorDisplay || "?").charAt(0).toUpperCase()}
-              </div>
+              <Link href={`/forum/profile/${c.userId}`} style={{ textDecoration: "none" }}>
+                <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#f1f5f9", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#64748b" }}>
+                  {(c.authorDisplay || "?").charAt(0).toUpperCase()}
+                </div>
+              </Link>
               <div style={{ background: "#FBFAF5", borderRadius: 10, padding: "6px 10px", flex: 1 }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: "#374151" }}>{c.authorDisplay || "Usuario"}</span>
+                <Link href={`/forum/profile/${c.userId}`} style={{ textDecoration: "none", display: "inline-block" }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#374151" }}>{c.authorDisplay || "Usuario"}</span>
+                </Link>
                 <p style={{ fontSize: 13, color: "#334155", margin: "2px 0 0", lineHeight: 1.5 }}>{c.body}</p>
               </div>
             </div>
@@ -691,14 +695,17 @@ function ForumContent() {
                               )}
                               <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 600, alignItems: "center", flexWrap: "wrap" }}>
                                 {/* Topic chip */}
-                                <span style={{ padding: "2px 8px", background: tc.light, color: tc.accent, borderRadius: 999, fontSize: 11, fontWeight: 700 }}>
-                                  {thread.topic.name}
-                                </span>
-                                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                  <div style={{ width: 22, height: 22, borderRadius: "50%", background: "white", border: "1px solid #f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <AvatarDisplay avatar={thread.author.avatar} size={20} />
-                                  </div>
-                                  <span>por {thread.author.nickname}</span>
+                                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                  {/* Topic chip */}
+                                  <span style={{ padding: "2px 8px", background: tc.light, color: tc.accent, borderRadius: 999, fontSize: 11, fontWeight: 700 }}>
+                                    {thread.topic.name}
+                                  </span>
+                                  <Link href={`/forum/profile/${thread.author.userId}`} style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", color: "inherit" }}>
+                                    <div style={{ width: 22, height: 22, borderRadius: "50%", background: "white", border: "1px solid #f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                      <AvatarDisplay avatar={thread.author.avatar} size={20} />
+                                    </div>
+                                    <span style={{ color: "#94a3b8" }}>por {thread.author.nickname}</span>
+                                  </Link>
                                 </div>
                                 <span>{formatDate(thread.createdAt)}</span>
                                 <span>{thread.commentCount} resp.</span>
