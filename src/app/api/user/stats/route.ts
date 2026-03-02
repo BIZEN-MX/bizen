@@ -24,6 +24,7 @@ export async function GET() {
         xp: true,
         level: true,
         createdAt: true,
+        currentStreak: true,
       }
     })
 
@@ -53,42 +54,8 @@ export async function GET() {
       where: { userId: user.id }
     })
 
-    // Calculate streak (simplified - counts days with completed lessons)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    let currentStreak = 0
-    let checkDate = new Date(today)
-
-    // Check last 30 days for streak
-    for (let i = 0; i < 30; i++) {
-      const startOfDay = new Date(checkDate)
-      const endOfDay = new Date(checkDate)
-      endOfDay.setHours(23, 59, 59, 999)
-
-      const completedToday = await prisma.progress.count({
-        where: {
-          userId: user.id,
-          completedAt: {
-            gte: startOfDay,
-            lte: endOfDay
-          }
-        }
-      })
-
-      if (completedToday > 0) {
-        currentStreak++
-        checkDate.setDate(checkDate.getDate() - 1)
-      } else {
-        // Streak broken
-        if (i === 0) {
-          // Check yesterday to allow for today not having progress yet
-          checkDate.setDate(checkDate.getDate() - 1)
-          continue
-        }
-        break
-      }
-    }
+    // Use currentStreak from profile
+    const currentStreak = profile.currentStreak || 0
 
     // Calculate level from XP
     const currentLevel = calculateLevel(profile.xp)

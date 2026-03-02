@@ -10,6 +10,7 @@ import {
 } from "lucide-react"
 import { useSettings } from "@/contexts/SettingsContext"
 import { useTranslation } from "@/lib/translations"
+import StreakWidget from "@/components/StreakWidget"
 
 const GIFT_CARDS = [
     { id: 1, store: "Amazon", color: "#FF9900", bg: "linear-gradient(135deg, #1a0a00 0%, #4a1a00 100%)", logo: "amazon", points: 5000, value: "$50 MXN", description: "Para cualquier compra en Amazon.com.mx" },
@@ -266,15 +267,32 @@ export default function PuntosPage() {
                     </div>
 
                     {/* Streak */}
-                    <div className="puntos-stat-card" style={{ background: "white", borderRadius: 24, padding: "28px 32px", border: "1px solid #e0e7ff", boxShadow: "0 4px 20px rgba(15,98,254,0.06)", display: "flex", alignItems: "center", gap: 20 }}>
-                        <div style={{ width: 60, height: 60, background: "linear-gradient(135deg, #e0e7ff, #c7d2fe)", borderRadius: "18px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 14px rgba(15,98,254,0.25)", animation: "puntos-float 3s ease-in-out infinite" }}>
-                            <Flame size={28} color="#0F62FE" />
-                        </div>
-                        <div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Racha actual</div>
-                            <div style={{ fontSize: 38, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{stats?.currentStreak || 0}<span style={{ fontSize: 16, fontWeight: 600, color: "#0F62FE", marginLeft: 4 }}>días</span></div>
-                            <div style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>¡No la rompas!</div>
-                        </div>
+                    <div className="puntos-stat-card">
+                        <StreakWidget
+                            streak={stats?.currentStreak || 0}
+                            showCalendar={true}
+                            activeDays={stats?.weeklyActiveDays || []}
+                            containerStyle={{ width: "100%" }}
+                            badgeStyle={{
+                                background: "white",
+                                border: "none",
+                                borderRadius: "24px 24px 0 0",
+                                boxShadow: "none",
+                                padding: "28px 32px",
+                                height: "auto",
+                                borderBottom: "1px solid #e0e7ff"
+                            }}
+                            textStyle={{ fontSize: 38, fontWeight: 900, color: "#0f172a" }}
+                            labelStyle={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}
+                        />
+                        <style>{`
+                            .puntos-stat-card:nth-child(2) {
+                                padding: 0 !important;
+                                overflow: hidden;
+                                display: block !important;
+                                border: 1px solid #e0e7ff;
+                            }
+                        `}</style>
                     </div>
 
                     {/* Progress to next level */}
