@@ -154,8 +154,8 @@ export default function ForumProfilePage() {
   }
 
   useEffect(() => {
-    if (user && userId && userId !== user.id) {
-      checkFollowStatus()
+    if (user && userId) {
+      if (userId !== user.id) checkFollowStatus()
       fetchFollowStats()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
