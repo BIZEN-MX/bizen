@@ -152,12 +152,7 @@ export default function CoursesPage() {
         className="courses-loading-placeholder"
       >
         <style>{`
-          @media (min-width: 768px) and (max-width: 1160px) {
-            .courses-loading-placeholder { margin-left: 220px; }
-          }
-          @media (min-width: 1161px) {
-            .courses-loading-placeholder { margin-left: 280px; }
-          }
+          /* Handled globally */
         `}</style>
         {/* No spinner - blank or redirect handles it */}
       </div>

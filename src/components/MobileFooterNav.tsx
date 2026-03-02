@@ -141,11 +141,6 @@ export default function MobileFooterNav() {
           font-family: Montserrat, sans-serif !important;
           display: block !important;
           margin: 0 !important;
-          transform: translateZ(0) !important;
-          -webkit-transform: translateZ(0) !important;
-          backface-visibility: hidden !important;
-          -webkit-backface-visibility: hidden !important;
-          will-change: transform !important;
         }
         .mobile-footer-inner {
           display: flex !important;

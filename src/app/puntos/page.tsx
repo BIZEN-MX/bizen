@@ -64,12 +64,6 @@ export default function PuntosPage() {
                     .puntos-outer { padding-bottom: 80px !important; }
                     .puntos-inner { width: 100% !important; max-width: 100% !important; margin-right: 0 !important; }
                 }
-                @media (min-width: 768px) and (max-width: 1160px) {
-                    .puntos-inner { width: calc(100% - 220px) !important; max-width: calc(100% - 220px) !important; margin-left: 220px !important; margin-right: 0 !important; }
-                }
-                @media (min-width: 1161px) {
-                    .puntos-inner { width: calc(100% - 280px) !important; max-width: calc(100% - 280px) !important; margin-left: 280px !important; margin-right: 0 !important; }
-                }
 
                 @keyframes puntos-fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
                 @keyframes puntos-shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }

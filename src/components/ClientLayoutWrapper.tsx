@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import NavigationLoading from './NavigationLoading';
 import FixedSidebar from './FixedSidebar';
-import MobileBottomNav from './MobileBottomNav';
 import MobileFooterNav from './MobileFooterNav';
 import GlobalLogo from './GlobalLogo';
 import { useKeyboardHandler } from '@/hooks/useKeyboardHandler';
@@ -163,9 +162,6 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
       {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page */}
       {!hideAppNavigation && isMobile && !isLessonInteractivePage && <MobileFooterNav />}
-
-      {/* Only show MobileBottomNav on desktop/tablet, never on mobile */}
-      {!hideAppNavigation && !isMobile && <MobileBottomNav />}
 
       <GlobalLogo />
       {children}

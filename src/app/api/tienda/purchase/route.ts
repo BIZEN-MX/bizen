@@ -29,61 +29,62 @@ export async function POST(request: NextRequest) {
 
         try {
             const result = await prisma.$transaction(async (tx) => {
-                // A. Atomic check for existing item
-                const existing: any[] = await tx.$queryRaw`
-                    SELECT id FROM public.user_inventory 
-                    WHERE user_id = ${user.id} AND product_id = ${String(productId)}
-                `
+                // A. Check for existing item using Prisma model
+                const existing = await tx.userInventoryItem.findFirst({
+                    where: {
+                        userId: user.id,
+                        productId: String(productId)
+                    }
+                })
 
-                if (existing && existing.length > 0) {
+                if (existing) {
                     logToFile(`ALREADY OWNED: user=${user.id} product=${productId}`)
                     throw new Error("ALREADY_OWNED")
                 }
 
                 // B. Check balance
-                const profile: any[] = await tx.$queryRaw`
-                    SELECT bizcoins, full_name FROM public.profiles 
-                    WHERE user_id = ${user.id}
-                    FOR UPDATE
-                `
+                // Using findUnique on Profile if user_id is PK
+                const profile = await tx.profile.findUnique({
+                    where: { userId: user.id }
+                })
 
-                if (!profile || profile.length === 0) {
+                if (!profile) {
                     logToFile(`PROFILE NOT FOUND: ${user.id}`)
                     throw new Error("PROFILE_NOT_FOUND")
                 }
 
-                const currentBalance = profile[0].bizcoins || 0
-                logToFile(`BALANCE CHECK: ${profile[0].full_name} has ${currentBalance}, need ${price}`)
+                const currentBalance = profile.bizcoins || 0
+                logToFile(`BALANCE CHECK: ${profile.fullName} has ${currentBalance}, need ${price}`)
 
                 if (currentBalance < price) {
-                    logToFile(`INSUFFICIENT FUNDS: ${profile[0].full_name}`)
+                    logToFile(`INSUFFICIENT FUNDS: ${profile.fullName}`)
                     throw new Error("INSUFFICIENT_FUNDS")
                 }
 
-                // C. Atomic Deduct & Insert
-                logToFile(`DEDUCTING: ${price} from ${profile[0].full_name}`)
+                // C. Deduct & Insert
+                logToFile(`DEDUCTING: ${price} from ${profile.fullName}`)
 
-                await tx.$executeRaw`
-                    UPDATE public.profiles 
-                    SET bizcoins = bizcoins - ${price}
-                    WHERE user_id = ${user.id}
-                `
+                const updated = await tx.profile.update({
+                    where: { userId: user.id },
+                    data: {
+                        bizcoins: {
+                            decrement: price
+                        }
+                    }
+                })
 
-                await tx.$executeRaw`
-                    INSERT INTO public.user_inventory (id, user_id, product_id, price_paid, purchased_at)
-                    VALUES (${crypto.randomUUID()}, ${user.id}, ${String(productId)}, ${price}, NOW())
-                `
+                await tx.userInventoryItem.create({
+                    data: {
+                        userId: user.id,
+                        productId: String(productId),
+                        pricePaid: price,
+                        purchasedAt: new Date()
+                    }
+                })
 
-                const updatedProfile: any[] = await tx.$queryRaw`
-                    SELECT bizcoins FROM public.profiles WHERE user_id = ${user.id}
-                `
-
-                return {
-                    bizcoins: updatedProfile[0].bizcoins
-                }
+                logToFile(`SUCCESS: user=${user.id} new_balance=${updated.bizcoins}`)
+                return { bizcoins: updated.bizcoins }
             })
-
-            logToFile(`SUCCESS: user=${user.id} new_balance=${result.bizcoins}`)
 
             return NextResponse.json({
                 success: true,
@@ -91,12 +92,19 @@ export async function POST(request: NextRequest) {
                 message: `Has comprado ${name} exitosamente`
             })
         } catch (error: any) {
-            logToFile(`TRANSACTION ERROR: ${error.message}`)
-            throw error // Re-throw to be caught by the outer catch
+            logToFile(`TRANSACTION ERROR: ${error.message || "Unknown error"}`)
+            console.error("[PURCHASE TRANSACTION] Error:", error)
+
+            // Re-throw specific errors to be handled by the outer catch
+            if (["ALREADY_OWNED", "INSUFFICIENT_FUNDS", "PROFILE_NOT_FOUND"].includes(error.message)) {
+                throw error
+            }
+            throw new Error(`INTERNAL_ERROR: ${error.message}`)
         }
 
     } catch (error: any) {
-        console.error("[PURCHASE] Error:", error.message)
+        console.error("[PURCHASE] Root Error:", error.message)
+        logToFile(`ROOT ERROR: ${error.message}`)
 
         let status = 500
         let message = "Error al procesar la compra"
@@ -110,6 +118,8 @@ export async function POST(request: NextRequest) {
         } else if (error.message === "PROFILE_NOT_FOUND") {
             status = 404
             message = "Perfil no encontrado"
+        } else if (error.message.startsWith("INTERNAL_ERROR")) {
+            message = `Error interno: ${error.message.split(": ")[1]}`
         }
 
         return NextResponse.json({ error: message, code: error.message }, { status })
