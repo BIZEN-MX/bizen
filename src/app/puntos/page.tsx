@@ -22,7 +22,7 @@ const GIFT_CARDS = [
 ]
 
 export default function PuntosPage() {
-    const { user, loading } = useAuth()
+    const { user, loading, dbProfile } = useAuth()
     const router = useRouter()
     const { settings } = useSettings()
     const t = useTranslation(settings.language)
@@ -44,7 +44,7 @@ export default function PuntosPage() {
         fetchStats()
     }, [user, loading, router])
 
-    const userPoints = stats?.bizcoins || 0
+    const userPoints = stats?.bizcoins ?? (dbProfile as any)?.bizcoins ?? 0
 
     // No longer returning early for loading to avoid "ugly" center screens
     // Instead we will render skeletons in the main UI
@@ -144,9 +144,22 @@ export default function PuntosPage() {
             {/* Redeem Confirmation Modal */}
             {redeemModal && selectedGC && (
                 <div className="modal-bg" onClick={e => { if (e.target === e.currentTarget) setRedeemModal(false) }}>
+                    <style>{`
+                            @keyframes gift-pulse {
+                                0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(15,98,254,0)); }
+                                50% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(15,98,254,0.4)); }
+                                100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(15,98,254,0)); }
+                            }
+                            .gift-pulse {
+                                animation: gift-pulse 2s infinite ease-in-out;
+                                color: #0F62FE;
+                            }
+                        `}</style>
                     <div className="modal-box">
                         <div style={{ textAlign: "center", marginBottom: 24 }}>
-                            <div style={{ fontSize: 48, marginBottom: 12 }}>🎁</div>
+                            <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+                                <Gift size={48} className="gift-pulse" />
+                            </div>
                             <h2 style={{ fontSize: 24, fontWeight: 900, color: "#0f172a", margin: "0 0 8px" }}>¿Canjear tarjeta?</h2>
                             <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>Esto descontará {selectedGC.points.toLocaleString()} BIZCOINS de tu saldo</p>
                         </div>

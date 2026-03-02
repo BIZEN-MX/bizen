@@ -84,6 +84,8 @@ model Profile {
   inventory        UserInventoryItem[]
   followers        UserFollow[]     @relation("following")
   following        UserFollow[]     @relation("follower")
+  reviews          CourseReview[]
+  notes            UserNote[]
 
   @@index([schoolId], map: "idx_profiles_school")
   @@map("profiles")
@@ -103,6 +105,7 @@ model Course {
   enrollments   Enrollment[]
   schoolCourses SchoolCourse[]
   units         Unit[]
+  reviews       CourseReview[]
 
   @@map("courses")
   @@schema("public")
@@ -165,9 +168,72 @@ model Lesson {
   units       Unit?      @relation(fields: [unit_id], references: [id], onDelete: Cascade)
   progress    Progress[]
   quizzes     Quiz[]
+  steps       LessonStep[]
+  resources   LessonResource[]
+  notes       UserNote[]
 
   @@index([sectionId], map: "idx_lessons_section")
   @@map("lessons")
+  @@schema("public")
+}
+
+model LessonStep {
+  id          String   @id @default(cuid())
+  lessonId    String   @map("lesson_id")
+  order       Int
+  type        String
+  title       String?
+  body        String?
+  data        Json?    @default("{}")
+  xpReward    Int      @default(10) @map("xp_reward")
+  createdAt   DateTime @default(now()) @map("created_at")
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId])
+  @@map("lesson_steps")
+  @@schema("public")
+}
+
+model LessonResource {
+  id        String   @id @default(cuid())
+  lessonId  String   @map("lesson_id")
+  title     String
+  url       String
+  fileType  String   @map("file_type")
+  createdAt DateTime @default(now()) @map("created_at")
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId])
+  @@map("lesson_resources")
+  @@schema("public")
+}
+
+model CourseReview {
+  id        String   @id @default(cuid())
+  courseId  String   @map("course_id")
+  userId    String   @map("user_id")
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user      Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("course_reviews")
+  @@schema("public")
+}
+
+model UserNote {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  lessonId  String   @map("lesson_id")
+  content   String
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user      Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("user_notes")
   @@schema("public")
 }
 

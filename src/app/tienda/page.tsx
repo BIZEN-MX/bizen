@@ -121,7 +121,7 @@ const BADGE_COLORS: Record<string, { bg: string; text: string }> = {
 
 // ─────────────────────────────────────────
 export default function TiendaPage() {
-    const { user, loading, refreshUser } = useAuth()
+    const { user, loading, refreshUser, dbProfile } = useAuth()
     const router = useRouter()
 
     const [stats, setStats] = useState<any>(null)
@@ -199,7 +199,7 @@ export default function TiendaPage() {
         }
     }
 
-    const bizcoins = stats?.bizcoins ?? 0
+    const bizcoins = stats?.bizcoins ?? (dbProfile as any)?.bizcoins ?? 0
 
     const filtered = PRODUCTS.filter(p => {
         const matchCat = activeCategory === "Todo" || p.category === activeCategory
