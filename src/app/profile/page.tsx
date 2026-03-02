@@ -136,7 +136,64 @@ export default function ProfilePage() {
     } catch { alert("No se pudo actualizar el avatar") } finally { setSavingAvatar(false) }
   }
 
-  if (loading || !mounted) return <div style={{ minHeight: "100vh", background: "#FBFAF5" }} />
+  // ── SKELETON COMPONENTS ──
+  const Skeleton = ({ w, h, r = 12, mb = 0, style = {} }: any) => (
+    <div className="skeleton-pulse" style={{ width: w, height: h, borderRadius: r, marginBottom: mb, background: "#f1f5f9", ...style }} />
+  )
+
+  const ProfileSkeleton = () => (
+    <div className="prof-outer" style={{ minHeight: "100vh", background: "#FBFAF5", padding: "clamp(24px, 5vw, 48px) clamp(16px, 4vw, 40px)" }}>
+      <div style={{ maxWidth: 1140, margin: "0 auto", display: "flex", gap: 32 }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 24, alignItems: "center" }}>
+          <Skeleton w={190} h={190} r="50%" mb={20} />
+          <Skeleton w={200} h={40} mb={8} />
+          <Skeleton w={140} h={20} mb={24} />
+          <div style={{ display: "flex", gap: 16 }}>
+            <Skeleton w={80} h={40} />
+            <Skeleton w={80} h={40} />
+          </div>
+          <div style={{ width: "100%", height: 1, background: "#e2e8f0", margin: "10px 0" }} />
+          <div style={{ alignSelf: "flex-start", width: "100%" }}>
+            <Skeleton w={120} h={24} mb={16} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <Skeleton w="100%" h={100} />
+              <Skeleton w="100%" h={100} />
+              <Skeleton w="100%" h={100} />
+              <Skeleton w="100%" h={100} />
+            </div>
+          </div>
+        </div>
+        <div style={{ width: 300, display: "flex", flexDirection: "column", gap: 16 }}>
+          <Skeleton w="100%" h={250} />
+          <Skeleton w="100%" h={180} />
+        </div>
+      </div>
+    </div>
+  )
+
+  const ListSkeleton = () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {[1, 2, 3, 4].map(i => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Skeleton w={40} h={40} r="50%" />
+          <div style={{ flex: 1 }}>
+            <Skeleton w="70%" h={14} mb={6} />
+            <Skeleton w="40%" h={10} />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+
+  if (loading || !mounted) return (
+    <>
+      <style>{`
+        @keyframes skeleton-pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        .skeleton-pulse { animation: skeleton-pulse 1.5s infinite ease-in-out; }
+      `}</style>
+      <ProfileSkeleton />
+    </>
+  )
   if (!user) return null
 
   const displayName = formData.fullName || user.email?.split("@")[0] || "Usuario"
@@ -175,12 +232,15 @@ export default function ProfilePage() {
   return (
     <>
 
+
       <style dangerouslySetInnerHTML={{
         __html: `
         @keyframes fadeUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes blobRotate { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
+        @keyframes skeleton-pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        .skeleton-pulse { animation: skeleton-pulse 1.5s infinite ease-in-out; }
 
         @media (max-width: 767px) {
           .prof-outer { padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
@@ -452,8 +512,10 @@ export default function ProfilePage() {
               </div>
 
               {/* Content */}
-              <div style={{ padding: "24px 20px" }}>
-                {(rightTab === "following" ? (loadingFollowing ? [] : following) : (loadingFollowers ? [] : followers)).length === 0 ? (
+              <div style={{ padding: "24px 20px", minHeight: 280 }}>
+                {(rightTab === "following" ? loadingFollowing : loadingFollowers) ? (
+                  <ListSkeleton />
+                ) : (rightTab === "following" ? following : followers).length === 0 ? (
                   <div style={{ textAlign: "center", animation: "fadeUp 0.5s ease" }}>
                     <div style={{
                       width: "100%", height: 140,
