@@ -22,9 +22,9 @@ export const TOUR_STEPS = [
         label: "Reto Diario",
         title: "Construye el hábito financiero",
         description:
-            "Cada día recibes un reto nuevo de 5 minutos. Al completarlo, publicas tu evidencia en el Foro y acumulas rachas. Así conviertes el aprendizaje en un hábito que cambia tu vida.",
-        color: "#10b981",
-        accent: "rgba(16,185,129,0.08)",
+            "Cada día recibes un reto nuevo de 5 minutos. Al completarlo, publicas tu evidencia en el Foro y acumulas rachas. Así convierte el aprendizaje en un hábito que cambia tu vida.",
+        color: "#0F62FE",
+        accent: "rgba(15,98,254,0.08)",
         step: 2,
         placement: "bottom-left"
     },
@@ -34,8 +34,8 @@ export const TOUR_STEPS = [
         title: "Aprende con tu comunidad",
         description:
             "Comparte tus evidencias del reto diario, haz preguntas rápidas y presenta proyectos emprendedores. Tu grupo te retroalimenta y tus maestros validan tu aprendizaje en tiempo real.",
-        color: "#8b5cf6",
-        accent: "rgba(139,92,246,0.08)",
+        color: "#0F62FE",
+        accent: "rgba(15,98,254,0.08)",
         step: 3,
         placement: "bottom-left"
     },
@@ -45,8 +45,8 @@ export const TOUR_STEPS = [
         title: "Tu aprendizaje genera donaciones",
         description:
             "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales en nombre de tu escuela. Revisa aquí cuánto has contribuido, tus logros desbloqueados y el impacto colectivo.",
-        color: "#f59e0b",
-        accent: "rgba(245,158,11,0.08)",
+        color: "#0F62FE",
+        accent: "rgba(15,98,254,0.08)",
         step: 4,
         placement: "bottom-left"
     },
@@ -56,8 +56,8 @@ export const TOUR_STEPS = [
         title: "Tu progreso financiero",
         description:
             "Monitorea tus XP, rachas y el historial de tus ganancias. Aquí verás cómo cada pequeña acción suma para convertirte en un experto de tus finanzas.",
-        color: "#f59e0b",
-        accent: "rgba(245,158,11,0.08)",
+        color: "#0F62FE",
+        accent: "rgba(15,98,254,0.08)",
         step: 5,
         placement: "bottom-right"
     },
@@ -67,8 +67,8 @@ export const TOUR_STEPS = [
         title: "Canjea tus recompensas",
         description:
             "Usa tus monedas Bizens para comprar artículos exclusivos, avatares especiales y beneficios reales. Tu esfuerzo se traduce en premios que puedes disfrutar.",
-        color: "#8b5cf6",
-        accent: "rgba(139,92,246,0.08)",
+        color: "#0F62FE",
+        accent: "rgba(15,98,254,0.08)",
         step: 6,
         placement: "bottom-right"
     },
@@ -77,9 +77,9 @@ export const TOUR_STEPS = [
         label: "Tu Perfil",
         title: "Tu identidad en BIZEN",
         description:
-            "Aquí vives: tus puntos XP, tu nivel, tus rachas y tus seguidores. Personaliza tu avatar y tu bio. Cada logro que desbloquees aparecerá en tu perfil para que el mundo vea tu progreso.",
-        color: "#ef4444",
-        accent: "rgba(239,68,68,0.08)",
+            "Aquí vives: tus puntos XP, tu nivel, tus rachas y tus seguidores. Personaliza tu avatar y tu bio. Cada logro que desbloquee aparecerá en tu perfil para que el mundo vea tu progreso.",
+        color: "#0F62FE",
+        accent: "rgba(15,98,254,0.08)",
         step: 7,
         placement: "bottom-right"
     },
@@ -435,7 +435,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                                 disabled={navigating}
                                 className="tour-btn tour-btn-next"
                                 style={{
-                                    background: isLast ? "#0f172a" : `linear-gradient(135deg, ${current.color}, ${current.color}cc)`,
+                                    background: `linear-gradient(135deg, ${current.color}, ${current.color}cc)`,
                                     boxShadow: `0 4px 14px ${current.color}40`,
                                     opacity: navigating ? 0.7 : 1,
                                     cursor: navigating ? "not-allowed" : "pointer"

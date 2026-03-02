@@ -22,24 +22,8 @@ interface UserStats {
   weeklyActiveDays?: string[]
 }
 
-const ACHIEVEMENTS = [
-  {
-    id: "wildfire", title: "Wildfire", desc: "Alcanza una racha de 3 días",
-    icon: "🔥", color: "#ef4444", maxVal: 3, unit: "streak"
-  },
-  {
-    id: "sage", title: "Sage", desc: "Gana 100 XP",
-    icon: "🧙", color: "#22c55e", maxVal: 100, unit: "xp"
-  },
-  {
-    id: "streak7", title: "On Fire", desc: "Alcanza una racha de 7 días",
-    icon: "🌟", color: "#f59e0b", maxVal: 7, unit: "streak"
-  },
-  {
-    id: "xp500", title: "Scholar", desc: "Gana 500 XP",
-    icon: "📚", color: "#6366f1", maxVal: 500, unit: "xp"
-  },
-]
+
+const ACHIEVEMENTS: any[] = []
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, dbProfile } = useAuth()
@@ -149,7 +133,7 @@ export default function ProfilePage() {
   }
 
   const statCards = [
-    { icon: <Flame size={22} color="#fb923c" />, value: streak, label: "Racha diaria" },
+    { icon: <Flame size={22} color="#0F62FE" />, value: streak, label: "Racha diaria" },
     { icon: <Zap size={22} color="#0F62FE" />, value: totalXp, label: "Total XP" },
     { icon: <Shield size={22} color="#0F62FE" />, value: level === 1 ? "Ninguna" : `Nivel ${level}`, label: "Liga actual" },
     { icon: <Award size={22} color="#0F62FE" />, value: ACHIEVEMENTS.filter(a => getAchievementProgress(a) >= a.maxVal).length, label: "Top completados" },
@@ -296,56 +280,59 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Achievements */}
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.01em" }}>
-                  Logros
-                </h2>
-                <Link href="/puntos" style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  VER TODOS
-                </Link>
-              </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {ACHIEVEMENTS.map(a => {
-                  const cur = getAchievementProgress(a)
-                  const pct = Math.min((cur / a.maxVal) * 100, 100)
-                  const done = cur >= a.maxVal
-                  return (
-                    <Card key={a.id} style={{ padding: "18px 20px", display: "flex", alignItems: "center", gap: 16 }}>
-                      {/* Badge */}
-                      <div style={{
-                        width: 60, height: 60, borderRadius: 14, flexShrink: 0,
-                        background: done ? a.color : "#f1f5f9",
-                        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                        gap: 2, position: "relative"
-                      }}>
-                        <span style={{ fontSize: 22 }}>{a.icon}</span>
-                        <span style={{ fontSize: 9, fontWeight: 800, color: done ? "white" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                          {done ? "✓" : "NIV 1"}
-                        </span>
-                      </div>
+            {/* Achievements - Hidden until real ones exist */}
+            {ACHIEVEMENTS.length > 0 && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.01em" }}>
+                    Logros
+                  </h2>
+                  <Link href="/puntos" style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    VER TODOS
+                  </Link>
+                </div>
 
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                          <span style={{ fontSize: 15, fontWeight: 800, color: "#0f172a" }}>{a.title}</span>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}>{cur}/{a.maxVal}</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {ACHIEVEMENTS.map(a => {
+                    const cur = getAchievementProgress(a)
+                    const pct = Math.min((cur / a.maxVal) * 100, 100)
+                    const done = cur >= a.maxVal
+                    return (
+                      <Card key={a.id} style={{ padding: "18px 20px", display: "flex", alignItems: "center", gap: 16 }}>
+                        {/* Badge */}
+                        <div style={{
+                          width: 60, height: 60, borderRadius: 14, flexShrink: 0,
+                          background: done ? a.color : "#f1f5f9",
+                          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                          gap: 2, position: "relative"
+                        }}>
+                          <span style={{ fontSize: 22 }}>{a.icon}</span>
+                          <span style={{ fontSize: 9, fontWeight: 800, color: done ? "white" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                            {done ? "✓" : "NIV 1"}
+                          </span>
                         </div>
-                        <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 999, overflow: "hidden", marginBottom: 6 }}>
-                          <div style={{
-                            width: `${pct}%`, height: "100%",
-                            background: done ? a.color : "#0F62FE",
-                            borderRadius: 999, transition: "width 1s ease"
-                          }} />
+
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                            <span style={{ fontSize: 15, fontWeight: 800, color: "#0f172a" }}>{a.title}</span>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}>{cur}/{a.maxVal}</span>
+                          </div>
+                          <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 999, overflow: "hidden", marginBottom: 6 }}>
+                            <div style={{
+                              width: `${pct}%`, height: "100%",
+                              background: done ? a.color : "#0F62FE",
+                              borderRadius: 999, transition: "width 1s ease"
+                            }} />
+                          </div>
+                          <div style={{ fontSize: 12, color: "#64748b" }}>{a.desc}</div>
                         </div>
-                        <div style={{ fontSize: 12, color: "#64748b" }}>{a.desc}</div>
-                      </div>
-                    </Card>
-                  )
-                })}
+                      </Card>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* ══ RIGHT COLUMN ══ */}
