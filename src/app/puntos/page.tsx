@@ -270,17 +270,16 @@ export default function PuntosPage() {
                     <div className="puntos-stat-card">
                         <StreakWidget
                             streak={stats?.currentStreak || 0}
-                            showCalendar={true}
-                            activeDays={stats?.weeklyActiveDays || []}
+                            showCalendar={false}
                             containerStyle={{ width: "100%" }}
                             badgeStyle={{
                                 background: "white",
                                 border: "none",
-                                borderRadius: "24px 24px 0 0",
+                                borderRadius: "24px",
                                 boxShadow: "none",
                                 padding: "28px 32px",
                                 height: "auto",
-                                borderBottom: "1px solid #e0e7ff"
+                                borderBottom: "none"
                             }}
                             textStyle={{ fontSize: 38, fontWeight: 900, color: "#0f172a" }}
                             labelStyle={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}
@@ -288,9 +287,13 @@ export default function PuntosPage() {
                         <style>{`
                             .puntos-stat-card:nth-child(2) {
                                 padding: 0 !important;
-                                overflow: hidden;
-                                display: block !important;
                                 border: 1px solid #e0e7ff;
+                                border-radius: 24px;
+                                background: white;
+                                box-shadow: 0 4px 20px rgba(15,98,254,0.06);
+                                display: flex;
+                                align-items: center;
+                                height: 100%;
                             }
                         `}</style>
                     </div>
