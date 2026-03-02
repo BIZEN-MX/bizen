@@ -288,7 +288,7 @@ export default function ForumProfilePage() {
 
           {/* ── HERO CARD ── */}
           <div style={{
-            background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
+            background: "#0f172a",
             borderRadius: 28,
             padding: "40px clamp(24px, 5vw, 48px)",
             marginBottom: 28,
@@ -298,25 +298,10 @@ export default function ForumProfilePage() {
             boxShadow: "0 24px 64px rgba(0,0,0,0.35)",
             animation: "fadeInUp 0.45s ease both"
           }}>
-            {/* Grid overlay */}
-            <div aria-hidden style={{
-              position: "absolute", inset: 0,
-              backgroundImage: "linear-gradient(rgba(15,98,254,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(15,98,254,0.05) 1px, transparent 1px)",
-              backgroundSize: "48px 48px",
-              pointerEvents: "none"
-            }} />
             {/* Radial glow top-right */}
             <div aria-hidden style={{
-              position: "absolute", top: "-30%", right: "-5%",
-              width: "45%", height: "200%",
-              background: "radial-gradient(circle, rgba(15,98,254,0.22) 0%, transparent 70%)",
-              pointerEvents: "none"
-            }} />
-            {/* Radial glow bottom-left */}
-            <div aria-hidden style={{
-              position: "absolute", bottom: "-20%", left: "-5%",
-              width: "40%", height: "160%",
-              background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)",
+              position: "absolute", inset: 0,
+              background: "radial-gradient(ellipse at 80% 0%, rgba(15,98,254,0.18) 0%, transparent 65%), radial-gradient(ellipse at 10% 100%, rgba(99,102,241,0.12) 0%, transparent 55%)",
               pointerEvents: "none"
             }} />
 
@@ -570,7 +555,7 @@ export default function ForumProfilePage() {
             display: "flex", alignItems: "center", justifyContent: "center", padding: 20
           }} onClick={() => setShowFollowers(false)}>
             <div style={{
-              background: "linear-gradient(135deg, #0f172a, #1e1b4b)",
+              background: "#0f172a",
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: 24, padding: 28,
               maxWidth: 480, width: "100%", maxHeight: "80vh", overflow: "auto",
@@ -632,7 +617,7 @@ export default function ForumProfilePage() {
             display: "flex", alignItems: "center", justifyContent: "center", padding: 20
           }} onClick={() => setShowFollowing(false)}>
             <div style={{
-              background: "linear-gradient(135deg, #0f172a, #1e1b4b)",
+              background: "#0f172a",
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: 24, padding: 28,
               maxWidth: 480, width: "100%", maxHeight: "80vh", overflow: "auto",
