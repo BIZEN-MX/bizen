@@ -42,11 +42,14 @@ export default function InteractiveLessonPage() {
   }, [])
 
   const redirectToCoursesRef = useRef(false)
-  const handleComplete = useCallback((stars?: number) => {
+  const handleComplete = useCallback(async (stars?: number) => {
     if (redirectToCoursesRef.current) return
     redirectToCoursesRef.current = true
 
     const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 2
+    const xpEarned = starsEarned * 5 // 5 XP per star, max 15
+
+    // Guest user: save to localStorage
     if (lessonIdStr && typeof window !== "undefined" && !user) {
       const stored = localStorage.getItem("guestCompletedLessons")
       const existing: string[] = stored ? JSON.parse(stored) : []
@@ -57,31 +60,43 @@ export default function InteractiveLessonPage() {
       starsObj[lessonIdStr] = starsEarned
       localStorage.setItem("guestLessonStars", JSON.stringify(starsObj))
     }
+
+    // Logged-in user: update auth metadata AND call API to persist stars + XP
     if (user && lessonIdStr) {
-      import("@/lib/supabase/client").then(({ createClient }) => {
+      try {
+        // Save to Supabase auth metadata (for completion badges etc.)
+        const { createClient } = await import("@/lib/supabase/client")
         const supabase = createClient()
         const existing = (user.user_metadata?.completedLessons as string[] | undefined) || []
         const lessonStars = (user.user_metadata?.lessonStars as Record<string, number> | undefined) || {}
         const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
         const newLessonStars = { ...lessonStars, [lessonIdStr]: starsEarned }
-        supabase.auth
-          .updateUser({
-            data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
-          })
-          .then(() => supabase.auth.refreshSession())
-          .catch(() => {
-            // Ignore network/auth errors (e.g. offline or Capacitor); progress still saved in memory
-          })
-      })
+        await supabase.auth.updateUser({
+          data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
+        })
+        await supabase.auth.refreshSession()
+
+        // Save stars + award XP via API route
+        await fetch("/api/lesson/complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
+        }).catch(() => { /* non-critical, ignore offline errors */ })
+      } catch {
+        // Offline or auth error - ignore, progress still saved in memory
+      }
     }
-    // Redirect to lessons menu (course page) after finishing the lesson
+
+    // Wait 3s so user can enjoy the reward animation before redirect
     const courseNum = courseIdStr.replace(/^course-/, "") || "1"
     const coursePagePath = `/courses/${courseNum}`
-    if (typeof window !== "undefined") {
-      window.location.href = coursePagePath
-    } else {
-      router.replace(coursePagePath)
-    }
+    setTimeout(() => {
+      if (typeof window !== "undefined") {
+        window.location.href = coursePagePath
+      } else {
+        router.replace(coursePagePath)
+      }
+    }, 3200)
   }, [lessonIdStr, user, router, courseIdStr])
 
   const handleExit = () => {
@@ -147,7 +162,7 @@ export default function InteractiveLessonPage() {
           min-height: 100dvh !important;
           overflow: hidden !important;
           box-sizing: border-box;
-          background: #f1f5f9 !important;
+          background: #FFFFFF !important;
         }
         /* Full width on all screen sizes when sidebar is hidden (lesson view) */
         .lesson-interactive-outer {
@@ -175,40 +190,12 @@ export default function InteractiveLessonPage() {
           padding-bottom: max(16px, env(safe-area-inset-bottom));
         }
       `}</style>
-      <div
-        className="lesson-interactive-outer"
-        style={{ height: "100dvh", maxHeight: "100dvh", overflow: "hidden", display: "flex", flexDirection: "column", background: "#f1f5f9" }}
-      >
-        {/* Progress bar - FIRST element, always visible at top */}
-        <div
-          style={{
-            flexShrink: 0,
-            minHeight: 90,
-            padding: "12px 16px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            background: "#f1f5f9",
-            borderBottom: "2px solid #cbd5e1",
-            boxSizing: "border-box",
-          }}
-        >
-          <LessonProgressHeader
-            currentStepIndex={progress.currentStep - 1}
-            totalSteps={progress.totalSteps}
-            streak={progress.streak}
-            stars={progress.stars}
-          />
-        </div>
-        {/* Content area - takes full space */}
-        <div style={{ flex: 1, minHeight: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-          <LessonEngine
-            lessonSteps={lessonSteps}
-            onComplete={handleComplete}
-            onExit={handleExit}
-            onProgressChange={setProgress}
-          />
-        </div>
+      <div className="lesson-interactive-outer">
+        <LessonEngine
+          lessonSteps={lessonSteps}
+          onComplete={handleComplete}
+          onExit={handleExit}
+        />
       </div>
 
       {/* Exit confirmation – same as sidebar when leaving lesson via "Courses" */}
@@ -258,6 +245,7 @@ export default function InteractiveLessonPage() {
                 color: "#374151",
                 lineHeight: 1.6,
                 marginBottom: 24,
+                fontFamily: "'Montserrat', sans-serif",
               }}
             >
               Si sales ahora, perderás todo el progreso de esta lección. ¡Estás haciendo un gran trabajo, te animamos a terminarla!

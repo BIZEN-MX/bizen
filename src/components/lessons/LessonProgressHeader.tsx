@@ -13,8 +13,6 @@ export interface LessonProgressHeaderProps {
   hideStars?: boolean
 }
 
-const BLUE = "#2563eb"
-
 export function LessonProgressHeader({
   currentStepIndex,
   totalSteps,
@@ -23,115 +21,87 @@ export function LessonProgressHeader({
   hideStreak = false,
   hideStars = false,
 }: LessonProgressHeaderProps) {
+  const progress = totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0
+
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "12px",
-        width: "min(95%, 900px)",
-        marginBottom: "1.5rem",
+        gap: 16,
+        width: "100%",
+        maxWidth: 720,
         boxSizing: "border-box",
         flexShrink: 0,
       }}
     >
-      {/* Progress bar container */}
+      {/* Progress bar — slim, Duolingo-inspired */}
       <div
         style={{
           flex: 1,
-          height: "24px", // Slimmer, more modern
-          borderRadius: "999px",
-          background: "rgba(255, 255, 255, 0.4)",
-          border: "1px solid rgba(11, 113, 254, 0.1)",
-          padding: "3px",
+          height: 16,
+          borderRadius: 999,
+          background: "#E5E7EB",
+          overflow: "hidden",
           boxSizing: "border-box",
-          position: "relative",
-          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.05)",
         }}
       >
         <div
           style={{
-            width: `${totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0}%`,
+            width: `${Math.max(progress, totalSteps > 0 ? 4 : 0)}%`,
             height: "100%",
-            background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)", // BIZEN Blue Gradient
-            borderRadius: "999px",
-            minWidth: totalSteps > 0 ? 12 : 0,
-            transition: "width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)", // Smoother bounce
+            background: "linear-gradient(90deg, #0B71FE 0%, #4A9EFF 100%)",
+            borderRadius: 999,
+            transition: "width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
             position: "relative",
             overflow: "hidden",
-            boxShadow: "0 2px 10px rgba(11, 113, 254, 0.3)",
           }}
         >
-          {/* Subtle Shine */}
+          {/* Subtle shine */}
           <div style={{
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            height: "40%",
-            background: "linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%)",
-            borderRadius: "999px 999px 0 0"
+            height: "50%",
+            background: "rgba(255,255,255,0.25)",
+            borderRadius: "999px 999px 0 0",
           }} />
         </div>
       </div>
 
-      {/* Streak + 3 stars - right */}
-      <div
-        style={{
-          flexShrink: 0,
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
-        {/* Streak - custom flame image (larger) */}
-        {!hideStreak && (
-          <span
-            style={{
-              fontSize: "clamp(16px, 3.5vw, 22px)",
-              fontWeight: 600,
-              color: "#1e293b",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <img
-              src="/streak.png"
-              alt=""
-              width={56}
-              height={56}
-              style={{ display: "block", objectFit: "contain" }}
-            />
-            {streak}
-          </span>
-        )}
+      {/* Stars removed section was here */}
 
-        {/* 3 stars - stars.png; unearned shown gray (larger) */}
-        {!hideStars && (
-          <span
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
-            role="img"
-            aria-label={stars === 0 ? "0 de 3 estrellas" : `${stars} de 3 estrellas`}
-          >
-            {[1, 2, 3].map((i) => (
-              <img
-                key={i}
-                src="/stars.png"
-                alt=""
-                width={40}
-                height={40}
-                style={{
-                  display: "block",
-                  objectFit: "contain",
-                  opacity: i <= stars ? 1 : 0.35,
-                  filter: i <= stars ? "none" : "grayscale(1)",
-                }}
-              />
-            ))}
-          </span>
-        )}
-      </div>
+      {/* Stars */}
+      {!hideStars && (
+        <div
+          style={{
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+          }}
+          role="img"
+          aria-label={`${stars} de 3 estrellas`}
+        >
+          {[1, 2, 3].map((i) => (
+            <img
+              key={i}
+              src="/stars.png"
+              alt=""
+              width={22}
+              height={22}
+              style={{
+                display: "block",
+                objectFit: "contain",
+                opacity: i <= stars ? 1 : 0.3,
+                filter: i <= stars ? "none" : "grayscale(1)",
+                transition: "opacity 0.3s ease",
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

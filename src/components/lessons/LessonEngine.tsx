@@ -4,6 +4,7 @@ import React, { useReducer, useEffect, useCallback, useRef, useState } from "rea
 import { LessonStep } from "@/types/lessonTypes"
 import { lessonReducer, LessonState } from "./lessonReducer"
 import { LessonScreen, StickyFooterButton, StickyFooter } from "./index"
+import { LessonProgressHeader } from "./LessonProgressHeader"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X, CONTENT_PADDING_Y } from "./layoutConstants"
 import {
   InfoStep,
@@ -85,12 +86,13 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           isCorrect: result.isCorrect,
           answerData: result.answerData,
         })
-        // Only enable Continue when correct (or not a review step). Review: user must get it right before advancing.
         if (result.isCorrect || !isReviewStep) {
           dispatch({ type: "ENABLE_CONTINUE" })
           if (result.isCorrect) haptic.success()
         } else {
-          dispatch({ type: "DISABLE_CONTINUE" })
+          // If a review step is failed, we append it again so it repeats
+          dispatch({ type: "APPEND_REVIEW_STEP", sourceStepId: sourceStepId! })
+          dispatch({ type: "ENABLE_CONTINUE" }) // Allow moving to the appended retry
           haptic.error()
         }
       } else if (result.isCompleted) {
@@ -177,6 +179,13 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     }
   }, [state.currentStepIndex])
 
+  // Stabilize the onAnswered callback to prevent infinite render loops in steps
+  const onStepAnswered = useCallback((res: any) => {
+    if (currentStep) {
+      handleAnswered(currentStep.id, res)
+    }
+  }, [currentStep?.id, handleAnswered])
+
   if (!currentStep) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FBFAF5]">
@@ -186,13 +195,6 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       </div>
     )
   }
-
-  // Stabilize the onAnswered callback to prevent infinite render loops in steps
-  const onStepAnswered = useCallback((res: any) => {
-    if (currentStep) {
-      handleAnswered(currentStep.id, res)
-    }
-  }, [currentStep?.id, handleAnswered])
 
   const stepProps = {
     step: currentStep as any,
@@ -220,18 +222,23 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       case "image_choice":
         return <ImageChoiceStep {...stepProps} />
       case "summary":
-        return <SummaryStep {...stepProps} />
+        return <SummaryStep {...stepProps} step={{ ...stepProps.step, starsEarned: stars }} />
       default:
         return <div>Unknown step type: {currentStep.stepType}</div>
     }
   }
 
-  const shouldPassFullScreenProps = currentStep.fullScreen || isSummaryStep
+  const shouldPassFullScreenProps = true // Always use full screen layout for all steps to ensure consistent footer/header behavior
+
+  const currentAnswer = state.answersByStepId[currentStep.id]
+  const isCorrect = currentAnswer?.isCorrect === true
+  const hasFeedback = state.isContinueEnabled && isAssessment
 
   const footerButtonLabel = (() => {
-    if (isSummaryStep || isLastStep) return "Finalizar lección"
+    if (hasFeedback && !isCorrect) return "Intentar de nuevo"
+    if (isSummaryStep || (isLastStep && isCorrect)) return "Avanzar"
     if (!state.isContinueEnabled) {
-      if (currentStep.stepType === "info") return "QUIERO VER"
+      if (currentStep.stepType === "info") return "Continuar"
       if (isAssessment) return "Comprobar"
     }
     return (currentStep as any).continueLabel || "Continuar"
@@ -239,84 +246,108 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   const footerButtonDisabled = !state.isContinueEnabled && !state.isActionEnabled && !isSummaryStep && !isLastStep
 
-  const renderFooter = () => (
-    <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
-      {/* Back button - only shown if not on first step, not on summary, and not during review building */}
-      {!isSummaryStep && state.currentStepIndex > 0 ? (
-        <StickyFooterButton
-          variant="secondary"
-          onClick={handleBack}
-          style={{ minWidth: "auto", fontSize: "0.9rem", fontWeight: 700, padding: "12px 16px" }}
-        >
-          Anterior
-        </StickyFooterButton>
-      ) : (
-        onExit && (
-          <StickyFooterButton
-            variant="outline"
-            onClick={onExit}
-            style={{ minWidth: "auto", fontSize: "0.9rem", fontWeight: 700, padding: "12px 16px" }}
-          >
-            Salir
-          </StickyFooterButton>
-        )
-      )}
+  const renderFooter = (isFixed: boolean = true) => (
+    <StickyFooter
+      fixed={isFixed}
+      feedbackColor={hasFeedback ? (isCorrect ? "correct" : "incorrect") : null}
+      feedbackTitle={hasFeedback ? (isCorrect ? "¡Muy bien hecho!" : "¡Sigue intentando!") : undefined}
+      feedbackBody={hasFeedback ? (currentStep as any).options?.find((o: any) => o.id === currentAnswer?.answerData?.selectedOptionId)?.explanation : undefined}
+    >
+      <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+        {/* Left: Exit/Back only if NO feedback shown */}
+        {!hasFeedback && (
+          !isSummaryStep && state.currentStepIndex > 0 ? (
+            <StickyFooterButton
+              variant="white"
+              onClick={handleBack}
+              style={{ minWidth: 60, padding: "14px 20px" }}
+            >
+              Anterior
+            </StickyFooterButton>
+          ) : (
+            onExit && (
+              <StickyFooterButton
+                variant="outline"
+                onClick={onExit}
+                style={{ minWidth: 60, padding: "14px 20px" }}
+              >
+                Salir
+              </StickyFooterButton>
+            )
+          )
+        )}
 
-      {/* Main Action Button */}
-      <StickyFooterButton
-        variant={isLastStep || isSummaryStep ? "success" : "blue"}
-        onClick={handleContinue}
-        disabled={footerButtonDisabled}
-        style={{ minWidth: 140, fontSize: "1rem", fontWeight: 700, padding: "12px 24px", flex: 1 }}
-      >
-        {footerButtonLabel}
-      </StickyFooterButton>
-    </div>
+        {/* Primary Action Button */}
+        <StickyFooterButton
+          variant={hasFeedback ? (isCorrect ? "blue" : "danger") : "blue"}
+          onClick={handleContinue}
+          disabled={footerButtonDisabled}
+          style={{ flex: 1, fontSize: "1rem", fontWeight: 800, padding: "14px 24px" }}
+        >
+          {footerButtonLabel}
+        </StickyFooterButton>
+      </div>
+    </StickyFooter>
   )
 
   if (shouldPassFullScreenProps) {
     return (
       <div
-        className="flex flex-col text-slate-900 relative w-full flex-1 min-h-0"
         style={{
-          paddingTop: "env(safe-area-inset-top)",
-          paddingBottom: "max(0px, env(safe-area-inset-bottom))",
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
           minHeight: "100dvh",
           maxHeight: "100dvh",
           height: "100dvh",
           overflow: "hidden",
-          background: "linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%)", // Matches LessonScreen
+          background: "#FFFFFF",
+          paddingTop: "env(safe-area-inset-top)",
+          fontFamily: "'Montserrat', sans-serif",
         }}
       >
+        {/* Header - Fixed Height */}
+        <div style={{ flexShrink: 0, padding: "16px clamp(16px, 4vw, 48px) 14px", borderBottom: "1.5px solid #F1F5F9", display: "flex", justifyContent: "center" }}>
+          <div style={{ width: "100%", maxWidth: 720 }}>
+            <LessonProgressHeader
+              currentStepIndex={state.currentStepIndex}
+              totalSteps={state.allSteps.length}
+              streak={streak}
+              stars={stars}
+            />
+          </div>
+        </div>
+
+        {/* Content Area - Scrollable */}
         <div
           key={state.currentStepIndex}
-          className="lesson-step-transition flex-1 min-h-0 flex flex-col justify-center items-stretch overflow-y-auto"
-          style={{ paddingTop: 20, paddingBottom: 20 }}
+          className="lesson-step-transition"
+          style={{
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "24px clamp(16px, 4vw, 48px) 120px", // Bottom padding for footer
+            boxSizing: "border-box",
+          }}
         >
           <div
-            className="lesson-slide-content-center"
             style={{
               width: "100%",
-              maxWidth: 1000,
-              marginLeft: "auto",
-              marginRight: "auto",
-              paddingLeft: "clamp(16px, 4vw, 32px)",
-              paddingRight: "clamp(16px, 4vw, 32px)",
-              flex: 1,
-              minHeight: 0,
+              maxWidth: 720,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              boxSizing: "border-box",
+              flex: 1,
             }}
           >
             {renderStep()}
           </div>
         </div>
 
-        <StickyFooter fixed={false}>
-          {renderFooter()}
-        </StickyFooter>
+        {renderFooter(true)}
       </div>
     )
   }
@@ -328,7 +359,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       streak={streak}
       stars={stars}
       showProgressBar={!onProgressChange}
-      footerContent={renderFooter()}
+      footerContent={renderFooter(false)}
     >
       {renderStep()}
     </LessonScreen>

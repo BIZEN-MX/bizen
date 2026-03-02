@@ -1,9 +1,10 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { FillBlanksStepFields } from "@/types/lessonTypes"
-import { sharedStyles } from "../sharedStyles"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
+import { ExerciseInstruction } from "./ExerciseInstruction"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface FillBlanksStepProps {
   step: FillBlanksStepFields & { id: string; title?: string; description?: string }
@@ -19,48 +20,71 @@ export function FillBlanksStep({
   actionTrigger = 0,
 }: FillBlanksStepProps) {
   const [blankAnswers, setBlankAnswers] = useState<Record<string, string>>(initialAnswers)
-  const [hasEvaluated, setHasEvaluated] = useState(false)
-  const hasPlayedSound = useRef(false)
-  const onAnsweredRef = useRef(onAnswered)
-  onAnsweredRef.current = onAnswered
+  const [hasChecked, setHasChecked] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [activeBlankId, setActiveBlankId] = useState<string | null>(null)
+
+  const blankIds = step.textParts
+    .filter((part) => part.type === "blank")
+    .map((part) => (part as any).id)
 
   useEffect(() => {
-    // Get all blank IDs
-    const blankIds = step.textParts
-      .filter((part) => part.type === "blank")
-      .map((part) => (part.type === "blank" ? part.id : ""))
+    if (activeBlankId === null && blankIds.length > 0) {
+      const firstEmpty = blankIds.find(id => !blankAnswers[id])
+      if (firstEmpty) setActiveBlankId(firstEmpty)
+    }
+  }, [blankAnswers, blankIds])
 
-    // Notify engine about completion state
+  useEffect(() => {
     const allFilled = blankIds.every((id) => !!blankAnswers[id])
-    onAnsweredRef.current({
+    onAnswered({
       isCompleted: false,
-      canAction: allFilled && !hasEvaluated
+      canAction: allFilled && !hasChecked,
+      answerData: { blankAnswers }
     })
-  }, [blankAnswers, hasEvaluated, step.textParts])
+  }, [blankAnswers, hasChecked])
+
+  const handleOptionTap = (optionId: string) => {
+    if (hasChecked) return
+
+    let targetId = activeBlankId
+    if (!targetId || blankAnswers[targetId]) {
+      targetId = blankIds.find(id => !blankAnswers[id]) || null
+    }
+
+    if (targetId) {
+      const newAnswers = { ...blankAnswers, [targetId]: optionId }
+      setBlankAnswers(newAnswers)
+
+      const nextEmpty = blankIds.find(id => id !== targetId && !newAnswers[id])
+      setActiveBlankId(nextEmpty || null)
+    }
+  }
+
+  const handleClearBlank = (blankId: string) => {
+    if (hasChecked) return
+    const newAnswers = { ...blankAnswers }
+    delete newAnswers[blankId]
+    setBlankAnswers(newAnswers)
+    setActiveBlankId(blankId)
+  }
 
   const handleCheck = () => {
-    const blankIds = step.textParts
-      .filter((part) => part.type === "blank")
-      .map((part) => (part.type === "blank" ? part.id : ""))
-
     const allFilled = blankIds.every((id) => !!blankAnswers[id])
-    if (!allFilled || hasEvaluated) return
+    if (!allFilled || hasChecked) return
 
     const isCorrect = blankIds.every((id) => {
-      const part = step.textParts.find(
-        (p) => p.type === "blank" && p.id === id
-      ) as Extract<typeof step.textParts[number], { type: "blank" }>
+      const part = step.textParts.find(p => p.type === "blank" && (p as any).id === id) as any
       return part && blankAnswers[id] === part.correctOptionId
     })
 
-    setHasEvaluated(true)
-    if (!hasPlayedSound.current) {
-      if (isCorrect) playCorrectSound()
-      else playIncorrectSound()
-      hasPlayedSound.current = true
-    }
+    setHasChecked(true)
+    setShowFeedback(true)
 
-    onAnsweredRef.current({
+    if (isCorrect) playCorrectSound()
+    else playIncorrectSound()
+
+    onAnswered({
       isCompleted: true,
       isCorrect,
       answerData: { blankAnswers: { ...blankAnswers } },
@@ -68,81 +92,150 @@ export function FillBlanksStep({
   }
 
   useEffect(() => {
-    const blankIds = step.textParts
-      .filter((part) => part.type === "blank")
-      .map((part) => (part.type === "blank" ? part.id : ""))
-    const allFilled = blankIds.every((id) => !!blankAnswers[id])
-
-    if (actionTrigger && actionTrigger > 0 && allFilled && !hasEvaluated) {
+    if (actionTrigger > 0 && !hasChecked) {
       handleCheck()
     }
   }, [actionTrigger])
 
-  const handleBlankChange = (blankId: string, optionId: string) => {
-    if (!hasEvaluated) {
-      setBlankAnswers((prev) => ({ ...prev, [blankId]: optionId }))
-    }
-  }
-
-  const getBlankStyle = (blankId: string) => {
-    if (!hasEvaluated) {
-      return ""
-    }
-    const part = step.textParts.find(
-      (p) => p.type === "blank" && p.id === blankId
-    ) as Extract<typeof step.textParts[number], { type: "blank" }>
-    if (!part) return ""
-
-    const isCorrect = blankAnswers[blankId] === part.correctOptionId
-    return isCorrect
-      ? "bg-emerald-600/25 border-emerald-500 ring-2 ring-emerald-400"
-      : "bg-red-600/20 border-red-500 ring-2 ring-red-500"
-  }
-
   return (
-    <div className={sharedStyles.container}>
-      {step.title && <h2 className={sharedStyles.title}>{step.title}</h2>}
-      {step.description && <p className={sharedStyles.description}>{step.description}</p>}
-      {step.question && <h3 className={sharedStyles.question}>{step.question}</h3>}
-      <div className="space-y-4 md:space-y-6">
-        {/* Text with blanks */}
-        <div className="text-2xl md:text-3xl lg:text-4xl leading-relaxed">
-          {step.textParts.map((part, index) => {
-            if (part.type === "text") {
-              return <span key={index}>{part.content}</span>
-            } else {
-              const selectedOptionId = blankAnswers[part.id]
-              const partObj = part as Extract<typeof step.textParts[number], { type: "blank" }>
-              const isCorrect = hasEvaluated && selectedOptionId === partObj.correctOptionId
+    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 32 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <ExerciseInstruction type="fill_blanks" />
+        <h3 style={{
+          fontSize: "clamp(20px, 3.5vw, 26px)",
+          fontWeight: 800,
+          color: "#111827",
+          margin: 0,
+          lineHeight: 1.3,
+          fontFamily: "'Montserrat', sans-serif",
+        }}>
+          {step.question || "Completa los espacios en blanco"}
+        </h3>
+      </div>
 
-              return (
-                <span key={part.id} className="inline-block mx-1">
-                  <select
-                    value={selectedOptionId || ""}
-                    onChange={(e) => handleBlankChange(part.id, e.target.value)}
-                    disabled={hasEvaluated}
-                    className={`${sharedStyles.blankInput} ${getBlankStyle(part.id)} transition-all duration-300 ${hasEvaluated ? 'cursor-default' : ''
-                      }`}
-                  >
-                    <option value="">---</option>
-                    {step.options.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  {hasEvaluated && (
-                    <span className="ml-2 text-xl">
-                      {isCorrect ? '✓' : '✗'}
-                    </span>
-                  )}
-                </span>
-              )
+      {/* Sentence Area */}
+      <div style={{
+        fontSize: "clamp(20px, 4vw, 32px)",
+        lineHeight: 1.8,
+        color: "#374151",
+        background: "#F9FAFB",
+        padding: "32px",
+        borderRadius: "24px",
+        border: "2px solid #F1F5F9",
+        fontFamily: "'Montserrat', sans-serif",
+        fontWeight: 600,
+      }}>
+        {step.textParts.map((part, idx) => {
+          if (part.type === "text") {
+            return <span key={idx} style={{ fontFamily: "'Montserrat', sans-serif" }}>{part.content}</span>
+          } else {
+            const blankId = (part as any).id
+            const selectedOptionId = blankAnswers[blankId]
+            const option = step.options.find(o => o.id === selectedOptionId)
+            const isActive = activeBlankId === blankId && !hasChecked
+            const isFilled = !!selectedOptionId
+
+            let borderColor = isActive ? "#0F62FE" : "#E5E7EB"
+            let background = isFilled ? "#EFF6FF" : "#FFFFFF"
+            let color = "#0F62FE"
+
+            if (showFeedback) {
+              const isCorrect = selectedOptionId === (part as any).correctOptionId
+              if (isCorrect) {
+                borderColor = "#3B82F6"
+                background = "#EFF6FF"
+                color = "#1D4ED8"
+              } else {
+                borderColor = "#EF4444"
+                background = "#FEF2F2"
+                color = "#DC2626"
+              }
             }
-          })}
-        </div>
+
+            return (
+              <motion.button
+                key={blankId}
+                layout
+                onClick={() => handleClearBlank(blankId)}
+                style={{
+                  display: "inline-block",
+                  minWidth: 100,
+                  height: 48,
+                  margin: "0 8px",
+                  padding: "0 16px",
+                  verticalAlign: "middle",
+                  background,
+                  border: `2px solid ${borderColor}`,
+                  borderRadius: 12,
+                  boxShadow: isActive ? "0 0 0 2px rgba(15, 98, 254, 0.2)" : "none",
+                  fontSize: 20,
+                  fontWeight: 800,
+                  color,
+                  cursor: isFilled && !hasChecked ? "pointer" : "default",
+                  transition: "all 0.2s ease",
+                  fontFamily: "'Montserrat', sans-serif",
+                }}
+              >
+                <AnimatePresence mode="wait">
+                  {isFilled ? (
+                    <motion.span
+                      key={selectedOptionId}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      style={{ fontFamily: "'Montserrat', sans-serif" }}
+                    >
+                      {option?.label}
+                    </motion.span>
+                  ) : (
+                    <span style={{ color: "#D1D5DB", fontFamily: "'Montserrat', sans-serif" }}>......</span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            )
+          }
+        })}
+      </div>
+
+      {/* Chip Bank */}
+      <div style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 12,
+        justifyContent: "center",
+        marginTop: 16
+      }}>
+        {step.options.map((option, idx) => {
+          const isUsed = Object.values(blankAnswers).includes(option.id)
+          return (
+            <motion.button
+              key={option.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+              onClick={() => handleOptionTap(option.id)}
+              disabled={isUsed || hasChecked}
+              style={{
+                padding: "12px 20px",
+                borderRadius: 16,
+                background: isUsed ? "#F3F4F6" : "#FFFFFF",
+                border: `2px solid ${isUsed ? "#E5E7EB" : "#E5E7EB"}`,
+                boxShadow: isUsed ? "none" : "0 3px 0 0 #E5E7EB",
+                color: isUsed ? "transparent" : "#374151",
+                fontSize: 18,
+                fontWeight: 700,
+                cursor: isUsed ? "default" : "pointer",
+                transition: "all 0.2s ease",
+                fontFamily: "'Montserrat', sans-serif"
+              }}
+            >
+              <span style={{ visibility: isUsed ? "hidden" : "visible" }}>
+                {option.label}
+              </span>
+            </motion.button>
+          )
+        })}
       </div>
     </div>
   )
 }
-

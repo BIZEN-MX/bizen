@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from "react"
 import { McqStepFields } from "@/types/lessonTypes"
-import { sharedStyles } from "../sharedStyles"
-import { CONTENT_MAX_WIDTH, CONTENT_GAP } from "../layoutConstants"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface MCQStepProps {
   step: McqStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; reviewSourceStepId?: string; imageUrl?: string; imageAlign?: "left" | "right" }
@@ -15,41 +14,19 @@ interface MCQStepProps {
   isContinueEnabled?: boolean
 }
 
-import { motion, AnimatePresence } from "framer-motion"
-
 export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, actionTrigger = 0, isContinueEnabled }: MCQStepProps) {
   const [selectedOptionId, setSelectedOptionId] = useState<string | undefined>(initialSelected)
-  const [showFeedback, setShowFeedback] = useState<Record<string, boolean>>({})
+  const [checkedOptionId, setCheckedOptionId] = useState<string | undefined>()
+  const [showFeedback, setShowFeedback] = useState(false)
   const [hasChecked, setHasChecked] = useState(false)
 
   const handleSelect = (optionId: string) => {
     if (hasChecked && isContinueEnabled) return
 
-    if (step.fullScreen) {
-      if (hasChecked && optionId !== selectedOptionId && !isContinueEnabled) {
-        setHasChecked(false)
-        setSelectedOptionId(optionId)
-        setShowFeedback({})
-        onAnswered({ isCompleted: false })
-      } else if (!hasChecked) {
-        setSelectedOptionId(optionId)
-        onAnswered({ isCompleted: false, canAction: true })
-      }
-    } else if (!hasChecked) {
-      setSelectedOptionId(optionId)
-      const selectedOption = step.options.find((opt) => opt.id === optionId)
-      const isCorrect = selectedOption?.isCorrect ?? false
-
-      setShowFeedback({ [optionId]: true })
-      if (isCorrect) playCorrectSound()
-      else playIncorrectSound()
-
-      onAnswered({
-        isCompleted: true,
-        isCorrect,
-        answerData: { selectedOptionId: optionId }
-      })
-    }
+    // Simply select the option. Don't show feedback yet.
+    setSelectedOptionId(optionId)
+    // Notify parent that we have a selection (so it can enable the "Check" button)
+    onAnswered({ isCompleted: false, canAction: true, answerData: { selectedOptionId: optionId } })
   }
 
   const handleCheck = () => {
@@ -57,13 +34,10 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
 
     const selectedOption = step.options.find((opt) => opt.id === selectedOptionId)
     const isCorrect = selectedOption?.isCorrect ?? false
-    const correctOption = step.options.find((opt) => opt.isCorrect)
 
     setHasChecked(true)
-    setShowFeedback({
-      [selectedOptionId]: true,
-      ...(correctOption?.id && correctOption.id !== selectedOptionId ? { [correctOption.id]: true } : {}),
-    })
+    setCheckedOptionId(selectedOptionId)
+    setShowFeedback(true)
 
     if (isCorrect) playCorrectSound()
     else playIncorrectSound()
@@ -76,117 +50,180 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
   }
 
   useEffect(() => {
-    if (actionTrigger > 0 && selectedOptionId && !hasChecked && step.fullScreen) {
+    if (actionTrigger > 0 && selectedOptionId && !hasChecked) {
       handleCheck()
     }
   }, [actionTrigger])
 
-  const optionLabels = ['A', 'B', 'C', 'D', 'E', 'F']
+  const isCorrectAnswer = checkedOptionId
+    ? step.options.find((o) => o.id === checkedOptionId)?.isCorrect
+    : undefined
+
+  const correctOption = step.options.find((o) => o.isCorrect)
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="w-full flex flex-col items-center justify-center min-h-0 flex-1"
-      style={{ gap: 32 }}
-    >
-      <div className="w-full max-w-2xl mx-auto flex flex-col items-stretch space-y-8">
-        <div className="text-center space-y-4">
-          <ExerciseInstruction type="mcq" />
-          <motion.h3
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className={sharedStyles.question}
-          >
-            {step.question}
-          </motion.h3>
-        </div>
+    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 28 }}>
+      {/* Question header */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <ExerciseInstruction type="mcq" />
+        <motion.h3
+          initial={{ y: -8, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          style={{
+            fontSize: "clamp(20px, 3vw, 26px)",
+            fontWeight: 800,
+            color: "#111827",
+            margin: 0,
+            lineHeight: 1.3,
+            fontFamily: "'Montserrat', sans-serif",
+          }}
+        >
+          {step.question}
+        </motion.h3>
+      </div>
 
-        <div className="grid grid-cols-1 gap-4 w-full">
-          {step.options.map((option, index) => {
-            const isSelected = selectedOptionId === option.id
-            const hasFeedback = (showFeedback[option.id] && hasChecked) || (!step.fullScreen && showFeedback[option.id])
-            const isCorrect = option.isCorrect
+      {/* Options */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {step.options.map((option, index) => {
+          const isSelected = selectedOptionId === option.id
+          const isChecked = checkedOptionId === option.id
+          const isCorrect = option.isCorrect
 
-            let stateClass = sharedStyles.option
-            if (hasFeedback) {
-              stateClass = isCorrect ? sharedStyles.optionCorrect : (isSelected ? sharedStyles.optionIncorrect : sharedStyles.option)
-            } else if (isSelected) {
-              stateClass = sharedStyles.optionSelected
+          // Determine visual state
+          let borderColor = "#E5E7EB"
+          let background = "#FFFFFF"
+          let color = "#374151"
+          let boxShadow = "0 2px 0 0 #E5E7EB"
+          let labelBg = "#F3F4F6"
+          let labelColor = "#6B7280"
+
+          if (showFeedback && isChecked) {
+            if (isCorrect) {
+              borderColor = "#3B82F6"
+              background = "#EFF6FF"
+              color = "#1D4ED8"
+              boxShadow = "0 2px 0 0 #93C5FD"
+              labelBg = "#DBEAFE"
+              labelColor = "#1D4ED8"
+            } else {
+              borderColor = "#EF4444"
+              background = "#FEF2F2"
+              color = "#DC2626"
+              boxShadow = "0 2px 0 0 #FCA5A5"
+              labelBg = "#FEE2E2"
+              labelColor = "#DC2626"
             }
+          } else if (showFeedback && isCorrect && checkedOptionId && !step.options.find(o => o.id === checkedOptionId)?.isCorrect) {
+            // Show which one was correct
+            borderColor = "#3B82F6"
+            background = "#EFF6FF"
+            color = "#1D4ED8"
+            boxShadow = "0 2px 0 0 #93C5FD"
+            labelBg = "#DBEAFE"
+            labelColor = "#1D4ED8"
+          } else if (isSelected && !showFeedback) {
+            borderColor = "#0F62FE"
+            background = "#EFF6FF"
+            color = "#1D4ED8"
+            boxShadow = "0 2px 0 0 #93C5FD"
+            labelBg = "#DBEAFE"
+            labelColor = "#1D4ED8"
+          }
 
-            return (
-              <motion.button
-                key={option.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={!hasChecked ? { scale: 1.01 } : {}}
-                whileTap={!hasChecked ? { scale: 0.98 } : {}}
-                onClick={() => handleSelect(option.id)}
-                disabled={hasChecked && isContinueEnabled}
-                className={stateClass}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 20,
-                  width: '100%',
-                }}
-              >
-                <div style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 12,
-                  background: isSelected ? 'rgba(11, 113, 254, 0.1)' : '#F1F5F9',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 16,
-                  fontWeight: 800,
-                  color: isSelected ? '#0B71FE' : '#64748B',
-                  flexShrink: 0,
-                  border: isSelected ? '2px solid #0B71FE' : '2px solid transparent'
-                }}>
-                  {optionLabels[index]}
-                </div>
-                <span className="flex-1 font-bold text-lg">{option.label}</span>
-                {hasFeedback && (
+          return (
+            <motion.button
+              key={option.id}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.07 }}
+              onClick={() => handleSelect(option.id)}
+              disabled={hasChecked && isContinueEnabled}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                width: "100%",
+                padding: "16px 20px",
+                borderRadius: 16,
+                background,
+                border: `2px solid ${borderColor}`,
+                boxShadow,
+                cursor: (hasChecked && isContinueEnabled) ? "not-allowed" : "pointer",
+                textAlign: "left",
+                color,
+                transition: "all 0.2s ease",
+                userSelect: "none",
+                outline: "none",
+                transform: "translateY(0)",
+              }}
+              onMouseEnter={(e) => {
+                if (!hasChecked) {
+                  e.currentTarget.style.transform = "translateY(-1px)"
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)"
+              }}
+              onMouseDown={(e) => {
+                if (!hasChecked) {
+                  e.currentTarget.style.transform = "translateY(2px)"
+                  e.currentTarget.style.boxShadow = "0 0px 0 0 #E5E7EB"
+                }
+              }}
+              onMouseUp={(e) => {
+                if (!hasChecked) {
+                  e.currentTarget.style.transform = "translateY(0)"
+                  e.currentTarget.style.boxShadow = boxShadow
+                }
+              }}
+            >
+              {/* Letter label */}
+              <div style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                background: labelBg,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                fontWeight: 900,
+                color: labelColor,
+                flexShrink: 0,
+                fontFamily: "'Montserrat', sans-serif",
+                border: `1.5px solid ${borderColor}`,
+                transition: "all 0.2s ease",
+              }}>
+                {['A', 'B', 'C', 'D', 'E', 'F'][index]}
+              </div>
+
+              {/* Option text */}
+              <span style={{
+                flex: 1,
+                fontSize: "clamp(15px, 1.8vw, 18px)",
+                fontWeight: 700,
+                fontFamily: "'Montserrat', sans-serif",
+                lineHeight: 1.4,
+              }}>
+                {option.label}
+              </span>
+
+              {/* Feedback icon */}
+              <AnimatePresence>
+                {showFeedback && isChecked && (
                   <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="text-2xl"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    style={{ fontSize: 20, flexShrink: 0, fontFamily: "'Montserrat', sans-serif" }}
                   >
-                    {isCorrect ? '✅' : (isSelected ? '❌' : '')}
+                    {isCorrect ? "✓" : "✗"}
                   </motion.span>
                 )}
-              </motion.button>
-            )
-          })}
-        </div>
-
-        <AnimatePresence>
-          {hasChecked && selectedOptionId && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={step.options.find(o => o.id === selectedOptionId)?.isCorrect ? sharedStyles.feedbackCorrect : sharedStyles.feedbackIncorrect}
-              style={{ borderRadius: 24, padding: 24, border: '2px solid currentColor' }}
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-1">
-                  <p className="font-bold text-lg mb-1">
-                    {step.options.find(o => o.id === selectedOptionId)?.isCorrect ? '¡Excelente trabajo!' : 'No exactamente...'}
-                  </p>
-                  <p className="opacity-90 leading-relaxed">
-                    {step.options.find(o => o.id === selectedOptionId)?.explanation ||
-                      (step.options.find(o => o.id === selectedOptionId)?.isCorrect ? 'Respuesta correcta.' : `La respuesta correcta era: ${step.options.find(o => o.isCorrect)?.label}`)}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </AnimatePresence>
+            </motion.button>
+          )
+        })}
       </div>
-    </motion.div>
+    </div>
   )
 }

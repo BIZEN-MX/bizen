@@ -11,17 +11,17 @@
  */
 export function calculateLevel(xp: number): number {
   if (xp < 100) return 1
-  
+
   let level = 1
   let totalXpNeeded = 0
   let xpForNextLevel = 100
-  
+
   while (totalXpNeeded + xpForNextLevel <= xp) {
     totalXpNeeded += xpForNextLevel
     level++
     xpForNextLevel += 50 // Each level requires 50 more XP than the previous
   }
-  
+
   return level
 }
 
@@ -30,15 +30,15 @@ export function calculateLevel(xp: number): number {
  */
 export function xpForLevel(level: number): number {
   if (level <= 1) return 0
-  
+
   let totalXp = 0
   let xpForNextLevel = 100
-  
+
   for (let i = 1; i < level; i++) {
     totalXp += xpForNextLevel
     xpForNextLevel += 50
   }
-  
+
   return totalXp
 }
 
@@ -90,5 +90,33 @@ export const XP_REWARDS = {
   ASSIGNMENT_PERFECT: 125,
   DAILY_STREAK: 25,
   COURSE_COMPLETE: 500,
+}
+
+/**
+ * Helper to get the midnight equivalent date object for Mexico City time.
+ * Useful for streak calculations so that users in Mexico don't lose their streak 
+ * because UTC midnight rolls over at 6:00 PM local time.
+ */
+export function getMexicoMidnight(date: Date = new Date()): Date {
+  const str = date.toLocaleString("en-US", { timeZone: "America/Mexico_City" })
+  const mxDate = new Date(str)
+  mxDate.setHours(0, 0, 0, 0)
+  return mxDate
+}
+
+/**
+ * Calculates if a streak is still alive based on Mexico City time.
+ */
+export function calculateCurrentStreak(lastActive: Date | null | undefined, currentStreak: number): number {
+  if (!lastActive) return currentStreak || 0
+  if (!currentStreak) return 0
+
+  const todayMx = getMexicoMidnight(new Date())
+  const lastActiveMx = getMexicoMidnight(new Date(lastActive))
+
+  const diffDays = Math.floor((todayMx.getTime() - lastActiveMx.getTime()) / 86400000)
+
+  if (diffDays > 1) return 0 // Streak broken
+  return currentStreak
 }
 

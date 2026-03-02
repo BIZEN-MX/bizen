@@ -36,6 +36,7 @@ export interface ImageOption {
   label: string;
   imageAlt: string;
   imageId: string; // Placeholder for image reference
+  imageUrl?: string;
 }
 
 // ============================================================================

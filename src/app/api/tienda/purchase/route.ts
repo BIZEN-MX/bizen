@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { logToFile } from "@/lib/debugLogger"
-import crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
     try {
@@ -24,12 +23,12 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid product data" }, { status: 400 })
         }
 
-        // 3. Perform purchase in a transaction
-        logToFile(`START TRANSACTION: user=${user.id}`)
-
+        // Perform purchase in a transaction
         try {
+            logToFile(`START TRANSACTION: user=${user.id} product=${productId}`)
             const result = await prisma.$transaction(async (tx) => {
                 // A. Check for existing item using Prisma model
+                logToFile(`Checking inventory for user=${user.id} product=${productId}`)
                 const existing = await tx.userInventoryItem.findFirst({
                     where: {
                         userId: user.id,
@@ -43,7 +42,7 @@ export async function POST(request: NextRequest) {
                 }
 
                 // B. Check balance
-                // Using findUnique on Profile if user_id is PK
+                logToFile(`Fetching profile for user=${user.id}`)
                 const profile = await tx.profile.findUnique({
                     where: { userId: user.id }
                 })
@@ -57,7 +56,7 @@ export async function POST(request: NextRequest) {
                 logToFile(`BALANCE CHECK: ${profile.fullName} has ${currentBalance}, need ${price}`)
 
                 if (currentBalance < price) {
-                    logToFile(`INSUFFICIENT FUNDS: ${profile.fullName}`)
+                    logToFile(`INSUFFICIENT FUNDS: ${profile.fullName} has ${currentBalance}, price is ${price}`)
                     throw new Error("INSUFFICIENT_FUNDS")
                 }
 
@@ -73,6 +72,7 @@ export async function POST(request: NextRequest) {
                     }
                 })
 
+                logToFile(`INSERTING inventory item for user=${user.id}`)
                 await tx.userInventoryItem.create({
                     data: {
                         userId: user.id,
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
         } else if (error.message === "PROFILE_NOT_FOUND") {
             status = 404
             message = "Perfil no encontrado"
-        } else if (error.message.startsWith("INTERNAL_ERROR")) {
+        } else if (error.message && error.message.startsWith("INTERNAL_ERROR")) {
             message = `Error interno: ${error.message.split(": ")[1]}`
         }
 

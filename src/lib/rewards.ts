@@ -1,5 +1,5 @@
 import { prisma } from "./prisma"
-import { calculateLevel } from "./xp"
+import { calculateLevel, getMexicoMidnight } from "./xp"
 
 export interface RewardsResult {
     xpAwarded: number
@@ -35,21 +35,19 @@ export async function awardXp(userId: string, amount: number): Promise<RewardsRe
     const newLevel = calculateLevel(newTotalXp)
     const leveledUp = newLevel > oldLevel
 
-    // Handle Streak Logic using UTC to be consistent with the Daily Challenge system
+    // Handle Streak Logic using localized Mexico Time
     const now = new Date()
-    const today = new Date(now)
-    today.setUTCHours(0, 0, 0, 0)
+    const today = getMexicoMidnight(now)
 
     let newStreak = profile.currentStreak || 0
     let newLongestStreak = profile.longestStreak || 0
     let streakUpdated = false
 
     if (profile.lastActive) {
-        const lastActiveDay = new Date(profile.lastActive)
-        lastActiveDay.setUTCHours(0, 0, 0, 0)
+        const lastActiveDay = getMexicoMidnight(new Date(profile.lastActive))
 
         const diffTime = today.getTime() - lastActiveDay.getTime()
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+        const diffDays = Math.floor(diffTime / 86400000)
 
         if (diffDays === 1) {
             // Last active was yesterday, increment streak

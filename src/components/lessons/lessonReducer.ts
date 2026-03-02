@@ -174,9 +174,9 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
             id: `review-${originalStep.id}`,
             reviewSourceStepId: originalStep.id,
             title: originalStep.title
-              ? `Review: ${originalStep.title}`
-              : "Review Question",
-            description: "Try this question again",
+              ? `Repaso: ${originalStep.title}`
+              : "Repaso",
+            description: "Intenta esta pregunta de nuevo",
           } as LessonStep
         })
         .filter((step): step is LessonStep => step !== null)
@@ -205,8 +205,8 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         ...originalStep,
         id: `review-${sourceStepId}-${reviewCount}`,
         reviewSourceStepId: originalStep.id,
-        title: originalStep.title ? `Review: ${originalStep.title}` : "Review Question",
-        description: "Try this question again",
+        title: originalStep.title ? `Repaso: ${originalStep.title}` : "Repaso",
+        description: "Intenta esta pregunta de nuevo",
       } as LessonStep
 
       return {

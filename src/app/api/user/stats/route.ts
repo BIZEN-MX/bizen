@@ -2,14 +2,18 @@ import { NextRequest, NextResponse } from "next/server"
 export const dynamic = 'force-dynamic'
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
-import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel } from "@/lib/xp"
+import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel, calculateCurrentStreak } from "@/lib/xp"
+import { logToFile } from "@/lib/debugLogger"
 
 export async function GET() {
+  let user: any = null
+
   try {
     const supabase = await createSupabaseServer()
 
     // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data, error: authError } = await supabase.auth.getUser()
+    user = data.user
 
     if (authError || !user) {
       return NextResponse.json(
@@ -18,32 +22,39 @@ export async function GET() {
       )
     }
 
-    // Get user profile with XP data using Raw SQL for reliability
-    const profileResult: any[] = await prisma.$queryRaw`
-      SELECT xp, bizcoins, level, created_at, current_streak 
-      FROM public.profiles 
-      WHERE user_id = ${user.id} 
-      LIMIT 1
-    `
+    // Get user profile with XP data using Prisma for reliability
+    const profile = await prisma.profile.findUnique({
+      where: { userId: user.id },
+      select: {
+        xp: true,
+        bizcoins: true,
+        level: true,
+        createdAt: true,
+        currentStreak: true,
+        lastActive: true
+      }
+    })
 
-    if (!profileResult || profileResult.length === 0) {
+    if (!profile) {
+      logToFile(`STATS API ERROR: Profile not found for ${user.id}`)
       return NextResponse.json(
         { error: "Profile not found" },
         { status: 404 }
       )
     }
 
-    const inventoryResult: any[] = await prisma.$queryRaw`
-      SELECT product_id FROM public.user_inventory WHERE user_id = ${user.id}
-    `
+    const inventoryItems = await prisma.userInventoryItem.findMany({
+      where: { userId: user.id },
+      select: { productId: true }
+    })
 
     const userProfile = {
-      xp: profileResult[0].xp || 0,
-      bizcoins: profileResult[0].bizcoins || 0,
-      level: profileResult[0].level || 1,
-      createdAt: profileResult[0].created_at,
-      currentStreak: profileResult[0].current_streak || 0,
-      inventory: inventoryResult.map(i => ({ productId: i.product_id }))
+      xp: profile.xp || 0,
+      bizcoins: profile.bizcoins || 0,
+      level: profile.level || 1,
+      createdAt: profile.createdAt,
+      currentStreak: profile.currentStreak || 0,
+      inventory: inventoryItems.map(i => ({ productId: i.productId }))
     }
 
     // Get lessons completed count
@@ -65,8 +76,9 @@ export async function GET() {
       where: { userId: user.id }
     })
 
-    // Use currentStreak from profile
-    const currentStreak = userProfile.currentStreak || 0
+    // Use timezone-aware streak calculation to prevent streaks visually dying at 6 PM Mexico time
+    // and correctly zero them if the user hasn't visited in >1 day.
+    const currentStreak = calculateCurrentStreak(profile.lastActive, profile.currentStreak || 0)
 
     // Calculate level from XP
     const currentLevel = calculateLevel(userProfile.xp)
@@ -74,11 +86,14 @@ export async function GET() {
     const totalXpNeeded = totalXpForNextLevel(userProfile.xp)
     const xpNeeded = xpForNextLevel(userProfile.xp)
 
-    // Update level in database if it changed
-    if (currentLevel !== userProfile.level) {
+    // Update level or streak in database if it changed
+    if (currentLevel !== profile.level || currentStreak !== (profile.currentStreak || 0)) {
       await prisma.profile.update({
         where: { userId: user.id },
-        data: { level: currentLevel }
+        data: {
+          level: currentLevel,
+          currentStreak: currentStreak
+        }
       })
     }
 
@@ -135,16 +150,20 @@ export async function GET() {
       weeklyActiveDays,
     }
 
-    const { logToFile } = require("@/lib/debugLogger")
-    logToFile(`STATS API: user=${user.id} bizcoins=${result.bizcoins}`)
+    try {
+      logToFile(`STATS API: user=${user.id} bizcoins=${result.bizcoins}`)
+    } catch (e) { }
 
     return NextResponse.json(result)
 
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching user stats:", error)
+    try {
+      logToFile(`STATS API CRASH: user=${user?.id || 'unknown'} error=${error.message || 'Unknown error'}`)
+    } catch (e) { }
     return NextResponse.json(
-      { error: "Failed to fetch stats" },
+      { error: "Failed to fetch stats", details: error.message },
       { status: 500 }
     )
   }

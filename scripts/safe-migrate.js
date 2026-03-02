@@ -7,6 +7,7 @@ async function main() {
         await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "current_streak" INTEGER NOT NULL DEFAULT 0;`);
         await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "longest_streak" INTEGER NOT NULL DEFAULT 0;`);
         await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "last_active" TIMESTAMP(3);`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "bizcoins" INTEGER DEFAULT 0;`);
         console.log("Profiles updated.");
 
         await prisma.$executeRawUnsafe(`CREATE TABLE IF NOT EXISTS "public"."daily_challenges" (
@@ -38,6 +39,16 @@ async function main() {
             CONSTRAINT "evidence_posts_pkey" PRIMARY KEY ("id")
         )`);
         console.log("evidence_posts created.");
+
+        await prisma.$executeRawUnsafe(`CREATE TABLE IF NOT EXISTS "public"."user_inventory" (
+          "id" TEXT PRIMARY KEY,
+          "user_id" TEXT NOT NULL REFERENCES "public"."profiles"("user_id") ON DELETE CASCADE,
+          "product_id" TEXT NOT NULL,
+          "purchased_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+          "price_paid" INTEGER NOT NULL DEFAULT 0
+        );`);
+        await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS idx_user_inventory_user_id ON "public"."user_inventory"("user_id");`);
+        console.log("user_inventory created.");
 
         await prisma.$executeRawUnsafe(`CREATE TABLE IF NOT EXISTS "public"."evidence_reactions" (
             "id" TEXT NOT NULL,

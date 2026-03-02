@@ -1,9 +1,10 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { MultiSelectStepFields } from "@/types/lessonTypes"
-import { sharedStyles } from "../sharedStyles"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
+import { ExerciseInstruction } from "./ExerciseInstruction"
+import { motion } from "framer-motion"
 
 interface MultiSelectStepProps {
   step: MultiSelectStepFields & { id: string; title?: string; description?: string }
@@ -19,21 +20,28 @@ export function MultiSelectStep({
   actionTrigger = 0,
 }: MultiSelectStepProps) {
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelected)
-  const [hasEvaluated, setHasEvaluated] = useState(false)
-  const hasPlayedSound = useRef(false)
-  const onAnsweredRef = useRef(onAnswered)
-  onAnsweredRef.current = onAnswered
+  const [hasChecked, setHasChecked] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
 
-  useEffect(() => {
+  const handleToggle = (optionId: string) => {
+    if (hasChecked) return
+
+    const newSelection = selectedOptionIds.includes(optionId)
+      ? selectedOptionIds.filter((id) => id !== optionId)
+      : [...selectedOptionIds, optionId]
+
+    setSelectedOptionIds(newSelection)
+
     // Notify engine about selection state
-    onAnsweredRef.current({
+    onAnswered({
       isCompleted: false,
-      canAction: selectedOptionIds.length > 0 && !hasEvaluated
+      canAction: newSelection.length > 0,
+      answerData: { selectedOptionIds: newSelection }
     })
-  }, [selectedOptionIds, hasEvaluated])
+  }
 
   const handleCheck = () => {
-    if (selectedOptionIds.length === 0 || hasEvaluated) return
+    if (selectedOptionIds.length === 0 || hasChecked) return
 
     const allSelectedCorrect = selectedOptionIds.every((id) => {
       const option = step.options.find((opt) => opt.id === id)
@@ -44,14 +52,13 @@ export function MultiSelectStep({
       .every((opt) => selectedOptionIds.includes(opt.id))
     const isCorrect = allSelectedCorrect && allCorrectSelected
 
-    setHasEvaluated(true)
-    if (!hasPlayedSound.current) {
-      if (isCorrect) playCorrectSound()
-      else playIncorrectSound()
-      hasPlayedSound.current = true
-    }
+    setHasChecked(true)
+    setShowFeedback(true)
 
-    onAnsweredRef.current({
+    if (isCorrect) playCorrectSound()
+    else playIncorrectSound()
+
+    onAnswered({
       isCompleted: true,
       isCorrect,
       answerData: { selectedOptionIds: [...selectedOptionIds] },
@@ -59,66 +66,108 @@ export function MultiSelectStep({
   }
 
   useEffect(() => {
-    if (actionTrigger > 0 && selectedOptionIds.length > 0 && !hasEvaluated) {
+    if (actionTrigger > 0 && selectedOptionIds.length > 0 && !hasChecked) {
       handleCheck()
     }
   }, [actionTrigger])
 
-  const handleToggle = (optionId: string) => {
-    if (hasEvaluated) return // Don't allow changes after evaluation
-    setSelectedOptionIds((prev) =>
-      prev.includes(optionId) ? prev.filter((id) => id !== optionId) : [...prev, optionId]
-    )
-  }
-
-  const getOptionStyle = (option: typeof step.options[0]) => {
-    const isSelected = selectedOptionIds.includes(option.id)
-    if (!hasEvaluated) {
-      return isSelected ? sharedStyles.optionSelected : ""
-    }
-
-    // Show feedback colors
-    if (isSelected && option.isCorrect) {
-      return "bg-emerald-600/25 border-emerald-500 ring-2 ring-emerald-400"
-    }
-    if (isSelected && !option.isCorrect) {
-      return "bg-red-600/20 border-red-500 ring-2 ring-red-500"
-    }
-    if (!isSelected && option.isCorrect) {
-      return "bg-emerald-600/15 border-emerald-500/50"
-    }
-    return ""
-  }
-
   return (
-    <div className={sharedStyles.container}>
-      {step.title && <h2 className={sharedStyles.title}>{step.title}</h2>}
-      {step.description && <p className={sharedStyles.description}>{step.description}</p>}
-      <h3 className={sharedStyles.question}>{step.question}</h3>
-      <div className={sharedStyles.grid1Col}>
-        {step.options.map((option) => {
+    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 28 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <ExerciseInstruction type="multi_select" />
+        <h3 style={{
+          fontSize: "clamp(20px, 3vw, 26px)",
+          fontWeight: 800,
+          color: "#111827",
+          margin: 0,
+          lineHeight: 1.3,
+          fontFamily: "'Montserrat', sans-serif",
+        }}>
+          {step.question}
+        </h3>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {step.options.map((option, index) => {
           const isSelected = selectedOptionIds.includes(option.id)
+          const isCorrect = option.isCorrect
+
+          let borderColor = "#E5E7EB"
+          let background = "#FFFFFF"
+          let color = "#374151"
+          let boxShadow = "0 2px 0 0 #E5E7EB"
+
+          if (showFeedback) {
+            if (isSelected && isCorrect) {
+              borderColor = "#3B82F6"
+              background = "#EFF6FF"
+              color = "#1D4ED8"
+              boxShadow = "0 2px 0 0 #93C5FD"
+            } else if (isSelected && !isCorrect) {
+              borderColor = "#EF4444"
+              background = "#FEF2F2"
+              color = "#DC2626"
+              boxShadow = "0 2px 0 0 #FCA5A5"
+            } else if (!isSelected && isCorrect) {
+              borderColor = "#3B82F6"
+              background = "#EFF6FF"
+              color = "#1D4ED8"
+            }
+          } else if (isSelected) {
+            borderColor = "#0F62FE"
+            background = "#EFF6FF"
+            color = "#1D4ED8"
+            boxShadow = "0 2px 0 0 #93C5FD"
+          }
+
           return (
-            <button
+            <motion.button
               key={option.id}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
               onClick={() => handleToggle(option.id)}
-              disabled={hasEvaluated}
-              className={`${sharedStyles.option} ${getOptionStyle(option)} transition-all duration-300 ${hasEvaluated ? 'cursor-default' : 'cursor-pointer'
-                }`}
+              disabled={hasChecked}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                width: "100%",
+                padding: "16px 20px",
+                borderRadius: 16,
+                background,
+                border: `2px solid ${borderColor}`,
+                boxShadow,
+                cursor: hasChecked ? "default" : "pointer",
+                textAlign: "left",
+                color,
+                transition: "all 0.2s ease",
+                fontFamily: "'Montserrat', sans-serif",
+              }}
             >
-              <div className="flex items-center justify-between w-full">
-                <span className="text-xl md:text-2xl lg:text-3xl text-left flex-1">{option.label}</span>
-                {hasEvaluated && (
-                  <span className="ml-3 text-2xl">
-                    {option.isCorrect ? '✓' : isSelected ? '✗' : ''}
-                  </span>
-                )}
+              <div style={{
+                width: 24,
+                height: 24,
+                borderRadius: 6,
+                border: `2px solid ${isSelected ? '#0F62FE' : '#E5E7EB'}`,
+                background: isSelected ? '#0F62FE' : 'transparent',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: 14,
+                flexShrink: 0
+              }}>
+                {isSelected && "✓"}
               </div>
-            </button>
+              <span style={{ flex: 1, fontSize: 18, fontWeight: 700, fontFamily: "'Montserrat', sans-serif" }}>{option.label}</span>
+              {showFeedback && isSelected && (
+                <span style={{ fontSize: 20, fontFamily: "'Montserrat', sans-serif" }}>{isCorrect ? "✓" : "✗"}</span>
+              )}
+            </motion.button>
           )
         })}
       </div>
     </div>
   )
 }
-

@@ -4,7 +4,6 @@ import React from "react"
 import { LessonProgressHeader } from "./LessonProgressHeader"
 import { LessonContainer } from "./LessonContainer"
 import { StickyFooter } from "./StickyFooter"
-import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X } from "./layoutConstants"
 
 interface LessonScreenProps {
   children: React.ReactNode
@@ -18,12 +17,11 @@ interface LessonScreenProps {
 }
 
 /**
- * Main lesson screen component
- * - Full-height layout with flex column
- * - Background: bg-slate-900 text-white
- * - Progress header (with streak & stars) at top - ALWAYS SHOWN
- * - Scrollable content in middle
- * - Sticky footer at bottom
+ * Main lesson screen — Duolingo-style layout:
+ * - Pure white background
+ * - Slim progress bar header at top
+ * - Centered scrollable content in the middle
+ * - Sticky footer with action buttons at the bottom
  */
 export function LessonScreen({
   children,
@@ -39,33 +37,33 @@ export function LessonScreen({
 
   return (
     <div
-      className="flex flex-col text-slate-900 relative w-full flex-1 min-h-0 lesson-screen-root"
       style={{
-        paddingTop: "env(safe-area-inset-top)",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
         minHeight: "100dvh",
         maxHeight: "100dvh",
         height: "100dvh",
         overflow: "hidden",
-        background: "linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%)", // Soft, premium background
+        background: "#FFFFFF",
+        paddingTop: "env(safe-area-inset-top)",
+        position: "relative",
       }}
     >
-      {/* Progress bar - shown unless parent renders its own (e.g. interactive page) */}
+      {/* Progress header — slim, clean, Duolingo-style */}
       {showProgressBar && (
         <div
-          className="lesson-progress-bar-fixed"
           style={{
             flexShrink: 0,
-            minHeight: 100,
-            paddingTop: 12,
-            paddingBottom: 16,
-            paddingLeft: 24,
-            paddingRight: 24,
+            paddingTop: 16,
+            paddingBottom: 14,
+            paddingLeft: "clamp(16px, 4vw, 48px)",
+            paddingRight: "clamp(16px, 4vw, 48px)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            background: "rgba(255, 255, 255, 0.6)", // Glassmorphism-lite
-            backdropFilter: "blur(8px)",
-            borderBottom: "1px solid rgba(11, 113, 254, 0.1)",
+            background: "#FFFFFF",
+            borderBottom: "1.5px solid #F1F5F9",
             boxSizing: "border-box",
           }}
         >
@@ -78,29 +76,45 @@ export function LessonScreen({
         </div>
       )}
 
-      {/* Content - fills space between progress bar and nav buttons; smooth fade on step change */}
+      {/* Content area — vertically centered, horizontally constrained */}
       <LessonContainer
         className={className}
         bottomPad={0}
         topPad={0}
-        noScroll
+        noScroll={false}
       >
         <div
           key={currentStep}
           className="lesson-step-transition"
-          style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
+          style={{
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "0 clamp(16px, 4vw, 48px)",
+            boxSizing: "border-box",
+          }}
         >
-          <div className="lesson-slide-content-center" style={{ width: "100%" }}>
+          <div
+            className="lesson-slide-content-center"
+            style={{
+              width: "100%",
+              maxWidth: 720,
+            }}
+          >
             {children}
           </div>
         </div>
       </LessonContainer>
 
-      {/* Nav buttons - in different container than content, at bottom of viewport */}
+      {/* Footer Area */}
       {footerContent && (
-        <StickyFooter fixed={false}>{footerContent}</StickyFooter>
+        <div style={{ flexShrink: 0 }}>
+          {footerContent}
+        </div>
       )}
     </div>
   )
 }
-
