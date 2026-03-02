@@ -232,18 +232,27 @@ export default function RetoDiarioPage() {
         .rd-textarea::placeholder { color: rgba(0,0,0,0.4); }
 
         .rd-wrap-card {
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 24px; padding: clamp(32px, 6vw, 52px) clamp(24px, 5vw, 48px);
+          background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 28px; padding: clamp(40px, 6vw, 60px) clamp(24px, 5vw, 48px);
           position: relative; overflow: hidden; text-align: center;
-          box-shadow: 0 20px 60px rgba(15,98,254,0.1);
+          box-shadow: 0 24px 64px rgba(0,0,0,0.4);
           animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
         .rd-wrap-card::before {
           content: '';
           position: absolute; inset: 0;
-          background: radial-gradient(ellipse at 50% 0%, rgba(15,98,254,0.08) 0%, transparent 60%),
-                      radial-gradient(ellipse at 30% 100%, rgba(167,139,250,0.05) 0%, transparent 50%);
+          background-image: linear-gradient(rgba(15,98,254,0.05) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(15,98,254,0.05) 1px, transparent 1px);
+          background-size: 48px 48px;
+          pointer-events: none;
+        }
+        .rd-wrap-card::after {
+          content: '';
+          position: absolute;
+          top: -30%; right: -5%;
+          width: 50%; height: 200%;
+          background: radial-gradient(circle, rgba(15,98,254,0.22) 0%, transparent 70%);
           pointer-events: none;
         }
 
@@ -253,32 +262,32 @@ export default function RetoDiarioPage() {
           margin: 0 auto;
           font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px;
           cursor: pointer; transition: all 0.25s ease;
-          background: linear-gradient(135deg, #0F62FE 0%, #a855f7 100%);
-          color: white; box-shadow: 0 8px 32px rgba(15,98,254,0.5);
+          background: linear-gradient(135deg, #0F62FE 0%, #2563EB 100%);
+          color: white; box-shadow: 0 8px 32px rgba(15,98,254,0.55);
           animation: fadeUp 0.4s ease 0.1s both;
         }
-        .rd-cta-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(15,98,254,0.6); }
+        .rd-cta-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(15,98,254,0.7); }
         .rd-cta-secondary {
           display: flex; align-items: center; justify-content: center; gap: 10px;
           width: fit-content; padding: 12px 24px; border-radius: 16px;
           margin: 0 auto;
           font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px;
           cursor: pointer; transition: all 0.25s ease;
-          background: #f8fafc; border: 1.5px solid #e2e8f0;
-          color: #475569;
+          background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.15);
+          color: rgba(255,255,255,0.85);
           animation: fadeUp 0.4s ease 0.18s both;
         }
-        .rd-cta-secondary:hover { background: #f1f5f9; border-color: #cbd5e1; transform: translateY(-2px); }
+        .rd-cta-secondary:hover { background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
         .rd-cta-tertiary {
           display: flex; align-items: center; justify-content: center; gap: 8px;
           width: 100%; padding: 13px 28px; border-radius: 12px;
           font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
           cursor: pointer; transition: all 0.2s ease;
-          background: transparent; border: 1px solid #e2e8f0;
-          color: #64748b;
+          background: transparent; border: 1px solid rgba(255,255,255,0.10);
+          color: rgba(255,255,255,0.45);
           animation: fadeUp 0.4s ease 0.26s both;
         }
-        .rd-cta-tertiary:hover { color: #1e293b; border-color: #cbd5e1; }
+        .rd-cta-tertiary:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.25); }
 
         .step-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; }
         .step-dot.active { width: 24px; border-radius: 4px; background: #0F62FE; }
@@ -635,24 +644,24 @@ export default function RetoDiarioPage() {
                     <Trophy size={34} color="white" strokeWidth={2.5} />
                   </div>
 
-                  <h2 style={{ fontSize: "clamp(24px, 4vw, 34px)", fontWeight: 900, color: "#111827", margin: "0 0 10px", letterSpacing: "-0.02em" }}>
+                  <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 900, color: "white", margin: "0 0 10px", letterSpacing: "-0.03em", lineHeight: 1.2 }}>
                     ¡Reto completado!
                   </h2>
 
                   {/* XP earned */}
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", background: "#ecfdf5", border: "1px solid #d1fae5", borderRadius: 999, marginBottom: 16 }}>
-                    <Star size={14} style={{ color: "#10b981" }} fill="#10b981" />
-                    <span style={{ fontSize: 14, fontWeight: 900, color: "#10b981" }}>+50 XP ganados</span>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 999, marginBottom: 16 }}>
+                    <Star size={14} style={{ color: "#fbbf24" }} fill="#fbbf24" />
+                    <span style={{ fontSize: 14, fontWeight: 900, color: "#fbbf24" }}>+50 XP ganados</span>
                     <Flame size={14} style={{ color: "#fb923c" }} />
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#fb923c" }}>{streak} días seguidos</span>
                   </div>
 
-                  <p style={{ fontSize: "clamp(13px, 1.2vw, 15px)", color: "#4b5563", maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.7 }}>
+                  <p style={{ fontSize: "clamp(13px, 1.2vw, 15px)", color: "rgba(255,255,255,0.55)", maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.7 }}>
                     Cada día que practicas es un paso hacia la libertad financiera. ¿Qué quieres hacer ahora?
                   </p>
 
                   {/* Divider */}
-                  <div style={{ height: 1, background: "#f1f5f9", marginBottom: 28 }} />
+                  <div style={{ height: 1, background: "rgba(255,255,255,0.08)", marginBottom: 28 }} />
 
                   {/* 3 CTAs */}
                   <div style={{ display: "grid", gap: 12 }}>
@@ -681,9 +690,9 @@ export default function RetoDiarioPage() {
                   {/* Back */}
                   <button
                     onClick={() => setPhase("doing")}
-                    style={{ marginTop: 24, background: "none", border: "none", cursor: "pointer", color: "#94a3b8", fontSize: 13, fontFamily: "'Inter', sans-serif", transition: "color 0.2s" }}
-                    onMouseEnter={e => (e.currentTarget.style.color = "#475569")}
-                    onMouseLeave={e => (e.currentTarget.style.color = "#94a3b8")}
+                    style={{ marginTop: 24, background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'Inter', sans-serif", transition: "color 0.2s" }}
+                    onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
                   >
                     ← Ver el reto de nuevo
                   </button>
