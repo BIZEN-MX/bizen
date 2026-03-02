@@ -66,54 +66,38 @@ interface TopicMeta {
 
 const ALL_TOPICS: TopicMeta[] = [
     { id: 1, title: "Mi relación con el dinero", icon: Wallet, color: "#3b82f6", lessons: 4 },
-    { id: 2, title: "¿Qué es el dinero y por qué existe?", icon: Coins, color: "#2563eb", lessons: 5 },
-    { id: 3, title: "¿Cómo entra y sale el dinero de mi vida?", icon: RefreshCw, color: "#1d4ed8", lessons: 6 },
-    { id: 4, title: "Presupuesto: tomar control sin ahogarme", icon: Receipt, color: "#1e40af", lessons: 8 },
-    { id: 5, title: "Ahorro con propósito", icon: PiggyBank, color: "#6366f1", lessons: 5 },
-    { id: 6, title: "¿Deuda: cuándo ayuda y cuándo destruye?", icon: CreditCard, color: "#4f46e5", lessons: 7 },
-    { id: 7, title: "Sistema financiero explicado fácil", icon: Landmark, color: "#4338ca", lessons: 6 },
-    { id: 8, title: "Impuestos en la vida real", icon: FileText, color: "#3730a3", lessons: 6 },
-    { id: 9, title: "Inflación y poder adquisitivo", icon: TrendingUp, color: "#2563eb", lessons: 5 },
+    { id: 2, title: "¿Qué es el dinero y por qué existe?", icon: Coins, color: "#3b82f6", lessons: 5 },
+    { id: 3, title: "¿Cómo entra y sale el dinero de mi vida?", icon: RefreshCw, color: "#3b82f6", lessons: 6 },
+    { id: 4, title: "Presupuesto: tomar control sin ahogarme", icon: Receipt, color: "#3b82f6", lessons: 8 },
+    { id: 5, title: "Ahorro con propósito", icon: PiggyBank, color: "#3b82f6", lessons: 5 },
+    { id: 6, title: "¿Deuda: cuándo ayuda y cuándo destruye?", icon: CreditCard, color: "#3b82f6", lessons: 7 },
+    { id: 7, title: "Sistema financiero explicado fácil", icon: Landmark, color: "#3b82f6", lessons: 6 },
+    { id: 8, title: "Impuestos en la vida real", icon: FileText, color: "#3b82f6", lessons: 6 },
+    { id: 9, title: "Inflación y poder adquisitivo", icon: TrendingUp, color: "#3b82f6", lessons: 5 },
     { id: 10, title: "Introducción a la inversión", icon: Presentation, color: "#3b82f6", lessons: 8 },
-    { id: 11, title: "Instrumentos de inversión básicos", icon: BarChart4, color: "#60a5fa", lessons: 10 },
-    { id: 12, title: "Psicología del inversionista", icon: Brain, color: "#818cf8", lessons: 7 },
-    { id: 13, title: "Construcción de patrimonio", icon: ShieldCheck, color: "#10b981", lessons: 9 },
-    { id: 14, title: "Errores financieros comunes", icon: AlertTriangle, color: "#f59e0b", lessons: 6 },
-    { id: 15, title: "Decisiones financieras conscientes", icon: Lightbulb, color: "#facc15", lessons: 5 },
-    { id: 16, title: "Mentalidad emprendedora", icon: Rocket, color: "#ef4444", lessons: 8 },
+    { id: 11, title: "Instrumentos de inversión básicos", icon: BarChart4, color: "#3b82f6", lessons: 10 },
+    { id: 12, title: "Psicología del inversionista", icon: Brain, color: "#3b82f6", lessons: 7 },
+    { id: 13, title: "Construcción de patrimonio", icon: ShieldCheck, color: "#3b82f6", lessons: 9 },
+    { id: 14, title: "Errores financieros comunes", icon: AlertTriangle, color: "#3b82f6", lessons: 6 },
+    { id: 15, title: "Decisiones financieras conscientes", icon: Lightbulb, color: "#3b82f6", lessons: 5 },
+    { id: 16, title: "Mentalidad emprendedora", icon: Rocket, color: "#3b82f6", lessons: 8 },
     { id: 17, title: "Oportunidades de negocio", icon: Search, color: "#3b82f6", lessons: 6 },
-    { id: 18, title: "Validar ideas rápido", icon: Zap, color: "#f59e0b", lessons: 7 },
-    { id: 19, title: "Modelo de negocio simple", icon: Layout, color: "#6366f1", lessons: 9 },
-    { id: 20, title: "Ingresos, costos y utilidad", icon: Calculator, color: "#10b981", lessons: 8 },
+    { id: 18, title: "Validar ideas rápido", icon: Zap, color: "#3b82f6", lessons: 7 },
+    { id: 19, title: "Modelo de negocio simple", icon: Layout, color: "#3b82f6", lessons: 9 },
+    { id: 20, title: "Ingresos, costos y utilidad", icon: Calculator, color: "#3b82f6", lessons: 8 },
     { id: 21, title: "Flujo de efectivo", icon: LineChart, color: "#3b82f6", lessons: 6 },
-    { id: 22, title: "Precios y valor", icon: BadgeDollarSign, color: "#2563eb", lessons: 5 },
-    { id: 23, title: "Contabilidad básica", icon: BookOpen, color: "#4f46e5", lessons: 7 },
-    { id: 24, title: "Errores comunes al emprender", icon: Skull, color: "#475569", lessons: 6 },
-    { id: 25, title: "Escalar un negocio", icon: TrendingUp, color: "#10b981", lessons: 8 },
-    { id: 26, title: "Dinero y estilo de vida", icon: Smile, color: "#f59e0b", lessons: 5 },
-    { id: 27, title: "Dinero y decisiones importantes", icon: Heart, color: "#ef4444", lessons: 6 },
-    { id: 28, title: "Dinero en crisis", icon: ShieldAlert, color: "#dc2626", lessons: 7 },
-    { id: 29, title: "Estrés y bienestar financiero", icon: Coffee, color: "#8b5cf6", lessons: 5 },
-    { id: 30, title: "Mi vida financiera a futuro", icon: Target, color: "#0B71FE", lessons: 10 },
+    { id: 22, title: "Precios y valor", icon: BadgeDollarSign, color: "#3b82f6", lessons: 5 },
+    { id: 23, title: "Contabilidad básica", icon: BookOpen, color: "#3b82f6", lessons: 7 },
+    { id: 24, title: "Errores comunes al emprender", icon: Skull, color: "#3b82f6", lessons: 6 },
+    { id: 25, title: "Escalar un negocio", icon: TrendingUp, color: "#3b82f6", lessons: 8 },
+    { id: 26, title: "Dinero y estilo de vida", icon: Smile, color: "#3b82f6", lessons: 5 },
+    { id: 27, title: "Dinero y decisiones importantes", icon: Heart, color: "#3b82f6", lessons: 6 },
+    { id: 28, title: "Dinero en crisis", icon: ShieldAlert, color: "#3b82f6", lessons: 7 },
+    { id: 29, title: "Estrés y bienestar financiero", icon: Coffee, color: "#3b82f6", lessons: 5 },
+    { id: 30, title: "Mi vida financiera a futuro", icon: Target, color: "#3b82f6", lessons: 10 },
 ]
 
 
-/** Blend a hex colour toward near-black to build a dark-to-vivid hero gradient. */
-function buildHeroGradient(hex: string): string {
-    // Parse hex -> RGB
-    const r = parseInt(hex.slice(1, 3), 16)
-    const g = parseInt(hex.slice(3, 5), 16)
-    const b = parseInt(hex.slice(5, 7), 16)
-    // Deep dark version (very low luminance)
-    const dr = Math.round(r * 0.12)
-    const dg = Math.round(g * 0.12)
-    const db = Math.round(b * 0.18)
-    // Mid version
-    const mr = Math.round(r * 0.4)
-    const mg = Math.round(g * 0.4)
-    const mb = Math.round(b * 0.45)
-    return `linear-gradient(135deg, rgb(${dr},${dg},${db}) 0%, rgb(${mr},${mg},${mb}) 50%, ${hex} 100%)`
-}
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -199,17 +183,17 @@ export default function CoursePageTemplate({
                     {/* ── HERO BANNER (mirrors /courses hero) ───────────────────────── */}
                     <div
                         style={{
-                            background: buildHeroGradient(topic.color),
+                            background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 45%, #2563eb 100%)",
                             borderRadius: 28,
                             padding: "clamp(28px, 4vw, 48px) clamp(24px, 4vw, 44px)",
                             marginBottom: "clamp(20px, 4vw, 32px)",
                             position: "relative",
                             overflow: "hidden",
-                            boxShadow: `0 20px 60px ${topic.color}55`,
+                            boxShadow: "0 20px 60px rgba(15,98,254,0.3)",
                         }}
                     >
                         {/* Orbs inside hero */}
-                        <div style={{ position: "absolute", top: "-30%", right: "-5%", width: 300, height: 300, background: `radial-gradient(circle, ${topic.color}33 0%, transparent 70%)`, borderRadius: "50%", pointerEvents: "none" }} />
+                        <div style={{ position: "absolute", top: "-30%", right: "-5%", width: 300, height: 300, background: "radial-gradient(circle, rgba(96,165,250,0.25) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
                         <div style={{ position: "absolute", bottom: "-20%", left: "5%", width: 220, height: 220, background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
 
                         <div style={{ position: "relative", zIndex: 1 }}>
@@ -232,8 +216,8 @@ export default function CoursePageTemplate({
 
                             {/* Title row */}
                             <div style={{ display: "flex", alignItems: "flex-start", gap: 20, marginBottom: 20, flexWrap: "wrap" }}>
-                                <div style={{ width: 64, height: 64, borderRadius: 18, background: `linear-gradient(135deg, ${topic.color}40 0%, ${topic.color}20 100%)`, border: `1.5px solid ${topic.color}60`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                    <IconComp size={30} color={topic.color} strokeWidth={2} />
+                                <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(255,255,255,0.12)", border: "1.5px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                    <IconComp size={30} color="#93c5fd" strokeWidth={2} />
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                     <h1 style={{ fontSize: "clamp(22px, 4vw, 36px)", fontWeight: 900, color: "#ffffff", margin: "0 0 8px", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
@@ -284,21 +268,10 @@ export default function CoursePageTemplate({
                             const subTotal = sub.lessons.length
                             const subPct = subTotal > 0 ? Math.round((subCompleted / subTotal) * 100) : 0
 
-                            // Subtema bar: vivid gradient matching the topic colour —
-                            // each bar shifts slightly toward the complementary dark tone
-                            const darkFactor = 1 - subIdx * 0.04
-                            const r = parseInt(topic.color.slice(1, 3), 16)
-                            const g = parseInt(topic.color.slice(3, 5), 16)
-                            const b = parseInt(topic.color.slice(5, 7), 16)
-                            const dr = Math.round(r * (0.45 * darkFactor))
-                            const dg = Math.round(g * (0.45 * darkFactor))
-                            const db = Math.round(b * (0.55 * darkFactor))
-                            const barBg = `linear-gradient(135deg, rgb(${dr},${dg},${db}) 0%, ${topic.color} 100%)`
-
                             return (
                                 <div key={subIdx} id={`tema${topicId}-subtema-${subIdx + 1}`} style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }}>
-                                    {/* Subtema header bar */}
-                                    <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: barBg, borderRadius: 18, boxShadow: `0 8px 28px ${topic.color}50`, border: `1.5px solid ${topic.color}40`, marginBottom: 20 }}>
+                                    {/* Subtema header bar — always deep spatial blue */}
+                                    <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%)", borderRadius: 18, boxShadow: "0 8px 28px rgba(15,98,254,0.35)", border: "1px solid rgba(59,130,246,0.3)", marginBottom: 20 }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
                                             <div style={{ width: "clamp(48px,10vw,60px)", height: "clamp(48px,10vw,60px)", minWidth: "clamp(48px,10vw,60px)", borderRadius: 14, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "clamp(18px,4vw,22px)", fontWeight: 900, color: "#fff", backdropFilter: "blur(4px)" }}>
                                                 {subIdx + 1}
@@ -343,13 +316,13 @@ export default function CoursePageTemplate({
                                                         display: "flex",
                                                         flexDirection: "column",
                                                         padding: "20px 18px",
-                                                        background: isDone ? `linear-gradient(135deg, ${topic.color}10 0%, ${topic.color}06 100%)` : "#fff",
+                                                        background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
                                                         borderRadius: 18,
-                                                        border: isDone ? `2px solid ${topic.color}40` : "1.5px solid #e8f0fe",
+                                                        border: isDone ? "2px solid rgba(59,130,246,0.3)" : "1.5px solid #e8f0fe",
                                                         boxSizing: "border-box",
                                                         scrollSnapAlign: "start",
                                                         cursor: "pointer",
-                                                        boxShadow: isDone ? `0 4px 16px ${topic.color}20` : "0 2px 10px rgba(0,0,0,0.04)",
+                                                        boxShadow: isDone ? "0 4px 16px rgba(15,98,254,0.12)" : "0 2px 10px rgba(0,0,0,0.04)",
                                                         gap: 10,
                                                         transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
                                                         position: "relative",
@@ -358,13 +331,13 @@ export default function CoursePageTemplate({
                                                 >
                                                     {/* Completed ribbon */}
                                                     {isDone && (
-                                                        <div style={{ position: "absolute", top: 10, right: 10, width: 22, height: 22, borderRadius: "50%", background: topic.color, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                        <div style={{ position: "absolute", top: 10, right: 10, width: 22, height: 22, borderRadius: "50%", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                                             <CheckCircle2 size={13} color="#fff" strokeWidth={2.5} />
                                                         </div>
                                                     )}
 
-                                                    {/* Lesson number badge */}
-                                                    <div style={{ width: 40, height: 40, borderRadius: 12, background: isDone ? topic.color : `${topic.color}18`, border: isDone ? "none" : `1.5px solid ${topic.color}30`, color: isDone ? "#fff" : topic.color, fontSize: 17, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                                    {/* Lesson number badge — always blue */}
+                                                    <div style={{ width: 40, height: 40, borderRadius: 12, background: isDone ? "#2563eb" : "rgba(15,98,254,0.1)", border: isDone ? "none" : "1.5px solid rgba(15,98,254,0.2)", color: isDone ? "#fff" : "#2563eb", fontSize: 17, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                                                         {lessonIdx + 1}
                                                     </div>
 
@@ -434,15 +407,15 @@ export default function CoursePageTemplate({
                         style={{ background: "white", borderRadius: 24, padding: "28px 32px", maxWidth: 400, width: "100%", boxShadow: "0 30px 60px rgba(0,0,0,0.3)", display: "flex", flexDirection: "column", gap: 0, overflow: "hidden" }}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Top accent */}
-                        <div style={{ height: 4, background: `linear-gradient(90deg, ${topic.color}, ${topic.color}88)`, margin: "-28px -32px 20px" }} />
+                        {/* Top accent — always blue */}
+                        <div style={{ height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6)", margin: "-28px -32px 20px" }} />
 
                         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                            <div style={{ width: 42, height: 42, borderRadius: 12, background: `${topic.color}18`, border: `1.5px solid ${topic.color}30`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                <IconComp size={20} color={topic.color} strokeWidth={2} />
+                            <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(15,98,254,0.1)", border: "1.5px solid rgba(15,98,254,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                <IconComp size={20} color="#2563eb" strokeWidth={2} />
                             </div>
                             <div>
-                                <div style={{ fontSize: 11, fontWeight: 700, color: topic.color, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{lessonModal.unitTitle}</div>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{lessonModal.unitTitle}</div>
                                 <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>{lessonModal.lesson.title}</div>
                             </div>
                         </div>
@@ -453,7 +426,7 @@ export default function CoursePageTemplate({
                                     router.push(getLessonPath(lessonModal.lesson.slug))
                                     setLessonModal(null)
                                 }}
-                                style={{ width: "100%", fontSize: 15, fontWeight: 800, padding: "14px 20px", background: `linear-gradient(135deg, ${topic.color} 0%, ${topic.color}cc 100%)`, color: "white", border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: `0 6px 18px ${topic.color}50`, transition: "all 0.2s" }}
+                                style={{ width: "100%", fontSize: 15, fontWeight: 800, padding: "14px 20px", background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)", color: "white", border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: "0 6px 18px rgba(15,98,254,0.35)", transition: "all 0.2s" }}
                             >
                                 Iniciar lección →
                             </button>

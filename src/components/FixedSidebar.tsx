@@ -1033,76 +1033,96 @@ export default function FixedSidebar() {
               onClick={() => navigateTo("/profile")}
               style={{
                 marginTop: "auto",
-                padding: "20px 0",
+                marginBottom: 20,
+                padding: "16px",
                 display: "flex",
+                flexDirection: isCompactSidebar ? "column" : "row",
                 alignItems: "center",
-                gap: 12,
+                justifyContent: "center",
+                gap: 16,
                 cursor: "pointer",
-                transition: "transform 0.2s ease, background 0.2s ease",
+                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                 WebkitTapHighlightColor: "transparent",
-                userSelect: "none"
+                userSelect: "none",
+                width: "100%",
+                maxWidth: "240px",
+                margin: "0 auto 20px",
+                boxSizing: "border-box",
+                borderRadius: "20px",
+                background: "rgba(15, 98, 254, 0.04)",
+                border: "1px solid rgba(15, 98, 254, 0.08)"
               }}
               onMouseEnter={e => {
+                e.currentTarget.style.background = "rgba(15, 98, 254, 0.08)"
                 e.currentTarget.style.transform = "translateY(-2px)"
-                e.currentTarget.style.background = "rgba(15, 98, 254, 0.03)"
+                e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.2)"
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.transform = ""
-                e.currentTarget.style.background = "transparent"
+                e.currentTarget.style.background = "rgba(15, 98, 254, 0.04)"
+                e.currentTarget.style.transform = "translateY(0)"
+                e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.08)"
               }}
             >
               <div style={{
-                width: 44,
-                height: 44,
+                width: 56,
+                height: 56,
                 borderRadius: "50%",
                 background: "linear-gradient(135deg, #0F62FE, #6366f1)",
-                padding: 2,
-                boxShadow: "0 4px 12px rgba(15, 98, 254, 0.15)",
-                flexShrink: 0
+                padding: 3,
+                boxShadow: "0 8px 16px rgba(15, 98, 254, 0.2)",
+                flexShrink: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
               }}>
-                <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "white", overflow: "hidden" }}>
+                <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "white", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <AvatarDisplay
                     avatar={user.user_metadata?.avatar}
-                    size={40}
+                    size={50}
                     frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
                   />
                 </div>
               </div>
-              {!isMobile && (
-                <div style={{ flex: 1, minWidth: 0 }}>
+              {!isCompactSidebar && (
+                <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                   <div style={{
-                    fontSize: 14,
-                    fontWeight: 800,
+                    fontSize: 18,
+                    fontWeight: 900,
                     color: "#0f172a",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
-                    textOverflow: "ellipsis"
+                    textOverflow: "ellipsis",
+                    lineHeight: 1.2
                   }}>
                     {user.user_metadata?.full_name || user.email?.split('@')[0]}
                   </div>
                   <div style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 700,
                     color: "#0F62FE",
                     textTransform: "uppercase",
-                    letterSpacing: "0.05em",
+                    letterSpacing: "0.02em",
                     display: "flex",
                     alignItems: "center",
-                    gap: 6
+                    gap: 8,
+                    flexWrap: "wrap"
                   }}>
                     <div style={{
                       display: "flex",
                       alignItems: "center",
                       gap: 4,
-                      background: "rgba(15,98,254,0.08)",
-                      padding: "2px 8px",
-                      borderRadius: 6,
-                      border: "1px solid rgba(15,98,254,0.15)"
+                      background: "#E0F2FE",
+                      padding: "4px 10px",
+                      borderRadius: 10,
+                      border: "1.5px solid #BAE6FD",
+                      color: "#0369A1",
+                      fontSize: 13,
+                      fontWeight: 800
                     }}>
-                      <Star size={10} fill="#0F62FE" />
+                      <Star size={12} fill="#0369A1" />
                       {((dbProfile as any)?.bizcoins || 0).toLocaleString()}
                     </div>
-                    <span>Mi Perfil</span>
+                    <span style={{ fontSize: 13, fontWeight: 850 }}>MI PERFIL</span>
                   </div>
                 </div>
               )}
@@ -1244,7 +1264,10 @@ export default function FixedSidebar() {
               <div style={{
                 width: 80,
                 height: 80,
-                margin: "0 auto 24px",
+                marginTop: 0,
+                marginBottom: 24,
+                marginLeft: "auto",
+                marginRight: "auto",
                 background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
                 borderRadius: "50%",
                 display: "flex",

@@ -401,36 +401,36 @@ export default function CoursesPage() {
             className="topics-grid-responsive"
           >
             {[
-              { id: 1, title: "Mi relación con el dinero", icon: Wallet, color: "#3b82f6", lessons: 4 },
-              { id: 2, title: "¿Qué es el dinero y por qué existe?", icon: Coins, color: "#2563eb", lessons: 5 },
-              { id: 3, title: "¿Cómo entra y sale el dinero de mi vida?", icon: RefreshCw, color: "#1d4ed8", lessons: 6 },
-              { id: 4, title: "Presupuesto: tomar control sin ahogarme", icon: Receipt, color: "#1e40af", lessons: 8 },
-              { id: 5, title: "Ahorro con propósito", icon: PiggyBank, color: "#6366f1", lessons: 5 },
-              { id: 6, title: "¿Deuda: cuándo ayuda y cuándo destruye?", icon: CreditCard, color: "#4f46e5", lessons: 7 },
-              { id: 7, title: "Sistema financiero explicado fácil", icon: Landmark, color: "#4338ca", lessons: 6 },
-              { id: 8, title: "Impuestos en la vida real", icon: FileText, color: "#3730a3", lessons: 6 },
-              { id: 9, title: "Inflación y poder adquisitivo", icon: TrendingUp, color: "#2563eb", lessons: 5 },
-              { id: 10, title: "Introducción a la inversión", icon: Presentation, color: "#3b82f6", lessons: 8 },
-              { id: 11, title: "Instrumentos de inversión básicos", icon: BarChart4, color: "#60a5fa", lessons: 10 },
-              { id: 12, title: "Psicología del inversionista", icon: Brain, color: "#818cf8", lessons: 7 },
-              { id: 13, title: "Construcción de patrimonio", icon: ShieldCheck, color: "#10b981", lessons: 9 },
-              { id: 14, title: "Errores financieros comunes", icon: AlertTriangle, color: "#f59e0b", lessons: 6 },
-              { id: 15, title: "Decisiones financieras conscientes", icon: Lightbulb, color: "#facc15", lessons: 5 },
-              { id: 16, title: "Mentalidad emprendedora", icon: Rocket, color: "#ef4444", lessons: 8 },
-              { id: 17, title: "Oportunidades de negocio", icon: Search, color: "#3b82f6", lessons: 6 },
-              { id: 18, title: "Validar ideas rápido", icon: Zap, color: "#f59e0b", lessons: 7 },
-              { id: 19, title: "Modelo de negocio simple", icon: Layout, color: "#6366f1", lessons: 9 },
-              { id: 20, title: "Ingresos, costos y utilidad", icon: Calculator, color: "#10b981", lessons: 8 },
-              { id: 21, title: "Flujo de efectivo", icon: LineChart, color: "#3b82f6", lessons: 6 },
-              { id: 22, title: "Precios y valor", icon: BadgeDollarSign, color: "#2563eb", lessons: 5 },
-              { id: 23, title: "Contabilidad básica", icon: BookOpen, color: "#4f46e5", lessons: 7 },
-              { id: 24, title: "Errores comunes al emprender", icon: Skull, color: "#475569", lessons: 6 },
-              { id: 25, title: "Escalar un negocio", icon: TrendingUp, color: "#10b981", lessons: 8 },
-              { id: 26, title: "Dinero y estilo de vida", icon: Smile, color: "#f59e0b", lessons: 5 },
-              { id: 27, title: "Dinero y decisiones importantes", icon: Heart, color: "#ef4444", lessons: 6 },
-              { id: 28, title: "Dinero en crisis", icon: ShieldAlert, color: "#dc2626", lessons: 7 },
-              { id: 29, title: "Estrés y bienestar financiero", icon: Coffee, color: "#8b5cf6", lessons: 5 },
-              { id: 30, title: "Mi vida financiera a futuro", icon: Target, color: "#0B71FE", lessons: 10 },
+              { id: 1, title: "Mi relación con el dinero", icon: Wallet, color: "#3b82f6", category: "Fundamentos", catColor: "#3b82f6", lessons: 4 },
+              { id: 2, title: "¿Qué es el dinero y por qué existe?", icon: Coins, color: "#3b82f6", category: "Fundamentos", catColor: "#3b82f6", lessons: 5 },
+              { id: 3, title: "¿Cómo entra y sale el dinero de mi vida?", icon: RefreshCw, color: "#3b82f6", category: "Fundamentos", catColor: "#3b82f6", lessons: 6 },
+              { id: 4, title: "Presupuesto: tomar control sin ahogarme", icon: Receipt, color: "#3b82f6", category: "Presupuesto", catColor: "#0ea5e9", lessons: 8 },
+              { id: 5, title: "Ahorro con propósito", icon: PiggyBank, color: "#3b82f6", category: "Ahorro", catColor: "#10b981", lessons: 5 },
+              { id: 6, title: "¿Deuda: cuándo ayuda y cuándo destruye?", icon: CreditCard, color: "#3b82f6", category: "Deuda", catColor: "#f59e0b", lessons: 7 },
+              { id: 7, title: "Sistema financiero explicado fácil", icon: Landmark, color: "#3b82f6", category: "Fundamentos", catColor: "#3b82f6", lessons: 6 },
+              { id: 8, title: "Impuestos en la vida real", icon: FileText, color: "#3b82f6", category: "Impuestos", catColor: "#6366f1", lessons: 6 },
+              { id: 9, title: "Inflación y poder adquisitivo", icon: TrendingUp, color: "#3b82f6", category: "Economía", catColor: "#8b5cf6", lessons: 5 },
+              { id: 10, title: "Introducción a la inversión", icon: Presentation, color: "#3b82f6", category: "Inversión", catColor: "#2563eb", lessons: 8 },
+              { id: 11, title: "Instrumentos de inversión básicos", icon: BarChart4, color: "#3b82f6", category: "Inversión", catColor: "#2563eb", lessons: 10 },
+              { id: 12, title: "Psicología del inversionista", icon: Brain, color: "#3b82f6", category: "Inversión", catColor: "#2563eb", lessons: 7 },
+              { id: 13, title: "Construcción de patrimonio", icon: ShieldCheck, color: "#3b82f6", category: "Patrimonio", catColor: "#10b981", lessons: 9 },
+              { id: 14, title: "Errores financieros comunes", icon: AlertTriangle, color: "#3b82f6", category: "Errores", catColor: "#f59e0b", lessons: 6 },
+              { id: 15, title: "Decisiones financieras conscientes", icon: Lightbulb, color: "#3b82f6", category: "Mentalidad", catColor: "#facc15", lessons: 5 },
+              { id: 16, title: "Mentalidad emprendedora", icon: Rocket, color: "#3b82f6", category: "Emprender", catColor: "#ef4444", lessons: 8 },
+              { id: 17, title: "Oportunidades de negocio", icon: Search, color: "#3b82f6", category: "Emprender", catColor: "#ef4444", lessons: 6 },
+              { id: 18, title: "Validar ideas rápido", icon: Zap, color: "#3b82f6", category: "Emprender", catColor: "#ef4444", lessons: 7 },
+              { id: 19, title: "Modelo de negocio simple", icon: Layout, color: "#3b82f6", category: "Negocios", catColor: "#6366f1", lessons: 9 },
+              { id: 20, title: "Ingresos, costos y utilidad", icon: Calculator, color: "#3b82f6", category: "Negocios", catColor: "#6366f1", lessons: 8 },
+              { id: 21, title: "Flujo de efectivo", icon: LineChart, color: "#3b82f6", category: "Negocios", catColor: "#6366f1", lessons: 6 },
+              { id: 22, title: "Precios y valor", icon: BadgeDollarSign, color: "#3b82f6", category: "Negocios", catColor: "#6366f1", lessons: 5 },
+              { id: 23, title: "Contabilidad básica", icon: BookOpen, color: "#3b82f6", category: "Negocios", catColor: "#6366f1", lessons: 7 },
+              { id: 24, title: "Errores comunes al emprender", icon: Skull, color: "#3b82f6", category: "Errores", catColor: "#f59e0b", lessons: 6 },
+              { id: 25, title: "Escalar un negocio", icon: TrendingUp, color: "#3b82f6", category: "Negocios", catColor: "#6366f1", lessons: 8 },
+              { id: 26, title: "Dinero y estilo de vida", icon: Smile, color: "#3b82f6", category: "Bienestar", catColor: "#ec4899", lessons: 5 },
+              { id: 27, title: "Dinero y decisiones importantes", icon: Heart, color: "#3b82f6", category: "Bienestar", catColor: "#ec4899", lessons: 6 },
+              { id: 28, title: "Dinero en crisis", icon: ShieldAlert, color: "#3b82f6", category: "Resiliencia", catColor: "#dc2626", lessons: 7 },
+              { id: 29, title: "Estrés y bienestar financiero", icon: Coffee, color: "#3b82f6", category: "Bienestar", catColor: "#ec4899", lessons: 5 },
+              { id: 30, title: "Mi vida financiera a futuro", icon: Target, color: "#3b82f6", category: "Futuro", catColor: "#0ea5e9", lessons: 10 },
             ].map((topic) => {
               const IconComp = topic.icon || BookOpen
               return (
@@ -439,10 +439,10 @@ export default function CoursesPage() {
                   onClick={() => router.push(`/courses/${topic.id}`)}
                   style={{
                     cursor: "pointer",
-                    border: "1.5px solid #e8f0fe",
+                    border: "1px solid rgba(15,98,254,0.1)",
                     borderRadius: "20px",
-                    background: "#FBFAF5",
-                    boxShadow: "0 4px 20px rgba(37, 99, 235, 0.06)",
+                    background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
+                    boxShadow: "0 2px 12px rgba(15,98,254,0.05)",
                     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     overflow: "hidden",
                     display: "flex",
@@ -450,52 +450,57 @@ export default function CoursesPage() {
                   }}
                   className="course-card-hover"
                 >
-                  {/* Colored top accent bar */}
+                  {/* Blue accent bar — always blue */}
                   <div style={{
                     height: 4,
-                    background: `linear-gradient(90deg, ${topic.color}, ${topic.color}88)`,
+                    background: "linear-gradient(90deg, #1e3a8a, #3b82f6)",
                     width: "100%",
                     flexShrink: 0
                   }} />
 
                   <CardContent style={{ padding: "22px 24px", position: "relative", flex: 1, display: "flex", flexDirection: "column" }}>
-                    {/* Topic Number Badge */}
+                    {/* Category badge — colored by category */}
                     <div style={{
                       position: "absolute",
                       top: 14,
-                      right: 16,
-                      fontSize: 11,
+                      right: 14,
+                      fontSize: 10,
                       fontWeight: 800,
-                      color: topic.color,
-                      background: `${topic.color}12`,
-                      padding: "2px 8px",
+                      color: topic.catColor,
+                      background: `${topic.catColor}16`,
+                      border: `1px solid ${topic.catColor}30`,
+                      padding: "3px 8px",
                       borderRadius: 999,
-                      letterSpacing: "0.04em"
+                      letterSpacing: "0.04em",
+                      textTransform: "uppercase"
                     }}>
-                      #{topic.id.toString().padStart(2, '0')}
+                      {topic.category}
                     </div>
 
-                    {/* Icon Header */}
+                    {/* Icon — category color only here */}
                     <div style={{
-                      width: 52,
-                      height: 52,
-                      borderRadius: "15px",
-                      background: `linear-gradient(135deg, ${topic.color}20 0%, ${topic.color}10 100%)`,
+                      width: 48,
+                      height: 48,
+                      borderRadius: "14px",
+                      background: `${topic.catColor}14`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginBottom: 16,
-                      color: topic.color,
-                      boxShadow: `0 4px 14px ${topic.color}25`,
-                      border: `1px solid ${topic.color}18`
+                      marginBottom: 14,
+                      color: topic.catColor,
                     }}>
-                      <IconComp size={26} strokeWidth={2} />
+                      <IconComp size={24} strokeWidth={2} />
+                    </div>
+
+                    {/* Topic number */}
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", marginBottom: 6, letterSpacing: "0.06em" }}>
+                      TEMA {topic.id.toString().padStart(2, '0')}
                     </div>
 
                     <h3 style={{
-                      fontSize: "clamp(14px, 2vw, 16px)",
+                      fontSize: "clamp(14px, 2vw, 15px)",
                       fontWeight: 700,
-                      color: "#1e3a5f",
+                      color: "#0f172a",
                       marginBottom: 14,
                       lineHeight: 1.4,
                       flex: 1
@@ -503,21 +508,21 @@ export default function CoursesPage() {
                       {topic.title}
                     </h3>
 
-                    {/* Meta Info */}
+                    {/* Lessons count — always blue */}
                     <div style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                       marginTop: "auto",
-                      paddingTop: 14,
-                      borderTop: `1px solid ${topic.color}18`
+                      paddingTop: 12,
+                      borderTop: "1px solid rgba(15,98,254,0.07)"
                     }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: topic.color, background: `${topic.color}10`, padding: "4px 10px", borderRadius: 999 }}>
-                        <BookOpen size={13} />
+                      <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 700, color: "#3b82f6", background: "rgba(59,130,246,0.08)", padding: "4px 10px", borderRadius: 999 }}>
+                        <BookOpen size={12} />
                         <span>{topic.lessons} lecciones</span>
                       </div>
-                      <div style={{ width: 28, height: 28, borderRadius: "50%", background: `${topic.color}15`, display: "flex", alignItems: "center", justifyContent: "center", color: topic.color }}>
-                        <ChevronRight size={16} strokeWidth={2.5} />
+                      <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(15,98,254,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "#3b82f6" }}>
+                        <ChevronRight size={14} strokeWidth={2.5} />
                       </div>
                     </div>
                   </CardContent>

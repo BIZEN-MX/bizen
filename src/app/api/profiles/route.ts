@@ -57,6 +57,7 @@ export async function GET(request: NextRequest) {
       schoolId: profile.school_id,
       bizcoins: profile.bizcoins || 0,
       inventory: inventoryResult.map(i => i.product_id),
+      currentStreak: profile.current_streak || 0,
       school
     };
 

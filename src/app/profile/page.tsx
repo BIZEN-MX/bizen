@@ -258,7 +258,14 @@ export default function ProfilePage() {
   ]
 
   const Card = ({ style, className, children }: any) => (
-    <div className={className} style={{ background: "white", border: "1.5px solid #e2e8f0", borderRadius: 20, boxSizing: "border-box", ...style }}>
+    <div className={className} style={{
+      background: "white",
+      border: "1px solid rgba(15,98,254,0.08)",
+      borderRadius: 20,
+      boxSizing: "border-box",
+      boxShadow: "0 2px 12px rgba(15,98,254,0.04), 0 1px 3px rgba(0,0,0,0.04)",
+      ...style
+    }}>
       {children}
     </div>
   )
@@ -278,7 +285,8 @@ export default function ProfilePage() {
 
         @media (max-width: 767px) {
           .prof-outer { padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
-          .prof-two-col { flex-direction: column !important; }
+          .prof-two-col { flex-direction: column !important; align-items: center !important; }
+          .prof-left-col { width: 100% !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
           .prof-right-col { width: 100% !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
@@ -335,9 +343,12 @@ export default function ProfilePage() {
 
         {/* Banner Section */}
         <div style={{
-          height: 180, width: "100%",
-          background: "linear-gradient(135deg, #0F62FE 0%, #6366f1 50%, #4f46e5 100%)",
-          position: "absolute", top: 0, left: 0, zIndex: 0
+          height: 180, width: "calc(100% - 32px)",
+          margin: "16px",
+          borderRadius: "24px",
+          background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 50%, #2563eb 100%)",
+          position: "absolute", top: 0, left: 0, zIndex: 0,
+          boxShadow: "0 10px 25px -5px rgba(0,0,0,0.3)"
         }}>
           <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
         </div>
@@ -352,7 +363,7 @@ export default function ProfilePage() {
         }}>
 
           {/* ══ LEFT COLUMN ══ */}
-          <div style={{ flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column", gap: 20 }}>
+          <div className="prof-left-col" style={{ flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column", gap: 20 }}>
 
             {/* Avatar card - CIRCULAR with 'Life' features */}
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
@@ -449,25 +460,29 @@ export default function ProfilePage() {
 
             {/* Level Progress - Adding Life */}
             <div className="prof-card-hover" style={{
-              background: "white", padding: "20px 24px", borderRadius: 20,
-              border: "1.5px solid #e2e8f0", boxShadow: "0 4px 12px rgba(0,0,0,0.02)"
+              background: "linear-gradient(135deg, #f8faff 0%, #fff 100%)",
+              padding: "20px 24px", borderRadius: 20,
+              border: "1px solid rgba(15,98,254,0.1)",
+              boxShadow: "0 4px 16px rgba(15,98,254,0.06)"
             }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#0f172a" }}>Tu Progreso</h3>
-                <span style={{ fontSize: 12, fontWeight: 700, color: "#64748b" }}>{xpPct}% completado</span>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
+                  <Zap size={16} color="#0F62FE" />
+                  Tu Progreso
+                </h3>
+                <span style={{ fontSize: 12, fontWeight: 800, color: "#0F62FE", background: "rgba(15,98,254,0.07)", padding: "3px 10px", borderRadius: 999 }}>{xpPct.toFixed(0)}%</span>
               </div>
-              <div style={{ width: "100%", height: 12, background: "#f1f5f9", borderRadius: 10, overflow: "hidden", position: "relative" }}>
+              <div style={{ width: "100%", height: 10, background: "#e9f0ff", borderRadius: 10, overflow: "hidden", position: "relative" }}>
                 <div style={{
                   width: `${xpPct}%`, height: "100%",
                   background: "linear-gradient(90deg, #60a5fa, #0F62FE)",
                   borderRadius: 10, transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
                 }} />
-                {/* Shimmer overlay */}
                 <div className="progress-shimmer" style={{ position: "absolute", inset: 0, width: `${xpPct}%`, borderRadius: 10 }} />
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 12, fontWeight: 700, color: "#94a3b8" }}>
-                <span>{xpInLevel} XP</span>
-                <span>Siguiente: {level + 1}</span>
+                <span>{xpInLevel.toLocaleString()} XP</span>
+                <span>Nivel {level + 1} →</span>
               </div>
             </div>
 
@@ -476,18 +491,35 @@ export default function ProfilePage() {
               <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.02em" }}>
                 Estadísticas
               </h2>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                {statCards.map(({ icon, value, label }) => (
-                  <Card key={label} className="prof-card-hover" style={{ padding: "20px", display: "flex", alignItems: "center", gap: 14, boxShadow: "0 8px 20px -8px rgba(0,0,0,0.05)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                {statCards.map(({ icon, value, label }, i) => (
+                  <div
+                    key={label}
+                    className="prof-card-hover"
+                    style={{
+                      padding: "20px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 10,
+                      background: i % 2 === 0
+                        ? "linear-gradient(135deg, #f8faff 0%, #fff 100%)"
+                        : "linear-gradient(135deg, #fffdf8 0%, #fff 100%)",
+                      border: "1px solid rgba(15,98,254,0.08)",
+                      borderRadius: 18,
+                      boxShadow: "0 2px 12px rgba(15,98,254,0.05)",
+                      boxSizing: "border-box"
+                    }}
+                  >
                     <div style={{
-                      width: 48, height: 48, borderRadius: 12, background: "rgba(15,98,254,0.06)",
-                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                      width: 40, height: 40, borderRadius: 12,
+                      background: "rgba(15,98,254,0.08)",
+                      display: "flex", alignItems: "center", justifyContent: "center"
                     }}>{icon}</div>
                     <div>
-                      <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{value}</div>
+                      <div style={{ fontSize: 24, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{value}</div>
                       <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             </div>
@@ -612,8 +644,8 @@ export default function ProfilePage() {
             </Card>
 
             {/* Add friends & Actions */}
-            <Card className="prof-card-hover" style={{ padding: "20px 16px", boxShadow: "0 8px 24px -10px rgba(0,0,0,0.06)" }}>
-              <h3 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 800, color: "#0f172a", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+            <Card className="prof-card-hover" style={{ padding: "20px 16px", background: "linear-gradient(135deg, #f8faff 0%, #fff 100%)" }}>
+              <h3 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 Más Acciones
               </h3>
               <div className="prof-add-row" onClick={() => router.push("/forum")}>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { logToFile } from "@/lib/debugLogger"
+import crypto from 'crypto'
 
 export async function POST(request: NextRequest) {
     try {

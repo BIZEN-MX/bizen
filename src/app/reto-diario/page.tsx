@@ -465,7 +465,7 @@ export default function RetoDiarioPage() {
                     letterSpacing: "-0.03em",
                     lineHeight: 1.2,
                     paddingBottom: "10px",
-                    background: "linear-gradient(135deg, #0f172a 0%, #f97316 100%)",
+                    background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 50%, #2563eb 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     textTransform: "capitalize"

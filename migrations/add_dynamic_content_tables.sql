@@ -51,6 +51,17 @@ CREATE INDEX IF NOT EXISTS idx_lesson_resources_lesson ON public.lesson_resource
 CREATE INDEX IF NOT EXISTS idx_course_reviews_course ON public.course_reviews(course_id);
 CREATE INDEX IF NOT EXISTS idx_user_notes_user_lesson ON public.user_notes(user_id, lesson_id);
 
--- 6. Habilitar RLS (Row Level Security) - Ejemplo básico
+-- 6. Tabla de Inventario de Usuario (Tienda)
+CREATE TABLE IF NOT EXISTS public.user_inventory (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES public.profiles(user_id) ON DELETE CASCADE,
+    product_id TEXT NOT NULL,
+    purchased_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    price_paid INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_user_inventory_user ON public.user_inventory(user_id);
+
+-- 7. Habilitar RLS (Row Level Security) - Ejemplo básico
 -- ALTER TABLE public.course_reviews ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.user_notes ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.user_inventory ENABLE ROW LEVEL SECURITY;
