@@ -119,7 +119,10 @@ export async function POST(request: NextRequest) {
             status = 404
             message = "Perfil no encontrado"
         } else if (error.message && error.message.startsWith("INTERNAL_ERROR")) {
-            message = `Error interno: ${error.message.split(": ")[1]}`
+            message = `Error interno: ${error.message.replace("INTERNAL_ERROR: ", "")}`
+        } else {
+            // Include actual error message for visibility
+            message = `Error: ${error.message}`
         }
 
         return NextResponse.json({ error: message, code: error.message }, { status })
