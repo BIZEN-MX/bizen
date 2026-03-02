@@ -456,14 +456,15 @@ function ForumContent() {
           <main style={{ position: "relative", margin: 0, padding: "clamp(16px, 4vw, 40px)", width: "100%", boxSizing: "border-box" }}>
 
             {/* ── Page Header ── */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 36 }}>
               <div>
 
                 <h1 style={{
                   margin: 0,
                   fontSize: "clamp(26px, 5vw, 40px)",
                   fontWeight: 900,
-                  lineHeight: 1.1,
+                  lineHeight: 1.25,
+                  paddingBottom: "12px",
                   letterSpacing: "-0.025em",
                   background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
                   WebkitBackgroundClip: "text",

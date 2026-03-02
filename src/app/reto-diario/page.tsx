@@ -456,14 +456,15 @@ export default function RetoDiarioPage() {
           {phase === "doing" && (
             <>
               {/* Top bar */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, animation: "fadeUp 0.4s ease both" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 36, animation: "fadeUp 0.4s ease both" }}>
                 <div>
                   <h1 style={{
                     fontSize: "clamp(28px, 5vw, 44px)",
                     fontWeight: 900,
                     margin: 0,
                     letterSpacing: "-0.03em",
-                    lineHeight: 1,
+                    lineHeight: 1.2,
+                    paddingBottom: "10px",
                     background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
