@@ -52,8 +52,10 @@ export function OrderStep({
   const [hasInteracted, setHasInteracted] = useState(false)
 
   useEffect(() => {
-    onAnswered({ isCompleted: false, canAction: true })
-  }, [onAnswered])
+    if (!hasChecked) {
+      onAnswered({ isCompleted: false, canAction: true })
+    }
+  }, [onAnswered, hasChecked])
 
   const handleCheck = () => {
     if (hasChecked) return

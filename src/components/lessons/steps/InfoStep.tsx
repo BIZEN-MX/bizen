@@ -21,8 +21,10 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
       return
     }
     // Block the blue footer button until revealed
-    onAnswered({ isCompleted: false, canAction: false })
-  }, [onAnswered, isContinueEnabled])
+    if (!isRevealed) {
+      onAnswered({ isCompleted: false, canAction: false })
+    }
+  }, [onAnswered, isContinueEnabled, isRevealed])
 
   const handleReveal = () => {
     setIsRevealed(true)

@@ -36,13 +36,14 @@ export function FillBlanksStep({
   }, [blankAnswers, blankIds])
 
   useEffect(() => {
+    if (hasChecked) return
     const allFilled = blankIds.every((id) => !!blankAnswers[id])
     onAnswered({
       isCompleted: false,
-      canAction: allFilled && !hasChecked,
+      canAction: allFilled,
       answerData: { blankAnswers }
     })
-  }, [blankAnswers, hasChecked])
+  }, [blankAnswers, hasChecked, blankIds, onAnswered])
 
   const handleOptionTap = (optionId: string) => {
     if (hasChecked) return
