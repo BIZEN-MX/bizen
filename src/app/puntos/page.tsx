@@ -341,7 +341,7 @@ export default function PuntosPage() {
 
                         <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
                             <span style={{ fontSize: 52, fontWeight: 950, color: "#0c4a6e", lineHeight: 1 }}>{stats?.xpInCurrentLevel || 0}</span>
-                            <span style={{ fontSize: 14, fontWeight: 700, color: "#38bdf8" }}>/ {stats?.xpToNextLevel || 150} XP</span>
+                            <span style={{ fontSize: 14, fontWeight: 700, color: "#38bdf8" }}>/ {stats?.xpNeeded || 150} XP</span>
                         </div>
 
                         <div style={{ width: "80%", maxWidth: "160px", height: 10, background: "rgba(255,255,255,0.5)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(14,165,233,0.2)", marginBottom: 10 }}>

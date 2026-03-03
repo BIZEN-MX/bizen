@@ -108,8 +108,8 @@ export function OrderStep({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             style={{
-              background: hasInteracted ? "#F0FDF4" : "#EFF6FF",
-              border: `1.5px solid ${hasInteracted ? "#10B981" : "#93C5FD"}`,
+              background: "#EFF6FF",
+              border: `1.5px solid #93C5FD`,
               borderRadius: 12,
               padding: "10px 16px",
               display: "flex",
@@ -118,11 +118,11 @@ export function OrderStep({
               fontFamily: "'Montserrat', sans-serif",
               fontSize: 13,
               fontWeight: 700,
-              color: hasInteracted ? "#065F46" : "#1D4ED8",
+              color: "#1D4ED8",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "50%", background: hasInteracted ? "#10B98120" : "#3B82F620" }}>
-              {hasInteracted ? <MoveVertical size={16} color="#10B981" /> : <Hand size={16} color="#3B82F6" />}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "50%", background: "#3B82F620" }}>
+              {hasInteracted ? <MoveVertical size={16} color="#3B82F6" /> : <Hand size={16} color="#3B82F6" />}
             </div>
             {hasInteracted ? "¡Eso es! Sigue ordenando hasta terminar" : "Mantén presionado y arrastra para cambiar el orden"}
           </motion.div>

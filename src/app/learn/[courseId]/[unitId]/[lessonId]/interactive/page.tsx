@@ -195,6 +195,7 @@ export default function InteractiveLessonPage() {
           lessonSteps={lessonSteps}
           onComplete={handleComplete}
           onExit={handleExit}
+          isRepeat={(user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr)}
         />
       </div>
 

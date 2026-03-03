@@ -68,26 +68,39 @@ export default function LessonPage() {
 
     const redirectToCoursesRef = useRef(false)
 
-    const handleComplete = useCallback((stars?: number) => {
+    const handleComplete = useCallback(async (stars?: number) => {
         if (redirectToCoursesRef.current) return
         redirectToCoursesRef.current = true
 
-        const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 2
+        const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 0
+        const xpEarned = starsEarned * 5
 
         // Save progress logic (same as interactive page)
         if (lessonIdStr) {
             if (user) {
-                import("@/lib/supabase/client").then(({ createClient }) => {
+                try {
+                    // 1. Save to Supabase auth metadata (legacy fallback)
+                    const { createClient } = await import("@/lib/supabase/client")
                     const supabase = createClient()
                     const existing = (user.user_metadata?.completedLessons as string[] | undefined) || []
                     const lessonStars = (user.user_metadata?.lessonStars as Record<string, number> | undefined) || {}
                     const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
                     const newLessonStars = { ...lessonStars, [lessonIdStr]: starsEarned }
 
-                    supabase.auth.updateUser({
+                    await supabase.auth.updateUser({
                         data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
-                    }).then(() => supabase.auth.refreshSession())
-                })
+                    })
+                    await supabase.auth.refreshSession()
+
+                    // 2. Call our API to award XP, bizcoins, and update Prisma progress
+                    await fetch("/api/lesson/complete", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
+                    })
+                } catch (err) {
+                    console.error("Error in completion save:", err)
+                }
             } else {
                 // Guest mode
                 const stored = localStorage.getItem("guestCompletedLessons")
@@ -101,9 +114,11 @@ export default function LessonPage() {
             }
         }
 
-        // Redirect to course page
-        const courseNum = courseIdStr.replace(/^course-/, "") || "1"
-        router.replace(`/courses/${courseNum}`)
+        // Wait ~3s so user can enjoy the summary screen/stars animation before redirect
+        setTimeout(() => {
+            const courseNum = courseIdStr.replace(/^course-/, "") || "1"
+            router.replace(`/courses/${courseNum}`)
+        }, 3200)
     }, [lessonIdStr, user, router, courseIdStr])
 
     const handleExit = () => setShowExitDialog(true)
@@ -183,6 +198,7 @@ export default function LessonPage() {
                         onComplete={handleComplete}
                         onExit={handleExit}
                         onProgressChange={setProgress}
+                        isRepeat={(user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr)}
                     />
                 </div>
             </div>

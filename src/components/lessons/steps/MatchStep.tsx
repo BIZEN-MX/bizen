@@ -330,8 +330,8 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
             exit={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.2 }}
             style={{
-              background: selectedLeftId ? "#F0FDF4" : "#EFF6FF",
-              border: `1.5px solid ${selectedLeftId ? "#10B981" : "#93C5FD"}`,
+              background: "#EFF6FF",
+              border: `1.5px solid #93C5FD`,
               borderRadius: 12,
               padding: "10px 16px",
               display: "flex",
@@ -340,11 +340,11 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
               fontFamily: "'Montserrat', sans-serif",
               fontSize: 13,
               fontWeight: 700,
-              color: selectedLeftId ? "#065F46" : "#1D4ED8",
+              color: "#1D4ED8",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "50%", background: selectedLeftId ? "#10B98120" : "#3B82F620" }}>
-              {selectedLeftId ? <ArrowRight size={18} color="#10B981" /> : <Hand size={18} color="#3B82F6" />}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "50%", background: "#3B82F620" }}>
+              {selectedLeftId ? <ArrowRight size={18} color="#3B82F6" /> : <Hand size={18} color="#3B82F6" />}
             </div>
             {selectedLeftId
               ? `Ahora selecciona el par: "${step.leftItems.find(l => l.id === selectedLeftId)?.label}"`

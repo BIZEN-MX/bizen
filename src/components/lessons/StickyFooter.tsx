@@ -65,7 +65,7 @@ export function StickyFooter({
         boxSizing: "border-box",
       }}
     >
-      <div style={{ width: "100%", maxWidth: 720, display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ width: "100%", maxWidth: 980, display: "flex", flexDirection: "column", gap: 12 }}>
         {/* Feedback Message (Duolingo style) */}
         <AnimatePresence>
           {feedbackColor && (
@@ -156,24 +156,24 @@ export function StickyFooterButton({
     primary: {
       background: BIZEN_BLUE,
       color: "#FFFFFF",
-      boxShadow: `0 4px 0 0 ${BIZEN_BLUE_DARK}`,
+      boxShadow: `0 3px 0 0 ${BIZEN_BLUE_DARK}`,
     },
     blue: {
       background: BIZEN_BLUE,
       color: "#FFFFFF",
-      boxShadow: `0 4px 0 0 ${BIZEN_BLUE_DARK}`,
+      boxShadow: `0 3px 0 0 ${BIZEN_BLUE_DARK}`,
     },
     secondary: {
       background: "#FFFFFF",
       color: "#4B5563",
       border: "2.5px solid #E5E7EB",
-      boxShadow: "0 4px 0 0 #E5E7EB",
+      boxShadow: "0 3px 0 0 #E5E7EB",
     },
     white: {
       background: "#FFFFFF",
       color: "#4B5563",
       border: "2.5px solid #E5E7EB",
-      boxShadow: "0 4px 0 0 #E5E7EB",
+      boxShadow: "0 3px 0 0 #E5E7EB",
     },
     outline: {
       background: "transparent",
@@ -184,12 +184,12 @@ export function StickyFooterButton({
     success: {
       background: BIZEN_BLUE,
       color: "#FFFFFF",
-      boxShadow: `0 4px 0 0 ${BIZEN_BLUE_DARK}`,
+      boxShadow: `0 3px 0 0 ${BIZEN_BLUE_DARK}`,
     },
     danger: {
       background: "#EF4444",
       color: "#FFFFFF",
-      boxShadow: "0 4px 0 0 #B91C1C",
+      boxShadow: "0 3px 0 0 #B91C1C",
     },
   }
 
@@ -205,7 +205,7 @@ export function StickyFooterButton({
     letterSpacing: "0.05em",
     cursor: disabled || isLoading ? "not-allowed" : "pointer",
     opacity: disabled || isLoading ? 0.4 : 1,
-    padding: "14px 28px",
+    padding: "10px 24px",
     transition: "all 0.1s ease",
     outline: "none",
     position: "relative",
@@ -224,7 +224,7 @@ export function StickyFooterButton({
         const el = e.currentTarget
         el.style.transform = "translateY(2px)"
         el.style.boxShadow = variantMap[variant]?.boxShadow
-          ? variantMap[variant].boxShadow!.toString().replace("4px", "0px")
+          ? variantMap[variant].boxShadow!.toString().replace(/[0-9]+px/, "0px")
           : "none"
       }}
       onMouseUp={(e) => {
@@ -232,10 +232,17 @@ export function StickyFooterButton({
         el.style.transform = ""
         el.style.boxShadow = (variantMap[variant]?.boxShadow || "none") as string
       }}
+      onMouseEnter={(e) => {
+        if (disabled || isLoading) return
+        e.currentTarget.style.opacity = "0.85"
+      }}
       onMouseLeave={(e) => {
         const el = e.currentTarget
         el.style.transform = ""
         el.style.boxShadow = (variantMap[variant]?.boxShadow || "none") as string
+        if (!disabled && !isLoading) {
+          el.style.opacity = "1"
+        }
       }}
       {...props}
     >

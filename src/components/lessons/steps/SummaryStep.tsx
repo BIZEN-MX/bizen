@@ -68,7 +68,8 @@ function AnimatedStar({ filled, delay }: { filled: boolean; delay: number }) {
 
 export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
   const stars: 0 | 1 | 2 | 3 = (step as any).starsEarned ?? 3
-  const xpEarned = stars * XP_PER_STAR
+  const isRepeat = (step as any).isRepeat ?? false
+  const xpEarned = isRepeat ? (stars > 0 ? 5 : 0) : (stars * XP_PER_STAR)
 
   useEffect(() => {
     onAnswered({ isCompleted: true })
@@ -180,7 +181,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
         </motion.p>
       </motion.div>
 
-      {/* 🏆 XP Reward Card */}
+      {/* 🏆 XP Reward Card - Restored and improved */}
       <motion.div
         initial={{ opacity: 0, scale: 0.85, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -195,48 +196,50 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
           gap: 4,
           boxShadow: "0 8px 32px rgba(15, 98, 254, 0.35)",
           minWidth: 200,
+          position: "relative",
+          overflow: "hidden"
         }}
       >
+        {/* Shine effect */}
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "100%", background: "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)", pointerEvents: "none" }} />
+
         <span style={{
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: 800,
-          color: "rgba(255,255,255,0.75)",
-          letterSpacing: "0.1em",
+          color: "rgba(255,255,255,0.85)",
+          letterSpacing: "0.12em",
           textTransform: "uppercase",
           fontFamily: "'Montserrat', sans-serif",
         }}>
-          XP Ganado
+          {(step as any).isRepeat ? "XP por repetición" : "Puntos Bizen Ganados"}
         </span>
         <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
           <motion.span
             style={{
-              fontSize: "clamp(42px, 10vw, 64px)",
-              fontWeight: 900,
+              fontSize: "clamp(46px, 10vw, 68px)",
+              fontWeight: 950,
               color: "#FFFFFF",
               lineHeight: 1,
               fontFamily: "'Montserrat', sans-serif",
-              textShadow: "0 2px 12px rgba(0,0,0,0.2)",
+              textShadow: "0 4px 12px rgba(0,0,0,0.15)",
             }}
           >
             +{displayXP}
           </motion.span>
           <span style={{
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: 800,
-            color: "rgba(255,255,255,0.8)",
+            color: "rgba(255,255,255,0.9)",
             fontFamily: "'Montserrat', sans-serif",
           }}>
             XP
           </span>
         </div>
-        <span style={{
-          fontSize: 12,
-          color: "rgba(255,255,255,0.6)",
-          fontFamily: "'Montserrat', sans-serif",
-          fontWeight: 600,
-        }}>
-          ¡Gran progreso! Sigue así
-        </span>
+        {(step as any).isRepeat && (
+          <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+            ¡Dominaste esta lección!
+          </span>
+        )}
       </motion.div>
 
       {/* Body text */}

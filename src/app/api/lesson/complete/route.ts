@@ -8,9 +8,16 @@ import { calculateLevel } from "@/lib/xp"
  * POST /api/lesson/complete
  * Body: { lessonId: string, starsEarned: 0|1|2|3, xpEarned: number }
  *
- * - Creates or updates the progress row (upsert).
- *   If the lesson was already completed with MORE stars, we don't downgrade stars.
- * - Awards XP only on FIRST completion or if stars improved.
+ * RULES:
+ * - 3 stars = 15 XP
+ * - 2 stars = 10 XP
+ * - 1 star = 5 XP
+ * - 0 stars = 0 XP
+ * - REPEAT: Max 5 XP if lesson was already completed (and starsEarned > 0).
+ *
+ * - Awards XP on FIRST completion based on stars.
+ * - Awards INCREMENTAL XP if stars improved from previous best.
+ * - Awards REPEAT BONUS (5 XP) if stars did NOT improve but lesson was finished with >= 1 star.
  */
 export async function POST(req: NextRequest) {
     try {
@@ -51,17 +58,25 @@ export async function POST(req: NextRequest) {
 
         const userId = user.id
 
-        // Check existing progress for this lesson
+        // Check existing progress for this lesson to determine rewards
         const existing = await prisma.progress.findUnique({
             where: { userId_lessonId: { userId, lessonId } },
         })
 
         const isFirstCompletion = !existing?.completedAt
-        const prevStars = existing?.starsEarned ?? 0
+        const prevStars = (existing?.starsEarned ?? 0) as 0 | 1 | 2 | 3
         const starsImproved = starsEarned > prevStars
 
-        // Only award XP if this is a new completion or an improvement
-        const xpToAward = isFirstCompletion || starsImproved ? xpEarned - (isFirstCompletion ? 0 : prevStars * 5) : 0
+        let xpToAward = 0
+
+        if (isFirstCompletion) {
+            // First time: full stars * 5
+            xpToAward = starsEarned * 5
+        } else {
+            // Repeated lesson: user said "lo máximo que dará de xp son 5xp"
+            // We give 5 XP if they at least finish with 1 star, regardless of improvement
+            xpToAward = starsEarned > 0 ? 5 : 0
+        }
 
         // Upsert progress row
         await prisma.progress.upsert({
@@ -81,22 +96,37 @@ export async function POST(req: NextRequest) {
             },
         })
 
-        // Award XP to profile
-        let newLevel: number | undefined
+        // Award XP to profile using centralized reward utility
+        let rewardResult = null
         if (xpToAward > 0) {
-            const profile = await prisma.profile.update({
-                where: { userId },
-                data: { xp: { increment: xpToAward } },
-                select: { xp: true },
-            })
-            newLevel = calculateLevel(profile.xp)
+            try {
+                const { awardXp } = await import("@/lib/rewards")
+
+                // Ensure profile exists first
+                const profile = await prisma.profile.findUnique({ where: { userId } })
+                if (!profile) {
+                    await prisma.profile.create({
+                        data: {
+                            userId,
+                            fullName: user.user_metadata?.full_name || "Usuario Bizen",
+                            xp: 0,
+                            level: 1,
+                        }
+                    })
+                }
+
+                rewardResult = await awardXp(userId, xpToAward)
+            } catch (err) {
+                console.error("[lesson/complete] Failed to award XP:", err)
+            }
         }
 
         return NextResponse.json({
             success: true,
             starsEarned,
             xpAwarded: xpToAward,
-            newLevel: newLevel ?? null,
+            newLevel: rewardResult?.newLevel ?? null,
+            bizcoinsAwarded: rewardResult?.bizcoinsAwarded ?? 0,
             isFirstCompletion,
         })
     } catch (error) {

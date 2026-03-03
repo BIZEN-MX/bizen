@@ -72,8 +72,8 @@ interface UserStats {
   xp: number
   level: number
   xpInCurrentLevel: number
-  totalXpForNextLevel: number
-  xpForNextLevel: number
+  xpNeeded: number
+  xpToNextLevel: number
   currentStreak?: number
   weeklyActiveDays?: string[]
   inventory?: string[]
@@ -243,7 +243,7 @@ export default function ProfilePage() {
   const level = userStats?.level || dbProfile?.level || 1
   const bizcoins = (dbProfile as any)?.bizcoins || 0
   const xpInLevel = userStats?.xpInCurrentLevel || 0
-  const xpForNext = userStats?.totalXpForNextLevel || 100
+  const xpForNext = userStats?.xpNeeded || 100
   const xpPct = Math.min((xpInLevel / xpForNext) * 100, 100)
 
   const getAchievementProgress = (a: typeof ACHIEVEMENTS[0]) => {

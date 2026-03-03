@@ -26,12 +26,13 @@ interface LessonEngineProps {
   onExit?: () => void
   /** Called when progress changes (progress bar = currentStep/totalSteps; stars = by mistakes). */
   onProgressChange?: (progress: { currentStep: number; totalSteps: number; streak: number; stars: 0 | 1 | 2 | 3 }) => void
+  isRepeat?: boolean
 }
 
 /**
  * Main lesson engine component that manages state and renders appropriate step components
  */
-export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange }: LessonEngineProps) {
+export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange, isRepeat }: LessonEngineProps) {
   const [state, dispatch] = useReducer(lessonReducer, {
     originalSteps: lessonSteps,
     allSteps: lessonSteps,
@@ -91,7 +92,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           if (result.isCorrect) haptic.success()
         } else {
           // If a review step is failed, we append it again so it repeats
-          dispatch({ type: "APPEND_REVIEW_STEP", sourceStepId: sourceStepId! })
+          dispatch({ type: "APPEND_REVIEW_STEP", sourceStepId: currentStep!.reviewSourceStepId! })
           dispatch({ type: "ENABLE_CONTINUE" }) // Allow moving to the appended retry
           haptic.error()
         }
@@ -222,7 +223,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       case "image_choice":
         return <ImageChoiceStep {...stepProps} />
       case "summary":
-        return <SummaryStep {...stepProps} step={{ ...stepProps.step, starsEarned: stars }} />
+        return <SummaryStep {...stepProps} step={{ ...stepProps.step, starsEarned: stars, isRepeat }} />
       default:
         return <div>Unknown step type: {currentStep.stepType}</div>
     }
@@ -253,36 +254,19 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       feedbackTitle={hasFeedback ? (isCorrect ? "¡Muy bien hecho!" : "¡Sigue intentando!") : undefined}
       feedbackBody={hasFeedback ? (currentStep as any).options?.find((o: any) => o.id === currentAnswer?.answerData?.selectedOptionId)?.explanation : undefined}
     >
-      <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
-        {/* Left: Exit/Back only if NO feedback shown */}
-        {!hasFeedback && (
-          !isSummaryStep && state.currentStepIndex > 0 ? (
-            <StickyFooterButton
-              variant="white"
-              onClick={handleBack}
-              style={{ minWidth: 60, padding: "14px 20px" }}
-            >
-              Anterior
-            </StickyFooterButton>
-          ) : (
-            onExit && (
-              <StickyFooterButton
-                variant="outline"
-                onClick={onExit}
-                style={{ minWidth: 60, padding: "14px 20px" }}
-              >
-                Salir
-              </StickyFooterButton>
-            )
-          )
-        )}
-
+      <div style={{ display: "flex", width: "100%", justifyContent: "center", alignItems: "center" }}>
         {/* Primary Action Button */}
         <StickyFooterButton
           variant={hasFeedback ? (isCorrect ? "blue" : "danger") : "blue"}
           onClick={handleContinue}
           disabled={footerButtonDisabled}
-          style={{ flex: 1, fontSize: "1rem", fontWeight: 800, padding: "14px 24px" }}
+          style={{
+            minWidth: "220px",
+            fontSize: "0.95rem",
+            fontWeight: 800,
+            padding: "10px 40px",
+            height: "45px"
+          }}
         >
           {footerButtonLabel}
         </StickyFooterButton>
@@ -306,14 +290,15 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           fontFamily: "'Montserrat', sans-serif",
         }}
       >
-        {/* Header - Fixed Height */}
-        <div style={{ flexShrink: 0, padding: "16px clamp(16px, 4vw, 48px) 14px", borderBottom: "1.5px solid #F1F5F9", display: "flex", justifyContent: "center" }}>
-          <div style={{ width: "100%", maxWidth: 720 }}>
+        {/* Header - Lowered and Thickened */}
+        <div style={{ flexShrink: 0, padding: "32px clamp(16px, 4vw, 48px) 20px", display: "flex", justifyContent: "center" }}>
+          <div style={{ width: "100%", maxWidth: 980 }}>
             <LessonProgressHeader
               currentStepIndex={state.currentStepIndex}
               totalSteps={state.allSteps.length}
               streak={streak}
               stars={stars}
+              onExit={onExit}
             />
           </div>
         </div>
@@ -336,7 +321,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           <div
             style={{
               width: "100%",
-              maxWidth: 720,
+              maxWidth: 980,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",

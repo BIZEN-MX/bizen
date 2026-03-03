@@ -9,10 +9,10 @@ const config: Record<ExerciseType, { label: string; color: string; bg: string; b
   info: { label: "Nueva lección", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: Lightbulb },
   mcq: { label: "Selecciona la respuesta correcta", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: HelpCircle },
   true_false: { label: "¿Verdadero o falso?", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: CheckSquare },
-  multi_select: { label: "Selecciona todas las correctas", color: "#7C3AED", bg: "#F5F3FF", border: "#DDD6FE", Icon: List },
-  order: { label: "Ordena los elementos", color: "#D97706", bg: "#FFFBEB", border: "#FDE68A", Icon: Layers },
-  match: { label: "Une los pares", color: "#059669", bg: "#ECFDF5", border: "#A7F3D0", Icon: MoveHorizontal },
-  fill_blanks: { label: "Completa el espacio", color: "#DB2777", bg: "#FDF2F8", border: "#FBCFE8", Icon: PenLine },
+  multi_select: { label: "Selecciona todas las correctas", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: List },
+  order: { label: "Ordena los elementos", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: Layers },
+  match: { label: "Une los pares", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: MoveHorizontal },
+  fill_blanks: { label: "Completa el espacio", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: PenLine },
   image_choice: { label: "Elige la imagen correcta", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: HelpCircle },
 }
 

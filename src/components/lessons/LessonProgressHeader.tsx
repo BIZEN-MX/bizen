@@ -1,6 +1,7 @@
 "use client"
 
-import React from "react"
+import { X } from "lucide-react"
+import { motion } from "framer-motion"
 
 export interface LessonProgressHeaderProps {
   currentStepIndex: number
@@ -11,6 +12,7 @@ export interface LessonProgressHeaderProps {
   stars: 0 | 1 | 2 | 3
   hideStreak?: boolean
   hideStars?: boolean
+  onExit?: () => void
 }
 
 export function LessonProgressHeader({
@@ -20,6 +22,7 @@ export function LessonProgressHeader({
   stars,
   hideStreak = false,
   hideStars = false,
+  onExit,
 }: LessonProgressHeaderProps) {
   const progress = totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0
 
@@ -28,36 +31,66 @@ export function LessonProgressHeader({
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 16,
+        gap: 20,
         width: "100%",
-        maxWidth: 720,
         boxSizing: "border-box",
         flexShrink: 0,
       }}
     >
+      {/* Exit Button - "X" */}
+      {onExit && (
+        <button
+          onClick={onExit}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 4,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#94a3b8",
+            transition: "color 0.2s ease",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#475569")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
+          aria-label="Salir de la lección"
+        >
+          <X size={24} strokeWidth={2.5} />
+        </button>
+      )}
       {/* Progress bar — slim, Duolingo-inspired */}
       <div
         style={{
           flex: 1,
           height: 16,
           borderRadius: 999,
-          background: "#E5E7EB",
+          background: "#F3F4F6",
           overflow: "hidden",
           boxSizing: "border-box",
+          position: "relative",
+          boxShadow: "inset 0 2px 4px rgba(0,0,0,0.05)",
         }}
       >
-        <div
+        <motion.div
+          initial={false}
+          animate={{
+            width: `${Math.max(progress, totalSteps > 0 ? 4 : 0)}%`
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 80,
+            damping: 15,
+            restDelta: 0.001
+          }}
           style={{
-            width: `${Math.max(progress, totalSteps > 0 ? 4 : 0)}%`,
             height: "100%",
             background: "linear-gradient(90deg, #0B71FE 0%, #4A9EFF 100%)",
             borderRadius: 999,
-            transition: "width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
             position: "relative",
             overflow: "hidden",
           }}
         >
-          {/* Subtle shine */}
           <div style={{
             position: "absolute",
             top: 0,
@@ -67,7 +100,7 @@ export function LessonProgressHeader({
             background: "rgba(255,255,255,0.25)",
             borderRadius: "999px 999px 0 0",
           }} />
-        </div>
+        </motion.div>
       </div>
 
       {/* Stars removed section was here */}

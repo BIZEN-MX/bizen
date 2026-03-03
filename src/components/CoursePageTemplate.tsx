@@ -410,17 +410,29 @@ export default function CoursePageTemplate({
                         {/* Top accent — always blue */}
                         <div style={{ height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6)", margin: "-28px -32px 20px" }} />
 
-                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, fontFamily: "'Montserrat', sans-serif" }}>
                             <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(15,98,254,0.1)", border: "1.5px solid rgba(15,98,254,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                                 <IconComp size={20} color="#2563eb" strokeWidth={2} />
                             </div>
-                            <div>
-                                <div style={{ fontSize: 11, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{lessonModal.unitTitle}</div>
-                                <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>{lessonModal.lesson.title}</div>
+                            <div style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2, fontFamily: "'Montserrat', sans-serif" }}>
+                                    {lessonModal.unitTitle}
+                                </div>
+                                <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", lineHeight: 1.3, fontFamily: "'Montserrat', sans-serif" }}>
+                                    {lessonModal.lesson.title}
+                                </div>
                             </div>
                         </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 10, fontFamily: "'Montserrat', sans-serif" }}>
+                            {/* XP Indicator */}
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#F0F9FF", border: "1.5px solid #BAE6FD", borderRadius: 12, padding: "10px 14px", marginBottom: 6, fontFamily: "'Montserrat', sans-serif" }}>
+                                <Zap size={15} color="#0EA5E9" fill="#0EA5E9" />
+                                <span style={{ fontSize: 13, fontWeight: 700, color: "#0369A1", fontFamily: "'Montserrat', sans-serif" }}>
+                                    {completedLessons.includes(lessonModal.lesson.slug) ? "Gana 5 XP" : "Gana hasta 15 XP"}
+                                </span>
+                            </div>
+
                             <button
                                 onClick={() => {
                                     router.push(getLessonPath(lessonModal.lesson.slug))
@@ -428,11 +440,11 @@ export default function CoursePageTemplate({
                                 }}
                                 style={{ width: "100%", fontSize: 15, fontWeight: 800, padding: "14px 20px", background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)", color: "white", border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: "0 6px 18px rgba(15,98,254,0.35)", transition: "all 0.2s" }}
                             >
-                                Iniciar lección →
+                                {completedLessons.includes(lessonModal.lesson.slug) ? "Repetir lección" : "Iniciar lección"}
                             </button>
                             <button
                                 onClick={() => setLessonModal(null)}
-                                style={{ width: "100%", fontSize: 14, fontWeight: 600, padding: "12px 20px", background: "transparent", color: "#64748b", border: "1.5px solid #e2e8f0", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
+                                style={{ width: "100%", fontSize: 14, fontWeight: 700, padding: "12px 20px", background: "transparent", color: "#64748b", border: "1.5px solid #e2e8f0", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
                             >
                                 Regresar
                             </button>
