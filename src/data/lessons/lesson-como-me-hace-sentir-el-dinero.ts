@@ -58,7 +58,6 @@ export const lessonComoMeHaceSentirElDineroSteps: LessonStep[] = [
     stepType: "true_false",
     statement: "Las decisiones de dinero siempre son racionales.",
     correctValue: false,
-    explanation: "Falso. Muchas decisiones se toman desde la emoción.",
     isAssessment: true,
     recordIncorrect: true,
     continueLabel: "Continuar",

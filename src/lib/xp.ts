@@ -98,10 +98,19 @@ export const XP_REWARDS = {
  * because UTC midnight rolls over at 6:00 PM local time.
  */
 export function getMexicoMidnight(date: Date = new Date()): Date {
-  const str = date.toLocaleString("en-US", { timeZone: "America/Mexico_City" })
-  const mxDate = new Date(str)
-  mxDate.setHours(0, 0, 0, 0)
-  return mxDate
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(date);
+
+  const year = parseInt(parts.find(p => p.type === "year")!.value);
+  const month = parseInt(parts.find(p => p.type === "month")!.value);
+  const day = parseInt(parts.find(p => p.type === "day")!.value);
+
+  // Return start of the day in UTC for consistent subtraction logic
+  return new Date(Date.UTC(year, month - 1, day));
 }
 
 /**

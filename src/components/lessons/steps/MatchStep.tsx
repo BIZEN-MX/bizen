@@ -305,7 +305,14 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
   const totalHeight = step.leftItems.length * ITEM_HEIGHT + (step.leftItems.length - 1) * ITEM_GAP
 
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 24 }}>
+    <div style={{
+      width: "100%",
+      maxWidth: 720,
+      margin: "0 auto",
+      display: "flex",
+      flexDirection: "column",
+      gap: 24
+    }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <ExerciseInstruction type="match" />
         <h3 style={{

@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react"
 import { SummaryStepFields } from "@/types/lessonTypes"
 import { motion, AnimatePresence } from "framer-motion"
+import { useAuth } from "@/contexts/AuthContext"
+import XPProgressCard from "@/components/XPProgressCard"
 
 interface SummaryStepProps {
   step: SummaryStepFields & {
@@ -19,33 +21,8 @@ interface SummaryStepProps {
 
 const XP_PER_STAR = 5
 
-function useCountUp(target: number, delay: number = 0, duration: number = 1200) {
-  const [value, setValue] = useState(0)
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const start = performance.now()
-      const tick = (now: number) => {
-        const elapsed = now - start
-        const progress = Math.min(elapsed / duration, 1)
-        // ease-out cubic
-        const eased = 1 - Math.pow(1 - progress, 3)
-        setValue(Math.round(eased * target))
-        if (progress < 1) requestAnimationFrame(tick)
-      }
-      requestAnimationFrame(tick)
-    }, delay)
-    return () => clearTimeout(timeout)
-  }, [target, delay, duration])
-  return value
-}
-
-const STAR_COLORS = {
-  filled: { glow: "#FFB800", fill: "url(#starGold)", stroke: "#F59E0B" },
-  empty: { glow: "transparent", fill: "#E5E7EB", stroke: "#D1D5DB" },
-}
-
 function AnimatedStar({ filled, delay }: { filled: boolean; delay: number }) {
-  if (!filled) return null; // Only show filled stars as per new stars.png instruction usually
+  if (!filled) return null;
   return (
     <motion.div
       initial={{ scale: 0, rotate: -30, opacity: 0 }}
@@ -67,6 +44,7 @@ function AnimatedStar({ filled, delay }: { filled: boolean; delay: number }) {
 }
 
 export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
+  const { dbProfile } = useAuth()
   const stars: 0 | 1 | 2 | 3 = (step as any).starsEarned ?? 3
   const isRepeat = (step as any).isRepeat ?? false
   const xpEarned = isRepeat ? (stars > 0 ? 5 : 0) : (stars * XP_PER_STAR)
@@ -74,9 +52,6 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
   useEffect(() => {
     onAnswered({ isCompleted: true })
   }, [onAnswered])
-
-  // XP count-up starts after stars animation (≈ 1.2s)
-  const displayXP = useCountUp(xpEarned, 1400, 1000)
 
   const starMessages: Record<0 | 1 | 2 | 3, string> = {
     3: "¡Perfecto! Sin errores 🎯",
@@ -181,66 +156,21 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
         </motion.p>
       </motion.div>
 
-      {/* 🏆 XP Reward Card - Restored and improved */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.85, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 1.1, type: "spring", stiffness: 200, damping: 20 }}
-        style={{
-          background: "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)",
-          borderRadius: 24,
-          padding: "20px 40px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 4,
-          boxShadow: "0 8px 32px rgba(15, 98, 254, 0.35)",
-          minWidth: 200,
-          position: "relative",
-          overflow: "hidden"
-        }}
-      >
-        {/* Shine effect */}
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "100%", background: "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)", pointerEvents: "none" }} />
-
-        <span style={{
-          fontSize: 11,
-          fontWeight: 800,
-          color: "rgba(255,255,255,0.85)",
-          letterSpacing: "0.12em",
-          textTransform: "uppercase",
-          fontFamily: "'Montserrat', sans-serif",
-        }}>
-          {(step as any).isRepeat ? "XP por repetición" : "Puntos Bizen Ganados"}
-        </span>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-          <motion.span
-            style={{
-              fontSize: "clamp(46px, 10vw, 68px)",
-              fontWeight: 950,
-              color: "#FFFFFF",
-              lineHeight: 1,
-              fontFamily: "'Montserrat', sans-serif",
-              textShadow: "0 4px 12px rgba(0,0,0,0.15)",
-            }}
-          >
-            +{displayXP}
-          </motion.span>
-          <span style={{
-            fontSize: 22,
-            fontWeight: 800,
-            color: "rgba(255,255,255,0.9)",
-            fontFamily: "'Montserrat', sans-serif",
-          }}>
-            XP
-          </span>
-        </div>
+      {/* 🏆 XP Reward Card - Using generic animated component */}
+      <div style={{ width: "100%", maxWidth: 380, marginTop: 10 }}>
+        <XPProgressCard
+          xpEarned={xpEarned}
+          initialXP={dbProfile?.xp || 0}
+          delay={1000}
+        />
         {(step as any).isRepeat && (
-          <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
-            ¡Dominaste esta lección!
-          </span>
+          <div style={{ marginTop: 12, textAlign: "center" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              ¡Dominaste esta lección!
+            </span>
+          </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Body text */}
       {step.body && (

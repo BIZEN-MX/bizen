@@ -447,3 +447,100 @@ Please make sure your database server is running at `aws-1-us-east-2.pooler.supa
 [2026-03-03T16:04:19.485Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
 [2026-03-03T16:04:23.000Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
 [2026-03-03T16:04:26.751Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T18:35:55.233Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T18:35:58.944Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T18:37:19.261Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T18:39:09.608Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T18:39:22.745Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:04:32.880Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:04:36.494Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:04:45.090Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:04:48.716Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:06.595Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:10.461Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:15.296Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:19.110Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:22.608Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:26.081Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:31.934Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:35.548Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98050
+[2026-03-03T19:05:52.531Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:05:54.656Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:05:58.401Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:06:02.013Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:06:05.717Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:06:12.739Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:06:16.361Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:06:41.748Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:06:46.527Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:07:37.644Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:07:41.337Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:07:46.578Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:07:50.269Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:07:51.711Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:07:55.349Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:07:59.053Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:09:30.447Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:09:33.857Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:09:37.603Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:09:41.362Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:11:19.360Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:11:29.121Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:12:27.961Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:12:32.368Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:12:37.691Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:12:41.393Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:12:45.079Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:12:48.734Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:13:15.643Z] STATS API: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 bizcoins=98100
+[2026-03-03T19:14:59.532Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:15:18.226Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:15:21.045Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:19:14.560Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:19:17.423Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:19:20.265Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:19:30.827Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:19:43.513Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:19:58.756Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:20:10.958Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:20:33.622Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:20:55.092Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:20:57.901Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:21:24.352Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:21:56.336Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:21:59.276Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:02.277Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:22.306Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:25.301Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:28.384Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:31.153Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:33.998Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:36.853Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:39.861Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:22:42.784Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:23:47.711Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:23:50.606Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:23:53.412Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:23:56.271Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:23:59.027Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:01.722Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:04.513Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:07.345Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:10.161Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:13.697Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:16.439Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:19.203Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:25.765Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:24:28.460Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:25:21.477Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:26:25.298Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:28:08.349Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:28:12.032Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:28:14.771Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:28:36.454Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:28:39.459Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:32:05.508Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:32:14.553Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:32:21.609Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:32:24.686Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-03-03T19:32:27.561Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined

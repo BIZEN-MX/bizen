@@ -85,7 +85,14 @@ export function OrderStep({
   const ITEM_ICONS = [Star, Zap, Target, Sparkles, Heart, Star]
 
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 24 }}>
+    <div style={{
+      width: "100%",
+      maxWidth: 600,
+      margin: "0 auto",
+      display: "flex",
+      flexDirection: "column",
+      gap: 24
+    }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <ExerciseInstruction type="order" />
         <h3 style={{

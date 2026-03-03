@@ -46,7 +46,6 @@ export const lessonDineroYAutoestimaSteps: LessonStep[] = [
         stepType: "true_false",
         statement: "La cantidad de dinero define cuánto valgo como persona.",
         correctValue: false,
-        explanation: "Tu valor no depende del dinero que tienes.",
         isAssessment: true,
         recordIncorrect: true,
         continueLabel: "Continuar",

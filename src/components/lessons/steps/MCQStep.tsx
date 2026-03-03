@@ -63,9 +63,23 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
   const correctOption = step.options.find((o) => o.isCorrect)
 
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 28 }}>
+    <div style={{
+      width: "100%",
+      maxWidth: 600,
+      margin: "0 auto",
+      display: "flex",
+      flexDirection: "column",
+      gap: 28
+    }}>
       {/* Question header */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{
+        width: "100%",
+        maxWidth: 600,
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 24
+      }}>
         <ExerciseInstruction type="mcq" />
         <motion.h3
           initial={{ y: -8, opacity: 0 }}
@@ -84,7 +98,14 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
       </div>
 
       {/* Options */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{
+        width: "100%",
+        maxWidth: 600,
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 32
+      }}>
         {step.options.map((option, index) => {
           const isSelected = selectedOptionId === option.id
           const isChecked = checkedOptionId === option.id

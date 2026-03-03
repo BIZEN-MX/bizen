@@ -272,32 +272,41 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   const footerButtonDisabled = !state.isContinueEnabled && !state.isActionEnabled && !isSummaryStep && !isLastStep
 
-  const renderFooter = (isFixed: boolean = true) => (
-    <StickyFooter
-      fixed={isFixed}
-      feedbackColor={hasFeedback ? (isCorrect ? "correct" : "incorrect") : null}
-      feedbackTitle={hasFeedback ? (isCorrect ? "¡Muy bien hecho!" : "¡Sigue intentando!") : undefined}
-      feedbackBody={hasFeedback ? (currentStep as any).options?.find((o: any) => o.id === currentAnswer?.answerData?.selectedOptionId)?.explanation : undefined}
-    >
-      <div style={{ display: "flex", width: "100%", justifyContent: "center", alignItems: "center" }}>
-        {/* Primary Action Button */}
-        <StickyFooterButton
-          variant={hasFeedback ? (isCorrect ? "blue" : "danger") : "blue"}
-          onClick={handleContinue}
-          disabled={footerButtonDisabled}
-          style={{
-            minWidth: "220px",
-            fontSize: "0.95rem",
-            fontWeight: 800,
-            padding: "10px 40px",
-            height: "45px"
-          }}
-        >
-          {footerButtonLabel}
-        </StickyFooterButton>
-      </div>
-    </StickyFooter>
-  )
+  const renderFooter = (isFixed: boolean = true) => {
+    const isTrueFalse = currentStep.stepType === "true_false"
+
+    // Specifically hide explanation (feedbackBody) for true_false per request
+    const feedbackBody = (!isTrueFalse && hasFeedback)
+      ? (currentStep as any).options?.find((o: any) => o.id === currentAnswer?.answerData?.selectedOptionId)?.explanation
+      : undefined
+
+    return (
+      <StickyFooter
+        fixed={isFixed}
+        feedbackColor={hasFeedback ? (isCorrect ? "correct" : "incorrect") : null}
+        feedbackTitle={hasFeedback ? (isCorrect ? "¡Muy bien hecho!" : "¡Sigue intentando!") : undefined}
+        feedbackBody={feedbackBody}
+      >
+        <div style={{ display: "flex", width: "100%", justifyContent: "center", alignItems: "center" }}>
+          {/* Primary Action Button */}
+          <StickyFooterButton
+            variant={hasFeedback ? (isCorrect ? "blue" : "danger") : "blue"}
+            onClick={handleContinue}
+            disabled={footerButtonDisabled}
+            style={{
+              minWidth: "220px",
+              fontSize: "0.95rem",
+              fontWeight: 800,
+              padding: "10px 40px",
+              height: "45px"
+            }}
+          >
+            {footerButtonLabel}
+          </StickyFooterButton>
+        </div>
+      </StickyFooter>
+    )
+  }
 
   if (shouldPassFullScreenProps) {
     return (

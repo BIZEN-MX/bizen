@@ -100,7 +100,14 @@ export function TrueFalseStep({
   }
 
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 32 }}>
+    <div style={{
+      width: "100%",
+      maxWidth: 600,
+      margin: "0 auto",
+      display: "flex",
+      flexDirection: "column",
+      gap: 32
+    }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <ExerciseInstruction type="true_false" />
         <h3 style={{

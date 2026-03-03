@@ -11,7 +11,7 @@ import StreakWidget from "@/components/StreakWidget"
 import {
   Target, MessageCircle, Briefcase, CheckCircle, AlertCircle,
   ChevronDown, ChevronUp,
-  Send, ExternalLink, X
+  Send, ExternalLink, X, BookOpen
 } from "lucide-react"
 import { RocketIcon, LeafIcon, NoteIcon, ThumbsUpIcon, IdeaIcon, WarningIcon, ZapIcon } from "@/components/CustomIcons"
 
@@ -301,6 +301,7 @@ function ForumContent() {
   const [todayChallenge, setTodayChallenge] = useState<DailyChallenge | null>(null)
   const [evidencePosts, setEvidencePosts] = useState<EvidencePost[]>([])
   const [loadingEvidence, setLoadingEvidence] = useState(false)
+  const [weeklyActiveDays, setWeeklyActiveDays] = useState<string[]>([])
   const [evidenceSort, setEvidenceSort] = useState<"new" | "validated">("new")
   const [evidenceScope, setEvidenceScope] = useState<"school" | "all">("school")
   const [userRole, setUserRole] = useState<string>("student")
@@ -324,12 +325,23 @@ function ForumContent() {
   useEffect(() => {
     if (loading || !user) return
     fetchUserRole()
+    fetchUserStats()
     if (activeTab === "reto-del-dia") {
       fetchTodayChallenge()
     } else {
       fetchForumData()
     }
   }, [activeTab, user, loading])
+
+  const fetchUserStats = async () => {
+    try {
+      const res = await fetch("/api/user/stats")
+      if (res.ok) {
+        const data = await res.json()
+        if (data.weeklyActiveDays) setWeeklyActiveDays(data.weeklyActiveDays)
+      }
+    } catch { }
+  }
 
   const fetchUserRole = async () => {
     try {
@@ -479,24 +491,46 @@ function ForumContent() {
                   Comparte, aprende y conecta con tu grupo
                 </h1>
               </div>
-              <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-                <StreakWidget streak={streak} />
-                <Link href="/forum/bookmarks" style={{ padding: "10px 16px", background: "white", color: "#374151", borderRadius: 10, fontWeight: 600, textDecoration: "none", fontSize: 13, border: "1.5px solid #e2e8f0" }}>Guardados</Link>
-                <Link href="/forum/new" style={{ padding: "10px 18px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", borderRadius: 10, fontWeight: 700, textDecoration: "none", fontSize: 13, boxShadow: "0 4px 12px rgba(15,98,254,0.3)" }}>+ Crear Tema</Link>
+              <div style={{ display: "flex", gap: 14, alignItems: "flex-start", flexWrap: "wrap" }}>
+                <StreakWidget streak={streak} showCalendar activeDays={weeklyActiveDays} />
               </div>
             </div>
 
-            {/* ── 3-Tab Selector ── */}
-            <div style={{ display: "flex", gap: 8, marginBottom: 28, overflowX: "auto", paddingBottom: 4, flexWrap: "nowrap" }}>
-              <button className={`forum-tab-btn ${activeTab === "reto-del-dia" ? "active" : "inactive"}`} onClick={() => setActiveTab("reto-del-dia")}>
-                <Target size={15} /> Reto del día
-              </button>
-              <button className={`forum-tab-btn ${activeTab === "preguntas" ? "active" : "inactive"}`} onClick={() => setActiveTab("preguntas")}>
-                <MessageCircle size={15} /> Preguntas rápidas
-              </button>
-              <button className={`forum-tab-btn ${activeTab === "proyectos" ? "active" : "inactive"}`} onClick={() => setActiveTab("proyectos")}>
-                <Briefcase size={15} /> Proyectos
-              </button>
+            {/* ── Tab Selector Row ── */}
+            <div style={{ display: "flex", gap: 10, marginBottom: 32, overflowX: "auto", paddingBottom: 6, flexWrap: "nowrap", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button className={`forum-tab-btn ${activeTab === "reto-del-dia" ? "active" : "inactive"}`} onClick={() => setActiveTab("reto-del-dia")}>
+                  <Target size={15} /> Reto del día
+                </button>
+                <button className={`forum-tab-btn ${activeTab === "preguntas" ? "active" : "inactive"}`} onClick={() => setActiveTab("preguntas")}>
+                  <MessageCircle size={15} /> Preguntas rápidas
+                </button>
+                <button className={`forum-tab-btn ${activeTab === "proyectos" ? "active" : "inactive"}`} onClick={() => setActiveTab("proyectos")}>
+                  <Briefcase size={15} /> Proyectos
+                </button>
+              </div>
+
+              {/* Vertical Divider */}
+              <div style={{ width: 1.5, height: 24, background: "#e2e8f0", margin: "0 4px" }} />
+
+              <div style={{ display: "flex", gap: 8 }}>
+                <Link href="/forum/bookmarks" style={{
+                  display: "flex", alignItems: "center", gap: 7,
+                  padding: "10px 18px", background: "white", color: "#64748b",
+                  borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 13,
+                  border: "1.5px solid #e2e8f0", transition: "all 0.2s"
+                }} className="forum-nav-extra-btn">
+                  <BookOpen size={15} /> Guardados
+                </Link>
+                <Link href="/forum/new" style={{
+                  display: "flex", alignItems: "center", gap: 7,
+                  padding: "10px 20px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white",
+                  borderRadius: 12, fontWeight: 800, textDecoration: "none", fontSize: 13,
+                  boxShadow: "0 4px 12px rgba(15,98,254,0.3)", transition: "all 0.2s"
+                }}>
+                  <span>+</span> Crear Tema
+                </Link>
+              </div>
             </div>
 
             {/* ════════════════════════════════════════════

@@ -10,6 +10,8 @@ import {
 } from "lucide-react"
 import confetti from "canvas-confetti"
 import StreakWidget from "@/components/StreakWidget"
+import XPProgressCard from "@/components/XPProgressCard"
+import { motion, AnimatePresence } from "framer-motion"
 
 type DailyChallenge = {
   id: string
@@ -44,8 +46,10 @@ const EVIDENCE_STEPS = [
 ]
 
 export default function RetoDiarioPage() {
-  const { user, loading, dbProfile } = useAuth()
+  const { user, loading, dbProfile, refreshUser } = useAuth()
   const router = useRouter()
+
+  const [earnedRewards, setEarnedRewards] = useState<{ xpAdded: number; newTotalXP: number } | null>(null)
 
   const [challenge, setChallenge] = useState<(DailyChallenge & { isCompleted?: boolean }) | null>(null)
   const [loadingChallenge, setLoadingChallenge] = useState(true)
@@ -127,6 +131,14 @@ export default function RetoDiarioPage() {
         body: JSON.stringify({ dailyChallengeId: challenge.id, ...form })
       })
       if (res.ok || res.status === 409) {
+        const data = await res.json()
+        if (data.rewards) {
+          setEarnedRewards({
+            xpAdded: data.rewards.xpAwarded || 50,
+            newTotalXP: data.rewards.newTotalXp
+          })
+        }
+        await refreshUser()
         setSubmitted(true); setShowEvidence(false); setEvidenceStep(0)
         confetti({
           particleCount: 150,
@@ -639,10 +651,17 @@ export default function RetoDiarioPage() {
                     ¡Reto completado!
                   </h2>
 
-                  {/* XP earned */}
+                  {/* XP Reward Animation */}
+                  <div style={{ marginBottom: 28, marginTop: 12 }}>
+                    <XPProgressCard
+                      xpEarned={earnedRewards?.xpAdded || 50}
+                      initialXP={(earnedRewards?.newTotalXP ? earnedRewards.newTotalXP - earnedRewards.xpAdded : (dbProfile?.xp || 0) - (submitted ? 0 : 50))}
+                      delay={600}
+                    />
+                  </div>
+
+                  {/* Streak Info */}
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 999, marginBottom: 16 }}>
-                    <Star size={14} style={{ color: "#fbbf24" }} fill="#fbbf24" />
-                    <span style={{ fontSize: 14, fontWeight: 900, color: "#fbbf24" }}>+50 XP ganados</span>
                     <Flame size={14} style={{ color: "#fb923c" }} />
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#fb923c" }}>{streak} días seguidos</span>
                   </div>

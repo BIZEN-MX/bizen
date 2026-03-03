@@ -87,12 +87,17 @@ export async function GET() {
     const xpNeeded = xpForNextLevel(userProfile.xp)
 
     // Update level or streak in database if it changed
-    if (currentLevel !== profile.level || currentStreak !== (profile.currentStreak || 0)) {
+    // IMPORTANT: Also update lastActive if it's a new day to keep the streak 'alive' even without winning XP
+    const profileLastActiveDay = profile.lastActive ? getMexicoMidnight(new Date(profile.lastActive)) : null;
+    const isNewDay = !profileLastActiveDay || getMexicoMidnight(now).getTime() > profileLastActiveDay.getTime();
+
+    if (currentLevel !== profile.level || currentStreak !== (profile.currentStreak || 0) || isNewDay) {
       await prisma.profile.update({
         where: { userId: user.id },
         data: {
           level: currentLevel,
-          currentStreak: currentStreak
+          currentStreak: currentStreak,
+          ...(isNewDay && { lastActive: now })
         }
       })
     }

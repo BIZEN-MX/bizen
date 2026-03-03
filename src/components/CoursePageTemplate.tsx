@@ -39,6 +39,7 @@ import {
     CheckCircle2,
     Zap,
     Layout,
+    Flag,
     LucideIcon
 } from "lucide-react"
 
@@ -119,6 +120,7 @@ export default function CoursePageTemplate({
     const { user, loading } = useAuth()
     const { completedLessons, lessonStars } = useLessonProgress()
     const [lessonModal, setLessonModal] = useState<{ lesson: GenericLesson; unitTitle: string } | null>(null)
+    const [lastJumpTime, setLastJumpTime] = useState(0)
 
     React.useEffect(() => {
         if (!loading && !user) {
@@ -268,14 +270,14 @@ export default function CoursePageTemplate({
                             const subTotal = sub.lessons.length
                             const subPct = subTotal > 0 ? Math.round((subCompleted / subTotal) * 100) : 0
 
+                            // Calculate the starting number for lessons in this subtema
+                            const lessonOffset = subtemas.slice(0, subIdx).reduce((acc, s) => acc + s.lessons.length, 0)
+
                             return (
                                 <div key={subIdx} id={`tema${topicId}-subtema-${subIdx + 1}`} style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }}>
                                     {/* Subtema header bar — always deep spatial blue */}
                                     <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%)", borderRadius: 18, boxShadow: "0 8px 28px rgba(15,98,254,0.35)", border: "1px solid rgba(59,130,246,0.3)", marginBottom: 20 }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
-                                            <div style={{ width: "clamp(48px,10vw,60px)", height: "clamp(48px,10vw,60px)", minWidth: "clamp(48px,10vw,60px)", borderRadius: 14, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "clamp(18px,4vw,22px)", fontWeight: 900, color: "#fff", backdropFilter: "blur(4px)" }}>
-                                                {subIdx + 1}
-                                            </div>
                                             <div style={{ flex: 1, minWidth: 0 }}>
                                                 <div style={{ fontSize: "clamp(15px, 3vw, 19px)", fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 4 }}>{sub.title}</div>
                                                 <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>{subTotal} lecciones · {subCompleted} completadas</div>
@@ -295,71 +297,148 @@ export default function CoursePageTemplate({
                                     {/* Lessons horizontal scroll */}
                                     <div
                                         className="lessons-scroll-container"
-                                        style={{ display: "flex", flexDirection: "row", gap: 16, overflowX: "auto", overflowY: "hidden", paddingBottom: 10, paddingTop: 4, scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "thin" }}
+                                        onScroll={(e) => {
+                                            const el = e.currentTarget
+                                            const now = Date.now()
+                                            if (now - lastJumpTime < 1500) return
+
+                                            // Trigger jump when reaching the right end of the scroll
+                                            const isAtEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 5
+
+                                            if (isAtEnd) {
+                                                const nextSubIdx = subIdx + 2 // 1-based next id (current subIdx is 0-based)
+                                                const nextEl = document.getElementById(`tema${topicId}-subtema-${nextSubIdx}`)
+                                                if (nextEl) {
+                                                    nextEl.scrollIntoView({ behavior: "smooth", block: "start" })
+                                                    setLastJumpTime(now)
+                                                }
+                                            }
+                                        }}
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            gap: 16,
+                                            overflowX: "auto",
+                                            overflowY: "hidden",
+                                            paddingBottom: 10,
+                                            paddingTop: 4,
+                                            scrollSnapType: "x mandatory",
+                                            WebkitOverflowScrolling: "touch",
+                                            scrollbarWidth: "thin"
+                                        }}
                                     >
                                         {sub.lessons.map((lesson, lessonIdx) => {
                                             const isDone = completedLessons.includes(lesson.slug)
                                             const stars = isDone ? (lessonStars[lesson.slug] ?? 0) : 0
+                                            const isLastLesson = lessonIdx === sub.lessons.length - 1
+                                            const absoluteLessonNumber = lessonOffset + lessonIdx + 1
 
                                             return (
-                                                <div
-                                                    key={lesson.slug}
-                                                    role="button"
-                                                    tabIndex={0}
-                                                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setLessonModal({ lesson, unitTitle: sub.title }) } }}
-                                                    onClick={() => setLessonModal({ lesson, unitTitle: sub.title })}
-                                                    className="cpt-lesson-card"
-                                                    style={{
-                                                        width: 240,
-                                                        minWidth: 240,
-                                                        flexShrink: 0,
-                                                        display: "flex",
-                                                        flexDirection: "column",
-                                                        padding: "20px 18px",
-                                                        background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
-                                                        borderRadius: 18,
-                                                        border: isDone ? "2px solid rgba(59,130,246,0.3)" : "1.5px solid #e8f0fe",
-                                                        boxSizing: "border-box",
-                                                        scrollSnapAlign: "start",
-                                                        cursor: "pointer",
-                                                        boxShadow: isDone ? "0 4px 16px rgba(15,98,254,0.12)" : "0 2px 10px rgba(0,0,0,0.04)",
-                                                        gap: 10,
-                                                        transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
-                                                        position: "relative",
-                                                        overflow: "hidden",
-                                                    }}
-                                                >
-                                                    {/* Completed ribbon */}
-                                                    {isDone && (
-                                                        <div style={{ position: "absolute", top: 10, right: 10, width: 22, height: 22, borderRadius: "50%", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                            <CheckCircle2 size={13} color="#fff" strokeWidth={2.5} />
+                                                <React.Fragment key={lesson.slug}>
+                                                    <div
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setLessonModal({ lesson, unitTitle: sub.title }) } }}
+                                                        onClick={() => setLessonModal({ lesson, unitTitle: sub.title })}
+                                                        className="cpt-lesson-card"
+                                                        style={{
+                                                            width: 320,
+                                                            minWidth: 320,
+                                                            flexShrink: 0,
+                                                            display: "flex",
+                                                            flexDirection: "column",
+                                                            padding: "32px 28px",
+                                                            background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
+                                                            borderRadius: 24,
+                                                            border: isDone ? "2.5px solid rgba(59,130,246,0.3)" : "1.8px solid #e8f0fe",
+                                                            boxSizing: "border-box",
+                                                            scrollSnapAlign: "start",
+                                                            cursor: "pointer",
+                                                            boxShadow: isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)",
+                                                            gap: 12,
+                                                            transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
+                                                            position: "relative",
+                                                            overflow: "hidden",
+                                                        }}
+                                                    >
+                                                        {/* Completed ribbon */}
+                                                        {isDone && (
+                                                            <div style={{ position: "absolute", top: 12, right: 12, width: 26, height: 26, borderRadius: "50%", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                                <CheckCircle2 size={15} color="#fff" strokeWidth={2.5} />
+                                                            </div>
+                                                        )}
+
+                                                        {/* Lesson number badge — always blue */}
+                                                        <div style={{ width: 44, height: 44, borderRadius: 14, background: isDone ? "#2563eb" : "rgba(15,98,254,0.1)", border: isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)", color: isDone ? "#fff" : "#2563eb", fontSize: 19, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                                            {absoluteLessonNumber}
                                                         </div>
+
+                                                        {/* Title */}
+                                                        <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
+                                                            {lesson.title}
+                                                        </div>
+
+                                                        {/* Footer: stars */}
+                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
+                                                            <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
+                                                                {[1, 2, 3].map((i) => (
+                                                                    <img
+                                                                        key={i}
+                                                                        src="/stars.png"
+                                                                        alt=""
+                                                                        style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Horizontal arrow connector between lesson cards */}
+                                                    {!isLastLesson ? (
+                                                        <div style={{
+                                                            display: "flex",
+                                                            flexDirection: "row",
+                                                            alignItems: "center",
+                                                            gap: 0,
+                                                            flexShrink: 0,
+                                                            alignSelf: "center",
+                                                        }}>
+                                                            <div style={{ width: 18, height: 2, background: "linear-gradient(to right, #bfdbfe, #3b82f6)", borderRadius: 2 }} />
+                                                            <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M10 7L0.25 13.0622L0.25 0.937822L10 7Z" fill="#3b82f6" />
+                                                            </svg>
+                                                        </div>
+                                                    ) : (
+                                                        /* If it's the last lesson of the LAST subtopic, add the finish line flag */
+                                                        (subIdx === subtemas.length - 1) && (
+                                                            <div style={{
+                                                                display: "flex",
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                gap: 12,
+                                                                flexShrink: 0,
+                                                                alignSelf: "center",
+                                                                paddingLeft: 12,
+                                                                paddingRight: 24
+                                                            }}>
+                                                                <div style={{ width: 18, height: 2, background: "linear-gradient(to right, #bfdbfe, #3b82f6)", borderRadius: 2 }} />
+                                                                <div style={{
+                                                                    width: 56,
+                                                                    height: 56,
+                                                                    borderRadius: "50%",
+                                                                    background: "#fff",
+                                                                    border: "3px solid #2563eb",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    boxShadow: "0 4px 16px rgba(37,99,235,0.2)"
+                                                                }}>
+                                                                    <Flag size={28} color="#2563eb" strokeWidth={3} fill="#2563eb" />
+                                                                </div>
+                                                            </div>
+                                                        )
                                                     )}
-
-                                                    {/* Lesson number badge — always blue */}
-                                                    <div style={{ width: 40, height: 40, borderRadius: 12, background: isDone ? "#2563eb" : "rgba(15,98,254,0.1)", border: isDone ? "none" : "1.5px solid rgba(15,98,254,0.2)", color: isDone ? "#fff" : "#2563eb", fontSize: 17, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                                        {lessonIdx + 1}
-                                                    </div>
-
-                                                    {/* Title */}
-                                                    <div style={{ fontSize: 14, fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
-                                                        {lesson.title}
-                                                    </div>
-
-                                                    {/* Footer: stars */}
-                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
-                                                        <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
-                                                            {[1, 2, 3].map((i) => (
-                                                                <img
-                                                                    key={i}
-                                                                    src="/stars.png"
-                                                                    alt=""
-                                                                    style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
-                                                                />
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </React.Fragment>
                                             )
                                         })}
                                     </div>
@@ -368,29 +447,7 @@ export default function CoursePageTemplate({
                         })}
                     </div>
 
-                    {/* ── PREV / NEXT NAVIGATION ─────────────────────────────────────── */}
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 16, paddingTop: 8, flexWrap: "wrap" }}>
-                        {prevTopic ? (
-                            <button
-                                onClick={() => router.push(`/courses/${prevTopic.id}`)}
-                                className="cpt-nav-btn"
-                                style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 22px", background: "#FBFAF5", border: "1.5px solid #e2e8f0", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", fontSize: 13, fontWeight: 700, color: "#374151", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", transition: "all 0.2s" }}
-                            >
-                                <ChevronLeft size={16} />
-                                <span>Tema {prevTopic.id.toString().padStart(2, "0")}: {prevTopic.title}</span>
-                            </button>
-                        ) : <div />}
-                        {nextTopic ? (
-                            <button
-                                onClick={() => router.push(`/courses/${nextTopic.id}`)}
-                                className="cpt-nav-btn"
-                                style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 22px", background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)", border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", fontSize: 13, fontWeight: 700, color: "#93c5fd", boxShadow: "0 4px 14px rgba(15,98,254,0.25)", transition: "all 0.2s" }}
-                            >
-                                <span>Tema {nextTopic.id.toString().padStart(2, "0")}: {nextTopic.title}</span>
-                                <ChevronRight size={16} />
-                            </button>
-                        ) : <div />}
-                    </div>
+
 
                 </div>
             </main>

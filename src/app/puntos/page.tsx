@@ -341,14 +341,14 @@ export default function PuntosPage() {
 
                         <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
                             <span style={{ fontSize: 52, fontWeight: 950, color: "#0c4a6e", lineHeight: 1 }}>{stats?.xpInCurrentLevel || 0}</span>
-                            <span style={{ fontSize: 14, fontWeight: 700, color: "#38bdf8" }}>/ {stats?.xpNeeded || 150} XP</span>
+                            <span style={{ fontSize: 14, fontWeight: 700, color: "#38bdf8" }}>/ {stats?.xpNeeded || 100} XP</span>
                         </div>
 
                         <div style={{ width: "80%", maxWidth: "160px", height: 10, background: "rgba(255,255,255,0.5)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(14,165,233,0.2)", marginBottom: 10 }}>
-                            <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpToNextLevel || 150)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #38bdf8, #0F62FE)", borderRadius: 10, boxShadow: "0 0 10px rgba(15,98,254,0.3)", transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)" }} />
+                            <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 100)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #38bdf8, #0F62FE)", borderRadius: 10, boxShadow: "0 0 10px rgba(15,98,254,0.3)", transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)" }} />
                         </div>
 
-                        <div style={{ fontSize: 11, fontWeight: 800, color: "#075985", textTransform: "uppercase", letterSpacing: "0.05em" }}>{(stats?.xpToNextLevel || 150) - (stats?.xpInCurrentLevel || 0)} XP para subir</div>
+                        <div style={{ fontSize: 11, fontWeight: 800, color: "#075985", textTransform: "uppercase", letterSpacing: "0.05em" }}>{stats?.xpToNextLevel || 100} XP para subir</div>
                     </div>
                 </div>
 
@@ -365,7 +365,7 @@ export default function PuntosPage() {
                         </div>
                         <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "1px solid #bfdbfe", borderRadius: 999, padding: "8px 16px" }}>
                             <Star size={14} color="#2563eb" fill="#2563eb" />
-                            <span style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8" }}>{userPoints.toLocaleString()} XP disponibles</span>
+                            <span style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8" }}>{userPoints.toLocaleString()} BIZCOINS disponibles</span>
                         </div>
                     </div>
 
