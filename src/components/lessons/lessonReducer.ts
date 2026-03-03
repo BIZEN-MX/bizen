@@ -32,6 +32,7 @@ export type LessonAction =
   | { type: "GO_TO_SUMMARY_AFTER_REVIEW" }
   | { type: "SET_ACTION_ENABLED"; enabled: boolean }
   | { type: "TRIGGER_ACTION" }
+  | { type: "RESET_STEP"; stepId: string }
 
 export function lessonReducer(state: LessonState, action: LessonAction): LessonState {
   switch (action.type) {
@@ -252,6 +253,20 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         ...state,
         actionTrigger: state.actionTrigger + 1,
       }
+
+    case "RESET_STEP": {
+      const { stepId } = action
+      const newAnswersByStepId = { ...state.answersByStepId }
+      delete newAnswersByStepId[stepId]
+
+      return {
+        ...state,
+        answersByStepId: newAnswersByStepId,
+        isContinueEnabled: false,
+        isActionEnabled: false,
+        actionTrigger: state.actionTrigger + 1, // Trigger a reset in the component
+      }
+    }
 
     default:
       return state

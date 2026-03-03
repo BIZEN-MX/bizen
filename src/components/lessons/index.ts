@@ -20,6 +20,7 @@ export {
   CENTERED_CONTAINER_STYLE,
 } from "./layoutConstants"
 export { LessonEngine } from "./LessonEngine"
+export { LessonExitModal } from "./LessonExitModal"
 export { lessonReducer, buildReviewSteps } from "./lessonReducer"
 export type { LessonState, LessonAction, AnswerResult } from "./lessonReducer"
 

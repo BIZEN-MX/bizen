@@ -3,7 +3,7 @@
 import React, { useReducer, useEffect, useCallback, useRef, useState } from "react"
 import { LessonStep } from "@/types/lessonTypes"
 import { lessonReducer, LessonState } from "./lessonReducer"
-import { LessonScreen, StickyFooterButton, StickyFooter } from "./index"
+import { LessonScreen, StickyFooterButton, StickyFooter, LessonExitModal } from "./index"
 import { LessonProgressHeader } from "./LessonProgressHeader"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X, CONTENT_PADDING_Y } from "./layoutConstants"
 import {
@@ -45,6 +45,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     isActionEnabled: false,
     actionTrigger: 0,
   })
+
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false)
 
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
@@ -137,13 +139,18 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const handleContinue = useCallback(() => {
     if (!currentStep) return
 
+    // Final completion
     if (isLastStep && isSummaryStep) {
       onCompleteRef.current?.(stars)
       return
     }
 
+    const currentAnswer = state.answersByStepId[currentStep.id]
+    const isCorrect = currentAnswer?.isCorrect === true
+
     // If step is not completed, trigger the action (Reveal or Check)
-    if (!state.isContinueEnabled && !isSummaryStep && !isLastStep) {
+    // removed !isLastStep check to prevent getting stuck on the final assessment
+    if (!state.isContinueEnabled && !isSummaryStep) {
       if (state.isActionEnabled) {
         haptic.light()
         dispatch({ type: "TRIGGER_ACTION" })
@@ -151,6 +158,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       return
     }
 
+    // If it's a review step and it was wrong, we've already appended a new retry.
+    // Moving next will take us to that retry.
+
+    // Check if we should transition to summary from a review step
     const isOnReviewStep = !!currentStep?.reviewSourceStepId
     if (isLastStep && isOnReviewStep && state.incorrectSteps.length === 0) {
       dispatch({ type: "GO_TO_SUMMARY_AFTER_REVIEW" })
@@ -158,20 +169,26 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     }
 
     const nextIndex = state.currentStepIndex + 1
-    const nextStep = state.originalSteps[nextIndex]
+    const nextStep = state.allSteps[nextIndex]
     const nextStepIsSummary = nextStep?.stepType === "summary"
 
-    if (nextStepIsSummary && !state.hasBuiltReviewSteps) {
+    // Transition logic for original flow
+    // If next is summary OR we've reached the end of original steps, check if we need to build review pool
+    const isAtEndOfOriginals = nextIndex >= state.originalSteps.length
+
+    if ((nextStepIsSummary || isAtEndOfOriginals) && !state.hasBuiltReviewSteps) {
       if (state.incorrectSteps.length > 0) {
         dispatch({ type: "BUILD_REVIEW_STEPS" })
+      } else if (nextIndex < state.allSteps.length) {
+        dispatch({ type: "NEXT_STEP" })
       } else {
         dispatch({ type: "GO_TO_SUMMARY" })
       }
-    } else {
+    } else if (nextIndex < state.allSteps.length) {
       haptic.light()
       dispatch({ type: "NEXT_STEP" })
     }
-  }, [state.isContinueEnabled, state.currentStepIndex, state.allSteps, state.originalSteps, state.hasBuiltReviewSteps, state.incorrectSteps.length, stars, currentStep, state.isActionEnabled, isLastStep, isSummaryStep])
+  }, [state.isContinueEnabled, state.currentStepIndex, state.allSteps, state.originalSteps, state.hasBuiltReviewSteps, state.incorrectSteps.length, stars, currentStep, state.isActionEnabled, isLastStep, isSummaryStep, state.answersByStepId])
 
   const handleBack = useCallback(() => {
     if (state.currentStepIndex > 0) {
@@ -179,6 +196,14 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       dispatch({ type: "PREV_STEP" })
     }
   }, [state.currentStepIndex])
+
+  const handleAttemptExit = useCallback(() => {
+    if (isSummaryStep) {
+      onExit?.()
+    } else {
+      setIsExitModalOpen(true)
+    }
+  }, [isSummaryStep, onExit])
 
   // Stabilize the onAnswered callback to prevent infinite render loops in steps
   const onStepAnswered = useCallback((res: any) => {
@@ -298,10 +323,19 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               totalSteps={state.allSteps.length}
               streak={streak}
               stars={stars}
-              onExit={onExit}
+              onExit={handleAttemptExit}
             />
           </div>
         </div>
+
+        <LessonExitModal
+          isOpen={isExitModalOpen}
+          onClose={() => setIsExitModalOpen(false)}
+          onExit={() => {
+            setIsExitModalOpen(false)
+            onExit?.()
+          }}
+        />
 
         {/* Content Area - Scrollable */}
         <div

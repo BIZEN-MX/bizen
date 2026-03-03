@@ -18,7 +18,6 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
     stepType: "info",
     title: "¿Qué es el dinero para mí?",
     body: "Antes de hablar de números,\nvamos a hablar de ti.\n\nNo hay respuestas buenas o malas.",
-    imageUrl: "/uploads/lesson-1/slide1.png",
     isAssessment: false,
     continueLabel: "Empezar",
     fullScreen: true,
@@ -46,8 +45,8 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
   {
     id: "qed-teoria-1",
     stepType: "info",
+    title: "Emociones y Dinero",
     body: "El dinero no es solo algo que se gana o se gasta.\nTambién es algo que se siente.",
-    imageUrl: "/uploads/lesson-1/slide3.png",
     isAssessment: false,
     continueLabel: "Continuar",
     fullScreen: true,
@@ -93,8 +92,8 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
   {
     id: "qed-scenario",
     stepType: "info",
+    title: "Diferentes Realidades",
     body: "Dos personas ganan lo mismo.\nUna vive tranquila.\nLa otra vive estresada.\n\nEl dinero es el mismo.\nLa relación no.",
-    imageUrl: "/uploads/lesson-1/slide6.png",
     isAssessment: false,
     continueLabel: "Continuar",
     fullScreen: true,
@@ -120,6 +119,7 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
   {
     id: "qed-teoria-2",
     stepType: "info",
+    title: "Entender el pensamiento",
     body: "Antes de aprender finanzas,\nhay que entender cómo pensamos.",
     isAssessment: false,
     continueLabel: "Continuar",
@@ -160,8 +160,8 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
   {
     id: "qed-teoria-3",
     stepType: "info",
+    title: "Observación",
     body: "Darte cuenta es el primer paso.\nNo cambiar nada todavía.\nSolo observar.",
-    imageUrl: "/uploads/lesson-1/slide11.png",
     isAssessment: false,
     continueLabel: "Continuar",
     fullScreen: true,

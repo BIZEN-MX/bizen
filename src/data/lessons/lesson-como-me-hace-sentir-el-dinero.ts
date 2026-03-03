@@ -17,12 +17,11 @@ export const lessonComoMeHaceSentirElDineroSteps: LessonStep[] = [
   {
     id: "cms-intro",
     stepType: "info",
+    title: "Sentimientos y Dinero",
     body: "El dinero no solo se piensa.\nTambién se siente.",
     isAssessment: false,
     continueLabel: "Empezar",
     fullScreen: true,
-    imageUrl: `${IMG}/intro.png`,
-    imageAlign: "right",
   },
 
   // FLASHCARD 2 – Quick Poll (no image)
@@ -46,12 +45,11 @@ export const lessonComoMeHaceSentirElDineroSteps: LessonStep[] = [
   {
     id: "cms-teoria-1",
     stepType: "info",
+    title: "Influencia Emocional",
     body: "Las emociones influyen en cómo usamos el dinero.",
     isAssessment: false,
     continueLabel: "Continuar",
     fullScreen: true,
-    imageUrl: `${IMG}/heart-brain.png`,
-    imageAlign: "left",
   },
 
   // FLASHCARD 4 – True / False
@@ -100,6 +98,7 @@ export const lessonComoMeHaceSentirElDineroSteps: LessonStep[] = [
   {
     id: "cms-teoria-2",
     stepType: "info",
+    title: "Decisiones y Emociones",
     body: "No es malo sentir emociones con el dinero.\nEl problema es decidir solo con ellas.",
     isAssessment: false,
     continueLabel: "Continuar",
@@ -144,6 +143,7 @@ export const lessonComoMeHaceSentirElDineroSteps: LessonStep[] = [
   {
     id: "cms-teoria-3",
     stepType: "info",
+    title: "Autoconocimiento",
     body: "Reconocer cómo me siento\nme ayuda a decidir mejor.",
     isAssessment: false,
     continueLabel: "Continuar",

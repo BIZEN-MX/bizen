@@ -18,7 +18,6 @@ export default function LessonPage() {
     const [lessonData, setLessonData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const [showExitDialog, setShowExitDialog] = useState(false)
     const [progress, setProgress] = useState({
         currentStep: 1,
         totalSteps: 1,
@@ -121,12 +120,9 @@ export default function LessonPage() {
         }, 3200)
     }, [lessonIdStr, user, router, courseIdStr])
 
-    const handleExit = () => setShowExitDialog(true)
-    const confirmExitLesson = () => {
-        setShowExitDialog(false)
+    const handleExit = () => {
         router.push(`/courses/${courseIdStr.replace(/^course-/, "") || "1"}`)
     }
-    const cancelExitLesson = () => setShowExitDialog(false)
 
     // Loading State
     if (loading) {
@@ -203,34 +199,6 @@ export default function LessonPage() {
                 </div>
             </div>
 
-            {/* Exit Dialog */}
-            <AnimatePresence>
-                {showExitDialog && (
-                    <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0, 0, 0, 0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1100, padding: 20, fontFamily: "'Montserrat', sans-serif" }}>
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            style={{ background: "white", borderRadius: 16, padding: "32px", maxWidth: 450, width: "100%", boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)" }}
-                        >
-                            <div style={{ fontSize: 24, fontWeight: 800, marginBottom: 16, background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                                ¿Deseas salir?
-                            </div>
-                            <p style={{ fontSize: 16, color: "#374151", lineHeight: 1.6, marginBottom: 24 }}>
-                                Si sales ahora, perderás todo el progreso de esta lección. ¡Estás haciendo un gran trabajo, te animamos a terminarla!
-                            </p>
-                            <div style={{ display: "flex", gap: 12, flexDirection: "column" }}>
-                                <button onClick={cancelExitLesson} style={{ padding: "14px 24px", background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)", color: "white", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)" }}>
-                                    Continuar con la lección
-                                </button>
-                                <button onClick={confirmExitLesson} style={{ padding: "14px 24px", background: "white", color: "#DC2626", border: "1px solid rgba(220, 38, 38, 0.3)", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-                                    Salir de la lección
-                                </button>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
         </>
     )
 }
