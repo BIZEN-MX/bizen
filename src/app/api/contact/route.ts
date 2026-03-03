@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { resend } from '@/lib/resend'
+import { getResend } from '@/lib/resend'
 
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'contacto@bizen.mx'
 const CONTACT_FROM = process.env.RESEND_FROM || 'BIZEN Web <onboarding@resend.dev>'
@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
 
       // 2) Fallback: send email via Resend so the form still works in production
       if (process.env.RESEND_API_KEY) {
+        const resend = await getResend()
         const { data, error } = await resend.emails.send({
           from: CONTACT_FROM,
           to: CONTACT_EMAIL,
