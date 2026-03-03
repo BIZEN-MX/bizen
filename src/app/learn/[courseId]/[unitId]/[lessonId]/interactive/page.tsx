@@ -45,8 +45,9 @@ export default function InteractiveLessonPage() {
     if (redirectToCoursesRef.current) return
     redirectToCoursesRef.current = true
 
+    const isRepeated = (user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr) || false
     const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 2
-    const xpEarned = starsEarned * 5 // 5 XP per star, max 15
+    const xpEarned = isRepeated ? (starsEarned > 0 ? 5 : 0) : (starsEarned * 5)
 
     // Guest user: save to localStorage
     if (lessonIdStr && typeof window !== "undefined" && !user) {
@@ -70,6 +71,7 @@ export default function InteractiveLessonPage() {
         const lessonStars = (user.user_metadata?.lessonStars as Record<string, number> | undefined) || {}
         const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
         const newLessonStars = { ...lessonStars, [lessonIdStr]: starsEarned }
+
         await supabase.auth.updateUser({
           data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
         })
@@ -81,7 +83,7 @@ export default function InteractiveLessonPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
         }).catch(() => { /* non-critical, ignore offline errors */ })
-      } catch {
+      } catch (e) {
         // Offline or auth error - ignore, progress still saved in memory
       }
     }
