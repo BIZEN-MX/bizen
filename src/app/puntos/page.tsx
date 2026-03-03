@@ -285,7 +285,7 @@ export default function PuntosPage() {
                         textAlign: "center"
                     }}>
                         <div style={{ fontSize: 12, fontWeight: 800, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Nivel actual</div>
-                        <div style={{ fontSize: 52, fontWeight: 950, color: "#b45309", lineHeight: 1, marginBottom: 6, textShadow: "0 2px 10px rgba(180,83,9,0.2)" }}>{stats?.level || 1}</div>
+                        <div style={{ fontSize: 52, fontWeight: 950, color: "#b45309", lineHeight: 1, marginBottom: 6, textShadow: "0 2px 10px rgba(180,83,9,0.2)" }}>{stats?.level || (dbProfile as any)?.level || 1}</div>
                         <div style={{ fontSize: 12, fontWeight: 800, color: "#d97706", textTransform: "uppercase", letterSpacing: "0.06em" }}>Bizen Explorer</div>
                     </div>
 
@@ -307,7 +307,7 @@ export default function PuntosPage() {
                             <div style={{ width: 80, height: 40, background: "#f1f5f9", borderRadius: 12, animation: "puntos-shimmer 2s infinite" }} />
                         ) : (
                             <StreakWidget
-                                streak={stats?.currentStreak || 0}
+                                streak={stats?.currentStreak ?? (dbProfile as any)?.currentStreak ?? 0}
                                 showCalendar={false}
                                 iconSize={34}
                                 fontSize={52}
@@ -337,7 +337,7 @@ export default function PuntosPage() {
                         justifyContent: "center",
                         textAlign: "center"
                     }}>
-                        <div style={{ fontSize: 12, fontWeight: 800, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Siguiente: Nivel {(stats?.level || 1) + 1}</div>
+                        <div style={{ fontSize: 12, fontWeight: 800, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Siguiente: Nivel {(stats?.level || (dbProfile as any)?.level || 1) + 1}</div>
 
                         <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
                             <span style={{ fontSize: 52, fontWeight: 950, color: "#0c4a6e", lineHeight: 1 }}>{stats?.xpInCurrentLevel || 0}</span>

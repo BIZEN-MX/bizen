@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 export const dynamic = 'force-dynamic'
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
-import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel, calculateCurrentStreak } from "@/lib/xp"
+import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel, calculateCurrentStreak, getMexicoMidnight } from "@/lib/xp"
 import { logToFile } from "@/lib/debugLogger"
 
 export async function GET() {
@@ -88,6 +88,7 @@ export async function GET() {
 
     // Update level or streak in database if it changed
     // IMPORTANT: Also update lastActive if it's a new day to keep the streak 'alive' even without winning XP
+    const now = new Date();
     const profileLastActiveDay = profile.lastActive ? getMexicoMidnight(new Date(profile.lastActive)) : null;
     const isNewDay = !profileLastActiveDay || getMexicoMidnight(now).getTime() > profileLastActiveDay.getTime();
 
@@ -103,7 +104,6 @@ export async function GET() {
     }
 
     // Get active days this week (Sun–Sat) from daily challenge evidence posts
-    const now = new Date()
     const dayOfWeek = now.getDay() // 0=Sun
     const sunday = new Date(now)
     sunday.setDate(now.getDate() - dayOfWeek)

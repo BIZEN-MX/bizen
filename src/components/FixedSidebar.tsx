@@ -388,7 +388,7 @@ export default function FixedSidebar() {
 
           {/* Quick Actions */}
           <div style={{ marginBottom: 24, flex: "1 1 auto" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: stackAlignment }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20, alignItems: stackAlignment }}>
               {isStudentOrGuest && (
                 <>
                   <button
@@ -398,7 +398,7 @@ export default function FixedSidebar() {
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
-                      padding: "12px",
+                      padding: "14px 16px",
                       background: isCompactSidebar ? "transparent" : (coursesActive ? "#eff6ff" : "transparent"),
                       border: "none",
                       borderRadius: 10,
@@ -437,7 +437,7 @@ export default function FixedSidebar() {
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
-                      padding: "12px",
+                      padding: "14px 16px",
                       background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "#eff6ff" : "transparent"),
                       border: "none",
                       borderRadius: 10,
@@ -516,7 +516,7 @@ export default function FixedSidebar() {
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
-                      padding: "12px",
+                      padding: "14px 16px",
                       background: isCompactSidebar ? "transparent" : (simuladorActive ? "#eff6ff" : "transparent"),
                       border: "none",
                       borderRadius: 10,
@@ -557,7 +557,7 @@ export default function FixedSidebar() {
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
-                      padding: "12px",
+                      padding: "14px 16px",
                       background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "#eff6ff" : "transparent"),
                       border: "none",
                       borderRadius: 10,
@@ -602,7 +602,7 @@ export default function FixedSidebar() {
                         display: "flex",
                         alignItems: "center",
                         gap: 12,
-                        padding: "12px",
+                        padding: "14px 16px",
                         background: isCompactSidebar ? "transparent" : (forumActive ? "#eff6ff" : "transparent"),
                         border: "none",
                         borderRadius: 10,
@@ -721,7 +721,7 @@ export default function FixedSidebar() {
                   {mounted && user && (
                     <div
                       ref={masTriggerRef}
-                      style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", gap: 6, alignItems: stackAlignment }}
+                      style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", gap: 10, alignItems: stackAlignment }}
                       onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
                       onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
                     >
@@ -732,7 +732,7 @@ export default function FixedSidebar() {
                           display: "flex",
                           alignItems: "center",
                           gap: 12,
-                          padding: "12px",
+                          padding: "14px 16px",
                           background: isCompactSidebar ? "transparent" : (isMasOpen ? "#eff6ff" : "transparent"),
                           border: "none",
                           borderRadius: 10,
@@ -780,7 +780,7 @@ export default function FixedSidebar() {
                             minWidth: 200,
                             display: "flex",
                             flexDirection: "column",
-                            gap: 6,
+                            gap: 10,
                             padding: "12px",
                             background: "#FBFAF5",
                             border: "2px solid #0F62FE",
