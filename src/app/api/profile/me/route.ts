@@ -12,73 +12,107 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const userProfileRaw = (await prisma.profile.findUnique({
-      where: { userId: user.id },
-      include: {
-        inventory: {
-          select: {
-            productId: true
+    // Use try-catch for each DB query to pinpoint failures and avoid blanket 500
+    let userProfileRaw: any = null;
+    try {
+      userProfileRaw = await prisma.profile.findUnique({
+        where: { userId: user.id },
+        include: {
+          inventory: {
+            select: {
+              productId: true
+            }
           }
         }
-      }
-    })) as any
+      })
+    } catch (e: any) {
+      console.error("DB Error (profile/me - primary fetch):", e.message)
+      throw new Error(`Profile fetch failed: ${e.message}`)
+    }
 
     if (!userProfileRaw) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 })
+      console.log(`[api/profile/me] Profile missing for user ${user.id}, creating default...`)
+      try {
+        userProfileRaw = await prisma.profile.create({
+          data: {
+            userId: user.id,
+            fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
+            role: 'student',
+            xp: 0,
+            bizcoins: 0,
+            level: 1
+          }
+        })
+      } catch (createErr: any) {
+        console.error('[api/profile/me] Failed to create default profile:', createErr.message)
+        return NextResponse.json({ error: "Profile not found and could not be created" }, { status: 404 })
+      }
     }
 
     const userProfile = {
       ...userProfileRaw,
-      inventory: userProfileRaw.inventory?.map((i: any) => i.productId) || []
+      inventory: (userProfileRaw.inventory || []).map((i: any) => i.productId) || []
     }
 
-    // Ensure level is synced with XP
-    const calculatedLevel = calculateLevel(userProfile.xp)
-    if (calculatedLevel !== userProfile.level) {
-      await prisma.profile.update({
-        where: { userId: user.id },
-        data: { level: calculatedLevel }
-      })
-      userProfile.level = calculatedLevel
+    // Ensure level is synced with XP (can fail without breaking everything)
+    try {
+      const calculatedLevelValue = calculateLevel(userProfile.xp)
+      if (calculatedLevelValue !== userProfile.level) {
+        await prisma.profile.update({
+          where: { userId: user.id },
+          data: { level: calculatedLevelValue }
+        }).catch(() => { }) // Ignore update failure
+        userProfile.level = calculatedLevelValue
+      }
+    } catch (e: any) {
+      console.warn("Soft error in level sync:", e.message)
     }
 
-    // Get active days this week (Sun–Sat)
-    const now = new Date()
-    const dayOfWeek = now.getDay()
-    const sunday = new Date(now)
-    sunday.setDate(now.getDate() - dayOfWeek)
-    sunday.setHours(0, 0, 0, 0)
-    const saturday = new Date(sunday)
-    saturday.setDate(sunday.getDate() + 6)
-    saturday.setHours(23, 59, 59, 999)
+    // Get active days this week (can fail without breaking everything)
+    let weeklyActiveDays: string[] = []
+    try {
+      const now = new Date()
+      const dayOfWeek = now.getDay()
+      const sunday = new Date(now)
+      sunday.setDate(now.getDate() - dayOfWeek)
+      sunday.setHours(0, 0, 0, 0)
+      const saturday = new Date(sunday)
+      saturday.setDate(sunday.getDate() + 6)
+      saturday.setHours(23, 59, 59, 999)
 
-    const [weeklyEvidence, weeklyProgress] = await Promise.all([
-      prisma.evidencePost.findMany({
-        where: { authorUserId: user.id, createdAt: { gte: sunday, lte: saturday } },
-        select: { createdAt: true }
-      }).catch(() => []),
-      prisma.progress.findMany({
-        where: { userId: user.id, completedAt: { gte: sunday, lte: saturday } },
-        select: { completedAt: true }
-      }).catch(() => [])
-    ])
+      const [weeklyEvidence, weeklyProgress] = await Promise.all([
+        prisma.evidencePost.findMany({
+          where: { authorUserId: user.id, createdAt: { gte: sunday, lte: saturday } },
+          select: { createdAt: true }
+        }).catch(() => []),
+        prisma.progress.findMany({
+          where: { userId: user.id, completedAt: { gte: sunday, lte: saturday } },
+          select: { completedAt: true }
+        }).catch(() => [])
+      ])
 
-    const activeDatesSet = new Set<string>()
-    for (const e of weeklyEvidence as any[]) {
-      if (e.createdAt) activeDatesSet.add(new Date(e.createdAt).toISOString().split("T")[0])
+      const activeDatesSet = new Set<string>()
+      for (const e of (weeklyEvidence as any[])) {
+        if (e.createdAt) activeDatesSet.add(new Date(e.createdAt).toISOString().split("T")[0])
+      }
+      for (const p of (weeklyProgress as any[])) {
+        if (p.completedAt) activeDatesSet.add(new Date(p.completedAt).toISOString().split("T")[0])
+      }
+      weeklyActiveDays = Array.from(activeDatesSet)
+    } catch (e: any) {
+      console.warn("Soft error in weekly activity calculation:", e.message)
     }
-    for (const p of weeklyProgress as any[]) {
-      if (p.completedAt) activeDatesSet.add(new Date(p.completedAt).toISOString().split("T")[0])
-    }
-    const weeklyActiveDays = Array.from(activeDatesSet)
 
     return NextResponse.json({
       ...userProfile,
       weeklyActiveDays
     })
-  } catch (error) {
-    console.error("Error fetching profile:", error)
-    return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 })
+  } catch (error: any) {
+    console.error("FATAL: Error in GET /api/profile/me:", error)
+    return NextResponse.json({
+      error: "Failed to fetch profile",
+      details: error instanceof Error ? error.message : String(error)
+    }, { status: 500 })
   }
 }
 

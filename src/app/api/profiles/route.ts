@@ -32,10 +32,25 @@ export async function GET(request: NextRequest) {
     }
 
     if (!profile) {
-      return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
-      )
+      console.log(`[api/profiles] Profile missing for user ${user.id}, creating default...`)
+      try {
+        profile = await prisma.profile.create({
+          data: {
+            userId: user.id,
+            fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
+            role: 'student',
+            xp: 0,
+            bizcoins: 0,
+            level: 1
+          }
+        })
+      } catch (createErr: any) {
+        console.error('[api/profiles] Failed to create default profile:', createErr.message)
+        return NextResponse.json(
+          { error: 'Profile not found and could not be created' },
+          { status: 404 }
+        )
+      }
     }
 
     // Fetch inventory via raw query with fallback

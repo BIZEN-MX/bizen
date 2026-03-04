@@ -58,43 +58,57 @@ export async function GET(req: NextRequest) {
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
         // VISIBILIDAD GLOBAL FORZADA: Traemos todo sin filtros
-        const posts = await prisma.evidencePost.findMany({
-            where: {},
-            orderBy: { createdAt: "desc" },
-            take: 50,
-            include: {
-                reactions: true,
-                comments: { orderBy: { createdAt: "asc" } }
-            }
-        })
+        let posts: any[] = []
+        try {
+            posts = await prisma.evidencePost.findMany({
+                where: {},
+                orderBy: { createdAt: "desc" },
+                take: 50,
+                include: {
+                    reactions: true,
+                    comments: { orderBy: { createdAt: "asc" } }
+                }
+            })
+        } catch (e: any) {
+            console.error("DB Error (evidence fetch):", e.message)
+            // If primary fetch fails, we can't do much, but let's try to return empty
+            return NextResponse.json([])
+        }
 
-        const authorIds = [...new Set(posts.map(p => p.authorUserId))]
-        const profiles = await prisma.profile.findMany({
-            where: { userId: { in: authorIds } },
-            select: { userId: true, fullName: true, role: true, avatar: true, inventory: { select: { productId: true } } }
-        }) as any[]
-        const profileMap = Object.fromEntries(profiles.map(p => [p.userId, p]))
+        let formatted: any[] = []
+        try {
+            const authorIds = [...new Set(posts.map(p => p.authorUserId))]
+            const profiles = await prisma.profile.findMany({
+                where: { userId: { in: authorIds } },
+                select: { userId: true, fullName: true, role: true, avatar: true, inventory: { select: { productId: true } } }
+            }).catch(() => []) as any[]
 
-        const formatted = posts.map(p => {
-            const authorProfile = profileMap[p.authorUserId]
-            const fullName = authorProfile?.fullName || "Usuario"
-            const parts = fullName.trim().split(" ")
-            const displayName = parts.length >= 2
-                ? `${parts[0]} ${parts[parts.length - 1][0]}.`
-                : parts[0]
-            return {
-                ...p,
-                authorDisplay: displayName,
-                isMe: p.authorUserId === user.id,
-                authorRole: authorProfile?.role ?? "student",
-                avatar: authorProfile?.avatar,
-                inventory: (authorProfile as any)?.inventory?.map((i: any) => i.productId) || []
-            }
-        })
+            const profileMap = Object.fromEntries(profiles.map(p => [p.userId, p]))
+
+            formatted = posts.map(p => {
+                const authorProfile = profileMap[p.authorUserId]
+                const fullName = authorProfile?.fullName || "Usuario"
+                const parts = fullName.trim().split(" ")
+                const displayName = parts.length >= 2
+                    ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+                    : parts[0]
+                return {
+                    ...p,
+                    authorDisplay: displayName,
+                    isMe: p.authorUserId === user.id,
+                    authorRole: authorProfile?.role ?? "student",
+                    avatar: authorProfile?.avatar,
+                    inventory: (authorProfile as any)?.inventory?.map((i: any) => i.productId) || []
+                }
+            })
+        } catch (e: any) {
+            console.warn("Soft error in formatting evidence posts:", e.message)
+            formatted = posts // Return unformatted if mapping fails
+        }
 
         return NextResponse.json(formatted)
-    } catch (err) {
-        console.error("GET /api/evidence:", err)
-        return NextResponse.json({ error: "Error al cargar evidencias" }, { status: 500 })
+    } catch (err: any) {
+        console.error("FATAL: GET /api/evidence:", err)
+        return NextResponse.json({ error: "Error al cargar evidencias", details: err.message }, { status: 500 })
     }
 }
