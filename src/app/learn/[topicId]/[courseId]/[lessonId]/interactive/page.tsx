@@ -19,8 +19,9 @@ export default function InteractiveLessonPage() {
   const router = useRouter()
   const params = useParams()
   const { user } = useAuth()
-  const { courseId, lessonId } = params
+  const { topicId, courseId, lessonId } = params
   const lessonIdStr = lessonId as string
+  const topicIdStr = (topicId as string) || "1"
   const courseIdStr = (courseId as string) || "1"
 
 
@@ -89,8 +90,8 @@ export default function InteractiveLessonPage() {
     }
 
     // Wait 3s so user can enjoy the reward animation before redirect
-    const courseNum = courseIdStr.replace(/^course-/, "") || "1"
-    const coursePagePath = `/courses/${courseNum}`
+    const topicNum = topicIdStr.replace(/^course-/, "") || "1"
+    const coursePagePath = `/courses/${topicNum}`
     setTimeout(() => {
       if (typeof window !== "undefined") {
         window.location.href = coursePagePath
@@ -98,7 +99,7 @@ export default function InteractiveLessonPage() {
         router.replace(coursePagePath)
       }
     }, 3200)
-  }, [lessonIdStr, user, router, courseIdStr])
+  }, [lessonIdStr, user, router, topicIdStr])
 
   const handleExit = () => {
     router.push("/courses")

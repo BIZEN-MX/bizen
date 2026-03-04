@@ -58,6 +58,21 @@ export async function POST(req: NextRequest) {
 
         const userId = user.id
 
+        // Ensure lesson exists in the database (create stub if missing)
+        // This prevents foreign key errors for lessons that are defined in code but not yet in DB
+        const lesson = await prisma.lesson.findUnique({ where: { id: lessonId } })
+        if (!lesson) {
+            await prisma.lesson.create({
+                data: {
+                    id: lessonId,
+                    title: (lessonId.charAt(0).toUpperCase() + lessonId.slice(1)).replace(/-/g, " "),
+                    contentType: "interactive",
+                    order: 0,
+                    xpReward: 50
+                }
+            }).catch(err => console.error("[lesson/complete] Failed to create lesson stub:", err))
+        }
+
         // Check existing progress for this lesson to determine rewards
         const existing = await prisma.progress.findUnique({
             where: { userId_lessonId: { userId, lessonId } },
