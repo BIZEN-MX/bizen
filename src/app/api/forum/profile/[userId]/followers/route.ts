@@ -44,15 +44,21 @@ export async function GET(
       where: { followingId: userId }
     })
 
-    const formatted = (followers as any[]).map(f => ({
-      userId: f.follower.userId,
-      nickname: f.follower.nickname || f.follower.fullName.split(' ')[0] || 'Usuario',
-      reputation: f.follower.reputation,
-      level: f.follower.level,
-      avatar: f.follower.avatar,
-      inventory: f.follower.inventory?.map((i: any) => i.productId) || [],
-      followedAt: f.createdAt
-    }))
+    const formatted = (followers as any[]).map(f => {
+      const parts = (f.follower.fullName || '').trim().split(/\s+/)
+      const safeName = parts.length >= 2
+        ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+        : (parts[0] || 'Usuario')
+      return {
+        userId: f.follower.userId,
+        nickname: f.follower.nickname || safeName,
+        reputation: f.follower.reputation,
+        level: f.follower.level,
+        avatar: f.follower.avatar,
+        inventory: f.follower.inventory?.map((i: any) => i.productId) || [],
+        followedAt: f.createdAt
+      }
+    })
 
     return NextResponse.json({
       followers: formatted,

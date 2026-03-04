@@ -205,29 +205,48 @@ export async function GET(
     const voteMap = new Map(commentVotes.map(v => [v.targetId, v.value]))
 
     // Format response
-    const formattedComments = (comments as any[]).map(c => ({
-      id: c.id,
-      body: c.body,
-      score: c.score,
-      isAccepted: c.isAccepted,
-      createdAt: c.createdAt,
-      replyCount: c._count.replies,
-      author: {
-        ...c.author,
-        nickname: c.author.nickname || c.author.fullName.split(' ')[0],
-        inventory: c.author.inventory?.map((i: any) => i.productId) || []
-      },
-      replies: includeReplies && (c as any).replies ? (c as any).replies.map((r: any) => ({
-        ...r,
+    const formattedComments = (comments as any[]).map(c => {
+      const parts = (c.author.fullName || '').trim().split(/\s+/)
+      const safeName = parts.length >= 2
+        ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+        : (parts[0] || 'Usuario')
+
+      return {
+        id: c.id,
+        body: c.body,
+        score: c.score,
+        isAccepted: c.isAccepted,
+        createdAt: c.createdAt,
+        replyCount: c._count.replies,
         author: {
-          ...r.author,
-          nickname: r.author.nickname || r.author.fullName.split(' ')[0],
-          inventory: r.author.inventory?.map((i: any) => i.productId) || []
+          userId: c.author.userId,
+          nickname: c.author.nickname || safeName,
+          reputation: c.author.reputation,
+          level: c.author.level,
+          avatar: c.author.avatar,
+          inventory: c.author.inventory?.map((i: any) => i.productId) || []
         },
-        userVote: voteMap.get(r.id) || null
-      })) : [],
-      userVote: voteMap.get(c.id) || null
-    }))
+        replies: includeReplies && (c as any).replies ? (c as any).replies.map((r: any) => {
+          const rParts = (r.author.fullName || '').trim().split(/\s+/)
+          const rSafeName = rParts.length >= 2
+            ? `${rParts[0]} ${rParts[rParts.length - 1][0]}.`
+            : (rParts[0] || 'Usuario')
+          return {
+            ...r,
+            author: {
+              userId: r.author.userId,
+              nickname: r.author.nickname || rSafeName,
+              reputation: r.author.reputation,
+              level: r.author.level,
+              avatar: r.author.avatar,
+              inventory: r.author.inventory?.map((i: any) => i.productId) || []
+            },
+            userVote: voteMap.get(r.id) || null
+          }
+        }) : [],
+        userVote: voteMap.get(c.id) || null
+      }
+    })
 
     // Get total comment count for pagination
     const totalComments = await prisma.forumComment.count({
@@ -239,12 +258,21 @@ export async function GET(
       }
     })
 
+    const threadAuthor = (thread as any).author
+    const threadAuthorParts = (threadAuthor.fullName || '').trim().split(/\s+/)
+    const threadAuthorSafeName = threadAuthorParts.length >= 2
+      ? `${threadAuthorParts[0]} ${threadAuthorParts[threadAuthorParts.length - 1][0]}.`
+      : (threadAuthorParts[0] || 'Usuario')
+
     return NextResponse.json({
       ...(thread as any),
       author: {
-        ...(thread as any).author,
-        nickname: (thread as any).author.nickname || (thread as any).author.fullName.split(' ')[0],
-        inventory: (thread as any).author.inventory?.map((i: any) => i.productId) || []
+        userId: threadAuthor.userId,
+        nickname: threadAuthor.nickname || threadAuthorSafeName,
+        reputation: threadAuthor.reputation,
+        level: threadAuthor.level,
+        avatar: threadAuthor.avatar,
+        inventory: threadAuthor.inventory?.map((i: any) => i.productId) || []
       },
       tags: (thread as any).tags.map((tt: any) => tt.tag),
       comments: formattedComments,

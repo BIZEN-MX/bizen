@@ -94,7 +94,17 @@ export async function GET(
       totalXp,
       xpPerCapita,
       avgLevel,
-      topStudents: students.slice(0, 10),
+      topStudents: students.slice(0, 10).map((s: any) => {
+        const parts = (s.fullName || '').trim().split(/\s+/)
+        const safeName = parts.length >= 2
+          ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+          : (parts[0] || 'Usuario')
+        return {
+          ...s,
+          fullName: undefined, // Privacy
+          nickname: s.nickname || safeName
+        }
+      }),
       xpBuckets,
     })
   } catch (error: any) {

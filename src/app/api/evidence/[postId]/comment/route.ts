@@ -32,10 +32,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pos
         })
 
         // Anonymize author
-        const profile = await prisma.profile.findUnique({ where: { userId: user.id }, select: { fullName: true } })
-        const fullName = profile?.fullName || "Usuario"
-        const parts = fullName.trim().split(" ")
-        const displayName = parts.length >= 2 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : parts[0]
+        const profile = await prisma.profile.findUnique({ where: { userId: user.id }, select: { fullName: true, nickname: true } })
+        const parts = (profile?.fullName || '').trim().split(/\s+/)
+        const safeName = parts.length >= 2
+            ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+            : (parts[0] || 'Usuario')
+        const displayName = profile?.nickname || safeName
 
         return NextResponse.json({ ...comment, authorDisplay: displayName, isMe: true }, { status: 201 })
     } catch (err) {

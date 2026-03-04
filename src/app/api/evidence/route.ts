@@ -77,28 +77,38 @@ export async function GET(req: NextRequest) {
 
         let formatted: any[] = []
         try {
-            const authorIds = [...new Set(posts.map(p => p.authorUserId))]
+            const authorIds = new Set<string>()
+            posts.forEach(p => {
+                authorIds.add(p.authorUserId)
+                p.comments.forEach((c: any) => authorIds.add(c.userId))
+            })
+
             const profiles = await prisma.profile.findMany({
-                where: { userId: { in: authorIds } },
-                select: { userId: true, fullName: true, role: true, avatar: true, inventory: { select: { productId: true } } }
+                where: { userId: { in: Array.from(authorIds) } },
+                select: { userId: true, fullName: true, nickname: true, role: true, avatar: true, inventory: { select: { productId: true } } }
             }).catch(() => []) as any[]
 
-            const profileMap = Object.fromEntries(profiles.map(p => [p.userId, p]))
+            const profileMap = Object.fromEntries(profiles.map(p => {
+                const parts = (p.fullName || '').trim().split(/\s+/)
+                const safeName = parts.length >= 2
+                    ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+                    : (parts[0] || 'Usuario')
+                return [p.userId, { ...p, displayName: p.nickname || safeName }]
+            }))
 
             formatted = posts.map(p => {
                 const authorProfile = profileMap[p.authorUserId]
-                const fullName = authorProfile?.fullName || "Usuario"
-                const parts = fullName.trim().split(" ")
-                const displayName = parts.length >= 2
-                    ? `${parts[0]} ${parts[parts.length - 1][0]}.`
-                    : parts[0]
                 return {
                     ...p,
-                    authorDisplay: displayName,
+                    authorDisplay: authorProfile?.displayName || "Usuario",
                     isMe: p.authorUserId === user.id,
                     authorRole: authorProfile?.role ?? "student",
                     avatar: authorProfile?.avatar,
-                    inventory: (authorProfile as any)?.inventory?.map((i: any) => i.productId) || []
+                    inventory: (authorProfile as any)?.inventory?.map((i: any) => i.productId) || [],
+                    comments: p.comments.map((c: any) => ({
+                        ...c,
+                        authorDisplay: profileMap[c.userId]?.displayName || "Usuario"
+                    }))
                 }
             })
         } catch (e: any) {

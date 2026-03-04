@@ -106,17 +106,26 @@ export async function GET(request: NextRequest) {
 
     console.log(`✅ Found ${threads.length} threads`)
 
-    const formatted = (threads as any[]).map(t => ({
-      ...t,
-      author: {
-        ...t.author,
-        nickname: t.author.nickname || t.author.fullName?.split(' ')[0] || 'Usuario',
-        isMinor: false,
-        inventory: t.author.inventory?.map((i: any) => i.productId) || []
-      },
-      tags: t.tags.map((tt: any) => tt.tag),
-      hasAcceptedAnswer: !!t.acceptedCommentId
-    }))
+    const formatted = (threads as any[]).map(t => {
+      const parts = (t.author.fullName || '').trim().split(/\s+/)
+      const safeName = parts.length >= 2
+        ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+        : (parts[0] || 'Usuario')
+
+      return {
+        ...t,
+        author: {
+          userId: t.author.userId,
+          nickname: t.author.nickname || safeName,
+          reputation: t.author.reputation,
+          avatar: t.author.avatar,
+          isMinor: false,
+          inventory: t.author.inventory?.map((i: any) => i.productId) || []
+        },
+        tags: t.tags.map((tt: any) => tt.tag),
+        hasAcceptedAnswer: !!t.acceptedCommentId
+      }
+    })
 
     console.log("✅ Returning formatted threads")
     return NextResponse.json(formatted)

@@ -62,15 +62,22 @@ export async function GET() {
         }
 
         return NextResponse.json({
-            users: topUsers.map((u: any, i) => ({
-                rank: i + 1,
-                userId: u.userId,
-                displayName: u.fullName || u.nickname || 'Usuario',
-                nickname: u.nickname,
-                xp: u.xp,
-                level: u.level,
-                schoolName: u.school?.name || null,
-            })),
+            users: topUsers.map((u: any, i) => {
+                const parts = (u.fullName || '').trim().split(/\s+/)
+                const safeName = parts.length >= 2
+                    ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+                    : (parts[0] || 'Usuario')
+
+                return {
+                    rank: i + 1,
+                    userId: u.userId,
+                    displayName: u.nickname || safeName,
+                    nickname: u.nickname,
+                    xp: u.xp,
+                    level: u.level,
+                    schoolName: u.school?.name || null,
+                }
+            }),
             schools: (schoolRankings || []).map((s, i) => ({ ...s, rank: i + 1 })),
         })
     } catch (error: any) {

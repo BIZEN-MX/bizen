@@ -133,9 +133,15 @@ export async function GET(
     }
     const weeklyActiveDays = Array.from(activeDatesSet)
 
+    const parts = (profile.fullName || '').trim().split(/\s+/)
+    const safeName = parts.length >= 2
+      ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+      : (parts[0] || 'Usuario')
+
     return NextResponse.json({
       ...profile,
-      nickname: profile.nickname || profile.fullName.split(' ')[0],
+      fullName: undefined, // Hide for privacy
+      nickname: profile.nickname || safeName,
       badges: profile.forumUserBadges,
       inventory: profile.inventory.map((item: any) => item.productId),
       recentActivity: allActivity,
