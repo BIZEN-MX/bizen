@@ -46,7 +46,7 @@ const EVIDENCE_STEPS = [
 ]
 
 export default function RetoDiarioPage() {
-  const { user, loading, dbProfile, refreshUser } = useAuth()
+  const { user, loading, dbProfile, refreshUser, setDbProfile } = useAuth()
   const router = useRouter()
 
   const [earnedRewards, setEarnedRewards] = useState<{ xpAdded: number; newTotalXP: number } | null>(null)
@@ -137,7 +137,16 @@ export default function RetoDiarioPage() {
             xpAdded: data.rewards.xpAwarded || 50,
             newTotalXP: data.rewards.newTotalXp
           })
+
+          // OPTIMISTIC UPDATE: Update the global context immediately
+          setDbProfile((prev: any) => prev ? ({
+            ...prev,
+            xp: data.rewards.newTotalXp,
+            level: data.rewards.newLevel,
+            currentStreak: data.rewards.currentStreak
+          }) : prev)
         }
+
         await refreshUser()
         setSubmitted(true); setShowEvidence(false); setEvidenceStep(0)
         confetti({
@@ -655,7 +664,11 @@ export default function RetoDiarioPage() {
                   <div style={{ marginBottom: 28, marginTop: 12 }}>
                     <XPProgressCard
                       xpEarned={earnedRewards?.xpAdded || 50}
-                      initialXP={(earnedRewards?.newTotalXP ? earnedRewards.newTotalXP - earnedRewards.xpAdded : (dbProfile?.xp || 0) - (submitted ? 0 : 50))}
+                      initialXP={
+                        earnedRewards?.newTotalXP
+                          ? earnedRewards.newTotalXP - earnedRewards.xpAdded
+                          : (submitted ? (dbProfile?.xp || 0) - 50 : (dbProfile?.xp || 0))
+                      }
                       delay={600}
                     />
                   </div>

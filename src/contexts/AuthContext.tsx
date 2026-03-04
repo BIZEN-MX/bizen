@@ -15,6 +15,7 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>
   updatePassword: (newPassword: string) => Promise<{ error: AuthError | null }>
   dbProfile: any | null
+  setDbProfile: React.Dispatch<React.SetStateAction<any | null>>
   refreshUser: () => Promise<void>
 }
 
@@ -119,7 +120,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchDbProfile = async () => {
     try {
-      const res = await fetch('/api/profiles')
+      // Add no-cache headers and timestamp to ensure we get the latest data from DB
+      const res = await fetch(`/api/profiles?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Pragma': 'no-cache',
+          'Cache-Control': 'no-cache'
+        }
+      })
       if (res.ok) {
         const data = await res.json()
         setDbProfile(data)
@@ -166,7 +174,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     resetPassword,
     updatePassword,
-    refreshUser
+    refreshUser,
+    setDbProfile
   }
 
   return (

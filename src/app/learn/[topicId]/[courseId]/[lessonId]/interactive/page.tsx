@@ -18,7 +18,7 @@ import { FooterNav } from "@/components/FooterNav"
 export default function InteractiveLessonPage() {
   const router = useRouter()
   const params = useParams()
-  const { user } = useAuth()
+  const { user, setDbProfile, refreshUser } = useAuth()
   const { topicId, courseId, lessonId } = params
   const lessonIdStr = lessonId as string
   const topicIdStr = (topicId as string) || "1"
@@ -71,7 +71,15 @@ export default function InteractiveLessonPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
         keepalive: true,
+      }).then(res => {
+        if (res.ok) refreshUser() // Thorough refresh after API success
       }).catch((e) => console.error("Error saving progress:", e))
+
+      // 1.5 Optimistic update for DB profile in context
+      setDbProfile((prev: any) => prev ? ({
+        ...prev,
+        xp: (prev.xp || 0) + xpEarned
+      }) : prev)
 
       // 2. Refresh local session for instant UI reflect without blocking
       try {

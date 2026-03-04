@@ -127,8 +127,8 @@ export default function ProfilePage() {
       birthDate: user.user_metadata?.birth_date || "",
       schoolId: user.user_metadata?.school_id || ""
     })
-    fetch("/api/user/stats").then(r => r.ok ? r.json() : null).then(d => { if (d) setUserStats(d) }).finally(() => setLoadingStats(false))
-    fetch("/api/profile/stats").then(r => r.ok ? r.json() : null).then(d => { if (d) setProfileStats(d) })
+    fetch(`/api/user/stats?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(d => { if (d) setUserStats(d) }).finally(() => setLoadingStats(false))
+    fetch(`/api/profile/stats?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(d => { if (d) setProfileStats(d) })
     fetch("/api/schools").then(r => r.ok ? r.json() : null).then(d => { if (d) setSchools(d) })
   }, [user, loading, router])
 
