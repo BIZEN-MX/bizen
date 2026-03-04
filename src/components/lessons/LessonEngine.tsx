@@ -136,12 +136,18 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const isSummaryStep = currentStep?.stepType === "summary"
   const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice"].includes(currentStep?.stepType || "")
 
+  useEffect(() => {
+    if (isSummaryStep) {
+      onCompleteRef.current?.(stars)
+    }
+  }, [isSummaryStep, stars])
+
   const handleContinue = useCallback(() => {
     if (!currentStep) return
 
-    // Final completion
+    // Final completion - exit immediately since completion was triggered on mount
     if (isLastStep && isSummaryStep) {
-      onCompleteRef.current?.(stars)
+      onExit?.()
       return
     }
 

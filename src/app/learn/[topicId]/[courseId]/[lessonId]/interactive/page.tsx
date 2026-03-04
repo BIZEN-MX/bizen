@@ -41,12 +41,13 @@ export default function InteractiveLessonPage() {
     return () => document.body.removeAttribute("data-lesson-interactive")
   }, [])
 
-  const redirectToCoursesRef = useRef(false)
-  const handleComplete = useCallback(async (stars?: number) => {
-    if (redirectToCoursesRef.current) return
-    redirectToCoursesRef.current = true
+  const isRepeated = (user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr) || false
 
-    const isRepeated = (user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr) || false
+  const hasCompletedRef = useRef(false)
+  const handleComplete = useCallback(async (stars?: number) => {
+    if (hasCompletedRef.current) return
+    hasCompletedRef.current = true
+
     const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 2
     const xpEarned = isRepeated ? (starsEarned > 0 ? 5 : 0) : (starsEarned * 5)
 
@@ -62,10 +63,18 @@ export default function InteractiveLessonPage() {
       localStorage.setItem("guestLessonStars", JSON.stringify(starsObj))
     }
 
-    // Logged-in user: update auth metadata AND call API to persist stars + XP
+    // Logged-in user: Call API first to ensure XP is saved, then update frontend session
     if (user && lessonIdStr) {
+      // 1. Issue the API call decoupled from UI blocking. keepalive helps if tab closes.
+      fetch("/api/lesson/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
+        keepalive: true,
+      }).catch((e) => console.error("Error saving progress:", e))
+
+      // 2. Refresh local session for instant UI reflect without blocking
       try {
-        // Save to Supabase auth metadata (for completion badges etc.)
         const { createClient } = await import("@/lib/supabase/client")
         const supabase = createClient()
         const existing = (user.user_metadata?.completedLessons as string[] | undefined) || []
@@ -73,36 +82,18 @@ export default function InteractiveLessonPage() {
         const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
         const newLessonStars = { ...lessonStars, [lessonIdStr]: starsEarned }
 
-        await supabase.auth.updateUser({
+        supabase.auth.updateUser({
           data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
-        })
-        await supabase.auth.refreshSession()
-
-        // Save stars + award XP via API route
-        await fetch("/api/lesson/complete", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
-        }).catch(() => { /* non-critical, ignore offline errors */ })
+        }).then(() => supabase.auth.refreshSession()).catch(() => { })
       } catch (e) {
-        // Offline or auth error - ignore, progress still saved in memory
+        // Ignore session refresh errors
       }
     }
-
-    // Wait 3s so user can enjoy the reward animation before redirect
-    const topicNum = topicIdStr.replace(/^course-/, "") || "1"
-    const coursePagePath = `/courses/${topicNum}`
-    setTimeout(() => {
-      if (typeof window !== "undefined") {
-        window.location.href = coursePagePath
-      } else {
-        router.replace(coursePagePath)
-      }
-    }, 3200)
-  }, [lessonIdStr, user, router, topicIdStr])
+  }, [lessonIdStr, user, isRepeated, topicIdStr])
 
   const handleExit = () => {
-    router.push("/courses")
+    const topicNum = topicIdStr.replace(/^course-/, "") || "1"
+    router.push(`/courses/${topicNum}`)
   }
 
   // Lesson has no content yet (not in registry or slug typo)
@@ -188,7 +179,8 @@ export default function InteractiveLessonPage() {
           lessonSteps={lessonSteps}
           onComplete={handleComplete}
           onExit={handleExit}
-          isRepeat={(user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr)}
+          isRepeat={isRepeated}
+          onProgressChange={setProgress}
         />
       </div>
 
