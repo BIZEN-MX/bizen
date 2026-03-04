@@ -2,101 +2,69 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { createSupabaseServer } from "@/lib/supabase/server"
 
-/**
- * GET /api/daily-challenge/today
- * Returns today's DailyChallenge, creating a placeholder if none exists.
- */
 export async function GET() {
     try {
         const supabase = await createSupabaseServer()
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-        // Today in YYYY-MM-DD (Mexico City Time)
-        // We use Intl.DateTimeFormat to get the date parts in the correct timezone
+        // 1. Get Today's Date in Mexico City Time
         const mxFormatter = new Intl.DateTimeFormat("en-US", {
             timeZone: "America/Mexico_City",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
+            year: "numeric", month: "2-digit", day: "2-digit",
         })
         const parts = mxFormatter.formatToParts(new Date())
-        const year = parts.find(p => p.type === "year")?.value
-        const month = parts.find(p => p.type === "month")?.value
-        const day = parts.find(p => p.type === "day")?.value
+        const y = parts.find(p => p.type === "year")?.value
+        const m = parts.find(p => p.type === "month")?.value
+        const d = parts.find(p => p.type === "day")?.value
 
-        // Create a UTC midnight date for that specific YYYY-MM-DD
-        const today = new Date(`${year}-${month}-${day}T00:00:00Z`)
+        // Use a more relaxed date range if direct match fails
+        const todayStr = `${y}-${m}-${d}`;
+        const startDate = new Date(`${todayStr}T00:00:00Z`);
+        const endDate = new Date(`${todayStr}T23:59:59Z`);
 
-        // We revert to direct equality match since Prisma handles @db.Date using exactly UTC midnight Dates.
-        let challenge = await prisma.dailyChallenge.findFirst({
-            where: { activeDate: today }
-        })
-
-        // Auto-seed a placeholder challenge if none exists for today
-        if (!challenge) {
-            const placeholders = [
-                {
-                    title: "Revisión de Gastos Semanal",
-                    description: "Dedica 5 minutos a revisar tus gastos de los últimos 7 días. Identifica en qué categoría gastaste más y propón una estrategia de ahorro para el próximo mes.",
-                    challengeType: "reflection",
-                },
-                {
-                    title: "Mi Presupuesto del Mes",
-                    description: "Anota tus ingresos y gastos fijos de este mes. Calcula cuánto te sobra (o falta) y diseña un plan para al menos ahorrar el 10%.",
-                    challengeType: "task",
-                },
-                {
-                    title: "¿Qué es el interés compuesto?",
-                    description: "Investiga qué es el interés compuesto y calcula cuánto tendrías si ahorras $500 mensuales durante 5 años con un 6% de rendimiento anual.",
-                    challengeType: "reflection",
-                },
-                {
-                    title: "Identifica un Gasto Innecesario",
-                    description: "Revisa tus últimos 3 gastos de entretenimiento. ¿Cuál podrías eliminar o reducir? Calcula cuánto ahorrarías en un año.",
-                    challengeType: "task",
-                },
-                {
-                    title: "Metas Financieras SMART",
-                    description: "Define una meta financiera a corto plazo (3 meses) usando el método SMART: Específica, Medible, Alcanzable, Relevante y con Tiempo definido.",
-                    challengeType: "reflection",
-                },
-            ]
-            const pick = placeholders[today.getUTCDay() % placeholders.length]
-            try {
-                challenge = await prisma.dailyChallenge.create({
-                    data: { ...pick, activeDate: today }
-                })
-            } catch (createErr) {
-                // If it fails (likely due to unique constraint from a concurrent request), fetch it again
-                console.warn("Failed to create placeholder challenge, trying to fetch again...", createErr)
-                challenge = await prisma.dailyChallenge.findFirst({
-                    where: { activeDate: today }
-                })
-
-                // If STILL not found, fetch the most recent one to avoid breaking the page
-                if (!challenge) {
-                    challenge = await prisma.dailyChallenge.findFirst({
-                        orderBy: { activeDate: "desc" }
-                    })
-                }
-
-                // If absolutely no challenge exists and we couldn't create one, throw
-                if (!challenge) throw createErr
+        // 2. Fetch challenge
+        let challenge: any = await prisma.dailyChallenge.findFirst({
+            where: {
+                activeDate: { gte: startDate, lte: endDate }
             }
+        }).catch(err => {
+            console.error("DB: Initial challenge find failed:", err.message);
+            return null;
+        });
+
+        // 3. Fallback to most recent if none found for *exactly* today
+        if (!challenge) {
+            challenge = await prisma.dailyChallenge.findFirst({
+                orderBy: { activeDate: "desc" }
+            }).catch(() => null);
         }
 
-        // Check if current user has already submitted evidence for this challenge
-        const existingEvidence = await prisma.evidencePost.findFirst({
-            where: { dailyChallengeId: challenge.id, authorUserId: user.id }
-        })
+        // 4. Critical fallback - Create a basic object if DB is totally empty/unreachable
+        if (!challenge) {
+            challenge = {
+                id: "fallback-challenge",
+                title: "Revisión de Gastos Semanal",
+                description: "Hoy enfoquémonos en revisar tus gastos recientes. Identifica uno que no fue necesario.",
+                challengeType: "reflection",
+                activeDate: startDate,
+                xpReward: 50
+            };
+        }
 
-        return NextResponse.json({
-            ...challenge,
-            isCompleted: !!existingEvidence
-        })
+        // 5. Completion Status
+        let isCompleted = false;
+        if (challenge.id !== "fallback-challenge") {
+            const evidence = await prisma.evidencePost.findFirst({
+                where: { dailyChallengeId: challenge.id, authorUserId: user.id }
+            }).catch(() => null);
+            isCompleted = !!evidence;
+        }
+
+        return NextResponse.json({ ...challenge, isCompleted })
+
     } catch (err: any) {
-        console.error("GET /api/daily-challenge/today:", err)
+        console.error("CRITICAL: GET /api/daily-challenge/today:", err);
         return NextResponse.json({
             error: "Error al cargar el reto",
             details: err?.message || String(err)

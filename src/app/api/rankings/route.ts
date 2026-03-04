@@ -24,7 +24,6 @@ export async function GET() {
         })
 
         // --- 2. Schools ranked by XP per capita ---
-        // First get all schools with their student profiles
         const schools = await prisma.school.findMany({
             select: {
                 id: true,
@@ -64,8 +63,11 @@ export async function GET() {
             })),
             schools: schoolRankings.map((s, i) => ({ ...s, rank: i + 1 })),
         })
-    } catch (error) {
-        console.error('Error fetching rankings:', error)
-        return NextResponse.json({ error: 'Failed to fetch rankings' }, { status: 500 })
+    } catch (error: any) {
+        console.error('CRITICAL: Error fetching rankings!', error)
+        return NextResponse.json({
+            error: 'Failed to fetch rankings',
+            details: error instanceof Error ? error.message : String(error)
+        }, { status: 500 })
     }
 }

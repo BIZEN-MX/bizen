@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 export const dynamic = 'force-dynamic'
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
-import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel, calculateCurrentStreak, getMexicoMidnight } from "@/lib/xp"
+import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel, calculateCurrentStreak } from "@/lib/xp"
 
 export async function GET() {
   let user: any = null
@@ -21,83 +21,80 @@ export async function GET() {
       )
     }
 
-    // Get user profile with XP data using Prisma for reliability
-    const profile = await prisma.profile.findUnique({
-      where: { userId: user.id },
-      select: {
-        xp: true,
-        bizcoins: true,
-        level: true,
-        createdAt: true,
-        currentStreak: true,
-        lastActive: true
-      }
-    })
-
-    if (!profile) {
-      return NextResponse.json(
-        { error: "Profile not found" },
-        { status: 404 }
-      )
-    }
-
-    const inventoryItems = await prisma.userInventoryItem.findMany({
-      where: { userId: user.id },
-      select: { productId: true }
-    })
-
-    const userProfile = {
-      xp: profile.xp || 0,
-      bizcoins: profile.bizcoins || 0,
-      level: profile.level || 1,
-      createdAt: profile.createdAt,
-      currentStreak: profile.currentStreak || 0,
-      inventory: inventoryItems.map(i => ({ productId: i.productId }))
-    }
-
-    // Get lessons completed count
-    const lessonsCompleted = await prisma.progress.count({
-      where: {
-        userId: user.id,
-        percent: 100,
-        completedAt: { not: null }
-      }
-    })
-
-    // Get courses enrolled
-    const coursesEnrolled = await prisma.enrollment.count({
-      where: { userId: user.id }
-    })
-
-    // Get certificates count
-    const certificatesCount = await prisma.certificate.count({
-      where: { userId: user.id }
-    })
-
-    // Use timezone-aware streak calculation
-    let currentStreak = calculateCurrentStreak(profile.lastActive, profile.currentStreak || 0)
-
-    // Calculate level from XP
-    const currentLevel = calculateLevel(userProfile.xp)
-    const xpInLevel = xpInCurrentLevel(userProfile.xp)
-    const totalXpNeeded = totalXpForNextLevel(userProfile.xp)
-    const xpNeeded = xpForNextLevel(userProfile.xp)
-
-    // Update level or streak in database IF they changed (Repair/Sync)
-    if (currentLevel !== profile.level || currentStreak !== (profile.currentStreak || 0)) {
-      await prisma.profile.update({
+    // Use try-catch for each DB query to pinpoint the failure
+    let profile: any = null;
+    try {
+      profile = await prisma.profile.findUnique({
         where: { userId: user.id },
-        data: {
-          level: currentLevel,
-          currentStreak: currentStreak,
+        select: {
+          xp: true,
+          bizcoins: true,
+          level: true,
+          createdAt: true,
+          currentStreak: true,
+          lastActive: true,
+          schoolId: true
         }
       })
+    } catch (e: any) {
+      console.error("DB Error (profile fetch):", e.message);
+      throw new Error(`Failed to fetch profile: ${e.message}`);
     }
 
-    const now = new Date();
+    if (!profile) {
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 })
+    }
 
-    // Get active days this week (Sun–Sat)
-    const dayOfWeek = now.getDay() // 0=Sun
+    // Optional stats (if they fail, we can still return basic stats)
+    let lessonsCompleted = 0;
+    try {
+      lessonsCompleted = await prisma.progress.count({
+        where: {
+          userId: user.id,
+          percent: 100,
+          completedAt: { not: null }
+        }
+      });
+    } catch (e: any) { console.warn("Failed count (lessonsCompleted):", e.message); }
+
+    let coursesEnrolled = 0;
+    try {
+      coursesEnrolled = await prisma.enrollment.count({
+        where: { userId: user.id }
+      });
+    } catch (e: any) { console.warn("Failed count (coursesEnrolled):", e.message); }
+
+    let certificatesCount = 0;
+    try {
+      certificatesCount = await prisma.certificate.count({
+        where: { userId: user.id }
+      });
+    } catch (e: any) { console.warn("Failed count (certificatesCount):", e.message); }
+
+    const inventoryItems: any[] = await prisma.userInventoryItem.findMany({
+      where: { userId: user.id },
+      select: { productId: true }
+    }).catch(() => []);
+
+    // Streaks & Stats
+    const currentXp = profile.xp || 0;
+    const currentLevel = calculateLevel(currentXp);
+    const xpInLevel = xpInCurrentLevel(currentXp);
+    const totalXpNeeded = totalXpForNextLevel(currentXp);
+    const xpRemaining = xpForNextLevel(currentXp);
+    const currentStreakCount = calculateCurrentStreak(profile.lastActive, profile.currentStreak || 0);
+
+    // Sync level/streak if needed
+    if (currentLevel !== profile.level || currentStreakCount !== (profile.currentStreak || 0)) {
+      prisma.profile.update({
+        where: { userId: user.id },
+        data: { level: currentLevel, currentStreak: currentStreakCount }
+      }).catch(e => console.warn("Sync update failed:", e.message));
+    }
+
+    // Weekly activity
+    const now = new Date();
+    const dayOfWeek = now.getDay()
     const sunday = new Date(now)
     sunday.setDate(now.getDate() - dayOfWeek)
     sunday.setHours(0, 0, 0, 0)
@@ -105,23 +102,16 @@ export async function GET() {
     saturday.setDate(sunday.getDate() + 6)
     saturday.setHours(23, 59, 59, 999)
 
-    // Check daily challenge evidence post submissions for the week
-    const weeklyEvidence = await prisma.evidencePost.findMany({
-      where: {
-        authorUserId: user.id,
-        createdAt: { gte: sunday, lte: saturday }
-      },
-      select: { createdAt: true }
-    }).catch(() => [] as { createdAt: Date }[])
-
-    // Also check any progress (lesson completions) for the week
-    const weeklyProgress = await prisma.progress.findMany({
-      where: {
-        userId: user.id,
-        completedAt: { gte: sunday, lte: saturday }
-      },
-      select: { completedAt: true }
-    }).catch(() => [] as { completedAt: Date | null }[])
+    const [weeklyEvidence, weeklyProgress] = await Promise.all([
+      prisma.evidencePost.findMany({
+        where: { authorUserId: user.id, createdAt: { gte: sunday, lte: saturday } },
+        select: { createdAt: true }
+      }).catch(() => []),
+      prisma.progress.findMany({
+        where: { userId: user.id, completedAt: { gte: sunday, lte: saturday } },
+        select: { completedAt: true }
+      }).catch(() => [])
+    ]);
 
     const activeDatesSet = new Set<string>()
     for (const e of (weeklyEvidence as any[])) {
@@ -130,31 +120,28 @@ export async function GET() {
     for (const p of (weeklyProgress as any[])) {
       if (p.completedAt) activeDatesSet.add(new Date(p.completedAt).toISOString().split("T")[0])
     }
-    const weeklyActiveDays = Array.from(activeDatesSet)
 
-    const result = {
-      xp: userProfile.xp,
+    return NextResponse.json({
+      xp: currentXp,
       level: currentLevel,
       xpInCurrentLevel: xpInLevel,
       xpNeeded: totalXpNeeded,
-      xpToNextLevel: xpNeeded,
+      xpToNextLevel: xpRemaining,
       lessonsCompleted,
       coursesEnrolled,
-      currentStreak,
+      currentStreak: currentStreakCount,
       certificatesCount,
-      totalPoints: userProfile.bizcoins || 0,
-      bizcoins: userProfile.bizcoins || 0,
-      inventory: userProfile.inventory.map(i => i.productId) || [],
-      weeklyActiveDays,
-    }
-
-    return NextResponse.json(result)
+      totalPoints: profile.bizcoins || 0,
+      bizcoins: profile.bizcoins || 0,
+      inventory: inventoryItems.map(i => i.productId),
+      weeklyActiveDays: Array.from(activeDatesSet),
+    })
 
   } catch (error: any) {
-    console.error("Error fetching user stats:", error)
-    return NextResponse.json(
-      { error: "Failed to fetch stats", details: error.message },
-      { status: 500 }
-    )
+    console.error("FATAL: Error in /api/user/stats:", error)
+    return NextResponse.json({
+      error: "Failed to fetch stats",
+      details: error instanceof Error ? error.message : String(error)
+    }, { status: 500 })
   }
 }
