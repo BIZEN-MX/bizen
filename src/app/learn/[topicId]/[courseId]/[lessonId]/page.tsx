@@ -11,9 +11,9 @@ export default function LessonPage() {
     const params = useParams()
     const { user } = useAuth()
 
+    const topicIdStr = (params.topicId as string) || "1"
     const courseIdStr = (params.courseId as string) || "1"
     const lessonIdStr = params.lessonId as string
-    const unitIdStr = params.unitId as string
 
     const [lessonData, setLessonData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
@@ -74,7 +74,7 @@ export default function LessonPage() {
         const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 0
         const xpEarned = starsEarned * 5
 
-        // Save progress logic (same as interactive page)
+        // Save progress logic
         if (lessonIdStr) {
             if (user) {
                 try {
@@ -113,15 +113,15 @@ export default function LessonPage() {
             }
         }
 
-        // Wait ~3s so user can enjoy the summary screen/stars animation before redirect
+        // Redirect back to topic page
         setTimeout(() => {
-            const courseNum = courseIdStr.replace(/^course-/, "") || "1"
-            router.replace(`/courses/${courseNum}`)
+            const topicNum = topicIdStr.replace(/^topic-|course-/, "") || "1"
+            router.replace(`/courses/${topicNum}`)
         }, 3200)
-    }, [lessonIdStr, user, router, courseIdStr])
+    }, [lessonIdStr, user, router, topicIdStr])
 
     const handleExit = () => {
-        router.push(`/courses/${courseIdStr.replace(/^course-/, "") || "1"}`)
+        router.push(`/courses/${topicIdStr.replace(/^topic-|course-/, "") || "1"}`)
     }
 
     // Loading State
@@ -146,10 +146,10 @@ export default function LessonPage() {
                     {error || "Esta lección no tiene contenido disponible."}
                 </p>
                 <button
-                    onClick={() => router.push(`/courses/${courseIdStr.replace(/^course-/, "") || "1"}`)}
+                    onClick={() => router.push(`/courses/${topicIdStr.replace(/^topic-|course-/, "") || "1"}`)}
                     style={{ padding: "14px 24px", background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)", color: "white", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer" }}
                 >
-                    Volver al curso
+                    Volver al tema
                 </button>
             </div>
         )

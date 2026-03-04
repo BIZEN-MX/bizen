@@ -53,8 +53,8 @@ export async function awardXp(userId: string, amount: number): Promise<RewardsRe
             // Last active was yesterday, increment streak
             newStreak += 1
             streakUpdated = true
-        } else if (diffDays > 1) {
-            // Streak broken, reset to 1 
+        } else if (diffDays > 1 || newStreak === 0) {
+            // Streak broken or just starting today, set/reset to 1
             newStreak = 1
             streakUpdated = true
         }

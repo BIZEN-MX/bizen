@@ -1,24 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// POST /api/school-courses - Enable a course for a school
+// POST /api/school-topics - Enable a topic for a school
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { schoolId, courseId, isEnabled } = body
+    const { schoolId, topicId, isEnabled } = body
 
-    if (!schoolId || !courseId) {
+    if (!schoolId || !topicId) {
       return NextResponse.json(
-        { error: 'schoolId and courseId are required' },
+        { error: 'schoolId and topicId are required' },
         { status: 400 }
       )
     }
 
-    const schoolCourse = await prisma.schoolCourse.upsert({
+    const schoolTopic = await prisma.schoolTopic.upsert({
       where: {
-        schoolId_courseId: {
+        schoolId_topicId: {
           schoolId,
-          courseId
+          topicId
         }
       },
       update: {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       },
       create: {
         schoolId,
-        courseId,
+        topicId,
         isEnabled: isEnabled !== undefined ? isEnabled : true
       },
       include: {
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
             name: true
           }
         },
-        course: {
+        topic: {
           select: {
             id: true,
             title: true
@@ -45,46 +45,45 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(schoolCourse)
+    return NextResponse.json(schoolTopic)
   } catch (error) {
-    console.error('Error toggling school course:', error)
+    console.error('Error toggling school topic:', error)
     return NextResponse.json(
-      { error: 'Failed to toggle school course' },
+      { error: 'Failed to toggle school topic' },
       { status: 500 }
     )
   }
 }
 
-// DELETE /api/school-courses - Disable a course for a school
+// DELETE /api/school-topics - Disable a topic for a school
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const schoolId = searchParams.get('schoolId')
-    const courseId = searchParams.get('courseId')
+    const topicId = searchParams.get('topicId')
 
-    if (!schoolId || !courseId) {
+    if (!schoolId || !topicId) {
       return NextResponse.json(
-        { error: 'schoolId and courseId are required' },
+        { error: 'schoolId and topicId are required' },
         { status: 400 }
       )
     }
 
-    await prisma.schoolCourse.delete({
+    await prisma.schoolTopic.delete({
       where: {
-        schoolId_courseId: {
+        schoolId_topicId: {
           schoolId,
-          courseId
+          topicId
         }
       }
     })
 
-    return NextResponse.json({ message: 'Course disabled for school' })
+    return NextResponse.json({ message: 'Topic disabled for school' })
   } catch (error) {
-    console.error('Error deleting school course:', error)
+    console.error('Error deleting school topic:', error)
     return NextResponse.json(
-      { error: 'Failed to delete school course' },
+      { error: 'Failed to delete school topic' },
       { status: 500 }
     )
   }
 }
-

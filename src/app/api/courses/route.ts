@@ -1,65 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/courses - List all courses
+// GET /api/courses - List courses (optionally by topicId)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const schoolId = searchParams.get('schoolId')
+    const topicId = searchParams.get('topicId')
 
-    let courses
-
-    if (schoolId) {
-      // Filter by school's enabled courses
-      courses = await prisma.course.findMany({
-        where: {
-          schoolCourses: {
-            some: {
-              schoolId,
-              isEnabled: true
-            }
+    const courses = await prisma.course.findMany({
+      where: topicId ? { topicId } : undefined,
+      include: {
+        _count: {
+          select: {
+            lessons: true
           }
-        },
-        include: {
-          units: {
-            include: {
-              _count: {
-                select: {
-                  lessons: true
-                }
-              }
-            },
-            orderBy: {
-              order: 'asc'
-            }
-          },
-          _count: {
-            select: {
-              units: true,
-              enrollments: true
-            }
-          }
-        },
-        orderBy: {
-          createdAt: 'desc'
         }
-      })
-    } else {
-      // Get all courses
-      courses = await prisma.course.findMany({
-        include: {
-          _count: {
-            select: {
-              units: true,
-              enrollments: true
-            }
-          }
-        },
-        orderBy: {
-          createdAt: 'desc'
-        }
-      })
-    }
+      },
+      orderBy: {
+        order: 'asc'
+      }
+    })
 
     return NextResponse.json(courses)
   } catch (error) {
@@ -75,21 +35,21 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { title, description, level, isActive } = body
+    const { topicId, title, order, isLocked } = body
 
-    if (!title || !level) {
+    if (!topicId || !title) {
       return NextResponse.json(
-        { error: 'Title and level are required' },
+        { error: 'topicId and title are required' },
         { status: 400 }
       )
     }
 
     const course = await prisma.course.create({
       data: {
+        topicId,
         title,
-        description: description || '',
-        level,
-        isActive: isActive !== undefined ? isActive : true
+        order: order || 1,
+        isLocked: isLocked !== undefined ? isLocked : false
       }
     })
 
@@ -98,6 +58,65 @@ export async function POST(request: NextRequest) {
     console.error('Error creating course:', error)
     return NextResponse.json(
       { error: 'Failed to create course' },
+      { status: 500 }
+    )
+  }
+}
+
+// PATCH /api/courses - Update course
+export async function PATCH(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { courseId, title, order, isLocked } = body
+
+    if (!courseId) {
+      return NextResponse.json(
+        { error: 'courseId is required' },
+        { status: 400 }
+      )
+    }
+
+    const course = await prisma.course.update({
+      where: { id: courseId },
+      data: {
+        ...(title && { title }),
+        ...(order !== undefined && { order }),
+        ...(isLocked !== undefined && { isLocked })
+      }
+    })
+
+    return NextResponse.json(course)
+  } catch (error) {
+    console.error('Error updating course:', error)
+    return NextResponse.json(
+      { error: 'Failed to update course' },
+      { status: 500 }
+    )
+  }
+}
+
+// DELETE /api/courses - Delete course
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const courseId = searchParams.get('courseId')
+
+    if (!courseId) {
+      return NextResponse.json(
+        { error: 'courseId is required' },
+        { status: 400 }
+      )
+    }
+
+    await prisma.course.delete({
+      where: { id: courseId }
+    })
+
+    return NextResponse.json({ message: 'Course deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting course:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete course' },
       { status: 500 }
     )
   }

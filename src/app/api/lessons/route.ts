@@ -1,21 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/lessons - List lessons (optionally by unitId)
+// GET /api/lessons - List lessons (optionally by courseId)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const unitId = searchParams.get('unitId')
+    const courseId = searchParams.get('courseId')
 
     const lessons = await prisma.lesson.findMany({
-      where: unitId ? { unitId } : undefined,
+      where: courseId ? { courseId } : undefined,
       include: {
         quizzes: true,
-        lessonObjectives: {
-          include: {
-            objective: true
-          }
-        }
       },
       orderBy: {
         order: 'asc'
@@ -36,18 +31,18 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { unitId, title, contentType, order } = body
+    const { courseId, title, contentType, order } = body
 
-    if (!unitId || !title || !contentType) {
+    if (!courseId || !title || !contentType) {
       return NextResponse.json(
-        { error: 'unitId, title, and contentType are required' },
+        { error: 'courseId, title, and contentType are required' },
         { status: 400 }
       )
     }
 
     const lesson = await prisma.lesson.create({
       data: {
-        unitId,
+        courseId,
         title,
         contentType,
         order: order || 1

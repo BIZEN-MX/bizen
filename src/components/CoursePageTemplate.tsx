@@ -198,67 +198,93 @@ export default function CoursePageTemplate({
                         <div style={{ position: "absolute", top: "-30%", right: "-5%", width: 300, height: 300, background: "radial-gradient(circle, rgba(96,165,250,0.25) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
                         <div style={{ position: "absolute", bottom: "-20%", left: "5%", width: 220, height: 220, background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
 
-                        <div style={{ position: "relative", zIndex: 1 }}>
-                            {/* Breadcrumb */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
-                                <button
-                                    onClick={() => router.push("/courses")}
-                                    style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "4px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, color: "#93c5fd", fontSize: 12, fontWeight: 700, fontFamily: "'Montserrat', sans-serif" }}
-                                >
-                                    <ChevronLeft size={12} /> Todos los Temas
-                                </button>
-                                <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>›</span>
-                                <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                                    <Zap size={12} color="#60a5fa" />
-                                    <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                                        Tema {topicId.toString().padStart(2, "0")}
-                                    </span>
+                        <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "clamp(24px, 5vw, 48px)", alignItems: "center" }}>
+                            {/* Left Side: Navigation, Icon & Title */}
+                            <div style={{ flex: "1 1 500px", minWidth: 0 }}>
+                                {/* Breadcrumb */}
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+                                    <button
+                                        onClick={() => router.push("/courses")}
+                                        style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "4px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, color: "#93c5fd", fontSize: 12, fontWeight: 700, fontFamily: "'Montserrat', sans-serif" }}
+                                    >
+                                        <ChevronLeft size={12} /> Todos los Temas
+                                    </button>
+                                    <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>›</span>
+                                    <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                                        <Zap size={12} color="#60a5fa" />
+                                        <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                                            Tema {topicId.toString().padStart(2, "0")}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: "flex", alignItems: "flex-start", gap: 20, marginBottom: 24, flexWrap: "wrap" }}>
+                                    <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(255,255,255,0.12)", border: "1.5px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                        <IconComp size={30} color="#93c5fd" strokeWidth={2} />
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <h1 style={{ fontSize: "clamp(22px, 4vw, 40px)", fontWeight: 900, color: "#ffffff", margin: "0 0 8px", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
+                                            {topic.title}
+                                        </h1>
+                                        <p style={{ fontSize: "clamp(13px, 1.8vw, 16px)", color: "#93c5fd", margin: 0, lineHeight: 1.5, maxWidth: 500 }}>
+                                            Domina cada concepto a tu ritmo. Completa lecciones para ganar XP y subir de nivel.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Progress Bar Integrated */}
+                                <div style={{ width: "100%", maxWidth: 600 }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 10 }}>
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                                            <span style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso del Tema</span>
+                                            <span style={{ fontSize: 12, fontWeight: 600, color: "#60a5fa" }}>{completedInTopic} de {totalInTopic} lecciones completadas</span>
+                                        </div>
+                                        <span style={{ fontSize: 32, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{topicPct}%</span>
+                                    </div>
+                                    <div style={{ width: "100%", height: 12, background: "rgba(255,255,255,0.12)", borderRadius: 10, overflow: "hidden" }}>
+                                        <div
+                                            style={{
+                                                width: `${topicPct}%`,
+                                                height: "100%",
+                                                background: "linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%)",
+                                                borderRadius: 10,
+                                                boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)",
+                                                transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)"
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Title row */}
-                            <div style={{ display: "flex", alignItems: "flex-start", gap: 20, marginBottom: 20, flexWrap: "wrap" }}>
-                                <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(255,255,255,0.12)", border: "1.5px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                    <IconComp size={30} color="#93c5fd" strokeWidth={2} />
-                                </div>
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                    <h1 style={{ fontSize: "clamp(22px, 4vw, 36px)", fontWeight: 900, color: "#ffffff", margin: "0 0 8px", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
-                                        {topic.title}
-                                    </h1>
-                                    <p style={{ fontSize: "clamp(13px, 1.8vw, 15px)", color: "#93c5fd", margin: 0, lineHeight: 1.5 }}>
-                                        Explora los subtemas y lecciones a tu propio ritmo. Cada lección te da XP.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Stats row */}
-                            <div style={{ display: "flex", gap: "clamp(12px, 3vw, 24px)", flexWrap: "wrap", marginBottom: 20 }}>
+                            {/* Right Side: Stats Cluster */}
+                            <div style={{ flex: "0 1 auto", display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px", minWidth: "280px" }}>
                                 {[
-                                    { label: "Lecciones", value: totalInTopic.toString(), icon: CheckCircle2 },
-                                    { label: "Completadas", value: completedInTopic.toString(), icon: Zap },
+                                    { label: "Cursos", value: subtemas.length.toString(), icon: BookOpen, color: "#60a5fa" },
+                                    { label: "Lecciones", value: totalInTopic.toString(), icon: CheckCircle2, color: "#93c5fd" },
                                 ].map((stat) => {
                                     const StatIcon = stat.icon
                                     return (
-                                        <div key={stat.label} style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "10px 16px" }}>
-                                            <StatIcon size={16} color="#60a5fa" />
-                                            <div>
-                                                <div style={{ fontSize: "clamp(16px, 2.5vw, 22px)", fontWeight: 900, color: "#fff", lineHeight: 1 }}>{stat.value}</div>
-                                                <div style={{ fontSize: 10, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.06em" }}>{stat.label}</div>
+                                        <div
+                                            key={stat.label}
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                justifyContent: "center",
+                                                background: "rgba(255,255,255,0.06)",
+                                                border: "1px solid rgba(255,255,255,0.1)",
+                                                borderRadius: 20,
+                                                padding: "20px 24px",
+                                                backdropFilter: "blur(4px)"
+                                            }}
+                                        >
+                                            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                                                <StatIcon size={18} color={stat.color} />
+                                                <div style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>{stat.label}</div>
                                             </div>
+                                            <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>{stat.value}</div>
                                         </div>
                                     )
                                 })}
-                            </div>
-
-                            {/* Progress bar */}
-                            <div>
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                                    <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd" }}>Progreso de este tema</span>
-                                    <span style={{ fontSize: 14, fontWeight: 900, color: "#fff" }}>{topicPct}%</span>
-                                </div>
-                                <div style={{ width: "100%", height: 8, borderRadius: 8, background: "rgba(255,255,255,0.18)", overflow: "hidden" }}>
-                                    <div style={{ width: `${topicPct}%`, height: "100%", borderRadius: 8, background: "rgba(255,255,255,0.9)", transition: "width 1s cubic-bezier(0.34,1.56,0.64,1)", boxShadow: "0 0 10px rgba(255,255,255,0.5)" }} />
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -279,6 +305,7 @@ export default function CoursePageTemplate({
                                     <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%)", borderRadius: 18, boxShadow: "0 8px 28px rgba(15,98,254,0.35)", border: "1px solid rgba(59,130,246,0.3)", marginBottom: 20 }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
                                             <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>CURSO {(subIdx + 1).toString().padStart(2, "0")}</div>
                                                 <div style={{ fontSize: "clamp(15px, 3vw, 19px)", fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 4 }}>{sub.title}</div>
                                                 <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>{subTotal} lecciones · {subCompleted} completadas</div>
                                             </div>
@@ -402,10 +429,20 @@ export default function CoursePageTemplate({
                                                             gap: 0,
                                                             flexShrink: 0,
                                                             alignSelf: "center",
+                                                            padding: "0 2px",
                                                         }}>
-                                                            <div style={{ width: 18, height: 2, background: "linear-gradient(to right, #bfdbfe, #3b82f6)", borderRadius: 2 }} />
-                                                            <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <path d="M10 7L0.25 13.0622L0.25 0.937822L10 7Z" fill="#3b82f6" />
+                                                            <svg width="52" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <defs>
+                                                                    <linearGradient id={`arrowGrad-${subIdx}`} x1="0" y1="10" x2="52" y2="10" gradientUnits="userSpaceOnUse">
+                                                                        <stop stopColor="#bfdbfe" />
+                                                                        <stop offset="0.6" stopColor="#3b82f6" />
+                                                                        <stop offset="1" stopColor="#2563eb" />
+                                                                    </linearGradient>
+                                                                </defs>
+                                                                {/* Animated line */}
+                                                                <line x1="2" y1="10" x2="38" y2="10" stroke={`url(#arrowGrad-${subIdx})`} strokeWidth="2.5" strokeLinecap="round" />
+                                                                {/* Arrowhead */}
+                                                                <path d="M36 4L50 10L36 16" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                                                             </svg>
                                                         </div>
                                                     ) : (
@@ -415,25 +452,33 @@ export default function CoursePageTemplate({
                                                                 display: "flex",
                                                                 flexDirection: "row",
                                                                 alignItems: "center",
-                                                                gap: 12,
+                                                                gap: 0,
                                                                 flexShrink: 0,
                                                                 alignSelf: "center",
-                                                                paddingLeft: 12,
-                                                                paddingRight: 24
+                                                                paddingLeft: 8,
+                                                                paddingRight: 20
                                                             }}>
-                                                                <div style={{ width: 18, height: 2, background: "linear-gradient(to right, #bfdbfe, #3b82f6)", borderRadius: 2 }} />
+                                                                <svg width="36" height="20" viewBox="0 0 36 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 12 }}>
+                                                                    <defs>
+                                                                        <linearGradient id="finishArrowGrad" x1="0" y1="10" x2="36" y2="10" gradientUnits="userSpaceOnUse">
+                                                                            <stop stopColor="#bfdbfe" />
+                                                                            <stop offset="1" stopColor="#2563eb" />
+                                                                        </linearGradient>
+                                                                    </defs>
+                                                                    <line x1="2" y1="10" x2="36" y2="10" stroke="url(#finishArrowGrad)" strokeWidth="2.5" strokeLinecap="round" />
+                                                                </svg>
                                                                 <div style={{
-                                                                    width: 56,
-                                                                    height: 56,
+                                                                    width: 60,
+                                                                    height: 60,
                                                                     borderRadius: "50%",
-                                                                    background: "#fff",
-                                                                    border: "3px solid #2563eb",
+                                                                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
                                                                     display: "flex",
                                                                     alignItems: "center",
                                                                     justifyContent: "center",
-                                                                    boxShadow: "0 4px 16px rgba(37,99,235,0.2)"
+                                                                    boxShadow: "0 6px 20px rgba(37,99,235,0.35), 0 0 0 6px rgba(37,99,235,0.12)",
+                                                                    animation: "flagPulse 2s ease-in-out infinite"
                                                                 }}>
-                                                                    <Flag size={28} color="#2563eb" strokeWidth={3} fill="#2563eb" />
+                                                                    <Flag size={28} color="#fff" strokeWidth={2.5} fill="#fff" />
                                                                 </div>
                                                             </div>
                                                         )
@@ -541,6 +586,11 @@ export default function CoursePageTemplate({
         .lessons-scroll-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 99px; }
         .lessons-scroll-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
         .lessons-scroll-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @keyframes flagPulse {
+          0%, 100% { box-shadow: 0 6px 20px rgba(37,99,235,0.35), 0 0 0 6px rgba(37,99,235,0.12); transform: scale(1); }
+          50% { box-shadow: 0 8px 28px rgba(37,99,235,0.5), 0 0 0 12px rgba(37,99,235,0.08); transform: scale(1.06); }
+        }
       `}</style>
         </div>
     )

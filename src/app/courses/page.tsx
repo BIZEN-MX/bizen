@@ -217,7 +217,7 @@ export default function CoursesPage() {
       {/* Hide MobileBottomNav on courses page */}
       <style>{`
         @media (max-width: 767px) {
-          [data-mobile-bottom-nav], .progress-card-mobile-hide {
+          [data-mobile-bottom-nav] {
             display: none !important;
           }
         }
@@ -271,35 +271,72 @@ export default function CoursesPage() {
             <div style={{ position: "absolute", top: "-30%", right: "-5%", width: 300, height: 300, background: "radial-gradient(circle, rgba(96,165,250,0.25) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
             <div style={{ position: "absolute", bottom: "-20%", left: "5%", width: 250, height: 250, background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
 
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <Zap size={13} color="#60a5fa" />
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>30 Temas</span>
+            <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "clamp(24px, 5vw, 48px)", alignItems: "center" }}>
+              {/* Left Side: Title & Progress */}
+              <div style={{ flex: "1 1 500px", minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                  <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <Zap size={13} color="#60a5fa" />
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>30 Temas</span>
+                  </div>
+                </div>
+                <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 900, color: "#ffffff", margin: "0 0 10px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+                  Tu Camino Financiero
+                </h1>
+                <p style={{ fontSize: "clamp(14px, 2vw, 17px)", color: "#93c5fd", margin: "0 0 24px", lineHeight: 1.6, maxWidth: 500 }}>
+                  Domina el dinero paso a paso. Desde las bases hasta invertir y emprender con confianza.
+                </p>
+
+                {/* Progress Bar Integrated */}
+                <div style={{ width: "100%", maxWidth: 600 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 10 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso de Cursos</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: "#60a5fa" }}>{Math.max(1, Math.floor(completedCount / 4))} de 150 cursos completados</span>
+                    </div>
+                    <span style={{ fontSize: 32, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{progressPct}%</span>
+                  </div>
+                  <div style={{ width: "100%", height: 12, background: "rgba(255,255,255,0.12)", borderRadius: 10, overflow: "hidden" }}>
+                    <div
+                      style={{
+                        width: `${progressPct}%`,
+                        height: "100%",
+                        background: "linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%)",
+                        borderRadius: 10,
+                        boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)",
+                        transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)"
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-              <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 900, color: "#ffffff", margin: "0 0 10px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
-                Tu Camino Financiero
-              </h1>
-              <p style={{ fontSize: "clamp(14px, 2vw, 17px)", color: "#93c5fd", margin: "0 0 32px", lineHeight: 1.6, maxWidth: 500 }}>
-                Domina el dinero paso a paso. Desde las bases hasta invertir y emprender con confianza.
-              </p>
 
-              {/* Stats row */}
-              <div style={{ display: "flex", gap: "clamp(16px, 4vw, 32px)", flexWrap: "wrap" }}>
+              {/* Right Side: Stats Cluster */}
+              <div style={{ flex: "0 1 auto", display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px", minWidth: "280px" }}>
                 {[
-                  { label: "Temas", value: "30", icon: BookOpen },
-                  { label: "Lecciones", value: `${APPROX_TOTAL_LESSONS}+`, icon: CheckCircle2 },
-                  { label: "Completadas", value: completedCount.toString(), icon: Zap },
+                  { label: "Temas", value: "30", icon: BookOpen, color: "#60a5fa" },
+                  { label: "Cursos", value: "150+", icon: CheckCircle2, color: "#93c5fd" },
                 ].map((stat) => {
                   const StatIcon = stat.icon
                   return (
-                    <div key={stat.label} style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "12px 18px" }}>
-                      <StatIcon size={18} color="#60a5fa" />
-                      <div>
-                        <div style={{ fontSize: "clamp(18px, 3vw, 24px)", fontWeight: 900, color: "#fff", lineHeight: 1 }}>{stat.value}</div>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>{stat.label}</div>
+                    <div
+                      key={stat.label}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        background: "rgba(255,255,255,0.06)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: 20,
+                        padding: "20px 24px",
+                        backdropFilter: "blur(4px)"
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                        <StatIcon size={18} color={stat.color} />
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>{stat.label}</div>
                       </div>
+                      <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>{stat.value}</div>
                     </div>
                   )
                 })}
@@ -307,84 +344,7 @@ export default function CoursesPage() {
             </div>
           </div>
 
-          {/* Progress indicator – lessons completed across all 30 topics */}
-          <div
-            className="progress-card-responsive progress-card-mobile-hide"
-            style={{
-              width: "100%",
-              marginBottom: "clamp(28px, 5vw, 44px)",
-              padding: "clamp(20px, 3vw, 28px) clamp(24px, 4vw, 32px)",
-              background: "white",
-              border: "1px solid #e2e8f0",
-              borderRadius: 20,
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.04)",
-              boxSizing: "border-box",
-              position: "relative",
-              overflow: "hidden"
-            }}
-            aria-label={`Progreso: ${completedCount} lecciones completadas`}
-          >
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #3b82f6, #2563eb, #6366f1)", borderRadius: "20px 20px 0 0" }} />
-            <div style={{ position: "absolute", top: -30, right: -30, width: 150, height: 150, background: "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)", borderRadius: "50%" }} />
 
-            <div
-              className="progress-flex-container"
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 16,
-                position: "relative",
-                zIndex: 1
-              }}
-            >
-              <div>
-                <h2 style={{ fontSize: "clamp(15px, 3vw, 20px)", fontWeight: 800, color: "#1e3a5f", margin: "0 0 3px" }} className="progress-title">
-                  <span className="full-text">Tu Viaje BIZEN</span>
-                  <span className="short-text">Mi Viaje</span>
-                </h2>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }} className="progress-subtitle">
-                  <span className="full-text">{completedCount} de {APPROX_TOTAL_LESSONS} lecciones dominadas</span>
-                  <span className="short-text">{completedCount} / {APPROX_TOTAL_LESSONS}</span>
-                </div>
-              </div>
-              <div style={{ textAlign: "right", display: "flex", alignItems: "center", gap: 12 }}>
-                <span
-                  style={{
-                    fontSize: "clamp(22px, 5vw, 34px)",
-                    fontWeight: 900,
-                    background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent"
-                  }}
-                >
-                  {progressPct}%
-                </span>
-              </div>
-            </div>
-            <div
-              style={{
-                width: "100%",
-                height: 10,
-                borderRadius: 10,
-                background: "#f1f5f9",
-                overflow: "hidden",
-                position: "relative",
-                zIndex: 1
-              }}
-            >
-              <div
-                style={{
-                  width: `${progressPct}%`,
-                  height: "100%",
-                  borderRadius: 10,
-                  background: "linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%)",
-                  transition: "width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                  boxShadow: "0 0 12px rgba(59, 130, 246, 0.5)"
-                }}
-              />
-            </div>
-          </div>
 
           {/* Topics Path — 2-per-row snake/zigzag layout */}
           <section
@@ -460,13 +420,37 @@ export default function CoursesPage() {
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                   <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", marginBottom: 8, letterSpacing: "0.06em" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
                                   <div style={{ fontSize: 19, fontWeight: 800, color: "#0f172a", lineHeight: 1.25 }}>{topic.title}</div>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 700, color: "#3b82f6" }}><BookOpen size={16} /><span>{topic.lessons} lecciones</span></div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 700, color: "#3b82f6" }}><BookOpen size={16} /><span>{topic.lessons} cursos</span></div>
                                 </div>
                               </div>
                             </div>
                             {showArrow && (
-                              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", flexShrink: 0, padding: "0 4px", alignSelf: "center" }}>
-                                {isRTL ? (<><svg width="10" height="14" viewBox="0 0 10 14" fill="none"><path d="M0 7L9.75 0.94L9.75 13.06L0 7Z" fill="#3b82f6" /></svg><div style={{ width: 20, height: 2, background: "linear-gradient(to left, #bfdbfe, #3b82f6)", borderRadius: 2 }} /></>) : (<><div style={{ width: 20, height: 2, background: "linear-gradient(to right, #bfdbfe, #3b82f6)", borderRadius: 2 }} /><svg width="10" height="14" viewBox="0 0 10 14" fill="none"><path d="M10 7L0.25 13.06L0.25 0.94L10 7Z" fill="#3b82f6" /></svg></>)}
+                              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", flexShrink: 0, padding: "0 6px", alignSelf: "center" }}>
+                                {isRTL ? (
+                                  <svg width="56" height="20" viewBox="0 0 56 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                      <linearGradient id={`hArrowL-${pairIdx}`} x1="56" y1="10" x2="0" y2="10" gradientUnits="userSpaceOnUse">
+                                        <stop stopColor="#bfdbfe" />
+                                        <stop offset="0.6" stopColor="#3b82f6" />
+                                        <stop offset="1" stopColor="#2563eb" />
+                                      </linearGradient>
+                                    </defs>
+                                    <line x1="53" y1="10" x2="18" y2="10" stroke={`url(#hArrowL-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" />
+                                    <path d="M20 4L6 10L20 16" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                                  </svg>
+                                ) : (
+                                  <svg width="56" height="20" viewBox="0 0 56 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                      <linearGradient id={`hArrowR-${pairIdx}`} x1="0" y1="10" x2="56" y2="10" gradientUnits="userSpaceOnUse">
+                                        <stop stopColor="#bfdbfe" />
+                                        <stop offset="0.6" stopColor="#3b82f6" />
+                                        <stop offset="1" stopColor="#2563eb" />
+                                      </linearGradient>
+                                    </defs>
+                                    <line x1="3" y1="10" x2="38" y2="10" stroke={`url(#hArrowR-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" />
+                                    <path d="M36 4L50 10L36 16" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                                  </svg>
+                                )}
                               </div>
                             )}
                           </React.Fragment>
@@ -475,10 +459,19 @@ export default function CoursesPage() {
                     </div>
                     {!isLastPair && (
                       <div style={{ display: "flex", width: "100%", justifyContent: isRTL ? "flex-start" : "flex-end" }}>
-                        <div style={{ width: "50%", display: "flex", justifyContent: "center", padding: "12px 0" }}>
+                        <div style={{ width: "50%", display: "flex", justifyContent: "center", padding: "4px 0" }}>
                           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <div style={{ width: 2, height: 40, background: "linear-gradient(to bottom, #bfdbfe, #3b82f6)", borderRadius: 2 }} />
-                            <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M7 10L0.94 0.25H13.06L7 10Z" fill="#3b82f6" /></svg>
+                            <svg width="20" height="64" viewBox="0 0 20 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <defs>
+                                <linearGradient id={`vArrow-${pairIdx}`} x1="10" y1="0" x2="10" y2="64" gradientUnits="userSpaceOnUse">
+                                  <stop stopColor="#bfdbfe" />
+                                  <stop offset="0.7" stopColor="#3b82f6" />
+                                  <stop offset="1" stopColor="#2563eb" />
+                                </linearGradient>
+                              </defs>
+                              <line x1="10" y1="2" x2="10" y2="46" stroke={`url(#vArrow-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" />
+                              <path d="M4 44L10 58L16 44" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                            </svg>
                           </div>
                         </div>
                       </div>
@@ -500,47 +493,6 @@ export default function CoursesPage() {
         @media (max-width: 640px) {
           .topics-grid-responsive {
             grid-template-columns: 1fr !important;
-          }
-          .progress-card-responsive {
-            padding: 16px !important;
-            border-radius: 16px !important;
-            margin-bottom: 24px !important;
-          }
-          .progress-flex-container {
-            flex-direction: row !important;
-            align-items: center !important;
-            flex-wrap: nowrap !important; /* Force single row for progress header */
-            gap: 4px !important;
-          }
-          .progress-flex-container > div:first-child {
-            flex: 1 !important;
-            min-width: 0 !important;
-          }
-          .progress-subtitle .full-text {
-            display: none !important;
-          }
-          .progress-subtitle .short-text {
-            display: inline !important;
-          }
-          .progress-title .full-text {
-            display: none !important;
-          }
-          .progress-title .short-text {
-            display: inline !important;
-          }
-        }
-        @media (min-width: 641px) {
-          .progress-subtitle .short-text {
-            display: none !important;
-          }
-          .progress-subtitle .full-text {
-            display: inline !important;
-          }
-          .progress-title .short-text {
-            display: none !important;
-          }
-          .progress-title .full-text {
-            display: inline !important;
           }
         }
 

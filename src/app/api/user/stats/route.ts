@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic'
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel, calculateCurrentStreak, getMexicoMidnight } from "@/lib/xp"
-import { logToFile } from "@/lib/debugLogger"
 
 export async function GET() {
   let user: any = null
@@ -12,8 +11,8 @@ export async function GET() {
     const supabase = await createSupabaseServer()
 
     // Get current user
-    const { data, error: authError } = await supabase.auth.getUser()
-    user = data.user
+    const { data: { user: supabaseUser }, error: authError } = await supabase.auth.getUser()
+    user = supabaseUser
 
     if (authError || !user) {
       return NextResponse.json(
@@ -36,7 +35,6 @@ export async function GET() {
     })
 
     if (!profile) {
-      logToFile(`STATS API ERROR: Profile not found for ${user.id}`)
       return NextResponse.json(
         { error: "Profile not found" },
         { status: 404 }
@@ -76,9 +74,8 @@ export async function GET() {
       where: { userId: user.id }
     })
 
-    // Use timezone-aware streak calculation to prevent streaks visually dying at 6 PM Mexico time
-    // and correctly zero them if the user hasn't visited in >1 day.
-    const currentStreak = calculateCurrentStreak(profile.lastActive, profile.currentStreak || 0)
+    // Use timezone-aware streak calculation
+    let currentStreak = calculateCurrentStreak(profile.lastActive, profile.currentStreak || 0)
 
     // Calculate level from XP
     const currentLevel = calculateLevel(userProfile.xp)
@@ -86,24 +83,20 @@ export async function GET() {
     const totalXpNeeded = totalXpForNextLevel(userProfile.xp)
     const xpNeeded = xpForNextLevel(userProfile.xp)
 
-    // Update level or streak in database if it changed
-    // IMPORTANT: Also update lastActive if it's a new day to keep the streak 'alive' even without winning XP
-    const now = new Date();
-    const profileLastActiveDay = profile.lastActive ? getMexicoMidnight(new Date(profile.lastActive)) : null;
-    const isNewDay = !profileLastActiveDay || getMexicoMidnight(now).getTime() > profileLastActiveDay.getTime();
-
-    if (currentLevel !== profile.level || currentStreak !== (profile.currentStreak || 0) || isNewDay) {
+    // Update level or streak in database IF they changed (Repair/Sync)
+    if (currentLevel !== profile.level || currentStreak !== (profile.currentStreak || 0)) {
       await prisma.profile.update({
         where: { userId: user.id },
         data: {
           level: currentLevel,
           currentStreak: currentStreak,
-          ...(isNewDay && { lastActive: now })
         }
       })
     }
 
-    // Get active days this week (Sun–Sat) from daily challenge evidence posts
+    const now = new Date();
+
+    // Get active days this week (Sun–Sat)
     const dayOfWeek = now.getDay() // 0=Sun
     const sunday = new Date(now)
     sunday.setDate(now.getDate() - dayOfWeek)
@@ -149,28 +142,19 @@ export async function GET() {
       coursesEnrolled,
       currentStreak,
       certificatesCount,
-      totalPoints: (userProfile as any).bizcoins || 0,
-      bizcoins: (userProfile as any).bizcoins || 0,
-      inventory: (userProfile as any).inventory?.map((i: any) => i.productId) || [],
+      totalPoints: userProfile.bizcoins || 0,
+      bizcoins: userProfile.bizcoins || 0,
+      inventory: userProfile.inventory.map(i => i.productId) || [],
       weeklyActiveDays,
     }
 
-    try {
-      logToFile(`STATS API: user=${user.id} bizcoins=${result.bizcoins}`)
-    } catch (e) { }
-
     return NextResponse.json(result)
-
 
   } catch (error: any) {
     console.error("Error fetching user stats:", error)
-    try {
-      logToFile(`STATS API CRASH: user=${user?.id || 'unknown'} error=${error.message || 'Unknown error'}`)
-    } catch (e) { }
     return NextResponse.json(
       { error: "Failed to fetch stats", details: error.message },
       { status: 500 }
     )
   }
 }
-

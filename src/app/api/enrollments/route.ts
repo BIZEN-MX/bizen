@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { createSupabaseServerMicrocred } from '@/lib/supabase/server-microcred'
+import { createSupabaseServerMicrocred as createClient } from '@/lib/supabase/server-microcred'
 import { cookies } from 'next/headers'
 
-// GET /api/enrollments - Get user's enrollments
+// GET /api/enrollments - Get user's enrollments (Joined Topics)
 export async function GET(request: NextRequest) {
   try {
     const cookieStore = cookies()
     const supabase = createClient(cookieStore)
-    
+
     const { data: { user }, error } = await supabase.auth.getUser()
-    
+
     if (error || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
     const enrollments = await prisma.enrollment.findMany({
       where: { userId: user.id },
       include: {
-        course: {
+        topic: {
           include: {
-            units: {
+            courses: {
               include: {
                 _count: {
                   select: {
@@ -53,14 +53,14 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/enrollments - Enroll in a course
+// POST /api/enrollments - Enroll in a topic
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = cookies()
     const supabase = createClient(cookieStore)
-    
+
     const { data: { user }, error } = await supabase.auth.getUser()
-    
+
     if (error || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -69,11 +69,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { courseId } = body
+    const { topicId } = body
 
-    if (!courseId) {
+    if (!topicId) {
       return NextResponse.json(
-        { error: 'courseId is required' },
+        { error: 'topicId is required' },
         { status: 400 }
       )
     }
@@ -81,16 +81,16 @@ export async function POST(request: NextRequest) {
     // Check if already enrolled
     const existing = await prisma.enrollment.findUnique({
       where: {
-        userId_courseId: {
+        userId_topicId: {
           userId: user.id,
-          courseId
+          topicId
         }
       }
     })
 
     if (existing) {
       return NextResponse.json(
-        { error: 'Already enrolled in this course' },
+        { error: 'Already enrolled in this topic' },
         { status: 400 }
       )
     }
@@ -98,10 +98,10 @@ export async function POST(request: NextRequest) {
     const enrollment = await prisma.enrollment.create({
       data: {
         userId: user.id,
-        courseId
+        topicId
       },
       include: {
-        course: true
+        topic: true
       }
     })
 
@@ -109,20 +109,20 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating enrollment:', error)
     return NextResponse.json(
-      { error: 'Failed to enroll in course' },
+      { error: 'Failed to enroll in topic' },
       { status: 500 }
     )
   }
 }
 
-// DELETE /api/enrollments - Unenroll from a course
+// DELETE /api/enrollments - Unenroll from a topic
 export async function DELETE(request: NextRequest) {
   try {
     const cookieStore = cookies()
     const supabase = createClient(cookieStore)
-    
+
     const { data: { user }, error } = await supabase.auth.getUser()
-    
+
     if (error || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -131,20 +131,20 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const courseId = searchParams.get('courseId')
+    const topicId = searchParams.get('topicId')
 
-    if (!courseId) {
+    if (!topicId) {
       return NextResponse.json(
-        { error: 'courseId is required' },
+        { error: 'topicId is required' },
         { status: 400 }
       )
     }
 
     await prisma.enrollment.delete({
       where: {
-        userId_courseId: {
+        userId_topicId: {
           userId: user.id,
-          courseId
+          topicId
         }
       }
     })
@@ -153,7 +153,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error('Error deleting enrollment:', error)
     return NextResponse.json(
-      { error: 'Failed to unenroll from course' },
+      { error: 'Failed to unenroll from topic' },
       { status: 500 }
     )
   }

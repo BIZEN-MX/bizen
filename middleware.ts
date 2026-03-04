@@ -78,27 +78,20 @@ export async function middleware(request: NextRequest) {
   if (process.env.NODE_ENV === 'development') {
     console.log('[MIDDLEWARE] Path:', pathname)
     console.log('[MIDDLEWARE] Has session:', !!session)
-    console.log('[MIDDLEWARE] User:', session?.user?.email)
   }
 
   // Role-based route protection - TEACHER routes
-  // Note: Detailed role checks are handled in API routes for better performance
-  // Middleware only checks for session existence
   if (pathname.startsWith('/teacher')) {
     if (!session) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
-    // Role verification happens in the API routes using requireAuthAndRole
   }
 
   // Role-based route protection - ADMIN routes
-  // Note: Detailed role checks are handled in API routes for better performance
-  // Middleware only checks for session existence
   if (pathname.startsWith('/admin')) {
     if (!session) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
-    // Role verification happens in the API routes using requireAuthAndRole
   }
 
   // Protected student routes (require login)
@@ -109,8 +102,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Paywall: block courses, cash-flow, learn, simuladores, business-lab, etc. without payment
-  // Cookie bizen_has_access is set after Stripe payment or when user has school license (auth callback)
+  // Paywall: block routes without payment
   const paidRoutes = [
     '/courses', '/cash-flow', '/learn', '/simuladores', '/business-lab',
     '/dashboard', '/forum', '/leaderboard', '/ranking', '/progress', '/reto-diario',

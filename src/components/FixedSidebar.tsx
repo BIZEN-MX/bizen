@@ -388,7 +388,7 @@ export default function FixedSidebar() {
 
           {/* Quick Actions */}
           <div style={{ marginBottom: 24, flex: "1 1 auto" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 20, alignItems: stackAlignment }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 26, alignItems: stackAlignment }}>
               {isStudentOrGuest && (
                 <>
                   <button
