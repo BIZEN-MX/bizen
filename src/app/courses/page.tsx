@@ -420,7 +420,7 @@ export default function CoursesPage() {
                               }}
                               className="course-card-hover"
                               style={{
-                                flex: "0 1 400px",
+                                flex: "0 1 550px",
                                 margin: "0 auto",
                                 minHeight: 180,
                                 cursor: "pointer",
