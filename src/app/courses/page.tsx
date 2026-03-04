@@ -399,7 +399,7 @@ export default function CoursesPage() {
                 const displayPair = isRTL ? [...pair].reverse() : pair
                 return (
                   <React.Fragment key={pairIdx}>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", width: "100%", gap: 0 }}>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", width: "100%", gap: 0, justifyContent: "center" }}>
                       {displayPair.map((topic, i) => {
                         const IconComp = topic.icon
                         const showArrow = i === 0 && displayPair.length > 1
@@ -421,7 +421,6 @@ export default function CoursesPage() {
                               className="course-card-hover"
                               style={{
                                 flex: "0 1 550px",
-                                margin: "0 auto",
                                 minHeight: 180,
                                 cursor: "pointer",
                                 border: "1px solid rgba(15,98,254,0.1)",
@@ -514,8 +513,18 @@ export default function CoursesPage() {
                       const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
 
                       return (
-                        <div style={{ display: "flex", width: "100%", justifyContent: isRTL ? "flex-start" : "flex-end" }}>
-                          <div style={{ width: "50%", display: "flex", justifyContent: "center", padding: "4px 0" }}>
+                        <div style={{
+                          display: "flex",
+                          width: "100%",
+                          justifyContent: "center"
+                        }}>
+                          <div style={{
+                            width: "1172px", // 2 cards of 550px + 72px arrow
+                            display: "flex",
+                            justifyContent: isRTL ? "flex-start" : "flex-end",
+                            paddingRight: isRTL ? 0 : "275px", // Center of the card
+                            paddingLeft: isRTL ? "275px" : 0
+                          }}>
                             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                               <svg width="28" height="72" viewBox="0 0 28 72" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
