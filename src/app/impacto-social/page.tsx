@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
+import { useLessonProgress } from "@/hooks/useLessonProgress"
+import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 import Card from "@/components/ui/card"
 import {
     Heart,
@@ -216,6 +218,27 @@ export default function ImpactoSocialPage() {
 
         fetchStats()
     }, [user, loading, router])
+
+    const { completedLessons } = useLessonProgress()
+
+    const handleGoToNextLesson = () => {
+        // Find first untaken lesson across all 30 topics
+        for (let tIdx = 0; tIdx < SUBTEMAS_BY_COURSE.length; tIdx++) {
+            const topicId = tIdx + 1
+            const subtemas = SUBTEMAS_BY_COURSE[tIdx]
+            for (let sIdx = 0; sIdx < subtemas.length; sIdx++) {
+                const unitId = sIdx + 1
+                const lessons = subtemas[sIdx].lessons
+                for (const lesson of lessons) {
+                    if (!completedLessons.includes(lesson.slug)) {
+                        router.push(`/learn/course-${topicId}/unit-${unitId}/${lesson.slug}/interactive`)
+                        return
+                    }
+                }
+            }
+        }
+        router.push("/courses")
+    }
 
     if (loading || isLoadingStats) {
         return (
@@ -757,7 +780,7 @@ export default function ImpactoSocialPage() {
                                     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                                         {/* Main CTA card */}
                                         <div style={{
-                                            background: "linear-gradient(135deg, #0F62FE 0%, #2563eb 100%)",
+                                            background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%)",
                                             borderRadius: 20, padding: "24px",
                                             boxShadow: "0 12px 32px rgba(15, 98, 254, 0.25)"
                                         }}>
@@ -772,7 +795,7 @@ export default function ImpactoSocialPage() {
                                             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                                                 <button
                                                     className="cta-action-btn"
-                                                    onClick={() => router.push("/courses")}
+                                                    onClick={handleGoToNextLesson}
                                                 >
                                                     <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
                                                         <Book size={16} /> Completa 1 lección
@@ -790,10 +813,10 @@ export default function ImpactoSocialPage() {
                                                 </button>
                                                 <button
                                                     className="cta-action-btn"
-                                                    onClick={() => router.push("/forum")}
+                                                    onClick={() => router.push("/forum/new")}
                                                 >
                                                     <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                                                        <MessageCircle size={16} /> Únete al Foro
+                                                        <MessageCircle size={16} /> Comenta en el Foro
                                                     </span>
                                                     <ChevronRight size={16} />
                                                 </button>

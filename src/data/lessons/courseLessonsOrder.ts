@@ -33,7 +33,7 @@ import { TEMA28_SUBTEMAS } from "@/app/courses/tema28-data"
 import { TEMA29_SUBTEMAS } from "@/app/courses/tema29-data"
 import { TEMA30_SUBTEMAS } from "@/app/courses/tema30-data"
 
-const SUBTEMAS_BY_COURSE: { lessons: { slug: string }[] }[][] = [
+export const SUBTEMAS_BY_COURSE: { lessons: { slug: string }[] }[][] = [
   TEMA1_SUBTEMAS,
   TEMA2_SUBTEMAS,
   TEMA3_SUBTEMAS,
