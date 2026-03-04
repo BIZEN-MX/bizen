@@ -399,7 +399,7 @@ export default function CoursesPage() {
                 const displayPair = isRTL ? [...pair].reverse() : pair
                 return (
                   <React.Fragment key={pairIdx}>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", width: "100%", gap: 0, justifyContent: "center" }}>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", width: "100%", gap: 0, justifyContent: "center", position: "relative" }}>
                       {displayPair.map((topic, i) => {
                         const IconComp = topic.icon
                         const showArrow = i === 0 && displayPair.length > 1
@@ -513,19 +513,20 @@ export default function CoursesPage() {
                       const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
 
                       return (
-                        <div style={{
-                          display: "flex",
-                          width: "100%",
-                          justifyContent: "center"
-                        }}>
+                        <div style={{ display: "flex", width: "100%", justifyContent: "center", position: "relative" }}>
+                          {/* Total row width is actually 1188px (550 + 8 + 72 + 8 + 550) */}
                           <div style={{
-                            width: "1172px", // 2 cards of 550px + 72px arrow
+                            width: 1188,
                             display: "flex",
                             justifyContent: isRTL ? "flex-start" : "flex-end",
-                            paddingRight: isRTL ? 0 : "275px", // Center of the card
-                            paddingLeft: isRTL ? "275px" : 0
+                            // To align perfectly under the center of the card:
+                            // Card center is at 275px from its side of the row.
+                            // We use padding on the inner container and translate the arrow by its half-width (14px).
+                            paddingLeft: isRTL ? 275 : 0,
+                            paddingRight: isRTL ? 0 : 275,
+                            position: "relative"
                           }}>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                            <div style={{ marginLeft: isRTL ? -14 : 0, marginRight: isRTL ? 0 : -14, display: "flex", flexDirection: "column", alignItems: "center" }}>
                               <svg width="28" height="72" viewBox="0 0 28 72" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                   <linearGradient id={`vArrow-${pairIdx}`} x1="14" y1="0" x2="14" y2="72" gradientUnits="userSpaceOnUse">
