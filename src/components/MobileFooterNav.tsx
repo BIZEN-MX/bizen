@@ -127,20 +127,10 @@ export default function MobileFooterNav() {
     <>
       <style jsx>{`
         .mobile-footer-container {
-          position: fixed !important;
-          bottom: 0 !important;
-          left: 0 !important;
-          right: 0 !important;
-          height: 65px !important;
-          padding-bottom: env(safe-area-inset-bottom) !important;
-          box-sizing: content-box !important;
-          background: #FBFAF5 !important;
-          border-top: 2px solid #0F62FE !important;
-          box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05) !important;
           z-index: 10000 !important;
           font-family: Montserrat, sans-serif !important;
-          display: block !important;
           margin: 0 !important;
+          box-sizing: border-box !important;
         }
         .mobile-footer-inner {
           display: flex !important;
@@ -187,7 +177,26 @@ export default function MobileFooterNav() {
           }
         }
       `}</style>
-      <div className="mobile-footer-container">
+      <div
+        className="mobile-footer-container"
+        data-mobile-bottom-nav
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "65px",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          boxSizing: "content-box",
+          zIndex: 10000,
+          transform: "translate3d(0, 0, 0)",
+          WebkitTransform: "translate3d(0, 0, 0)",
+          display: "block",
+          background: "#FBFAF5",
+          borderTop: "2px solid #0F62FE",
+          boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.05)"
+        }}
+      >
         <div className="mobile-footer-inner">
           {navItems.map((item, index) => (
             <button

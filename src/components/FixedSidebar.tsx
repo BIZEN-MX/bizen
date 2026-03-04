@@ -1799,12 +1799,6 @@ export default function FixedSidebar() {
           display: none !important; /* Hide username on all devices */
         }
         
-        /* Hide MobileBottomNav on mobile */
-        @media (max-width: 767px) {
-          [data-mobile-bottom-nav] {
-            display: none !important;
-          }
-        }
       `}</style>
     </>
   )

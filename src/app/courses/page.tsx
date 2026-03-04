@@ -214,14 +214,6 @@ export default function CoursesPage() {
         pointerEvents: "none"
       }} />
 
-      {/* Hide MobileBottomNav on courses page */}
-      <style>{`
-        @media (max-width: 767px) {
-          [data-mobile-bottom-nav] {
-            display: none !important;
-          }
-        }
-      `}</style>
 
       <div
         style={{
@@ -609,12 +601,6 @@ export default function CoursesPage() {
             margin-bottom: 0 !important;
           }
           
-          /* Ensure body/html keep white background without changing scroll behavior */
-          body,
-          html {
-            background: #ffffff !important;
-            overflow-x: clip !important; /* Use clip instead of hidden to allow child overflow */
-          }
           
           /* Ensure main container doesn't cause horizontal scroll */
           div[style*="width: 100%"],
