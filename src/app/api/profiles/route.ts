@@ -18,11 +18,18 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Use raw query for profile to ensure we get bizcoins and ignore Prisma mapping issues
-    const profileResult: any[] = await prisma.$queryRaw`
-      SELECT * FROM public.profiles WHERE user_id = ${user.id} LIMIT 1
-    `
-    const profile = profileResult[0]
+    // Use try-catch for each DB query to avoid blanket 500
+    let profile: any = null;
+    try {
+      const profileResult: any[] = await prisma.$queryRaw`
+          SELECT * FROM public.profiles WHERE user_id = ${user.id} LIMIT 1
+        `
+      profile = profileResult[0]
+    } catch (e: any) {
+      console.error('DB Error (profile raw query):', e.message)
+      // Try fallback to standard prisma query if raw fails
+      profile = await prisma.profile.findUnique({ where: { userId: user.id } }).catch(() => null);
+    }
 
     if (!profile) {
       return NextResponse.json(
@@ -31,33 +38,45 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Fetch inventory via raw query
-    const inventoryResult: any[] = await prisma.$queryRaw`
-      SELECT product_id FROM public.user_inventory WHERE user_id = ${user.id}
-    `
+    // Fetch inventory via raw query with fallback
+    let inventoryResult: any[] = []
+    try {
+      inventoryResult = await prisma.$queryRaw`
+          SELECT product_id FROM public.user_inventory WHERE user_id = ${user.id}
+        `
+    } catch (e: any) {
+      console.warn('DB Warning (inventory fetch failed):', e.message)
+    }
 
     // Fetch school separately if needed
-    const school = profile.school_id ? await prisma.school.findUnique({
-      where: { id: profile.school_id },
-      include: {
-        licenses: {
-          where: {
-            status: 'active',
-            endDate: { gt: new Date() }
-          },
-          take: 1
-        }
+    let school = null;
+    try {
+      if (profile.school_id || profile.schoolId) {
+        school = await prisma.school.findUnique({
+          where: { id: profile.school_id || profile.schoolId },
+          include: {
+            licenses: {
+              where: {
+                status: 'active',
+                endDate: { gt: new Date() }
+              },
+              take: 1
+            }
+          }
+        })
       }
-    }) : null
+    } catch (e: any) {
+      console.warn('DB Warning (school fetch failed):', e.message)
+    }
 
     const profileData = {
       ...profile,
-      userId: profile.user_id, // Map snake_case to camelCase for frontend
-      fullName: profile.full_name,
-      schoolId: profile.school_id,
+      userId: profile.user_id || profile.userId,
+      fullName: profile.full_name || profile.fullName,
+      schoolId: profile.school_id || profile.schoolId,
       bizcoins: profile.bizcoins || 0,
-      inventory: inventoryResult.map(i => i.product_id),
-      currentStreak: profile.current_streak || 0,
+      inventory: (inventoryResult || []).map((i: any) => i.product_id),
+      currentStreak: profile.current_streak || profile.currentStreak || 0,
       school
     };
 

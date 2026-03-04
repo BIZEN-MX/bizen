@@ -70,7 +70,17 @@ export async function middleware(request: NextRequest) {
   )
 
   // Refresh session if expired - this is critical for SSR
-  const { data: { session } } = await supabase.auth.getSession()
+  let session = null;
+  try {
+    const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession()
+    if (sessionError) {
+      console.warn('[MIDDLEWARE] Session error (potential network issue):', sessionError.message)
+    }
+    session = currentSession
+  } catch (err: any) {
+    console.error('[MIDDLEWARE] Fatal session refresh error:', err?.message || err)
+    // Don't throw, just proceed without session to avoid blanket 500 error
+  }
 
   const pathname = request.nextUrl.pathname
 
