@@ -3,7 +3,7 @@ import { createSupabaseServer } from "@/lib/supabase/server"
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { gameId: string } }
+  { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
     const supabase = await createSupabaseServer()

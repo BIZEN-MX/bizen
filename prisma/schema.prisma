@@ -55,37 +55,38 @@ model ContactMessage {
 }
 
 model Profile {
-  userId           String        @id @map("user_id")
-  fullName         String        @map("full_name")
-  role             String        @default("student")
-  schoolId         String?       @map("school_id")
-  xp               Int           @default(0)
-  level            Int           @default(1)
-  nickname         String?       @unique
-  reputation       Int           @default(0)
-  postsCreated     Int           @default(0) @map("posts_created")
-  commentsCreated  Int           @default(0) @map("comments_created")
-  acceptedAnswers  Int           @default(0) @map("accepted_answers")
-  createdAt        DateTime      @default(now()) @map("created_at")
-  birthDate        DateTime?     @map("birth_date") @db.Timestamptz(6)
-  isMinor          Boolean       @default(false) @map("is_minor")
-  parentalOverride Boolean       @default(false) @map("parental_override")
-  ageVerifiedAt    DateTime?     @map("age_verified_at") @db.Timestamptz(6)
+  userId           String              @id @map("user_id")
+  fullName         String              @map("full_name")
+  role             String              @default("student")
+  schoolId         String?             @map("school_id")
+  xp               Int                 @default(0)
+  level            Int                 @default(1)
+  nickname         String?             @unique
+  reputation       Int                 @default(0)
+  postsCreated     Int                 @default(0) @map("posts_created")
+  commentsCreated  Int                 @default(0) @map("comments_created")
+  acceptedAnswers  Int                 @default(0) @map("accepted_answers")
+  createdAt        DateTime            @default(now()) @map("created_at")
+  birthDate        DateTime?           @map("birth_date") @db.Timestamptz(6)
+  isMinor          Boolean             @default(false) @map("is_minor")
+  parentalOverride Boolean             @default(false) @map("parental_override")
+  ageVerifiedAt    DateTime?           @map("age_verified_at") @db.Timestamptz(6)
   avatar           Json?
-  currentStreak    Int?          @default(0) @map("current_streak")
-  longestStreak    Int?          @default(0) @map("longest_streak")
-  lastActive       DateTime?     @map("last_active")
-  bizcoins         Int?          @default(0)
+  currentStreak    Int?                @default(0) @map("current_streak")
+  longestStreak    Int?                @default(0) @map("longest_streak")
+  lastActive       DateTime?           @map("last_active")
+  bizcoins         Int?                @default(0)
   certificates     Certificate[]
   enrollments      Enrollment[]
   progress         Progress[]
-  school           School?          @relation(fields: [schoolId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  school           School?             @relation(fields: [schoolId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   forumUserBadges  ForumUserBadge[]
   inventory        UserInventoryItem[]
-  followers        UserFollow[]     @relation("following")
-  following        UserFollow[]     @relation("follower")
+  followers        UserFollow[]        @relation("following")
+  following        UserFollow[]        @relation("follower")
   reviews          TopicReview[]
   notes            UserNote[]
+  ForumComment     ForumComment[]
 
   @@index([schoolId], map: "idx_profiles_school")
   @@map("profiles")
@@ -93,19 +94,19 @@ model Profile {
 }
 
 model Topic {
-  id            String         @id @default(cuid())
-  title         String
-  description   String?
-  level         String
-  isActive      Boolean        @default(true) @map("is_active")
-  createdAt     DateTime       @default(now()) @map("created_at")
-  bannerUrl     String?        @map("banner_url")
-  icon          String?
-  certificates  Certificate[]
-  enrollments   Enrollment[]
-  schoolTopics  SchoolTopic[]
-  courses       Course[]
-  reviews       TopicReview[]
+  id           String        @id @default(cuid())
+  title        String
+  description  String?
+  level        String
+  isActive     Boolean       @default(true) @map("is_active")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  bannerUrl    String?       @map("banner_url")
+  icon         String?
+  certificates Certificate[]
+  enrollments  Enrollment[]
+  schoolTopics SchoolTopic[]
+  courses      Course[]
+  reviews      TopicReview[]
 
   @@map("topics")
   @@schema("public")
@@ -155,17 +156,17 @@ model Section {
 }
 
 model Lesson {
-  id          String     @id @default(cuid())
-  courseId    String?    @map("course_id")
+  id          String           @id @default(cuid())
+  courseId    String?          @map("course_id")
   title       String
-  contentType String     @map("content_type")
+  contentType String           @map("content_type")
   order       Int
-  xpReward    Int        @default(50) @map("xp_reward")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  sectionId   String?    @map("section_id")
-  duration    Int?       @default(5)
-  section     Section?   @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  course      Course?    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  xpReward    Int              @default(50) @map("xp_reward")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  sectionId   String?          @map("section_id")
+  duration    Int?             @default(5)
+  section     Section?         @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  course      Course?          @relation(fields: [courseId], references: [id], onDelete: Cascade)
   progress    Progress[]
   quizzes     Quiz[]
   steps       LessonStep[]
@@ -179,16 +180,16 @@ model Lesson {
 }
 
 model LessonStep {
-  id          String   @id @default(cuid())
-  lessonId    String   @map("lesson_id")
-  order       Int
-  type        String
-  title       String?
-  body        String?
-  data        Json?    @default("{}")
-  xpReward    Int      @default(10) @map("xp_reward")
-  createdAt   DateTime @default(now()) @map("created_at")
-  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  lessonId  String   @map("lesson_id")
+  order     Int
+  type      String
+  title     String?
+  body      String?
+  data      Json?    @default("{}")
+  xpReward  Int      @default(10) @map("xp_reward")
+  createdAt DateTime @default(now()) @map("created_at")
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@index([lessonId])
   @@map("lesson_steps")
@@ -397,6 +398,7 @@ model ForumComment {
   threadId         String         @map("thread_id")
   parentCommentId  String?        @map("parent_comment_id")
   authorId         String         @map("author_id")
+  author           Profile        @relation(fields: [authorId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
   body             String
   score            Int            @default(0)
   isHidden         Boolean        @default(false) @map("is_hidden")

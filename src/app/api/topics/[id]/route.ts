@@ -4,34 +4,41 @@ import { prisma } from '@/lib/prisma'
 // GET /api/topics/[id] - Get topic by ID with full details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const topic = await prisma.topic.findUnique({
-      where: { id: params.id },
-      include: {
-        courses: {
-          include: {
-            lessons: {
-              include: {
-                quizzes: true
-              },
-              orderBy: {
-                order: 'asc'
+    const { id } = await params
+    let topic: any = null
+    try {
+      topic = await prisma.topic.findUnique({
+        where: { id },
+        include: {
+          courses: {
+            include: {
+              lessons: {
+                include: {
+                  quizzes: true
+                },
+                orderBy: {
+                  order: 'asc'
+                }
               }
+            },
+            orderBy: {
+              order: 'asc'
             }
           },
-          orderBy: {
-            order: 'asc'
-          }
-        },
-        _count: {
-          select: {
-            enrollments: true
+          _count: {
+            select: {
+              enrollments: true
+            }
           }
         }
-      }
-    })
+      })
+    } catch (dbErr: any) {
+      console.warn("Soft error fetching topic relations:", dbErr.message)
+      topic = await prisma.topic.findUnique({ where: { id } }).catch(() => null)
+    }
 
     if (!topic) {
       return NextResponse.json(
@@ -53,14 +60,15 @@ export async function GET(
 // PATCH /api/topics/[id] - Update topic
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
     const { title, description, level, isActive } = body
 
     const topic = await prisma.topic.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(title && { title }),
         ...(description !== undefined && { description }),
@@ -82,11 +90,12 @@ export async function PATCH(
 // DELETE /api/topics/[id] - Delete topic
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     await prisma.topic.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({ message: 'Topic deleted successfully' })

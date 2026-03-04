@@ -8,14 +8,14 @@ import { createSupabaseServer } from '@/lib/supabase/server';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createSupabaseServer();
-    
+
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
+
     if (authError || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -23,7 +23,7 @@ export async function GET(
       );
     }
 
-    const stepId = params.id;
+    const { id: stepId } = await params;
     const stepData = await getStepById(stepId, user.id);
 
     return NextResponse.json({

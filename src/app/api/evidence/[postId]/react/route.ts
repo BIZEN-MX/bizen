@@ -8,7 +8,7 @@ const VALID_REACTIONS = ["Buena meta", "Tip", "Te faltó algo", "Inspirador"]
  * POST /api/evidence/[postId]/react
  * Toggle a reaction on an evidence post (1 reaction per user per post).
  */
-export async function POST(req: NextRequest, { params }: { params: { postId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ postId: string }> }) {
     try {
         const supabase = await createSupabaseServer()
         const { data: { user } } = await supabase.auth.getUser()

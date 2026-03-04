@@ -4,9 +4,10 @@ import { prisma } from "@/lib/prisma"
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -22,7 +23,7 @@ export async function GET(
 
     // First, get the thread without comments to avoid heavy nested queries
     const thread = await prisma.forumThread.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         title: true,
@@ -78,7 +79,7 @@ export async function GET(
     // Only load top-level comments first, replies will be loaded on demand
     const comments = await prisma.forumComment.findMany({
       where: {
-        threadId: params.id,
+        threadId: id,
         moderationStatus: 'approved',
         isHidden: false,
         parentCommentId: null
@@ -151,7 +152,7 @@ export async function GET(
 
     // Increment view count asynchronously (don't block response)
     prisma.forumThread.update({
-      where: { id: params.id },
+      where: { id },
       data: { viewCount: { increment: 1 } }
     }).catch(err => console.error("Error incrementing view count:", err))
 
@@ -162,7 +163,7 @@ export async function GET(
           userId_targetType_targetId: {
             userId: user.id,
             targetType: 'thread',
-            targetId: params.id
+            targetId: id
           }
         }
       }),
@@ -170,7 +171,7 @@ export async function GET(
         where: {
           userId_threadId: {
             userId: user.id,
-            threadId: params.id
+            threadId: id
           }
         }
       }),
@@ -178,11 +179,11 @@ export async function GET(
         where: {
           userId_threadId: {
             userId: user.id,
-            threadId: params.id
+            threadId: id
           }
         }
       })
-    ])
+    ]).catch(() => [null, null, null])
 
     // Get user votes for all comments in a single optimized query
     const commentIds = includeReplies
@@ -231,7 +232,7 @@ export async function GET(
     // Get total comment count for pagination
     const totalComments = await prisma.forumComment.count({
       where: {
-        threadId: params.id,
+        threadId: id,
         moderationStatus: 'approved',
         isHidden: false,
         parentCommentId: null
@@ -270,9 +271,10 @@ export async function GET(
 // PATCH update thread
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -281,7 +283,7 @@ export async function PATCH(
     }
 
     const thread = await prisma.forumThread.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!thread) {
@@ -315,7 +317,7 @@ export async function PATCH(
     }
 
     const updated = await prisma.forumThread.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData
     })
 
@@ -329,9 +331,10 @@ export async function PATCH(
 // DELETE thread
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -340,7 +343,7 @@ export async function DELETE(
     }
 
     const thread = await prisma.forumThread.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!thread) {
@@ -359,7 +362,7 @@ export async function DELETE(
     }
 
     await prisma.forumThread.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({ success: true })

@@ -10,7 +10,7 @@ const BOARD_SPACES = [
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { gameId: string } }
+  { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
     console.log("🎲 Roll dice API called")

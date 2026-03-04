@@ -4,7 +4,7 @@ import { translateOpportunityCard, translateMarketEvent } from "@/lib/cashflow/t
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { gameId: string } }
+  { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
     console.log("🎴 Draw card API called")

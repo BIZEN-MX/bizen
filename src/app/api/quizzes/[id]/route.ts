@@ -4,36 +4,43 @@ import { prisma } from '@/lib/prisma'
 // GET /api/quizzes/[id] - Get quiz by ID with questions
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const quiz = await prisma.quiz.findUnique({
-      where: { id: params.id },
-      include: {
-        lesson: {
-          include: {
-            unit: {
-              include: {
-                course: {
-                  select: {
-                    id: true,
-                    title: true
+    const { id } = await params
+    let quiz: any = null
+    try {
+      quiz = await prisma.quiz.findUnique({
+        where: { id },
+        include: {
+          lesson: {
+            include: {
+              units: {
+                include: {
+                  course: {
+                    select: {
+                      id: true,
+                      title: true
+                    }
                   }
                 }
               }
             }
-          }
-        },
-        questions: {
-          include: {
-            options: true
           },
-          orderBy: {
-            order: 'asc'
+          questions: {
+            include: {
+              options: true
+            },
+            orderBy: {
+              order: 'asc'
+            }
           }
         }
-      }
-    })
+      })
+    } catch (dbErr: any) {
+      console.warn("Soft error fetching quiz relations:", dbErr.message)
+      quiz = await prisma.quiz.findUnique({ where: { id } }).catch(() => null)
+    }
 
     if (!quiz) {
       return NextResponse.json(
@@ -55,14 +62,15 @@ export async function GET(
 // PATCH /api/quizzes/[id] - Update quiz
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
     const { title, passScore, totalPoints } = body
 
     const quiz = await prisma.quiz.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(title && { title }),
         ...(passScore !== undefined && { passScore }),
@@ -83,11 +91,12 @@ export async function PATCH(
 // DELETE /api/quizzes/[id] - Delete quiz
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     await prisma.quiz.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({ message: 'Quiz deleted successfully' })

@@ -6,7 +6,7 @@ import { createSupabaseServer } from "@/lib/supabase/server"
  * POST /api/evidence/[postId]/validate
  * Teacher-only: mark an evidence post as validated.
  */
-export async function POST(req: NextRequest, { params }: { params: { postId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ postId: string }> }) {
     try {
         const supabase = await createSupabaseServer()
         const { data: { user } } = await supabase.auth.getUser()

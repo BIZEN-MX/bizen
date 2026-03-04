@@ -5,9 +5,10 @@ import { prisma } from "@/lib/prisma"
 // GET replies for a specific comment
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -22,7 +23,7 @@ export async function GET(
     // Get replies for this comment
     const replies = await prisma.forumComment.findMany({
       where: {
-        parentCommentId: params.id,
+        parentCommentId: id,
         moderationStatus: 'approved',
         isHidden: false
       },
@@ -76,7 +77,7 @@ export async function GET(
     // Get total count for pagination
     const total = await prisma.forumComment.count({
       where: {
-        parentCommentId: params.id,
+        parentCommentId: id,
         moderationStatus: 'approved',
         isHidden: false
       }
@@ -104,9 +105,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -115,7 +117,7 @@ export async function PATCH(
     }
 
     const comment = await prisma.forumComment.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!comment) {
@@ -134,7 +136,7 @@ export async function PATCH(
     }
 
     const updated = await prisma.forumComment.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         body: content.trim(),
         updatedAt: new Date()
@@ -150,9 +152,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
@@ -161,7 +164,7 @@ export async function DELETE(
     }
 
     const comment = await prisma.forumComment.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!comment) {
@@ -180,7 +183,7 @@ export async function DELETE(
     }
 
     await prisma.forumComment.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({ success: true })

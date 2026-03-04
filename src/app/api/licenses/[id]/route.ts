@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 // GET /api/licenses/[id] - Get license by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const license = await prisma.license.findUnique({
@@ -34,7 +34,7 @@ export async function GET(
 // PATCH /api/licenses/[id] - Update license
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json()
