@@ -53,15 +53,22 @@ export async function GET() {
             })
         } catch (e: any) { console.warn("Quizzes count failed:", e.message) }
 
+        let challengesCompleted = 0
+        try {
+            challengesCompleted = await prisma.evidencePost.count({
+                where: { authorUserId: user.id }
+            })
+        } catch (e: any) { console.warn("Challenges count failed:", e.message) }
+
         let simulatorsPlayed = 0
         try {
-            simulatorsPlayed = await prisma.gameSession.count({
+            simulatorsPlayed = await (prisma as any).gameSession.count({
                 where: { userId: user.id }
             })
         } catch (e: any) { console.warn("Games count failed:", e.message) }
 
         // Sesiones utiles calculation
-        const usefulSessions = Math.floor(lessonsCompleted / 3) + simulatorsPlayed
+        const usefulSessions = Math.floor(lessonsCompleted / 3) + challengesCompleted + simulatorsPlayed
 
         // 3. Fetch Targets (with fallbacks)
         let globalTargets: any[] = []
@@ -86,8 +93,8 @@ export async function GET() {
         return NextResponse.json({
             studentStats: {
                 usefulSessions,
-                modulesCompleted: lessonsCompleted,
-                quizzesTaken,
+                lessonsCompleted,
+                challengesCompleted,
                 simulatorsPlayed,
             },
             schoolImpacts: impacts,

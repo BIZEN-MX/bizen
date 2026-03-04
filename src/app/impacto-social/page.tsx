@@ -131,13 +131,13 @@ const MOCK_TARGETS: ImpactTarget[] = [
 
     {
         id: "t3",
-        label: "Módulos completados (promedio)",
-        metricKey: "avg_modules",
-        currentValue: 0.4,
-        targetValue: 1,
-        unit: "módulo",
+        label: "Lecciones completadas (promedio)",
+        metricKey: "avg_lessons",
+        currentValue: 4.2,
+        targetValue: 10,
+        unit: "lecciones",
         status: "locked",
-        howToHelpCTA: "Termina el módulo actual para subir el promedio"
+        howToHelpCTA: "Termina tu lección actual para subir el promedio"
     }
 ]
 
@@ -174,7 +174,7 @@ const MOCK_REPORTS: Report[] = [
  * REGLAS DE MEDICIÓN (IA):
  * 1. Sesión útil: >= 10 mins Y >= 1 acción completada (lección/quiz/reto/simulador).
  * 2. Día activo: Al menos 1 sesión útil en ese día.
- * 3. Alumno activo: Al menos 3 sesiones útiles en últimos 30 días O 1 módulo completado en últimos 30 días.
+ * 3. Alumno activo: Al menos 3 sesiones útiles en últimos 30 días O 1 lección completada en últimos 30 días.
  */
 const checkActiveStatus = (sessionsLast30d: number, modulesLast30d: number): boolean => {
     return sessionsLast30d >= 3 || modulesLast30d >= 1;
@@ -229,7 +229,7 @@ export default function ImpactoSocialPage() {
 
     // Helper references to real data
     const impactData = stats?.schoolImpacts?.[0] || MOCK_SCHOOL_IMPACT
-    const studentStats = stats?.studentStats || { usefulSessions: 0, modulesCompleted: 0, quizzesTaken: 0, simulatorsPlayed: 0 }
+    const studentStats = stats?.studentStats || { usefulSessions: 0, lessonsCompleted: 0, challengesCompleted: 0, simulatorsPlayed: 0 }
     const targetsData = (stats?.targets?.length ? stats.targets : MOCK_TARGETS).map((t: any) => ({
         ...t,
         label: t.title || t.label,
@@ -239,8 +239,8 @@ export default function ImpactoSocialPage() {
 
     // Calculate dynamic equivalents based on live user stats
     const equivalenceFood = Math.floor(studentStats.usefulSessions / 5) || 0; // arbitrary mapping
-    const equivalenceBooks = Math.floor(studentStats.modulesCompleted / 2) || 0;
-    const equivalenceTrees = Math.floor(studentStats.quizzesTaken / 10) || 0;
+    const equivalenceBooks = Math.floor(studentStats.lessonsCompleted / 2) || 0;
+    const equivalenceTrees = Math.floor(studentStats.challengesCompleted / 10) || 0;
     const equivalenceTutoring = studentStats.simulatorsPlayed * 2 || 0;
 
     // --- RENDERING HELPERS ---
@@ -657,8 +657,8 @@ export default function ImpactoSocialPage() {
                                 <div className="student-grid">
                                     {[
 
-                                        { value: studentStats.modulesCompleted, label: "Módulos", icon: <Book size={18} color="#0F62FE" />, color: "#10b981", bg: "#ecfdf5", trend: "Reciente", up: true },
-                                        { value: studentStats.quizzesTaken, label: "Quizzes", icon: <Brain size={18} color="#0F62FE" />, color: "#8b5cf6", bg: "#f5f3ff", trend: "Constante", up: true },
+                                        { value: studentStats.lessonsCompleted, label: "Lecciones", icon: <Book size={18} color="#0F62FE" />, color: "#10b981", bg: "#ecfdf5", trend: "Reciente", up: true },
+                                        { value: studentStats.challengesCompleted, label: "Retos Diarios", icon: <Brain size={18} color="#0F62FE" />, color: "#8b5cf6", bg: "#f5f3ff", trend: "Constante", up: true },
                                         { value: studentStats.simulatorsPlayed, label: "Simuladores", icon: <Gamepad2 size={18} color="#0F62FE" />, color: "#f59e0b", bg: "#fffbeb", trend: "Constante", up: false },
                                     ].map((stat, i) => (
                                         <div key={i} className="student-stat-card" style={{ animationDelay: `${i * 0.07}s` }}>
@@ -775,7 +775,7 @@ export default function ImpactoSocialPage() {
                                                     onClick={() => router.push("/courses")}
                                                 >
                                                     <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                                                        <Book size={16} /> Completa 1 módulo
+                                                        <Book size={16} /> Completa 1 lección
                                                     </span>
                                                     <ChevronRight size={16} />
                                                 </button>
@@ -813,7 +813,7 @@ export default function ImpactoSocialPage() {
                                             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                                                 {[
                                                     { rule: "3 sesiones útiles en los últimos 30 días", done: true },
-                                                    { rule: "O 1 módulo completo en el mes", done: true },
+                                                    { rule: "O 1 lección completa en el mes", done: true },
                                                 ].map((r, i) => (
                                                     <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
                                                         <CheckCircle2 size={14} color={r.done ? "#10b981" : "#cbd5e1"} />
@@ -983,7 +983,7 @@ export default function ImpactoSocialPage() {
                                     { icon: <School size={24} color="#0F62FE" />, value: "62%", label: "Alumnos Activos", sub: "meta: 70%", color: "#f59e0b", bg: "#fffbeb" },
                                     { icon: <CircleDollarSign size={24} color="#0F62FE" />, value: "$45K", label: "Donado (MXN)", sub: "este ciclo", color: "#10b981", bg: "#ecfdf5" },
 
-                                    { icon: <Book size={24} color="#0F62FE" />, value: "0.4", label: "Módulos / Alum.", sub: "meta: 1", color: "#8b5cf6", bg: "#f5f3ff" },
+                                    { icon: <Book size={24} color="#0F62FE" />, value: "4.2", label: "Lecc. / Alum.", sub: "meta: 10", color: "#8b5cf6", bg: "#f5f3ff" },
                                 ].map((kpi, i) => (
                                     <div key={i} className="school-kpi-card" style={{ animationDelay: `${i * 0.07}s` }}>
                                         <div style={{ marginBottom: 8, display: "flex" }}>{kpi.icon}</div>
@@ -1340,12 +1340,12 @@ export default function ImpactoSocialPage() {
                                                 },
                                                 {
                                                     q: "¿Cómo se desbloquea el bono?",
-                                                    a: "Cumpliendo 3 metas colectivas simultáneamente: (1) ≥70% de alumnos activos, (2) promedio ≥3 sesiones útiles/mes por alumno, y (3) ≥1 módulo completo por alumno en el ciclo.",
+                                                    a: "Cumpliendo 3 metas colectivas simultáneamente: (1) ≥70% de alumnos activos, (2) promedio ≥3 sesiones útiles/mes por alumno, y (3) ≥10 lecciones completas por alumno en el ciclo.",
                                                     icon: <Unlock size={18} color="#0F62FE" />
                                                 },
                                                 {
                                                     q: "¿Cómo se miden las métricas?",
-                                                    a: "Una sesión útil requiere ≥10 minutos activos y al menos 1 acción completada (lección, quiz, reto o simulador). Un alumno activo mantiene ≥3 sesiones útiles en los últimos 30 días, o completó ≥1 módulo en el mismo período.",
+                                                    a: "Una sesión útil requiere ≥10 minutos activos y al menos 1 acción completada (lección, reto o simulador). Un alumno activo mantiene ≥3 sesiones útiles en los últimos 30 días, o completó ≥1 lección en el mismo período.",
                                                     icon: <Ruler size={18} color="#0F62FE" />
                                                 },
                                             ].map((faq, i) => (
