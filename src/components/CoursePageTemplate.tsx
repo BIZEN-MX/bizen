@@ -40,6 +40,7 @@ import {
     Zap,
     Layout,
     Flag,
+    Lock,
     LucideIcon
 } from "lucide-react"
 
@@ -127,6 +128,12 @@ export default function CoursePageTemplate({
             window.open("/login", "_blank")
         }
     }, [loading, user])
+
+    // Access check
+    const { dbProfile } = useAuth()
+    const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
+    const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
+    const hasPremiumAccess = hasActiveStripe || hasActiveLicense
 
     // White background
     useEffect(() => {
@@ -360,13 +367,26 @@ export default function CoursePageTemplate({
                                             const isLastLesson = lessonIdx === sub.lessons.length - 1
                                             const absoluteLessonNumber = lessonOffset + lessonIdx + 1
 
+                                            // Updated locking logic: Topic 1 has 3 free lessons. Others are premium.
+                                            const isPremiumLesson = topicId > 1 || absoluteLessonNumber > 3;
+                                            const isLocked = isPremiumLesson && !hasPremiumAccess;
+
                                             return (
                                                 <React.Fragment key={lesson.slug}>
                                                     <div
                                                         role="button"
                                                         tabIndex={0}
-                                                        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setLessonModal({ lesson, unitTitle: sub.title }) } }}
-                                                        onClick={() => setLessonModal({ lesson, unitTitle: sub.title })}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === "Enter" || e.key === " ") {
+                                                                e.preventDefault();
+                                                                if (isLocked) router.push('/payment');
+                                                                else setLessonModal({ lesson, unitTitle: sub.title });
+                                                            }
+                                                        }}
+                                                        onClick={() => {
+                                                            if (isLocked) router.push('/payment');
+                                                            else setLessonModal({ lesson, unitTitle: sub.title });
+                                                        }}
                                                         className="cpt-lesson-card"
                                                         style={{
                                                             width: 320,
@@ -377,26 +397,40 @@ export default function CoursePageTemplate({
                                                             padding: "32px 28px",
                                                             background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
                                                             borderRadius: 24,
-                                                            border: isDone ? "2.5px solid rgba(59,130,246,0.3)" : "1.8px solid #e8f0fe",
+                                                            border: isLocked ? "1.8px dashed #cbd5e1" : (isDone ? "2.5px solid rgba(59,130,246,0.3)" : "1.8px solid #e8f0fe"),
                                                             boxSizing: "border-box",
                                                             scrollSnapAlign: "start",
                                                             cursor: "pointer",
-                                                            boxShadow: isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)",
+                                                            boxShadow: isLocked ? "none" : (isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)"),
                                                             gap: 12,
                                                             transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
                                                             position: "relative",
                                                             overflow: "hidden",
+                                                            opacity: isLocked ? 0.75 : 1
                                                         }}
                                                     >
+                                                        {/* Lock overlay if locked */}
+                                                        {isLocked && (
+                                                            <div style={{ position: "absolute", top: 12, right: 12, width: 28, height: 28, borderRadius: "50%", background: "#f1f5f9", border: "1.5px solid #cbd5e1", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                                <Lock size={14} color="#64748b" />
+                                                            </div>
+                                                        )}
+
                                                         {/* Completed ribbon */}
-                                                        {isDone && (
+                                                        {isDone && !isLocked && (
                                                             <div style={{ position: "absolute", top: 12, right: 12, width: 26, height: 26, borderRadius: "50%", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                                                 <CheckCircle2 size={15} color="#fff" strokeWidth={2.5} />
                                                             </div>
                                                         )}
 
                                                         {/* Lesson number badge — always blue */}
-                                                        <div style={{ width: 44, height: 44, borderRadius: 14, background: isDone ? "#2563eb" : "rgba(15,98,254,0.1)", border: isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)", color: isDone ? "#fff" : "#2563eb", fontSize: 19, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                                        <div style={{
+                                                            width: 44, height: 44, borderRadius: 14,
+                                                            background: isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)"),
+                                                            border: isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)"),
+                                                            color: isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb"),
+                                                            fontSize: 19, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                                                        }}>
                                                             {absoluteLessonNumber}
                                                         </div>
 
@@ -407,45 +441,63 @@ export default function CoursePageTemplate({
 
                                                         {/* Footer: stars */}
                                                         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
-                                                            <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
-                                                                {[1, 2, 3].map((i) => (
-                                                                    <img
-                                                                        key={i}
-                                                                        src="/stars.png"
-                                                                        alt=""
-                                                                        style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
-                                                                    />
-                                                                ))}
-                                                            </div>
+                                                            {isLocked ? (
+                                                                <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>Premium</div>
+                                                            ) : (
+                                                                <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
+                                                                    {[1, 2, 3].map((i) => (
+                                                                        <img
+                                                                            key={i}
+                                                                            src="/stars.png"
+                                                                            alt=""
+                                                                            style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
+                                                                        />
+                                                                    ))}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
 
                                                     {/* Horizontal arrow connector between lesson cards */}
-                                                    {!isLastLesson ? (
-                                                        <div style={{
-                                                            display: "flex",
-                                                            flexDirection: "row",
-                                                            alignItems: "center",
-                                                            gap: 0,
-                                                            flexShrink: 0,
-                                                            alignSelf: "center",
-                                                            padding: "0 2px",
-                                                        }}>
-                                                            <svg width="52" height="20" viewBox="0 0 52 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <defs>
-                                                                    <linearGradient id={`arrowGrad-${subIdx}`} x1="0" y1="10" x2="52" y2="10" gradientUnits="userSpaceOnUse">
-                                                                        <stop stopColor="#bfdbfe" />
-                                                                        <stop offset="0.6" stopColor="#3b82f6" />
-                                                                        <stop offset="1" stopColor="#2563eb" />
-                                                                    </linearGradient>
-                                                                </defs>
-                                                                {/* Animated line */}
-                                                                <line x1="2" y1="10" x2="38" y2="10" stroke={`url(#arrowGrad-${subIdx})`} strokeWidth="2.5" strokeLinecap="round" />
-                                                                {/* Arrowhead */}
-                                                                <path d="M36 4L50 10L36 16" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                                                            </svg>
-                                                        </div>
-                                                    ) : (
+                                                    {!isLastLesson ? (() => {
+                                                        const nextAbsoluteNumber = lessonOffset + (lessonIdx + 1) + 1;
+                                                        const isNextLocked = (topicId > 1 || nextAbsoluteNumber > 3) && !hasPremiumAccess;
+                                                        const arrowColor = isNextLocked ? "#94a3b8" : "#1e3a8a";
+                                                        const strokeColor = isNextLocked ? "#cbd5e1" : "#3b82f6";
+
+                                                        return (
+                                                            <div style={{
+                                                                display: "flex",
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                gap: 0,
+                                                                flexShrink: 0,
+                                                                alignSelf: "center",
+                                                                padding: "0 2px",
+                                                            }}>
+                                                                <svg width="60" height="28" viewBox="0 0 60 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <defs>
+                                                                        <linearGradient id={`arrowGrad-${subIdx}-${lessonIdx}`} x1="0" y1="14" x2="60" y2="14" gradientUnits="userSpaceOnUse">
+                                                                            <stop stopColor={isNextLocked ? "#f1f5f9" : "#dbeafe"} />
+                                                                            <stop offset="0.5" stopColor={strokeColor} />
+                                                                            <stop offset="1" stopColor={isNextLocked ? "#64748b" : "#1e3a8a"} />
+                                                                        </linearGradient>
+                                                                        <filter id={`arrowGlow-${subIdx}-${lessonIdx}`} x="-20%" y="-150%" width="140%" height="400%">
+                                                                            <feGaussianBlur stdDeviation="2" result="blur" />
+                                                                            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                                                                        </filter>
+                                                                    </defs>
+                                                                    {/* Glow */}
+                                                                    <line x1="2" y1="14" x2="44" y2="14" stroke={strokeColor} strokeWidth="4" strokeLinecap="round" opacity="0.2" filter={`url(#arrowGlow-${subIdx}-${lessonIdx})`} />
+                                                                    {/* Dashed line */}
+                                                                    <line x1="2" y1="14" x2="44" y2="14" stroke={`url(#arrowGrad-${subIdx}-${lessonIdx})`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 3" />
+                                                                    {/* Arrowhead */}
+                                                                    <path d="M42 7L56 14L42 21" stroke={arrowColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                                                                    <circle cx="56" cy="14" r="3" fill={isNextLocked ? "#64748b" : "#1e3a8a"} />
+                                                                </svg>
+                                                            </div>
+                                                        );
+                                                    })() : (
                                                         /* If it's the last lesson of the LAST subtopic, add the finish line flag */
                                                         (subIdx === subtemas.length - 1) && (
                                                             <div style={{

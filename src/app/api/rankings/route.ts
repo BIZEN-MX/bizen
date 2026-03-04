@@ -75,6 +75,7 @@ export async function GET() {
                     nickname: u.nickname,
                     xp: u.xp,
                     level: u.level,
+                    avatar: u.avatar,
                     schoolName: u.school?.name || null,
                 }
             }),

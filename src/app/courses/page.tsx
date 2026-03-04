@@ -65,12 +65,17 @@ interface Course {
 const APPROX_TOTAL_LESSONS = 150
 
 export default function CoursesPage() {
-  const { user, loading } = useAuth()
+  const { user, dbProfile, loading } = useAuth()
   const router = useRouter()
   const { completedLessons } = useLessonProgress()
   const [courses, setCourses] = useState<Course[]>([])
   const [loadingData, setLoadingData] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
+
+  // Calcule premium access based on Profile API data
+  const hasActiveLicense = !!dbProfile?.school?.licenses?.length;
+  const hasActiveStripe = dbProfile?.subscriptionStatus === 'active';
+  const hasPremiumAccess = hasActiveLicense || hasActiveStripe;
 
   const completedCount = completedLessons.length
   const progressPct = Math.min(100, Math.round((completedCount / APPROX_TOTAL_LESSONS) * 100))
@@ -398,76 +403,142 @@ export default function CoursesPage() {
                       {displayPair.map((topic, i) => {
                         const IconComp = topic.icon
                         const showArrow = i === 0 && displayPair.length > 1
+
+                        // Updated: Only topic 1 has free content. Topics 2-30 are premium.
+                        const isPremiumTopic = topic.id > 1;
+                        const isLocked = isPremiumTopic && !hasPremiumAccess;
+
                         return (
                           <React.Fragment key={topic.id}>
                             <div
-                              onClick={() => router.push(`/courses/${topic.id}`)}
+                              onClick={() => {
+                                if (isLocked) {
+                                  router.push('/payment');
+                                } else {
+                                  router.push(`/courses/${topic.id}`);
+                                }
+                              }}
                               className="course-card-hover"
-                              style={{ flex: 1, minHeight: 180, cursor: "pointer", border: "1px solid rgba(15,98,254,0.1)", borderRadius: "24px", background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)", boxShadow: "0 4px 20px rgba(15,98,254,0.08)", transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", overflow: "hidden", display: "flex", flexDirection: "column", minWidth: 0 }}
+                              style={{
+                                flex: "0 1 400px",
+                                margin: "0 auto",
+                                minHeight: 180,
+                                cursor: "pointer",
+                                border: "1px solid rgba(15,98,254,0.1)",
+                                borderRadius: "24px",
+                                background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
+                                boxShadow: "0 4px 20px rgba(15,98,254,0.08)",
+                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                overflow: "hidden",
+                                display: "flex",
+                                flexDirection: "column",
+                                minWidth: 0,
+                                opacity: isLocked ? 0.7 : 1
+                              }}
                             >
-                              <div style={{ height: 5, background: "linear-gradient(90deg, #1e3a8a, #3b82f6)", width: "100%", flexShrink: 0 }} />
+                              <div style={{ height: 5, background: isLocked ? "linear-gradient(90deg, #64748b, #94a3b8)" : "linear-gradient(90deg, #1e3a8a, #3b82f6)", width: "100%", flexShrink: 0 }} />
                               <div style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
-                                <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: topic.catColor, background: `${topic.catColor}16`, border: `1px solid ${topic.catColor}30`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>{topic.category}</div>
-                                <div style={{ width: 68, height: 68, borderRadius: 20, flexShrink: 0, background: `${topic.catColor}14`, display: "flex", alignItems: "center", justifyContent: "center", color: topic.catColor }}><IconComp size={36} strokeWidth={2} /></div>
+                                <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
+                                  {isLocked ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Bloqueado</span> : topic.category}
+                                </div>
+                                <div style={{ width: 68, height: 68, borderRadius: 20, flexShrink: 0, background: isLocked ? '#f1f5f9' : `${topic.catColor}14`, display: "flex", alignItems: "center", justifyContent: "center", color: isLocked ? '#64748b' : topic.catColor }}>
+                                  <IconComp size={36} strokeWidth={2} />
+                                </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                   <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", marginBottom: 8, letterSpacing: "0.06em" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
                                   <div style={{ fontSize: 19, fontWeight: 800, color: "#0f172a", lineHeight: 1.25 }}>{topic.title}</div>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 700, color: "#3b82f6" }}><BookOpen size={16} /><span>{topic.lessons} cursos</span></div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 700, color: isLocked ? "#64748b" : "#3b82f6" }}>
+                                    <BookOpen size={16} /><span>{topic.lessons} cursos</span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                            {showArrow && (
-                              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", flexShrink: 0, padding: "0 6px", alignSelf: "center" }}>
-                                {isRTL ? (
-                                  <svg width="56" height="20" viewBox="0 0 56 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                      <linearGradient id={`hArrowL-${pairIdx}`} x1="56" y1="10" x2="0" y2="10" gradientUnits="userSpaceOnUse">
-                                        <stop stopColor="#bfdbfe" />
-                                        <stop offset="0.6" stopColor="#3b82f6" />
-                                        <stop offset="1" stopColor="#2563eb" />
-                                      </linearGradient>
-                                    </defs>
-                                    <line x1="53" y1="10" x2="18" y2="10" stroke={`url(#hArrowL-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" />
-                                    <path d="M20 4L6 10L20 16" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                                  </svg>
-                                ) : (
-                                  <svg width="56" height="20" viewBox="0 0 56 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                      <linearGradient id={`hArrowR-${pairIdx}`} x1="0" y1="10" x2="56" y2="10" gradientUnits="userSpaceOnUse">
-                                        <stop stopColor="#bfdbfe" />
-                                        <stop offset="0.6" stopColor="#3b82f6" />
-                                        <stop offset="1" stopColor="#2563eb" />
-                                      </linearGradient>
-                                    </defs>
-                                    <line x1="3" y1="10" x2="38" y2="10" stroke={`url(#hArrowR-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" />
-                                    <path d="M36 4L50 10L36 16" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                                  </svg>
-                                )}
-                              </div>
-                            )}
+                            {showArrow && (() => {
+                              const destTopic = displayPair[i + 1];
+                              const isDestLocked = (destTopic.id > 1) && !hasPremiumAccess;
+                              const arrowColor = isDestLocked ? "#94a3b8" : "#2563eb";
+                              const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
+
+                              return (
+                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", flexShrink: 0, padding: "0 8px", alignSelf: "center" }}>
+                                  {isRTL ? (
+                                    <svg width="72" height="28" viewBox="0 0 72 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <defs>
+                                        <linearGradient id={`hArrowL-${pairIdx}`} x1="72" y1="14" x2="0" y2="14" gradientUnits="userSpaceOnUse">
+                                          <stop stopColor={isDestLocked ? "#f1f5f9" : "#dbeafe"} />
+                                          <stop offset="0.5" stopColor={strokeColor} />
+                                          <stop offset="1" stopColor={isDestLocked ? "#64748b" : "#1e3a8a"} />
+                                        </linearGradient>
+                                        <filter id={`glowL-${pairIdx}`} x="-20%" y="-150%" width="140%" height="400%">
+                                          <feGaussianBlur stdDeviation="2" result="blur" />
+                                          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                                        </filter>
+                                      </defs>
+                                      <line x1="68" y1="14" x2="22" y2="14" stroke={strokeColor} strokeWidth="4" strokeLinecap="round" opacity="0.2" filter={`url(#glowL-${pairIdx})`} />
+                                      <line x1="68" y1="14" x2="22" y2="14" stroke={`url(#hArrowL-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 3" />
+                                      <path d="M24 7L8 14L24 21" stroke={arrowColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                                      <circle cx="8" cy="14" r="3" fill={isDestLocked ? "#64748b" : "#1e3a8a"} />
+                                    </svg>
+                                  ) : (
+                                    <svg width="72" height="28" viewBox="0 0 72 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <defs>
+                                        <linearGradient id={`hArrowR-${pairIdx}`} x1="0" y1="14" x2="72" y2="14" gradientUnits="userSpaceOnUse">
+                                          <stop stopColor={isDestLocked ? "#f1f5f9" : "#dbeafe"} />
+                                          <stop offset="0.5" stopColor={strokeColor} />
+                                          <stop offset="1" stopColor={isDestLocked ? "#64748b" : "#1e3a8a"} />
+                                        </linearGradient>
+                                        <filter id={`glowR-${pairIdx}`} x="-20%" y="-150%" width="140%" height="400%">
+                                          <feGaussianBlur stdDeviation="2" result="blur" />
+                                          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                                        </filter>
+                                      </defs>
+                                      <line x1="4" y1="14" x2="50" y2="14" stroke={strokeColor} strokeWidth="4" strokeLinecap="round" opacity="0.2" filter={`url(#glowR-${pairIdx})`} />
+                                      <line x1="4" y1="14" x2="50" y2="14" stroke={`url(#hArrowR-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 3" />
+                                      <path d="M48 7L64 14L48 21" stroke={arrowColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                                      <circle cx="64" cy="14" r="3" fill={isDestLocked ? "#64748b" : "#1e3a8a"} />
+                                    </svg>
+                                  )}
+                                </div>
+                              );
+                            })()}
                           </React.Fragment>
                         )
                       })}
                     </div>
-                    {!isLastPair && (
-                      <div style={{ display: "flex", width: "100%", justifyContent: isRTL ? "flex-start" : "flex-end" }}>
-                        <div style={{ width: "50%", display: "flex", justifyContent: "center", padding: "4px 0" }}>
-                          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <svg width="20" height="64" viewBox="0 0 20 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <defs>
-                                <linearGradient id={`vArrow-${pairIdx}`} x1="10" y1="0" x2="10" y2="64" gradientUnits="userSpaceOnUse">
-                                  <stop stopColor="#bfdbfe" />
-                                  <stop offset="0.7" stopColor="#3b82f6" />
-                                  <stop offset="1" stopColor="#2563eb" />
-                                </linearGradient>
-                              </defs>
-                              <line x1="10" y1="2" x2="10" y2="46" stroke={`url(#vArrow-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" />
-                              <path d="M4 44L10 58L16 44" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                            </svg>
+                    {!isLastPair && (() => {
+                      const nextPair = pairs[pairIdx + 1];
+                      // Points to the first item of next row (which is pairs[pairIdx+1][0])
+                      const destTopic = nextPair[0];
+                      const isDestLocked = (destTopic.id > 1) && !hasPremiumAccess;
+                      const arrowColor = isDestLocked ? "#94a3b8" : "#1e3a8a";
+                      const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
+
+                      return (
+                        <div style={{ display: "flex", width: "100%", justifyContent: isRTL ? "flex-start" : "flex-end" }}>
+                          <div style={{ width: "50%", display: "flex", justifyContent: "center", padding: "4px 0" }}>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                              <svg width="28" height="72" viewBox="0 0 28 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                  <linearGradient id={`vArrow-${pairIdx}`} x1="14" y1="0" x2="14" y2="72" gradientUnits="userSpaceOnUse">
+                                    <stop stopColor={isDestLocked ? "#f1f5f9" : "#dbeafe"} />
+                                    <stop offset="0.6" stopColor={strokeColor} />
+                                    <stop offset="1" stopColor={isDestLocked ? "#64748b" : "#1e3a8a"} />
+                                  </linearGradient>
+                                  <filter id={`vGlow-${pairIdx}`} x="-150%" y="-20%" width="400%" height="140%">
+                                    <feGaussianBlur stdDeviation="2" result="blur" />
+                                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                                  </filter>
+                                </defs>
+                                <line x1="14" y1="4" x2="14" y2="52" stroke={strokeColor} strokeWidth="5" strokeLinecap="round" opacity="0.15" filter={`url(#vGlow-${pairIdx})`} />
+                                <line x1="14" y1="4" x2="14" y2="52" stroke={`url(#vArrow-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 3" />
+                                <path d="M7 50L14 66L21 50" stroke={arrowColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                                <circle cx="14" cy="4" r="3" fill={isDestLocked ? "#f1f5f9" : "#dbeafe"} />
+                              </svg>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      );
+                    })()}
                   </React.Fragment>
                 )
               })

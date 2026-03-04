@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Trophy, Users, School, Zap, Star, TrendingUp, Medal, Crown } from "lucide-react"
 import Link from "next/link"
+import { AvatarDisplay } from "@/components/AvatarDisplay"
 
 interface UserRank {
     rank: number
@@ -11,6 +12,7 @@ interface UserRank {
     nickname: string | null
     xp: number
     level: number
+    avatar: any
     schoolName: string | null
 }
 
@@ -329,24 +331,29 @@ export default function RankingsPage() {
                                                 <RankBadge rank={user.rank} />
                                             </div>
 
-                                            {/* Avatar placeholder ─ initials circle */}
+                                            {/* Avatar Display */}
                                             <div
                                                 style={{
                                                     width: 44,
                                                     height: 44,
                                                     borderRadius: "50%",
-                                                    background: lc.bg,
                                                     display: "flex",
                                                     alignItems: "center",
                                                     justifyContent: "center",
                                                     flexShrink: 0,
-                                                    color: "#fff",
-                                                    fontWeight: 900,
-                                                    fontSize: 17,
-                                                    boxShadow: `0 4px 14px ${lc.text}40`,
+                                                    overflow: "hidden",
+                                                    position: "relative",
+                                                    background: user.avatar ? "transparent" : lc.bg,
+                                                    boxShadow: user.avatar ? "none" : `0 4px 14px ${lc.text}40`,
                                                 }}
                                             >
-                                                {user.displayName.charAt(0).toUpperCase()}
+                                                {user.avatar ? (
+                                                    <AvatarDisplay avatar={user.avatar} size={38} />
+                                                ) : (
+                                                    <span style={{ color: "#fff", fontWeight: 900, fontSize: 17 }}>
+                                                        {user.displayName.charAt(0).toUpperCase()}
+                                                    </span>
+                                                )}
                                             </div>
 
                                             {/* Name & school */}
