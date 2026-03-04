@@ -363,7 +363,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "24px clamp(16px, 4vw, 48px) 120px", // Bottom padding for footer
+            padding: isSummaryStep
+              ? "12px clamp(16px, 4vw, 48px) 120px"
+              : "24px clamp(16px, 4vw, 48px) 120px",
             boxSizing: "border-box",
           }}
         >
