@@ -71,11 +71,13 @@ export default function PaymentPage() {
         .pay-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,99,235,0.35); }
         .pay-feature-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
         
+        @media (max-width: 1300px) {
+          .pay-mascot { display: none !important; }
+        }
         @media (max-width: 900px) {
           .pay-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
           .pay-hero { order: 2; padding: 24px !important; }
           .pay-form-card { order: 1; padding: 24px !important; }
-          .pay-mascot { display: none !important; }
           .pay-header-text h1 { font-size: 28px !important; }
           .pay-header-text p { font-size: 14px !important; }
           .pay-header { padding: 0 20px !important; }
