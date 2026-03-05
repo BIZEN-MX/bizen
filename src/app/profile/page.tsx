@@ -784,7 +784,7 @@ export default function ProfilePage() {
                         </span>
                       </div>
 
-                      {hasActiveStripe && dbProfile?.stripeCustomerId && (
+                      {hasActiveStripe && dbProfile?.stripeCustomerId && !hasActiveLicense && (
                         <button
                           onClick={handleManageSubscription}
                           style={{
@@ -800,6 +800,7 @@ export default function ProfilePage() {
                             display: "flex",
                             alignItems: "center",
                             gap: 8,
+                            width: "fit-content",
                             transition: "all 0.2s"
                           }}
                         >
@@ -894,45 +895,47 @@ export default function ProfilePage() {
 
           </div>
         </div>
-      </div>
+      </div >
 
       {/* ── AVATAR PICKER MODAL ── */}
-      {isPickerOpen && (
-        <div style={{
-          position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)",
-          backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 9999, padding: 20
-        }} onClick={() => setIsPickerOpen(false)}>
-          <div style={{ background: "white", border: "1.5px solid #e2e8f0", borderRadius: 28, width: "100%", maxWidth: 440, padding: 32, position: "relative", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}
-            onClick={e => e.stopPropagation()}>
-            <button onClick={() => setIsPickerOpen(false)} style={{ position: "absolute", top: 20, right: 20, background: "#f1f5f9", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <CloseIcon size={18} />
-            </button>
-            <h3 style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", margin: "0 0 6px" }}>Elige tu Mascota</h3>
-            <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 24px" }}>Selecciona el avatar que más te represente</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(76px, 1fr))", gap: 14 }}>
-              {avatarOptions.map(av => {
-                const isSelected = (user.user_metadata?.avatar?.id || "robot") === av.id
-                return (
-                  <div key={av.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                    <button onClick={() => updateAvatar(av)} disabled={savingAvatar} style={{
-                      width: 70, height: 70, borderRadius: "50%",
-                      border: `2.5px solid ${isSelected ? "#0F62FE" : "#f1f5f9"}`,
-                      background: isSelected ? "#eff6ff" : "white",
-                      cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                      padding: 0, outline: "none", overflow: "hidden", transition: "all 0.2s"
-                    }}>
-                      <AvatarDisplay avatar={av} size={48} />
-                    </button>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: isSelected ? "#0F62FE" : "#64748b" }}>{av.label}</span>
-                  </div>
-                )
-              })}
+      {
+        isPickerOpen && (
+          <div style={{
+            position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)",
+            backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center",
+            zIndex: 9999, padding: 20
+          }} onClick={() => setIsPickerOpen(false)}>
+            <div style={{ background: "white", border: "1.5px solid #e2e8f0", borderRadius: 28, width: "100%", maxWidth: 440, padding: 32, position: "relative", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}
+              onClick={e => e.stopPropagation()}>
+              <button onClick={() => setIsPickerOpen(false)} style={{ position: "absolute", top: 20, right: 20, background: "#f1f5f9", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <CloseIcon size={18} />
+              </button>
+              <h3 style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", margin: "0 0 6px" }}>Elige tu Mascota</h3>
+              <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 24px" }}>Selecciona el avatar que más te represente</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(76px, 1fr))", gap: 14 }}>
+                {avatarOptions.map(av => {
+                  const isSelected = (user.user_metadata?.avatar?.id || "robot") === av.id
+                  return (
+                    <div key={av.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                      <button onClick={() => updateAvatar(av)} disabled={savingAvatar} style={{
+                        width: 70, height: 70, borderRadius: "50%",
+                        border: `2.5px solid ${isSelected ? "#0F62FE" : "#f1f5f9"}`,
+                        background: isSelected ? "#eff6ff" : "white",
+                        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                        padding: 0, outline: "none", overflow: "hidden", transition: "all 0.2s"
+                      }}>
+                        <AvatarDisplay avatar={av} size={48} />
+                      </button>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: isSelected ? "#0F62FE" : "#64748b" }}>{av.label}</span>
+                    </div>
+                  )
+                })}
+              </div>
+              {savingAvatar && <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#0F62FE", fontWeight: 700 }}>Guardando...</div>}
             </div>
-            {savingAvatar && <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#0F62FE", fontWeight: 700 }}>Guardando...</div>}
           </div>
-        </div>
-      )}
+        )
+      }
     </>
   )
 }
