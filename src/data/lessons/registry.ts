@@ -1,6 +1,4 @@
 import type { LessonStep } from "@/types/lessonTypes"
-import { lesson1Steps } from "./lesson1"
-import { lesson2Steps } from "./lesson2"
 import { lessonQueEsElDineroParaMiSteps } from "./lesson-que-es-el-dinero-para-mi"
 import { lessonComoMeHaceSentirElDineroSteps } from "./lesson-como-me-hace-sentir-el-dinero"
 import { lessonDineroYAutoestimaSteps } from "./lesson-dinero-y-autoestima"
@@ -13,8 +11,6 @@ import { lessonPacienciaFinancieraYMentalidadALargoPlazoSteps } from "./lesson-p
  * Lesson ID should match the slug used in course tema data (e.g. que-es-el-dinero-para-mi-hoy).
  */
 export const lessonRegistry: Record<string, LessonStep[]> = {
-  "l1-1": lesson1Steps,
-  "l1-2": lesson2Steps,
   "que-es-el-dinero-para-mi-hoy": lessonQueEsElDineroParaMiSteps,
   "como-me-hace-sentir-el-dinero": lessonComoMeHaceSentirElDineroSteps,
   "dinero-y-autoestima": lessonDineroYAutoestimaSteps,
