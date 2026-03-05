@@ -421,6 +421,39 @@ export default function CoursePageTemplate({
                                                             opacity: isLocked ? 0.75 : 1
                                                         }}
                                                     >
+                                                        {/* Next lesson indicator — pulsing top bar */}
+                                                        {lesson.slug === nextLessonSlug && !isLocked && (
+                                                            <>
+                                                                <div style={{
+                                                                    position: "absolute",
+                                                                    top: 0, left: 0, right: 0,
+                                                                    height: 4,
+                                                                    background: "linear-gradient(90deg, #1e3a8a, #2563eb, #38bdf8, #2563eb, #1e3a8a)",
+                                                                    backgroundSize: "200% 100%",
+                                                                    animation: "shimmer-bar-lesson 2s linear infinite",
+                                                                    borderRadius: "24px 24px 0 0"
+                                                                }} />
+                                                                <div style={{
+                                                                    position: "absolute",
+                                                                    top: -14,
+                                                                    left: "50%",
+                                                                    transform: "translateX(-50%)",
+                                                                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+                                                                    color: "#fff",
+                                                                    fontSize: 10,
+                                                                    fontWeight: 900,
+                                                                    letterSpacing: "0.1em",
+                                                                    padding: "4px 13px",
+                                                                    borderRadius: 999,
+                                                                    boxShadow: "0 4px 14px rgba(37,99,235,0.5), 0 0 0 3px rgba(255,255,255,0.95)",
+                                                                    whiteSpace: "nowrap",
+                                                                    zIndex: 10,
+                                                                    animation: "siguiente-badge-pulse 2s ease-in-out infinite"
+                                                                }}>
+                                                                    ▶ SIGUIENTE
+                                                                </div>
+                                                            </>
+                                                        )}
                                                         {/* Lock overlay if locked */}
                                                         {isLocked && (
                                                             <div style={{ position: "absolute", top: 12, right: 12, width: 28, height: 28, borderRadius: "50%", background: "#f1f5f9", border: "1.5px solid #cbd5e1", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -658,15 +691,26 @@ export default function CoursePageTemplate({
             transform: translateY(0);
           }
           50% { 
-            box-shadow: 0 16px 40px rgba(37,99,235,0.25), 0 0 0 4px rgba(37,99,235,0.12); 
-            border-color: rgba(37,99,235,0.6);
+            box-shadow: 0 16px 40px rgba(37,99,235,0.28), 0 0 0 5px rgba(37,99,235,0.14); 
+            border-color: rgba(37,99,235,0.7);
             transform: translateY(-5px);
           }
         }
         .next-lesson-to-complete {
           animation: active-lesson-pulse 2.5s ease-in-out infinite;
-          background: linear-gradient(135deg, #fff 0%, #f0f7ff 100%) !important;
+          background: linear-gradient(135deg, #f5f9ff 0%, #fff 100%) !important;
           border-width: 2.2px !important;
+          overflow: visible !important;
+        }
+
+        @keyframes shimmer-bar-lesson {
+          0% { background-position: 200% center; }
+          100% { background-position: -200% center; }
+        }
+
+        @keyframes siguiente-badge-pulse {
+          0%, 100% { transform: translateX(-50%) scale(1); }
+          50% { transform: translateX(-50%) scale(1.08); }
         }
 
         @keyframes flagPulse {
