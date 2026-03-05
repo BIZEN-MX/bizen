@@ -108,66 +108,91 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
             transition={{ type: "spring", damping: 15, stiffness: 100 }}
             style={{
               width: "100%",
-              maxWidth: 520,
-              minHeight: 360,
+              maxWidth: 820,
+              minHeight: 400,
               display: "flex",
-              flexDirection: "column",
+              flexDirection: step.imageUrl ? (step.imageAlign === "left" ? "row-reverse" : "row") : "column",
               alignItems: "center",
               justifyContent: "center",
               padding: "48px 32px",
               background: "#FFFFFF",
               borderRadius: 40,
               border: "5px solid #0F62FE",
-              textAlign: "center",
+              textAlign: step.imageUrl ? (step.imageAlign === "left" ? "right" : "left") : "center",
               boxShadow: "0 12px 64px rgba(15, 98, 254, 0.15)",
-              gap: 12,
+              gap: 40,
               perspective: 1000,
             }}
           >
-            {step.title && (
-              <h2 style={{
-                fontSize: "clamp(24px, 4.5vw, 36px)",
-                fontWeight: 900,
-                color: "#111827",
-                margin: "0 0 16px 0",
-                lineHeight: 1.2,
-                fontFamily: "'Montserrat', sans-serif",
-              }}>
-                {step.title}
-              </h2>
-            )}
-
-            <div style={{
-              fontSize: "clamp(18px, 2.8vw, 24px)",
-              color: "#374151",
-              lineHeight: 1.5,
-              fontFamily: "'Montserrat', sans-serif",
-              fontWeight: 800,
-              maxWidth: "100%",
-            }}>
-              {step.body.split("\n\n").map((line, i) => (
-                <p key={i} style={{
+            {/* Text Content */}
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: step.imageUrl ? (step.imageAlign === "left" ? "flex-end" : "flex-start") : "center" }}>
+              {step.title && (
+                <h2 style={{
+                  fontSize: "clamp(24px, 4.5vw, 36px)",
+                  fontWeight: 900,
+                  color: "#111827",
                   margin: "0 0 16px 0",
-                  fontFamily: "'Montserrat', sans-serif",
-                  whiteSpace: "pre-wrap"
+                  lineHeight: 1.2,
+                  fontFamily: "'Inter', sans-serif",
                 }}>
-                  {line}
+                  {step.title}
+                </h2>
+              )}
+
+              <div style={{
+                fontSize: "clamp(18px, 2.8vw, 24px)",
+                color: "#374151",
+                lineHeight: 1.5,
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                maxWidth: "100%",
+              }}>
+                {step.body.split("\n\n").map((line, i) => (
+                  <p key={i} style={{
+                    margin: "0 0 16px 0",
+                    fontFamily: "'Inter', sans-serif",
+                    whiteSpace: "pre-wrap"
+                  }}>
+                    {line}
+                  </p>
+                ))}
+              </div>
+
+              {step.description && (
+                <p style={{
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  color: "#0F62FE",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  margin: "12px 0 0 0",
+                  fontFamily: "'Inter', sans-serif",
+                }}>
+                  {step.description}
                 </p>
-              ))}
+              )}
             </div>
 
-            {step.description && (
-              <p style={{
-                fontSize: "14px",
-                fontWeight: 700,
-                color: "#0F62FE",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                margin: "12px 0 0 0",
-                fontFamily: "'Montserrat', sans-serif",
+            {/* Image Content */}
+            {step.imageUrl && (
+              <div style={{
+                flex: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                maxWidth: 300,
               }}>
-                {step.description}
-              </p>
+                <img
+                  src={step.imageUrl}
+                  alt={step.title || "Illustration"}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.1))"
+                  }}
+                />
+              </div>
             )}
           </motion.div>
         )}

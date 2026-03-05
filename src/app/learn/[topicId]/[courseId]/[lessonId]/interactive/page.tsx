@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useCallback, useRef, useState } from "react"
-import { useRouter, useParams } from "next/navigation"
+import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
 import { getStepsForLesson } from "@/data/lessons/registry"
@@ -18,21 +18,28 @@ import { FooterNav } from "@/components/FooterNav"
 export default function InteractiveLessonPage() {
   const router = useRouter()
   const params = useParams()
-  const { user, setDbProfile, refreshUser } = useAuth()
-  const { topicId, courseId, lessonId } = params
-  const lessonIdStr = lessonId as string
-  const topicIdStr = (topicId as string) || "1"
-  const courseIdStr = (courseId as string) || "1"
+  const searchParams = useSearchParams()
+  const { user, dbProfile, loading, setDbProfile, refreshUser } = useAuth()
+
+  const topicIdStr = params.topicId as string
+  const courseIdStr = params.courseId as string
+  const lessonIdStr = params.lessonId as string
+  const initialStepIndex = searchParams.get("step")
 
 
   const lessonSteps = getStepsForLesson(lessonIdStr)
 
   const [progress, setProgress] = useState({
-    currentStep: 1,
+    currentStepIndex: initialStepIndex ? parseInt(initialStepIndex) : 0,
     totalSteps: lessonSteps.length || 1,
     streak: 0,
+    mistakes: 0,
     stars: 3 as 0 | 1 | 2 | 3,
+    xpEarned: 0,
   })
+
+  // Access derived state after all hooks
+  const isRepeated = (user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr) || false
 
   // Hide app mobile footer on this page (CSS in globals.css hides via data-lesson-interactive)
   useEffect(() => {
@@ -41,15 +48,21 @@ export default function InteractiveLessonPage() {
     return () => document.body.removeAttribute("data-lesson-interactive")
   }, [])
 
-  const isRepeated = (user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr) || false
-
   const hasCompletedRef = useRef(false)
   const handleComplete = useCallback(async (stars?: number) => {
     if (hasCompletedRef.current) return
     hasCompletedRef.current = true
 
-    const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 2
-    const xpEarned = isRepeated ? (starsEarned > 0 ? 5 : 0) : (starsEarned * 5)
+    const prevStars = (user?.user_metadata?.lessonStars?.[lessonIdStr] ?? 0) as 0 | 1 | 2 | 3
+    const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? (stars as 0 | 1 | 2 | 3) : (2 as 0 | 1 | 2 | 3)
+    const isFirstTime = !isRepeated
+
+    // XP only awarded for new stars (Max 15 total per lesson)
+    // First time: stars * 5
+    // Improved stars: (newStars - oldStars) * 5
+    const xpToBeAwarded = isFirstTime
+      ? (starsEarned * 5)
+      : Math.max(0, (starsEarned - prevStars) * 5)
 
     // Guest user: save to localStorage
     if (lessonIdStr && typeof window !== "undefined" && !user) {
@@ -69,7 +82,7 @@ export default function InteractiveLessonPage() {
       fetch("/api/lesson/complete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
+        body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned: xpToBeAwarded }),
         keepalive: true,
       }).then(res => {
         if (res.ok) refreshUser() // Thorough refresh after API success
@@ -78,7 +91,7 @@ export default function InteractiveLessonPage() {
       // 1.5 Optimistic update for DB profile in context
       setDbProfile((prev: any) => prev ? ({
         ...prev,
-        xp: (prev.xp || 0) + xpEarned
+        xp: (prev.xp || 0) + xpToBeAwarded
       }) : prev)
 
       // 2. Refresh local session for instant UI reflect without blocking
@@ -188,7 +201,7 @@ export default function InteractiveLessonPage() {
           onComplete={handleComplete}
           onExit={handleExit}
           isRepeat={isRepeated}
-          onProgressChange={setProgress}
+          onProgressChange={(p) => setProgress(prev => ({ ...prev, ...p }))}
         />
       </div>
 

@@ -85,13 +85,18 @@ export async function POST(req: NextRequest) {
         let xpToAward = 0
 
         if (isFirstCompletion) {
-            // First time: full stars * 5
+            // First time: stars * 5 XP (Max 15)
             xpToAward = starsEarned * 5
+        } else if (starsImproved) {
+            // Improved stars: difference * 5 XP
+            // e.g., 1 star -> 3 stars = (3-1)*5 = 10 XP
+            xpToAward = (starsEarned - prevStars) * 5
         } else {
-            // Repeated lesson: user said "lo máximo que dará de xp son 5xp"
-            // We give 5 XP if they at least finish with 1 star, regardless of improvement
-            xpToAward = starsEarned > 0 ? 5 : 0
+            // No improvement or same stars: 0 XP
+            xpToAward = 0
         }
+
+        console.log(`[lesson/complete] User ${userId} completed ${lessonId}. Stars: ${starsEarned} (prev: ${prevStars}). Awarding: ${xpToAward} XP.`)
 
         // Upsert progress row
         await prisma.progress.upsert({

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { cookies } from 'next/headers'
+import path from 'path'
+import dotenv from 'dotenv'
+
+// Load .env.local manually to ensure it's available for this route
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
 
 function getStripeClient() {
   const secretKey = process.env.STRIPE_SECRET_KEY

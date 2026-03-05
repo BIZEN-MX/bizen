@@ -96,7 +96,7 @@ export default function CoursesPage() {
     if (!loading && !user) {
       window.open("/login", "_blank")
     }
-  }, [loading, user, router])
+  }, [loading, user])
 
   useEffect(() => {
     // Only fetch data if user is authenticated

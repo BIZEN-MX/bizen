@@ -118,22 +118,20 @@ export default function CoursePageTemplate({
     getLessonPath,
 }: CoursePageTemplateProps) {
     const router = useRouter()
-    const { user, loading } = useAuth()
+    const { user, loading, dbProfile } = useAuth()
     const { completedLessons, lessonStars } = useLessonProgress()
     const [lessonModal, setLessonModal] = useState<{ lesson: GenericLesson; unitTitle: string } | null>(null)
-    const [lastJumpTime, setLastJumpTime] = useState(0)
+
+    // Access check
+    const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
+    const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
+    const hasPremiumAccess = hasActiveStripe || hasActiveLicense
 
     React.useEffect(() => {
         if (!loading && !user) {
             window.open("/login", "_blank")
         }
     }, [loading, user])
-
-    // Access check
-    const { dbProfile } = useAuth()
-    const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
-    const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
-    const hasPremiumAccess = hasActiveStripe || hasActiveLicense
 
     // White background
     useEffect(() => {
@@ -147,20 +145,10 @@ export default function CoursePageTemplate({
         }
     }, [])
 
-    if (loading || !user) {
-        return <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Montserrat', sans-serif" }} />
-    }
-
-    const topic = ALL_TOPICS.find((t) => t.id === topicId) || ALL_TOPICS[0]
-    const IconComp = topic.icon
-    const prevTopic = ALL_TOPICS.find((t) => t.id === topicId - 1)
-    const nextTopic = ALL_TOPICS.find((t) => t.id === topicId + 1)
-
     // Progress for this topic
     const allLessonsInTopic = subtemas.flatMap((s) => s.lessons)
     const topicCompletedCount = allLessonsInTopic.filter((l) => completedLessons.includes(l.slug)).length
     const topicTotalLessons = allLessonsInTopic.length
-    const topicProgressPct = topicTotalLessons > 0 ? Math.round((topicCompletedCount / topicTotalLessons) * 100) : 0
 
     const nextLessonSlug = React.useMemo(() => {
         for (const sub of subtemas) {
@@ -170,9 +158,19 @@ export default function CoursePageTemplate({
         }
         return null
     }, [subtemas, completedLessons])
+
     const completedInTopic = allLessonsInTopic.filter((l) => completedLessons.includes(l.slug)).length
     const totalInTopic = allLessonsInTopic.length
     const topicPct = totalInTopic > 0 ? Math.round((completedInTopic / totalInTopic) * 100) : 0
+
+    if (loading || !user) {
+        return <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Montserrat', sans-serif" }} />
+    }
+
+    const topic = ALL_TOPICS.find((t) => t.id === topicId) || ALL_TOPICS[0]
+    const IconComp = topic.icon
+    const prevTopic = ALL_TOPICS.find((t) => t.id === topicId - 1)
+    const nextTopic = ALL_TOPICS.find((t) => t.id === topicId + 1)
 
     return (
         <div style={{ position: "relative", width: "100%", maxWidth: "100%", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>

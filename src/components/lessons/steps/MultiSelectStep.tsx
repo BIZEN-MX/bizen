@@ -81,7 +81,7 @@ export function MultiSelectStep({
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Montserrat', sans-serif",
+          fontFamily: "'Inter', sans-serif",
         }}>
           {step.question}
         </h3>
@@ -142,7 +142,7 @@ export function MultiSelectStep({
                 textAlign: "left",
                 color,
                 transition: "all 0.2s ease",
-                fontFamily: "'Montserrat', sans-serif",
+                fontFamily: "'Inter', sans-serif",
               }}
             >
               <div style={{
@@ -160,9 +160,9 @@ export function MultiSelectStep({
               }}>
                 {isSelected && "✓"}
               </div>
-              <span style={{ flex: 1, fontSize: 18, fontWeight: 700, fontFamily: "'Montserrat', sans-serif" }}>{option.label}</span>
+              <span style={{ flex: 1, fontSize: 18, fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{option.label}</span>
               {showFeedback && isSelected && (
-                <span style={{ fontSize: 20, fontFamily: "'Montserrat', sans-serif" }}>{isCorrect ? "✓" : "✗"}</span>
+                <span style={{ fontSize: 20, fontFamily: "'Inter', sans-serif" }}>{isCorrect ? "✓" : "✗"}</span>
               )}
             </motion.button>
           )

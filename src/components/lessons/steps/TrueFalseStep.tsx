@@ -95,7 +95,7 @@ export function TrueFalseStep({
       justifyContent: 'center',
       gap: '12px',
       transition: 'all 0.2s ease',
-      fontFamily: "'Montserrat', sans-serif",
+      fontFamily: "'Inter', sans-serif",
     }
   }
 
@@ -116,7 +116,7 @@ export function TrueFalseStep({
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Montserrat', sans-serif",
+          fontFamily: "'Inter', sans-serif",
         }}>
           {step.statement}
         </h3>
@@ -131,7 +131,7 @@ export function TrueFalseStep({
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === true ? "#0F62FE15" : "#F3F4F6", border: selectedValue === true ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
             <Check size={20} strokeWidth={3} />
           </div>
-          <span style={{ flex: 1, textAlign: "left", fontFamily: "'Montserrat', sans-serif" }}>Verdadero</span>
+          <span style={{ flex: 1, textAlign: "left", fontFamily: "'Inter', sans-serif" }}>Verdadero</span>
           {showFeedback && selectedValue === true && (
             <div style={{ flexShrink: 0 }}>
               {step.correctValue === true ? (
@@ -150,7 +150,7 @@ export function TrueFalseStep({
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === false ? "#0F62FE15" : "#F3F4F6", border: selectedValue === false ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
             <X size={20} strokeWidth={3} />
           </div>
-          <span style={{ flex: 1, textAlign: "left", fontFamily: "'Montserrat', sans-serif" }}>Falso</span>
+          <span style={{ flex: 1, textAlign: "left", fontFamily: "'Inter', sans-serif" }}>Falso</span>
           {showFeedback && selectedValue === false && (
             <div style={{ flexShrink: 0 }}>
               {step.correctValue === false ? (

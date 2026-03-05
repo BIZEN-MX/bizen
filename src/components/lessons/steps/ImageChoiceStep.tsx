@@ -62,7 +62,7 @@ export function ImageChoiceStep({
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Montserrat', sans-serif",
+          fontFamily: "'Inter', sans-serif",
         }}>
           {step.question}
         </h3>
@@ -127,7 +127,7 @@ export function ImageChoiceStep({
                 cursor: hasChecked ? "default" : "pointer",
                 color,
                 transition: "all 0.2s ease",
-                fontFamily: "'Montserrat', sans-serif",
+                fontFamily: "'Inter', sans-serif",
               }}
             >
               <div style={{
@@ -166,7 +166,7 @@ export function ImageChoiceStep({
                   </div>
                 )}
               </div>
-              <span style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Montserrat', sans-serif" }}>{option.label}</span>
+              <span style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Inter', sans-serif" }}>{option.label}</span>
             </motion.button>
           )
         })}

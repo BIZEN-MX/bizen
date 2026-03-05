@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
+import path from 'path';
+import dotenv from 'dotenv';
+
+// Load .env.local manually to ensure it's available for this route
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
 export async function POST(req: NextRequest) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {

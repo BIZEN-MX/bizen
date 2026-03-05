@@ -264,10 +264,26 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
 
 // --- Main SummaryStep ---
 export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
-  const { dbProfile } = useAuth()
+  const { dbProfile, user } = useAuth()
   const stars: 0 | 1 | 2 | 3 = (step as any).starsEarned ?? 3
-  const isRepeat = (step as any).isRepeat ?? false
-  const xpEarned = isRepeat ? (stars > 0 ? 5 : 0) : (stars * XP_PER_STAR)
+
+  // Snapshot XP on mount so it doesn't jump if AuthContext updates in the background
+  const [xpSnapshot, setXpSnapshot] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (dbProfile?.xp !== undefined && xpSnapshot === null) {
+      setXpSnapshot(dbProfile.xp)
+    }
+  }, [dbProfile])
+
+  // XP calculation logic matched to backend (Improvement rule)
+  const lessonIdStr = step.id
+  const prevStars = (user?.user_metadata?.lessonStars?.[lessonIdStr] ?? 0) as 0 | 1 | 2 | 3
+  const isRepeated = (step as any).isRepeat ?? false
+
+  const xpEarned = !isRepeated
+    ? (stars * XP_PER_STAR)
+    : Math.max(0, (stars - prevStars) * XP_PER_STAR)
 
   // Confetti fires once on mount — only if stars > 0
   const [confettiActive, setConfettiActive] = useState(false)
@@ -357,7 +373,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
             WebkitTextFillColor: "transparent",
             margin: 0,
             lineHeight: 1.2,
-            fontFamily: "'Montserrat', sans-serif",
+            fontFamily: "'Inter', sans-serif",
           }}
         >
           {step.title}
@@ -379,7 +395,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.3 }}
-            style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#6B7280" }}
+            style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#6B7280", fontFamily: "'Inter', sans-serif" }}
           >
             {starMessages[stars]}
           </motion.p>
@@ -389,7 +405,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
         {xpEarned > 0 ? (
           <div style={{ width: "100%", maxWidth: 380, padding: "0 16px", boxSizing: "border-box" }}>
             <XPBar
-              initialXP={dbProfile?.xp ?? 0}
+              initialXP={xpSnapshot ?? dbProfile?.xp ?? 0}
               xpEarned={xpEarned}
               delay={900}
             />
@@ -409,7 +425,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
             }}
           >
             <div style={{ fontSize: 28 }}>😅</div>
-            <p style={{ margin: "8px 0 0", fontSize: 14, fontWeight: 700, color: "#64748b" }}>
+            <p style={{ margin: "8px 0 0", fontSize: 14, fontWeight: 700, color: "#64748b", fontFamily: "'Inter', sans-serif" }}>
               Sin XP esta vez — ¡intenta no cometer errores!
             </p>
           </motion.div>
@@ -428,10 +444,11 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
               fontWeight: 500,
               maxWidth: 440,
               padding: "0 16px",
+              fontFamily: "'Inter', sans-serif",
             }}
           >
             {step.body.split("\n\n").map((line, i) => (
-              <p key={i} style={{ margin: "0 0 8px" }}>{line}</p>
+              <p key={i} style={{ margin: "0 0 8px", fontFamily: "'Inter', sans-serif" }}>{line}</p>
             ))}
           </motion.div>
         )}

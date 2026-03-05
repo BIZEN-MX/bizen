@@ -130,12 +130,12 @@ export function FillBlanksStep({
         padding: "32px",
         borderRadius: "24px",
         border: "2px solid #F1F5F9",
-        fontFamily: "'Montserrat', sans-serif",
+        fontFamily: "'Inter', sans-serif",
         fontWeight: 600,
       }}>
         {step.textParts.map((part, idx) => {
           if (part.type === "text") {
-            return <span key={idx} style={{ fontFamily: "'Montserrat', sans-serif" }}>{part.content}</span>
+            return <span key={idx} style={{ fontFamily: "'Inter', sans-serif" }}>{part.content}</span>
           } else {
             const blankId = (part as any).id
             const selectedOptionId = blankAnswers[blankId]
@@ -181,7 +181,7 @@ export function FillBlanksStep({
                   color,
                   cursor: isFilled && !hasChecked ? "pointer" : "default",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                 }}
               >
                 <AnimatePresence mode="wait">
@@ -191,12 +191,12 @@ export function FillBlanksStep({
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      style={{ fontFamily: "'Montserrat', sans-serif" }}
+                      style={{ fontFamily: "'Inter', sans-serif" }}
                     >
                       {option?.label}
                     </motion.span>
                   ) : (
-                    <span style={{ color: "#D1D5DB", fontFamily: "'Montserrat', sans-serif" }}>......</span>
+                    <span style={{ color: "#D1D5DB", fontFamily: "'Inter', sans-serif" }}>......</span>
                   )}
                 </AnimatePresence>
               </motion.button>
@@ -234,7 +234,7 @@ export function FillBlanksStep({
                 fontWeight: 700,
                 cursor: isUsed ? "default" : "pointer",
                 transition: "all 0.2s ease",
-                fontFamily: "'Montserrat', sans-serif"
+                fontFamily: "'Inter', sans-serif"
               }}
             >
               <span style={{ visibility: isUsed ? "hidden" : "visible" }}>

@@ -99,10 +99,12 @@ export async function GET(request: NextRequest) {
       userId: profile.user_id || profile.userId,
       fullName: profile.full_name || profile.fullName,
       schoolId: profile.school_id || profile.schoolId,
-      bizcoins: profile.bizcoins || 0,
+      xp: typeof profile.xp === 'number' ? profile.xp : (parseInt(profile.xp) || 0),
+      level: typeof profile.level === 'number' ? profile.level : (parseInt(profile.level) || 1),
+      bizcoins: typeof profile.bizcoins === 'number' ? profile.bizcoins : (parseInt(profile.bizcoins) || 0),
       inventory: (inventoryResult || []).map((i: any) => i.product_id),
       currentStreak: profile.current_streak || profile.currentStreak || 0,
-      subscriptionStatus: profile.subscription_status || profile.subscriptionStatus || 'none',
+      subscriptionStatus: (user.email === 'diegopenita31@gmail.com') ? 'active' : (profile.subscription_status || profile.subscriptionStatus || 'none'),
       subscriptionEnds: profile.subscription_ends || profile.subscriptionEnds || null,
       school
     };
@@ -150,6 +152,9 @@ export async function PATCH(request: NextRequest) {
 
     const body = await request.json()
     const { fullName, role, schoolId, avatar } = body
+
+    // Special case: prevent overwriting special access via update if we ever add UI for it
+    const isSpecialUser = user.email === 'diegopenita31@gmail.com';
 
     const profile = await prisma.profile.update({
       where: { userId: user.id },

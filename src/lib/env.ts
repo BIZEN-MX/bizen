@@ -10,20 +10,24 @@ const envSchema = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY_BIZEN: z.string().min(1).optional(),
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
-  
+
   // Database Configuration
   DATABASE_URL: z.string().url(),
   DIRECT_URL: z.string().url().optional(),
-  
+
   // Site Configuration
   NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
-  
+
   // Email Service (Optional)
   RESEND_API_KEY: z.string().optional(),
-  
+
   // OpenAI (Optional)
   OPENAI_API_KEY: z.string().optional(),
-  
+
+  // Stripe Configuration
+  STRIPE_SECRET_KEY: z.string().min(1).optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
+
   // Node Environment
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 })
@@ -45,13 +49,15 @@ export function validateEnv(): EnvSchema {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     NODE_ENV: process.env.NODE_ENV || 'development',
   }
 
   // Check for at least one Supabase configuration
   const hasBizenConfig = env.NEXT_PUBLIC_SUPABASE_URL_BIZEN && env.NEXT_PUBLIC_SUPABASE_ANON_KEY_BIZEN
   const hasGenericConfig = env.NEXT_PUBLIC_SUPABASE_URL && env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  
+
   if (!hasBizenConfig && !hasGenericConfig) {
     throw new Error(
       'Missing Supabase configuration. Please set either:\n' +
@@ -62,12 +68,12 @@ export function validateEnv(): EnvSchema {
 
   // Validate the rest
   const result = envSchema.safeParse(env)
-  
+
   if (!result.success) {
-    const errors = result.error.errors.map(err => 
+    const errors = result.error.errors.map(err =>
       `  - ${err.path.join('.')}: ${err.message}`
     ).join('\n')
-    
+
     throw new Error(
       `Invalid environment variables:\n${errors}\n\n` +
       'Please check your .env.local file or deployment environment variables.'

@@ -103,7 +103,7 @@ export function OrderStep({
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Montserrat', sans-serif",
+          fontFamily: "'Inter', sans-serif",
         }}>
           {step.question || "Pon los elementos en el orden correcto"}
         </h3>
@@ -124,7 +124,7 @@ export function OrderStep({
               display: "flex",
               alignItems: "center",
               gap: 10,
-              fontFamily: "'Montserrat', sans-serif",
+              fontFamily: "'Inter', sans-serif",
               fontSize: 13,
               fontWeight: 700,
               color: "#1D4ED8",
@@ -211,7 +211,7 @@ export function OrderStep({
                   strokeWidth: 2.5
                 })}
               </div>
-              <span style={{ flex: 1, fontSize: 18, fontWeight: 700, color, fontFamily: "'Montserrat', sans-serif" }}>
+              <span style={{ flex: 1, fontSize: 18, fontWeight: 700, color, fontFamily: "'Inter', sans-serif" }}>
                 {item.label}
               </span>
               {!hasChecked && (

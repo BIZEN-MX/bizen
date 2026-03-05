@@ -122,8 +122,9 @@ export async function middleware(request: NextRequest) {
   const allowedWithoutPayment = ['/payment', '/payment/success', '/payment/cancel']
   const isAllowedWithoutPayment = allowedWithoutPayment.some(route => pathname.startsWith(route))
   const hasAccessCookie = request.cookies.get('bizen_has_access')?.value === '1'
+  const isSpecialAccount = session?.user?.email === 'diegopenita31@gmail.com'
 
-  if (isPaidRoute && !isAllowedWithoutPayment && !hasAccessCookie) {
+  if (isPaidRoute && !isAllowedWithoutPayment && !hasAccessCookie && !isSpecialAccount) {
     return NextResponse.redirect(new URL('/payment', request.url))
   }
 

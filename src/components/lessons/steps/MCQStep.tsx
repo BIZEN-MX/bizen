@@ -90,7 +90,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
             color: "#111827",
             margin: 0,
             lineHeight: 1.3,
-            fontFamily: "'Montserrat', sans-serif",
+            fontFamily: "'Inter', sans-serif",
           }}
         >
           {step.question}
@@ -212,7 +212,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
                 fontWeight: 900,
                 color: labelColor,
                 flexShrink: 0,
-                fontFamily: "'Montserrat', sans-serif",
+                fontFamily: "'Inter', sans-serif",
                 border: `1.5px solid ${borderColor}`,
                 transition: "all 0.2s ease",
               }}>
@@ -224,7 +224,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
                 flex: 1,
                 fontSize: "clamp(15px, 1.8vw, 18px)",
                 fontWeight: 700,
-                fontFamily: "'Montserrat', sans-serif",
+                fontFamily: "'Inter', sans-serif",
                 lineHeight: 1.4,
               }}>
                 {option.label}
