@@ -421,44 +421,46 @@ export default function CoursesPage() {
 
                         return (
                           <React.Fragment key={topic.id}>
-                            <div
-                              onClick={() => {
-                                if (isLocked) {
-                                  router.push('/payment');
-                                } else {
-                                  router.push(`/courses/${topic.id}`);
-                                }
-                              }}
-                              className={`course-card-hover ${topic.id === nextTopicId ? "next-topic-glow" : ""}`}
-                              style={{
-                                flex: "0 1 550px",
-                                minHeight: 180,
-                                cursor: "pointer",
-                                border: "1px solid rgba(15,98,254,0.1)",
-                                borderRadius: "24px",
-                                background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
-                                boxShadow: "0 4px 20px rgba(15,98,254,0.08)",
-                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                                overflow: "hidden",
-                                display: "flex",
-                                flexDirection: "column",
-                                minWidth: 0,
-                                opacity: isLocked ? 0.7 : 1
-                              }}
-                            >
-                              <div style={{ height: 5, background: isLocked ? "linear-gradient(90deg, #64748b, #94a3b8)" : "linear-gradient(90deg, #1e3a8a, #3b82f6)", width: "100%", flexShrink: 0 }} />
-                              <div style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
-                                <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
-                                  {isLocked ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Bloqueado</span> : topic.category}
-                                </div>
-                                <div style={{ width: 68, height: 68, borderRadius: 20, flexShrink: 0, background: isLocked ? '#f1f5f9' : `${topic.catColor}14`, display: "flex", alignItems: "center", justifyContent: "center", color: isLocked ? '#64748b' : topic.catColor }}>
-                                  <IconComp size={36} strokeWidth={2} />
-                                </div>
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", marginBottom: 8, letterSpacing: "0.06em" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
-                                  <div style={{ fontSize: 19, fontWeight: 800, color: "#0f172a", lineHeight: 1.25 }}>{topic.title}</div>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 700, color: isLocked ? "#64748b" : "#3b82f6" }}>
-                                    <BookOpen size={16} /><span>{topic.lessons} cursos</span>
+                            <div className={topic.id === nextTopicId ? "next-topic-glow-wrapper" : ""} style={{ flex: "0 1 550px", minWidth: 0 }}>
+                              <div
+                                onClick={() => {
+                                  if (isLocked) {
+                                    router.push('/payment');
+                                  } else {
+                                    router.push(`/courses/${topic.id}`);
+                                  }
+                                }}
+                                className={`course-card-hover ${topic.id === nextTopicId ? "next-topic-glow" : ""}`}
+                                style={{
+                                  flex: "0 1 550px",
+                                  minHeight: 180,
+                                  cursor: "pointer",
+                                  border: topic.id === nextTopicId ? "1.5px solid transparent" : "1px solid rgba(15,98,254,0.1)",
+                                  borderRadius: "24px",
+                                  background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
+                                  boxShadow: "0 4px 20px rgba(15,98,254,0.08)",
+                                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                  overflow: "hidden",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  minWidth: 0,
+                                  opacity: isLocked ? 0.7 : 1
+                                }}
+                              >
+                                <div style={{ height: 5, background: isLocked ? "linear-gradient(90deg, #64748b, #94a3b8)" : "linear-gradient(90deg, #1e3a8a, #3b82f6)", width: "100%", flexShrink: 0 }} />
+                                <div style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
+                                  <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
+                                    {isLocked ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Bloqueado</span> : topic.category}
+                                  </div>
+                                  <div style={{ width: 68, height: 68, borderRadius: 20, flexShrink: 0, background: isLocked ? '#f1f5f9' : `${topic.catColor}14`, display: "flex", alignItems: "center", justifyContent: "center", color: isLocked ? '#64748b' : topic.catColor }}>
+                                    <IconComp size={36} strokeWidth={2} />
+                                  </div>
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", marginBottom: 8, letterSpacing: "0.06em" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
+                                    <div style={{ fontSize: 19, fontWeight: 800, color: "#0f172a", lineHeight: 1.25 }}>{topic.title}</div>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 700, color: isLocked ? "#64748b" : "#3b82f6" }}>
+                                      <BookOpen size={16} /><span>{topic.lessons} cursos</span>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -646,23 +648,30 @@ export default function CoursesPage() {
         }
         .next-topic-glow {
           animation: topic-glow-pulse 4s ease-in-out infinite !important;
+        }
+        .next-topic-glow-wrapper {
           position: relative;
           z-index: 1;
+          border-radius: 24px;
         }
-        .next-topic-glow::after {
+        .next-topic-glow-wrapper::after {
           content: "";
           position: absolute;
-          inset: -2px;
-          background: conic-gradient(from 0deg at 50% 50%, transparent 0%, transparent 20%, #3b82f6 25%, #60a5fa 30%, transparent 35%, transparent 100%);
-          border-radius: 22px;
-          animation: electric-border-rotate 3s linear infinite;
+          inset: -1.5px;
+          background: conic-gradient(from 0deg at 50% 50%,
+            transparent 0%,
+            transparent 15%,
+            #93c5fd 20%,
+            #3b82f6 26%,
+            #1d4ed8 30%,
+            #60a5fa 34%,
+            transparent 40%,
+            transparent 100%
+          );
+          border-radius: 26px;
+          animation: electric-border-rotate 2.5s linear infinite;
           z-index: -1;
-          opacity: 0.8;
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask-composite: exclude;
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          padding: 2px;
+          opacity: 0.9;
         }
         @keyframes electric-border-rotate {
           from { transform: rotate(0deg); }

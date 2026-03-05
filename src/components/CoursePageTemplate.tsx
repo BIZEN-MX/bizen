@@ -385,88 +385,88 @@ export default function CoursePageTemplate({
 
                                             return (
                                                 <React.Fragment key={lesson.slug}>
-                                                    <div
-                                                        role="button"
-                                                        tabIndex={0}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === "Enter" || e.key === " ") {
-                                                                e.preventDefault();
+                                                    <div className={lesson.slug === nextLessonSlug ? "next-lesson-to-complete-wrapper" : ""} style={{ width: 320, minWidth: 320, flexShrink: 0, scrollSnapAlign: "start" }}>
+                                                        <div
+                                                            role="button"
+                                                            tabIndex={0}
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === "Enter" || e.key === " ") {
+                                                                    e.preventDefault();
+                                                                    if (isLocked) router.push('/payment');
+                                                                    else setLessonModal({ lesson, unitTitle: sub.title });
+                                                                }
+                                                            }}
+                                                            onClick={() => {
                                                                 if (isLocked) router.push('/payment');
                                                                 else setLessonModal({ lesson, unitTitle: sub.title });
-                                                            }
-                                                        }}
-                                                        onClick={() => {
-                                                            if (isLocked) router.push('/payment');
-                                                            else setLessonModal({ lesson, unitTitle: sub.title });
-                                                        }}
-                                                        className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""}`}
-                                                        style={{
-                                                            width: 320,
-                                                            minWidth: 320,
-                                                            flexShrink: 0,
-                                                            display: "flex",
-                                                            flexDirection: "column",
-                                                            padding: "32px 28px",
-                                                            background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
-                                                            borderRadius: 24,
-                                                            border: isLocked ? "1.8px dashed #cbd5e1" : (isDone ? "2.5px solid rgba(59,130,246,0.3)" : "1.8px solid #e8f0fe"),
-                                                            boxSizing: "border-box",
-                                                            scrollSnapAlign: "start",
-                                                            cursor: "pointer",
-                                                            boxShadow: isLocked ? "none" : (isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)"),
-                                                            gap: 12,
-                                                            transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
-                                                            position: "relative",
-                                                            overflow: "hidden",
-                                                            opacity: isLocked ? 0.75 : 1
-                                                        }}
-                                                    >
-                                                        {/* Lock overlay if locked */}
-                                                        {isLocked && (
-                                                            <div style={{ position: "absolute", top: 12, right: 12, width: 28, height: 28, borderRadius: "50%", background: "#f1f5f9", border: "1.5px solid #cbd5e1", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                                <Lock size={14} color="#64748b" />
-                                                            </div>
-                                                        )}
-
-                                                        {/* Completed ribbon */}
-                                                        {isDone && !isLocked && (
-                                                            <div style={{ position: "absolute", top: 12, right: 12, width: 26, height: 26, borderRadius: "50%", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                                <CheckCircle2 size={15} color="#fff" strokeWidth={2.5} />
-                                                            </div>
-                                                        )}
-
-                                                        {/* Lesson number badge — always blue */}
-                                                        <div style={{
-                                                            width: 44, height: 44, borderRadius: 14,
-                                                            background: isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)"),
-                                                            border: isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)"),
-                                                            color: isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb"),
-                                                            fontSize: 19, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-                                                        }}>
-                                                            {absoluteLessonNumber}
-                                                        </div>
-
-                                                        {/* Title */}
-                                                        <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
-                                                            {lesson.title}
-                                                        </div>
-
-                                                        {/* Footer: stars */}
-                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
-                                                            {isLocked ? (
-                                                                <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>Premium</div>
-                                                            ) : (
-                                                                <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
-                                                                    {[1, 2, 3].map((i) => (
-                                                                        <img
-                                                                            key={i}
-                                                                            src="/stars.png"
-                                                                            alt=""
-                                                                            style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
-                                                                        />
-                                                                    ))}
+                                                            }}
+                                                            className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""}`}
+                                                            style={{
+                                                                width: "100%",
+                                                                flexShrink: 0,
+                                                                display: "flex",
+                                                                flexDirection: "column",
+                                                                padding: "32px 28px",
+                                                                background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
+                                                                borderRadius: 24,
+                                                                border: lesson.slug === nextLessonSlug ? "1.5px solid transparent" : (isLocked ? "1.8px dashed #cbd5e1" : (isDone ? "2.5px solid rgba(59,130,246,0.3)" : "1.8px solid #e8f0fe")),
+                                                                boxSizing: "border-box",
+                                                                cursor: "pointer",
+                                                                boxShadow: isLocked ? "none" : (isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)"),
+                                                                gap: 12,
+                                                                transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
+                                                                position: "relative",
+                                                                overflow: "hidden",
+                                                                opacity: isLocked ? 0.75 : 1
+                                                            }}
+                                                        >
+                                                            {/* Lock overlay if locked */}
+                                                            {isLocked && (
+                                                                <div style={{ position: "absolute", top: 12, right: 12, width: 28, height: 28, borderRadius: "50%", background: "#f1f5f9", border: "1.5px solid #cbd5e1", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                                    <Lock size={14} color="#64748b" />
                                                                 </div>
                                                             )}
+
+                                                            {/* Completed ribbon */}
+                                                            {isDone && !isLocked && (
+                                                                <div style={{ position: "absolute", top: 12, right: 12, width: 26, height: 26, borderRadius: "50%", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                                    <CheckCircle2 size={15} color="#fff" strokeWidth={2.5} />
+                                                                </div>
+                                                            )}
+
+                                                            {/* Lesson number badge — always blue */}
+                                                            <div style={{
+                                                                width: 44, height: 44, borderRadius: 14,
+                                                                background: isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)"),
+                                                                border: isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)"),
+                                                                color: isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb"),
+                                                                fontSize: 19, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                                                            }}>
+                                                                {absoluteLessonNumber}
+                                                            </div>
+
+                                                            {/* Title */}
+                                                            <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
+                                                                {lesson.title}
+                                                            </div>
+
+                                                            {/* Footer: stars */}
+                                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
+                                                                {isLocked ? (
+                                                                    <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>Premium</div>
+                                                                ) : (
+                                                                    <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
+                                                                        {[1, 2, 3].map((i) => (
+                                                                            <img
+                                                                                key={i}
+                                                                                src="/stars.png"
+                                                                                alt=""
+                                                                                style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
+                                                                            />
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -663,23 +663,30 @@ export default function CoursePageTemplate({
         }
         .next-lesson-to-complete {
           animation: active-lesson-pulse 4s ease-in-out infinite !important;
+        }
+        .next-lesson-to-complete-wrapper {
           position: relative;
           z-index: 1;
+          border-radius: 24px;
         }
-        .next-lesson-to-complete::after {
+        .next-lesson-to-complete-wrapper::after {
           content: "";
           position: absolute;
-          inset: -2px;
-          background: conic-gradient(from 0deg at 50% 50%, transparent 0%, transparent 20%, #3b82f6 25%, #60a5fa 30%, transparent 35%, transparent 100%);
+          inset: -1.5px;
+          background: conic-gradient(from 0deg at 50% 50%,
+            transparent 0%,
+            transparent 15%,
+            #93c5fd 20%,
+            #3b82f6 26%,
+            #1d4ed8 30%,
+            #60a5fa 34%,
+            transparent 40%,
+            transparent 100%
+          );
           border-radius: 26px;
-          animation: electric-border-rotate 3s linear infinite;
+          animation: electric-border-rotate 2.5s linear infinite;
           z-index: -1;
-          opacity: 0.8;
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask-composite: exclude;
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          padding: 2.5px;
+          opacity: 0.9;
         }
         @keyframes electric-border-rotate {
           from { transform: rotate(0deg); }
