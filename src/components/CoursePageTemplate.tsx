@@ -360,9 +360,18 @@ export default function CoursePageTemplate({
                                             const stars = isDone ? (lessonStars[lesson.slug] ?? 0) : 0
                                             const isLastLesson = lessonIdx === sub.lessons.length - 1
                                             const absoluteLessonNumber = lessonOffset + lessonIdx + 1
-
                                             const isPremiumLesson = topicId > 1 || absoluteLessonNumber > 3;
-                                            const isLocked = isPremiumLesson && !hasPremiumAccess;
+                                            const isPaywalled = isPremiumLesson && !hasPremiumAccess;
+
+                                            // BIZEN Sequential Unlocking logic:
+                                            // 1. First lesson of Topic 1 is always unlocked.
+                                            // 2. Any other lesson is locked if the PREVIOUS lesson in the topic is not completed.
+                                            // 3. Lessons are also locked if they are paywalled (premium lesson + no subscription).
+                                            const isFirstLessonOfWholeTopic = absoluteLessonNumber === 1;
+                                            const previousLesson = absoluteLessonNumber > 1 ? allLessonsInTopic[absoluteLessonNumber - 2] : null;
+                                            const isSequenceLocked = !isFirstLessonOfWholeTopic && previousLesson && !completedLessons.includes(previousLesson.slug);
+
+                                            const isLocked = isPaywalled || isSequenceLocked;
 
                                             return (
                                                 <React.Fragment key={lesson.slug}>

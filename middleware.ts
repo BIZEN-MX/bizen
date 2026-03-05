@@ -20,7 +20,6 @@ export async function middleware(request: NextRequest) {
     },
   })
 
-  // Get validated Supabase configuration
   const { url: supabaseUrl, anonKey: supabaseKey } = getSupabaseConfig()
 
   const supabase = createServerClient(
@@ -32,100 +31,69 @@ export async function middleware(request: NextRequest) {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
+          // If this is a Supabase auth cookie, ensure it has a long duration
+          const enhancedOptions = {
             ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          })
+            // Defaults for persistence if not provided
+            maxAge: options.maxAge ?? (60 * 60 * 24 * 365), // 1 year default
+            path: options.path ?? '/',
+          }
+
+          request.cookies.set({ name, value, ...enhancedOptions })
+          response.cookies.set({ name, value, ...enhancedOptions })
         },
         remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
+          request.cookies.set({ name, value: '', ...options })
+          response.cookies.set({ name, value: '', ...options })
         },
       },
     }
   )
 
-  // Refresh session if expired - this is critical for SSR
-  let session = null;
-  try {
-    const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession()
-    if (sessionError) {
-      console.warn('[MIDDLEWARE] Session error (potential network issue):', sessionError.message)
-    }
-    session = currentSession
-  } catch (err: any) {
-    console.error('[MIDDLEWARE] Fatal session refresh error:', err?.message || err)
-    // Don't throw, just proceed without session to avoid blanket 500 error
-  }
+  // Critical: this refreshes the session from the cookie and updates it if needed
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession()
 
   const pathname = request.nextUrl.pathname
 
-  // Debug logging (can be removed in production)
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[MIDDLEWARE] Path:', pathname)
-    console.log('[MIDDLEWARE] Has session:', !!session)
+  // Protected routes check
+  const studentProtected = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum', '/reto-diario', '/courses', '/cash-flow', '/simuladores', '/business-lab', '/leaderboard', '/ranking', '/cuenta', '/configuracion', '/profile']
+  const isStudentProtected = studentProtected.some(route => pathname.startsWith(route))
+
+  if (isStudentProtected && !session) {
+    const from = pathname + request.nextUrl.search
+    return NextResponse.redirect(new URL(`/login?redirect=${encodeURIComponent(from)}`, request.url))
   }
 
-  // Role-based route protection - TEACHER routes
-  if (pathname.startsWith('/teacher')) {
-    if (!session) {
-      return NextResponse.redirect(new URL('/login', request.url))
-    }
-  }
-
-  // Role-based route protection - ADMIN routes
-  if (pathname.startsWith('/admin')) {
-    if (!session) {
-      return NextResponse.redirect(new URL('/login', request.url))
-    }
-  }
-
-  // Protected student routes (require login)
-  const protectedRoutes = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum', '/reto-diario']
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
-
-  if (isProtectedRoute && !session) {
+  // Admin/Teacher protection
+  if ((pathname.startsWith('/teacher') || pathname.startsWith('/admin')) && !session) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Paywall: block routes without payment
-  const paidRoutes = [
-    '/courses', '/cash-flow', '/learn', '/simuladores', '/business-lab',
-    '/dashboard', '/forum', '/leaderboard', '/ranking', '/progress', '/reto-diario',
-    '/cuenta', '/configuracion', '/profile', '/teacher', '/bizen/dashboard'
-  ]
-  const isPaidRoute = paidRoutes.some(route => pathname.startsWith(route))
-  const allowedWithoutPayment = ['/payment', '/payment/success', '/payment/cancel']
-  const isAllowedWithoutPayment = allowedWithoutPayment.some(route => pathname.startsWith(route))
-  const hasAccessCookie = request.cookies.get('bizen_has_access')?.value === '1'
-  const isSpecialAccount = session?.user?.email === 'diegopenita31@gmail.com'
+  // Paywall Logic
+  // We only block if the user has NO session OR they are logged in but clearly flagged as no-access.
+  // HOWEVER: If they just logged in, they might not have the 'bizen_has_access' cookie yet.
+  // We allow the request if session exists, and let the Profiles API (client-side) handle the paywall cookie sync.
+  const paidRoutes = ['/courses', '/cash-flow', '/learn', '/simuladores', '/business-lab', '/dashboard', '/forum', '/leaderboard', '/ranking', '/progress', '/reto-diario', '/cuenta', '/configuracion', '/profile']
+  const isPaidPath = paidRoutes.some(route => pathname.startsWith(route))
+  const isExempt = ['/payment', '/payment/success', '/payment/cancel'].some(route => pathname.startsWith(route))
 
-  if (isPaidRoute && !isAllowedWithoutPayment && !hasAccessCookie && !isSpecialAccount) {
-    return NextResponse.redirect(new URL('/payment', request.url))
+  if (isPaidPath && !isExempt) {
+    const hasAccessCookie = request.cookies.get('bizen_has_access')?.value === '1'
+    const isSpecialAccount = session?.user?.email === 'diegopenita31@gmail.com'
+
+    // IF no session, redirect to login (already handled above)
+    // IF session exists but no access cookie and not special, we allow it TEMPORARILY 
+    // to let the app fetch the profile and set the cookie. 
+    // The actual paywall enforcement will happen in the App (ModuleGate, SectionGate, etc.) 
+    // or if the Profiles API returns subStatus='none'
+    if (session && !hasAccessCookie && !isSpecialAccount) {
+      // Allow through so /api/profiles can run and set the cookie
+      return response
+    }
+
+    if (!session) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
   }
 
   return response

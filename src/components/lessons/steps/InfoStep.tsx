@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { InfoStepFields } from "@/types/lessonTypes"
+import { playFlipSound } from "../lessonSounds"
 import { motion, AnimatePresence } from "framer-motion"
 
 interface InfoStepProps {
@@ -27,8 +28,11 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
   }, [onAnswered, isContinueEnabled, isRevealed])
 
   const handleReveal = () => {
-    setIsRevealed(true)
-    onAnswered({ isCompleted: true })
+    if (!isRevealed) {
+      playFlipSound()
+      setIsRevealed(true)
+      onAnswered({ isCompleted: true })
+    }
   }
 
   useEffect(() => {
