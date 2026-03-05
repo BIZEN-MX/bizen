@@ -622,7 +622,7 @@ export default function CoursesPage() {
           background: linear-gradient(135deg, #0A5FD4 0%, #3A8EF7 100%) !important;
         }
 
-        .course-card-hover:hover {
+        .course-card-hover:not(.next-topic-glow):hover {
           border-color: #3b82f6 !important;
           transform: translateY(-4px) !important;
           box-shadow: 0 12px 32px rgba(37, 99, 235, 0.14) !important;

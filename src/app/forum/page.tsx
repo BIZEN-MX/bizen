@@ -331,7 +331,7 @@ function ForumContent() {
     } else {
       fetchForumData()
     }
-  }, [activeTab, user, loading])
+  }, [activeTab, user, loading, sortBy, selectedTopic])
 
   const fetchUserStats = async () => {
     try {
@@ -382,7 +382,7 @@ function ForumContent() {
     try {
       const [topicsRes, threadsRes] = await Promise.all([
         fetch('/api/forum/topics', { credentials: 'same-origin', cache: 'no-store' }),
-        fetch(`/api/forum/threads?sort=${sortBy}&topic=${selectedTopic}`, { credentials: 'same-origin', cache: 'no-store' })
+        fetch(`/api/forum/threads?sort=${sortBy}&topic=${selectedTopic === 'all' ? '' : selectedTopic}`, { credentials: 'same-origin', cache: 'no-store' })
       ])
       if (topicsRes.ok) setTopics(await topicsRes.json())
       if (threadsRes.ok) {
@@ -553,9 +553,9 @@ function ForumContent() {
                     </div>
                     <Link href="/reto-diario" style={{
                       display: "flex", alignItems: "center", gap: 7, padding: "11px 20px",
-                      background: "linear-gradient(135deg, #0f172a, #1e3a8a)", color: "white",
+                      background: "white", color: "#0f172a",
                       borderRadius: 12, fontWeight: 700, fontSize: 13, textDecoration: "none",
-                      boxShadow: "0 4px 14px rgba(15,23,42,0.4)", whiteSpace: "nowrap"
+                      boxShadow: "0 4px 14px rgba(0,0,0,0.2)", whiteSpace: "nowrap"
                     }}>
                       <Target size={15} /> Hacer el reto
                     </Link>
@@ -622,7 +622,7 @@ function ForumContent() {
                     <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
                       Completa el reto de hoy y comparte tu aprendizaje con tu grupo.
                     </p>
-                    <Link href="/reto-diario" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "linear-gradient(135deg, #0f172a, #1e3a8a)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>
+                    <Link href="/reto-diario" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "white", color: "#0f172a", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14, boxShadow: "0 4px 14px rgba(0,0,0,0.15)" }}>
                       <Target size={16} /> Hacer el reto de hoy
                     </Link>
                   </div>
@@ -654,11 +654,11 @@ function ForumContent() {
                       background: tag === "Todos" && selectedTopic === "all" ? "linear-gradient(135deg, #0f172a, #1e3a8a)" : "#f1f5f9",
                       color: tag === "Todos" && selectedTopic === "all" ? "white" : "#64748b",
                       border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif"
-                    }} onClick={() => { if (tag === "Todos") setSelectedTopic("all"); else setSelectedTopic(tag); fetchForumData() }}>
+                    }} onClick={() => { if (tag === "Todos") setSelectedTopic("all"); else setSelectedTopic(tag); }}>
                       #{tag === "Todos" ? "all" : tag}
                     </button>
                   ))}
-                  <select value={sortBy} onChange={e => { setSortBy(e.target.value as any); fetchForumData() }} style={{ marginLeft: "auto", padding: "6px 10px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", background: "white", color: "#374151" }}>
+                  <select value={sortBy} onChange={e => { setSortBy(e.target.value as any); }} style={{ marginLeft: "auto", padding: "6px 10px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", background: "white", color: "#374151" }}>
                     <option value="new">Más recientes</option>
                     <option value="top">Más votados</option>
                     <option value="unanswered">Sin responder</option>
@@ -748,7 +748,7 @@ function ForumContent() {
                                         frame={thread.author.inventory?.includes("2") ? "vip" : thread.author.inventory?.includes("1") ? "ambassador" : null}
                                       />
                                     </div>
-                                    <span style={{ color: "#94a3b8" }}>por {thread.author.nickname}</span>
+                                    <span style={{ color: "#94a3b8" }}>por {thread.author?.nickname || "Anónimo"}</span>
                                   </Link>
                                 </div>
                                 <span>{formatDate(thread.createdAt)}</span>

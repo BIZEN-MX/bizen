@@ -635,7 +635,7 @@ export default function CoursePageTemplate({
         }
 
         /* Lesson card hover */
-        .cpt-lesson-card:hover {
+        .cpt-lesson-card:not(.next-lesson-to-complete):hover {
           transform: translateY(-3px) !important;
           box-shadow: 0 10px 28px rgba(37,99,235,0.14) !important;
           border-color: rgba(59,130,246,0.5) !important;
