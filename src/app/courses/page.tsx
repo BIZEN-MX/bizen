@@ -416,14 +416,16 @@ export default function CoursesPage() {
                         const showArrow = i === 0 && displayPair.length > 1
 
                         const isPremiumTopic = topic.id > 1;
-                        const isLocked = isPremiumTopic && !hasPremiumAccess;
+                        const isPaywalled = isPremiumTopic && !hasPremiumAccess;
+                        const isSequenceLocked = topic.id > nextTopicId;
+                        const isLocked = isPaywalled || isSequenceLocked;
 
                         return (
                           <React.Fragment key={topic.id}>
                             <div
                               onClick={() => {
                                 if (isLocked) {
-                                  router.push('/payment');
+                                  router.push(isPaywalled && !isSequenceLocked ? '/payment' : '#');
                                 } else {
                                   router.push(`/courses/${topic.id}`);
                                 }
@@ -432,7 +434,7 @@ export default function CoursesPage() {
                               style={{
                                 flex: "0 1 550px",
                                 minHeight: 180,
-                                cursor: "pointer",
+                                cursor: isLocked && !isPaywalled ? "default" : "pointer",
                                 border: "1px solid rgba(15,98,254,0.1)",
                                 borderRadius: "24px",
                                 background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
@@ -448,7 +450,11 @@ export default function CoursesPage() {
                               <div style={{ height: 5, background: isLocked ? "linear-gradient(90deg, #64748b, #94a3b8)" : "linear-gradient(90deg, #1e3a8a, #3b82f6)", width: "100%", flexShrink: 0 }} />
                               <div className="course-card-content" style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
                                 <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
-                                  {isLocked ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Bloqueado</span> : topic.category}
+                                  {isLocked ? (
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                      {isSequenceLocked ? 'Completar anterior' : 'Bloqueado'}
+                                    </span>
+                                  ) : topic.category}
                                 </div>
                                 <div className="course-card-icon-container" style={{ width: 68, height: 68, borderRadius: 20, flexShrink: 0, background: isLocked ? '#f1f5f9' : `${topic.catColor}14`, display: "flex", alignItems: "center", justifyContent: "center", color: isLocked ? '#64748b' : topic.catColor }}>
                                   <IconComp size={36} strokeWidth={2} />
@@ -464,7 +470,7 @@ export default function CoursesPage() {
                             </div>
                             {showArrow && (() => {
                               const destTopic = displayPair[i + 1];
-                              const isDestLocked = (destTopic.id > 1) && !hasPremiumAccess;
+                              const isDestLocked = (destTopic.id > 1 && !hasPremiumAccess) || (destTopic.id > nextTopicId);
                               const arrowColor = isDestLocked ? "#94a3b8" : "#2563eb";
                               const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
 
@@ -519,7 +525,7 @@ export default function CoursesPage() {
                     {!isLastPair && (() => {
                       const nextPair = pairs[pairIdx + 1];
                       const destTopic = nextPair[0];
-                      const isDestLocked = (destTopic.id > 1) && !hasPremiumAccess;
+                      const isDestLocked = (destTopic.id > 1 && !hasPremiumAccess) || (destTopic.id > nextTopicId);
                       const arrowColor = isDestLocked ? "#94a3b8" : "#1e3a8a";
                       const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
 

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
+import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 import {
     BookOpen,
     ChevronRight,
@@ -159,12 +160,42 @@ export default function CoursePageTemplate({
         return null
     }, [subtemas, completedLessons])
 
+    const nextTopicId = React.useMemo(() => {
+        for (let i = 0; i < SUBTEMAS_BY_COURSE.length; i++) {
+            const tId = i + 1;
+            const topicLessons = SUBTEMAS_BY_COURSE[i].flatMap((s: any) => s.lessons);
+            const allDone = topicLessons.every((l: any) => completedLessons.includes(l.slug));
+            if (!allDone) return tId;
+        }
+        return 1;
+    }, [completedLessons]);
+
+    const isTopicLockedBySequence = topicId > nextTopicId;
+
     const completedInTopic = allLessonsInTopic.filter((l) => completedLessons.includes(l.slug)).length
     const totalInTopic = allLessonsInTopic.length
     const topicPct = totalInTopic > 0 ? Math.round((completedInTopic / totalInTopic) * 100) : 0
 
     if (loading || !user) {
         return <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Montserrat', sans-serif" }} />
+    }
+
+    if (isTopicLockedBySequence) {
+        return (
+            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#FBFAF5", padding: 20, fontFamily: "'Montserrat', sans-serif", textAlign: "center" }}>
+                <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(15,98,254,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, fontSize: 40 }}>🔒</div>
+                <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0f172a", marginBottom: 12 }}>Tema Bloqueado</h1>
+                <p style={{ fontSize: 18, color: "#64748b", maxWidth: 500, lineHeight: 1.6, marginBottom: 32 }}>
+                    Para acceder a este tema, primero debes completar todas las lecciones del <strong>Tema {topicId - 1}</strong>.
+                </p>
+                <button
+                    onClick={() => router.push('/courses')}
+                    style={{ padding: "14px 32px", background: "#1e3a8a", color: "#fff", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer", boxShadow: "0 8px 24px rgba(30,58,138,0.25)" }}
+                >
+                    Volver al Camino Financiero
+                </button>
+            </div>
+        )
     }
 
     const topic = ALL_TOPICS.find((t) => t.id === topicId) || ALL_TOPICS[0]
