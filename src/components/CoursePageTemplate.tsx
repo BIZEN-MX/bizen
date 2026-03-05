@@ -158,6 +158,18 @@ export default function CoursePageTemplate({
 
     // Progress for this topic
     const allLessonsInTopic = subtemas.flatMap((s) => s.lessons)
+    const topicCompletedCount = allLessonsInTopic.filter((l) => completedLessons.includes(l.slug)).length
+    const topicTotalLessons = allLessonsInTopic.length
+    const topicProgressPct = topicTotalLessons > 0 ? Math.round((topicCompletedCount / topicTotalLessons) * 100) : 0
+
+    const nextLessonSlug = React.useMemo(() => {
+        for (const sub of subtemas) {
+            for (const lesson of sub.lessons) {
+                if (!completedLessons.includes(lesson.slug)) return lesson.slug
+            }
+        }
+        return null
+    }, [subtemas, completedLessons])
     const completedInTopic = allLessonsInTopic.filter((l) => completedLessons.includes(l.slug)).length
     const totalInTopic = allLessonsInTopic.length
     const topicPct = totalInTopic > 0 ? Math.round((completedInTopic / totalInTopic) * 100) : 0
@@ -387,7 +399,7 @@ export default function CoursePageTemplate({
                                                             if (isLocked) router.push('/payment');
                                                             else setLessonModal({ lesson, unitTitle: sub.title });
                                                         }}
-                                                        className="cpt-lesson-card"
+                                                        className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""}`}
                                                         style={{
                                                             width: 320,
                                                             minWidth: 320,
@@ -638,6 +650,24 @@ export default function CoursePageTemplate({
         .lessons-scroll-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 99px; }
         .lessons-scroll-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
         .lessons-scroll-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @keyframes active-lesson-pulse {
+          0%, 100% { 
+            box-shadow: 0 10px 28px rgba(37,99,235,0.14); 
+            border-color: rgba(59,130,246,0.2);
+            transform: translateY(0);
+          }
+          50% { 
+            box-shadow: 0 16px 40px rgba(37,99,235,0.25), 0 0 0 4px rgba(37,99,235,0.12); 
+            border-color: rgba(37,99,235,0.6);
+            transform: translateY(-5px);
+          }
+        }
+        .next-lesson-to-complete {
+          animation: active-lesson-pulse 2.5s ease-in-out infinite;
+          background: linear-gradient(135deg, #fff 0%, #f0f7ff 100%) !important;
+          border-width: 2.2px !important;
+        }
 
         @keyframes flagPulse {
           0%, 100% { box-shadow: 0 6px 20px rgba(37,99,235,0.35), 0 0 0 6px rgba(37,99,235,0.12); transform: scale(1); }

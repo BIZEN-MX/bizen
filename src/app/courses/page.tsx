@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
+import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 import {
   BookOpen,
   ChevronRight,
@@ -79,6 +80,16 @@ export default function CoursesPage() {
 
   const completedCount = completedLessons.length
   const progressPct = Math.min(100, Math.round((completedCount / APPROX_TOTAL_LESSONS) * 100))
+
+  const nextTopicId = React.useMemo(() => {
+    for (let i = 0; i < SUBTEMAS_BY_COURSE.length; i++) {
+      const topicId = i + 1
+      const lessons = SUBTEMAS_BY_COURSE[i].flatMap(s => s.lessons)
+      const allDone = lessons.every(l => completedLessons.includes(l.slug))
+      if (!allDone) return topicId
+    }
+    return 1
+  }, [completedLessons])
 
   // Redirect unauthenticated users
   useEffect(() => {
@@ -418,7 +429,7 @@ export default function CoursesPage() {
                                   router.push(`/courses/${topic.id}`);
                                 }
                               }}
-                              className="course-card-hover"
+                              className={`course-card-hover ${topic.id === nextTopicId ? "next-topic-glow" : ""}`}
                               style={{
                                 flex: "0 1 550px",
                                 minHeight: 180,
@@ -619,6 +630,24 @@ export default function CoursesPage() {
 
         .course-card-hover:active {
           transform: translateY(-1px) !important;
+        }
+
+        @keyframes topic-glow-pulse {
+          0%, 100% { 
+            box-shadow: 0 4px 20px rgba(15,98,254,0.08); 
+            border-color: rgba(15,98,254,0.1);
+            transform: translateY(0);
+          }
+          50% { 
+            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.2), 0 0 0 4px rgba(37, 99, 235, 0.1); 
+            border-color: rgba(37, 99, 235, 0.6);
+            transform: translateY(-6px);
+          }
+        }
+        .next-topic-glow {
+          animation: topic-glow-pulse 3s ease-in-out infinite;
+          border-width: 1.5px !important;
+          background: linear-gradient(135deg, #fff 0%, #f0f7ff 100%) !important;
         }
         
         @keyframes bounce {
