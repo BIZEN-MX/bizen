@@ -51,13 +51,13 @@ const TOPIC_COLORS: Record<string, { gradient: string; accent: string; light: st
   "emprendimiento": { gradient: "linear-gradient(135deg, #8b5cf6, #7c3aed)", accent: "#7c3aed", light: "#f5f3ff", shadow: "rgba(139,92,246,0.18)" },
   "proyectos": { gradient: "linear-gradient(135deg, #7c3aed, #4f46e5)", accent: "#4f46e5", light: "#eef2ff", shadow: "rgba(124,58,237,0.18)" },
   "negocios": { gradient: "linear-gradient(135deg, #0ea5e9, #0284c7)", accent: "#0284c7", light: "#f0f9ff", shadow: "rgba(14,165,233,0.18)" },
-  "finanzas": { gradient: "linear-gradient(135deg, #10b981, #0F62FE)", accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.18)" },
+  "finanzas": { gradient: "linear-gradient(135deg, #0f172a, #1e3a8a)", accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.18)" },
   "reto-del-dia": { gradient: "linear-gradient(135deg, #0f172a, #1e1b4b)", accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.18)" },
-  "preguntas": { gradient: "linear-gradient(135deg, #0F62FE, #4A9EFF)", accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.18)" },
+  "preguntas": { gradient: "linear-gradient(135deg, #0f172a, #1e3a8a)", accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.18)" },
 }
 
 // Default fallback theme (Bizen blue)
-const DEFAULT_COLORS = { gradient: "linear-gradient(135deg, #0F62FE, #4A9EFF)", accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.18)" }
+const DEFAULT_COLORS = { gradient: "linear-gradient(135deg, #0f172a, #1e3a8a)", accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.18)" }
 
 function getTopicColors(slug: string) {
   // Try exact match first, then prefix match
@@ -253,7 +253,7 @@ export default function TopicFeedPage() {
                 padding: "18px 20px 18px 0",
                 background: "white",
                 borderRadius: 14,
-                border: "1.5px solid #f1f5f9",
+                border: "1.5px solid rgba(15, 23, 42, 0.12)",
                 boxShadow: `0 2px 8px rgba(0,0,0,0.04)`,
                 textDecoration: "none",
                 overflow: "hidden",
@@ -270,7 +270,7 @@ export default function TopicFeedPage() {
               onMouseLeave={e => {
                 const el = e.currentTarget as HTMLAnchorElement
                 el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)"
-                el.style.borderColor = "#f1f5f9"
+                el.style.borderColor = "rgba(15, 23, 42, 0.12)"
                 el.style.borderLeftColor = thread.isPinned ? "#f59e0b" : colors.accent
               }}
             >

@@ -397,7 +397,7 @@ export default function ThreadDetailPage() {
                     frame={comment.author.inventory?.includes("2") ? "vip" : comment.author.inventory?.includes("1") ? "ambassador" : null}
                   />
                 </div>
-                <Link href={`/forum/profile/${comment.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{comment.author.nickname}</Link> ({comment.author.reputation} pts)
+                <Link href={`/forum/profile/${comment.author.userId}`} style={{ color: "#1e3a8a", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{comment.author.nickname}</Link> ({comment.author.reputation} pts)
               </div>
               <span>{new Date(comment.createdAt).toLocaleDateString('es-ES')}</span>
               <button
@@ -405,7 +405,7 @@ export default function ThreadDetailPage() {
                 style={{
                   background: "none",
                   border: "none",
-                  color: "#0F62FE",
+                  color: "#1e3a8a",
                   cursor: "pointer",
                   fontSize: "clamp(11px, 2.5vw, 12px)",
                   fontWeight: 700,
@@ -452,8 +452,8 @@ export default function ThreadDetailPage() {
             disabled={loadingReplies.has(comment.id)}
             style={{
               background: "transparent",
-              border: "1px solid #0F62FE",
-              color: "#0F62FE",
+              border: "1px solid #1e3a8a",
+              color: "#1e3a8a",
               padding: "clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px)",
               borderRadius: 6,
               cursor: loadingReplies.has(comment.id) ? "wait" : "pointer",
@@ -469,14 +469,14 @@ export default function ThreadDetailPage() {
             }}
             onMouseEnter={(e) => {
               if (!loadingReplies.has(comment.id)) {
-                e.currentTarget.style.background = "#0F62FE"
+                e.currentTarget.style.background = "#1e3a8a"
                 e.currentTarget.style.color = "#fff"
               }
             }}
             onMouseLeave={(e) => {
               if (!loadingReplies.has(comment.id)) {
                 e.currentTarget.style.background = "transparent"
-                e.currentTarget.style.color = "#0F62FE"
+                e.currentTarget.style.color = "#1e3a8a"
               }
             }}
           >
@@ -593,30 +593,30 @@ export default function ThreadDetailPage() {
             <Link href="/forum" style={{ textDecoration: "none" }}>
               <button style={{
                 padding: "8px 16px",
-                background: "rgba(15, 98, 254, 0.15)",
+                background: "rgba(30, 58, 138, 0.08)",
                 backdropFilter: "blur(10px)",
-                border: "2px solid rgba(15, 98, 254, 0.3)",
+                border: "2px solid rgba(30, 58, 138, 0.15)",
                 borderRadius: 8,
                 fontSize: 14,
                 fontWeight: 600,
-                color: "#0F62FE",
+                color: "#1e3a8a",
                 cursor: "pointer",
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
                 transition: "all 0.2s ease",
-                boxShadow: "0 2px 8px rgba(15, 98, 254, 0.1)",
+                boxShadow: "0 2px 8px rgba(30, 58, 138, 0.05)",
                 fontFamily: "Montserrat, sans-serif"
               }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(15, 98, 254, 0.25)"
-                  e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.5)"
-                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(15, 98, 254, 0.2)"
+                  e.currentTarget.style.background = "rgba(30, 58, 138, 0.12)"
+                  e.currentTarget.style.borderColor = "rgba(30, 58, 138, 0.25)"
+                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(30, 58, 138, 0.1)"
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
-                  e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.3)"
-                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(15, 98, 254, 0.1)"
+                  e.currentTarget.style.background = "rgba(30, 58, 138, 0.08)"
+                  e.currentTarget.style.borderColor = "rgba(30, 58, 138, 0.15)"
+                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(30, 58, 138, 0.05)"
                 }}
               >
                 ← Volver al Foro
@@ -631,7 +631,7 @@ export default function ThreadDetailPage() {
               background: "rgba(255, 255, 255, 0.4)",
               backdropFilter: "blur(20px)",
               borderRadius: 20,
-              border: "2px solid rgba(255, 255, 255, 0.6)",
+              border: "2px solid rgba(156, 163, 175, 0.3)",
               marginBottom: 32,
               animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
             }}>
@@ -660,8 +660,8 @@ export default function ThreadDetailPage() {
               background: "rgba(255, 255, 255, 0.4)",
               backdropFilter: "blur(20px)",
               borderRadius: 20,
-              border: "2px solid rgba(255, 255, 255, 0.6)",
-              boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
+              border: "2px solid rgba(30, 58, 138, 0.2)",
+              boxShadow: "0 8px 32px rgba(30, 58, 138, 0.15)",
               marginBottom: 32,
               animation: "fadeIn 0.4s ease"
             }}>
@@ -675,7 +675,7 @@ export default function ThreadDetailPage() {
                 margin: "0 0 16px",
                 fontSize: "clamp(24px, 5vw, 32px)",
                 fontWeight: 800,
-                color: "#1E40AF"
+                color: "#0f172a"
               }}>
                 {thread.title}
               </h1>
@@ -688,8 +688,8 @@ export default function ThreadDetailPage() {
                       key={tag.id}
                       style={{
                         padding: "4px 12px",
-                        background: "rgba(59, 130, 246, 0.15)",
-                        color: "#0F62FE",
+                        background: "rgba(30, 58, 138, 0.1)",
+                        color: "#1e3a8a",
                         fontSize: 13,
                         fontWeight: 600,
                         borderRadius: 6
@@ -713,7 +713,7 @@ export default function ThreadDetailPage() {
                 borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
               }}>
                 <span>
-                  por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#0F62FE", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link>
+                  por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#1e3a8a", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link>
                 </span>
                 <span>Nivel {thread.author.level}</span>
                 <span>{thread.author.reputation} pts</span>
@@ -741,7 +741,7 @@ export default function ThreadDetailPage() {
                     padding: "10px 16px",
                     background: "rgba(255, 255, 255, 0.6)",
                     color: "#374151",
-                    border: thread.userVote === 1 ? "2px solid #0B71FE" : "2px solid transparent",
+                    border: thread.userVote === 1 ? "2px solid #1e3a8a" : "2px solid transparent",
                     borderRadius: 8,
                     fontSize: 14,
                     fontWeight: 700,
@@ -773,7 +773,7 @@ export default function ThreadDetailPage() {
                     padding: "10px 16px",
                     background: "rgba(255, 255, 255, 0.6)",
                     color: "#374151",
-                    border: thread.userVote === -1 ? "2px solid #0B71FE" : "2px solid transparent",
+                    border: thread.userVote === -1 ? "2px solid #1e3a8a" : "2px solid transparent",
                     borderRadius: 8,
                     fontSize: 14,
                     fontWeight: 700,

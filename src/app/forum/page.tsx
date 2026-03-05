@@ -69,11 +69,11 @@ const TOPIC_COLORS: Record<string, { accent: string; light: string; shadow: stri
   "emprendimiento": { accent: "#7c3aed", light: "#f5f3ff", shadow: "rgba(124,58,237,0.15)" },
   "proyectos": { accent: "#4f46e5", light: "#eef2ff", shadow: "rgba(79,70,229,0.15)" },
   "negocios": { accent: "#0284c7", light: "#f0f9ff", shadow: "rgba(2,132,199,0.15)" },
-  "finanzas": { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)" },
+  "finanzas": { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" },
   "reto-del-dia": { accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.15)" },
-  "preguntas": { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)" },
+  "preguntas": { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" },
 }
-const DEFAULT_TOPIC = { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)" }
+const DEFAULT_TOPIC = { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" }
 
 function getTopicColors(slug: string) {
   if (TOPIC_COLORS[slug]) return TOPIC_COLORS[slug]
@@ -147,7 +147,7 @@ function EvidenceCard({
   return (
     <div style={{
       background: "white", borderRadius: 16, padding: "20px 22px",
-      border: `1.5px solid ${post.status === "validated" ? "rgba(16,185,129,0.3)" : "#f1f5f9"}`,
+      border: `1.5px solid ${post.status === "validated" ? "rgba(16,185,129,0.3)" : "rgba(15, 23, 42, 0.1)"}`,
       boxShadow: post.status === "validated" ? "0 4px 16px rgba(16,185,129,0.1)" : "0 2px 8px rgba(0,0,0,0.04)",
       marginBottom: 12
     }}>
@@ -276,7 +276,7 @@ function EvidenceCard({
             <button
               onClick={handleComment}
               disabled={!commentText.trim() || sendingComment}
-              style={{ padding: "8px 12px", background: commentText.trim() ? "#0F62FE" : "#e2e8f0", color: commentText.trim() ? "white" : "#94a3b8", border: "none", borderRadius: 10, cursor: commentText.trim() ? "pointer" : "not-allowed", transition: "all 0.15s" }}
+              style={{ padding: "8px 12px", background: commentText.trim() ? "linear-gradient(135deg, #0f172a, #1e3a8a)" : "#e2e8f0", color: commentText.trim() ? "white" : "#94a3b8", border: "none", borderRadius: 10, cursor: commentText.trim() ? "pointer" : "not-allowed", transition: "all 0.15s" }}
             >
               <Send size={15} />
             </button>
@@ -463,9 +463,9 @@ function ForumContent() {
           align-items: center;
           gap: 7px;
         }
-        .forum-tab-btn.active { background: #0F62FE; color: white; box-shadow: 0 4px 12px rgba(15,98,254,0.3); }
+        .forum-tab-btn.active { background: linear-gradient(135deg, #0f172a, #1e3a8a); color: white; box-shadow: 0 4px 12px rgba(15,23,42,0.3); }
         .forum-tab-btn.inactive { background: white; color: #64748b; border: 1.5px solid #e2e8f0; }
-        .forum-tab-btn.inactive:hover { border-color: #0F62FE; color: #0F62FE; }
+        .forum-tab-btn.inactive:hover { border-color: #1e3a8a; color: #1e3a8a; }
       `}</style>
 
       <div className="forum-outer" style={{ position: "relative", flex: 1, fontFamily: "'Montserrat', sans-serif", background: "#FBFAF5", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
@@ -524,9 +524,9 @@ function ForumContent() {
                 </Link>
                 <Link href="/forum/new" style={{
                   display: "flex", alignItems: "center", gap: 7,
-                  padding: "10px 20px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white",
+                  padding: "10px 20px", background: "linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb)", color: "white",
                   borderRadius: 12, fontWeight: 800, textDecoration: "none", fontSize: 13,
-                  boxShadow: "0 4px 12px rgba(15,98,254,0.3)", transition: "all 0.2s"
+                  boxShadow: "0 4px 12px rgba(15,23,42,0.3)", transition: "all 0.2s"
                 }}>
                   <span>+</span> Crear Tema
                 </Link>
@@ -553,9 +553,9 @@ function ForumContent() {
                     </div>
                     <Link href="/reto-diario" style={{
                       display: "flex", alignItems: "center", gap: 7, padding: "11px 20px",
-                      background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white",
+                      background: "linear-gradient(135deg, #0f172a, #1e3a8a)", color: "white",
                       borderRadius: 12, fontWeight: 700, fontSize: 13, textDecoration: "none",
-                      boxShadow: "0 4px 14px rgba(15,98,254,0.4)", whiteSpace: "nowrap"
+                      boxShadow: "0 4px 14px rgba(15,23,42,0.4)", whiteSpace: "nowrap"
                     }}>
                       <Target size={15} /> Hacer el reto
                     </Link>
@@ -622,7 +622,7 @@ function ForumContent() {
                     <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
                       Completa el reto de hoy y comparte tu aprendizaje con tu grupo.
                     </p>
-                    <Link href="/reto-diario" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>
+                    <Link href="/reto-diario" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "linear-gradient(135deg, #0f172a, #1e3a8a)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>
                       <Target size={16} /> Hacer el reto de hoy
                     </Link>
                   </div>
@@ -651,7 +651,7 @@ function ForumContent() {
                   {["Todos", "ahorro", "presupuesto", "deuda", "inversión básica", "emprendimiento"].map(tag => (
                     <button key={tag} style={{
                       padding: "6px 14px", borderRadius: 999,
-                      background: tag === "Todos" && selectedTopic === "all" ? "#0F62FE" : "#f1f5f9",
+                      background: tag === "Todos" && selectedTopic === "all" ? "linear-gradient(135deg, #0f172a, #1e3a8a)" : "#f1f5f9",
                       color: tag === "Todos" && selectedTopic === "all" ? "white" : "#64748b",
                       border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif"
                     }} onClick={() => { if (tag === "Todos") setSelectedTopic("all"); else setSelectedTopic(tag); fetchForumData() }}>
@@ -678,7 +678,7 @@ function ForumContent() {
                       <div style={{ textAlign: "center", padding: "60px 24px", background: "white", borderRadius: 20, border: "1.5px solid #f1f5f9" }}>
                         <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>No hay preguntas todavía</h3>
                         <p style={{ color: "#64748b", fontSize: 14, marginBottom: 20 }}>¡Sé el primero en hacer una pregunta!</p>
-                        <Link href="/forum/new" style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>Hacer pregunta</Link>
+                        <Link href="/forum/new" style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0f172a, #1e3a8a)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>Hacer pregunta</Link>
                       </div>
                     ) : threads.map((thread, i) => {
                       const tc = getTopicColors(thread.topic?.slug || "")
@@ -687,7 +687,7 @@ function ForumContent() {
                         <Link key={thread.id} href={`/forum/thread/${thread.id}`} style={{
                           padding: "clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px) 0",
                           background: "white", borderRadius: 16,
-                          border: "1.5px solid #f1f5f9",
+                          border: "1.5px solid rgba(15, 23, 42, 0.12)",
                           borderLeft: `4px solid ${accentBorder}`,
                           boxShadow: "0 2px 8px rgba(0,0,0,0.04)", textDecoration: "none",
                           display: "block", transition: "all 0.2s ease",
@@ -697,13 +697,13 @@ function ForumContent() {
                           onMouseEnter={e => {
                             e.currentTarget.style.transform = "translateX(4px)"
                             e.currentTarget.style.boxShadow = `0 6px 20px ${tc.shadow}`
-                            e.currentTarget.style.borderColor = tc.accent
+                            e.currentTarget.style.borderColor = "#1e3a8a"
                             e.currentTarget.style.borderLeftColor = accentBorder
                           }}
                           onMouseLeave={e => {
                             e.currentTarget.style.transform = "translateX(0)"
                             e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)"
-                            e.currentTarget.style.borderColor = "#f1f5f9"
+                            e.currentTarget.style.borderColor = "rgba(15, 23, 42, 0.12)"
                             e.currentTarget.style.borderLeftColor = accentBorder
                           }}>
                           <div style={{ display: "flex", gap: 16, paddingLeft: 20 }}>

@@ -40,11 +40,11 @@ const TOPIC_ACCENT: Record<string, string> = {
   "proyectos": "#4f46e5",
   "negocios": "#0284c7",
   "reto-del-dia": "#fbbf24",
-  "preguntas": "#0F62FE",
+  "preguntas": "#1e3a8a",
 }
 function topicColor(slug: string) {
   const key = Object.keys(TOPIC_ACCENT).find(k => slug?.startsWith(k) || k?.startsWith(slug))
-  return key ? TOPIC_ACCENT[key] : "#0F62FE"
+  return key ? TOPIC_ACCENT[key] : "#1e3a8a"
 }
 
 export default function NewThreadPage() {
@@ -124,7 +124,7 @@ export default function NewThreadPage() {
           @media (min-width: 1161px) { .fn-outer { margin-left: 280px !important; } }
         `}</style>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-          <div style={{ width: 44, height: 44, border: "3px solid #0F62FE22", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
+          <div style={{ width: 44, height: 44, border: "3px solid rgba(30,58,138,0.1)", borderTopColor: "#1e3a8a", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           <span style={{ fontSize: 14, fontWeight: 600, color: "#64748b", fontFamily: "'Montserrat', sans-serif" }}>Cargando formulario...</span>
         </div>
@@ -193,7 +193,7 @@ export default function NewThreadPage() {
             <form onSubmit={handleSubmit}>
 
               {/* Card: Título */}
-              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
                 <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
                   Título *
                 </label>
@@ -223,7 +223,7 @@ export default function NewThreadPage() {
               </div>
 
               {/* Card: Categoría */}
-              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
                 <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
                   Categoría *
                 </label>
@@ -255,7 +255,7 @@ export default function NewThreadPage() {
               </div>
 
               {/* Card: Etiquetas */}
-              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <label style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
                     Etiquetas
@@ -321,7 +321,7 @@ export default function NewThreadPage() {
               </div>
 
               {/* Card: Contenido */}
-              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 20 }}>
+              <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <label style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
                     Contenido *
@@ -382,11 +382,11 @@ export default function NewThreadPage() {
                   style={{
                     flex: 1, minWidth: 160, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                     padding: "15px 28px",
-                    background: canSubmit && !submitting ? `linear-gradient(135deg, ${accent} 0%, ${accent}cc 100%)` : "#cbd5e1",
+                    background: canSubmit && !submitting ? `linear-gradient(135deg, #0f172a, #1e3a8a)` : "#cbd5e1",
                     color: "white", border: "none", borderRadius: 14,
                     fontSize: 15, fontWeight: 800, letterSpacing: "-0.01em",
                     cursor: canSubmit && !submitting ? "pointer" : "not-allowed",
-                    boxShadow: canSubmit && !submitting ? `0 4px 14px ${accent}40` : "none",
+                    boxShadow: canSubmit && !submitting ? `0 4px 14px rgba(15,23,42,0.4)` : "none",
                     fontFamily: "'Montserrat', sans-serif", transition: "all 0.25s"
                   }}
                 >
@@ -412,7 +412,7 @@ export default function NewThreadPage() {
           <div style={{ width: 280, flexShrink: 0, display: "flex", flexDirection: "column", gap: 16, animation: "fadeUp 0.5s ease 0.2s both" }}>
 
             {/* Progress Card */}
-            <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
+            <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Estado del Tema</div>
               {[
                 { label: "Título", done: title.trim().length > 5 },
@@ -449,7 +449,7 @@ export default function NewThreadPage() {
             </div>
 
             {/* Quick Actions */}
-            <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid #f1f5f9", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
+            <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Ver antes de publicar</div>
               {[
                 { label: "Explorar temas", href: "/forum", icon: <FileText size={14} /> },

@@ -88,10 +88,10 @@ function ForumSearchContent() {
 
   if (loading || loadingData) {
     return (
-      <div style={{ 
-        display: "grid", 
-        placeItems: "center", 
-        minHeight: "60vh", 
+      <div style={{
+        display: "grid",
+        placeItems: "center",
+        minHeight: "60vh",
         fontFamily: "Montserrat, sans-serif",
         background: "#FBFAF5"
       }}>
@@ -125,16 +125,16 @@ function ForumSearchContent() {
           .forum-search-outer { margin-left: 280px !important; max-width: calc(100% - 280px) !important; width: auto !important; }
         }
       `}</style>
-      <main style={{ 
+      <main style={{
         position: "relative",
-        maxWidth: 1200, 
-        margin: "0 auto", 
+        maxWidth: 1200,
+        margin: "0 auto",
         padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1
       }}>
         {/* Breadcrumb */}
         <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
-          <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none" }}>
+          <Link href="/forum" style={{ color: "#1e3a8a", textDecoration: "none" }}>
             Foro
           </Link>
           <span style={{ color: "#9CA3AF" }}>→</span>
@@ -177,14 +177,14 @@ function ForumSearchContent() {
               disabled={!searchQuery.trim()}
               style={{
                 padding: "12px 24px",
-                background: searchQuery.trim() ? "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)" : "#9CA3AF",
+                background: searchQuery.trim() ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)" : "#9CA3AF",
                 color: "white",
                 border: "none",
                 borderRadius: 12,
                 fontSize: 15,
                 fontWeight: 700,
                 cursor: searchQuery.trim() ? "pointer" : "not-allowed",
-                boxShadow: searchQuery.trim() ? "0 4px 12px rgba(11, 113, 254, 0.3)" : "none",
+                boxShadow: searchQuery.trim() ? "0 4px 12px rgba(15, 23, 42, 0.3)" : "none",
                 fontFamily: "Montserrat, sans-serif"
               }}
             >
@@ -193,7 +193,7 @@ function ForumSearchContent() {
           </div>
         </form>
 
-        <h1 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 800, color: "#1E40AF" }}>
+        <h1 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
           Resultados de búsqueda
         </h1>
         <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 15, fontWeight: 600 }}>
@@ -212,7 +212,7 @@ function ForumSearchContent() {
                   background: "rgba(255, 255, 255, 0.4)",
                   backdropFilter: "blur(20px)",
                   borderRadius: 16,
-                  border: "2px solid rgba(255, 255, 255, 0.6)",
+                  border: "2px solid rgba(15, 23, 42, 0.12)",
                   boxShadow: "0 4px 16px rgba(31, 38, 135, 0.1)",
                   textDecoration: "none",
                   transition: "all 0.3s ease",
@@ -220,14 +220,16 @@ function ForumSearchContent() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateX(4px)"
-                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.2)"
+                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 23, 42, 0.15)"
+                  e.currentTarget.style.borderColor = "#1e3a8a"
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateX(0)"
                   e.currentTarget.style.boxShadow = "0 4px 16px rgba(31, 38, 135, 0.1)"
+                  e.currentTarget.style.borderColor = "rgba(15, 23, 42, 0.12)"
                 }}
               >
-                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700, color: "#1E40AF" }}>
+                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700, color: "#1e3a8a" }}>
                   {thread.title}
                 </h3>
                 <p style={{ margin: "0 0 12px", fontSize: 14, color: "#6B7280", lineHeight: 1.5 }}>
@@ -249,10 +251,10 @@ function ForumSearchContent() {
             background: "rgba(255, 255, 255, 0.4)",
             backdropFilter: "blur(20px)",
             borderRadius: 20,
-            border: "2px solid rgba(255, 255, 255, 0.6)",
+            border: "2px solid rgba(15, 23, 42, 0.12)",
             boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)"
           }}>
-            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700, color: "#1E40AF" }}>
+            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
               No se encontraron resultados
             </h3>
             <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 14, fontWeight: 600 }}>
@@ -261,13 +263,13 @@ function ForumSearchContent() {
             <Link href="/forum" style={{
               display: "inline-flex",
               padding: "14px 24px",
-              background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+              background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
               color: "white",
               borderRadius: 12,
               fontWeight: 700,
               textDecoration: "none",
               fontSize: 15,
-              boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
+              boxShadow: "0 4px 12px rgba(15, 23, 42, 0.3)",
             }}>
               Volver al Foro
             </Link>

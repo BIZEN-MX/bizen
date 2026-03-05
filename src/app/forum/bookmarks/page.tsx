@@ -36,9 +36,9 @@ const TOPIC_COLORS: Record<string, { accent: string; light: string; shadow: stri
   "proyectos": { accent: "#4f46e5", light: "#eef2ff", shadow: "rgba(79,70,229,0.15)" },
   "negocios": { accent: "#0284c7", light: "#f0f9ff", shadow: "rgba(2,132,199,0.15)" },
   "reto-del-dia": { accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.15)" },
-  "preguntas": { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)" },
+  "preguntas": { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" },
 }
-const DEFAULT_TC = { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)" }
+const DEFAULT_TC = { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" }
 
 function getTC(slug: string) {
   if (TOPIC_COLORS[slug]) return TOPIC_COLORS[slug]
@@ -105,12 +105,12 @@ export default function BookmarksPage() {
 
         {/* ── HERO ──────────────────────────────────────────────────────── */}
         <div style={{
-          background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0F62FE 100%)",
+          background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1e3a8a 100%)",
           padding: "clamp(28px, 5vw, 48px) clamp(20px, 5vw, 44px)",
           position: "relative", overflow: "hidden",
           borderRadius: "clamp(0px, 3vw, 32px)",
           margin: "clamp(0px, 2vw, 24px) clamp(0px, 2vw, 24px) 0",
-          boxShadow: "0 20px 50px rgba(15,98,254,0.3)"
+          boxShadow: "0 20px 50px rgba(15,23,42,0.3)"
         }}>
           <div style={{ position: "absolute", top: "-20%", right: "-4%", width: 340, height: 340, background: "radial-gradient(circle, rgba(15,98,254,0.3) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
           <div style={{ position: "absolute", bottom: "-25%", left: "8%", width: 220, height: 220, background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
@@ -206,8 +206,8 @@ export default function BookmarksPage() {
                   padding: "clamp(40px, 8vw, 72px) 32px",
                   textAlign: "center"
                 }}>
-                  <div style={{ width: 80, height: 80, borderRadius: 24, background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "1.5px solid #bfdbfe", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-                    <Bookmark size={36} color="#0F62FE" strokeWidth={1.5} />
+                  <div style={{ width: 80, height: 80, borderRadius: 24, background: "linear-gradient(135deg, #f8fafc, #f1f5f9)", border: "1.5px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+                    <Bookmark size={36} color="#1e3a8a" strokeWidth={1.5} />
                   </div>
                   <h3 style={{ margin: "0 0 8px", fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
                     {search ? "Sin resultados" : "No tienes temas guardados"}
@@ -227,7 +227,7 @@ export default function BookmarksPage() {
                       </button>
                     )}
                     <Link href="/forum" style={{ textDecoration: "none" }}>
-                      <button style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0F62FE 0%, #3b82f6 100%)", color: "#fff", border: "none", borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: "0 4px 14px rgba(15,98,254,0.25)", display: "flex", alignItems: "center", gap: 8 }}>
+                      <button style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)", color: "#fff", border: "none", borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: "0 4px 14px rgba(15,23,42,0.25)", display: "flex", alignItems: "center", gap: 8 }}>
                         <Search size={14} /> Explorar el Foro
                       </button>
                     </Link>
@@ -245,7 +245,7 @@ export default function BookmarksPage() {
                   style={{
                     display: "block", textDecoration: "none",
                     background: "#FBFAF5", borderRadius: 18,
-                    border: "1.5px solid #f1f5f9",
+                    border: "1.5px solid rgba(15, 23, 42, 0.12)",
                     borderLeft: `4px solid ${accentBorder}`,
                     boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
                     overflow: "hidden", transition: "all 0.2s ease",
@@ -258,7 +258,7 @@ export default function BookmarksPage() {
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)"
-                    e.currentTarget.style.borderColor = "#f1f5f9"
+                    e.currentTarget.style.borderColor = "rgba(15, 23, 42, 0.12)"
                     e.currentTarget.style.borderLeftColor = accentBorder
                   }}
                 >
