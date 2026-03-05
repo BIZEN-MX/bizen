@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
+import { CheckCircle, ArrowRight, ShieldCheck, Zap } from "lucide-react"
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams()
@@ -25,7 +25,7 @@ function PaymentSuccessContent() {
         })
         if (!res.ok) throw new Error('Verification failed')
       } catch {
-        // Still show success - cookie may already be set or user can retry
+        // Verification logic
       } finally {
         setLoading(false)
       }
@@ -36,167 +36,136 @@ function PaymentSuccessContent() {
   if (loading) {
     return (
       <div style={{
-        minHeight: "100vh",
+        height: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
+        background: "#FBFAF5",
+        fontFamily: "Helvetica, 'Inter', sans-serif",
       }}>
         <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Verificando pago...</p>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(15,98,254,0.1)", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 16px" }} />
+          <p style={{ color: "#64748b", fontSize: 15, fontWeight: 600 }}>Verificando suscripción...</p>
         </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     )
   }
 
   return (
     <div style={{
-      minHeight: "100vh",
+      height: "100vh",
+      background: "#FBFAF5",
+      fontFamily: "Helvetica, 'Inter', sans-serif",
+      position: "relative",
+      overflow: "hidden",
       display: "flex",
       flexDirection: "column",
-      background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
-      backgroundAttachment: "fixed",
+      boxSizing: "border-box"
     }}>
+      <style>{`
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .success-btn-primary {
+          display: inline-flex; align-items: center; gap: 10px;
+          padding: 14px 32px; border-radius: 14px; font-size: 15px; font-weight: 800;
+          cursor: pointer; text-decoration: none;
+          background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+          color: white; border: none;
+          box-shadow: 0 8px 24px rgba(37,99,235,0.25);
+          transition: all 0.25s;
+        }
+        .success-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,99,235,0.35); }
+        
+        @media (max-height: 700px) {
+          .success-icon-box { width: 72px !important; height: 72px !important; margin-bottom: 20px !important; }
+          .success-icon-box svg { width: 36px !important; height: 36px !important; }
+          .success-title { font-size: 32px !important; margin-bottom: 8px !important; }
+          .success-info-box { padding: 16px !important; margin-bottom: 24px !important; }
+          .success-info-item { gap: 8px !important; }
+        }
+      `}</style>
+
       {/* Header */}
       <header style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-        background: "#FBFAF5",
-        borderBottom: "1px solid rgba(0,0,0,0.06)",
-        padding: "16px 0",
+        height: 64, zIndex: 100,
+        background: "rgba(251,250,245,0.9)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid rgba(15,98,254,0.08)",
+        padding: "0 40px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        flexShrink: 0
       }}>
-        <div style={{
-          maxWidth: "1400px",
-          margin: "0 auto",
-          padding: "0 clamp(16px, 4vw, 32px)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}>
-          <Link href="/" style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            textDecoration: "none",
-          }}>
-            <Image
-              src="/bizen-logo.png"
-              alt="BIZEN Logo"
-              width={40}
-              height={40}
-              style={{ borderRadius: 8 }}
-            />
-            <span style={{
-              fontSize: 24,
-              fontWeight: 900,
-              background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>
-              BIZEN
-            </span>
-          </Link>
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <span style={{ fontSize: 26, fontWeight: 900, color: "#475569", fontFamily: "Helvetica, Arial, sans-serif", letterSpacing: "-0.03em" }}>
+            BIZEN
+          </span>
+        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(37,99,235,0.06)", padding: "6px 14px", borderRadius: 999 }}>
+          <ShieldCheck size={14} color="#2563eb" />
+          <span style={{ fontSize: 11, fontWeight: 800, color: "#2563eb", textTransform: "uppercase" }}>Suscripción Activa</span>
         </div>
       </header>
 
-      {/* Success Content */}
+      {/* Main Container */}
       <main style={{
         flex: 1,
         display: "flex",
-        alignItems: "center",
+        flexDirection: "column",
         justifyContent: "center",
-        padding: "clamp(48px, 8vw, 96px) clamp(16px, 4vw, 32px)",
+        alignItems: "center",
+        padding: "20px 40px",
+        overflowY: "auto",
+        zIndex: 1
       }}>
-        <div style={{
-          maxWidth: "600px",
-          width: "100%",
-          textAlign: "center",
-        }}>
-          <div style={{
-            width: 120,
-            height: 120,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 32px",
-            boxShadow: "0 8px 24px rgba(16, 185, 129, 0.3)",
+        <div style={{ width: "100%", maxWidth: 560, textAlign: "center", animation: "fadeUp 0.5s ease both" }}>
+
+          <div className="success-icon-box" style={{
+            width: 84, height: 84, borderRadius: 24,
+            background: "linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)",
+            border: "1.5px solid rgba(16,185,129,0.2)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            margin: "0 auto 24px",
+            boxShadow: "0 10px 25px rgba(16,185,129,0.12)"
           }}>
-            <span style={{ fontSize: 64, color: "white" }}>✓</span>
+            <CheckCircle size={40} color="#10b981" />
           </div>
 
-          <h1 style={{
-            fontSize: "clamp(32px, 5vw, 48px)",
-            fontWeight: 800,
-            margin: "0 0 16px 0",
-            background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
-          }}>
-            ¡Pago exitoso!
+          <h1 className="success-title" style={{ margin: "0 0 12px", fontSize: 40, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em" }}>
+            ¡Ya eres Premium!
           </h1>
 
-          <p style={{
-            fontSize: "clamp(18px, 2.5vw, 20px)",
-            color: "#64748b",
-            margin: "0 0 32px 0",
-            lineHeight: 1.6,
-            fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
-          }}>
-            Tu suscripción al Plan Emprendedor ha sido activada. Recibirás un correo de confirmación en breve.
+          <p style={{ margin: "0 0 24px", fontSize: 16, color: "#64748b", fontWeight: 500, lineHeight: 1.5, maxWidth: 460, marginInline: "auto" }}>
+            Pago procesado. Tienes acceso total a todos los cursos y temas de <span style={{ color: "#1e3a8a", fontWeight: 700 }}>BIZEN</span>.
           </p>
 
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            alignItems: "center",
+          <div className="success-info-box" style={{
+            background: "white",
+            border: "1px solid rgba(15,98,254,0.08)",
+            borderRadius: 20,
+            padding: "20px",
+            marginBottom: 32,
+            textAlign: "left",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.03)"
           }}>
-            <Link
-              href="/dashboard"
-              style={{
-                padding: "14px 32px",
-                fontSize: 16,
-                fontWeight: 700,
-                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 100%)",
-                color: "white",
-                border: "none",
-                borderRadius: 12,
-                textDecoration: "none",
-                cursor: "pointer",
-                boxShadow: "0 8px 24px rgba(15, 98, 254, 0.35)",
-                display: "inline-block",
-                transition: "transform 0.2s ease, box-shadow 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-2px)"
-                e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.45)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)"
-                e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.35)"
-              }}
-            >
-              Ir a mi cuenta
-            </Link>
+            <div className="success-info-item" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+              <Zap size={14} color="#10b981" style={{ marginTop: 3 }} />
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a" }}>Temas desbloqueados</div>
+                <div style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>Explora el contenido premium en tu biblioteca.</div>
+              </div>
+            </div>
+          </div>
 
-            <Link
-              href="/"
-              style={{
-                color: "#0F62FE",
-                fontSize: 14,
-                fontWeight: 600,
-                textDecoration: "none",
-              }}
-            >
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <Link href="/courses" className="success-btn-primary">
+              Empezar a aprender
+              <ArrowRight size={18} />
+            </Link>
+            <Link href="/" style={{ fontSize: 14, fontWeight: 700, color: "#64748b", textDecoration: "none" }}>
               Volver al inicio
             </Link>
           </div>
+
         </div>
       </main>
     </div>
@@ -205,21 +174,8 @@ function PaymentSuccessContent() {
 
 export default function PaymentSuccessPage() {
   return (
-    <Suspense fallback={
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
-      }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={null}>
       <PaymentSuccessContent />
     </Suspense>
   )
 }
-

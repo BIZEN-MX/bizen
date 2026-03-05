@@ -76,6 +76,14 @@ model Profile {
   longestStreak    Int?                @default(0) @map("longest_streak")
   lastActive       DateTime?           @map("last_active")
   bizcoins         Int?                @default(0)
+
+  // Campos para B2C (Stripe)
+  stripeCustomerId   String?           @unique @map("stripe_customer_id")
+  subscriptionStatus String?           @default("none") @map("subscription_status")
+  subscriptionId     String?           @map("subscription_id")
+  planId             String?           @map("plan_id")
+  subscriptionEnds   DateTime?         @map("subscription_ends")
+
   certificates     Certificate[]
   enrollments      Enrollment[]
   progress         Progress[]

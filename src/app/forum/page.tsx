@@ -645,20 +645,37 @@ function ForumContent() {
                 TAB 2 — PREGUNTAS RÁPIDAS (existing forum)
             ════════════════════════════════════════════ */}
             {activeTab === "preguntas" && (
-              <div>
-                {/* Tags quick filter */}
-                <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
-                  {["Todos", "ahorro", "presupuesto", "deuda", "inversión básica", "emprendimiento"].map(tag => (
+              <div style={{ width: "100%" }}>
+                {/* Topic selector row */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap", alignItems: "center" }}>
+                  <button
+                    style={{
+                      padding: "6px 14px", borderRadius: 999,
+                      background: selectedTopic === "all" ? "linear-gradient(135deg, #1e3a8a, #3b82f6)" : "#f1f5f9",
+                      color: selectedTopic === "all" ? "white" : "#64748b",
+                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif"
+                    }}
+                    onClick={() => setSelectedTopic("all")}
+                  >
+                    #Todos
+                  </button>
+
+                  {(topics.length > 0 ? topics.map(t => t.slug) : ["ahorro", "presupuesto", "deuda", "inversion", "emprendimiento"]).map(tag => (
                     <button key={tag} style={{
                       padding: "6px 14px", borderRadius: 999,
-                      background: tag === "Todos" && selectedTopic === "all" ? "linear-gradient(135deg, #0f172a, #1e3a8a)" : "#f1f5f9",
-                      color: tag === "Todos" && selectedTopic === "all" ? "white" : "#64748b",
+                      background: selectedTopic === tag ? "linear-gradient(135deg, #1e3a8a, #3b82f6)" : "#f1f5f9",
+                      color: selectedTopic === tag ? "white" : "#64748b",
                       border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif"
-                    }} onClick={() => { if (tag === "Todos") setSelectedTopic("all"); else setSelectedTopic(tag); }}>
-                      #{tag === "Todos" ? "all" : tag}
+                    }} onClick={() => setSelectedTopic(tag)}>
+                      #{tag}
                     </button>
                   ))}
-                  <select value={sortBy} onChange={e => { setSortBy(e.target.value as any); }} style={{ marginLeft: "auto", padding: "6px 10px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", background: "white", color: "#374151" }}>
+
+                  <select
+                    value={sortBy}
+                    onChange={e => setSortBy(e.target.value as any)}
+                    style={{ marginLeft: "auto", padding: "6px 10px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", background: "white", color: "#374151" }}
+                  >
                     <option value="new">Más recientes</option>
                     <option value="top">Más votados</option>
                     <option value="unanswered">Sin responder</option>
@@ -672,74 +689,63 @@ function ForumContent() {
                   </div>
                 )}
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, opacity: loadingData ? 0.6 : 1, transition: "opacity 0.3s" }}>
-                  {loadingData ? <><ThreadCardSkeleton /><ThreadCardSkeleton /></> :
-                    threads.length === 0 ? (
-                      <div style={{ textAlign: "center", padding: "60px 24px", background: "white", borderRadius: 20, border: "1.5px solid #f1f5f9" }}>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>No hay preguntas todavía</h3>
-                        <p style={{ color: "#64748b", fontSize: 14, marginBottom: 20 }}>¡Sé el primero en hacer una pregunta!</p>
-                        <Link href="/forum/new" style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0f172a, #1e3a8a)", color: "white", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14 }}>Hacer pregunta</Link>
-                      </div>
-                    ) : threads.map((thread, i) => {
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {loadingData && threads.length === 0 ? (
+                    <ThreadCardSkeleton />
+                  ) : threads.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8faff", borderRadius: 18, border: "1.8px dashed #e2e8f0" }}>
+                      <p style={{ color: "#64748b", fontSize: 14, fontWeight: 600 }}>No hay preguntas en este tema todavía. ¡Sé el primero!</p>
+                    </div>
+                  ) : (
+                    threads.map((thread, i) => {
                       const tc = getTopicColors(thread.topic?.slug || "")
                       const accentBorder = thread.isPinned ? "#f59e0b" : tc.accent
                       return (
                         <Link key={thread.id} href={`/forum/thread/${thread.id}`} style={{
                           padding: "clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px) 0",
                           background: "white", borderRadius: 16,
-                          border: "1.5px solid rgba(15, 23, 42, 0.12)",
+                          border: "1.5px solid #1e3a8a",
                           borderLeft: `4px solid ${accentBorder}`,
                           boxShadow: "0 2px 8px rgba(0,0,0,0.04)", textDecoration: "none",
                           display: "block", transition: "all 0.2s ease",
                           overflow: "hidden",
-                          animation: `fadeInUp 0.4s ease ${i * 0.04}s both`
+                          animation: `fadeInUp 0.4s ease ${i * 0.04}s both`,
+                          position: "relative"
                         }}
                           onMouseEnter={e => {
                             e.currentTarget.style.transform = "translateX(4px)"
                             e.currentTarget.style.boxShadow = `0 6px 20px ${tc.shadow}`
-                            e.currentTarget.style.borderColor = "#1e3a8a"
-                            e.currentTarget.style.borderLeftColor = accentBorder
+                            e.currentTarget.style.borderColor = "#2563eb"
                           }}
                           onMouseLeave={e => {
                             e.currentTarget.style.transform = "translateX(0)"
                             e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)"
-                            e.currentTarget.style.borderColor = "rgba(15, 23, 42, 0.12)"
-                            e.currentTarget.style.borderLeftColor = accentBorder
-                          }}>
-                          <div style={{ display: "flex", gap: 16, paddingLeft: 20 }}>
-                            {/* Vote score */}
-                            <div style={{ minWidth: 44, textAlign: "center", paddingTop: 2 }}>
-                              <div style={{ fontSize: 22, fontWeight: 900, color: thread.score > 0 ? tc.accent : thread.score < 0 ? "#ef4444" : "#94a3b8", lineHeight: 1 }}>{thread.score}</div>
+                            e.currentTarget.style.borderColor = "#1e3a8a"
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "stretch", width: "100%" }}>
+                            <div style={{ width: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderRight: "1px solid #f1f5f9", flexShrink: 0 }}>
+                              <div style={{ fontSize: 16, fontWeight: 800, color: "#1e3a8a" }}>{thread.score}</div>
                               <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600, marginTop: 2 }}>votos</div>
                             </div>
-                            <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ flex: 1, minWidth: 0, paddingLeft: 20 }}>
                               <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 6 }}>
                                 <h3 style={{ margin: 0, flex: 1, fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>{thread.title}</h3>
-                                <span style={{
-                                  padding: "3px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
-                                  background: thread.status === "resolved" ? "#ecfdf5" : thread.status === "locked" ? "#fef2f2" : tc.light,
-                                  color: thread.status === "resolved" ? "#065f46" : thread.status === "locked" ? "#dc2626" : tc.accent,
-                                }}>
-                                  {thread.status === "resolved" ? "Resuelto" : thread.status === "locked" ? "Cerrado" : "Abierto"}
-                                </span>
-                              </div>
-                              <p style={{ margin: "0 0 10px", fontSize: 13, color: "#64748b", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                                {thread.body.substring(0, 150)}...
-                              </p>
-                              {thread.tags.length > 0 && (
-                                <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 }}>
-                                  {thread.tags.map(tag => (
-                                    <span key={tag.id} style={{ padding: "3px 8px", background: tc.light, color: tc.accent, fontSize: 11, fontWeight: 600, borderRadius: 6 }}>#{tag.name}</span>
-                                  ))}
-                                </div>
-                              )}
-                              <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 600, alignItems: "center", flexWrap: "wrap" }}>
-                                {/* Topic chip */}
-                                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                                  {/* Topic chip */}
-                                  <span style={{ padding: "2px 8px", background: tc.light, color: tc.accent, borderRadius: 999, fontSize: 11, fontWeight: 700 }}>
-                                    {thread.topic.name}
+                                {thread.status !== 'open' && (
+                                  <span style={{
+                                    padding: "3px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
+                                    background: thread.status === "resolved" ? "#ecfdf5" : "#fef2f2",
+                                    color: thread.status === "resolved" ? "#047857" : "#ef4444"
+                                  }}>
+                                    {thread.status.toUpperCase()}
                                   </span>
+                                )}
+                              </div>
+                              <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 6, background: tc.light, padding: "3px 10px", borderRadius: 999, flexShrink: 0 }}>
+                                  <span style={{ fontSize: 11, fontWeight: 700, color: tc.accent }}>{thread.topic.name}</span>
+                                </div>
+                                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#64748b", fontSize: 12 }}>
                                   <Link href={`/forum/profile/${thread.author.userId}`} style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", color: "inherit" }}>
                                     <div style={{ width: 22, height: 22, borderRadius: "50%", background: "white", border: "1px solid #f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                       <AvatarDisplay
@@ -748,18 +754,23 @@ function ForumContent() {
                                         frame={thread.author.inventory?.includes("2") ? "vip" : thread.author.inventory?.includes("1") ? "ambassador" : null}
                                       />
                                     </div>
-                                    <span style={{ color: "#94a3b8" }}>por {thread.author?.nickname || "Anónimo"}</span>
+                                    <span style={{ fontWeight: 600 }}>{thread.author.nickname}</span>
                                   </Link>
+                                  <span>·</span>
+                                  <span>{formatDate(thread.createdAt)}</span>
+                                  <span>·</span>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                                    <MessageCircle size={13} />
+                                    <span>{thread.commentCount}</span>
+                                  </div>
                                 </div>
-                                <span>{formatDate(thread.createdAt)}</span>
-                                <span>{thread.commentCount} resp.</span>
                               </div>
                             </div>
                           </div>
                         </Link>
                       )
                     })
-                  }
+                  )}
                 </div>
               </div>
             )}
@@ -826,8 +837,8 @@ function ForumContent() {
             )}
 
           </main>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   )
 }

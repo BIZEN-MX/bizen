@@ -720,6 +720,118 @@ export default function ProfilePage() {
               </div>
             </Card>
 
+            {/* ── PREMIUM UPSELL / STATUS CARD ── */}
+            {(() => {
+              const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
+              const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
+              const isPremium = hasActiveStripe || hasActiveLicense
+
+              if (isPremium) {
+                return (
+                  <div style={{
+                    background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%)",
+                    borderRadius: 20,
+                    padding: "20px 22px",
+                    position: "relative",
+                    overflow: "hidden",
+                    boxShadow: "0 8px 30px rgba(15,98,254,0.25)",
+                    fontFamily: "Helvetica, 'Inter', sans-serif"
+                  }}>
+                    {/* Glow orb */}
+                    <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)", pointerEvents: "none" }} />
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, position: "relative" }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Shield size={18} color="#93c5fd" />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 900, color: "#fff", letterSpacing: "-0.01em" }}>Plan Premium Activo</div>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "#93c5fd", marginTop: 2 }}>Tienes acceso completo a BIZEN</div>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.08)", borderRadius: 10, padding: "8px 12px", position: "relative" }}>
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 6px #4ade80", flexShrink: 0 }} />
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "#e2e8f0" }}>
+                        {hasActiveLicense ? "Acceso vía Institución Educativa" : "Suscripción activa"}
+                      </span>
+                    </div>
+                  </div>
+                )
+              }
+
+              // Non-premium: show upsell card
+              return (
+                <div
+                  onClick={() => router.push("/payment")}
+                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 16px 40px rgba(15,98,254,0.35)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = ""; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 30px rgba(15,98,254,0.2)"; }}
+                  style={{
+                    background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%)",
+                    borderRadius: 20,
+                    padding: "22px",
+                    position: "relative",
+                    overflow: "hidden",
+                    boxShadow: "0 8px 30px rgba(15,98,254,0.2)",
+                    cursor: "pointer",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    fontFamily: "Helvetica, 'Inter', sans-serif"
+                  }}
+                >
+                  {/* Decorative orbs */}
+                  <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.5) 0%, transparent 70%)", pointerEvents: "none" }} />
+                  <div style={{ position: "absolute", bottom: -30, left: -10, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+                  {/* Badge */}
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.2)", padding: "4px 12px", borderRadius: 999, marginBottom: 14, position: "relative" }}>
+                    <Zap size={11} color="#e0f2fe" />
+                    <span style={{ fontSize: 11, fontWeight: 800, color: "#e0f2fe", letterSpacing: "0.08em", textTransform: "uppercase" }}>BIZEN PRO</span>
+                  </div>
+
+                  <div style={{ position: "relative" }}>
+                    <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 900, color: "#fff", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
+                      Accede a todo el contenido
+                    </h3>
+                    <p style={{ margin: "0 0 18px", fontSize: 13, color: "#93c5fd", fontWeight: 500, lineHeight: 1.6 }}>
+                      Domina tus finanzas con acceso ilimitado a todos los temas y cursos de BIZEN.
+                    </p>
+
+                    {/* Price */}
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 18 }}>
+                      <span style={{ fontSize: 30, fontWeight: 900, color: "#fff", lineHeight: 1 }}>$99</span>
+                      <span style={{ fontSize: 14, color: "#93c5fd", fontWeight: 600 }}>/mes</span>
+                    </div>
+
+                    {/* CTA Button */}
+                    <button
+                      onClick={e => { e.stopPropagation(); router.push("/payment") }}
+                      style={{
+                        width: "100%",
+                        padding: "13px 20px",
+                        background: "linear-gradient(90deg, #fff 0%, #e0f2fe 100%)",
+                        border: "none",
+                        borderRadius: 12,
+                        fontSize: 14,
+                        fontWeight: 900,
+                        color: "#1e3a8a",
+                        cursor: "pointer",
+                        letterSpacing: "-0.01em",
+                        boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+                        transition: "all 0.2s ease",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.02)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)"; }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.15)"; }}
+                    >
+                      <span>Ver Plan Premium</span>
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              )
+            })()}
+
           </div>
         </div>
       </div>

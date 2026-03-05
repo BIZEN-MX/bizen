@@ -315,12 +315,11 @@ export default function CoursePageTemplate({
                             const subTotal = sub.lessons.length
                             const subPct = subTotal > 0 ? Math.round((subCompleted / subTotal) * 100) : 0
 
-                            // Calculate the starting number for lessons in this subtema
                             const lessonOffset = subtemas.slice(0, subIdx).reduce((acc, s) => acc + s.lessons.length, 0)
 
                             return (
                                 <div key={subIdx} id={`tema${topicId}-subtema-${subIdx + 1}`} style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }}>
-                                    {/* Subtema header bar — always deep spatial blue */}
+                                    {/* Subtema header bar */}
                                     <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%)", borderRadius: 18, boxShadow: "0 8px 28px rgba(15,98,254,0.35)", border: "1px solid rgba(59,130,246,0.3)", marginBottom: 20 }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
                                             <div style={{ flex: 1, minWidth: 0 }}>
@@ -334,7 +333,6 @@ export default function CoursePageTemplate({
                                                 </div>
                                             )}
                                         </div>
-                                        {/* Progress bar */}
                                         <div style={{ width: "100%", height: 6, borderRadius: 6, background: "rgba(255,255,255,0.25)", overflow: "hidden" }}>
                                             <div style={{ width: `${subPct}%`, height: "100%", borderRadius: 6, background: "rgba(255,255,255,0.92)", transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)" }} />
                                         </div>
@@ -348,11 +346,10 @@ export default function CoursePageTemplate({
                                             const now = Date.now()
                                             if (now - lastJumpTime < 1500) return
 
-                                            // Trigger jump when reaching the right end of the scroll
                                             const isAtEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 5
 
                                             if (isAtEnd) {
-                                                const nextSubIdx = subIdx + 2 // 1-based next id (current subIdx is 0-based)
+                                                const nextSubIdx = subIdx + 2
                                                 const nextEl = document.getElementById(`tema${topicId}-subtema-${nextSubIdx}`)
                                                 if (nextEl) {
                                                     nextEl.scrollIntoView({ behavior: "smooth", block: "start" })
@@ -370,7 +367,7 @@ export default function CoursePageTemplate({
                                             paddingTop: 4,
                                             scrollSnapType: "x mandatory",
                                             WebkitOverflowScrolling: "touch",
-                                            scrollbarWidth: "thin"
+                                            scrollbarWidth: "none"
                                         }}
                                     >
                                         {sub.lessons.map((lesson, lessonIdx) => {
@@ -379,98 +376,91 @@ export default function CoursePageTemplate({
                                             const isLastLesson = lessonIdx === sub.lessons.length - 1
                                             const absoluteLessonNumber = lessonOffset + lessonIdx + 1
 
-                                            // Updated locking logic: Topic 1 has 3 free lessons. Others are premium.
                                             const isPremiumLesson = topicId > 1 || absoluteLessonNumber > 3;
                                             const isLocked = isPremiumLesson && !hasPremiumAccess;
 
                                             return (
                                                 <React.Fragment key={lesson.slug}>
-                                                    <div className={lesson.slug === nextLessonSlug ? "next-lesson-to-complete-wrapper" : ""} style={{ width: 320, minWidth: 320, flexShrink: 0, scrollSnapAlign: "start" }}>
-                                                        <div
-                                                            role="button"
-                                                            tabIndex={0}
-                                                            onKeyDown={(e) => {
-                                                                if (e.key === "Enter" || e.key === " ") {
-                                                                    e.preventDefault();
-                                                                    if (isLocked) router.push('/payment');
-                                                                    else setLessonModal({ lesson, unitTitle: sub.title });
-                                                                }
-                                                            }}
-                                                            onClick={() => {
+                                                    <div
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === "Enter" || e.key === " ") {
+                                                                e.preventDefault();
                                                                 if (isLocked) router.push('/payment');
                                                                 else setLessonModal({ lesson, unitTitle: sub.title });
-                                                            }}
-                                                            className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""}`}
-                                                            style={{
-                                                                width: "100%",
-                                                                flexShrink: 0,
-                                                                display: "flex",
-                                                                flexDirection: "column",
-                                                                padding: "32px 28px",
-                                                                background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
-                                                                borderRadius: 24,
-                                                                border: lesson.slug === nextLessonSlug ? "1.5px solid transparent" : (isLocked ? "1.8px dashed #cbd5e1" : (isDone ? "2.5px solid rgba(59,130,246,0.3)" : "1.8px solid #e8f0fe")),
-                                                                boxSizing: "border-box",
-                                                                cursor: "pointer",
-                                                                boxShadow: isLocked ? "none" : (isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)"),
-                                                                gap: 12,
-                                                                transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
-                                                                position: "relative",
-                                                                overflow: "hidden",
-                                                                opacity: isLocked ? 0.75 : 1
-                                                            }}
-                                                        >
-                                                            {/* Lock overlay if locked */}
-                                                            {isLocked && (
-                                                                <div style={{ position: "absolute", top: 12, right: 12, width: 28, height: 28, borderRadius: "50%", background: "#f1f5f9", border: "1.5px solid #cbd5e1", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                                    <Lock size={14} color="#64748b" />
+                                                            }
+                                                        }}
+                                                        onClick={() => {
+                                                            if (isLocked) router.push('/payment');
+                                                            else setLessonModal({ lesson, unitTitle: sub.title });
+                                                        }}
+                                                        className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""}`}
+                                                        style={{
+                                                            width: 320,
+                                                            minWidth: 320,
+                                                            flexShrink: 0,
+                                                            display: "flex",
+                                                            flexDirection: "column",
+                                                            padding: "32px 28px",
+                                                            background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
+                                                            borderRadius: 24,
+                                                            border: isLocked ? "1.8px dashed #cbd5e1" : (isDone ? "2.5px solid rgba(59,130,246,0.3)" : "1.8px solid #e8f0fe"),
+                                                            boxSizing: "border-box",
+                                                            scrollSnapAlign: "start",
+                                                            cursor: "pointer",
+                                                            boxShadow: isLocked ? "none" : (isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)"),
+                                                            gap: 12,
+                                                            transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
+                                                            position: "relative",
+                                                            overflow: "hidden",
+                                                            opacity: isLocked ? 0.75 : 1
+                                                        }}
+                                                    >
+                                                        {isLocked && (
+                                                            <div style={{ position: "absolute", top: 12, right: 12, width: 28, height: 28, borderRadius: "50%", background: "#f1f5f9", border: "1.5px solid #cbd5e1", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                                <Lock size={14} color="#64748b" />
+                                                            </div>
+                                                        )}
+
+                                                        {isDone && !isLocked && (
+                                                            <div style={{ position: "absolute", top: 12, right: 12, width: 26, height: 26, borderRadius: "50%", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                                <CheckCircle2 size={15} color="#fff" strokeWidth={2.5} />
+                                                            </div>
+                                                        )}
+
+                                                        <div style={{
+                                                            width: 44, height: 44, borderRadius: 14,
+                                                            background: isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)"),
+                                                            border: isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)"),
+                                                            color: isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb"),
+                                                            fontSize: 19, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                                                        }}>
+                                                            {absoluteLessonNumber}
+                                                        </div>
+
+                                                        <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
+                                                            {lesson.title}
+                                                        </div>
+
+                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
+                                                            {isLocked ? (
+                                                                <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>Premium</div>
+                                                            ) : (
+                                                                <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
+                                                                    {[1, 2, 3].map((i) => (
+                                                                        <img
+                                                                            key={i}
+                                                                            src="/stars.png"
+                                                                            alt=""
+                                                                            style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
+                                                                        />
+                                                                    ))}
                                                                 </div>
                                                             )}
-
-                                                            {/* Completed ribbon */}
-                                                            {isDone && !isLocked && (
-                                                                <div style={{ position: "absolute", top: 12, right: 12, width: 26, height: 26, borderRadius: "50%", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                                    <CheckCircle2 size={15} color="#fff" strokeWidth={2.5} />
-                                                                </div>
-                                                            )}
-
-                                                            {/* Lesson number badge — always blue */}
-                                                            <div style={{
-                                                                width: 44, height: 44, borderRadius: 14,
-                                                                background: isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)"),
-                                                                border: isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)"),
-                                                                color: isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb"),
-                                                                fontSize: 19, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-                                                            }}>
-                                                                {absoluteLessonNumber}
-                                                            </div>
-
-                                                            {/* Title */}
-                                                            <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
-                                                                {lesson.title}
-                                                            </div>
-
-                                                            {/* Footer: stars */}
-                                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
-                                                                {isLocked ? (
-                                                                    <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>Premium</div>
-                                                                ) : (
-                                                                    <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
-                                                                        {[1, 2, 3].map((i) => (
-                                                                            <img
-                                                                                key={i}
-                                                                                src="/stars.png"
-                                                                                alt=""
-                                                                                style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
-                                                                            />
-                                                                        ))}
-                                                                    </div>
-                                                                )}
-                                                            </div>
                                                         </div>
                                                     </div>
 
-                                                    {/* Horizontal arrow connector between lesson cards */}
                                                     {!isLastLesson ? (() => {
                                                         const nextAbsoluteNumber = lessonOffset + (lessonIdx + 1) + 1;
                                                         const isNextLocked = (topicId > 1 || nextAbsoluteNumber > 3) && !hasPremiumAccess;
@@ -478,15 +468,7 @@ export default function CoursePageTemplate({
                                                         const strokeColor = isNextLocked ? "#cbd5e1" : "#3b82f6";
 
                                                         return (
-                                                            <div style={{
-                                                                display: "flex",
-                                                                flexDirection: "row",
-                                                                alignItems: "center",
-                                                                gap: 0,
-                                                                flexShrink: 0,
-                                                                alignSelf: "center",
-                                                                padding: "0 2px",
-                                                            }}>
+                                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 0, flexShrink: 0, alignSelf: "center", padding: "0 2px" }}>
                                                                 <svg width="60" height="28" viewBox="0 0 60 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <defs>
                                                                         <linearGradient id={`arrowGrad-${subIdx}-${lessonIdx}`} x1="0" y1="14" x2="60" y2="14" gradientUnits="userSpaceOnUse">
@@ -499,49 +481,25 @@ export default function CoursePageTemplate({
                                                                             <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                                                                         </filter>
                                                                     </defs>
-                                                                    {/* Glow */}
                                                                     <line x1="2" y1="14" x2="44" y2="14" stroke={strokeColor} strokeWidth="4" strokeLinecap="round" opacity="0.2" filter={`url(#arrowGlow-${subIdx}-${lessonIdx})`} />
-                                                                    {/* Dashed line */}
                                                                     <line x1="2" y1="14" x2="44" y2="14" stroke={`url(#arrowGrad-${subIdx}-${lessonIdx})`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 3" />
-                                                                    {/* Arrowhead */}
                                                                     <path d="M42 7L56 14L42 21" stroke={arrowColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                                                                     <circle cx="56" cy="14" r="3" fill={isNextLocked ? "#64748b" : "#1e3a8a"} />
                                                                 </svg>
                                                             </div>
                                                         );
                                                     })() : (
-                                                        /* If it's the last lesson of the LAST subtopic, add the finish line flag */
                                                         (subIdx === subtemas.length - 1) && (
-                                                            <div style={{
-                                                                display: "flex",
-                                                                flexDirection: "row",
-                                                                alignItems: "center",
-                                                                gap: 0,
-                                                                flexShrink: 0,
-                                                                alignSelf: "center",
-                                                                paddingLeft: 8,
-                                                                paddingRight: 20
-                                                            }}>
+                                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 0, flexShrink: 0, alignSelf: "center", paddingLeft: 8, paddingRight: 20 }}>
                                                                 <svg width="36" height="20" viewBox="0 0 36 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 12 }}>
                                                                     <defs>
                                                                         <linearGradient id="finishArrowGrad" x1="0" y1="10" x2="36" y2="10" gradientUnits="userSpaceOnUse">
-                                                                            <stop stopColor="#bfdbfe" />
-                                                                            <stop offset="1" stopColor="#2563eb" />
+                                                                            <stop stopColor="#bfdbfe" /><stop offset="1" stopColor="#2563eb" />
                                                                         </linearGradient>
                                                                     </defs>
                                                                     <line x1="2" y1="10" x2="36" y2="10" stroke="url(#finishArrowGrad)" strokeWidth="2.5" strokeLinecap="round" />
                                                                 </svg>
-                                                                <div style={{
-                                                                    width: 60,
-                                                                    height: 60,
-                                                                    borderRadius: "50%",
-                                                                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "center",
-                                                                    boxShadow: "0 6px 20px rgba(37,99,235,0.35), 0 0 0 6px rgba(37,99,235,0.12)",
-                                                                    animation: "flagPulse 2s ease-in-out infinite"
-                                                                }}>
+                                                                <div style={{ width: 60, height: 60, borderRadius: "50%", background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 20px rgba(37,99,235,0.35), 0 0 0 6px rgba(37,99,235,0.12)", animation: "flagPulse 2s ease-in-out infinite" }}>
                                                                     <Flag size={28} color="#fff" strokeWidth={2.5} fill="#fff" />
                                                                 </div>
                                                             </div>
@@ -555,69 +513,68 @@ export default function CoursePageTemplate({
                             )
                         })}
                     </div>
-
-
-
                 </div>
             </main>
 
             {/* ── LESSON MODAL ────────────────────────────────────────────────── */}
-            {lessonModal && (
-                <div
-                    role="dialog"
-                    aria-modal="true"
-                    style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)", boxSizing: "border-box" }}
-                    onClick={() => setLessonModal(null)}
-                >
+            {
+                lessonModal && (
                     <div
-                        style={{ background: "white", borderRadius: 24, padding: "28px 32px", maxWidth: 400, width: "100%", boxShadow: "0 30px 60px rgba(0,0,0,0.3)", display: "flex", flexDirection: "column", gap: 0, overflow: "hidden" }}
-                        onClick={(e) => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)", boxSizing: "border-box" }}
+                        onClick={() => setLessonModal(null)}
                     >
-                        {/* Top accent — always blue */}
-                        <div style={{ height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6)", margin: "-28px -32px 20px" }} />
+                        <div
+                            style={{ background: "white", borderRadius: 24, padding: "28px 32px", maxWidth: 400, width: "100%", boxShadow: "0 30px 60px rgba(0,0,0,0.3)", display: "flex", flexDirection: "column", gap: 0, overflow: "hidden" }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Top accent — always blue */}
+                            <div style={{ height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6)", margin: "-28px -32px 20px" }} />
 
-                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, fontFamily: "'Montserrat', sans-serif" }}>
-                            <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(15,98,254,0.1)", border: "1.5px solid rgba(15,98,254,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                <IconComp size={20} color="#2563eb" strokeWidth={2} />
-                            </div>
-                            <div style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                <div style={{ fontSize: 11, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2, fontFamily: "'Montserrat', sans-serif" }}>
-                                    {lessonModal.unitTitle}
+                            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, fontFamily: "'Montserrat', sans-serif" }}>
+                                <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(15,98,254,0.1)", border: "1.5px solid rgba(15,98,254,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                    <IconComp size={20} color="#2563eb" strokeWidth={2} />
                                 </div>
-                                <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", lineHeight: 1.3, fontFamily: "'Montserrat', sans-serif" }}>
-                                    {lessonModal.lesson.title}
+                                <div style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                    <div style={{ fontSize: 11, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2, fontFamily: "'Montserrat', sans-serif" }}>
+                                        {lessonModal.unitTitle}
+                                    </div>
+                                    <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", lineHeight: 1.3, fontFamily: "'Montserrat', sans-serif" }}>
+                                        {lessonModal.lesson.title}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: 10, fontFamily: "'Montserrat', sans-serif" }}>
-                            {/* XP Indicator */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#F0F9FF", border: "1.5px solid #BAE6FD", borderRadius: 12, padding: "10px 14px", marginBottom: 6, fontFamily: "'Montserrat', sans-serif" }}>
-                                <Zap size={15} color="#0EA5E9" fill="#0EA5E9" />
-                                <span style={{ fontSize: 13, fontWeight: 700, color: "#0369A1", fontFamily: "'Montserrat', sans-serif" }}>
-                                    {completedLessons.includes(lessonModal.lesson.slug) ? "Gana 5 XP" : "Gana hasta 15 XP"}
-                                </span>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 10, fontFamily: "'Montserrat', sans-serif" }}>
+                                {/* XP Indicator */}
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#F0F9FF", border: "1.5px solid #BAE6FD", borderRadius: 12, padding: "10px 14px", marginBottom: 6, fontFamily: "'Montserrat', sans-serif" }}>
+                                    <Zap size={15} color="#0EA5E9" fill="#0EA5E9" />
+                                    <span style={{ fontSize: 13, fontWeight: 700, color: "#0369A1", fontFamily: "'Montserrat', sans-serif" }}>
+                                        {completedLessons.includes(lessonModal.lesson.slug) ? "Gana 5 XP" : "Gana hasta 15 XP"}
+                                    </span>
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        router.push(getLessonPath(lessonModal.lesson.slug))
+                                        setLessonModal(null)
+                                    }}
+                                    style={{ width: "100%", fontSize: 15, fontWeight: 800, padding: "14px 20px", background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)", color: "white", border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: "0 6px 18px rgba(15,98,254,0.35)", transition: "all 0.2s" }}
+                                >
+                                    {completedLessons.includes(lessonModal.lesson.slug) ? "Repetir lección" : "Iniciar lección"}
+                                </button>
+                                <button
+                                    onClick={() => setLessonModal(null)}
+                                    style={{ width: "100%", fontSize: 14, fontWeight: 700, padding: "12px 20px", background: "transparent", color: "#64748b", border: "1.5px solid #e2e8f0", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
+                                >
+                                    Regresar
+                                </button>
                             </div>
-
-                            <button
-                                onClick={() => {
-                                    router.push(getLessonPath(lessonModal.lesson.slug))
-                                    setLessonModal(null)
-                                }}
-                                style={{ width: "100%", fontSize: 15, fontWeight: 800, padding: "14px 20px", background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)", color: "white", border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: "0 6px 18px rgba(15,98,254,0.35)", transition: "all 0.2s" }}
-                            >
-                                {completedLessons.includes(lessonModal.lesson.slug) ? "Repetir lección" : "Iniciar lección"}
-                            </button>
-                            <button
-                                onClick={() => setLessonModal(null)}
-                                style={{ width: "100%", fontSize: 14, fontWeight: 700, padding: "12px 20px", background: "transparent", color: "#64748b", border: "1.5px solid #e2e8f0", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
-                            >
-                                Regresar
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             <style>{`
         /* Sidebar compensation */
@@ -646,10 +603,8 @@ export default function CoursePageTemplate({
         .cpt-nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.12) !important; }
 
         /* Scrollbar styling */
-        .lessons-scroll-container::-webkit-scrollbar { height: 5px; }
-        .lessons-scroll-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 99px; }
-        .lessons-scroll-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
-        .lessons-scroll-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .lessons-scroll-container::-webkit-scrollbar { display: none; }
+        .lessons-scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
 
         @keyframes active-lesson-pulse {
           0%, 100% { 
@@ -663,34 +618,6 @@ export default function CoursePageTemplate({
         }
         .next-lesson-to-complete {
           animation: active-lesson-pulse 4s ease-in-out infinite !important;
-        }
-        .next-lesson-to-complete-wrapper {
-          position: relative;
-          z-index: 1;
-          border-radius: 24px;
-        }
-        .next-lesson-to-complete-wrapper::after {
-          content: "";
-          position: absolute;
-          inset: -1.5px;
-          background: conic-gradient(from 0deg at 50% 50%,
-            transparent 0%,
-            transparent 15%,
-            #93c5fd 20%,
-            #3b82f6 26%,
-            #1d4ed8 30%,
-            #60a5fa 34%,
-            transparent 40%,
-            transparent 100%
-          );
-          border-radius: 26px;
-          animation: electric-border-rotate 2.5s linear infinite;
-          z-index: -1;
-          opacity: 0.9;
-        }
-        @keyframes electric-border-rotate {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
         }
 
         @keyframes flagPulse {

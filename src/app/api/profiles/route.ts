@@ -32,12 +32,25 @@ export async function GET(request: NextRequest) {
     }
 
     if (!profile) {
-      console.log(`[api/profiles] Profile missing for user ${user.id}, creating default...`)
+      console.warn(`[api/profiles] Profile missing for user ${user.id}, creating default...`)
+      const fallbackProfile = {
+        userId: user.id,
+        fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
+        role: 'student',
+        xp: 0,
+        bizcoins: 0,
+        level: 1,
+        currentStreak: 0,
+        subscriptionStatus: 'none',
+        inventory: [],
+        school: null
+      };
+
       try {
         profile = await prisma.profile.create({
           data: {
             userId: user.id,
-            fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
+            fullName: fallbackProfile.fullName,
             role: 'student',
             xp: 0,
             bizcoins: 0,
@@ -45,11 +58,8 @@ export async function GET(request: NextRequest) {
           }
         })
       } catch (createErr: any) {
-        console.error('[api/profiles] Failed to create default profile:', createErr.message)
-        return NextResponse.json(
-          { error: 'Profile not found and could not be created' },
-          { status: 404 }
-        )
+        console.error('[api/profiles] Failed to insert default profile. Serving ephemeral profile.', createErr.message)
+        profile = fallbackProfile; // Use ephemeral profile so we don't throw 404
       }
     }
 
@@ -92,15 +102,19 @@ export async function GET(request: NextRequest) {
       bizcoins: profile.bizcoins || 0,
       inventory: (inventoryResult || []).map((i: any) => i.product_id),
       currentStreak: profile.current_streak || profile.currentStreak || 0,
+      subscriptionStatus: profile.subscription_status || profile.subscriptionStatus || 'none',
+      subscriptionEnds: profile.subscription_ends || profile.subscriptionEnds || null,
       school
     };
 
-    // If user has school with active license, set/renew paywall bypass cookie
+    // If user has school with active license, or active Stripe subscription, set/renew paywall bypass cookie
     const hasActiveLicense = (profile as any)?.school?.licenses?.length && (profile as any).school.licenses.length > 0;
+    const hasActiveStripe = profileData.subscriptionStatus === 'active';
+    const hasPremiumAccess = hasActiveLicense || hasActiveStripe;
 
     const response = NextResponse.json(profileData);
 
-    if (hasActiveLicense) {
+    if (hasPremiumAccess) {
       response.cookies.set('bizen_has_access', '1', {
         path: '/',
         maxAge: 60 * 60 * 24 * 365, // 1 year

@@ -1,160 +1,130 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { ArrowLeft, RefreshCcw, BookOpen, ShieldOff } from "lucide-react"
 
 export default function PaymentCancelPage() {
+  const router = useRouter()
+
   return (
     <div style={{
-      minHeight: "100vh",
+      height: "100vh",
+      background: "#FBFAF5",
+      fontFamily: "Helvetica, 'Inter', sans-serif",
+      position: "relative",
+      overflow: "hidden",
       display: "flex",
       flexDirection: "column",
-      background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
-      backgroundAttachment: "fixed",
+      boxSizing: "border-box"
     }}>
+      <style>{`
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .cancel-btn-primary {
+          display: inline-flex; align-items: center; gap: 10px;
+          padding: 14px 28px; border-radius: 14px; font-size: 14px; font-weight: 800;
+          cursor: pointer; text-decoration: none;
+          background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+          color: white; border: none;
+          box-shadow: 0 8px 24px rgba(37,99,235,0.25);
+          transition: all 0.25s;
+        }
+        .cancel-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,99,235,0.35); }
+        
+        @media (max-height: 700px) {
+          .cancel-icon-box { width: 72px !important; height: 72px !important; margin-bottom: 20px !important; }
+          .cancel-icon-box svg { width: 32px !important; height: 32px !important; }
+          .cancel-title { font-size: 28px !important; margin-bottom: 8px !important; }
+          .cancel-info-box { padding: 16px !important; margin-bottom: 24px !important; }
+        }
+      `}</style>
+
       {/* Header */}
       <header style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-        background: "#FBFAF5",
-        borderBottom: "1px solid rgba(0,0,0,0.06)",
-        padding: "16px 0",
+        height: 64, zIndex: 100,
+        background: "rgba(251,250,245,0.9)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid rgba(15,98,254,0.08)",
+        padding: "0 40px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        flexShrink: 0
       }}>
-        <div style={{
-          maxWidth: "1400px",
-          margin: "0 auto",
-          padding: "0 clamp(16px, 4vw, 32px)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}>
-          <Link href="/" style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            textDecoration: "none",
-          }}>
-            <Image
-              src="/bizen-logo.png"
-              alt="BIZEN Logo"
-              width={40}
-              height={40}
-              style={{ borderRadius: 8 }}
-            />
-            <span style={{
-              fontSize: 24,
-              fontWeight: 900,
-              background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>
-              BIZEN
-            </span>
-          </Link>
-        </div>
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <span style={{ fontSize: 26, fontWeight: 900, color: "#475569", fontFamily: "Helvetica, Arial, sans-serif", letterSpacing: "-0.03em" }}>
+            BIZEN
+          </span>
+        </Link>
+        <Link href="/" style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+          <ArrowLeft size={15} />
+          Volver al inicio
+        </Link>
       </header>
 
-      {/* Cancel Content */}
+      {/* Main Container */}
       <main style={{
         flex: 1,
         display: "flex",
-        alignItems: "center",
+        flexDirection: "column",
         justifyContent: "center",
-        padding: "clamp(48px, 8vw, 96px) clamp(16px, 4vw, 32px)",
+        alignItems: "center",
+        padding: "20px 40px",
+        overflowY: "auto",
+        zIndex: 1
       }}>
-        <div style={{
-          maxWidth: "600px",
-          width: "100%",
-          textAlign: "center",
-        }}>
-          <div style={{
-            width: 120,
-            height: 120,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 32px",
-            boxShadow: "0 8px 24px rgba(245, 158, 11, 0.3)",
+        <div style={{ width: "100%", maxWidth: 500, textAlign: "center", animation: "fadeUp 0.5s ease both" }}>
+
+          {/* Icon Section */}
+          <div className="cancel-icon-box" style={{
+            width: 84, height: 84, borderRadius: 24,
+            background: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",
+            border: "1.5px solid rgba(245,158,11,0.2)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            margin: "0 auto 24px",
+            boxShadow: "0 10px 25px rgba(245,158,11,0.12)"
           }}>
-            <span style={{ fontSize: 64, color: "white" }}>⚠</span>
+            <ShieldOff size={40} color="#d97706" />
           </div>
 
-          <h1 style={{
-            fontSize: "clamp(32px, 5vw, 48px)",
-            fontWeight: 800,
-            margin: "0 0 16px 0",
-            background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
-          }}>
+          <h1 className="cancel-title" style={{ margin: "0 0 12px", fontSize: 32, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em" }}>
             Pago cancelado
           </h1>
 
-          <p style={{
-            fontSize: "clamp(18px, 2.5vw, 20px)",
-            color: "#64748b",
-            margin: "0 0 32px 0",
-            lineHeight: 1.6,
-            fontFamily: "'Inter', 'Poppins', 'Open Sans', system-ui, -apple-system, sans-serif",
-          }}>
-            No se procesó ningún cargo. Puedes intentar nuevamente cuando estés listo.
+          <p style={{ margin: "0 0 24px", fontSize: 15, color: "#64748b", fontWeight: 500, lineHeight: 1.6 }}>
+            No se realizó ningún cargo. Puedes intentarlo de nuevo cuando quieras.
           </p>
 
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            alignItems: "center",
+          <div className="cancel-info-box" style={{
+            background: "white",
+            border: "1px solid rgba(15,98,254,0.08)",
+            borderRadius: 18,
+            padding: "18px 20px",
+            marginBottom: 32,
+            textAlign: "left",
+            display: "flex", flexDirection: "column", gap: 10,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.03)"
           }}>
-            <Link
-              href="/payment"
-              style={{
-                padding: "14px 32px",
-                fontSize: 16,
-                fontWeight: 700,
-                background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 100%)",
-                color: "white",
-                border: "none",
-                borderRadius: 12,
-                textDecoration: "none",
-                cursor: "pointer",
-                boxShadow: "0 8px 24px rgba(15, 98, 254, 0.35)",
-                display: "inline-block",
-                transition: "transform 0.2s ease, box-shadow 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-2px)"
-                e.currentTarget.style.boxShadow = "0 12px 32px rgba(15, 98, 254, 0.45)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)"
-                e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.35)"
-              }}
-            >
+            <div style={{ display: "flex", gap: 10 }}>
+              <BookOpen size={14} color="#2563eb" style={{ marginTop: 2 }} />
+              <span style={{ fontSize: 13, color: "#475569", fontWeight: 500 }}>Tus datos y progreso están seguros.</span>
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <RefreshCcw size={14} color="#2563eb" style={{ marginTop: 2 }} />
+              <span style={{ fontSize: 13, color: "#475569", fontWeight: 500 }}>Reintenta el pago en cualquier momento.</span>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <Link href="/payment" className="cancel-btn-primary">
+              <RefreshCcw size={16} />
               Intentar de nuevo
             </Link>
-
-            <Link
-              href="/"
-              style={{
-                color: "#0F62FE",
-                fontSize: 14,
-                fontWeight: 600,
-                textDecoration: "none",
-              }}
-            >
-              Volver al inicio
+            <Link href="/courses" style={{ fontSize: 14, fontWeight: 700, color: "#64748b", textDecoration: "none" }}>
+              Ver cursos gratuitos
             </Link>
           </div>
+
         </div>
       </main>
     </div>
   )
 }
-

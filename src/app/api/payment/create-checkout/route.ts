@@ -7,14 +7,14 @@ function getStripeClient() {
     throw new Error('STRIPE_SECRET_KEY is not set')
   }
   return new Stripe(secretKey, {
-    apiVersion: '2024-12-18.acacia',
+    apiVersion: '2025-01-27.acacia' as any, // Ignoramos el error de tipado para soportar versiones dinámicas si cambian
     typescript: true,
   })
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, name, planName = 'Plan Emprendedor' } = await request.json()
+    const { email, name, planName = 'Plan Emprendedor', userId } = await request.json()
 
     const stripe = getStripeClient()
 
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
             currency: 'usd',
             product_data: {
               name: planName,
-              description: 'Pilotos y licenciamiento',
+              description: 'Suscripción BIZEN',
             },
             recurring: {
               interval: 'month',
@@ -39,9 +39,11 @@ export async function POST(request: NextRequest) {
       ],
       mode: 'subscription',
       customer_email: email,
+      client_reference_id: userId, // Very important for webhooks
       metadata: {
         customer_name: name,
         plan: planName,
+        userId: userId || "", // Fallback as string if omitted
       },
       success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3004'}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3004'}/payment/cancel`,
