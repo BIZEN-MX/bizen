@@ -42,14 +42,75 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
+      className="info-step-container"
       style={{
         width: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        padding: "0 16px",
       }}
     >
+      <style>{`
+        .info-step-card {
+          width: 100%;
+          background: #FFFFFF;
+          border-radius: 32px;
+          border: 1px solid rgba(15, 98, 254, 0.1);
+          box-shadow: 
+            0 1px 2px rgba(15, 98, 254, 0.05),
+            0 4px 12px rgba(15, 98, 254, 0.05),
+            0 12px 32px rgba(15, 98, 254, 0.1);
+          overflow: hidden;
+          position: relative;
+        }
+        .info-step-card::before {
+          content: "";
+          position: absolute;
+          top: 0; left: 0; right: 0; height: 6px;
+          background: linear-gradient(90deg, #3b82f6, #2563eb, #1e40af);
+          z-index: 10;
+        }
+        .info-content-layout {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 24px;
+          padding: 32px 24px;
+        }
+        @media (min-width: 768px) {
+          .info-content-layout {
+            flex-direction: ${step.imageUrl ? (step.imageAlign === "left" ? "row-reverse" : "row") : "column"};
+            padding: 48px;
+            gap: 48px;
+            text-align: ${step.imageUrl ? (step.imageAlign === "left" ? "right" : "left") : "center"};
+          }
+          .info-text-wrapper {
+            align-items: ${step.imageUrl ? (step.imageAlign === "left" ? "flex-end" : "flex-start") : "center"} !important;
+          }
+        }
+        .reveal-card {
+          max-width: 420px;
+          min-height: 280px;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 2px solid #F1F5F9;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+          padding: 40px 24px;
+          text-align: center;
+        }
+        .reveal-card:hover {
+          border-color: #3b82f6;
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(15, 98, 254, 0.12);
+        }
+      `}</style>
+
       <AnimatePresence mode="wait">
         {!isRevealed ? (
           <motion.div
@@ -57,46 +118,29 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
             onClick={handleReveal}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 24,
-              padding: "48px 32px",
-              textAlign: "center",
-              background: "#FFFFFF",
-              borderRadius: 32,
-              border: "3px solid #F1F5F9",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.04)",
-              cursor: "pointer",
-              width: "100%",
-              maxWidth: 480,
-              minHeight: 300,
-            }}
+            className="info-step-card reveal-card"
           >
             <div style={{
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
               borderRadius: "50%",
               background: "linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              boxShadow: "inset 0 2px 4px rgba(0,0,0,0.05)"
             }}>
-              <Image src="/hero4.png" alt="Billy" width={70} height={70} style={{ objectFit: "contain" }} />
+              <Image src="/hero4.png" alt="Billy" width={56} height={56} style={{ objectFit: "contain" }} />
             </div>
             <div style={{
-              padding: "16px 24px",
+              padding: "12px 20px",
               background: "#F9FAFB",
-              borderRadius: 16,
+              borderRadius: 14,
               border: "2px dashed #BFDBFE",
             }}>
-              <p style={{ margin: 0, fontSize: 15, color: "#0F62FE", fontWeight: 700, fontFamily: "'Montserrat', sans-serif" }}>
-                Toca la tarjeta para revelar
+              <p style={{ margin: 0, fontSize: 14, color: "#2563eb", fontWeight: 800, fontFamily: "'Inter', sans-serif" }}>
+                Haz clic para revelar
               </p>
             </div>
           </motion.div>
@@ -105,95 +149,100 @@ export function InfoStep({ step, onAnswered, actionTrigger = 0, isContinueEnable
             key="content"
             initial={{ opacity: 0, scale: 0.9, rotateY: 90 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ type: "spring", damping: 15, stiffness: 100 }}
-            style={{
-              width: "100%",
-              maxWidth: 820,
-              minHeight: 400,
-              display: "flex",
-              flexDirection: step.imageUrl ? (step.imageAlign === "left" ? "row-reverse" : "row") : "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "48px 32px",
-              background: "#FFFFFF",
-              borderRadius: 40,
-              border: "5px solid #0F62FE",
-              textAlign: step.imageUrl ? (step.imageAlign === "left" ? "right" : "left") : "center",
-              boxShadow: "0 12px 64px rgba(15, 98, 254, 0.15)",
-              gap: 40,
-              perspective: 1000,
-            }}
+            transition={{ type: "spring", damping: 20, stiffness: 100 }}
+            className="info-step-card"
+            style={{ maxWidth: 880 }}
           >
-            {/* Text Content */}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: step.imageUrl ? (step.imageAlign === "left" ? "flex-end" : "flex-start") : "center" }}>
-              {step.title && (
-                <h2 style={{
-                  fontSize: "clamp(24px, 4.5vw, 36px)",
-                  fontWeight: 900,
-                  color: "#111827",
-                  margin: "0 0 16px 0",
-                  lineHeight: 1.2,
-                  fontFamily: "'Inter', sans-serif",
-                }}>
-                  {step.title}
-                </h2>
-              )}
-
-              <div style={{
-                fontSize: "clamp(18px, 2.8vw, 24px)",
-                color: "#374151",
-                lineHeight: 1.5,
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 600,
-                maxWidth: "100%",
-              }}>
-                {step.body.split("\n\n").map((line, i) => (
-                  <p key={i} style={{
+            <div className="info-content-layout">
+              {/* Text Content */}
+              <div className="info-text-wrapper" style={{ flex: 1.2, display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+                {step.title && (
+                  <h2 style={{
+                    fontSize: "clamp(22px, 5vw, 32px)",
+                    fontWeight: 900,
+                    color: "#0f172a",
                     margin: "0 0 16px 0",
+                    lineHeight: 1.2,
                     fontFamily: "'Inter', sans-serif",
-                    whiteSpace: "pre-wrap"
+                    letterSpacing: "-0.02em"
                   }}>
-                    {line}
-                  </p>
-                ))}
+                    {step.title}
+                  </h2>
+                )}
+
+                <div style={{
+                  fontSize: "clamp(17px, 3vw, 21px)",
+                  color: "#334155",
+                  lineHeight: 1.6,
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 500,
+                  width: "100%",
+                }}>
+                  {step.body.split("\n\n").map((line, i) => (
+                    <p key={i} style={{
+                      margin: "0 0 16px 0",
+                      whiteSpace: "pre-wrap"
+                    }}>
+                      {line}
+                    </p>
+                  ))}
+                </div>
+
+                {step.description && (
+                  <div style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "6px 14px",
+                    background: "#eff6ff",
+                    borderRadius: 99,
+                    marginTop: 8
+                  }}>
+                    <span style={{
+                      fontSize: "11px",
+                      fontWeight: 800,
+                      color: "#2563eb",
+                      letterSpacing: "0.05em",
+                      textTransform: "uppercase",
+                      fontFamily: "'Inter', sans-serif",
+                    }}>
+                      {step.description}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {step.description && (
-                <p style={{
-                  fontSize: "14px",
-                  fontWeight: 700,
-                  color: "#0F62FE",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  margin: "12px 0 0 0",
-                  fontFamily: "'Inter', sans-serif",
+              {/* Image Content */}
+              {step.imageUrl && (
+                <div style={{
+                  flex: 0.8,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  maxWidth: 320,
+                  position: "relative"
                 }}>
-                  {step.description}
-                </p>
+                  <div style={{
+                    position: "absolute",
+                    inset: "-10%",
+                    background: "radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%)",
+                    zIndex: -1
+                  }} />
+                  <img
+                    src={step.imageUrl}
+                    alt={step.title || "Illustration"}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      maxHeight: "300px",
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 12px 24px rgba(0,0,0,0.12))"
+                    }}
+                  />
+                </div>
               )}
             </div>
-
-            {/* Image Content */}
-            {step.imageUrl && (
-              <div style={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                maxWidth: 300,
-              }}>
-                <img
-                  src={step.imageUrl}
-                  alt={step.title || "Illustration"}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    objectFit: "contain",
-                    filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.1))"
-                  }}
-                />
-              </div>
-            )}
           </motion.div>
         )}
       </AnimatePresence>

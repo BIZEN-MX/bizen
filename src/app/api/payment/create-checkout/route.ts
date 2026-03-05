@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: 'mxn',
             product_data: {
               name: planName,
               description: 'Suscripción BIZEN',
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
             recurring: {
               interval: 'month',
             },
-            unit_amount: 9900, // $99.00 in cents
+            unit_amount: 4900, // $49.00 in cents
           },
           quantity: 1,
         },

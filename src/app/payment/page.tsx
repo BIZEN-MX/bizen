@@ -151,8 +151,8 @@ export default function PaymentPage() {
               </div>
 
               <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 48, fontWeight: 900, color: "#fff", lineHeight: 1 }}>$99</span>
-                <span style={{ fontSize: 16, fontWeight: 600, color: "#93c5fd" }}>/mes</span>
+                <span style={{ fontSize: 48, fontWeight: 900, color: "#fff", lineHeight: 1 }}>$49</span>
+                <span style={{ fontSize: 16, fontWeight: 600, color: "#93c5fd" }}>/mes MXN</span>
               </div>
               <p style={{ fontSize: 13, color: "#60a5fa", fontWeight: 500, marginBottom: 20 }}>Cancela en cualquier momento.</p>
 
@@ -210,7 +210,7 @@ export default function PaymentPage() {
                 <div style={{ background: "#f8faff", border: "1px solid rgba(37,99,235,0.08)", borderRadius: 14, padding: "12px 16px", marginTop: 4 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, fontWeight: 800 }}>
                     <span>Total hoy</span>
-                    <span>$99 USD</span>
+                    <span>$49 MXN</span>
                   </div>
                 </div>
 

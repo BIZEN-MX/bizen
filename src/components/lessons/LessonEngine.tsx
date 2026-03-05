@@ -267,7 +267,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const hasFeedback = state.isContinueEnabled && isAssessment
 
   const footerButtonLabel = (() => {
-    if (hasFeedback && !isCorrect) return "Intentar de nuevo"
+    if (hasFeedback && !isCorrect) {
+      // Per user request: If incorrect, show "Siguiente" unless it's the last slide (where we must retry)
+      return isLastStep ? "Intentar de nuevo" : "Siguiente"
+    }
     if (isSummaryStep || (isLastStep && isCorrect)) return "Avanzar"
     if (!state.isContinueEnabled) {
       if (currentStep.stepType === "info") return "Continuar"

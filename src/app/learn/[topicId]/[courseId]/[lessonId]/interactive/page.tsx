@@ -157,6 +157,10 @@ export default function InteractiveLessonPage() {
     )
   }
 
+  const handleProgressChange = useCallback((p: any) => {
+    setProgress(prev => ({ ...prev, ...p }))
+  }, [])
+
   return (
     <>
       <style>{`
@@ -201,7 +205,7 @@ export default function InteractiveLessonPage() {
           onComplete={handleComplete}
           onExit={handleExit}
           isRepeat={isRepeated}
-          onProgressChange={(p) => setProgress(prev => ({ ...prev, ...p }))}
+          onProgressChange={handleProgressChange}
         />
       </div>
 
