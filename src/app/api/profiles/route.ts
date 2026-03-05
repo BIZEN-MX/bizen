@@ -94,6 +94,10 @@ export async function GET(request: NextRequest) {
       console.warn('DB Warning (school fetch failed):', e.message)
     }
 
+    // Check for paywall bypass cookie (set by verify-session or profiles route)
+    const cookieStore = await cookies()
+    const hasAccessCookie = cookieStore.get('bizen_has_access')?.value === '1';
+
     const profileData = {
       ...profile,
       userId: profile.user_id || profile.userId,
@@ -104,7 +108,7 @@ export async function GET(request: NextRequest) {
       bizcoins: typeof profile.bizcoins === 'number' ? profile.bizcoins : (parseInt(profile.bizcoins) || 0),
       inventory: (inventoryResult || []).map((i: any) => i.product_id),
       currentStreak: profile.current_streak || profile.currentStreak || 0,
-      subscriptionStatus: (user.email === 'diegopenita31@gmail.com') ? 'active' : (profile.subscription_status || profile.subscriptionStatus || 'none'),
+      subscriptionStatus: (user.email === 'diegopenita31@gmail.com' || hasAccessCookie) ? 'active' : (profile.subscription_status || profile.subscriptionStatus || 'none'),
       subscriptionEnds: profile.subscription_ends || profile.subscriptionEnds || null,
       school
     };
