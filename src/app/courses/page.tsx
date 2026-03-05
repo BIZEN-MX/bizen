@@ -446,39 +446,7 @@ export default function CoursesPage() {
                                 opacity: isLocked ? 0.7 : 1
                               }}
                             >
-                              {/* Special glowing accent bar for next topic */}
-                              <div style={{
-                                height: topic.id === nextTopicId ? 6 : 5,
-                                background: topic.id === nextTopicId
-                                  ? "linear-gradient(90deg, #1e3a8a, #2563eb, #38bdf8, #2563eb, #1e3a8a)"
-                                  : (isLocked ? "linear-gradient(90deg, #64748b, #94a3b8)" : "linear-gradient(90deg, #1e3a8a, #3b82f6)"),
-                                backgroundSize: topic.id === nextTopicId ? "200% 100%" : "100%",
-                                animation: topic.id === nextTopicId ? "shimmer-bar 3s linear infinite" : "none",
-                                width: "100%",
-                                flexShrink: 0
-                              }} />
-                              {/* CONTINUAR badge — only for next topic */}
-                              {topic.id === nextTopicId && !isLocked && (
-                                <div style={{
-                                  position: "absolute",
-                                  top: -14,
-                                  left: "50%",
-                                  transform: "translateX(-50%)",
-                                  background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
-                                  color: "#fff",
-                                  fontSize: 11,
-                                  fontWeight: 900,
-                                  letterSpacing: "0.12em",
-                                  padding: "5px 16px",
-                                  borderRadius: 999,
-                                  boxShadow: "0 4px 16px rgba(37,99,235,0.45), 0 0 0 3px rgba(255,255,255,0.9)",
-                                  whiteSpace: "nowrap",
-                                  zIndex: 10,
-                                  animation: "continuar-pulse 2s ease-in-out infinite"
-                                }}>
-                                  ▶ CONTINUAR
-                                </div>
-                              )}
+                              <div style={{ height: 5, background: isLocked ? "linear-gradient(90deg, #64748b, #94a3b8)" : "linear-gradient(90deg, #1e3a8a, #3b82f6)", width: "100%", flexShrink: 0 }} />
                               <div style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
                                 <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
                                   {isLocked ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Bloqueado</span> : topic.category}
@@ -667,30 +635,17 @@ export default function CoursesPage() {
         @keyframes topic-glow-pulse {
           0%, 100% { 
             box-shadow: 0 4px 20px rgba(15,98,254,0.08); 
+            transform: scale(1);
             border-color: rgba(15,98,254,0.1);
-            transform: translateY(0);
           }
           50% { 
-            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.2), 0 0 0 4px rgba(37, 99, 235, 0.1); 
-            border-color: rgba(37, 99, 235, 0.6);
-            transform: translateY(-6px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15); 
+            transform: scale(1.02);
+            border-color: rgba(37, 99, 235, 0.3);
           }
         }
         .next-topic-glow {
-          animation: topic-glow-pulse 3s ease-in-out infinite;
-          border-width: 1.5px !important;
-          background: linear-gradient(135deg, #fff 0%, #f0f7ff 100%) !important;
-          overflow: visible !important;
-        }
-
-        @keyframes shimmer-bar {
-          0% { background-position: 200% center; }
-          100% { background-position: -200% center; }
-        }
-
-        @keyframes continuar-pulse {
-          0%, 100% { transform: translateX(-50%) scale(1); box-shadow: 0 4px 16px rgba(37,99,235,0.45), 0 0 0 3px rgba(255,255,255,0.9); }
-          50% { transform: translateX(-50%) scale(1.07); box-shadow: 0 6px 22px rgba(37,99,235,0.65), 0 0 0 3px rgba(255,255,255,0.9); }
+          animation: topic-glow-pulse 4s ease-in-out infinite !important;
         }
         
         @keyframes bounce {
