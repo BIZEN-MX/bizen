@@ -3087,139 +3087,260 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
         </section>
       </>)}
       {(sectionRange === 'all' || sectionRange === 'rest') && (<>
-        {/* Conoce BIZEN - enhanced */}
+        {/* Conoce BIZEN - deep spatial blue enhanced */}
         <section id="conoce-bizen" className="section conoce-bizen-section reveal-element" style={{
-          background: "#FBFAF5",
-          padding: "clamp(72px, 10vw, 112px) clamp(16px, 4vw, 48px)",
-          maxWidth: "1320px",
-          margin: "0 auto",
+          background: "linear-gradient(160deg, #020c1f 0%, #041640 40%, #071e52 70%, #020c1f 100%)",
+          padding: "clamp(80px, 10vw, 120px) clamp(16px, 4vw, 48px)",
+          margin: "0",
+          width: "100%",
+          maxWidth: "100%",
+          boxSizing: "border-box" as const,
           height: "auto",
-          overflow: "visible"
+          overflow: "hidden",
+          position: "relative" as const,
         }}>
 
-          {/* Section label + heading centered */}
-          <div style={{ textAlign: "center", marginBottom: "clamp(56px, 7vw, 80px)" }}>
-            <span style={{
-              display: "inline-block",
-              background: "rgba(0, 86, 231, 0.08)",
-              color: "#0056E7",
-              borderRadius: "999px",
-              padding: "6px 18px",
-              fontSize: "13px",
-              fontWeight: 700,
-              fontFamily: "'Inter', sans-serif",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              marginBottom: "20px",
-            }}>Conoce BIZEN</span>
-            <h2 style={{
-              fontSize: "clamp(32px, 4.5vw, 56px)",
-              fontWeight: 800,
-              color: "#111",
-              lineHeight: 1.15,
-              marginBottom: "clamp(16px, 2vw, 20px)",
-              fontFamily: "'Inter', sans-serif",
-              letterSpacing: "-0.02em",
-            }}>
-              Aprender finanzas nunca ha sido{" "}
-              <span style={{
-                background: "linear-gradient(90deg, #0056E7, #1983FD)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>tan claro y relevante</span>.
-            </h2>
-            <p style={{
-              fontSize: "clamp(17px, 1.3vw, 20px)",
-              lineHeight: 1.65,
-              color: "#64748b",
-              fontFamily: "'Inter', sans-serif",
-              maxWidth: "600px",
-              margin: "0 auto",
-            }}>
-              Impulsa a tu escuela a desarrollar habilidades clave mientras los estudiantes aprenden de forma práctica y guiada.
-            </p>
-          </div>
+          {/* Animated dot-grid overlay */}
+          <div aria-hidden style={{
+            position: "absolute", inset: 0, zIndex: 0,
+            backgroundImage: "radial-gradient(rgba(25, 131, 253, 0.18) 1px, transparent 1px)",
+            backgroundSize: "36px 36px",
+            pointerEvents: "none",
+          }} />
 
-          {/* 6 skills — 3-column card grid */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "clamp(16px, 2vw, 24px)",
-          }} className="conoce-skills-grid">
-            {[
-              { label: "Toma de decisiones informadas", desc: "Evalúa opciones y elige con criterio financiero en situaciones reales.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg> },
-              { label: "Pensamiento crítico aplicado", desc: "Analiza información y cuestiona supuestos para resolver mejor.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg> },
-              { label: "Resolución de problemas financieros", desc: "Enfrenta retos económicos reales con herramientas prácticas.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></svg> },
-              { label: "Planeación y visión a futuro", desc: "Establece metas claras y administra recursos con perspectiva.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> },
-              { label: "Trabajo colaborativo en el aula", desc: "Potencia el aprendizaje compartido en equipos.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> },
-              { label: "Responsabilidad socioemocional", desc: "Desarrolla autonomía, empatía y habilidades para la vida.", Icon: () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></svg> },
-            ].map((item, i) => (
-              <div key={i} style={{
-                background: "#FBFAF5",
-                border: "1px solid rgba(0, 86, 231, 0.1)",
-                borderRadius: "24px",
-                padding: "clamp(24px, 3vw, 32px)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "14px",
-                transition: "transform 0.25s ease, box-shadow 0.25s ease",
-                maxWidth: "340px",
+          {/* Floating glow orbs */}
+          <div aria-hidden style={{
+            position: "absolute", top: "-120px", left: "-120px",
+            width: "520px", height: "520px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0,86,231,0.28) 0%, transparent 70%)",
+            filter: "blur(60px)", zIndex: 0, pointerEvents: "none",
+          }} />
+          <div aria-hidden style={{
+            position: "absolute", bottom: "-100px", right: "-80px",
+            width: "480px", height: "480px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(25,131,253,0.22) 0%, transparent 70%)",
+            filter: "blur(60px)", zIndex: 0, pointerEvents: "none",
+          }} />
+          <div aria-hidden style={{
+            position: "absolute", top: "40%", left: "50%", transform: "translate(-50%, -50%)",
+            width: "300px", height: "300px", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0,86,231,0.12) 0%, transparent 70%)",
+            filter: "blur(80px)", zIndex: 0, pointerEvents: "none",
+          }} />
+
+          {/* Inner container */}
+          <div style={{ position: "relative", zIndex: 1, maxWidth: "1320px", margin: "0 auto" }}>
+
+            {/* Section label + heading centered */}
+            <div style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 72px)" }}>
+              <span style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(25, 131, 253, 0.15)",
+                color: "#60aeff",
+                borderRadius: "999px",
+                padding: "6px 18px",
+                fontSize: "13px",
+                fontWeight: 700,
+                fontFamily: "'Inter', sans-serif",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                marginBottom: "24px",
+                border: "1px solid rgba(25, 131, 253, 0.25)",
+                backdropFilter: "blur(4px)",
+              }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#1983FD", display: "inline-block", boxShadow: "0 0 8px #1983FD" }} />
+                Conoce BIZEN
+              </span>
+              <h2 style={{
+                fontSize: "clamp(32px, 4.5vw, 58px)",
+                fontWeight: 800,
+                color: "#fff",
+                lineHeight: 1.12,
+                marginBottom: "clamp(16px, 2vw, 20px)",
+                fontFamily: "'Inter', sans-serif",
+                letterSpacing: "-0.025em",
+              }}>
+                Aprender finanzas nunca ha sido{" "}
+                <span style={{
+                  background: "linear-gradient(90deg, #4da3ff, #1983FD, #60aeff)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}>tan claro y relevante</span>.
+              </h2>
+              <p style={{
+                fontSize: "clamp(16px, 1.2vw, 19px)",
+                lineHeight: 1.7,
+                color: "rgba(180, 205, 255, 0.75)",
+                fontFamily: "'Inter', sans-serif",
+                maxWidth: "580px",
                 margin: "0 auto",
-                width: "100%",
-              }} className={`reveal-element reveal-delay-${i % 3 + 1} conoce-skill-card`}>
-                <div style={{
-                  width: "56px",
-                  height: "56px",
-                  borderRadius: "16px",
-                  background: "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 8px 20px rgba(0, 86, 231, 0.2)",
-                  flexShrink: 0,
+              }}>
+                Impulsa a tu escuela a desarrollar habilidades clave mientras los estudiantes aprenden de forma práctica y guiada.
+              </p>
+            </div>
+
+            {/* Stats row */}
+            <div className="conoce-stats-row" style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "clamp(16px, 3vw, 48px)",
+              marginBottom: "clamp(48px, 6vw, 72px)",
+              flexWrap: "wrap",
+            }}>
+              {[
+                { value: "+500", label: "Estudiantes activos" },
+                { value: "6", label: "Habilidades clave" },
+                { value: "98%", label: "Satisfacción docente" },
+              ].map((stat, i) => (
+                <div key={i} style={{
+                  textAlign: "center",
+                  padding: "clamp(16px,2vw,24px) clamp(24px,3vw,40px)",
+                  background: "rgba(255,255,255,0.04)",
+                  borderRadius: "20px",
+                  border: "1px solid rgba(25, 131, 253, 0.2)",
+                  backdropFilter: "blur(12px)",
+                  minWidth: "140px",
                 }}>
-                  <item.Icon />
-                </div>
-                <div>
                   <div style={{
-                    fontSize: "clamp(15px, 1.1rem, 17px)",
-                    fontWeight: 700,
-                    color: "#111",
+                    fontSize: "clamp(28px, 3.5vw, 44px)",
+                    fontWeight: 800,
+                    color: "#fff",
                     fontFamily: "'Inter', sans-serif",
-                    marginBottom: "6px",
-                    lineHeight: 1.3,
-                  }}>{item.label}</div>
+                    letterSpacing: "-0.03em",
+                    background: "linear-gradient(135deg, #fff 40%, #60aeff 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}>{stat.value}</div>
                   <div style={{
-                    fontSize: "clamp(13px, 0.9rem, 15px)",
-                    color: "#64748b",
+                    fontSize: "clamp(12px, 0.85rem, 14px)",
+                    color: "rgba(180, 205, 255, 0.65)",
                     fontFamily: "'Inter', sans-serif",
-                    lineHeight: 1.6,
-                  }}>{item.desc}</div>
+                    fontWeight: 500,
+                    marginTop: "4px",
+                    letterSpacing: "0.03em",
+                  }}>{stat.label}</div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* 6 skills — 3-column card grid */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "clamp(14px, 2vw, 22px)",
+            }} className="conoce-skills-grid">
+              {[
+                { label: "Toma de decisiones informadas", desc: "Evalúa opciones y elige con criterio financiero en situaciones reales.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg> },
+                { label: "Pensamiento crítico aplicado", desc: "Analiza información y cuestiona supuestos para resolver mejor.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg> },
+                { label: "Resolución de problemas financieros", desc: "Enfrenta retos económicos reales con herramientas prácticas.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></svg> },
+                { label: "Planeación y visión a futuro", desc: "Establece metas claras y administra recursos con perspectiva.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> },
+                { label: "Trabajo colaborativo en el aula", desc: "Potencia el aprendizaje compartido en equipos.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> },
+                { label: "Responsabilidad socioemocional", desc: "Desarrolla autonomía, empatía y habilidades para la vida.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></svg> },
+              ].map((item, i) => (
+                <div key={i} className={`reveal-element reveal-delay-${i % 3 + 1} conoce-skill-card`} style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(25, 131, 253, 0.18)",
+                  borderRadius: "24px",
+                  padding: "clamp(22px, 2.5vw, 30px)",
+                  display: "flex",
+                  flexDirection: "column" as const,
+                  gap: "16px",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)" as any,
+                  transition: "transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease",
+                  maxWidth: "340px",
+                  margin: "0 auto",
+                  width: "100%",
+                  cursor: "default",
+                  position: "relative" as const,
+                  overflow: "hidden",
+                }}>
+                  {/* card inner glow on hover — handled via CSS */}
+                  <div style={{
+                    width: "52px",
+                    height: "52px",
+                    borderRadius: "14px",
+                    background: "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
+                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 6px 20px rgba(0, 86, 231, 0.45)",
+                    flexShrink: 0,
+                  }}>
+                    <item.Icon />
+                  </div>
+                  <div>
+                    <div style={{
+                      fontSize: "clamp(15px, 1.05rem, 17px)",
+                      fontWeight: 700,
+                      color: "#e8f0ff",
+                      fontFamily: "'Inter', sans-serif",
+                      marginBottom: "8px",
+                      lineHeight: 1.3,
+                    }}>{item.label}</div>
+                    <div style={{
+                      fontSize: "clamp(13px, 0.88rem, 15px)",
+                      color: "rgba(180, 205, 255, 0.65)",
+                      fontFamily: "'Inter', sans-serif",
+                      lineHeight: 1.65,
+                    }}>{item.desc}</div>
+                  </div>
+                  {/* Hover arrow indicator */}
+                  <div className="conoce-card-arrow" style={{
+                    position: "absolute", bottom: "22px", right: "22px",
+                    width: "28px", height: "28px", borderRadius: "50%",
+                    background: "rgba(25,131,253,0.15)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    opacity: 0, transition: "opacity 0.2s ease, transform 0.2s ease",
+                    transform: "translateX(-4px)",
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60aeff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <style>{`
-                .conoce-skill-card:hover {
-                  transform: translateY(-4px);
-                  box-shadow: 0 12px 32px rgba(0, 86, 231, 0.1);
-                  border-color: rgba(0, 86, 231, 0.25) !important;
-                }
-                @media (max-width: 900px) {
-                  .conoce-skills-grid {
-                    grid-template-columns: 1fr 1fr !important;
-                  }
-                }
-                @media (max-width: 580px) {
-                  .conoce-skills-grid {
-                    grid-template-columns: 1fr !important;
-                  }
-                }
-
-              `}</style>
+            .conoce-skill-card:hover {
+              transform: translateY(-6px);
+              box-shadow: 0 20px 50px rgba(0, 86, 231, 0.35), 0 0 0 1px rgba(25, 131, 253, 0.4);
+              border-color: rgba(25, 131, 253, 0.45) !important;
+              background: rgba(255,255,255,0.07) !important;
+            }
+            .conoce-skill-card:hover .conoce-card-arrow {
+              opacity: 1 !important;
+              transform: translateX(0) !important;
+            }
+            @media (max-width: 900px) {
+              .conoce-skills-grid {
+                grid-template-columns: 1fr 1fr !important;
+              }
+              .conoce-stats-row > div {
+                min-width: 110px !important;
+              }
+            }
+            @media (max-width: 580px) {
+              .conoce-skills-grid {
+                grid-template-columns: 1fr !important;
+              }
+              .conoce-stats-row {
+                gap: 12px !important;
+              }
+            }
+            /* Force deep blue spatial background regardless of global overrides */
+            #conoce-bizen,
+            .conoce-bizen-section {
+              background: linear-gradient(160deg, #020c1f 0%, #041640 40%, #071e52 70%, #020c1f 100%) !important;
+              overflow: hidden !important;
+              position: relative !important;
+            }
+          `}</style>
         </section>
 
         {/* Cada clase, una aventura divertida — enhanced carousel */}

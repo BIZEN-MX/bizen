@@ -342,20 +342,7 @@ export default function CoursePageTemplate({
                                     <div
                                         className="lessons-scroll-container"
                                         onScroll={(e) => {
-                                            const el = e.currentTarget
-                                            const now = Date.now()
-                                            if (now - lastJumpTime < 1500) return
-
-                                            const isAtEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 5
-
-                                            if (isAtEnd) {
-                                                const nextSubIdx = subIdx + 2
-                                                const nextEl = document.getElementById(`tema${topicId}-subtema-${nextSubIdx}`)
-                                                if (nextEl) {
-                                                    nextEl.scrollIntoView({ behavior: "smooth", block: "start" })
-                                                    setLastJumpTime(now)
-                                                }
-                                            }
+                                            // Auto-scroll to next subtema removed as requested
                                         }}
                                         style={{
                                             display: "flex",
