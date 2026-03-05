@@ -136,45 +136,48 @@ export default function MobileFooterNav() {
           display: flex !important;
           flex-direction: row !important;
           flex-wrap: nowrap !important;
-          align-items: center !important;
+          align-items: stretch !important;
           justify-content: space-around !important;
           height: 100% !important;
-          padding: 0 4px !important;
-          gap: 2px !important;
+          padding: 8px 12px 0 12px !important;
+          gap: 4px !important;
           width: 100% !important;
         }
         .mobile-footer-btn {
           display: flex !important;
+          flex-direction: column !important;
           align-items: center !important;
           justify-content: center !important;
           flex: 1 1 0 !important;
-          height: 50px !important;
-          max-width: 60px !important;
-          min-width: 35px !important;
+          height: auto !important;
+          max-width: 64px !important;
           border: none !important;
-          border-radius: 8px !important;
+          border-radius: 12px !important;
           cursor: pointer !important;
-          padding: 0 !important;
+          padding: 6px 0 !important;
           margin: 0 !important;
-          flex-shrink: 1 !important;
+          transition: all 0.2s ease !important;
         }
-        .mobile-footer-icon {
-          width: 40px !important;
-          height: 40px !important;
+        .mobile-footer-icon-wrapper {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          height: 32px !important;
+          width: 32px !important;
+          transition: transform 0.2s ease !important;
+        }
+        .mobile-footer-btn.active .mobile-footer-icon-wrapper {
+          transform: translateY(-2px) !important;
         }
         .mobile-footer-btn.active {
-          background: #EFF6FF !important;
+          background: rgba(15, 98, 254, 0.08) !important;
         }
         .mobile-footer-btn:not(.active) {
           background: transparent !important;
         }
         @keyframes slideUp {
-          from {
-            transform: translateY(100%);
-          }
-          to {
-            transform: translateY(0);
-          }
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
         }
       `}</style>
       <div
@@ -185,8 +188,8 @@ export default function MobileFooterNav() {
           bottom: 0,
           left: 0,
           right: 0,
-          height: "65px",
-          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          height: "70px",
+          paddingBottom: "max(12px, env(safe-area-inset-bottom, 0px))",
           boxSizing: "content-box",
           zIndex: 10000,
           transform: "translate3d(0, 0, 0)",
@@ -210,34 +213,44 @@ export default function MobileFooterNav() {
               }}
               className={`mobile-footer-btn ${item.active ? 'active' : ''}`}
             >
-              {item.isProfileButton && user ? (
-                <div style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  background: user?.user_metadata?.avatar?.gradient || user?.user_metadata?.avatar?.bgColor
-                    ? "transparent"
-                    : "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  overflow: "hidden",
-                  border: item.active ? "2px solid #0F62FE" : "none",
-                  boxSizing: "border-box"
-                }}>
-                  <AvatarDisplay
-                    avatar={user?.user_metadata?.avatar || { type: "emoji", value: (user?.user_metadata?.full_name || user?.email || "U")[0].toUpperCase() }}
-                    size={32}
-                    frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
+              <div className="mobile-footer-icon-wrapper">
+                {item.isProfileButton && user ? (
+                  <div style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
+                    background: user?.user_metadata?.avatar?.gradient || user?.user_metadata?.avatar?.bgColor
+                      ? "transparent"
+                      : "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    border: item.active ? "2px solid #0F62FE" : "none",
+                    boxSizing: "border-box"
+                  }}>
+                    <AvatarDisplay
+                      avatar={user?.user_metadata?.avatar || { type: "emoji", value: (user?.user_metadata?.full_name || user?.email || "U")[0].toUpperCase() }}
+                      size={32}
+                      frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
+                    />
+                  </div>
+                ) : (
+                  <item.icon
+                    size={24}
+                    strokeWidth={item.active ? 2.5 : 2}
+                    color={item.active ? "#0F62FE" : "#4b5563"}
                   />
-                </div>
-              ) : (
-                <item.icon
-                  size={24}
-                  strokeWidth={item.active ? 2.5 : 2}
-                  color={item.active ? "#0F62FE" : "#4b5563"}
-                />
-              )}
+                )}
+              </div>
+              <span style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                color: item.active ? "#0F62FE" : "#64748b",
+                marginTop: "2px"
+              }}>
+                {item.label}
+              </span>
             </button>
           ))}
         </div>

@@ -410,12 +410,11 @@ export default function CoursesPage() {
                 const displayPair = isRTL ? [...pair].reverse() : pair
                 return (
                   <React.Fragment key={pairIdx}>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", width: "100%", gap: 0, justifyContent: "center", position: "relative" }}>
+                    <div className="topics-row-container" style={{ display: "flex", flexDirection: "row", alignItems: "stretch", width: "100%", gap: 0, justifyContent: "center", position: "relative" }}>
                       {displayPair.map((topic, i) => {
                         const IconComp = topic.icon
                         const showArrow = i === 0 && displayPair.length > 1
 
-                        // Updated: Only topic 1 has free content. Topics 2-30 are premium.
                         const isPremiumTopic = topic.id > 1;
                         const isLocked = isPremiumTopic && !hasPremiumAccess;
 
@@ -429,7 +428,7 @@ export default function CoursesPage() {
                                   router.push(`/courses/${topic.id}`);
                                 }
                               }}
-                              className={`course-card-hover ${topic.id === nextTopicId ? "next-topic-glow" : ""}`}
+                              className={`course-card-wrapper course-card-hover ${topic.id === nextTopicId ? "next-topic-glow" : ""}`}
                               style={{
                                 flex: "0 1 550px",
                                 minHeight: 180,
@@ -447,11 +446,11 @@ export default function CoursesPage() {
                               }}
                             >
                               <div style={{ height: 5, background: isLocked ? "linear-gradient(90deg, #64748b, #94a3b8)" : "linear-gradient(90deg, #1e3a8a, #3b82f6)", width: "100%", flexShrink: 0 }} />
-                              <div style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
+                              <div className="course-card-content" style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
                                 <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
                                   {isLocked ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Bloqueado</span> : topic.category}
                                 </div>
-                                <div style={{ width: 68, height: 68, borderRadius: 20, flexShrink: 0, background: isLocked ? '#f1f5f9' : `${topic.catColor}14`, display: "flex", alignItems: "center", justifyContent: "center", color: isLocked ? '#64748b' : topic.catColor }}>
+                                <div className="course-card-icon-container" style={{ width: 68, height: 68, borderRadius: 20, flexShrink: 0, background: isLocked ? '#f1f5f9' : `${topic.catColor}14`, display: "flex", alignItems: "center", justifyContent: "center", color: isLocked ? '#64748b' : topic.catColor }}>
                                   <IconComp size={36} strokeWidth={2} />
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -470,7 +469,7 @@ export default function CoursesPage() {
                               const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
 
                               return (
-                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", flexShrink: 0, padding: "0 8px", alignSelf: "center" }}>
+                                <div className="topic-horizontal-arrow" style={{ display: "flex", flexDirection: "row", alignItems: "center", flexShrink: 0, padding: "0 8px", alignSelf: "center" }}>
                                   {isRTL ? (
                                     <svg width="72" height="28" viewBox="0 0 72 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <defs>
@@ -519,22 +518,17 @@ export default function CoursesPage() {
                     </div>
                     {!isLastPair && (() => {
                       const nextPair = pairs[pairIdx + 1];
-                      // Points to the first item of next row (which is pairs[pairIdx+1][0])
                       const destTopic = nextPair[0];
                       const isDestLocked = (destTopic.id > 1) && !hasPremiumAccess;
                       const arrowColor = isDestLocked ? "#94a3b8" : "#1e3a8a";
                       const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
 
                       return (
-                        <div style={{ display: "flex", width: "100%", justifyContent: "center", position: "relative" }}>
-                          {/* Total row width is actually 1188px (550 + 8 + 72 + 8 + 550) */}
+                        <div className="topic-vertical-arrow-container" style={{ display: "flex", width: "100%", justifyContent: "center", position: "relative" }}>
                           <div style={{
                             width: 1188,
                             display: "flex",
                             justifyContent: isRTL ? "flex-start" : "flex-end",
-                            // To align perfectly under the center of the card:
-                            // Card center is at 275px from its side of the row.
-                            // We use padding on the inner container and translate the arrow by its half-width (14px).
                             paddingLeft: isRTL ? 275 : 0,
                             paddingRight: isRTL ? 0 : 275,
                             position: "relative"
@@ -571,57 +565,55 @@ export default function CoursesPage() {
       </div >
 
       <style>{`
-        @media (max-width: 1024px) {
-          .topics-grid-responsive {
-            grid-template-columns: repeat(2, 1fr) !important;
+        /* Topics row: 2-per-row on desktop, 1-per-row on mobile */
+        @media (max-width: 900px) {
+          .topics-row-container {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 20px !important;
           }
-        }
-        @media (max-width: 640px) {
-          .topics-grid-responsive {
-            grid-template-columns: 1fr !important;
+          .course-card-wrapper {
+            flex: 1 1 100% !important;
+            width: 100% !important;
+            max-width: 550px !important;
+          }
+          .topic-horizontal-arrow, .topic-vertical-arrow-container {
+            display: none !important;
           }
         }
 
-        /* Course title separator - use full usable width */
-        div[style*="gap: clamp(16px, 3vw, 24px)"][style*="marginBottom: clamp(10px"] {
-          width: 100% !important;
-          max-width: 100% !important;
-        }
-        
-        /* On tablet/iPad - account for left sidebar only (220px) */
-        @media (min-width: 768px) and (max-width: 1160px) {
-          div[style*="gap: clamp(16px, 3vw, 24px)"][style*="marginBottom: clamp(10px"] {
-            width: calc(100vw - 220px - 32px) !important;
-            max-width: calc(100vw - 220px - 32px) !important;
+        @media (max-width: 480px) {
+          .course-card-content {
+            padding: 32px 20px !important;
+            gap: 16px !important;
+          }
+          .course-card-icon-container {
+            width: 52px !important;
+            height: 52px !important;
+          }
+          .course-card-icon-container svg {
+            width: 28px !important;
+            height: 28px !important;
           }
         }
-        
-        /* On desktop - account for left sidebar only (280px) */
+          
+        /* Responsive sidebar offsets */
         @media (min-width: 1161px) {
-          div[style*="gap: clamp(16px, 3vw, 24px)"][style*="marginBottom: clamp(10px"] {
-            width: calc(100vw - 280px - 48px) !important;
-            max-width: calc(100vw - 280px - 48px) !important;
+          .courses-main-content {
+            padding-left: 280px !important;
+            padding-right: 32px !important;
           }
         }
-        
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .courses-main-content {
+            padding-left: 220px !important;
+            padding-right: 24px !important;
+          }
+        }
+        /* RESTORED ANIMATIONS & HOVER EFFECTS */
         @keyframes shimmer {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
-        }
-
-        /* Lesson action buttons - hover effect */
-        .lesson-btn:hover {
-          transform: scale(1.02);
-          box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-        }
-        .lesson-btn:active {
-          transform: scale(0.98);
-        }
-        .lesson-btn-start:hover {
-          background: #2563EB !important;
-        }
-        .lesson-btn-signup:hover {
-          background: linear-gradient(135deg, #0A5FD4 0%, #3A8EF7 100%) !important;
         }
 
         .course-card-hover:not(.next-topic-glow):hover {
@@ -649,125 +641,13 @@ export default function CoursesPage() {
         .next-topic-glow {
           animation: topic-glow-pulse 4s ease-in-out infinite !important;
         }
-        
-        @keyframes bounce {
-          0%, 100% { transform: translateX(-50%) translateY(0); }
-          50% { transform: translateX(-50%) translateY(-8px); }
-        }
-        
-        @keyframes softRotate {
-          0% { transform: rotateY(0deg); }
-          100% { transform: rotateY(360deg); }
-        }
-        
-        /* Removed redundant padding media queries handled globally */
-        
-        @media (max-width: 768px) {
-          /* Ensure app-shell and app-scroll use full width on mobile */
-          .app-shell,
-          .app-scroll,
-          .app-main {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow-x: hidden !important;
-            background-color: #ffffff !important;
-          }
-          
-          /* Ensure root container uses full width */
-          div[style*="position: relative"][style*="width: 100%"] {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-          }
-          
-          /* Fix main container for mobile scrolling */
-          div[style*="position: relative"][style*="minHeight: 100vh"] {
-            position: relative !important;
-            height: auto !important;
-            min-height: 100vh !important;
-            overflow-y: visible !important;
-            overflow-x: hidden !important;
-            -webkit-overflow-scrolling: touch !important;
-          }
-          
-          /* Adjust main content padding on mobile - no left padding since panel is hidden */
-          main[style*="paddingLeft"],
-          main[style*="padding-left"],
-          .courses-main-content {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            padding-top: 80px !important; /* Space for hamburger button + course bar */
-            padding-bottom: calc(65px + env(safe-area-inset-bottom)) !important; /* Space for mobile footer + safe area */
-            background: #ffffff !important;
-          }
-          
-          /* Remove extra margin from last course section on mobile */
-          .courses-main-content > div > div:last-child {
-            margin-bottom: 0 !important;
-          }
-          
-          
-          /* Ensure main container doesn't cause horizontal scroll */
-          div[style*="width: 100%"],
-          div[style*="width: 100vw"] {
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow-x: clip !important; /* Use clip instead of hidden */
-            box-sizing: border-box !important;
-          }
-          
-          /* Ensure island path container fits in available space on mobile - centered */
-          div[style*="maxWidth: 800px"],
-          div[style*="maxWidth: 800"] {
-            max-width: 100% !important;
-            width: 100% !important;
-            margin: 0 auto !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
-            overflow: visible !important; /* Allow START label and preview panels to show */
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-          }
-          
-          /* Container for course/lesson list */
-          div[style*="flexDirection: column"][style*="alignItems: center"] {
-            overflow: visible !important;
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-          
-          /* Ensure main container allows overflow */
-          main {
-            overflow: visible !important;
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-          }
-          }
-          
-        /* Responsive sidebar offsets */
-        @media (min-width: 1161px) {
-          .courses-main-content {
-            padding-left: 280px !important;
-            padding-right: 32px !important;
-          }
-        }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .courses-main-content {
-            padding-left: 220px !important;
-            padding-right: 24px !important;
-          }
-        }
+
         @media (max-width: 767px) {
           .courses-main-content {
             padding-left: 16px !important;
             padding-right: 16px !important;
             padding-top: 80px !important;
+            padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
           }
         }
         

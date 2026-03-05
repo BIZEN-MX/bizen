@@ -54,11 +54,10 @@ export default function PaymentPage() {
 
   return (
     <div style={{
-      height: "100vh",
+      minHeight: "100vh",
       background: "#FBFAF5",
       fontFamily: "Helvetica, 'Inter', sans-serif",
       position: "relative",
-      overflow: "hidden",
       display: "flex",
       flexDirection: "column",
       boxSizing: "border-box"
@@ -72,23 +71,25 @@ export default function PaymentPage() {
         .pay-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,99,235,0.35); }
         .pay-feature-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
         
-        @media (max-width: 1024px) {
-          .pay-grid { grid-template-columns: 1fr !important; gap: 16px !important; padding-top: 16px !important; }
-          .pay-hero { padding: 20px !important; }
-          .pay-form-card { padding: 20px !important; }
-          .pay-header-text { margin-bottom: 20px !important; }
-        }
-        @media (max-height: 800px) {
-          .pay-hero { padding: 16px !important; }
-          .pay-form-card { padding: 20px !important; }
-          .pay-feature-row { padding: 4px 0 !important; }
+        @media (max-width: 900px) {
+          .pay-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+          .pay-hero { order: 2; padding: 24px !important; }
+          .pay-form-card { order: 1; padding: 24px !important; }
+          .pay-mascot { display: none !important; }
           .pay-header-text h1 { font-size: 28px !important; }
-          .pay-hero-badge { margin-bottom: 10px !important; }
+          .pay-header-text p { font-size: 14px !important; }
+          .pay-header { padding: 0 20px !important; }
+          .pay-main { padding: 20px !important; }
+        }
+        @media (max-height: 700px) {
+          .pay-main { padding: 40px 20px !important; }
+          .pay-hero { padding: 20px !important; }
+          .pay-header-text { margin-bottom: 24px !important; }
         }
       `}</style>
 
       {/* Header */}
-      <header style={{
+      <header className="pay-header" style={{
         height: 64, zIndex: 100,
         background: "rgba(251,250,245,0.9)",
         backdropFilter: "blur(12px)",
@@ -109,15 +110,13 @@ export default function PaymentPage() {
       </header>
 
       {/* Main Container - FLEX to prevent cut-off */}
-      <main style={{
+      <main className="pay-main" style={{
         flex: 1,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        padding: "20px 40px",
-        paddingBottom: "40px",
-        overflowY: "auto", // Allow internal scroll if viewport is extremely small, but container stays locked
+        padding: "40px",
         zIndex: 1
       }}>
 
@@ -180,6 +179,7 @@ export default function PaymentPage() {
               <img
                 src="/image copy.png"
                 alt="Billy"
+                className="pay-mascot"
                 style={{
                   position: "absolute",
                   top: -90,
