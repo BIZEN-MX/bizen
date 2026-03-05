@@ -298,7 +298,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const starMessages: Record<0 | 1 | 2 | 3, string> = {
-    3: "¡Perfecto! Sin errores 🎯",
+    3: "¡Excelente trabajo! 🎯",
     2: "¡Muy bien! Casi perfecto ⭐",
     1: "¡Buen esfuerzo! Sigue practicando 💪",
     0: "Sigue intentándolo, ¡tú puedes! 🔥",

@@ -10,7 +10,7 @@ import Link from "next/link"
 import {
   Flame, Zap, Shield, Award, UserPlus, Users,
   Search, Mail, ChevronRight, X as CloseIcon, Camera, Star,
-  Trophy, BookOpen, Compass, Share2, Heart
+  Trophy, BookOpen, Compass, Share2, Heart, Settings
 } from "lucide-react"
 
 // --- CUSTOM ILLUSTRATIONS ---
@@ -172,6 +172,26 @@ export default function ProfilePage() {
     } catch { alert("No se pudo actualizar el avatar") } finally { setSavingAvatar(false) }
   }
 
+  const handleManageSubscription = async () => {
+    if (!user?.id) return
+    try {
+      const res = await fetch("/api/payment/create-portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id })
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        alert(data.error || "No se pudo abrir el portal de gestión. Si no tienes una suscripción activa pagada por Stripe, no hay nada que gestionar.")
+      }
+    } catch (err) {
+      console.error("Error redirecting to portal:", err)
+      alert("Error al conectar con Stripe.")
+    }
+  }
+
   // ── SKELETON COMPONENTS ──
   const Skeleton = ({ w, h, r = 12, mb = 0, style = {} }: any) => (
     <div className="skeleton-pulse" style={{ width: w, height: h, borderRadius: r, marginBottom: mb, background: "#f1f5f9", ...style }} />
@@ -252,10 +272,18 @@ export default function ProfilePage() {
     return 0
   }
 
+  const getLeagueTitle = (lvl: number) => {
+    if (lvl >= 20) return "Leyenda"
+    if (lvl >= 15) return "Maestro"
+    if (lvl >= 10) return "Experto"
+    if (lvl >= 5) return "Avanzado"
+    return "Explorer"
+  }
+
   const statCards = [
     { icon: <Flame size={22} color="#0F62FE" />, value: streak, label: "Racha diaria" },
     { icon: <Zap size={22} color="#0F62FE" />, value: totalXp, label: "Total XP" },
-    { icon: <Shield size={22} color="#0F62FE" />, value: level === 1 ? "Ninguna" : `Nivel ${level}`, label: "Liga actual" },
+    { icon: <Shield size={22} color="#0F62FE" />, value: getLeagueTitle(level), label: "Liga actual" },
     { icon: <Award size={22} color="#0F62FE" />, value: ACHIEVEMENTS.filter(a => getAchievementProgress(a) >= a.maxVal).length, label: "Top completados" },
   ]
 
@@ -748,11 +776,43 @@ export default function ProfilePage() {
                         <div style={{ fontSize: 11, fontWeight: 600, color: "#93c5fd", marginTop: 2 }}>Tienes acceso completo a BIZEN</div>
                       </div>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.08)", borderRadius: 10, padding: "8px 12px", position: "relative" }}>
-                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 6px #4ade80", flexShrink: 0 }} />
-                      <span style={{ fontSize: 12, fontWeight: 700, color: "#e2e8f0" }}>
-                        {hasActiveLicense ? "Acceso vía Institución Educativa" : "Suscripción activa"}
-                      </span>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.08)", borderRadius: 10, padding: "8px 12px", position: "relative" }}>
+                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 6px #4ade80", flexShrink: 0 }} />
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#e2e8f0" }}>
+                          {hasActiveLicense ? `Acceso vía ${dbProfile?.school?.name || "Institución"}` : "Suscripción activa"}
+                        </span>
+                      </div>
+
+                      {hasActiveStripe && dbProfile?.stripeCustomerId && (
+                        <button
+                          onClick={handleManageSubscription}
+                          style={{
+                            marginTop: 4,
+                            padding: "10px 14px",
+                            background: "rgba(255,255,255,0.12)",
+                            border: "1px solid rgba(255,255,255,0.2)",
+                            borderRadius: "10px",
+                            color: "#fff",
+                            fontSize: "12px",
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            transition: "all 0.2s"
+                          }}
+                        >
+                          <Settings size={14} />
+                          Gestionar Suscripción
+                        </button>
+                      )}
+
+                      {!hasActiveLicense && (
+                        <div style={{ fontSize: 11, color: "rgba(147,197,253,0.7)", marginTop: 4, fontStyle: "italic", marginLeft: 4 }}>
+                          Al cancelar, mantienes tu acceso hasta el final del periodo pagado.
+                        </div>
+                      )}
                     </div>
                   </div>
                 )

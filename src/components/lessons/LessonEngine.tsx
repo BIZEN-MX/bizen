@@ -121,7 +121,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   }
   const mistakeCount = state.totalMistakes
   const stars: 0 | 1 | 2 | 3 =
-    mistakeCount === 0 ? 3 : mistakeCount === 1 ? 2 : mistakeCount === 2 ? 1 : 0
+    mistakeCount <= 2 ? 3 : mistakeCount <= 5 ? 2 : 1
 
   useEffect(() => {
     onProgressChange?.({
