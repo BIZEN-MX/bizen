@@ -646,6 +646,27 @@ export default function CoursesPage() {
         }
         .next-topic-glow {
           animation: topic-glow-pulse 4s ease-in-out infinite !important;
+          position: relative;
+          z-index: 1;
+        }
+        .next-topic-glow::after {
+          content: "";
+          position: absolute;
+          inset: -2px;
+          background: conic-gradient(from 0deg at 50% 50%, transparent 0%, transparent 20%, #3b82f6 25%, #60a5fa 30%, transparent 35%, transparent 100%);
+          border-radius: 22px;
+          animation: electric-border-rotate 3s linear infinite;
+          z-index: -1;
+          opacity: 0.8;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          padding: 2px;
+        }
+        @keyframes electric-border-rotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
         
         @keyframes bounce {
