@@ -143,7 +143,10 @@ export function MultiSelectStep({
                 color,
                 transition: "all 0.2s ease",
                 fontFamily: "'Inter', sans-serif",
+                opacity: 1,
               }}
+              onMouseEnter={(e) => { if (!hasChecked) e.currentTarget.style.opacity = "0.72" }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
             >
               <div style={{
                 width: 24,

@@ -177,25 +177,30 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
                 userSelect: "none",
                 outline: "none",
                 transform: "translateY(0)",
+                opacity: 1,
               }}
               onMouseEnter={(e) => {
                 if (!hasChecked) {
                   e.currentTarget.style.transform = "translateY(-1px)"
+                  e.currentTarget.style.opacity = "0.72"
                 }
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)"
+                e.currentTarget.style.opacity = "1"
               }}
               onMouseDown={(e) => {
                 if (!hasChecked) {
                   e.currentTarget.style.transform = "translateY(2px)"
                   e.currentTarget.style.boxShadow = "0 0px 0 0 #E5E7EB"
+                  e.currentTarget.style.opacity = "0.55"
                 }
               }}
               onMouseUp={(e) => {
                 if (!hasChecked) {
                   e.currentTarget.style.transform = "translateY(0)"
                   e.currentTarget.style.boxShadow = boxShadow
+                  e.currentTarget.style.opacity = "1"
                 }
               }}
             >

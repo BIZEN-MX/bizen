@@ -96,6 +96,7 @@ export function TrueFalseStep({
       gap: '12px',
       transition: 'all 0.2s ease',
       fontFamily: "'Inter', sans-serif",
+      opacity: 1,
     }
   }
 
@@ -127,6 +128,8 @@ export function TrueFalseStep({
           onClick={() => handleSelect(true)}
           disabled={hasChecked}
           style={getButtonStyle(true)}
+          onMouseEnter={(e) => { if (!hasChecked) e.currentTarget.style.opacity = "0.72" }}
+          onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === true ? "#0F62FE15" : "#F3F4F6", border: selectedValue === true ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
             <Check size={20} strokeWidth={3} />
@@ -146,6 +149,8 @@ export function TrueFalseStep({
           onClick={() => handleSelect(false)}
           disabled={hasChecked}
           style={getButtonStyle(false)}
+          onMouseEnter={(e) => { if (!hasChecked) e.currentTarget.style.opacity = "0.72" }}
+          onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === false ? "#0F62FE15" : "#F3F4F6", border: selectedValue === false ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
             <X size={20} strokeWidth={3} />
