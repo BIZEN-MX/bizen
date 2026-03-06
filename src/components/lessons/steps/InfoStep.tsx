@@ -330,20 +330,22 @@ export function InfoStep({
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
-                    gap: 6,
+                    gap: 7,
                     padding: "5px 12px",
-                    background: "#F8FAFC",
+                    background: "#EFF6FF",
                     borderRadius: 8,
-                    border: "1px solid #E2E8F0",
-                    alignSelf: hasImage ? "flex-start" : "flex-start",
-                    marginLeft: hasImage ? 0 : 0,
+                    border: "1.5px solid #BFDBFE",
+                    alignSelf: "flex-start",
                   }}
                 >
-                  <span style={{ fontSize: 13 }}>📖</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                  </svg>
                   <span style={{
                     fontSize: 11,
                     fontWeight: 800,
-                    color: "#94A3B8",
+                    color: "#2563EB",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
                     fontFamily: "'Montserrat', sans-serif",

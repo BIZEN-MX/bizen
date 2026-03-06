@@ -19,6 +19,7 @@ import {
 } from "./steps"
 import { haptic } from "@/utils/hapticFeedback"
 import { playFlipSound } from "./lessonSounds"
+import { SmartText } from "./SmartText"
 
 interface LessonEngineProps {
   lessonSteps: LessonStep[]
@@ -437,7 +438,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               <path d="M12 3v16M18 13l-6 6-6-6" stroke="#2563eb" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
 
-            {/* The BIG Button */}
+            {/* The BIG Button — no hover effects */}
             <button
               onClick={() => { playFlipSound(); setShowRecallOverlay(true) }}
               style={{
@@ -454,18 +455,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 fontSize: 16,
                 fontWeight: 800,
                 color: "#ffffff",
-                transition: "transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease",
                 animation: recallHintBounce ? "recallBounce 0.4s ease 2" : "none",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px) scale(1.02)";
-                e.currentTarget.style.boxShadow = "0 14px 32px rgba(37,99,235,0.5), inset 0 2px 0 rgba(255,255,255,0.2)";
-                e.currentTarget.style.filter = "brightness(1.1)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0) scale(1)";
-                e.currentTarget.style.boxShadow = "0 8px 24px rgba(37,99,235,0.4), inset 0 2px 0 rgba(255,255,255,0.2)";
-                e.currentTarget.style.filter = "brightness(1)";
               }}
             >
               {/* Custom SVG Flashcard/Notebook Icon */}
@@ -542,22 +532,46 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
               {/* Content */}
               <div style={{ padding: "32px 32px 40px" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#eff6ff", padding: "4px 12px", borderRadius: 999, marginBottom: 20 }}>
-                  <span style={{ fontSize: 13 }}>📖</span>
-                  <span style={{ fontSize: 11, fontWeight: 800, color: "#2563eb", letterSpacing: "0.05em", textTransform: "uppercase" as const }}>Nota de clase</span>
+
+                {/* Pill header — SVG icon instead of emoji */}
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#eff6ff", border: "1.5px solid #BFDBFE", padding: "5px 14px", borderRadius: 999, marginBottom: 24 }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                  </svg>
+                  <span style={{ fontSize: 11, fontWeight: 900, color: "#2563eb", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontFamily: "'Montserrat', sans-serif" }}>Nota de clase</span>
                 </div>
 
                 {(lastInfoStep as any).title && (
-                  <h2 style={{ fontSize: "clamp(20px, 4vw, 26px)", fontWeight: 900, color: "#0f172a", marginBottom: 16, lineHeight: 1.25, fontFamily: "'Montserrat', sans-serif" }}>
+                  <h2 style={{
+                    fontSize: "clamp(20px, 4vw, 26px)",
+                    fontWeight: 900,
+                    marginBottom: 16,
+                    lineHeight: 1.2,
+                    fontFamily: "'Montserrat', sans-serif",
+                    background: "linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #3b82f6 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    letterSpacing: "-0.02em",
+                  }}>
                     {(lastInfoStep as any).title}
                   </h2>
                 )}
 
-                <div style={{ fontSize: "clamp(15px, 2.5vw, 18px)", color: "#334155", lineHeight: 1.7, fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}>
-                  {(lastInfoStep as any).body?.split("\n\n").map((para: string, i: number) => (
-                    <p key={i} style={{ margin: "0 0 14px", whiteSpace: "pre-wrap" }}>{para}</p>
-                  ))}
-                </div>
+                {/* Gradient divider under title */}
+                {(lastInfoStep as any).title && (
+                  <div style={{ height: 2, width: 200, background: "linear-gradient(90deg, #3b82f6, #BFDBFE, transparent)", borderRadius: 999, marginBottom: 20 }} />
+                )}
+
+                {/* SmartText for formatted body content */}
+                {(lastInfoStep as any).body && (
+                  <SmartText
+                    text={(lastInfoStep as any).body}
+                    fontSize="clamp(15px, 2.2vw, 18px)"
+                    align="left"
+                  />
+                )}
               </div>
             </div>
           </div>
