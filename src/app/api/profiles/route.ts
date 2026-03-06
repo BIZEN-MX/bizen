@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
       bizcoins: typeof profile.bizcoins === 'number' ? profile.bizcoins : (parseInt(profile.bizcoins) || 0),
       inventory: (inventoryResult || []).map((i: any) => i.product_id),
       currentStreak: profile.current_streak || profile.currentStreak || 0,
-      subscriptionStatus: (user.email === 'diegopenita31@gmail.com' || hasAccessCookie) ? 'active' : (profile.subscription_status || profile.subscriptionStatus || 'none'),
+      subscriptionStatus: hasAccessCookie ? 'active' : (profile.subscription_status || profile.subscriptionStatus || 'none'),
       subscriptionEnds: profile.subscription_ends || profile.subscriptionEnds || null,
       stripeCustomerId: profile.stripe_customer_id || profile.stripeCustomerId || null,
       school
