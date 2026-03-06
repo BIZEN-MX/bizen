@@ -502,12 +502,33 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 maxHeight: "80vh",
                 overflowY: "auto",
                 position: "relative",
-                boxShadow: "0 24px 64px rgba(15,23,42,0.35)",
+                // Synced with InfoStep flashcard border + glow
+                border: "2px solid rgba(15, 98, 254, 0.22)",
+                boxShadow: [
+                  "0 0 0 4px rgba(15, 98, 254, 0.06)",
+                  "0 2px 6px rgba(15,98,254,0.08)",
+                  "0 10px 28px rgba(15,98,254,0.14)",
+                  "0 32px 64px rgba(15,23,42,0.25)",
+                ].join(", "),
                 animation: "recallSlideUp 0.25s cubic-bezier(0.4,0,0.2,1)",
               }}
             >
-              {/* Blue top bar */}
-              <div style={{ height: 6, background: "linear-gradient(90deg, #3b82f6, #1e40af)", borderRadius: "28px 28px 0 0" }} />
+              {/* Shimmer top bar — synced with InfoStep */}
+              <div style={{
+                height: 6,
+                background: "linear-gradient(90deg, #1e40af 0%, #2563eb 35%, #3b82f6 65%, #60a5fa 100%)",
+                borderRadius: "26px 26px 0 0",
+                position: "relative",
+                overflow: "hidden",
+              }}>
+                <div style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+                  width: "50%",
+                  animation: "shimmerSlide 2.5s linear 1s infinite",
+                }} />
+              </div>
 
               {/* Close button */}
               <button
@@ -519,19 +540,24 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                   width: 36,
                   height: 36,
                   borderRadius: "50%",
-                  background: "#f1f5f9",
-                  border: "none",
+                  background: "#EFF6FF",
+                  border: "1.5px solid #BFDBFE",
                   cursor: "pointer",
-                  fontSize: 18,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#64748b",
+                  color: "#2563EB",
                   fontWeight: 700,
-                  lineHeight: 1,
+                  transition: "opacity 0.2s ease",
+                  opacity: 1,
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7" }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
               >
-                ×
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
               </button>
 
               {/* Content */}
@@ -576,6 +602,17 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                     align="left"
                   />
                 )}
+                {/* Bottom vignette — synced with InfoStep */}
+                <div style={{
+                  position: "sticky",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: "40px",
+                  background: "linear-gradient(to top, rgba(239,246,255,0.3), transparent)",
+                  pointerEvents: "none",
+                  marginTop: 16,
+                }} />
               </div>
             </div>
           </div>
@@ -597,6 +634,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           @keyframes recallSlideUp {
             from { opacity: 0; transform: translateY(24px) scale(0.97); }
             to   { opacity: 1; transform: translateY(0) scale(1); }
+          }
+          @keyframes shimmerSlide {
+            from { transform: translateX(-200%); }
+            to   { transform: translateX(300%); }
           }
         `}</style>
 
