@@ -16,8 +16,9 @@ const globalForPrisma = globalThis as unknown as {
 // Better to configure the DATABASE_URL correctly in .env directly.
 let customUrl = process.env.DATABASE_URL
 
+console.log("🛠️ Initializing Prisma Client with URL:", customUrl ? customUrl.substring(0, 20) + "..." : "null")
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   datasourceUrl: customUrl,
 })
 

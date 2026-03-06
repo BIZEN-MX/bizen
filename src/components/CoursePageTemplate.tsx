@@ -122,6 +122,7 @@ export default function CoursePageTemplate({
     const { user, loading, dbProfile } = useAuth()
     const { completedLessons, lessonStars } = useLessonProgress()
     const [lessonModal, setLessonModal] = useState<{ lesson: GenericLesson; unitTitle: string } | null>(null)
+    const [sequenceWarning, setSequenceWarning] = useState<string | null>(null)
 
     // Access check
     const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
@@ -236,10 +237,13 @@ export default function CoursePageTemplate({
                             background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 45%, #2563eb 100%)",
                             borderRadius: 28,
                             padding: "clamp(28px, 4vw, 48px) clamp(24px, 4vw, 44px)",
-                            marginBottom: "clamp(20px, 4vw, 32px)",
+                            width: "100%",
+                            maxWidth: "100%",
+                            margin: "0 auto clamp(20px, 4vw, 32px)",
                             position: "relative",
                             overflow: "hidden",
                             boxShadow: "0 20px 60px rgba(15,98,254,0.3)",
+                            boxSizing: "border-box"
                         }}
                     >
                         {/* Orbs inside hero */}
@@ -338,7 +342,7 @@ export default function CoursePageTemplate({
                     </div>
 
                     {/* ── SUBTEMAS ──────────────────────────────────────────────────── */}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "clamp(28px, 5vw, 44px)", paddingBottom: 40 }}>
+                    <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px, 5vw, 44px)", paddingBottom: 40, boxSizing: "border-box" }}>
                         {subtemas.map((sub, subIdx) => {
                             const subCompleted = sub.lessons.filter((l) => completedLessons.includes(l.slug)).length
                             const subTotal = sub.lessons.length
@@ -412,13 +416,30 @@ export default function CoursePageTemplate({
                                                         onKeyDown={(e) => {
                                                             if (e.key === "Enter" || e.key === " ") {
                                                                 e.preventDefault();
-                                                                if (isLocked) router.push('/payment');
-                                                                else setLessonModal({ lesson, unitTitle: sub.title });
+                                                                if (isLocked) {
+                                                                    if (hasPremiumAccess && isSequenceLocked) {
+                                                                        setSequenceWarning(lesson.slug);
+                                                                        return;
+                                                                    }
+                                                                    router.push('/payment');
+                                                                } else {
+                                                                    setSequenceWarning(null);
+                                                                    setLessonModal({ lesson, unitTitle: sub.title });
+                                                                }
                                                             }
                                                         }}
                                                         onClick={() => {
-                                                            if (isLocked) router.push('/payment');
-                                                            else setLessonModal({ lesson, unitTitle: sub.title });
+                                                            const isSelected = lessonModal?.lesson.slug === lesson.slug;
+                                                            if (isLocked) {
+                                                                if (hasPremiumAccess && isSequenceLocked) {
+                                                                    setSequenceWarning(sequenceWarning === lesson.slug ? null : lesson.slug);
+                                                                    return;
+                                                                }
+                                                                router.push('/payment');
+                                                            } else {
+                                                                setSequenceWarning(null);
+                                                                setLessonModal(isSelected ? null : { lesson, unitTitle: sub.title });
+                                                            }
                                                         }}
                                                         className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""}`}
                                                         style={{
@@ -430,7 +451,7 @@ export default function CoursePageTemplate({
                                                             padding: "32px 28px",
                                                             background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
                                                             borderRadius: 24,
-                                                            border: isLocked ? "1.8px dashed #cbd5e1" : (isDone ? "2.5px solid rgba(59,130,246,0.3)" : "1.8px solid #e8f0fe"),
+                                                            border: isLocked ? "2.5px dashed rgba(148, 163, 184, 0.4)" : (isDone ? "3px solid rgba(59,130,246,0.5)" : "2.5px solid rgba(15, 98, 254, 0.25)"),
                                                             boxSizing: "border-box",
                                                             scrollSnapAlign: "start",
                                                             cursor: "pointer",
@@ -483,6 +504,79 @@ export default function CoursePageTemplate({
                                                                     ))}
                                                                 </div>
                                                             )}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Inline Action Panel */}
+                                                    <div
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        style={{
+                                                            flexShrink: 0,
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            width: lessonModal?.lesson.slug === lesson.slug ? 220 : 0,
+                                                            opacity: lessonModal?.lesson.slug === lesson.slug ? 1 : 0,
+                                                            transition: "width 0.42s cubic-bezier(0.34,1.4,0.64,1), opacity 0.3s ease",
+                                                            pointerEvents: lessonModal?.lesson.slug === lesson.slug ? "auto" : "none",
+                                                            overflow: "visible",
+                                                        }}
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                width: 200,
+                                                                minWidth: 200,
+                                                                background: "#fff",
+                                                                borderRadius: 20,
+                                                                padding: "18px 18px 18px 14px",
+                                                                border: "2.5px solid #2563eb",
+                                                                boxShadow: "0 12px 36px rgba(37,99,235,0.15)",
+                                                                display: "flex",
+                                                                flexDirection: "column",
+                                                                justifyContent: "center",
+                                                                gap: 11,
+                                                                position: "relative",
+                                                                marginLeft: 10,
+                                                                transform: lessonModal?.lesson.slug === lesson.slug
+                                                                    ? "scale(1) translateX(0)"
+                                                                    : "scale(0.88) translateX(-12px)",
+                                                                transition: "transform 0.42s cubic-bezier(0.34,1.56,0.64,1)",
+                                                                overflow: "hidden"
+                                                            }}
+                                                        >
+                                                            {/* Top accent bar */}
+                                                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #1e3a8a, #60a5fa)", borderRadius: "20px 20px 0 0" }} />
+
+                                                            {/* Lesson number */}
+                                                            <div style={{ fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 8 }}>
+                                                                Lección {absoluteLessonNumber}
+                                                            </div>
+
+                                                            {/* XP badge */}
+                                                            <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#F0F9FF", border: "1.5px solid #BAE6FD", borderRadius: 10, padding: "6px 11px" }}>
+                                                                <Zap size={13} color="#0EA5E9" fill="#0EA5E9" />
+                                                                <span style={{ fontSize: 11, fontWeight: 800, color: "#0369A1" }}>
+                                                                    {isDone ? "+5 XP al repetir" : "Hasta 15 XP"}
+                                                                </span>
+                                                            </div>
+
+                                                            {/* CTA */}
+                                                            <button
+                                                                className="panel-cta-btn"
+                                                                onClick={() => {
+                                                                    router.push(getLessonPath(lesson.slug));
+                                                                    setLessonModal(null);
+                                                                }}
+                                                                style={{
+                                                                    width: "100%", fontSize: 13, fontWeight: 900, padding: "10px 14px",
+                                                                    background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
+                                                                    color: "white", border: "none", borderRadius: 11,
+                                                                    cursor: "pointer", fontFamily: "'Montserrat', sans-serif",
+                                                                    boxShadow: "0 5px 16px rgba(15,98,254,0.35)",
+                                                                    transition: "opacity 0.15s ease"
+                                                                }}
+                                                            >
+                                                                {isDone ? "Repetir lección" : "¡Empezar!"}
+                                                            </button>
                                                         </div>
                                                     </div>
 
@@ -541,65 +635,96 @@ export default function CoursePageTemplate({
                 </div>
             </main>
 
-            {/* ── LESSON MODAL ────────────────────────────────────────────────── */}
-            {
-                lessonModal && (
+            {/* Modal removed as requested */}
+
+            {/* Sequence Warning Overlay */}
+            {sequenceWarning && (
+                <div
+                    onClick={() => setSequenceWarning(null)}
+                    style={{
+                        position: "fixed", inset: 0, zIndex: 9999,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        background: "rgba(15, 23, 42, 0.45)",
+                        backdropFilter: "blur(8px)",
+                        animation: "seqOverlayIn 0.25s ease"
+                    }}
+                >
                     <div
-                        role="dialog"
-                        aria-modal="true"
-                        style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)", boxSizing: "border-box" }}
-                        onClick={() => setLessonModal(null)}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                            background: "#fff",
+                            borderRadius: 28,
+                            padding: "44px 40px 36px",
+                            maxWidth: 380,
+                            width: "90%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: 20,
+                            boxShadow: "0 32px 80px rgba(0,0,0,0.22)",
+                            animation: "seqCardIn 0.35s cubic-bezier(0.34,1.56,0.64,1)",
+                            position: "relative",
+                            overflow: "hidden",
+                            textAlign: "center",
+                            fontFamily: "'Montserrat', sans-serif"
+                        }}
                     >
-                        <div
-                            style={{ background: "white", borderRadius: 24, padding: "28px 32px", maxWidth: 400, width: "100%", boxShadow: "0 30px 60px rgba(0,0,0,0.3)", display: "flex", flexDirection: "column", gap: 0, overflow: "hidden" }}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Top accent — always blue */}
-                            <div style={{ height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6)", margin: "-28px -32px 20px" }} />
+                        {/* Top gradient bar */}
+                        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa)" }} />
 
-                            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, fontFamily: "'Montserrat', sans-serif" }}>
-                                <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(15,98,254,0.1)", border: "1.5px solid rgba(15,98,254,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                    <IconComp size={20} color="#2563eb" strokeWidth={2} />
-                                </div>
-                                <div style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                    <div style={{ fontSize: 11, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2, fontFamily: "'Montserrat', sans-serif" }}>
-                                        {lessonModal.unitTitle}
-                                    </div>
-                                    <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", lineHeight: 1.3, fontFamily: "'Montserrat', sans-serif" }}>
-                                        {lessonModal.lesson.title}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style={{ display: "flex", flexDirection: "column", gap: 10, fontFamily: "'Montserrat', sans-serif" }}>
-                                {/* XP Indicator */}
-                                <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#F0F9FF", border: "1.5px solid #BAE6FD", borderRadius: 12, padding: "10px 14px", marginBottom: 6, fontFamily: "'Montserrat', sans-serif" }}>
-                                    <Zap size={15} color="#0EA5E9" fill="#0EA5E9" />
-                                    <span style={{ fontSize: 13, fontWeight: 700, color: "#0369A1", fontFamily: "'Montserrat', sans-serif" }}>
-                                        {completedLessons.includes(lessonModal.lesson.slug) ? "Gana 5 XP" : "Gana hasta 15 XP"}
-                                    </span>
-                                </div>
-
-                                <button
-                                    onClick={() => {
-                                        router.push(getLessonPath(lessonModal.lesson.slug))
-                                        setLessonModal(null)
-                                    }}
-                                    style={{ width: "100%", fontSize: 15, fontWeight: 800, padding: "14px 20px", background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)", color: "white", border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: "0 6px 18px rgba(15,98,254,0.35)", transition: "all 0.2s" }}
-                                >
-                                    {completedLessons.includes(lessonModal.lesson.slug) ? "Repetir lección" : "Iniciar lección"}
-                                </button>
-                                <button
-                                    onClick={() => setLessonModal(null)}
-                                    style={{ width: "100%", fontSize: 14, fontWeight: 700, padding: "12px 20px", background: "transparent", color: "#64748b", border: "1.5px solid #e2e8f0", borderRadius: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
-                                >
-                                    Regresar
-                                </button>
-                            </div>
+                        {/* Custom SVG icon: Lock */}
+                        <div style={{
+                            width: 72, height: 72,
+                            borderRadius: "50%",
+                            background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)",
+                            border: "2px solid #3b82f6",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            flexShrink: 0
+                        }}>
+                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                {/* Lock body */}
+                                <rect x="8" y="18" width="20" height="14" rx="3" fill="#2563eb" />
+                                {/* Lock shackle */}
+                                <path d="M12 18v-5a6 6 0 0112 0v5" stroke="#1e3a8a" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                                {/* Keyhole circle */}
+                                <circle cx="18" cy="25" r="2.5" fill="#fff" />
+                                {/* Keyhole stem */}
+                                <rect x="17" y="25" width="2" height="3" rx="1" fill="#fff" />
+                            </svg>
                         </div>
+
+                        {/* Title */}
+                        <div style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", lineHeight: 1.25 }}>
+                            ¡Vas rápido!
+                        </div>
+
+                        {/* Body */}
+                        <div style={{ fontSize: 15, fontWeight: 600, color: "#64748b", lineHeight: 1.6, maxWidth: 280 }}>
+                            Termina la lección anterior para desbloquear ésta. El orden importa — construyamos base a base.
+                        </div>
+
+                        {/* Dismiss button */}
+                        <button
+                            onClick={() => setSequenceWarning(null)}
+                            className="seq-dismiss-btn"
+                            style={{
+                                marginTop: 4,
+                                padding: "12px 32px",
+                                background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
+                                color: "#fff",
+                                border: "none", borderRadius: 12,
+                                fontSize: 14, fontWeight: 900,
+                                cursor: "pointer",
+                                fontFamily: "'Montserrat', sans-serif",
+                                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
+                                transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, opacity 0.15s ease"
+                            }}
+                        >
+                            Entendido
+                        </button>
                     </div>
-                )
-            }
+                </div>
+            )}
 
             <style>{`
         /* Sidebar compensation */
@@ -645,9 +770,18 @@ export default function CoursePageTemplate({
           animation: active-lesson-pulse 4s ease-in-out infinite !important;
         }
 
-        @keyframes flagPulse {
-          0%, 100% { box-shadow: 0 6px 20px rgba(37,99,235,0.35), 0 0 0 6px rgba(37,99,235,0.12); transform: scale(1); }
-          50% { box-shadow: 0 8px 28px rgba(37,99,235,0.5), 0 0 0 12px rgba(37,99,235,0.08); transform: scale(1.06); }
+        .panel-cta-btn:hover { opacity: 0.85; }
+        .panel-cta-btn:active { opacity: 0.7; }
+        .seq-dismiss-btn:hover { transform: translateY(-3px) !important; box-shadow: 0 12px 28px rgba(37,99,235,0.45) !important; }
+        .seq-dismiss-btn:active { transform: translateY(0) !important; opacity: 0.85; }
+
+        @keyframes seqOverlayIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        @keyframes seqCardIn {
+          0% { opacity: 0; transform: scale(0.88) translateY(20px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
         }
       `}</style>
         </div>

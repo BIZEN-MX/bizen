@@ -589,50 +589,90 @@ export default function RetoDiarioPage() {
               </div>
 
               {/* ── Info cards row ── */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
-                {/* Tip */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+
+                {/* Consejo del experto */}
                 <div style={{
-                  padding: "24px 28px",
-                  background: "#fffbeb",
-                  border: "1.5px solid #fef3c7",
+                  padding: "24px 24px",
+                  background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
+                  border: "2px solid rgba(15, 98, 254, 0.2)",
                   borderRadius: 24,
-                  borderLeft: "6px solid #f59e0b",
-                  animation: "fadeUp 0.5s ease 0.05s both"
+                  boxShadow: "0 4px 20px rgba(15,98,254,0.08)",
+                  animation: "fadeUp 0.5s ease 0.05s both",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 16
                 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: "#f59e0b", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Lightbulb size={20} color="white" />
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{
+                      width: 42, height: 42, borderRadius: 12,
+                      background: "linear-gradient(135deg, #f59e0b, #fbbf24)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      flexShrink: 0,
+                      boxShadow: "0 4px 12px rgba(245,158,11,0.3)"
+                    }}>
+                      <Lightbulb size={22} color="white" strokeWidth={2.5} />
                     </div>
-                    <span style={{ fontSize: 12, fontWeight: 850, color: "#d97706", textTransform: "uppercase", letterSpacing: "0.1em" }}>Consejo del experto</span>
+                    <div>
+                      <div style={{ fontSize: 11, fontWeight: 800, color: "#f59e0b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Consejo del experto</div>
+                      <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>Sabiduría del día</div>
+                    </div>
                   </div>
-                  <p style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
-                    La constancia vence al talento. Completar este reto diario te pone en el <strong>top 10%</strong> de estudiantes que mejoran su situación financiera este año.
+                  <p style={{ fontSize: 14.5, color: "#334155", lineHeight: 1.75, margin: 0, fontWeight: 500 }}>
+                    La constancia vence al talento. Completar este reto diario te pone en el{" "}
+                    <span style={{ fontWeight: 800, color: "#0F62FE" }}>top 10%</span>{" "}
+                    de estudiantes que mejoran su situación financiera este año.
                   </p>
                 </div>
 
-                {/* Stats mini */}
+                {/* ¿Por qué hacerlo? */}
                 <div style={{
-                  padding: "24px 28px",
-                  background: "#FBFAF5",
-                  border: "1.5px solid #e2e8f0",
-                  borderLeft: "6px solid #0F62FE",
+                  padding: "24px 24px",
+                  background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
+                  border: "2px solid rgba(15, 98, 254, 0.2)",
                   borderRadius: 24,
-                  animation: "fadeUp 0.5s ease 0.1s both"
+                  boxShadow: "0 4px 20px rgba(15,98,254,0.08)",
+                  animation: "fadeUp 0.5s ease 0.1s both",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 16
                 }}>
-                  <div style={{ fontSize: 12, fontWeight: 850, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 18 }}>¿Por qué hacerlo?</div>
-                  {[
-                    { icon: <Zap size={16} color="#0F62FE" />, text: "5 min = un hábito financiero sólido", bg: "#eff6ff" },
-                    { icon: <Target size={16} color="#0F62FE" />, text: "Cada reto refuerza lo aprendido en clase", bg: "#eff6ff" },
-                    { icon: <Award size={16} color="#0F62FE" />, text: "Acumula XP y sube de nivel", bg: "#eff6ff" },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                      <div style={{ width: 28, height: 28, borderRadius: 8, background: item.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        {item.icon}
-                      </div>
-                      <span style={{ fontSize: 14, color: "#475569", lineHeight: 1.4, fontWeight: 600 }}>{item.text}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{
+                      width: 42, height: 42, borderRadius: 12,
+                      background: "linear-gradient(135deg, #0F62FE, #4A9EFF)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      flexShrink: 0,
+                      boxShadow: "0 4px 12px rgba(15,98,254,0.3)"
+                    }}>
+                      <Target size={22} color="white" strokeWidth={2.5} />
                     </div>
-                  ))}
+                    <div>
+                      <div style={{ fontSize: 11, fontWeight: 800, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>¿Por qué hacerlo?</div>
+                      <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>Tu motivación</div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {[
+                      { icon: <Zap size={15} color="#f59e0b" />, text: "5 min = un hábito financiero sólido", iconBg: "#fffbeb" },
+                      { icon: <Target size={15} color="#0F62FE" />, text: "Cada reto refuerza lo aprendido en clase", iconBg: "#eff6ff" },
+                      { icon: <Award size={15} color="#10b981" />, text: "Acumula XP y sube de nivel", iconBg: "#f0fdf4" },
+                    ].map((item, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <div style={{
+                          width: 32, height: 32, borderRadius: 9,
+                          background: item.iconBg,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          flexShrink: 0
+                        }}>
+                          {item.icon}
+                        </div>
+                        <span style={{ fontSize: 14, color: "#475569", lineHeight: 1.4, fontWeight: 600 }}>{item.text}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
               </div>
             </>
           )}

@@ -72,6 +72,7 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([])
   const [loadingData, setLoadingData] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [topicWarning, setTopicWarning] = useState(false)
 
   // Calcule premium access based on Profile API data
   const hasActiveLicense = !!dbProfile?.school?.licenses?.length;
@@ -269,10 +270,13 @@ export default function CoursesPage() {
               background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
               borderRadius: 28,
               padding: "clamp(32px, 5vw, 52px) clamp(28px, 5vw, 48px)",
-              marginBottom: "clamp(28px, 5vw, 40px)",
+              width: "100%",
+              maxWidth: 1188,
+              margin: "0 auto clamp(28px, 5vw, 40px)",
               position: "relative",
               overflow: "hidden",
-              boxShadow: "0 20px 60px rgba(15, 98, 254, 0.25)"
+              boxShadow: "0 20px 60px rgba(15, 98, 254, 0.25)",
+              boxSizing: "border-box"
             }}
           >
             {/* Glowing orbs inside hero */}
@@ -425,7 +429,11 @@ export default function CoursesPage() {
                             <div
                               onClick={() => {
                                 if (isLocked) {
-                                  router.push(isPaywalled && !isSequenceLocked ? '/payment' : '#');
+                                  if (isSequenceLocked) {
+                                    setTopicWarning(true);
+                                    return;
+                                  }
+                                  router.push('/payment');
                                 } else {
                                   router.push(`/courses/${topic.id}`);
                                 }
@@ -435,7 +443,7 @@ export default function CoursesPage() {
                                 flex: "0 1 550px",
                                 minHeight: 180,
                                 cursor: isLocked && !isPaywalled ? "default" : "pointer",
-                                border: "1px solid rgba(15,98,254,0.1)",
+                                border: isLocked ? "2px solid rgba(148, 163, 184, 0.2)" : "2px solid rgba(15, 98, 254, 0.2)",
                                 borderRadius: "24px",
                                 background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
                                 boxShadow: "0 4px 20px rgba(15,98,254,0.08)",
@@ -447,7 +455,7 @@ export default function CoursesPage() {
                                 opacity: isLocked ? 0.7 : 1
                               }}
                             >
-                              <div style={{ height: 5, background: isLocked ? "linear-gradient(90deg, #64748b, #94a3b8)" : "linear-gradient(90deg, #1e3a8a, #3b82f6)", width: "100%", flexShrink: 0 }} />
+
                               <div className="course-card-content" style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
                                 <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
                                   {isLocked ? (
@@ -665,6 +673,101 @@ export default function CoursesPage() {
         
           /* Content area is already offset by app-main padding in globals.css */
         `}</style>
+
+      {/* Topic Sequence Warning Overlay */}
+      {topicWarning && (
+        <div
+          onClick={() => setTopicWarning(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "rgba(15, 23, 42, 0.45)",
+            backdropFilter: "blur(8px)",
+            animation: "seqOverlayIn 0.25s ease"
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff",
+              borderRadius: 28,
+              padding: "44px 40px 36px",
+              maxWidth: 380,
+              width: "90%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 20,
+              boxShadow: "0 32px 80px rgba(0,0,0,0.22)",
+              animation: "seqCardIn 0.35s cubic-bezier(0.34,1.56,0.64,1)",
+              position: "relative",
+              overflow: "hidden",
+              textAlign: "center",
+              fontFamily: "'Montserrat', sans-serif"
+            }}
+          >
+            {/* Top gradient bar */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa)" }} />
+
+            {/* Custom SVG icon: Shield with arrow */}
+            <div style={{
+              width: 72, height: 72,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)",
+              border: "2px solid #3b82f6",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0
+            }}>
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Shield body */}
+                <path d="M18 4L7 9v8c0 6.5 4.7 12.5 11 14 6.3-1.5 11-7.5 11-14V9L18 4z" fill="#2563eb" opacity="0.15" />
+                <path d="M18 4L7 9v8c0 6.5 4.7 12.5 11 14 6.3-1.5 11-7.5 11-14V9L18 4z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round" fill="none" />
+                {/* Steps icon inside */}
+                <rect x="13" y="20" width="3" height="6" rx="1" fill="#2563eb" />
+                <rect x="17" y="16" width="3" height="10" rx="1" fill="#2563eb" />
+                <rect x="21" y="12" width="3" height="14" rx="1" fill="#2563eb" />
+              </svg>
+            </div>
+
+            {/* Title */}
+            <div style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", lineHeight: 1.25 }}>
+              ¡Calma!
+            </div>
+
+            {/* Body */}
+            <div style={{ fontSize: 15, fontWeight: 600, color: "#64748b", lineHeight: 1.6, maxWidth: 280 }}>
+              Para desbloquear este tema, primero debes completar todos los cursos del tema anterior.
+            </div>
+
+            {/* Dismiss */}
+            <button
+              onClick={() => setTopicWarning(false)}
+              className="topic-dismiss-btn"
+              style={{
+                marginTop: 4,
+                padding: "12px 32px",
+                background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
+                color: "#fff",
+                border: "none", borderRadius: 12,
+                fontSize: 14, fontWeight: 900,
+                cursor: "pointer",
+                fontFamily: "'Montserrat', sans-serif",
+                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
+                transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, opacity 0.15s ease"
+              }}
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes seqOverlayIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes seqCardIn { 0% { opacity: 0; transform: scale(0.88) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .topic-dismiss-btn:hover { transform: translateY(-3px) !important; box-shadow: 0 12px 28px rgba(37,99,235,0.45) !important; }
+        .topic-dismiss-btn:active { transform: translateY(0) !important; opacity: 0.85; }
+      `}</style>
     </div >
   )
 }

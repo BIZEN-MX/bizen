@@ -84,6 +84,16 @@ model Profile {
   enrollments        Enrollment[]
   evidence_posts     EvidencePost[]
   progress           Progress[]
+  forumThreads       ForumThread[]  @relation("ForumThreadAuthor")
+  forumComments      ForumComment[] @relation("ForumCommentAuthor")
+  forumVotes         ForumVote[]    @relation("ForumVotes")
+  forumBookmarks     ForumBookmark[] @relation("ForumBookmarks")
+  forumFollows       ForumFollow[]   @relation("ForumFollows")
+  forumReportsCreated  ForumReport[]   @relation("ForumReporter")
+  forumReportsReviewed ForumReport[]   @relation("ForumReviewer")
+  forumNotifications   ForumNotification[] @relation("ForumNotifications")
+  forumUserBadges      ForumUserBadge[]    @relation("ForumUserBadges")
+  inventory            UserInventoryItem[] @relation("ProfileInventory")
 
   @@index([schoolId], map: "idx_profiles_school")
   @@map("profiles")
@@ -335,6 +345,20 @@ model ForumTag {
   @@schema("public")
 }
 
+model ForumTopic {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?
+  icon        String?
+  orderIndex  Int           @default(0) @map("order_index")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  threads     ForumThread[]
+
+  @@map("forum_topics")
+  @@schema("public")
+}
+
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model ForumThread {
   id                String           @id @default(cuid())
@@ -352,10 +376,12 @@ model ForumThread {
   moderationStatus  String?          @default("approved") @map("moderation_status")
   createdAt         DateTime         @default(now()) @map("created_at")
   updatedAt         DateTime         @default(now()) @updatedAt @map("updated_at")
+  tags              ForumThreadTag[]
   bookmarks         ForumBookmark[]
   comments          ForumComment[]
   follows           ForumFollow[]
-  tags              ForumThreadTag[]
+  author            Profile          @relation("ForumThreadAuthor", fields: [authorId], references: [userId], onDelete: Cascade)
+  topic             ForumTopic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@index([authorId])
   @@index([topicId])
@@ -394,6 +420,7 @@ model ForumComment {
   parentComment    ForumComment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   replies          ForumComment[] @relation("CommentReplies")
   thread           ForumThread    @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  author           Profile        @relation("ForumCommentAuthor", fields: [authorId], references: [userId], onDelete: Cascade)
 
   @@index([threadId])
   @@index([parentCommentId])
@@ -410,6 +437,7 @@ model ForumVote {
   targetId   String   @map("target_id")
   value      Int
   createdAt  DateTime @default(now()) @map("created_at")
+  user       Profile  @relation("ForumVotes", fields: [userId], references: [userId], onDelete: Cascade)
 
   @@unique([userId, targetType, targetId])
   @@index([userId])
@@ -424,6 +452,7 @@ model ForumBookmark {
   threadId  String      @map("thread_id")
   createdAt DateTime    @default(now()) @map("created_at")
   thread    ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user      Profile     @relation("ForumBookmarks", fields: [userId], references: [userId], onDelete: Cascade)
 
   @@id([userId, threadId])
   @@index([threadId])
@@ -438,6 +467,7 @@ model ForumFollow {
   notifyInApp Boolean     @default(true) @map("notify_in_app")
   createdAt   DateTime    @default(now()) @map("created_at")
   thread      ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user        Profile     @relation("ForumFollows", fields: [userId], references: [userId], onDelete: Cascade)
 
   @@id([userId, threadId])
   @@index([threadId])
@@ -457,6 +487,8 @@ model ForumReport {
   reviewedAt  DateTime? @map("reviewed_at")
   actionTaken String?   @map("action_taken")
   createdAt   DateTime  @default(now()) @map("created_at")
+  reporter    Profile   @relation("ForumReporter", fields: [reporterId], references: [userId], onDelete: Cascade)
+  reviewer    Profile?  @relation("ForumReviewer", fields: [reviewedBy], references: [userId], onDelete: SetNull)
 
   @@index([reporterId])
   @@index([targetType, targetId])
@@ -474,6 +506,7 @@ model ForumNotification {
   data      Json
   readAt    DateTime? @map("read_at")
   createdAt DateTime  @default(now()) @map("created_at")
+  user      Profile   @relation("ForumNotifications", fields: [userId], references: [userId], onDelete: Cascade)
 
   @@index([userId])
   @@index([createdAt(sort: Desc)])
@@ -501,6 +534,7 @@ model ForumUserBadge {
   badgeId  String     @map("badge_id")
   earnedAt DateTime   @default(now()) @map("earned_at")
   badge    ForumBadge @relation(fields: [badgeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user     Profile    @relation("ForumUserBadges", fields: [userId], references: [userId], onDelete: Cascade)
 
   @@id([userId, badgeId])
   @@index([badgeId])
@@ -514,6 +548,7 @@ model UserInventoryItem {
   productId   String   @map("product_id")
   purchasedAt DateTime @default(now()) @map("purchased_at")
   pricePaid   Int      @map("price_paid")
+  user        Profile  @relation("ProfileInventory", fields: [userId], references: [userId], onDelete: Cascade)
 
   @@unique([userId, productId], map: "user_inventory_unique_purchase")
   @@index([userId])

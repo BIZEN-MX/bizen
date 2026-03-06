@@ -304,18 +304,120 @@ export default function FixedSidebar() {
               letterSpacing: "-1px",
               lineHeight: 1,
               display: "flex",
-              alignItems: "baseline",
-              gap: "2px"
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "8px"
             }}>
-              BIZEN
-              <span style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: "#0F62FE",
-                display: "inline-block",
-                marginBottom: 3
-              }} />
+              <span style={{ display: "flex", alignItems: "baseline", gap: "2px" }}>
+                BIZEN
+                <span style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#0F62FE",
+                  display: "inline-block",
+                  marginBottom: 3
+                }} />
+              </span>
+
+              {mounted && !loading && (() => {
+                const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length > 0)
+                return (
+                  <>
+                    <style>{`
+                      @keyframes plan-shimmer {
+                        0%   { transform: translateX(-100%) skewX(-15deg); }
+                        100% { transform: translateX(250%) skewX(-15deg); }
+                      }
+                      @keyframes plan-glow {
+                        0%, 100% { box-shadow: 0 2px 8px rgba(15, 98, 254, 0.35), 0 0 0 1px rgba(79,140,255,0.25); }
+                        50%       { box-shadow: 0 4px 16px rgba(15, 98, 254, 0.55), 0 0 0 1px rgba(79,140,255,0.4); }
+                      }
+                      .plan-badge-premium {
+                        position: relative;
+                        overflow: hidden;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                        background: #000000;
+                        background: linear-gradient(135deg, #000000 0%, #000814 40%, #001233 100%);
+                        color: #FFFFFF !important;
+                        font-size: 11px;
+                        font-weight: 900;
+                        font-family: 'Montserrat', sans-serif;
+                        letter-spacing: 1.8px;
+                        text-transform: uppercase;
+                        padding: 6px 16px;
+                        border-radius: 30px;
+                        border: 1.5px solid rgba(255, 255, 255, 0.4);
+                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 82, 255, 0.2);
+                        animation: plan-glow 3s ease-in-out infinite;
+                        cursor: default;
+                        user-select: none;
+                        -webkit-font-smoothing: antialiased;
+                        -moz-osx-font-smoothing: grayscale;
+                      }
+                      .plan-badge-premium .plan-badge-shine {
+                        position: absolute;
+                        top: 0; left: 0;
+                        width: 50%;
+                        height: 100%;
+                        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+                        animation: plan-shimmer 3.5s ease-in-out infinite;
+                        pointer-events: none;
+                      }
+                      .plan-badge-premium .plan-dot {
+                        width: 7px; height: 7px;
+                        border-radius: 50%;
+                        background: #FFFFFF;
+                        box-shadow: 0 0 8px #FFFFFF;
+                        flex-shrink: 0;
+                      }
+                      @keyframes pulse {
+                        0% { transform: scale(1); opacity: 1; }
+                        50% { transform: scale(1.2); opacity: 0.8; }
+                        100% { transform: scale(1); opacity: 1; }
+                      }
+                      .plan-badge-free {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        background: transparent;
+                        color: #94A3B8;
+                        font-size: 11px;
+                        font-weight: 700;
+                        font-family: 'Montserrat', sans-serif;
+                        letter-spacing: 1.2px;
+                        text-transform: uppercase;
+                        padding: 4px 12px;
+                        border-radius: 20px;
+                        border: 1.5px solid #CBD5E1;
+                        cursor: default;
+                        user-select: none;
+                      }
+                      .plan-badge-free .plan-dot {
+                        width: 5px; height: 5px;
+                        border-radius: 50%;
+                        background: #CBD5E1;
+                        flex-shrink: 0;
+                      }
+                    `}</style>
+                    {isPremium ? (
+                      <span className="plan-badge-premium" style={{ color: "#ffffff" }}>
+                        <span className="plan-badge-shine" />
+                        <span className="plan-dot" />
+                        <span style={{ marginRight: "4px", fontSize: "12px" }}>✦</span>
+                        Premium
+                      </span>
+                    ) : (
+                      <span className="plan-badge-free">
+                        <span className="plan-dot" />
+                        Free
+                      </span>
+                    )}
+                  </>
+                )
+              })()}
             </span>
           </button>
 
