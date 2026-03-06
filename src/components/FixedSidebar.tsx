@@ -330,8 +330,8 @@ export default function FixedSidebar() {
                         display: inline-flex;
                         align-items: center;
                         gap: 5px;
-                        background: rgba(245, 158, 11, 0.08);
-                        color: #F59E0B;
+                        background: rgba(15, 98, 254, 0.08);
+                        color: #0F62FE;
                         font-size: 11px;
                         font-weight: 800;
                         font-family: 'Montserrat', sans-serif;
@@ -339,14 +339,14 @@ export default function FixedSidebar() {
                         text-transform: uppercase;
                         padding: 4px 12px;
                         border-radius: 20px;
-                        border: 1.5px solid rgba(245, 158, 11, 0.2);
+                        border: 1.5px solid rgba(15, 98, 254, 0.2);
                         cursor: default;
                         user-select: none;
                       }
                       .plan-badge-premium .plan-dot {
                         width: 5px; height: 5px;
                         border-radius: 50%;
-                        background: #F59E0B;
+                        background: #0F62FE;
                         flex-shrink: 0;
                       }
                       @keyframes pulse {
