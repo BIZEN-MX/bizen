@@ -6,10 +6,13 @@ export async function POST(request: Request) {
     try {
         const body = await request.json()
         const { email, fullName, institution, userAnswers } = body
+        const emailLower = email?.toLowerCase() || ""
+        const domain = emailLower.split('@')[1] || ""
+        const isInstitutional = domain.endsWith('.edu') || domain.includes('.edu.')
 
-        if (!email || !fullName || !institution || !userAnswers) {
+        if (!email || !fullName || !institution || !userAnswers || !isInstitutional) {
             return NextResponse.json(
-                { error: "Missing required fields" },
+                { error: !isInstitutional ? "Solo se permiten correos institucionales" : "Missing required fields" },
                 { status: 400 }
             )
         }

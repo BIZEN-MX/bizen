@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 export type UserInfo = {
   email: string
@@ -12,196 +12,278 @@ type ExamIntroProps = {
   userInfo: UserInfo
   onChange: (info: UserInfo) => void
   error?: string
+  onSubmit?: () => void
+  isLoading?: boolean
 }
 
-export function ExamIntro({ userInfo, onChange, error }: ExamIntroProps) {
+interface School {
+  id: string
+  name: string
+}
+
+export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: ExamIntroProps) {
+  const [schools, setSchools] = useState<School[]>([])
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const response = await fetch('/api/schools')
+        if (response.ok) {
+          const data = await response.json()
+          setSchools(data || [])
+        }
+      } catch (err) {
+        console.error("Error fetching schools:", err)
+      }
+    }
+    fetchSchools()
+  }, [])
+
   const handleChange = (field: keyof UserInfo, value: string) => {
     onChange({ ...userInfo, [field]: value })
   }
 
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "14px 18px",
+    borderRadius: "14px",
+    border: "2px solid #E5E7EB",
+    fontSize: "15px",
+    outline: "none",
+    transition: "border-color 0.2s, box-shadow 0.2s",
+    boxSizing: "border-box",
+    fontFamily: "'Inter', sans-serif",
+    color: "#111827",
+    background: "#FFFFFF",
+  }
+
+  const labelStyle: React.CSSProperties = {
+    display: "block",
+    fontSize: "13px",
+    fontWeight: 700,
+    color: "#6B7280",
+    marginBottom: "8px",
+    letterSpacing: "0.03em",
+    textTransform: "uppercase",
+    fontFamily: "'Inter', sans-serif",
+  }
+
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "4rem",
-        width: "100%",
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "0 2rem",
-        flexWrap: "wrap",
-        boxSizing: "border-box"
-      }}
-    >
-      {/* Left Column: Text */}
-      <div style={{ flex: "1 1 450px", textAlign: "center" }}>
-        <span
-          style={{
-            fontSize: "14px",
-            fontWeight: 700,
-            color: "#6366f1",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            display: "block",
-            marginBottom: "1rem"
-          }}
-        >
-          ¡Bienvenido a BIZEN!
-        </span>
-        <h1
-          style={{
-            fontSize: "clamp(30px, 5vw, 42px)",
-            fontWeight: 900,
-            color: "#1e293b",
-            lineHeight: 1.1,
-            marginBottom: "1.5rem",
-            letterSpacing: "-0.02em"
-          }}
-        >
-          Examen <br />
-          <span style={{ color: "#2563eb" }}>Diagnóstico</span>
+    <div style={{
+      width: "100%",
+      maxWidth: 520,
+      margin: "0 auto",
+      padding: "20px 0",
+    }}>
+      {/* Header */}
+      <div style={{ textAlign: "center", marginBottom: "32px" }}>
+        <div style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 64,
+          height: 64,
+          borderRadius: "20px",
+          background: "linear-gradient(135deg, rgba(15, 98, 254, 0.1) 0%, rgba(74, 158, 255, 0.1) 100%)",
+          marginBottom: "24px",
+          border: "2px solid rgba(15, 98, 254, 0.05)",
+        }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 11l3 3L22 4" />
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+          </svg>
+        </div>
+        <h1 style={{
+          fontSize: "clamp(26px, 5vw, 32px)",
+          fontWeight: 900,
+          color: "#111827",
+          lineHeight: 1.15,
+          margin: "0 0 12px 0",
+          letterSpacing: "-0.03em",
+          fontFamily: "'Montserrat', sans-serif",
+        }}>
+          Examen <span style={{ color: "#0F62FE" }}>Diagnóstico</span>
         </h1>
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#64748b",
-            lineHeight: 1.5,
-            maxWidth: "500px",
-            margin: "0 auto"
-          }}
-        >
-          Antes de comenzar tu aventura, necesitamos conocerte un poco mejor. Completa tu información para personalizar tu experiencia de aprendizaje.
+        <p style={{
+          fontSize: "16px",
+          color: "#6B7280",
+          lineHeight: 1.6,
+          margin: 0,
+          fontFamily: "'Inter', sans-serif",
+          fontWeight: 500,
+        }}>
+          Completa tu información para comenzar. Solo toma 2 minutos.
         </p>
       </div>
 
-      {/* Right Column: Form */}
-      <div
-        style={{
-          flex: "1 1 400px",
-          background: "#FBFAF5",
-          padding: "3rem",
-          borderRadius: "40px",
-          border: "2px solid #e2e8f0",
-          boxShadow: "0 20px 50px -12px rgba(0, 0, 0, 0.08)"
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
-            <label
-              htmlFor="fullName"
-              style={{ display: "block", fontSize: "14px", fontWeight: 700, color: "#475569" }}
-            >
-              Nombre Completo
-            </label>
-            <input
-              id="fullName"
-              type="text"
-              value={userInfo.fullName}
-              onChange={(e) => handleChange("fullName", e.target.value)}
-              placeholder="Juan Pérez"
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                borderRadius: "14px",
-                border: "2px solid #e2e8f0",
-                fontSize: "16px",
-                outline: "none",
-                transition: "all 0.2s",
-                boxSizing: "border-box",
-                fontFamily: "inherit",
-                textAlign: "center"
-              }}
-            />
-          </div>
+      {/* Form Card */}
+      <div style={{
+        background: "#FFFFFF",
+        borderRadius: "28px",
+        border: "2px solid #E5E7EB",
+        padding: "36px",
+        boxShadow: "0 10px 40px rgba(0,0,0,0.04)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "24px",
+      }}>
+        {/* Name field */}
+        <div>
+          <label htmlFor="fullName" style={labelStyle}>Nombre Completo</label>
+          <input
+            id="fullName"
+            type="text"
+            value={userInfo.fullName}
+            onChange={(e) => handleChange("fullName", e.target.value)}
+            placeholder="Juan Pérez"
+            style={inputStyle}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "#0F62FE"
+              e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15,98,254,0.1)"
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = "#E5E7EB"
+              e.currentTarget.style.boxShadow = "none"
+            }}
+          />
+        </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
-            <label
-              htmlFor="email"
-              style={{ display: "block", fontSize: "14px", fontWeight: 700, color: "#475569" }}
-            >
-              Correo Electrónico
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={userInfo.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              placeholder="juan@ejemplo.com"
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                borderRadius: "14px",
-                border: "2px solid #e2e8f0",
-                fontSize: "16px",
-                outline: "none",
-                transition: "all 0.2s",
-                boxSizing: "border-box",
-                fontFamily: "inherit",
-                textAlign: "center"
-              }}
-            />
-          </div>
+        {/* Email field */}
+        <div>
+          <label htmlFor="email" style={labelStyle}>Correo Electrónico</label>
+          <input
+            id="email"
+            type="email"
+            value={userInfo.email}
+            onChange={(e) => handleChange("email", e.target.value)}
+            placeholder="tu@universidad.edu"
+            style={inputStyle}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "#0F62FE"
+              e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15,98,254,0.1)"
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = "#E5E7EB"
+              e.currentTarget.style.boxShadow = "none"
+            }}
+          />
+        </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
-            <label
-              htmlFor="institution"
-              style={{ display: "block", fontSize: "14px", fontWeight: 700, color: "#475569" }}
-            >
-              Institución / Empresa
-            </label>
-            <input
-              id="institution"
-              type="text"
-              value={userInfo.institution}
-              onChange={(e) => handleChange("institution", e.target.value)}
-              placeholder="Ej. Universidad Anáhuac"
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                borderRadius: "14px",
-                border: "2px solid #e2e8f0",
-                fontSize: "16px",
-                outline: "none",
-                transition: "all 0.2s",
-                boxSizing: "border-box",
-                fontFamily: "inherit",
-                textAlign: "center"
-              }}
-            />
-          </div>
+        {/* Institution field */}
+        <div>
+          <label htmlFor="institution" style={labelStyle}>Institución / Empresa</label>
+          <input
+            id="institution"
+            type="text"
+            list="schools-list"
+            value={userInfo.institution}
+            onChange={(e) => handleChange("institution", e.target.value)}
+            placeholder="Selecciona o escribe..."
+            style={inputStyle}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "#0F62FE"
+              e.currentTarget.style.boxShadow = "0 0 0 4px rgba(15,98,254,0.1)"
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = "#E5E7EB"
+              e.currentTarget.style.boxShadow = "none"
+            }}
+          />
+          <datalist id="schools-list">
+            {schools.map((school) => (
+              <option key={school.id} value={school.name} />
+            ))}
+            {!schools.some(s => s.name?.toLowerCase().includes("mondragón")) && (
+              <option value="Universidad Mondragón México" />
+            )}
+            {!schools.some(s => s.name?.toLowerCase().includes("balmoral")) && (
+              <option value="Balmoral Escocés Preparatoria" />
+            )}
+            <option value="UNAM" />
+            <option value="Tec de Monterrey (ITESM)" />
+            <option value="Universidad Anáhuac" />
+            <option value="IPN" />
+            <option value="Universidad Iberoamericana" />
+            <option value="UVM" />
+            <option value="Tecmilenio" />
+            <option value="Particular / Independiente" />
+          </datalist>
+        </div>
 
-          {error && (
-            <p style={{ color: "#ef4444", fontSize: "15px", fontWeight: 600, margin: 0 }}>
+        {/* Error message */}
+        {error && (
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "14px 18px",
+            background: "#FEF2F2",
+            borderRadius: "16px",
+            border: "1.5px solid #FCA5A5",
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p style={{ color: "#DC2626", fontSize: "14px", fontWeight: 700, margin: 0, fontFamily: "'Inter', sans-serif" }}>
               {error}
             </p>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
 
-      <style jsx>{`
-        input::placeholder {
-          color: #94a3b8;
-        }
-        input:focus {
-          border-color: #2563eb !important;
-          box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
-        @media (max-width: 900px) {
-          div[style*="flex: 1 1 450px"] {
-             text-align: center !important;
-             flex: 1 1 100% !important;
-          }
-           div[style*="flex: 1 1 400px"] {
-             flex: 1 1 100% !important;
-             padding: 2rem !important;
-          }
-          p {
-            margin: 0 auto !important;
-          }
-        }
-      `}</style>
+        {/* Submit Button - BIZEN Lesson 3D style */}
+        {onSubmit && (
+          <button
+            type="button"
+            onClick={onSubmit}
+            disabled={isLoading}
+            style={{
+              width: "100%",
+              padding: "18px",
+              borderRadius: "18px",
+              background: isLoading ? "#94A3B8" : "#0F62FE",
+              color: "#FFFFFF",
+              fontSize: "17px",
+              fontWeight: 800,
+              fontFamily: "'Montserrat', sans-serif",
+              border: "none",
+              cursor: isLoading ? "not-allowed" : "pointer",
+              transition: "all 0.15s ease",
+              letterSpacing: "0.01em",
+              boxShadow: isLoading ? "none" : "0 4px 0 0 #0947BB",
+              marginTop: "8px",
+              userSelect: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.transform = "translateY(-1px)"
+                e.currentTarget.style.boxShadow = "0 5px 0 0 #0947BB"
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)"
+              e.currentTarget.style.boxShadow = isLoading ? "none" : "0 4px 0 0 #0947BB"
+            }}
+            onMouseDown={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.transform = "translateY(3px)"
+                e.currentTarget.style.boxShadow = "0 1px 0 0 #0947BB"
+              }
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = "translateY(0)"
+              e.currentTarget.style.boxShadow = isLoading ? "none" : "0 4px 0 0 #0947BB"
+            }}
+          >
+            {isLoading ? "Verificando..." : "Empezar examen →"}
+          </button>
+        )}
+      </div>
     </div>
   )
 }

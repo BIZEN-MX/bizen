@@ -12,6 +12,8 @@ interface LessonScreenProps {
   streak?: number
   stars?: 0 | 1 | 2 | 3
   showProgressBar?: boolean
+  hideStars?: boolean
+  hideHeaderBorder?: boolean
   footerContent?: React.ReactNode
   className?: string
 }
@@ -30,6 +32,8 @@ export function LessonScreen({
   streak = 0,
   stars = 3,
   showProgressBar = true,
+  hideStars = false,
+  hideHeaderBorder = false,
   footerContent,
   className = "",
 }: LessonScreenProps) {
@@ -48,6 +52,7 @@ export function LessonScreen({
         background: "#FFFFFF",
         paddingTop: "env(safe-area-inset-top)",
         position: "relative",
+        fontFamily: "'Inter', sans-serif"
       }}
     >
       {/* Progress header — slim, clean, Duolingo-style */}
@@ -63,7 +68,7 @@ export function LessonScreen({
             justifyContent: "center",
             alignItems: "center",
             background: "#FFFFFF",
-            borderBottom: "1.5px solid #F1F5F9",
+            borderBottom: hideHeaderBorder ? "none" : "1.5px solid #F1F5F9",
             boxSizing: "border-box",
           }}
         >
@@ -72,6 +77,7 @@ export function LessonScreen({
             totalSteps={totalSteps}
             streak={streak}
             stars={starsClamped}
+            hideStars={hideStars}
           />
         </div>
       )}
