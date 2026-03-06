@@ -185,9 +185,15 @@ export function InfoStep({
               maxWidth: hasImage ? 900 : 680,
               background: "#FFFFFF",
               borderRadius: 32,
-              border: "1px solid rgba(15, 98, 254, 0.08)",
-              boxShadow:
-                "0 2px 4px rgba(15,98,254,0.04), 0 8px 20px rgba(15,98,254,0.08), 0 24px 48px rgba(15,98,254,0.07)",
+              // Enhanced border: visible blue outline
+              border: "2px solid rgba(15, 98, 254, 0.22)",
+              // Multi-layer glow: subtle close glow + wider ambient blue halo
+              boxShadow: [
+                "0 0 0 4px rgba(15, 98, 254, 0.06)",
+                "0 2px 6px rgba(15,98,254,0.08)",
+                "0 10px 28px rgba(15,98,254,0.12)",
+                "0 32px 64px rgba(15,98,254,0.10)",
+              ].join(", "),
               overflow: "hidden",
               position: "relative",
             }}

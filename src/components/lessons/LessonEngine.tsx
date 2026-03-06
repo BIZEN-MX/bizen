@@ -438,7 +438,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               <path d="M12 3v16M18 13l-6 6-6-6" stroke="#2563eb" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
 
-            {/* The BIG Button — no hover effects */}
+            {/* The BIG Button — opacity effect on hover */}
             <button
               onClick={() => { playFlipSound(); setShowRecallOverlay(true) }}
               style={{
@@ -456,7 +456,11 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 fontWeight: 800,
                 color: "#ffffff",
                 animation: recallHintBounce ? "recallBounce 0.4s ease 2" : "none",
+                opacity: 1,
+                transition: "opacity 0.2s ease",
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.75" }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
             >
               {/* Custom SVG Flashcard/Notebook Icon */}
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
