@@ -79,14 +79,13 @@ export async function middleware(request: NextRequest) {
 
   if (isPaidPath && !isExempt) {
     const hasAccessCookie = request.cookies.get('bizen_has_access')?.value === '1'
-    const isSpecialAccount = session?.user?.email === 'diegopenita31@gmail.com'
 
     // IF no session, redirect to login (already handled above)
-    // IF session exists but no access cookie and not special, we allow it TEMPORARILY 
+    // IF session exists but no access cookie, we allow it TEMPORARILY 
     // to let the app fetch the profile and set the cookie. 
     // The actual paywall enforcement will happen in the App (ModuleGate, SectionGate, etc.) 
     // or if the Profiles API returns subStatus='none'
-    if (session && !hasAccessCookie && !isSpecialAccount) {
+    if (session && !hasAccessCookie) {
       // Allow through so /api/profiles can run and set the cookie
       return response
     }
