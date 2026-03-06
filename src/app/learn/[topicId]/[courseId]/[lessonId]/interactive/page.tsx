@@ -44,8 +44,8 @@ export default function InteractiveLessonPage() {
   // Hide app mobile footer on this page (CSS in globals.css hides via data-lesson-interactive)
   useEffect(() => {
     if (typeof document === "undefined") return
-    document.body.setAttribute("data-lesson-interactive", "true")
-    return () => document.body.removeAttribute("data-lesson-interactive")
+    document.documentElement.setAttribute("data-lesson-interactive", "true")
+    return () => document.documentElement.removeAttribute("data-lesson-interactive")
   }, [])
 
   const hasCompletedRef = useRef(false)

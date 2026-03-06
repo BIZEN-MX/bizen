@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
+import { StarIcon } from "@/components/icons/StarIcon"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 import {
     BookOpen,
@@ -495,11 +496,10 @@ export default function CoursePageTemplate({
                                                             ) : (
                                                                 <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
                                                                     {[1, 2, 3].map((i) => (
-                                                                        <img
+                                                                        <StarIcon
                                                                             key={i}
-                                                                            src="/stars.png"
-                                                                            alt=""
-                                                                            style={{ width: 18, height: 18, objectFit: "contain", opacity: i <= stars ? 1 : 0.28, filter: i <= stars ? "none" : "grayscale(1)", transition: "opacity 0.2s" }}
+                                                                            size={18}
+                                                                            filled={i <= stars}
                                                                         />
                                                                     ))}
                                                                 </div>
@@ -729,12 +729,12 @@ export default function CoursePageTemplate({
             <style>{`
         /* Sidebar compensation */
         @media (min-width: 768px) and (max-width: 1160px) {
-          .courses-main-content { padding-left: 220px !important; padding-right: 16px !important; display: flex !important; justify-content: center !important; }
-          .courses-main-content > div { max-width: calc(100vw - 220px - 32px) !important; width: 100% !important; margin: 0 auto !important; }
+          .courses-main-content { padding-left: 252px !important; padding-right: 16px !important; display: flex !important; justify-content: center !important; }
+          .courses-main-content > div { max-width: calc(100vw - 252px - 32px) !important; width: 100% !important; margin: 0 auto !important; }
         }
         @media (min-width: 1161px) {
-          .courses-main-content { padding-left: 280px !important; padding-right: 16px !important; display: flex !important; justify-content: center !important; }
-          .courses-main-content > div { max-width: calc(100vw - 280px - 48px) !important; width: 100% !important; margin: 0 auto !important; }
+          .courses-main-content { padding-left: 312px !important; padding-right: 16px !important; display: flex !important; justify-content: center !important; }
+          .courses-main-content > div { max-width: calc(100vw - 312px - 48px) !important; width: 100% !important; margin: 0 auto !important; }
         }
         @media (max-width: 767px) {
           .courses-main-content { padding-top: 80px !important; padding-bottom: calc(65px + env(safe-area-inset-bottom)) !important; padding-left: 12px !important; padding-right: 12px !important; }

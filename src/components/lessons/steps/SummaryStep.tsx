@@ -5,6 +5,7 @@ import { SummaryStepFields } from "@/types/lessonTypes"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
 import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel } from "@/lib/xp"
+import { AnimatedStar } from "@/components/icons/StarIcon"
 
 interface SummaryStepProps {
   step: SummaryStepFields & {
@@ -94,23 +95,6 @@ function useCountUp(target: number, delay: number = 0, duration: number = 1000) 
   return value
 }
 
-// --- Single animated star ---
-function AnimatedStar({ filled, delay }: { filled: boolean; delay: number }) {
-  return (
-    <motion.div
-      initial={{ scale: 0, rotate: -30, opacity: 0 }}
-      animate={filled ? { scale: 1, rotate: 0, opacity: 1 } : { scale: 0.85, rotate: 0, opacity: 0.25 }}
-      transition={{ type: "spring", stiffness: 300, damping: 18, delay }}
-      style={{ filter: filled ? "drop-shadow(0 0 12px rgba(255,184,0,0.6))" : "none" }}
-    >
-      <img
-        src="/stars.png"
-        alt={filled ? "Estrella ganada" : "Estrella vacía"}
-        style={{ width: 54, height: 54, objectFit: "contain" }}
-      />
-    </motion.div>
-  )
-}
 
 // --- XP Progress Bar component ---
 function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: number; delay: number }) {
@@ -388,7 +372,12 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
         >
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
             {[1, 2, 3].map((i) => (
-              <AnimatedStar key={i} filled={i <= stars} delay={0.5 + i * 0.22} />
+              <AnimatedStar
+                key={i}
+                filled={i <= stars}
+                delay={0.5 + i * 0.22}
+                size={54}
+              />
             ))}
           </div>
           <motion.p

@@ -101,12 +101,7 @@ export function InfoStep({
               position: "relative",
               overflow: "hidden",
             }}
-            whileHover={{
-              y: -4,
-              borderColor: "#93C5FD",
-              boxShadow: "0 16px 40px rgba(15,98,254,0.14)",
-            }}
-            whileTap={{ scale: 0.97 }}
+            whileTap={{ scale: 0.98 }}
           >
             {/* Subtle animated background gradient */}
             <div style={{
@@ -121,8 +116,8 @@ export function InfoStep({
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               style={{
-                width: 84,
-                height: 84,
+                width: "clamp(100px, 18vw, 140px)",
+                height: "clamp(100px, 18vw, 140px)",
                 borderRadius: "50%",
                 background: "linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)",
                 display: "flex",
@@ -131,7 +126,9 @@ export function InfoStep({
                 boxShadow: "0 8px 24px rgba(15,98,254,0.14)",
               }}
             >
-              <Image src="/hero4.png" alt="Billy" width={60} height={60} style={{ objectFit: "contain" }} />
+              <div style={{ position: "relative", width: "70%", height: "70%" }}>
+                <Image src="/hero4.png" alt="Billy" fill style={{ objectFit: "contain" }} />
+              </div>
             </motion.div>
 
             {/* Tap hint */}
@@ -180,14 +177,13 @@ export function InfoStep({
             initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ type: "spring", damping: 22, stiffness: 120 }}
+            className="revealed-flashcard-container"
             style={{
               width: "100%",
               maxWidth: hasImage ? 900 : 680,
               background: "#FFFFFF",
               borderRadius: 32,
-              // Enhanced border: visible blue outline
               border: "2px solid rgba(15, 98, 254, 0.22)",
-              // Multi-layer glow: subtle close glow + wider ambient blue halo
               boxShadow: [
                 "0 0 0 4px rgba(15, 98, 254, 0.06)",
                 "0 2px 6px rgba(15,98,254,0.08)",
@@ -218,13 +214,13 @@ export function InfoStep({
             </div>
 
             {/* Content layout */}
-            <div style={{
+            <div className="flashcard-content-layout" style={{
               display: "flex",
               flexDirection: hasImage ? "row" : "column",
               flexWrap: "wrap",
               alignItems: "center",
               gap: hasImage ? 40 : 24,
-              padding: hasImage ? "44px 48px" : "44px 40px",
+              padding: hasImage ? "clamp(24px, 5vw, 44px) clamp(20px, 6vw, 48px)" : "44px 40px",
             }}>
 
               {/* Image — LEFT side if imageLeft */}
@@ -394,7 +390,7 @@ function FlashcardImage({ url, title }: { url: string; title?: string }) {
         flex: "0 0 auto",
         position: "relative",
         width: "100%",
-        maxWidth: 280,
+        maxWidth: "clamp(240px, 40vw, 380px)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -414,13 +410,25 @@ function FlashcardImage({ url, title }: { url: string; title?: string }) {
         style={{
           width: "100%",
           height: "auto",
-          maxHeight: 260,
+          maxHeight: "clamp(180px, 30vh, 260px)",
           objectFit: "contain",
           filter: "drop-shadow(0 16px 32px rgba(0,0,0,0.10))",
           position: "relative",
           zIndex: 1,
         }}
       />
+      <style>{`
+        @media (max-width: 768px) {
+          .flashcard-content-layout {
+            flex-direction: column !important;
+            padding: 32px 20px !important;
+            gap: 24px !important;
+          }
+          .revealed-flashcard-container {
+            border-radius: 24px !important;
+          }
+        }
+      `}</style>
     </motion.div>
   )
 }

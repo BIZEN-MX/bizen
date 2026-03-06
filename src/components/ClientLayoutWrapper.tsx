@@ -193,16 +193,16 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     return () => document.body.removeAttribute("data-no-sidebar")
   }, [hideAppNavigation])
 
-  // Flag body on lesson interactive page so CSS can hide app footer (backup)
+  // Flag html on lesson/diagnostic page so CSS can lock scroll and hide app chrome
   useEffect(() => {
     if (typeof document === "undefined") return
-    if (isLessonInteractivePage) {
-      document.body.setAttribute("data-lesson-interactive", "true")
+    if (isLessonInteractivePage || isDiagnosticPage) {
+      document.documentElement.setAttribute("data-lesson-interactive", "true")
     } else {
-      document.body.removeAttribute("data-lesson-interactive")
+      document.documentElement.removeAttribute("data-lesson-interactive")
     }
-    return () => document.body.removeAttribute("data-lesson-interactive")
-  }, [isLessonInteractivePage])
+    return () => document.documentElement.removeAttribute("data-lesson-interactive")
+  }, [isLessonInteractivePage, isDiagnosticPage])
 
   return (
     <>

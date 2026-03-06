@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react"
 import { motion } from "framer-motion"
+import { StarIcon } from "@/components/icons/StarIcon"
 
 export interface LessonProgressHeaderProps {
   currentStepIndex: number
@@ -118,19 +119,10 @@ export function LessonProgressHeader({
           aria-label={`${stars} de 3 estrellas`}
         >
           {[1, 2, 3].map((i) => (
-            <img
+            <StarIcon
               key={i}
-              src="/stars.png"
-              alt=""
-              width={22}
-              height={22}
-              style={{
-                display: "block",
-                objectFit: "contain",
-                opacity: i <= stars ? 1 : 0.3,
-                filter: i <= stars ? "none" : "grayscale(1)",
-                transition: "opacity 0.3s ease",
-              }}
+              size={22}
+              filled={i <= stars}
             />
           ))}
         </div>

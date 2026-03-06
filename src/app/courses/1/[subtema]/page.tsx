@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Button from "@/components/ui/button"
+import { StarIcon } from "@/components/icons/StarIcon"
 import { TEMA1_SUBTEMAS } from "../../tema1-data"
 import type { Tema1Lesson } from "../../tema1-data"
 
@@ -207,9 +208,9 @@ export default function Tema1SubtemaPage() {
                     }}
                   >
                     <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 4 }}>
-                      <img src="/stars.png" alt="" style={{ width: 22, height: 22, objectFit: "contain" }} />
-                      <img src="/stars.png" alt="" style={{ width: 22, height: 22, objectFit: "contain" }} />
-                      <img src="/stars.png" alt="" style={{ width: 22, height: 22, objectFit: "contain" }} />
+                      <StarIcon size={22} />
+                      <StarIcon size={22} />
+                      <StarIcon size={22} />
                     </div>
                     <div
                       style={{

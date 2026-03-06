@@ -61,8 +61,8 @@ export default function LessonPage() {
     // 2. Hide app mobile footer
     useEffect(() => {
         if (typeof document === "undefined") return
-        document.body.setAttribute("data-lesson-interactive", "true")
-        return () => document.body.removeAttribute("data-lesson-interactive")
+        document.documentElement.setAttribute("data-lesson-interactive", "true")
+        return () => document.documentElement.removeAttribute("data-lesson-interactive")
     }, [])
 
     const redirectToCoursesRef = useRef(false)

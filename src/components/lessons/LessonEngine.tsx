@@ -418,21 +418,20 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
         {/* Floating Recall Button */}
         {showRecallButton && (
-          <div style={{
+          <div className="recall-widget-container" style={{
             position: "fixed",
-            bottom: "88px",
-            left: "clamp(16px, 4vw, 48px)",
+            bottom: "clamp(75px, 12vh, 88px)",
+            left: "clamp(12px, 4vw, 48px)",
             zIndex: 8000,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 6,
           }}>
             {/* Animated blue arrow pointing down */}
             <svg
+              className="recall-arrow"
               width="24" height="24" viewBox="0 0 24 24" fill="none"
               style={{
-                animation: "arrowBounceLoop 1.5s infinite ease-in-out",
                 filter: "drop-shadow(0 4px 6px rgba(37,99,235,0.3))"
               }}
             >
@@ -441,57 +440,65 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
             {/* The BIG Button — opacity effect on hover */}
             <button
+              className="recall-button"
               onClick={() => { playFlipSound(); setShowRecallOverlay(true) }}
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 10,
-                padding: "14px 24px",
+                gap: "clamp(6px, 1vw, 10px)",
+                padding: "clamp(10px, 1.5vw, 14px) clamp(16px, 2.5vw, 24px)",
                 background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
                 border: "none",
                 borderRadius: 999,
                 boxShadow: "0 8px 24px rgba(37,99,235,0.4), inset 0 2px 0 rgba(255,255,255,0.2)",
                 cursor: "pointer",
                 fontFamily: "'Montserrat', sans-serif",
-                fontSize: 16,
+                fontSize: "clamp(13px, 1.8vw, 16px)",
                 fontWeight: 800,
                 color: "#ffffff",
+                whiteSpace: "nowrap",
                 animation: recallHintBounce ? "recallBounce 0.4s ease 2" : "none",
                 opacity: 1,
-                transition: "opacity 0.2s ease",
+                transition: "all 0.2s ease",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.75" }}
               onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
             >
               {/* Custom SVG Flashcard/Notebook Icon */}
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                width="clamp(18px, 2vw, 22px)"
+                height="clamp(18px, 2vw, 22px)"
+                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              >
                 <path d="M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" />
                 <path d="M4 7H20" stroke="white" strokeWidth="2" strokeLinecap="round" />
                 <path d="M9 11H15" stroke="white" strokeWidth="2" strokeLinecap="round" />
                 <path d="M9 15H13" stroke="white" strokeWidth="2" strokeLinecap="round" />
                 <path d="M6 2V22" stroke="white" strokeWidth="2" opacity="0.4" />
               </svg>
-              Repasar nota
+              <span>Repasar nota</span>
             </button>
 
-            {/* Mascot Image below recall button */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              className="recall-mascot-wrap"
+              initial={{ opacity: 0, scale: 0.8, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
               style={{
-                marginTop: 8,
+                marginTop: 4,
                 display: "flex",
                 justifyContent: "center",
                 width: "100%",
+                pointerEvents: "none"
               }}
             >
               <img
                 src="/image copy 2.png"
                 alt="Mascot"
                 style={{
-                  width: 60,
+                  width: "clamp(100px, 18vw, 220px)",
                   height: "auto",
+                  maxHeight: "25vh",
                   objectFit: "contain",
                   filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.1))",
                 }}
@@ -663,6 +670,49 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           @keyframes shimmerSlide {
             from { transform: translateX(-200%); }
             to   { transform: translateX(300%); }
+          }
+          
+          .recall-widget-container {
+            gap: clamp(4px, 1vw, 8px);
+          }
+
+          .recall-arrow {
+            animation: arrowBounceLoop 1.2s infinite ease-in-out;
+          }
+
+          @media (max-width: 1200px) {
+            .recall-widget-container {
+              flex-direction: row !important; /* Changed to normal row to have Arrow -> Button -> Mascot */
+              align-items: center !important;
+              gap: 8px !important;
+              bottom: clamp(75px, 10vh, 82px) !important;
+              left: 10px !important;
+              width: auto !important;
+            }
+            .recall-button {
+              margin-bottom: 0 !important;
+              padding: clamp(10px, 1.2vw, 14px) clamp(16px, 2vw, 24px) !important;
+              font-size: clamp(13px, 1.5vw, 15px) !important;
+            }
+            .recall-mascot-wrap {
+              margin-top: 0 !important;
+              width: clamp(100px, 15vw, 160px) !important;
+            }
+            .recall-mascot-wrap img {
+              width: 100% !important;
+            }
+            .recall-arrow {
+              display: block !important;
+              transform: rotate(-90deg) !important; /* Point right towards the button */
+              animation: arrowBounceSide 1.2s infinite ease-in-out !important;
+              margin-right: -4px !important;
+              flex-shrink: 0;
+            }
+          }
+
+          @keyframes arrowBounceSide {
+            0%, 100% { transform: rotate(-90deg) translateX(0); }
+            50% { transform: rotate(-90deg) translateX(6px); }
           }
         `}</style>
 

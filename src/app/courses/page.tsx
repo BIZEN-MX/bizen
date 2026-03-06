@@ -237,7 +237,7 @@ export default function CoursesPage() {
           flex: 1,
           paddingTop: "clamp(8px, 1.5vw, 16px)",
           paddingBottom: "clamp(40px, 8vw, 80px)",
-          paddingLeft: "280px", // Desktop default offset
+          paddingLeft: "312px", // Desktop default offset
           paddingRight: "16px",
           fontFamily: "'Montserrat', sans-serif",
           background: "transparent",
@@ -614,13 +614,13 @@ export default function CoursesPage() {
         /* Responsive sidebar offsets */
         @media (min-width: 1161px) {
           .courses-main-content {
-            padding-left: 280px !important;
+            padding-left: 312px !important;
             padding-right: 32px !important;
           }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .courses-main-content {
-            padding-left: 220px !important;
+            padding-left: 252px !important;
             padding-right: 24px !important;
           }
         }
