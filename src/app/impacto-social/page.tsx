@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
@@ -38,7 +39,8 @@ import {
     ShieldCheck,
     ClipboardCheck,
     MessageCircle,
-    Lightbulb
+    Lightbulb,
+    Instagram
 } from "lucide-react"
 
 // --- TYPES & INTERFACES ---
@@ -98,11 +100,11 @@ interface Report {
 
 const MOCK_FOUNDATION: Foundation = {
     id: "f1",
-    name: "Fundación Semillas de Éxito",
+    name: "Nuqleo Querétaro",
     logo: "",
-    description: "Organización verificada que apoya la reinserción educativa de jóvenes en zonas vulnerables.",
+    description: "Espacio de innovación social y emprendimiento que impulsa a las juventudes y el desarrollo.",
     verified: true,
-    website: "https://ejemplo.org"
+    website: "https://www.instagram.com/nucleo_qro?igsh=Z2hpejE3cHF4Y3kw"
 }
 
 const MOCK_SCHOOL_IMPACT: SchoolImpact = {
@@ -148,7 +150,7 @@ const MOCK_EVIDENCE: EvidenceEntry[] = [
         id: "ev1",
         date: "2025-12-15",
         amount: 15000,
-        foundation: "Fundación Semillas",
+        foundation: "Nuqleo Querétaro",
         status: "Completado",
         evidenceUrl: "#",
         type: "pdf"
@@ -198,7 +200,7 @@ export default function ImpactoSocialPage() {
     useEffect(() => {
         if (loading) return
         if (!user) {
-            router.push("/login")
+            setIsLoadingStats(false)
             return
         }
 
@@ -248,7 +250,133 @@ export default function ImpactoSocialPage() {
         )
     }
 
-    if (!user) return null
+    if (!user) {
+        return (
+            <div style={{
+                minHeight: "100vh",
+                background: "linear-gradient(145deg, #0a0f1e 0%, #0d1b3e 40%, #0f2761 70%, #1a3a8a 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                overflow: "hidden",
+                fontFamily: "'Inter', sans-serif",
+            }}>
+                <style>{`
+                    @keyframes is-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+                    @keyframes is-glow  { 0%,100%{opacity:.4} 50%{opacity:.8} }
+                    @keyframes is-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+                    @keyframes is-fadeup { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
+                    .is-cta-primary {
+                        background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
+                        color: #fff;
+                        border: none;
+                        border-radius: 18px;
+                        padding: 20px 48px;
+                        font-size: 18px;
+                        font-weight: 800;
+                        font-family: 'Inter', sans-serif;
+                        cursor: pointer;
+                        box-shadow: 0 8px 32px rgba(15, 98, 254, 0.45);
+                        transition: transform 0.2s, box-shadow 0.2s;
+                        display: inline-block;
+                        text-decoration: none;
+                        letter-spacing: -0.02em;
+                    }
+                    .is-cta-primary:hover {
+                        transform: translateY(-3px) scale(1.02);
+                        box-shadow: 0 16px 48px rgba(15, 98, 254, 0.6);
+                    }
+                    .is-cta-secondary {
+                        color: rgba(255,255,255,0.75);
+                        font-size: 15px;
+                        font-weight: 600;
+                        font-family: 'Inter', sans-serif;
+                        text-decoration: none;
+                        border-bottom: 1px solid rgba(255,255,255,0.3);
+                        padding-bottom: 2px;
+                        transition: color 0.2s, border-color 0.2s;
+                        cursor: pointer;
+                        background: none;
+                        border-top: none;
+                        border-left: none;
+                        border-right: none;
+                    }
+                    .is-cta-secondary:hover {
+                        color: #fff;
+                        border-color: #fff;
+                    }
+                    .is-stat-pill {
+                        background: rgba(255,255,255,0.07);
+                        border: 1px solid rgba(255,255,255,0.12);
+                        border-radius: 40px;
+                        padding: 10px 22px;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        backdrop-filter: blur(8px);
+                        animation: is-fadeup 0.8s ease both;
+                    }
+                `}</style>
+
+                {/* Ambient orbs */}
+                <div style={{ position: "absolute", top: "-15%", right: "-8%", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(15,98,254,0.15) 0%, transparent 70%)", animation: "is-glow 6s ease-in-out infinite" }} />
+                <div style={{ position: "absolute", bottom: "-20%", left: "-10%", width: 800, height: 800, borderRadius: "50%", background: "radial-gradient(circle, rgba(74,158,255,0.10) 0%, transparent 65%)", animation: "is-glow 8s ease-in-out infinite 2s" }} />
+
+                {/* Grid pattern overlay */}
+                <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "48px 48px", zIndex: 0 }} />
+
+                {/* Main content */}
+                <div style={{ position: "relative", zIndex: 1, textAlign: "center", padding: "0 24px", maxWidth: 640 }}>
+
+                    {/* Badge */}
+                    <div style={{ animation: "is-fadeup 0.5s ease both", marginBottom: 32, display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(15,98,254,0.15)", border: "1px solid rgba(15,98,254,0.4)", borderRadius: 40, padding: "8px 18px" }}>
+                        <Heart size={14} color="#60a5fa" fill="#60a5fa" />
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>Impacto Social</span>
+                    </div>
+
+                    {/* Heading */}
+                    <h1 style={{ animation: "is-fadeup 0.6s 0.1s ease both", fontSize: "clamp(32px, 8vw, 56px)", fontWeight: 800, color: "#fff", margin: "0 0 20px", lineHeight: 1.1, letterSpacing: "-0.03em" }}>
+                        Aprende finanzas y
+                        <br />
+                        <span style={{ background: "linear-gradient(90deg, #60a5fa, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>cambia el mundo</span>
+                    </h1>
+
+                    {/* Sub */}
+                    <p style={{ animation: "is-fadeup 0.6s 0.2s ease both", fontSize: "clamp(15px, 3vw, 18px)", color: "rgba(255,255,255,0.65)", margin: "0 0 48px", lineHeight: 1.7 }}>
+                        Con cada lección completada en Bizen, tu escuela dona a <strong style={{ color: "#93c5fd" }}>Nuqleo Querétaro</strong>.<br />
+                        Únete y mide el impacto real de tu aprendizaje.
+                    </p>
+
+                    {/* Stats pills */}
+                    <div style={{ animation: "is-fadeup 0.6s 0.25s ease both", display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 48 }}>
+                        <div className="is-stat-pill" style={{ animationDelay: "0.3s" }}>
+                            <Globe size={16} color="#60a5fa" />
+                            <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>$45,000 MXN donados</span>
+                        </div>
+                        <div className="is-stat-pill" style={{ animationDelay: "0.4s" }}>
+                            <Users size={16} color="#a78bfa" />
+                            <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>90 canastas alimentarias</span>
+                        </div>
+                        <div className="is-stat-pill" style={{ animationDelay: "0.5s" }}>
+                            <Award size={16} color="#34d399" />
+                            <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>3 donaciones ejecutadas</span>
+                        </div>
+                    </div>
+
+                    {/* CTAs */}
+                    <div style={{ animation: "is-fadeup 0.7s 0.35s ease both", display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+                        <Link href="/signup" className="is-cta-primary">
+                            Crear cuenta gratis
+                        </Link>
+                        <Link href="/login" className="is-cta-secondary">
+                            Ya tengo cuenta — Iniciar sesión
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     // Helper references to real data
     const impactData = stats?.schoolImpacts?.[0] || MOCK_SCHOOL_IMPACT
@@ -1139,7 +1267,7 @@ export default function ImpactoSocialPage() {
                                             display: "flex", alignItems: "center", gap: 6,
                                             marginTop: 14, fontSize: 13, fontWeight: 700, color: "#0F62FE", textDecoration: "none"
                                         }}>
-                                            <ExternalLink size={13} /> Ver sitio oficial
+                                            <Instagram size={13} /> Ver Instagram oficial
                                         </a>
                                     </div>
                                 </div>

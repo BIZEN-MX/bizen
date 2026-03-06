@@ -22,7 +22,7 @@ export async function GET(
     const includeReplies = searchParams.get('includeReplies') === 'true' // Default false - only load replies when explicitly requested
 
     // First, get the thread without comments to avoid heavy nested queries
-    const thread = await prisma.forumThread.findUnique({
+    const thread = await (prisma.forumThread as any).findUnique({
       where: { id },
       select: {
         id: true,
@@ -44,6 +44,7 @@ export async function GET(
             fullName: true,
             reputation: true,
             level: true,
+            role: true,
             isMinor: true,
             avatar: true,
             inventory: { select: { productId: true } }
@@ -75,9 +76,21 @@ export async function GET(
       return NextResponse.json({ error: "Thread not found" }, { status: 404 })
     }
 
+    const profile = await prisma.profile.findUnique({
+      where: { userId: user.id },
+      select: { role: true }
+    })
+
+    const isParticular = profile?.role === 'particular'
+    const isAuthorParticular = (thread as any).author?.role === 'particular'
+
+    if (isParticular !== isAuthorParticular) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 })
+    }
+
     // Get comments separately with optimized query
     // Only load top-level comments first, replies will be loaded on demand
-    const comments = await prisma.forumComment.findMany({
+    const comments = await (prisma.forumComment as any).findMany({
       where: {
         threadId: id,
         moderationStatus: 'approved',
@@ -206,6 +219,27 @@ export async function GET(
 
     // Format response
     const formattedComments = (comments as any[]).map(c => {
+      if (!c.author) {
+        return {
+          id: c.id,
+          body: c.body,
+          score: c.score,
+          isAccepted: c.isAccepted,
+          createdAt: c.createdAt,
+          replyCount: c._count.replies,
+          author: {
+            userId: 'unknown',
+            nickname: 'Usuario',
+            reputation: 0,
+            level: 1,
+            avatar: null,
+            inventory: []
+          },
+          replies: [],
+          userVote: voteMap.get(c.id) || null
+        }
+      }
+
       const parts = (c.author.fullName || '').trim().split(/\s+/)
       const safeName = parts.length >= 2
         ? `${parts[0]} ${parts[parts.length - 1][0]}.`
@@ -259,20 +293,30 @@ export async function GET(
     })
 
     const threadAuthor = (thread as any).author
-    const threadAuthorParts = (threadAuthor.fullName || '').trim().split(/\s+/)
-    const threadAuthorSafeName = threadAuthorParts.length >= 2
-      ? `${threadAuthorParts[0]} ${threadAuthorParts[threadAuthorParts.length - 1][0]}.`
-      : (threadAuthorParts[0] || 'Usuario')
+    let threadAuthorSafeName = 'Usuario'
+    if (threadAuthor) {
+      const threadAuthorParts = (threadAuthor.fullName || '').trim().split(/\s+/)
+      threadAuthorSafeName = threadAuthorParts.length >= 2
+        ? `${threadAuthorParts[0]} ${threadAuthorParts[threadAuthorParts.length - 1][0]}.`
+        : (threadAuthorParts[0] || 'Usuario')
+    }
 
     return NextResponse.json({
       ...(thread as any),
-      author: {
+      author: threadAuthor ? {
         userId: threadAuthor.userId,
         nickname: threadAuthor.nickname || threadAuthorSafeName,
         reputation: threadAuthor.reputation,
         level: threadAuthor.level,
         avatar: threadAuthor.avatar,
         inventory: threadAuthor.inventory?.map((i: any) => i.productId) || []
+      } : {
+        userId: 'unknown',
+        nickname: 'Usuario',
+        reputation: 0,
+        level: 1,
+        avatar: null,
+        inventory: []
       },
       tags: (thread as any).tags.map((tt: any) => tt.tag),
       comments: formattedComments,

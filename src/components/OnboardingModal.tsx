@@ -129,7 +129,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     }
 
     const profileName = user?.user_metadata?.full_name?.split(" ")[0] || "nuevo estudiante"
-    const progressPct = step === "welcome" ? 0 : step === "avatar" ? 25 : step === "username" ? 50 : step === "school" ? 75 : 100
+    const getProgressPct = () => {
+        if (step === "welcome") return 0
+        if (step === "avatar") return isInstitutional ? 25 : 33
+        if (step === "username") return isInstitutional ? 50 : 66
+        if (step === "school") return 75
+        return 100
+    }
+    const progressPct = getProgressPct()
 
     // Helper: calculate age from date string
     const calcAge = (dateStr: string): number | null => {
@@ -141,6 +148,13 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--
         return age
     }
+
+    const emailForRole = user?.email?.toLowerCase() || ''
+    const isInstitutional = emailForRole.endsWith('.edu') || emailForRole.includes('.edu.')
+    const stepList = isInstitutional
+        ? ["welcome", "avatar", "username", "school", "birthday"]
+        : ["welcome", "avatar", "username", "birthday"]
+    const totalSteps = stepList.length - 1 // excluding welcome
 
     return (
         <>
@@ -304,8 +318,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                             {/* Step dots */}
                             <div className="ob-step-dots">
-                                {["welcome", "avatar", "username", "school", "birthday"].map((s, i) => (
-                                    <div key={s} className={`ob-step-dot${s === step ? " active" : i < ["welcome", "avatar", "username", "school", "birthday"].indexOf(step) ? " done" : ""}`} style={{ width: s === step ? 22 : 8 }} />
+                                {stepList.map((s, i) => (
+                                    <div key={s} className={`ob-step-dot${s === step ? " active" : i < stepList.indexOf(step) ? " done" : ""}`} style={{ width: s === step ? 22 : 8 }} />
                                 ))}
                             </div>
                         </div>
@@ -316,7 +330,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                         <div style={{ padding: "clamp(24px, 5vw, 40px)" }}>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                                 <button className="ob-btn-ghost" onClick={() => goToStep("welcome")}>Atras</button>
-                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 1 de 2</span>
+                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 1 de {totalSteps}</span>
                             </div>
 
                             {/* Avatar preview */}
@@ -372,7 +386,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                         <div style={{ padding: "clamp(24px, 5vw, 40px)" }}>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                                 <button className="ob-btn-ghost" onClick={() => goToStep("avatar")}>Atras</button>
-                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 2 de 3</span>
+                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 2 de {totalSteps}</span>
                             </div>
 
                             {/* Mini avatar preview */}
@@ -433,7 +447,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                             <button
                                 className="ob-btn-primary"
                                 disabled={!!usernameError || username.length < 3}
-                                onClick={() => goToStep("school")}
+                                onClick={() => goToStep(isInstitutional ? "school" : "birthday")}
                             >
                                 Continuar
                             </button>
@@ -492,8 +506,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                     {step === "birthday" && (
                         <div style={{ padding: "clamp(24px, 5vw, 40px)" }}>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                                <button className="ob-btn-ghost" onClick={() => goToStep("school")}>Atras</button>
-                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso 4 de 4</span>
+                                <button className="ob-btn-ghost" onClick={() => goToStep(isInstitutional ? "school" : "username")}>Atras</button>
+                                <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Paso {isInstitutional ? 4 : 3} de {totalSteps}</span>
                             </div>
 
                             {/* Birthday illustration */}

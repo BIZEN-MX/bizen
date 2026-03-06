@@ -42,7 +42,23 @@ export async function GET() {
     }
 
     if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 })
+      // Instead of 404, return default empty stats so the client doesn't crash.
+      // The actual profile creation usually happens in /api/profiles or auth callback.
+      return NextResponse.json({
+        xp: 0,
+        level: 1,
+        xpInCurrentLevel: 0,
+        xpNeeded: 100,
+        xpToNextLevel: 100,
+        lessonsCompleted: 0,
+        coursesEnrolled: 0,
+        currentStreak: 0,
+        certificatesCount: 0,
+        totalPoints: 0,
+        bizcoins: 0,
+        inventory: [],
+        weeklyActiveDays: [],
+      })
     }
 
     // Optional stats (if they fail, we can still return basic stats)

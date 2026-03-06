@@ -57,11 +57,20 @@ export async function GET(req: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-        // VISIBILIDAD GLOBAL FORZADA: Traemos todo sin filtros
+        const myProfile = await prisma.profile.findUnique({
+            where: { userId: user.id },
+            select: { role: true }
+        })
+        const isParticular = myProfile?.role === 'particular'
+
         let posts: any[] = []
         try {
             posts = await prisma.evidencePost.findMany({
-                where: {},
+                where: {
+                    profiles: {
+                        role: isParticular ? 'particular' : { not: 'particular' }
+                    }
+                },
                 orderBy: { createdAt: "desc" },
                 take: 50,
                 include: {

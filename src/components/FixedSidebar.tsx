@@ -322,55 +322,31 @@ export default function FixedSidebar() {
 
               {mounted && !loading && (() => {
                 const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length > 0)
+                const isParticular = dbProfile?.role === 'particular' || !dbProfile?.role
                 return (
                   <>
                     <style>{`
-                      @keyframes plan-shimmer {
-                        0%   { transform: translateX(-100%) skewX(-15deg); }
-                        100% { transform: translateX(250%) skewX(-15deg); }
-                      }
-                      @keyframes plan-glow {
-                        0%, 100% { box-shadow: 0 2px 8px rgba(15, 98, 254, 0.35), 0 0 0 1px rgba(79,140,255,0.25); }
-                        50%       { box-shadow: 0 4px 16px rgba(15, 98, 254, 0.55), 0 0 0 1px rgba(79,140,255,0.4); }
-                      }
                       .plan-badge-premium {
-                        position: relative;
-                        overflow: hidden;
                         display: inline-flex;
                         align-items: center;
-                        gap: 4px;
-                        background: #000000;
-                        background: linear-gradient(135deg, #000000 0%, #000814 40%, #001233 100%);
-                        color: #FFFFFF !important;
+                        gap: 5px;
+                        background: rgba(245, 158, 11, 0.08);
+                        color: #F59E0B;
                         font-size: 11px;
-                        font-weight: 900;
+                        font-weight: 800;
                         font-family: 'Montserrat', sans-serif;
-                        letter-spacing: 1.8px;
+                        letter-spacing: 1px;
                         text-transform: uppercase;
-                        padding: 6px 16px;
-                        border-radius: 30px;
-                        border: 1.5px solid rgba(255, 255, 255, 0.4);
-                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 82, 255, 0.2);
-                        animation: plan-glow 3s ease-in-out infinite;
+                        padding: 4px 12px;
+                        border-radius: 20px;
+                        border: 1.5px solid rgba(245, 158, 11, 0.2);
                         cursor: default;
                         user-select: none;
-                        -webkit-font-smoothing: antialiased;
-                        -moz-osx-font-smoothing: grayscale;
-                      }
-                      .plan-badge-premium .plan-badge-shine {
-                        position: absolute;
-                        top: 0; left: 0;
-                        width: 50%;
-                        height: 100%;
-                        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-                        animation: plan-shimmer 3.5s ease-in-out infinite;
-                        pointer-events: none;
                       }
                       .plan-badge-premium .plan-dot {
-                        width: 7px; height: 7px;
+                        width: 5px; height: 5px;
                         border-radius: 50%;
-                        background: #FFFFFF;
-                        box-shadow: 0 0 8px #FFFFFF;
+                        background: #F59E0B;
                         flex-shrink: 0;
                       }
                       @keyframes pulse {
@@ -401,13 +377,40 @@ export default function FixedSidebar() {
                         background: #CBD5E1;
                         flex-shrink: 0;
                       }
+                      .plan-badge-institutional {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        background: rgba(15, 98, 254, 0.08);
+                        color: #0F62FE;
+                        font-size: 11px;
+                        font-weight: 800;
+                        font-family: 'Montserrat', sans-serif;
+                        letter-spacing: 1px;
+                        text-transform: uppercase;
+                        padding: 4px 12px;
+                        border-radius: 20px;
+                        border: 1.5px solid rgba(15, 98, 254, 0.2);
+                        cursor: default;
+                        user-select: none;
+                      }
+                      .plan-badge-institutional .plan-dot {
+                        width: 5px; height: 5px;
+                        border-radius: 50%;
+                        background: #0F62FE;
+                        flex-shrink: 0;
+                      }
                     `}</style>
                     {isPremium ? (
-                      <span className="plan-badge-premium" style={{ color: "#ffffff" }}>
-                        <span className="plan-badge-shine" />
+                      <span className="plan-badge-premium">
                         <span className="plan-dot" />
                         <span style={{ marginRight: "4px", fontSize: "12px" }}>✦</span>
                         Premium
+                      </span>
+                    ) : !isParticular ? (
+                      <span className="plan-badge-institutional">
+                        <span className="plan-dot" />
+                        Institucional
                       </span>
                     ) : (
                       <span className="plan-badge-free">

@@ -24,6 +24,9 @@ export async function GET(request: NextRequest) {
 
     console.log("📊 Query params:", { sort, topicSlug })
 
+    const profile = await prisma.profile.findUnique({ where: { userId: user.id }, select: { role: true } })
+    const isParticular = profile?.role === 'particular'
+
     let orderBy: any = { createdAt: 'desc' }
     if (sort === 'top') orderBy = { score: 'desc' }
     if (sort === 'unanswered') orderBy = { commentCount: 'asc' }
@@ -33,7 +36,10 @@ export async function GET(request: NextRequest) {
         { moderationStatus: 'approved' },
         { moderationStatus: 'pending', authorId: user.id } // Show user's own pending threads
       ],
-      isHidden: false
+      isHidden: false,
+      author: {
+        role: isParticular ? 'particular' : { not: 'particular' }
+      }
     }
 
     if (topicSlug && topicSlug !== 'all') {
@@ -107,6 +113,23 @@ export async function GET(request: NextRequest) {
     console.log(`✅ Found ${threads.length} threads`)
 
     const formatted = (threads as any[]).map(t => {
+      // Safety check: handle cases where author profile might be missing
+      if (!t.author) {
+        return {
+          ...t,
+          author: {
+            userId: 'unknown',
+            nickname: 'Usuario',
+            reputation: 0,
+            avatar: null,
+            isMinor: false,
+            inventory: []
+          },
+          tags: t.tags?.map((tt: any) => tt.tag) || [],
+          hasAcceptedAnswer: !!t.acceptedCommentId
+        }
+      }
+
       const parts = (t.author.fullName || '').trim().split(/\s+/)
       const safeName = parts.length >= 2
         ? `${parts[0]} ${parts[parts.length - 1][0]}.`

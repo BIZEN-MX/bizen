@@ -753,6 +753,7 @@ export default function ProfilePage() {
               const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
               const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
               const isPremium = hasActiveStripe || hasActiveLicense
+              const isParticular = dbProfile?.role === 'particular' || !dbProfile?.role
 
               if (isPremium) {
                 return (
@@ -784,7 +785,7 @@ export default function ProfilePage() {
                         </span>
                       </div>
 
-                      {hasActiveStripe && dbProfile?.stripeCustomerId && !hasActiveLicense && (
+                      {hasActiveStripe && dbProfile?.stripeCustomerId && !hasActiveLicense && isParticular && (
                         <button
                           onClick={handleManageSubscription}
                           style={{
@@ -809,7 +810,7 @@ export default function ProfilePage() {
                         </button>
                       )}
 
-                      {!hasActiveLicense && (
+                      {!hasActiveLicense && isParticular && (
                         <div style={{ fontSize: 11, color: "rgba(147,197,253,0.7)", marginTop: 4, fontStyle: "italic", marginLeft: 4 }}>
                           Al cancelar, mantienes tu acceso hasta el final del periodo pagado.
                         </div>
@@ -819,7 +820,32 @@ export default function ProfilePage() {
                 )
               }
 
-              // Non-premium: show upsell card
+              // Hide non-premium upsell if user is an institutional student
+              if (!isParticular) {
+                return (
+                  <div style={{
+                    background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%)",
+                    borderRadius: 20,
+                    padding: "20px 22px",
+                    position: "relative",
+                    overflow: "hidden",
+                    boxShadow: "0 8px 30px rgba(15,98,254,0.25)",
+                    fontFamily: "Helvetica, 'Inter', sans-serif"
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Shield size={18} color="#93c5fd" />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 900, color: "#fff", letterSpacing: "-0.01em" }}>Plan Institucional</div>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "#93c5fd", marginTop: 2 }}>Tu acceso es provisto por tu institución.</div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+
+              // Non-premium: show upsell card (for particulars)
               return (
                 <div
                   onClick={() => router.push("/payment")}

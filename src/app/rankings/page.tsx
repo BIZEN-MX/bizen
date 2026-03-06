@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Trophy, Users, School, Zap, Star, TrendingUp, Medal, Crown } from "lucide-react"
 import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import { useAuth } from "@/contexts/AuthContext"
 
 interface UserRank {
     rank: number
@@ -60,8 +61,12 @@ function RankBadge({ rank }: { rank: number }) {
 }
 
 export default function RankingsPage() {
+    const { dbProfile } = useAuth()
+    const isParticular = dbProfile?.role === 'particular'
+
     const [activeTab, setActiveTab] = useState<"users" | "schools">("users")
     const [users, setUsers] = useState<UserRank[]>([])
+    const [particulares, setParticulares] = useState<UserRank[]>([])
     const [schools, setSchools] = useState<SchoolRank[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -74,6 +79,7 @@ export default function RankingsPage() {
                 if (!res.ok) throw new Error("Error cargando rankings")
                 const data = await res.json()
                 setUsers(data.users || [])
+                setParticulares(data.particulares || [])
                 setSchools(data.schools || [])
             } catch (err) {
                 setError("No se pudieron cargar los rankings. Intenta de nuevo más tarde.")
@@ -239,44 +245,65 @@ export default function RankingsPage() {
                 </div>
 
                 {/* ── TABS ── */}
-                <div
-                    style={{
-                        display: "flex",
-                        gap: 10,
-                        marginBottom: 28,
-                        background: "white",
-                        padding: "6px",
-                        borderRadius: 14,
-                        border: "1.5px solid #e8f0fe",
-                        width: "fit-content",
-                        boxShadow: "0 2px 10px rgba(15,98,254,0.05)",
-                    }}
-                >
-                    <button
-                        className="rk-tab"
-                        onClick={() => setActiveTab("users")}
+                {!isParticular ? (
+                    <div
                         style={{
-                            background: activeTab === "users" ? "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)" : "transparent",
-                            color: activeTab === "users" ? "#fff" : "#64748b",
-                            boxShadow: activeTab === "users" ? "0 4px 15px rgba(15,98,254,0.3)" : "none",
+                            display: "flex",
+                            gap: 10,
+                            marginBottom: 28,
+                            background: "white",
+                            padding: "6px",
+                            borderRadius: 14,
+                            border: "1.5px solid #e8f0fe",
+                            width: "fit-content",
+                            boxShadow: "0 2px 10px rgba(15,98,254,0.05)",
+                        }}
+                    >
+                        <button
+                            className="rk-tab"
+                            onClick={() => setActiveTab("users")}
+                            style={{
+                                background: activeTab === "users" ? "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)" : "transparent",
+                                color: activeTab === "users" ? "#fff" : "#64748b",
+                                boxShadow: activeTab === "users" ? "0 4px 15px rgba(15,98,254,0.3)" : "none",
+                            }}
+                        >
+                            <Users size={16} />
+                            Estudiantes
+                        </button>
+                        <button
+                            className="rk-tab"
+                            onClick={() => setActiveTab("schools")}
+                            style={{
+                                background: activeTab === "schools" ? "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)" : "transparent",
+                                color: activeTab === "schools" ? "#fff" : "#64748b",
+                                boxShadow: activeTab === "schools" ? "0 4px 15px rgba(15,98,254,0.3)" : "none",
+                            }}
+                        >
+                            <School size={16} />
+                            Escuelas
+                        </button>
+                    </div>
+                ) : (
+                    <div
+                        style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 10,
+                            padding: "8px 16px",
+                            background: "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)",
+                            color: "white",
+                            borderRadius: 12,
+                            fontWeight: 700,
+                            fontSize: 14,
+                            marginBottom: 28,
+                            boxShadow: "0 4px 15px rgba(15,98,254,0.3)"
                         }}
                     >
                         <Users size={16} />
-                        Estudiantes
-                    </button>
-                    <button
-                        className="rk-tab"
-                        onClick={() => setActiveTab("schools")}
-                        style={{
-                            background: activeTab === "schools" ? "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)" : "transparent",
-                            color: activeTab === "schools" ? "#fff" : "#64748b",
-                            boxShadow: activeTab === "schools" ? "0 4px 15px rgba(15,98,254,0.3)" : "none",
-                        }}
-                    >
-                        <School size={16} />
-                        Escuelas
-                    </button>
-                </div>
+                        Ranking de Particulares
+                    </div>
+                )}
 
                 {/* ── Loading / Error ── */}
                 {loading && (
@@ -292,7 +319,7 @@ export default function RankingsPage() {
                 )}
 
                 {/* ── USERS TAB ── */}
-                {!loading && !error && activeTab === "users" && (
+                {!loading && !error && (activeTab === "users" || isParticular) && (
                     <div>
                         {/* Section label */}
                         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
@@ -300,18 +327,20 @@ export default function RankingsPage() {
                                 <Zap size={19} color="#0F62FE" />
                             </div>
                             <div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Top Estudiantes por XP</div>
+                                <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a" }}>
+                                    {isParticular ? "Top Particulares por XP" : "Top Estudiantes por XP"}
+                                </div>
                                 <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Del más alto nivel al más bajo</div>
                             </div>
                         </div>
 
-                        {users.length === 0 ? (
+                        {(isParticular ? particulares : users).length === 0 ? (
                             <div style={{ textAlign: "center", padding: "60px 24px", color: "#94a3b8", fontSize: 15 }}>
-                                No hay estudiantes con XP todavía. ¡Sé el primero! 🚀
+                                No hay usuarios con XP todavía. ¡Sé el primero! 🚀
                             </div>
                         ) : (
                             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                                {users.map((user, idx) => {
+                                {(isParticular ? particulares : users).map((user, idx) => {
                                     const lc = getLevelColor(user.level)
                                     const isTop3 = user.rank <= 3
                                     return (
@@ -408,7 +437,7 @@ export default function RankingsPage() {
                 )}
 
                 {/* ── SCHOOLS TAB ── */}
-                {!loading && !error && activeTab === "schools" && (
+                {!isParticular && !loading && !error && activeTab === "schools" && (
                     <div>
                         {/* Section label */}
                         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>

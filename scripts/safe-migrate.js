@@ -4,10 +4,17 @@ async function main() {
     console.log("Running safe database adjustments...");
     const prisma = new PrismaClient();
     try {
-        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "current_streak" INTEGER NOT NULL DEFAULT 0;`);
-        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "longest_streak" INTEGER NOT NULL DEFAULT 0;`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "current_streak" INTEGER DEFAULT 0;`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "longest_streak" INTEGER DEFAULT 0;`);
         await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "last_active" TIMESTAMP(3);`);
         await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "bizcoins" INTEGER DEFAULT 0;`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "is_minor" BOOLEAN DEFAULT false;`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "parental_override" BOOLEAN DEFAULT false;`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "subscription_status" TEXT DEFAULT 'none';`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "reputation" INTEGER DEFAULT 0;`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "posts_created" INTEGER DEFAULT 0;`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "comments_created" INTEGER DEFAULT 0;`);
+        await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "accepted_answers" INTEGER DEFAULT 0;`);
         console.log("Profiles updated.");
 
         await prisma.$executeRawUnsafe(`CREATE TABLE IF NOT EXISTS "public"."daily_challenges" (

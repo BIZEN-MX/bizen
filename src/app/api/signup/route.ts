@@ -233,16 +233,20 @@ export async function POST(request: NextRequest) {
         })
 
         if (!existingProfile) {
+          const emailForRole = rawData.email.toLowerCase()
+          const isInstitutional = emailForRole.endsWith('.edu') || emailForRole.includes('.edu.')
+          const role = isInstitutional ? 'student' : 'particular'
+
           await prisma.profile.create({
             data: {
               userId: data.user.id,
               fullName: rawData.fullName,
-              role: 'student', // Default role
+              role: role,
               xp: 0,
               level: 1
             }
           })
-          console.log('✅ Profile created successfully')
+          console.log(`✅ Profile created successfully with role: ${role}`)
         } else {
           console.log('ℹ️ Profile already exists for user')
         }

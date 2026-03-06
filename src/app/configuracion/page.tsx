@@ -484,13 +484,15 @@ function SettingsContent() {
                     onFocus={e => { e.currentTarget.style.borderColor = "#0F62FE"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(15,98,254,0.1)" }}
                     onBlur={e => { e.currentTarget.style.borderColor = "#E2E8F0"; e.currentTarget.style.boxShadow = "none" }} />
                 </div>
-                <div>
-                  <FieldLabel>Mi Escuela</FieldLabel>
-                  <select value={schoolId} onChange={e => setSchoolId(e.target.value)} style={inputStyle}>
-                    <option value="">Selecciona tu escuela</option>
-                    {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                  </select>
-                </div>
+                {dbProfile?.role !== 'particular' && (
+                  <div>
+                    <FieldLabel>Mi Escuela</FieldLabel>
+                    <select value={schoolId} onChange={e => setSchoolId(e.target.value)} style={inputStyle}>
+                      <option value="">Selecciona tu escuela</option>
+                      {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                    </select>
+                  </div>
+                )}
               </div>
 
               <button onClick={saveProfile} disabled={saving} style={{ ...btnPrimary, width: "100%", marginTop: 10 }}>
@@ -589,35 +591,49 @@ function SettingsContent() {
               {/* Plans */}
               <div style={{ marginBottom: 20 }}>
                 <FieldLabel>Plan de Suscripción</FieldLabel>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {([
-                    { id: "gratuito", l: "Plan Gratuito", d: "Acceso a todos los cursos básicos", c: "#10B981", grad: "linear-gradient(135deg,#10b981,#34d399)" },
-                    { id: "estudiante", l: "Plan Estudiante", d: "Herramientas adicionales para estudiantes", c: "#0F62FE", grad: "linear-gradient(135deg,#0F62FE,#4A9EFF)" },
-                    { id: "premium", l: "Plan Premium ⭐", d: "Acceso completo + certificados + soporte prioritario", c: "#F59E0B", grad: "linear-gradient(135deg,#F59E0B,#FCD34D)" },
-                  ] as { id: "gratuito" | "estudiante" | "premium", l: string, d: string, c: string, grad: string }[]).map(({ id, l, d, c, grad }) => (
-                    <div key={id} onClick={() => savePlan(id)} style={{
-                      padding: "16px 20px", borderRadius: 16, cursor: "pointer", transition: "all .2s",
-                      border: `2px solid ${plan === id ? c : "#f1f5f9"}`,
-                      background: plan === id ? `${c}10` : "#f8faff",
-                      display: "flex", alignItems: "center", justifyContent: "space-between",
-                      boxShadow: plan === id ? `0 4px 16px ${c}25` : "none"
-                    }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 10, background: grad, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                          <Award size={18} color="white" />
+                {dbProfile?.role === 'particular' || !dbProfile?.role ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {([
+                      { id: "gratuito", l: "Plan Gratuito", d: "Acceso a todos los cursos básicos", c: "#10B981", grad: "linear-gradient(135deg,#10b981,#34d399)" },
+                      { id: "estudiante", l: "Plan Estudiante", d: "Herramientas adicionales para estudiantes", c: "#0F62FE", grad: "linear-gradient(135deg,#0F62FE,#4A9EFF)" },
+                      { id: "premium", l: "Plan Premium ⭐", d: "Acceso completo + certificados + soporte prioritario", c: "#F59E0B", grad: "linear-gradient(135deg,#F59E0B,#FCD34D)" },
+                    ] as { id: "gratuito" | "estudiante" | "premium", l: string, d: string, c: string, grad: string }[]).map(({ id, l, d, c, grad }) => (
+                      <div key={id} onClick={() => savePlan(id)} style={{
+                        padding: "16px 20px", borderRadius: 16, cursor: "pointer", transition: "all .2s",
+                        border: `2px solid ${plan === id ? c : "#f1f5f9"}`,
+                        background: plan === id ? `${c}10` : "#f8faff",
+                        display: "flex", alignItems: "center", justifyContent: "space-between",
+                        boxShadow: plan === id ? `0 4px 16px ${c}25` : "none"
+                      }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                          <div style={{ width: 36, height: 36, borderRadius: 10, background: grad, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Award size={18} color="white" />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: 15, fontWeight: 800, color: plan === id ? c : "#0F172A" }}>{l}</div>
+                            <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>{d}</div>
+                          </div>
                         </div>
-                        <div>
-                          <div style={{ fontSize: 15, fontWeight: 800, color: plan === id ? c : "#0F172A" }}>{l}</div>
-                          <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>{d}</div>
-                        </div>
+                        {plan === id && <span style={{
+                          fontSize: 11, fontWeight: 800, color: c,
+                          background: `${c}18`, padding: "4px 12px", borderRadius: 20, border: `1.5px solid ${c}40`
+                        }}>ACTIVO</span>}
                       </div>
-                      {plan === id && <span style={{
-                        fontSize: 11, fontWeight: 800, color: c,
-                        background: `${c}18`, padding: "4px 12px", borderRadius: 20, border: `1.5px solid ${c}40`
-                      }}>ACTIVO</span>}
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ padding: "16px 20px", borderRadius: 16, background: "#f8faff", border: "1.5px solid #e0eaff" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#0F62FE,#4A9EFF)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Award size={18} color="white" />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: "#0F172A" }}>Institucional</div>
+                        <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>Tu plan de suscripción es gestionado por tu escuela o institución educativa.</div>
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
 
               {/* Account meta */}

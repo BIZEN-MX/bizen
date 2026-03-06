@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
+
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -24,13 +22,19 @@ export async function GET(request: NextRequest) {
 
     const searchTerm = query.trim().toLowerCase()
 
+    const profile = await prisma.profile.findUnique({ where: { userId: user.id }, select: { role: true } })
+    const isParticular = profile?.role === 'particular'
+
     const where: any = {
       moderationStatus: 'approved',
       isHidden: false,
       OR: [
         { title: { contains: searchTerm, mode: 'insensitive' } },
         { body: { contains: searchTerm, mode: 'insensitive' } }
-      ]
+      ],
+      author: {
+        role: isParticular ? 'particular' : { not: 'particular' }
+      }
     }
 
     // Filter by topic
@@ -71,13 +75,13 @@ export async function GET(request: NextRequest) {
       take: 30
     })
 
-    const formatted = threads.map(t => ({
+    const formatted = (threads as any[]).map(t => ({
       ...t,
       author: {
         ...t.author,
-        nickname: t.author.nickname || t.author.fullName.split(' ')[0]
+        nickname: t.author?.nickname || t.author?.fullName?.split(' ')[0] || 'Unknown'
       },
-      tags: t.tags.map(tt => tt.tag)
+      tags: t.tags?.map((tt: any) => tt.tag) || []
     }))
 
     return NextResponse.json({ query, results: formatted })

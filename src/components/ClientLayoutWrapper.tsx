@@ -8,12 +8,26 @@ import MobileFooterNav from './MobileFooterNav';
 import GlobalLogo from './GlobalLogo';
 import { useKeyboardHandler } from '@/hooks/useKeyboardHandler';
 import { useViewportHeight } from '@/hooks/useViewportHeight';
+import { useAuth } from '@/contexts/AuthContext';
+
+const PUBLIC_PATHS = [
+  "/", "/login", "/signup", "/forgot-password", "/reset-password",
+  "/bizen/", "/payment", "/auth/", "/impacto-social"
+]
+
+function isPublicPath(p: string) {
+  return PUBLIC_PATHS.some(pub => p === pub || p.startsWith(pub))
+}
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
+  const { user, loading } = useAuth();
+
+  // Hide navigation entirely when user is not authenticated on a protected route
+  const isUnauthProtected = !loading && !user && !isPublicPath(pathname)
 
   // Fix iOS Safari viewport height
   useViewportHeight();
@@ -157,13 +171,13 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
   return (
     <>
-      {/* Show FixedSidebar only on larger screens (>767px), hidden during interactive lesson */}
-      {!hideAppNavigation && !isMobile && !isLessonInteractivePage && <FixedSidebar />}
+      {/* Show FixedSidebar only on larger screens (>767px), hidden during interactive lesson, hidden when unauth */}
+      {!hideAppNavigation && !isMobile && !isLessonInteractivePage && !isUnauthProtected && <FixedSidebar />}
 
-      {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page */}
-      {!hideAppNavigation && isMobile && !isLessonInteractivePage && <MobileFooterNav />}
+      {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page, hidden when unauth */}
+      {!hideAppNavigation && isMobile && !isLessonInteractivePage && !isUnauthProtected && <MobileFooterNav />}
 
-      <GlobalLogo />
+      {!isUnauthProtected && <GlobalLogo />}
       {children}
       <NavigationLoading isLoading={isNavigating} />
     </>
