@@ -16,10 +16,9 @@ model School {
   region        String?
   contactEmail  String?           @map("contact_email")
   licenses      License[]
-  schoolTopics  SchoolTopic[]
   cycleGoals    SchoolCycleGoal[]
   schoolImpacts SchoolImpact[]
-  profiles      Profile[]
+  schoolTopics  SchoolTopic[]
 
   @@map("schools")
   @@schema("public")
@@ -55,46 +54,36 @@ model ContactMessage {
 }
 
 model Profile {
-  userId           String              @id @map("user_id")
-  fullName         String              @map("full_name")
-  role             String              @default("student")
-  schoolId         String?             @map("school_id")
-  xp               Int                 @default(0)
-  level            Int                 @default(1)
-  nickname         String?             @unique
-  reputation       Int                 @default(0)
-  postsCreated     Int                 @default(0) @map("posts_created")
-  commentsCreated  Int                 @default(0) @map("comments_created")
-  acceptedAnswers  Int                 @default(0) @map("accepted_answers")
-  createdAt        DateTime            @default(now()) @map("created_at")
-  birthDate        DateTime?           @map("birth_date") @db.Timestamptz(6)
-  isMinor          Boolean             @default(false) @map("is_minor")
-  parentalOverride Boolean             @default(false) @map("parental_override")
-  ageVerifiedAt    DateTime?           @map("age_verified_at") @db.Timestamptz(6)
-  avatar           Json?
-  currentStreak    Int?                @default(0) @map("current_streak")
-  longestStreak    Int?                @default(0) @map("longest_streak")
-  lastActive       DateTime?           @map("last_active")
-  bizcoins         Int?                @default(0)
-
-  // Campos para B2C (Stripe)
-  stripeCustomerId   String?           @unique @map("stripe_customer_id")
-  subscriptionStatus String?           @default("none") @map("subscription_status")
-  subscriptionId     String?           @map("subscription_id")
-  planId             String?           @map("plan_id")
-  subscriptionEnds   DateTime?         @map("subscription_ends")
-
-  certificates     Certificate[]
-  enrollments      Enrollment[]
-  progress         Progress[]
-  school           School?             @relation(fields: [schoolId], references: [id], onDelete: SetNull, onUpdate: NoAction)
-  forumUserBadges  ForumUserBadge[]
-  inventory        UserInventoryItem[]
-  followers        UserFollow[]        @relation("following")
-  following        UserFollow[]        @relation("follower")
-  reviews          TopicReview[]
-  notes            UserNote[]
-  ForumComment     ForumComment[]
+  userId             String         @id @map("user_id")
+  fullName           String         @map("full_name")
+  role               String         @default("student")
+  schoolId           String?        @map("school_id")
+  xp                 Int            @default(0)
+  level              Int            @default(1)
+  nickname           String?        @unique
+  reputation         Int            @default(0)
+  postsCreated       Int            @default(0) @map("posts_created")
+  commentsCreated    Int            @default(0) @map("comments_created")
+  acceptedAnswers    Int            @default(0) @map("accepted_answers")
+  createdAt          DateTime       @default(now()) @map("created_at")
+  birthDate          DateTime?      @map("birth_date") @db.Timestamptz(6)
+  isMinor            Boolean        @default(false) @map("is_minor")
+  parentalOverride   Boolean        @default(false) @map("parental_override")
+  ageVerifiedAt      DateTime?      @map("age_verified_at") @db.Timestamptz(6)
+  avatar             Json?
+  currentStreak      Int?           @default(0) @map("current_streak")
+  longestStreak      Int?           @default(0) @map("longest_streak")
+  lastActive         DateTime?      @map("last_active")
+  bizcoins           Int?           @default(0)
+  stripeCustomerId   String?        @unique @map("stripe_customer_id")
+  subscriptionStatus String?        @default("none") @map("subscription_status")
+  subscriptionId     String?        @map("subscription_id")
+  planId             String?        @map("plan_id")
+  subscriptionEnds   DateTime?      @map("subscription_ends")
+  certificates       Certificate[]
+  enrollments        Enrollment[]
+  evidence_posts     EvidencePost[]
+  progress           Progress[]
 
   @@index([schoolId], map: "idx_profiles_school")
   @@map("profiles")
@@ -102,7 +91,7 @@ model Profile {
 }
 
 model Topic {
-  id           String        @id @default(cuid())
+  id           String        @id(map: "courses_pkey") @default(cuid())
   title        String
   description  String?
   level        String
@@ -111,10 +100,9 @@ model Topic {
   bannerUrl    String?       @map("banner_url")
   icon         String?
   certificates Certificate[]
+  courses      Course[]
   enrollments  Enrollment[]
   schoolTopics SchoolTopic[]
-  courses      Course[]
-  reviews      TopicReview[]
 
   @@map("topics")
   @@schema("public")
@@ -124,16 +112,16 @@ model SchoolTopic {
   schoolId  String  @map("school_id")
   topicId   String  @map("topic_id")
   isEnabled Boolean @default(true) @map("is_enabled")
-  topic     Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  school    School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  topic     Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade, map: "school_courses_course_id_fkey")
+  school    School  @relation(fields: [schoolId], references: [id], onDelete: Cascade, map: "school_courses_school_id_fkey")
 
-  @@id([schoolId, topicId])
+  @@id([schoolId, topicId], map: "school_courses_pkey")
   @@map("school_topics")
   @@schema("public")
 }
 
 model Course {
-  id          String    @id @default(cuid())
+  id          String    @id(map: "units_pkey") @default(cuid())
   topicId     String    @map("topic_id")
   title       String
   order       Int
@@ -141,9 +129,9 @@ model Course {
   createdAt   DateTime  @default(now()) @map("created_at")
   description String?
   icon        String?
+  topic       Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade, map: "units_course_id_fkey")
   lessons     Lesson[]
   sections    Section[]
-  topic       Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@map("courses")
   @@schema("public")
@@ -156,7 +144,7 @@ model Section {
   order     Int
   createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   lessons   Lesson[]
-  course    Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  course    Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "sections_unit_id_fkey")
 
   @@index([courseId], map: "idx_sections_course")
   @@map("sections")
@@ -164,25 +152,21 @@ model Section {
 }
 
 model Lesson {
-  id          String           @id @default(cuid())
-  courseId    String?          @map("course_id")
+  id          String     @id @default(cuid())
+  courseId    String?    @map("course_id")
   title       String
-  contentType String           @map("content_type")
+  contentType String     @map("content_type")
   order       Int
-  xpReward    Int              @default(50) @map("xp_reward")
-  createdAt   DateTime         @default(now()) @map("created_at")
-  sectionId   String?          @map("section_id")
-  duration    Int?             @default(5)
-  section     Section?         @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  course      Course?          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  xpReward    Int        @default(50) @map("xp_reward")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  sectionId   String?    @map("section_id")
+  duration    Int?       @default(5)
+  section     Section?   @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  course      Course?    @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "lessons_unit_id_fkey")
   progress    Progress[]
   quizzes     Quiz[]
-  steps       LessonStep[]
-  resources   LessonResource[]
-  notes       UserNote[]
 
   @@index([sectionId], map: "idx_lessons_section")
-  @@index([courseId], map: "idx_lessons_course")
   @@map("lessons")
   @@schema("public")
 }
@@ -197,9 +181,8 @@ model LessonStep {
   data      Json?    @default("{}")
   xpReward  Int      @default(10) @map("xp_reward")
   createdAt DateTime @default(now()) @map("created_at")
-  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
-  @@index([lessonId])
+  @@index([lessonId], map: "idx_lesson_steps_lesson")
   @@map("lesson_steps")
   @@schema("public")
 }
@@ -211,24 +194,21 @@ model LessonResource {
   url       String
   fileType  String   @map("file_type")
   createdAt DateTime @default(now()) @map("created_at")
-  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
-  @@index([lessonId])
+  @@index([lessonId], map: "idx_lesson_resources_lesson")
   @@map("lesson_resources")
   @@schema("public")
 }
 
 model TopicReview {
-  id        String   @id @default(cuid())
+  id        String   @id(map: "course_reviews_pkey") @default(cuid())
   topicId   String   @map("topic_id")
   userId    String   @map("user_id")
   rating    Int
   comment   String?
   createdAt DateTime @default(now()) @map("created_at")
-  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  user      Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
-  @@unique([userId, topicId])
+  @@unique([userId, topicId], map: "course_reviews_user_id_course_id_key")
   @@map("topic_reviews")
   @@schema("public")
 }
@@ -239,8 +219,6 @@ model UserNote {
   lessonId  String   @map("lesson_id")
   content   String
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  user      Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@unique([userId, lessonId])
   @@map("user_notes")
@@ -291,10 +269,10 @@ model Enrollment {
   userId     String   @map("user_id")
   topicId    String   @map("topic_id")
   enrolledAt DateTime @default(now()) @map("enrolled_at") @db.Timestamptz(6)
-  topic      Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  topic      Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "enrollments_course_id_fkey")
   user       Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
 
-  @@unique([userId, topicId])
+  @@unique([userId, topicId], map: "enrollments_user_id_course_id_key")
   @@map("enrollments")
   @@schema("public")
 }
@@ -337,10 +315,10 @@ model Certificate {
   topicId  String   @map("topic_id")
   url      String?
   issuedAt DateTime @default(now()) @map("issued_at") @db.Timestamptz(6)
-  topic    Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  topic    Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "certificates_course_id_fkey")
   user     Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
 
-  @@unique([userId, topicId])
+  @@unique([userId, topicId], map: "certificates_user_id_course_id_key")
   @@map("certificates")
   @@schema("public")
 }
@@ -406,7 +384,6 @@ model ForumComment {
   threadId         String         @map("thread_id")
   parentCommentId  String?        @map("parent_comment_id")
   authorId         String         @map("author_id")
-  author           Profile        @relation(fields: [authorId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
   body             String
   score            Int            @default(0)
   isHidden         Boolean        @default(false) @map("is_hidden")
@@ -524,7 +501,6 @@ model ForumUserBadge {
   badgeId  String     @map("badge_id")
   earnedAt DateTime   @default(now()) @map("earned_at")
   badge    ForumBadge @relation(fields: [badgeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  profile  Profile    @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([userId, badgeId])
   @@index([badgeId])
@@ -538,10 +514,11 @@ model UserInventoryItem {
   productId   String   @map("product_id")
   purchasedAt DateTime @default(now()) @map("purchased_at")
   pricePaid   Int      @map("price_paid")
-  profile     Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
-  @@unique([userId, productId])
+  @@unique([userId, productId], map: "user_inventory_unique_purchase")
   @@index([userId])
+  @@index([userId], map: "idx_user_inventory_user")
+  @@index([userId], map: "idx_user_inventory_user_id")
   @@map("user_inventory")
   @@schema("public")
 }
@@ -550,8 +527,6 @@ model UserFollow {
   followerId  String    @map("follower_id")
   followingId String    @map("following_id")
   createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
-  follower    Profile   @relation("follower", fields: [followerId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
-  following   Profile   @relation("following", fields: [followingId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([followerId, followingId])
   @@map("user_follows")
@@ -798,6 +773,7 @@ model DailyChallenge {
   updatedAt     DateTime?      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   evidencePosts EvidencePost[]
 
+  @@index([activeDate])
   @@map("daily_challenges")
   @@schema("public")
 }
@@ -818,6 +794,7 @@ model EvidencePost {
   validatedAt      DateTime?          @map("validated_at") @db.Timestamptz(6)
   createdAt        DateTime?          @default(now()) @map("created_at") @db.Timestamptz(6)
   comments         EvidenceComment[]
+  profiles         Profile            @relation(fields: [authorUserId], references: [userId], onDelete: Cascade)
   dailyChallenge   DailyChallenge     @relation(fields: [dailyChallengeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   reactions        EvidenceReaction[]
 
@@ -1251,8 +1228,7 @@ model SchoolCycleGoal {
   schoolId                   String      @map("school_id")
   cycleId                    String      @map("cycle_id")
   targetActiveRate           Decimal?    @default(0.70) @map("target_active_rate") @db.Decimal
-  targetLessonsPerStudent    Decimal?    @default(10.0) @map("target_lessons_per_student") @db.Decimal
-  targetChallengesPerStudent Decimal?    @default(5.0)  @map("target_challenges_per_student") @db.Decimal
+  target_modules_per_student Decimal?    @default(1.0) @db.Decimal
   cycle                      ImpactCycle @relation(fields: [cycleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   school                     School      @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 

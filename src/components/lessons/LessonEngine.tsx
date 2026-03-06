@@ -18,6 +18,7 @@ import {
   SummaryStep,
 } from "./steps"
 import { haptic } from "@/utils/hapticFeedback"
+import { playFlipSound } from "./lessonSounds"
 
 interface LessonEngineProps {
   lessonSteps: LessonStep[]
@@ -47,6 +48,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   })
 
   const [isExitModalOpen, setIsExitModalOpen] = useState(false)
+  const [showRecallOverlay, setShowRecallOverlay] = useState(false)
+  const hasShownRecallHint = useRef(false)
 
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
@@ -108,6 +111,30 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   )
 
   const currentStep = state.allSteps[state.currentStepIndex]
+  const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
+  const isSummaryStep = currentStep?.stepType === "summary"
+  const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice"].includes(currentStep?.stepType || "")
+
+  // Find the last InfoStep seen before the current step
+  const lastInfoStep = React.useMemo(() => {
+    for (let i = state.currentStepIndex - 1; i >= 0; i--) {
+      if (state.allSteps[i]?.stepType === "info") return state.allSteps[i]
+    }
+    return null
+  }, [state.currentStepIndex, state.allSteps])
+
+  const showRecallButton = isAssessment && lastInfoStep != null
+
+  // Animate hint bounce once per session when the button first becomes visible
+  const [recallHintBounce, setRecallHintBounce] = useState(false)
+  useEffect(() => {
+    if (showRecallButton && !hasShownRecallHint.current) {
+      hasShownRecallHint.current = true
+      setRecallHintBounce(true)
+      const t = setTimeout(() => setRecallHintBounce(false), 1200)
+      return () => clearTimeout(t)
+    }
+  }, [showRecallButton])
 
   // Compute streak and stars from state
   const originalQuizStepIds = state.originalSteps
@@ -132,9 +159,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     })
   }, [state.currentStepIndex, state.allSteps.length, streak, stars, onProgressChange])
 
-  const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
-  const isSummaryStep = currentStep?.stepType === "summary"
-  const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice"].includes(currentStep?.stepType || "")
+  // Close recall overlay when advancing to a new step
+  useEffect(() => {
+    setShowRecallOverlay(false)
+  }, [state.currentStepIndex])
 
   useEffect(() => {
     if (isSummaryStep) {
@@ -385,6 +413,174 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             {renderStep()}
           </div>
         </div>
+
+        {/* Floating Recall Button */}
+        {showRecallButton && (
+          <div style={{
+            position: "fixed",
+            bottom: "88px",
+            left: "clamp(16px, 4vw, 48px)",
+            zIndex: 8000,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 6,
+          }}>
+            {/* Animated blue arrow pointing down */}
+            <svg
+              width="24" height="24" viewBox="0 0 24 24" fill="none"
+              style={{
+                animation: "arrowBounceLoop 1.5s infinite ease-in-out",
+                filter: "drop-shadow(0 4px 6px rgba(37,99,235,0.3))"
+              }}
+            >
+              <path d="M12 3v16M18 13l-6 6-6-6" stroke="#2563eb" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+
+            {/* The BIG Button */}
+            <button
+              onClick={() => { playFlipSound(); setShowRecallOverlay(true) }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "14px 24px",
+                background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
+                border: "none",
+                borderRadius: 999,
+                boxShadow: "0 8px 24px rgba(37,99,235,0.4), inset 0 2px 0 rgba(255,255,255,0.2)",
+                cursor: "pointer",
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: 16,
+                fontWeight: 800,
+                color: "#ffffff",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease",
+                animation: recallHintBounce ? "recallBounce 0.4s ease 2" : "none",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-4px) scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 14px 32px rgba(37,99,235,0.5), inset 0 2px 0 rgba(255,255,255,0.2)";
+                e.currentTarget.style.filter = "brightness(1.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+                e.currentTarget.style.boxShadow = "0 8px 24px rgba(37,99,235,0.4), inset 0 2px 0 rgba(255,255,255,0.2)";
+                e.currentTarget.style.filter = "brightness(1)";
+              }}
+            >
+              {/* Custom SVG Flashcard/Notebook Icon */}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" />
+                <path d="M4 7H20" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                <path d="M9 11H15" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                <path d="M9 15H13" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                <path d="M6 2V22" stroke="white" strokeWidth="2" opacity="0.4" />
+              </svg>
+              Repasar nota
+            </button>
+          </div>
+        )}
+
+        {/* Flashcard Recall Overlay */}
+        {showRecallOverlay && lastInfoStep && (
+          <div
+            onClick={() => { playFlipSound(); setShowRecallOverlay(false) }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(15, 23, 42, 0.7)",
+              backdropFilter: "blur(4px)",
+              zIndex: 9000,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "24px 16px",
+              animation: "recallFadeIn 0.2s ease",
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                borderRadius: 28,
+                width: "100%",
+                maxWidth: 640,
+                maxHeight: "80vh",
+                overflowY: "auto",
+                position: "relative",
+                boxShadow: "0 24px 64px rgba(15,23,42,0.35)",
+                animation: "recallSlideUp 0.25s cubic-bezier(0.4,0,0.2,1)",
+              }}
+            >
+              {/* Blue top bar */}
+              <div style={{ height: 6, background: "linear-gradient(90deg, #3b82f6, #1e40af)", borderRadius: "28px 28px 0 0" }} />
+
+              {/* Close button */}
+              <button
+                onClick={() => { playFlipSound(); setShowRecallOverlay(false) }}
+                style={{
+                  position: "absolute",
+                  top: 18,
+                  right: 18,
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  background: "#f1f5f9",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 18,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#64748b",
+                  fontWeight: 700,
+                  lineHeight: 1,
+                }}
+              >
+                ×
+              </button>
+
+              {/* Content */}
+              <div style={{ padding: "32px 32px 40px" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#eff6ff", padding: "4px 12px", borderRadius: 999, marginBottom: 20 }}>
+                  <span style={{ fontSize: 13 }}>📖</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "#2563eb", letterSpacing: "0.05em", textTransform: "uppercase" as const }}>Nota de clase</span>
+                </div>
+
+                {(lastInfoStep as any).title && (
+                  <h2 style={{ fontSize: "clamp(20px, 4vw, 26px)", fontWeight: 900, color: "#0f172a", marginBottom: 16, lineHeight: 1.25, fontFamily: "'Montserrat', sans-serif" }}>
+                    {(lastInfoStep as any).title}
+                  </h2>
+                )}
+
+                <div style={{ fontSize: "clamp(15px, 2.5vw, 18px)", color: "#334155", lineHeight: 1.7, fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}>
+                  {(lastInfoStep as any).body?.split("\n\n").map((para: string, i: number) => (
+                    <p key={i} style={{ margin: "0 0 14px", whiteSpace: "pre-wrap" }}>{para}</p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <style>{`
+          @keyframes arrowBounceLoop {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+          }
+          @keyframes recallBounce {
+            0%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+            70% { transform: translateY(-3px); }
+          }
+          @keyframes recallFadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+          }
+          @keyframes recallSlideUp {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+          }
+        `}</style>
 
         {renderFooter(true)}
       </div>
