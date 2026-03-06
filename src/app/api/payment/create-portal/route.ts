@@ -24,6 +24,12 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "No Stripe customer found for this user in DB" }, { status: 400 });
         }
 
+        if (profile.stripeCustomerId.startsWith("cus_test_admin")) {
+            return NextResponse.json({
+                error: "Perfil en modo Administrador. El sistema reconoce un pago ficticio para mostrarte el botón, pero no se puede abrir el portal de Stripe porque no existe una tarjeta bancaria real vinculada."
+            }, { status: 400 });
+        }
+
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
             apiVersion: "2025-01-27.acacia" as any,
         });
