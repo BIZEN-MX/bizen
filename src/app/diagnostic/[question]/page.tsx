@@ -192,36 +192,41 @@ export default function DiagnosticQuestionPage() {
 
   // Footer is only shown during the quiz, not on the intro screen
   const quizFooter = userInfo && !showSuccess ? (
-    <div className="flex gap-3 md:gap-4 p-4 md:p-6 pb-[max(24px,env(safe-area-inset-bottom))] bg-white border-t-2 border-slate-100">
-      <div className="w-full max-w-4xl mx-auto flex gap-3 md:gap-4">
-        {!isFirstPage && (
-          <StickyFooterButton
-            variant="secondary"
-            onClick={() => goToPage(currentPage - 1)}
-            className="flex-1 max-w-none"
-          >
-            Anterior
-          </StickyFooterButton>
-        )}
-        {currentPage < totalQuestions ? (
-          <StickyFooterButton
-            variant="blue"
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={userAnswers[currentQuestion.id] === undefined}
-            className={isFirstPage ? "w-full" : "flex-[2] max-w-none"}
-          >
-            Siguiente
-          </StickyFooterButton>
-        ) : (
-          <StickyFooterButton
-            variant="blue"
-            onClick={handleQuizSubmit}
-            disabled={quizIncomplete || quizSubmitted}
-            className={isFirstPage ? "w-full" : "flex-[2] max-w-none"}
-          >
-            {quizSubmitted ? "Enviado" : "Finalizar examen"}
-          </StickyFooterButton>
-        )}
+    <div className="flex p-4 md:p-6 pb-[max(24px,env(safe-area-inset-bottom))] bg-white border-t-2 border-slate-100">
+      <div className="w-full max-w-4xl mx-auto flex items-center justify-between gap-3 md:gap-4">
+        <div>
+          {!isFirstPage && (
+            <StickyFooterButton
+              variant="secondary"
+              onClick={() => goToPage(currentPage - 1)}
+              style={{ width: "auto", minWidth: "140px" }}
+            >
+              Anterior
+            </StickyFooterButton>
+          )}
+        </div>
+
+        <div className="flex-1 flex justify-end">
+          {currentPage < totalQuestions ? (
+            <StickyFooterButton
+              variant="blue"
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={userAnswers[currentQuestion.id] === undefined}
+              style={{ width: "auto", minWidth: "200px" }}
+            >
+              Siguiente
+            </StickyFooterButton>
+          ) : (
+            <StickyFooterButton
+              variant="blue"
+              onClick={handleQuizSubmit}
+              disabled={quizIncomplete || quizSubmitted}
+              style={{ width: "auto", minWidth: "200px" }}
+            >
+              {quizSubmitted ? "Enviado" : "Finalizar examen"}
+            </StickyFooterButton>
+          )}
+        </div>
       </div>
     </div>
   ) : null

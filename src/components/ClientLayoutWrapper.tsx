@@ -38,6 +38,41 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     offset: 100
   });
 
+  // 🔴 GLOBAL FIX FOR CACHE ISSUES 🔴
+  // Next.js and browsers aggressively cache API responses.
+  // This intercepts all fetch calls globally to force fresh data without needing to rewrite the entire app to SWR.
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !(window as any)._fetchPatched) {
+      const originalFetch = window.fetch;
+      window.fetch = async function () {
+        let [resource, config] = arguments;
+
+        if (typeof resource === 'string' && resource.startsWith('/api/')) {
+          config = config || {};
+          // Force no-store and cache-busting on all API GET requests
+          if (!config.method || config.method.toUpperCase() === 'GET') {
+            config.cache = 'no-store';
+            const t = Date.now();
+            if (resource.includes('?')) {
+              if (!resource.includes('_t=')) resource += `&_t=${t}`;
+            } else {
+              resource += `?_t=${t}`;
+            }
+            config.headers = {
+              ...config.headers,
+              'Pragma': 'no-cache',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+            };
+          }
+        }
+
+        return originalFetch.apply(this, [resource, config]);
+      };
+      (window as any)._fetchPatched = true;
+      console.log('✅ Global Fetch interceptor activated (Cache Buster)');
+    }
+  }, []);
+
   // Update body attribute when keyboard is visible
   useEffect(() => {
     if (typeof document !== 'undefined') {
