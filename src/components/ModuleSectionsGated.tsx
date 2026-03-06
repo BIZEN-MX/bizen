@@ -132,7 +132,7 @@ export default function ModuleSectionsGated(props: Props) {
           : maxFromApi
       setSectionMax(finalMax)
       setError(null)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       setSectionMax(forcedMax ?? clamp(startUnlockedSection, 1, totalSections))
       // Silently use default progress - don't show error to user
@@ -271,23 +271,7 @@ export default function ModuleSectionsGated(props: Props) {
         {/* Progreso visual opcional */}
         {showProgressBar && (
           <div style={{ display: "flex" as const, alignItems: "center" as const, gap: 12, marginBottom: 10 }}>
-            <motion.span
-              style={{
-                display: "inline-flex" as const,
-                alignItems: "center" as const,
-                gap: 8,
-                padding: "6px 10px",
-                borderRadius: 999,
-                background: `${primaryColor}14`,
-                color: primaryColor,
-                fontWeight: 800,
-                fontSize: 14,
-              }}
-              animate={progressBreathing ? { scale: [1, 1.06, 1] } : undefined}
-              transition={progressBreathing ? { duration: progressBreathDur, ease: "easeInOut", repeat: Infinity } : undefined}
-            >
-              {clamp(Math.round(progressPercent), 0, 100)}%
-            </motion.span>
+            {/* Percentage text removed per user request */}
             <div
               style={{
                 flex: 1,

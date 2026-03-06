@@ -20,6 +20,7 @@ import {
 import { haptic } from "@/utils/hapticFeedback"
 import { playFlipSound } from "./lessonSounds"
 import { SmartText } from "./SmartText"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface LessonEngineProps {
   lessonSteps: LessonStep[]
@@ -124,7 +125,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     return null
   }, [state.currentStepIndex, state.allSteps])
 
-  const showRecallButton = isAssessment && lastInfoStep != null
+  const showRecallButton = isAssessment && lastInfoStep != null && !state.isContinueEnabled
 
   // Animate hint bounce once per session when the button first becomes visible
   const [recallHintBounce, setRecallHintBounce] = useState(false)
@@ -472,6 +473,30 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               </svg>
               Repasar nota
             </button>
+
+            {/* Mascot Image below recall button */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              style={{
+                marginTop: 8,
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <img
+                src="/image copy 2.png"
+                alt="Mascot"
+                style={{
+                  width: 60,
+                  height: "auto",
+                  objectFit: "contain",
+                  filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.1))",
+                }}
+              />
+            </motion.div>
           </div>
         )}
 
