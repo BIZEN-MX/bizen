@@ -65,14 +65,17 @@ export async function POST(req: NextRequest) {
             case "customer.subscription.deleted": {
                 const subscription = event.data.object as any;
 
+                const isCanceled = subscription.cancel_at_period_end || subscription.status === "canceled";
+                const dbStatus = isCanceled ? "canceled" : subscription.status;
+
                 await prisma.profile.updateMany({
                     where: { subscriptionId: subscription.id },
                     data: {
-                        subscriptionStatus: subscription.status,
+                        subscriptionStatus: dbStatus,
                         subscriptionEnds: new Date(subscription.current_period_end * 1000),
                     },
                 });
-                console.log(`[Stripe Webhook] Suscripción ${subscription.id} actualizada a ${subscription.status}`);
+                console.log(`[Stripe Webhook] Suscripción ${subscription.id} actualizada a ${dbStatus}`);
                 break;
             }
             default:
