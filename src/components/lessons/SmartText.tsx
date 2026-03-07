@@ -180,7 +180,7 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
             style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "14px",
+                gap: "clamp(8px, 1.5vw, 14px)",
                 width: "100%",
                 textAlign: align,
             }}
