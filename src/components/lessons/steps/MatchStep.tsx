@@ -26,7 +26,7 @@ const PAIR_COLORS = [
   { bg: "#FDF4FF", border: "#A21CAF", text: "#86198F", shadow: "#F5D0FE", line: "#A21CAF", Icon: Award },
 ]
 
-const ITEM_HEIGHT = 64 // fixed height for all boxes
+const ITEM_HEIGHT = "clamp(54px, 12vw, 64px)" as any // adaptive height
 const ITEM_GAP = 12
 
 export function MatchStep({ step, onAnswered, matches: initialMatches = [], actionTrigger = 0 }: MatchStepProps) {
@@ -157,12 +157,12 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         color: isCorrect ? "#065F46" : "#DC2626",
         fontFamily: "'Inter', sans-serif",
         fontWeight: 800,
-        fontSize: 16,
+        fontSize: "clamp(13px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 16px",
+        padding: "0 clamp(8px, 2vw, 16px)",
         transition: "all 0.2s ease",
       }
     }
@@ -178,12 +178,12 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         color: colors.text,
         fontFamily: "'Inter', sans-serif",
         fontWeight: 800,
-        fontSize: 16,
+        fontSize: "clamp(13px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 16px",
+        padding: "0 clamp(8px, 2vw, 16px)",
         transform: "scale(1.02)",
         transition: "all 0.15s ease",
       }
@@ -200,12 +200,12 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         color: colors.text,
         fontFamily: "'Inter', sans-serif",
         fontWeight: 800,
-        fontSize: 16,
+        fontSize: "clamp(13px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 16px",
+        padding: "0 clamp(8px, 2vw, 16px)",
         transition: "all 0.2s ease",
       }
     }
@@ -247,12 +247,12 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         color: isCorrect ? "#065F46" : "#DC2626",
         fontFamily: "'Inter', sans-serif",
         fontWeight: 800,
-        fontSize: 16,
+        fontSize: "clamp(13px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 16px",
+        padding: "0 clamp(8px, 2vw, 16px)",
         transition: "all 0.2s ease",
       }
     }
@@ -271,12 +271,12 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         color: matchColors.text,
         fontFamily: "'Inter', sans-serif",
         fontWeight: 800,
-        fontSize: 16,
+        fontSize: "clamp(13px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 16px",
+        padding: "0 clamp(8px, 2vw, 16px)",
         transition: "all 0.2s ease",
       }
     }
@@ -416,7 +416,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         {/* Two columns */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "1fr 56px 1fr",
+          gridTemplateColumns: "1fr clamp(30px, 8vw, 56px) 1fr",
           gap: 0,
           width: "100%",
         }}>

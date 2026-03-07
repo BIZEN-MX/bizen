@@ -131,9 +131,9 @@ export function MultiSelectStep({
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 16,
+                gap: "clamp(8px, 2vw, 16px)",
                 width: "100%",
-                padding: "16px 20px",
+                padding: "clamp(8px, 2.5vw, 16px) clamp(10px, 3vw, 20px)",
                 borderRadius: 16,
                 background,
                 border: `2px solid ${borderColor}`,
@@ -163,7 +163,7 @@ export function MultiSelectStep({
               }}>
                 {isSelected && "✓"}
               </div>
-              <span style={{ flex: 1, fontSize: 18, fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{option.label}</span>
+              <span style={{ flex: 1, fontSize: "clamp(14px, 3.5vw, 18px)", fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{option.label}</span>
               {showFeedback && isSelected && (
                 <span style={{ fontSize: 20, fontFamily: "'Inter', sans-serif" }}>{isCorrect ? "✓" : "✗"}</span>
               )}

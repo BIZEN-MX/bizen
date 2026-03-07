@@ -77,7 +77,8 @@ export default function CoursesPage() {
   // Calcule premium access based on Profile API data
   const hasActiveLicense = !!dbProfile?.school?.licenses?.length;
   const hasActiveStripe = dbProfile?.subscriptionStatus === 'active';
-  const hasPremiumAccess = hasActiveLicense || hasActiveStripe;
+  const isInstitutional = !!dbProfile?.schoolId || dbProfile?.role === 'institucional';
+  const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isInstitutional;
 
   const completedCount = completedLessons.length
   const progressPct = Math.min(100, Math.round((completedCount / APPROX_TOTAL_LESSONS) * 100))
@@ -428,9 +429,10 @@ export default function CoursesPage() {
                           <React.Fragment key={topic.id}>
                             <div
                               onClick={() => {
+                                if (!dbProfile && user) return; // Prevent action until profile is loaded
                                 if (isLocked) {
-                                  if (isSequenceLocked) {
-                                    setTopicWarning(true);
+                                  if (hasPremiumAccess) {
+                                    if (isSequenceLocked) setTopicWarning(true);
                                     return;
                                   }
                                   router.push('/payment');
@@ -598,16 +600,22 @@ export default function CoursesPage() {
 
         @media (max-width: 480px) {
           .course-card-content {
-            padding: 32px 20px !important;
-            gap: 16px !important;
+            padding: 16px 14px !important;
+            gap: 10px !important;
+          }
+          .course-card-content div[style*="fontSize: 19"] {
+            font-size: 16px !important;
+          }
+          .course-card-content div[style*="fontSize: 12"] {
+            font-size: 10px !important;
           }
           .course-card-icon-container {
-            width: 52px !important;
-            height: 52px !important;
+            width: 44px !important;
+            height: 44px !important;
           }
           .course-card-icon-container svg {
-            width: 28px !important;
-            height: 28px !important;
+            width: 24px !important;
+            height: 24px !important;
           }
         }
           

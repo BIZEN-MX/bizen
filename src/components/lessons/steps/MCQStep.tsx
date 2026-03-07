@@ -104,7 +104,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: 32
+        gap: "clamp(10px, 4vw, 24px)"
       }}>
         {step.options.map((option, index) => {
           const isSelected = selectedOptionId === option.id
@@ -163,9 +163,9 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 16,
+                gap: "clamp(8px, 2vw, 16px)",
                 width: "100%",
-                padding: "16px 20px",
+                padding: "clamp(8px, 2.5vw, 16px) clamp(10px, 3vw, 20px)",
                 borderRadius: 16,
                 background,
                 border: `2px solid ${borderColor}`,
@@ -206,14 +206,14 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
             >
               {/* Letter label */}
               <div style={{
-                width: 36,
-                height: 36,
+                width: "clamp(28px, 10vw, 36px)",
+                height: "clamp(28px, 10vw, 36px)",
                 borderRadius: 10,
                 background: labelBg,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: 900,
                 color: labelColor,
                 flexShrink: 0,
@@ -227,10 +227,10 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
               {/* Option text */}
               <span style={{
                 flex: 1,
-                fontSize: "clamp(15px, 1.8vw, 18px)",
+                fontSize: "clamp(14px, 3.5vw, 18px)",
                 fontWeight: 700,
                 fontFamily: "'Inter', sans-serif",
-                lineHeight: 1.4,
+                lineHeight: 1.3,
               }}>
                 {option.label}
               </span>

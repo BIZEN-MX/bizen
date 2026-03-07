@@ -84,18 +84,18 @@ export function InfoStep({
             onClick={handleReveal}
             style={{
               width: "100%",
-              maxWidth: 460,
-              minHeight: 280,
+              maxWidth: 420,
+              minHeight: "clamp(200px, 45vw, 280px)",
               background: "#FFFFFF",
-              borderRadius: 32,
+              borderRadius: "clamp(20px, 6vw, 32px)",
               border: "2px dashed #BFDBFE",
               boxShadow: "0 4px 24px rgba(15,98,254,0.07)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: 24,
-              padding: "48px 32px",
+              gap: "clamp(12px, 4vw, 24px)",
+              padding: "clamp(24px, 10vw, 48px) clamp(16px, 6vw, 32px)",
               cursor: "pointer",
               userSelect: "none",
               position: "relative",
@@ -182,7 +182,7 @@ export function InfoStep({
               width: "100%",
               maxWidth: hasImage ? 900 : 680,
               background: "#FFFFFF",
-              borderRadius: 32,
+              borderRadius: "clamp(20px, 6vw, 32px)",
               border: "2px solid rgba(15, 98, 254, 0.22)",
               boxShadow: [
                 "0 0 0 4px rgba(15, 98, 254, 0.06)",
@@ -190,7 +190,7 @@ export function InfoStep({
                 "0 10px 28px rgba(15,98,254,0.12)",
                 "0 32px 64px rgba(15,98,254,0.10)",
               ].join(", "),
-              overflow: "hidden",
+              overflow: "visible",
               position: "relative",
             }}
           >
@@ -217,10 +217,10 @@ export function InfoStep({
             <div className="flashcard-content-layout" style={{
               display: "flex",
               flexDirection: hasImage ? "row" : "column",
-              flexWrap: "wrap",
-              alignItems: "center",
-              gap: hasImage ? 40 : 24,
-              padding: hasImage ? "clamp(24px, 5vw, 44px) clamp(20px, 6vw, 48px)" : "44px 40px",
+              flexWrap: "nowrap",
+              alignItems: "stretch",
+              gap: hasImage ? "clamp(20px, 4vw, 40px)" : 24,
+              padding: hasImage ? "clamp(20px, 4vw, 44px) clamp(16px, 5vw, 48px)" : "44px 40px",
             }}>
 
               {/* Image — LEFT side if imageLeft */}
@@ -386,6 +386,7 @@ function FlashcardImage({ url, title }: { url: string; title?: string }) {
       initial={{ opacity: 0, scale: 0.92 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.18, type: "spring", stiffness: 140 }}
+      className="flashcard-image-outer"
       style={{
         flex: "0 0 auto",
         position: "relative",
@@ -406,6 +407,7 @@ function FlashcardImage({ url, title }: { url: string; title?: string }) {
       }} />
       <img
         src={url}
+        className="flashcard-image-img"
         alt={title || "Ilustración"}
         style={{
           width: "100%",
@@ -421,11 +423,30 @@ function FlashcardImage({ url, title }: { url: string; title?: string }) {
         @media (max-width: 768px) {
           .flashcard-content-layout {
             flex-direction: column !important;
-            padding: 32px 20px !important;
-            gap: 24px !important;
+            padding: clamp(24px, 8vw, 32px) clamp(16px, 6vw, 24px) !important;
+            gap: clamp(20px, 5vw, 24px) !important;
+            align-items: center !important;
           }
           .revealed-flashcard-container {
             border-radius: 24px !important;
+          }
+          .flashcard-image-outer {
+             max-width: clamp(180px, 60vw, 300px) !important;
+          }
+          .flashcard-image-img {
+             max-height: clamp(140px, 25vh, 200px) !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .flashcard-content-layout {
+            padding: 16px 12px !important;
+            gap: 14px !important;
+          }
+          .flashcard-image-outer {
+             max-width: 140px !important;
+          }
+          .flashcard-image-img {
+             max-height: 120px !important;
           }
         }
       `}</style>

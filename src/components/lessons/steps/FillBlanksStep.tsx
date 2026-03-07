@@ -167,16 +167,16 @@ export function FillBlanksStep({
                 onClick={() => handleClearBlank(blankId)}
                 style={{
                   display: "inline-block",
-                  minWidth: 100,
-                  height: 48,
-                  margin: "0 8px",
-                  padding: "0 16px",
+                  minWidth: "clamp(80px, 15vw, 100px)",
+                  height: "clamp(40px, 10vw, 48px)",
+                  margin: "4px clamp(4px, 1vw, 8px)",
+                  padding: "0 clamp(8px, 2vw, 16px)",
                   verticalAlign: "middle",
                   background,
                   border: `2px solid ${borderColor}`,
                   borderRadius: 12,
                   boxShadow: isActive ? "0 0 0 2px rgba(15, 98, 254, 0.2)" : "none",
-                  fontSize: 20,
+                  fontSize: "clamp(16px, 3.5vw, 20px)",
                   fontWeight: 800,
                   color,
                   cursor: isFilled && !hasChecked ? "pointer" : "default",
@@ -224,13 +224,13 @@ export function FillBlanksStep({
               onClick={() => handleOptionTap(option.id)}
               disabled={isUsed || hasChecked}
               style={{
-                padding: "12px 20px",
+                padding: "clamp(8px, 2.5vw, 12px) clamp(14px, 3.5vw, 20px)",
                 borderRadius: 16,
                 background: isUsed ? "#F3F4F6" : "#FFFFFF",
                 border: `2px solid ${isUsed ? "#E5E7EB" : "#E5E7EB"}`,
                 boxShadow: isUsed ? "none" : "0 3px 0 0 #E5E7EB",
                 color: isUsed ? "transparent" : "#374151",
-                fontSize: 18,
+                fontSize: "clamp(15px, 3vw, 18px)",
                 fontWeight: 700,
                 cursor: isUsed ? "default" : "pointer",
                 transition: "all 0.2s ease",

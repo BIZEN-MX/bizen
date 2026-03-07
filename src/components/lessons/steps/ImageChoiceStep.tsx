@@ -70,8 +70,8 @@ export function ImageChoiceStep({
 
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-        gap: 16,
+        gridTemplateColumns: "repeat(auto-fit, minmax(clamp(120px, 40vw, 150px), 1fr))",
+        gap: "clamp(12px, 2.5vw, 16px)",
         width: "100%"
       }}>
         {step.imageOptions.map((option, index) => {
@@ -118,8 +118,8 @@ export function ImageChoiceStep({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: 12,
-                padding: "16px",
+                gap: "clamp(8px, 2vw, 12px)",
+                padding: "clamp(12px, 3vw, 16px)",
                 borderRadius: 20,
                 background,
                 border: `3.5px solid ${borderColor}`,

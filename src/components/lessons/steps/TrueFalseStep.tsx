@@ -86,8 +86,8 @@ export function TrueFalseStep({
       color,
       boxShadow,
       borderRadius: 16,
-      padding: '20px',
-      fontSize: '20px',
+      padding: 'clamp(10px, 3vw, 20px)',
+      fontSize: 'clamp(15px, 3.5vw, 20px)',
       fontWeight: 800,
       cursor: hasChecked ? 'default' : 'pointer',
       display: 'flex',
@@ -107,7 +107,7 @@ export function TrueFalseStep({
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
-      gap: 32
+      gap: "clamp(16px, 4vw, 32px)"
     }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <ExerciseInstruction type="true_false" />

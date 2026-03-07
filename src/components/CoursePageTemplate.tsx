@@ -128,7 +128,8 @@ export default function CoursePageTemplate({
     // Access check
     const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
     const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
-    const hasPremiumAccess = hasActiveStripe || hasActiveLicense
+    const isInstitutional = !!dbProfile?.schoolId || dbProfile?.role === 'institucional'
+    const hasPremiumAccess = hasActiveStripe || hasActiveLicense || isInstitutional
 
     React.useEffect(() => {
         if (!loading && !user) {
@@ -430,10 +431,13 @@ export default function CoursePageTemplate({
                                                             }
                                                         }}
                                                         onClick={() => {
+                                                            if (!dbProfile && user) return;
                                                             const isSelected = lessonModal?.lesson.slug === lesson.slug;
                                                             if (isLocked) {
-                                                                if (hasPremiumAccess && isSequenceLocked) {
-                                                                    setSequenceWarning(sequenceWarning === lesson.slug ? null : lesson.slug);
+                                                                if (hasPremiumAccess) {
+                                                                    if (isSequenceLocked) {
+                                                                        setSequenceWarning(sequenceWarning === lesson.slug ? null : lesson.slug);
+                                                                    }
                                                                     return;
                                                                 }
                                                                 router.push('/payment');
@@ -444,12 +448,12 @@ export default function CoursePageTemplate({
                                                         }}
                                                         className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""}`}
                                                         style={{
-                                                            width: 320,
-                                                            minWidth: 320,
+                                                            width: "clamp(180px, 65vw, 320px)",
+                                                            minWidth: "initial",
                                                             flexShrink: 0,
                                                             display: "flex",
                                                             flexDirection: "column",
-                                                            padding: "32px 28px",
+                                                            padding: "clamp(12px, 3.5vw, 32px) clamp(10px, 3vw, 28px)",
                                                             background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
                                                             borderRadius: 24,
                                                             border: isLocked ? "2.5px dashed rgba(148, 163, 184, 0.4)" : (isDone ? "3px solid rgba(59,130,246,0.5)" : "2.5px solid rgba(15, 98, 254, 0.25)"),
@@ -457,7 +461,7 @@ export default function CoursePageTemplate({
                                                             scrollSnapAlign: "start",
                                                             cursor: "pointer",
                                                             boxShadow: isLocked ? "none" : (isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)"),
-                                                            gap: 12,
+                                                            gap: "clamp(8px, 2vw, 12px)",
                                                             transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
                                                             position: "relative",
                                                             overflow: "hidden",
@@ -477,16 +481,16 @@ export default function CoursePageTemplate({
                                                         )}
 
                                                         <div style={{
-                                                            width: 44, height: 44, borderRadius: 14,
+                                                            width: "clamp(34px, 10vw, 44px)", height: "clamp(34px, 10vw, 44px)", borderRadius: 14,
                                                             background: isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)"),
                                                             border: isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)"),
                                                             color: isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb"),
-                                                            fontSize: 19, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                                                            fontSize: "clamp(16px, 4vw, 19px)", fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
                                                         }}>
                                                             {absoluteLessonNumber}
                                                         </div>
 
-                                                        <div style={{ fontSize: 16, fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
+                                                        <div style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
                                                             {lesson.title}
                                                         </div>
 
@@ -514,7 +518,7 @@ export default function CoursePageTemplate({
                                                             flexShrink: 0,
                                                             display: "flex",
                                                             alignItems: "center",
-                                                            width: lessonModal?.lesson.slug === lesson.slug ? 220 : 0,
+                                                            width: lessonModal?.lesson.slug === lesson.slug ? "clamp(120px, 45vw, 220px)" : 0,
                                                             opacity: lessonModal?.lesson.slug === lesson.slug ? 1 : 0,
                                                             transition: "width 0.42s cubic-bezier(0.34,1.4,0.64,1), opacity 0.3s ease",
                                                             pointerEvents: lessonModal?.lesson.slug === lesson.slug ? "auto" : "none",
@@ -522,20 +526,21 @@ export default function CoursePageTemplate({
                                                         }}
                                                     >
                                                         <div
+                                                            className="cpt-action-panel"
                                                             style={{
-                                                                width: 200,
-                                                                minWidth: 200,
+                                                                width: "clamp(110px, 42vw, 200px)",
+                                                                minWidth: "initial",
                                                                 background: "#fff",
                                                                 borderRadius: 20,
-                                                                padding: "18px 18px 18px 14px",
+                                                                padding: "clamp(10px, 3vw, 18px) clamp(10px, 3vw, 18px) clamp(10px, 3vw, 18px) clamp(8px, 2.5vw, 14px)",
                                                                 border: "2.5px solid #2563eb",
                                                                 boxShadow: "0 12px 36px rgba(37,99,235,0.15)",
                                                                 display: "flex",
                                                                 flexDirection: "column",
                                                                 justifyContent: "center",
-                                                                gap: 11,
+                                                                gap: "clamp(6px, 2vw, 11px)",
                                                                 position: "relative",
-                                                                marginLeft: 10,
+                                                                marginLeft: "clamp(6px, 2vw, 10px)",
                                                                 transform: lessonModal?.lesson.slug === lesson.slug
                                                                     ? "scale(1) translateX(0)"
                                                                     : "scale(0.88) translateX(-12px)",
@@ -782,6 +787,22 @@ export default function CoursePageTemplate({
         @keyframes seqCardIn {
           0% { opacity: 0; transform: scale(0.88) translateY(20px); }
           100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        /* Media queries for smaller screens */
+        @media (max-width: 480px) {
+          .cpt-lesson-card {
+            width: 150px !important;
+            min-height: 160px !important;
+            padding: 12px 10px !important;
+          }
+          .cpt-action-panel {
+            width: 140px !important;
+            padding: 10px !important;
+          }
+          .lessons-scroll-container {
+             gap: 8px !important;
+             padding-bottom: 20px !important;
+          }
         }
       `}</style>
         </div>

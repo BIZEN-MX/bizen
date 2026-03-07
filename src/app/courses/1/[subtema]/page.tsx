@@ -3,6 +3,8 @@
 import React, { useMemo, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
+import { useLessonProgress } from "@/hooks/useLessonProgress"
+import { Lock } from "lucide-react"
 import Button from "@/components/ui/button"
 import { StarIcon } from "@/components/icons/StarIcon"
 import { TEMA1_SUBTEMAS } from "../../tema1-data"
@@ -17,13 +19,21 @@ const LEVEL_COLORS: Record<string, { bg: string; text: string }> = {
 export default function Tema1SubtemaPage() {
   const router = useRouter()
   const params = useParams()
-  const { user, loading } = useAuth()
+  const { user, loading, dbProfile } = useAuth()
+  const { completedLessons } = useLessonProgress()
   const subtemaIndex = useMemo(() => {
     const n = Number(params?.subtema)
     return Number.isFinite(n) && n >= 1 && n <= 5 ? n - 1 : null
   }, [params?.subtema])
 
   const [lessonModal, setLessonModal] = useState<Tema1Lesson | null>(null)
+  const [sequenceWarning, setSequenceWarning] = useState<string | null>(null)
+
+  // Premium Access
+  const hasActiveLicense = !!dbProfile?.school?.licenses?.length
+  const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
+  const isInstitutional = !!dbProfile?.schoolId || dbProfile?.role === 'institucional'
+  const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isInstitutional
 
   const subtema = subtemaIndex != null ? TEMA1_SUBTEMAS[subtemaIndex] : null
 
@@ -168,30 +178,50 @@ export default function Tema1SubtemaPage() {
                   key={lesson.slug}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault()
+                  onClick={() => {
+                    if (!dbProfile && user) return
+
+                    const lessonOffset = subtema.lessons.indexOf(lesson)
+                    const absoluteLessonNumber = lessonOffset + 1
+                    const isPremiumLesson = absoluteLessonNumber > 3
+                    const isPaywalled = isPremiumLesson && !hasPremiumAccess
+
+                    // Simple sequence lock: previous lesson in this subtema must be done
+                    const isFirstInSubtema = lessonOffset === 0
+                    const prevLesson = isFirstInSubtema ? null : subtema.lessons[lessonOffset - 1]
+                    const isSequenceLocked = !isFirstInSubtema && prevLesson && !completedLessons.includes(prevLesson.slug)
+
+                    const isLocked = isPaywalled || isSequenceLocked
+
+                    if (isLocked) {
+                      if (hasPremiumAccess) {
+                        if (isSequenceLocked) setSequenceWarning(lesson.slug === sequenceWarning ? null : lesson.slug)
+                        return
+                      }
+                      router.push('/payment')
+                    } else {
+                      setSequenceWarning(null)
                       setLessonModal(lesson)
                     }
                   }}
-                  onClick={() => setLessonModal(lesson)}
                   className="lesson-square-card"
                   style={{
-                    width: 260,
-                    minWidth: 260,
+                    width: "clamp(160px, 50vw, 260px)",
+                    minWidth: "initial",
                     aspectRatio: "1",
                     flexShrink: 0,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    padding: 20,
+                    padding: "clamp(10px, 3vw, 20px)",
                     background: "#F0F9FF",
                     borderRadius: 20,
                     border: "2px solid rgba(59, 130, 246, 0.3)",
                     boxSizing: "border-box",
                     scrollSnapAlign: "start",
                     cursor: "pointer",
+                    position: "relative",
                   }}
                 >
                   <div
@@ -208,18 +238,40 @@ export default function Tema1SubtemaPage() {
                     }}
                   >
                     <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 4 }}>
-                      <StarIcon size={22} />
-                      <StarIcon size={22} />
-                      <StarIcon size={22} />
+                      <StarIcon size={18} />
+                      <StarIcon size={18} />
+                      <StarIcon size={18} />
                     </div>
+
+                    {sequenceWarning === lesson.slug && (
+                      <div style={{
+                        position: "absolute",
+                        inset: "12px",
+                        background: "rgba(255,255,255,0.95)",
+                        zIndex: 10,
+                        borderRadius: 16,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: 12,
+                        textAlign: "center",
+                        animation: "seqCardIn 0.3s ease-out"
+                      }}>
+                        <Lock size={20} color="#3b82f6" style={{ marginBottom: 8 }} />
+                        <div style={{ fontSize: 11, fontWeight: 800, color: "#1e293b", lineHeight: 1.3 }}>
+                          Completa la lección anterior primero
+                        </div>
+                      </div>
+                    )}
                     <div
                       style={{
-                        width: 44,
-                        height: 44,
+                        width: "clamp(34px, 10vw, 44px)",
+                        height: "clamp(34px, 10vw, 44px)",
                         borderRadius: 14,
                         background: "#3B82F6",
                         color: "white",
-                        fontSize: 20,
+                        fontSize: "clamp(16px, 4vw, 20px)",
                         fontWeight: 800,
                         display: "flex",
                         alignItems: "center",
@@ -232,7 +284,7 @@ export default function Tema1SubtemaPage() {
                     </div>
                     <div
                       style={{
-                        fontSize: 15,
+                        fontSize: "clamp(12px, 3.2vw, 15px)",
                         fontWeight: 600,
                         color: "#6B7280",
                         overflow: "hidden",
@@ -245,7 +297,7 @@ export default function Tema1SubtemaPage() {
                     </div>
                     <div
                       style={{
-                        fontSize: 17,
+                        fontSize: "clamp(14px, 3.5vw, 17px)",
                         fontWeight: 700,
                         color: "#111",
                         lineHeight: 1.3,
@@ -375,6 +427,15 @@ export default function Tema1SubtemaPage() {
         .lesson-square-card:hover {
           border-color: rgba(59, 130, 246, 0.6) !important;
           box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+        @media (max-width: 480px) {
+          .lesson-square-card {
+            width: 140px !important;
+            padding: 10px !important;
+          }
+          .lessons-scroll-container {
+            gap: 12px !important;
+          }
         }
       `}</style>
     </div>

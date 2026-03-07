@@ -182,17 +182,17 @@ export function OrderStep({
                 border: `2px solid ${borderColor}`,
                 boxShadow,
                 borderRadius: 16,
-                padding: "16px 20px",
+                padding: "clamp(12px, 2.8vw, 16px) clamp(14px, 3.5vw, 20px)",
                 display: "flex",
                 alignItems: "center",
-                gap: 16,
+                gap: "clamp(12px, 2vw, 16px)",
                 cursor: hasChecked ? "default" : "grab",
                 position: "relative",
               }}
             >
               <div style={{
-                width: 36,
-                height: 36,
+                width: "clamp(30px, 8vw, 36px)",
+                height: "clamp(30px, 8vw, 36px)",
                 borderRadius: 10,
                 background: showFeedback ? (item.correctOrder === index + 1 ? "#3B82F620" : "#EF444420") : "#F3F4F6",
                 display: "flex",
@@ -211,7 +211,7 @@ export function OrderStep({
                   strokeWidth: 2.5
                 })}
               </div>
-              <span style={{ flex: 1, fontSize: 18, fontWeight: 700, color, fontFamily: "'Inter', sans-serif" }}>
+              <span style={{ flex: 1, fontSize: "clamp(15px, 3.5vw, 18px)", fontWeight: 700, color, fontFamily: "'Inter', sans-serif" }}>
                 {item.label}
               </span>
               {!hasChecked && (
