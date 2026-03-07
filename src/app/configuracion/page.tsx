@@ -664,18 +664,34 @@ function SettingsContent() {
                 <div style={{ fontSize: 13, color: "#64748B", marginBottom: 14 }}>
                   Cierra tu sesión de forma segura en este dispositivo.
                 </div>
-                <button disabled={saving} onClick={async () => {
-                  if (!supabase) return; setSaving(true)
-                  try { await supabase.auth.signOut(); router.push("/login") }
-                  catch (e) { flash(false, "Error al cerrar sesión") } finally { setSaving(false) }
-                }} style={{
-                  padding: "12px 28px", background: "#EF4444", border: "none", borderRadius: 12,
-                  color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer",
-                  fontFamily: "'Inter','Montserrat',sans-serif", opacity: saving ? .6 : 1,
-                  boxShadow: "0 4px 12px rgba(239,68,68,0.35)"
-                }}>
-                  {saving ? "Saliendo..." : "Cerrar Sesión"}
-                </button>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <button disabled={saving} onClick={async () => {
+                    if (!supabase) return; setSaving(true)
+                    try { await supabase.auth.signOut(); router.push("/login") }
+                    catch (e) { flash(false, "Error al cerrar sesión") } finally { setSaving(false) }
+                  }} style={{
+                    padding: "12px 28px", background: "#EF4444", border: "none", borderRadius: 12,
+                    color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer",
+                    fontFamily: "'Inter','Montserrat',sans-serif", opacity: saving ? .6 : 1,
+                    boxShadow: "0 4px 12px rgba(239,68,68,0.35)"
+                  }}>
+                    {saving ? "Saliendo..." : "Cerrar Sesión"}
+                  </button>
+
+                  <button disabled={saving} onClick={async () => {
+                    if (!supabase) return; setSaving(true)
+                    try { await supabase.auth.signOut(); router.push("/login") }
+                    catch (e) { flash(false, "Error al cerrar sesión") } finally { setSaving(false) }
+                  }} style={{
+                    padding: "12px 28px", background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: 12,
+                    color: "#475569", fontSize: 14, fontWeight: 700, cursor: "pointer",
+                    fontFamily: "'Inter','Montserrat',sans-serif", opacity: saving ? .6 : 1,
+                    display: "flex", alignItems: "center", gap: 8
+                  }}>
+                    <LogOut size={16} />
+                    Cambiar de Cuenta
+                  </button>
+                </div>
               </div>
             </div>)}
 
