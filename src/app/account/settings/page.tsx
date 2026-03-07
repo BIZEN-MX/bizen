@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
+import { LogOut, ArrowLeft } from "lucide-react"
 
 export default function AccountSettingsPage() {
   const { user, loading } = useAuth()
@@ -82,6 +83,17 @@ export default function AccountSettingsPage() {
       setMessage("❌ Error al guardar")
     } finally {
       setSaving(false)
+    }
+  }
+
+  const { signOut } = useAuth()
+  const handleSwitchAccount = async () => {
+    try {
+      await signOut()
+      // Clear all local storage / cookies if needed? router.push handles it
+      router.push('/login')
+    } catch (error) {
+      console.error("Error switching account:", error)
     }
   }
 
@@ -252,8 +264,49 @@ export default function AccountSettingsPage() {
               </div>
             )}
 
+            {/* Danger Zone / Account Actions */}
+            <div style={{
+              marginTop: 40,
+              paddingTop: 32,
+              borderTop: "2px dashed rgba(30, 64, 175, 0.1)"
+            }}>
+              <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 800, color: "#1E40AF" }}>
+                Sesión
+              </h3>
+              <button
+                type="button"
+                onClick={handleSwitchAccount}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px 20px",
+                  background: "#FEF2F2",
+                  color: "#DC2626",
+                  border: "2px solid #FEE2E2",
+                  borderRadius: 12,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  fontFamily: "Montserrat, sans-serif"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#FEE2E2"
+                  e.currentTarget.style.transform = "translateY(-1px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#FEF2F2"
+                  e.currentTarget.style.transform = "translateY(0)"
+                }}
+              >
+                <LogOut size={18} />
+                Cambiar de Cuenta
+              </button>
+            </div>
+
             {/* Buttons */}
-            <div style={{ display: "flex", gap: 12 }}>
+            <div style={{ display: "flex", gap: 12, marginTop: 40 }}>
               <button
                 type="submit"
                 disabled={saving}
