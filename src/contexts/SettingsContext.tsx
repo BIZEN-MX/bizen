@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
 
 export type Language = 'es' | 'en'
 export type Theme = 'light' | 'dark' | 'auto'
@@ -104,11 +105,14 @@ interface SettingsContextType {
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
 
+// Provider Component
+
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<AppSettings>(defaultSettings)
   const [isInitialized, setIsInitialized] = useState(false)
+  const { dbProfile } = useAuth()
 
-  // Load settings from localStorage on mount
+  // Load settings from localStorage on mount (initial load)
   useEffect(() => {
     const savedSettings = localStorage.getItem('bizen_settings')
     if (savedSettings) {
@@ -121,6 +125,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }
     setIsInitialized(true)
   }, [])
+
+  // 🔄 Sync from Database if logged in 🔄
+  useEffect(() => {
+    if (isInitialized && dbProfile?.settings && Object.keys(dbProfile.settings).length > 0) {
+      console.log('🔄 Syncing settings from DB profile...');
+      setSettings(prev => ({ ...prev, ...dbProfile.settings }));
+      localStorage.setItem('bizen_settings', JSON.stringify({ ...settings, ...dbProfile.settings }));
+    }
+  }, [dbProfile?.settings, isInitialized])
 
   // Apply theme when settings change
   useEffect(() => {
@@ -155,7 +168,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const applyTheme = () => {
     const root = document.documentElement
     let theme = settings.theme
-    
+
     // Handle auto theme
     if (theme === 'auto') {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches

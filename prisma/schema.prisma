@@ -56,6 +56,9 @@ model ContactMessage {
 model Profile {
   userId             String         @id @map("user_id")
   fullName           String         @map("full_name")
+  username           String?        @unique @map("username")
+  bio                String?        @map("bio")
+  phone              String?        @map("phone")
   role               String         @default("student")
   schoolId           String?        @map("school_id")
   xp                 Int            @default(0)
@@ -71,6 +74,7 @@ model Profile {
   parentalOverride   Boolean        @default(false) @map("parental_override")
   ageVerifiedAt      DateTime?      @map("age_verified_at") @db.Timestamptz(6)
   avatar             Json?
+  settings           Json?          @default("{}") @map("settings")
   currentStreak      Int?           @default(0) @map("current_streak")
   longestStreak      Int?           @default(0) @map("longest_streak")
   lastActive         DateTime?      @map("last_active")

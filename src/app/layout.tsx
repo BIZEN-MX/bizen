@@ -1,8 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next"
-import { AuthProvider } from "@/contexts/AuthContext"
-import { SettingsProvider } from "@/contexts/SettingsContext"
-import { OnboardingProvider } from "@/contexts/OnboardingContext"
+import { Providers } from "@/components/Providers"
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
 // Production Build Trigger - Wed Feb 18 14:50:00 CST 2026
@@ -33,17 +31,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <SettingsProvider>
-          <AuthProvider>
-            <OnboardingProvider>
-              <ClientLayoutWrapper>
-                <AppLayout>
-                  {children}
-                </AppLayout>
-              </ClientLayoutWrapper>
-            </OnboardingProvider>
-          </AuthProvider>
-        </SettingsProvider>
+        <Providers>
+          <ClientLayoutWrapper>
+            <AppLayout>
+              {children}
+            </AppLayout>
+          </ClientLayoutWrapper>
+        </Providers>
       </body>
     </html>
   )
