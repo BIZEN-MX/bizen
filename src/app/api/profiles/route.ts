@@ -117,7 +117,8 @@ export async function GET(request: NextRequest) {
     // If user has school with active license, or active Stripe subscription, set/renew paywall bypass cookie
     const hasActiveLicense = (profile as any)?.school?.licenses?.length && (profile as any).school.licenses.length > 0;
     const hasActiveStripe = profileData.subscriptionStatus === 'active';
-    const hasPremiumAccess = hasActiveLicense || hasActiveStripe;
+    const isInstitutional = !!profileData.schoolId || profileData.role === 'institucional';
+    const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isInstitutional;
 
     const response = NextResponse.json(profileData);
 
