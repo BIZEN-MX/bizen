@@ -364,7 +364,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         }}
       >
         {/* Header - Lowered and Thickened */}
-        <div style={{ flexShrink: 0, padding: "32px clamp(16px, 4vw, 48px) 20px", display: "flex", justifyContent: "center" }}>
+        <div style={{ flexShrink: 0, padding: "clamp(12px, 4vw, 32px) clamp(16px, 4vw, 48px) clamp(8px, 2vw, 20px)", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth: 980 }}>
             <LessonProgressHeader
               currentStepIndex={state.currentStepIndex}
@@ -397,8 +397,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             flexDirection: "column",
             alignItems: "center",
             padding: isSummaryStep
-              ? "12px clamp(16px, 4vw, 48px) 120px"
-              : "24px clamp(16px, 4vw, 48px) 120px",
+              ? "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 48px) 120px"
+              : "clamp(8px, 3vw, 24px) clamp(16px, 4vw, 48px) 120px",
             boxSizing: "border-box",
           }}
         >

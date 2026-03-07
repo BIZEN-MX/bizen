@@ -107,9 +107,9 @@ export function TrueFalseStep({
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
-      gap: "clamp(16px, 4vw, 32px)"
+      gap: "clamp(12px, 3vw, 32px)"
     }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(4px, 1.5vw, 10px)" }}>
         <ExerciseInstruction type="true_false" />
         <h3 style={{
           fontSize: "clamp(20px, 3.5vw, 28px)",
@@ -123,7 +123,7 @@ export function TrueFalseStep({
         </h3>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(8px, 2vw, 16px)', width: '100%' }}>
         <button
           onClick={() => handleSelect(true)}
           disabled={hasChecked}

@@ -85,17 +85,17 @@ export function InfoStep({
             style={{
               width: "100%",
               maxWidth: 420,
-              minHeight: "clamp(200px, 45vw, 280px)",
+              minHeight: "clamp(180px, 40vw, 280px)",
               background: "#FFFFFF",
-              borderRadius: "clamp(20px, 6vw, 32px)",
+              borderRadius: "clamp(16px, 5vw, 32px)",
               border: "2px dashed #BFDBFE",
               boxShadow: "0 4px 24px rgba(15,98,254,0.07)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: "clamp(12px, 4vw, 24px)",
-              padding: "clamp(24px, 10vw, 48px) clamp(16px, 6vw, 32px)",
+              gap: "clamp(10px, 3vw, 24px)",
+              padding: "clamp(20px, 8vw, 48px) clamp(12px, 5vw, 32px)",
               cursor: "pointer",
               userSelect: "none",
               position: "relative",
@@ -182,7 +182,7 @@ export function InfoStep({
               width: "100%",
               maxWidth: hasImage ? 900 : 680,
               background: "#FFFFFF",
-              borderRadius: "clamp(20px, 6vw, 32px)",
+              borderRadius: "clamp(16px, 5vw, 32px)",
               border: "2px solid rgba(15, 98, 254, 0.22)",
               boxShadow: [
                 "0 0 0 4px rgba(15, 98, 254, 0.06)",
@@ -319,7 +319,7 @@ export function InfoStep({
                 >
                   <SmartText
                     text={step.body}
-                    fontSize="clamp(16px, 2.2vw, 19px)"
+                    fontSize="clamp(15px, 2.2vw, 19px)"
                     align={hasImage ? "left" : "left"}
                   />
                 </motion.div>
@@ -423,30 +423,45 @@ function FlashcardImage({ url, title }: { url: string; title?: string }) {
         @media (max-width: 768px) {
           .flashcard-content-layout {
             flex-direction: column !important;
-            padding: clamp(24px, 8vw, 32px) clamp(16px, 6vw, 24px) !important;
-            gap: clamp(20px, 5vw, 24px) !important;
+            padding: clamp(16px, 6vw, 32px) clamp(12px, 4vw, 24px) !important;
+            gap: clamp(16px, 4vw, 24px) !important;
             align-items: center !important;
           }
           .revealed-flashcard-container {
-            border-radius: 24px !important;
+            border-radius: 20px !important;
           }
           .flashcard-image-outer {
-             max-width: clamp(180px, 60vw, 300px) !important;
+             max-width: clamp(160px, 50vw, 300px) !important;
           }
           .flashcard-image-img {
-             max-height: clamp(140px, 25vh, 200px) !important;
+             max-height: clamp(120px, 22vh, 180px) !important;
           }
         }
         @media (max-width: 480px) {
           .flashcard-content-layout {
-            padding: 16px 12px !important;
-            gap: 14px !important;
+            padding: 14px 10px !important;
+            gap: 12px !important;
           }
           .flashcard-image-outer {
-             max-width: 140px !important;
+             max-width: 120px !important;
           }
           .flashcard-image-img {
-             max-height: 120px !important;
+             max-height: 100px !important;
+          }
+          .revealed-flashcard-container {
+            border-radius: 16px !important;
+          }
+        }
+        @media (max-width: 360px) {
+          .flashcard-content-layout {
+            padding: 10px 8px !important;
+            gap: 10px !important;
+          }
+          .flashcard-image-outer {
+             max-width: 100px !important;
+          }
+          .flashcard-image-img {
+             max-height: 85px !important;
           }
         }
       `}</style>

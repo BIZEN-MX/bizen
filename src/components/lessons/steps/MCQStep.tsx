@@ -69,7 +69,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
-      gap: 28
+      gap: "clamp(16px, 4vw, 28px)"
     }}>
       {/* Question header */}
       <div style={{
@@ -78,7 +78,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: 24
+        gap: "clamp(12px, 3vw, 24px)"
       }}>
         <ExerciseInstruction type="mcq" />
         <motion.h3

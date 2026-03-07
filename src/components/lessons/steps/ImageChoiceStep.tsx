@@ -53,7 +53,7 @@ export function ImageChoiceStep({
   }, [actionTrigger])
 
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 28 }}>
+    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "clamp(16px, 4vw, 28px)" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <ExerciseInstruction type="image_choice" />
         <h3 style={{
@@ -135,7 +135,7 @@ export function ImageChoiceStep({
             >
               <div style={{
                 width: "100%",
-                aspectRatio: "1.2",
+                aspectRatio: "1.3",
                 background: "#F9FAFB",
                 borderRadius: 12,
                 overflow: "hidden",
