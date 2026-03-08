@@ -57,11 +57,18 @@ export async function GET(req: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-        const myProfile = await prisma.profile.findUnique({
-            where: { userId: user.id },
-            select: { role: true }
-        })
-        const isParticular = myProfile?.role === 'particular'
+        let isParticular = true; // Fallback default
+        try {
+            const myProfile = await prisma.profile.findUnique({
+                where: { userId: user.id },
+                select: { role: true }
+            })
+            if (myProfile?.role && myProfile.role !== 'particular') {
+                isParticular = false;
+            }
+        } catch (e: any) {
+            console.warn("Soft error checking role in evidence:", e.message)
+        }
 
         let posts: any[] = []
         try {

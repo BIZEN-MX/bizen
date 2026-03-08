@@ -26,8 +26,9 @@ export async function GET() {
         }
       })
     } catch (e: any) {
-      console.error("DB Error (profile/me - primary fetch):", e.message)
-      throw new Error(`Profile fetch failed: ${e.message}`)
+      console.warn("DB Warning (profile/me - primary fetch):", e.message)
+      // Do not throw so we can try to fall back or return a safe default
+      userProfileRaw = null;
     }
 
     if (!userProfileRaw) {
