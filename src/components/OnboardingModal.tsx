@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
-import { createClientMicrocred } from "@/lib/supabase/client-microcred"
+import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/AuthContext"
 import { SchoolIcon, CakeIcon, PartyIcon } from "@/components/CustomIcons"
 
@@ -47,7 +47,7 @@ interface OnboardingModalProps {
 
 export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const { user, refreshUser } = useAuth()
-    const supabase = createClientMicrocred()
+    const supabase = createClient()
 
     const [step, setStep] = useState<Step>("welcome")
     const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "character", id: "robot", character: "robot", label: "Robot" })
@@ -116,8 +116,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             })
 
             if (!res.ok) {
-                const data = await res.json()
-                setUsernameError(data.error || "Error al guardar")
+                let errorMsg = "Error al guardar"
+                try {
+                    const data = await res.json()
+                    errorMsg = data.error || errorMsg
+                } catch {
+                    // Fallback for non-json error responses
+                }
+                setUsernameError(errorMsg)
                 setSaving(false)
                 return
             }
