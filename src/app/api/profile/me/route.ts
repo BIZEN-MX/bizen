@@ -14,6 +14,7 @@ export async function GET() {
 
     // Use try-catch for each DB query to pinpoint failures and avoid blanket 500
     let userProfileRaw: any = null;
+    let dbFetchError = false;
     try {
       userProfileRaw = await prisma.profile.findUnique({
         where: { userId: user.id },
@@ -27,11 +28,10 @@ export async function GET() {
       })
     } catch (e: any) {
       console.warn("DB Warning (profile/me - primary fetch):", e.message)
-      // Do not throw so we can try to fall back or return a safe default
-      userProfileRaw = null;
+      dbFetchError = true;
     }
 
-    if (!userProfileRaw) {
+    if (!userProfileRaw && !dbFetchError) {
       console.log(`[api/profile/me] Profile missing for user ${user.id}, creating default...`)
       try {
         userProfileRaw = await prisma.profile.create({
@@ -47,6 +47,17 @@ export async function GET() {
       } catch (createErr: any) {
         console.error('[api/profile/me] Failed to create default profile:', createErr.message)
         return NextResponse.json({ error: "Profile not found and could not be created" }, { status: 404 })
+      }
+    } else if (!userProfileRaw && dbFetchError) {
+      // Return a mocked profile if the database connection failed so the UI doesn't crash
+      userProfileRaw = {
+        userId: user.id,
+        fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
+        role: 'student',
+        xp: 0,
+        bizcoins: 0,
+        level: 1,
+        inventory: []
       }
     }
 
