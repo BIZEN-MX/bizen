@@ -10,8 +10,8 @@ export const TOUR_STEPS = [
         path: "/courses",
         label: "Temas y Lecciones",
         title: "Tu camino de aprendizaje",
-        description:
-            "Aquí encontrarás 30 temas de educación financiera diseñados paso a paso. Cada tema tiene lecciones interactivas, simuladores y quizzes. Avanza a tu ritmo y acumula XP con cada lección completada.",
+        description: "Aquí encontrarás 30 temas de educación financiera diseñados paso a paso. Cada tema tiene lecciones interactivas, simuladores y quizzes.",
+        emoji: "📚",
         color: "#0F62FE",
         accent: "rgba(15,98,254,0.08)",
         step: 1,
@@ -21,10 +21,10 @@ export const TOUR_STEPS = [
         path: "/reto-diario",
         label: "Reto Diario",
         title: "Construye el hábito financiero",
-        description:
-            "Cada día recibes un reto nuevo de 5 minutos. Al completarlo, publicas tu evidencia en el Foro y acumulas rachas. Así convierte el aprendizaje en un hábito que cambia tu vida.",
-        color: "#0F62FE",
-        accent: "rgba(15,98,254,0.08)",
+        description: "Cada día recibes un reto nuevo de 5 minutos. Al completarlo, publicas tu evidencia en el Foro y acumulas rachas.",
+        emoji: "🔥",
+        color: "#f97316",
+        accent: "rgba(249,115,22,0.08)",
         step: 2,
         placement: "bottom-left"
     },
@@ -32,10 +32,10 @@ export const TOUR_STEPS = [
         path: "/forum",
         label: "Foro",
         title: "Aprende con tu comunidad",
-        description:
-            "Comparte tus evidencias del reto diario, haz preguntas rápidas y presenta proyectos emprendedores. Tu grupo te retroalimenta y tus maestros validan tu aprendizaje en tiempo real.",
-        color: "#0F62FE",
-        accent: "rgba(15,98,254,0.08)",
+        description: "Comparte tus evidencias del reto diario, haz preguntas rápidas y presenta proyectos. Tu grupo te retroalimenta en tiempo real.",
+        emoji: "💬",
+        color: "#8b5cf6",
+        accent: "rgba(139,92,246,0.08)",
         step: 3,
         placement: "bottom-left"
     },
@@ -43,10 +43,10 @@ export const TOUR_STEPS = [
         path: "/impacto-social",
         label: "Impacto Social",
         title: "Tu aprendizaje genera donaciones",
-        description:
-            "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales en nombre de tu escuela. Revisa aquí cuánto has contribuido, tus logros desbloqueados y el impacto colectivo.",
-        color: "#0F62FE",
-        accent: "rgba(15,98,254,0.08)",
+        description: "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales en nombre de tu escuela.",
+        emoji: "🌱",
+        color: "#10b981",
+        accent: "rgba(16,185,129,0.08)",
         step: 4,
         placement: "bottom-left"
     },
@@ -54,10 +54,10 @@ export const TOUR_STEPS = [
         path: "/puntos",
         label: "Mis Puntos",
         title: "Tu progreso financiero",
-        description:
-            "Monitorea tus XP, rachas y el historial de tus ganancias. Aquí verás cómo cada pequeña acción suma para convertirte en un experto de tus finanzas.",
-        color: "#0F62FE",
-        accent: "rgba(15,98,254,0.08)",
+        description: "Monitorea tus XP, rachas y el historial de tus ganancias. Cada pequeña acción suma para convertirte en experto.",
+        emoji: "⭐",
+        color: "#eab308",
+        accent: "rgba(234,179,8,0.08)",
         step: 5,
         placement: "bottom-right"
     },
@@ -65,10 +65,10 @@ export const TOUR_STEPS = [
         path: "/tienda",
         label: "Bizen Tienda",
         title: "Canjea tus recompensas",
-        description:
-            "Usa tus monedas Bizens para comprar artículos exclusivos, avatares especiales y beneficios reales. Tu esfuerzo se traduce en premios que puedes disfrutar.",
-        color: "#0F62FE",
-        accent: "rgba(15,98,254,0.08)",
+        description: "Usa tus monedas Bizens para comprar artículos exclusivos, avatares especiales y beneficios reales.",
+        emoji: "🎁",
+        color: "#ec4899",
+        accent: "rgba(236,72,153,0.08)",
         step: 6,
         placement: "bottom-right"
     },
@@ -76,8 +76,8 @@ export const TOUR_STEPS = [
         path: "/profile",
         label: "Tu Perfil",
         title: "Tu identidad en BIZEN",
-        description:
-            "Aquí vives: tus puntos XP, tu nivel, tus rachas y tus seguidores. Personaliza tu avatar y tu bio. Cada logro que desbloquee aparecerá en tu perfil para que el mundo vea tu progreso.",
+        description: "Tus puntos XP, nivel, rachas y seguidores. Personaliza tu avatar y bio. ¡Muéstrale al mundo tu progreso!",
+        emoji: "🏆",
         color: "#0F62FE",
         accent: "rgba(15,98,254,0.08)",
         step: 7,
@@ -85,10 +85,10 @@ export const TOUR_STEPS = [
     },
 ]
 
-const PLACEMENTS: Record<string, any> = {
+const PLACEMENTS: Record<string, React.CSSProperties> = {
     "center": { bottom: "clamp(16px, 3vw, 32px)", left: "50%", transform: "translateX(-50%)" },
-    "bottom-left": { bottom: "clamp(16px, 3vw, 32px)", left: "clamp(16px, 3vw, 40px)", transform: "translateX(0)" },
-    "bottom-right": { bottom: "clamp(16px, 3vw, 32px)", left: "auto", right: "clamp(16px, 3vw, 40px)", transform: "translateX(0)" },
+    "bottom-left": { bottom: "clamp(16px, 3vw, 32px)", left: "clamp(16px, 3vw, 40px)" },
+    "bottom-right": { bottom: "clamp(16px, 3vw, 32px)", right: "clamp(16px, 3vw, 40px)" },
 }
 
 interface AppTourOverlayProps {
@@ -108,47 +108,40 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
     // Navigate to first tour page on mount
     useEffect(() => {
         setVisible(true)
-        // Navigate to the first step if not already there
         if (pathname !== TOUR_STEPS[0].path) {
             router.push(TOUR_STEPS[0].path)
         }
-        // Animate card in after short delay
         const t = setTimeout(() => setCardVisible(true), 100)
         return () => clearTimeout(t)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // Highlight sidebar item if it exists
+    // Highlight sidebar item
     useEffect(() => {
         if (!visible || !current) return
-
-        // Remove highlight from all
-        const allItems = document.querySelectorAll('[data-tour-id]');
+        const allItems = document.querySelectorAll('[data-tour-id]')
         allItems.forEach(el => {
-            (el as HTMLElement).style.boxShadow = "";
-            (el as HTMLElement).style.transform = "";
-            (el as HTMLElement).style.zIndex = "";
+            (el as HTMLElement).style.boxShadow = ""
+                ; (el as HTMLElement).style.transform = ""
+                ; (el as HTMLElement).style.zIndex = ""
         })
-
-        // Highlight current
         const target = document.querySelector(`[data-tour-id="${current.path}"]`) as HTMLElement
         if (target) {
-            target.style.boxShadow = `0 0 0 3px ${current.color}60, 0 8px 24px ${current.color}40`;
-            target.style.transform = "scale(1.05) translateX(4px)";
-            target.style.zIndex = "100002";
-            target.scrollIntoView({ behavior: "smooth", block: "center" });
+            target.style.boxShadow = `0 0 0 3px ${current.color}60, 0 8px 24px ${current.color}40`
+            target.style.transform = "scale(1.05) translateX(4px)"
+            target.style.zIndex = "100002"
+            target.scrollIntoView({ behavior: "smooth", block: "center" })
         }
-
         return () => {
             allItems.forEach(el => {
-                (el as HTMLElement).style.boxShadow = "";
-                (el as HTMLElement).style.transform = "";
-                (el as HTMLElement).style.zIndex = "";
-            });
+                (el as HTMLElement).style.boxShadow = ""
+                    ; (el as HTMLElement).style.transform = ""
+                    ; (el as HTMLElement).style.zIndex = ""
+            })
         }
     }, [visible, current, pathname])
 
-    // Animate card back in when path matches current step
+    // Animate card back in when path matches
     useEffect(() => {
         if (pathname === current.path) {
             setNavigating(false)
@@ -161,12 +154,8 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
         if (navigating) return
         const next = stepIndex + 1
         if (next >= TOUR_STEPS.length) {
-            // Tour complete
             setCardVisible(false)
-            setTimeout(() => {
-                setVisible(false)
-                onEnd()
-            }, 350)
+            setTimeout(() => { setVisible(false); onEnd() }, 350)
             return
         }
         setCardVisible(false)
@@ -177,7 +166,6 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
         }, 300)
     }, [navigating, stepIndex, router, onEnd])
 
-
     if (!visible) return null
 
     const isLast = stepIndex === TOUR_STEPS.length - 1
@@ -186,237 +174,259 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
     return (
         <>
             <style>{`
-        @keyframes tour-slideUp {
-          from { opacity: 0; transform: translateY(32px); }
-          to   { opacity: 1; transform: translateY(0); }
+        @keyframes tour-in {
+          from { opacity: 0; transform: translateY(28px) scale(0.96); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes tour-slideDown {
-          from { opacity: 1; transform: translateY(0); }
-          to   { opacity: 0; transform: translateY(32px); }
+        @keyframes tour-out {
+          from { opacity: 1; transform: translateY(0) scale(1); }
+          to   { opacity: 0; transform: translateY(20px) scale(0.96); }
         }
-        @keyframes tour-mascotBob {
-          0%,100% { transform: translateY(0) rotate(-2deg); }
-          50%     { transform: translateY(-6px) rotate(2deg); }
+        @keyframes tour-bob {
+          0%,100% { transform: translateY(0) rotate(-3deg); }
+          50%     { transform: translateY(-8px) rotate(3deg); }
         }
         @keyframes tour-breathe {
-          0%, 100% { transform: scale(1); box-shadow: 0 4px 14px var(--tour-color-alpha); }
-          50%      { transform: scale(1.05); box-shadow: 0 8px 28px var(--tour-color-beta); }
+          0%, 100% { transform: scale(1); box-shadow: 0 4px 14px var(--tc-a); }
+          50%      { transform: scale(1.04); box-shadow: 0 10px 28px var(--tc-b); }
         }
-        .tour-card {
+        @keyframes tour-shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position:  200% center; }
+        }
+
+        /* ── Card ── */
+        .tc {
           position: fixed;
           z-index: 100001;
-          width: calc(100% - 32px);
-          max-width: 600px;
           background: #ffffff;
-          border-radius: 28px;
+          border-radius: clamp(18px, 3vw, 26px);
           box-shadow:
-            0 32px 80px rgba(0,0,0,0.22),
-            0 0 0 1px rgba(0,0,0,0.06);
+            0 4px 6px rgba(0,0,0,0.04),
+            0 16px 48px rgba(0,0,0,0.18),
+            0 0 0 1px rgba(0,0,0,0.05);
           overflow: hidden;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          font-family: 'Inter', system-ui, sans-serif;
+          width: calc(100vw - clamp(24px, 6vw, 80px));
+          max-width: clamp(320px, 52vw, 520px);
         }
-        .tour-card.enter {
-          animation: tour-slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        .tc.enter { animation: tour-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+        .tc.exit  { animation: tour-out 0.3s ease forwards; }
+
+        /* ── Progress bar at top ── */
+        .tc-progress {
+          height: 4px;
+          background: #f1f5f9;
         }
-        .tour-card.exit {
-          animation: tour-slideDown 0.3s ease forwards;
+        .tc-progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--tc-color) 0%, var(--tc-color-light) 100%);
+          background-size: 200% auto;
+          transition: width 0.55s cubic-bezier(0.34,1.56,0.64,1);
         }
-        .tour-backdrop {
-          position: fixed;
-          inset: 0;
+
+        /* ── Backdrop ── */
+        .tc-backdrop {
+          position: fixed; inset: 0;
           z-index: 100000;
           pointer-events: auto;
           background: transparent;
         }
 
-        .tour-card-inner {
-            padding: clamp(20px, 4vw, 32px) clamp(24px, 5vw, 40px);
-        }
-        .tour-header-row {
-            display: flex;
-            align-items: flex-start;
-            gap: clamp(14px, 3vw, 20px);
-            margin-bottom: clamp(14px, 3vw, 20px);
-        }
-        .tour-mascot {
-            width: clamp(56px, 12vw, 76px);
-            height: clamp(56px, 12vw, 76px);
-            flex-shrink: 0;
-            animation: tour-mascotBob 3s ease infinite;
-        }
-        .tour-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: clamp(11px, 2.5vw, 13px);
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 999px;
-            letter-spacing: 0.04em;
-        }
-        .tour-title {
-            margin: 0;
-            font-size: clamp(18px, 4vw, 24px);
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.3;
-        }
-        .tour-desc {
-            margin: 0 0 clamp(18px, 4vw, 28px);
-            font-size: clamp(15px, 3.5vw, 18px);
-            color: #475569;
-            line-height: 1.6;
-        }
-        .tour-bottom-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .tour-actions {
-            display: flex;
-            gap: clamp(8px, 2vw, 12px);
-        }
-        .tour-btn {
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(14px, 3vw, 16px);
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .tour-btn-prev {
-            padding: clamp(10px, 2vw, 14px) clamp(16px, 3vw, 24px);
-            border: 1.5px solid #e5e7eb;
-            background: white;
-            color: #6b7280;
-            font-weight: 600;
-        }
-        .tour-btn-next {
-            padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px);
-            border: none;
-            color: white;
-            animation: tour-breathe 2.5s ease-in-out infinite;
+        /* ── Inner layout ── */
+        .tc-body {
+          padding: clamp(16px, 3.5vw, 28px) clamp(18px, 4vw, 32px);
         }
 
-        /* Responsive Mobile Layout */
+        /* ── Header row ── */
+        .tc-header {
+          display: flex;
+          align-items: flex-start;
+          gap: clamp(10px, 2.5vw, 18px);
+          margin-bottom: clamp(10px, 2.5vw, 16px);
+        }
+
+        /* ── Mascot ── */
+        .tc-mascot {
+          width: clamp(48px, 10vw, 68px);
+          height: clamp(48px, 10vw, 68px);
+          flex-shrink: 0;
+          animation: tour-bob 3.2s ease infinite;
+          filter: drop-shadow(0 4px 8px rgba(15,98,254,0.2));
+        }
+
+        /* ── Badge ── */
+        .tc-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: clamp(10px, 2vw, 12px);
+          font-weight: 700;
+          padding: 4px 12px;
+          border-radius: 999px;
+          letter-spacing: 0.04em;
+          margin-bottom: 6px;
+        }
+
+        /* ── Title ── */
+        .tc-title {
+          margin: 0 0 2px;
+          font-size: clamp(15px, 3.5vw, 20px);
+          font-weight: 800;
+          color: #0f172a;
+          line-height: 1.25;
+        }
+
+        /* ── Description ── */
+        .tc-desc {
+          margin: 0 0 clamp(14px, 3.5vw, 22px);
+          font-size: clamp(12px, 2.8vw, 14px);
+          color: #475569;
+          line-height: 1.65;
+        }
+
+        /* ── Footer row ── */
+        .tc-footer {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        /* ── Dots ── */
+        .tc-dots {
+          display: flex;
+          gap: 5px;
+          align-items: center;
+          flex: 1;
+        }
+        .tc-dot {
+          height: 5px;
+          border-radius: 3px;
+          transition: all 0.36s cubic-bezier(0.34,1.56,0.64,1);
+        }
+
+        /* ── Buttons ── */
+        .tc-actions { display: flex; gap: 8px; }
+        .tc-btn {
+          border-radius: 11px;
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(12px, 2.8vw, 14px);
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .tc-btn-prev {
+          padding: clamp(9px, 2vw, 12px) clamp(14px, 3vw, 20px);
+          border: 1.5px solid #e5e7eb;
+          background: white; color: #6b7280;
+        }
+        .tc-btn-prev:hover { border-color: #d1d5db; background: #f9fafb; }
+        .tc-btn-next {
+          padding: clamp(9px, 2vw, 12px) clamp(18px, 4vw, 28px);
+          border: none; color: white;
+          animation: tour-breathe 2.6s ease-in-out infinite;
+        }
+        .tc-btn-next:hover:not(:disabled) { filter: brightness(1.08); animation-play-state: paused; }
+        .tc-btn-next:disabled { opacity: 0.7; cursor: not-allowed; animation: none; }
+
+        /* ─── MOBILE ──────────────────────────────────────────────────────── */
         @media (max-width: 767px) {
-          .tour-card {
-            bottom: calc(75px + env(safe-area-inset-bottom));
-            width: calc(100% - 24px);
-            border-radius: 20px;
+          .tc {
+            /* On mobile: stick to bottom above the mobile nav bar */
+            left: 12px !important;
+            right: 12px !important;
+            bottom: calc(68px + env(safe-area-inset-bottom)) !important;
+            transform: none !important;
+            width: calc(100% - 24px) !important;
+            max-width: 100% !important;
+            border-radius: 20px !important;
           }
-          .tour-card-inner {
-            padding: 20px 20px;
-          }
-          .tour-header-row {
-            flex-direction: column;
+          .tc-header {
+            flex-direction: row;
             align-items: center;
-            text-align: center;
-            gap: 12px;
-            margin-bottom: 12px;
           }
-          .tour-mascot {
-            width: 58px;
-            height: 58px;
+          .tc-mascot {
+            width: 48px;
+            height: 48px;
           }
-          .tour-badge {
-            justify-content: center;
-            display: inline-flex;
-          }
-          .tour-title {
-            font-size: 18px;
-          }
-          .tour-desc {
-            text-align: center;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-          }
-          .tour-bottom-row {
-            flex-direction: column-reverse; /* Dots below buttons */
-            gap: 16px;
-          }
-          .tour-actions {
-            width: 100%;
-          }
-          .tour-btn {
-            flex: 1; /* Stretch buttons equally on mobile */
-            padding: 12px 14px;
-            font-size: 14px;
-          }
+          .tc-title { font-size: 15px; }
+          .tc-desc  { font-size: 12px; line-height: 1.55; margin-bottom: 14px; }
+          .tc-footer { gap: 8px; }
+          .tc-btn   { font-size: 13px; }
+          .tc-btn-prev { padding: 9px 14px; }
+          .tc-btn-next { padding: 9px 18px; }
+        }
+
+        @media (max-width: 400px) {
+          .tc-body { padding: 14px 16px; }
+          .tc-mascot { width: 40px; height: 40px; }
+          .tc-badge { font-size: 9px; padding: 3px 9px; }
+          .tc-title { font-size: 14px; }
         }
       `}</style>
 
-            {/* Blocking backdrop — forces user to interact ONLY with the tour card */}
-            <div className="tour-backdrop" />
+            {/* Blocking backdrop */}
+            <div className="tc-backdrop" />
 
             <div
-                className={`tour-card ${cardVisible ? "enter" : "exit"}`}
+                className={`tc ${cardVisible ? "enter" : "exit"}`}
                 style={{
                     ...PLACEMENTS[(current as any).placement || "center"],
-                    "--tour-color-alpha": `${current.color}40`,
-                    "--tour-color-beta": `${current.color}70`,
-                } as any}
+                    "--tc-color": current.color,
+                    "--tc-color-light": current.color + "99",
+                    "--tc-a": current.color + "40",
+                    "--tc-b": current.color + "70",
+                } as React.CSSProperties}
             >
-                {/* Color accent stripe */}
-                <div style={{ height: 4, background: `linear-gradient(90deg, ${current.color}, ${current.color}99)`, width: `${progressPct}%`, transition: "width 0.5s cubic-bezier(0.34,1.56,0.64,1)" }} />
+                {/* Progress stripe */}
+                <div className="tc-progress">
+                    <div className="tc-progress-fill" style={{ width: `${progressPct}%` }} />
+                </div>
 
-                <div className="tour-card-inner">
-                    {/* Header row */}
-                    <div className="tour-header-row">
-                        {/* Mascot */}
-                        <div className="tour-mascot">
+                <div className="tc-body">
+                    {/* Header: mascot + badge + title */}
+                    <div className="tc-header">
+                        <div className="tc-mascot">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src="/hero4.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                         </div>
 
-                        <div style={{ flex: 1, minWidth: 0, width: "100%" }}>
-                            {/* Step badge */}
-                            <div style={{ textAlign: "center" }}>
-                                <div className="tour-badge" style={{ color: current.color, background: current.accent, border: `1px solid ${current.color}25` }}>
-                                    {current.label} — {stepIndex + 1} / {TOUR_STEPS.length}
-                                </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <div className="tc-badge" style={{ color: current.color, background: current.accent, border: `1px solid ${current.color}25` }}>
+                                <span>{current.emoji}</span>
+                                <span>{current.label}</span>
+                                <span style={{ opacity: 0.55, fontSize: "0.9em" }}>{stepIndex + 1}/{TOUR_STEPS.length}</span>
                             </div>
-                            <h3 className="tour-title">
-                                {current.title}
-                            </h3>
+                            <h3 className="tc-title">{current.title}</h3>
                         </div>
                     </div>
 
                     {/* Description */}
-                    <p className="tour-desc">
-                        {current.description}
-                    </p>
+                    <p className="tc-desc">{current.description}</p>
 
-                    {/* Step dots + action */}
-                    <div className="tour-bottom-row">
-                        {/* Dots */}
-                        <div style={{ display: "flex", gap: 6, alignItems: "center", justifyContent: "center", width: "100%", flex: 1 }}>
+                    {/* Footer: dots + navigation */}
+                    <div className="tc-footer">
+                        {/* Step dots */}
+                        <div className="tc-dots">
                             {TOUR_STEPS.map((_, i) => (
                                 <div
                                     key={i}
+                                    className="tc-dot"
                                     style={{
-                                        height: 6,
-                                        borderRadius: 3,
-                                        background: i === stepIndex ? current.color : i < stepIndex ? "#cbd5e1" : "#f1f5f9",
-                                        width: i === stepIndex ? 20 : 6,
-                                        transition: "all 0.3s cubic-bezier(0.34,1.56,0.64,1)",
+                                        background: i === stepIndex ? current.color : i < stepIndex ? "#cbd5e1" : "#e9edf2",
+                                        width: i === stepIndex ? 20 : 5,
                                     }}
                                 />
                             ))}
                         </div>
 
-                        {/* Navigation */}
-                        <div className="tour-actions">
+                        {/* Buttons */}
+                        <div className="tc-actions">
                             {stepIndex > 0 && (
                                 <button
+                                    className="tc-btn tc-btn-prev"
                                     onClick={() => {
                                         setCardVisible(false)
                                         setNavigating(true)
@@ -425,15 +435,14 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                                             router.push(TOUR_STEPS[stepIndex - 1].path)
                                         }, 280)
                                     }}
-                                    className="tour-btn tour-btn-prev"
                                 >
-                                    Anterior
+                                    ← Anterior
                                 </button>
                             )}
                             <button
+                                className="tc-btn tc-btn-next"
                                 onClick={goToNext}
                                 disabled={navigating}
-                                className="tour-btn tour-btn-next"
                                 style={{
                                     background: `linear-gradient(135deg, ${current.color}, ${current.color}cc)`,
                                     boxShadow: `0 4px 14px ${current.color}40`,
@@ -441,7 +450,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                                     cursor: navigating ? "not-allowed" : "pointer"
                                 }}
                             >
-                                {navigating ? "..." : isLast ? "Finalizar tour" : "Siguiente"}
+                                {navigating ? "..." : isLast ? "¡Comenzar! 🚀" : "Siguiente →"}
                             </button>
                         </div>
                     </div>
