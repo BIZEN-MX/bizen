@@ -2,178 +2,189 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
+import {
+  BookIcon,
+  FireIcon,
+  MessageSquareIcon,
+  LeafIcon,
+  StarIcon,
+  ShoppingCartIcon,
+  TrophyIcon,
+  ChevronRightIcon,
+  RocketIcon
+} from "@/components/CustomIcons"
 
 // ─── Tour Steps ───────────────────────────────────────────────────────────────
 
 export const TOUR_STEPS = [
-    {
-        path: "/courses",
-        label: "Temas y Lecciones",
-        title: "Tu camino de aprendizaje",
-        description: "Aquí encontrarás 30 temas de educación financiera diseñados paso a paso. Cada tema tiene lecciones interactivas, simuladores y quizzes.",
-        emoji: "📚",
-        color: "#0F62FE",
-        accent: "rgba(15,98,254,0.08)",
-        step: 1,
-        placement: "bottom-left"
-    },
-    {
-        path: "/reto-diario",
-        label: "Reto Diario",
-        title: "Construye el hábito financiero",
-        description: "Cada día recibes un reto nuevo de 5 minutos. Al completarlo, publicas tu evidencia en el Foro y acumulas rachas.",
-        emoji: "🔥",
-        color: "#f97316",
-        accent: "rgba(249,115,22,0.08)",
-        step: 2,
-        placement: "bottom-left"
-    },
-    {
-        path: "/forum",
-        label: "Foro",
-        title: "Aprende con tu comunidad",
-        description: "Comparte tus evidencias del reto diario, haz preguntas rápidas y presenta proyectos. Tu grupo te retroalimenta en tiempo real.",
-        emoji: "💬",
-        color: "#8b5cf6",
-        accent: "rgba(139,92,246,0.08)",
-        step: 3,
-        placement: "bottom-left"
-    },
-    {
-        path: "/impacto-social",
-        label: "Impacto Social",
-        title: "Tu aprendizaje genera donaciones",
-        description: "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales en nombre de tu escuela.",
-        emoji: "🌱",
-        color: "#10b981",
-        accent: "rgba(16,185,129,0.08)",
-        step: 4,
-        placement: "bottom-left"
-    },
-    {
-        path: "/puntos",
-        label: "Mis Puntos",
-        title: "Tu progreso financiero",
-        description: "Monitorea tus XP, rachas y el historial de tus ganancias. Cada pequeña acción suma para convertirte en experto.",
-        emoji: "⭐",
-        color: "#eab308",
-        accent: "rgba(234,179,8,0.08)",
-        step: 5,
-        placement: "bottom-right"
-    },
-    {
-        path: "/tienda",
-        label: "Bizen Tienda",
-        title: "Canjea tus recompensas",
-        description: "Usa tus monedas Bizens para comprar artículos exclusivos, avatares especiales y beneficios reales.",
-        emoji: "🎁",
-        color: "#ec4899",
-        accent: "rgba(236,72,153,0.08)",
-        step: 6,
-        placement: "bottom-right"
-    },
-    {
-        path: "/profile",
-        label: "Tu Perfil",
-        title: "Tu identidad en BIZEN",
-        description: "Tus puntos XP, nivel, rachas y seguidores. Personaliza tu avatar y bio. ¡Muéstrale al mundo tu progreso!",
-        emoji: "🏆",
-        color: "#0F62FE",
-        accent: "rgba(15,98,254,0.08)",
-        step: 7,
-        placement: "bottom-right"
-    },
+  {
+    path: "/courses",
+    label: "Temas y Lecciones",
+    title: "Tu camino de aprendizaje",
+    description: "Aquí encontrarás 30 temas de educación financiera diseñados paso a paso. Cada tema tiene lecciones interactivas, simuladores y quizzes.",
+    icon: BookIcon,
+    color: "#0F62FE",
+    accent: "rgba(15,98,254,0.08)",
+    step: 1,
+    placement: "bottom-left"
+  },
+  {
+    path: "/reto-diario",
+    label: "Reto Diario",
+    title: "Construye el hábito financiero",
+    description: "Cada día recibes un reto nuevo de 5 minutos. Al completarlo, publicas tu evidencia en el Foro y acumulas rachas.",
+    icon: FireIcon,
+    color: "#f97316",
+    accent: "rgba(249,115,22,0.08)",
+    step: 2,
+    placement: "bottom-left"
+  },
+  {
+    path: "/forum",
+    label: "Foro",
+    title: "Aprende con tu comunidad",
+    description: "Comparte tus evidencias del reto diario, haz preguntas rápidas y presenta proyectos. Tu grupo te retroalimenta en tiempo real.",
+    icon: MessageSquareIcon,
+    color: "#8b5cf6",
+    accent: "rgba(139,92,246,0.08)",
+    step: 3,
+    placement: "bottom-left"
+  },
+  {
+    path: "/impacto-social",
+    label: "Impacto Social",
+    title: "Tu aprendizaje genera donaciones",
+    description: "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales en nombre de tu escuela.",
+    icon: LeafIcon,
+    color: "#10b981",
+    accent: "rgba(16,185,129,0.08)",
+    step: 4,
+    placement: "bottom-left"
+  },
+  {
+    path: "/puntos",
+    label: "Mis Puntos",
+    title: "Tu progreso financiero",
+    description: "Monitorea tus XP, rachas y el historial de tus ganancias. Cada pequeña acción suma para convertirte en experto.",
+    icon: StarIcon,
+    color: "#eab308",
+    accent: "rgba(234,179,8,0.08)",
+    step: 5,
+    placement: "bottom-right"
+  },
+  {
+    path: "/tienda",
+    label: "Bizen Tienda",
+    title: "Canjea tus recompensas",
+    description: "Usa tus monedas Bizens para comprar artículos exclusivos, avatares especiales y beneficios reales.",
+    icon: ShoppingCartIcon,
+    color: "#ec4899",
+    accent: "rgba(236,72,153,0.08)",
+    step: 6,
+    placement: "bottom-right"
+  },
+  {
+    path: "/profile",
+    label: "Tu Perfil",
+    title: "Tu identidad en BIZEN",
+    description: "Tus puntos XP, nivel, rachas y seguidores. Personaliza tu avatar y bio. ¡Muéstrale al mundo tu progreso!",
+    icon: TrophyIcon,
+    color: "#0F62FE",
+    accent: "rgba(15,98,254,0.08)",
+    step: 7,
+    placement: "bottom-right"
+  },
 ]
 
 const PLACEMENTS: Record<string, React.CSSProperties> = {
-    "center": { bottom: "clamp(16px, 3vw, 32px)", left: "50%", transform: "translateX(-50%)" },
-    "bottom-left": { bottom: "clamp(16px, 3vw, 32px)", left: "clamp(16px, 3vw, 40px)" },
-    "bottom-right": { bottom: "clamp(16px, 3vw, 32px)", right: "clamp(16px, 3vw, 40px)" },
+  "center": { bottom: "clamp(16px, 3vw, 32px)", left: "50%", transform: "translateX(-50%)" },
+  "bottom-left": { bottom: "clamp(16px, 3vw, 32px)", left: "clamp(16px, 3vw, 40px)" },
+  "bottom-right": { bottom: "clamp(16px, 3vw, 32px)", right: "clamp(16px, 3vw, 40px)" },
 }
 
 interface AppTourOverlayProps {
-    onEnd: () => void
+  onEnd: () => void
 }
 
 export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
-    const router = useRouter()
-    const pathname = usePathname()
-    const [stepIndex, setStepIndex] = useState(0)
-    const [navigating, setNavigating] = useState(false)
-    const [visible, setVisible] = useState(false)
-    const [cardVisible, setCardVisible] = useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
+  const [stepIndex, setStepIndex] = useState(0)
+  const [navigating, setNavigating] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [cardVisible, setCardVisible] = useState(false)
 
-    const current = TOUR_STEPS[stepIndex]
+  const current = TOUR_STEPS[stepIndex]
 
-    // Navigate to first tour page on mount
-    useEffect(() => {
-        setVisible(true)
-        if (pathname !== TOUR_STEPS[0].path) {
-            router.push(TOUR_STEPS[0].path)
-        }
-        const t = setTimeout(() => setCardVisible(true), 100)
-        return () => clearTimeout(t)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+  // Navigate to first tour page on mount
+  useEffect(() => {
+    setVisible(true)
+    if (pathname !== TOUR_STEPS[0].path) {
+      router.push(TOUR_STEPS[0].path)
+    }
+    const t = setTimeout(() => setCardVisible(true), 100)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-    // Highlight sidebar item
-    useEffect(() => {
-        if (!visible || !current) return
-        const allItems = document.querySelectorAll('[data-tour-id]')
-        allItems.forEach(el => {
-            (el as HTMLElement).style.boxShadow = ""
-                ; (el as HTMLElement).style.transform = ""
-                ; (el as HTMLElement).style.zIndex = ""
-        })
-        const target = document.querySelector(`[data-tour-id="${current.path}"]`) as HTMLElement
-        if (target) {
-            target.style.boxShadow = `0 0 0 3px ${current.color}60, 0 8px 24px ${current.color}40`
-            target.style.transform = "scale(1.05) translateX(4px)"
-            target.style.zIndex = "100002"
-            target.scrollIntoView({ behavior: "smooth", block: "center" })
-        }
-        return () => {
-            allItems.forEach(el => {
-                (el as HTMLElement).style.boxShadow = ""
-                    ; (el as HTMLElement).style.transform = ""
-                    ; (el as HTMLElement).style.zIndex = ""
-            })
-        }
-    }, [visible, current, pathname])
+  // Highlight sidebar item
+  useEffect(() => {
+    if (!visible || !current) return
+    const allItems = document.querySelectorAll('[data-tour-id]')
+    allItems.forEach(el => {
+      (el as HTMLElement).style.boxShadow = ""
+        ; (el as HTMLElement).style.transform = ""
+        ; (el as HTMLElement).style.zIndex = ""
+    })
+    const target = document.querySelector(`[data-tour-id="${current.path}"]`) as HTMLElement
+    if (target) {
+      target.style.boxShadow = `0 0 0 3px ${current.color}60, 0 8px 24px ${current.color}40`
+      target.style.transform = "scale(1.05) translateX(4px)"
+      target.style.zIndex = "100002"
+      target.scrollIntoView({ behavior: "smooth", block: "center" })
+    }
+    return () => {
+      allItems.forEach(el => {
+        (el as HTMLElement).style.boxShadow = ""
+          ; (el as HTMLElement).style.transform = ""
+          ; (el as HTMLElement).style.zIndex = ""
+      })
+    }
+  }, [visible, current, pathname])
 
-    // Animate card back in when path matches
-    useEffect(() => {
-        if (pathname === current.path) {
-            setNavigating(false)
-            const t = setTimeout(() => setCardVisible(true), 150)
-            return () => clearTimeout(t)
-        }
-    }, [pathname, current.path])
+  // Animate card back in when path matches
+  useEffect(() => {
+    if (pathname === current.path) {
+      setNavigating(false)
+      const t = setTimeout(() => setCardVisible(true), 150)
+      return () => clearTimeout(t)
+    }
+  }, [pathname, current.path])
 
-    const goToNext = useCallback(() => {
-        if (navigating) return
-        const next = stepIndex + 1
-        if (next >= TOUR_STEPS.length) {
-            setCardVisible(false)
-            setTimeout(() => { setVisible(false); onEnd() }, 350)
-            return
-        }
-        setCardVisible(false)
-        setNavigating(true)
-        setTimeout(() => {
-            setStepIndex(next)
-            router.push(TOUR_STEPS[next].path)
-        }, 300)
-    }, [navigating, stepIndex, router, onEnd])
+  const goToNext = useCallback(() => {
+    if (navigating) return
+    const next = stepIndex + 1
+    if (next >= TOUR_STEPS.length) {
+      setCardVisible(false)
+      setTimeout(() => { setVisible(false); onEnd() }, 350)
+      return
+    }
+    setCardVisible(false)
+    setNavigating(true)
+    setTimeout(() => {
+      setStepIndex(next)
+      router.push(TOUR_STEPS[next].path)
+    }, 300)
+  }, [navigating, stepIndex, router, onEnd])
 
-    if (!visible) return null
+  if (!visible) return null
 
-    const isLast = stepIndex === TOUR_STEPS.length - 1
-    const progressPct = ((stepIndex + 1) / TOUR_STEPS.length) * 100
+  const isLast = stepIndex === TOUR_STEPS.length - 1
+  const progressPct = ((stepIndex + 1) / TOUR_STEPS.length) * 100
 
-    return (
-        <>
-            <style>{`
+  return (
+    <>
+      <style>{`
         @keyframes tour-in {
           from { opacity: 0; transform: translateY(28px) scale(0.96); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -367,95 +378,105 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
         }
       `}</style>
 
-            {/* Blocking backdrop */}
-            <div className="tc-backdrop" />
+      {/* Blocking backdrop */}
+      <div className="tc-backdrop" />
 
-            <div
-                className={`tc ${cardVisible ? "enter" : "exit"}`}
-                style={{
-                    ...PLACEMENTS[(current as any).placement || "center"],
-                    "--tc-color": current.color,
-                    "--tc-color-light": current.color + "99",
-                    "--tc-a": current.color + "40",
-                    "--tc-b": current.color + "70",
-                } as React.CSSProperties}
-            >
-                {/* Progress stripe */}
-                <div className="tc-progress">
-                    <div className="tc-progress-fill" style={{ width: `${progressPct}%` }} />
-                </div>
+      <div
+        className={`tc ${cardVisible ? "enter" : "exit"}`}
+        style={{
+          ...PLACEMENTS[(current as any).placement || "center"],
+          "--tc-color": current.color,
+          "--tc-color-light": current.color + "99",
+          "--tc-a": current.color + "40",
+          "--tc-b": current.color + "70",
+        } as React.CSSProperties}
+      >
+        {/* Progress stripe */}
+        <div className="tc-progress">
+          <div className="tc-progress-fill" style={{ width: `${progressPct}%` }} />
+        </div>
 
-                <div className="tc-body">
-                    {/* Header: mascot + badge + title */}
-                    <div className="tc-header">
-                        <div className="tc-mascot">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src="/hero4.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                        </div>
-
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                            <div className="tc-badge" style={{ color: current.color, background: current.accent, border: `1px solid ${current.color}25` }}>
-                                <span>{current.emoji}</span>
-                                <span>{current.label}</span>
-                                <span style={{ opacity: 0.55, fontSize: "0.9em" }}>{stepIndex + 1}/{TOUR_STEPS.length}</span>
-                            </div>
-                            <h3 className="tc-title">{current.title}</h3>
-                        </div>
-                    </div>
-
-                    {/* Description */}
-                    <p className="tc-desc">{current.description}</p>
-
-                    {/* Footer: dots + navigation */}
-                    <div className="tc-footer">
-                        {/* Step dots */}
-                        <div className="tc-dots">
-                            {TOUR_STEPS.map((_, i) => (
-                                <div
-                                    key={i}
-                                    className="tc-dot"
-                                    style={{
-                                        background: i === stepIndex ? current.color : i < stepIndex ? "#cbd5e1" : "#e9edf2",
-                                        width: i === stepIndex ? 20 : 5,
-                                    }}
-                                />
-                            ))}
-                        </div>
-
-                        {/* Buttons */}
-                        <div className="tc-actions">
-                            {stepIndex > 0 && (
-                                <button
-                                    className="tc-btn tc-btn-prev"
-                                    onClick={() => {
-                                        setCardVisible(false)
-                                        setNavigating(true)
-                                        setTimeout(() => {
-                                            setStepIndex(stepIndex - 1)
-                                            router.push(TOUR_STEPS[stepIndex - 1].path)
-                                        }, 280)
-                                    }}
-                                >
-                                    ← Anterior
-                                </button>
-                            )}
-                            <button
-                                className="tc-btn tc-btn-next"
-                                onClick={goToNext}
-                                disabled={navigating}
-                                style={{
-                                    background: `linear-gradient(135deg, ${current.color}, ${current.color}cc)`,
-                                    boxShadow: `0 4px 14px ${current.color}40`,
-                                    opacity: navigating ? 0.7 : 1,
-                                    cursor: navigating ? "not-allowed" : "pointer"
-                                }}
-                            >
-                                {navigating ? "..." : isLast ? "¡Comenzar! 🚀" : "Siguiente →"}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+        <div className="tc-body">
+          {/* Header: mascot + badge + title */}
+          <div className="tc-header">
+            <div className="tc-mascot">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/hero4.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             </div>
-        </>
-    )
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="tc-badge" style={{ color: current.color, background: current.accent, border: `1px solid ${current.color}25` }}>
+                {current.icon && <current.icon size={14} color={current.color} />}
+                <span>{current.label}</span>
+                <span style={{ opacity: 0.55, fontSize: "0.9em" }}>{stepIndex + 1}/{TOUR_STEPS.length}</span>
+              </div>
+              <h3 className="tc-title">{current.title}</h3>
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="tc-desc">{current.description}</p>
+
+          {/* Footer: dots + navigation */}
+          <div className="tc-footer">
+            {/* Step dots */}
+            <div className="tc-dots">
+              {TOUR_STEPS.map((_, i) => (
+                <div
+                  key={i}
+                  className="tc-dot"
+                  style={{
+                    background: i === stepIndex ? current.color : i < stepIndex ? "#cbd5e1" : "#e9edf2",
+                    width: i === stepIndex ? 20 : 5,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Buttons */}
+            <div className="tc-actions">
+              {stepIndex > 0 && (
+                <button
+                  className="tc-btn tc-btn-prev"
+                  onClick={() => {
+                    setCardVisible(false)
+                    setNavigating(true)
+                    setTimeout(() => {
+                      setStepIndex(stepIndex - 1)
+                      router.push(TOUR_STEPS[stepIndex - 1].path)
+                    }, 280)
+                  }}
+                >
+                  Anterior
+                </button>
+              )}
+              <button
+                className="tc-btn tc-btn-next"
+                onClick={goToNext}
+                disabled={navigating}
+                style={{
+                  background: `linear-gradient(135deg, ${current.color}, ${current.color}cc)`,
+                  boxShadow: `0 4px 14px ${current.color}40`,
+                  opacity: navigating ? 0.7 : 1,
+                  cursor: navigating ? "not-allowed" : "pointer"
+                }}
+              >
+                {navigating ? "..." : isLast ? (
+                  <>
+                    ¡Comenzar!
+                    <RocketIcon size={16} color="white" style={{ marginLeft: 6 }} />
+                  </>
+                ) : (
+                  <>
+                    Siguiente
+                    <ChevronRightIcon size={16} color="white" style={{ marginLeft: 2 }} />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }

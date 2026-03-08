@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/AuthContext"
-import { SchoolIcon, CakeIcon, PartyIcon } from "@/components/CustomIcons"
+import { SchoolIcon, CakeIcon, PartyIcon, RocketIcon } from "@/components/CustomIcons"
 
 // ─── Avatar Options ───────────────────────────────────────────────────────────
 
@@ -353,11 +353,11 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                             {/* Badge */}
                             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, rgba(15,98,254,0.1), rgba(99,102,241,0.1))", border: "1px solid rgba(15,98,254,0.2)", borderRadius: 99, padding: "5px 16px", marginBottom: "clamp(12px,3vw,18px)" }}>
-                                <span style={{ fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 800, color: "#0F62FE", letterSpacing: "0.06em", textTransform: "uppercase" }}>👋 Bienvenido a BIZEN</span>
+                                <span style={{ fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 800, color: "#0F62FE", letterSpacing: "0.06em", textTransform: "uppercase" }}>Bienvenido a BIZEN</span>
                             </div>
 
                             <h1 style={{ fontSize: "clamp(20px,5vw,28px)", fontWeight: 900, color: "#0f172a", margin: "0 0 clamp(8px,2vw,12px)", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-                                Hola, <span style={{ color: "#0F62FE" }}>{profileName}</span> 👋
+                                Hola, <span style={{ color: "#0F62FE" }}>{profileName}</span>
                             </h1>
                             <p style={{ fontSize: "clamp(13px,3.5vw,15px)", color: "#64748b", margin: "0 0 6px", lineHeight: 1.75 }}>
                                 Antes de explorar la plataforma, vamos a configurar tu perfil. Solo toma un minuto.
@@ -613,7 +613,10 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                         Guardando...
                                     </>
                                 ) : (
-                                    "¡Guardar y ver el tour 🚀!"
+                                    <>
+                                        ¡Guardar y ver el tour!
+                                        <RocketIcon size={18} color="white" />
+                                    </>
                                 )}
                             </button>
                             {!birthDate && (
