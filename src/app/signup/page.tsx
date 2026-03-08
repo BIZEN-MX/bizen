@@ -43,9 +43,11 @@ function BIZENSignupContent() {
       "Password should be at least 6 characters": "La contraseña debe tener al menos 6 caracteres.",
       "Invalid email": "Email inválido.",
       "Signup is disabled": "El registro está deshabilitado temporalmente.",
+      "rate limit": "Demasiados intentos. Por favor espera unos minutos.",
+      "too many requests": "Demasiados intentos. Por favor espera unos minutos.",
     }
     for (const [en, es] of Object.entries(errorTranslations)) {
-      if (errorMessage.includes(en)) return es
+      if (errorMessage.toLowerCase().includes(en.toLowerCase())) return es
     }
     if (errorMessage.includes("fetch") || errorMessage.includes("Network")) return "Sin conexión. Revisa tu internet."
     return `Error: ${errorMessage}`

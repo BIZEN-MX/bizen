@@ -37,11 +37,12 @@ function BIZENLoginContent() {
     const errorTranslations: Record<string, string> = {
       "Invalid login credentials": "Credenciales inválidas. Verifica tu email y contraseña.",
       "Email not confirmed": "Email no confirmado. Revisa tu correo.",
-      "Too many requests": "Demasiados intentos. Espera un momento.",
+      "Too many requests": "Demasiados intentos. Por favor espera unos minutos.",
+      "rate limit": "Demasiados intentos. Por favor espera unos minutos.",
       "User not found": "Usuario no encontrado.",
     }
     for (const [en, es] of Object.entries(errorTranslations)) {
-      if (errorMessage.includes(en)) return es
+      if (errorMessage.toLowerCase().includes(en.toLowerCase())) return es
     }
     if (errorMessage.includes("fetch") || errorMessage.includes("Network")) {
       return "Sin conexión. Revisa tu internet."
