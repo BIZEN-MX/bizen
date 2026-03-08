@@ -136,6 +136,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     }
 
     const profileName = user?.user_metadata?.full_name?.split(" ")[0] || "nuevo estudiante"
+
+    const emailForRole = user?.email?.toLowerCase() || ''
+    const isInstitutional = emailForRole.endsWith('.edu') || emailForRole.includes('.edu.')
+    const stepList = isInstitutional
+        ? ["welcome", "avatar", "username", "school", "birthday"]
+        : ["welcome", "avatar", "username", "birthday"]
+    const totalSteps = stepList.length - 1 // excluding welcome
+
     const getProgressPct = () => {
         if (step === "welcome") return 0
         if (step === "avatar") return isInstitutional ? 25 : 33
@@ -155,13 +163,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--
         return age
     }
-
-    const emailForRole = user?.email?.toLowerCase() || ''
-    const isInstitutional = emailForRole.endsWith('.edu') || emailForRole.includes('.edu.')
-    const stepList = isInstitutional
-        ? ["welcome", "avatar", "username", "school", "birthday"]
-        : ["welcome", "avatar", "username", "birthday"]
-    const totalSteps = stepList.length - 1 // excluding welcome
 
     return (
         <>
