@@ -15,7 +15,8 @@ const PUBLIC_PATHS = [
   "/bizen/", "/payment", "/auth/", "/impacto-social"
 ]
 
-function isPublicPath(p: string) {
+function isPublicPath(p: string | null) {
+  if (!p) return false;
   return PUBLIC_PATHS.some(pub => p === pub || p.startsWith(pub))
 }
 

@@ -64,7 +64,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     useEffect(() => {
         fetch("/api/schools")
             .then(res => res.json())
-            .then(data => setSchools(data || []))
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setSchools(data)
+                } else {
+                    console.error("Received non-array schools data:", data)
+                    setSchools([])
+                }
+            })
             .catch(err => console.error("Error loading schools in onboarding:", err))
     }, [])
 
@@ -486,7 +493,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                     required
                                 >
                                     <option value="" disabled>Selecciona tu escuela...</option>
-                                    {schools.map(s => (
+                                    {Array.isArray(schools) && schools.map(s => (
                                         <option key={s.id} value={s.id}>{s.name}</option>
                                     ))}
                                 </select>

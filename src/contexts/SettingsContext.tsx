@@ -130,8 +130,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (isInitialized && dbProfile?.settings && Object.keys(dbProfile.settings).length > 0) {
       console.log('🔄 Syncing settings from DB profile...');
-      setSettings(prev => ({ ...prev, ...dbProfile.settings }));
-      localStorage.setItem('bizen_settings', JSON.stringify({ ...settings, ...dbProfile.settings }));
+      const mergedSettings = { ...settings, ...dbProfile.settings };
+      setSettings(mergedSettings);
+      localStorage.setItem('bizen_settings', JSON.stringify(mergedSettings));
     }
   }, [dbProfile?.settings, isInitialized])
 

@@ -18,7 +18,8 @@ const PUBLIC_PATHS = [
   "/impacto-social", // has its own unauthenticated landing
 ]
 
-function isPublicPath(pathname: string) {
+function isPublicPath(pathname: string | null) {
+  if (!pathname) return false;
   return PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith(p))
 }
 
