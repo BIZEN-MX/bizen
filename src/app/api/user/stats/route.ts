@@ -37,8 +37,8 @@ export async function GET() {
         }
       })
     } catch (e: any) {
-      console.error("DB Error (profile fetch):", e.message);
-      throw new Error(`Failed to fetch profile: ${e.message}`);
+      console.warn("API User Stats Warning - DB profile fetch failed, using fallback:", e.message);
+      // Do not throw, leaving profile = null
     }
 
     if (!profile) {
