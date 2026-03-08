@@ -247,11 +247,12 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
 }
 
 // --- Main SummaryStep ---
-export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
+export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStepProps & { actionTrigger?: number }) {
   const { dbProfile, user } = useAuth()
   const stars: 0 | 1 | 2 | 3 = (step as any).starsEarned ?? 3
+  const [phase, setPhase] = useState<'celebration' | 'xp'>('celebration')
 
-  // Snapshot XP on mount so it doesn't jump if AuthContext updates in the background
+  // Snapshot XP on mount
   const [xpSnapshot, setXpSnapshot] = useState<number | null>(null)
 
   useEffect(() => {
@@ -260,7 +261,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
     }
   }, [dbProfile])
 
-  // XP calculation logic matched to backend (Improvement rule)
+  // XP calculation logic
   const lessonIdStr = step.id
   const prevStars = (user?.user_metadata?.lessonStars?.[lessonIdStr] ?? 0) as 0 | 1 | 2 | 3
   const isRepeated = (step as any).isRepeat ?? false
@@ -269,17 +270,28 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
     ? (stars * XP_PER_STAR)
     : Math.max(0, (stars - prevStars) * XP_PER_STAR)
 
-  // Confetti fires once on mount — only if stars > 0
+  // Confetti helper
   const [confettiActive, setConfettiActive] = useState(false)
   const canvasRef = useConfetti(confettiActive)
 
   useEffect(() => {
-    onAnswered({ isCompleted: true })
+    // Phase 1 (Celebration) is initially NOT "completed" to allow footer to say "Continuar"
+    // and wait for user action to go to XP phase
+    onAnswered({ isCompleted: false, canAction: true })
+
     if (stars > 0) {
       const t = setTimeout(() => setConfettiActive(true), 300)
       return () => clearTimeout(t)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Handle phase transition when lesson engine triggers action
+  useEffect(() => {
+    if (actionTrigger > 0 && phase === 'celebration') {
+      setPhase('xp')
+      onAnswered({ isCompleted: true }) // Now it's completed, footer says "Finalizar"
+    }
+  }, [actionTrigger, phase, onAnswered])
 
   const starMessages: Record<0 | 1 | 2 | 3, string> = {
     3: "¡Excelente trabajo! 🎯",
@@ -289,7 +301,7 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
   }
 
   return (
-    <div style={{ position: "relative", width: "100%" }}>
+    <div style={{ position: "relative", width: "100%", minHeight: "clamp(300px, 60vh, 500px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
       {/* Confetti canvas */}
       <canvas
         ref={canvasRef}
@@ -303,145 +315,197 @@ export function SummaryStep({ step, onAnswered }: SummaryStepProps) {
         }}
       />
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-          gap: 24,
-          padding: "16px 0 32px",
-          fontFamily: "'Montserrat', sans-serif",
-        }}
-      >
-        {/* Celebration image */}
-        <motion.div
-          initial={{ scale: 0, rotate: -15 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
-          style={{ position: "relative" }}
-        >
-          <div style={{
-            position: "absolute", inset: -20,
-            background: "radial-gradient(circle, rgba(15,98,254,0.18) 0%, transparent 70%)",
-            borderRadius: "50%", filter: "blur(24px)", pointerEvents: "none",
-          }} />
-          <img
-            src={(step as any).imageUrl || "/Lección%20completada.png"}
-            alt="Lección completada"
+      <AnimatePresence mode="wait">
+        {phase === 'celebration' ? (
+          <motion.div
+            key="celebration"
+            initial={{ opacity: 0, scale: 0.96, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -10 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              width: "clamp(120px, 28vw, 200px)",
-              height: "auto",
-              objectFit: "contain",
-              position: "relative",
-              zIndex: 1,
-              filter: "drop-shadow(0 12px 32px rgba(15,98,254,0.25))",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              gap: 24,
+              padding: "16px 0 32px",
             }}
-          />
-        </motion.div>
-
-        {/* Title */}
-        <motion.h2
-          initial={{ y: -12, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.25 }}
-          style={{
-            fontSize: "clamp(22px, 5vw, 34px)",
-            fontWeight: 900,
-            background: "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            margin: 0,
-            lineHeight: 1.2,
-            fontFamily: "'Inter', sans-serif",
-          }}
-        >
-          {step.title}
-        </motion.h2>
-
-        {/* ⭐ Stars row */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}
-        >
-          <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-            {[1, 2, 3].map((i) => (
-              <AnimatedStar
-                key={i}
-                filled={i <= stars}
-                delay={0.5 + i * 0.22}
-                size={54}
-              />
-            ))}
-          </div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3 }}
-            style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#6B7280", fontFamily: "'Inter', sans-serif" }}
           >
-            {starMessages[stars]}
-          </motion.p>
-        </motion.div>
+            {/* Celebration image */}
+            <motion.div
+              initial={{ scale: 0, rotate: -15 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+              style={{ position: "relative" }}
+            >
+              <div style={{
+                position: "absolute", inset: -20,
+                background: "radial-gradient(circle, rgba(15,98,254,0.18) 0%, transparent 70%)",
+                borderRadius: "50%", filter: "blur(24px)", pointerEvents: "none",
+              }} />
+              <img
+                src={(step as any).imageUrl || "/Lección%20completada.png"}
+                alt="Lección completada"
+                style={{
+                  width: "clamp(140px, 32vw, 220px)",
+                  height: "auto",
+                  objectFit: "contain",
+                  position: "relative",
+                  zIndex: 1,
+                  filter: "drop-shadow(0 12px 32px rgba(15,98,254,0.25))",
+                }}
+              />
+            </motion.div>
 
-        {/* 🏆 XP Reward block */}
-        {xpEarned > 0 ? (
-          <div style={{ width: "100%", maxWidth: 380, padding: "0 16px", boxSizing: "border-box" }}>
-            <XPBar
-              initialXP={xpSnapshot ?? dbProfile?.xp ?? 0}
-              xpEarned={xpEarned}
-              delay={900}
-            />
-          </div>
+            {/* Title */}
+            <motion.h2
+              initial={{ y: -12, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.25 }}
+              style={{
+                fontSize: "clamp(24px, 6vw, 38px)",
+                fontWeight: 900,
+                background: "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                margin: 0,
+                lineHeight: 1.2,
+                fontFamily: "'Inter', sans-serif",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {step.title || "¡Lección completada!"}
+            </motion.h2>
+
+            {/* ⭐ Stars row */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}
+            >
+              <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+                {[1, 2, 3].map((i) => (
+                  <AnimatedStar
+                    key={i}
+                    filled={i <= stars}
+                    delay={0.5 + i * 0.22}
+                    size={64}
+                  />
+                ))}
+              </div>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.3 }}
+                style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#6B7280", fontFamily: "'Inter', sans-serif" }}
+              >
+                {starMessages[stars]}
+              </motion.p>
+            </motion.div>
+
+            {/* Body text */}
+            {step.body && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5 }}
+                style={{
+                  fontSize: "clamp(14px, 1.8vw, 16px)",
+                  color: "#6B7280",
+                  lineHeight: 1.6,
+                  fontWeight: 500,
+                  maxWidth: 440,
+                  padding: "0 16px",
+                  fontFamily: "'Inter', sans-serif",
+                }}
+              >
+                {step.body.split("\n\n").map((line, i) => (
+                  <p key={i} style={{ margin: "0 0 8px" }}>{line}</p>
+                ))}
+              </motion.div>
+            )}
+          </motion.div>
         ) : (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.9 }}
+            key="xp"
+            initial={{ opacity: 0, scale: 0.96, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              background: "linear-gradient(135deg, #f8fafc, #e2e8f0)",
-              borderRadius: 16,
-              padding: "16px 24px",
-              textAlign: "center",
-              border: "2px dashed #94a3b8",
-              maxWidth: 340,
+              width: "100%",
+              maxWidth: 420,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 32,
             }}
           >
-            <div style={{ fontSize: 28 }}>😅</div>
-            <p style={{ margin: "8px 0 0", fontSize: 14, fontWeight: 700, color: "#64748b", fontFamily: "'Inter', sans-serif" }}>
-              Sin XP esta vez — ¡intenta no cometer errores!
+            {/* Icon for XP slide */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 280, damping: 20 }}
+              style={{
+                width: 80, height: 80,
+                borderRadius: 24,
+                background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 8px 32px rgba(15,98,254,0.3)",
+              }}
+            >
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            </motion.div>
+
+            <h2 style={{
+              fontSize: 28,
+              fontWeight: 900,
+              color: "#0f172a",
+              margin: 0,
+              fontFamily: "'Montserrat', sans-serif",
+            }}>
+              Tu progreso actual
+            </h2>
+
+            {/* 🏆 XP Reward block */}
+            {xpEarned > 0 ? (
+              <div style={{ width: "100%", padding: "0 16px", boxSizing: "border-box" }}>
+                <XPBar
+                  initialXP={xpSnapshot ?? dbProfile?.xp ?? 0}
+                  xpEarned={xpEarned}
+                  delay={200}
+                />
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                style={{
+                  background: "linear-gradient(135deg, #f8fafc, #e2e8f0)",
+                  borderRadius: 20,
+                  padding: "24px",
+                  textAlign: "center",
+                  border: "2px dashed #94a3b8",
+                  width: "100%",
+                }}
+              >
+                <div style={{ fontSize: 32, marginBottom: 8 }}>😅</div>
+                <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#64748b", fontFamily: "'Inter', sans-serif" }}>
+                  Sin XP esta vez — ¡intenta no cometer errores!
+                </p>
+              </motion.div>
+            )}
+
+            <p style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8", textAlign: "center", padding: "0 20px" }}>
+              Cada lección completada te acerca más a tu libertad financiera.
             </p>
           </motion.div>
         )}
-
-        {/* Body text */}
-        {step.body && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.8 }}
-            style={{
-              fontSize: "clamp(13px, 1.6vw, 15px)",
-              color: "#6B7280",
-              lineHeight: 1.7,
-              fontWeight: 500,
-              maxWidth: 440,
-              padding: "0 16px",
-              fontFamily: "'Inter', sans-serif",
-            }}
-          >
-            {step.body.split("\n\n").map((line, i) => (
-              <p key={i} style={{ margin: "0 0 8px", fontFamily: "'Inter', sans-serif" }}>{line}</p>
-            ))}
-          </motion.div>
-        )}
-      </motion.div>
+      </AnimatePresence>
     </div>
   )
 }

@@ -651,13 +651,11 @@ export default function CoursesPage() {
         @keyframes topic-glow-pulse {
           0%, 100% { 
             box-shadow: 0 4px 20px rgba(15,98,254,0.08); 
-            transform: scale(1);
             border-color: rgba(15,98,254,0.1);
           }
           50% { 
-            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15); 
-            transform: scale(1.02);
-            border-color: rgba(37, 99, 235, 0.3);
+            box-shadow: 0 10px 32px rgba(37, 99, 235, 0.18), 0 0 0 1px rgba(37, 99, 235, 0.15); 
+            border-color: rgba(37, 99, 235, 0.45);
           }
         }
         .next-topic-glow {

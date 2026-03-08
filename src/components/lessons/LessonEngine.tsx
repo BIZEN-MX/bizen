@@ -301,7 +301,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       // Per user request: If incorrect, show "Siguiente" unless it's the last slide (where we must retry)
       return isLastStep ? "Intentar de nuevo" : "Siguiente"
     }
-    if (isSummaryStep || (isLastStep && isCorrect)) return "Avanzar"
+    if (isSummaryStep) {
+      return state.isContinueEnabled ? "Finalizar" : "Continuar"
+    }
+    if (isLastStep && isCorrect) return "Finalizar"
     if (!state.isContinueEnabled) {
       if (currentStep.stepType === "info") return "Continuar"
       if (isAssessment) return "Comprobar"
@@ -680,9 +683,12 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             animation: arrowBounceLoop 1.2s infinite ease-in-out;
           }
 
-          @media (max-width: 1200px) {
+          @media (max-width: 1024px) {
+            .recall-mascot-wrap {
+              display: none !important;
+            }
             .recall-widget-container {
-              flex-direction: row !important; /* Changed to normal row to have Arrow -> Button -> Mascot */
+              flex-direction: row !important;
               align-items: center !important;
               gap: 8px !important;
               bottom: clamp(75px, 10vh, 82px) !important;
@@ -691,22 +697,31 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             }
             .recall-button {
               margin-bottom: 0 !important;
-              padding: clamp(10px, 1.2vw, 14px) clamp(16px, 2vw, 24px) !important;
-              font-size: clamp(13px, 1.5vw, 15px) !important;
-            }
-            .recall-mascot-wrap {
-              margin-top: 0 !important;
-              width: clamp(100px, 15vw, 160px) !important;
-            }
-            .recall-mascot-wrap img {
-              width: 100% !important;
+              padding: 10px 18px !important;
+              font-size: 14px !important;
             }
             .recall-arrow {
               display: block !important;
-              transform: rotate(-90deg) !important; /* Point right towards the button */
+              transform: rotate(-90deg) !important;
               animation: arrowBounceSide 1.2s infinite ease-in-out !important;
               margin-right: -4px !important;
               flex-shrink: 0;
+            }
+          }
+
+          @media (max-width: 640px) {
+            .lesson-step-transition {
+              padding: clamp(4px, 2vw, 8px) 16px 100px !important;
+            }
+            .recall-widget-container {
+              bottom: 82px !important;
+            }
+            .recall-button span {
+              display: none;
+            }
+            .recall-button {
+              padding: 12px !important;
+              border-radius: 50% !important;
             }
           }
 

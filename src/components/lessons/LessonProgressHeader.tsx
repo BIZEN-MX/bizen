@@ -32,7 +32,7 @@ export function LessonProgressHeader({
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 20,
+        gap: "clamp(8px, 4vw, 20px)",
         width: "100%",
         boxSizing: "border-box",
         flexShrink: 0,
@@ -52,19 +52,20 @@ export function LessonProgressHeader({
             justifyContent: "center",
             color: "#94a3b8",
             transition: "color 0.2s ease",
+            flexShrink: 0,
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = "#475569")}
           onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
           aria-label="Salir de la lección"
         >
-          <X size={24} strokeWidth={2.5} />
+          <X style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
         </button>
       )}
       {/* Progress bar — slim, Duolingo-inspired */}
       <div
         style={{
           flex: 1,
-          height: 16,
+          height: "clamp(10px, 3vw, 16px)",
           borderRadius: 999,
           background: "#F3F4F6",
           overflow: "hidden",
@@ -113,7 +114,7 @@ export function LessonProgressHeader({
             flexShrink: 0,
             display: "flex",
             alignItems: "center",
-            gap: 4,
+            gap: "clamp(2px, 1vw, 4px)",
           }}
           role="img"
           aria-label={`${stars} de 3 estrellas`}
@@ -121,7 +122,7 @@ export function LessonProgressHeader({
           {[1, 2, 3].map((i) => (
             <StarIcon
               key={i}
-              size={22}
+              size={18} // Fixed smaller size for better fit on all devices
               filled={i <= stars}
             />
           ))}

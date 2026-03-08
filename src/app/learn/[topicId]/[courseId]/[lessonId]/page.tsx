@@ -7,9 +7,9 @@ import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
 import { motion, AnimatePresence } from "framer-motion"
 
 export default function LessonPage() {
+    const { user, refreshUser } = useAuth()
     const router = useRouter()
     const params = useParams()
-    const { user } = useAuth()
 
     const topicIdStr = (params.topicId as string) || "1"
     const courseIdStr = (params.courseId as string) || "1"
@@ -97,6 +97,9 @@ export default function LessonPage() {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
                     })
+
+                    // 3. Sync the global AuthContext state so XP shows up immediately
+                    await refreshUser()
                 } catch (err) {
                     console.error("Error in completion save:", err)
                 }
@@ -113,12 +116,10 @@ export default function LessonPage() {
             }
         }
 
-        // Redirect back to topic page
-        setTimeout(() => {
-            const topicNum = topicIdStr.replace(/^topic-|course-/, "") || "1"
-            router.replace(`/courses/${topicNum}`)
-        }, 3200)
-    }, [lessonIdStr, user, router, topicIdStr])
+        // Redirect back to topic page after finishing the lesson
+        const topicNum = topicIdStr.replace(/^topic-|course-/, "") || "1"
+        router.push(`/courses/${topicNum}`)
+    }, [lessonIdStr, user, refreshUser, router, topicIdStr])
 
     const handleExit = () => {
         router.push(`/courses/${topicIdStr.replace(/^topic-|course-/, "") || "1"}`)
