@@ -439,6 +439,7 @@ export default function ForumProfilePage() {
                   <StreakWidget
                     streak={profile.currentStreak || 0}
                     showCalendar={true}
+                    hideCalendarOnMobile={true}
                     activeDays={profile.weeklyActiveDays || []}
                     containerStyle={{ width: "100%" }}
                     badgeStyle={{

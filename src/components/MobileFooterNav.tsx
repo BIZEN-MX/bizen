@@ -16,7 +16,8 @@ import {
   Heart,
   LogIn,
   Target,
-  BarChart2
+  BarChart2,
+  Trophy
 } from "lucide-react"
 
 export default function MobileFooterNav() {
@@ -394,6 +395,32 @@ export default function MobileFooterNav() {
                 >
                   <Star size={20} color="#0F62FE" />
                   <span>Mis Puntos</span>
+                </button>
+              )}
+
+              {isStudentOrGuest && (
+                <button
+                  onClick={() => {
+                    setShowProfilePanel(false)
+                    navigateTo("/rankings")
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "16px",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    color: "#0f172a",
+                    width: "100%",
+                    textAlign: "left"
+                  }}
+                >
+                  <Trophy size={20} color="#0F62FE" />
+                  <span>Rankings</span>
                 </button>
               )}
 

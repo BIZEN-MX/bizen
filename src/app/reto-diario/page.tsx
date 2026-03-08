@@ -496,7 +496,7 @@ export default function RetoDiarioPage() {
                 </div>
 
                 {/* Streak badge + Weekly Calendar */}
-                <StreakWidget streak={streak} showCalendar activeDays={weeklyActiveDays} />
+                <StreakWidget streak={streak} showCalendar hideCalendarOnMobile activeDays={weeklyActiveDays} />
               </div>
 
               {/* ── Challenge hero card ── */}

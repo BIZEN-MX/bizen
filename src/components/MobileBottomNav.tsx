@@ -20,7 +20,8 @@ import {
   UserPlus,
   MoreHorizontal,
   LogIn,
-  BarChart2
+  BarChart2,
+  Trophy
 } from "lucide-react"
 
 export default function MobileBottomNav() {
@@ -138,6 +139,13 @@ export default function MobileBottomNav() {
         label: "Mis Puntos",
         icon: Star,
         path: "/puntos",
+        protected: true
+      },
+      {
+        id: "rankings",
+        label: "Rankings",
+        icon: Trophy,
+        path: "/rankings",
         protected: true
       },
       {

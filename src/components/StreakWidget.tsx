@@ -8,6 +8,8 @@ interface StreakWidgetProps {
     showCalendar?: boolean
     /** Array of ISO date strings (YYYY-MM-DD) for days the user was active this week */
     activeDays?: string[]
+    /** If true, hides the weekly calendar on mobile screens (<768px) and fixes the badge borders */
+    hideCalendarOnMobile?: boolean
     containerStyle?: React.CSSProperties
     badgeStyle?: React.CSSProperties
     iconStyle?: React.CSSProperties
@@ -46,6 +48,7 @@ export default function StreakWidget({
     streak,
     showCalendar = false,
     activeDays = [],
+    hideCalendarOnMobile = false,
     containerStyle = {},
     badgeStyle = {},
     iconStyle = {},
@@ -60,9 +63,9 @@ export default function StreakWidget({
     const activeSet = new Set(activeDays)
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: 0, ...containerStyle }}>
+        <div className={hideCalendarOnMobile ? "mobile-streak-hide-calendar" : ""} style={{ display: "flex", flexDirection: "column", gap: 0, ...containerStyle }}>
             {/* ── Streak Badge ── */}
-            <div style={{
+            <div className="streak-badge" style={{
                 display: "flex", alignItems: "center", gap: 10,
                 padding: "12px 18px",
                 background: "linear-gradient(135deg, #fffaf5 0%, #fff7ed 100%)",
@@ -108,7 +111,7 @@ export default function StreakWidget({
 
             {/* ── Weekly Calendar (only when showCalendar=true) ── */}
             {showCalendar && (
-                <div style={{
+                <div className="streak-calendar-row" style={{
                     background: "linear-gradient(135deg, #fff7ed 0%, #fffaf5 100%)",
                     border: "2px solid rgba(249,115,22,0.25)",
                     borderTop: "none",
@@ -186,6 +189,15 @@ export default function StreakWidget({
             <style>{`
         @keyframes streakFloat { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
         @keyframes streakGlow  { 0%,100% { text-shadow: 0 0 10px rgba(249,115,22,0.3) } 50% { text-shadow: 0 0 20px rgba(249,115,22,0.6) } }
+        
+        @media (max-width: 767px) {
+            .mobile-streak-hide-calendar .streak-calendar-row { display: none !important; }
+            .mobile-streak-hide-calendar .streak-badge { 
+                border-radius: 20px !important; 
+                border-bottom: 2px solid rgba(249,115,22,0.25) !important;
+                box-shadow: 0 8px 20px rgba(249,115,22,0.12) !important;
+            }
+        }
       `}</style>
         </div>
     )
