@@ -65,7 +65,13 @@ function BIZENSignupContent() {
       })
       if (error) throw error
       setMessage("¡Cuenta creada con éxito! Redirigiendo...")
-      setTimeout(() => router.push("/diagnostic"), 2000)
+
+      const emailLower = email.toLowerCase()
+      const isInstitutional = emailLower.endsWith('.edu') || emailLower.includes('.edu.')
+
+      setTimeout(() => {
+        router.push(isInstitutional ? "/diagnostic" : "/courses")
+      }, 2000)
     } catch (err: unknown) {
       setMessage(translateAuthError(err instanceof Error ? err.message : "Error al crear cuenta"))
     } finally {

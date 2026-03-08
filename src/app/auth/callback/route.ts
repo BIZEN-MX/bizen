@@ -86,33 +86,42 @@ export async function GET(request: Request) {
     }
 
     // If user has school with active license, set paywall bypass cookie
-    let redirectUrl = `${origin}/courses?verified=true&t=${Date.now()}`;
+    const emailLower = data.user?.email?.toLowerCase() || "";
+    const isInstitutional = emailLower.endsWith('.edu') || emailLower.includes('.edu.');
+    const onboardingComplete = data.user?.user_metadata?.onboarding_complete === true;
+
+    let redirectUrl = (isInstitutional && !onboardingComplete)
+      ? `${origin}/diagnostic?verified=true&t=${Date.now()}`
+      : `${origin}/courses?verified=true&t=${Date.now()}`;
     try {
       const profile = await prisma.profile.findUnique({
-        where: { userId: data.user!.id },
-        include: {
-          school: {
-            include: {
-              licenses: {
-                where: {
-                  status: 'active',
-                  endDate: { gt: new Date() }
-                },
-                take: 1
-              }
+        where: { userId: data.user!.id }
+      });
+
+      if (profile?.schoolId) {
+        const schoolWithLicense = await prisma.school.findUnique({
+          where: { id: profile.schoolId },
+          include: {
+            licenses: {
+              where: {
+                status: 'active',
+                endDate: { gt: new Date() }
+              },
+              take: 1
             }
           }
-        }
-      });
-      const hasActiveLicense = profile?.school?.licenses?.length && profile.school.licenses.length > 0;
-      if (hasActiveLicense) {
-        cookieStore.set('bizen_has_access', '1', {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365,
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
         });
+
+        const hasActiveLicense = schoolWithLicense?.licenses?.length && schoolWithLicense.licenses.length > 0;
+        if (hasActiveLicense) {
+          cookieStore.set('bizen_has_access', '1', {
+            path: '/',
+            maxAge: 60 * 60 * 24 * 365,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+          });
+        }
       }
     } catch (e) {
       console.warn('Auth callback: could not check school license:', e);
