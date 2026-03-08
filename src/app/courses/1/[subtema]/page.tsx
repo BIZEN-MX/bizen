@@ -32,7 +32,7 @@ export default function Tema1SubtemaPage() {
   // Premium Access
   const hasActiveLicense = !!dbProfile?.school?.licenses?.length
   const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
-  const isInstitutional = !!dbProfile?.schoolId || dbProfile?.role === 'institucional'
+  const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular')
   const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isInstitutional
 
   const subtema = subtemaIndex != null ? TEMA1_SUBTEMAS[subtemaIndex] : null

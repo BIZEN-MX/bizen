@@ -128,7 +128,7 @@ export default function CoursePageTemplate({
     // Access check
     const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
     const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
-    const isInstitutional = !!dbProfile?.schoolId || dbProfile?.role === 'institucional'
+    const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular')
     const hasPremiumAccess = hasActiveStripe || hasActiveLicense || isInstitutional
 
     React.useEffect(() => {

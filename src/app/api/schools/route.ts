@@ -9,7 +9,8 @@ export async function GET() {
     })
     return NextResponse.json(schools)
   } catch (err) {
-    console.error('Error fetching schools:', err)
-    return NextResponse.json({ error: 'Failed to fetch schools' }, { status: 500 })
+    console.error('API Schools Error - Failed to fetch schools, returning empty array:', err)
+    // Return empty array to prevent UI crashing on select components
+    return NextResponse.json([], { status: 200 })
   }
 }

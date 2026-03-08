@@ -77,7 +77,7 @@ export default function CoursesPage() {
   // Calcule premium access based on Profile API data
   const hasActiveLicense = !!dbProfile?.school?.licenses?.length;
   const hasActiveStripe = dbProfile?.subscriptionStatus === 'active';
-  const isInstitutional = !!dbProfile?.schoolId || dbProfile?.role === 'institucional';
+  const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular');
   const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isInstitutional;
 
   const completedCount = completedLessons.length

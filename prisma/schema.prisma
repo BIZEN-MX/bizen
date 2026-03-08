@@ -19,6 +19,7 @@ model School {
   cycleGoals    SchoolCycleGoal[]
   schoolImpacts SchoolImpact[]
   schoolTopics  SchoolTopic[]
+  profiles      Profile[]
 
   @@map("schools")
   @@schema("public")
@@ -98,6 +99,7 @@ model Profile {
   forumNotifications   ForumNotification[] @relation("ForumNotifications")
   forumUserBadges      ForumUserBadge[]    @relation("ForumUserBadges")
   inventory            UserInventoryItem[] @relation("ProfileInventory")
+  school               School?             @relation(fields: [schoolId], references: [id], onDelete: SetNull)
 
   @@index([schoolId], map: "idx_profiles_school")
   @@map("profiles")

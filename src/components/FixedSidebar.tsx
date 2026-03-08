@@ -279,9 +279,7 @@ export default function FixedSidebar() {
         }}>
         <div style={{ padding: "24px 20px 0 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", minHeight: "100%" }} className="sidebar-inner-container">
           {/* Bizen logo and brand name */}
-          <button
-            type="button"
-            onClick={() => router.push("/")}
+          <div
             style={{
               display: "flex",
               alignItems: "center",
@@ -290,7 +288,7 @@ export default function FixedSidebar() {
               padding: "12px 0",
               background: "transparent",
               border: "none",
-              cursor: "pointer",
+              cursor: "default",
               textAlign: "center",
               width: "100%"
             }}
@@ -422,7 +420,7 @@ export default function FixedSidebar() {
                 )
               })()}
             </span>
-          </button>
+          </div>
 
           {/* Create Account Button (only after mount + auth resolved, when user is not authenticated) */}
           {mounted && !loading && !user && (
