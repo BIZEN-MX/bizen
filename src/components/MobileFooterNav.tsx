@@ -302,7 +302,9 @@ export default function MobileFooterNav() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: "rgba(0, 0, 0, 0.5)",
+            background: "rgba(15, 23, 42, 0.45)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
             zIndex: 10001,
             display: "flex",
             alignItems: "flex-end",
@@ -313,26 +315,33 @@ export default function MobileFooterNav() {
         >
           <div
             style={{
-              background: "#FBFAF5",
-              borderRadius: "20px 20px 0 0",
-              padding: "24px",
+              background: "rgba(255, 255, 255, 0.96)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              borderRadius: "32px 32px 0 0",
+              padding: "20px 24px 32px 24px",
               width: "100%",
               maxWidth: "100%",
-              boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.15)",
-              animation: "slideUp 0.3s ease-out",
-              borderTop: "2px solid #0F62FE"
+              boxShadow: "0 -8px 40px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+              animation: "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+              borderTop: "1px solid rgba(255, 255, 255, 0.8)",
+              position: "relative",
+              overflow: "hidden"
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Top decorative gradient bar */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #0F62FE, #4A9EFF, #10B981)" }} />
+
             <div style={{
-              width: "40px",
-              height: "4px",
-              background: "#d1d5db",
-              borderRadius: "2px",
-              margin: "0 auto 20px auto"
+              width: "48px",
+              height: "5px",
+              background: "rgba(0, 0, 0, 0.1)",
+              borderRadius: "10px",
+              margin: "8px auto 24px auto"
             }} />
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {isStudentOrGuest && (
                 <button
                   onClick={() => {
@@ -342,19 +351,23 @@ export default function MobileFooterNav() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "12px",
-                    padding: "16px",
-                    background: "transparent",
+                    gap: "14px",
+                    padding: "14px 18px",
+                    background: pathname === "/tienda" ? "rgba(15, 98, 254, 0.08)" : "transparent",
                     border: "none",
+                    borderRadius: "16px",
                     cursor: "pointer",
                     fontSize: 16,
-                    fontWeight: 500,
-                    color: "#0f172a",
+                    fontWeight: 600,
+                    color: pathname === "/tienda" ? "#0F62FE" : "#1e293b",
                     width: "100%",
-                    textAlign: "left"
+                    textAlign: "left",
+                    transition: "all 0.2s ease"
                   }}
                 >
-                  <ShoppingBag size={20} color="#0F62FE" />
+                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <ShoppingBag size={20} color="#0F62FE" strokeWidth={2.5} />
+                  </div>
                   <span>Tienda</span>
                 </button>
               )}
@@ -367,19 +380,23 @@ export default function MobileFooterNav() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "12px",
-                  padding: "16px",
-                  background: "transparent",
+                  gap: "14px",
+                  padding: "14px 18px",
+                  background: (pathname === "/cuenta" || pathname === "/configuracion") ? "rgba(15, 98, 254, 0.08)" : "transparent",
                   border: "none",
+                  borderRadius: "16px",
                   cursor: "pointer",
                   fontSize: 16,
-                  fontWeight: 500,
-                  color: "#0f172a",
+                  fontWeight: 600,
+                  color: (pathname === "/cuenta" || pathname === "/configuracion") ? "#0F62FE" : "#1e293b",
                   width: "100%",
-                  textAlign: "left"
+                  textAlign: "left",
+                  transition: "all 0.2s ease"
                 }}
               >
-                <Settings size={20} color="#0F62FE" />
+                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Settings size={20} color="#0F62FE" strokeWidth={2.5} />
+                </div>
                 <span>Configuración</span>
               </button>
 
@@ -392,19 +409,23 @@ export default function MobileFooterNav() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "12px",
-                    padding: "16px",
-                    background: "transparent",
+                    gap: "14px",
+                    padding: "14px 18px",
+                    background: pathname === "/puntos" ? "rgba(15, 98, 254, 0.08)" : "transparent",
                     border: "none",
+                    borderRadius: "16px",
                     cursor: "pointer",
                     fontSize: 16,
-                    fontWeight: 500,
-                    color: "#0f172a",
+                    fontWeight: 600,
+                    color: pathname === "/puntos" ? "#0F62FE" : "#1e293b",
                     width: "100%",
-                    textAlign: "left"
+                    textAlign: "left",
+                    transition: "all 0.2s ease"
                   }}
                 >
-                  <Star size={20} color="#0F62FE" />
+                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(255, 176, 32, 0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Star size={20} color="#F59E0B" fill="#F59E0B" />
+                  </div>
                   <span>Mis Puntos</span>
                 </button>
               )}
@@ -418,19 +439,23 @@ export default function MobileFooterNav() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "12px",
-                    padding: "16px",
-                    background: "transparent",
+                    gap: "14px",
+                    padding: "14px 18px",
+                    background: pathname === "/rankings" ? "rgba(15, 98, 254, 0.08)" : "transparent",
                     border: "none",
+                    borderRadius: "16px",
                     cursor: "pointer",
                     fontSize: 16,
-                    fontWeight: 500,
-                    color: "#0f172a",
+                    fontWeight: 600,
+                    color: pathname === "/rankings" ? "#0F62FE" : "#1e293b",
                     width: "100%",
-                    textAlign: "left"
+                    textAlign: "left",
+                    transition: "all 0.2s ease"
                   }}
                 >
-                  <Trophy size={20} color="#0F62FE" />
+                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(16, 185, 129, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Trophy size={20} color="#10B981" strokeWidth={2.5} />
+                  </div>
                   <span>Rankings</span>
                 </button>
               )}
@@ -443,19 +468,23 @@ export default function MobileFooterNav() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "12px",
-                  padding: "16px",
-                  background: "transparent",
+                  gap: "14px",
+                  padding: "14px 18px",
+                  background: pathname === "/impacto-social" ? "rgba(15, 98, 254, 0.08)" : "transparent",
                   border: "none",
+                  borderRadius: "16px",
                   cursor: "pointer",
                   fontSize: 16,
-                  fontWeight: 500,
-                  color: "#0f172a",
+                  fontWeight: 600,
+                  color: pathname === "/impacto-social" ? "#0F62FE" : "#1e293b",
                   width: "100%",
-                  textAlign: "left"
+                  textAlign: "left",
+                  transition: "all 0.2s ease"
                 }}
               >
-                <Heart size={20} color="#0F62FE" />
+                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(239, 68, 68, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Heart size={20} color="#EF4444" fill="#EF4444" />
+                </div>
                 <span>Mi Impacto Social</span>
               </button>
 
@@ -467,21 +496,27 @@ export default function MobileFooterNav() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "12px",
-                  padding: "16px",
-                  background: "transparent",
+                  gap: "14px",
+                  padding: "14px 18px",
+                  background: pathname === "/profile" ? "rgba(15, 98, 254, 0.08)" : "transparent",
                   border: "none",
+                  borderRadius: "16px",
                   cursor: "pointer",
                   fontSize: 16,
-                  fontWeight: 500,
-                  color: "#0f172a",
+                  fontWeight: 600,
+                  color: pathname === "/profile" ? "#0F62FE" : "#1e293b",
                   width: "100%",
-                  textAlign: "left"
+                  textAlign: "left",
+                  transition: "all 0.2s ease"
                 }}
               >
-                <User size={20} color="#0F62FE" />
+                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <User size={20} color="#0F62FE" strokeWidth={2.5} />
+                </div>
                 <span>Perfil</span>
               </button>
+
+              <div style={{ height: "1px", background: "rgba(0, 0, 0, 0.06)", margin: "8px 0" }} />
 
               {user && (
                 <button
@@ -497,21 +532,22 @@ export default function MobileFooterNav() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "12px",
+                    justifyContent: "center",
+                    gap: "10px",
                     padding: "16px",
-                    background: "transparent",
+                    background: "rgba(239, 68, 68, 0.06)",
                     border: "none",
+                    borderRadius: "18px",
                     cursor: "pointer",
                     fontSize: 16,
-                    fontWeight: 500,
-                    color: "#0f172a",
+                    fontWeight: 600,
+                    color: "#DC2626",
                     width: "100%",
-                    textAlign: "center",
-                    justifyContent: "center"
+                    transition: "all 0.2s ease"
                   }}
                 >
-                  <LogIn size={20} color="#DC2626" />
-                  <span style={{ color: "#DC2626" }}>Cerrar sesión</span>
+                  <LogIn size={20} color="#DC2626" strokeWidth={2.5} />
+                  <span>Cerrar sesión</span>
                 </button>
               )}
             </div>
