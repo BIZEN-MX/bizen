@@ -39,6 +39,7 @@ export default function WelcomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [authDropdownOpen, setAuthDropdownOpen] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [navScrolled, setNavScrolled] = useState(false)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -54,9 +55,17 @@ export default function WelcomePage() {
     }
     window.addEventListener("click", handleClickOutside)
 
+    // Scroll-aware nav
+    const handleScroll = () => {
+      // Hero section is roughly 100vh tall, switch after scrolling past it
+      setNavScrolled(window.scrollY > window.innerHeight * 0.75)
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("click", handleClickOutside)
+      window.removeEventListener("scroll", handleScroll)
     }
   }, [authDropdownOpen])
 
@@ -132,7 +141,7 @@ export default function WelcomePage() {
   }, [])
 
   const gradientStyle = {
-    background: "radial-gradient(circle at 50% -20%, rgba(15, 98, 254, 0.08) 0%, rgba(255, 255, 255, 0) 50%), linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)",
+    background: "linear-gradient(160deg, #020e27 0%, #041640 50%, #061852 100%)",
     backgroundAttachment: "scroll" as const,
     overflow: "hidden",
     position: "relative" as const
@@ -214,24 +223,23 @@ export default function WelcomePage() {
             <div style={{ width: 26, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(-45deg) translateY(-8px)" : "none" }} />
           </button>
 
-          {/* Centered pill nav */}
-          <nav className="header-bar-nav landing-header-nav" style={{
+          {/* Centered pill nav — scroll-aware: dark on hero, light on white sections */}
+          <nav className={`header-bar-nav landing-header-nav ${navScrolled ? 'is-light' : 'is-dark'}`} style={{
             display: "flex",
             alignItems: "center",
             gap: "4px",
-            background: "rgba(255, 255, 255, 0.8)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
             borderRadius: "9999px",
             padding: "6px 8px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.03), 0 0 0 1px rgba(15, 98, 254, 0.05)",
+            transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
             flexShrink: 0,
           }}>
-            <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Inicio</Link>
-            <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Somos BIZEN</Link>
-            <Link href="#perfiles" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Perfil educativo</Link>
-            <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Impacto social</Link>
-            <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Blog</Link>
+            <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Inicio</Link>
+            <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Somos BIZEN</Link>
+            <Link href="#perfiles" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Perfil educativo</Link>
+            <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Impacto social</Link>
+            <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Blog</Link>
           </nav>
 
           {/* Header Actions */}
@@ -249,11 +257,12 @@ export default function WelcomePage() {
                 padding: "10px 20px",
                 fontSize: "clamp(13px, 1.3vw, 15px)",
                 fontWeight: 500,
-                color: "#0056E7",
+                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.85)",
                 textDecoration: "none",
                 borderRadius: "9999px",
-                background: "rgba(0, 86, 231, 0.08)",
-                transition: "all 0.2s ease",
+                background: navScrolled ? "rgba(0, 86, 231, 0.08)" : "rgba(255, 255, 255, 0.1)",
+                border: navScrolled ? "none" : "1px solid rgba(255, 255, 255, 0.18)",
+                transition: "all 0.3s ease",
               }}
             >
               <Calendar size={16} />
@@ -263,7 +272,7 @@ export default function WelcomePage() {
             {/* Comenzar ahora with Dropdown */}
             <div className={`auth-dropdown-wrapper ${authDropdownOpen ? 'is-open' : ''}`}>
               <button
-                className="premium-button landing-header-actions-main"
+                className="premium-button landing-header-actions-main landing-hero-cta-primary"
                 onClick={(e) => {
                   e.stopPropagation();
                   setAuthDropdownOpen(!authDropdownOpen);
@@ -274,15 +283,19 @@ export default function WelcomePage() {
                   justifyContent: "center",
                   padding: "10px 24px",
                   fontSize: "clamp(13px, 1.3vw, 15px)",
-                  fontWeight: 500,
+                  fontWeight: 600,
                   borderRadius: "9999px",
-                  background: "#0056E7",
+                  background: "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
+                  backgroundSize: "200% auto",
                   color: "#fff",
                   border: "none",
                   cursor: "pointer",
                   whiteSpace: "nowrap",
                   flexShrink: 0,
-                  boxShadow: "0 4px 14px rgba(0, 86, 231, 0.35)",
+                  boxShadow: navScrolled
+                    ? "0 2px 10px rgba(0, 86, 231, 0.25)"
+                    : "0 4px 20px rgba(0, 86, 231, 0.45), 0 0 0 1px rgba(255,255,255,0.15) inset",
+                  transition: "all 0.3s ease",
                 }}
               >
                 Comenzar ahora
@@ -512,10 +525,10 @@ export default function WelcomePage() {
 
       <main className="landing-main" style={{ flex: "1 0 auto", width: "100%", maxWidth: "100vw", display: "block", overflowX: "hidden" }}>
         <div className="landing-gradient-wrapper" style={gradientStyle}>
-          {/* Hero Section - centered text with geometric shapes */}
+          {/* Hero Section - deep space dark with animated orbs */}
           <div className="landing-hero-wrapper" style={{
-            paddingTop: "clamp(80px, 12vw, 160px)",
-            paddingBottom: "clamp(60px, 10vw, 120px)",
+            paddingTop: "clamp(100px, 14vw, 180px)",
+            paddingBottom: "clamp(80px, 12vw, 160px)",
             position: "relative",
             display: "flex",
             flexDirection: "column",
@@ -524,18 +537,66 @@ export default function WelcomePage() {
             width: "100%",
             maxWidth: "100%",
             boxSizing: "border-box",
-            minHeight: "auto",
+            minHeight: "100vh",
             overflow: "hidden",
             isolation: "isolate"
           }}>
-            {/* Premium Grain Texture */}
-            <div style={{
+
+            {/* Grid dot pattern */}
+            <div aria-hidden style={{
               position: "absolute",
               inset: 0,
-              opacity: 0.03,
+              zIndex: 0,
+              backgroundImage: "linear-gradient(rgba(0,86,231,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.07) 1px, transparent 1px)",
+              backgroundSize: "56px 56px",
+              animation: "grid-fade-in 1.5s ease forwards",
+              opacity: 0,
+              pointerEvents: "none"
+            }} />
+
+            {/* Glow orb 1 — top-left blue */}
+            <div aria-hidden style={{
+              position: "absolute",
+              top: "-15%",
+              left: "-10%",
+              width: "min(80vw, 700px)",
+              height: "min(80vw, 700px)",
+              background: "radial-gradient(circle, rgba(0, 86, 231, 0.28) 0%, rgba(0, 86, 231, 0.0) 70%)",
+              borderRadius: "50%",
+              filter: "blur(40px)",
+              animation: "landing-orb-drift 12s ease-in-out infinite",
               pointerEvents: "none",
-              zIndex: -1,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+              zIndex: 0
+            }} />
+
+            {/* Glow orb 2 — bottom-right teal-blue */}
+            <div aria-hidden style={{
+              position: "absolute",
+              bottom: "-20%",
+              right: "-15%",
+              width: "min(70vw, 600px)",
+              height: "min(70vw, 600px)",
+              background: "radial-gradient(circle, rgba(25, 131, 253, 0.22) 0%, rgba(25, 131, 253, 0.0) 70%)",
+              borderRadius: "50%",
+              filter: "blur(50px)",
+              animation: "landing-orb-drift 15s ease-in-out infinite 3s",
+              pointerEvents: "none",
+              zIndex: 0
+            }} />
+
+            {/* Glow orb 3 — center-right accent */}
+            <div aria-hidden style={{
+              position: "absolute",
+              top: "30%",
+              right: "5%",
+              width: "min(40vw, 400px)",
+              height: "min(40vw, 400px)",
+              background: "radial-gradient(circle, rgba(96, 165, 250, 0.12) 0%, transparent 70%)",
+              borderRadius: "50%",
+              filter: "blur(30px)",
+              animation: "pulse-glow-slow 9s ease-in-out infinite 1.5s",
+              pointerEvents: "none",
+              zIndex: 0
             }} />
 
             <Hero3DScene />
@@ -659,18 +720,24 @@ export default function WelcomePage() {
             }}>
               {/* Main headline */}
               <h1 style={{
-                fontSize: "clamp(36px, 6.5vw, 68px)",
-                color: "#0F172A",
+                fontSize: "clamp(34px, 6vw, 68px)",
+                color: "#FFFFFF",
                 fontWeight: 800,
-                margin: "0 0 clamp(48px, 7vw, 80px) 0",
-                lineHeight: 1.1,
+                margin: "0 0 clamp(40px, 6vw, 72px) 0",
+                lineHeight: 1.08,
                 letterSpacing: "-0.04em",
                 wordWrap: "break-word",
                 overflowWrap: "break-word",
+                textShadow: "0 2px 40px rgba(0,0,0,0.3)"
               }}>
-                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>El futuro de la <span style={{ color: "#0F62FE" }}>Educación Financiera</span></span><br />
+                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>El futuro de la{" "}<span style={{
+                  background: "linear-gradient(90deg, #60a5fa, #1983FD, #4A9EFF)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}>Educación Financiera</span></span><br />
                 para jóvenes en un click<br />
-                con <span className="brand-highlight-blue" style={{ fontWeight: 900 }}>BIZEN</span>
+                con <span className="brand-highlight-blue" style={{ fontWeight: 900, background: "linear-gradient(90deg, #ffffff, #a5c8ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>BIZEN</span>
               </h1>
 
               {/* Subheading with highlighted text - responsive, never overlaps */}
@@ -715,17 +782,19 @@ export default function WelcomePage() {
                   }}>
                     <div style={{
                       borderRadius: "16px",
-                      background: "rgba(255, 255, 255, 0.93)",
-                      backdropFilter: "blur(8px)",
+                      background: "rgba(255, 255, 255, 0.07)",
+                      backdropFilter: "blur(20px)",
+                      WebkitBackdropFilter: "blur(20px)",
                       padding: "clamp(20px, 3vw, 30px) clamp(24px, 4vw, 40px)",
                       textAlign: "center",
+                      border: "1px solid rgba(255, 255, 255, 0.12)",
                     }}>
                       {/* Thin accent bar */}
                       <div style={{
                         width: "32px",
                         height: "3px",
                         borderRadius: "99px",
-                        background: "linear-gradient(90deg, #0056E7, #1983FD)",
+                        background: "linear-gradient(90deg, #60a5fa, #1983FD)",
                         margin: "0 auto 16px",
                       }} />
 
@@ -735,7 +804,7 @@ export default function WelcomePage() {
                         fontSize: "clamp(13px, 1.15vw, 16px)",
                         lineHeight: 1.85,
                         fontWeight: 500,
-                        color: "#374151",
+                        color: "rgba(255, 255, 255, 0.82)",
                         letterSpacing: "0.015em",
                         wordWrap: "break-word",
                       }}>
@@ -744,7 +813,7 @@ export default function WelcomePage() {
                           display: "inline-flex",
                           alignItems: "center",
                           gap: "5px",
-                          background: "linear-gradient(90deg, #0056E7, #1983FD)",
+                          background: "linear-gradient(90deg, #1983FD, #60a5fa)",
                           color: "#fff",
                           borderRadius: "6px",
                           padding: "2px 10px 2px 8px",
@@ -754,7 +823,7 @@ export default function WelcomePage() {
                           whiteSpace: "nowrap",
                         }}>gamificación e IA</span>{" "}
                         para enseñar finanzas personales a estudiantes de preparatoria y universidad de forma{" "}
-                        <em style={{ fontStyle: "normal", fontWeight: 500, color: "#0056E7" }}>práctica, clara y relevante.</em>
+                        <em style={{ fontStyle: "normal", fontWeight: 500, color: "#60a5fa" }}>práctica, clara y relevante.</em>
                       </p>
                     </div>
                   </div>
@@ -773,20 +842,22 @@ export default function WelcomePage() {
               </div>
             </div>
 
-            {/* Company logos section - carousel (spacing keeps it clear of sub text on small screens) */}
+            {/* Company logos section - carousel */}
             <div className="landing-hero-logos-wrap" style={{
               position: "relative",
               zIndex: 1,
               width: "100%",
               maxWidth: "min(90%, 1200px)",
-              margin: "clamp(80px, 12vw, 140px) auto 0",
+              margin: "clamp(60px, 10vw, 120px) auto 0",
               textAlign: "center",
             }}>
               <p style={{
-                fontSize: "clamp(14px, 1.5vw, 18px)",
-                color: "#6b7280",
+                fontSize: "clamp(12px, 1.3vw, 15px)",
+                color: "rgba(255, 255, 255, 0.4)",
                 fontWeight: 500,
-                margin: "0 0 clamp(24px, 3vw, 40px) 0",
+                margin: "0 0 clamp(20px, 3vw, 36px) 0",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
               }}>
                 Empresas que ya confían
               </p>
@@ -814,7 +885,13 @@ export default function WelcomePage() {
                           alt={logo.alt}
                           width={isGoogle ? 80 : 120}
                           height={isGoogle ? 40 : 60}
-                          style={{ height: "100%", width: "auto", objectFit: "contain" }}
+                          style={{
+                            height: "100%",
+                            width: "auto",
+                            objectFit: "contain",
+                            filter: "brightness(0) invert(1)",
+                            opacity: 0.55
+                          }}
                         />
                       </div>
                     );
@@ -824,6 +901,16 @@ export default function WelcomePage() {
             </div>
 
           </div>
+
+          {/* Section fade divider: dark → white */}
+          <div aria-hidden style={{
+            width: "100%",
+            height: "clamp(80px, 12vw, 160px)",
+            background: "linear-gradient(180deg, #061852 0%, #FFFFFF 100%)",
+            marginTop: 0,
+            flexShrink: 0,
+            pointerEvents: "none"
+          }} />
 
           {/* SOMOS BIZEN Section — redesigned */}
           <div id="sobre-bizen" style={{
@@ -901,7 +988,17 @@ export default function WelcomePage() {
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 }}>
 
-                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
+                  <div style={{
+                    fontSize: "clamp(36px, 5vw, 56px)",
+                    fontWeight: 800,
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1,
+                    marginBottom: "10px",
+                    background: "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}>
                     +50
                   </div>
                   <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -924,7 +1021,17 @@ export default function WelcomePage() {
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 }}>
 
-                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
+                  <div style={{
+                    fontSize: "clamp(36px, 5vw, 56px)",
+                    fontWeight: 800,
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1,
+                    marginBottom: "10px",
+                    background: "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}>
                     +10
                   </div>
                   <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -947,7 +1054,17 @@ export default function WelcomePage() {
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 }}>
 
-                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
+                  <div style={{
+                    fontSize: "clamp(36px, 5vw, 56px)",
+                    fontWeight: 800,
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1,
+                    marginBottom: "10px",
+                    background: "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}>
                     $25K
                   </div>
                   <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
