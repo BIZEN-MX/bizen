@@ -560,75 +560,112 @@ export default function CoursePageTemplate({
                                                         </div>
                                                     </div>
 
-                                                    {/* Inline Action Panel */}
+                                                    {/* Premium Inline Action Panel */}
                                                     <div
                                                         onClick={(e) => e.stopPropagation()}
                                                         style={{
                                                             flexShrink: 0,
                                                             display: "flex",
                                                             alignItems: "center",
-                                                            width: lessonModal?.lesson.slug === lesson.slug ? "clamp(120px, 45vw, 220px)" : 0,
+                                                            width: lessonModal?.lesson.slug === lesson.slug ? "clamp(140px, 48vw, 240px)" : 0,
                                                             opacity: lessonModal?.lesson.slug === lesson.slug ? 1 : 0,
-                                                            transition: "width 0.42s cubic-bezier(0.34,1.4,0.64,1), opacity 0.3s ease",
+                                                            transition: "width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease",
                                                             pointerEvents: lessonModal?.lesson.slug === lesson.slug ? "auto" : "none",
                                                             overflow: "visible",
                                                         }}
                                                     >
                                                         <div
-                                                            className="cpt-action-panel"
+                                                            className="cpt-action-panel-premium"
                                                             style={{
-                                                                width: "clamp(110px, 42vw, 200px)",
+                                                                width: "clamp(130px, 45vw, 230px)",
                                                                 minWidth: "initial",
-                                                                background: "#fff",
-                                                                borderRadius: 20,
-                                                                padding: "clamp(10px, 3vw, 18px) clamp(10px, 3vw, 18px) clamp(10px, 3vw, 18px) clamp(8px, 2.5vw, 14px)",
-                                                                border: "2.5px solid #2563eb",
-                                                                boxShadow: "0 12px 36px rgba(37,99,235,0.15)",
+                                                                background: "rgba(255, 255, 255, 0.95)",
+                                                                backdropFilter: "blur(16px)",
+                                                                WebkitBackdropFilter: "blur(16px)",
+                                                                borderRadius: 24,
+                                                                padding: "clamp(12px, 3.5vw, 20px)",
+                                                                border: "1px solid rgba(255, 255, 255, 0.8)",
+                                                                boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.15), 0 4px 24px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
                                                                 display: "flex",
                                                                 flexDirection: "column",
                                                                 justifyContent: "center",
-                                                                gap: "clamp(6px, 2vw, 11px)",
+                                                                gap: "clamp(8px, 2.5vw, 14px)",
                                                                 position: "relative",
-                                                                marginLeft: "clamp(6px, 2vw, 10px)",
+                                                                marginLeft: "clamp(8px, 2.5vw, 14px)",
                                                                 transform: lessonModal?.lesson.slug === lesson.slug
                                                                     ? "scale(1) translateX(0)"
-                                                                    : "scale(0.88) translateX(-12px)",
-                                                                transition: "transform 0.42s cubic-bezier(0.34,1.56,0.64,1)",
+                                                                    : "scale(0.9) translateX(-16px)",
+                                                                transition: "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)",
                                                                 overflow: "hidden"
                                                             }}
                                                         >
-                                                            {/* Top accent bar */}
-                                                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #1e3a8a, #60a5fa)", borderRadius: "20px 20px 0 0" }} />
+                                                            {/* Premium animated glow background */}
+                                                            <div style={{ position: "absolute", top: -50, right: -50, width: 100, height: 100, background: "radial-gradient(circle, rgba(15,98,254,0.1) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
 
-                                                            {/* Lesson number */}
-                                                            <div style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 8 }}>
-                                                                Lección {absoluteLessonNumber}
+                                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                                                {/* Lesson number indicator */}
+                                                                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                                                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: isDone ? "#10B981" : "#0F62FE", boxShadow: isDone ? "0 0 8px rgba(16,185,129,0.5)" : "0 0 8px rgba(15,98,254,0.5)" }} />
+                                                                    <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                                                                        Lección {absoluteLessonNumber}
+                                                                    </div>
+                                                                </div>
                                                             </div>
 
-                                                            {/* XP badge */}
-                                                            <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#F0F9FF", border: "1.5px solid #BAE6FD", borderRadius: 10, padding: "6px 11px" }}>
-                                                                <Zap size={13} color="#0EA5E9" fill="#0EA5E9" />
-                                                                <span style={{ fontSize: 11, fontWeight: 500, color: "#0369A1" }}>
-                                                                    {isDone ? "+5 XP al repetir" : "Hasta 15 XP"}
+                                                            {/* Minimal XP badge */}
+                                                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: 6, background: "linear-gradient(135deg, #FFB020 0%, #F59E0B 100%)", boxShadow: "0 2px 6px rgba(245,158,11,0.3)" }}>
+                                                                    <Zap size={12} color="#FFFFFF" fill="#FFFFFF" />
+                                                                </div>
+                                                                <span style={{ fontSize: 12, fontWeight: 500, color: "#475569" }}>
+                                                                    {isDone ? "+5 Puntos" : "Hasta 15 Puntos"}
                                                                 </span>
                                                             </div>
 
-                                                            {/* CTA */}
+                                                            {/* Premium CTA Button */}
                                                             <button
-                                                                className="panel-cta-btn"
+                                                                className="premium-action-cta"
                                                                 onClick={() => {
                                                                     router.push(getLessonPath(lesson.slug));
                                                                     setLessonModal(null);
                                                                 }}
                                                                 style={{
-                                                                    width: "100%", fontSize: 13, fontWeight: 500, padding: "10px 14px",
-                                                                    background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
-                                                                    color: "white", border: "none", borderRadius: 11,
-                                                                    cursor: "pointer", boxShadow: "0 5px 16px rgba(15,98,254,0.35)",
-                                                                    transition: "opacity 0.15s ease"
+                                                                    width: "100%",
+                                                                    fontSize: 14,
+                                                                    fontWeight: 600,
+                                                                    padding: "12px 16px",
+                                                                    background: isDone ? "linear-gradient(135deg, #0F62FE 0%, #2563EB 100%)" : "linear-gradient(135deg, #0F62FE 0%, #0056E7 100%)",
+                                                                    color: "white",
+                                                                    border: "none",
+                                                                    borderRadius: 14,
+                                                                    cursor: "pointer",
+                                                                    boxShadow: "0 4px 14px rgba(15,98,254,0.3), inset 0 1px 0 rgba(255,255,255,0.2)",
+                                                                    transition: "all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)",
+                                                                    position: "relative",
+                                                                    overflow: "hidden",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    gap: 6
+                                                                }}
+                                                                onMouseOver={(e) => {
+                                                                    e.currentTarget.style.transform = "translateY(-2px)";
+                                                                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(15,98,254,0.4), inset 0 1px 0 rgba(255,255,255,0.2)";
+                                                                }}
+                                                                onMouseOut={(e) => {
+                                                                    e.currentTarget.style.transform = "translateY(0)";
+                                                                    e.currentTarget.style.boxShadow = "0 4px 14px rgba(15,98,254,0.3), inset 0 1px 0 rgba(255,255,255,0.2)";
+                                                                }}
+                                                                onMouseDown={(e) => {
+                                                                    e.currentTarget.style.transform = "translateY(1px)";
+                                                                    e.currentTarget.style.boxShadow = "0 2px 8px rgba(15,98,254,0.3), inset 0 1px 0 rgba(255,255,255,0.2)";
                                                                 }}
                                                             >
-                                                                {isDone ? "Repetir lección" : "¡Empezar!"}
+                                                                {isDone ? "Repasar" : "Aprender"}
+                                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                                    {isDone ? <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> : null}
+                                                                    {isDone ? <path d="M3 3v5h5" /> : <path d="M5 12h14M12 5l7 7-7 7" />}
+                                                                </svg>
                                                             </button>
                                                         </div>
                                                     </div>
