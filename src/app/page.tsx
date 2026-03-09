@@ -60,19 +60,33 @@ export default function WelcomePage() {
     }
   }, [authDropdownOpen])
 
-  // Fix body scroll when mobile menu is open
+  // Fix scroll when mobile menu is open (Robust fix for iOS)
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden'
-      document.documentElement.style.overflow = 'hidden'
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset'
-      document.documentElement.style.overflow = 'unset'
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
     }
+
     return () => {
-      document.body.style.overflow = 'unset'
-      document.documentElement.style.overflow = 'unset'
-    }
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+    };
   }, [mobileMenuOpen])
 
   const heroCardSummaries: { title: string; summary: string }[] = [
@@ -141,22 +155,23 @@ export default function WelcomePage() {
       position: "relative"
     }} className="main-page-container landing-page-root" data-landing-root>
       {/* Header: pill nav design matching reference screenshot */}
-      <header className="landing-header" style={{
+      <header className="main-header landing-header glass-header" style={{
         width: "100%",
+        maxWidth: "100%",
+        boxSizing: "border-box",
+        padding: "clamp(10px, 1.5vw, 16px) 0",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "16px 0",
-        transition: "all 0.3s ease",
-        zIndex: 1000,
-        position: "fixed",
+        background: "transparent",
+        backdropFilter: "none",
+        WebkitBackdropFilter: "none",
+        position: "absolute",
         top: 0,
         left: 0,
         right: 0,
-        background: "rgba(255, 255, 255, 0.9)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        borderBottom: "1px solid rgba(15, 98, 254, 0.08)"
+        zIndex: 1000,
+        borderBottom: "none",
       }}>
         <div className="landing-header-container" style={{
           width: "100%",
@@ -182,10 +197,10 @@ export default function WelcomePage() {
             style={{
               display: "none",
               flexDirection: "column",
-              gap: "5px",
+              gap: "6px",
               width: 44,
               height: 44,
-              padding: "12px 10px",
+              padding: 0,
               border: "none",
               background: "transparent",
               cursor: "pointer",
@@ -194,9 +209,9 @@ export default function WelcomePage() {
               justifyContent: "center"
             }}
           >
-            <div style={{ width: 24, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(45deg) translateY(10px)" : "none" }} />
-            <div style={{ width: 24, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", opacity: mobileMenuOpen ? 0 : 1 }} />
-            <div style={{ width: 24, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(-45deg) translateY(-10px)" : "none" }} />
+            <div style={{ width: 26, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(45deg) translateY(8px)" : "none" }} />
+            <div style={{ width: 26, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", opacity: mobileMenuOpen ? 0 : 1 }} />
+            <div style={{ width: 26, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(-45deg) translateY(-8px)" : "none" }} />
           </button>
 
           {/* Centered pill nav */}
@@ -311,8 +326,8 @@ export default function WelcomePage() {
             alignItems: "center",
             justifyContent: "center",
             overflowY: "auto",
-            overflowX: "hidden",
-            padding: "60px 0",
+            WebkitOverflowScrolling: "touch",
+            padding: "40px 0",
             boxSizing: "border-box"
           }}
           onClick={() => setMobileMenuOpen(false)}
