@@ -163,31 +163,25 @@ export default function WelcomePage() {
       flexDirection: "column",
       position: "relative"
     }} className="main-page-container landing-page-root" data-landing-root>
-      {/* Header: sticky with scroll-aware glass */}
+      {/* Header: transparent on hero, glass when scrolled */}
       <header className="main-header landing-header glass-header" style={{
         width: "100%",
         maxWidth: "100%",
         boxSizing: "border-box",
-        padding: navScrolled ? "clamp(8px, 1vw, 12px) 0" : "clamp(10px, 1.5vw, 16px) 0",
+        padding: "clamp(10px, 1.5vw, 16px) 0",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: navScrolled
-          ? "rgba(255, 255, 255, 0.92)"
-          : "rgba(4, 9, 30, 0.2)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
+        background: navScrolled ? "rgba(255, 255, 255, 0.94)" : "transparent",
+        backdropFilter: navScrolled ? "blur(20px)" : "none",
+        WebkitBackdropFilter: navScrolled ? "blur(20px)" : "none",
         position: "fixed",
         top: 0,
         left: 0,
         right: 0,
         zIndex: 10000,
-        borderBottom: navScrolled
-          ? "1px solid rgba(0, 0, 0, 0.06)"
-          : "1px solid rgba(255, 255, 255, 0.08)",
-        boxShadow: navScrolled
-          ? "0 2px 20px rgba(0, 0, 0, 0.08)"
-          : "none",
+        borderBottom: navScrolled ? "1px solid rgba(0, 0, 0, 0.06)" : "none",
+        boxShadow: navScrolled ? "0 2px 20px rgba(0, 0, 0, 0.08)" : "none",
         transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
       }}>
         <div className="landing-header-container" style={{
@@ -682,59 +676,6 @@ export default function WelcomePage() {
                   filter: "drop-shadow(20px 0 30px rgba(44, 123, 239, 0.15))"
                 }}
               />
-            </div>
-
-            {/* Right side image leaning out - image.png */}
-            <div className="landing-hero-right-mascot reveal-element" style={{
-              position: "absolute",
-              right: 0,
-              bottom: "clamp(100px, 10vw, 200px)", // Using bottom for more consistent lowering
-              zIndex: 0,
-              width: "clamp(240px, 24vw, 460px)",
-              transform: "translateX(35%)", // Start further out
-              pointerEvents: "none",
-              transition: "all 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)",
-              opacity: 0,
-            }}>
-              <style dangerouslySetInnerHTML={{
-                __html: `
-                .landing-hero-right-mascot.revealed {
-                  opacity: 1 !important;
-                  transform: translateX(25%) translateY(0) !important; // Hide 1/4 (25%)
-                }
-                @media (max-width: 1023px) {
-                  .landing-hero-right-mascot {
-                    width: 180px !important;
-                    bottom: 40px !important;
-                    top: auto !important;
-                    transform: translateX(35%) !important;
-                    opacity: 0.6 !important; /* Slightly fade to reduce visual noise on tablets */
-                  }
-                }
-                @media (max-width: 768px) {
-                  .landing-hero-right-mascot {
-                    width: 120px !important;
-                    bottom: 20px !important;
-                    transform: translateX(45%) !important;
-                    opacity: 0.4 !important; /* More transparent on mobile */
-                  }
-                }
-              `}} />
-              <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                <Image
-                  src="/image.png"
-                  alt="Bizen Platform"
-                  width={700}
-                  height={700}
-                  priority
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    filter: "drop-shadow(-20px 0 40px rgba(44, 123, 239, 0.2))",
-                    display: "block"
-                  }}
-                />
-              </div>
             </div>
 
 
@@ -3962,117 +3903,199 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               `}</style>
         </section>
 
-        {/* Cómo funciona — enhanced */}
+        {/* Cómo funciona  — Premium redesign */}
         <section id="como-funciona" className="section how-it-works reveal-element reveal-delay-2" style={{
-          background: "#FBFAF5",
-          padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 24px)",
-          overflow: "visible",
-          height: "auto",
-          maxWidth: "1100px",
-          margin: "0 auto",
+          background: "linear-gradient(170deg, #040f26 0%, #071840 50%, #040e24 100%)",
+          padding: "clamp(80px, 10vw, 130px) clamp(24px, 5vw, 48px)",
+          overflow: "hidden",
+          position: "relative",
         }}>
-          <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 72px)" }}>
-            <span style={{
-              display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
-              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 500,
-              letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
-            }}>Proceso</span>
-            <h2 style={{
-              margin: "0 0 16px", fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 500, color: "#111",
-              lineHeight: 1.1, letterSpacing: "-0.02em",
-            }}>
-              ¿Cómo{" "}
-              <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>funciona?</span>
-            </h2>
-            <p style={{ margin: "0 auto", fontSize: "clamp(16px, 1.2vw, 19px)", color: "#64748b", maxWidth: "480px", lineHeight: 1.65 }}>
-              Tres pasos: empiezas, practicas y mides tu avance.
-            </p>
-          </div>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "clamp(24px, 4vw, 36px)",
-            alignItems: "stretch",
-            position: "relative",
-          }} className="how-it-works-steps">
-            {howItWorksSteps.map((step, i) => (
-              <div key={i} className={`step-card reveal-element reveal-delay-${i + 1}`} style={{
-                padding: "clamp(36px, 4vw, 52px) clamp(28px, 3vw, 40px)",
-                borderRadius: "28px",
-                background: "#FBFAF5",
-                border: "1px solid rgba(0, 86, 231, 0.1)",
-                boxShadow: "0 8px 32px rgba(0, 86, 231, 0.06)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                cursor: "default",
-                maxWidth: "320px",
-                margin: "0 auto",
-                width: "100%",
+
+          {/* Background grid */}
+          <div aria-hidden style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "linear-gradient(rgba(0,86,231,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.05) 1px, transparent 1px)",
+            backgroundSize: "52px 52px",
+            pointerEvents: "none",
+          }} />
+
+          {/* Glow accent */}
+          <div aria-hidden style={{
+            position: "absolute",
+            top: "-20%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "min(80vw, 600px)",
+            height: "min(80vw, 600px)",
+            background: "radial-gradient(circle, rgba(0, 86, 231, 0.18) 0%, transparent 70%)",
+            borderRadius: "50%",
+            filter: "blur(60px)",
+            pointerEvents: "none",
+          }} />
+
+          {/* Content */}
+          <div style={{ maxWidth: "1100px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+
+            {/* Section label */}
+            <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 80px)" }}>
+              <span style={{
+                display: "inline-block",
+                background: "rgba(25, 131, 253, 0.15)",
+                color: "#60a5fa",
+                borderRadius: "999px",
+                padding: "6px 18px",
+                fontSize: "12px",
+                fontWeight: 600,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                marginBottom: "20px",
+                border: "1px solid rgba(96, 165, 250, 0.2)",
+              }}>Proceso</span>
+              <h2 style={{
+                margin: "0 0 16px",
+                fontSize: "clamp(30px, 5vw, 56px)",
+                fontWeight: 700,
+                color: "#fff",
+                lineHeight: 1.08,
+                letterSpacing: "-0.03em",
               }}>
-                <div className="step-number-container" style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "24px",
-                  background: "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
+                ¿Cómo{" "}
+                <span style={{
+                  background: "linear-gradient(90deg, #60a5fa, #1983FD)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}>funciona?</span>
+              </h2>
+              <p style={{
+                margin: "0 auto",
+                fontSize: "clamp(15px, 1.2vw, 19px)",
+                color: "rgba(255, 255, 255, 0.6)",
+                maxWidth: "480px",
+                lineHeight: 1.7,
+              }}>
+                Tres pasos: empiezas, practicas y mides tu avance.
+              </p>
+            </div>
+
+            {/* Steps grid */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "clamp(16px, 3vw, 28px)",
+              alignItems: "stretch",
+              position: "relative",
+            }} className="how-it-works-steps">
+
+              {/* Connecting line (desktop only) */}
+              <div aria-hidden style={{
+                position: "absolute",
+                top: "64px",
+                left: "calc(16.67% + 40px)",
+                right: "calc(16.67% + 40px)",
+                height: "2px",
+                background: "linear-gradient(90deg, rgba(25,131,253,0.5), rgba(96,165,250,0.8), rgba(25,131,253,0.5))",
+                zIndex: 0,
+                pointerEvents: "none",
+              }} className="how-works-connector-line" />
+
+              {howItWorksSteps.map((step, i) => (
+                <div key={i} className={`step-card reveal-element reveal-delay-${i + 1}`} style={{
+                  padding: "clamp(32px, 4vw, 48px) clamp(24px, 3vw, 36px)",
+                  borderRadius: "28px",
+                  background: "rgba(255, 255, 255, 0.04)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  boxShadow: "0 8px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  backdropFilter: "blur(16px)",
                   display: "flex",
+                  flexDirection: "column",
                   alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "24px",
-                  flexShrink: 0,
+                  textAlign: "center",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  cursor: "default",
                   position: "relative",
-                  boxShadow: "0 10px 24px rgba(0, 86, 231, 0.28)",
+                  zIndex: 1,
                 }}>
-                  <span style={{
+                  {/* Step number badge */}
+                  <div style={{
                     position: "absolute",
-                    top: "-10px",
-                    right: "-10px",
-                    width: "28px",
-                    height: "28px",
-                    borderRadius: "8px",
-                    background: "#FBFAF5",
-                    color: "#0056E7",
-                    fontSize: "13px",
-                    fontWeight: 500,
+                    top: "-16px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #0056E7, #1983FD)",
+                    color: "#fff",
+                    fontSize: "14px",
+                    fontWeight: 700,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0 2px 8px rgba(0, 86, 231, 0.2)",
-                    border: "1.5px solid rgba(0,86,231,0.12)",
-                  }}>{i + 1}</span>
-                  {i === 0 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>)}
-                  {i === 1 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>)}
-                  {i === 2 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg>)}
+                    boxShadow: "0 4px 16px rgba(0, 86, 231, 0.5)",
+                    border: "2px solid rgba(255,255,255,0.15)",
+                  }}>{i + 1}</div>
+
+                  {/* Icon container */}
+                  <div style={{
+                    width: "72px",
+                    height: "72px",
+                    borderRadius: "20px",
+                    background: "linear-gradient(135deg, rgba(0,86,231,0.3) 0%, rgba(25,131,253,0.2) 100%)",
+                    border: "1px solid rgba(96, 165, 250, 0.25)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "24px",
+                    marginTop: "8px",
+                    boxShadow: "0 8px 24px rgba(0, 86, 231, 0.2)",
+                  }}>
+                    {i === 0 && (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>)}
+                    {i === 1 && (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>)}
+                    {i === 2 && (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg>)}
+                  </div>
+
+                  <h3 style={{
+                    margin: "0 0 12px",
+                    fontSize: "clamp(17px, 1.5vw, 22px)",
+                    fontWeight: 600,
+                    color: "#ffffff",
+                    letterSpacing: "-0.01em",
+                  }}>{step.title}</h3>
+                  <p style={{
+                    margin: 0,
+                    fontSize: "clamp(13px, 1rem, 15px)",
+                    color: "rgba(255, 255, 255, 0.6)",
+                    lineHeight: 1.7,
+                  }}>
+                    {step.schoolsText}
+                  </p>
                 </div>
-                <h3 style={{
-                  margin: "0 0 12px",
-                  fontSize: "clamp(19px, 1.5vw, 23px)",
-                  fontWeight: 500,
-                  color: "#111",
-                }}>{step.title}</h3>
-                <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", color: "#64748b", lineHeight: 1.65, }}>
-                  {step.schoolsText}
-                </p>
-              </div>
-            ))}
-            <style>{`
-                  .step-card:hover {
-                    border-color: rgba(0, 86, 231, 0.25) !important;
-                    box-shadow: 0 12px 40px rgba(0, 86, 231, 0.10) !important;
-                    transform: translateY(-4px);
-                  }
-                  @media (max-width: 767px) {
-                    .how-it-works-steps { grid-template-columns: 1fr !important; }
-                  }
-                  @media (min-width: 768px) and (max-width: 899px) {
-                    .how-it-works-steps { grid-template-columns: repeat(2, 1fr) !important; }
-                  }
-                  @media (min-width: 900px) {
-                    .how-it-works-steps { grid-template-columns: repeat(3, 1fr) !important; }
-                  }
-                `}</style>
+              ))}
+              <style>{`
+                .step-card:hover {
+                  border-color: rgba(96, 165, 250, 0.3) !important;
+                  box-shadow: 0 16px 48px rgba(0, 86, 231, 0.3), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+                  transform: translateY(-6px);
+                  background: rgba(255, 255, 255, 0.07) !important;
+                }
+                .how-works-connector-line {
+                  display: block;
+                }
+                @media (max-width: 767px) {
+                  .how-it-works-steps { grid-template-columns: 1fr !important; }
+                  .how-works-connector-line { display: none !important; }
+                }
+                @media (min-width: 768px) and (max-width: 899px) {
+                  .how-it-works-steps { grid-template-columns: repeat(2, 1fr) !important; }
+                  .how-works-connector-line { display: none !important; }
+                }
+                @media (min-width: 900px) {
+                  .how-it-works-steps { grid-template-columns: repeat(3, 1fr) !important; }
+                }
+              `}</style>
+            </div>
           </div>
         </section>
       </>
