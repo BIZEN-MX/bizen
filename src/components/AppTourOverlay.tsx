@@ -401,7 +401,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
           <div className="tc-header">
             <div className="tc-mascot">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/hero4.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+              <img src="/image copy 5.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
