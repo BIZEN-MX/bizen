@@ -289,11 +289,11 @@ export default function ProfilePage() {
 
   const Card = ({ style, className, children }: any) => (
     <div className={className} style={{
-      background: "white",
-      border: "1px solid rgba(15,98,254,0.08)",
-      borderRadius: 20,
+      background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
+      border: "1px solid rgba(15,98,254,0.12)",
+      borderRadius: 24,
       boxSizing: "border-box",
-      boxShadow: "0 2px 12px rgba(15,98,254,0.04), 0 1px 3px rgba(0,0,0,0.04)",
+      boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1)",
       ...style
     }}>
       {children}
@@ -363,7 +363,7 @@ export default function ProfilePage() {
 
       <div className="prof-outer" style={{
         minHeight: "100vh", background: "#FBFAF5",
-                boxSizing: "border-box", color: "#0f172a",
+        boxSizing: "border-box", color: "#0f172a",
         position: "relative", overflowX: "hidden"
       }}>
         {/* Decorative elements */}
@@ -372,14 +372,25 @@ export default function ProfilePage() {
 
         {/* Banner Section */}
         <div style={{
-          height: 180, width: "calc(100% - 32px)",
+          height: 220, width: "calc(100% - 32px)",
           margin: "16px",
-          borderRadius: "24px",
-          background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 50%, #2563eb 100%)",
+          borderRadius: "32px",
+          background: "linear-gradient(135deg, #0a0f1e 0%, #1e3a8a 60%, #1d4ed8 100%)",
           position: "absolute", top: 0, left: 0, zIndex: 0,
-          boxShadow: "0 10px 25px -5px rgba(0,0,0,0.3)"
+          boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.25)",
+          overflow: "hidden"
         }}>
-          <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+          {/* Premium Noise Texture for Banner */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            opacity: 0.08,
+            pointerEvents: "none",
+            mixBlendMode: "overlay",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }} />
+          <div style={{ position: "absolute", inset: 0, opacity: 0.15, backgroundImage: "radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+          <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 400, height: 400, background: "radial-gradient(circle, rgba(99,179,255,0.15) 0%, transparent 60%)", borderRadius: "50%", pointerEvents: "none" }} />
         </div>
 
         <div className="prof-two-col" style={{
@@ -410,7 +421,11 @@ export default function ProfilePage() {
                 }}
               >
                 {/* Background glow in circle */}
-                <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 50%, #eff6ff 0%, #dbeafe 100%)", zIndex: 0 }} />
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: "radial-gradient(circle at 50% 50%, #ffffff 0%, #eff6ff 100%)",
+                  zIndex: 0
+                }} />
 
                 <div style={{ position: "relative", zIndex: 1 }}>
                   <AvatarDisplay
@@ -450,7 +465,7 @@ export default function ProfilePage() {
                 <span style={{ fontSize: 12, fontWeight: 500, color: "#0f172a", textTransform: "uppercase", letterSpacing: "0.02em" }}>Nivel {level}</span>
               </div>
 
-              <h1 style={{ margin: "0 0 6px", fontSize: 32, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+              <h1 style={{ margin: "0 0 4px", fontSize: 36, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.04em", lineHeight: 1.1 }}>
                 {displayName}
               </h1>
               <p style={{ margin: "0 0 4px", fontSize: 16, color: "#64748b", fontWeight: 500 }}>
@@ -492,10 +507,10 @@ export default function ProfilePage() {
 
             {/* Level Progress - Adding Life */}
             <div className="prof-card-hover" style={{
-              background: "linear-gradient(135deg, #f8faff 0%, #fff 100%)",
-              padding: "20px 24px", borderRadius: 20,
-              border: "1px solid rgba(15,98,254,0.1)",
-              boxShadow: "0 4px 16px rgba(15,98,254,0.06)"
+              background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
+              padding: "24px 28px", borderRadius: 24,
+              border: "1px solid rgba(15,98,254,0.12)",
+              boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1)"
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                 <h3 style={{ margin: 0, fontSize: 15, fontWeight: 500, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
@@ -534,11 +549,11 @@ export default function ProfilePage() {
                       flexDirection: "column",
                       gap: 10,
                       background: i % 2 === 0
-                        ? "linear-gradient(135deg, #f8faff 0%, #fff 100%)"
-                        : "linear-gradient(135deg, #fffdf8 0%, #fff 100%)",
-                      border: "1px solid rgba(15,98,254,0.08)",
-                      borderRadius: 18,
-                      boxShadow: "0 2px 12px rgba(15,98,254,0.05)",
+                        ? "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)"
+                        : "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
+                      border: "1px solid rgba(15,98,254,0.12)",
+                      borderRadius: 24,
+                      boxShadow: "0 12px 24px -6px rgba(15,98,254,0.08)",
                       boxSizing: "border-box"
                     }}
                   >
@@ -548,8 +563,8 @@ export default function ProfilePage() {
                       display: "flex", alignItems: "center", justifyContent: "center"
                     }}>{icon}</div>
                     <div>
-                      <div style={{ fontSize: 24, fontWeight: 500, color: "#0f172a", lineHeight: 1 }}>{value}</div>
-                      <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
+                      <div style={{ fontSize: 28, fontWeight: 800, color: "#0F172A", lineHeight: 1, letterSpacing: "-0.02em" }}>{value}</div>
+                      <div style={{ fontSize: 11, color: "#64748B", fontWeight: 700, marginTop: 6, textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
                     </div>
                   </div>
                 ))}
@@ -757,13 +772,13 @@ export default function ProfilePage() {
               if (isPremium) {
                 return (
                   <div style={{
-                    background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%)",
-                    borderRadius: 20,
-                    padding: "20px 22px",
+                    background: "linear-gradient(145deg, #0a0f1e 0%, #1e3a8a 70%, #1d4ed8 100%)",
+                    borderRadius: 24,
+                    padding: "24px",
                     position: "relative",
                     overflow: "hidden",
-                    boxShadow: "0 8px 30px rgba(15,98,254,0.25)",
-                                      }}>
+                    boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.3)",
+                  }}>
                     {/* Glow orb */}
                     <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)", pointerEvents: "none" }} />
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, position: "relative" }}>
@@ -822,13 +837,13 @@ export default function ProfilePage() {
               if (!isParticular) {
                 return (
                   <div style={{
-                    background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%)",
-                    borderRadius: 20,
-                    padding: "20px 22px",
+                    background: "linear-gradient(145deg, #0a0f1e 0%, #1e3a8a 70%, #1d4ed8 100%)",
+                    borderRadius: 24,
+                    padding: "24px",
                     position: "relative",
                     overflow: "hidden",
-                    boxShadow: "0 8px 30px rgba(15,98,254,0.25)",
-                                      }}>
+                    boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.3)",
+                  }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                       <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                         <Shield size={18} color="#93c5fd" />
@@ -857,7 +872,7 @@ export default function ProfilePage() {
                     boxShadow: "0 8px 30px rgba(15,98,254,0.2)",
                     cursor: "pointer",
                     transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                                      }}
+                  }}
                 >
                   {/* Decorative orbs */}
                   <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.5) 0%, transparent 70%)", pointerEvents: "none" }} />

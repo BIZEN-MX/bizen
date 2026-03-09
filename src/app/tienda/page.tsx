@@ -227,8 +227,8 @@ export default function TiendaPage() {
             className="tienda-outer"
             style={{
                 minHeight: "100vh",
-                background: "#FBFAF5",
-                                width: "100%",
+                background: "#f8fafc",
+                width: "100%",
                 boxSizing: "border-box",
             }}
         >
@@ -268,9 +268,9 @@ export default function TiendaPage() {
         /* ── product card ── */
         .tienda-card {
           background: white;
-          border-radius: 20px;
-          border: 1.5px solid #e8f0fe;
-          box-shadow: 0 4px 18px rgba(15,98,254,0.05);
+          border-radius: 24px;
+          border: 1.5px solid #e2e8f0;
+          box-shadow: 0 8px 32px -8px rgba(15, 98, 254, 0.08);
           overflow: hidden;
           transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1);
           animation: tienda-fadeUp 0.45s ease both;
@@ -278,8 +278,8 @@ export default function TiendaPage() {
           flex-direction: column;
         }
         .tienda-card:hover {
-          transform: translateY(-6px) scale(1.015);
-          box-shadow: 0 16px 42px rgba(15,98,254,0.13);
+          transform: translateY(-6px);
+          box-shadow: 0 24px 48px -12px rgba(15, 98, 254, 0.15);
           border-color: #bfdbfe;
         }
 
@@ -300,14 +300,14 @@ export default function TiendaPage() {
           gap: 8px;
         }
         .canjear-btn.can-afford {
-          background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
+          background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
           color: white;
           box-shadow: 0 6px 20px rgba(15,98,254,0.3);
           animation: tienda-pulse 2.5s ease infinite;
         }
         .canjear-btn.can-afford:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 30px rgba(15,98,254,0.45);
+          transform: translateY(-3px);
+          box-shadow: 0 12px 28px rgba(15, 23, 42, 0.4);
         }
         .canjear-btn.locked {
           background: #f1f5f9;
@@ -360,8 +360,8 @@ export default function TiendaPage() {
                                 }}>
                                     <PartyPopper size={48} />
                                 </div>
-                                <h2 style={{ fontSize: 22, fontWeight: 500, color: "#0f172a", marginBottom: 8 }}>¡Canje exitoso!</h2>
-                                <p style={{ fontSize: 14, color: "#64748b", marginBottom: 28 }}>
+                                <h2 style={{ fontSize: 24, fontWeight: 700, color: "#0f172a", marginBottom: 8, letterSpacing: "-0.01em" }}>¡Canje exitoso!</h2>
+                                <p style={{ fontSize: 15, color: "#64748b", marginBottom: 32, lineHeight: 1.5 }}>
                                     <strong>{selectedProduct.name}</strong> ya está en tu perfil.
                                 </p>
                                 <button
@@ -444,13 +444,13 @@ export default function TiendaPage() {
                                         disabled={bizcoins < selectedProduct.price || purchasing}
                                         onClick={handleConfirmPurchase}
                                         style={{
-                                            flex: 2, padding: "13px", borderRadius: 12, border: "none",
+                                            flex: 2, padding: "14px", borderRadius: 14, border: "none",
                                             background: bizcoins >= selectedProduct.price && !purchasing
-                                                ? "linear-gradient(135deg,#0F62FE,#4A9EFF)"
+                                                ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)"
                                                 : "#e2e8f0",
                                             color: bizcoins >= selectedProduct.price && !purchasing ? "white" : "#94a3b8",
-                                            fontWeight: 500, fontSize: 14, cursor: (bizcoins >= selectedProduct.price && !purchasing) ? "pointer" : "not-allowed",
-                                                                                        display: "flex", alignItems: "center", justifyContent: "center", gap: 8
+                                            fontWeight: 600, fontSize: 14, cursor: (bizcoins >= selectedProduct.price && !purchasing) ? "pointer" : "not-allowed",
+                                            display: "flex", alignItems: "center", justifyContent: "center", gap: 8
                                         }}
                                     >
                                         {purchasing ? (
@@ -485,8 +485,8 @@ export default function TiendaPage() {
                 {/* ── HERO HEADER ── */}
                 <div style={{
                     background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0F62FE 100%)",
-                    borderRadius: 28,
-                    padding: "clamp(32px,5vw,52px) clamp(28px,5vw,48px)",
+                    borderRadius: 32,
+                    padding: "clamp(32px, 5vw, 64px) clamp(28px, 5vw, 48px)",
                     marginBottom: 32,
                     position: "relative",
                     overflow: "hidden",
@@ -503,22 +503,23 @@ export default function TiendaPage() {
                                 <ShoppingBag size={13} color="#60a5fa" />
                                 <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tienda BIZEN</span>
                             </div>
-                            <h1 style={{ fontSize: "clamp(26px,5vw,42px)", fontWeight: 500, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+                            <h1 style={{ fontSize: "clamp(32px, 6vw, 48px)", fontWeight: 800, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
                                 Canjea tus BIZCOINS
                             </h1>
-                            <p style={{ fontSize: "clamp(13px,1.5vw,16px)", color: "#93c5fd", margin: 0, maxWidth: 480 }}>
+                            <p style={{ fontSize: "clamp(15px, 2vw, 18px)", color: "#93c5fd", fontWeight: 400, margin: 0, maxWidth: 480, lineHeight: 1.5 }}>
                                 Recompensas exclusivas para los mejores estudiantes. ¡Tú te lo mereces!
                             </p>
                         </div>
 
                         {/* Balance balloon */}
                         <div style={{
-                            background: "rgba(255,255,255,0.08)",
-                            border: "1px solid rgba(255,255,255,0.15)",
-                            borderRadius: 24,
-                            padding: "24px 36px",
+                            background: "rgba(15, 23, 42, 0.4)",
+                            border: "1px solid rgba(147, 197, 253, 0.3)",
+                            borderRadius: 28,
+                            padding: "32px 42px",
                             textAlign: "center",
-                            backdropFilter: "blur(10px)",
+                            backdropFilter: "blur(16px)",
+                            boxShadow: "0 24px 48px rgba(0,0,0,0.2)",
                             flexShrink: 0,
                         }}>
                             <div style={{ fontSize: "clamp(40px,8vw,62px)", fontWeight: 500, lineHeight: 1, background: "linear-gradient(135deg,#fff,#93c5fd)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -538,9 +539,9 @@ export default function TiendaPage() {
 
                 {/* ── FEATURED PROMO BANNER ── */}
                 <div style={{
-                    background: "linear-gradient(120deg,#7c3aed 0%,#4f46e5 50%,#0F62FE 100%)",
-                    borderRadius: 20,
-                    padding: "24px 32px",
+                    background: "linear-gradient(120deg, #6d28d9 0%, #4f46e5 50%, #0F62FE 100%)",
+                    borderRadius: 24,
+                    padding: "28px 36px",
                     marginBottom: 32,
                     display: "flex",
                     alignItems: "center",
@@ -593,7 +594,7 @@ export default function TiendaPage() {
                                 border: "none",
                                 borderBottom: activeTab === tab.id ? "3px solid #0F62FE" : "3px solid transparent",
                                 color: activeTab === tab.id ? "#0F62FE" : "#64748b",
-                                                                fontWeight: 500,
+                                fontWeight: 500,
                                 fontSize: 15,
                                 cursor: "pointer",
                                 transition: "all 0.2s ease",
@@ -635,15 +636,17 @@ export default function TiendaPage() {
                             placeholder="Buscar recompensas..."
                             style={{
                                 width: "100%",
-                                padding: "12px 14px 12px 42px",
-                                borderRadius: 12,
-                                border: `1.5px solid ${searchFocused ? "#0F62FE" : "#e2e8f0"}`,
-                                fontSize: 14,
-                                                                fontWeight: 500,
+                                padding: "14px 16px 14px 44px",
+                                borderRadius: 16,
+                                border: `2px solid ${searchFocused ? "#0F62FE" : "transparent"}`,
+                                fontSize: 15,
+                                fontWeight: 500,
                                 color: "#0f172a",
                                 background: "white",
-                                boxShadow: searchFocused ? "0 0 0 3px rgba(15,98,254,0.12)" : "none",
-                                transition: "all 0.2s",
+                                boxShadow: searchFocused
+                                    ? "0 8px 24px rgba(15,98,254,0.15)"
+                                    : "0 4px 12px rgba(0,0,0,0.05)",
+                                transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
                                 boxSizing: "border-box",
                                 outline: "none",
                             }}
@@ -658,20 +661,21 @@ export default function TiendaPage() {
                                 className="tienda-cat"
                                 onClick={() => setActiveCategory(cat as Category | "Todo")}
                                 style={{
-                                    padding: "10px 20px",
+                                    padding: "10px 22px",
                                     borderRadius: 999,
-                                                                        fontWeight: 500,
-                                    fontSize: 13,
+                                    fontWeight: 600,
+                                    fontSize: 14,
                                     cursor: "pointer",
                                     whiteSpace: "nowrap",
                                     background: activeCategory === cat
-                                        ? "linear-gradient(135deg,#0F62FE,#4A9EFF)"
+                                        ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)"
                                         : "white",
                                     color: activeCategory === cat ? "white" : "#64748b",
                                     boxShadow: activeCategory === cat
-                                        ? "0 4px 14px rgba(15,98,254,0.3)"
-                                        : "0 1px 4px rgba(0,0,0,0.07)",
+                                        ? "0 8px 20px rgba(15, 23, 42, 0.25)"
+                                        : "0 2px 8px rgba(0,0,0,0.04)",
                                     border: activeCategory === cat ? "none" : "1.5px solid #e2e8f0",
+                                    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                                 }}
                             >
                                 {cat}

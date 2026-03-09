@@ -13,6 +13,8 @@ interface StickyFooterProps {
   feedbackTitle?: string
   /** Feedback body text */
   feedbackBody?: string
+  /** Make footer transparent and adapt for dark mode */
+  isDark?: boolean
 }
 
 /**
@@ -27,17 +29,18 @@ export function StickyFooter({
   feedbackColor,
   feedbackTitle,
   feedbackBody,
+  isDark = false,
 }: StickyFooterProps) {
   const isCorrect = feedbackColor === "correct"
   const isIncorrect = feedbackColor === "incorrect"
 
-  const bg = isCorrect
+  const bg = isDark ? "transparent" : isCorrect
     ? "#EFF6FF"
     : isIncorrect
       ? "#FEF2F2"
       : "#FFFFFF"
 
-  const borderColor = isCorrect
+  const borderColor = isDark ? "transparent" : isCorrect
     ? "#93C5FD"
     : isIncorrect
       ? "#FECACA"
@@ -102,7 +105,7 @@ export function StickyFooter({
                   fontWeight: 500,
                   fontSize: "clamp(17px, 2vw, 20px)",
                   color: isCorrect ? "#1D4ED8" : "#DC2626",
-                                  }}>
+                }}>
                   {feedbackTitle}
                 </p>
                 {feedbackBody && (
@@ -112,7 +115,7 @@ export function StickyFooter({
                     color: isCorrect ? "#3B82F6" : "#EF4444",
                     fontWeight: 500,
                     lineHeight: 1.4,
-                                      }}>
+                  }}>
                     {feedbackBody}
                   </p>
                 )}
@@ -198,7 +201,7 @@ export function StickyFooterButton({
     borderRadius: 16,
     fontWeight: 500,
     fontSize: "clamp(14px, 1.5vw, 16px)",
-        textTransform: "uppercase",
+    textTransform: "uppercase",
     letterSpacing: "0.05em",
     cursor: disabled || isLoading ? "not-allowed" : "pointer",
     opacity: disabled || isLoading ? 0.4 : 1,

@@ -119,7 +119,7 @@ function BIZENLoginContent() {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      background: "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)",
+      background: "linear-gradient(135deg, #050b14 0%, #0a192f 40%, #173d7a 100%)",
       overflow: "hidden",
       padding: "clamp(16px, 4vw, 40px)",
       boxSizing: "border-box",
@@ -180,19 +180,26 @@ function BIZENLoginContent() {
         </strong>
       </Link>
 
-      {/* Form — floating directly on background */}
       <div style={{
         position: "relative", zIndex: 2,
-        width: "100%", maxWidth: "clamp(320px, 90vw, 440px)",
+        width: "100%", maxWidth: "clamp(280px, 92vw, 480px)",
         display: "flex", flexDirection: "column", alignItems: "center",
+        background: "rgba(10, 25, 47, 0.6)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        borderRadius: "32px",
+        padding: "clamp(32px, 6vw, 48px) clamp(24px, 4vw, 40px)",
+        boxSizing: "border-box",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        boxShadow: "0 32px 64px -16px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
       }}>
 
 
         {/* Heading */}
-        <h1 style={{ margin: "0 0 6px", fontSize: "clamp(26px, 5vw, 36px)", fontWeight: 500, color: "#fff", textAlign: "center", letterSpacing: "-0.02em" }}>
+        <h1 style={{ margin: "0 0 8px", fontSize: "clamp(28px, 5vw, 40px)", fontWeight: 800, color: "#fff", textAlign: "center", letterSpacing: "-0.04em" }}>
           ¡Bienvenido!
         </h1>
-        <p style={{ margin: "0 0 clamp(28px, 5vw, 40px)", fontSize: "clamp(14px, 2vw, 16px)", color: "rgba(255,255,255,0.55)", textAlign: "center", }}>
+        <p style={{ margin: "0 0 clamp(32px, 5vw, 48px)", fontSize: "clamp(15px, 2vw, 17px)", color: "rgba(255,255,255,0.7)", textAlign: "center", fontWeight: 500 }}>
           Inicia sesión en tu cuenta de {brandName}
         </p>
 
@@ -215,7 +222,7 @@ function BIZENLoginContent() {
                 backdropFilter: "blur(8px)",
                 padding: "0 16px", outline: "none",
                 fontSize: 15, color: "#fff",
-                                transition: "border-color .2s, background .2s",
+                transition: "border-color .2s, background .2s",
               }}
             />
           </div>
@@ -238,7 +245,7 @@ function BIZENLoginContent() {
                   backdropFilter: "blur(8px)",
                   padding: "0 44px 0 16px", outline: "none",
                   fontSize: 15, color: "#fff",
-                                    transition: "border-color .2s, background .2s",
+                  transition: "border-color .2s, background .2s",
                 }}
               />
               <button type="button" onClick={() => setShowPass(s => !s)} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "transparent", border: "none", cursor: "pointer", padding: 4, display: "flex" }} aria-label={showPass ? "Ocultar" : "Mostrar"}>
@@ -261,15 +268,15 @@ function BIZENLoginContent() {
             type="submit" disabled={loading}
             style={{
               height: 52, borderRadius: 12, border: "none", width: "100%",
-              background: loading ? "rgba(0,86,231,0.5)" : "linear-gradient(135deg, #0056E7, #1983FD)",
-              color: "#fff", fontWeight: 500, fontSize: 16,
+              background: loading ? "rgba(15, 98, 254, 0.5)" : "linear-gradient(135deg, #0F62FE, #4A9EFF)",
+              color: "#fff", fontWeight: 700, fontSize: 16,
               cursor: loading ? "not-allowed" : "pointer",
-                            letterSpacing: "0.01em",
-              boxShadow: loading ? "none" : "0 8px 24px rgba(0,86,231,0.4)",
-              transition: "all 0.2s ease",
+              letterSpacing: "0.02em",
+              boxShadow: loading ? "none" : "0 12px 24px -6px rgba(15, 98, 254, 0.4)",
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
-            onMouseOver={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,86,231,0.5)" } }}
-            onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = loading ? "none" : "0 8px 24px rgba(0,86,231,0.4)" }}
+            onMouseOver={(e) => { if (!loading) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 16px 32px -8px rgba(15, 98, 254, 0.6)" } }}
+            onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = loading ? "none" : "0 12px 24px -6px rgba(15, 98, 254, 0.4)" }}
           >
             {loading ? "Entrando…" : `Entrar a ${brandName}`}
           </button>
@@ -301,7 +308,7 @@ function BIZENLoginContent() {
               backdropFilter: "blur(8px)",
               color: "#fff", fontWeight: 500, fontSize: 15,
               cursor: loading ? "not-allowed" : "pointer",
-                            display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
               transition: "all 0.2s ease",
             }}
             onMouseOver={(e) => { if (!loading) { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.transform = "translateY(-1px)" } }}
@@ -327,7 +334,7 @@ function BIZENLoginContent() {
               backdropFilter: "blur(8px)",
               color: "#fff", fontWeight: 500, fontSize: 15,
               cursor: loading ? "not-allowed" : "pointer",
-                            display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
               transition: "all 0.2s ease",
             }}
             onMouseOver={(e) => { if (!loading) { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.transform = "translateY(-1px)" } }}
@@ -343,7 +350,7 @@ function BIZENLoginContent() {
         {/* Error message */}
         {message && (
           <p role="status" style={{
-            marginTop: 16, textAlign: "center", color: "#f87171", fontSize: 13,             background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)", borderRadius: 8,
+            marginTop: 16, textAlign: "center", color: "#f87171", fontSize: 13, background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)", borderRadius: 8,
             padding: "10px 16px", width: "100%", boxSizing: "border-box",
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
           }}>

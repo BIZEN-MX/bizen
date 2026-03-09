@@ -82,7 +82,8 @@ export default function FixedSidebar() {
     const handleResize = () => {
       const width = window.innerWidth
       setIsMobile(width <= 767) // Only mobile phones
-      setIsCompactSidebar(width <= 1160)
+      // Compact is true ONLY on mobile where we hide labels in CSS
+      setIsCompactSidebar(width <= 767)
     }
     handleResize()
     window.addEventListener('resize', handleResize)
@@ -219,7 +220,6 @@ export default function FixedSidebar() {
   const stackAlignment = isCompactSidebar ? "center" : "stretch"
   const coursesActive = isActivePath("/courses")
   const retoDiarioActive = isActivePath("/reto-diario")
-  const businessLabActive = isActivePath("/business-lab")
   const simuladorActive = isActivePath("/simulador")
   const forumActive = isActivePath("/forum")
 
@@ -268,12 +268,12 @@ export default function FixedSidebar() {
           left: 0,
           width: isCompactSidebar ? "220px" : "280px",
           height: "100vh",
-          background: "#FBFAF5",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+          background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)",
+          boxShadow: "4px 0 24px rgba(0, 0, 0, 0.03)",
           zIndex: 1000,
           overflowY: "auto",
           overflowX: "hidden",
-                    borderRight: "2px solid #0F62FE",
+          borderRight: "1px solid rgba(15, 98, 254, 0.08)",
           boxSizing: "border-box"
         }}>
         <div style={{ padding: "24px 20px 0 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", minHeight: "100%" }} className="sidebar-inner-container">
@@ -294,7 +294,7 @@ export default function FixedSidebar() {
             className="sidebar-brand"
           >
             <span style={{
-                            fontSize: 30,
+              fontSize: 30,
               fontWeight: 500,
               color: "#1e293b",
               letterSpacing: "-1px",
@@ -325,73 +325,67 @@ export default function FixedSidebar() {
                       .plan-badge-premium {
                         display: inline-flex;
                         align-items: center;
-                        gap: 5px;
-                        background: rgba(15, 98, 254, 0.08);
+                        gap: 6px;
+                        background: linear-gradient(135deg, rgba(15, 98, 254, 0.1) 0%, rgba(15, 98, 254, 0.05) 100%);
                         color: #0F62FE;
-                        font-size: 11px;
-                        font-weight: 500;
-                        
-                        letter-spacing: 1px;
+                        font-size: 10px;
+                        font-weight: 700;
+                        letter-spacing: 0.05em;
                         text-transform: uppercase;
                         padding: 4px 12px;
-                        border-radius: 20px;
-                        border: 1.5px solid rgba(15, 98, 254, 0.2);
+                        border-radius: 99px;
+                        border: 1px solid rgba(15, 98, 254, 0.15);
                         cursor: default;
                         user-select: none;
+                        box-shadow: 0 2px 4px rgba(15, 98, 254, 0.05);
                       }
                       .plan-badge-premium .plan-dot {
-                        width: 5px; height: 5px;
+                        width: 4px; height: 4px;
                         border-radius: 50%;
                         background: #0F62FE;
                         flex-shrink: 0;
-                      }
-                      @keyframes pulse {
-                        0% { transform: scale(1); opacity: 1; }
-                        50% { transform: scale(1.2); opacity: 0.8; }
-                        100% { transform: scale(1); opacity: 1; }
+                        box-shadow: 0 0 8px #0F62FE;
                       }
                       .plan-badge-free {
                         display: inline-flex;
                         align-items: center;
-                        gap: 5px;
-                        background: transparent;
-                        color: #94A3B8;
-                        font-size: 11px;
-                        font-weight: 500;
-                        
-                        letter-spacing: 1.2px;
+                        gap: 6px;
+                        background: #F1F5F9;
+                        color: #64748B;
+                        font-size: 10px;
+                        font-weight: 700;
+                        letter-spacing: 0.05em;
                         text-transform: uppercase;
                         padding: 4px 12px;
-                        border-radius: 20px;
-                        border: 1.5px solid #CBD5E1;
+                        border-radius: 99px;
+                        border: 1px solid #E2E8F0;
                         cursor: default;
                         user-select: none;
                       }
                       .plan-badge-free .plan-dot {
-                        width: 5px; height: 5px;
+                        width: 4px; height: 4px;
                         border-radius: 50%;
-                        background: #CBD5E1;
+                        background: #94A3B8;
                         flex-shrink: 0;
                       }
                       .plan-badge-institutional {
                         display: inline-flex;
                         align-items: center;
-                        gap: 5px;
-                        background: rgba(15, 98, 254, 0.08);
+                        gap: 6px;
+                        background: linear-gradient(135deg, rgba(15, 98, 254, 0.08) 0%, rgba(15, 98, 254, 0.03) 100%);
                         color: #0F62FE;
-                        font-size: 11px;
-                        font-weight: 500;
-                        
-                        letter-spacing: 1px;
+                        font-size: 10px;
+                        font-weight: 700;
+                        letter-spacing: 0.05em;
                         text-transform: uppercase;
                         padding: 4px 12px;
-                        border-radius: 20px;
-                        border: 1.5px solid rgba(15, 98, 254, 0.2);
+                        border-radius: 99px;
+                        border: 1px solid rgba(15, 98, 254, 0.1);
                         cursor: default;
                         user-select: none;
                       }
                       .plan-badge-institutional .plan-dot {
-                        width: 5px; height: 5px;
+                        width: 4px; height: 4px;
                         border-radius: 50%;
                         background: #0F62FE;
                         flex-shrink: 0;
@@ -400,18 +394,17 @@ export default function FixedSidebar() {
                     {isPremium ? (
                       <span className="plan-badge-premium">
                         <span className="plan-dot" />
-                        <span style={{ marginRight: "4px", fontSize: "12px" }}>✦</span>
-                        Premium
+                        Plan Premium
                       </span>
                     ) : !isParticular ? (
                       <span className="plan-badge-institutional">
                         <span className="plan-dot" />
-                        Institucional
+                        Plan Institucional
                       </span>
                     ) : (
                       <span className="plan-badge-free">
                         <span className="plan-dot" />
-                        Free
+                        Plan Free
                       </span>
                     )}
                   </>
@@ -433,7 +426,7 @@ export default function FixedSidebar() {
                   borderRadius: 12,
                   cursor: "pointer",
                   transition: "all 0.3s ease",
-                                    fontSize: 15,
+                  fontSize: 15,
                   fontWeight: 500,
                   color: "white",
                   boxShadow: "0 4px 20px rgba(11, 113, 254, 0.5), 0 0 30px rgba(11, 113, 254, 0.3)",
@@ -499,32 +492,49 @@ export default function FixedSidebar() {
                       alignItems: "center",
                       gap: 12,
                       padding: "14px 16px",
-                      background: isCompactSidebar ? "transparent" : (coursesActive ? "#eff6ff" : "transparent"),
+                      background: isCompactSidebar ? "transparent" : (coursesActive ? "rgba(11, 113, 254, 0.1)" : "transparent"),
                       border: "none",
                       borderRadius: 10,
                       cursor: "pointer",
-                      transition: "all 0.2s ease",
-                                            fontSize: 14,
-                      fontWeight: coursesActive ? 700 : 600,
+                      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                      fontSize: 14,
+                      fontWeight: coursesActive ? 700 : 500,
                       textAlign: "left",
-                      color: coursesActive ? "#0B71FE" : "#4b5563",
-                      ...compactButtonOverrides(coursesActive)
+                      color: coursesActive ? "#0B71FE" : "#64748B",
+                      ...compactButtonOverrides(coursesActive),
+                      position: "relative",
+                      overflow: "hidden",
+                      boxShadow: coursesActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                     }}
                     onMouseEnter={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = "#f8fafc"
+                        e.currentTarget.style.background = coursesActive ? "rgba(11, 113, 254, 0.15)" : "#F1F5F9"
                         e.currentTarget.style.color = "#0B71FE"
-                        e.currentTarget.style.transform = "translateX(-4px)"
+                        e.currentTarget.style.transform = "translateY(-1px)"
+                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = coursesActive ? "#eff6ff" : "transparent"
-                        e.currentTarget.style.color = coursesActive ? "#0B71FE" : "#4b5563"
-                        e.currentTarget.style.transform = "translateX(0)"
+                        e.currentTarget.style.background = coursesActive ? "rgba(11, 113, 254, 0.1)" : "transparent"
+                        e.currentTarget.style.color = coursesActive ? "#0B71FE" : "#64748B"
+                        e.currentTarget.style.transform = "translateY(0)"
+                        e.currentTarget.style.boxShadow = coursesActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                       }
                     }}
                   >
+                    {coursesActive && (
+                      <div style={{
+                        position: "absolute",
+                        left: 0,
+                        top: "15%",
+                        height: "70%",
+                        width: "4px",
+                        backgroundColor: "#0B71FE",
+                        borderRadius: "0 4px 4px 0",
+                        boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                      }} />
+                    )}
                     <MapIcon size={iconSize} strokeWidth={coursesActive ? 2.5 : 2} />
                     <span className="nav-item-label">{t.nav.exploreCourses}</span>
                   </button>
@@ -537,74 +547,54 @@ export default function FixedSidebar() {
                       alignItems: "center",
                       gap: 12,
                       padding: "14px 16px",
-                      background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "#eff6ff" : "transparent"),
+                      background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "rgba(11, 113, 254, 0.1)" : "transparent"),
                       border: "none",
                       borderRadius: 10,
                       cursor: "pointer",
-                      transition: "all 0.2s ease",
-                                            fontSize: 14,
-                      fontWeight: retoDiarioActive ? 700 : 600,
+                      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                      fontSize: 14,
+                      fontWeight: retoDiarioActive ? 700 : 500,
                       textAlign: "left",
-                      color: retoDiarioActive ? "#0B71FE" : "#4b5563",
-                      ...compactButtonOverrides(retoDiarioActive)
+                      color: retoDiarioActive ? "#0B71FE" : "#64748B",
+                      ...compactButtonOverrides(retoDiarioActive),
+                      position: "relative",
+                      overflow: "hidden",
+                      boxShadow: retoDiarioActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                     }}
                     onMouseEnter={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = "#f8fafc"
+                        e.currentTarget.style.background = retoDiarioActive ? "rgba(11, 113, 254, 0.15)" : "#F1F5F9"
                         e.currentTarget.style.color = "#0B71FE"
-                        e.currentTarget.style.transform = "translateX(-4px)"
+                        e.currentTarget.style.transform = "translateY(-1px)"
+                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = retoDiarioActive ? "#eff6ff" : "transparent"
-                        e.currentTarget.style.color = retoDiarioActive ? "#0B71FE" : "#4b5563"
-                        e.currentTarget.style.transform = "translateX(0)"
+                        e.currentTarget.style.background = retoDiarioActive ? "rgba(11, 113, 254, 0.1)" : "transparent"
+                        e.currentTarget.style.color = retoDiarioActive ? "#0B71FE" : "#64748B"
+                        e.currentTarget.style.transform = "translateY(0)"
+                        e.currentTarget.style.boxShadow = retoDiarioActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                       }
                     }}
                   >
+                    {retoDiarioActive && (
+                      <div style={{
+                        position: "absolute",
+                        left: 0,
+                        top: "15%",
+                        height: "70%",
+                        width: "4px",
+                        backgroundColor: "#0B71FE",
+                        borderRadius: "0 4px 4px 0",
+                        boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                      }} />
+                    )}
                     <Target size={iconSize} strokeWidth={retoDiarioActive ? 2.5 : 2} />
                     <span className="nav-item-label">Reto diario</span>
                   </button>
 
-                  {/* Business Lab hidden for now — remove this block to show again */}
-                  {false && (
-                    <button
-                      onClick={() => navigateTo("/business-lab")}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "12px",
-                        background: isCompactSidebar ? "transparent" : (businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"),
-                        border: "none",
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                                                fontSize: 14,
-                        fontWeight: businessLabActive ? 700 : 600,
-                        textAlign: "left",
-                        color: businessLabActive ? "#93C5FD" : "#fff",
-                        ...compactButtonOverrides(businessLabActive)
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = "rgba(255,255,255,0.1)"
-                          e.currentTarget.style.color = "#93C5FD"
-                          e.currentTarget.style.transform = "translateX(-4px)"
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = businessLabActive ? "rgba(255,255,255,0.15)" : "transparent"
-                          e.currentTarget.style.color = businessLabActive ? "#93C5FD" : "#fff"
-                          e.currentTarget.style.transform = "translateX(0)"
-                        }
-                      }}
-                    >
-                      <span className="nav-item-label">Business Lab</span>
-                    </button>
-                  )}
+
 
                   <button
                     data-tour-id="/simulador"
@@ -614,32 +604,49 @@ export default function FixedSidebar() {
                       alignItems: "center",
                       gap: 12,
                       padding: "14px 16px",
-                      background: isCompactSidebar ? "transparent" : (simuladorActive ? "#eff6ff" : "transparent"),
+                      background: isCompactSidebar ? "transparent" : (simuladorActive ? "rgba(11, 113, 254, 0.1)" : "transparent"),
                       border: "none",
                       borderRadius: 10,
                       cursor: "pointer",
-                      transition: "all 0.2s ease",
-                                            fontSize: 14,
-                      fontWeight: simuladorActive ? 700 : 600,
+                      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                      fontSize: 14,
+                      fontWeight: simuladorActive ? 700 : 500,
                       textAlign: "left",
-                      color: simuladorActive ? "#0B71FE" : "#4b5563",
-                      ...compactButtonOverrides(simuladorActive)
+                      color: simuladorActive ? "#0B71FE" : "#64748B",
+                      ...compactButtonOverrides(simuladorActive),
+                      position: "relative",
+                      overflow: "hidden",
+                      boxShadow: simuladorActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                     }}
                     onMouseEnter={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = "#f8fafc"
+                        e.currentTarget.style.background = simuladorActive ? "rgba(11, 113, 254, 0.15)" : "#F1F5F9"
                         e.currentTarget.style.color = "#0B71FE"
-                        e.currentTarget.style.transform = "translateX(-4px)"
+                        e.currentTarget.style.transform = "translateY(-1px)"
+                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = simuladorActive ? "#eff6ff" : "transparent"
-                        e.currentTarget.style.color = simuladorActive ? "#0B71FE" : "#4b5563"
-                        e.currentTarget.style.transform = "translateX(0)"
+                        e.currentTarget.style.background = simuladorActive ? "rgba(11, 113, 254, 0.1)" : "transparent"
+                        e.currentTarget.style.color = simuladorActive ? "#0B71FE" : "#64748B"
+                        e.currentTarget.style.transform = "translateY(0)"
+                        e.currentTarget.style.boxShadow = simuladorActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                       }
                     }}
                   >
+                    {simuladorActive && (
+                      <div style={{
+                        position: "absolute",
+                        left: 0,
+                        top: "15%",
+                        height: "70%",
+                        width: "4px",
+                        backgroundColor: "#0B71FE",
+                        borderRadius: "0 4px 4px 0",
+                        boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                      }} />
+                    )}
                     <Gamepad2 size={iconSize} strokeWidth={simuladorActive ? 2.5 : 2} />
                     <span className="nav-item-label">Simulador</span>
                   </button>
@@ -654,32 +661,49 @@ export default function FixedSidebar() {
                       alignItems: "center",
                       gap: 12,
                       padding: "14px 16px",
-                      background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "#eff6ff" : "transparent"),
+                      background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "rgba(11, 113, 254, 0.12)" : "transparent"),
                       border: "none",
                       borderRadius: 10,
                       cursor: "pointer",
-                      transition: "all 0.2s ease",
-                                            fontSize: 14,
-                      fontWeight: impactoSocialActive ? 700 : 600,
+                      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                      fontSize: 14,
+                      fontWeight: impactoSocialActive ? 700 : 500,
                       textAlign: "left",
-                      color: impactoSocialActive ? "#0B71FE" : "#4b5563",
-                      ...compactButtonOverrides(impactoSocialActive)
+                      color: impactoSocialActive ? "#0B71FE" : "#64748B",
+                      ...compactButtonOverrides(impactoSocialActive),
+                      position: "relative",
+                      overflow: "hidden",
+                      boxShadow: impactoSocialActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                     }}
                     onMouseEnter={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = "#f8fafc"
+                        e.currentTarget.style.background = impactoSocialActive ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
                         e.currentTarget.style.color = "#0B71FE"
-                        e.currentTarget.style.transform = "translateX(-4px)"
+                        e.currentTarget.style.transform = "translateY(-1px)"
+                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isCompactSidebar) {
-                        e.currentTarget.style.background = impactoSocialActive ? "#eff6ff" : "transparent"
-                        e.currentTarget.style.color = impactoSocialActive ? "#0B71FE" : "#4b5563"
-                        e.currentTarget.style.transform = "translateX(0)"
+                        e.currentTarget.style.background = impactoSocialActive ? "rgba(11, 113, 254, 0.12)" : "transparent"
+                        e.currentTarget.style.color = impactoSocialActive ? "#0B71FE" : "#64748B"
+                        e.currentTarget.style.transform = "translateY(0)"
+                        e.currentTarget.style.boxShadow = impactoSocialActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                       }
                     }}
                   >
+                    {impactoSocialActive && (
+                      <div style={{
+                        position: "absolute",
+                        left: 0,
+                        top: "15%",
+                        height: "70%",
+                        width: "4px",
+                        backgroundColor: "#0B71FE",
+                        borderRadius: "0 4px 4px 0",
+                        boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                      }} />
+                    )}
                     <Heart size={iconSize} strokeWidth={impactoSocialActive ? 2.5 : 2} />
                     <span className="nav-item-label">{t.nav.impactoSocial}</span>
                   </button>
@@ -698,32 +722,47 @@ export default function FixedSidebar() {
                         alignItems: "center",
                         gap: 12,
                         padding: "14px 16px",
-                        background: isCompactSidebar ? "transparent" : (forumActive ? "#eff6ff" : "transparent"),
+                        background: isCompactSidebar ? "transparent" : (forumActive ? "rgba(11, 113, 254, 0.12)" : "transparent"),
                         border: "none",
                         borderRadius: 10,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                                                fontSize: 14,
+                        fontSize: 14,
                         fontWeight: forumActive ? 700 : 600,
                         textAlign: "left",
                         color: forumActive ? "#0B71FE" : "#4b5563",
-                        ...compactButtonOverrides(forumActive)
+                        ...compactButtonOverrides(forumActive),
+                        position: "relative",
+                        overflow: "hidden",
+                        boxShadow: forumActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                       }}
                       onMouseEnter={(e) => {
                         if (!isCompactSidebar) {
-                          e.currentTarget.style.background = "#f8fafc"
+                          e.currentTarget.style.background = forumActive ? "rgba(11, 113, 254, 0.18)" : "#f8fafc"
                           e.currentTarget.style.color = "#0B71FE"
                           e.currentTarget.style.transform = "translateX(-4px)"
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (!isCompactSidebar) {
-                          e.currentTarget.style.background = forumActive ? "#eff6ff" : "transparent"
+                          e.currentTarget.style.background = forumActive ? "rgba(11, 113, 254, 0.12)" : "transparent"
                           e.currentTarget.style.color = forumActive ? "#0B71FE" : "#4b5563"
                           e.currentTarget.style.transform = "translateX(0)"
                         }
                       }}
                     >
+                      {forumActive && (
+                        <div style={{
+                          position: "absolute",
+                          left: 0,
+                          top: "15%",
+                          height: "70%",
+                          width: "4px",
+                          backgroundColor: "#0B71FE",
+                          borderRadius: "0 4px 4px 0",
+                          boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                        }} />
+                      )}
                       <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
                       <span className="nav-item-label">Foro</span>
                     </button>
@@ -745,7 +784,7 @@ export default function FixedSidebar() {
                           borderRadius: 10,
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                                                    fontSize: 14,
+                          fontSize: 14,
                           fontWeight: pathname === "/teacher/dashboard" ? 700 : 600,
                           textAlign: "left",
                           color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563",
@@ -782,7 +821,7 @@ export default function FixedSidebar() {
                           borderRadius: 10,
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                                                    fontSize: 14,
+                          fontSize: 14,
                           fontWeight: pathname === "/teacher/courses" ? 700 : 600,
                           textAlign: "left",
                           color: pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563",
@@ -830,7 +869,7 @@ export default function FixedSidebar() {
                           borderRadius: 10,
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                                                    fontSize: 14,
+                          fontSize: 14,
                           fontWeight: 500,
                           textAlign: "left",
                           color: isMasOpen ? "#0B71FE" : "#4b5563",
@@ -892,27 +931,41 @@ export default function FixedSidebar() {
                                   alignItems: "center",
                                   gap: 12,
                                   padding: "10px 12px",
-                                  background: rankingsActive ? "#eff6ff" : "transparent",
+                                  background: rankingsActive ? "rgba(11, 113, 254, 0.15)" : "transparent",
                                   border: "none",
                                   borderRadius: 8,
                                   cursor: "pointer",
                                   transition: "all 0.2s ease",
-                                                                    fontSize: 13,
-                                  fontWeight: rankingsActive ? 700 : 600,
+                                  fontSize: 13,
+                                  fontWeight: rankingsActive ? 750 : 600,
                                   textAlign: "left",
                                   color: rankingsActive ? "#0B71FE" : "#4b5563",
                                   width: "100%",
-                                  boxSizing: "border-box"
+                                  boxSizing: "border-box",
+                                  position: "relative",
+                                  overflow: "hidden"
                                 }}
                                 onMouseEnter={(e) => {
-                                  e.currentTarget.style.background = "#f8fafc"
+                                  e.currentTarget.style.background = rankingsActive ? "rgba(11, 113, 254, 0.22)" : "#f8fafc"
                                   e.currentTarget.style.color = "#0B71FE"
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = rankingsActive ? "#eff6ff" : "transparent"
+                                  e.currentTarget.style.background = rankingsActive ? "rgba(11, 113, 254, 0.15)" : "transparent"
                                   e.currentTarget.style.color = rankingsActive ? "#0B71FE" : "#4b5563"
                                 }}
                               >
+                                {rankingsActive && (
+                                  <div style={{
+                                    position: "absolute",
+                                    left: 0,
+                                    top: "20%",
+                                    height: "60%",
+                                    width: "4px",
+                                    backgroundColor: "#0B71FE",
+                                    borderRadius: "0 4px 4px 0",
+                                    boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                                  }} />
+                                )}
                                 <Medal size={20} strokeWidth={rankingsActive ? 2.5 : 2} />
                                 <span className="nav-item-label">Rankings</span>
                               </button>
@@ -930,7 +983,7 @@ export default function FixedSidebar() {
                                   borderRadius: 8,
                                   cursor: "pointer",
                                   transition: "all 0.2s ease",
-                                                                    fontSize: 13,
+                                  fontSize: 13,
                                   fontWeight: puntosActive ? 700 : 600,
                                   textAlign: "left",
                                   color: puntosActive ? "#0B71FE" : "#4b5563",
@@ -963,30 +1016,44 @@ export default function FixedSidebar() {
                                   alignItems: "center",
                                   gap: 12,
                                   padding: "10px 12px",
-                                  background: isCompactSidebar ? "transparent" : (tiendaActive ? "#eff6ff" : "transparent"),
+                                  background: isCompactSidebar ? "transparent" : (tiendaActive ? "rgba(11, 113, 254, 0.15)" : "transparent"),
                                   border: "none",
                                   borderRadius: 8,
                                   cursor: "pointer",
                                   transition: "all 0.2s ease",
-                                                                    fontSize: 13,
-                                  fontWeight: tiendaActive ? 700 : 600,
+                                  fontSize: 13,
+                                  fontWeight: tiendaActive ? 750 : 600,
                                   textAlign: "left",
                                   color: tiendaActive ? "#0B71FE" : "#4b5563",
-                                  ...compactButtonOverrides(tiendaActive)
+                                  ...compactButtonOverrides(tiendaActive),
+                                  position: "relative",
+                                  overflow: "hidden"
                                 }}
                                 onMouseEnter={(e) => {
                                   if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = "#f8fafc"
+                                    e.currentTarget.style.background = tiendaActive ? "rgba(11, 113, 254, 0.22)" : "#f8fafc"
                                     e.currentTarget.style.color = "#0B71FE"
                                   }
                                 }}
                                 onMouseLeave={(e) => {
                                   if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = tiendaActive ? "#eff6ff" : "transparent"
+                                    e.currentTarget.style.background = tiendaActive ? "rgba(11, 113, 254, 0.15)" : "transparent"
                                     e.currentTarget.style.color = tiendaActive ? "#0B71FE" : "#4b5563"
                                   }
                                 }}
                               >
+                                {tiendaActive && (
+                                  <div style={{
+                                    position: "absolute",
+                                    left: 0,
+                                    top: "20%",
+                                    height: "60%",
+                                    width: "4px",
+                                    backgroundColor: "#0B71FE",
+                                    borderRadius: "0 4px 4px 0",
+                                    boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                                  }} />
+                                )}
                                 <ShoppingBag size={20} strokeWidth={tiendaActive ? 2.5 : 2} />
                                 <span className="nav-item-label">Tienda</span>
                               </button>
@@ -1001,32 +1068,46 @@ export default function FixedSidebar() {
                               alignItems: "center",
                               gap: 12,
                               padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (settingsActive ? "#eff6ff" : "transparent"),
+                              background: isCompactSidebar ? "transparent" : (settingsActive ? "rgba(11, 113, 254, 0.15)" : "transparent"),
                               border: "none",
                               borderRadius: 8,
                               cursor: "pointer",
                               transition: "all 0.2s ease",
-                                                            fontSize: 13,
-                              fontWeight: settingsActive ? 700 : 600,
+                              fontSize: 13,
+                              fontWeight: settingsActive ? 750 : 600,
                               textAlign: "left",
                               color: settingsActive ? "#0B71FE" : "#4b5563",
                               width: "100%",
                               boxSizing: "border-box",
-                              ...compactButtonOverrides(settingsActive)
+                              ...compactButtonOverrides(settingsActive),
+                              position: "relative",
+                              overflow: "hidden"
                             }}
                             onMouseEnter={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = "#f8fafc"
+                                e.currentTarget.style.background = settingsActive ? "rgba(11, 113, 254, 0.22)" : "#f8fafc"
                                 e.currentTarget.style.color = "#0B71FE"
                               }
                             }}
                             onMouseLeave={(e) => {
                               if (!isCompactSidebar) {
-                                e.currentTarget.style.background = settingsActive ? "#eff6ff" : "transparent"
+                                e.currentTarget.style.background = settingsActive ? "rgba(11, 113, 254, 0.15)" : "transparent"
                                 e.currentTarget.style.color = settingsActive ? "#0B71FE" : "#4b5563"
                               }
                             }}
                           >
+                            {settingsActive && (
+                              <div style={{
+                                position: "absolute",
+                                left: 0,
+                                top: "20%",
+                                height: "60%",
+                                width: "4px",
+                                backgroundColor: "#0B71FE",
+                                borderRadius: "0 4px 4px 0",
+                                boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                              }} />
+                            )}
                             <Settings size={20} strokeWidth={settingsActive ? 2.5 : 2} />
                             <span className="nav-item-label">Configuración</span>
                           </button>
@@ -1044,7 +1125,7 @@ export default function FixedSidebar() {
                               borderRadius: 8,
                               cursor: "pointer",
                               transition: "all 0.2s ease",
-                                                            fontSize: 13,
+                              fontSize: 13,
                               fontWeight: 500,
                               textAlign: "left",
                               color: "#4b5563",
@@ -1084,7 +1165,7 @@ export default function FixedSidebar() {
                               borderRadius: 8,
                               cursor: "pointer",
                               transition: "all 0.2s ease",
-                                                            fontSize: 13,
+                              fontSize: 13,
                               fontWeight: 500,
                               textAlign: "left",
                               color: "#DC2626",
@@ -1123,8 +1204,8 @@ export default function FixedSidebar() {
                 display: "flex",
                 flexDirection: isCompactSidebar ? "column" : "row",
                 alignItems: "center",
-                justifyContent: "center",
-                gap: 16,
+                justifyContent: isCompactSidebar ? "center" : "flex-start",
+                gap: 12,
                 cursor: "pointer",
                 transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                 WebkitTapHighlightColor: "transparent",
@@ -1231,7 +1312,7 @@ export default function FixedSidebar() {
             justifyContent: "center",
             zIndex: 1100,
             padding: 20,
-                      }}>
+          }}>
             <div style={{
               background: "white",
               borderRadius: 16,
@@ -1272,7 +1353,7 @@ export default function FixedSidebar() {
                     cursor: "pointer",
                     transition: "transform 0.2s ease",
                     boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                                      }}
+                  }}
                   onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
                   onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                 >
@@ -1291,7 +1372,7 @@ export default function FixedSidebar() {
                     fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                                      }}
+                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = "#FEF2F2"
                     e.currentTarget.style.transform = "scale(1.02)"
@@ -1325,7 +1406,7 @@ export default function FixedSidebar() {
               justifyContent: "center",
               zIndex: 1100,
               padding: 20,
-                            backdropFilter: "blur(4px)"
+              backdropFilter: "blur(4px)"
             }}
             onClick={() => setShowAuthDialog(false)}
           >
@@ -1403,7 +1484,7 @@ export default function FixedSidebar() {
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                     boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
-                                      }}
+                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-2px)"
                     e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.5)"
@@ -1431,7 +1512,7 @@ export default function FixedSidebar() {
                     fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                                      }}
+                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = "#EFF6FF"
                     e.currentTarget.style.transform = "translateY(-1px)"
@@ -1455,7 +1536,7 @@ export default function FixedSidebar() {
                     fontWeight: 500,
                     cursor: "pointer",
                     transition: "color 0.2s ease",
-                                      }}
+                  }}
                   onMouseEnter={(e) => e.currentTarget.style.color = "#374151"}
                   onMouseLeave={(e) => e.currentTarget.style.color = "#6B7280"}
                 >

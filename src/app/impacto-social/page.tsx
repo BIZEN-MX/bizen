@@ -694,11 +694,11 @@ export default function ImpactoSocialPage() {
                                 }
                                 .student-stat-card {
                                     background: #fff;
-                                    border-radius: 20px;
-                                    padding: clamp(20px, 3vw, 28px);
-                                    border: 1.5px solid #e8f0fe;
-                                    box-shadow: 0 4px 24px rgba(15,98,254,0.06), 0 1px 4px rgba(0,0,0,0.04);
-                                    transition: transform 0.22s ease, box-shadow 0.22s ease;
+                                    border-radius: 24px;
+                                    padding: clamp(24px, 3vw, 32px);
+                                    border: 1px solid rgba(0,0,0,0.04);
+                                    box-shadow: 0 16px 32px -8px rgba(15,98,254,0.1), 0 4px 12px rgba(0,0,0,0.03);
+                                    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                                     animation: stat-countup 0.5s ease both;
                                     position: relative;
                                     overflow: hidden;
@@ -707,13 +707,12 @@ export default function ImpactoSocialPage() {
                                     content: '';
                                     position: absolute;
                                     top: 0; left: 0; right: 0;
-                                    height: 3px;
+                                    height: 4px;
                                     background: var(--card-accent, linear-gradient(90deg, #0F62FE, #3b82f6));
-                                    border-radius: 20px 20px 0 0;
                                 }
                                 .student-stat-card:hover {
-                                    transform: translateY(-4px);
-                                    box-shadow: 0 20px 48px rgba(15,98,254,0.13), 0 4px 12px rgba(0,0,0,0.06);
+                                    transform: translateY(-4px) scale(1.01);
+                                    box-shadow: 0 24px 48px -12px rgba(15,98,254,0.15), 0 8px 16px rgba(0,0,0,0.04);
                                 }
                                 .day-dot {
                                     width: 10px;
@@ -788,9 +787,9 @@ export default function ImpactoSocialPage() {
                                 </div>
                                 <div className="student-grid">
                                     {[
-                                        { value: studentStats.lessonsCompleted, label: "Lecciones", icon: <Book size={22} color="#0F62FE" />, bg: "linear-gradient(135deg, #eff6ff, #dbeafe)", bgBorder: "#bfdbfe", trend: "Reciente", up: true, barColor: "#0F62FE", barPct: 72, barBg: "#dbeafe", sub: "de 14 lecciones total", accent: "linear-gradient(90deg, #0F62FE, #3b82f6)", glow: "rgba(15,98,254,0.12)" },
-                                        { value: studentStats.challengesCompleted, label: "Retos Diarios", icon: <Brain size={22} color="#3b82f6" />, bg: "linear-gradient(135deg, #eff6ff, #bfdbfe)", bgBorder: "#93c5fd", trend: "Constante", up: true, barColor: "#3b82f6", barPct: 55, barBg: "#dbeafe", sub: "del mes completados", accent: "linear-gradient(90deg, #3b82f6, #60a5fa)", glow: "rgba(59,130,246,0.12)" },
-                                        { value: studentStats.simulatorsPlayed, label: "Simuladores", icon: <Gamepad2 size={22} color="#60a5fa" />, bg: "linear-gradient(135deg, #f0f9ff, #bae6fd)", bgBorder: "#7dd3fc", trend: "Constante", up: false, barColor: "#60a5fa", barPct: 30, barBg: "#e0f2fe", sub: "simulaciones jugadas", accent: "linear-gradient(90deg, #60a5fa, #93c5fd)", glow: "rgba(96,165,250,0.12)" },
+                                        { value: studentStats.lessonsCompleted, label: "Lecciones", icon: <Book size={24} color="#0F62FE" />, bg: "linear-gradient(135deg, #eff6ff, #dbeafe)", bgBorder: "#bfdbfe", trend: "Reciente", up: true, barColor: "#0F62FE", barPct: 72, barBg: "#dbeafe", sub: "de 14 lecciones total", accent: "linear-gradient(90deg, #0F62FE, #3b82f6)", glow: "rgba(15,98,254,0.12)" },
+                                        { value: studentStats.challengesCompleted, label: "Retos Diarios", icon: <Brain size={24} color="#3b82f6" />, bg: "linear-gradient(135deg, #eff6ff, #bfdbfe)", bgBorder: "#93c5fd", trend: "Constante", up: true, barColor: "#3b82f6", barPct: 55, barBg: "#dbeafe", sub: "del mes completados", accent: "linear-gradient(90deg, #3b82f6, #60a5fa)", glow: "rgba(59,130,246,0.12)" },
+                                        { value: studentStats.simulatorsPlayed, label: "Simuladores", icon: <Gamepad2 size={24} color="#60a5fa" />, bg: "linear-gradient(135deg, #f0f9ff, #bae6fd)", bgBorder: "#7dd3fc", trend: "Constante", up: false, barColor: "#60a5fa", barPct: 30, barBg: "#e0f2fe", sub: "simulaciones jugadas", accent: "linear-gradient(90deg, #60a5fa, #93c5fd)", glow: "rgba(96,165,250,0.12)" },
                                     ].map((stat, i) => (
                                         <div key={i} className="student-stat-card" style={{ animationDelay: `${i * 0.07}s`, display: "flex", flexDirection: "column", justifyContent: "space-between", ['--card-accent' as any]: stat.accent }}>
                                             <div>
@@ -881,25 +880,30 @@ export default function ImpactoSocialPage() {
                                         { icon: <Clock size={28} color="#93c5fd" />, value: `${equivalenceTutoring} h`, label: "De tutoría", desc: "equivalente en tiempo", barColor: "#93c5fd", barPct: 30, bg: "#eff6ff" },
                                     ].map((eq, i) => (
                                         <div key={i} style={{
-                                            background: "#fff", border: "1.5px solid #e0eaff",
-                                            borderRadius: 18, padding: "20px",
+                                            background: "#fff", border: "1px solid rgba(0,0,0,0.04)",
+                                            borderRadius: 24, padding: "24px",
                                             textAlign: "center",
-                                            boxShadow: "0 2px 16px rgba(15,98,254,0.06)",
+                                            boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1), 0 4px 12px rgba(0,0,0,0.03)",
                                             animation: `stat-countup 0.5s ${i * 0.08}s ease both`,
-                                            display: "flex", flexDirection: "column", gap: 8
-                                        }}>
-                                            <div style={{ display: "flex", justifyContent: "center", padding: "8px", borderRadius: 12, background: eq.bg, width: 48, height: 48, alignItems: "center", margin: "0 auto 4px" }}>{eq.icon}</div>
-                                            <div style={{ fontSize: 40, fontWeight: 500, color: "#0f172a", lineHeight: 1 }}>{eq.value}</div>
-                                            <div style={{ fontSize: 13, fontWeight: 500, color: "#374151" }}>{eq.label}</div>
-                                            <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 4 }}>{eq.desc}</div>
+                                            display: "flex", flexDirection: "column", gap: 8,
+                                            transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                                            cursor: "default"
+                                        }}
+                                            onMouseEnter={(e: any) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 24px 48px -12px rgba(15,98,254,0.15), 0 8px 16px rgba(0,0,0,0.04)" }}
+                                            onMouseLeave={(e: any) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 16px 32px -8px rgba(15,98,254,0.1), 0 4px 12px rgba(0,0,0,0.03)" }}
+                                        >
+                                            <div style={{ display: "flex", justifyContent: "center", padding: "8px", borderRadius: 16, background: eq.bg, width: 56, height: 56, alignItems: "center", margin: "0 auto 8px" }}>{eq.icon}</div>
+                                            <div style={{ fontSize: 44, fontWeight: 700, color: "#111", lineHeight: 1, letterSpacing: "-0.03em" }}>{eq.value}</div>
+                                            <div style={{ fontSize: 14, fontWeight: 600, color: "#374151" }}>{eq.label}</div>
+                                            <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 8 }}>{eq.desc}</div>
                                             {/* Blue bar */}
-                                            <div style={{ height: 4, borderRadius: 99, background: "#dbeafe", overflow: "hidden" }}>
+                                            <div style={{ height: 6, borderRadius: 99, background: "#f1f5f9", overflow: "hidden" }}>
                                                 <div style={{
                                                     height: "100%",
                                                     width: `${eq.barPct}%`,
                                                     borderRadius: 99,
-                                                    background: `linear-gradient(90deg, ${eq.barColor}aa, ${eq.barColor})`,
-                                                    boxShadow: `0 0 6px ${eq.barColor}55`
+                                                    background: `linear-gradient(90deg, ${eq.barColor}cc, ${eq.barColor})`,
+                                                    boxShadow: `0 0 8px ${eq.barColor}55`
                                                 }} />
                                             </div>
                                         </div>

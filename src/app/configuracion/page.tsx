@@ -384,7 +384,7 @@ function SettingsContent() {
                 fontSize: 10, color: "rgba(255,255,255,.8)", background: "rgba(255,255,255,.15)",
                 padding: "2px 9px", borderRadius: 20, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.06em"
               }}>
-                {dbProfile?.role || "Estudiante"}
+                {`Plan ${dbProfile?.role || "Estudiante"}`}
               </span>
             </div>
           </div>

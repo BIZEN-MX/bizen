@@ -103,6 +103,51 @@ const ALL_TOPICS: TopicMeta[] = [
 
 
 
+// ─── Subtema bar visual variants (all blue, different gradient & depth) ──────
+
+const SUBTEMA_VARIANTS = [
+    {
+        // Deep navy → royal blue — classic strong
+        background: "linear-gradient(135deg, #0c1f5a 0%, #1e3a8a 50%, #2563eb 100%)",
+        boxShadow: "0 10px 32px rgba(12,31,90,0.55)",
+        progressBg: "rgba(255,255,255,0.22)",
+        progressFill: "rgba(255,255,255,0.92)",
+        border: "1px solid rgba(37,99,235,0.4)"
+    },
+    {
+        // Indigo-navy → cobalt — more violet warmth
+        background: "linear-gradient(150deg, #1a1060 0%, #2338a8 45%, #3b5fe8 100%)",
+        boxShadow: "0 10px 32px rgba(26,16,96,0.50)",
+        progressBg: "rgba(255,255,255,0.20)",
+        progressFill: "rgba(255,255,255,0.90)",
+        border: "1px solid rgba(59,95,232,0.4)"
+    },
+    {
+        // Midnight → strong blue — the darkest, most dramatic
+        background: "linear-gradient(120deg, #080e2a 0%, #122465 40%, #1e48c8 100%)",
+        boxShadow: "0 10px 32px rgba(8,14,42,0.60)",
+        progressBg: "rgba(255,255,255,0.18)",
+        progressFill: "rgba(255,255,255,0.88)",
+        border: "1px solid rgba(30,72,200,0.35)"
+    },
+    {
+        // Rich cobalt → electric blue — most saturated/vibrant
+        background: "linear-gradient(155deg, #0f3bcc 0%, #1a52f0 50%, #3b6ef5 100%)",
+        boxShadow: "0 10px 32px rgba(15,59,204,0.50)",
+        progressBg: "rgba(255,255,255,0.22)",
+        progressFill: "rgba(255,255,255,0.94)",
+        border: "1px solid rgba(59,110,245,0.45)"
+    },
+    {
+        // Steel-blue → sapphire — slightly cooler, more slate
+        background: "linear-gradient(140deg, #0d2a7a 0%, #1a4abf 45%, #2662e0 100%)",
+        boxShadow: "0 10px 32px rgba(13,42,122,0.52)",
+        progressBg: "rgba(255,255,255,0.20)",
+        progressFill: "rgba(255,255,255,0.90)",
+        border: "1px solid rgba(38,98,224,0.4)"
+    },
+] as const
+
 // ─── Props ───────────────────────────────────────────────────────────────────
 
 interface CoursePageTemplateProps {
@@ -220,7 +265,7 @@ export default function CoursePageTemplate({
                     paddingBottom: "clamp(40px, 8vw, 80px)",
                     paddingLeft: "16px",
                     paddingRight: "16px",
-                                        background: "transparent",
+                    background: "transparent",
                     position: "relative",
                     display: "flex",
                     justifyContent: "center",
@@ -353,24 +398,29 @@ export default function CoursePageTemplate({
 
                             return (
                                 <div key={subIdx} id={`tema${topicId}-subtema-${subIdx + 1}`} style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }}>
-                                    {/* Subtema header bar */}
-                                    <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%)", borderRadius: 18, boxShadow: "0 8px 28px rgba(15,98,254,0.35)", border: "1px solid rgba(59,130,246,0.3)", marginBottom: 20 }}>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
-                                            <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>CURSO {(subIdx + 1).toString().padStart(2, "0")}</div>
-                                                <div style={{ fontSize: "clamp(15px, 3vw, 19px)", fontWeight: 500, color: "#fff", lineHeight: 1.2, marginBottom: 4 }}>{sub.title}</div>
-                                                <div style={{ fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.7)" }}>{subTotal} lecciones · {subCompleted} completadas</div>
-                                            </div>
-                                            {subPct > 0 && (
-                                                <div style={{ flexShrink: 0, width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.35)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 500, color: "#fff" }}>
-                                                    {subPct}%
+                                    {/* Subtema header bar – variant cycles on index */}
+                                    {(() => {
+                                        const v = SUBTEMA_VARIANTS[subIdx % SUBTEMA_VARIANTS.length]
+                                        return (
+                                            <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: v.background, borderRadius: 18, boxShadow: v.boxShadow, border: v.border, marginBottom: 20 }}>
+                                                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
+                                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                                        <div style={{ fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>CURSO {(subIdx + 1).toString().padStart(2, "0")}</div>
+                                                        <div style={{ fontSize: "clamp(15px, 3vw, 19px)", fontWeight: 500, color: "#fff", lineHeight: 1.2, marginBottom: 4 }}>{sub.title}</div>
+                                                        <div style={{ fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.7)" }}>{subTotal} lecciones · {subCompleted} completadas</div>
+                                                    </div>
+                                                    {subPct > 0 && (
+                                                        <div style={{ flexShrink: 0, width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.35)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 500, color: "#fff" }}>
+                                                            {subPct}%
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                        <div style={{ width: "100%", height: 6, borderRadius: 6, background: "rgba(255,255,255,0.25)", overflow: "hidden" }}>
-                                            <div style={{ width: `${subPct}%`, height: "100%", borderRadius: 6, background: "rgba(255,255,255,0.92)", transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)" }} />
-                                        </div>
-                                    </div>
+                                                <div style={{ width: "100%", height: 6, borderRadius: 6, background: v.progressBg, overflow: "hidden" }}>
+                                                    <div style={{ width: `${subPct}%`, height: "100%", borderRadius: 6, background: v.progressFill, transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)" }} />
+                                                </div>
+                                            </div>
+                                        )
+                                    })()}
 
                                     {/* Lessons horizontal scroll */}
                                     <div
@@ -574,7 +624,7 @@ export default function CoursePageTemplate({
                                                                     width: "100%", fontSize: 13, fontWeight: 500, padding: "10px 14px",
                                                                     background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
                                                                     color: "white", border: "none", borderRadius: 11,
-                                                                    cursor: "pointer",                                                                     boxShadow: "0 5px 16px rgba(15,98,254,0.35)",
+                                                                    cursor: "pointer", boxShadow: "0 5px 16px rgba(15,98,254,0.35)",
                                                                     transition: "opacity 0.15s ease"
                                                                 }}
                                                             >
@@ -669,7 +719,7 @@ export default function CoursePageTemplate({
                             position: "relative",
                             overflow: "hidden",
                             textAlign: "center",
-                                                    }}
+                        }}
                     >
                         {/* Top gradient bar */}
                         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa)" }} />
@@ -717,7 +767,7 @@ export default function CoursePageTemplate({
                                 border: "none", borderRadius: 12,
                                 fontSize: 14, fontWeight: 500,
                                 cursor: "pointer",
-                                                                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
+                                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
                                 transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, opacity 0.15s ease"
                             }}
                         >

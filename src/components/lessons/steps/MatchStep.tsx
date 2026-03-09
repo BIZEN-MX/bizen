@@ -26,7 +26,7 @@ const PAIR_COLORS = [
   { bg: "#FDF4FF", border: "#A21CAF", text: "#86198F", shadow: "#F5D0FE", line: "#A21CAF", Icon: Award },
 ]
 
-const ITEM_HEIGHT = "clamp(54px, 12vw, 64px)" as any // adaptive height
+const DEFAULT_ITEM_HEIGHT = "clamp(54px, 12vw, 64px)" as any // minimum adaptive height
 const ITEM_GAP = 12
 
 export function MatchStep({ step, onAnswered, matches: initialMatches = [], actionTrigger = 0 }: MatchStepProps) {
@@ -78,7 +78,11 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
     setConnectors(newConnectors)
   }
 
-  useLayoutEffect(() => { updateConnectors() }, [matches, showFeedback])
+  useLayoutEffect(() => {
+    updateConnectors()
+    window.addEventListener("resize", updateConnectors)
+    return () => window.removeEventListener("resize", updateConnectors)
+  }, [matches, showFeedback])
 
   const handleLeftClick = (leftId: string) => {
     if (hasChecked) return
@@ -148,40 +152,42 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
       const match = matches.find(m => m.leftId === leftId)!
       const isCorrect = step.correctPairs.some(p => p.leftId === leftId && p.rightId === match.rightId)
       return {
-        height: ITEM_HEIGHT,
+        minHeight: DEFAULT_ITEM_HEIGHT,
+        height: "auto",
         borderRadius: 16,
         background: isCorrect ? "#ECFDF5" : "#FEF2F2",
         border: `2px solid ${isCorrect ? "#10B981" : "#EF4444"}`,
         boxShadow: `0 3px 0 0 ${isCorrect ? "#A7F3D0" : "#FCA5A5"}`,
         cursor: "default",
         color: isCorrect ? "#065F46" : "#DC2626",
-                fontWeight: 500,
-        fontSize: "clamp(13px, 3.2vw, 15px)",
+        fontWeight: 500,
+        fontSize: "clamp(12px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 clamp(8px, 2vw, 16px)",
+        padding: "10px clamp(8px, 2vw, 16px)",
         transition: "all 0.2s ease",
       }
     }
 
     if (isSelected) {
       return {
-        height: ITEM_HEIGHT,
+        minHeight: DEFAULT_ITEM_HEIGHT,
+        height: "auto",
         borderRadius: 16,
         background: colors.bg,
         border: `2.5px solid ${colors.border}`,
         boxShadow: `0 3px 0 0 ${colors.shadow}, 0 0 0 3px ${colors.border}40`,
         cursor: "pointer",
         color: colors.text,
-                fontWeight: 500,
-        fontSize: "clamp(13px, 3.2vw, 15px)",
+        fontWeight: 500,
+        fontSize: "clamp(12px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 clamp(8px, 2vw, 16px)",
+        padding: "10px clamp(8px, 2vw, 16px)",
         transform: "scale(1.02)",
         transition: "all 0.15s ease",
       }
@@ -189,39 +195,41 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
 
     if (isMatched) {
       return {
-        height: ITEM_HEIGHT,
+        minHeight: DEFAULT_ITEM_HEIGHT,
+        height: "auto",
         borderRadius: 16,
         background: colors.bg,
         border: `2px solid ${colors.border}`,
         boxShadow: `0 3px 0 0 ${colors.shadow}`,
         cursor: "pointer",
         color: colors.text,
-                fontWeight: 500,
-        fontSize: "clamp(13px, 3.2vw, 15px)",
+        fontWeight: 500,
+        fontSize: "clamp(12px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 clamp(8px, 2vw, 16px)",
+        padding: "10px clamp(8px, 2vw, 16px)",
         transition: "all 0.2s ease",
       }
     }
 
     return {
-      height: ITEM_HEIGHT,
+      minHeight: DEFAULT_ITEM_HEIGHT,
+      height: "auto",
       borderRadius: 16,
       background: "#FFFFFF",
       border: "2px solid #E5E7EB",
       boxShadow: "0 3px 0 0 #E5E7EB",
       cursor: "pointer",
       color: "#374151",
-            fontWeight: 500,
-      fontSize: 16,
+      fontWeight: 500,
+      fontSize: 15,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       textAlign: "center",
-      padding: "0 16px",
+      padding: "10px 16px",
       transition: "all 0.2s ease",
     }
   }
@@ -234,20 +242,21 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
       const match = matches.find(m => m.rightId === rightId)!
       const isCorrect = step.correctPairs.some(p => p.leftId === match.leftId && p.rightId === rightId)
       return {
-        height: ITEM_HEIGHT,
+        minHeight: DEFAULT_ITEM_HEIGHT,
+        height: "auto",
         borderRadius: 16,
         background: isCorrect ? "#ECFDF5" : "#FEF2F2",
         border: `2px solid ${isCorrect ? "#10B981" : "#EF4444"}`,
         boxShadow: `0 3px 0 0 ${isCorrect ? "#A7F3D0" : "#FCA5A5"}`,
         cursor: "default",
         color: isCorrect ? "#065F46" : "#DC2626",
-                fontWeight: 500,
-        fontSize: "clamp(13px, 3.2vw, 15px)",
+        fontWeight: 500,
+        fontSize: "clamp(12px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 clamp(8px, 2vw, 16px)",
+        padding: "10px clamp(8px, 2vw, 16px)",
         transition: "all 0.2s ease",
       }
     }
@@ -257,45 +266,47 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
 
     if (isMatched && matchColors) {
       return {
-        height: ITEM_HEIGHT,
+        minHeight: DEFAULT_ITEM_HEIGHT,
+        height: "auto",
         borderRadius: 16,
         background: matchColors.bg,
         border: `2px solid ${matchColors.border}`,
         boxShadow: `0 3px 0 0 ${matchColors.shadow}`,
         cursor: "pointer",
         color: matchColors.text,
-                fontWeight: 500,
-        fontSize: "clamp(13px, 3.2vw, 15px)",
+        fontWeight: 500,
+        fontSize: "clamp(12px, 3.2vw, 15px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 clamp(8px, 2vw, 16px)",
+        padding: "10px clamp(8px, 2vw, 16px)",
         transition: "all 0.2s ease",
       }
     }
 
     return {
-      height: ITEM_HEIGHT,
+      minHeight: DEFAULT_ITEM_HEIGHT,
+      height: "auto",
       borderRadius: 16,
       background: isHighlighted ? "#F0FDF4" : "#FFFFFF",
       border: `2px solid ${isHighlighted ? "#10B981" : "#E5E7EB"}`,
       boxShadow: `0 3px 0 0 ${isHighlighted ? "#A7F3D0" : "#E5E7EB"}`,
       cursor: canClick ? "pointer" : "default",
       color: isHighlighted ? "#065F46" : "#374151",
-            fontWeight: 500,
-      fontSize: 16,
+      fontWeight: 500,
+      fontSize: 15,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       textAlign: "center",
-      padding: "0 16px",
+      padding: "10px 16px",
       transition: "all 0.15s ease",
       opacity: !canClick && !isMatched && !hasChecked ? 0.65 : 1,
     }
   }
 
-  const totalHeight = step.leftItems.length * ITEM_HEIGHT + (step.leftItems.length - 1) * ITEM_GAP
+  // totalHeight is no longer fixed, SVG will use inset: 0 logic
 
   return (
     <div style={{
@@ -314,7 +325,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-                  }}>
+        }}>
           {step.question || "Une las parejas correspondientes"}
         </h3>
       </div>
@@ -336,7 +347,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
               display: "flex",
               alignItems: "center",
               gap: 8,
-                            fontSize: 13,
+              fontSize: 13,
               fontWeight: 500,
               color: "#1D4ED8",
             }}
@@ -363,7 +374,8 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
             top: 0,
             left: 0,
             width: "100%",
-            height: totalHeight,
+            height: "100%",
+            minHeight: step.leftItems.length * 64, // Fallback min height to ensure markers show
             pointerEvents: "none",
             zIndex: 5,
             overflow: "visible",

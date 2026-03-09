@@ -218,8 +218,10 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
             0 0 0 1px rgba(0,0,0,0.05);
           overflow: hidden;
           font-family: 'Inter', system-ui, sans-serif;
-          width: calc(100vw - clamp(24px, 6vw, 80px));
-          max-width: clamp(320px, 52vw, 520px);
+          width: calc(100vw - clamp(20px, 6vw, 80px));
+          max-width: clamp(280px, 94vw, 520px);
+          word-wrap: break-word;
+          overflow-wrap: break-word;
         }
         .tc.enter { animation: tour-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
         .tc.exit  { animation: tour-out 0.3s ease forwards; }

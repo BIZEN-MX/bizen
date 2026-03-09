@@ -115,7 +115,7 @@ export function FillBlanksStep({
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-                  }}>
+        }}>
           {step.question || "Completa los espacios en blanco"}
         </h3>
       </div>
@@ -129,11 +129,11 @@ export function FillBlanksStep({
         padding: "32px",
         borderRadius: "24px",
         border: "2px solid #F1F5F9",
-                fontWeight: 500,
+        fontWeight: 500,
       }}>
         {step.textParts.map((part, idx) => {
           if (part.type === "text") {
-            return <span key={idx} style={{ }}>{part.content}</span>
+            return <span key={idx} style={{}}>{part.content}</span>
           } else {
             const blankId = (part as any).id
             const selectedOptionId = blankAnswers[blankId]
@@ -166,9 +166,10 @@ export function FillBlanksStep({
                 style={{
                   display: "inline-block",
                   minWidth: "clamp(80px, 15vw, 100px)",
-                  height: "clamp(40px, 10vw, 48px)",
+                  minHeight: "clamp(40px, 10vw, 48px)",
+                  height: "auto",
                   margin: "4px clamp(4px, 1vw, 8px)",
-                  padding: "0 clamp(8px, 2vw, 16px)",
+                  padding: "4px clamp(8px, 2vw, 16px)",
                   verticalAlign: "middle",
                   background,
                   border: `2px solid ${borderColor}`,
@@ -179,7 +180,7 @@ export function FillBlanksStep({
                   color,
                   cursor: isFilled && !hasChecked ? "pointer" : "default",
                   transition: "all 0.2s ease",
-                                  }}
+                }}
               >
                 <AnimatePresence mode="wait">
                   {isFilled ? (
@@ -188,7 +189,7 @@ export function FillBlanksStep({
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      style={{ }}
+                      style={{}}
                     >
                       {option?.label}
                     </motion.span>
@@ -231,7 +232,7 @@ export function FillBlanksStep({
                 fontWeight: 500,
                 cursor: isUsed ? "default" : "pointer",
                 transition: "all 0.2s ease",
-                              }}
+              }}
             >
               <span style={{ visibility: isUsed ? "hidden" : "visible" }}>
                 {option.label}

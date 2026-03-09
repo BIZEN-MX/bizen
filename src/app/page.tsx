@@ -22,7 +22,7 @@ const modalInputStyle = {
   background: "#FBFAF5",
   border: "1px solid #e2e8f0",
   color: "#1e293b",
-    boxSizing: "border-box" as const,
+  boxSizing: "border-box" as const,
   transition: "border-color 0.2s, box-shadow 0.2s",
   outline: "none",
   textAlign: "center" as const
@@ -114,11 +114,16 @@ export default function WelcomePage() {
     return () => observer.disconnect()
   }, [])
 
-  const gradientStyle = { background: "linear-gradient(180deg, #ffffff 0%, rgba(0, 86, 231, 0.03) 18%, rgba(0, 86, 231, 0.05) 40%, rgba(25, 131, 253, 0.08) 60%, rgba(25, 131, 253, 0.1) 100%)", backgroundAttachment: "scroll" as const, overflow: "hidden" }
+  const gradientStyle = {
+    background: "radial-gradient(circle at 50% -20%, rgba(15, 98, 254, 0.08) 0%, rgba(255, 255, 255, 0) 50%), linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)",
+    backgroundAttachment: "scroll" as const,
+    overflow: "hidden",
+    position: "relative" as const
+  }
 
   return (
     <div style={{
-      background: "#FBFAF5",
+      background: "#FFFFFF",
       flex: "1 0 auto",
       height: "auto",
       width: "100%",
@@ -197,10 +202,12 @@ export default function WelcomePage() {
             display: "flex",
             alignItems: "center",
             gap: "4px",
-            background: "#FBFAF5",
+            background: "rgba(255, 255, 255, 0.8)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
             borderRadius: "9999px",
             padding: "6px 8px",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.03), 0 0 0 1px rgba(15, 98, 254, 0.05)",
             flexShrink: 0,
           }}>
             <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Inicio</Link>
@@ -493,7 +500,7 @@ export default function WelcomePage() {
             paddingTop: "clamp(80px, 12vw, 160px)",
             paddingBottom: "clamp(60px, 10vw, 120px)",
             position: "relative",
-                        display: "flex",
+            display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -504,6 +511,16 @@ export default function WelcomePage() {
             overflow: "hidden",
             isolation: "isolate"
           }}>
+            {/* Premium Grain Texture */}
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              opacity: 0.03,
+              pointerEvents: "none",
+              zIndex: -1,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            }} />
+
             <Hero3DScene />
 
             {/* Mascot leaning out from the left - updated character */}
@@ -625,18 +642,18 @@ export default function WelcomePage() {
             }}>
               {/* Main headline */}
               <h1 style={{
-                fontSize: "clamp(32px, 6vw, 64px)",
-                color: "#000",
-                fontWeight: 500,
+                fontSize: "clamp(36px, 6.5vw, 68px)",
+                color: "#0F172A",
+                fontWeight: 800,
                 margin: "0 0 clamp(48px, 7vw, 80px) 0",
-                lineHeight: 1.2,
-                                letterSpacing: "-0.02em",
+                lineHeight: 1.1,
+                letterSpacing: "-0.04em",
                 wordWrap: "break-word",
                 overflowWrap: "break-word",
               }}>
-                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>El futuro de la <span style={{ color: "#0056E7" }}>Educación Financiera</span></span><br />
+                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>El futuro de la <span style={{ color: "#0F62FE" }}>Educación Financiera</span></span><br />
                 para jóvenes en un click<br />
-                con <span className="brand-highlight-blue">BIZEN</span>
+                con <span className="brand-highlight-blue" style={{ fontWeight: 900 }}>BIZEN</span>
               </h1>
 
               {/* Subheading with highlighted text - responsive, never overlaps */}
@@ -702,7 +719,7 @@ export default function WelcomePage() {
                         lineHeight: 1.85,
                         fontWeight: 500,
                         color: "#374151",
-                                                letterSpacing: "0.015em",
+                        letterSpacing: "0.015em",
                         wordWrap: "break-word",
                       }}>
                         La plataforma educativa que combina{" "}
@@ -753,7 +770,7 @@ export default function WelcomePage() {
                 color: "#6b7280",
                 fontWeight: 500,
                 margin: "0 0 clamp(24px, 3vw, 40px) 0",
-                              }}>
+              }}>
                 Empresas que ya confían
               </p>
 
@@ -815,7 +832,7 @@ export default function WelcomePage() {
                 fontSize: "clamp(40px, 6vw, 76px)",
                 fontWeight: 500,
                 color: "#ffffff",
-                                letterSpacing: "-0.03em",
+                letterSpacing: "-0.03em",
                 lineHeight: 1.05,
                 marginBottom: "clamp(24px, 3vw, 36px)",
               }}>
@@ -836,7 +853,7 @@ export default function WelcomePage() {
                 lineHeight: 1.8,
                 maxWidth: "860px",
                 margin: "0 auto clamp(56px, 7vw, 88px)",
-                                fontWeight: 400,
+                fontWeight: 400,
               }}>
                 En <strong style={{ color: "#fff", fontWeight: 500 }}>BIZEN</strong> combinamos{" "}
                 <strong style={{ color: "#60a5fa" }}>aprendizaje gamificado</strong>{" "}
@@ -2352,7 +2369,7 @@ export default function WelcomePage() {
             <h2 style={{
               textAlign: "center", margin: "0",
               fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 500, color: "#111",
-                            lineHeight: 1.15, letterSpacing: "-0.02em",
+              lineHeight: 1.15, letterSpacing: "-0.02em",
             }}>
               Colegios líderes en México{" "}
               <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>ya evolucionaron</span>{" "}con BIZEN.
@@ -2708,7 +2725,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 padding: "6px 18px",
                 fontSize: "13px",
                 fontWeight: 500,
-                                letterSpacing: "0.08em",
+                letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 marginBottom: "20px",
               }}>Para cada miembro de la comunidad educativa</span>
@@ -2719,7 +2736,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 color: "#111",
                 lineHeight: 1.15,
                 marginBottom: "clamp(12px, 2vw, 16px)",
-                                letterSpacing: "-0.02em",
+                letterSpacing: "-0.02em",
               }}>
                 1 solución,{" "}
                 <span style={{
@@ -2775,7 +2792,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                       padding: "12px 20px",
                       fontSize: "clamp(14px, 1rem, 16px)",
                       fontWeight: 500,
-                                            border: "none",
+                      border: "none",
                       borderRadius: "14px",
                       cursor: "pointer",
                       transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -2810,7 +2827,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         padding: "6px 16px",
                         fontSize: "13px",
                         fontWeight: 500,
-                                                letterSpacing: "0.05em",
+                        letterSpacing: "0.05em",
                         textTransform: "uppercase",
                         marginBottom: "14px",
                       }}>
@@ -2823,7 +2840,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         fontWeight: 500,
                         color: "#111",
                         marginBottom: 0,
-                                                letterSpacing: "-0.02em",
+                        letterSpacing: "-0.02em",
                         lineHeight: 1.15,
                       }}>
                         {activeProfile === "docentes" && "Enseña más con menos esfuerzo"}
@@ -2837,7 +2854,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                       lineHeight: 1.65,
                       color: "#374151",
                       marginBottom: "clamp(24px, 4vw, 32px)",
-                                          }}>
+                    }}>
                       {activeProfile === "docentes" && "Herramientas prácticas para enseñar finanzas con contenido listo para usar, seguimiento en tiempo real y recursos descargables."}
                       {activeProfile === "estudiantes" && "Aprende finanzas de forma divertida con cursos interactivos, simuladores reales y recompensas por tu progreso."}
                       {activeProfile === "padres" && "Acompaña el aprendizaje financiero de tus hijos con acceso a su progreso, recursos compartidos y actividades familiares."}
@@ -3008,7 +3025,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         padding: "clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 32px)",
                         fontSize: "clamp(14px, 2vw, 18px)",
                         fontWeight: 500,
-                                                background: "#0056E7",
+                        background: "#0056E7",
                         color: "#ffffff",
                         border: "none",
                         borderRadius: 9999,
@@ -3128,7 +3145,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 padding: "6px 18px",
                 fontSize: "13px",
                 fontWeight: 500,
-                                letterSpacing: "0.1em",
+                letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 marginBottom: "24px",
                 border: "1px solid rgba(25, 131, 253, 0.25)",
@@ -3143,7 +3160,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 color: "#fff",
                 lineHeight: 1.12,
                 marginBottom: "clamp(16px, 2vw, 20px)",
-                                letterSpacing: "-0.025em",
+                letterSpacing: "-0.025em",
               }}>
                 Aprender finanzas nunca ha sido{" "}
                 <span style={{
@@ -3157,7 +3174,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 fontSize: "clamp(16px, 1.2vw, 19px)",
                 lineHeight: 1.7,
                 color: "rgba(180, 205, 255, 0.75)",
-                                maxWidth: "580px",
+                maxWidth: "580px",
                 margin: "0 auto",
               }}>
                 Impulsa a tu escuela a desarrollar habilidades clave mientras los estudiantes aprenden de forma práctica y guiada.
@@ -3190,7 +3207,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                     fontSize: "clamp(28px, 3.5vw, 44px)",
                     fontWeight: 500,
                     color: "#fff",
-                                        letterSpacing: "-0.03em",
+                    letterSpacing: "-0.03em",
                     background: "linear-gradient(135deg, #fff 40%, #60aeff 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -3199,7 +3216,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                   <div style={{
                     fontSize: "clamp(12px, 0.85rem, 14px)",
                     color: "rgba(180, 205, 255, 0.65)",
-                                        fontWeight: 500,
+                    fontWeight: 500,
                     marginTop: "4px",
                     letterSpacing: "0.03em",
                   }}>{stat.label}</div>
@@ -3259,13 +3276,13 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                       fontSize: "clamp(15px, 1.05rem, 17px)",
                       fontWeight: 500,
                       color: "#e8f0ff",
-                                            marginBottom: "8px",
+                      marginBottom: "8px",
                       lineHeight: 1.3,
                     }}>{item.label}</div>
                     <div style={{
                       fontSize: "clamp(13px, 0.88rem, 15px)",
                       color: "rgba(180, 205, 255, 0.65)",
-                                            lineHeight: 1.65,
+                      lineHeight: 1.65,
                     }}>{item.desc}</div>
                   </div>
                   {/* Hover arrow indicator */}
@@ -3343,7 +3360,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               fontSize: "clamp(30px, 4.5vw, 52px)",
               fontWeight: 500,
               color: "#111",
-                            lineHeight: 1.15,
+              lineHeight: 1.15,
               letterSpacing: "-0.02em",
             }}>
               Cada clase,{" "}
@@ -3423,7 +3440,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         padding: "5px 14px",
                         fontSize: "12px",
                         fontWeight: 500,
-                                                letterSpacing: "0.07em",
+                        letterSpacing: "0.07em",
                         textTransform: "uppercase",
                         marginBottom: "20px",
                       }}>{slide.tag}</span>
@@ -3433,7 +3450,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         fontSize: "clamp(26px, 3vw, 42px)",
                         fontWeight: 500,
                         color: "#fff",
-                                                lineHeight: 1.15,
+                        lineHeight: 1.15,
                         letterSpacing: "-0.02em",
                       }}>
                         {slide.title}
@@ -3444,7 +3461,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         fontSize: "clamp(15px, 1.05vw, 18px)",
                         lineHeight: 1.75,
                         color: "rgba(255,255,255,0.72)",
-                                                maxWidth: "480px",
+                        maxWidth: "480px",
                       }}>
                         {slide.description}
                       </p>
@@ -3464,7 +3481,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                           color: "#0056E7",
                           borderRadius: "999px",
                           cursor: "pointer",
-                                                    boxShadow: "0 6px 20px rgba(255,255,255,0.15)",
+                          boxShadow: "0 6px 20px rgba(255,255,255,0.15)",
                           transition: "all 0.25s ease",
                           textDecoration: "none",
                         }}
@@ -3601,7 +3618,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               padding: "6px 18px",
               fontSize: "13px",
               fontWeight: 500,
-                            letterSpacing: "0.08em",
+              letterSpacing: "0.08em",
               textTransform: "uppercase",
               marginBottom: "20px",
             }}>El reto en educación financiera</span>
@@ -3611,7 +3628,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               color: "#fff",
               lineHeight: 1.1,
               marginBottom: "16px",
-                            letterSpacing: "-0.02em",
+              letterSpacing: "-0.02em",
             }}>
               Tres obstáculos{" "}
               <span style={{
@@ -3786,7 +3803,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                                        boxShadow: "0 2px 8px rgba(0, 86, 231, 0.2)",
+                    boxShadow: "0 2px 8px rgba(0, 86, 231, 0.2)",
                     border: "1.5px solid rgba(0,86,231,0.12)",
                   }}>{i + 1}</span>
                   {i === 0 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>)}
@@ -3798,7 +3815,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                   fontSize: "clamp(19px, 1.5vw, 23px)",
                   fontWeight: 500,
                   color: "#111",
-                                  }}>{step.title}</h3>
+                }}>{step.title}</h3>
                 <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", color: "#64748b", lineHeight: 1.65, }}>
                   {step.schoolsText}
                 </p>

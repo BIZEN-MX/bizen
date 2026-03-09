@@ -112,7 +112,8 @@ export default function AdminDashboardPage() {
                 }
                 @media (max-width: 767px) {
                     .dashboard-container {
-                        padding-left: clamp(20px, 4vw, 40px) !important;
+                        padding-left: clamp(16px, 4vw, 40px) !important;
+                        padding-right: clamp(16px, 4vw, 40px) !important;
                     }
                 }
             `}</style>
@@ -129,7 +130,7 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* KPI Cards */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 40 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(max(240px, 100%), 1fr))", gap: 20, marginBottom: 40 }}>
                 {[
                     { label: "Alumnos Activos", value: data.kpis.totalStudents, icon: <Users color="#0F62FE" size={24} />, bg: "#eff6ff" },
                     { label: "Módulos Completados (Promedio)", value: data.kpis.avgModulesCompleted, icon: <BookOpen color="#8b5cf6" size={24} />, bg: "#f5f3ff" },
@@ -139,11 +140,11 @@ export default function AdminDashboardPage() {
                         <div style={{ width: 48, height: 48, borderRadius: 14, background: kpi.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                             {kpi.icon}
                         </div>
-                        <div>
+                        <div style={{ overflow: "hidden", wordWrap: "break-word", overflowWrap: "break-word" }}>
                             <div style={{ fontSize: 13, fontWeight: 500, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
                                 {kpi.label}
                             </div>
-                            <div style={{ fontSize: 32, fontWeight: 500, color: "#0f172a", lineHeight: 1 }}>
+                            <div style={{ fontSize: "clamp(24px, 5vw, 32px)", fontWeight: 500, color: "#0f172a", lineHeight: 1.1 }}>
                                 {kpi.value}
                             </div>
                         </div>

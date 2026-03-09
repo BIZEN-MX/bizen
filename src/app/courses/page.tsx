@@ -160,7 +160,7 @@ export default function CoursesPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-                    paddingLeft: 16,
+          paddingLeft: 16,
           paddingRight: 16,
           marginLeft: 0,
           boxSizing: "border-box",
@@ -239,7 +239,7 @@ export default function CoursesPage() {
           paddingBottom: "clamp(40px, 8vw, 80px)",
           paddingLeft: "312px", // Desktop default offset
           paddingRight: "16px",
-                    background: "transparent",
+          background: "transparent",
           position: "relative",
           display: "flex",
           justifyContent: "flex-start",
@@ -410,10 +410,10 @@ export default function CoursesPage() {
               return pairs.map((pair, pairIdx) => {
                 const isRTL = pairIdx % 2 === 1
                 const isLastPair = pairIdx === pairs.length - 1
-                const displayPair = isRTL ? [...pair].reverse() : pair
+                const displayPair = pair
                 return (
                   <React.Fragment key={pairIdx}>
-                    <div className="topics-row-container" style={{ display: "flex", flexDirection: "row", alignItems: "stretch", width: "100%", gap: 0, justifyContent: "center", position: "relative" }}>
+                    <div className={`topics-row-container ${isRTL ? "rtl-row" : ""}`} style={{ display: "flex", flexDirection: isRTL ? "row-reverse" : "row", alignItems: "stretch", width: "100%", gap: 0, justifyContent: "center", position: "relative" }}>
                       {displayPair.map((topic, i) => {
                         const IconComp = topic.icon
                         const showArrow = i === 0 && displayPair.length > 1
@@ -443,16 +443,16 @@ export default function CoursesPage() {
                                 flex: "0 1 550px",
                                 minHeight: 180,
                                 cursor: isLocked && !isPaywalled ? "default" : "pointer",
-                                border: isLocked ? "2px solid rgba(148, 163, 184, 0.2)" : "2px solid rgba(15, 98, 254, 0.2)",
-                                borderRadius: "24px",
-                                background: "linear-gradient(135deg, #f8faff 0%, #ffffff 100%)",
-                                boxShadow: "0 4px 20px rgba(15,98,254,0.08)",
-                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                border: isLocked ? "1px solid rgba(148, 163, 184, 0.15)" : "1px solid rgba(15, 98, 254, 0.12)",
+                                borderRadius: "32px",
+                                background: isLocked ? "#F1F5F9" : "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
+                                boxShadow: isLocked ? "none" : "0 24px 48px -12px rgba(15, 98, 254, 0.08)",
+                                transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                 overflow: "hidden",
                                 display: "flex",
                                 flexDirection: "column",
                                 minWidth: 0,
-                                opacity: isLocked ? 0.7 : 1
+                                opacity: isLocked ? 0.6 : 1
                               }}
                             >
 
@@ -468,8 +468,8 @@ export default function CoursesPage() {
                                   <IconComp size={36} strokeWidth={2} />
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div style={{ fontSize: 12, fontWeight: 500, color: "#94a3b8", marginBottom: 8, letterSpacing: "0.06em" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
-                                  <div style={{ fontSize: 19, fontWeight: 500, color: "#0f172a", lineHeight: 1.25 }}>{topic.title}</div>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", marginBottom: 6, letterSpacing: "0.08em", textTransform: "uppercase" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
+                                  <div style={{ fontSize: 20, fontWeight: 800, color: "#0F172A", lineHeight: 1.15, letterSpacing: "-0.02em" }}>{topic.title}</div>
                                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 500, color: isLocked ? "#64748b" : "#3b82f6" }}>
                                     <BookOpen size={16} /><span>{topic.lessons} cursos</span>
                                   </div>
@@ -637,9 +637,9 @@ export default function CoursesPage() {
         }
 
         .course-card-hover:not(.next-topic-glow):hover {
-          border-color: #3b82f6 !important;
-          transform: translateY(-4px) !important;
-          box-shadow: 0 12px 32px rgba(37, 99, 235, 0.14) !important;
+          border-color: rgba(15, 98, 254, 0.3) !important;
+          transform: translateY(-6px) !important;
+          box-shadow: 0 40px 80px -15px rgba(15, 98, 254, 0.15) !important;
         }
 
         .course-card-hover:active {
@@ -707,7 +707,7 @@ export default function CoursesPage() {
               position: "relative",
               overflow: "hidden",
               textAlign: "center",
-                          }}
+            }}
           >
             {/* Top gradient bar */}
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa)" }} />
@@ -754,7 +754,7 @@ export default function CoursesPage() {
                 border: "none", borderRadius: 12,
                 fontSize: 14, fontWeight: 500,
                 cursor: "pointer",
-                                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
+                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
                 transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, opacity 0.15s ease"
               }}
             >

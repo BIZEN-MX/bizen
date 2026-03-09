@@ -147,7 +147,7 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
             fontWeight: 950,
             color: "#FFF",
             lineHeight: 1,
-                        textShadow: "0 0 30px rgba(96,165,250,0.5)",
+            textShadow: "0 0 30px rgba(96,165,250,0.5)",
           }}>
             +{gainedXP}
           </span>
@@ -232,7 +232,7 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
               fontSize: 13,
               fontWeight: 500,
               color: "#fff",
-                            letterSpacing: "0.04em",
+              letterSpacing: "0.04em",
               boxShadow: "0 4px 16px rgba(255,184,0,0.4)",
             }}
           >
@@ -363,14 +363,15 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.25 }}
               style={{
-                fontSize: "clamp(24px, 6vw, 38px)",
-                fontWeight: 500,
-                background: "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)",
+                fontSize: "clamp(32px, 8vw, 44px)",
+                fontWeight: 800,
+                background: "linear-gradient(135deg, #FFFFFF 0%, #93C5FD 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 margin: 0,
-                lineHeight: 1.2,
-                                letterSpacing: "-0.01em",
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
+                textShadow: "0 0 32px rgba(147, 197, 253, 0.3)",
               }}
             >
               {step.title || "¡Lección completada!"}
@@ -397,7 +398,7 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.3 }}
-                style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "#6B7280", }}
+                style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#BFDBFE" }}
               >
                 {starMessages[stars]}
               </motion.p>
@@ -410,13 +411,13 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5 }}
                 style={{
-                  fontSize: "clamp(14px, 1.8vw, 16px)",
-                  color: "#6B7280",
+                  fontSize: "clamp(15px, 2vw, 18px)",
+                  color: "#93c5fd",
                   lineHeight: 1.6,
-                  fontWeight: 500,
+                  fontWeight: 400,
                   maxWidth: 440,
                   padding: "0 16px",
-                                  }}
+                }}
               >
                 {step.body.split("\n\n").map((line, i) => (
                   <p key={i} style={{ margin: "0 0 8px" }}>{line}</p>
@@ -458,11 +459,12 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
             </motion.div>
 
             <h2 style={{
-              fontSize: 28,
-              fontWeight: 500,
-              color: "#0f172a",
+              fontSize: 32,
+              fontWeight: 700,
+              color: "#FFFFFF",
+              textShadow: "0 0 24px rgba(255,255,255,0.2)",
               margin: 0,
-                          }}>
+            }}>
               Tu progreso actual
             </h2>
 
@@ -480,22 +482,23 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 style={{
-                  background: "linear-gradient(135deg, #f8fafc, #e2e8f0)",
+                  background: "rgba(15,23,42,0.4)",
                   borderRadius: 20,
                   padding: "24px",
                   textAlign: "center",
-                  border: "2px dashed #94a3b8",
+                  border: "2px dashed rgba(147,197,253,0.2)",
                   width: "100%",
+                  backdropFilter: "blur(12px)",
                 }}
               >
-                <div style={{ fontSize: 32, marginBottom: 8 }}>😅</div>
-                <p style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "#64748b", }}>
+                <div style={{ fontSize: 32, marginBottom: 8, filter: "grayscale(0.5)" }}>😅</div>
+                <p style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "#94a3b8" }}>
                   Sin XP esta vez — ¡intenta no cometer errores!
                 </p>
               </motion.div>
             )}
 
-            <p style={{ fontSize: 14, fontWeight: 500, color: "#94a3b8", textAlign: "center", padding: "0 20px" }}>
+            <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", textAlign: "center", padding: "0 20px" }}>
               Cada lección completada te acerca más a tu libertad financiera.
             </p>
           </motion.div>

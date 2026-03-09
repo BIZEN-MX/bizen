@@ -226,7 +226,7 @@ function EvidenceCard({
               style={{
                 display: "flex", alignItems: "center", gap: 5,
                 padding: "5px 10px", borderRadius: 8, cursor: "pointer",
-                fontSize: 12, fontWeight: active ? 700 : 600,                 border: active ? `1.5px solid ${r.color}` : "1px solid #e2e8f0",
+                fontSize: 12, fontWeight: active ? 700 : 600, border: active ? `1.5px solid ${r.color}` : "1px solid #e2e8f0",
                 background: active ? r.bg : "white",
                 color: active ? r.color : "#64748b",
                 transition: "all 0.15s"
@@ -652,7 +652,8 @@ function ForumContent() {
                       padding: "6px 14px", borderRadius: 999,
                       background: selectedTopic === "all" ? "linear-gradient(135deg, #1e3a8a, #3b82f6)" : "#f1f5f9",
                       color: selectedTopic === "all" ? "white" : "#64748b",
-                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500,                     }}
+                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500,
+                    }}
                     onClick={() => setSelectedTopic("all")}
                   >
                     #Todos
@@ -663,7 +664,8 @@ function ForumContent() {
                       padding: "6px 14px", borderRadius: 999,
                       background: selectedTopic === tag ? "linear-gradient(135deg, #1e3a8a, #3b82f6)" : "#f1f5f9",
                       color: selectedTopic === tag ? "white" : "#64748b",
-                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500,                     }} onClick={() => setSelectedTopic(tag)}>
+                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500,
+                    }} onClick={() => setSelectedTopic(tag)}>
                       #{tag}
                     </button>
                   ))}
@@ -699,25 +701,25 @@ function ForumContent() {
                       const accentBorder = thread.isPinned ? "#f59e0b" : tc.accent
                       return (
                         <Link key={thread.id} href={`/forum/thread/${thread.id}`} style={{
-                          padding: "clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px) 0",
-                          background: "white", borderRadius: 16,
-                          border: "1.5px solid #1e3a8a",
+                          padding: "clamp(16px, 3vw, 24px) clamp(16px, 3vw, 24px) clamp(16px, 3vw, 24px) 0",
+                          background: "#fff", borderRadius: 24,
+                          border: "1px solid rgba(0,0,0,0.04)",
                           borderLeft: `4px solid ${accentBorder}`,
-                          boxShadow: "0 2px 8px rgba(0,0,0,0.04)", textDecoration: "none",
-                          display: "block", transition: "all 0.2s ease",
+                          boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1), 0 4px 12px rgba(0,0,0,0.03)", textDecoration: "none",
+                          display: "block", transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
                           overflow: "hidden",
                           animation: `fadeInUp 0.4s ease ${i * 0.04}s both`,
                           position: "relative"
                         }}
                           onMouseEnter={e => {
-                            e.currentTarget.style.transform = "translateX(4px)"
-                            e.currentTarget.style.boxShadow = `0 6px 20px ${tc.shadow}`
-                            e.currentTarget.style.borderColor = "#2563eb"
+                            e.currentTarget.style.transform = "translateY(-4px)"
+                            e.currentTarget.style.boxShadow = `0 24px 48px -12px ${tc.shadow}, 0 8px 16px rgba(0,0,0,0.04)`
+                            e.currentTarget.style.borderColor = tc.accent
                           }}
                           onMouseLeave={e => {
-                            e.currentTarget.style.transform = "translateX(0)"
-                            e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)"
-                            e.currentTarget.style.borderColor = "#1e3a8a"
+                            e.currentTarget.style.transform = "translateY(0)"
+                            e.currentTarget.style.boxShadow = "0 16px 32px -8px rgba(15,98,254,0.1), 0 4px 12px rgba(0,0,0,0.03)"
+                            e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)"
                           }}
                         >
                           <div style={{ display: "flex", alignItems: "stretch", width: "100%" }}>

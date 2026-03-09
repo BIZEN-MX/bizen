@@ -200,10 +200,12 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           background: #ffffff;
           border-radius: clamp(20px, 4vw, 32px);
           width: 100%;
-          max-width: clamp(320px, 90vw, 540px);
+          max-width: clamp(280px, 92vw, 540px);
           max-height: 96dvh;
           overflow-y: auto;
           overflow-x: hidden;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
           box-shadow:
             0 0 0 1px rgba(15,98,254,0.08),
             0 24px 64px rgba(2,10,30,0.45),

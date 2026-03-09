@@ -129,6 +129,15 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   // Animate hint bounce once per session when the button first becomes visible
   const [recallHintBounce, setRecallHintBounce] = useState(false)
+  const [isMobileScreen, setIsMobileScreen] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileScreen(window.innerWidth <= 1024)
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   useEffect(() => {
     if (showRecallButton && !hasShownRecallHint.current) {
       hasShownRecallHint.current = true
@@ -328,6 +337,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         feedbackColor={hasFeedback ? (isCorrect ? "correct" : "incorrect") : null}
         feedbackTitle={hasFeedback ? (isCorrect ? "¡Muy bien hecho!" : "¡Sigue intentando!") : undefined}
         feedbackBody={feedbackBody}
+        isDark={isSummaryStep}
       >
         <div style={{ display: "flex", width: "100%", justifyContent: "center", alignItems: "center" }}>
           {/* Primary Action Button */}
@@ -361,22 +371,24 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           maxHeight: "100dvh",
           height: "100dvh",
           overflow: "hidden",
-          background: "#FFFFFF",
+          background: isSummaryStep ? "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)" : "#FFFFFF",
           paddingTop: "env(safe-area-inset-top)",
-                  }}
+        }}
       >
-        {/* Header - Lowered and Thickened */}
-        <div style={{ flexShrink: 0, padding: "clamp(12px, 4vw, 32px) clamp(16px, 4vw, 48px) clamp(8px, 2vw, 20px)", display: "flex", justifyContent: "center" }}>
-          <div style={{ width: "100%", maxWidth: 980 }}>
-            <LessonProgressHeader
-              currentStepIndex={state.currentStepIndex}
-              totalSteps={state.allSteps.length}
-              streak={streak}
-              stars={stars}
-              onExit={handleAttemptExit}
-            />
+        {/* Header - Hidden on Summary Step for maximum immersion */}
+        {!isSummaryStep && (
+          <div style={{ flexShrink: 0, padding: "clamp(12px, 4vw, 32px) clamp(16px, 4vw, 48px) clamp(8px, 2vw, 20px)", display: "flex", justifyContent: "center" }}>
+            <div style={{ width: "100%", maxWidth: 980 }}>
+              <LessonProgressHeader
+                currentStepIndex={state.currentStepIndex}
+                totalSteps={state.allSteps.length}
+                streak={streak}
+                stars={stars}
+                onExit={handleAttemptExit}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         <LessonExitModal
           isOpen={isExitModalOpen}
@@ -454,7 +466,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 borderRadius: 999,
                 boxShadow: "0 8px 24px rgba(37,99,235,0.4), inset 0 2px 0 rgba(255,255,255,0.2)",
                 cursor: "pointer",
-                                fontSize: "clamp(13px, 1.8vw, 16px)",
+                fontSize: "clamp(13px, 1.8vw, 16px)",
                 fontWeight: 500,
                 color: "#ffffff",
                 whiteSpace: "nowrap",
@@ -480,31 +492,33 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               <span>Repasar nota</span>
             </button>
 
-            <motion.div
-              className="recall-mascot-wrap"
-              initial={{ opacity: 0, scale: 0.8, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
-              style={{
-                marginTop: 4,
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                pointerEvents: "none"
-              }}
-            >
-              <img
-                src="/image copy 2.png"
-                alt="Mascot"
+            {!isMobileScreen && (
+              <motion.div
+                className="recall-mascot-wrap"
+                initial={{ opacity: 0, scale: 0.8, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
                 style={{
-                  width: "clamp(100px, 18vw, 220px)",
-                  height: "auto",
-                  maxHeight: "25vh",
-                  objectFit: "contain",
-                  filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.1))",
+                  marginTop: 4,
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  pointerEvents: "none"
                 }}
-              />
-            </motion.div>
+              >
+                <img
+                  src="/image copy 2.png"
+                  alt="Mascot"
+                  style={{
+                    width: "clamp(100px, 18vw, 220px)",
+                    height: "auto",
+                    maxHeight: "25vh",
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.1))",
+                  }}
+                />
+              </motion.div>
+            )}
           </div>
         )}
 
@@ -611,7 +625,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                     fontWeight: 500,
                     marginBottom: 16,
                     lineHeight: 1.2,
-                                        background: "linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #3b82f6 100%)",
+                    background: "linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #3b82f6 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",

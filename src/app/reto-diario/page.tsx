@@ -34,8 +34,8 @@ const LIMITS = { smartGoal: 180, didToday: 250, learned: 250, changeTomorrow: 25
 const CHALLENGE_TYPE_META: Record<string, { label: string; icon: any; color: string; accent: string }> = {
   reflection: { label: "Reflexión", icon: Brain, color: "#818cf8", accent: "rgba(129,140,248,0.15)" },
   task: { label: "Acción", icon: TrendingUp, color: "#10b981", accent: "rgba(16,185,129,0.15)" },
-  quiz: { label: "Quiz", icon: BookOpen, color: "#f59e0b", accent: "rgba(245,158,11,0.15)" },
-  simulator: { label: "Simulador", icon: Zap, color: "#f97316", accent: "rgba(249,115,22,0.15)" },
+  quiz: { label: "Quiz", icon: BookOpen, color: "#6366f1", accent: "rgba(99,102,241,0.15)" },
+  simulator: { label: "Simulador", icon: Zap, color: "#0F62FE", accent: "rgba(15,98,254,0.15)" },
 }
 
 const EVIDENCE_STEPS = [
@@ -74,7 +74,7 @@ export default function RetoDiarioPage() {
   const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    document.body.style.background = "#FBFAF5"
+    document.body.style.background = "#F8FAFC"
     return () => { document.body.style.background = "" }
   }, [])
 
@@ -153,7 +153,7 @@ export default function RetoDiarioPage() {
           particleCount: 150,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#0F62FE', '#4A9EFF', '#fb923c', '#10b981']
+          colors: ['#0F62FE', '#4A9EFF', '#60A5FA', '#10b981']
         })
       } else {
         const d = await res.json()
@@ -195,13 +195,13 @@ export default function RetoDiarioPage() {
         @keyframes streakGlow { 0%,100% { text-shadow: 0 0 12px rgba(251,146,60,0.8) } 50% { text-shadow: 0 0 24px rgba(251,146,60,1) } }
 
         .rd-challenge-card {
-          background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%) !important;
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 24px;
+          background: linear-gradient(145deg, #0a0f1e 0%, #1e3a8a 70%, #1d4ed8 100%) !important;
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 28px;
           position: relative;
           overflow: hidden;
-          box-shadow: 0 20px 60px rgba(15,98,254,0.25);
-          animation: fadeUp 0.5s ease both;
+          box-shadow: 0 32px 64px -12px rgba(15, 98, 254, 0.3);
+          animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
         .rd-challenge-card::before {
           content: '';
@@ -213,11 +213,11 @@ export default function RetoDiarioPage() {
         .rd-card-title {
           color: #ffffff !important;
           -webkit-text-fill-color: #ffffff !important;
-          font-size: clamp(20px, 3vw, 28px) !important;
-          font-weight: 500 !important;
+          font-size: clamp(24px, 4vw, 36px) !important;
+          font-weight: 800 !important;
           margin: 0 0 16px !important;
-          letter-spacing: -0.015em !important;
-          line-height: 1.25 !important;
+          letter-spacing: -0.02em !important;
+          line-height: 1.15 !important;
         }
         .rd-card-desc {
           color: rgba(255,255,255,0.80) !important;
@@ -330,7 +330,7 @@ export default function RetoDiarioPage() {
         style={{
           minHeight: "100vh",
           background: "#FBFAF5",
-                    padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)",
+          padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)",
           boxSizing: "border-box",
           position: "relative",
           overflow: "hidden",
@@ -520,11 +520,11 @@ export default function RetoDiarioPage() {
                     <div style={{
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 14px",
-                      background: "rgba(251,191,36,0.2)",
-                      border: "1px solid rgba(251,191,36,0.4)",
-                      borderRadius: 999, fontSize: 12, fontWeight: 500, color: "#fbbf24"
+                      background: "rgba(15, 98, 254, 0.15)",
+                      border: "1px solid rgba(15, 98, 254, 0.25)",
+                      borderRadius: 999, fontSize: 12, fontWeight: 700, color: "#93c5fd"
                     }}>
-                      <Zap size={12} />
+                      <Zap size={12} fill="#93c5fd" />
                       +50 XP
                     </div>
                     <div style={{
@@ -713,9 +713,18 @@ export default function RetoDiarioPage() {
                   </div>
 
                   {/* Streak Info */}
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 999, marginBottom: 16 }}>
-                    <Flame size={14} style={{ color: "#fb923c" }} />
-                    <span style={{ fontSize: 13, fontWeight: 500, color: "#fb923c" }}>{streak} días seguidos</span>
+                  <div style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 7,
+                    padding: "8px 18px",
+                    background: "rgba(15,98,254,0.06)",
+                    border: "1px solid rgba(15,98,254,0.15)",
+                    borderRadius: 999,
+                    marginBottom: 16
+                  }}>
+                    <Flame size={14} style={{ color: "#0F62FE" }} />
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#0F62FE" }}>{streak} días seguidos</span>
                   </div>
 
                   <p style={{ fontSize: "clamp(13px, 1.2vw, 15px)", color: "rgba(255,255,255,0.55)", maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.7 }}>

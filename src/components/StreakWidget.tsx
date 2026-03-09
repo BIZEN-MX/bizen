@@ -68,18 +68,18 @@ export default function StreakWidget({
             <div className="streak-badge" style={{
                 display: "flex", alignItems: "center", gap: 10,
                 padding: "12px 18px",
-                background: "linear-gradient(135deg, #fffaf5 0%, #fff7ed 100%)",
-                border: "2px solid rgba(249,115,22,0.25)",
+                background: "linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)",
+                border: "1px solid rgba(15, 98, 254, 0.15)",
                 borderRadius: showCalendar ? "20px 20px 0 0" : "20px",
-                boxShadow: showCalendar ? "none" : "0 8px 20px rgba(249,115,22,0.12)",
-                borderBottom: showCalendar ? "1px solid rgba(249,115,22,0.15)" : undefined,
+                boxShadow: showCalendar ? "none" : "0 8px 24px rgba(15, 98, 254, 0.08)",
+                borderBottom: showCalendar ? "1px solid rgba(15, 98, 254, 0.1)" : undefined,
                 ...badgeStyle
             }}>
                 <Flame
                     size={iconSize}
                     style={{
-                        color: streak > 0 ? (iconStyle.color || "#f97316") : "#94a3b8",
-                        animation: streak > 0 ? (iconStyle.animation || "streakFloat 2s ease infinite") : "none",
+                        color: streak > 0 ? (iconStyle.color || "#0F62FE") : "#94A3B8",
+                        animation: streak > 0 ? (iconStyle.animation || "streakFloat 3s ease-in-out infinite") : "none",
                         flexShrink: 0,
                         ...iconStyle
                     }}
@@ -87,20 +87,20 @@ export default function StreakWidget({
                 <div style={{ display: "flex", flexDirection: "column", alignItems: badgeStyle.alignItems || "center" }}>
                     <div style={{
                         fontSize: fontSize,
-                        fontWeight: 950,
-                        color: streak > 0 ? "#ea580c" : "#94a3b8",
+                        fontWeight: 800,
+                        color: streak > 0 ? "#0F62FE" : "#94A3B8",
                         lineHeight: 0.9,
-                        animation: streak > 0 ? "streakGlow 2s ease infinite" : "none",
+                        letterSpacing: "-0.02em",
                         ...textStyle
                     }}>
                         {streak}
                     </div>
                     <div style={{
                         fontSize: 10,
-                        color: streak > 0 ? "#f97316" : "#94a3b8",
-                        fontWeight: 500,
+                        color: streak > 0 ? "#4A9EFF" : "#94A3B8",
+                        fontWeight: 700,
                         textTransform: "uppercase" as const,
-                        letterSpacing: "0.08em",
+                        letterSpacing: "0.1em",
                         marginTop: 2,
                         ...labelStyle
                     }}>
@@ -112,12 +112,12 @@ export default function StreakWidget({
             {/* ── Weekly Calendar (only when showCalendar=true) ── */}
             {showCalendar && (
                 <div className="streak-calendar-row" style={{
-                    background: "linear-gradient(135deg, #fff7ed 0%, #fffaf5 100%)",
-                    border: "2px solid rgba(249,115,22,0.25)",
+                    background: "linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)",
+                    border: "1px solid rgba(15, 98, 254, 0.15)",
                     borderTop: "none",
                     borderRadius: "0 0 20px 20px",
-                    padding: "12px 16px 14px",
-                    boxShadow: "0 8px 20px rgba(249,115,22,0.10)",
+                    padding: "14px 16px 16px",
+                    boxShadow: "0 8px 24px rgba(15, 98, 254, 0.06)",
                 }}>
                     <div style={{
                         display: "flex",
@@ -136,35 +136,38 @@ export default function StreakWidget({
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "center",
-                                    gap: 6,
+                                    gap: 7,
                                     flex: 1,
                                 }}>
                                     {/* Day circle */}
                                     <div style={{
-                                        width: 30,
-                                        height: 30,
+                                        width: 32,
+                                        height: 32,
                                         borderRadius: "50%",
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
                                         background: isActive
-                                            ? "linear-gradient(135deg, #f97316, #fb923c)"
+                                            ? "linear-gradient(135deg, #0F62FE, #4A9EFF)"
                                             : isToday
-                                                ? "rgba(249,115,22,0.12)"
+                                                ? "rgba(15, 98, 254, 0.08)"
                                                 : "transparent",
                                         border: isActive
-                                            ? "2px solid #ea580c"
+                                            ? "none"
                                             : isToday
-                                                ? "2px dashed #f97316"
+                                                ? "1.5px solid #0F62FE"
                                                 : isFuture
-                                                    ? "1.5px solid #d1d5db"
-                                                    : "1.5px solid #9ca3af",
-                                        boxShadow: isActive ? "0 3px 10px rgba(249,115,22,0.35)" : "none",
-                                        transition: "all 0.2s ease",
+                                                    ? "1px solid #E2E8F0"
+                                                    : "1px solid #CBD5E1",
+                                        boxShadow: isActive ? "0 4px 12px rgba(15, 98, 254, 0.3)" : isToday ? "0 0 12px rgba(15, 98, 254, 0.15)" : "none",
+                                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                                         position: "relative" as const,
                                     }}>
                                         {isActive && (
                                             <Flame size={14} style={{ color: "#fff" }} />
+                                        )}
+                                        {isToday && !isActive && (
+                                            <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#0F62FE" }} />
                                         )}
                                     </div>
 
@@ -172,9 +175,9 @@ export default function StreakWidget({
                                     <span style={{
                                         fontSize: 9,
                                         fontWeight: isToday ? 800 : 600,
-                                        color: isToday ? "#ea580c" : isFuture ? "#d1d5db" : "#6b7280",
+                                        color: isToday ? "#0F62FE" : isFuture ? "#CBD5E1" : "#64748B",
                                         textTransform: "uppercase" as const,
-                                        letterSpacing: "0.04em",
+                                        letterSpacing: "0.05em",
                                     }}>
                                         {day.short}
                                     </span>
@@ -187,15 +190,14 @@ export default function StreakWidget({
 
             {/* Keyframes */}
             <style>{`
-        @keyframes streakFloat { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
-        @keyframes streakGlow  { 0%,100% { text-shadow: 0 0 10px rgba(249,115,22,0.3) } 50% { text-shadow: 0 0 20px rgba(249,115,22,0.6) } }
+        @keyframes streakFloat { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-3px) } }
         
         @media (max-width: 767px) {
             .mobile-streak-hide-calendar .streak-calendar-row { display: none !important; }
             .mobile-streak-hide-calendar .streak-badge { 
                 border-radius: 20px !important; 
-                border-bottom: 2px solid rgba(249,115,22,0.25) !important;
-                box-shadow: 0 8px 20px rgba(249,115,22,0.12) !important;
+                border-bottom: 1px solid rgba(15, 98, 254, 0.15) !important;
+                box-shadow: 0 8px 24px rgba(15, 98, 254, 0.08) !important;
             }
         }
       `}</style>

@@ -69,7 +69,6 @@ export default function MobileFooterNav() {
     return pathname === path || pathname.startsWith(path + '/')
   }
 
-  // Business Lab hidden for now — add back { path: "/business-lab", ... } to show again
   const navItems = isStudentOrGuest ? [
     {
       path: "/courses",
@@ -137,11 +136,11 @@ export default function MobileFooterNav() {
           display: flex !important;
           flex-direction: row !important;
           flex-wrap: nowrap !important;
-          align-items: stretch !important;
+          align-items: center !important;
           justify-content: space-around !important;
           height: 100% !important;
-          padding: 8px 12px 0 12px !important;
-          gap: 4px !important;
+          padding: 0 16px !important;
+          gap: 6px !important;
           width: 100% !important;
         }
         .mobile-footer-btn {
@@ -150,28 +149,30 @@ export default function MobileFooterNav() {
           align-items: center !important;
           justify-content: center !important;
           flex: 1 1 0 !important;
-          height: auto !important;
+          height: 52px !important;
           max-width: 64px !important;
           border: none !important;
-          border-radius: 12px !important;
+          border-radius: 14px !important;
           cursor: pointer !important;
-          padding: 6px 0 !important;
+          padding: 4px 0 !important;
           margin: 0 !important;
-          transition: all 0.2s ease !important;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+          position: relative !important;
+          overflow: hidden !important;
         }
         .mobile-footer-icon-wrapper {
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
-          height: 32px !important;
-          width: 32px !important;
-          transition: transform 0.2s ease !important;
+          height: 28px !important;
+          width: 28px !important;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .mobile-footer-btn.active .mobile-footer-icon-wrapper {
-          transform: translateY(-2px) !important;
+          transform: translateY(-2px) scale(1.1) !important;
         }
         .mobile-footer-btn.active {
-          background: rgba(15, 98, 254, 0.08) !important;
+          background: rgba(15, 98, 254, 0.15) !important;
         }
         .mobile-footer-btn:not(.active) {
           background: transparent !important;
@@ -186,19 +187,21 @@ export default function MobileFooterNav() {
         data-mobile-bottom-nav
         style={{
           position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "70px",
-          paddingBottom: "max(12px, env(safe-area-inset-bottom, 0px))",
-          boxSizing: "content-box",
+          bottom: "max(16px, env(safe-area-inset-bottom, 16px))",
+          left: "clamp(16px, 4vw, 32px)",
+          right: "clamp(16px, 4vw, 32px)",
+          height: "64px",
+          boxSizing: "border-box",
           zIndex: 10000,
           transform: "translate3d(0, 0, 0)",
           WebkitTransform: "translate3d(0, 0, 0)",
           display: "block",
-          background: "#FBFAF5",
-          borderTop: "2px solid #0F62FE",
-          boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.05)"
+          background: "rgba(20, 25, 40, 0.8)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          borderRadius: "24px",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          boxShadow: "0 16px 32px -8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
         }}
       >
         <div className="mobile-footer-inner">
@@ -232,23 +235,29 @@ export default function MobileFooterNav() {
                   }}>
                     <AvatarDisplay
                       avatar={user?.user_metadata?.avatar || { type: "emoji", value: (user?.user_metadata?.full_name || user?.email || "U")[0].toUpperCase() }}
-                      size={32}
+                      size={28}
                       frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
                     />
                   </div>
                 ) : (
                   <item.icon
-                    size={24}
+                    size={22}
                     strokeWidth={item.active ? 2.5 : 2}
-                    color={item.active ? "#0F62FE" : "#4b5563"}
+                    color={item.active ? "#4A9EFF" : "#94a3b8"}
+                    style={{
+                      filter: item.active ? "drop-shadow(0 0 8px rgba(74, 158, 255, 0.5))" : "none"
+                    }}
                   />
                 )}
               </div>
               <span style={{
                 fontSize: "10px",
-                fontWeight: 500,
-                color: item.active ? "#0F62FE" : "#64748b",
-                marginTop: "2px"
+                fontWeight: 600,
+                color: item.active ? "#4A9EFF" : "#64748b",
+                marginTop: "4px",
+                letterSpacing: "0.02em",
+                textShadow: item.active ? "0 0 12px rgba(74, 158, 255, 0.4)" : "none",
+                transition: "color 0.3s ease"
               }}>
                 {item.label}
               </span>
