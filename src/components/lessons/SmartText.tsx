@@ -57,15 +57,14 @@ function InlineSegments({ segments }: { segments: Segment[] }) {
                         <span
                             key={i}
                             style={{
-                                fontWeight: 800,
+                                fontWeight: 500,
                                 color: BLUE_DARK,
                                 background: BLUE_LIGHT,
                                 borderRadius: "6px",
                                 padding: "1px 6px",
                                 display: "inline",
                                 borderBottom: `2.5px solid ${BLUE_BORDER}`,
-                                fontFamily: "'Inter', sans-serif",
-                            }}
+                                                            }}
                         >
                             {seg.content}
                         </span>
@@ -76,14 +75,13 @@ function InlineSegments({ segments }: { segments: Segment[] }) {
                         <span
                             key={i}
                             style={{
-                                fontWeight: 800,
+                                fontWeight: 500,
                                 color: "#059669",
                                 background: "#ECFDF5",
                                 borderRadius: "6px",
                                 padding: "1px 7px",
                                 display: "inline",
-                                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-                                letterSpacing: "-0.01em",
+                                                                letterSpacing: "-0.01em",
                                 fontSize: "0.93em",
                             }}
                         >
@@ -98,9 +96,8 @@ function InlineSegments({ segments }: { segments: Segment[] }) {
                             style={{
                                 color: "#7C3AED",
                                 fontStyle: "italic",
-                                fontWeight: 600,
-                                fontFamily: "'Inter', sans-serif",
-                            }}
+                                fontWeight: 500,
+                                                            }}
                         >
                             "{seg.content}"
                         </em>
@@ -208,12 +205,11 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
                             <span
                                 style={{
                                     fontSize: "12px",
-                                    fontWeight: 800,
+                                    fontWeight: 500,
                                     color: BLUE,
                                     letterSpacing: "0.05em",
                                     textTransform: "uppercase",
-                                    fontFamily: "'Montserrat', sans-serif",
-                                }}
+                                                                    }}
                             >
                                 {block.text}
                             </span>
@@ -260,7 +256,7 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
                                                 border: `1.5px solid ${BLUE_BORDER}`,
                                                 color: BLUE,
                                                 fontSize: "11px",
-                                                fontWeight: 900,
+                                                fontWeight: 500,
                                                 flexShrink: 0,
                                                 marginTop: "2px",
                                             }}
@@ -273,8 +269,7 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
                                                 color: "#334155",
                                                 fontWeight: 500,
                                                 lineHeight: 1.55,
-                                                fontFamily: "'Inter', sans-serif",
-                                            }}
+                                                                                            }}
                                         >
                                             <InlineSegments segments={segments} />
                                         </span>
@@ -298,8 +293,7 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
                                 color: "#334155",
                                 lineHeight: 1.65,
                                 fontWeight: 500,
-                                fontFamily: "'Inter', sans-serif",
-                                whiteSpace: "pre-wrap",
+                                                                whiteSpace: "pre-wrap",
                             }}
                         >
                             <InlineSegments segments={segments} />

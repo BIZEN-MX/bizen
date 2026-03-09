@@ -12,7 +12,7 @@ export default function BackButton() {
           border: "2px solid #E5E7EB",
           borderRadius: 8,
           fontSize: 14,
-          fontWeight: 600,
+          fontWeight: 500,
           color: "#374151",
           cursor: "pointer",
           marginBottom: 24,

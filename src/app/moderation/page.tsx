@@ -89,7 +89,7 @@ export default function ModerationPage() {
 
   if (loading || loadingData) {
     return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "Montserrat, sans-serif" }}>
+      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
         </div>
@@ -105,15 +105,14 @@ export default function ModerationPage() {
         display: "grid",
         placeItems: "center",
         minHeight: "60vh",
-        fontFamily: "Montserrat, sans-serif",
-        padding: 40
+                padding: 40
       }}>
         <div style={{ textAlign: "center", maxWidth: 500 }}>
           <div style={{ fontSize: 64, marginBottom: 16 }}>🔒</div>
-          <h2 style={{ margin: "0 0 12px", fontSize: 24, fontWeight: 800, color: "#1E40AF" }}>
+          <h2 style={{ margin: "0 0 12px", fontSize: 24, fontWeight: 500, color: "#1E40AF" }}>
             Acceso Denegado
           </h2>
-          <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 15, fontWeight: 600 }}>
+          <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 15, fontWeight: 500 }}>
             Esta página es solo para moderadores y administradores
           </p>
           <Link href="/forum" style={{
@@ -121,7 +120,7 @@ export default function ModerationPage() {
             background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
             color: "white",
             borderRadius: 12,
-            fontWeight: 700,
+            fontWeight: 500,
             textDecoration: "none",
             fontSize: 15,
             display: "inline-block"
@@ -139,8 +138,7 @@ export default function ModerationPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "#FBFAF5",
+            background: "#FBFAF5",
       backgroundAttachment: "fixed"
     }}>
       <main style={{ 
@@ -150,10 +148,10 @@ export default function ModerationPage() {
         padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1
       }}>
-        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 800, color: "#1E40AF" }}>
+        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 500, color: "#1E40AF" }}>
           Panel de Moderación
         </h1>
-        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 600 }}>
+        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 500 }}>
           Gestiona reportes y contenido de la comunidad
         </p>
 
@@ -170,10 +168,9 @@ export default function ModerationPage() {
                 border: "none",
                 borderRadius: 8,
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 500,
                 cursor: "pointer",
-                fontFamily: "Montserrat, sans-serif",
-                textTransform: "capitalize"
+                                textTransform: "capitalize"
               }}
             >
               {status === 'all' ? 'Todos' : status === 'open' ? 'Abiertos' : status === 'reviewing' ? 'En revisión' : 'Cerrados'}
@@ -203,23 +200,23 @@ export default function ModerationPage() {
                       background: report.status === 'open' ? "#EF4444" : report.status === 'reviewing' ? "#F59E0B" : "#10B981",
                       color: "white",
                       fontSize: 11,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       borderRadius: 6,
                       marginRight: 8
                     }}>
                       {report.status.toUpperCase()}
                     </span>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: "#1E40AF" }}>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: "#1E40AF" }}>
                       {report.targetType === 'thread' ? 'Tema' : report.targetType === 'comment' ? 'Comentario' : 'Usuario'}
                     </span>
                   </div>
-                  <span style={{ fontSize: 12, color: "#9CA3AF", fontWeight: 600 }}>
+                  <span style={{ fontSize: 12, color: "#9CA3AF", fontWeight: 500 }}>
                     {new Date(report.createdAt).toLocaleDateString('es-ES')}
                   </span>
                 </div>
 
                 <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: "#374151", marginBottom: 4 }}>
                     Razón: {report.reason}
                   </div>
                   {report.details && (
@@ -227,7 +224,7 @@ export default function ModerationPage() {
                       {report.details}
                     </div>
                   )}
-                  <div style={{ fontSize: 13, color: "#9CA3AF", fontWeight: 600, marginTop: 8 }}>
+                  <div style={{ fontSize: 13, color: "#9CA3AF", fontWeight: 500, marginTop: 8 }}>
                     Reportado por: {report.reporter.nickname}
                   </div>
                 </div>
@@ -240,7 +237,7 @@ export default function ModerationPage() {
                     borderRadius: 10,
                     marginBottom: 16
                   }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: "#1E40AF", marginBottom: 4 }}>
+                    <div style={{ fontSize: 14, fontWeight: 500, color: "#1E40AF", marginBottom: 4 }}>
                       {report.thread.title}
                     </div>
                   </div>
@@ -272,10 +269,9 @@ export default function ModerationPage() {
                       border: "none",
                       borderRadius: 8,
                       fontSize: 13,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: "pointer",
-                      fontFamily: "Montserrat, sans-serif"
-                    }}
+                                          }}
                   >
                     Aprobar
                   </button>
@@ -288,10 +284,9 @@ export default function ModerationPage() {
                       border: "none",
                       borderRadius: 8,
                       fontSize: 13,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: "pointer",
-                      fontFamily: "Montserrat, sans-serif"
-                    }}
+                                          }}
                   >
                     Ocultar
                   </button>
@@ -304,10 +299,9 @@ export default function ModerationPage() {
                       border: "none",
                       borderRadius: 8,
                       fontSize: 13,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: "pointer",
-                      fontFamily: "Montserrat, sans-serif"
-                    }}
+                                          }}
                   >
                     Eliminar
                   </button>
@@ -320,10 +314,9 @@ export default function ModerationPage() {
                       border: "none",
                       borderRadius: 8,
                       fontSize: 13,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: "pointer",
-                      fontFamily: "Montserrat, sans-serif"
-                    }}
+                                          }}
                   >
                     Cerrar Reporte
                   </button>
@@ -342,7 +335,7 @@ export default function ModerationPage() {
             borderRadius: 20,
             border: "2px solid rgba(255, 255, 255, 0.6)",
           }}>
-            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700, color: "#1E40AF" }}>
+            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 500, color: "#1E40AF" }}>
               No hay reportes {filter !== 'all' && filter}
             </h3>
           </div>

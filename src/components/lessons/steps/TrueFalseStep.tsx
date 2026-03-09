@@ -88,15 +88,14 @@ export function TrueFalseStep({
       borderRadius: 16,
       padding: 'clamp(10px, 3vw, 20px)',
       fontSize: 'clamp(15px, 3.5vw, 20px)',
-      fontWeight: 800,
+      fontWeight: 500,
       cursor: hasChecked ? 'default' : 'pointer',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       gap: '12px',
       transition: 'all 0.2s ease',
-      fontFamily: "'Inter', sans-serif",
-      opacity: 1,
+            opacity: 1,
     }
   }
 
@@ -113,12 +112,11 @@ export function TrueFalseStep({
         <ExerciseInstruction type="true_false" />
         <h3 style={{
           fontSize: "clamp(20px, 3.5vw, 28px)",
-          fontWeight: 800,
+          fontWeight: 500,
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Inter', sans-serif",
-        }}>
+                  }}>
           {step.statement}
         </h3>
       </div>
@@ -134,7 +132,7 @@ export function TrueFalseStep({
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === true ? "#0F62FE15" : "#F3F4F6", border: selectedValue === true ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
             <Check size={20} strokeWidth={3} />
           </div>
-          <span style={{ flex: 1, textAlign: "left", fontFamily: "'Inter', sans-serif" }}>Verdadero</span>
+          <span style={{ flex: 1, textAlign: "left", }}>Verdadero</span>
           {showFeedback && selectedValue === true && (
             <div style={{ flexShrink: 0 }}>
               {step.correctValue === true ? (
@@ -155,7 +153,7 @@ export function TrueFalseStep({
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === false ? "#0F62FE15" : "#F3F4F6", border: selectedValue === false ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
             <X size={20} strokeWidth={3} />
           </div>
-          <span style={{ flex: 1, textAlign: "left", fontFamily: "'Inter', sans-serif" }}>Falso</span>
+          <span style={{ flex: 1, textAlign: "left", }}>Falso</span>
           {showFeedback && selectedValue === false && (
             <div style={{ flexShrink: 0 }}>
               {step.correctValue === false ? (

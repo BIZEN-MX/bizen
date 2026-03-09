@@ -169,14 +169,14 @@ function EvidenceCard({
             />
           </div>
           <div>
-            <span style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>{post.authorDisplay}</span>
-            {post.isMe && <span style={{ fontSize: 11, color: "#0F62FE", fontWeight: 700, marginLeft: 6 }}>Tú</span>}
+            <span style={{ fontSize: 14, fontWeight: 500, color: "#0f172a" }}>{post.authorDisplay}</span>
+            {post.isMe && <span style={{ fontSize: 11, color: "#0F62FE", fontWeight: 500, marginLeft: 6 }}>Tú</span>}
             <div style={{ fontSize: 11, color: "#94a3b8" }}>{formatDate(post.createdAt)}</div>
           </div>
         </Link>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           <span style={{
-            fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 8,
+            fontSize: 11, fontWeight: 500, padding: "3px 10px", borderRadius: 8,
             background: post.status === "validated" ? "#ecfdf5" : "#f1f5f9",
             color: post.status === "validated" ? "#065f46" : "#64748b"
           }}>
@@ -185,7 +185,7 @@ function EvidenceCard({
           {isTeacher && post.status !== "validated" && (
             <button
               onClick={() => onValidate(post.id)}
-              style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 8, background: "#ecfdf5", color: "#065f46", border: "1px solid rgba(16,185,129,0.4)", cursor: "pointer", fontFamily: "'Montserrat', sans-serif" }}
+              style={{ fontSize: 11, fontWeight: 500, padding: "3px 10px", borderRadius: 8, background: "#ecfdf5", color: "#065f46", border: "1px solid rgba(16,185,129,0.4)", cursor: "pointer", }}
             >
               Validar
             </button>
@@ -195,8 +195,8 @@ function EvidenceCard({
 
       {/* Smart Goal always visible */}
       <div style={{ marginBottom: 10 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Mi objetivo SMART</div>
-        <p style={{ fontSize: 14, color: "#0f172a", margin: 0, lineHeight: 1.6, fontWeight: 600 }}>{post.smartGoal}</p>
+        <div style={{ fontSize: 11, fontWeight: 500, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Mi objetivo SMART</div>
+        <p style={{ fontSize: 14, color: "#0f172a", margin: 0, lineHeight: 1.6, fontWeight: 500 }}>{post.smartGoal}</p>
       </div>
 
       {/* Expandable fields */}
@@ -204,13 +204,13 @@ function EvidenceCard({
         <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 12, display: "grid", gap: 10 }}>
           {[["¿Qué hice hoy?", post.didToday], ["¿Qué aprendí?", post.learned], ["¿Qué cambiaré mañana?", post.changeTomorrow]].map(([label, val]) => (
             <div key={label}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 3 }}>{label}</div>
+              <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 3 }}>{label}</div>
               <p style={{ fontSize: 13, color: "#334155", margin: 0, lineHeight: 1.6 }}>{val}</p>
             </div>
           ))}
         </div>
       )}
-      <button onClick={() => setExpanded(e => !e)} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 4, padding: "4px 0", marginTop: 8, fontFamily: "'Montserrat', sans-serif" }}>
+      <button onClick={() => setExpanded(e => !e)} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", fontSize: 12, fontWeight: 500, display: "flex", alignItems: "center", gap: 4, padding: "4px 0", marginTop: 8, }}>
         {expanded ? <><ChevronUp size={14} /> Menos detalles</> : <><ChevronDown size={14} /> Ver más detalles</>}
       </button>
 
@@ -226,8 +226,7 @@ function EvidenceCard({
               style={{
                 display: "flex", alignItems: "center", gap: 5,
                 padding: "5px 10px", borderRadius: 8, cursor: "pointer",
-                fontSize: 12, fontWeight: active ? 700 : 600, fontFamily: "'Montserrat', sans-serif",
-                border: active ? `1.5px solid ${r.color}` : "1px solid #e2e8f0",
+                fontSize: 12, fontWeight: active ? 700 : 600,                 border: active ? `1.5px solid ${r.color}` : "1px solid #e2e8f0",
                 background: active ? r.bg : "white",
                 color: active ? r.color : "#64748b",
                 transition: "all 0.15s"
@@ -235,12 +234,12 @@ function EvidenceCard({
             >
               {r.icon}
               {r.type}
-              {count > 0 && <span style={{ fontWeight: 800 }}>{count}</span>}
+              {count > 0 && <span style={{ fontWeight: 500 }}>{count}</span>}
             </button>
           )
         })}
 
-        <button onClick={() => setShowComments(s => !s)} style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 600, border: "1px solid #e2e8f0", background: "white", color: "#64748b", fontFamily: "'Montserrat', sans-serif" }}>
+        <button onClick={() => setShowComments(s => !s)} style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 500, border: "1px solid #e2e8f0", background: "white", color: "#64748b", }}>
           <MessageCircle size={13} />
           {localComments.length > 0 ? localComments.length : "Comentar"}
         </button>
@@ -252,13 +251,13 @@ function EvidenceCard({
           {localComments.map(c => (
             <div key={c.id} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
               <Link href={`/forum/profile/${c.userId}`} style={{ textDecoration: "none" }}>
-                <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#f1f5f9", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#64748b" }}>
+                <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#f1f5f9", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 500, color: "#64748b" }}>
                   {(c.authorDisplay || "?").charAt(0).toUpperCase()}
                 </div>
               </Link>
               <div style={{ background: "#FBFAF5", borderRadius: 10, padding: "6px 10px", flex: 1 }}>
                 <Link href={`/forum/profile/${c.userId}`} style={{ textDecoration: "none", display: "inline-block" }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#374151" }}>{c.authorDisplay || "Usuario"}</span>
+                  <span style={{ fontSize: 12, fontWeight: 500, color: "#374151" }}>{c.authorDisplay || "Usuario"}</span>
                 </Link>
                 <p style={{ fontSize: 13, color: "#334155", margin: "2px 0 0", lineHeight: 1.5 }}>{c.body}</p>
               </div>
@@ -271,7 +270,7 @@ function EvidenceCard({
               value={commentText}
               onChange={e => setCommentText(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") handleComment() }}
-              style={{ flex: 1, padding: "8px 12px", border: "1.5px solid #e2e8f0", borderRadius: 10, fontSize: 13, outline: "none", fontFamily: "'Montserrat', sans-serif" }}
+              style={{ flex: 1, padding: "8px 12px", border: "1.5px solid #e2e8f0", borderRadius: 10, fontSize: 13, outline: "none", }}
             />
             <button
               onClick={handleComment}
@@ -453,7 +452,7 @@ function ForumContent() {
           padding: 10px 20px;
           border: none;
           border-radius: 10px;
-          font-weight: 700;
+          font-weight: 500;
           font-size: 14px;
           cursor: pointer;
           transition: all 0.2s ease;
@@ -468,7 +467,7 @@ function ForumContent() {
         .forum-tab-btn.inactive:hover { border-color: #1e3a8a; color: #1e3a8a; }
       `}</style>
 
-      <div className="forum-outer" style={{ position: "relative", flex: 1, fontFamily: "'Montserrat', sans-serif", background: "#FBFAF5", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
+      <div className="forum-outer" style={{ position: "relative", flex: 1, background: "#FBFAF5", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
         <div ref={containerRef} className="forum-container" style={{ position: "relative", flex: 1, paddingTop: 32, paddingBottom: 80, boxSizing: "border-box", width: "100%" }}>
           <main style={{ position: "relative", margin: 0, padding: "clamp(16px, 4vw, 40px)", width: "100%", boxSizing: "border-box" }}>
 
@@ -479,7 +478,7 @@ function ForumContent() {
                 <h1 style={{
                   margin: 0,
                   fontSize: "clamp(26px, 5vw, 40px)",
-                  fontWeight: 900,
+                  fontWeight: 500,
                   lineHeight: 1.25,
                   paddingBottom: "12px",
                   letterSpacing: "-0.025em",
@@ -517,7 +516,7 @@ function ForumContent() {
                 <Link href="/forum/bookmarks" style={{
                   display: "flex", alignItems: "center", gap: 7,
                   padding: "10px 18px", background: "white", color: "#64748b",
-                  borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 13,
+                  borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 13,
                   border: "1.5px solid #e2e8f0", transition: "all 0.2s"
                 }} className="forum-nav-extra-btn">
                   <BookOpen size={15} /> Guardados
@@ -525,7 +524,7 @@ function ForumContent() {
                 <Link href="/forum/new" style={{
                   display: "flex", alignItems: "center", gap: 7,
                   padding: "10px 20px", background: "linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb)", color: "white",
-                  borderRadius: 12, fontWeight: 800, textDecoration: "none", fontSize: 13,
+                  borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 13,
                   boxShadow: "0 4px 12px rgba(15,23,42,0.3)", transition: "all 0.2s"
                 }}>
                   <span>+</span> Crear Tema
@@ -547,14 +546,14 @@ function ForumContent() {
                     border: "1px solid rgba(255,255,255,0.06)", boxShadow: "0 16px 40px rgba(0,0,0,0.25)"
                   }}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Reto de hoy</div>
-                      <h2 style={{ fontSize: "clamp(16px, 2vw, 20px)", fontWeight: 800, color: "white", margin: "0 0 6px" }}>{todayChallenge.title}</h2>
+                      <div style={{ fontSize: 11, fontWeight: 500, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Reto de hoy</div>
+                      <h2 style={{ fontSize: "clamp(16px, 2vw, 20px)", fontWeight: 500, color: "white", margin: "0 0 6px" }}>{todayChallenge.title}</h2>
                       <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.5, maxWidth: 500 }}>{todayChallenge.description.slice(0, 120)}...</p>
                     </div>
                     <Link href="/reto-diario" style={{
                       display: "flex", alignItems: "center", gap: 7, padding: "11px 20px",
                       background: "white", color: "#0f172a",
-                      borderRadius: 12, fontWeight: 700, fontSize: 13, textDecoration: "none",
+                      borderRadius: 12, fontWeight: 500, fontSize: 13, textDecoration: "none",
                       boxShadow: "0 4px 14px rgba(0,0,0,0.2)", whiteSpace: "nowrap"
                     }}>
                       <Target size={15} /> Hacer el reto
@@ -571,8 +570,8 @@ function ForumContent() {
                       { label: "Pendientes", value: pendingToday, color: "#f59e0b" },
                     ].map(({ label, value, color }) => (
                       <div key={label} style={{ background: "white", borderRadius: 14, padding: "16px 20px", border: "1.5px solid #f1f5f9", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-                        <div style={{ fontSize: 28, fontWeight: 900, color }}>{value}</div>
-                        <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>{label}</div>
+                        <div style={{ fontSize: 28, fontWeight: 500, color }}>{value}</div>
+                        <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>{label}</div>
                       </div>
                     ))}
                   </div>
@@ -583,7 +582,7 @@ function ForumContent() {
                   <select
                     value={evidenceSort}
                     onChange={e => setEvidenceSort(e.target.value as "new" | "validated")}
-                    style={{ padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif", color: "#374151", cursor: "pointer", background: "white" }}
+                    style={{ padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", background: "white" }}
                   >
                     <option value="new">Más recientes</option>
                     <option value="validated">Más validadas</option>
@@ -595,7 +594,7 @@ function ForumContent() {
                         setEvidenceScope(e.target.value as "school" | "all")
                         if (todayChallenge) fetchEvidence(todayChallenge.id, e.target.value as any)
                       }}
-                      style={{ padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif", color: "#374151", cursor: "pointer", background: "white" }}
+                      style={{ padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", background: "white" }}
                     >
                       <option value="school">Mi escuela</option>
                       <option value="all">Todas</option>
@@ -618,11 +617,11 @@ function ForumContent() {
                     <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
                       <NoteIcon size={48} color="#94a3b8" />
                     </div>
-                    <h3 style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>Sé el primero en publicar tu evidencia</h3>
+                    <h3 style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", marginBottom: 10 }}>Sé el primero en publicar tu evidencia</h3>
                     <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
                       Completa el reto de hoy y comparte tu aprendizaje con tu grupo.
                     </p>
-                    <Link href="/reto-diario" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "white", color: "#0f172a", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 14, boxShadow: "0 4px 14px rgba(0,0,0,0.15)" }}>
+                    <Link href="/reto-diario" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "white", color: "#0f172a", borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 14, boxShadow: "0 4px 14px rgba(0,0,0,0.15)" }}>
                       <Target size={16} /> Hacer el reto de hoy
                     </Link>
                   </div>
@@ -653,8 +652,7 @@ function ForumContent() {
                       padding: "6px 14px", borderRadius: 999,
                       background: selectedTopic === "all" ? "linear-gradient(135deg, #1e3a8a, #3b82f6)" : "#f1f5f9",
                       color: selectedTopic === "all" ? "white" : "#64748b",
-                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif"
-                    }}
+                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500,                     }}
                     onClick={() => setSelectedTopic("all")}
                   >
                     #Todos
@@ -665,8 +663,7 @@ function ForumContent() {
                       padding: "6px 14px", borderRadius: 999,
                       background: selectedTopic === tag ? "linear-gradient(135deg, #1e3a8a, #3b82f6)" : "#f1f5f9",
                       color: selectedTopic === tag ? "white" : "#64748b",
-                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "'Montserrat', sans-serif"
-                    }} onClick={() => setSelectedTopic(tag)}>
+                      border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500,                     }} onClick={() => setSelectedTopic(tag)}>
                       #{tag}
                     </button>
                   ))}
@@ -674,7 +671,7 @@ function ForumContent() {
                   <select
                     value={sortBy}
                     onChange={e => setSortBy(e.target.value as any)}
-                    style={{ marginLeft: "auto", padding: "6px 10px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", background: "white", color: "#374151" }}
+                    style={{ marginLeft: "auto", padding: "6px 10px", borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 12, fontWeight: 500, cursor: "pointer", background: "white", color: "#374151" }}
                   >
                     <option value="new">Más recientes</option>
                     <option value="top">Más votados</option>
@@ -694,7 +691,7 @@ function ForumContent() {
                     <ThreadCardSkeleton />
                   ) : threads.length === 0 ? (
                     <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8faff", borderRadius: 18, border: "1.8px dashed #e2e8f0" }}>
-                      <p style={{ color: "#64748b", fontSize: 14, fontWeight: 600 }}>No hay preguntas en este tema todavía. ¡Sé el primero!</p>
+                      <p style={{ color: "#64748b", fontSize: 14, fontWeight: 500 }}>No hay preguntas en este tema todavía. ¡Sé el primero!</p>
                     </div>
                   ) : (
                     threads.map((thread, i) => {
@@ -725,15 +722,15 @@ function ForumContent() {
                         >
                           <div style={{ display: "flex", alignItems: "stretch", width: "100%" }}>
                             <div style={{ width: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderRight: "1px solid #f1f5f9", flexShrink: 0 }}>
-                              <div style={{ fontSize: 16, fontWeight: 800, color: "#1e3a8a" }}>{thread.score}</div>
-                              <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600, marginTop: 2 }}>votos</div>
+                              <div style={{ fontSize: 16, fontWeight: 500, color: "#1e3a8a" }}>{thread.score}</div>
+                              <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 500, marginTop: 2 }}>votos</div>
                             </div>
                             <div style={{ flex: 1, minWidth: 0, paddingLeft: 20 }}>
                               <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 6 }}>
-                                <h3 style={{ margin: 0, flex: 1, fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>{thread.title}</h3>
+                                <h3 style={{ margin: 0, flex: 1, fontSize: 16, fontWeight: 500, color: "#0f172a", lineHeight: 1.4 }}>{thread.title}</h3>
                                 {thread.status !== 'open' && (
                                   <span style={{
-                                    padding: "3px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
+                                    padding: "3px 8px", borderRadius: 6, fontSize: 11, fontWeight: 500, whiteSpace: "nowrap",
                                     background: thread.status === "resolved" ? "#ecfdf5" : "#fef2f2",
                                     color: thread.status === "resolved" ? "#047857" : "#ef4444"
                                   }}>
@@ -743,7 +740,7 @@ function ForumContent() {
                               </div>
                               <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 6, background: tc.light, padding: "3px 10px", borderRadius: 999, flexShrink: 0 }}>
-                                  <span style={{ fontSize: 11, fontWeight: 700, color: tc.accent }}>{thread.topic.name}</span>
+                                  <span style={{ fontSize: 11, fontWeight: 500, color: tc.accent }}>{thread.topic.name}</span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#64748b", fontSize: 12 }}>
                                   <Link href={`/forum/profile/${thread.author.userId}`} style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", color: "inherit" }}>
@@ -754,7 +751,7 @@ function ForumContent() {
                                         frame={thread.author.inventory?.includes("2") ? "vip" : thread.author.inventory?.includes("1") ? "ambassador" : null}
                                       />
                                     </div>
-                                    <span style={{ fontWeight: 600 }}>{thread.author.nickname}</span>
+                                    <span style={{ fontWeight: 500 }}>{thread.author.nickname}</span>
                                   </Link>
                                   <span>·</span>
                                   <span>{formatDate(thread.createdAt)}</span>
@@ -788,21 +785,21 @@ function ForumContent() {
                   boxShadow: "0 8px 24px rgba(124,58,237,0.3)"
                 }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Esta semana</div>
-                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 24px)", fontWeight: 900, color: "white", margin: "0 0 6px" }}>
+                    <div style={{ fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Esta semana</div>
+                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 24px)", fontWeight: 500, color: "white", margin: "0 0 6px" }}>
                       <RocketIcon size={24} color="white" style={{ verticalAlign: "middle", marginRight: 8 }} />
                       Pitch Week
                     </h2>
                     <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: 0, lineHeight: 1.5 }}>Comparte tu idea de negocio y recibe feedback de tu grupo. Usa la plantilla estructurada abajo.</p>
                   </div>
-                  <Link href="/forum/new" style={{ padding: "11px 20px", background: "rgba(255,255,255,0.15)", color: "white", borderRadius: 12, fontWeight: 700, fontSize: 13, textDecoration: "none", border: "1.5px solid rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
+                  <Link href="/forum/new" style={{ padding: "11px 20px", background: "rgba(255,255,255,0.15)", color: "white", borderRadius: 12, fontWeight: 500, fontSize: 13, textDecoration: "none", border: "1.5px solid rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
                     Publicar proyecto →
                   </Link>
                 </div>
 
                 {/* Project template guide */}
                 <div style={{ background: "white", borderRadius: 18, padding: 28, border: "1.5px solid #f1f5f9", marginBottom: 20 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>Plantilla para Proyectos</h3>
+                  <h3 style={{ fontSize: 16, fontWeight: 500, color: "#0f172a", marginBottom: 16 }}>Plantilla para Proyectos</h3>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
                     {[
                       { label: "Idea", desc: "¿Qué problema resuelves?" },
@@ -812,12 +809,12 @@ function ForumContent() {
                       { label: "Siguiente paso", desc: "¿Qué harás esta semana?" },
                     ].map(({ label, desc }) => (
                       <div key={label} style={{ background: "#FBFAF5", borderRadius: 12, padding: "14px 16px" }}>
-                        <div style={{ fontSize: 12, fontWeight: 800, color: "#7c3aed", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{label}</div>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#7c3aed", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{label}</div>
                         <div style={{ fontSize: 13, color: "#64748b" }}>{desc}</div>
                       </div>
                     ))}
                   </div>
-                  <Link href="/forum/new" style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 20, padding: "12px 22px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", color: "white", borderRadius: 12, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                  <Link href="/forum/new" style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 20, padding: "12px 22px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", color: "white", borderRadius: 12, fontWeight: 500, fontSize: 14, textDecoration: "none" }}>
                     <Briefcase size={16} /> Publicar mi proyecto
                   </Link>
                 </div>
@@ -827,9 +824,9 @@ function ForumContent() {
                   <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>
                     <LeafIcon size={40} color="#10b981" />
                   </div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>Aún no hay proyectos</h3>
+                  <h3 style={{ fontSize: 18, fontWeight: 500, color: "#0f172a", marginBottom: 10 }}>Aún no hay proyectos</h3>
                   <p style={{ color: "#64748b", fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>El feed de proyectos aparecerá aquí. ¡Sé el primero en publicar tu idea!</p>
-                  <Link href="/forum/new" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", color: "white", borderRadius: 12, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                  <Link href="/forum/new" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 22px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", color: "white", borderRadius: 12, fontWeight: 500, fontSize: 14, textDecoration: "none" }}>
                     <Briefcase size={16} /> Publicar proyecto
                   </Link>
                 </div>

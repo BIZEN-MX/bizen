@@ -91,8 +91,7 @@ export default function LabPage() {
         maxWidth: "none",
         flex: 1,
         background: "#FBFAF5",
-        fontFamily: "Montserrat, sans-serif",
-        overflowX: "hidden",
+                overflowX: "hidden",
         overflowY: "auto",
         boxSizing: "border-box",
         display: "flex",
@@ -116,7 +115,7 @@ export default function LabPage() {
           <div style={{ marginBottom: 32, width: "100%", maxWidth: "none", textAlign: "center" }}>
             <h1 style={{
               fontSize: 42,
-              fontWeight: 900,
+              fontWeight: 500,
               background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -145,7 +144,7 @@ export default function LabPage() {
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
               <span style={{ fontSize: 24 }}>🎯</span>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: "#1E40AF" }}>
+              <h2 style={{ fontSize: 20, fontWeight: 500, color: "#1E40AF" }}>
                 Tu Progreso General
               </h2>
             </div>
@@ -173,7 +172,7 @@ export default function LabPage() {
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 fontSize: 12,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#1E40AF"
               }}>
                 {progressPercentage}%
@@ -198,18 +197,18 @@ export default function LabPage() {
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                 <span style={{ fontSize: 24 }}>💡</span>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: "#1E40AF" }}>
+                <h2 style={{ fontSize: 20, fontWeight: 500, color: "#1E40AF" }}>
                   Siguiente Paso Recomendado
                 </h2>
               </div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: "#1E40AF" }}>
+              <h3 style={{ fontSize: 18, fontWeight: 500, marginBottom: 8, color: "#1E40AF" }}>
                 {nextStep.title}
               </h3>
               <p style={{ color: "#374151", marginBottom: 12, fontSize: 14, fontWeight: 500 }}>
                 {nextStep.description}
               </p>
               {nextStep.goal && (
-                <p style={{ fontSize: 14, color: "#4B5563", marginBottom: 16, fontWeight: 600 }}>
+                <p style={{ fontSize: 14, color: "#4B5563", marginBottom: 16, fontWeight: 500 }}>
                   🎯 {nextStep.goal}
                 </p>
               )}
@@ -220,7 +219,7 @@ export default function LabPage() {
                   color: "#0B71FE",
                   border: "1px solid rgba(11, 113, 254, 0.4)",
                   borderRadius: 12,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   fontSize: 15,
                   cursor: "pointer",
                   boxShadow: "0 4px 12px rgba(11, 113, 254, 0.2)",
@@ -285,7 +284,7 @@ export default function LabPage() {
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 12 }}>📄</div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111", marginBottom: 6 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 500, color: "#111", marginBottom: 6 }}>
                   Templates
                 </h3>
                 <p style={{ fontSize: 13, color: "#6B7280" }}>
@@ -322,7 +321,7 @@ export default function LabPage() {
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 12 }}>🧮</div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111", marginBottom: 6 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 500, color: "#111", marginBottom: 6 }}>
                   Simuladores
                 </h3>
                 <p style={{ fontSize: 13, color: "#6B7280" }}>
@@ -359,7 +358,7 @@ export default function LabPage() {
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 12 }}>📈</div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111", marginBottom: 6 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 500, color: "#111", marginBottom: 6 }}>
                   Investment Score
                 </h3>
                 <p style={{ fontSize: 13, color: "#6B7280" }}>
@@ -373,7 +372,7 @@ export default function LabPage() {
           <div style={{ marginBottom: 32, width: "100%" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, justifyContent: "center" }}>
               <span style={{ fontSize: 28 }}>🎯</span>
-              <h2 style={{ fontSize: 28, fontWeight: 700, color: "#1E40AF" }}>
+              <h2 style={{ fontSize: 28, fontWeight: 500, color: "#1E40AF" }}>
                 Rutas de Aprendizaje
               </h2>
             </div>
@@ -437,7 +436,7 @@ export default function LabPage() {
                       </div>
                       <h3 style={{
                         fontSize: 20,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         color: "#111",
                         marginBottom: 8
                       }}>
@@ -458,7 +457,7 @@ export default function LabPage() {
                         color: "#6B7280"
                       }}>
                         <span>Progreso</span>
-                        <span style={{ fontWeight: 600 }}>
+                        <span style={{ fontWeight: 500 }}>
                           {track.completedSteps || 0}/{track.totalSteps || 0}
                         </span>
                       </div>
@@ -498,7 +497,7 @@ export default function LabPage() {
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
               <span style={{ fontSize: 24 }}>⚠️</span>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>
+              <h3 style={{ fontSize: 16, fontWeight: 500, color: "#0f172a" }}>
                 Normas de Uso
               </h3>
             </div>

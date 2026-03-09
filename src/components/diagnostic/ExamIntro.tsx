@@ -52,21 +52,19 @@ export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: Ex
     outline: "none",
     transition: "border-color 0.2s, box-shadow 0.2s",
     boxSizing: "border-box",
-    fontFamily: "'Inter', sans-serif",
-    color: "#111827",
+        color: "#111827",
     background: "#FFFFFF",
   }
 
   const labelStyle: React.CSSProperties = {
     display: "block",
     fontSize: "13px",
-    fontWeight: 700,
+    fontWeight: 500,
     color: "#6B7280",
     marginBottom: "8px",
     letterSpacing: "0.03em",
     textTransform: "uppercase",
-    fontFamily: "'Inter', sans-serif",
-  }
+      }
 
   return (
     <div style={{
@@ -95,13 +93,12 @@ export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: Ex
         </div>
         <h1 style={{
           fontSize: "clamp(26px, 5vw, 32px)",
-          fontWeight: 900,
+          fontWeight: 500,
           color: "#111827",
           lineHeight: 1.15,
           margin: "0 0 12px 0",
           letterSpacing: "-0.03em",
-          fontFamily: "'Montserrat', sans-serif",
-        }}>
+                  }}>
           Examen <span style={{ color: "#0F62FE" }}>Diagnóstico</span>
         </h1>
         <p style={{
@@ -109,8 +106,7 @@ export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: Ex
           color: "#6B7280",
           lineHeight: 1.6,
           margin: 0,
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 500,
+                    fontWeight: 500,
         }}>
           Completa tu información para comenzar. Solo toma 2 minutos.
         </p>
@@ -226,7 +222,7 @@ export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: Ex
               <line x1="12" y1="8" x2="12" y2="12" />
               <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
-            <p style={{ color: "#DC2626", fontSize: "14px", fontWeight: 700, margin: 0, fontFamily: "'Inter', sans-serif" }}>
+            <p style={{ color: "#DC2626", fontSize: "14px", fontWeight: 500, margin: 0, }}>
               {error}
             </p>
           </div>
@@ -245,9 +241,8 @@ export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: Ex
               background: isLoading ? "#94A3B8" : "#0F62FE",
               color: "#FFFFFF",
               fontSize: "17px",
-              fontWeight: 800,
-              fontFamily: "'Montserrat', sans-serif",
-              border: "none",
+              fontWeight: 500,
+                            border: "none",
               cursor: isLoading ? "not-allowed" : "pointer",
               transition: "all 0.15s ease",
               letterSpacing: "0.01em",

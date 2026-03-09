@@ -68,8 +68,7 @@ export default function HistorialLogrosPage() {
         <div style={{
             minHeight: "100vh",
             background: "#FBFAF5",
-            fontFamily: "'Inter', sans-serif",
-            color: "#1e3a5f",
+                        color: "#1e3a5f",
             width: "100%",
             overflowX: "hidden",
             boxSizing: "border-box"
@@ -104,14 +103,14 @@ export default function HistorialLogrosPage() {
                                 color: "#0F62FE",
                                 cursor: "pointer",
                                 fontSize: 14,
-                                fontWeight: 700,
+                                fontWeight: 500,
                                 padding: 0,
                                 marginBottom: 16
                             }}
                         >
                             <ChevronLeft size={18} /> Volver
                         </button>
-                        <h1 style={{ fontSize: 32, fontWeight: 900, margin: "0 0 8px", color: "#111827" }}>
+                        <h1 style={{ fontSize: 32, fontWeight: 500, margin: "0 0 8px", color: "#111827" }}>
                             Historial de Logros
                         </h1>
                         <p style={{ fontSize: 16, color: "#64748b", margin: 0 }}>
@@ -144,14 +143,14 @@ export default function HistorialLogrosPage() {
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
-                                        <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: "#111827" }}>{item.title}</h3>
-                                        <span style={{ fontSize: 12, fontWeight: 700, color: "#0F62FE", whiteSpace: "nowrap" }}>{item.date}</span>
+                                        <h3 style={{ fontSize: 16, fontWeight: 500, margin: 0, color: "#111827" }}>{item.title}</h3>
+                                        <span style={{ fontSize: 12, fontWeight: 500, color: "#0F62FE", whiteSpace: "nowrap" }}>{item.date}</span>
                                     </div>
                                     <p style={{ fontSize: 14, color: "#475569", margin: "0 0 8px" }}>{item.desc}</p>
                                     <div style={{ display: "flex", gap: 8 }}>
                                         <span style={{
                                             fontSize: 11,
-                                            fontWeight: 700,
+                                            fontWeight: 500,
                                             textTransform: "uppercase",
                                             letterSpacing: "0.05em",
                                             padding: "4px 8px",
@@ -163,7 +162,7 @@ export default function HistorialLogrosPage() {
                                         </span>
                                         <span style={{
                                             fontSize: 11,
-                                            fontWeight: 700,
+                                            fontWeight: 500,
                                             textTransform: "uppercase",
                                             letterSpacing: "0.05em",
                                             padding: "4px 8px",
@@ -189,13 +188,13 @@ export default function HistorialLogrosPage() {
                     }}>
                         <div style={{ padding: 20, background: "#FBFAF5", borderRadius: 20 }}>
                             <div style={{ color: "#0F62FE", marginBottom: 8 }}><Calendar size={20} /></div>
-                            <div style={{ fontSize: 20, fontWeight: 800, color: "#111827" }}>2026</div>
-                            <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Ciclo Escolar</div>
+                            <div style={{ fontSize: 20, fontWeight: 500, color: "#111827" }}>2026</div>
+                            <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Ciclo Escolar</div>
                         </div>
                         <div style={{ padding: 20, background: "#FBFAF5", borderRadius: 20 }}>
                             <div style={{ color: "#F59E0B", marginBottom: 8 }}><Trophy size={20} /></div>
-                            <div style={{ fontSize: 20, fontWeight: 800, color: "#111827" }}>3</div>
-                            <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Logros Clave</div>
+                            <div style={{ fontSize: 20, fontWeight: 500, color: "#111827" }}>3</div>
+                            <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Logros Clave</div>
                         </div>
                     </div>
                 </div>

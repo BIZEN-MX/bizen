@@ -173,7 +173,7 @@ export default function ModuleSectionsGated(props: Props) {
         color: textColor,
         borderRadius: radius,
         padding: "14px 16px",
-        fontWeight: 600,
+        fontWeight: 500,
         cursor: locked ? "not-allowed" : "pointer",
         userSelect: "none",
         boxShadow: "0 1px 1px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.06)",
@@ -199,7 +199,7 @@ export default function ModuleSectionsGated(props: Props) {
             lineHeight: "28px",
             textAlign: "center",
             marginRight: 10,
-            fontWeight: 700,
+            fontWeight: 500,
           }}
         >
           {n}
@@ -253,7 +253,7 @@ export default function ModuleSectionsGated(props: Props) {
               style={{
                 color: brandTextColor || primaryColor,
                 letterSpacing: 0.2,
-                fontWeight: 800,
+                fontWeight: 500,
                 fontSize: 28,
               }}
             >
@@ -263,7 +263,7 @@ export default function ModuleSectionsGated(props: Props) {
         )}
 
         {header && (
-          <h3 style={{ marginTop: 0, marginBottom: 12, color: textColor, fontWeight: 800 }}>
+          <h3 style={{ marginTop: 0, marginBottom: 12, color: textColor, fontWeight: 500 }}>
             {header}
           </h3>
         )}

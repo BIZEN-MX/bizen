@@ -185,7 +185,7 @@ export default function CelebrationPage() {
             transition={{ delay: 0.5, duration: 0.8 }}
             style={{
               fontSize: "4rem",
-              fontWeight: 800,
+              fontWeight: 500,
               color: "#fff",
               textShadow: "0 4px 20px rgba(0,0,0,0.3)",
               marginBottom: "2rem",
@@ -296,7 +296,7 @@ export default function CelebrationPage() {
                 <motion.p
                   style={{
                     fontSize: "1.8rem",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     color: "#333",
                     lineHeight: 1.6,
                     margin: 0
@@ -385,7 +385,7 @@ export default function CelebrationPage() {
                   padding: "1.5rem 3rem",
                   borderRadius: "50px",
                   fontSize: "1.5rem",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   cursor: "pointer",
                   textTransform: "uppercase",
                   letterSpacing: "1px",

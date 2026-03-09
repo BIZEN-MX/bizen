@@ -115,7 +115,7 @@ export default function ProgressPage() {
           <h1
             style={{
               fontSize: 42,
-              fontWeight: 800,
+              fontWeight: 500,
               marginBottom: 16,
               color: "#111",
             }}
@@ -140,11 +140,11 @@ export default function ProgressPage() {
                 marginBottom: 12,
               }}
             >
-              <span style={{ fontSize: 18, fontWeight: 700 }}>
+              <span style={{ fontSize: 18, fontWeight: 500 }}>
                 Progreso General
               </span>
               <span
-                style={{ fontSize: 24, fontWeight: 800, color: PRIMARY_COLOR }}
+                style={{ fontSize: 24, fontWeight: 500, color: PRIMARY_COLOR }}
               >
                 {progress?.overallProgress || 0}%
               </span>
@@ -196,7 +196,7 @@ export default function ProgressPage() {
               <h2
                 style={{
                   fontSize: 24,
-                  fontWeight: 800,
+                  fontWeight: 500,
                   marginBottom: 20,
                   color: "#111",
                 }}
@@ -264,7 +264,7 @@ export default function ProgressPage() {
                       <h3
                         style={{
                           fontSize: 18,
-                          fontWeight: 700,
+                          fontWeight: 500,
                           marginBottom: 12,
                           paddingRight: 32,
                         }}
@@ -330,7 +330,7 @@ export default function ProgressPage() {
               color: "#fff",
               borderRadius: 12,
               fontSize: 16,
-              fontWeight: 700,
+              fontWeight: 500,
               textDecoration: "none",
             }}
           >

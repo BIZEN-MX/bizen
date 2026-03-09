@@ -45,7 +45,7 @@ export default function PrivacidadPage() {
               color: "#fff",
               textDecoration: "none",
               fontSize: 14,
-              fontWeight: 600,
+              fontWeight: 500,
               transition: "background 0.2s ease",
               border: "1px solid rgba(255,255,255,0.2)",
             }}
@@ -54,7 +54,7 @@ export default function PrivacidadPage() {
           >
             ← Regresar
           </Link>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 500, margin: 0 }}>
             Aviso de Privacidad
           </h1>
         </div>
@@ -75,7 +75,7 @@ export default function PrivacidadPage() {
           color: "#333"
         }}>
           <div style={{ marginBottom: 40, paddingBottom: 20, borderBottom: "2px solid #e5e7eb" }}>
-            <h1 style={{ fontSize: 32, fontWeight: 700, color: "#111", margin: "0 0 12px 0" }}>
+            <h1 style={{ fontSize: 32, fontWeight: 500, color: "#111", margin: "0 0 12px 0" }}>
               Aviso de Privacidad Integral – {brandName} (México)
             </h1>
             <p style={{ fontSize: 14, color: "#666", margin: 0 }}>
@@ -85,7 +85,7 @@ export default function PrivacidadPage() {
 
           {/* Section 1 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               1) Identidad y datos de contacto del responsable
             </h2>
             <p>
@@ -98,7 +98,7 @@ export default function PrivacidadPage() {
 
           {/* Section 2 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               2) Datos personales que recabamos
             </h2>
             <p>
@@ -125,11 +125,11 @@ export default function PrivacidadPage() {
 
           {/* Section 3 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               3) Finalidades del tratamiento
             </h2>
             
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 12, marginTop: 20 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 500, color: "#111", marginBottom: 12, marginTop: 20 }}>
               Primarias (necesarias):
             </h3>
             <ul style={{ marginLeft: 20 }}>
@@ -141,7 +141,7 @@ export default function PrivacidadPage() {
               <li>Atención a clientes y soporte técnico.</li>
             </ul>
 
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 12, marginTop: 20 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 500, color: "#111", marginBottom: 12, marginTop: 20 }}>
               Secundarias (opcionales):
             </h3>
             <ul style={{ marginLeft: 20 }}>
@@ -155,7 +155,7 @@ export default function PrivacidadPage() {
 
           {/* Section 4 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               4) Fundamento y consentimiento
             </h2>
             <p>
@@ -168,7 +168,7 @@ export default function PrivacidadPage() {
 
           {/* Section 5 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               5) Transferencias de datos
             </h2>
             <p>Podemos transferir datos dentro y fuera de México a:</p>
@@ -190,7 +190,7 @@ export default function PrivacidadPage() {
 
           {/* Section 6 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               6) Conservación
             </h2>
             <p>
@@ -200,7 +200,7 @@ export default function PrivacidadPage() {
 
           {/* Section 7 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               7) Derechos ARCO y revocación del consentimiento
             </h2>
             <p>
@@ -230,7 +230,7 @@ export default function PrivacidadPage() {
 
           {/* Section 8 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               8) Cookies y tecnologías de rastreo
             </h2>
             <p>
@@ -243,7 +243,7 @@ export default function PrivacidadPage() {
 
           {/* Section 9 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               9) Medidas de seguridad
             </h2>
             <p>
@@ -253,7 +253,7 @@ export default function PrivacidadPage() {
 
           {/* Section 10 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               10) Menores de edad
             </h2>
             <p>
@@ -263,7 +263,7 @@ export default function PrivacidadPage() {
 
           {/* Section 11 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               11) Cambios al Aviso
             </h2>
             <p>
@@ -273,7 +273,7 @@ export default function PrivacidadPage() {
 
           {/* Section 12 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               12) Contacto
             </h2>
             <p><strong>Responsable de privacidad:</strong> Área de Privacidad {brandName}</p>

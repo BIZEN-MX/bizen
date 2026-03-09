@@ -31,8 +31,7 @@ export default function BIZENPrivacidadPage() {
       background: "#FBFAF5", 
       minHeight: "100vh", 
       paddingBottom: 60,
-      fontFamily: "Arial, sans-serif"
-    }}>
+          }}>
       {/* Header */}
       <div style={{
         background: "#2c3e50",
@@ -58,18 +57,17 @@ export default function BIZENPrivacidadPage() {
               color: "#fff",
               textDecoration: "none",
               fontSize: 13,
-              fontWeight: 600,
+              fontWeight: 500,
               transition: "background 0.2s ease",
               border: "1px solid rgba(255,255,255,0.25)",
               cursor: "pointer",
-              fontFamily: "Arial, sans-serif"
-            }}
+                          }}
             onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
             onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
           >
             ← Regresar
           </button>
-          <strong style={{ fontSize: 18, fontFamily: "Arial, sans-serif" }}>Aviso de Privacidad</strong>
+          <strong style={{ fontSize: 18, }}>Aviso de Privacidad</strong>
         </div>
       </div>
 
@@ -85,20 +83,19 @@ export default function BIZENPrivacidadPage() {
           border: "1px solid #e0e0e0",
           lineHeight: 1.7,
           color: "#333",
-          fontFamily: "Arial, sans-serif"
-        }}>
+                  }}>
           <div style={{ marginBottom: 32, paddingBottom: 16, borderBottom: "1px solid #e0e0e0" }}>
-            <h1 style={{ fontSize: 24, fontWeight: 700, color: "#2c3e50", margin: "0 0 10px 0", fontFamily: "Arial, sans-serif" }}>
+            <h1 style={{ fontSize: 24, fontWeight: 500, color: "#2c3e50", margin: "0 0 10px 0", }}>
               Aviso de Privacidad – {brandName}
             </h1>
-            <p style={{ fontSize: 13, color: "#777", margin: 0, fontFamily: "Arial, sans-serif" }}>
+            <p style={{ fontSize: 13, color: "#777", margin: 0, }}>
               Última actualización: <strong>20 de octubre de 2025</strong>
             </p>
           </div>
 
           {/* Section 1 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               1) Identidad y datos de contacto del responsable
             </h2>
             <p>
@@ -111,7 +108,7 @@ export default function BIZENPrivacidadPage() {
 
           {/* Section 2 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               2) Datos personales que recabamos
             </h2>
             <p>
@@ -132,11 +129,11 @@ export default function BIZENPrivacidadPage() {
 
           {/* Section 3 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               3) Finalidades del tratamiento
             </h2>
             
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: "#2c3e50", marginBottom: 10, marginTop: 16, fontFamily: "Arial, sans-serif" }}>
+            <h3 style={{ fontSize: 15, fontWeight: 500, color: "#2c3e50", marginBottom: 10, marginTop: 16, }}>
               Primarias:
             </h3>
             <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
@@ -148,7 +145,7 @@ export default function BIZENPrivacidadPage() {
               <li>Atención a clientes.</li>
             </ul>
 
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: "#2c3e50", marginBottom: 10, marginTop: 16, fontFamily: "Arial, sans-serif" }}>
+            <h3 style={{ fontSize: 15, fontWeight: 500, color: "#2c3e50", marginBottom: 10, marginTop: 16, }}>
               Secundarias:
             </h3>
             <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
@@ -162,7 +159,7 @@ export default function BIZENPrivacidadPage() {
 
           {/* Section 4 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               4) Derechos ARCO
             </h2>
             <p>
@@ -183,7 +180,7 @@ export default function BIZENPrivacidadPage() {
 
           {/* Section 5 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               5) Medidas de seguridad
             </h2>
             <p>
@@ -193,7 +190,7 @@ export default function BIZENPrivacidadPage() {
 
           {/* Section 6 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               6) Contacto
             </h2>
             <p><strong>Área de Privacidad:</strong> {brandName}</p>

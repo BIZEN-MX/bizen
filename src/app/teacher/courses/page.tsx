@@ -91,7 +91,7 @@ export default function TeacherCoursesPage() {
 
   if (loading || loadingCourses) {
     return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "Montserrat, sans-serif" }}>
+      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando cursos...</p>
         </div>
@@ -109,8 +109,7 @@ export default function TeacherCoursesPage() {
       maxWidth: 1200, 
       margin: "0 auto", 
       padding: "clamp(20px, 4vw, 40px)",
-      fontFamily: "Montserrat, sans-serif"
-    }}>
+          }}>
       {/* Header */}
       <div style={{ 
         display: "flex", 
@@ -124,7 +123,7 @@ export default function TeacherCoursesPage() {
           <h1 style={{ 
             margin: 0, 
             fontSize: "clamp(28px, 6vw, 36px)", 
-            fontWeight: 800,
+            fontWeight: 500,
             background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -150,21 +149,21 @@ export default function TeacherCoursesPage() {
         marginBottom: 40
       }}>
         <Card style={{ textAlign: "center", padding: "20px 16px" }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: "#0F62FE" }}>{courses.length}</div>
+          <div style={{ fontSize: 32, fontWeight: 500, color: "#0F62FE" }}>{courses.length}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Total Cursos</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "20px 16px" }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: "#10B981" }}>{activeCourses.length}</div>
+          <div style={{ fontSize: 32, fontWeight: 500, color: "#10B981" }}>{activeCourses.length}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Activos</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "20px 16px" }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: "#F59E0B" }}>
+          <div style={{ fontSize: 32, fontWeight: 500, color: "#F59E0B" }}>
             {courses.reduce((sum, c) => sum + c.studentsEnrolled, 0)}
           </div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Estudiantes</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "20px 16px" }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: "#8B5CF6" }}>
+          <div style={{ fontSize: 32, fontWeight: 500, color: "#8B5CF6" }}>
             {courses.reduce((sum, c) => sum + c.lessonsCount, 0)}
           </div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Lecciones</div>
@@ -174,7 +173,7 @@ export default function TeacherCoursesPage() {
       {/* Active Courses */}
       {activeCourses.length > 0 && (
         <div style={{ marginBottom: 40 }}>
-          <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+          <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
             ✓ Cursos Activos
           </h2>
           <div style={{
@@ -213,12 +212,12 @@ export default function TeacherCoursesPage() {
                     background: "rgba(255,255,255,0.2)",
                     borderRadius: 12,
                     fontSize: 12,
-                    fontWeight: 600,
+                    fontWeight: 500,
                     marginBottom: 12
                   }}>
                     {course.level === "Beginner" ? "Principiante" : course.level === "Intermediate" ? "Intermedio" : "Avanzado"}
                   </div>
-                  <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700, lineHeight: 1.3 }}>
+                  <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, lineHeight: 1.3 }}>
                     {course.title}
                   </h3>
                   <p style={{ margin: 0, fontSize: 14, opacity: 0.9, lineHeight: 1.4 }}>
@@ -236,15 +235,15 @@ export default function TeacherCoursesPage() {
                     textAlign: "center"
                   }}>
                     <div>
-                      <div style={{ fontSize: 20, fontWeight: 700, color: "#0F62FE" }}>{course.unitsCount}</div>
+                      <div style={{ fontSize: 20, fontWeight: 500, color: "#0F62FE" }}>{course.unitsCount}</div>
                       <div style={{ fontSize: 12, color: "#666" }}>Unidades</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: 20, fontWeight: 700, color: "#10B981" }}>{course.lessonsCount}</div>
+                      <div style={{ fontSize: 20, fontWeight: 500, color: "#10B981" }}>{course.lessonsCount}</div>
                       <div style={{ fontSize: 12, color: "#666" }}>Lecciones</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: 20, fontWeight: 700, color: "#F59E0B" }}>{course.studentsEnrolled}</div>
+                      <div style={{ fontSize: 20, fontWeight: 500, color: "#F59E0B" }}>{course.studentsEnrolled}</div>
                       <div style={{ fontSize: 12, color: "#666" }}>Alumnos</div>
                     </div>
                   </div>
@@ -268,7 +267,7 @@ export default function TeacherCoursesPage() {
       {/* Draft Courses */}
       {draftCourses.length > 0 && (
         <div>
-          <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+          <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
             📝 Borradores
           </h2>
           <div style={{
@@ -302,12 +301,12 @@ export default function TeacherCoursesPage() {
                   color: "#6B7280",
                   borderRadius: 12,
                   fontSize: 12,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   marginBottom: 12
                 }}>
                   Borrador
                 </div>
-                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700 }}>
+                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500 }}>
                   {course.title}
                 </h3>
                 <p style={{ margin: "0 0 16px", fontSize: 14, color: "#666", lineHeight: 1.4 }}>
@@ -326,7 +325,7 @@ export default function TeacherCoursesPage() {
       {courses.length === 0 && (
         <Card style={{ padding: "60px 40px", textAlign: "center" }}>
           <div style={{ fontSize: 64, marginBottom: 16 }}>📚</div>
-          <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700 }}>
+          <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 500 }}>
             Crea tu primer curso
           </h3>
           <p style={{ margin: "0 0 24px", color: "#666", fontSize: 14 }}>

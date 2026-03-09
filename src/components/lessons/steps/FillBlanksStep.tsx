@@ -111,12 +111,11 @@ export function FillBlanksStep({
         <ExerciseInstruction type="fill_blanks" />
         <h3 style={{
           fontSize: "clamp(20px, 3.5vw, 26px)",
-          fontWeight: 800,
+          fontWeight: 500,
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Montserrat', sans-serif",
-        }}>
+                  }}>
           {step.question || "Completa los espacios en blanco"}
         </h3>
       </div>
@@ -130,12 +129,11 @@ export function FillBlanksStep({
         padding: "32px",
         borderRadius: "24px",
         border: "2px solid #F1F5F9",
-        fontFamily: "'Inter', sans-serif",
-        fontWeight: 600,
+                fontWeight: 500,
       }}>
         {step.textParts.map((part, idx) => {
           if (part.type === "text") {
-            return <span key={idx} style={{ fontFamily: "'Inter', sans-serif" }}>{part.content}</span>
+            return <span key={idx} style={{ }}>{part.content}</span>
           } else {
             const blankId = (part as any).id
             const selectedOptionId = blankAnswers[blankId]
@@ -177,12 +175,11 @@ export function FillBlanksStep({
                   borderRadius: 12,
                   boxShadow: isActive ? "0 0 0 2px rgba(15, 98, 254, 0.2)" : "none",
                   fontSize: "clamp(16px, 3.5vw, 20px)",
-                  fontWeight: 800,
+                  fontWeight: 500,
                   color,
                   cursor: isFilled && !hasChecked ? "pointer" : "default",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Inter', sans-serif",
-                }}
+                                  }}
               >
                 <AnimatePresence mode="wait">
                   {isFilled ? (
@@ -191,12 +188,12 @@ export function FillBlanksStep({
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      style={{ fontFamily: "'Inter', sans-serif" }}
+                      style={{ }}
                     >
                       {option?.label}
                     </motion.span>
                   ) : (
-                    <span style={{ color: "#D1D5DB", fontFamily: "'Inter', sans-serif" }}>......</span>
+                    <span style={{ color: "#D1D5DB", }}>......</span>
                   )}
                 </AnimatePresence>
               </motion.button>
@@ -231,11 +228,10 @@ export function FillBlanksStep({
                 boxShadow: isUsed ? "none" : "0 3px 0 0 #E5E7EB",
                 color: isUsed ? "transparent" : "#374151",
                 fontSize: "clamp(15px, 3vw, 18px)",
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: isUsed ? "default" : "pointer",
                 transition: "all 0.2s ease",
-                fontFamily: "'Inter', sans-serif"
-              }}
+                              }}
             >
               <span style={{ visibility: isUsed ? "hidden" : "visible" }}>
                 {option.label}

@@ -17,8 +17,7 @@ export default function BizenPage() {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      fontFamily: "Montserrat, sans-serif",
-      padding: 40,
+            padding: 40,
     }}>
       <div style={{
         opacity: isVisible ? 1 : 0,
@@ -29,7 +28,7 @@ export default function BizenPage() {
       }}>
         <h1 style={{
           fontSize: "clamp(48px, 10vw, 96px)",
-          fontWeight: 900,
+          fontWeight: 500,
           margin: "0 0 24px 0",
           background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
           WebkitBackgroundClip: "text",

@@ -88,21 +88,19 @@ export function LessonExitModal({ isOpen, onClose, onExit }: LessonExitModalProp
                             <h3 style={{
                                 margin: 0,
                                 fontSize: 26,
-                                fontWeight: 900,
+                                fontWeight: 500,
                                 color: "#1F2937",
-                                fontFamily: "'Montserrat', sans-serif",
-                                lineHeight: 1.25,
+                                                                lineHeight: 1.25,
                             }}>
                                 ¡Espera, no te vayas!
                             </h3>
                             <p style={{
                                 margin: 0,
                                 fontSize: 18,
-                                fontWeight: 700,
+                                fontWeight: 500,
                                 color: "#6B7280",
                                 lineHeight: 1.5,
-                                fontFamily: "'Montserrat', sans-serif",
-                                maxWidth: "290px",
+                                                                maxWidth: "290px",
                                 alignSelf: "center"
                             }}>
                                 Si sales ahora, perderás todo el progreso de esta lección.
@@ -120,14 +118,13 @@ export function LessonExitModal({ isOpen, onClose, onExit }: LessonExitModalProp
                                     borderRadius: 20,
                                     padding: "12px 24px",
                                     fontSize: 15,
-                                    fontWeight: 900,
+                                    fontWeight: 500,
                                     textTransform: "uppercase",
                                     letterSpacing: "0.08em",
                                     cursor: "pointer",
                                     boxShadow: "0 4px 0 0 #0849C9",
                                     transition: "all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                                    fontFamily: "'Montserrat', sans-serif",
-                                    width: "100%",
+                                                                        width: "100%",
                                     userSelect: "none",
                                     height: "44px"
                                 }}
@@ -157,12 +154,11 @@ export function LessonExitModal({ isOpen, onClose, onExit }: LessonExitModalProp
                                     border: "none",
                                     padding: "8px",
                                     fontSize: 14,
-                                    fontWeight: 900,
+                                    fontWeight: 500,
                                     textTransform: "uppercase",
                                     letterSpacing: "0.1em",
                                     cursor: "pointer",
-                                    fontFamily: "'Montserrat', sans-serif",
-                                    transition: "all 0.2s ease",
+                                                                        transition: "all 0.2s ease",
                                     opacity: 0.85
                                 }}
                                 onMouseEnter={(e) => {

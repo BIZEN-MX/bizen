@@ -89,7 +89,7 @@ export default function ManageUsersPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: 40, textAlign: "center", fontFamily: "'Montserrat', sans-serif" }}>
+      <div style={{ padding: 40, textAlign: "center", }}>
         <div style={{
           width: 40, height: 40, border: "3px solid #f3f3f3", borderTop: "3px solid #0F62FE",
           borderRadius: "50%", animation: "spin 1s linear infinite", margin: "0 auto 20px"
@@ -105,7 +105,7 @@ export default function ManageUsersPage() {
   }
 
   return (
-    <div style={{ padding: 40, maxWidth: 1400, margin: "0 auto", fontFamily: "'Montserrat', sans-serif" }}>
+    <div style={{ padding: 40, maxWidth: 1400, margin: "0 auto", }}>
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse-subtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
@@ -116,7 +116,7 @@ export default function ManageUsersPage() {
       <div style={{ marginBottom: 30 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
           <Users size={32} color="#0F62FE" className="icon-bounce" />
-          <h1 style={{ fontSize: 32, fontWeight: 800, margin: 0 }}>
+          <h1 style={{ fontSize: 32, fontWeight: 500, margin: 0 }}>
             Gestión de Usuarios
           </h1>
         </div>
@@ -156,7 +156,7 @@ export default function ManageUsersPage() {
             color: "#475569",
             border: "none",
             cursor: "pointer",
-            fontWeight: 700,
+            fontWeight: 500,
             transition: "all 0.2s"
           }}
           onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"}
@@ -169,7 +169,7 @@ export default function ManageUsersPage() {
       {users.length === 0 ? (
         <div style={{ textAlign: "center", padding: 80, color: "#94a3b8", background: "#f8fafc", borderRadius: 20 }}>
           <Users size={48} strokeWidth={1} style={{ marginBottom: 16, opacity: 0.5 }} />
-          <p style={{ fontWeight: 600 }}>No hay usuarios con registros en el sistema.</p>
+          <p style={{ fontWeight: 500 }}>No hay usuarios con registros en el sistema.</p>
         </div>
       ) : (
         <div style={{ display: "grid", gap: 24 }}>
@@ -193,7 +193,7 @@ export default function ManageUsersPage() {
                       <User size={24} />
                     </div>
                     <div>
-                      <h3 style={{ fontSize: 20, fontWeight: 800, margin: 0, color: "#1e293b" }}>
+                      <h3 style={{ fontSize: 20, fontWeight: 500, margin: 0, color: "#1e293b" }}>
                         {userData.diagnosticQuiz?.studentName || "Estudiante sin nombre"}
                       </h3>
                       {userData.email && (
@@ -204,7 +204,7 @@ export default function ManageUsersPage() {
                     </div>
                   </div>
 
-                  <div style={{ margin: "16px 0", padding: "12px 16px", background: "#f8fafc", borderRadius: 12, fontFamily: "monospace", fontSize: 12, color: "#94a3b8", wordBreak: "break-all" }}>
+                  <div style={{ margin: "16px 0", padding: "12px 16px", background: "#f8fafc", borderRadius: 12, fontSize: 12, color: "#94a3b8", wordBreak: "break-all" }}>
                     ID: {userData.userId}
                   </div>
 
@@ -212,8 +212,8 @@ export default function ManageUsersPage() {
                     <div style={{ marginBottom: 20, padding: 16, background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)", borderRadius: 16, border: "1px solid #bae6fd", display: "flex", alignItems: "center", gap: 12 }}>
                       <FileText size={20} color="#0369a1" />
                       <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.05em" }}>Quiz Diagnóstico</div>
-                        <div style={{ fontSize: 16, fontWeight: 800, color: "#0c4a6e" }}>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.05em" }}>Quiz Diagnóstico</div>
+                        <div style={{ fontSize: 16, fontWeight: 500, color: "#0c4a6e" }}>
                           {userData.diagnosticQuiz.score} de {userData.diagnosticQuiz.totalQuestions} ({Math.round((userData.diagnosticQuiz.score / userData.diagnosticQuiz.totalQuestions) * 100)}%)
                         </div>
                       </div>
@@ -251,7 +251,7 @@ export default function ManageUsersPage() {
                       color: deleting === userData.userId ? "#94a3b8" : "#e11d48",
                       border: deleting === userData.userId ? "1px solid #e2e8f0" : "1px solid #fecdd3",
                       cursor: deleting === userData.userId ? "not-allowed" : "pointer",
-                      fontWeight: 800,
+                      fontWeight: 500,
                       fontSize: 14,
                       transition: "all 0.2s"
                     }}

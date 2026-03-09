@@ -134,10 +134,9 @@ export default function TopicFeedPage() {
         display: "grid",
         placeItems: "center",
         minHeight: "60vh",
-        fontFamily: "Montserrat, sans-serif",
-        background: "#FBFAF5"
+                background: "#FBFAF5"
       }}>
-        <p style={{ color: "#64748b", fontSize: 15, fontWeight: 600 }}>Cargando...</p>
+        <p style={{ color: "#64748b", fontSize: 15, fontWeight: 500 }}>Cargando...</p>
       </div>
     )
   }
@@ -152,8 +151,7 @@ export default function TopicFeedPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "#FBFAF5",
+            background: "#FBFAF5",
     }} className="forum-topic-outer">
       <style>{`
         @media (max-width: 767px) {
@@ -184,7 +182,7 @@ export default function TopicFeedPage() {
         zIndex: 1
       }}>
         {/* Breadcrumb */}
-        <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600 }}>
+        <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 500 }}>
           <Link href="/forum" style={{ color: colors.accent, textDecoration: "none", opacity: 0.8 }}>
             Foro
           </Link>
@@ -206,7 +204,7 @@ export default function TopicFeedPage() {
           gap: 16,
         }}>
           <div>
-            <h1 style={{ margin: "0 0 6px", fontSize: "clamp(22px, 4vw, 30px)", fontWeight: 900, color: "white", letterSpacing: "-0.02em" }}>
+            <h1 style={{ margin: "0 0 6px", fontSize: "clamp(22px, 4vw, 30px)", fontWeight: 500, color: "white", letterSpacing: "-0.02em" }}>
               {topic.name}
             </h1>
             {topic.description && (
@@ -214,7 +212,7 @@ export default function TopicFeedPage() {
                 {topic.description}
               </p>
             )}
-            <div style={{ marginTop: 12, display: "flex", gap: 16, fontSize: 13, color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
+            <div style={{ marginTop: 12, display: "flex", gap: 16, fontSize: 13, color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>
               <span>{threads.length} {threads.length === 1 ? "tema" : "temas"}</span>
               <span>{threads.reduce((s, t) => s + t.commentCount, 0)} respuestas</span>
             </div>
@@ -226,7 +224,7 @@ export default function TopicFeedPage() {
               background: "rgba(255,255,255,0.18)",
               color: "white",
               borderRadius: 12,
-              fontWeight: 700,
+              fontWeight: 500,
               textDecoration: "none",
               fontSize: 14,
               border: "1.5px solid rgba(255,255,255,0.35)",
@@ -279,13 +277,13 @@ export default function TopicFeedPage() {
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 44, paddingTop: 2 }}>
                   <div style={{
                     fontSize: 20,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     color: thread.score > 0 ? colors.accent : thread.score < 0 ? "#ef4444" : "#94a3b8",
                     lineHeight: 1,
                   }}>
                     {thread.score}
                   </div>
-                  <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600, marginTop: 2 }}>votos</div>
+                  <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 500, marginTop: 2 }}>votos</div>
                 </div>
 
                 {/* Content */}
@@ -293,14 +291,14 @@ export default function TopicFeedPage() {
                   {/* Pinned badge + title */}
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 5 }}>
                     {thread.isPinned && (
-                      <span style={{ padding: "2px 7px", background: "#fffbeb", color: "#d97706", fontSize: 10, fontWeight: 700, borderRadius: 6, whiteSpace: "nowrap", marginTop: 2 }}>
+                      <span style={{ padding: "2px 7px", background: "#fffbeb", color: "#d97706", fontSize: 10, fontWeight: 500, borderRadius: 6, whiteSpace: "nowrap", marginTop: 2 }}>
                         Fijado
                       </span>
                     )}
                     <h3 style={{
                       margin: 0, flex: 1,
                       fontSize: "clamp(14px, 2vw, 16px)",
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: "#0f172a",
                       lineHeight: 1.4,
                       overflow: "hidden",
@@ -315,7 +313,7 @@ export default function TopicFeedPage() {
                       padding: "3px 8px",
                       borderRadius: 6,
                       fontSize: 11,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       whiteSpace: "nowrap",
                       background: thread.hasAcceptedAnswer || thread.status === "resolved"
                         ? "#ecfdf5" : thread.status === "locked" ? "#fef2f2" : colors.light,
@@ -350,7 +348,7 @@ export default function TopicFeedPage() {
                           background: colors.light,
                           color: colors.accent,
                           fontSize: 11,
-                          fontWeight: 600,
+                          fontWeight: 500,
                           borderRadius: 6,
                         }}>
                           #{tag.name}
@@ -360,8 +358,8 @@ export default function TopicFeedPage() {
                   )}
 
                   {/* Meta row */}
-                  <div style={{ display: "flex", gap: 14, fontSize: 12, color: "#94a3b8", fontWeight: 600, alignItems: "center", flexWrap: "wrap" }}>
-                    <span>por <span style={{ color: colors.accent, fontWeight: 700 }}>{thread.author.nickname}</span></span>
+                  <div style={{ display: "flex", gap: 14, fontSize: 12, color: "#94a3b8", fontWeight: 500, alignItems: "center", flexWrap: "wrap" }}>
+                    <span>por <span style={{ color: colors.accent, fontWeight: 500 }}>{thread.author.nickname}</span></span>
                     <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
                       <MessageCircle size={12} />
                       {thread.commentCount}
@@ -398,7 +396,7 @@ export default function TopicFeedPage() {
             }}>
               <MessageCircle size={28} color="white" />
             </div>
-            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 800, color: "#0f172a" }}>
+            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 500, color: "#0f172a" }}>
               Sin temas todavía
             </h3>
             <p style={{ margin: "0 0 24px", color: "#64748b", fontSize: 14, lineHeight: 1.6 }}>
@@ -414,7 +412,7 @@ export default function TopicFeedPage() {
                 background: colors.gradient,
                 color: "white",
                 borderRadius: 12,
-                fontWeight: 700,
+                fontWeight: 500,
                 textDecoration: "none",
                 fontSize: 14,
                 boxShadow: `0 4px 14px ${colors.shadow}`,

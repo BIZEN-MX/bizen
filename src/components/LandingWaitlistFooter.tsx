@@ -38,18 +38,16 @@ export function LandingWaitlistFooter({ }: Props) {
                         <div style={{ marginBottom: "24px" }}>
                             <span style={{
                                 fontSize: "clamp(36px, 5vw, 52px)",
-                                fontWeight: 900,
+                                fontWeight: 500,
                                 color: "#fff",
-                                fontFamily: "'Inter', sans-serif",
-                                letterSpacing: "-0.03em",
+                                                                letterSpacing: "-0.03em",
                                 lineHeight: 1,
                             }}>BIZEN</span>
                         </div>
                         <p style={{
                             fontSize: "clamp(14px, 1rem, 16px)",
                             color: "rgba(255,255,255,0.55)",
-                            fontFamily: "'Inter', sans-serif",
-                            lineHeight: 1.75,
+                                                        lineHeight: 1.75,
                             maxWidth: "320px",
                             margin: "0 0 28px",
                         }}>
@@ -97,7 +95,7 @@ export function LandingWaitlistFooter({ }: Props) {
 
                     {/* Col 2: Nav links */}
                     <div>
-                        <p style={{ fontSize: "12px", fontWeight: 700, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px" }}>
+                        <p style={{ fontSize: "12px", fontWeight: 500, color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px" }}>
                             Plataforma
                         </p>
                         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -112,8 +110,7 @@ export function LandingWaitlistFooter({ }: Props) {
                                     fontSize: "clamp(14px, 0.95rem, 16px)",
                                     color: "rgba(255,255,255,0.6)",
                                     textDecoration: "none",
-                                    fontFamily: "'Inter', sans-serif",
-                                    transition: "color 0.2s ease",
+                                                                        transition: "color 0.2s ease",
                                     display: "inline-flex", alignItems: "center", gap: "6px",
                                 }}>
                                     {link.label}
@@ -124,10 +121,10 @@ export function LandingWaitlistFooter({ }: Props) {
 
                     {/* Col 3: CTA + contact */}
                     <div>
-                        <p style={{ fontSize: "12px", fontWeight: 700, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px" }}>
+                        <p style={{ fontSize: "12px", fontWeight: 500, color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px" }}>
                             Contacto
                         </p>
-                        <p style={{ fontSize: "clamp(18px, 1.8vw, 22px)", fontWeight: 700, color: "#fff", fontFamily: "'Inter', sans-serif", lineHeight: 1.3, marginBottom: "24px" }}>
+                        <p style={{ fontSize: "clamp(18px, 1.8vw, 22px)", fontWeight: 500, color: "#fff", lineHeight: 1.3, marginBottom: "24px" }}>
                             ¿Listo para transformar<br />tu colegio?
                         </p>
                         <a
@@ -138,13 +135,12 @@ export function LandingWaitlistFooter({ }: Props) {
                             style={{
                                 display: "inline-flex", alignItems: "center", gap: "10px",
                                 padding: "13px 24px",
-                                fontSize: "15px", fontWeight: 700,
+                                fontSize: "15px", fontWeight: 500,
                                 background: "linear-gradient(135deg, #0056E7, #1983FD)",
                                 color: "#fff",
                                 borderRadius: "999px",
                                 textDecoration: "none",
-                                fontFamily: "'Inter', sans-serif",
-                                boxShadow: "0 6px 20px rgba(0,86,231,0.35)",
+                                                                boxShadow: "0 6px 20px rgba(0,86,231,0.35)",
                                 transition: "all 0.25s ease",
                                 marginBottom: "20px",
                             }}
@@ -158,8 +154,7 @@ export function LandingWaitlistFooter({ }: Props) {
                             <a href="tel:+524427081622" className="footer-contact-link" style={{
                                 display: "flex", alignItems: "center", gap: "10px",
                                 color: "rgba(255,255,255,0.6)", textDecoration: "none",
-                                fontSize: "14px", fontFamily: "'Inter', sans-serif",
-                                transition: "color 0.2s ease",
+                                fontSize: "14px",                                 transition: "color 0.2s ease",
                             }}>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12.7a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.8 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -169,8 +164,7 @@ export function LandingWaitlistFooter({ }: Props) {
                             <a href="mailto:hola@bizen.mx" className="footer-contact-link" style={{
                                 display: "flex", alignItems: "center", gap: "10px",
                                 color: "rgba(255,255,255,0.6)", textDecoration: "none",
-                                fontSize: "14px", fontFamily: "'Inter', sans-serif",
-                                transition: "color 0.2s ease",
+                                fontSize: "14px",                                 transition: "color 0.2s ease",
                             }}>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -184,14 +178,14 @@ export function LandingWaitlistFooter({ }: Props) {
 
                 {/* Divider */}
                 <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "clamp(20px, 3vw, 28px)", paddingBottom: "clamp(20px, 3vw, 28px)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }} className="footer-bottom-bar">
-                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.35)", fontFamily: "'Inter', sans-serif", margin: 0 }}>
+                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.35)", margin: 0 }}>
                         © {new Date().getFullYear()} BIZEN Learning Systems. Todos los derechos reservados.
                     </p>
                     <div style={{ display: "flex", gap: "24px" }}>
                         {["Aviso de privacidad", "Términos de uso"].map((link) => (
                             <a key={link} href="#" style={{
                                 fontSize: "13px", color: "rgba(255,255,255,0.35)",
-                                fontFamily: "'Inter', sans-serif", textDecoration: "none",
+                                textDecoration: "none",
                                 transition: "color 0.2s ease",
                             }} className="footer-legal-link">{link}</a>
                         ))}

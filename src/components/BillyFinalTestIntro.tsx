@@ -93,7 +93,7 @@ export default function BillyFinalTestIntro({ onContinue }: BillyFinalTestIntroP
               fontSize: "clamp(16px, 4vw, 22px)",
               lineHeight: 1.6,
               color: "#1e293b",
-              fontWeight: 600,
+              fontWeight: 500,
             }}>
               ¿Recuerdas el quiz diagnóstico del inicio? Ahora realizarás el mismo quiz para medir tu progreso, y con esto ¡terminarás!
             </p>
@@ -116,7 +116,7 @@ export default function BillyFinalTestIntro({ onContinue }: BillyFinalTestIntroP
             background: "linear-gradient(135deg, #0F62FE, #3B82F6)",
             color: "white",
             fontSize: "clamp(16px, 4vw, 20px)",
-            fontWeight: 700,
+            fontWeight: 500,
             border: "none",
             cursor: "pointer",
             boxShadow: "0 8px 32px rgba(15, 98, 254, 0.4)"

@@ -55,8 +55,7 @@ export default function PuntosPage() {
         <div className="puntos-outer" style={{
             minHeight: "100vh",
             background: "#FBFAF5",
-            fontFamily: "'Inter', sans-serif",
-            width: "100%",
+                        width: "100%",
             boxSizing: "border-box"
         }}>
             <style>{`
@@ -123,7 +122,7 @@ export default function PuntosPage() {
                 .redeem-btn {
                     background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
                     color: white; border: none; border-radius: 16px;
-                    font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px;
+                    font-family: 'Inter', sans-serif; font-weight: 500; font-size: 16px;
                     cursor: pointer; transition: all 0.3s ease;
                     box-shadow: 0 8px 30px rgba(15,98,254,0.4);
                     animation: puntos-pulse 2.5s ease infinite;
@@ -168,34 +167,34 @@ export default function PuntosPage() {
                             <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
                                 <Gift size={48} className="gift-pulse" />
                             </div>
-                            <h2 style={{ fontSize: 24, fontWeight: 900, color: "#0f172a", margin: "0 0 8px" }}>¿Canjear tarjeta?</h2>
+                            <h2 style={{ fontSize: 24, fontWeight: 500, color: "#0f172a", margin: "0 0 8px" }}>¿Canjear tarjeta?</h2>
                             <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>Esto descontará {selectedGC.points.toLocaleString()} BIZCOINS de tu saldo</p>
                         </div>
 
                         {/* Mini gift card preview */}
                         <div style={{ background: selectedGC.bg, borderRadius: 16, padding: "20px 24px", marginBottom: 20, color: "white", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <div>
-                                <div style={{ fontSize: 18, fontWeight: 900 }}>{selectedGC.store}</div>
-                                <div style={{ fontSize: 22, fontWeight: 900, color: selectedGC.color }}>{selectedGC.value}</div>
+                                <div style={{ fontSize: 18, fontWeight: 500 }}>{selectedGC.store}</div>
+                                <div style={{ fontSize: 22, fontWeight: 500, color: selectedGC.color }}>{selectedGC.value}</div>
                             </div>
-                            <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: "10px 14px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.8)" }}>
+                            <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: "10px 14px", fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.8)" }}>
                                 -{selectedGC.points.toLocaleString()} BIZCOINS
                             </div>
                         </div>
 
                         {userPoints < selectedGC.points && (
-                            <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: "12px 16px", marginBottom: 16, display: "flex", gap: 8, alignItems: "center", color: "#dc2626", fontSize: 13, fontWeight: 600 }}>
+                            <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: "12px 16px", marginBottom: 16, display: "flex", gap: 8, alignItems: "center", color: "#dc2626", fontSize: 13, fontWeight: 500 }}>
                                 <Lock size={15} /> No tienes suficientes BIZCOINS para este canje.
                             </div>
                         )}
 
                         <div style={{ display: "flex", gap: 10 }}>
-                            <button onClick={() => setRedeemModal(false)} style={{ flex: 1, padding: "13px", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 14, color: "#64748b", fontFamily: "'Inter', sans-serif" }}>
+                            <button onClick={() => setRedeemModal(false)} style={{ flex: 1, padding: "13px", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 12, fontWeight: 500, cursor: "pointer", fontSize: 14, color: "#64748b", }}>
                                 Cancelar
                             </button>
                             <button
                                 disabled={userPoints < selectedGC.points}
-                                style={{ flex: 2, padding: "13px", background: userPoints >= selectedGC.points ? "linear-gradient(135deg, #0F62FE, #4A9EFF)" : "#e2e8f0", color: userPoints >= selectedGC.points ? "white" : "#94a3b8", border: "none", borderRadius: 12, fontWeight: 800, cursor: userPoints >= selectedGC.points ? "pointer" : "not-allowed", fontSize: 14, fontFamily: "'Inter', sans-serif" }}
+                                style={{ flex: 2, padding: "13px", background: userPoints >= selectedGC.points ? "linear-gradient(135deg, #0F62FE, #4A9EFF)" : "#e2e8f0", color: userPoints >= selectedGC.points ? "white" : "#94a3b8", border: "none", borderRadius: 12, fontWeight: 500, cursor: userPoints >= selectedGC.points ? "pointer" : "not-allowed", fontSize: 14, }}
                             >
                                 Confirmar canje →
                             </button>
@@ -230,9 +229,9 @@ export default function PuntosPage() {
                         <div>
                             <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
                                 <Zap size={13} color="#60a5fa" />
-                                <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tu saldo de BIZCOINS</span>
+                                <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tu saldo de BIZCOINS</span>
                             </div>
-                            <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 900, color: "#ffffff", margin: "0 0 8px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                            <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 500, color: "#ffffff", margin: "0 0 8px", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
                                 Mis BIZCOINS
                             </h1>
                             <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "#93c5fd", margin: 0 }}>
@@ -251,7 +250,7 @@ export default function PuntosPage() {
                         }}>
                             <div style={{
                                 fontSize: "clamp(42px, 8vw, 64px)",
-                                fontWeight: 900,
+                                fontWeight: 500,
                                 color: "#fff",
                                 lineHeight: 1,
                                 background: "linear-gradient(135deg, #fff, #93c5fd)",
@@ -264,7 +263,7 @@ export default function PuntosPage() {
                                     (userPoints).toLocaleString()
                                 )}
                             </div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4 }}>BIZCOINS disponibles</div>
+                            <div style={{ fontSize: 13, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4 }}>BIZCOINS disponibles</div>
                         </div>
                     </div>
                 </div>
@@ -284,9 +283,9 @@ export default function PuntosPage() {
                         justifyContent: "center",
                         textAlign: "center"
                     }}>
-                        <div style={{ fontSize: 12, fontWeight: 800, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Nivel actual</div>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Nivel actual</div>
                         <div style={{ fontSize: 52, fontWeight: 950, color: "#b45309", lineHeight: 1, marginBottom: 6, textShadow: "0 2px 10px rgba(180,83,9,0.2)" }}>{stats?.level || (dbProfile as any)?.level || 1}</div>
-                        <div style={{ fontSize: 12, fontWeight: 800, color: "#d97706", textTransform: "uppercase", letterSpacing: "0.06em" }}>Bizen Explorer</div>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#d97706", textTransform: "uppercase", letterSpacing: "0.06em" }}>Bizen Explorer</div>
                     </div>
 
                     {/* Streak */}
@@ -337,18 +336,18 @@ export default function PuntosPage() {
                         justifyContent: "center",
                         textAlign: "center"
                     }}>
-                        <div style={{ fontSize: 12, fontWeight: 800, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Siguiente: Nivel {(stats?.level || (dbProfile as any)?.level || 1) + 1}</div>
+                        <div style={{ fontSize: 12, fontWeight: 500, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Siguiente: Nivel {(stats?.level || (dbProfile as any)?.level || 1) + 1}</div>
 
                         <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
                             <span style={{ fontSize: 52, fontWeight: 950, color: "#0c4a6e", lineHeight: 1 }}>{stats?.xpInCurrentLevel || 0}</span>
-                            <span style={{ fontSize: 14, fontWeight: 700, color: "#38bdf8" }}>/ {stats?.xpNeeded || 100} XP</span>
+                            <span style={{ fontSize: 14, fontWeight: 500, color: "#38bdf8" }}>/ {stats?.xpNeeded || 100} XP</span>
                         </div>
 
                         <div style={{ width: "80%", maxWidth: "160px", height: 10, background: "rgba(255,255,255,0.5)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(14,165,233,0.2)", marginBottom: 10 }}>
                             <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 100)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #38bdf8, #0F62FE)", borderRadius: 10, boxShadow: "0 0 10px rgba(15,98,254,0.3)", transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)" }} />
                         </div>
 
-                        <div style={{ fontSize: 11, fontWeight: 800, color: "#075985", textTransform: "uppercase", letterSpacing: "0.05em" }}>{stats?.xpToNextLevel || 100} XP para subir</div>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#075985", textTransform: "uppercase", letterSpacing: "0.05em" }}>{stats?.xpToNextLevel || 100} XP para subir</div>
                     </div>
                 </div>
 
@@ -356,7 +355,7 @@ export default function PuntosPage() {
                 <div style={{ marginBottom: 40 }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
                         <div>
-                            <h2 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 900, color: "#0f172a", margin: "0 0 4px" }}>
+                            <h2 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 500, color: "#0f172a", margin: "0 0 4px" }}>
                                 Canjea tus BIZCOINS
                             </h2>
                             <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
@@ -365,7 +364,7 @@ export default function PuntosPage() {
                         </div>
                         <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "linear-gradient(135deg, #eff6ff, #dbeafe)", border: "1px solid #bfdbfe", borderRadius: 999, padding: "8px 16px" }}>
                             <Star size={14} color="#2563eb" fill="#2563eb" />
-                            <span style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8" }}>{userPoints.toLocaleString()} BIZCOINS disponibles</span>
+                            <span style={{ fontSize: 13, fontWeight: 500, color: "#1d4ed8" }}>{userPoints.toLocaleString()} BIZCOINS disponibles</span>
                         </div>
                     </div>
 
@@ -386,22 +385,22 @@ export default function PuntosPage() {
                                         {/* Card chip decoration */}
                                         <div style={{ position: "absolute", top: 16, right: 16, width: 32, height: 24, background: "rgba(255,255,255,0.12)", borderRadius: 5, border: "1px solid rgba(255,255,255,0.2)" }} />
 
-                                        <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", marginBottom: 4 }}>{card.store}</div>
-                                        <div style={{ fontSize: 32, fontWeight: 900, color: card.color, lineHeight: 1 }}>{card.value}</div>
+                                        <div style={{ fontSize: 22, fontWeight: 500, color: "#fff", marginBottom: 4 }}>{card.store}</div>
+                                        <div style={{ fontSize: 32, fontWeight: 500, color: card.color, lineHeight: 1 }}>{card.value}</div>
                                         <div style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 8 }}>{card.description}</div>
                                     </div>
 
                                     {/* Card bottom */}
                                     <div style={{ background: "white", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                         <div>
-                                            <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Costo</div>
-                                            <div style={{ fontSize: 18, fontWeight: 900, color: canAfford ? "#0F62FE" : "#94a3b8", display: "flex", alignItems: "center", gap: 5 }}>
+                                            <div style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Costo</div>
+                                            <div style={{ fontSize: 18, fontWeight: 500, color: canAfford ? "#0F62FE" : "#94a3b8", display: "flex", alignItems: "center", gap: 5 }}>
                                                 <Star size={14} fill={canAfford ? "#0F62FE" : "#94a3b8"} color={canAfford ? "#0F62FE" : "#94a3b8"} />
                                                 {card.points.toLocaleString()} BIZCOINS
                                             </div>
                                         </div>
                                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                            {!canAfford && <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 700, color: "#94a3b8" }}><Lock size={12} /> Sin saldo</div>}
+                                            {!canAfford && <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 500, color: "#94a3b8" }}><Lock size={12} /> Sin saldo</div>}
                                             {isSelected && canAfford && <CheckCircle2 size={22} color="#0F62FE" />}
                                             {!isSelected && canAfford && <ChevronRight size={20} color="#0F62FE" />}
                                         </div>
@@ -427,7 +426,7 @@ export default function PuntosPage() {
 
                 {/* === HOW TO EARN MORE === */}
                 <div style={{ background: "white", borderRadius: 24, padding: "clamp(24px,4vw,36px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.04)", marginBottom: 32 }}>
-                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 22px)", fontWeight: 800, color: "#0f172a", margin: "0 0 20px" }}>Cómo ganar más BIZCOINS y XP</h2>
+                    <h2 style={{ fontSize: "clamp(18px, 2.5vw, 22px)", fontWeight: 500, color: "#0f172a", margin: "0 0 20px" }}>Cómo ganar más BIZCOINS y XP</h2>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
                         {[
                             { IconComp: Zap, label: "Reto Diario", xp: "+50 BIZCOINS", color: "#0F62FE", desc: "Completa el reto del día" },
@@ -439,9 +438,9 @@ export default function PuntosPage() {
                                 <div style={{ width: 42, height: 42, borderRadius: 12, background: `${item.color}15`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14, border: `1px solid ${item.color}20` }}>
                                     <item.IconComp size={22} color={item.color} strokeWidth={2.2} />
                                 </div>
-                                <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", marginBottom: 4 }}>{item.label}</div>
+                                <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a", marginBottom: 4 }}>{item.label}</div>
                                 <div style={{ fontSize: 12, color: "#64748b", marginBottom: 10, lineHeight: 1.5 }}>{item.desc}</div>
-                                <div style={{ fontSize: 16, fontWeight: 900, color: item.color }}>{item.xp}</div>
+                                <div style={{ fontSize: 16, fontWeight: 500, color: item.color }}>{item.xp}</div>
                             </div>
                         ))}
                     </div>

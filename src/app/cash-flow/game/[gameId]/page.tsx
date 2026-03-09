@@ -166,7 +166,7 @@ export default function CashFlowGamePage() {
 
   const modalTitleStyle: React.CSSProperties = {
     fontSize: 28,
-    fontWeight: 900,
+    fontWeight: 500,
     margin: "0 0 16px",
     color: "#333"
   }
@@ -192,8 +192,8 @@ export default function CashFlowGamePage() {
     fontSize: 14
   }
 
-  const modalInfoLabelStyle: React.CSSProperties = { fontWeight: 600 }
-  const modalInfoValueStyle: React.CSSProperties = { fontWeight: 700 }
+  const modalInfoLabelStyle: React.CSSProperties = { fontWeight: 500 }
+  const modalInfoValueStyle: React.CSSProperties = { fontWeight: 500 }
 
   const modalActionsStyle: React.CSSProperties = { display: "flex", gap: 12 }
   const modalPrimaryButtonStyle: React.CSSProperties = {
@@ -204,9 +204,8 @@ export default function CashFlowGamePage() {
     border: "none",
     borderRadius: 12,
     fontSize: 16,
-    fontWeight: 700,
-    fontFamily: "'Montserrat', sans-serif"
-  }
+    fontWeight: 500,
+      }
   const modalSecondaryButtonStyle: React.CSSProperties = {
     flex: 1,
     padding: "14px",
@@ -214,9 +213,8 @@ export default function CashFlowGamePage() {
     border: "2px solid #ef4444",
     borderRadius: 12,
     fontSize: 16,
-    fontWeight: 700,
-    fontFamily: "'Montserrat', sans-serif"
-  }
+    fontWeight: 500,
+      }
 
   const warningBoxStyle: React.CSSProperties = {
     background: "#fef2f2",
@@ -687,7 +685,7 @@ export default function CashFlowGamePage() {
             boxSizing: "border-box"
           }}
         >
-          <div style={{ color: "#333", fontSize: 24, fontWeight: 700 }}>
+          <div style={{ color: "#333", fontSize: 24, fontWeight: 500 }}>
             Cargando juego...
           </div>
         </div>
@@ -806,7 +804,7 @@ export default function CashFlowGamePage() {
           <div style={{ fontSize: 14, color: "#666", marginBottom: 4 }}>
             Costo
           </div>
-          <div style={{ fontSize: 36, fontWeight: 900, color: "#ef4444" }}>
+          <div style={{ fontSize: 36, fontWeight: 500, color: "#ef4444" }}>
             ${currentDoodad?.cost.toLocaleString()}
           </div>
           <div style={{ fontSize: 12, color: "#999", marginTop: 4 }}>
@@ -1005,8 +1003,7 @@ export default function CashFlowGamePage() {
         width: "100%",
         minHeight: "100vh",
         background: "#FBFAF5",
-        fontFamily: "'Montserrat', sans-serif",
-        overflowX: "hidden"
+                overflowX: "hidden"
       }}>
         <main className="cashflow-game-main" style={{
           width: "100%",
@@ -1069,7 +1066,7 @@ export default function CashFlowGamePage() {
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
                     <h1 style={{
                       fontSize: "clamp(22px, 3vw, 36px)",
-                      fontWeight: 900,
+                      fontWeight: 500,
                       margin: 0,
                       color: "white",
                       letterSpacing: "-0.02em"
@@ -1079,7 +1076,7 @@ export default function CashFlowGamePage() {
                     <span style={{
                       padding: "4px 12px", background: player.isOnFastTrack ? "#fbbf24" : "rgba(11,113,254,0.3)",
                       color: player.isOnFastTrack ? "#92400e" : "#bfdbfe", borderRadius: 999,
-                      fontSize: 12, fontWeight: 800, textTransform: "uppercase"
+                      fontSize: 12, fontWeight: 500, textTransform: "uppercase"
                     }}>
                       {player.isOnFastTrack ? "Fast Track" : "Rat Race"}
                     </span>
@@ -1093,7 +1090,7 @@ export default function CashFlowGamePage() {
               {/* Progress Toward Freedom */}
               {!player.isOnFastTrack && (
                 <div style={{ minWidth: isMobile ? "100%" : 300, zIndex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 13, fontWeight: 700, color: "white" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 13, fontWeight: 500, color: "white" }}>
                     <span>Independencia Financiera</span>
                     <span>{Math.min(100, Math.round((player.passiveIncome / totalExpenses) * 100))}%</span>
                   </div>
@@ -1141,7 +1138,7 @@ export default function CashFlowGamePage() {
                   <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(37,99,235,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <BarChartIcon size={24} color="#2563eb" />
                   </div>
-                  <h2 style={{ fontSize: 20, fontWeight: 900, color: "#1e293b", margin: 0 }}>Estado Financiero</h2>
+                  <h2 style={{ fontSize: 20, fontWeight: 500, color: "#1e293b", margin: 0 }}>Estado Financiero</h2>
                   <div style={{
                     marginLeft: "auto",
                     padding: "6px 14px",
@@ -1149,7 +1146,7 @@ export default function CashFlowGamePage() {
                     background: player.passiveIncome >= totalExpenses ? "rgba(16, 185, 129, 0.15)" : "rgba(245, 158, 11, 0.1)",
                     color: player.passiveIncome >= totalExpenses ? "#059669" : "#d97706",
                     fontSize: "11px",
-                    fontWeight: 800,
+                    fontWeight: 500,
                     textTransform: "uppercase",
                     letterSpacing: "0.03em",
                     border: player.passiveIncome >= totalExpenses ? "1px solid rgba(16, 185, 129, 0.2)" : "1px solid rgba(245, 158, 11, 0.2)"
@@ -1161,17 +1158,17 @@ export default function CashFlowGamePage() {
                 {/* Income Section */}
                 <div style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.05), rgba(5,150,105,0.1))", borderRadius: 20, padding: 20, border: "1px solid rgba(16,185,129,0.1)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#059669", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ingresos Totales</span>
-                    <span style={{ fontSize: 18, fontWeight: 900, color: "#059669" }}>${totalIncome.toLocaleString()}</span>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: "#059669", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ingresos Totales</span>
+                    <span style={{ fontSize: 18, fontWeight: 500, color: "#059669" }}>${totalIncome.toLocaleString()}</span>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
                       <span style={{ color: "#64748b" }}>Salario</span>
-                      <span style={{ fontWeight: 600 }}>${player.profession.salary.toLocaleString()}</span>
+                      <span style={{ fontWeight: 500 }}>${player.profession.salary.toLocaleString()}</span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
                       <span style={{ color: "#64748b" }}>Ingreso Pasivo</span>
-                      <span style={{ fontWeight: 700, color: "#10b981" }}>+${player.passiveIncome.toLocaleString()}</span>
+                      <span style={{ fontWeight: 500, color: "#10b981" }}>+${player.passiveIncome.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -1179,8 +1176,8 @@ export default function CashFlowGamePage() {
                 {/* Expenses Section */}
                 <div style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.05), rgba(220,38,38,0.1))", borderRadius: 20, padding: 20, border: "1px solid rgba(239,68,68,0.1)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#dc2626", textTransform: "uppercase", letterSpacing: "0.05em" }}>Gastos Totales</span>
-                    <span style={{ fontSize: 18, fontWeight: 900, color: "#dc2626" }}>${totalExpenses.toLocaleString()}</span>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: "#dc2626", textTransform: "uppercase", letterSpacing: "0.05em" }}>Gastos Totales</span>
+                    <span style={{ fontSize: 18, fontWeight: 500, color: "#dc2626" }}>${totalExpenses.toLocaleString()}</span>
                   </div>
                   <div style={{ maxHeight: 120, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, paddingRight: 4 }}>
                     {[
@@ -1206,8 +1203,8 @@ export default function CashFlowGamePage() {
                   background: cashFlow > 0 ? "linear-gradient(135deg, #10b981, #059669)" : "linear-gradient(135deg, #ef4444, #dc2626)",
                   borderRadius: 20, padding: 24, color: "white", boxShadow: "0 15px 30px rgba(0,0,0,0.15)"
                 }}>
-                  <div style={{ fontSize: 12, fontWeight: 800, opacity: 0.8, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Flujo Mensual</div>
-                  <div style={{ fontSize: 28, fontWeight: 900 }}>${cashFlow.toLocaleString()}</div>
+                  <div style={{ fontSize: 12, fontWeight: 500, opacity: 0.8, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Flujo Mensual</div>
+                  <div style={{ fontSize: 28, fontWeight: 500 }}>${cashFlow.toLocaleString()}</div>
                 </div>
               </motion.div>
 
@@ -1232,24 +1229,24 @@ export default function CashFlowGamePage() {
                   <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <MoneyIcon size={24} color="#10b981" />
                   </div>
-                  <h2 style={{ fontSize: 20, fontWeight: 900, color: "#1e293b", margin: 0 }}>Mis Activos</h2>
+                  <h2 style={{ fontSize: 20, fontWeight: 500, color: "#1e293b", margin: 0 }}>Mis Activos</h2>
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   <div style={{ background: "white", borderRadius: 16, padding: 16, border: "1px solid #f1f5f9", textAlign: "center" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", marginBottom: 4 }}>Efectivo</div>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: "#10b981" }}>${player.cashOnHand.toLocaleString()}</div>
+                    <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b", textTransform: "uppercase", marginBottom: 4 }}>Efectivo</div>
+                    <div style={{ fontSize: 20, fontWeight: 500, color: "#10b981" }}>${player.cashOnHand.toLocaleString()}</div>
                   </div>
                   <div style={{ background: "white", borderRadius: 16, padding: 16, border: "1px solid #f1f5f9", textAlign: "center" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", marginBottom: 4 }}>Ahorros</div>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: "#3b82f6" }}>${player.savings.toLocaleString()}</div>
+                    <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b", textTransform: "uppercase", marginBottom: 4 }}>Ahorros</div>
+                    <div style={{ fontSize: 20, fontWeight: 500, color: "#3b82f6" }}>${player.savings.toLocaleString()}</div>
                   </div>
                 </div>
 
                 {/* Investments List */}
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 14, fontWeight: 800, color: "#334155" }}>Portafolio ({player.investments?.length || 0})</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: "#334155" }}>Portafolio ({player.investments?.length || 0})</span>
                     <span style={{ fontSize: 12, color: "#94a3b8" }}>Haga clic para vender</span>
                   </div>
 
@@ -1277,7 +1274,7 @@ export default function CashFlowGamePage() {
                             {inv.opportunityCard.type === "limited_partnership" && "🤝"}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 14, fontWeight: 800, color: "#1e293b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{inv.opportunityCard.name}</div>
+                            <div style={{ fontSize: 14, fontWeight: 500, color: "#1e293b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{inv.opportunityCard.name}</div>
                             <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#64748b", marginTop: 2 }}>
                               <span>Flujo: <b style={{ color: "#10b981" }}>+${(inv.currentCashFlow || 0).toLocaleString()}</b></span>
                               <span>ROI: <b>{((((inv.opportunityCard.minSalePrice || 0) - inv.purchasePrice) / inv.purchasePrice) * 100).toFixed(1)}%</b></span>
@@ -1311,7 +1308,7 @@ export default function CashFlowGamePage() {
                   <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(239,68,68,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <CreditCardIcon size={24} color="#ef4444" />
                   </div>
-                  <h2 style={{ fontSize: 20, fontWeight: 900, color: "#1e293b", margin: 0 }}>Mis Deudas</h2>
+                  <h2 style={{ fontSize: 20, fontWeight: 500, color: "#1e293b", margin: 0 }}>Mis Deudas</h2>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 12, maxHeight: 350, overflowY: "auto", paddingRight: 4 }}>
@@ -1325,10 +1322,10 @@ export default function CashFlowGamePage() {
                   ].filter(l => l.value > 0).map((l, idx) => (
                     <div key={idx} style={{ background: "white", borderRadius: 16, padding: "14px 18px", border: "1.5px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
-                        <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>{l.label}</div>
-                        <div style={{ fontSize: 16, fontWeight: 800, color: "#1e293b" }}>${l.value.toLocaleString()}</div>
+                        <div style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>{l.label}</div>
+                        <div style={{ fontSize: 16, fontWeight: 500, color: "#1e293b" }}>${l.value.toLocaleString()}</div>
                       </div>
-                      <div style={{ padding: "6px 10px", borderRadius: 8, background: "#fef2f2", color: "#ef4444", fontSize: 11, fontWeight: 800 }}>PASIVO</div>
+                      <div style={{ padding: "6px 10px", borderRadius: 8, background: "#fef2f2", color: "#ef4444", fontSize: 11, fontWeight: 500 }}>PASIVO</div>
                     </div>
                   ))}
 
@@ -1346,10 +1343,10 @@ export default function CashFlowGamePage() {
                       }}
                     >
                       <div>
-                        <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>{l.description || l.type === "bank_loan" ? "Préstamo Bancario" : l.type}</div>
-                        <div style={{ fontSize: 16, fontWeight: 800, color: "#1e293b" }}>${l.remainingBalance.toLocaleString()}</div>
+                        <div style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>{l.description || l.type === "bank_loan" ? "Préstamo Bancario" : l.type}</div>
+                        <div style={{ fontSize: 16, fontWeight: 500, color: "#1e293b" }}>${l.remainingBalance.toLocaleString()}</div>
                       </div>
-                      <button style={{ padding: "6px 12px", borderRadius: 8, background: "#ef4444", color: "white", border: "none", fontSize: 11, fontWeight: 800, cursor: "pointer" }}>PAGAR</button>
+                      <button style={{ padding: "6px 12px", borderRadius: 8, background: "#ef4444", color: "white", border: "none", fontSize: 11, fontWeight: 500, cursor: "pointer" }}>PAGAR</button>
                     </motion.div>
                   ))}
                 </div>
@@ -1366,7 +1363,7 @@ export default function CashFlowGamePage() {
               }}>
                 <div style={{
                   fontSize: 14,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "#dc2626",
                   marginBottom: 12
                 }}>
@@ -1394,7 +1391,7 @@ export default function CashFlowGamePage() {
                       }}
                     >
                       <span style={{ color: "#666" }}>{doodad.name}</span>
-                      <span style={{ fontWeight: 700, color: "#ef4444" }}>
+                      <span style={{ fontWeight: 500, color: "#ef4444" }}>
                         -${doodad.cost.toLocaleString()}
                       </span>
                     </div>
@@ -1405,7 +1402,7 @@ export default function CashFlowGamePage() {
                   paddingTop: 12,
                   borderTop: "1px solid #fecaca",
                   fontSize: 14,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "#dc2626",
                   display: "flex",
                   justifyContent: "space-between"
@@ -1476,11 +1473,10 @@ export default function CashFlowGamePage() {
                     border: "2.5px solid #fbbf24",
                     borderRadius: "20px",
                     fontSize: 15,
-                    fontWeight: 800,
+                    fontWeight: 500,
                     cursor: actionInProgress ? "not-allowed" : "pointer",
                     boxShadow: "0 4px 12px rgba(245, 158, 11, 0.1)",
-                    fontFamily: "'Montserrat', sans-serif",
-                    display: "flex",
+                                        display: "flex",
                     alignItems: "center",
                     gap: 10
                   }}
@@ -1501,11 +1497,10 @@ export default function CashFlowGamePage() {
                     border: "none",
                     borderRadius: "20px",
                     fontSize: 15,
-                    fontWeight: 800,
+                    fontWeight: 500,
                     cursor: actionInProgress ? "not-allowed" : "pointer",
                     boxShadow: "0 8px 20px rgba(16, 185, 129, 0.3)",
-                    fontFamily: "'Montserrat', sans-serif",
-                    display: "flex",
+                                        display: "flex",
                     alignItems: "center",
                     gap: 10
                   }}
@@ -1576,7 +1571,7 @@ export default function CashFlowGamePage() {
                   </div>
                   <h2 style={{
                     fontSize: 32,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     margin: "0 0 16px",
                     textAlign: "center",
                     background: "linear-gradient(135deg, #667eea, #764ba2)",
@@ -1610,7 +1605,7 @@ export default function CashFlowGamePage() {
                   </div>
                   <h2 style={{
                     fontSize: 28,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     margin: "0 0 16px",
                     textAlign: "center",
                     color: "#333"
@@ -1658,7 +1653,7 @@ export default function CashFlowGamePage() {
                   </div>
                   <h2 style={{
                     fontSize: 28,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     margin: "0 0 16px",
                     textAlign: "center",
                     color: "#333"
@@ -1718,7 +1713,7 @@ export default function CashFlowGamePage() {
                   </div>
                   <h2 style={{
                     fontSize: 28,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     margin: "0 0 16px",
                     textAlign: "center",
                     color: "#333"
@@ -1792,7 +1787,7 @@ export default function CashFlowGamePage() {
                   </div>
                   <h2 style={{
                     fontSize: 28,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     margin: "0 0 16px",
                     textAlign: "center",
                     color: "#333"
@@ -1854,10 +1849,9 @@ export default function CashFlowGamePage() {
                       border: "2px solid #667eea",
                       borderRadius: 12,
                       fontSize: 16,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: "pointer",
-                      fontFamily: "'Montserrat', sans-serif",
-                      transition: "all 0.2s"
+                                            transition: "all 0.2s"
                     }}
                   >
                     ← Anterior
@@ -1874,10 +1868,9 @@ export default function CashFlowGamePage() {
                     border: "none",
                     borderRadius: 12,
                     fontSize: 16,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
-                    fontFamily: "'Montserrat', sans-serif",
-                    boxShadow: "0 6px 20px rgba(102, 126, 234, 0.3)",
+                                        boxShadow: "0 6px 20px rgba(102, 126, 234, 0.3)",
                     transition: "all 0.2s"
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
@@ -1894,10 +1887,9 @@ export default function CashFlowGamePage() {
                     color: "#999",
                     border: "none",
                     fontSize: 14,
-                    fontWeight: 600,
+                    fontWeight: 500,
                     cursor: "pointer",
-                    fontFamily: "'Montserrat', sans-serif"
-                  }}
+                                      }}
                 >
                   Saltar
                 </button>
@@ -1938,7 +1930,7 @@ export default function CashFlowGamePage() {
               }}>
                 <h2 style={{
                   fontSize: 28,
-                  fontWeight: 900,
+                  fontWeight: 500,
                   margin: "0 0 16px",
                   color: "#333"
                 }}>
@@ -1961,14 +1953,14 @@ export default function CashFlowGamePage() {
                     color: "#333",
                     margin: "0 0 16px",
                     lineHeight: 1.6,
-                    fontWeight: 600
+                    fontWeight: 500
                   }}>
                     {marketEventData.marketEvent.message}
                   </p>
                   {marketEventData.cashChange !== 0 && (
                     <div style={{
                       fontSize: 32,
-                      fontWeight: 900,
+                      fontWeight: 500,
                       color: marketEventData.cashChange > 0 ? "#10b981" : "#ef4444"
                     }}>
                       {marketEventData.cashChange > 0 ? "+" : ""}${marketEventData.cashChange.toLocaleString()}
@@ -1986,10 +1978,9 @@ export default function CashFlowGamePage() {
                     border: "none",
                     borderRadius: 12,
                     fontSize: 16,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
-                    fontFamily: "'Montserrat', sans-serif"
-                  }}
+                                      }}
                 >
                   Continuar
                 </button>
@@ -2026,7 +2017,7 @@ export default function CashFlowGamePage() {
                 }}>
                   <h2 style={{
                     fontSize: 28,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     margin: "0 0 16px",
                     color: "#333"
                   }}>
@@ -2054,8 +2045,8 @@ export default function CashFlowGamePage() {
                       marginBottom: 12,
                       fontSize: 14
                     }}>
-                      <span style={{ fontWeight: 600 }}>Saldo actual:</span>
-                      <span style={{ fontWeight: 700, color: "#ef4444" }}>
+                      <span style={{ fontWeight: 500 }}>Saldo actual:</span>
+                      <span style={{ fontWeight: 500, color: "#ef4444" }}>
                         ${selectedLoan.remainingBalance.toLocaleString()}
                       </span>
                     </div>
@@ -2066,8 +2057,8 @@ export default function CashFlowGamePage() {
                       marginBottom: 12,
                       fontSize: 14
                     }}>
-                      <span style={{ fontWeight: 600 }}>Pago mensual:</span>
-                      <span style={{ fontWeight: 700 }}>
+                      <span style={{ fontWeight: 500 }}>Pago mensual:</span>
+                      <span style={{ fontWeight: 500 }}>
                         ${selectedLoan.monthlyPayment.toLocaleString()}/mes
                       </span>
                     </div>
@@ -2079,8 +2070,8 @@ export default function CashFlowGamePage() {
                       borderTop: "2px solid #e5e7eb",
                       fontSize: 14
                     }}>
-                      <span style={{ fontWeight: 600 }}>Tu efectivo actual:</span>
-                      <span style={{ fontWeight: 700, color: player.cashOnHand >= selectedLoan.remainingBalance ? "#10b981" : "#ef4444" }}>
+                      <span style={{ fontWeight: 500 }}>Tu efectivo actual:</span>
+                      <span style={{ fontWeight: 500, color: player.cashOnHand >= selectedLoan.remainingBalance ? "#10b981" : "#ef4444" }}>
                         ${player.cashOnHand.toLocaleString()}
                       </span>
                     </div>
@@ -2138,10 +2129,9 @@ export default function CashFlowGamePage() {
                         border: "none",
                         borderRadius: 12,
                         fontSize: 16,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: (actionInProgress || player.cashOnHand < selectedLoan.remainingBalance) ? "not-allowed" : "pointer",
-                        fontFamily: "'Montserrat', sans-serif"
-                      }}
+                                              }}
                     >
                       💰 Pagar ${selectedLoan.remainingBalance.toLocaleString()}
                     </button>
@@ -2157,10 +2147,9 @@ export default function CashFlowGamePage() {
                         border: "2px solid #ef4444",
                         borderRadius: 12,
                         fontSize: 16,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: actionInProgress ? "not-allowed" : "pointer",
-                        fontFamily: "'Montserrat', sans-serif"
-                      }}
+                                              }}
                     >
                       Cancelar
                     </button>
@@ -2197,7 +2186,7 @@ export default function CashFlowGamePage() {
               }}>
                 <h2 style={{
                   fontSize: 28,
-                  fontWeight: 900,
+                  fontWeight: 500,
                   margin: "0 0 16px",
                   color: "#333"
                 }}>
@@ -2235,7 +2224,7 @@ export default function CashFlowGamePage() {
                   <label style={{
                     display: "block",
                     fontSize: 14,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     color: "#333",
                     marginBottom: 12
                   }}>
@@ -2259,10 +2248,9 @@ export default function CashFlowGamePage() {
                           border: "none",
                           borderRadius: 8,
                           fontSize: 13,
-                          fontWeight: 700,
+                          fontWeight: 500,
                           cursor: "pointer",
-                          fontFamily: "'Montserrat', sans-serif",
-                          transition: "all 0.2s"
+                                                    transition: "all 0.2s"
                         }}
                       >
                         ${(amount / 1000).toFixed(0)}K
@@ -2283,9 +2271,8 @@ export default function CashFlowGamePage() {
                       border: "2px solid #e5e7eb",
                       borderRadius: 12,
                       fontSize: 18,
-                      fontWeight: 700,
-                      fontFamily: "'Montserrat', sans-serif",
-                      textAlign: "center"
+                      fontWeight: 500,
+                                            textAlign: "center"
                     }}
                   />
                 </div>
@@ -2303,8 +2290,8 @@ export default function CashFlowGamePage() {
                     marginBottom: 12,
                     fontSize: 14
                   }}>
-                    <span style={{ fontWeight: 600 }}>Recibirás:</span>
-                    <span style={{ fontWeight: 700, color: "#10b981" }}>
+                    <span style={{ fontWeight: 500 }}>Recibirás:</span>
+                    <span style={{ fontWeight: 500, color: "#10b981" }}>
                       ${loanAmount.toLocaleString()}
                     </span>
                   </div>
@@ -2315,8 +2302,8 @@ export default function CashFlowGamePage() {
                     marginBottom: 12,
                     fontSize: 14
                   }}>
-                    <span style={{ fontWeight: 600 }}>Interés (10% anual):</span>
-                    <span style={{ fontWeight: 700 }}>
+                    <span style={{ fontWeight: 500 }}>Interés (10% anual):</span>
+                    <span style={{ fontWeight: 500 }}>
                       ${Math.floor(loanAmount * 0.10).toLocaleString()}/año
                     </span>
                   </div>
@@ -2328,8 +2315,8 @@ export default function CashFlowGamePage() {
                     borderTop: "2px solid #e5e7eb",
                     fontSize: 14
                   }}>
-                    <span style={{ fontWeight: 600 }}>Pago mensual:</span>
-                    <span style={{ fontWeight: 700, color: "#ef4444" }}>
+                    <span style={{ fontWeight: 500 }}>Pago mensual:</span>
+                    <span style={{ fontWeight: 500, color: "#ef4444" }}>
                       ${Math.floor(loanAmount * 0.10 / 12).toLocaleString()}/mes
                     </span>
                   </div>
@@ -2352,10 +2339,9 @@ export default function CashFlowGamePage() {
                       border: "none",
                       borderRadius: 12,
                       fontSize: 16,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: (actionInProgress || loanAmount < 1000) ? "not-allowed" : "pointer",
-                      fontFamily: "'Montserrat', sans-serif"
-                    }}
+                                          }}
                   >
                     💰 Solicitar Préstamo
                   </button>
@@ -2371,10 +2357,9 @@ export default function CashFlowGamePage() {
                       border: "2px solid #ef4444",
                       borderRadius: 12,
                       fontSize: 16,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: actionInProgress ? "not-allowed" : "pointer",
-                      fontFamily: "'Montserrat', sans-serif"
-                    }}
+                                          }}
                   >
                     Cancelar
                   </button>
@@ -2412,7 +2397,7 @@ export default function CashFlowGamePage() {
                 }}>
                   <h2 style={{
                     fontSize: 28,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     margin: "0 0 16px",
                     color: "#333"
                   }}>
@@ -2436,8 +2421,8 @@ export default function CashFlowGamePage() {
                       marginBottom: 12,
                       fontSize: 14
                     }}>
-                      <span style={{ fontWeight: 600 }}>Precio de compra:</span>
-                      <span style={{ fontWeight: 700 }}>
+                      <span style={{ fontWeight: 500 }}>Precio de compra:</span>
+                      <span style={{ fontWeight: 500 }}>
                         ${selectedInvestment.purchasePrice.toLocaleString()}
                       </span>
                     </div>
@@ -2448,8 +2433,8 @@ export default function CashFlowGamePage() {
                       marginBottom: 12,
                       fontSize: 14
                     }}>
-                      <span style={{ fontWeight: 600 }}>Ingreso generado:</span>
-                      <span style={{ fontWeight: 700, color: "#10b981" }}>
+                      <span style={{ fontWeight: 500 }}>Ingreso generado:</span>
+                      <span style={{ fontWeight: 500, color: "#10b981" }}>
                         ${selectedInvestment.totalIncomeEarned.toLocaleString()}
                       </span>
                     </div>
@@ -2462,8 +2447,8 @@ export default function CashFlowGamePage() {
                       paddingTop: 12,
                       borderTop: "1px solid #e5e7eb"
                     }}>
-                      <span style={{ fontWeight: 600 }}>Rango de venta:</span>
-                      <span style={{ fontWeight: 700 }}>
+                      <span style={{ fontWeight: 500 }}>Rango de venta:</span>
+                      <span style={{ fontWeight: 500 }}>
                         ${(selectedInvestment.opportunityCard.minSalePrice || 0).toLocaleString()} -
                         ${(selectedInvestment.opportunityCard.maxSalePrice || 0).toLocaleString()}
                       </span>
@@ -2475,7 +2460,7 @@ export default function CashFlowGamePage() {
                     <label style={{
                       display: "block",
                       fontSize: 14,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: "#333",
                       marginBottom: 8
                     }}>
@@ -2497,10 +2482,9 @@ export default function CashFlowGamePage() {
                           border: "none",
                           borderRadius: 8,
                           fontSize: 12,
-                          fontWeight: 600,
+                          fontWeight: 500,
                           cursor: "pointer",
-                          fontFamily: "'Montserrat', sans-serif"
-                        }}
+                                                  }}
                       >
                         Mínimo
                       </button>
@@ -2519,10 +2503,9 @@ export default function CashFlowGamePage() {
                           border: "none",
                           borderRadius: 8,
                           fontSize: 12,
-                          fontWeight: 600,
+                          fontWeight: 500,
                           cursor: "pointer",
-                          fontFamily: "'Montserrat', sans-serif"
-                        }}
+                                                  }}
                       >
                         Medio
                       </button>
@@ -2537,10 +2520,9 @@ export default function CashFlowGamePage() {
                           border: "none",
                           borderRadius: 8,
                           fontSize: 12,
-                          fontWeight: 600,
+                          fontWeight: 500,
                           cursor: "pointer",
-                          fontFamily: "'Montserrat', sans-serif"
-                        }}
+                                                  }}
                       >
                         Máximo
                       </button>
@@ -2558,9 +2540,8 @@ export default function CashFlowGamePage() {
                         border: "2px solid #e5e7eb",
                         borderRadius: 8,
                         fontSize: 16,
-                        fontWeight: 700,
-                        fontFamily: "'Montserrat', sans-serif",
-                        textAlign: "center"
+                        fontWeight: 500,
+                                                textAlign: "center"
                       }}
                     />
                   </div>
@@ -2582,7 +2563,7 @@ export default function CashFlowGamePage() {
                     </div>
                     <div style={{
                       fontSize: 32,
-                      fontWeight: 900,
+                      fontWeight: 500,
                       color: (salePrice - selectedInvestment.purchasePrice) >= 0 ? "#10b981" : "#ef4444"
                     }}>
                       {(salePrice - selectedInvestment.purchasePrice) >= 0 ? "+" : ""}
@@ -2614,10 +2595,9 @@ export default function CashFlowGamePage() {
                         border: "none",
                         borderRadius: 12,
                         fontSize: 16,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: actionInProgress ? "not-allowed" : "pointer",
-                        fontFamily: "'Montserrat', sans-serif"
-                      }}
+                                              }}
                     >
                       💰 Vender
                     </button>
@@ -2633,10 +2613,9 @@ export default function CashFlowGamePage() {
                         border: "2px solid #ef4444",
                         borderRadius: 12,
                         fontSize: 16,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: actionInProgress ? "not-allowed" : "pointer",
-                        fontFamily: "'Montserrat', sans-serif"
-                      }}
+                                              }}
                     >
                       Cancelar
                     </button>
@@ -2691,11 +2670,10 @@ export default function CashFlowGamePage() {
 
               <h2 style={{
                 fontSize: 42,
-                fontWeight: 900,
+                fontWeight: 500,
                 color: "#1e293b",
                 margin: "0 0 16px",
-                fontFamily: "'Montserrat', sans-serif"
-              }}>
+                              }}>
                 ¡LIBERTAD FINANCIERA!
               </h2>
 
@@ -2718,12 +2696,12 @@ export default function CashFlowGamePage() {
               }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#059669", textTransform: "uppercase", marginBottom: 4 }}>Ingreso Pasivo</div>
-                    <div style={{ fontSize: 24, fontWeight: 900, color: "#064e3b" }}>${player.passiveIncome.toLocaleString()}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: "#059669", textTransform: "uppercase", marginBottom: 4 }}>Ingreso Pasivo</div>
+                    <div style={{ fontSize: 24, fontWeight: 500, color: "#064e3b" }}>${player.passiveIncome.toLocaleString()}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#ef4444", textTransform: "uppercase", marginBottom: 4 }}>Gastos Totales</div>
-                    <div style={{ fontSize: 24, fontWeight: 900, color: "#7f1d1d" }}>${totalExpenses.toLocaleString()}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: "#ef4444", textTransform: "uppercase", marginBottom: 4 }}>Gastos Totales</div>
+                    <div style={{ fontSize: 24, fontWeight: 500, color: "#7f1d1d" }}>${totalExpenses.toLocaleString()}</div>
                   </div>
                 </div>
               </div>
@@ -2738,11 +2716,10 @@ export default function CashFlowGamePage() {
                   border: "none",
                   borderRadius: "16px",
                   fontSize: 18,
-                  fontWeight: 800,
+                  fontWeight: 500,
                   cursor: "pointer",
                   boxShadow: "0 10px 30px rgba(16, 185, 129, 0.4)",
-                  fontFamily: "'Montserrat', sans-serif"
-                }}
+                                  }}
               >
                 🚀 Continuar a la Vía Rápida
               </button>

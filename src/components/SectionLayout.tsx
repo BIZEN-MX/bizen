@@ -206,7 +206,7 @@ export default function SectionLayout({
     alignItems: "center" as const,
     justifyContent: "center" as const,
     padding: "18px 28px",      // 👈 BIGGER padding
-    fontWeight: 800,
+    fontWeight: 500,
     fontSize: 18,              // 👈 BIGGER font
     borderRadius: 14,
     minWidth: 220,             // 👈 WIDER button

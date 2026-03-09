@@ -85,16 +85,14 @@ export default async function TemplatesPage() {
         width: "100%",
         flex: 1,
         background: "#FBFAF5",
-        fontFamily: "Montserrat, sans-serif",
-        overflowX: "hidden",
+                overflowX: "hidden",
         overflowY: "auto",
         boxSizing: "border-box"
       }}>
         <main className="templates-main" style={{
           margin: "0 auto",
           flex: 1,
-          fontFamily: "Montserrat, sans-serif",
-          width: "100%",
+                    width: "100%",
           boxSizing: "border-box" as const,
           overflowX: "hidden",
           overflowY: "visible"
@@ -106,7 +104,7 @@ export default async function TemplatesPage() {
               border: "2px solid #E5E7EB",
               borderRadius: 8,
               fontSize: 14,
-              fontWeight: 600,
+              fontWeight: 500,
               color: "#374151",
               cursor: "pointer",
               marginBottom: 24,
@@ -125,7 +123,7 @@ export default async function TemplatesPage() {
           <div style={{ marginBottom: 32 }}>
             <h1 style={{
               fontSize: 42,
-              fontWeight: 900,
+              fontWeight: 500,
               background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -140,7 +138,7 @@ export default async function TemplatesPage() {
 
           {Object.entries(templatesByCategory).map(([category, categoryTemplates]) => (
             <div key={category} style={{ marginBottom: 40, width: "100%" }}>
-              <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, color: "#111" }}>
+              <h2 style={{ fontSize: 24, fontWeight: 500, marginBottom: 20, color: "#111" }}>
                 {categoryNames[category] || category}
               </h2>
               <div style={{
@@ -174,7 +172,7 @@ export default async function TemplatesPage() {
                         <div style={{ fontSize: 32, marginBottom: 8 }}>
                           {template.icon || "📋"}
                         </div>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 6 }}>
+                        <h3 style={{ fontSize: 18, fontWeight: 500, color: "#111", marginBottom: 6 }}>
                           {template.title}
                         </h3>
                         <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.5 }}>
@@ -187,7 +185,7 @@ export default async function TemplatesPage() {
                         background: "#F3F4F6",
                         color: "#6B7280",
                         borderRadius: 6,
-                        fontWeight: 600
+                        fontWeight: 500
                       }}>
                         {template.code}
                       </span>
@@ -215,7 +213,7 @@ export default async function TemplatesPage() {
                         color: "#374151",
                         borderRadius: 8,
                         fontSize: 14,
-                        fontWeight: 600,
+                        fontWeight: 500,
                         cursor: "pointer"
                       }}>
                         Ver Ejemplo
@@ -228,7 +226,7 @@ export default async function TemplatesPage() {
                         color: "white",
                         borderRadius: 8,
                         fontSize: 14,
-                        fontWeight: 600,
+                        fontWeight: 500,
                         cursor: "pointer"
                       }}>
                         Usar Template
@@ -251,7 +249,7 @@ export default async function TemplatesPage() {
             <div style={{ display: "flex", alignItems: "start", gap: 12 }}>
               <span style={{ fontSize: 24 }}>💡</span>
               <div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1E40AF", marginBottom: 6 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 500, color: "#1E40AF", marginBottom: 6 }}>
                   Tip
                 </h3>
                 <p style={{ fontSize: 14, color: "#1E3A8A", lineHeight: 1.6 }}>

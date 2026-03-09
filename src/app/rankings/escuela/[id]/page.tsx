@@ -37,7 +37,7 @@ function RankBadge({ rank }: { rank: number }) {
     if (rank === 2) return <span style={{ fontSize: 24 }}>🥈</span>
     if (rank === 3) return <span style={{ fontSize: 24 }}>🥉</span>
     return (
-        <span style={{ fontSize: 14, fontWeight: 800, color: "#94a3b8", minWidth: 24, textAlign: "center", display: "block" }}>
+        <span style={{ fontSize: 14, fontWeight: 500, color: "#94a3b8", minWidth: 24, textAlign: "center", display: "block" }}>
             {rank}
         </span>
     )
@@ -73,8 +73,7 @@ export default function SchoolProfilePage() {
             style={{
                 minHeight: "100vh",
                 background: "#FBFAF5",
-                fontFamily: "'Montserrat', sans-serif",
-                width: "100%",
+                                width: "100%",
                 boxSizing: "border-box",
                 overflowX: "hidden",
             }}
@@ -195,10 +194,9 @@ export default function SchoolProfilePage() {
                         padding: "10px 18px",
                         cursor: "pointer",
                         fontSize: 14,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         color: "#475569",
-                        fontFamily: "'Montserrat', sans-serif",
-                        marginBottom: 28,
+                                                marginBottom: 28,
                         boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
                         transition: "all 0.2s ease",
                     }}
@@ -213,13 +211,13 @@ export default function SchoolProfilePage() {
                 {loading && (
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 300, flexDirection: "column", gap: 16 }}>
                         <div style={{ width: 44, height: 44, border: "4px solid rgba(15,98,254,0.15)", borderTop: "4px solid #0F62FE", borderRadius: "50%", animation: "sc-spin 0.9s linear infinite" }} />
-                        <span style={{ fontSize: 14, color: "#94a3b8", fontWeight: 600 }}>Cargando perfil…</span>
+                        <span style={{ fontSize: 14, color: "#94a3b8", fontWeight: 500 }}>Cargando perfil…</span>
                     </div>
                 )}
 
                 {/* ── ERROR ── */}
                 {!loading && error && (
-                    <div style={{ textAlign: "center", padding: "60px 24px", color: "#dc2626", fontSize: 16, fontWeight: 600 }}>
+                    <div style={{ textAlign: "center", padding: "60px 24px", color: "#dc2626", fontSize: 16, fontWeight: 500 }}>
                         {error}
                     </div>
                 )}
@@ -249,17 +247,17 @@ export default function SchoolProfilePage() {
                                     {/* Pill label */}
                                     <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
                                         <School size={13} color="#60a5fa" />
-                                        <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Perfil de Escuela</span>
+                                        <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Perfil de Escuela</span>
                                     </div>
 
-                                    <h1 style={{ fontSize: "clamp(24px, 5vw, 40px)", fontWeight: 900, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+                                    <h1 style={{ fontSize: "clamp(24px, 5vw, 40px)", fontWeight: 500, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
                                         {school.name}
                                     </h1>
 
                                     {school.region && (
                                         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
                                             <MapPin size={14} color="#93c5fd" />
-                                            <span style={{ fontSize: 14, color: "#93c5fd", fontWeight: 600 }}>{school.region}</span>
+                                            <span style={{ fontSize: 14, color: "#93c5fd", fontWeight: 500 }}>{school.region}</span>
                                         </div>
                                     )}
 
@@ -272,7 +270,7 @@ export default function SchoolProfilePage() {
                                         ].map((item, i) => (
                                             <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "6px 14px" }}>
                                                 {item.icon}
-                                                <span style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0" }}>{item.label}</span>
+                                                <span style={{ fontSize: 13, fontWeight: 500, color: "#e2e8f0" }}>{item.label}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -322,8 +320,8 @@ export default function SchoolProfilePage() {
                                     <div style={{ width: 44, height: 44, borderRadius: 13, background: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                         {stat.icon}
                                     </div>
-                                    <div style={{ fontSize: 26, fontWeight: 900, color: "#0f172a", lineHeight: 1.1 }}>{stat.value}</div>
-                                    <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>{stat.label}</div>
+                                    <div style={{ fontSize: 26, fontWeight: 500, color: "#0f172a", lineHeight: 1.1 }}>{stat.value}</div>
+                                    <div style={{ fontSize: 12, fontWeight: 500, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>{stat.label}</div>
                                 </div>
                             ))}
                         </div>
@@ -339,8 +337,8 @@ export default function SchoolProfilePage() {
                                         <Trophy size={19} color="#0F62FE" />
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Top Estudiantes</div>
-                                        <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Los más activos de {school.name}</div>
+                                        <div style={{ fontSize: 16, fontWeight: 500, color: "#0f172a" }}>Top Estudiantes</div>
+                                        <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>Los más activos de {school.name}</div>
                                     </div>
                                 </div>
 
@@ -375,7 +373,7 @@ export default function SchoolProfilePage() {
                                                         {student.avatar ? (
                                                             <AvatarDisplay avatar={student.avatar} size={38} />
                                                         ) : (
-                                                            <span style={{ fontSize: 18, fontWeight: 900, color: isTop3 ? "#d97706" : "#0F62FE" }}>
+                                                            <span style={{ fontSize: 18, fontWeight: 500, color: isTop3 ? "#d97706" : "#0F62FE" }}>
                                                                 {displayName.charAt(0).toUpperCase()}
                                                             </span>
                                                         )}
@@ -383,19 +381,19 @@ export default function SchoolProfilePage() {
 
                                                     {/* Name & level */}
                                                     <div style={{ flex: 1, minWidth: 0 }}>
-                                                        <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                                        <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                                             {displayName}
                                                         </div>
-                                                        <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Nivel {student.level}</div>
+                                                        <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>Nivel {student.level}</div>
                                                     </div>
 
                                                     {/* XP */}
                                                     <div style={{ textAlign: "right", flexShrink: 0 }}>
-                                                        <div style={{ fontSize: 17, fontWeight: 900, color: isTop3 ? "#d97706" : "#0F62FE", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
+                                                        <div style={{ fontSize: 17, fontWeight: 500, color: isTop3 ? "#d97706" : "#0F62FE", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
                                                             <Zap size={13} fill={isTop3 ? "#d97706" : "#0F62FE"} color={isTop3 ? "#d97706" : "#0F62FE"} />
                                                             {student.xp.toLocaleString()}
                                                         </div>
-                                                        <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>XP</div>
+                                                        <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 500 }}>XP</div>
                                                     </div>
                                                 </Link>
                                             )
@@ -423,8 +421,8 @@ export default function SchoolProfilePage() {
                                             <BarChart3 size={18} color="#0F62FE" />
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a" }}>Distribución de XP</div>
-                                            <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>Por nivel de actividad</div>
+                                            <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a" }}>Distribución de XP</div>
+                                            <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>Por nivel de actividad</div>
                                         </div>
                                     </div>
 
@@ -437,8 +435,8 @@ export default function SchoolProfilePage() {
                                             return (
                                                 <div key={label}>
                                                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                                                        <span style={{ fontSize: 12, fontWeight: 700, color: "#475569" }}>{label}</span>
-                                                        <span style={{ fontSize: 12, fontWeight: 800, color: "#0f172a" }}>{count} <span style={{ color: "#94a3b8", fontWeight: 600 }}>({sharePct}%)</span></span>
+                                                        <span style={{ fontSize: 12, fontWeight: 500, color: "#475569" }}>{label}</span>
+                                                        <span style={{ fontSize: 12, fontWeight: 500, color: "#0f172a" }}>{count} <span style={{ color: "#94a3b8", fontWeight: 500 }}>({sharePct}%)</span></span>
                                                     </div>
                                                     <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 8, overflow: "hidden", position: "relative" }}>
                                                         <div
@@ -476,8 +474,8 @@ export default function SchoolProfilePage() {
                                                 <BookOpen size={18} color="#10b981" />
                                             </div>
                                             <div>
-                                                <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a" }}>Temas Activos</div>
-                                                <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>Contenido habilitado</div>
+                                                <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a" }}>Temas Activos</div>
+                                                <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>Contenido habilitado</div>
                                             </div>
                                         </div>
 
@@ -486,9 +484,9 @@ export default function SchoolProfilePage() {
                                                 <div key={topic.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: "#f8faff", borderRadius: 12, border: "1px solid #e8f0fe" }}>
                                                     <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", flexShrink: 0 }} />
                                                     <div style={{ flex: 1, minWidth: 0 }}>
-                                                        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{topic.title}</div>
+                                                        <div style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{topic.title}</div>
                                                     </div>
-                                                    <span style={{ fontSize: 10, fontWeight: 700, color: "#10b981", background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "2px 8px", borderRadius: 999, flexShrink: 0 }}>
+                                                    <span style={{ fontSize: 10, fontWeight: 500, color: "#10b981", background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "2px 8px", borderRadius: 999, flexShrink: 0 }}>
                                                         {topic.level === "Beginner" ? "Inicial" : topic.level === "Intermediate" ? "Medio" : "Avanzado"}
                                                     </span>
                                                 </div>
@@ -509,7 +507,7 @@ export default function SchoolProfilePage() {
                                         color: "white",
                                         borderRadius: 16,
                                         padding: "16px 24px",
-                                        fontWeight: 800,
+                                        fontWeight: 500,
                                         fontSize: 15,
                                         textDecoration: "none",
                                         boxShadow: "0 8px 24px rgba(15,98,254,0.3)",

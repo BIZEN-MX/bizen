@@ -49,7 +49,7 @@ function RankBadge({ rank }: { rank: number }) {
     return (
         <span style={{
             fontSize: 15,
-            fontWeight: 800,
+            fontWeight: 500,
             color: "#94a3b8",
             minWidth: 28,
             textAlign: "center",
@@ -96,8 +96,7 @@ export default function RankingsPage() {
             style={{
                 minHeight: "100vh",
                 background: "#FBFAF5",
-                fontFamily: "'Montserrat', sans-serif",
-                width: "100%",
+                                width: "100%",
                 boxSizing: "border-box",
             }}
         >
@@ -143,7 +142,7 @@ export default function RankingsPage() {
           border: none;
           border-radius: 10px;
           font-family: 'Montserrat', sans-serif;
-          font-weight: 700;
+          font-weight: 500;
           font-size: 14px;
           cursor: pointer;
           transition: all 0.22s ease;
@@ -213,9 +212,9 @@ export default function RankingsPage() {
                         <div>
                             <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
                                 <Trophy size={13} color="#60a5fa" />
-                                <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tabla de clasificación</span>
+                                <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tabla de clasificación</span>
                             </div>
-                            <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 900, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+                            <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 500, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
                                 Rankings BIZEN
                             </h1>
                             <p style={{ fontSize: "clamp(13px, 1.5vw, 16px)", color: "#93c5fd", margin: 0, maxWidth: 480 }}>
@@ -294,7 +293,7 @@ export default function RankingsPage() {
                             background: "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)",
                             color: "white",
                             borderRadius: 12,
-                            fontWeight: 700,
+                            fontWeight: 500,
                             fontSize: 14,
                             marginBottom: 28,
                             boxShadow: "0 4px 15px rgba(15,98,254,0.3)"
@@ -309,11 +308,11 @@ export default function RankingsPage() {
                 {loading && (
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 260, flexDirection: "column", gap: 16 }}>
                         <div style={{ width: 44, height: 44, border: "4px solid rgba(15,98,254,0.15)", borderTop: "4px solid #0F62FE", borderRadius: "50%", animation: "rk-spin 0.9s linear infinite" }} />
-                        <span style={{ fontSize: 14, color: "#94a3b8", fontWeight: 600 }}>Cargando rankings…</span>
+                        <span style={{ fontSize: 14, color: "#94a3b8", fontWeight: 500 }}>Cargando rankings…</span>
                     </div>
                 )}
                 {!loading && error && (
-                    <div style={{ textAlign: "center", padding: "60px 24px", color: "#dc2626", fontSize: 15, fontWeight: 600 }}>
+                    <div style={{ textAlign: "center", padding: "60px 24px", color: "#dc2626", fontSize: 15, fontWeight: 500 }}>
                         {error}
                     </div>
                 )}
@@ -327,10 +326,10 @@ export default function RankingsPage() {
                                 <Zap size={19} color="#0F62FE" />
                             </div>
                             <div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a" }}>
+                                <div style={{ fontSize: 16, fontWeight: 500, color: "#0f172a" }}>
                                     {isParticular ? "Top Particulares por XP" : "Top Estudiantes por XP"}
                                 </div>
-                                <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>Del más alto nivel al más bajo</div>
+                                <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>Del más alto nivel al más bajo</div>
                             </div>
                         </div>
 
@@ -379,7 +378,7 @@ export default function RankingsPage() {
                                                 {user.avatar ? (
                                                     <AvatarDisplay avatar={user.avatar} size={38} />
                                                 ) : (
-                                                    <span style={{ color: "#fff", fontWeight: 900, fontSize: 17 }}>
+                                                    <span style={{ color: "#fff", fontWeight: 500, fontSize: 17 }}>
                                                         {user.displayName.charAt(0).toUpperCase()}
                                                     </span>
                                                 )}
@@ -387,11 +386,11 @@ export default function RankingsPage() {
 
                                             {/* Name & school */}
                                             <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                                <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                                     {user.displayName}
                                                 </div>
                                                 {user.schoolName && (
-                                                    <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600, marginTop: 1, display: "flex", alignItems: "center", gap: 4 }}>
+                                                    <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500, marginTop: 1, display: "flex", alignItems: "center", gap: 4 }}>
                                                         <School size={11} />
                                                         {user.schoolName}
                                                     </div>
@@ -412,21 +411,21 @@ export default function RankingsPage() {
                                                     border: "1px solid #bfdbfe",
                                                 }}
                                             >
-                                                <div style={{ fontSize: 18, fontWeight: 900, color: "#0F62FE", lineHeight: 1 }}>
+                                                <div style={{ fontSize: 18, fontWeight: 500, color: "#0F62FE", lineHeight: 1 }}>
                                                     {user.level}
                                                 </div>
-                                                <div style={{ fontSize: 9, fontWeight: 700, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                                                <div style={{ fontSize: 9, fontWeight: 500, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                                                     {getLevelTitle(user.level)}
                                                 </div>
                                             </div>
 
                                             {/* XP */}
                                             <div style={{ textAlign: "right", flexShrink: 0 }}>
-                                                <div style={{ fontSize: 18, fontWeight: 900, color: isTop3 ? "#d97706" : "#0F62FE", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
+                                                <div style={{ fontSize: 18, fontWeight: 500, color: isTop3 ? "#d97706" : "#0F62FE", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
                                                     <Zap size={14} fill={isTop3 ? "#d97706" : "#0F62FE"} color={isTop3 ? "#d97706" : "#0F62FE"} />
                                                     {user.xp.toLocaleString()}
                                                 </div>
-                                                <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>XP</div>
+                                                <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>XP</div>
                                             </div>
                                         </Link>
                                     )
@@ -445,8 +444,8 @@ export default function RankingsPage() {
                                 <TrendingUp size={19} color="#0F62FE" />
                             </div>
                             <div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a" }}>Ranking de Escuelas — XP per Cápita</div>
-                                <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>XP promedio por alumno activo</div>
+                                <div style={{ fontSize: 16, fontWeight: 500, color: "#0f172a" }}>Ranking de Escuelas — XP per Cápita</div>
+                                <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>XP promedio por alumno activo</div>
                             </div>
                         </div>
 
@@ -464,7 +463,7 @@ export default function RankingsPage() {
                             }}
                         >
                             <Star size={13} color="#0F62FE" fill="#0F62FE" />
-                            <span style={{ fontSize: 12, fontWeight: 700, color: "#1d4ed8" }}>
+                            <span style={{ fontSize: 12, fontWeight: 500, color: "#1d4ed8" }}>
                                 XP per cápita = XP total ÷ número de estudiantes
                             </span>
                         </div>
@@ -524,21 +523,21 @@ export default function RankingsPage() {
 
                                                 {/* Name & students */}
                                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                                    <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                                         {school.schoolName}
                                                     </div>
-                                                    <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>
+                                                    <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>
                                                         {school.studentCount} estudiante{school.studentCount !== 1 ? "s" : ""} · {school.totalXp.toLocaleString()} XP total
                                                     </div>
                                                 </div>
 
                                                 {/* XP per capita */}
                                                 <div style={{ textAlign: "right", flexShrink: 0 }}>
-                                                    <div style={{ fontSize: 20, fontWeight: 900, color: isTop3 ? "#d97706" : "#0F62FE", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
+                                                    <div style={{ fontSize: 20, fontWeight: 500, color: isTop3 ? "#d97706" : "#0F62FE", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
                                                         <Medal size={15} color={isTop3 ? "#d97706" : "#0F62FE"} />
                                                         {school.xpPerCapita.toLocaleString()}
                                                     </div>
-                                                    <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>XP / alumno</div>
+                                                    <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>XP / alumno</div>
                                                 </div>
                                             </div>
 

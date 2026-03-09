@@ -98,7 +98,7 @@ export default function StreakWidget({
                     <div style={{
                         fontSize: 10,
                         color: streak > 0 ? "#f97316" : "#94a3b8",
-                        fontWeight: 800,
+                        fontWeight: 500,
                         textTransform: "uppercase" as const,
                         letterSpacing: "0.08em",
                         marginTop: 2,

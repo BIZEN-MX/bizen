@@ -214,7 +214,7 @@ export default function RetoDiarioPage() {
           color: #ffffff !important;
           -webkit-text-fill-color: #ffffff !important;
           font-size: clamp(20px, 3vw, 28px) !important;
-          font-weight: 900 !important;
+          font-weight: 500 !important;
           margin: 0 0 16px !important;
           letter-spacing: -0.015em !important;
           line-height: 1.25 !important;
@@ -233,7 +233,7 @@ export default function RetoDiarioPage() {
           width: fit-content; padding: 16px 36px; margin: 0 auto;
           background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
           color: white; border: none; border-radius: 16px;
-          font-family: 'Inter', sans-serif; font-weight: 800; font-size: 17px;
+          font-family: 'Inter', sans-serif; font-weight: 500; font-size: 17px;
           cursor: pointer; transition: all 0.25s ease;
           box-shadow: 0 8px 40px rgba(15,98,254,0.6);
           animation: pulse 2.5s ease infinite;
@@ -272,7 +272,7 @@ export default function RetoDiarioPage() {
           display: flex; align-items: center; justify-content: center; gap: 10px;
           width: fit-content; padding: 14px 28px; border: none; border-radius: 16px;
           margin: 0 auto;
-          font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px;
+          font-family: 'Inter', sans-serif; font-weight: 500; font-size: 16px;
           cursor: pointer; transition: all 0.25s ease;
           background: linear-gradient(135deg, #0F62FE 0%, #2563EB 100%);
           color: white; box-shadow: 0 8px 32px rgba(15,98,254,0.55);
@@ -283,7 +283,7 @@ export default function RetoDiarioPage() {
           display: flex; align-items: center; justify-content: center; gap: 10px;
           width: fit-content; padding: 12px 24px; border-radius: 16px;
           margin: 0 auto;
-          font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px;
+          font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px;
           cursor: pointer; transition: all 0.25s ease;
           background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.15);
           color: rgba(255,255,255,0.85);
@@ -293,7 +293,7 @@ export default function RetoDiarioPage() {
         .rd-cta-tertiary {
           display: flex; align-items: center; justify-content: center; gap: 8px;
           width: 100%; padding: 13px 28px; border-radius: 12px;
-          font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+          font-family: 'Inter', sans-serif; font-weight: 500; font-size: 14px;
           cursor: pointer; transition: all 0.2s ease;
           background: transparent; border: 1px solid rgba(255,255,255,0.10);
           color: rgba(255,255,255,0.45);
@@ -330,8 +330,7 @@ export default function RetoDiarioPage() {
         style={{
           minHeight: "100vh",
           background: "#FBFAF5",
-          fontFamily: "'Inter', sans-serif",
-          padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)",
+                    padding: "clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px)",
           boxSizing: "border-box",
           position: "relative",
           overflow: "hidden",
@@ -349,7 +348,7 @@ export default function RetoDiarioPage() {
               {/* Header */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 22 }}>
                 <div>
-                  <h2 style={{ fontSize: 20, fontWeight: 900, color: "#111827", margin: "0 0 4px" }}>
+                  <h2 style={{ fontSize: 20, fontWeight: 500, color: "#111827", margin: "0 0 4px" }}>
                     Publicar Evidencia
                   </h2>
                   <p style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", margin: 0 }}>
@@ -366,7 +365,7 @@ export default function RetoDiarioPage() {
                 {EVIDENCE_STEPS.map((_, i) => (
                   <div key={i} className={`step-dot ${i === evidenceStep ? "active" : i < evidenceStep ? "done" : "pending"}`} />
                 ))}
-                <span style={{ marginLeft: "auto", fontSize: 12, color: "rgba(0,0,0,0.3)", fontWeight: 600 }}>
+                <span style={{ marginLeft: "auto", fontSize: 12, color: "rgba(0,0,0,0.3)", fontWeight: 500 }}>
                   {evidenceStep + 1} / {EVIDENCE_STEPS.length}
                 </span>
               </div>
@@ -374,7 +373,7 @@ export default function RetoDiarioPage() {
               {/* Current step */}
               <div style={{ animation: "fadeUp 0.3s ease both" }} key={evidenceStep}>
                 <div style={{ fontSize: 28, marginBottom: 10 }}>{currentStep.emoji}</div>
-                <div style={{ fontSize: 17, fontWeight: 800, color: "#111827", marginBottom: 4 }}>{currentStep.label}</div>
+                <div style={{ fontSize: 17, fontWeight: 500, color: "#111827", marginBottom: 4 }}>{currentStep.label}</div>
                 <div style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", marginBottom: 14 }}>{currentStep.hint}</div>
 
                 {submitError && evidenceStep === EVIDENCE_STEPS.length - 1 && (
@@ -385,8 +384,8 @@ export default function RetoDiarioPage() {
                 )}
 
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                  <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Tu respuesta *</label>
-                  <span style={{ fontSize: 11, color: currentVal.length > currentStep.limit * 0.85 ? "#f59e0b" : "rgba(0,0,0,0.25)", fontWeight: 600 }}>
+                  <label style={{ fontSize: 12, fontWeight: 500, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Tu respuesta *</label>
+                  <span style={{ fontSize: 11, color: currentVal.length > currentStep.limit * 0.85 ? "#f59e0b" : "rgba(0,0,0,0.25)", fontWeight: 500 }}>
                     {currentVal.length}/{currentStep.limit}
                   </span>
                 </div>
@@ -405,7 +404,7 @@ export default function RetoDiarioPage() {
               <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
                 <button
                   onClick={() => evidenceStep > 0 ? setEvidenceStep(s => s - 1) : setShowEvidence(false)}
-                  style={{ flex: 1, padding: "13px", background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 14, color: "#6b7280", fontFamily: "'Inter', sans-serif" }}
+                  style={{ flex: 1, padding: "13px", background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 12, fontWeight: 500, cursor: "pointer", fontSize: 14, color: "#6b7280", }}
                 >
                   {evidenceStep > 0 ? "← Atrás" : "Cancelar"}
                 </button>
@@ -416,8 +415,8 @@ export default function RetoDiarioPage() {
                     flex: 2, padding: "13px",
                     background: currentVal.trim() && !submitting ? "linear-gradient(135deg, #0F62FE, #4A9EFF)" : "#f3f4f6",
                     color: currentVal.trim() && !submitting ? "white" : "#9ca3af",
-                    border: "none", borderRadius: 12, fontWeight: 800, cursor: currentVal.trim() ? "pointer" : "not-allowed",
-                    fontSize: 14, fontFamily: "'Inter', sans-serif", transition: "all 0.2s",
+                    border: "none", borderRadius: 12, fontWeight: 500, cursor: currentVal.trim() ? "pointer" : "not-allowed",
+                    fontSize: 14, transition: "all 0.2s",
                     boxShadow: currentVal.trim() ? "0 6px 20px rgba(15,98,254,0.35)" : "none"
                   }}
                 >
@@ -434,7 +433,7 @@ export default function RetoDiarioPage() {
             <div className="modal-box" style={{ maxWidth: 460 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <div>
-                  <h2 style={{ fontSize: 18, fontWeight: 900, color: "#111827", margin: 0 }}>⏱ Reflexión rápida</h2>
+                  <h2 style={{ fontSize: 18, fontWeight: 500, color: "#111827", margin: 0 }}>⏱ Reflexión rápida</h2>
                   <p style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", margin: "4px 0 0" }}>Escribe en 30 segundos o menos</p>
                 </div>
                 <button onClick={() => setShowReflection(false)} style={{ background: "rgba(0,0,0,0.05)", border: "none", cursor: "pointer", padding: 8, borderRadius: 10, color: "rgba(0,0,0,0.4)", lineHeight: 0 }}>
@@ -454,13 +453,13 @@ export default function RetoDiarioPage() {
                 onChange={e => setQuickLearned(e.target.value)}
               />
               <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-                <button onClick={() => setShowReflection(false)} style={{ flex: 1, padding: "12px", background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 13, color: "#6b7280", fontFamily: "'Inter', sans-serif" }}>
+                <button onClick={() => setShowReflection(false)} style={{ flex: 1, padding: "12px", background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 12, fontWeight: 500, cursor: "pointer", fontSize: 13, color: "#6b7280", }}>
                   Cerrar
                 </button>
                 {quickLearned.trim() && (
                   <button
                     onClick={() => { setForm(f => ({ ...f, learned: quickLearned })); setShowReflection(false); setEvidenceStep(0); setShowEvidence(true) }}
-                    style={{ flex: 2, padding: "12px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", border: "none", borderRadius: 12, fontWeight: 800, cursor: "pointer", fontSize: 13, fontFamily: "'Inter', sans-serif" }}
+                    style={{ flex: 2, padding: "12px", background: "linear-gradient(135deg, #0F62FE, #4A9EFF)", color: "white", border: "none", borderRadius: 12, fontWeight: 500, cursor: "pointer", fontSize: 13, }}
                   >
                     Usar en mi evidencia →
                   </button>
@@ -481,7 +480,7 @@ export default function RetoDiarioPage() {
                 <div>
                   <h1 style={{
                     fontSize: "clamp(28px, 5vw, 44px)",
-                    fontWeight: 900,
+                    fontWeight: 500,
                     margin: 0,
                     letterSpacing: "-0.03em",
                     lineHeight: 1.2,
@@ -513,7 +512,7 @@ export default function RetoDiarioPage() {
                       padding: "6px 14px",
                       background: "rgba(255,255,255,0.15)",
                       border: "1px solid rgba(255,255,255,0.25)",
-                      borderRadius: 999, fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.95)"
+                      borderRadius: 999, fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.95)"
                     }}>
                       <TypeIcon size={13} />
                       {typeMeta.label}
@@ -523,7 +522,7 @@ export default function RetoDiarioPage() {
                       padding: "6px 14px",
                       background: "rgba(251,191,36,0.2)",
                       border: "1px solid rgba(251,191,36,0.4)",
-                      borderRadius: 999, fontSize: 12, fontWeight: 700, color: "#fbbf24"
+                      borderRadius: 999, fontSize: 12, fontWeight: 500, color: "#fbbf24"
                     }}>
                       <Zap size={12} />
                       +50 XP
@@ -532,7 +531,7 @@ export default function RetoDiarioPage() {
                       display: "inline-flex", alignItems: "center", gap: 6,
                       padding: "6px 12px",
                       background: "rgba(255,255,255,0.1)",
-                      borderRadius: 999, fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)"
+                      borderRadius: 999, fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.6)"
                     }}>
                       <Clock size={12} />
                       ~5 min
@@ -556,12 +555,12 @@ export default function RetoDiarioPage() {
                     </>
                   ) : errorDetails ? (
                     <div style={{ padding: "16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "12px", marginBottom: "24px" }}>
-                      <p style={{ color: "#b91c1c", fontSize: "14px", fontWeight: 600, margin: "0 0 8px" }}>
+                      <p style={{ color: "#b91c1c", fontSize: "14px", fontWeight: 500, margin: "0 0 8px" }}>
                         Ocurrió un error al cargar el reto: {errorDetails}
                       </p>
                       <button
                         onClick={() => { setErrorDetails(null); setLoadingChallenge(true); fetchChallenge(); }}
-                        style={{ background: "#b91c1c", color: "white", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: 700, cursor: "pointer" }}
+                        style={{ background: "#b91c1c", color: "white", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: 500, cursor: "pointer" }}
                       >
                         Reintentar
                       </button>
@@ -576,7 +575,7 @@ export default function RetoDiarioPage() {
                   {submitted ? (
                     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 20px", background: "rgba(16,185,129,0.2)", border: "1px solid rgba(16,185,129,0.4)", borderRadius: 14, color: "#6ee7b7" }}>
                       <CheckCircle size={20} />
-                      <span style={{ fontWeight: 700, fontSize: 15 }}>¡Evidencia publicada! Tu grupo ya puede verla en el Foro.</span>
+                      <span style={{ fontWeight: 500, fontSize: 15 }}>¡Evidencia publicada! Tu grupo ya puede verla en el Foro.</span>
                     </div>
                   ) : (
                     <button className="rd-complete-btn" onClick={() => setPhase("wrap")}>
@@ -614,13 +613,13 @@ export default function RetoDiarioPage() {
                       <Lightbulb size={22} color="white" strokeWidth={2.5} />
                     </div>
                     <div>
-                      <div style={{ fontSize: 11, fontWeight: 800, color: "#f59e0b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Consejo del experto</div>
+                      <div style={{ fontSize: 11, fontWeight: 500, color: "#f59e0b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Consejo del experto</div>
                       <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>Sabiduría del día</div>
                     </div>
                   </div>
                   <p style={{ fontSize: 14.5, color: "#334155", lineHeight: 1.75, margin: 0, fontWeight: 500 }}>
                     La constancia vence al talento. Completar este reto diario te pone en el{" "}
-                    <span style={{ fontWeight: 800, color: "#0F62FE" }}>top 10%</span>{" "}
+                    <span style={{ fontWeight: 500, color: "#0F62FE" }}>top 10%</span>{" "}
                     de estudiantes que mejoran su situación financiera este año.
                   </p>
                 </div>
@@ -648,7 +647,7 @@ export default function RetoDiarioPage() {
                       <Target size={22} color="white" strokeWidth={2.5} />
                     </div>
                     <div>
-                      <div style={{ fontSize: 11, fontWeight: 800, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>¿Por qué hacerlo?</div>
+                      <div style={{ fontSize: 11, fontWeight: 500, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>¿Por qué hacerlo?</div>
                       <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>Tu motivación</div>
                     </div>
                   </div>
@@ -667,7 +666,7 @@ export default function RetoDiarioPage() {
                         }}>
                           {item.icon}
                         </div>
-                        <span style={{ fontSize: 14, color: "#475569", lineHeight: 1.4, fontWeight: 600 }}>{item.text}</span>
+                        <span style={{ fontSize: 14, color: "#475569", lineHeight: 1.4, fontWeight: 500 }}>{item.text}</span>
                       </div>
                     ))}
                   </div>
@@ -696,7 +695,7 @@ export default function RetoDiarioPage() {
                     <Trophy size={34} color="white" strokeWidth={2.5} />
                   </div>
 
-                  <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 900, color: "white", margin: "0 0 10px", letterSpacing: "-0.03em", lineHeight: 1.2 }}>
+                  <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 500, color: "white", margin: "0 0 10px", letterSpacing: "-0.03em", lineHeight: 1.2 }}>
                     ¡Reto completado!
                   </h2>
 
@@ -716,7 +715,7 @@ export default function RetoDiarioPage() {
                   {/* Streak Info */}
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 999, marginBottom: 16 }}>
                     <Flame size={14} style={{ color: "#fb923c" }} />
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#fb923c" }}>{streak} días seguidos</span>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: "#fb923c" }}>{streak} días seguidos</span>
                   </div>
 
                   <p style={{ fontSize: "clamp(13px, 1.2vw, 15px)", color: "rgba(255,255,255,0.55)", maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.7 }}>
@@ -753,7 +752,7 @@ export default function RetoDiarioPage() {
                   {/* Back */}
                   <button
                     onClick={() => setPhase("doing")}
-                    style={{ marginTop: 24, background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'Inter', sans-serif", transition: "color 0.2s" }}
+                    style={{ marginTop: 24, background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.3)", fontSize: 13, transition: "color 0.2s" }}
                     onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
                     onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
                   >

@@ -35,7 +35,7 @@ function Card(props: React.HTMLAttributes<HTMLDivElement>) {
 }
 
 function Label({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
-  return <label htmlFor={htmlFor} style={{ display: "block" as const, fontSize: 12, fontWeight: 600, color: "#333", marginBottom: 6 }}>{children}</label>
+  return <label htmlFor={htmlFor} style={{ display: "block" as const, fontSize: 12, fontWeight: 500, color: "#333", marginBottom: 6 }}>{children}</label>
 }
 
 function TextField(props: React.InputHTMLAttributes<HTMLInputElement>) {
@@ -73,7 +73,7 @@ function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { loading
         width: "100%",
         background: rest.disabled ? "#cfd8e3" : buttonColor,
         color: "#fff",
-        fontWeight: 700,
+        fontWeight: 500,
         letterSpacing: 0.2,
         cursor: rest.disabled ? "not-allowed" : "pointer",
         transform: "translateZ(0)",
@@ -208,7 +208,7 @@ export default function ForgotPasswordPage() {
             )}
 
             <div style={{ marginTop: 20, textAlign: "center" }}>
-              <Link href="/login" target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, color: linkColor, textDecoration: "none", fontWeight: 600 }}>
+              <Link href="/login" target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, color: linkColor, textDecoration: "none", fontWeight: 500 }}>
                 ← Volver al login
               </Link>
             </div>
@@ -245,7 +245,7 @@ export default function ForgotPasswordPage() {
               >
                 Enviar de nuevo
               </Button>
-              <Link href="/login" target="_blank" rel="noopener noreferrer" style={{ display: "block" as const, textAlign: "center", fontSize: 14, color: linkColor, textDecoration: "none", fontWeight: 600 }}>
+              <Link href="/login" target="_blank" rel="noopener noreferrer" style={{ display: "block" as const, textAlign: "center", fontSize: 14, color: linkColor, textDecoration: "none", fontWeight: 500 }}>
                 ← Volver al login
               </Link>
             </div>

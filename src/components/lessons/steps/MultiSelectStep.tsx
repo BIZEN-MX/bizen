@@ -77,12 +77,11 @@ export function MultiSelectStep({
         <ExerciseInstruction type="multi_select" />
         <h3 style={{
           fontSize: "clamp(20px, 3vw, 26px)",
-          fontWeight: 800,
+          fontWeight: 500,
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Inter', sans-serif",
-        }}>
+                  }}>
           {step.question}
         </h3>
       </div>
@@ -142,8 +141,7 @@ export function MultiSelectStep({
                 textAlign: "left",
                 color,
                 transition: "all 0.2s ease",
-                fontFamily: "'Inter', sans-serif",
-                opacity: 1,
+                                opacity: 1,
               }}
               onMouseEnter={(e) => { if (!hasChecked) e.currentTarget.style.opacity = "0.72" }}
               onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
@@ -163,9 +161,9 @@ export function MultiSelectStep({
               }}>
                 {isSelected && "✓"}
               </div>
-              <span style={{ flex: 1, fontSize: "clamp(14px, 3.5vw, 18px)", fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{option.label}</span>
+              <span style={{ flex: 1, fontSize: "clamp(14px, 3.5vw, 18px)", fontWeight: 500, }}>{option.label}</span>
               {showFeedback && isSelected && (
-                <span style={{ fontSize: 20, fontFamily: "'Inter', sans-serif" }}>{isCorrect ? "✓" : "✗"}</span>
+                <span style={{ fontSize: 20, }}>{isCorrect ? "✓" : "✗"}</span>
               )}
             </motion.button>
           )

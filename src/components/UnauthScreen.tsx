@@ -14,8 +14,7 @@ export function UnauthScreen() {
             alignItems: "center",
             justifyContent: "center",
             overflow: "hidden",
-            fontFamily: "'Inter', sans-serif",
-        }}>
+                    }}>
             <style>{`
                 @keyframes unauth-glow   { 0%,100%{opacity:.4} 50%{opacity:.8} }
                 @keyframes unauth-fadeup { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
@@ -27,7 +26,7 @@ export function UnauthScreen() {
                     border-radius: 18px;
                     padding: 20px 52px;
                     font-size: 19px;
-                    font-weight: 800;
+                    font-weight: 500;
                     font-family: 'Inter', sans-serif;
                     cursor: pointer;
                     box-shadow: 0 8px 32px rgba(15, 98, 254, 0.45);
@@ -43,7 +42,7 @@ export function UnauthScreen() {
                 .unauth-cta-secondary {
                     color: rgba(255,255,255,0.7);
                     font-size: 15px;
-                    font-weight: 600;
+                    font-weight: 500;
                     font-family: 'Inter', sans-serif;
                     text-decoration: none;
                     border-bottom: 1px solid rgba(255,255,255,0.28);
@@ -81,11 +80,11 @@ export function UnauthScreen() {
                 {/* Badge */}
                 <div style={{ animation: "unauth-fadeup 0.5s ease both", marginBottom: 32, display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(15,98,254,0.15)", border: "1px solid rgba(15,98,254,0.4)", borderRadius: 40, padding: "8px 18px" }}>
                     <Heart size={14} color="#60a5fa" fill="#60a5fa" />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>Bizen · Educación Financiera</span>
+                    <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>Bizen · Educación Financiera</span>
                 </div>
 
                 {/* Heading */}
-                <h1 style={{ animation: "unauth-fadeup 0.6s 0.1s ease both", fontSize: "clamp(32px, 8vw, 54px)", fontWeight: 800, color: "#fff", margin: "0 0 20px", lineHeight: 1.1, letterSpacing: "-0.03em" }}>
+                <h1 style={{ animation: "unauth-fadeup 0.6s 0.1s ease both", fontSize: "clamp(32px, 8vw, 54px)", fontWeight: 500, color: "#fff", margin: "0 0 20px", lineHeight: 1.1, letterSpacing: "-0.03em" }}>
                     Aprende finanzas y<br />
                     <span style={{ background: "linear-gradient(90deg, #60a5fa, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                         transforma tu futuro
@@ -102,15 +101,15 @@ export function UnauthScreen() {
                 <div style={{ animation: "unauth-fadeup 0.6s 0.28s ease both", display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 48 }}>
                     <div className="unauth-stat-pill">
                         <Globe size={15} color="#60a5fa" />
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>$45,000 MXN donados</span>
+                        <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.9)" }}>$45,000 MXN donados</span>
                     </div>
                     <div className="unauth-stat-pill">
                         <Users size={15} color="#a78bfa" />
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>90 canastas equivalentes</span>
+                        <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.9)" }}>90 canastas equivalentes</span>
                     </div>
                     <div className="unauth-stat-pill">
                         <Award size={15} color="#34d399" />
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>3 donaciones ejecutadas</span>
+                        <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.9)" }}>3 donaciones ejecutadas</span>
                     </div>
                 </div>
 

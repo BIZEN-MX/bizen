@@ -259,7 +259,7 @@ export default function CombinedSimulatorsPage() {
         .tab-btn {
           padding: 10px 22px;
           border-radius: 10px;
-          font-weight: 700;
+          font-weight: 500;
           font-size: 15px;
           cursor: pointer;
           transition: all 0.25s ease;
@@ -323,7 +323,7 @@ export default function CombinedSimulatorsPage() {
                   padding: "6px 16px",
                   marginBottom: 16,
                   fontSize: 12,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "#0B71FE",
                   letterSpacing: "0.08em",
                   textTransform: "uppercase"
@@ -333,7 +333,7 @@ export default function CombinedSimulatorsPage() {
                 </div>
                 <h1 style={{
                   fontSize: "clamp(28px, 4vw, 48px)",
-                  fontWeight: 900,
+                  fontWeight: 500,
                   margin: "0 0 12px",
                   color: "#0f172a",
                   letterSpacing: "-0.02em",
@@ -410,7 +410,7 @@ export default function CombinedSimulatorsPage() {
                       border: "1.5px solid #0B71FE",
                       borderRadius: 12,
                       fontSize: 14,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
@@ -424,7 +424,7 @@ export default function CombinedSimulatorsPage() {
                 </div>
 
                 {simsError ? (
-                  <div style={{ textAlign: "center", padding: "48px 0", color: "#ef4444", fontSize: 16, fontWeight: 600 }}>
+                  <div style={{ textAlign: "center", padding: "48px 0", color: "#ef4444", fontSize: 16, fontWeight: 500 }}>
                     Error al cargar los simuladores.
                   </div>
                 ) : loadingSims ? (
@@ -456,11 +456,11 @@ export default function CombinedSimulatorsPage() {
                               <div style={{ width: 48, height: 48, borderRadius: 14, background: `${accent}15`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                                 <IconComponent size={22} color={accent} />
                               </div>
-                              <span style={{ fontSize: 11, fontWeight: 700, padding: "4px 10px", background: `${accent}12`, color: accent, borderRadius: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                              <span style={{ fontSize: 11, fontWeight: 500, padding: "4px 10px", background: `${accent}12`, color: accent, borderRadius: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                                 {CATEGORY_LABELS[simulator.category] || simulator.category}
                               </span>
                             </div>
-                            <h3 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginBottom: 10, lineHeight: 1.25 }}>
+                            <h3 style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", marginBottom: 10, lineHeight: 1.25 }}>
                               {simulator.name}
                             </h3>
                             <p style={{ fontSize: 14, color: "#64748b", lineHeight: 1.65, flex: 1, marginBottom: 22 }}>
@@ -474,7 +474,7 @@ export default function CombinedSimulatorsPage() {
                               border: "none",
                               borderRadius: 12,
                               fontSize: 14,
-                              fontWeight: 700,
+                              fontWeight: 500,
                               cursor: "pointer",
                               display: "flex",
                               alignItems: "center",
@@ -511,7 +511,7 @@ export default function CombinedSimulatorsPage() {
                     <div style={{ width: 72, height: 72, borderRadius: "50%", background: "rgba(11,113,254,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
                       <Laptop size={36} color="#3b82f6" />
                     </div>
-                    <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 14, color: "white" }}>Mejor experiencia en laptop</h2>
+                    <h2 style={{ fontSize: 22, fontWeight: 500, marginBottom: 14, color: "white" }}>Mejor experiencia en laptop</h2>
                     <p style={{ color: "rgba(255,255,255,0.6)", lineHeight: 1.65, marginBottom: 20, fontSize: 15 }}>
                       Para tener una mejor experiencia de juego, te recomendamos abrir CashFlow en tu computadora.
                     </p>
@@ -539,10 +539,10 @@ export default function CombinedSimulatorsPage() {
 
                       <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20 }}>
                         <div>
-                          <div style={{ display: "inline-block", background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 999, padding: "5px 14px", marginBottom: 16, fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                          <div style={{ display: "inline-block", background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 999, padding: "5px 14px", marginBottom: 16, fontSize: 11, fontWeight: 500, color: "#fbbf24", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                             Juego de Simulación
                           </div>
-                          <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 900, marginBottom: 12, color: "white", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                          <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 500, marginBottom: 12, color: "white", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
                             CASHFLOW GAME
                           </h2>
                           <p style={{ fontSize: "clamp(14px, 1.3vw, 17px)", color: "rgba(255,255,255,0.6)", maxWidth: 560, lineHeight: 1.65, margin: 0 }}>
@@ -557,7 +557,7 @@ export default function CombinedSimulatorsPage() {
                             color: "rgba(255,255,255,0.8)",
                             border: "1px solid rgba(255,255,255,0.15)",
                             borderRadius: 12,
-                            fontWeight: 700,
+                            fontWeight: 500,
                             cursor: "pointer",
                             fontSize: 14,
                             display: "flex",
@@ -585,7 +585,7 @@ export default function CombinedSimulatorsPage() {
                         boxShadow: "0 4px 20px rgba(0,0,0,0.05)"
                       }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-                          <h2 style={{ fontSize: "clamp(20px, 2vw, 26px)", fontWeight: 800, color: "#0f172a", margin: 0 }}>Mis Partidas</h2>
+                          <h2 style={{ fontSize: "clamp(20px, 2vw, 26px)", fontWeight: 500, color: "#0f172a", margin: 0 }}>Mis Partidas</h2>
                           <button
                             onClick={() => setShowNewGame(true)}
                             style={{
@@ -594,7 +594,7 @@ export default function CombinedSimulatorsPage() {
                               color: "white",
                               border: "none",
                               borderRadius: 12,
-                              fontWeight: 700,
+                              fontWeight: 500,
                               cursor: "pointer",
                               fontSize: 14,
                               display: "flex",
@@ -623,12 +623,12 @@ export default function CombinedSimulatorsPage() {
                                     <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #1d4ed8, #3b82f6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                       <Briefcase size={15} color="white" />
                                     </div>
-                                    <div style={{ fontSize: 17, fontWeight: 800, color: "#0f172a" }}>{game.player.profession}</div>
+                                    <div style={{ fontSize: 17, fontWeight: 500, color: "#0f172a" }}>{game.player.profession}</div>
                                   </div>
                                   <div style={{ fontSize: 12, color: "#94a3b8", marginLeft: 40 }}>{getTimeSince(game.lastActivityAt)}</div>
                                 </div>
                                 {game.player.hasEscapedRatRace && (
-                                  <span style={{ background: "linear-gradient(135deg, #059669, #10b981)", color: "white", padding: "4px 10px", borderRadius: 8, fontSize: 11, fontWeight: 700, boxShadow: "0 2px 8px rgba(16,185,129,0.3)" }}>
+                                  <span style={{ background: "linear-gradient(135deg, #059669, #10b981)", color: "white", padding: "4px 10px", borderRadius: 8, fontSize: 11, fontWeight: 500, boxShadow: "0 2px 8px rgba(16,185,129,0.3)" }}>
                                     Libre
                                   </span>
                                 )}
@@ -636,19 +636,19 @@ export default function CombinedSimulatorsPage() {
 
                               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 18 }}>
                                 <div style={{ background: "white", padding: "10px 12px", borderRadius: 10, border: "1px solid #f1f5f9" }}>
-                                  <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600, marginBottom: 2 }}>Efectivo</div>
-                                  <div style={{ fontWeight: 800, color: "#059669", fontSize: 16 }}>${game.player.cashOnHand.toLocaleString()}</div>
+                                  <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500, marginBottom: 2 }}>Efectivo</div>
+                                  <div style={{ fontWeight: 500, color: "#059669", fontSize: 16 }}>${game.player.cashOnHand.toLocaleString()}</div>
                                 </div>
                                 <div style={{ background: "white", padding: "10px 12px", borderRadius: 10, border: "1px solid #f1f5f9" }}>
-                                  <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600, marginBottom: 2 }}>Ingreso Pasivo</div>
-                                  <div style={{ fontWeight: 800, color: "#2563eb", fontSize: 16 }}>${game.player.passiveIncome.toLocaleString()}</div>
+                                  <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500, marginBottom: 2 }}>Ingreso Pasivo</div>
+                                  <div style={{ fontWeight: 500, color: "#2563eb", fontSize: 16 }}>${game.player.passiveIncome.toLocaleString()}</div>
                                 </div>
                               </div>
 
                               <div style={{ display: "flex", gap: 10 }}>
                                 <button
                                   onClick={() => router.push(`/cash-flow/game/${game.id}`)}
-                                  style={{ flex: 1, padding: "11px", background: "linear-gradient(135deg, #4f46e5, #6366f1)", color: "white", border: "none", borderRadius: 10, fontWeight: 700, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
+                                  style={{ flex: 1, padding: "11px", background: "linear-gradient(135deg, #4f46e5, #6366f1)", color: "white", border: "none", borderRadius: 10, fontWeight: 500, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
                                 >
                                   <Play size={14} fill="white" />
                                   Continuar
@@ -675,7 +675,7 @@ export default function CombinedSimulatorsPage() {
                         border: "1.5px solid #f1f5f9",
                         boxShadow: "0 4px 20px rgba(0,0,0,0.05)"
                       }}>
-                        <h2 style={{ fontSize: "clamp(18px, 2vw, 24px)", fontWeight: 800, marginBottom: 24, color: "#0f172a" }}>
+                        <h2 style={{ fontSize: "clamp(18px, 2vw, 24px)", fontWeight: 500, marginBottom: 24, color: "#0f172a" }}>
                           Selecciona tu Profesión
                         </h2>
 
@@ -710,7 +710,7 @@ export default function CombinedSimulatorsPage() {
                                     <div style={{ width: 36, height: 36, borderRadius: 10, background: isSel ? "rgba(11,113,254,0.12)" : "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                       <Briefcase size={18} color={isSel ? "#0B71FE" : "#64748b"} />
                                     </div>
-                                    <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: "#0f172a" }}>{prof.name}</h3>
+                                    <h3 style={{ fontSize: 17, fontWeight: 500, margin: 0, color: "#0f172a" }}>{prof.name}</h3>
                                   </div>
                                   {prof.description && (
                                     <div style={{ fontSize: 13, color: "#64748b", marginBottom: 14, lineHeight: 1.5 }}>{prof.description}</div>
@@ -718,11 +718,11 @@ export default function CombinedSimulatorsPage() {
                                   <div style={{ background: "#FBFAF5", padding: "12px 14px", borderRadius: 10, fontSize: 13 }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                                       <span style={{ color: "#64748b" }}>Salario</span>
-                                      <span style={{ fontWeight: 800, color: "#059669" }}>${prof.salary.toLocaleString()}</span>
+                                      <span style={{ fontWeight: 500, color: "#059669" }}>${prof.salary.toLocaleString()}</span>
                                     </div>
                                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                                       <span style={{ color: "#64748b" }}>Cash Flow</span>
-                                      <span style={{ fontWeight: 800, color: cfPositive ? "#059669" : "#ef4444" }}>${cashFlow.toLocaleString()}</span>
+                                      <span style={{ fontWeight: 500, color: cfPositive ? "#059669" : "#ef4444" }}>${cashFlow.toLocaleString()}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -736,7 +736,7 @@ export default function CombinedSimulatorsPage() {
                             {games.length > 0 && (
                               <button
                                 onClick={() => setShowNewGame(false)}
-                                style={{ padding: "14px 28px", background: "white", border: "1.5px solid #e2e8f0", borderRadius: 14, fontWeight: 700, cursor: "pointer", fontSize: 15, color: "#64748b" }}
+                                style={{ padding: "14px 28px", background: "white", border: "1.5px solid #e2e8f0", borderRadius: 14, fontWeight: 500, cursor: "pointer", fontSize: 15, color: "#64748b" }}
                               >
                                 Volver
                               </button>
@@ -756,7 +756,7 @@ export default function CombinedSimulatorsPage() {
                                 border: "none",
                                 borderRadius: 14,
                                 fontSize: "clamp(15px, 1.5vw, 18px)",
-                                fontWeight: 800,
+                                fontWeight: 500,
                                 cursor: startingGame ? "not-allowed" : "pointer",
                                 display: "flex",
                                 alignItems: "center",

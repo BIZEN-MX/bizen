@@ -42,7 +42,7 @@ export default function SectionPageHeader({
           style={{
             letterSpacing: 0.2,
             fontSize: "clamp(18px, 4vw, 26px)",
-            fontWeight: 800,
+            fontWeight: 500,
             color: primaryColor,
           }}
         >
@@ -70,7 +70,7 @@ export default function SectionPageHeader({
             borderRadius: 999,
             background: `${primaryColor}14`,
             color: primaryColor,
-            fontWeight: 700,
+            fontWeight: 500,
             fontSize: "clamp(11px, 2.5vw, 14px)",
             minWidth: "clamp(40px, 10vw, 54px)",
             justifyContent: "center" as const,

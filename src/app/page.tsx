@@ -22,8 +22,7 @@ const modalInputStyle = {
   background: "#FBFAF5",
   border: "1px solid #e2e8f0",
   color: "#1e293b",
-  fontFamily: "inherit",
-  boxSizing: "border-box" as const,
+    boxSizing: "border-box" as const,
   transition: "border-color 0.2s, box-shadow 0.2s",
   outline: "none",
   textAlign: "center" as const
@@ -163,7 +162,7 @@ export default function WelcomePage() {
         }}>
           {/* Logo */}
           <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }} aria-label="BIZEN home">
-            <span style={{ fontSize: "clamp(18px, 2vw, 22px)", fontWeight: 700, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", letterSpacing: "0.01em" }}>BIZEN</span>
+            <span style={{ fontSize: "clamp(18px, 2vw, 22px)", fontWeight: 500, color: "#0056E7", letterSpacing: "0.01em" }}>BIZEN</span>
           </Link>
 
           {/* Hamburger (mobile only) */}
@@ -204,11 +203,11 @@ export default function WelcomePage() {
             boxShadow: "0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05)",
             flexShrink: 0,
           }}>
-            <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Inicio</Link>
-            <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Somos BIZEN</Link>
-            <Link href="#perfiles" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Perfil educativo</Link>
-            <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Impacto social</Link>
-            <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Blog</Link>
+            <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Inicio</Link>
+            <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Somos BIZEN</Link>
+            <Link href="#perfiles" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Perfil educativo</Link>
+            <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Impacto social</Link>
+            <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: "#0056E7", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px" }}>Blog</Link>
           </nav>
 
           {/* Header Actions */}
@@ -225,7 +224,7 @@ export default function WelcomePage() {
                 gap: "8px",
                 padding: "10px 20px",
                 fontSize: "clamp(13px, 1.3vw, 15px)",
-                fontWeight: 600,
+                fontWeight: 500,
                 color: "#0056E7",
                 textDecoration: "none",
                 borderRadius: "9999px",
@@ -251,7 +250,7 @@ export default function WelcomePage() {
                   justifyContent: "center",
                   padding: "10px 24px",
                   fontSize: "clamp(13px, 1.3vw, 15px)",
-                  fontWeight: 600,
+                  fontWeight: 500,
                   borderRadius: "9999px",
                   background: "#0056E7",
                   color: "#fff",
@@ -352,7 +351,7 @@ export default function WelcomePage() {
             </div>
 
             <div style={{ marginBottom: "40px" }}>
-              <span style={{ fontSize: "28px", fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
+              <span style={{ fontSize: "28px", fontWeight: 500, color: "#fff", letterSpacing: "-0.02em" }}>
                 BIZEN<span style={{ color: "#1983FD" }}>.</span>
               </span>
             </div>
@@ -372,7 +371,7 @@ export default function WelcomePage() {
                   style={{
                     width: "100%",
                     fontSize: "18px",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     color: "rgba(255,255,255,0.9)",
                     textDecoration: "none",
                     padding: "12px",
@@ -400,7 +399,7 @@ export default function WelcomePage() {
                   fontSize: "18px",
                   color: "#fff",
                   textDecoration: "none",
-                  fontWeight: 600,
+                  fontWeight: 500,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -424,7 +423,7 @@ export default function WelcomePage() {
                   fontSize: "18px",
                   color: "#fff",
                   textDecoration: "none",
-                  fontWeight: 600,
+                  fontWeight: 500,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -447,7 +446,7 @@ export default function WelcomePage() {
                   fontSize: "18px",
                   color: "#fff",
                   textDecoration: "none",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -494,8 +493,7 @@ export default function WelcomePage() {
             paddingTop: "clamp(80px, 12vw, 160px)",
             paddingBottom: "clamp(60px, 10vw, 120px)",
             position: "relative",
-            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-            display: "flex",
+                        display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -629,11 +627,10 @@ export default function WelcomePage() {
               <h1 style={{
                 fontSize: "clamp(32px, 6vw, 64px)",
                 color: "#000",
-                fontWeight: 700,
+                fontWeight: 500,
                 margin: "0 0 clamp(48px, 7vw, 80px) 0",
                 lineHeight: 1.2,
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                letterSpacing: "-0.02em",
+                                letterSpacing: "-0.02em",
                 wordWrap: "break-word",
                 overflowWrap: "break-word",
               }}>
@@ -705,8 +702,7 @@ export default function WelcomePage() {
                         lineHeight: 1.85,
                         fontWeight: 500,
                         color: "#374151",
-                        fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                        letterSpacing: "0.015em",
+                                                letterSpacing: "0.015em",
                         wordWrap: "break-word",
                       }}>
                         La plataforma educativa que combina{" "}
@@ -718,13 +714,13 @@ export default function WelcomePage() {
                           color: "#fff",
                           borderRadius: "6px",
                           padding: "2px 10px 2px 8px",
-                          fontWeight: 700,
+                          fontWeight: 500,
                           fontSize: "0.95em",
                           letterSpacing: "0.02em",
                           whiteSpace: "nowrap",
                         }}>gamificación e IA</span>{" "}
                         para enseñar finanzas personales a estudiantes de preparatoria y universidad de forma{" "}
-                        <em style={{ fontStyle: "normal", fontWeight: 700, color: "#0056E7" }}>práctica, clara y relevante.</em>
+                        <em style={{ fontStyle: "normal", fontWeight: 500, color: "#0056E7" }}>práctica, clara y relevante.</em>
                       </p>
                     </div>
                   </div>
@@ -757,8 +753,7 @@ export default function WelcomePage() {
                 color: "#6b7280",
                 fontWeight: 500,
                 margin: "0 0 clamp(24px, 3vw, 40px) 0",
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-              }}>
+                              }}>
                 Empresas que ya confían
               </p>
 
@@ -818,10 +813,9 @@ export default function WelcomePage() {
               <h2 style={{
                 textAlign: "center",
                 fontSize: "clamp(40px, 6vw, 76px)",
-                fontWeight: 900,
+                fontWeight: 500,
                 color: "#ffffff",
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: "-0.03em",
+                                letterSpacing: "-0.03em",
                 lineHeight: 1.05,
                 marginBottom: "clamp(24px, 3vw, 36px)",
               }}>
@@ -842,10 +836,9 @@ export default function WelcomePage() {
                 lineHeight: 1.8,
                 maxWidth: "860px",
                 margin: "0 auto clamp(56px, 7vw, 88px)",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 400,
+                                fontWeight: 400,
               }}>
-                En <strong style={{ color: "#fff", fontWeight: 700 }}>BIZEN</strong> combinamos{" "}
+                En <strong style={{ color: "#fff", fontWeight: 500 }}>BIZEN</strong> combinamos{" "}
                 <strong style={{ color: "#60a5fa" }}>aprendizaje gamificado</strong>{" "}
                 para que los alumnos entiendan el dinero practicando, desarrollamos{" "}
                 <strong style={{ color: "#60a5fa" }}>competencias reales</strong>{" "}
@@ -874,13 +867,13 @@ export default function WelcomePage() {
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 }}>
 
-                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 900, color: "#fff", fontFamily: "'Inter', sans-serif", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
+                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
                     +50
                   </div>
-                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 700, color: "#60a5fa", fontFamily: "'Inter', sans-serif", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     Startups
                   </div>
-                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>
+                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, }}>
                     Seleccionados entre +50 startups. Parte del Programa de Incubación de la Secretaría de Desarrollo Económico.
                   </p>
                 </div>
@@ -897,13 +890,13 @@ export default function WelcomePage() {
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 }}>
 
-                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 900, color: "#fff", fontFamily: "'Inter', sans-serif", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
+                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
                     +10
                   </div>
-                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 700, color: "#60a5fa", fontFamily: "'Inter', sans-serif", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     Instituciones
                   </div>
-                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>
+                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, }}>
                     Más de 10 instituciones en Querétaro nos respaldan. BIZEN enseña ahorro, inversión y emprendimiento con metodología práctica.
                   </p>
                 </div>
@@ -920,13 +913,13 @@ export default function WelcomePage() {
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 }}>
 
-                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 900, color: "#fff", fontFamily: "'Inter', sans-serif", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
+                  <div style={{ fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: "10px" }}>
                     $25K
                   </div>
-                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 700, color: "#60a5fa", fontFamily: "'Inter', sans-serif", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     USD en créditos
                   </div>
-                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>
+                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, }}>
                     Más de 25,000 USD en créditos de Google invertidos en nosotros. Parte de la comunidad EdTech más grande de LATAM.
                   </p>
                 </div>
@@ -943,14 +936,14 @@ export default function WelcomePage() {
                 marginBottom: "clamp(40px, 5vw, 64px)",
                 backdropFilter: "blur(8px)",
               }}>
-                <p style={{ margin: 0, fontSize: "clamp(16px, 1.4vw, 20px)", color: "rgba(255,255,255,0.85)", fontFamily: "'Inter', sans-serif", fontWeight: 500, lineHeight: 1.7 }}>
+                <p style={{ margin: 0, fontSize: "clamp(16px, 1.4vw, 20px)", color: "rgba(255,255,255,0.85)", fontWeight: 500, lineHeight: 1.7 }}>
                   BIZEN enseña <strong style={{ color: "#fff" }}>ahorro, inversión y emprendimiento</strong> con metodología práctica, gamificada y alineada al mundo real.
                 </p>
               </div>
 
               {/* Partner logos strip */}
               <div style={{ textAlign: "center", marginBottom: "clamp(20px, 3vw, 32px)" }}>
-                <p style={{ margin: "0 0 24px", fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                <p style={{ margin: "0 0 24px", fontSize: "12px", fontWeight: 500, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
                   Nos respaldan
                 </p>
                 <div style={{
@@ -1060,7 +1053,7 @@ export default function WelcomePage() {
           background-clip: text;
           color: transparent;
           display: inline-block;
-          font-weight: 800;
+          font-weight: 500;
         }
         
         .main-page-container,
@@ -1121,7 +1114,7 @@ export default function WelcomePage() {
           color: #0056E7;
           text-decoration: none;
           font-size: 14px;
-          font-weight: 600;
+          font-weight: 500;
           border-radius: 10px;
           transition: all 0.2s ease;
         }
@@ -1391,7 +1384,7 @@ export default function WelcomePage() {
           color: #ffffff;
           border-radius: 999px;
           padding: 10px 20px;
-          font-weight: 600;
+          font-weight: 500;
           font-size: 14px;
           letter-spacing: 0.02em;
           text-decoration: none;
@@ -1733,7 +1726,7 @@ export default function WelcomePage() {
         }
         .hero-circle-label {
           font-size: clamp(14px, 1.8vw, 18px);
-          font-weight: 600;
+          font-weight: 500;
           color: #1f2937;
           text-align: center;
           line-height: 1.4;
@@ -2353,14 +2346,13 @@ export default function WelcomePage() {
           <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 72px)" }}>
             <span style={{
               display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
-              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 700,
-              fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
+              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 500,
+              letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
             }}>Testimonios</span>
             <h2 style={{
               textAlign: "center", margin: "0",
-              fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 800, color: "#111",
-              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-              lineHeight: 1.15, letterSpacing: "-0.02em",
+              fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 500, color: "#111",
+                            lineHeight: 1.15, letterSpacing: "-0.02em",
             }}>
               Colegios líderes en México{" "}
               <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>ya evolucionaron</span>{" "}con BIZEN.
@@ -2436,13 +2428,13 @@ export default function WelcomePage() {
                           <svg key={s} width="18" height="18" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                         ))}
                       </div>
-                      <p style={{ margin: "0 0 20px", fontSize: "clamp(15px, 1.1vw, 18px)", lineHeight: 1.7, color: "#1e293b", fontFamily: "'Inter', sans-serif", fontStyle: "italic" }}>
+                      <p style={{ margin: "0 0 20px", fontSize: "clamp(15px, 1.1vw, 18px)", lineHeight: 1.7, color: "#1e293b", fontStyle: "italic" }}>
                         "{testimonial.quote}"
                       </p>
                       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                         <div style={{ width: "32px", height: "2px", background: "linear-gradient(90deg,#0056E7,#1983FD)", borderRadius: "2px" }} />
                         <div>
-                          <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", fontWeight: 700, color: "#111" }}>{testimonial.name}</p>
+                          <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", fontWeight: 500, color: "#111" }}>{testimonial.name}</p>
                           <p style={{ margin: "3px 0 0", fontSize: "clamp(12px, 0.85rem, 14px)", color: "#64748b" }}>{testimonial.title}</p>
                         </div>
                       </div>
@@ -2715,21 +2707,19 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 borderRadius: "999px",
                 padding: "6px 18px",
                 fontSize: "13px",
-                fontWeight: 700,
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: "0.08em",
+                fontWeight: 500,
+                                letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 marginBottom: "20px",
               }}>Para cada miembro de la comunidad educativa</span>
               <h2 style={{
                 textAlign: "center",
                 fontSize: "clamp(36px, 5vw, 62px)",
-                fontWeight: 800,
+                fontWeight: 500,
                 color: "#111",
                 lineHeight: 1.15,
                 marginBottom: "clamp(12px, 2vw, 16px)",
-                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-                letterSpacing: "-0.02em",
+                                letterSpacing: "-0.02em",
               }}>
                 1 solución,{" "}
                 <span style={{
@@ -2739,7 +2729,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                   backgroundClip: "text",
                 }}>3 perfiles educativos</span>.
               </h2>
-              <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "#64748b", fontFamily: "'Inter', sans-serif", lineHeight: 1.6 }}>
+              <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "#64748b", lineHeight: 1.6 }}>
                 Un clic que adapta toda la experiencia a quién eres.
               </p>
             </div>
@@ -2784,9 +2774,8 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                       flex: 1,
                       padding: "12px 20px",
                       fontSize: "clamp(14px, 1rem, 16px)",
-                      fontWeight: 600,
-                      fontFamily: "'Inter', sans-serif",
-                      border: "none",
+                      fontWeight: 500,
+                                            border: "none",
                       borderRadius: "14px",
                       cursor: "pointer",
                       transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -2820,9 +2809,8 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         borderRadius: "12px",
                         padding: "6px 16px",
                         fontSize: "13px",
-                        fontWeight: 700,
-                        fontFamily: "'Inter', sans-serif",
-                        letterSpacing: "0.05em",
+                        fontWeight: 500,
+                                                letterSpacing: "0.05em",
                         textTransform: "uppercase",
                         marginBottom: "14px",
                       }}>
@@ -2832,11 +2820,10 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                       </span>
                       <h3 style={{
                         fontSize: "clamp(28px, 3.5vw, 44px)",
-                        fontWeight: 800,
+                        fontWeight: 500,
                         color: "#111",
                         marginBottom: 0,
-                        fontFamily: "'Inter', sans-serif",
-                        letterSpacing: "-0.02em",
+                                                letterSpacing: "-0.02em",
                         lineHeight: 1.15,
                       }}>
                         {activeProfile === "docentes" && "Enseña más con menos esfuerzo"}
@@ -2850,8 +2837,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                       lineHeight: 1.65,
                       color: "#374151",
                       marginBottom: "clamp(24px, 4vw, 32px)",
-                      fontFamily: "'Inter', sans-serif",
-                    }}>
+                                          }}>
                       {activeProfile === "docentes" && "Herramientas prácticas para enseñar finanzas con contenido listo para usar, seguimiento en tiempo real y recursos descargables."}
                       {activeProfile === "estudiantes" && "Aprende finanzas de forma divertida con cursos interactivos, simuladores reales y recompensas por tu progreso."}
                       {activeProfile === "padres" && "Acompaña el aprendizaje financiero de tus hijos con acceso a su progreso, recursos compartidos y actividades familiares."}
@@ -2883,7 +2869,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                                 alignItems: "center",
                                 justifyContent: "center",
                                 color: "#fff",
-                                fontWeight: 700,
+                                fontWeight: 500,
                                 fontSize: "13px",
                                 flexShrink: 0,
                                 boxShadow: "0 4px 10px rgba(0, 86, 231, 0.3)",
@@ -3022,8 +3008,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         padding: "clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 32px)",
                         fontSize: "clamp(14px, 2vw, 18px)",
                         fontWeight: 500,
-                        fontFamily: "'Inter', sans-serif",
-                        background: "#0056E7",
+                                                background: "#0056E7",
                         color: "#ffffff",
                         border: "none",
                         borderRadius: 9999,
@@ -3142,9 +3127,8 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 borderRadius: "999px",
                 padding: "6px 18px",
                 fontSize: "13px",
-                fontWeight: 700,
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: "0.1em",
+                fontWeight: 500,
+                                letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 marginBottom: "24px",
                 border: "1px solid rgba(25, 131, 253, 0.25)",
@@ -3155,12 +3139,11 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               </span>
               <h2 style={{
                 fontSize: "clamp(32px, 4.5vw, 58px)",
-                fontWeight: 800,
+                fontWeight: 500,
                 color: "#fff",
                 lineHeight: 1.12,
                 marginBottom: "clamp(16px, 2vw, 20px)",
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: "-0.025em",
+                                letterSpacing: "-0.025em",
               }}>
                 Aprender finanzas nunca ha sido{" "}
                 <span style={{
@@ -3174,8 +3157,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 fontSize: "clamp(16px, 1.2vw, 19px)",
                 lineHeight: 1.7,
                 color: "rgba(180, 205, 255, 0.75)",
-                fontFamily: "'Inter', sans-serif",
-                maxWidth: "580px",
+                                maxWidth: "580px",
                 margin: "0 auto",
               }}>
                 Impulsa a tu escuela a desarrollar habilidades clave mientras los estudiantes aprenden de forma práctica y guiada.
@@ -3206,10 +3188,9 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 }}>
                   <div style={{
                     fontSize: "clamp(28px, 3.5vw, 44px)",
-                    fontWeight: 800,
+                    fontWeight: 500,
                     color: "#fff",
-                    fontFamily: "'Inter', sans-serif",
-                    letterSpacing: "-0.03em",
+                                        letterSpacing: "-0.03em",
                     background: "linear-gradient(135deg, #fff 40%, #60aeff 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -3218,8 +3199,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                   <div style={{
                     fontSize: "clamp(12px, 0.85rem, 14px)",
                     color: "rgba(180, 205, 255, 0.65)",
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 500,
+                                        fontWeight: 500,
                     marginTop: "4px",
                     letterSpacing: "0.03em",
                   }}>{stat.label}</div>
@@ -3277,17 +3257,15 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                   <div>
                     <div style={{
                       fontSize: "clamp(15px, 1.05rem, 17px)",
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: "#e8f0ff",
-                      fontFamily: "'Inter', sans-serif",
-                      marginBottom: "8px",
+                                            marginBottom: "8px",
                       lineHeight: 1.3,
                     }}>{item.label}</div>
                     <div style={{
                       fontSize: "clamp(13px, 0.88rem, 15px)",
                       color: "rgba(180, 205, 255, 0.65)",
-                      fontFamily: "'Inter', sans-serif",
-                      lineHeight: 1.65,
+                                            lineHeight: 1.65,
                     }}>{item.desc}</div>
                   </div>
                   {/* Hover arrow indicator */}
@@ -3357,16 +3335,15 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
           <div style={{ textAlign: "center", marginBottom: "clamp(40px, 5vw, 60px)" }}>
             <span style={{
               display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
-              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 700,
-              fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
+              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 500,
+              letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
             }}>Metodología</span>
             <h2 style={{
               margin: 0,
               fontSize: "clamp(30px, 4.5vw, 52px)",
-              fontWeight: 800,
+              fontWeight: 500,
               color: "#111",
-              fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-              lineHeight: 1.15,
+                            lineHeight: 1.15,
               letterSpacing: "-0.02em",
             }}>
               Cada clase,{" "}
@@ -3445,9 +3422,8 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         borderRadius: "999px",
                         padding: "5px 14px",
                         fontSize: "12px",
-                        fontWeight: 700,
-                        fontFamily: "'Inter', sans-serif",
-                        letterSpacing: "0.07em",
+                        fontWeight: 500,
+                                                letterSpacing: "0.07em",
                         textTransform: "uppercase",
                         marginBottom: "20px",
                       }}>{slide.tag}</span>
@@ -3455,10 +3431,9 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                       <h3 style={{
                         margin: "0 0 clamp(14px, 2vw, 20px)",
                         fontSize: "clamp(26px, 3vw, 42px)",
-                        fontWeight: 800,
+                        fontWeight: 500,
                         color: "#fff",
-                        fontFamily: "'Inter', sans-serif",
-                        lineHeight: 1.15,
+                                                lineHeight: 1.15,
                         letterSpacing: "-0.02em",
                       }}>
                         {slide.title}
@@ -3469,8 +3444,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                         fontSize: "clamp(15px, 1.05vw, 18px)",
                         lineHeight: 1.75,
                         color: "rgba(255,255,255,0.72)",
-                        fontFamily: "'Inter', sans-serif",
-                        maxWidth: "480px",
+                                                maxWidth: "480px",
                       }}>
                         {slide.description}
                       </p>
@@ -3485,13 +3459,12 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                           gap: "10px",
                           padding: "14px 28px",
                           fontSize: "clamp(14px, 1rem, 17px)",
-                          fontWeight: 600,
+                          fontWeight: 500,
                           background: "#FBFAF5",
                           color: "#0056E7",
                           borderRadius: "999px",
                           cursor: "pointer",
-                          fontFamily: "'Inter', sans-serif",
-                          boxShadow: "0 6px 20px rgba(255,255,255,0.15)",
+                                                    boxShadow: "0 6px 20px rgba(255,255,255,0.15)",
                           transition: "all 0.25s ease",
                           textDecoration: "none",
                         }}
@@ -3594,7 +3567,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               </button>
 
               {/* Counter */}
-              <span style={{ fontSize: "14px", fontWeight: 700, color: "rgba(0, 86, 231, 0.4)", fontFamily: "'Inter', sans-serif", minWidth: "40px" }}>
+              <span style={{ fontSize: "14px", fontWeight: 500, color: "rgba(0, 86, 231, 0.4)", minWidth: "40px" }}>
                 {activeAdventureSlide + 1} / 3
               </span>
             </div>
@@ -3627,20 +3600,18 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               borderRadius: "999px",
               padding: "6px 18px",
               fontSize: "13px",
-              fontWeight: 700,
-              fontFamily: "'Inter', sans-serif",
-              letterSpacing: "0.08em",
+              fontWeight: 500,
+                            letterSpacing: "0.08em",
               textTransform: "uppercase",
               marginBottom: "20px",
             }}>El reto en educación financiera</span>
             <h2 style={{
               fontSize: "clamp(36px, 5vw, 62px)",
-              fontWeight: 800,
+              fontWeight: 500,
               color: "#fff",
               lineHeight: 1.1,
               marginBottom: "16px",
-              fontFamily: "'Inter', sans-serif",
-              letterSpacing: "-0.02em",
+                            letterSpacing: "-0.02em",
             }}>
               Tres obstáculos{" "}
               <span style={{
@@ -3650,7 +3621,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 backgroundClip: "text",
               }}>comunes.</span>
             </h2>
-            <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "rgba(255,255,255,0.6)", fontFamily: "'Inter', sans-serif", lineHeight: 1.65 }}>
+            <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "rgba(255,255,255,0.6)", lineHeight: 1.65 }}>
               La educación financiera tropieza con lo mismo una y otra vez.
             </p>
           </div>
@@ -3694,18 +3665,18 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                       boxShadow: "0 8px 24px rgba(0, 86, 231, 0.35)", flexShrink: 0,
                     }}>{card.icon}</div>
                     <span style={{
-                      fontSize: "clamp(40px, 5vw, 60px)", fontWeight: 900, color: "rgba(255,255,255,0.07)",
-                      fontFamily: "'Inter', sans-serif", letterSpacing: "-0.04em", lineHeight: 1, userSelect: "none",
+                      fontSize: "clamp(40px, 5vw, 60px)", fontWeight: 500, color: "rgba(255,255,255,0.07)",
+                      letterSpacing: "-0.04em", lineHeight: 1, userSelect: "none",
                     }}>{card.n}</span>
                   </div>
                   <div>
-                    <div style={{ fontSize: "clamp(11px, 0.8rem, 13px)", fontWeight: 700, color: "#60a5fa", fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "8px" }}>
+                    <div style={{ fontSize: "clamp(11px, 0.8rem, 13px)", fontWeight: 500, color: "#60a5fa", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "8px" }}>
                       Obstáculo {card.n}
                     </div>
-                    <h3 style={{ margin: "0 0 10px", fontSize: "clamp(20px, 1.4rem, 24px)", fontWeight: 700, color: "#fff", fontFamily: "'Inter', sans-serif", lineHeight: 1.25 }}>
+                    <h3 style={{ margin: "0 0 10px", fontSize: "clamp(20px, 1.4rem, 24px)", fontWeight: 500, color: "#fff", lineHeight: 1.25 }}>
                       {card.title}
                     </h3>
-                    <p style={{ margin: 0, fontSize: "clamp(15px, 1rem, 17px)", lineHeight: 1.65, color: "rgba(255,255,255,0.55)", fontFamily: "'Inter', sans-serif" }}>
+                    <p style={{ margin: 0, fontSize: "clamp(15px, 1rem, 17px)", lineHeight: 1.65, color: "rgba(255,255,255,0.55)", }}>
                       {card.desc}
                     </p>
                   </div>
@@ -3725,7 +3696,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
             maxWidth: "900px",
             margin: "0 auto",
           }}>
-            <p style={{ margin: 0, fontSize: "clamp(17px, 1.4vw, 21px)", color: "#fff", fontFamily: "'Inter', sans-serif", fontWeight: 600, lineHeight: 1.6 }}>
+            <p style={{ margin: 0, fontSize: "clamp(17px, 1.4vw, 21px)", color: "#fff", fontWeight: 500, lineHeight: 1.6 }}>
               <span style={{ background: "linear-gradient(90deg, #60a5fa, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>BIZEN</span>
               {" "}está diseñado para superar estos obstáculos.
             </p>
@@ -3750,17 +3721,17 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
           <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 72px)" }}>
             <span style={{
               display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
-              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 700,
-              fontFamily: "'Inter', sans-serif", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
+              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 500,
+              letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
             }}>Proceso</span>
             <h2 style={{
-              margin: "0 0 16px", fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 800, color: "#111",
-              fontFamily: "'Inter', sans-serif", lineHeight: 1.1, letterSpacing: "-0.02em",
+              margin: "0 0 16px", fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 500, color: "#111",
+              lineHeight: 1.1, letterSpacing: "-0.02em",
             }}>
               ¿Cómo{" "}
               <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>funciona?</span>
             </h2>
-            <p style={{ margin: "0 auto", fontSize: "clamp(16px, 1.2vw, 19px)", color: "#64748b", fontFamily: "'Inter', sans-serif", maxWidth: "480px", lineHeight: 1.65 }}>
+            <p style={{ margin: "0 auto", fontSize: "clamp(16px, 1.2vw, 19px)", color: "#64748b", maxWidth: "480px", lineHeight: 1.65 }}>
               Tres pasos: empiezas, practicas y mides tu avance.
             </p>
           </div>
@@ -3811,12 +3782,11 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                     background: "#FBFAF5",
                     color: "#0056E7",
                     fontSize: "13px",
-                    fontWeight: 800,
+                    fontWeight: 500,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontFamily: "'Inter', sans-serif",
-                    boxShadow: "0 2px 8px rgba(0, 86, 231, 0.2)",
+                                        boxShadow: "0 2px 8px rgba(0, 86, 231, 0.2)",
                     border: "1.5px solid rgba(0,86,231,0.12)",
                   }}>{i + 1}</span>
                   {i === 0 && (<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>)}
@@ -3826,11 +3796,10 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                 <h3 style={{
                   margin: "0 0 12px",
                   fontSize: "clamp(19px, 1.5vw, 23px)",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "#111",
-                  fontFamily: "'Inter', sans-serif",
-                }}>{step.title}</h3>
-                <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", color: "#64748b", lineHeight: 1.65, fontFamily: "'Inter', sans-serif" }}>
+                                  }}>{step.title}</h3>
+                <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", color: "#64748b", lineHeight: 1.65, }}>
                   {step.schoolsText}
                 </p>
               </div>
@@ -3980,7 +3949,7 @@ section#problema {
           overflow: visible !important;
         }
 .section-head{max-width:900px; margin:0 auto 28px auto; text-align:center; overflow:visible; word-wrap:break-word; overflow-wrap:break-word;}
-.section-head h2{margin:0 0 8px 0; font-size:clamp(28px, 4.2vw, 40px); font-weight:600; line-height:1.15; white-space:normal;}
+.section-head h2{margin:0 0 8px 0; font-size:clamp(28px, 4.2vw, 40px); font-weight: 500; line-height:1.15; white-space:normal;}
 .section-head p{margin:0; color:var(--c-muted); font-weight:400; white-space:normal;}
 
 .container{
@@ -4081,7 +4050,7 @@ section#problema {
 @media (min-width: 900px){ .steps{ grid-template-columns: repeat(3, 1fr) !important; gap: 28px !important; } }
 
 .benefit{display:grid; gap:10px; text-align:left}
-.benefit .benefit-icon{width:40px; height:40px; display:grid; place-items:center; background:rgba(16,185,129,.15); color:#065F46; border-radius:12px; font-weight:600;}
+.benefit .benefit-icon{width:40px; height:40px; display:grid; place-items:center; background:rgba(16,185,129,.15); color:#065F46; border-radius:12px; font-weight: 500;}
 
 .course-media img{width:100%; height:auto; aspect-ratio: 16/10; object-fit:cover}
 .course-title{margin:2px 0 8px}
@@ -4096,11 +4065,11 @@ section#problema {
 .plan--highlight{background:rgba(240, 247, 255, 0.7); border:2px solid rgba(0, 86, 231, 0.4); box-shadow:0 12px 32px rgba(0, 86, 231, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6); position:relative; overflow:visible;}
 .plan--highlight::before{content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #0056E7 0%, #1983FD 50%, #0056E7 100%); background-size:200% auto; animation:shimmer 3s ease-in-out infinite;}
 .tag{position:absolute; top:16px; right:16px; background:linear-gradient(135deg, #0056E7 0%, #1983FD 100%); color:#fff; border-radius:999px; font-weight:500; padding:8px 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 12px rgba(0, 86, 231, 0.3); z-index:2;}
-.plan-name{font-size:clamp(24px, 3vw, 32px); margin:0 0 12px 0; font-weight:600; letter-spacing:-0.02em; background:linear-gradient(135deg, #0056E7 0%, #1983FD 50%, #0056E7 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 3s ease-in-out infinite; font-family:'Inter', system-ui, -apple-system, sans-serif; white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
+.plan-name{font-size:clamp(24px, 3vw, 32px); margin:0 0 12px 0; font-weight: 500; letter-spacing:-0.02em; background:linear-gradient(135deg, #0056E7 0%, #1983FD 50%, #0056E7 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 3s ease-in-out infinite; font-family:'Inter', system-ui, -apple-system, sans-serif; white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
 .plan-note{font-size:14px; margin:0 0 24px 0; color:var(--c-muted); font-weight:400; white-space:normal;}
 .plan-list{list-style:none; margin:0 0 24px 0; padding:0; display:grid; gap:14px; flex-grow:1; overflow:visible;}
 .plan-list li{display:flex; gap:12px; align-items:flex-start; font-size:15px; line-height:1.6; color:var(--c-text); white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
-.check{color:var(--c-accent); font-weight:600; font-size:18px; min-width:20px; margin-top:2px;}
+.check{color:var(--c-accent); font-weight: 500; font-size:18px; min-width:20px; margin-top:2px;}
 .plan-btn:hover{transform:none !important;}
 .plan-btn:active{transform:none !important;}
 

@@ -157,11 +157,10 @@ export default function HistoryPage() {
                 border: "2px solid #0B71FE",
                 borderRadius: 10,
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: "pointer",
                 transition: "all 0.2s ease",
-                fontFamily: "Montserrat, sans-serif",
-                marginBottom: 16
+                                marginBottom: 16
               }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#0B71FE"
@@ -176,7 +175,7 @@ export default function HistoryPage() {
             </Link>
             <h1 style={{
               fontSize: 42,
-              fontWeight: 900,
+              fontWeight: 500,
               margin: "0 0 12px",
               background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
               WebkitBackgroundClip: "text",
@@ -202,11 +201,10 @@ export default function HistoryPage() {
                   border: `2px solid ${filterSlug === '' ? "#0B71FE" : "#E5E7EB"}`,
                   borderRadius: 10,
                   fontSize: 14,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
               >
                 Todos
               </button>
@@ -221,11 +219,10 @@ export default function HistoryPage() {
                     border: `2px solid ${filterSlug === slug ? "#0B71FE" : "#E5E7EB"}`,
                     borderRadius: 10,
                     fontSize: 14,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                    fontFamily: "Montserrat, sans-serif"
-                  }}
+                                      }}
                 >
                   {simulatorNames[slug] || slug}
                 </button>
@@ -264,7 +261,7 @@ export default function HistoryPage() {
               border: "2px solid #E5E7EB"
             }}>
               <div style={{ fontSize: 64, marginBottom: 16 }}>📭</div>
-              <h3 style={{ fontSize: 24, fontWeight: 700, color: "#111", marginBottom: 12 }}>
+              <h3 style={{ fontSize: 24, fontWeight: 500, color: "#111", marginBottom: 12 }}>
                 No tienes simulaciones guardadas
               </h3>
               <p style={{ fontSize: 16, color: "#6B7280", marginBottom: 24 }}>
@@ -278,11 +275,10 @@ export default function HistoryPage() {
                   border: "none",
                   borderRadius: 12,
                   fontSize: 16,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "transform 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif",
-                  boxShadow: "0 4px 12px rgba(11,113,254,0.3)"
+                                    boxShadow: "0 4px 12px rgba(11,113,254,0.3)"
                 }}
                   onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
                   onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>
@@ -314,10 +310,10 @@ export default function HistoryPage() {
                   }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 6, fontWeight: 600 }}>
+                      <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 6, fontWeight: 500 }}>
                         {simulatorNames[run.simulator_slug] || run.simulator_slug}
                       </div>
-                      <h3 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 4 }}>
+                      <h3 style={{ fontSize: 20, fontWeight: 500, color: "#111", marginBottom: 4 }}>
                         {run.run_name || 'Sin nombre'}
                       </h3>
                       <div style={{ fontSize: 12, color: "#9CA3AF" }}>
@@ -333,11 +329,10 @@ export default function HistoryPage() {
                         border: "2px solid #ef4444",
                         borderRadius: 10,
                         fontSize: 14,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                        fontFamily: "Montserrat, sans-serif"
-                      }}
+                                              }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background = "#ef4444"
                         e.currentTarget.style.color = "white"
@@ -353,7 +348,7 @@ export default function HistoryPage() {
 
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
-                      <p style={{ fontSize: 14, color: "#374151", fontWeight: 600 }}>
+                      <p style={{ fontSize: 14, color: "#374151", fontWeight: 500 }}>
                         {getRunSummary(run)}
                       </p>
                       {run.notes && (
@@ -370,11 +365,10 @@ export default function HistoryPage() {
                         border: "2px solid #0B71FE",
                         borderRadius: 10,
                         fontSize: 14,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                        fontFamily: "Montserrat, sans-serif",
-                        marginLeft: 16
+                                                marginLeft: 16
                       }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = "#0B71FE"

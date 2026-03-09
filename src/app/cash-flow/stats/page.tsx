@@ -86,7 +86,7 @@ export default function CashFlowStatsPage() {
         background: "#FBFAF5",
         paddingRight: "340px"
       }}>
-        <div style={{ color: "#333", fontSize: 24, fontWeight: 700 }}>
+        <div style={{ color: "#333", fontSize: 24, fontWeight: 500 }}>
           Cargando estadísticas...
         </div>
       </div>
@@ -98,8 +98,7 @@ export default function CashFlowStatsPage() {
       display: "flex",
       minHeight: "100vh",
       background: "#FBFAF5",
-      fontFamily: "Montserrat, sans-serif"
-    }}>
+          }}>
       <main style={{
         flex: 1,
         padding: "40px 20px",
@@ -124,7 +123,7 @@ export default function CashFlowStatsPage() {
               <div>
                 <h1 style={{
                   fontSize: 48,
-                  fontWeight: 900,
+                  fontWeight: 500,
                   margin: "0 0 8px",
                   background: "linear-gradient(135deg, #667eea, #764ba2)",
                   WebkitBackgroundClip: "text",
@@ -146,7 +145,7 @@ export default function CashFlowStatsPage() {
                   color: "white",
                   borderRadius: 12,
                   fontSize: 14,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   textDecoration: "none",
                   boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)"
                 }}
@@ -171,10 +170,10 @@ export default function CashFlowStatsPage() {
               boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
             }}>
               <div style={{ fontSize: 48, marginBottom: 8 }}>🎮</div>
-              <div style={{ fontSize: 36, fontWeight: 900, color: "#667eea", marginBottom: 4 }}>
+              <div style={{ fontSize: 36, fontWeight: 500, color: "#667eea", marginBottom: 4 }}>
                 {stats.overview.totalGames}
               </div>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 600 }}>
+              <div style={{ fontSize: 14, color: "#666", fontWeight: 500 }}>
                 Partidas Jugadas
               </div>
             </div>
@@ -187,10 +186,10 @@ export default function CashFlowStatsPage() {
               boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
             }}>
               <div style={{ fontSize: 48, marginBottom: 8 }}>🏆</div>
-              <div style={{ fontSize: 36, fontWeight: 900, color: "#10b981", marginBottom: 4 }}>
+              <div style={{ fontSize: 36, fontWeight: 500, color: "#10b981", marginBottom: 4 }}>
                 {stats.overview.completedGames}
               </div>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 600 }}>
+              <div style={{ fontSize: 14, color: "#666", fontWeight: 500 }}>
                 Victorias
               </div>
             </div>
@@ -203,10 +202,10 @@ export default function CashFlowStatsPage() {
               boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
             }}>
               <div style={{ fontSize: 48, marginBottom: 8 }}>📈</div>
-              <div style={{ fontSize: 36, fontWeight: 900, color: "#2563eb", marginBottom: 4 }}>
+              <div style={{ fontSize: 36, fontWeight: 500, color: "#2563eb", marginBottom: 4 }}>
                 {stats.overview.winRate}%
               </div>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 600 }}>
+              <div style={{ fontSize: 14, color: "#666", fontWeight: 500 }}>
                 Tasa de Victoria
               </div>
             </div>
@@ -219,10 +218,10 @@ export default function CashFlowStatsPage() {
               boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
             }}>
               <div style={{ fontSize: 48, marginBottom: 8 }}>⚡</div>
-              <div style={{ fontSize: 36, fontWeight: 900, color: "#f59e0b", marginBottom: 4 }}>
+              <div style={{ fontSize: 36, fontWeight: 500, color: "#f59e0b", marginBottom: 4 }}>
                 {stats.performance.fastestWin || "-"}
               </div>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 600 }}>
+              <div style={{ fontSize: 14, color: "#666", fontWeight: 500 }}>
                 Victoria Más Rápida (turnos)
               </div>
             </div>
@@ -238,7 +237,7 @@ export default function CashFlowStatsPage() {
           }}>
             <h2 style={{
               fontSize: 28,
-              fontWeight: 900,
+              fontWeight: 500,
               margin: "0 0 24px",
               color: "#333"
             }}>
@@ -258,7 +257,7 @@ export default function CashFlowStatsPage() {
                 <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
                   📊 Turnos Promedio para Ganar
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 900, color: "#667eea" }}>
+                <div style={{ fontSize: 32, fontWeight: 500, color: "#667eea" }}>
                   {stats.performance.avgTurnsToWin || "-"}
                 </div>
               </div>
@@ -271,7 +270,7 @@ export default function CashFlowStatsPage() {
                 <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
                   👤 Mejor Profesión
                 </div>
-                <div style={{ fontSize: 24, fontWeight: 900, color: "#10b981" }}>
+                <div style={{ fontSize: 24, fontWeight: 500, color: "#10b981" }}>
                   {stats.performance.bestProfession?.name || "Ninguna aún"}
                 </div>
                 {stats.performance.bestProfession && (
@@ -289,7 +288,7 @@ export default function CashFlowStatsPage() {
                 <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
                   💰 Dinero Total Ganado
                 </div>
-                <div style={{ fontSize: 28, fontWeight: 900, color: "#10b981" }}>
+                <div style={{ fontSize: 28, fontWeight: 500, color: "#10b981" }}>
                   ${stats.performance.totalCashEarned.toLocaleString()}
                 </div>
               </div>
@@ -302,7 +301,7 @@ export default function CashFlowStatsPage() {
                 <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
                   🏠 Inversiones Totales
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 900, color: "#2563eb" }}>
+                <div style={{ fontSize: 32, fontWeight: 500, color: "#2563eb" }}>
                   {stats.performance.totalInvestments}
                 </div>
               </div>
@@ -316,7 +315,7 @@ export default function CashFlowStatsPage() {
                 <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
                   💸 Doodads Comprados
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 900, color: "#ef4444" }}>
+                <div style={{ fontSize: 32, fontWeight: 500, color: "#ef4444" }}>
                   {stats.performance.totalDoodads}
                 </div>
                 <div style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>
@@ -332,7 +331,7 @@ export default function CashFlowStatsPage() {
                 <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
                   🎲 Partidas Activas
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 900, color: "#f59e0b" }}>
+                <div style={{ fontSize: 32, fontWeight: 500, color: "#f59e0b" }}>
                   {stats.overview.activeGames}
                 </div>
               </div>
@@ -349,7 +348,7 @@ export default function CashFlowStatsPage() {
             }}>
               <h2 style={{
                 fontSize: 28,
-                fontWeight: 900,
+                fontWeight: 500,
                 margin: "0 0 24px",
                 color: "#333"
               }}>
@@ -388,7 +387,7 @@ export default function CashFlowStatsPage() {
                       <div style={{ flex: 1 }}>
                         <div style={{
                           fontSize: 18,
-                          fontWeight: 800,
+                          fontWeight: 500,
                           color: "#333",
                           marginBottom: 8
                         }}>
@@ -401,7 +400,7 @@ export default function CashFlowStatsPage() {
                               color: "white",
                               borderRadius: 8,
                               fontSize: 11,
-                              fontWeight: 700
+                              fontWeight: 500
                             }}>
                               ✓ GANADO
                             </span>
@@ -437,7 +436,7 @@ export default function CashFlowStatsPage() {
                           color: "white",
                           borderRadius: 10,
                           fontSize: 13,
-                          fontWeight: 700,
+                          fontWeight: 500,
                           textDecoration: "none"
                         }}
                       >
@@ -464,7 +463,7 @@ export default function CashFlowStatsPage() {
               </div>
               <h2 style={{
                 fontSize: 28,
-                fontWeight: 800,
+                fontWeight: 500,
                 color: "#333",
                 marginBottom: 16
               }}>
@@ -486,7 +485,7 @@ export default function CashFlowStatsPage() {
                   color: "white",
                   borderRadius: 12,
                   fontSize: 16,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   textDecoration: "none",
                   boxShadow: "0 6px 20px rgba(16, 185, 129, 0.3)"
                 }}

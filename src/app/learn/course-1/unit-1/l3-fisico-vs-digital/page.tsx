@@ -113,7 +113,7 @@ function Card1({ onComplete }: CardProps) {
         transition={{ delay: 0.3, duration: 0.3 }}
         style={{
           fontSize: 32,
-          fontWeight: 800,
+          fontWeight: 500,
           background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -154,7 +154,7 @@ function Card1({ onComplete }: CardProps) {
           border: "none",
           borderRadius: 12,
           fontSize: 16,
-          fontWeight: 700,
+          fontWeight: 500,
           cursor: "pointer",
           boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
         }}
@@ -209,7 +209,7 @@ function Card2({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.1, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 32,
           textAlign: "center"
@@ -263,7 +263,7 @@ function Card2({ onComplete, onXpEarned }: CardProps) {
             borderRadius: 12,
             marginBottom: 24
           }}>
-            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
               {isCorrect ? "¡Bien hecho! Correcto. Físico es objeto; digital es registro/saldo." : "Casi. Intenta otra vez."}
             </p>
           </div>
@@ -287,7 +287,7 @@ function Card2({ onComplete, onXpEarned }: CardProps) {
                 border: "none",
                 borderRadius: 12,
                 fontSize: 16,
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: "pointer",
                 boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
               }}
@@ -362,7 +362,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.1, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 32,
           textAlign: "center"
@@ -389,7 +389,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
                 border: "2px solid #E5E7EB",
                 borderRadius: 12,
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 500,
                 cursor: "pointer",
                 textAlign: "left"
               }}
@@ -417,7 +417,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
                 border: "2px solid #E5E7EB",
                 borderRadius: 12,
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 500,
                 cursor: selectedLeft ? "pointer" : "default",
                 textAlign: "left",
                 opacity: selectedLeft ? 1 : 0.6
@@ -442,7 +442,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
             border: "1px solid #0B71FE",
             borderRadius: 8,
             fontSize: 14,
-            fontWeight: 600,
+            fontWeight: 500,
             cursor: "pointer",
             marginBottom: 16
           }}
@@ -480,7 +480,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
             marginBottom: 24
           }}
         >
-          <p style={{ margin: 0, color: "#059669", fontWeight: 600 }}>
+          <p style={{ margin: 0, color: "#059669", fontWeight: 500 }}>
             ¡Bien hecho! Objeto vs. autorización electrónica.
           </p>
         </motion.div>
@@ -501,7 +501,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -528,7 +528,7 @@ function Card3({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -590,7 +590,7 @@ function Card4({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.1, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 32,
           textAlign: "center"
@@ -613,7 +613,7 @@ function Card4({ onComplete, onXpEarned }: CardProps) {
               borderRadius: 12
             }}
           >
-            <p style={{ marginBottom: 16, fontSize: 16, color: "#1F2937", fontWeight: 600 }}>
+            <p style={{ marginBottom: 16, fontSize: 16, color: "#1F2937", fontWeight: 500 }}>
               {question.text}
             </p>
             <div style={{ display: "flex", gap: 12 }}>
@@ -628,7 +628,7 @@ function Card4({ onComplete, onXpEarned }: CardProps) {
                   border: "2px solid #E5E7EB",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: showFeedback ? "default" : "pointer"
                 }}
               >
@@ -645,7 +645,7 @@ function Card4({ onComplete, onXpEarned }: CardProps) {
                   border: "2px solid #E5E7EB",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: showFeedback ? "default" : "pointer"
                 }}
               >
@@ -668,7 +668,7 @@ function Card4({ onComplete, onXpEarned }: CardProps) {
             marginBottom: 24
           }}
         >
-          <p style={{ margin: 0, color: allCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+          <p style={{ margin: 0, color: allCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
             {allCorrect ? "¡Exacto! Efectivo va offline; digital necesita red." : "Casi. Intenta otra vez."}
           </p>
         </motion.div>
@@ -689,7 +689,7 @@ function Card4({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -716,7 +716,7 @@ function Card4({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -786,7 +786,7 @@ function Card5({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.2, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 16,
           textAlign: "center"
@@ -854,7 +854,7 @@ function Card5({ onComplete, onXpEarned }: CardProps) {
             borderRadius: 12,
             marginBottom: 24
           }}>
-            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
               {isCorrect ? "¡Correcto! Digital permite pagos a distancia." : "Casi. Intenta otra vez."}
             </p>
           </div>
@@ -878,7 +878,7 @@ function Card5({ onComplete, onXpEarned }: CardProps) {
                 border: "none",
                 borderRadius: 12,
                 fontSize: 16,
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: "pointer",
                 boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
               }}
@@ -946,7 +946,7 @@ function Card6({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.1, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 32,
           textAlign: "center"
@@ -1016,7 +1016,7 @@ function Card6({ onComplete, onXpEarned }: CardProps) {
             marginBottom: 24
           }}
         >
-          <p style={{ margin: 0, color: allCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+          <p style={{ margin: 0, color: allCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
             {allCorrect ? "¡Bien hecho! Cada forma tiene riesgos distintos." : "Casi. Intenta otra vez."}
           </p>
         </motion.div>
@@ -1037,7 +1037,7 @@ function Card6({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -1064,7 +1064,7 @@ function Card6({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -1135,7 +1135,7 @@ function Card7({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.2, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 32,
           textAlign: "center"
@@ -1189,7 +1189,7 @@ function Card7({ onComplete, onXpEarned }: CardProps) {
             borderRadius: 12,
             marginBottom: 24
           }}>
-            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
               {isCorrect ? "¡Correcto! Digital deja registro; efectivo, no siempre." : "Casi. Intenta otra vez."}
             </p>
           </div>
@@ -1213,7 +1213,7 @@ function Card7({ onComplete, onXpEarned }: CardProps) {
                 border: "none",
                 borderRadius: 12,
                 fontSize: 16,
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: "pointer",
                 boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
               }}
@@ -1294,7 +1294,7 @@ function Card8({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.1, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 16,
           textAlign: "center"
@@ -1335,11 +1335,11 @@ function Card8({ onComplete, onXpEarned }: CardProps) {
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 14,
-                fontWeight: 700
+                fontWeight: 500
               }}>
                 {index + 1}
               </div>
-              <span style={{ fontSize: 16, color: "#1F2937", fontWeight: 600 }}>{item}</span>
+              <span style={{ fontSize: 16, color: "#1F2937", fontWeight: 500 }}>{item}</span>
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               <button
@@ -1353,7 +1353,7 @@ function Card8({ onComplete, onXpEarned }: CardProps) {
                   borderRadius: 8,
                   cursor: index === 0 || showFeedback ? "default" : "pointer",
                   fontSize: 18,
-                  fontWeight: 700
+                  fontWeight: 500
                 }}
               >
                 ↑
@@ -1369,7 +1369,7 @@ function Card8({ onComplete, onXpEarned }: CardProps) {
                   borderRadius: 8,
                   cursor: index === items.length - 1 || showFeedback ? "default" : "pointer",
                   fontSize: 18,
-                  fontWeight: 700
+                  fontWeight: 500
                 }}
               >
                 ↓
@@ -1391,7 +1391,7 @@ function Card8({ onComplete, onXpEarned }: CardProps) {
             marginBottom: 24
           }}
         >
-          <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+          <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
             {isCorrect ? "¡Exacto! Efectivo es ágil; contactless también; transferencias pueden tardar." : "Casi. Intenta otra vez."}
           </p>
         </motion.div>
@@ -1412,7 +1412,7 @@ function Card8({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -1439,7 +1439,7 @@ function Card8({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -1511,7 +1511,7 @@ function Card9({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.2, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 16,
           textAlign: "center"
@@ -1579,7 +1579,7 @@ function Card9({ onComplete, onXpEarned }: CardProps) {
             borderRadius: 12,
             marginBottom: 24
           }}>
-            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
               {isCorrect ? "¡Correcto! Efectivo funciona sin red." : "Casi. Intenta otra vez."}
             </p>
           </div>
@@ -1603,7 +1603,7 @@ function Card9({ onComplete, onXpEarned }: CardProps) {
                 border: "none",
                 borderRadius: 12,
                 fontSize: 16,
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: "pointer",
                 boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
               }}
@@ -1687,7 +1687,7 @@ function Card10({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.2, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 32,
           textAlign: "center"
@@ -1757,7 +1757,7 @@ function Card10({ onComplete, onXpEarned }: CardProps) {
             marginBottom: 24
           }}
         >
-          <p style={{ margin: 0, color: allCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+          <p style={{ margin: 0, color: allCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
             {allCorrect ? "¡Bien hecho! Seguridad primero." : "Casi. Intenta otra vez."}
           </p>
         </motion.div>
@@ -1778,7 +1778,7 @@ function Card10({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -1805,7 +1805,7 @@ function Card10({ onComplete, onXpEarned }: CardProps) {
             border: "none",
             borderRadius: 12,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: "pointer",
             boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
           }}
@@ -1877,7 +1877,7 @@ function Card11({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.2, duration: 0.3 }}
         style={{
           fontSize: 24,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 16,
           textAlign: "center"
@@ -1945,7 +1945,7 @@ function Card11({ onComplete, onXpEarned }: CardProps) {
             borderRadius: 12,
             marginBottom: 24
           }}>
-            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 600 }}>
+            <p style={{ margin: 0, color: isCorrect ? "#059669" : "#DC2626", fontWeight: 500 }}>
               {isCorrect ? "¡Correcto! Digital habilita e-commerce global." : "Casi. Intenta otra vez."}
             </p>
           </div>
@@ -1969,7 +1969,7 @@ function Card11({ onComplete, onXpEarned }: CardProps) {
                 border: "none",
                 borderRadius: 12,
                 fontSize: 16,
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: "pointer",
                 boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
               }}
@@ -2031,7 +2031,7 @@ function Card12({ onComplete, onXpEarned }: CardProps) {
         transition={{ delay: 0.4, duration: 0.3 }}
         style={{
           fontSize: 32,
-          fontWeight: 800,
+          fontWeight: 500,
           background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -2063,7 +2063,7 @@ function Card12({ onComplete, onXpEarned }: CardProps) {
           <p style={{
             margin: 0,
             fontSize: 18,
-            fontWeight: 700,
+            fontWeight: 500,
             color: "white"
           }}>
             🏆 Insignia desbloqueada: Navegante del Dinero
@@ -2072,7 +2072,7 @@ function Card12({ onComplete, onXpEarned }: CardProps) {
 
         <h3 style={{
           fontSize: 20,
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#1F2937",
           marginBottom: 16
         }}>
@@ -2155,7 +2155,7 @@ function Card12({ onComplete, onXpEarned }: CardProps) {
           border: "none",
           borderRadius: 12,
           fontSize: 16,
-          fontWeight: 700,
+          fontWeight: 500,
           cursor: "pointer",
           boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)"
         }}
@@ -2215,8 +2215,7 @@ export default function L3FisicoVsDigitalPage() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        fontFamily: "Montserrat, sans-serif"
-      }}>
+              }}>
         <p>Cargando...</p>
       </div>
     )
@@ -2226,8 +2225,7 @@ export default function L3FisicoVsDigitalPage() {
     <div style={{
       minHeight: "100vh",
       background: "#FBFAF5",
-      fontFamily: "Montserrat, sans-serif",
-      paddingRight: "320px" // Space for sidebar
+            paddingRight: "320px" // Space for sidebar
     }}>
       {/* Header */}
       <div style={{
@@ -2237,7 +2235,7 @@ export default function L3FisicoVsDigitalPage() {
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontSize: 14, color: "#6B7280", fontWeight: 600 }}>
+          <div style={{ fontSize: 14, color: "#6B7280", fontWeight: 500 }}>
             Tarjeta {currentCard + 1} de 12
           </div>
           <div style={{ display: "flex", gap: 8 }}>
@@ -2250,7 +2248,7 @@ export default function L3FisicoVsDigitalPage() {
             background: "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)",
             borderRadius: 20,
             fontSize: 14,
-            fontWeight: 700,
+            fontWeight: 500,
             color: "white"
           }}>
             {totalXP} XP

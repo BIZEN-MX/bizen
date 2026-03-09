@@ -37,7 +37,7 @@ export const BizenWelcomeEmail = ({ name, dashboardUrl }: WelcomeEmailProps) => 
           }
           .logo {
             font-size: 32px;
-            font-weight: bold;
+            font-weight: 500;
             margin-bottom: 10px;
             letter-spacing: 2px;
           }
@@ -54,7 +54,7 @@ export const BizenWelcomeEmail = ({ name, dashboardUrl }: WelcomeEmailProps) => 
             font-size: 24px;
             color: #0E4A7A;
             margin-bottom: 20px;
-            font-weight: 600;
+            font-weight: 500;
           }
           .message {
             font-size: 16px;
@@ -76,7 +76,7 @@ export const BizenWelcomeEmail = ({ name, dashboardUrl }: WelcomeEmailProps) => 
             color: white !important;
             text-decoration: none;
             border-radius: 12px;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 16px;
             text-align: center;
             margin: 25px 0;
@@ -102,7 +102,7 @@ export const BizenWelcomeEmail = ({ name, dashboardUrl }: WelcomeEmailProps) => 
             margin-right: 10px;
           }
           .feature-title {
-            font-weight: 600;
+            font-weight: 500;
             color: #0E4A7A;
             margin-bottom: 5px;
           }
@@ -218,7 +218,7 @@ export const BizenWelcomeEmail = ({ name, dashboardUrl }: WelcomeEmailProps) => 
               ¡Feliz aprendizaje! 🚀
             </p>
 
-            <p style="margin-top: 25px; font-weight: 600; color: #0E4A7A;">
+            <p style="margin-top: 25px; font-weight: 500; color: #0E4A7A;">
               El equipo de BIZEN
             </p>
           </div>

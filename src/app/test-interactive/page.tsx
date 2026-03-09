@@ -18,8 +18,7 @@ export default function TestInteractivePage() {
       alignItems: "center",
       justifyContent: "center",
       minHeight: "100vh",
-      fontFamily: "Montserrat, sans-serif",
-      background: "#FBFAF5",
+            background: "#FBFAF5",
       padding: 40
     }}>
       <div style={{
@@ -34,7 +33,7 @@ export default function TestInteractivePage() {
         
         <h1 style={{
           fontSize: 32,
-          fontWeight: 800,
+          fontWeight: 500,
           background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -72,7 +71,7 @@ export default function TestInteractivePage() {
                 border: "2px solid #0F62FE",
                 borderRadius: 8,
                 textDecoration: "none",
-                fontWeight: 600,
+                fontWeight: 500,
                 fontSize: 13,
                 color: "#0F62FE",
                 textAlign: "center"
@@ -88,7 +87,7 @@ export default function TestInteractivePage() {
                 color: "#fff",
                 borderRadius: 8,
                 textDecoration: "none",
-                fontWeight: 600,
+                fontWeight: 500,
                 fontSize: 13,
                 textAlign: "center"
               }}

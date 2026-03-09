@@ -125,7 +125,7 @@ export default function TeacherAnalyticsPage() {
 
   if (loading || loadingAnalytics) {
     return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "Montserrat, sans-serif" }}>
+      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando análisis...</p>
         </div>
@@ -140,14 +140,13 @@ export default function TeacherAnalyticsPage() {
       maxWidth: 1200, 
       margin: "0 auto", 
       padding: "clamp(20px, 4vw, 40px)",
-      fontFamily: "Montserrat, sans-serif"
-    }}>
+          }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ 
           margin: 0, 
           fontSize: "clamp(28px, 6vw, 36px)", 
-          fontWeight: 800,
+          fontWeight: 500,
           background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -168,26 +167,26 @@ export default function TeacherAnalyticsPage() {
         marginBottom: 40
       }}>
         <Card style={{ textAlign: "center", padding: "24px 16px" }}>
-          <div style={{ fontSize: 40, fontWeight: 800, color: "#0F62FE" }}>{analytics.totalStudents}</div>
+          <div style={{ fontSize: 40, fontWeight: 500, color: "#0F62FE" }}>{analytics.totalStudents}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Total Estudiantes</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "24px 16px" }}>
-          <div style={{ fontSize: 40, fontWeight: 800, color: "#10B981" }}>{analytics.activeStudents}</div>
+          <div style={{ fontSize: 40, fontWeight: 500, color: "#10B981" }}>{analytics.activeStudents}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Activos (últimos 7 días)</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "24px 16px" }}>
-          <div style={{ fontSize: 40, fontWeight: 800, color: "#F59E0B" }}>{analytics.avgProgress}%</div>
+          <div style={{ fontSize: 40, fontWeight: 500, color: "#F59E0B" }}>{analytics.avgProgress}%</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Progreso Promedio</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "24px 16px" }}>
-          <div style={{ fontSize: 40, fontWeight: 800, color: "#8B5CF6" }}>{analytics.completionRate}%</div>
+          <div style={{ fontSize: 40, fontWeight: 500, color: "#8B5CF6" }}>{analytics.completionRate}%</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Tasa de Finalización</div>
         </Card>
       </div>
 
       {/* Course Performance */}
       <Card style={{ marginBottom: 32, padding: "28px 24px" }}>
-        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
           📚 Desempeño por Curso
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -201,7 +200,7 @@ export default function TeacherAnalyticsPage() {
                 gap: 12
               }}>
                 <div>
-                  <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 700 }}>
+                  <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 500 }}>
                     {course.title}
                   </h3>
                   <div style={{ fontSize: 14, color: "#666" }}>
@@ -209,7 +208,7 @@ export default function TeacherAnalyticsPage() {
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 20, fontWeight: 700, color: "#0F62FE" }}>
+                  <div style={{ fontSize: 20, fontWeight: 500, color: "#0F62FE" }}>
                     {course.avgProgress}%
                   </div>
                   <div style={{ fontSize: 13, color: "#666" }}>
@@ -246,7 +245,7 @@ export default function TeacherAnalyticsPage() {
       }}>
         {/* Recent Quiz Results */}
         <Card style={{ padding: "28px 24px" }}>
-          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 700 }}>
+          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 500 }}>
             ✅ Resultados Recientes de Quizzes
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -266,12 +265,12 @@ export default function TeacherAnalyticsPage() {
                   marginBottom: 8,
                   gap: 12
                 }}>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: "#111" }}>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#111" }}>
                     {quiz.studentName}
                   </div>
                   <div style={{
                     fontSize: 16,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     color: quiz.status === "passed" ? "#10B981" : "#EF4444"
                   }}>
                     {quiz.score}%
@@ -295,7 +294,7 @@ export default function TeacherAnalyticsPage() {
 
         {/* Pending Grading */}
         <Card style={{ padding: "28px 24px" }}>
-          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 700 }}>
+          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 500 }}>
             ⏳ Pendientes de Calificar ({analytics.pendingGrading.length})
           </h2>
           {analytics.pendingGrading.length > 0 ? (
@@ -322,7 +321,7 @@ export default function TeacherAnalyticsPage() {
                     e.currentTarget.style.background = "#FEF3C7"
                   }}
                 >
-                  <div style={{ fontSize: 15, fontWeight: 600, color: "#111", marginBottom: 8 }}>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#111", marginBottom: 8 }}>
                     {submission.studentName}
                   </div>
                   <div style={{ fontSize: 13, color: "#92400E", marginBottom: 4 }}>

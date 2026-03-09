@@ -164,7 +164,7 @@ export default function FinalTestResultsPage() {
                 padding: '6px 12px',
                 borderRadius: '20px',
                 fontSize: '14px',
-                fontWeight: '600'
+                fontWeight: 500
               }}>
                 #{index + 1}
               </div>
@@ -185,7 +185,7 @@ export default function FinalTestResultsPage() {
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span style={{ fontSize: '14px', color: '#666' }}>🆔</span>
-                        <span style={{ fontSize: '12px', color: '#999', fontFamily: 'monospace' }}>
+                        <span style={{ fontSize: '12px', color: '#999', }}>
                           {result.user_id.substring(0, 8)}...
                         </span>
                       </div>
@@ -196,7 +196,7 @@ export default function FinalTestResultsPage() {
                   <div style={{ textAlign: 'right', minWidth: '120px' }}>
                     <div style={{
                       fontSize: '32px',
-                      fontWeight: '800',
+                      fontWeight: 500,
                       color: getScoreColor(result.score_percentage),
                       marginBottom: '4px'
                     }}>
@@ -205,7 +205,7 @@ export default function FinalTestResultsPage() {
                     <div style={{
                       fontSize: '14px',
                       color: getScoreColor(result.score_percentage),
-                      fontWeight: '600'
+                      fontWeight: 500
                     }}>
                       {getScoreLabel(result.score_percentage)}
                     </div>
@@ -249,7 +249,7 @@ export default function FinalTestResultsPage() {
                   </div>
                   <div>
                     <strong>Calificación:</strong><br />
-                    <span style={{ color: getScoreColor(result.score_percentage), fontWeight: '600' }}>
+                    <span style={{ color: getScoreColor(result.score_percentage), fontWeight: 500 }}>
                       {getScoreLabel(result.score_percentage)}
                     </span>
                   </div>

@@ -184,7 +184,7 @@ export default function ModuleQuizResultsAdmin() {
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 12 }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 800 }}>
+              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 500 }}>
                 📚 Resultados de Quizzes por Módulo
               </h1>
               <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
@@ -202,7 +202,7 @@ export default function ModuleQuizResultsAdmin() {
                   border: "2px solid #0F62FE",
                   textDecoration: "none",
                   fontSize: 16,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   transition: "transform 0.2s ease",
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
@@ -219,7 +219,7 @@ export default function ModuleQuizResultsAdmin() {
                   color: "#fff",
                   border: "none",
                   fontSize: 16,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "transform 0.2s ease",
                 }}
@@ -243,7 +243,7 @@ export default function ModuleQuizResultsAdmin() {
             alignItems: "center",
             boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
           }}>
-            <div style={{ fontWeight: 600 }}>Filtros:</div>
+            <div style={{ fontWeight: 500 }}>Filtros:</div>
             
             <select
               value={filterModule}
@@ -309,7 +309,7 @@ export default function ModuleQuizResultsAdmin() {
                 background: "#f1f5f9",
                 border: "1px solid #e2e8f0",
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 500,
                 cursor: "pointer"
               }}
             >
@@ -331,7 +331,7 @@ export default function ModuleQuizResultsAdmin() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
             }}>
               <div style={{ fontSize: 14, color: "#64748b", marginBottom: 8 }}>Promedio</div>
-              <div style={{ fontSize: 32, fontWeight: 700, color: "#0F62FE" }}>
+              <div style={{ fontSize: 32, fontWeight: 500, color: "#0F62FE" }}>
                 {avgScore}%
               </div>
             </div>
@@ -343,7 +343,7 @@ export default function ModuleQuizResultsAdmin() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
             }}>
               <div style={{ fontSize: 14, color: "#64748b", marginBottom: 8 }}>Excelentes (≥80%)</div>
-              <div style={{ fontSize: 32, fontWeight: 700, color: "#16a34a" }}>
+              <div style={{ fontSize: 32, fontWeight: 500, color: "#16a34a" }}>
                 {filteredResults.filter(r => r.scorePct >= 80).length}
               </div>
             </div>
@@ -355,7 +355,7 @@ export default function ModuleQuizResultsAdmin() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
             }}>
               <div style={{ fontSize: 14, color: "#64748b", marginBottom: 8 }}>Buenos (60-79%)</div>
-              <div style={{ fontSize: 32, fontWeight: 700, color: "#ea580c" }}>
+              <div style={{ fontSize: 32, fontWeight: 500, color: "#ea580c" }}>
                 {filteredResults.filter(r => r.scorePct >= 60 && r.scorePct < 80).length}
               </div>
             </div>
@@ -367,7 +367,7 @@ export default function ModuleQuizResultsAdmin() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
             }}>
               <div style={{ fontSize: 14, color: "#64748b", marginBottom: 8 }}>Necesita mejorar (&lt;60%)</div>
-              <div style={{ fontSize: 32, fontWeight: 700, color: "#dc2626" }}>
+              <div style={{ fontSize: 32, fontWeight: 500, color: "#dc2626" }}>
                 {filteredResults.filter(r => r.scorePct < 60).length}
               </div>
             </div>
@@ -385,17 +385,17 @@ export default function ModuleQuizResultsAdmin() {
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ background: "#f1f5f9", borderBottom: "2px solid #e2e8f0" }}>
-                  <th style={{ padding: "16px", textAlign: "left", fontWeight: 600, fontSize: 14 }}>Estudiante</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>Módulo</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>Sección</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>Página</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>Tipo</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>Correctas</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>%</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>Estado</th>
-                  <th style={{ padding: "16px", textAlign: "left", fontWeight: 600, fontSize: 14 }}>Fecha</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>Detalles</th>
-                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 600, fontSize: 14 }}>Acciones</th>
+                  <th style={{ padding: "16px", textAlign: "left", fontWeight: 500, fontSize: 14 }}>Estudiante</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>Módulo</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>Sección</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>Página</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>Tipo</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>Correctas</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>%</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>Estado</th>
+                  <th style={{ padding: "16px", textAlign: "left", fontWeight: 500, fontSize: 14 }}>Fecha</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>Detalles</th>
+                  <th style={{ padding: "16px", textAlign: "center", fontWeight: 500, fontSize: 14 }}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -410,13 +410,13 @@ export default function ModuleQuizResultsAdmin() {
                     <React.Fragment key={result.id}>
                       <tr style={{ borderBottom: "1px solid #e2e8f0" }}>
                         <td style={{ padding: "16px", fontSize: 14 }}>
-                          <div style={{ fontWeight: 600 }}>{result.userName}</div>
+                          <div style={{ fontWeight: 500 }}>{result.userName}</div>
                           <div style={{ fontSize: 12, color: "#64748b" }}>{result.email}</div>
                         </td>
-                        <td style={{ padding: "16px", textAlign: "center", fontSize: 14, fontWeight: 600 }}>
+                        <td style={{ padding: "16px", textAlign: "center", fontSize: 14, fontWeight: 500 }}>
                           M{result.moduleId}
                         </td>
-                        <td style={{ padding: "16px", textAlign: "center", fontSize: 14, fontWeight: 600 }}>
+                        <td style={{ padding: "16px", textAlign: "center", fontSize: 14, fontWeight: 500 }}>
                           S{result.sectionId}
                         </td>
                         <td style={{ padding: "16px", textAlign: "center", fontSize: 14 }}>
@@ -427,12 +427,12 @@ export default function ModuleQuizResultsAdmin() {
                             padding: "4px 8px",
                             borderRadius: 4,
                             background: "#f1f5f9",
-                            fontWeight: 600
+                            fontWeight: 500
                           }}>
                             {result.quizType}
                           </span>
                         </td>
-                        <td style={{ padding: "16px", textAlign: "center", fontSize: 16, fontWeight: 600 }}>
+                        <td style={{ padding: "16px", textAlign: "center", fontSize: 16, fontWeight: 500 }}>
                           {result.score} / {result.totalQuestions}
                         </td>
                         <td style={{ padding: "16px", textAlign: "center" }}>
@@ -441,7 +441,7 @@ export default function ModuleQuizResultsAdmin() {
                             padding: "6px 12px",
                             borderRadius: 6,
                             fontSize: 16,
-                            fontWeight: 700,
+                            fontWeight: 500,
                             background: `${getStatusColor(result.scorePct)}20`,
                             color: getStatusColor(result.scorePct)
                           }}>
@@ -451,7 +451,7 @@ export default function ModuleQuizResultsAdmin() {
                         <td style={{ padding: "16px", textAlign: "center" }}>
                           <span style={{
                             fontSize: 14,
-                            fontWeight: 600,
+                            fontWeight: 500,
                             color: getStatusColor(result.scorePct)
                           }}>
                             {getStatusText(result.scorePct)}
@@ -469,7 +469,7 @@ export default function ModuleQuizResultsAdmin() {
                               background: "#f1f5f9",
                               border: "1px solid #e2e8f0",
                               fontSize: 14,
-                              fontWeight: 600,
+                              fontWeight: 500,
                               cursor: "pointer",
                               transition: "background 0.2s",
                             }}
@@ -490,7 +490,7 @@ export default function ModuleQuizResultsAdmin() {
                               border: "1px solid #fecaca",
                               color: "#991b1b",
                               fontSize: 14,
-                              fontWeight: 600,
+                              fontWeight: 500,
                               cursor: deletingUserId === result.userId ? "not-allowed" : "pointer",
                               transition: "background 0.2s",
                               opacity: deletingUserId === result.userId ? 0.6 : 1,
@@ -514,7 +514,7 @@ export default function ModuleQuizResultsAdmin() {
                         <tr>
                           <td colSpan={11} style={{ padding: 20, background: "#f8fafc" }}>
                             <div style={{ maxHeight: 400, overflowY: "auto" }}>
-                              <h4 style={{ margin: "0 0 16px 0", fontSize: 16, fontWeight: 600 }}>
+                              <h4 style={{ margin: "0 0 16px 0", fontSize: 16, fontWeight: 500 }}>
                                 Respuestas Detalladas
                               </h4>
                               <div style={{ display: "grid", gap: 12 }}>
@@ -528,7 +528,7 @@ export default function ModuleQuizResultsAdmin() {
                                       borderLeft: `4px solid ${answer.isCorrect ? "#16a34a" : "#dc2626"}`
                                     }}
                                   >
-                                    <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
+                                    <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
                                       Pregunta {answer.questionIndex + 1} - {answer.isCorrect ? "✓ Correcta" : "✗ Incorrecta"}
                                     </div>
                                     <div style={{ fontSize: 13, color: "#64748b", marginBottom: 6 }}>

@@ -31,8 +31,7 @@ export default function BIZENTerminosPage() {
       background: "#FBFAF5", 
       minHeight: "100vh", 
       paddingBottom: 60,
-      fontFamily: "Arial, sans-serif"
-    }}>
+          }}>
       {/* Header */}
       <div style={{
         background: "#2c3e50",
@@ -58,18 +57,17 @@ export default function BIZENTerminosPage() {
               color: "#fff",
               textDecoration: "none",
               fontSize: 13,
-              fontWeight: 600,
+              fontWeight: 500,
               transition: "background 0.2s ease",
               border: "1px solid rgba(255,255,255,0.25)",
               cursor: "pointer",
-              fontFamily: "Arial, sans-serif"
-            }}
+                          }}
             onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
             onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
           >
             ← Regresar
           </button>
-          <strong style={{ fontSize: 18, fontFamily: "Arial, sans-serif" }}>Términos y Condiciones</strong>
+          <strong style={{ fontSize: 18, }}>Términos y Condiciones</strong>
         </div>
       </div>
 
@@ -85,13 +83,12 @@ export default function BIZENTerminosPage() {
           border: "1px solid #e0e0e0",
           lineHeight: 1.7,
           color: "#333",
-          fontFamily: "Arial, sans-serif"
-        }}>
+                  }}>
           <div style={{ marginBottom: 32, paddingBottom: 16, borderBottom: "1px solid #e0e0e0" }}>
-            <h1 style={{ fontSize: 24, fontWeight: 700, color: "#2c3e50", margin: "0 0 10px 0", fontFamily: "Arial, sans-serif" }}>
+            <h1 style={{ fontSize: 24, fontWeight: 500, color: "#2c3e50", margin: "0 0 10px 0", }}>
               Términos y Condiciones de Uso – {brandName}
             </h1>
-            <p style={{ fontSize: 13, color: "#777", margin: 0, fontFamily: "Arial, sans-serif" }}>
+            <p style={{ fontSize: 13, color: "#777", margin: 0, }}>
               Última actualización: <strong>20 de octubre de 2025</strong>
             </p>
           </div>
@@ -105,7 +102,7 @@ export default function BIZENTerminosPage() {
 
           {/* Section 1 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               1. Aceptación de los Términos
             </h2>
             <p>
@@ -115,7 +112,7 @@ export default function BIZENTerminosPage() {
 
           {/* Section 2 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               2. Descripción del Servicio
             </h2>
             <p>
@@ -128,7 +125,7 @@ export default function BIZENTerminosPage() {
 
           {/* Section 3 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               3. Creación y Seguridad de Cuenta
             </h2>
             <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
@@ -149,7 +146,7 @@ export default function BIZENTerminosPage() {
 
           {/* Section 4 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               4. Uso Permitido
             </h2>
             <p>Usted se compromete a utilizar {brandName} únicamente para:</p>
@@ -169,7 +166,7 @@ export default function BIZENTerminosPage() {
 
           {/* Section 5 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               5. Propiedad Intelectual
             </h2>
             <p>
@@ -182,7 +179,7 @@ export default function BIZENTerminosPage() {
 
           {/* Section 6 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               6. Limitación de Responsabilidad
             </h2>
             <p>
@@ -200,7 +197,7 @@ export default function BIZENTerminosPage() {
 
           {/* Section 7 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               7. Privacidad y Protección de Datos
             </h2>
             <p>
@@ -210,7 +207,7 @@ export default function BIZENTerminosPage() {
 
           {/* Section 8 */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               8. Terminación
             </h2>
             <p>
@@ -228,7 +225,7 @@ export default function BIZENTerminosPage() {
 
           {/* Contact */}
           <section style={{ marginBottom: 24, fontSize: 14 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#2c3e50", marginBottom: 12, fontFamily: "Arial, sans-serif" }}>
+            <h2 style={{ fontSize: 17, fontWeight: 500, color: "#2c3e50", marginBottom: 12, }}>
               9. Contacto
             </h2>
             <p>

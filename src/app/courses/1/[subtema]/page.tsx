@@ -51,23 +51,21 @@ export default function Tema1SubtemaPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "'Montserrat', sans-serif",
-        }}
+                  }}
       />
     )
   }
 
   if (subtemaIndex == null || !subtema) {
     return (
-      <div style={{ padding: 24, fontFamily: "'Montserrat', sans-serif", maxWidth: 800, margin: "0 auto" }}>
+      <div style={{ padding: 24, maxWidth: 800, margin: "0 auto" }}>
         <Button
           type="button"
           variant="outline"
           onClick={() => router.push("/courses/1")}
           style={{
-            fontFamily: "inherit",
-            fontSize: 15,
-            fontWeight: 600,
+                        fontSize: 15,
+            fontWeight: 500,
             padding: "10px 18px",
             border: "2px solid #E5E7EB",
             color: "#374151",
@@ -103,8 +101,7 @@ export default function Tema1SubtemaPage() {
           paddingBottom: "clamp(40px, 8vw, 80px)",
           paddingLeft: 16,
           paddingRight: 16,
-          fontFamily: "'Montserrat', sans-serif",
-          background: "transparent",
+                    background: "transparent",
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
@@ -129,9 +126,8 @@ export default function Tema1SubtemaPage() {
               variant="outline"
               onClick={() => router.push("/courses/1")}
               style={{
-                fontFamily: "inherit",
-                fontSize: 15,
-                fontWeight: 600,
+                                fontSize: 15,
+                fontWeight: 500,
                 padding: "10px 18px",
                 border: "2px solid #E5E7EB",
                 color: "#374151",
@@ -147,7 +143,7 @@ export default function Tema1SubtemaPage() {
           <h1
             style={{
               fontSize: "clamp(20px, 3.5vw, 26px)",
-              fontWeight: 800,
+              fontWeight: 500,
               color: "#1e293b",
               lineHeight: 1.2,
             }}
@@ -259,7 +255,7 @@ export default function Tema1SubtemaPage() {
                         animation: "seqCardIn 0.3s ease-out"
                       }}>
                         <Lock size={20} color="#3b82f6" style={{ marginBottom: 8 }} />
-                        <div style={{ fontSize: 11, fontWeight: 800, color: "#1e293b", lineHeight: 1.3 }}>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#1e293b", lineHeight: 1.3 }}>
                           Completa la lección anterior primero
                         </div>
                       </div>
@@ -272,7 +268,7 @@ export default function Tema1SubtemaPage() {
                         background: "#3B82F6",
                         color: "white",
                         fontSize: "clamp(16px, 4vw, 20px)",
-                        fontWeight: 800,
+                        fontWeight: 500,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -285,7 +281,7 @@ export default function Tema1SubtemaPage() {
                     <div
                       style={{
                         fontSize: "clamp(12px, 3.2vw, 15px)",
-                        fontWeight: 600,
+                        fontWeight: 500,
                         color: "#6B7280",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -298,7 +294,7 @@ export default function Tema1SubtemaPage() {
                     <div
                       style={{
                         fontSize: "clamp(14px, 3.5vw, 17px)",
-                        fontWeight: 700,
+                        fontWeight: 500,
                         color: "#111",
                         lineHeight: 1.3,
                         overflow: "hidden",
@@ -321,7 +317,7 @@ export default function Tema1SubtemaPage() {
                       <span
                         style={{
                           fontSize: 11,
-                          fontWeight: 700,
+                          fontWeight: 500,
                           padding: "4px 8px",
                           borderRadius: 6,
                           background: colors.bg,
@@ -373,8 +369,8 @@ export default function Tema1SubtemaPage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: 18, fontWeight: 600, color: "#6B7280" }}>{unitTitle}</div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: "#111", lineHeight: 1.3 }}>{lessonModal.title}</div>
+            <div style={{ fontSize: 18, fontWeight: 500, color: "#6B7280" }}>{unitTitle}</div>
+            <div style={{ fontSize: 22, fontWeight: 500, color: "#111", lineHeight: 1.3 }}>{lessonModal.title}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <Button
                 onClick={() => {
@@ -385,7 +381,7 @@ export default function Tema1SubtemaPage() {
                 style={{
                   width: "100%",
                   fontSize: 17,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   padding: "14px 20px",
                   background: "#3B82F6",
                   color: "white",
@@ -402,7 +398,7 @@ export default function Tema1SubtemaPage() {
                 style={{
                   width: "100%",
                   fontSize: 16,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   padding: "12px 20px",
                   background: "transparent",
                   color: "#6B7280",

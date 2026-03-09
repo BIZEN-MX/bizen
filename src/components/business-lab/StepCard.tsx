@@ -58,7 +58,7 @@ export default function StepCard({ step, isCompleted }: StepCardProps) {
             alignItems: "center",
             justifyContent: "center",
             fontSize: 20,
-            fontWeight: 700,
+            fontWeight: 500,
             color: isCompleted ? "#10B981" : "#0B71FE",
             flexShrink: 0
           }}>
@@ -67,7 +67,7 @@ export default function StepCard({ step, isCompleted }: StepCardProps) {
           
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111" }}>
+              <h3 style={{ fontSize: 18, fontWeight: 500, color: "#111" }}>
                 {step.title}
               </h3>
               {step.required && (
@@ -77,7 +77,7 @@ export default function StepCard({ step, isCompleted }: StepCardProps) {
                   background: "#FEE2E2",
                   color: "#991B1B",
                   borderRadius: 4,
-                  fontWeight: 600
+                  fontWeight: 500
                 }}>
                   REQUERIDO
                 </span>

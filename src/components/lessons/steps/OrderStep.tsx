@@ -99,12 +99,11 @@ export function OrderStep({
         <ExerciseInstruction type="order" />
         <h3 style={{
           fontSize: "clamp(20px, 3.5vw, 28px)",
-          fontWeight: 800,
+          fontWeight: 500,
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Inter', sans-serif",
-        }}>
+                  }}>
           {step.question || "Pon los elementos en el orden correcto"}
         </h3>
       </div>
@@ -124,9 +123,8 @@ export function OrderStep({
               display: "flex",
               alignItems: "center",
               gap: 10,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 13,
-              fontWeight: 700,
+                            fontSize: 13,
+              fontWeight: 500,
               color: "#1D4ED8",
             }}
           >
@@ -202,7 +200,7 @@ export function OrderStep({
                 border: `1.5px solid ${borderColor}`,
                 position: "relative",
               }}>
-                <span style={{ fontSize: 13, fontWeight: 900, color: color, position: "absolute", top: -8, left: -8, background: "white", width: 18, height: 18, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", border: `1.5px solid ${borderColor}`, boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
+                <span style={{ fontSize: 13, fontWeight: 500, color: color, position: "absolute", top: -8, left: -8, background: "white", width: 18, height: 18, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", border: `1.5px solid ${borderColor}`, boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
                   {index + 1}
                 </span>
                 {Math.min(index, ITEM_ICONS.length - 1) >= 0 && React.createElement(ITEM_ICONS[index % ITEM_ICONS.length], {
@@ -211,7 +209,7 @@ export function OrderStep({
                   strokeWidth: 2.5
                 })}
               </div>
-              <span style={{ flex: 1, fontSize: "clamp(15px, 3.5vw, 18px)", fontWeight: 700, color, fontFamily: "'Inter', sans-serif" }}>
+              <span style={{ flex: 1, fontSize: "clamp(15px, 3.5vw, 18px)", fontWeight: 500, color, }}>
                 {item.label}
               </span>
               {!hasChecked && (

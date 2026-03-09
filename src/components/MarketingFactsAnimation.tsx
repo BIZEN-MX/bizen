@@ -131,7 +131,7 @@ export default function MarketingFactsAnimation({ facts, baseFontSize = 18 }: Ma
             lineHeight: 1.4,
             color: '#1f2937',
             textAlign: 'center',
-            fontWeight: 600,
+            fontWeight: 500,
             margin: 0,
           }}>
             {currentFact.text}

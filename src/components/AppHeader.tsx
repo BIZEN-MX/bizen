@@ -59,10 +59,9 @@ export default function AppHeader() {
           />
           <span style={{
             fontSize: "18px",
-            fontWeight: 800,
+            fontWeight: 500,
             color: "#0F62FE",
-            fontFamily: "Montserrat, sans-serif",
-            letterSpacing: "0.5px"
+                        letterSpacing: "0.5px"
           }}>
             BIZEN
           </span>

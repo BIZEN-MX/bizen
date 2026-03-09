@@ -152,9 +152,8 @@ export function InfoStep({
                   margin: 0,
                   fontSize: 14,
                   color: "#FFFFFF",
-                  fontWeight: 800,
-                  fontFamily: "'Montserrat', sans-serif",
-                  letterSpacing: "0.03em",
+                  fontWeight: 500,
+                                    letterSpacing: "0.03em",
                 }}>
                   ¡Toca para ver la nota! →
                 </p>
@@ -163,8 +162,7 @@ export function InfoStep({
                 margin: 0,
                 fontSize: 12,
                 color: "#94A3B8",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 500,
+                                fontWeight: 500,
               }}>
                 Tenemos algo importante para ti
               </p>
@@ -257,12 +255,11 @@ export function InfoStep({
                   >
                     <span style={{
                       fontSize: "11px",
-                      fontWeight: 900,
+                      fontWeight: 500,
                       color: "#1D4ED8",
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
-                      fontFamily: "'Montserrat', sans-serif",
-                    }}>
+                                          }}>
                       {step.description}
                     </span>
                   </motion.div>
@@ -277,11 +274,10 @@ export function InfoStep({
                     style={{
                       margin: 0,
                       fontSize: "clamp(22px, 4vw, 30px)",
-                      fontWeight: 900,
+                      fontWeight: 500,
                       letterSpacing: "-0.03em",
                       lineHeight: 1.18,
-                      fontFamily: "'Montserrat', sans-serif",
-                      // Gradient title text
+                                            // Gradient title text
                       background: "linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #3b82f6 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -346,12 +342,11 @@ export function InfoStep({
                   </svg>
                   <span style={{
                     fontSize: 11,
-                    fontWeight: 800,
+                    fontWeight: 500,
                     color: "#2563EB",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
-                    fontFamily: "'Montserrat', sans-serif",
-                  }}>
+                                      }}>
                     Nota de clase
                   </span>
                 </motion.div>

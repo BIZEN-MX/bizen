@@ -72,8 +72,7 @@ export default function LeaderboardPage() {
         display: "grid", 
         placeItems: "center", 
         minHeight: "60vh", 
-        fontFamily: "Montserrat, sans-serif",
-        background: "#FBFAF5"
+                background: "#FBFAF5"
       }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
@@ -90,8 +89,7 @@ export default function LeaderboardPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "#FBFAF5",
+            background: "#FBFAF5",
     }}>
       <main style={{ 
         position: "relative",
@@ -100,10 +98,10 @@ export default function LeaderboardPage() {
         padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1
       }}>
-        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 800, color: "#1E40AF" }}>
+        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 500, color: "#1E40AF" }}>
           Tabla de Clasificación
         </h1>
-        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 600 }}>
+        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 500 }}>
           Los miembros más activos de la comunidad
         </p>
 
@@ -118,10 +116,9 @@ export default function LeaderboardPage() {
               border: "none",
               borderRadius: 8,
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: "pointer",
-              fontFamily: "Montserrat, sans-serif"
-            }}
+                          }}
           >
             Esta Semana
           </button>
@@ -134,10 +131,9 @@ export default function LeaderboardPage() {
               border: "none",
               borderRadius: 8,
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: "pointer",
-              fontFamily: "Montserrat, sans-serif"
-            }}
+                          }}
           >
             Histórico
           </button>
@@ -172,7 +168,7 @@ export default function LeaderboardPage() {
               {/* Position */}
               <div style={{
                 fontSize: 24,
-                fontWeight: 800,
+                fontWeight: 500,
                 color: index < 3 ? "#F59E0B" : "#6B7280",
                 minWidth: 50,
                 textAlign: "center"
@@ -182,24 +178,24 @@ export default function LeaderboardPage() {
 
               {/* User Info */}
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 18, fontWeight: 700, color: "#1E40AF", marginBottom: 4 }}>
+                <div style={{ fontSize: 18, fontWeight: 500, color: "#1E40AF", marginBottom: 4 }}>
                   {entry.nickname}
                 </div>
-                <div style={{ fontSize: 13, color: "#6B7280", fontWeight: 600 }}>
+                <div style={{ fontSize: 13, color: "#6B7280", fontWeight: 500 }}>
                   Nivel {entry.level} • {entry.reputation} pts
                 </div>
               </div>
 
               {/* Stats */}
-              <div style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 600, color: "#374151" }}>
+              <div style={{ display: "flex", gap: 20, fontSize: 13, fontWeight: 500, color: "#374151" }}>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: "#0F62FE" }}>
+                  <div style={{ fontSize: 20, fontWeight: 500, color: "#0F62FE" }}>
                     {entry.postsCreated}
                   </div>
                   <div style={{ color: "#9CA3AF" }}>temas</div>
                 </div>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: "#10B981" }}>
+                  <div style={{ fontSize: 20, fontWeight: 500, color: "#10B981" }}>
                     {entry.acceptedAnswers}
                   </div>
                   <div style={{ color: "#9CA3AF" }}>aceptadas</div>

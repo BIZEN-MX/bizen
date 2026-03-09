@@ -40,7 +40,7 @@ export const BizenPasswordResetEmail = ({
           }
           .logo {
             font-size: 32px;
-            font-weight: bold;
+            font-weight: 500;
             margin-bottom: 10px;
             letter-spacing: 2px;
           }
@@ -56,7 +56,7 @@ export const BizenPasswordResetEmail = ({
             font-size: 24px;
             color: #0E4A7A;
             margin-bottom: 20px;
-            font-weight: 600;
+            font-weight: 500;
           }
           .message {
             font-size: 16px;
@@ -78,7 +78,7 @@ export const BizenPasswordResetEmail = ({
             color: white !important;
             text-decoration: none;
             border-radius: 12px;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 16px;
             text-align: center;
             margin: 25px 0;
@@ -185,7 +185,7 @@ export const BizenPasswordResetEmail = ({
               ${resetUrl}
             </p>
 
-            <p style="margin-top: 25px; font-weight: 600; color: #0E4A7A;">
+            <p style="margin-top: 25px; font-weight: 500; color: #0E4A7A;">
               El equipo de BIZEN
             </p>
           </div>

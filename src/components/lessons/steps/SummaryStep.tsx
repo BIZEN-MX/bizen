@@ -147,28 +147,27 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
             fontWeight: 950,
             color: "#FFF",
             lineHeight: 1,
-            fontFamily: "'Montserrat', sans-serif",
-            textShadow: "0 0 30px rgba(96,165,250,0.5)",
+                        textShadow: "0 0 30px rgba(96,165,250,0.5)",
           }}>
             +{gainedXP}
           </span>
-          <span style={{ fontSize: 22, fontWeight: 800, color: "#93c5fd", fontFamily: "'Montserrat', sans-serif" }}>XP</span>
+          <span style={{ fontSize: 22, fontWeight: 500, color: "#93c5fd", }}>XP</span>
         </motion.div>
-        <div style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 2 }}>
+        <div style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 2 }}>
           XP ganado
         </div>
       </div>
 
       {/* Level labels */}
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-        <span style={{ fontSize: 12, fontWeight: 900, color: "#fff", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <span style={{ fontSize: 12, fontWeight: 500, color: "#fff", textTransform: "uppercase", letterSpacing: "0.08em" }}>
           Nivel {leveledUp ? newLevel : currentLevel}
         </span>
         <motion.span
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: delay / 1000 + 0.5 }}
-          style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd" }}
+          style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd" }}
         >
           {Math.min(xpNeeded, xpInLevel + gainedXP)} / {xpNeeded} XP
         </motion.span>
@@ -231,10 +230,9 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
               padding: "6px 16px",
               textAlign: "center",
               fontSize: 13,
-              fontWeight: 900,
+              fontWeight: 500,
               color: "#fff",
-              fontFamily: "'Montserrat', sans-serif",
-              letterSpacing: "0.04em",
+                            letterSpacing: "0.04em",
               boxShadow: "0 4px 16px rgba(255,184,0,0.4)",
             }}
           >
@@ -366,14 +364,13 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
               transition={{ delay: 0.25 }}
               style={{
                 fontSize: "clamp(24px, 6vw, 38px)",
-                fontWeight: 900,
+                fontWeight: 500,
                 background: "linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 margin: 0,
                 lineHeight: 1.2,
-                fontFamily: "'Inter', sans-serif",
-                letterSpacing: "-0.01em",
+                                letterSpacing: "-0.01em",
               }}
             >
               {step.title || "¡Lección completada!"}
@@ -400,7 +397,7 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.3 }}
-                style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#6B7280", fontFamily: "'Inter', sans-serif" }}
+                style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "#6B7280", }}
               >
                 {starMessages[stars]}
               </motion.p>
@@ -419,8 +416,7 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                   fontWeight: 500,
                   maxWidth: 440,
                   padding: "0 16px",
-                  fontFamily: "'Inter', sans-serif",
-                }}
+                                  }}
               >
                 {step.body.split("\n\n").map((line, i) => (
                   <p key={i} style={{ margin: "0 0 8px" }}>{line}</p>
@@ -463,11 +459,10 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
 
             <h2 style={{
               fontSize: 28,
-              fontWeight: 900,
+              fontWeight: 500,
               color: "#0f172a",
               margin: 0,
-              fontFamily: "'Montserrat', sans-serif",
-            }}>
+                          }}>
               Tu progreso actual
             </h2>
 
@@ -494,13 +489,13 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 8 }}>😅</div>
-                <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#64748b", fontFamily: "'Inter', sans-serif" }}>
+                <p style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "#64748b", }}>
                   Sin XP esta vez — ¡intenta no cometer errores!
                 </p>
               </motion.div>
             )}
 
-            <p style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8", textAlign: "center", padding: "0 20px" }}>
+            <p style={{ fontSize: 14, fontWeight: 500, color: "#94a3b8", textAlign: "center", padding: "0 20px" }}>
               Cada lección completada te acerca más a tu libertad financiera.
             </p>
           </motion.div>

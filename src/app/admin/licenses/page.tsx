@@ -65,7 +65,7 @@ export default function AdminLicensesPage() {
 
   if (loading || loadingLicense) {
     return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "Montserrat, sans-serif" }}>
+      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando licencia...</p>
         </div>
@@ -83,14 +83,13 @@ export default function AdminLicensesPage() {
       maxWidth: 900, 
       margin: "0 auto", 
       padding: "clamp(20px, 4vw, 40px)",
-      fontFamily: "Montserrat, sans-serif"
-    }}>
+          }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ 
           margin: 0, 
           fontSize: "clamp(28px, 6vw, 36px)", 
-          fontWeight: 800,
+          fontWeight: 500,
           background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -110,7 +109,7 @@ export default function AdminLicensesPage() {
         background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
         color: "#fff"
       }}>
-        <h2 style={{ margin: "0 0 24px", fontSize: 24, fontWeight: 700 }}>
+        <h2 style={{ margin: "0 0 24px", fontSize: 24, fontWeight: 500 }}>
           Plan Actual: {license.plan === "annual" ? "Anual" : "Mensual"}
         </h2>
 
@@ -122,15 +121,15 @@ export default function AdminLicensesPage() {
         }}>
           <div>
             <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 6 }}>Asientos Totales</div>
-            <div style={{ fontSize: 36, fontWeight: 800 }}>{license.seats}</div>
+            <div style={{ fontSize: 36, fontWeight: 500 }}>{license.seats}</div>
           </div>
           <div>
             <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 6 }}>Asientos Usados</div>
-            <div style={{ fontSize: 36, fontWeight: 800 }}>{license.seatsUsed}</div>
+            <div style={{ fontSize: 36, fontWeight: 500 }}>{license.seatsUsed}</div>
           </div>
           <div>
             <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 6 }}>Disponibles</div>
-            <div style={{ fontSize: 36, fontWeight: 800 }}>{license.seats - license.seatsUsed}</div>
+            <div style={{ fontSize: 36, fontWeight: 500 }}>{license.seats - license.seatsUsed}</div>
           </div>
         </div>
 
@@ -172,13 +171,13 @@ export default function AdminLicensesPage() {
         }}>
           <div style={{ marginBottom: 12 }}>
             <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 4 }}>Inicio de Plan</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>
+            <div style={{ fontSize: 16, fontWeight: 500 }}>
               {new Date(license.startDate).toLocaleDateString('es-ES', { month: 'long', day: 'numeric', year: 'numeric' })}
             </div>
           </div>
           <div>
             <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 4 }}>Renovación</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>
+            <div style={{ fontSize: 16, fontWeight: 500 }}>
               {new Date(license.endDate).toLocaleDateString('es-ES', { month: 'long', day: 'numeric', year: 'numeric' })}
             </div>
             <div style={{ fontSize: 14, opacity: 0.9, marginTop: 4 }}>
@@ -215,7 +214,7 @@ export default function AdminLicensesPage() {
 
       {/* Plan Options */}
       <div>
-        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
           💎 Planes Disponibles
         </h2>
         
@@ -226,14 +225,14 @@ export default function AdminLicensesPage() {
         }}>
           {/* Monthly Plan */}
           <Card style={{ padding: "28px 24px" }}>
-            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700 }}>
+            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 500 }}>
               Mensual
             </h3>
             <p style={{ margin: "0 0 20px", fontSize: 14, color: "#666" }}>
               Flexibilidad mes a mes
             </p>
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 36, fontWeight: 800, color: "#0F62FE" }}>
+              <div style={{ fontSize: 36, fontWeight: 500, color: "#0F62FE" }}>
                 $XX<span style={{ fontSize: 16, fontWeight: 500, color: "#666" }}>/mes</span>
               </div>
               <div style={{ fontSize: 13, color: "#666" }}>por asiento</div>
@@ -252,19 +251,19 @@ export default function AdminLicensesPage() {
               color: "#fff",
               borderRadius: 12,
               fontSize: 12,
-              fontWeight: 600,
+              fontWeight: 500,
               marginBottom: 12
             }}>
               ⭐ Recomendado
             </div>
-            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700 }}>
+            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 500 }}>
               Anual
             </h3>
             <p style={{ margin: "0 0 20px", fontSize: 14, color: "#666" }}>
               Ahorra 20% con pago anual
             </p>
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 36, fontWeight: 800, color: "#0F62FE" }}>
+              <div style={{ fontSize: 36, fontWeight: 500, color: "#0F62FE" }}>
                 $XX<span style={{ fontSize: 16, fontWeight: 500, color: "#666" }}>/año</span>
               </div>
               <div style={{ fontSize: 13, color: "#666" }}>por asiento</div>

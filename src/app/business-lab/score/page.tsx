@@ -68,16 +68,14 @@ export default async function ScorePage() {
         width: "100%",
         flex: 1,
         background: "#FBFAF5",
-        fontFamily: "Montserrat, sans-serif",
-        overflowX: "hidden",
+                overflowX: "hidden",
         overflowY: "auto",
         boxSizing: "border-box"
       }}>
         <main className="score-main" style={{
           margin: "0 auto",
           flex: 1,
-          fontFamily: "Montserrat, sans-serif",
-          width: "100%",
+                    width: "100%",
           boxSizing: "border-box" as const,
           overflowX: "hidden",
           overflowY: "visible"
@@ -89,7 +87,7 @@ export default async function ScorePage() {
               border: "2px solid #E5E7EB",
               borderRadius: 8,
               fontSize: 14,
-              fontWeight: 600,
+              fontWeight: 500,
               color: "#374151",
               cursor: "pointer",
               marginBottom: 24,
@@ -108,7 +106,7 @@ export default async function ScorePage() {
           <div style={{ marginBottom: 32 }}>
             <h1 style={{
               fontSize: 42,
-              fontWeight: 900,
+              fontWeight: 500,
               background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -145,14 +143,14 @@ export default async function ScorePage() {
             }}>
               <div style={{
                 fontSize: 72,
-                fontWeight: 900,
+                fontWeight: 500,
                 color: "white"
               }}>
                 {score?.readinessScore || 0}
               </div>
             </div>
 
-            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8, color: "#111" }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, marginBottom: 8, color: "#111" }}>
               Tu Score Actual
             </h2>
             <p style={{ fontSize: 14, color: "#6B7280" }}>
@@ -171,7 +169,7 @@ export default async function ScorePage() {
               marginBottom: 32,
               width: "100%"
             }}>
-              <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#111" }}>
+              <h3 style={{ fontSize: 20, fontWeight: 500, marginBottom: 16, color: "#111" }}>
                 Desglose por Área
               </h3>
               {/* Add breakdown visualization here */}
@@ -189,7 +187,7 @@ export default async function ScorePage() {
             border: "2px solid #e5e7eb",
             width: "100%"
           }}>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#1E40AF", marginBottom: 12 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 500, color: "#1E40AF", marginBottom: 12 }}>
               ¿Cómo mejorar tu score?
             </h3>
             <ul style={{

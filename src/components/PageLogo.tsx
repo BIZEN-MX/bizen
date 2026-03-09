@@ -31,10 +31,9 @@ export default function PageLogo() {
       />
       <span style={{
         fontSize: 28,
-        fontWeight: 900,
+        fontWeight: 500,
         color: "#0F62FE",
-        fontFamily: "Montserrat, sans-serif",
-        letterSpacing: "0.5px"
+                letterSpacing: "0.5px"
       }}>
         BIZEN
       </span>

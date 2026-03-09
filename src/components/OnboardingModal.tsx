@@ -266,7 +266,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           width: 100%; padding: clamp(13px, 3vw, 16px) 24px;
           background: linear-gradient(135deg, #0F62FE 0%, #4F8EFF 100%);
           color: white; border: none; border-radius: 14px;
-          font-size: clamp(14px, 3.5vw, 15px); font-weight: 800; font-family: 'Inter', sans-serif;
+          font-size: clamp(14px, 3.5vw, 15px); font-weight: 500; font-family: 'Inter', sans-serif;
           cursor: pointer;
           display: flex; align-items: center; justify-content: center; gap: 8px;
           letter-spacing: 0.02em;
@@ -353,10 +353,10 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                             {/* Badge */}
                             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, rgba(15,98,254,0.1), rgba(99,102,241,0.1))", border: "1px solid rgba(15,98,254,0.2)", borderRadius: 99, padding: "5px 16px", marginBottom: "clamp(12px,3vw,18px)" }}>
-                                <span style={{ fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 800, color: "#0F62FE", letterSpacing: "0.06em", textTransform: "uppercase" }}>Bienvenido a BIZEN</span>
+                                <span style={{ fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 500, color: "#0F62FE", letterSpacing: "0.06em", textTransform: "uppercase" }}>Bienvenido a BIZEN</span>
                             </div>
 
-                            <h1 style={{ fontSize: "clamp(20px,5vw,28px)", fontWeight: 900, color: "#0f172a", margin: "0 0 clamp(8px,2vw,12px)", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+                            <h1 style={{ fontSize: "clamp(20px,5vw,28px)", fontWeight: 500, color: "#0f172a", margin: "0 0 clamp(8px,2vw,12px)", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
                                 Hola, <span style={{ color: "#0F62FE" }}>{profileName}</span>
                             </h1>
                             <p style={{ fontSize: "clamp(13px,3.5vw,15px)", color: "#64748b", margin: "0 0 6px", lineHeight: 1.75 }}>
@@ -383,7 +383,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                         <div className="ob-pad">
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "clamp(14px,3vw,22px)" }}>
                                 <button className="ob-btn-ghost" onClick={() => goToStep("welcome")}>← Atrás</button>
-                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 700 }}>Paso 1 de {totalSteps}</span>
+                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 500 }}>Paso 1 de {totalSteps}</span>
                             </div>
 
                             <div style={{ textAlign: "center", marginBottom: "clamp(16px,4vw,24px)" }}>
@@ -398,7 +398,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                 }}>
                                     <AvatarDisplay avatar={selectedAvatar} size={50} />
                                 </div>
-                                <h2 style={{ fontSize: "clamp(17px,4.5vw,22px)", fontWeight: 800, color: "#0f172a", margin: "0 0 4px" }}>Elige tu avatar</h2>
+                                <h2 style={{ fontSize: "clamp(17px,4.5vw,22px)", fontWeight: 500, color: "#0f172a", margin: "0 0 4px" }}>Elige tu avatar</h2>
                                 <p style={{ fontSize: "clamp(12px,3vw,13px)", color: "#64748b", margin: 0 }}>Será tu cara en el foro y tu perfil</p>
                             </div>
 
@@ -441,7 +441,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                         <div className="ob-pad">
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "clamp(14px,3vw,22px)" }}>
                                 <button className="ob-btn-ghost" onClick={() => goToStep("avatar")}>← Atrás</button>
-                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 700 }}>Paso 2 de {totalSteps}</span>
+                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 500 }}>Paso 2 de {totalSteps}</span>
                             </div>
 
                             {/* Mini avatar + heading */}
@@ -450,14 +450,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                     <AvatarDisplay avatar={selectedAvatar} size={34} />
                                 </div>
                                 <div>
-                                    <h2 style={{ fontSize: "clamp(16px,4.5vw,20px)", fontWeight: 800, color: "#0f172a", margin: "0 0 3px" }}>Elige tu nombre</h2>
+                                    <h2 style={{ fontSize: "clamp(16px,4.5vw,20px)", fontWeight: 500, color: "#0f172a", margin: "0 0 3px" }}>Elige tu nombre</h2>
                                     <p style={{ fontSize: "clamp(11px,3vw,13px)", color: "#64748b", margin: 0 }}>Con este alias te verán en el foro</p>
                                 </div>
                             </div>
 
                             {/* Username */}
                             <div style={{ marginBottom: "clamp(14px,3vw,18px)" }}>
-                                <label style={{ display: "block", fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 700, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
+                                <label style={{ display: "block", fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 500, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
                                     Nombre de usuario *
                                 </label>
                                 <div style={{ position: "relative" }}>
@@ -483,7 +483,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                             {/* Bio */}
                             <div style={{ marginBottom: "clamp(20px,5vw,28px)" }}>
-                                <label style={{ display: "block", fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 700, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
+                                <label style={{ display: "block", fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 500, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
                                     Intereses financieros{" "}
                                     <span style={{ fontWeight: 500, color: "#9ca3af", textTransform: "none" as const, letterSpacing: 0 }}>(opcional)</span>
                                 </label>
@@ -514,19 +514,19 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                         <div className="ob-pad">
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "clamp(14px,3vw,22px)" }}>
                                 <button className="ob-btn-ghost" onClick={() => goToStep("username")}>← Atrás</button>
-                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 700 }}>Paso 3 de 4</span>
+                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 500 }}>Paso 3 de 4</span>
                             </div>
 
                             <div style={{ textAlign: "center", marginBottom: "clamp(18px,5vw,28px)" }}>
                                 <div className="ob-section-icon" style={{ background: "#EFF6FF", color: "#0B71FE" }}>
                                     <SchoolIcon size={36} />
                                 </div>
-                                <h2 style={{ fontSize: "clamp(17px,4.5vw,21px)", fontWeight: 800, color: "#0f172a", margin: "0 0 6px" }}>¿Cuál es tu escuela?</h2>
+                                <h2 style={{ fontSize: "clamp(17px,4.5vw,21px)", fontWeight: 500, color: "#0f172a", margin: "0 0 6px" }}>¿Cuál es tu escuela?</h2>
                                 <p style={{ fontSize: "clamp(12px,3vw,13px)", color: "#64748b", margin: 0 }}>Para mostrarte el progreso de tus compañeros.</p>
                             </div>
 
                             <div style={{ marginBottom: "clamp(20px,5vw,28px)" }}>
-                                <label style={{ display: "block", fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 700, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
+                                <label style={{ display: "block", fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 500, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
                                     Selecciona tu institución *
                                 </label>
                                 <select
@@ -557,19 +557,19 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                         <div className="ob-pad">
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "clamp(14px,3vw,22px)" }}>
                                 <button className="ob-btn-ghost" onClick={() => goToStep(isInstitutional ? "school" : "username")}>← Atrás</button>
-                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 700 }}>Paso {isInstitutional ? 4 : 3} de {totalSteps}</span>
+                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 500 }}>Paso {isInstitutional ? 4 : 3} de {totalSteps}</span>
                             </div>
 
                             <div style={{ textAlign: "center", marginBottom: "clamp(18px,5vw,28px)" }}>
                                 <div className="ob-section-icon" style={{ background: "#FFF1F2", color: "#F43F5E" }}>
                                     <CakeIcon size={36} />
                                 </div>
-                                <h2 style={{ fontSize: "clamp(17px,4.5vw,21px)", fontWeight: 800, color: "#0f172a", margin: "0 0 6px" }}>¿Cuándo es tu cumpleaños?</h2>
+                                <h2 style={{ fontSize: "clamp(17px,4.5vw,21px)", fontWeight: 500, color: "#0f172a", margin: "0 0 6px" }}>¿Cuándo es tu cumpleaños?</h2>
                                 <p style={{ fontSize: "clamp(12px,3vw,13px)", color: "#64748b", margin: 0 }}>Nos ayuda a personalizar tu experiencia. Es opcional.</p>
                             </div>
 
                             <div style={{ marginBottom: "clamp(16px,4vw,24px)" }}>
-                                <label style={{ display: "block", fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 700, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
+                                <label style={{ display: "block", fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 500, color: "#374151", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginBottom: 8 }}>
                                     Fecha de nacimiento{" "}
                                     <span style={{ fontWeight: 500, color: "#9ca3af", textTransform: "none" as const, letterSpacing: 0 }}>(opcional)</span>
                                 </label>
@@ -593,7 +593,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                         }}>
                                             <PartyIcon size={20} color="#1e40af" />
                                             <div>
-                                                <div style={{ fontSize: "clamp(12px,3vw,13px)", fontWeight: 800, color: "#1e40af" }}>¡Tienes {age} años!</div>
+                                                <div style={{ fontSize: "clamp(12px,3vw,13px)", fontWeight: 500, color: "#1e40af" }}>¡Tienes {age} años!</div>
                                                 <div style={{ fontSize: "clamp(10px,2.5vw,11px)", color: "#3b82f6" }}>Bienvenido a BIZEN</div>
                                             </div>
                                         </div>

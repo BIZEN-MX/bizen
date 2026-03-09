@@ -105,7 +105,7 @@ export default function CourseCompletePage() {
           fontSize: 48, 
           margin: 0, 
           marginBottom: 16,
-          fontWeight: 900,
+          fontWeight: 500,
           color: primaryColor
         }}>
           ¡Felicitaciones!
@@ -158,7 +158,7 @@ export default function CourseCompletePage() {
               <p
                 style={{
                   fontSize: 20,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "#0F62FE",
                   margin: 0,
                   lineHeight: 1.5,
@@ -219,7 +219,7 @@ export default function CourseCompletePage() {
             style={{
               padding: "20px 48px",
               fontSize: 20,
-              fontWeight: 700,
+              fontWeight: 500,
               color: "white",
               background: `linear-gradient(135deg, ${primaryColor}, #3B82F6)`,
               border: "none",

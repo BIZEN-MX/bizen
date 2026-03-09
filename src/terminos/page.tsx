@@ -43,7 +43,7 @@ export default function TerminosPage() {
               color: "#fff",
               textDecoration: "none",
               fontSize: 14,
-              fontWeight: 600,
+              fontWeight: 500,
               transition: "background 0.2s ease",
               border: "1px solid rgba(255,255,255,0.2)",
             }}
@@ -52,7 +52,7 @@ export default function TerminosPage() {
           >
             ← Regresar
           </Link>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 500, margin: 0 }}>
             Términos y Condiciones
           </h1>
         </div>
@@ -73,7 +73,7 @@ export default function TerminosPage() {
           color: "#333"
         }}>
           <div style={{ marginBottom: 40, paddingBottom: 20, borderBottom: "2px solid #e5e7eb" }}>
-            <h1 style={{ fontSize: 32, fontWeight: 700, color: "#111", margin: "0 0 12px 0" }}>
+            <h1 style={{ fontSize: 32, fontWeight: 500, color: "#111", margin: "0 0 12px 0" }}>
               Términos y Condiciones de Uso – {brandName}
             </h1>
             <p style={{ fontSize: 14, color: "#666", margin: 0 }}>
@@ -90,7 +90,7 @@ export default function TerminosPage() {
 
           {/* Section 1 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               1. Aceptación de los Términos
             </h2>
             <p>
@@ -100,7 +100,7 @@ export default function TerminosPage() {
 
           {/* Section 2 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               2. Descripción del Servicio
             </h2>
             <p>
@@ -113,7 +113,7 @@ export default function TerminosPage() {
 
           {/* Section 3 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               3. Creación y Seguridad de Cuenta
             </h2>
             <ul style={{ marginLeft: 20 }}>
@@ -134,7 +134,7 @@ export default function TerminosPage() {
 
           {/* Section 4 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               4. Uso Permitido
             </h2>
             <p>Usted se compromete a utilizar {brandName} únicamente para:</p>
@@ -154,7 +154,7 @@ export default function TerminosPage() {
 
           {/* Section 5 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               5. Propiedad Intelectual
             </h2>
             <p>
@@ -167,7 +167,7 @@ export default function TerminosPage() {
 
           {/* Section 6 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               6. Pagos y Facturación
             </h2>
             <p>
@@ -183,7 +183,7 @@ export default function TerminosPage() {
 
           {/* Section 7 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               7. Privacidad y Protección de Datos
             </h2>
             <p>
@@ -193,7 +193,7 @@ export default function TerminosPage() {
 
           {/* Section 8 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               8. Limitación de Responsabilidad
             </h2>
             <p>
@@ -211,7 +211,7 @@ export default function TerminosPage() {
 
           {/* Section 9 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               9. Indemnización
             </h2>
             <p>
@@ -226,7 +226,7 @@ export default function TerminosPage() {
 
           {/* Section 10 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               10. Modificaciones a los Términos
             </h2>
             <p>
@@ -239,7 +239,7 @@ export default function TerminosPage() {
 
           {/* Section 11 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               11. Terminación
             </h2>
             <p>
@@ -257,7 +257,7 @@ export default function TerminosPage() {
 
           {/* Section 12 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               12. Ley Aplicable y Jurisdicción
             </h2>
             <p>
@@ -267,7 +267,7 @@ export default function TerminosPage() {
 
           {/* Section 13 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               13. Menores de Edad
             </h2>
             <p>
@@ -277,7 +277,7 @@ export default function TerminosPage() {
 
           {/* Section 14 */}
           <section style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: bgColor, marginBottom: 16 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, color: bgColor, marginBottom: 16 }}>
               14. Contacto
             </h2>
             <p>

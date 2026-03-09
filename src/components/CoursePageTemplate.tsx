@@ -180,20 +180,20 @@ export default function CoursePageTemplate({
     const topicPct = totalInTopic > 0 ? Math.round((completedInTopic / totalInTopic) * 100) : 0
 
     if (loading || !user) {
-        return <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Montserrat', sans-serif" }} />
+        return <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", }} />
     }
 
     if (isTopicLockedBySequence) {
         return (
-            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#FBFAF5", padding: 20, fontFamily: "'Montserrat', sans-serif", textAlign: "center" }}>
+            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#FBFAF5", padding: 20, textAlign: "center" }}>
                 <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(15,98,254,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, fontSize: 40 }}>🔒</div>
-                <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0f172a", marginBottom: 12 }}>Tema Bloqueado</h1>
+                <h1 style={{ fontSize: 28, fontWeight: 500, color: "#0f172a", marginBottom: 12 }}>Tema Bloqueado</h1>
                 <p style={{ fontSize: 18, color: "#64748b", maxWidth: 500, lineHeight: 1.6, marginBottom: 32 }}>
                     Para acceder a este tema, primero debes completar todas las lecciones del <strong>Tema {topicId - 1}</strong>.
                 </p>
                 <button
                     onClick={() => router.push('/courses')}
-                    style={{ padding: "14px 32px", background: "#1e3a8a", color: "#fff", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer", boxShadow: "0 8px 24px rgba(30,58,138,0.25)" }}
+                    style={{ padding: "14px 32px", background: "#1e3a8a", color: "#fff", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 500, cursor: "pointer", boxShadow: "0 8px 24px rgba(30,58,138,0.25)" }}
                 >
                     Volver al Camino Financiero
                 </button>
@@ -220,8 +220,7 @@ export default function CoursePageTemplate({
                     paddingBottom: "clamp(40px, 8vw, 80px)",
                     paddingLeft: "16px",
                     paddingRight: "16px",
-                    fontFamily: "'Montserrat', sans-serif",
-                    background: "transparent",
+                                        background: "transparent",
                     position: "relative",
                     display: "flex",
                     justifyContent: "center",
@@ -259,14 +258,14 @@ export default function CoursePageTemplate({
                                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
                                     <button
                                         onClick={() => router.push("/courses")}
-                                        style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "4px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, color: "#93c5fd", fontSize: 12, fontWeight: 700, fontFamily: "'Montserrat', sans-serif" }}
+                                        style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "4px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, color: "#93c5fd", fontSize: 12, fontWeight: 500, }}
                                     >
                                         <ChevronLeft size={12} /> Todos los Temas
                                     </button>
                                     <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>›</span>
                                     <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
                                         <Zap size={12} color="#60a5fa" />
-                                        <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                                        <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>
                                             Tema {topicId.toString().padStart(2, "0")}
                                         </span>
                                     </div>
@@ -277,7 +276,7 @@ export default function CoursePageTemplate({
                                         <IconComp size={30} color="#93c5fd" strokeWidth={2} />
                                     </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
-                                        <h1 style={{ fontSize: "clamp(22px, 4vw, 40px)", fontWeight: 900, color: "#ffffff", margin: "0 0 8px", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
+                                        <h1 style={{ fontSize: "clamp(22px, 4vw, 40px)", fontWeight: 500, color: "#ffffff", margin: "0 0 8px", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
                                             {topic.title}
                                         </h1>
                                         <p style={{ fontSize: "clamp(13px, 1.8vw, 16px)", color: "#93c5fd", margin: 0, lineHeight: 1.5, maxWidth: 500 }}>
@@ -290,10 +289,10 @@ export default function CoursePageTemplate({
                                 <div style={{ width: "100%", maxWidth: 600 }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 10 }}>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                                            <span style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso del Tema</span>
-                                            <span style={{ fontSize: 12, fontWeight: 600, color: "#60a5fa" }}>{completedInTopic} de {totalInTopic} lecciones completadas</span>
+                                            <span style={{ fontSize: 13, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso del Tema</span>
+                                            <span style={{ fontSize: 12, fontWeight: 500, color: "#60a5fa" }}>{completedInTopic} de {totalInTopic} lecciones completadas</span>
                                         </div>
-                                        <span style={{ fontSize: 32, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{topicPct}%</span>
+                                        <span style={{ fontSize: 32, fontWeight: 500, color: "#fff", lineHeight: 1 }}>{topicPct}%</span>
                                     </div>
                                     <div style={{ width: "100%", height: 12, background: "rgba(255,255,255,0.12)", borderRadius: 10, overflow: "hidden" }}>
                                         <div
@@ -333,9 +332,9 @@ export default function CoursePageTemplate({
                                         >
                                             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
                                                 <StatIcon size={18} color={stat.color} />
-                                                <div style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>{stat.label}</div>
+                                                <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>{stat.label}</div>
                                             </div>
-                                            <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>{stat.value}</div>
+                                            <div style={{ fontSize: 28, fontWeight: 500, color: "#fff", lineHeight: 1.1 }}>{stat.value}</div>
                                         </div>
                                     )
                                 })}
@@ -358,12 +357,12 @@ export default function CoursePageTemplate({
                                     <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%)", borderRadius: 18, boxShadow: "0 8px 28px rgba(15,98,254,0.35)", border: "1px solid rgba(59,130,246,0.3)", marginBottom: 20 }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
                                             <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>CURSO {(subIdx + 1).toString().padStart(2, "0")}</div>
-                                                <div style={{ fontSize: "clamp(15px, 3vw, 19px)", fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 4 }}>{sub.title}</div>
-                                                <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>{subTotal} lecciones · {subCompleted} completadas</div>
+                                                <div style={{ fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>CURSO {(subIdx + 1).toString().padStart(2, "0")}</div>
+                                                <div style={{ fontSize: "clamp(15px, 3vw, 19px)", fontWeight: 500, color: "#fff", lineHeight: 1.2, marginBottom: 4 }}>{sub.title}</div>
+                                                <div style={{ fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.7)" }}>{subTotal} lecciones · {subCompleted} completadas</div>
                                             </div>
                                             {subPct > 0 && (
-                                                <div style={{ flexShrink: 0, width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.35)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 900, color: "#fff" }}>
+                                                <div style={{ flexShrink: 0, width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.35)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 500, color: "#fff" }}>
                                                     {subPct}%
                                                 </div>
                                             )}
@@ -485,18 +484,18 @@ export default function CoursePageTemplate({
                                                             background: isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)"),
                                                             border: isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)"),
                                                             color: isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb"),
-                                                            fontSize: "clamp(16px, 4vw, 19px)", fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                                                            fontSize: "clamp(16px, 4vw, 19px)", fontWeight: 500, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
                                                         }}>
                                                             {absoluteLessonNumber}
                                                         </div>
 
-                                                        <div style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 700, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
+                                                        <div style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 500, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
                                                             {lesson.title}
                                                         </div>
 
                                                         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
                                                             {isLocked ? (
-                                                                <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>Premium</div>
+                                                                <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>Premium</div>
                                                             ) : (
                                                                 <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
                                                                     {[1, 2, 3].map((i) => (
@@ -552,14 +551,14 @@ export default function CoursePageTemplate({
                                                             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #1e3a8a, #60a5fa)", borderRadius: "20px 20px 0 0" }} />
 
                                                             {/* Lesson number */}
-                                                            <div style={{ fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 8 }}>
+                                                            <div style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 8 }}>
                                                                 Lección {absoluteLessonNumber}
                                                             </div>
 
                                                             {/* XP badge */}
                                                             <div style={{ display: "flex", alignItems: "center", gap: 7, background: "#F0F9FF", border: "1.5px solid #BAE6FD", borderRadius: 10, padding: "6px 11px" }}>
                                                                 <Zap size={13} color="#0EA5E9" fill="#0EA5E9" />
-                                                                <span style={{ fontSize: 11, fontWeight: 800, color: "#0369A1" }}>
+                                                                <span style={{ fontSize: 11, fontWeight: 500, color: "#0369A1" }}>
                                                                     {isDone ? "+5 XP al repetir" : "Hasta 15 XP"}
                                                                 </span>
                                                             </div>
@@ -572,11 +571,10 @@ export default function CoursePageTemplate({
                                                                     setLessonModal(null);
                                                                 }}
                                                                 style={{
-                                                                    width: "100%", fontSize: 13, fontWeight: 900, padding: "10px 14px",
+                                                                    width: "100%", fontSize: 13, fontWeight: 500, padding: "10px 14px",
                                                                     background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
                                                                     color: "white", border: "none", borderRadius: 11,
-                                                                    cursor: "pointer", fontFamily: "'Montserrat', sans-serif",
-                                                                    boxShadow: "0 5px 16px rgba(15,98,254,0.35)",
+                                                                    cursor: "pointer",                                                                     boxShadow: "0 5px 16px rgba(15,98,254,0.35)",
                                                                     transition: "opacity 0.15s ease"
                                                                 }}
                                                             >
@@ -671,8 +669,7 @@ export default function CoursePageTemplate({
                             position: "relative",
                             overflow: "hidden",
                             textAlign: "center",
-                            fontFamily: "'Montserrat', sans-serif"
-                        }}
+                                                    }}
                     >
                         {/* Top gradient bar */}
                         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa)" }} />
@@ -699,12 +696,12 @@ export default function CoursePageTemplate({
                         </div>
 
                         {/* Title */}
-                        <div style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", lineHeight: 1.25 }}>
+                        <div style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", lineHeight: 1.25 }}>
                             ¡Vas rápido!
                         </div>
 
                         {/* Body */}
-                        <div style={{ fontSize: 15, fontWeight: 600, color: "#64748b", lineHeight: 1.6, maxWidth: 280 }}>
+                        <div style={{ fontSize: 15, fontWeight: 500, color: "#64748b", lineHeight: 1.6, maxWidth: 280 }}>
                             Termina la lección anterior para desbloquear ésta. El orden importa — construyamos base a base.
                         </div>
 
@@ -718,10 +715,9 @@ export default function CoursePageTemplate({
                                 background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
                                 color: "#fff",
                                 border: "none", borderRadius: 12,
-                                fontSize: 14, fontWeight: 900,
+                                fontSize: 14, fontWeight: 500,
                                 cursor: "pointer",
-                                fontFamily: "'Montserrat', sans-serif",
-                                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
+                                                                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
                                 transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, opacity 0.15s ease"
                             }}
                         >

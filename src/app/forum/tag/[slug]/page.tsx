@@ -81,8 +81,7 @@ export default function TagFeedPage() {
         display: "grid", 
         placeItems: "center", 
         minHeight: "60vh", 
-        fontFamily: "Montserrat, sans-serif",
-        background: "#FBFAF5"
+                background: "#FBFAF5"
       }}>
         <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
       </div>
@@ -97,8 +96,7 @@ export default function TagFeedPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "#FBFAF5",
+            background: "#FBFAF5",
       backgroundAttachment: "fixed",
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat"
@@ -122,7 +120,7 @@ export default function TagFeedPage() {
         zIndex: 1
       }}>
         {/* Breadcrumb */}
-        <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
+        <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 500 }}>
           <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none" }}>
             Foro
           </Link>
@@ -130,10 +128,10 @@ export default function TagFeedPage() {
           <span style={{ color: "#374151" }}>#{tagName || tagSlug}</span>
         </div>
 
-        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 800, color: "#1E40AF" }}>
+        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 500, color: "#1E40AF" }}>
           #{tagName || tagSlug}
         </h1>
-        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 600 }}>
+        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 500 }}>
           {threads.length} temas con esta etiqueta
         </p>
 
@@ -163,13 +161,13 @@ export default function TagFeedPage() {
                 e.currentTarget.style.boxShadow = "0 4px 16px rgba(31, 38, 135, 0.1)"
               }}
             >
-              <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700, color: "#1E40AF" }}>
+              <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, color: "#1E40AF" }}>
                 {thread.title}
               </h3>
               <p style={{ margin: "0 0 12px", fontSize: 14, color: "#6B7280" }}>
                 {thread.body.substring(0, 150)}...
               </p>
-              <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#9CA3AF", fontWeight: 600 }}>
+              <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#9CA3AF", fontWeight: 500 }}>
                 <span>{thread.topic.name}</span>
                 <span>por {thread.author.nickname}</span>
                 <span>{thread.score} votos</span>

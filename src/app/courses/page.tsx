@@ -160,8 +160,7 @@ export default function CoursesPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "'Montserrat', sans-serif",
-          paddingLeft: 16,
+                    paddingLeft: 16,
           paddingRight: 16,
           marginLeft: 0,
           boxSizing: "border-box",
@@ -240,8 +239,7 @@ export default function CoursesPage() {
           paddingBottom: "clamp(40px, 8vw, 80px)",
           paddingLeft: "312px", // Desktop default offset
           paddingRight: "16px",
-          fontFamily: "'Montserrat', sans-serif",
-          background: "transparent",
+                    background: "transparent",
           position: "relative",
           display: "flex",
           justifyContent: "flex-start",
@@ -290,10 +288,10 @@ export default function CoursesPage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                   <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
                     <Zap size={13} color="#60a5fa" />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>30 Temas</span>
+                    <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>30 Temas</span>
                   </div>
                 </div>
-                <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 900, color: "#ffffff", margin: "0 0 10px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+                <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 500, color: "#ffffff", margin: "0 0 10px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
                   Tu Camino Financiero
                 </h1>
                 <p style={{ fontSize: "clamp(14px, 2vw, 17px)", color: "#93c5fd", margin: "0 0 24px", lineHeight: 1.6, maxWidth: 500 }}>
@@ -304,10 +302,10 @@ export default function CoursesPage() {
                 <div style={{ width: "100%", maxWidth: 600 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 10 }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso de Cursos</span>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: "#60a5fa" }}>{Math.max(1, Math.floor(completedCount / 4))} de 150 cursos completados</span>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso de Cursos</span>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: "#60a5fa" }}>{Math.max(1, Math.floor(completedCount / 4))} de 150 cursos completados</span>
                     </div>
-                    <span style={{ fontSize: 32, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{progressPct}%</span>
+                    <span style={{ fontSize: 32, fontWeight: 500, color: "#fff", lineHeight: 1 }}>{progressPct}%</span>
                   </div>
                   <div style={{ width: "100%", height: 12, background: "rgba(255,255,255,0.12)", borderRadius: 10, overflow: "hidden" }}>
                     <div
@@ -347,9 +345,9 @@ export default function CoursesPage() {
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
                         <StatIcon size={18} color={stat.color} />
-                        <div style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>{stat.label}</div>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>{stat.label}</div>
                       </div>
-                      <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", lineHeight: 1.1 }}>{stat.value}</div>
+                      <div style={{ fontSize: 28, fontWeight: 500, color: "#fff", lineHeight: 1.1 }}>{stat.value}</div>
                     </div>
                   )
                 })}
@@ -459,7 +457,7 @@ export default function CoursesPage() {
                             >
 
                               <div className="course-card-content" style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
-                                <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 800, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
+                                <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 500, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
                                   {isLocked ? (
                                     <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                                       {isSequenceLocked ? 'Completar anterior' : 'Bloqueado'}
@@ -470,9 +468,9 @@ export default function CoursesPage() {
                                   <IconComp size={36} strokeWidth={2} />
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", marginBottom: 8, letterSpacing: "0.06em" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
-                                  <div style={{ fontSize: 19, fontWeight: 800, color: "#0f172a", lineHeight: 1.25 }}>{topic.title}</div>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 700, color: isLocked ? "#64748b" : "#3b82f6" }}>
+                                  <div style={{ fontSize: 12, fontWeight: 500, color: "#94a3b8", marginBottom: 8, letterSpacing: "0.06em" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
+                                  <div style={{ fontSize: 19, fontWeight: 500, color: "#0f172a", lineHeight: 1.25 }}>{topic.title}</div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 500, color: isLocked ? "#64748b" : "#3b82f6" }}>
                                     <BookOpen size={16} /><span>{topic.lessons} cursos</span>
                                   </div>
                                 </div>
@@ -709,8 +707,7 @@ export default function CoursesPage() {
               position: "relative",
               overflow: "hidden",
               textAlign: "center",
-              fontFamily: "'Montserrat', sans-serif"
-            }}
+                          }}
           >
             {/* Top gradient bar */}
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa)" }} />
@@ -736,12 +733,12 @@ export default function CoursesPage() {
             </div>
 
             {/* Title */}
-            <div style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", lineHeight: 1.25 }}>
+            <div style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", lineHeight: 1.25 }}>
               ¡Calma!
             </div>
 
             {/* Body */}
-            <div style={{ fontSize: 15, fontWeight: 600, color: "#64748b", lineHeight: 1.6, maxWidth: 280 }}>
+            <div style={{ fontSize: 15, fontWeight: 500, color: "#64748b", lineHeight: 1.6, maxWidth: 280 }}>
               Para desbloquear este tema, primero debes completar todos los cursos del tema anterior.
             </div>
 
@@ -755,10 +752,9 @@ export default function CoursesPage() {
                 background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
                 color: "#fff",
                 border: "none", borderRadius: 12,
-                fontSize: 14, fontWeight: 900,
+                fontSize: 14, fontWeight: 500,
                 cursor: "pointer",
-                fontFamily: "'Montserrat', sans-serif",
-                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
+                                boxShadow: "0 6px 20px rgba(37,99,235,0.35)",
                 transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, opacity 0.15s ease"
               }}
             >

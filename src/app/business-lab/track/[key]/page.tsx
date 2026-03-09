@@ -86,16 +86,14 @@ export default async function TrackPage({ params }: Props) {
         width: "100%",
         flex: 1,
         background: "#FBFAF5",
-        fontFamily: "Montserrat, sans-serif",
-        overflowX: "hidden",
+                overflowX: "hidden",
         overflowY: "auto",
         boxSizing: "border-box"
       }}>
         <main className="track-main" style={{
           margin: "0 auto",
           flex: 1,
-          fontFamily: "Montserrat, sans-serif",
-          width: "100%",
+                    width: "100%",
           boxSizing: "border-box",
           overflowX: "hidden",
           overflowY: "visible"
@@ -107,7 +105,7 @@ export default async function TrackPage({ params }: Props) {
           <div style={{ marginBottom: 32, width: "100%" }}>
             <h1 style={{
               fontSize: 42,
-              fontWeight: 900,
+              fontWeight: 500,
               background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -132,7 +130,7 @@ export default async function TrackPage({ params }: Props) {
             border: "2px solid #e5e7eb",
             width: "100%"
           }}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: "#1E40AF", marginBottom: 8 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 500, color: "#1E40AF", marginBottom: 8 }}>
               Progreso en esta Ruta
             </h2>
             <p style={{ color: "#6B7280", marginBottom: 16, fontSize: 14 }}>
@@ -158,7 +156,7 @@ export default async function TrackPage({ params }: Props) {
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 fontSize: 12,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: progressPercentage > 50 ? "white" : "#0B71FE"
               }}>
                 {progressPercentage}%
@@ -168,7 +166,7 @@ export default async function TrackPage({ params }: Props) {
 
           {/* Steps List */}
           <div style={{ marginBottom: 32, width: "100%" }}>
-            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, color: "#111" }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, marginBottom: 20, color: "#111" }}>
               Pasos de esta Ruta
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -188,7 +186,7 @@ export default async function TrackPage({ params }: Props) {
               boxShadow: "0 4px 20px rgba(16,185,129,0.15)",
               width: "100%"
             }}>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: "#065F46", marginBottom: 8 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 500, color: "#065F46", marginBottom: 8 }}>
                 🎉 ¡Felicidades! Has completado esta ruta
               </h2>
               <p style={{ fontSize: 14, color: "#047857", marginBottom: 16 }}>
@@ -203,7 +201,7 @@ export default async function TrackPage({ params }: Props) {
                     color: "#10B981",
                     borderRadius: 8,
                     fontSize: 14,
-                    fontWeight: 600,
+                    fontWeight: 500,
                     cursor: "pointer"
                   }}>
                     Ver todas las rutas
@@ -217,7 +215,7 @@ export default async function TrackPage({ params }: Props) {
                     color: "white",
                     borderRadius: 8,
                     fontSize: 14,
-                    fontWeight: 600,
+                    fontWeight: 500,
                     cursor: "pointer"
                   }}>
                     Explorar Simuladores

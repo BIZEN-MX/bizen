@@ -177,7 +177,7 @@ function BIZENSignupContent() {
         position: "absolute", top: 24, left: "clamp(20px, 4vw, 36px)",
         textDecoration: "none", zIndex: 10, display: "flex", alignItems: "center", gap: 8,
       }}>
-        <strong style={{ fontSize: "clamp(22px, 3vw, 28px)", color: "#fff", fontFamily: "Montserrat, sans-serif", letterSpacing: "-0.02em" }}>
+        <strong style={{ fontSize: "clamp(22px, 3vw, 28px)", color: "#fff", letterSpacing: "-0.02em" }}>
           BIZEN<span style={{ color: "#1983FD" }}>.</span>
         </strong>
       </Link>
@@ -191,10 +191,10 @@ function BIZENSignupContent() {
       }}>
 
 
-        <h1 style={{ margin: "0 0 6px", fontSize: "clamp(24px, 4.5vw, 34px)", fontWeight: 800, color: "#fff", fontFamily: "Montserrat, sans-serif", textAlign: "center", letterSpacing: "-0.02em" }}>
+        <h1 style={{ margin: "0 0 6px", fontSize: "clamp(24px, 4.5vw, 34px)", fontWeight: 500, color: "#fff", textAlign: "center", letterSpacing: "-0.02em" }}>
           Crea tu cuenta
         </h1>
-        <p style={{ margin: "0 0 clamp(24px, 4vw, 36px)", fontSize: "clamp(13px, 1.8vw, 15px)", color: "rgba(255,255,255,0.5)", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
+        <p style={{ margin: "0 0 clamp(24px, 4vw, 36px)", fontSize: "clamp(13px, 1.8vw, 15px)", color: "rgba(255,255,255,0.5)", textAlign: "center", }}>
           Únete a la revolución de la educación financiera
         </p>
 
@@ -202,7 +202,7 @@ function BIZENSignupContent() {
         <form onSubmit={onSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
           {/* Name */}
           <div>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", }}>
               Nombre completo
             </label>
             <input
@@ -210,13 +210,13 @@ function BIZENSignupContent() {
               placeholder="¿Cómo te llamas?"
               value={fullName} onChange={(e) => setFullName(e.currentTarget.value)}
               className="bizen-input"
-              style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 16px", outline: "none", fontSize: 15, color: "#fff", fontFamily: "Inter, sans-serif", transition: "border-color .2s, background .2s" }}
+              style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 16px", outline: "none", fontSize: 15, color: "#fff", transition: "border-color .2s, background .2s" }}
             />
           </div>
 
           {/* Email */}
           <div>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", }}>
               Email
             </label>
             <input
@@ -224,13 +224,13 @@ function BIZENSignupContent() {
               placeholder="tu@email.com"
               value={email} onChange={(e) => setEmail(e.currentTarget.value)}
               className="bizen-input"
-              style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 16px", outline: "none", fontSize: 15, color: "#fff", fontFamily: "Inter, sans-serif", transition: "border-color .2s, background .2s" }}
+              style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 16px", outline: "none", fontSize: 15, color: "#fff", transition: "border-color .2s, background .2s" }}
             />
           </div>
 
           {/* Password */}
           <div>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.5)", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase", }}>
               Contraseña
             </label>
             <div style={{ position: "relative" }}>
@@ -239,7 +239,7 @@ function BIZENSignupContent() {
                 placeholder="Mínimo 6 caracteres"
                 value={password} onChange={(e) => setPassword(e.currentTarget.value)}
                 className="bizen-input"
-                style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 44px 0 16px", outline: "none", fontSize: 15, color: "#fff", fontFamily: "Inter, sans-serif", transition: "border-color .2s, background .2s" }}
+                style={{ width: "100%", height: 50, borderRadius: 12, boxSizing: "border-box", border: "1.5px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.07)", backdropFilter: "blur(8px)", padding: "0 44px 0 16px", outline: "none", fontSize: 15, color: "#fff", transition: "border-color .2s, background .2s" }}
               />
               <button type="button" onClick={() => setShowPass(s => !s)} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "transparent", border: "none", cursor: "pointer", padding: 4, display: "flex" }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2">
@@ -255,10 +255,9 @@ function BIZENSignupContent() {
             style={{
               height: 52, borderRadius: 12, border: "none", width: "100%", marginTop: 4,
               background: (loading || googleLoading) ? "rgba(0,86,231,0.5)" : "linear-gradient(135deg, #0056E7, #1983FD)",
-              color: "#fff", fontWeight: 700, fontSize: 16,
+              color: "#fff", fontWeight: 500, fontSize: 16,
               cursor: (loading || googleLoading) ? "not-allowed" : "pointer",
-              fontFamily: "Montserrat, sans-serif",
-              boxShadow: (loading || googleLoading) ? "none" : "0 8px 24px rgba(0,86,231,0.4)",
+                            boxShadow: (loading || googleLoading) ? "none" : "0 8px 24px rgba(0,86,231,0.4)",
               transition: "all 0.2s ease",
             }}
             onMouseOver={(e) => { if (!loading && !googleLoading) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,86,231,0.5)" } }}
@@ -270,7 +269,7 @@ function BIZENSignupContent() {
           {/* Divider */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 12, alignItems: "center" }}>
             <div style={{ height: 1, background: "rgba(255,255,255,0.1)" }} />
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "Inter, sans-serif" }}>o regístrate con</span>
+            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", }}>o regístrate con</span>
             <div style={{ height: 1, background: "rgba(255,255,255,0.1)" }} />
           </div>
 
@@ -287,9 +286,8 @@ function BIZENSignupContent() {
                 backdropFilter: "blur(8px)",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
                 cursor: (loading || googleLoading) ? "not-allowed" : "pointer",
-                fontWeight: 600, fontSize: 15, color: "#fff",
-                fontFamily: "Inter, sans-serif",
-                transition: "background 0.2s, border-color 0.2s",
+                fontWeight: 500, fontSize: 15, color: "#fff",
+                                transition: "background 0.2s, border-color 0.2s",
               }}
               onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.11)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.22)"; }}
               onMouseOut={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; }}
@@ -314,9 +312,8 @@ function BIZENSignupContent() {
                 backdropFilter: "blur(8px)",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
                 cursor: (loading || googleLoading) ? "not-allowed" : "pointer",
-                fontWeight: 600, fontSize: 15, color: "#fff",
-                fontFamily: "Inter, sans-serif",
-                transition: "background 0.2s, border-color 0.2s",
+                fontWeight: 500, fontSize: 15, color: "#fff",
+                                transition: "background 0.2s, border-color 0.2s",
               }}
               onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.11)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.22)"; }}
               onMouseOut={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; }}
@@ -332,8 +329,7 @@ function BIZENSignupContent() {
         {/* Status message */}
         {message && (
           <p role="status" style={{
-            marginTop: 16, textAlign: "center", fontSize: 13, fontFamily: "Inter, sans-serif",
-            color: isSuccess ? "#4ade80" : "#f87171",
+            marginTop: 16, textAlign: "center", fontSize: 13,             color: isSuccess ? "#4ade80" : "#f87171",
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             background: isSuccess ? "rgba(74,222,128,0.1)" : "rgba(248,113,113,0.1)",
             border: `1px solid ${isSuccess ? "rgba(74,222,128,0.2)" : "rgba(248,113,113,0.2)"}`,
@@ -345,9 +341,9 @@ function BIZENSignupContent() {
         )}
 
         {/* Login link */}
-        <p style={{ marginTop: 24, fontSize: 14, color: "rgba(255,255,255,0.45)", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
+        <p style={{ marginTop: 24, fontSize: 14, color: "rgba(255,255,255,0.45)", textAlign: "center", }}>
           ¿Ya tienes cuenta?{" "}
-          <Link href="/login" style={{ color: "#60a5fa", fontWeight: 700, textDecoration: "none" }}>Inicia sesión</Link>
+          <Link href="/login" style={{ color: "#60a5fa", fontWeight: 500, textDecoration: "none" }}>Inicia sesión</Link>
         </p>
       </div>
 

@@ -175,7 +175,7 @@ function BIZENLoginContent() {
         position: "absolute", top: 24, left: "clamp(20px, 4vw, 36px)",
         textDecoration: "none", zIndex: 10, display: "flex", alignItems: "center", gap: 8,
       }}>
-        <strong style={{ fontSize: "clamp(22px, 3vw, 28px)", color: "#fff", fontFamily: "Montserrat, sans-serif", letterSpacing: "-0.02em" }}>
+        <strong style={{ fontSize: "clamp(22px, 3vw, 28px)", color: "#fff", letterSpacing: "-0.02em" }}>
           BIZEN<span style={{ color: "#1983FD" }}>.</span>
         </strong>
       </Link>
@@ -189,10 +189,10 @@ function BIZENLoginContent() {
 
 
         {/* Heading */}
-        <h1 style={{ margin: "0 0 6px", fontSize: "clamp(26px, 5vw, 36px)", fontWeight: 800, color: "#fff", fontFamily: "Montserrat, sans-serif", textAlign: "center", letterSpacing: "-0.02em" }}>
+        <h1 style={{ margin: "0 0 6px", fontSize: "clamp(26px, 5vw, 36px)", fontWeight: 500, color: "#fff", textAlign: "center", letterSpacing: "-0.02em" }}>
           ¡Bienvenido!
         </h1>
-        <p style={{ margin: "0 0 clamp(28px, 5vw, 40px)", fontSize: "clamp(14px, 2vw, 16px)", color: "rgba(255,255,255,0.55)", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
+        <p style={{ margin: "0 0 clamp(28px, 5vw, 40px)", fontSize: "clamp(14px, 2vw, 16px)", color: "rgba(255,255,255,0.55)", textAlign: "center", }}>
           Inicia sesión en tu cuenta de {brandName}
         </p>
 
@@ -200,7 +200,7 @@ function BIZENLoginContent() {
         <form onSubmit={onSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
           {/* Email */}
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)", marginBottom: 8, letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.55)", marginBottom: 8, letterSpacing: "0.06em", textTransform: "uppercase", }}>
               Email
             </label>
             <input
@@ -215,15 +215,14 @@ function BIZENLoginContent() {
                 backdropFilter: "blur(8px)",
                 padding: "0 16px", outline: "none",
                 fontSize: 15, color: "#fff",
-                fontFamily: "Inter, sans-serif",
-                transition: "border-color .2s, background .2s",
+                                transition: "border-color .2s, background .2s",
               }}
             />
           </div>
 
           {/* Password */}
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)", marginBottom: 8, letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.55)", marginBottom: 8, letterSpacing: "0.06em", textTransform: "uppercase", }}>
               Contraseña
             </label>
             <div style={{ position: "relative" }}>
@@ -239,8 +238,7 @@ function BIZENLoginContent() {
                   backdropFilter: "blur(8px)",
                   padding: "0 44px 0 16px", outline: "none",
                   fontSize: 15, color: "#fff",
-                  fontFamily: "Inter, sans-serif",
-                  transition: "border-color .2s, background .2s",
+                                    transition: "border-color .2s, background .2s",
                 }}
               />
               <button type="button" onClick={() => setShowPass(s => !s)} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "transparent", border: "none", cursor: "pointer", padding: 4, display: "flex" }} aria-label={showPass ? "Ocultar" : "Mostrar"}>
@@ -253,7 +251,7 @@ function BIZENLoginContent() {
 
           {/* Forgot password */}
           <div style={{ textAlign: "right", marginTop: -4 }}>
-            <a href="/bizen/forgot-password" style={{ fontSize: 13, color: "#60a5fa", textDecoration: "none", fontFamily: "Inter, sans-serif" }}>
+            <a href="/bizen/forgot-password" style={{ fontSize: 13, color: "#60a5fa", textDecoration: "none", }}>
               ¿Olvidaste tu contraseña?
             </a>
           </div>
@@ -264,10 +262,9 @@ function BIZENLoginContent() {
             style={{
               height: 52, borderRadius: 12, border: "none", width: "100%",
               background: loading ? "rgba(0,86,231,0.5)" : "linear-gradient(135deg, #0056E7, #1983FD)",
-              color: "#fff", fontWeight: 700, fontSize: 16,
+              color: "#fff", fontWeight: 500, fontSize: 16,
               cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "Montserrat, sans-serif",
-              letterSpacing: "0.01em",
+                            letterSpacing: "0.01em",
               boxShadow: loading ? "none" : "0 8px 24px rgba(0,86,231,0.4)",
               transition: "all 0.2s ease",
             }}
@@ -278,7 +275,7 @@ function BIZENLoginContent() {
           </button>
 
           {/* Remember me */}
-          <label style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "center", fontSize: 13, color: "rgba(255,255,255,0.5)", fontFamily: "Inter, sans-serif", cursor: "pointer" }}>
+          <label style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "center", fontSize: 13, color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
             <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.currentTarget.checked)} style={{ accentColor: "#1983FD", width: 15, height: 15 }} />
             Mantener sesión iniciada
           </label>
@@ -287,7 +284,7 @@ function BIZENLoginContent() {
         {/* Separator */}
         <div style={{ display: "flex", alignItems: "center", width: "100%", margin: "24px 0", gap: 12 }}>
           <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
-          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)", fontWeight: 600 }}>O TAMBIÉN</span>
+          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.25)", fontWeight: 500 }}>O TAMBIÉN</span>
           <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
         </div>
 
@@ -302,10 +299,9 @@ function BIZENLoginContent() {
               height: 52, borderRadius: 12, border: "1.5px solid rgba(255,255,255,0.12)", width: "100%",
               background: "rgba(255,255,255,0.05)",
               backdropFilter: "blur(8px)",
-              color: "#fff", fontWeight: 700, fontSize: 15,
+              color: "#fff", fontWeight: 500, fontSize: 15,
               cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "Montserrat, sans-serif",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+                            display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
               transition: "all 0.2s ease",
             }}
             onMouseOver={(e) => { if (!loading) { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.transform = "translateY(-1px)" } }}
@@ -329,10 +325,9 @@ function BIZENLoginContent() {
               height: 52, borderRadius: 12, border: "1.5px solid rgba(255,255,255,0.12)", width: "100%",
               background: "rgba(255,255,255,0.05)",
               backdropFilter: "blur(8px)",
-              color: "#fff", fontWeight: 700, fontSize: 15,
+              color: "#fff", fontWeight: 500, fontSize: 15,
               cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "Montserrat, sans-serif",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+                            display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
               transition: "all 0.2s ease",
             }}
             onMouseOver={(e) => { if (!loading) { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.transform = "translateY(-1px)" } }}
@@ -348,8 +343,7 @@ function BIZENLoginContent() {
         {/* Error message */}
         {message && (
           <p role="status" style={{
-            marginTop: 16, textAlign: "center", color: "#f87171", fontSize: 13, fontFamily: "Inter, sans-serif",
-            background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)", borderRadius: 8,
+            marginTop: 16, textAlign: "center", color: "#f87171", fontSize: 13,             background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)", borderRadius: 8,
             padding: "10px 16px", width: "100%", boxSizing: "border-box",
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
           }}>
@@ -359,13 +353,13 @@ function BIZENLoginContent() {
         )}
 
         {/* Sign up link */}
-        <p style={{ marginTop: 28, fontSize: 14, color: "rgba(255,255,255,0.45)", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
+        <p style={{ marginTop: 28, fontSize: 14, color: "rgba(255,255,255,0.45)", textAlign: "center", }}>
           ¿No tienes cuenta?{" "}
-          <Link href="/signup" style={{ color: "#60a5fa", fontWeight: 700, textDecoration: "none" }}>Regístrate</Link>
+          <Link href="/signup" style={{ color: "#60a5fa", fontWeight: 500, textDecoration: "none" }}>Regístrate</Link>
         </p>
 
         {/* Support */}
-        <p style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.3)", textAlign: "center", fontFamily: "Inter, sans-serif", lineHeight: 1.6 }}>
+        <p style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.3)", textAlign: "center", lineHeight: 1.6 }}>
           ¿Necesitas ayuda? <a href={`mailto:${supportEmail}`} style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>{supportEmail}</a>
         </p>
       </div>

@@ -43,8 +43,7 @@ export default function MarkCompletePage() {
       minHeight: "100vh",
       background: "#FFFFFF",
       padding: 40,
-      fontFamily: "system-ui, -apple-system, sans-serif",
-    }}>
+          }}>
       <div style={{
         maxWidth: 600,
         margin: "0 auto",
@@ -59,7 +58,7 @@ export default function MarkCompletePage() {
         </p>
 
         <div style={{ marginBottom: 20 }}>
-          <label style={{ display: "block", marginBottom: 8, fontWeight: 600 }}>
+          <label style={{ display: "block", marginBottom: 8, fontWeight: 500 }}>
             Module ID:
           </label>
           <input
@@ -79,7 +78,7 @@ export default function MarkCompletePage() {
         </div>
 
         <div style={{ marginBottom: 20 }}>
-          <label style={{ display: "block", marginBottom: 8, fontWeight: 600 }}>
+          <label style={{ display: "block", marginBottom: 8, fontWeight: 500 }}>
             Section ID:
           </label>
           <input
@@ -109,7 +108,7 @@ export default function MarkCompletePage() {
             border: "none",
             borderRadius: 8,
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             cursor: loading ? "not-allowed" : "pointer",
             opacity: loading ? 0.6 : 1,
           }}

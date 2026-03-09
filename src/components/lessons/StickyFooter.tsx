@@ -90,7 +90,7 @@ export function StickyFooter({
                 alignItems: "center",
                 justifyContent: "center",
                 color: "#FFFFFF",
-                fontWeight: 900,
+                fontWeight: 500,
                 fontSize: 20,
                 flexShrink: 0,
               }}>
@@ -99,11 +99,10 @@ export function StickyFooter({
               <div style={{ flex: 1 }}>
                 <p style={{
                   margin: 0,
-                  fontWeight: 900,
+                  fontWeight: 500,
                   fontSize: "clamp(17px, 2vw, 20px)",
                   color: isCorrect ? "#1D4ED8" : "#DC2626",
-                  fontFamily: "'Montserrat', sans-serif",
-                }}>
+                                  }}>
                   {feedbackTitle}
                 </p>
                 {feedbackBody && (
@@ -111,10 +110,9 @@ export function StickyFooter({
                     margin: 0,
                     fontSize: 14,
                     color: isCorrect ? "#3B82F6" : "#EF4444",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     lineHeight: 1.4,
-                    fontFamily: "'Montserrat', sans-serif",
-                  }}>
+                                      }}>
                     {feedbackBody}
                   </p>
                 )}
@@ -198,10 +196,9 @@ export function StickyFooterButton({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 16,
-    fontWeight: 800,
+    fontWeight: 500,
     fontSize: "clamp(14px, 1.5vw, 16px)",
-    fontFamily: "'Montserrat', sans-serif",
-    textTransform: "uppercase",
+        textTransform: "uppercase",
     letterSpacing: "0.05em",
     cursor: disabled || isLoading ? "not-allowed" : "pointer",
     opacity: disabled || isLoading ? 0.4 : 1,

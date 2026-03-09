@@ -289,7 +289,7 @@ export default function ThreadDetailPage() {
             color: "white",
             borderRadius: "clamp(4px, 1vw, 6px)",
             fontSize: "clamp(11px, 2.5vw, 12px)",
-            fontWeight: 700,
+            fontWeight: 500,
             display: "inline-block"
           }}>
             Respuesta Aceptada
@@ -332,7 +332,7 @@ export default function ThreadDetailPage() {
             >
               <ThumbsUpIcon size={20} color={comment.userVote === 1 ? "#0B71FE" : "#94a3b8"} />
             </button>
-            <span style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 700, color: "#374151" }}>
+            <span style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 500, color: "#374151" }}>
               {comment.score}
             </span>
             <button
@@ -386,7 +386,7 @@ export default function ThreadDetailPage() {
               alignItems: "center",
               fontSize: "clamp(11px, 2.5vw, 12px)",
               color: "#9CA3AF",
-              fontWeight: 600,
+              fontWeight: 500,
               flexWrap: "wrap"
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -397,7 +397,7 @@ export default function ThreadDetailPage() {
                     frame={comment.author.inventory?.includes("2") ? "vip" : comment.author.inventory?.includes("1") ? "ambassador" : null}
                   />
                 </div>
-                <Link href={`/forum/profile/${comment.author.userId}`} style={{ color: "#1e3a8a", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{comment.author.nickname}</Link> ({comment.author.reputation} pts)
+                <Link href={`/forum/profile/${comment.author.userId}`} style={{ color: "#1e3a8a", textDecoration: "none", fontWeight: 500 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{comment.author.nickname}</Link> ({comment.author.reputation} pts)
               </div>
               <span>{new Date(comment.createdAt).toLocaleDateString('es-ES')}</span>
               <button
@@ -408,7 +408,7 @@ export default function ThreadDetailPage() {
                   color: "#1e3a8a",
                   cursor: "pointer",
                   fontSize: "clamp(11px, 2.5vw, 12px)",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   padding: "clamp(4px, 1vw, 6px)",
                   whiteSpace: "nowrap"
                 }}
@@ -424,7 +424,7 @@ export default function ThreadDetailPage() {
                     color: "#10B981",
                     cursor: "pointer",
                     fontSize: "clamp(11px, 2.5vw, 12px)",
-                    fontWeight: 700,
+                    fontWeight: 500,
                     padding: "clamp(4px, 1vw, 6px)",
                     whiteSpace: "nowrap"
                   }}
@@ -458,7 +458,7 @@ export default function ThreadDetailPage() {
               borderRadius: 6,
               cursor: loadingReplies.has(comment.id) ? "wait" : "pointer",
               fontSize: "clamp(11px, 2.5vw, 14px)",
-              fontWeight: 600,
+              fontWeight: 500,
               transition: "all 0.2s ease",
               width: "100%",
               maxWidth: "100%",
@@ -571,8 +571,7 @@ export default function ThreadDetailPage() {
         minHeight: "100vh",
         paddingTop: "clamp(20px, 4vw, 40px)",
         paddingBottom: "clamp(80px, 12vw, 120px)",
-        fontFamily: "Montserrat, sans-serif",
-        background: "#FBFAF5",
+                background: "#FBFAF5",
         backgroundAttachment: "fixed",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -598,7 +597,7 @@ export default function ThreadDetailPage() {
                 border: "2px solid rgba(30, 58, 138, 0.15)",
                 borderRadius: 8,
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 500,
                 color: "#1e3a8a",
                 cursor: "pointer",
                 display: "inline-flex",
@@ -606,8 +605,7 @@ export default function ThreadDetailPage() {
                 gap: 8,
                 transition: "all 0.2s ease",
                 boxShadow: "0 2px 8px rgba(30, 58, 138, 0.05)",
-                fontFamily: "Montserrat, sans-serif"
-              }}
+                              }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "rgba(30, 58, 138, 0.12)"
                   e.currentTarget.style.borderColor = "rgba(30, 58, 138, 0.25)"
@@ -674,7 +672,7 @@ export default function ThreadDetailPage() {
               <h1 style={{
                 margin: "0 0 16px",
                 fontSize: "clamp(24px, 5vw, 32px)",
-                fontWeight: 800,
+                fontWeight: 500,
                 color: "#0f172a"
               }}>
                 {thread.title}
@@ -691,7 +689,7 @@ export default function ThreadDetailPage() {
                         background: "rgba(30, 58, 138, 0.1)",
                         color: "#1e3a8a",
                         fontSize: 13,
-                        fontWeight: 600,
+                        fontWeight: 500,
                         borderRadius: 6
                       }}
                     >
@@ -707,13 +705,13 @@ export default function ThreadDetailPage() {
                 gap: 16,
                 fontSize: 13,
                 color: "#9CA3AF",
-                fontWeight: 600,
+                fontWeight: 500,
                 marginBottom: 20,
                 paddingBottom: 20,
                 borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
               }}>
                 <span>
-                  por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#1e3a8a", textDecoration: "none", fontWeight: 700 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link>
+                  por <Link href={`/forum/profile/${thread.author.userId}`} style={{ color: "#1e3a8a", textDecoration: "none", fontWeight: 500 }} onMouseEnter={(e) => { e.currentTarget.style.textDecoration = "underline" }} onMouseLeave={(e) => { e.currentTarget.style.textDecoration = "none" }}>{thread.author.nickname}</Link>
                 </span>
                 <span>Nivel {thread.author.level}</span>
                 <span>{thread.author.reputation} pts</span>
@@ -744,10 +742,9 @@ export default function ThreadDetailPage() {
                     border: thread.userVote === 1 ? "2px solid #1e3a8a" : "2px solid transparent",
                     borderRadius: 8,
                     fontSize: 14,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
-                    fontFamily: "Montserrat, sans-serif",
-                    display: "flex",
+                                        display: "flex",
                     alignItems: "center",
                     gap: 6,
                     transition: "all 0.2s ease",
@@ -776,10 +773,9 @@ export default function ThreadDetailPage() {
                     border: thread.userVote === -1 ? "2px solid #1e3a8a" : "2px solid transparent",
                     borderRadius: 8,
                     fontSize: 14,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
-                    fontFamily: "Montserrat, sans-serif",
-                    transition: "all 0.2s ease",
+                                        transition: "all 0.2s ease",
                     boxShadow: thread.userVote === -1 ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
                   }}
                   onMouseDown={(e) => {
@@ -804,10 +800,9 @@ export default function ThreadDetailPage() {
                     border: thread.isBookmarked ? "2px solid #0B71FE" : "2px solid transparent",
                     borderRadius: 8,
                     fontSize: 14,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
-                    fontFamily: "Montserrat, sans-serif",
-                    display: "flex",
+                                        display: "flex",
                     alignItems: "center",
                     gap: 6,
                     transition: "all 0.2s ease",
@@ -847,10 +842,9 @@ export default function ThreadDetailPage() {
                     border: thread.isFollowing ? "2px solid #0B71FE" : "2px solid transparent",
                     borderRadius: 8,
                     fontSize: 14,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
-                    fontFamily: "Montserrat, sans-serif",
-                    transition: "all 0.2s ease",
+                                        transition: "all 0.2s ease",
                     boxShadow: thread.isFollowing ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
                   }}
                   onMouseDown={(e) => {
@@ -876,10 +870,9 @@ export default function ThreadDetailPage() {
                       border: "2px solid transparent",
                       borderRadius: 8,
                       fontSize: 14,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: "pointer",
-                      fontFamily: "Montserrat, sans-serif",
-                      transition: "all 0.2s ease"
+                                            transition: "all 0.2s ease"
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"
@@ -907,7 +900,7 @@ export default function ThreadDetailPage() {
           <h2 style={{
             margin: "0 0 20px",
             fontSize: 22,
-            fontWeight: 700,
+            fontWeight: 500,
             color: "#1E40AF"
           }}>
             {comments.length} Respuestas
@@ -941,7 +934,7 @@ export default function ThreadDetailPage() {
               <h3 style={{
                 margin: "0 0 16px",
                 fontSize: 18,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#1E40AF"
               }}>
                 {replyTo ? "Responder al comentario" : "Tu respuesta"}
@@ -957,8 +950,7 @@ export default function ThreadDetailPage() {
                     minHeight: 150,
                     padding: 16,
                     fontSize: 15,
-                    fontFamily: "Montserrat, sans-serif",
-                    fontWeight: 500,
+                                        fontWeight: 500,
                     border: "2px solid rgba(255, 255, 255, 0.6)",
                     borderRadius: 12,
                     background: "rgba(255, 255, 255, 0.6)",
@@ -983,11 +975,10 @@ export default function ThreadDetailPage() {
                       border: "none",
                       borderRadius: 12,
                       fontSize: 15,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: submitting || !newComment.trim() ? "not-allowed" : "pointer",
                       boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                      fontFamily: "Montserrat, sans-serif"
-                    }}
+                                          }}
                   >
                     {submitting ? "Enviando..." : "Publicar Respuesta"}
                   </button>
@@ -1003,10 +994,9 @@ export default function ThreadDetailPage() {
                         border: "none",
                         borderRadius: 12,
                         fontSize: 15,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: "pointer",
-                        fontFamily: "Montserrat, sans-serif"
-                      }}
+                                              }}
                     >
                       Cancelar
                     </button>
@@ -1025,8 +1015,8 @@ export default function ThreadDetailPage() {
               borderRadius: 16,
               border: "2px solid rgba(239, 68, 68, 0.3)"
             }}>
-              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: "#DC2626" }}>Cerrado</div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: "#DC2626" }}>
+              <div style={{ fontSize: 18, fontWeight: 500, marginBottom: 8, color: "#DC2626" }}>Cerrado</div>
+              <div style={{ fontSize: 15, fontWeight: 500, color: "#DC2626" }}>
                 Este tema está cerrado y no acepta nuevas respuestas
               </div>
             </div>

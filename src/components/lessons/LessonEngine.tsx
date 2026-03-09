@@ -338,7 +338,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             style={{
               minWidth: "220px",
               fontSize: "0.95rem",
-              fontWeight: 800,
+              fontWeight: 500,
               padding: "10px 40px",
               height: "45px"
             }}
@@ -363,8 +363,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           overflow: "hidden",
           background: "#FFFFFF",
           paddingTop: "env(safe-area-inset-top)",
-          fontFamily: "'Montserrat', sans-serif",
-        }}
+                  }}
       >
         {/* Header - Lowered and Thickened */}
         <div style={{ flexShrink: 0, padding: "clamp(12px, 4vw, 32px) clamp(16px, 4vw, 48px) clamp(8px, 2vw, 20px)", display: "flex", justifyContent: "center" }}>
@@ -455,9 +454,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 borderRadius: 999,
                 boxShadow: "0 8px 24px rgba(37,99,235,0.4), inset 0 2px 0 rgba(255,255,255,0.2)",
                 cursor: "pointer",
-                fontFamily: "'Montserrat', sans-serif",
-                fontSize: "clamp(13px, 1.8vw, 16px)",
-                fontWeight: 800,
+                                fontSize: "clamp(13px, 1.8vw, 16px)",
+                fontWeight: 500,
                 color: "#ffffff",
                 whiteSpace: "nowrap",
                 animation: recallHintBounce ? "recallBounce 0.4s ease 2" : "none",
@@ -582,7 +580,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#2563EB",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   transition: "opacity 0.2s ease",
                   opacity: 1,
                 }}
@@ -604,17 +602,16 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                   </svg>
-                  <span style={{ fontSize: 11, fontWeight: 900, color: "#2563eb", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontFamily: "'Montserrat', sans-serif" }}>Nota de clase</span>
+                  <span style={{ fontSize: 11, fontWeight: 500, color: "#2563eb", letterSpacing: "0.06em", textTransform: "uppercase" as const, }}>Nota de clase</span>
                 </div>
 
                 {(lastInfoStep as any).title && (
                   <h2 style={{
                     fontSize: "clamp(20px, 4vw, 26px)",
-                    fontWeight: 900,
+                    fontWeight: 500,
                     marginBottom: 16,
                     lineHeight: 1.2,
-                    fontFamily: "'Montserrat', sans-serif",
-                    background: "linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #3b82f6 100%)",
+                                        background: "linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #3b82f6 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",

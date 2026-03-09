@@ -92,8 +92,7 @@ function ForumSearchContent() {
         display: "grid",
         placeItems: "center",
         minHeight: "60vh",
-        fontFamily: "Montserrat, sans-serif",
-        background: "#FBFAF5"
+                background: "#FBFAF5"
       }}>
         <p style={{ color: "#666", fontSize: 16 }}>Buscando...</p>
       </div>
@@ -108,8 +107,7 @@ function ForumSearchContent() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "#FBFAF5",
+            background: "#FBFAF5",
       backgroundAttachment: "fixed",
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat"
@@ -133,7 +131,7 @@ function ForumSearchContent() {
         zIndex: 1
       }}>
         {/* Breadcrumb */}
-        <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600 }}>
+        <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 500 }}>
           <Link href="/forum" style={{ color: "#1e3a8a", textDecoration: "none" }}>
             Foro
           </Link>
@@ -162,8 +160,7 @@ function ForumSearchContent() {
                 flex: 1,
                 padding: "12px 16px",
                 fontSize: 15,
-                fontFamily: "Montserrat, sans-serif",
-                fontWeight: 600,
+                                fontWeight: 500,
                 border: "none",
                 borderRadius: 12,
                 background: "rgba(255, 255, 255, 0.6)",
@@ -182,21 +179,20 @@ function ForumSearchContent() {
                 border: "none",
                 borderRadius: 12,
                 fontSize: 15,
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: searchQuery.trim() ? "pointer" : "not-allowed",
                 boxShadow: searchQuery.trim() ? "0 4px 12px rgba(15, 23, 42, 0.3)" : "none",
-                fontFamily: "Montserrat, sans-serif"
-              }}
+                              }}
             >
               Buscar
             </button>
           </div>
         </form>
 
-        <h1 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>
+        <h1 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 500, color: "#0f172a" }}>
           Resultados de búsqueda
         </h1>
-        <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 15, fontWeight: 600 }}>
+        <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 15, fontWeight: 500 }}>
           {results.length} {results.length === 1 ? 'resultado' : 'resultados'} para "{query}"
         </p>
 
@@ -229,13 +225,13 @@ function ForumSearchContent() {
                   e.currentTarget.style.borderColor = "rgba(15, 23, 42, 0.12)"
                 }}
               >
-                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700, color: "#1e3a8a" }}>
+                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, color: "#1e3a8a" }}>
                   {thread.title}
                 </h3>
                 <p style={{ margin: "0 0 12px", fontSize: 14, color: "#6B7280", lineHeight: 1.5 }}>
                   {thread.body.substring(0, 200)}...
                 </p>
-                <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#9CA3AF", fontWeight: 600, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#9CA3AF", fontWeight: 500, flexWrap: "wrap" }}>
                   <span>{thread.topic.name}</span>
                   <span>por {thread.author.nickname}</span>
                   <span>{thread.score} votos</span>
@@ -254,10 +250,10 @@ function ForumSearchContent() {
             border: "2px solid rgba(15, 23, 42, 0.12)",
             boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)"
           }}>
-            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
+            <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 500, color: "#0f172a" }}>
               No se encontraron resultados
             </h3>
-            <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 14, fontWeight: 600 }}>
+            <p style={{ margin: "0 0 24px", color: "#374151", fontSize: 14, fontWeight: 500 }}>
               Intenta con otras palabras clave
             </p>
             <Link href="/forum" style={{
@@ -266,7 +262,7 @@ function ForumSearchContent() {
               background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
               color: "white",
               borderRadius: 12,
-              fontWeight: 700,
+              fontWeight: 500,
               textDecoration: "none",
               fontSize: 15,
               boxShadow: "0 4px 12px rgba(15, 23, 42, 0.3)",

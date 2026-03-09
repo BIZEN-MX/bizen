@@ -128,8 +128,7 @@ export default function FollowingPage() {
         minHeight: "100vh",
         paddingTop: 40,
         paddingBottom: 80,
-        fontFamily: "Montserrat, sans-serif",
-        background: "#FBFAF5",
+                background: "#FBFAF5",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         width: "100%",
@@ -154,7 +153,7 @@ export default function FollowingPage() {
                 border: "2px solid #E5E7EB",
                 borderRadius: 8,
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 500,
                 color: "#374151",
                 cursor: "pointer",
                 display: "inline-flex",
@@ -167,12 +166,12 @@ export default function FollowingPage() {
             <h1 style={{
               margin: "16px 0 8px",
               fontSize: "clamp(28px, 6vw, 36px)",
-              fontWeight: 800,
+              fontWeight: 500,
               color: "#1E40AF"
             }}>
               Temas que Sigo
             </h1>
-            <p style={{ margin: 0, color: "#374151", fontSize: "clamp(14px, 3vw, 16px)", fontWeight: 600 }}>
+            <p style={{ margin: 0, color: "#374151", fontSize: "clamp(14px, 3vw, 16px)", fontWeight: 500 }}>
               Recibe notificaciones cuando haya nuevas respuestas en estos temas
             </p>
           </div>
@@ -200,8 +199,8 @@ export default function FollowingPage() {
                 border: "2px solid rgba(255, 255, 255, 0.6)",
                 textAlign: "center"
               }}>
-                <div style={{ fontSize: 48, marginBottom: 16, color: "#1E40AF", fontWeight: 700 }}>Siguiendo</div>
-                <h3 style={{ fontSize: 20, fontWeight: 700, color: "#1E40AF", marginBottom: 8 }}>
+                <div style={{ fontSize: 48, marginBottom: 16, color: "#1E40AF", fontWeight: 500 }}>Siguiendo</div>
+                <h3 style={{ fontSize: 20, fontWeight: 500, color: "#1E40AF", marginBottom: 8 }}>
                   No sigues ningún tema
                 </h3>
                 <p style={{ color: "#6B7280", marginBottom: 24 }}>
@@ -214,7 +213,7 @@ export default function FollowingPage() {
                     color: "white",
                     border: "none",
                     borderRadius: 12,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     fontSize: 15,
                     cursor: "pointer"
                   }}>
@@ -259,12 +258,12 @@ export default function FollowingPage() {
                   }}>
                     <div style={{
                       fontSize: 24,
-                      fontWeight: 800,
+                      fontWeight: 500,
                       color: thread.score > 0 ? "#10B981" : thread.score < 0 ? "#EF4444" : "#6B7280"
                     }}>
                       {thread.score}
                     </div>
-                    <div style={{ fontSize: 11, color: "#6B7280", fontWeight: 600 }}>
+                    <div style={{ fontSize: 11, color: "#6B7280", fontWeight: 500 }}>
                       votos
                     </div>
                   </div>
@@ -276,7 +275,7 @@ export default function FollowingPage() {
                         margin: 0,
                         flex: 1,
                         fontSize: 18,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         color: "#1E40AF",
                         lineHeight: 1.4
                       }}>
@@ -287,7 +286,7 @@ export default function FollowingPage() {
                         background: getStatusColor(thread.status) + "22",
                         color: getStatusColor(thread.status),
                         fontSize: 11,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         borderRadius: 6,
                         whiteSpace: "nowrap"
                       }}>
@@ -323,7 +322,7 @@ export default function FollowingPage() {
                           background: "#10B98122",
                           color: "#10B981",
                           borderRadius: 4,
-                          fontWeight: 600,
+                          fontWeight: 500,
                           whiteSpace: "nowrap"
                         }}>
                           <CheckIcon size={12} color="#10B981" style={{ marginRight: 4 }} />

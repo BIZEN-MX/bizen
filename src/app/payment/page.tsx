@@ -56,8 +56,7 @@ export default function PaymentPage() {
     <div style={{
       minHeight: "100vh",
       background: "#FBFAF5",
-      fontFamily: "Helvetica, 'Inter', sans-serif",
-      position: "relative",
+            position: "relative",
       display: "flex",
       flexDirection: "column",
       boxSizing: "border-box"
@@ -67,7 +66,7 @@ export default function PaymentPage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         .pay-input { width: 100%; height: 44px; border-radius: 12px; border: 1.5px solid #e2e8f0; padding: 0 16px; font-size: 14px; font-family: inherit; color: #0f172a; background: white; box-sizing: border-box; transition: all 0.2s; outline: none; }
         .pay-input:focus { border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
-        .pay-btn { width: 100%; padding: 14px 20px; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); border: none; border-radius: 14px; color: white; font-size: 15px; font-weight: 800; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.25s; box-shadow: 0 8px 24px rgba(37,99,235,0.25); }
+        .pay-btn { width: 100%; padding: 14px 20px; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); border: none; border-radius: 14px; color: white; font-size: 15px; font-weight: 500; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.25s; box-shadow: 0 8px 24px rgba(37,99,235,0.25); }
         .pay-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,99,235,0.35); }
         .pay-feature-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
         
@@ -101,11 +100,11 @@ export default function PaymentPage() {
         flexShrink: 0
       }}>
         <Link href="/" style={{ textDecoration: "none" }}>
-          <span style={{ fontSize: 26, fontWeight: 900, color: "#475569", fontFamily: "Helvetica, Arial, sans-serif", letterSpacing: "-0.03em" }}>
+          <span style={{ fontSize: 26, fontWeight: 500, color: "#475569", letterSpacing: "-0.03em" }}>
             BIZEN
           </span>
         </Link>
-        <button onClick={() => router.back()} style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", color: "#64748b", fontSize: 14, fontWeight: 600 }}>
+        <button onClick={() => router.back()} style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", color: "#64748b", fontSize: 14, fontWeight: 500 }}>
           <ArrowLeft size={18} />
           Volver
         </button>
@@ -126,7 +125,7 @@ export default function PaymentPage() {
 
           {/* Top Headline */}
           <div className="pay-header-text" style={{ textAlign: "center", marginBottom: 32 }}>
-            <h1 style={{ margin: "0 0 8px", fontSize: 36, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em" }}>
+            <h1 style={{ margin: "0 0 8px", fontSize: 36, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.03em" }}>
               Todo <span style={{ color: "#1e3a8a" }}>BIZEN</span>. Sin límites.
             </h1>
             <p style={{ margin: 0, fontSize: 16, color: "#64748b", fontWeight: 500 }}>
@@ -147,12 +146,12 @@ export default function PaymentPage() {
               boxShadow: "0 20px 40px rgba(15,98,254,0.2)"
             }}>
               <div className="pay-hero-badge" style={{ display: "inline-flex", background: "rgba(255,255,255,0.12)", padding: "5px 12px", borderRadius: 999, marginBottom: 16, width: "fit-content" }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: "#93c5fd", letterSpacing: "0.08em", textTransform: "uppercase" }}>PLAN EMPRENDEDOR</span>
+                <span style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", letterSpacing: "0.08em", textTransform: "uppercase" }}>PLAN EMPRENDEDOR</span>
               </div>
 
               <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 48, fontWeight: 900, color: "#fff", lineHeight: 1 }}>$49</span>
-                <span style={{ fontSize: 16, fontWeight: 600, color: "#93c5fd" }}>/mes MXN</span>
+                <span style={{ fontSize: 48, fontWeight: 500, color: "#fff", lineHeight: 1 }}>$49</span>
+                <span style={{ fontSize: 16, fontWeight: 500, color: "#93c5fd" }}>/mes MXN</span>
               </div>
               <p style={{ fontSize: 13, color: "#60a5fa", fontWeight: 500, marginBottom: 20 }}>Cancela en cualquier momento.</p>
 
@@ -160,7 +159,7 @@ export default function PaymentPage() {
                 {FEATURES.map(({ icon: Icon, text }) => (
                   <div key={text} className="pay-feature-row">
                     <Icon size={14} color="#93c5fd" style={{ flexShrink: 0 }} />
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0" }}>{text}</span>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: "#e2e8f0" }}>{text}</span>
                   </div>
                 ))}
               </div>
@@ -193,22 +192,22 @@ export default function PaymentPage() {
                   transform: "scaleX(-1)"
                 }}
               />
-              <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 900, color: "#0f172a" }}>
+              <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 500, color: "#0f172a" }}>
                 Completa tu registro
               </h2>
 
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 6 }}>Nombre completo</label>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "#64748b", marginBottom: 6 }}>Nombre completo</label>
                   <input className="pay-input" name="name" type="text" required value={formData.name} onChange={handleInputChange} placeholder="Tu nombre" />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 6 }}>Correo electrónico</label>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "#64748b", marginBottom: 6 }}>Correo electrónico</label>
                   <input className="pay-input" name="email" type="email" required value={formData.email} onChange={handleInputChange} placeholder="tu@correo.com" />
                 </div>
 
                 <div style={{ background: "#f8faff", border: "1px solid rgba(37,99,235,0.08)", borderRadius: 14, padding: "12px 16px", marginTop: 4 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, fontWeight: 800 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, fontWeight: 500 }}>
                     <span>Total hoy</span>
                     <span>$49 MXN</span>
                   </div>

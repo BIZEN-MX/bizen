@@ -273,8 +273,7 @@ export default function FixedSidebar() {
           zIndex: 1000,
           overflowY: "auto",
           overflowX: "hidden",
-          fontFamily: "'Montserrat', sans-serif",
-          borderRight: "2px solid #0F62FE",
+                    borderRight: "2px solid #0F62FE",
           boxSizing: "border-box"
         }}>
         <div style={{ padding: "24px 20px 0 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", minHeight: "100%" }} className="sidebar-inner-container">
@@ -295,9 +294,8 @@ export default function FixedSidebar() {
             className="sidebar-brand"
           >
             <span style={{
-              fontFamily: "'Helvetica', 'Arial', sans-serif",
-              fontSize: 30,
-              fontWeight: 900,
+                            fontSize: 30,
+              fontWeight: 500,
               color: "#1e293b",
               letterSpacing: "-1px",
               lineHeight: 1,
@@ -331,8 +329,8 @@ export default function FixedSidebar() {
                         background: rgba(15, 98, 254, 0.08);
                         color: #0F62FE;
                         font-size: 11px;
-                        font-weight: 800;
-                        font-family: 'Montserrat', sans-serif;
+                        font-weight: 500;
+                        
                         letter-spacing: 1px;
                         text-transform: uppercase;
                         padding: 4px 12px;
@@ -359,8 +357,8 @@ export default function FixedSidebar() {
                         background: transparent;
                         color: #94A3B8;
                         font-size: 11px;
-                        font-weight: 700;
-                        font-family: 'Montserrat', sans-serif;
+                        font-weight: 500;
+                        
                         letter-spacing: 1.2px;
                         text-transform: uppercase;
                         padding: 4px 12px;
@@ -382,8 +380,8 @@ export default function FixedSidebar() {
                         background: rgba(15, 98, 254, 0.08);
                         color: #0F62FE;
                         font-size: 11px;
-                        font-weight: 800;
-                        font-family: 'Montserrat', sans-serif;
+                        font-weight: 500;
+                        
                         letter-spacing: 1px;
                         text-transform: uppercase;
                         padding: 4px 12px;
@@ -435,9 +433,8 @@ export default function FixedSidebar() {
                   borderRadius: 12,
                   cursor: "pointer",
                   transition: "all 0.3s ease",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: 15,
-                  fontWeight: 700,
+                                    fontSize: 15,
+                  fontWeight: 500,
                   color: "white",
                   boxShadow: "0 4px 20px rgba(11, 113, 254, 0.5), 0 0 30px rgba(11, 113, 254, 0.3)",
                   display: "flex",
@@ -507,8 +504,7 @@ export default function FixedSidebar() {
                       borderRadius: 10,
                       cursor: "pointer",
                       transition: "all 0.2s ease",
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 14,
+                                            fontSize: 14,
                       fontWeight: coursesActive ? 700 : 600,
                       textAlign: "left",
                       color: coursesActive ? "#0B71FE" : "#4b5563",
@@ -546,8 +542,7 @@ export default function FixedSidebar() {
                       borderRadius: 10,
                       cursor: "pointer",
                       transition: "all 0.2s ease",
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 14,
+                                            fontSize: 14,
                       fontWeight: retoDiarioActive ? 700 : 600,
                       textAlign: "left",
                       color: retoDiarioActive ? "#0B71FE" : "#4b5563",
@@ -586,8 +581,7 @@ export default function FixedSidebar() {
                         borderRadius: 10,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontSize: 14,
+                                                fontSize: 14,
                         fontWeight: businessLabActive ? 700 : 600,
                         textAlign: "left",
                         color: businessLabActive ? "#93C5FD" : "#fff",
@@ -625,8 +619,7 @@ export default function FixedSidebar() {
                       borderRadius: 10,
                       cursor: "pointer",
                       transition: "all 0.2s ease",
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 14,
+                                            fontSize: 14,
                       fontWeight: simuladorActive ? 700 : 600,
                       textAlign: "left",
                       color: simuladorActive ? "#0B71FE" : "#4b5563",
@@ -666,8 +659,7 @@ export default function FixedSidebar() {
                       borderRadius: 10,
                       cursor: "pointer",
                       transition: "all 0.2s ease",
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontSize: 14,
+                                            fontSize: 14,
                       fontWeight: impactoSocialActive ? 700 : 600,
                       textAlign: "left",
                       color: impactoSocialActive ? "#0B71FE" : "#4b5563",
@@ -711,8 +703,7 @@ export default function FixedSidebar() {
                         borderRadius: 10,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontSize: 14,
+                                                fontSize: 14,
                         fontWeight: forumActive ? 700 : 600,
                         textAlign: "left",
                         color: forumActive ? "#0B71FE" : "#4b5563",
@@ -754,8 +745,7 @@ export default function FixedSidebar() {
                           borderRadius: 10,
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                          fontFamily: "'Montserrat', sans-serif",
-                          fontSize: 14,
+                                                    fontSize: 14,
                           fontWeight: pathname === "/teacher/dashboard" ? 700 : 600,
                           textAlign: "left",
                           color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563",
@@ -792,8 +782,7 @@ export default function FixedSidebar() {
                           borderRadius: 10,
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                          fontFamily: "'Montserrat', sans-serif",
-                          fontSize: 14,
+                                                    fontSize: 14,
                           fontWeight: pathname === "/teacher/courses" ? 700 : 600,
                           textAlign: "left",
                           color: pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563",
@@ -841,9 +830,8 @@ export default function FixedSidebar() {
                           borderRadius: 10,
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                          fontFamily: "'Montserrat', sans-serif",
-                          fontSize: 14,
-                          fontWeight: 600,
+                                                    fontSize: 14,
+                          fontWeight: 500,
                           textAlign: "left",
                           color: isMasOpen ? "#0B71FE" : "#4b5563",
                           width: "100%",
@@ -909,8 +897,7 @@ export default function FixedSidebar() {
                                   borderRadius: 8,
                                   cursor: "pointer",
                                   transition: "all 0.2s ease",
-                                  fontFamily: "'Montserrat', sans-serif",
-                                  fontSize: 13,
+                                                                    fontSize: 13,
                                   fontWeight: rankingsActive ? 700 : 600,
                                   textAlign: "left",
                                   color: rankingsActive ? "#0B71FE" : "#4b5563",
@@ -943,8 +930,7 @@ export default function FixedSidebar() {
                                   borderRadius: 8,
                                   cursor: "pointer",
                                   transition: "all 0.2s ease",
-                                  fontFamily: "'Montserrat', sans-serif",
-                                  fontSize: 13,
+                                                                    fontSize: 13,
                                   fontWeight: puntosActive ? 700 : 600,
                                   textAlign: "left",
                                   color: puntosActive ? "#0B71FE" : "#4b5563",
@@ -982,8 +968,7 @@ export default function FixedSidebar() {
                                   borderRadius: 8,
                                   cursor: "pointer",
                                   transition: "all 0.2s ease",
-                                  fontFamily: "'Montserrat', sans-serif",
-                                  fontSize: 13,
+                                                                    fontSize: 13,
                                   fontWeight: tiendaActive ? 700 : 600,
                                   textAlign: "left",
                                   color: tiendaActive ? "#0B71FE" : "#4b5563",
@@ -1021,8 +1006,7 @@ export default function FixedSidebar() {
                               borderRadius: 8,
                               cursor: "pointer",
                               transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif",
-                              fontSize: 13,
+                                                            fontSize: 13,
                               fontWeight: settingsActive ? 700 : 600,
                               textAlign: "left",
                               color: settingsActive ? "#0B71FE" : "#4b5563",
@@ -1060,9 +1044,8 @@ export default function FixedSidebar() {
                               borderRadius: 8,
                               cursor: "pointer",
                               transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif",
-                              fontSize: 13,
-                              fontWeight: 600,
+                                                            fontSize: 13,
+                              fontWeight: 500,
                               textAlign: "left",
                               color: "#4b5563",
                               textDecoration: "none",
@@ -1101,9 +1084,8 @@ export default function FixedSidebar() {
                               borderRadius: 8,
                               cursor: "pointer",
                               transition: "all 0.2s ease",
-                              fontFamily: "'Montserrat', sans-serif",
-                              fontSize: 13,
-                              fontWeight: 600,
+                                                            fontSize: 13,
+                              fontWeight: 500,
                               textAlign: "left",
                               color: "#DC2626",
                               width: "100%",
@@ -1190,7 +1172,7 @@ export default function FixedSidebar() {
                 <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                   <div style={{
                     fontSize: 18,
-                    fontWeight: 900,
+                    fontWeight: 500,
                     color: "#0f172a",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
@@ -1201,7 +1183,7 @@ export default function FixedSidebar() {
                   </div>
                   <div style={{
                     fontSize: 12,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     color: "#0F62FE",
                     textTransform: "uppercase",
                     letterSpacing: "0.02em",
@@ -1220,12 +1202,12 @@ export default function FixedSidebar() {
                       border: "1.5px solid #BAE6FD",
                       color: "#0369A1",
                       fontSize: 13,
-                      fontWeight: 800
+                      fontWeight: 500
                     }}>
                       <Star size={12} fill="#0369A1" />
                       {((dbProfile as any)?.bizcoins || 0).toLocaleString()}
                     </div>
-                    <span style={{ fontSize: 13, fontWeight: 850 }}>MI PERFIL</span>
+                    <span style={{ fontSize: 13, fontWeight: 500 }}>MI PERFIL</span>
                   </div>
                 </div>
               )}
@@ -1249,8 +1231,7 @@ export default function FixedSidebar() {
             justifyContent: "center",
             zIndex: 1100,
             padding: 20,
-            fontFamily: "'Montserrat', sans-serif"
-          }}>
+                      }}>
             <div style={{
               background: "white",
               borderRadius: 16,
@@ -1287,12 +1268,11 @@ export default function FixedSidebar() {
                     border: "none",
                     borderRadius: 12,
                     fontSize: 15,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
                     transition: "transform 0.2s ease",
                     boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                    fontFamily: "'Montserrat', sans-serif"
-                  }}
+                                      }}
                   onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
                   onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                 >
@@ -1308,11 +1288,10 @@ export default function FixedSidebar() {
                     border: "1px solid rgba(220, 38, 38, 0.3)",
                     borderRadius: 12,
                     fontSize: 15,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                    fontFamily: "'Montserrat', sans-serif"
-                  }}
+                                      }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = "#FEF2F2"
                     e.currentTarget.style.transform = "scale(1.02)"
@@ -1346,8 +1325,7 @@ export default function FixedSidebar() {
               justifyContent: "center",
               zIndex: 1100,
               padding: 20,
-              fontFamily: "'Montserrat', sans-serif",
-              backdropFilter: "blur(4px)"
+                            backdropFilter: "blur(4px)"
             }}
             onClick={() => setShowAuthDialog(false)}
           >
@@ -1383,7 +1361,7 @@ export default function FixedSidebar() {
 
               <div style={{
                 fontSize: 26,
-                fontWeight: 800,
+                fontWeight: 500,
                 marginBottom: 16,
                 textAlign: "center",
                 background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
@@ -1421,12 +1399,11 @@ export default function FixedSidebar() {
                     border: "none",
                     borderRadius: 12,
                     fontSize: 16,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                     boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
-                    fontFamily: "'Montserrat', sans-serif"
-                  }}
+                                      }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-2px)"
                     e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.5)"
@@ -1451,11 +1428,10 @@ export default function FixedSidebar() {
                     border: "2px solid #0B71FE",
                     borderRadius: 12,
                     fontSize: 16,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                    fontFamily: "'Montserrat', sans-serif"
-                  }}
+                                      }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = "#EFF6FF"
                     e.currentTarget.style.transform = "translateY(-1px)"
@@ -1476,11 +1452,10 @@ export default function FixedSidebar() {
                     color: "#6B7280",
                     border: "none",
                     fontSize: 14,
-                    fontWeight: 600,
+                    fontWeight: 500,
                     cursor: "pointer",
                     transition: "color 0.2s ease",
-                    fontFamily: "'Montserrat', sans-serif"
-                  }}
+                                      }}
                   onMouseEnter={(e) => e.currentTarget.style.color = "#374151"}
                   onMouseLeave={(e) => e.currentTarget.style.color = "#6B7280"}
                 >
@@ -1503,7 +1478,7 @@ export default function FixedSidebar() {
         [data-fixed-sidebar] button {
           text-transform: uppercase !important;
           letter-spacing: 0.5px;
-          font-weight: 700 !important;
+          font-weight: 500 !important;
           color: #4b5563 !important;
         }
         

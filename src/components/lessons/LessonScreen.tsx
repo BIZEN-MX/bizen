@@ -52,8 +52,7 @@ export function LessonScreen({
         background: "#FFFFFF",
         paddingTop: "env(safe-area-inset-top)",
         position: "relative",
-        fontFamily: "'Inter', sans-serif"
-      }}
+              }}
     >
       {/* Progress header — slim, clean, Duolingo-style */}
       {showProgressBar && (

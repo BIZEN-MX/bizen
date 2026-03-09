@@ -59,7 +59,7 @@ export default function PullToRefreshIndicator({
         {isRefreshing ? (
           <span style={{
             fontSize: 12,
-            fontWeight: 600,
+            fontWeight: 500,
             color: "#0B71FE"
           }}>
             Actualizando...
@@ -90,7 +90,7 @@ export default function PullToRefreshIndicator({
             </div>
             <span style={{
               fontSize: 12,
-              fontWeight: 600,
+              fontWeight: 500,
               color: shouldTrigger ? "#0B71FE" : "#9CA3AF",
               transition: "color 0.2s ease"
             }}>

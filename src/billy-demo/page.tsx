@@ -39,7 +39,7 @@ export default function BillyDemoPage() {
       }}>
         <h1 style={{
           fontSize: "clamp(32px, 5vw, 48px)",
-          fontWeight: 900,
+          fontWeight: 500,
           marginBottom: 16,
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           WebkitBackgroundClip: 'text',
@@ -70,7 +70,7 @@ export default function BillyDemoPage() {
               border: selectedDemo === 'text' ? '2px solid #667eea' : '2px solid #e5e7eb',
               background: selectedDemo === 'text' ? '#667eea' : 'white',
               color: selectedDemo === 'text' ? 'white' : '#374151',
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: 'pointer',
               transition: 'all 0.2s ease',
             }}
@@ -86,7 +86,7 @@ export default function BillyDemoPage() {
               border: selectedDemo === 'audio' ? '2px solid #667eea' : '2px solid #e5e7eb',
               background: selectedDemo === 'audio' ? '#667eea' : 'white',
               color: selectedDemo === 'audio' ? 'white' : '#374151',
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: 'pointer',
               transition: 'all 0.2s ease',
             }}
@@ -102,7 +102,7 @@ export default function BillyDemoPage() {
               border: selectedDemo === 'interactive' ? '2px solid #667eea' : '2px solid #e5e7eb',
               background: selectedDemo === 'interactive' ? '#667eea' : 'white',
               color: selectedDemo === 'interactive' ? 'white' : '#374151',
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: 'pointer',
               transition: 'all 0.2s ease',
             }}
@@ -118,7 +118,7 @@ export default function BillyDemoPage() {
               border: '2px solid #10B981',
               background: showCharacter ? '#10B981' : 'white',
               color: showCharacter ? 'white' : '#10B981',
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: 'pointer',
               marginLeft: 'auto',
             }}
@@ -140,7 +140,7 @@ export default function BillyDemoPage() {
         }}>
           {selectedDemo === 'text' && (
             <div>
-              <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 16 }}>
+              <h2 style={{ fontSize: 28, fontWeight: 500, marginBottom: 16 }}>
                 Text-to-Speech Demo
               </h2>
               <p style={{ color: '#666', marginBottom: 24 }}>
@@ -158,8 +158,7 @@ export default function BillyDemoPage() {
                   borderRadius: 12,
                   border: '2px solid #e5e7eb',
                   fontSize: 16,
-                  fontFamily: 'inherit',
-                  resize: 'vertical',
+                                    resize: 'vertical',
                 }}
               />
 
@@ -193,7 +192,7 @@ export default function BillyDemoPage() {
 
           {selectedDemo === 'audio' && (
             <div>
-              <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 16 }}>
+              <h2 style={{ fontSize: 28, fontWeight: 500, marginBottom: 16 }}>
                 Audio File Demo
               </h2>
               <p style={{ color: '#666', marginBottom: 24 }}>
@@ -206,7 +205,7 @@ export default function BillyDemoPage() {
                 padding: 24,
                 border: '1px solid #e5e7eb',
               }}>
-                <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}>
+                <h3 style={{ fontSize: 18, fontWeight: 500, marginBottom: 12 }}>
                   Para usar audio personalizado:
                 </h3>
                 <ol style={{ paddingLeft: 20, color: '#666', lineHeight: 1.8 }}>
@@ -251,7 +250,7 @@ export default function BillyDemoPage() {
 
           {selectedDemo === 'interactive' && (
             <div>
-              <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 16 }}>
+              <h2 style={{ fontSize: 28, fontWeight: 500, marginBottom: 16 }}>
                 Interactive Demo
               </h2>
               <p style={{ color: '#666', marginBottom: 24 }}>
@@ -300,7 +299,7 @@ export default function BillyDemoPage() {
           borderRadius: 16,
           border: '1px solid #BFDBFE',
         }}>
-          <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 12 }}>
+          <h3 style={{ fontSize: 20, fontWeight: 500, marginBottom: 12 }}>
             📦 Cómo integrarlo en tu app
           </h3>
           <pre style={{
@@ -365,7 +364,7 @@ function InteractiveButton({ text, icon }: { text: string; icon: React.ReactNode
           cursor: 'pointer',
           transition: 'all 0.2s ease',
           fontSize: 16,
-          fontWeight: 600,
+          fontWeight: 500,
           textAlign: 'left',
           display: 'flex',
           alignItems: 'center',

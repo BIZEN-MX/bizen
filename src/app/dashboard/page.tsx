@@ -25,8 +25,7 @@ export default function DashboardPage() {
       display: "grid", 
       placeItems: "center", 
       minHeight: "60vh", 
-      fontFamily: "Montserrat, sans-serif" 
-    }}>
+          }}>
       <div style={{ textAlign: "center" }}>
         <p style={{ color: "#666", fontSize: 16 }}>Redirigiendo...</p>
       </div>

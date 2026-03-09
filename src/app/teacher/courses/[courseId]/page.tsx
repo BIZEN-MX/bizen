@@ -84,7 +84,7 @@ export default function TeacherCourseEditPage() {
 
   if (loading || loadingCourse) {
     return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "Montserrat, sans-serif" }}>
+      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando curso...</p>
         </div>
@@ -99,8 +99,7 @@ export default function TeacherCourseEditPage() {
       maxWidth: 1200, 
       margin: "0 auto", 
       padding: "clamp(20px, 4vw, 40px)",
-      fontFamily: "Montserrat, sans-serif"
-    }}>
+          }}>
       {/* Back Button */}
       <button
         onClick={() => router.push("/teacher/courses")}
@@ -109,7 +108,7 @@ export default function TeacherCourseEditPage() {
           border: "none",
           color: "#0F62FE",
           fontSize: 14,
-          fontWeight: 600,
+          fontWeight: 500,
           cursor: "pointer",
           marginBottom: 24,
           display: "flex",
@@ -127,7 +126,7 @@ export default function TeacherCourseEditPage() {
             <h1 style={{ 
               margin: "0 0 8px", 
               fontSize: "clamp(24px, 5vw, 32px)", 
-              fontWeight: 800,
+              fontWeight: 500,
               color: "#111"
             }}>
               {course.title}
@@ -144,7 +143,7 @@ export default function TeacherCourseEditPage() {
                 color: course.isActive ? "#065F46" : "#6B7280",
                 borderRadius: 12,
                 fontSize: 13,
-                fontWeight: 600
+                fontWeight: 500
               }}>
                 {course.isActive ? "✓ Activo" : "Borrador"}
               </span>
@@ -201,7 +200,7 @@ export default function TeacherCourseEditPage() {
       {activeTab === "units" && (
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 500 }}>
               Unidades del Curso
             </h2>
             <Button onClick={handleAddUnit}>+ Agregar Unidad</Button>
@@ -238,13 +237,13 @@ export default function TeacherCourseEditPage() {
                       color: "#fff",
                       borderRadius: 8,
                       fontSize: 12,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       marginBottom: 12
                     }}>
                       Unidad {unit.order}
                     </div>
 
-                    <h3 style={{ margin: "0 0 12px", fontSize: 18, fontWeight: 700 }}>
+                    <h3 style={{ margin: "0 0 12px", fontSize: 18, fontWeight: 500 }}>
                       {unit.title}
                     </h3>
 
@@ -272,7 +271,7 @@ export default function TeacherCourseEditPage() {
                         border: "none",
                         borderRadius: 8,
                         fontSize: 14,
-                        fontWeight: 600,
+                        fontWeight: 500,
                         cursor: "pointer",
                         color: "#374151"
                       }}
@@ -307,13 +306,13 @@ export default function TeacherCourseEditPage() {
       {/* Settings Tab */}
       {activeTab === "settings" && (
         <Card style={{ padding: "32px 28px" }}>
-          <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 700 }}>
+          <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 500 }}>
             Configuración del Curso
           </h2>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 600 }}>
             <div>
-              <label style={{ display: "block", fontSize: 14, fontWeight: 600, marginBottom: 8, color: "#374151" }}>
+              <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8, color: "#374151" }}>
                 Título del Curso
               </label>
               <input
@@ -326,13 +325,12 @@ export default function TeacherCourseEditPage() {
                   border: "1px solid #D1D5DB",
                   borderRadius: 8,
                   fontSize: 15,
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 14, fontWeight: 600, marginBottom: 8, color: "#374151" }}>
+              <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8, color: "#374151" }}>
                 Descripción
               </label>
               <textarea
@@ -345,14 +343,13 @@ export default function TeacherCourseEditPage() {
                   border: "1px solid #D1D5DB",
                   borderRadius: 8,
                   fontSize: 15,
-                  fontFamily: "Montserrat, sans-serif",
-                  resize: "vertical"
+                                    resize: "vertical"
                 }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 14, fontWeight: 600, marginBottom: 8, color: "#374151" }}>
+              <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8, color: "#374151" }}>
                 Nivel
               </label>
               <select
@@ -364,8 +361,7 @@ export default function TeacherCourseEditPage() {
                   border: "1px solid #D1D5DB",
                   borderRadius: 8,
                   fontSize: 15,
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
               >
                 <option value="Beginner">Principiante</option>
                 <option value="Intermediate">Intermedio</option>
@@ -383,7 +379,7 @@ export default function TeacherCourseEditPage() {
       {/* Students Tab */}
       {activeTab === "students" && (
         <Card style={{ padding: "32px 28px" }}>
-          <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 700 }}>
+          <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 500 }}>
             Estudiantes Inscritos ({course.studentsEnrolled})
           </h2>
 

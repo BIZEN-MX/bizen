@@ -134,7 +134,7 @@ export default function LessonPage() {
                     transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
                     style={{ width: 40, height: 40, border: "4px solid #E2E8F0", borderTopColor: "#0B71FE", borderRadius: "50%" }}
                 />
-                <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, color: "#64748B" }}>Cargando lección...</p>
+                <p style={{ fontWeight: 500, color: "#64748B" }}>Cargando lección...</p>
             </div>
         )
     }
@@ -142,13 +142,13 @@ export default function LessonPage() {
     // Error State
     if (error || !lessonData || !lessonData.steps?.length) {
         return (
-            <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24, padding: 24, background: "#f1f5f9", fontFamily: "'Montserrat', sans-serif" }}>
-                <p style={{ fontSize: 20, fontWeight: 600, color: "#334155", textAlign: "center" }}>
+            <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24, padding: 24, background: "#f1f5f9", }}>
+                <p style={{ fontSize: 20, fontWeight: 500, color: "#334155", textAlign: "center" }}>
                     {error || "Esta lección no tiene contenido disponible."}
                 </p>
                 <button
                     onClick={() => router.push(`/courses/${topicIdStr.replace(/^topic-|course-/, "") || "1"}`)}
-                    style={{ padding: "14px 24px", background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)", color: "white", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer" }}
+                    style={{ padding: "14px 24px", background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)", color: "white", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 500, cursor: "pointer" }}
                 >
                     Volver al tema
                 </button>

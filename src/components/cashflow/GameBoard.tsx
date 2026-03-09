@@ -223,12 +223,11 @@ export default function GameBoard({ playerPosition, isRolling, onRollDice, canRo
           top: 12,
           left: 16,
           fontSize: 11,
-          fontWeight: 800,
+          fontWeight: 500,
           letterSpacing: '0.12em',
           textTransform: 'uppercase',
           color: isOnFastTrack ? '#fbbf24' : 'rgba(255,255,255,0.4)',
-          fontFamily: "'Montserrat', sans-serif"
-        }}>
+                  }}>
           {isOnFastTrack ? '★ Fast Track' : 'Rat Race'}
         </div>
 
@@ -281,12 +280,11 @@ export default function GameBoard({ playerPosition, isRolling, onRollDice, canRo
                   borderRadius: 999,
                   padding: '13px 28px',
                   fontSize: 14,
-                  fontWeight: 800,
+                  fontWeight: 500,
                   cursor: canRoll && !isRolling ? 'pointer' : 'not-allowed',
                   opacity: canRoll && !isRolling ? 1 : 0.55,
                   transition: 'all 0.25s cubic-bezier(0.4,0,0.2,1)',
-                  fontFamily: "'Montserrat', sans-serif",
-                  animation: isRolling
+                                    animation: isRolling
                     ? 'shake 0.5s infinite'
                     : (canRoll ? (isOnFastTrack ? 'board-btn-pulse-gold 2s ease-in-out infinite' : 'board-btn-pulse 2s ease-in-out infinite') : 'none'),
                   whiteSpace: 'nowrap',
@@ -349,14 +347,13 @@ export default function GameBoard({ playerPosition, isRolling, onRollDice, canRo
                   {/* Space label */}
                   <div style={{
                     fontSize: isCorner ? 7 : 6.5,
-                    fontWeight: 800,
+                    fontWeight: 500,
                     color: isPlayerHere ? '#92400e' : spStyle.text,
                     textAlign: 'center',
                     lineHeight: 1.1,
                     letterSpacing: '0.02em',
                     padding: '0 2px',
-                    fontFamily: "'Montserrat', sans-serif",
-                    textTransform: 'uppercase',
+                                        textTransform: 'uppercase',
                     position: 'absolute',
                     top: 6
                   }}>
@@ -424,10 +421,9 @@ export default function GameBoard({ playerPosition, isRolling, onRollDice, canRo
                 }} />
                 <span style={{
                   fontSize: 'clamp(9px, 1.5vw, 11px)',
-                  fontWeight: 600,
+                  fontWeight: 500,
                   color: 'rgba(255,255,255,0.55)',
-                  fontFamily: "'Montserrat', sans-serif"
-                }}>{label}</span>
+                                  }}>{label}</span>
               </div>
             )
           })}

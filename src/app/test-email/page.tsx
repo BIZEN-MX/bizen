@@ -85,8 +85,7 @@ export default function TestEmailPage() {
       minHeight: "100vh",
       background: "#FBFAF5",
       padding: "40px 20px",
-      fontFamily: "Arial, sans-serif"
-    }}>
+          }}>
       <div style={{
         maxWidth: "600px",
         margin: "0 auto",
@@ -118,7 +117,7 @@ export default function TestEmailPage() {
 
         {/* Input Fields */}
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", marginBottom: "8px", fontWeight: "600" }}>
+          <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
             Email de destino:
           </label>
           <input
@@ -137,7 +136,7 @@ export default function TestEmailPage() {
         </div>
 
         <div style={{ marginBottom: "24px" }}>
-          <label style={{ display: "block", marginBottom: "8px", fontWeight: "600" }}>
+          <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
             Nombre (para email de bienvenida):
           </label>
           <input
@@ -168,7 +167,7 @@ export default function TestEmailPage() {
               border: "none",
               borderRadius: "8px",
               fontSize: "16px",
-              fontWeight: "600",
+              fontWeight: 500,
               cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.6 : 1,
               minWidth: "180px"
@@ -188,7 +187,7 @@ export default function TestEmailPage() {
               border: "none",
               borderRadius: "8px",
               fontSize: "16px",
-              fontWeight: "600",
+              fontWeight: 500,
               cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.6 : 1,
               minWidth: "180px"

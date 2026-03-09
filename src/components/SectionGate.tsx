@@ -150,7 +150,7 @@ export function SectionGate({
           <h1
             style={{
               fontSize: 28,
-              fontWeight: 800,
+              fontWeight: 500,
               marginBottom: 16,
               color: "#111",
             }}
@@ -186,7 +186,7 @@ export function SectionGate({
               border: "none",
               borderRadius: 12,
               fontSize: 16,
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: "pointer",
             }}
           >

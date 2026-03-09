@@ -124,7 +124,7 @@ export default function AdminFilesPage() {
                 color: 'white',
                 border: 'none',
                 cursor: 'pointer',
-                fontWeight: 600,
+                fontWeight: 500,
                 fontSize: '14px',
                 transition: 'all 0.2s ease'
               }}
@@ -209,7 +209,7 @@ export default function AdminFilesPage() {
                         background: '#fef3c7',
                         padding: '2px 8px',
                         borderRadius: '4px',
-                        fontWeight: '600'
+                        fontWeight: 500
                       }}>
                         ⚠️ Archivo antiguo
                       </span>

@@ -110,8 +110,7 @@ export default function HamburgerMenu() {
         boxShadow: "-2px 0 40px rgba(0,0,0,0.5)",
         zIndex: 1000, transition: "right 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
         overflowY: "auto", overflowX: "hidden",
-        fontFamily: "Montserrat, sans-serif",
-        boxSizing: "border-box"
+                boxSizing: "border-box"
       }}>
         {/* Decorative blobs */}
         <div aria-hidden style={{ position: "absolute", top: "-60px", right: "-60px", width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,86,231,0.25) 0%, transparent 70%)", filter: "blur(30px)", pointerEvents: "none" }} />
@@ -142,7 +141,7 @@ export default function HamburgerMenu() {
         <div style={{ padding: "72px 24px 32px", position: "relative", zIndex: 1 }}>
           {/* Brand */}
           <div style={{ marginBottom: 28, textAlign: "center" }}>
-            <span style={{ fontSize: 24, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
+            <span style={{ fontSize: 24, fontWeight: 500, color: "#fff", letterSpacing: "-0.02em" }}>
               BIZEN<span style={{ color: "#1983FD" }}>.</span>
             </span>
           </div>
@@ -157,10 +156,10 @@ export default function HamburgerMenu() {
               backdropFilter: "blur(8px)",
               textAlign: "center"
             }}>
-              <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.45)", letterSpacing: "0.05em", textTransform: "uppercase", fontFamily: "Inter, sans-serif" }}>
+              <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.45)", letterSpacing: "0.05em", textTransform: "uppercase", }}>
                 Bienvenido de nuevo
               </p>
-              <p style={{ margin: "4px 0 0", fontSize: 17, fontWeight: 700, color: "#fff", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <p style={{ margin: "4px 0 0", fontSize: 17, fontWeight: 500, color: "#fff", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Estudiante'} <PartyIcon size={20} />
               </p>
             </div>
@@ -169,7 +168,7 @@ export default function HamburgerMenu() {
           {/* Stats */}
           {stats && (
             <div style={{ marginBottom: 28 }}>
-              <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", textAlign: "center" }}>
+              <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", textAlign: "center" }}>
                 Tu Progreso
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -185,8 +184,8 @@ export default function HamburgerMenu() {
                     borderRadius: 12, padding: "14px 12px",
                     textAlign: "center"
                   }}>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: stat.color, fontFamily: "Montserrat, sans-serif" }}>{stat.value}</div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4, fontFamily: "Inter, sans-serif" }}>{stat.label}</div>
+                    <div style={{ fontSize: 22, fontWeight: 500, color: stat.color, }}>{stat.value}</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4, }}>{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -195,7 +194,7 @@ export default function HamburgerMenu() {
 
           {/* Nav Items */}
           <div style={{ marginBottom: 24 }}>
-            <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", textAlign: "center" }}>
+            <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", textAlign: "center" }}>
               Acciones Rápidas
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -210,7 +209,7 @@ export default function HamburgerMenu() {
                     border: "1px solid rgba(255,255,255,0.08)",
                     borderRadius: 12, cursor: "pointer",
                     transition: "all 0.2s ease",
-                    fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: 600,
+                    fontSize: 14, fontWeight: 500,
                     color: "#fff", textAlign: "center", width: "100%", justifyContent: "center"
                   }}
                   onMouseOver={(e) => { e.currentTarget.style.background = "rgba(0,86,231,0.2)"; e.currentTarget.style.borderColor = "rgba(25,131,253,0.3)"; e.currentTarget.style.transform = "translateX(4px)" }}
@@ -225,7 +224,7 @@ export default function HamburgerMenu() {
 
           {/* Account Items */}
           <div style={{ marginBottom: 24 }}>
-            <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "Inter, sans-serif", textAlign: "center" }}>
+            <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", textAlign: "center" }}>
               Cuenta
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -238,7 +237,7 @@ export default function HamburgerMenu() {
                     padding: "12px 16px",
                     background: "transparent", border: "none", borderRadius: 10,
                     cursor: "pointer", transition: "all 0.2s ease",
-                    fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: 500,
+                    fontSize: 14, fontWeight: 500,
                     color: "rgba(255,255,255,0.7)", textAlign: "center", width: "100%", justifyContent: "center"
                   }}
                   onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.transform = "translateX(4px)" }}
@@ -256,7 +255,7 @@ export default function HamburgerMenu() {
 
           {/* Email */}
           {user?.email && (
-            <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "Inter, sans-serif", textAlign: "center" }}>
+            <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.3)", textAlign: "center" }}>
               {user.email}
             </p>
           )}
@@ -269,8 +268,7 @@ export default function HamburgerMenu() {
           position: "fixed", inset: 0,
           background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 1100, padding: 20, fontFamily: "Montserrat, sans-serif"
-        }}>
+          zIndex: 1100, padding: 20,         }}>
           <div style={{
             background: "linear-gradient(160deg, #041640, #0a1f5c)",
             border: "1px solid rgba(255,255,255,0.1)",
@@ -278,7 +276,7 @@ export default function HamburgerMenu() {
             maxWidth: 420, width: "100%",
             boxShadow: "0 24px 64px rgba(0,0,0,0.5)"
           }}>
-            <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 12, color: "#fff", display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ fontSize: 20, fontWeight: 500, marginBottom: 12, color: "#fff", display: 'flex', alignItems: 'center', gap: 10 }}>
               <WarningIcon size={24} color="#f59e0b" /> ¿Estás seguro?
             </div>
             <p style={{ fontSize: 15, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, marginBottom: 24 }}>
@@ -290,9 +288,8 @@ export default function HamburgerMenu() {
                 style={{
                   padding: "14px", background: "linear-gradient(135deg, #0056E7, #1983FD)",
                   color: "#fff", border: "none", borderRadius: 12,
-                  fontSize: 15, fontWeight: 700, cursor: "pointer",
-                  boxShadow: "0 6px 16px rgba(0,86,231,0.4)", fontFamily: "Montserrat, sans-serif",
-                  transition: "transform 0.2s"
+                  fontSize: 15, fontWeight: 500, cursor: "pointer",
+                  boxShadow: "0 6px 16px rgba(0,86,231,0.4)",                   transition: "transform 0.2s"
                 }}
                 onMouseOver={(e) => e.currentTarget.style.transform = "translateY(-2px)"}
                 onMouseOut={(e) => e.currentTarget.style.transform = "translateY(0)"}
@@ -305,9 +302,8 @@ export default function HamburgerMenu() {
                   padding: "14px",
                   background: "rgba(220,38,38,0.1)",
                   color: "#f87171", border: "1px solid rgba(220,38,38,0.25)",
-                  borderRadius: 12, fontSize: 15, fontWeight: 700,
-                  cursor: "pointer", fontFamily: "Montserrat, sans-serif",
-                  transition: "all 0.2s"
+                  borderRadius: 12, fontSize: 15, fontWeight: 500,
+                  cursor: "pointer",                   transition: "all 0.2s"
                 }}
                 onMouseOver={(e) => { e.currentTarget.style.background = "rgba(220,38,38,0.2)" }}
                 onMouseOut={(e) => { e.currentTarget.style.background = "rgba(220,38,38,0.1)" }}

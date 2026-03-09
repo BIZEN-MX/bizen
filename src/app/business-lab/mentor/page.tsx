@@ -56,8 +56,7 @@ export default async function MentorPage() {
         minHeight: "100vh",
         background: "#FBFAF5",
         padding: "40px",
-        fontFamily: "Montserrat, sans-serif",
-        width: "100%",
+                width: "100%",
         boxSizing: "border-box",
         overflowX: "hidden",
         overflowY: "visible"
@@ -69,7 +68,7 @@ export default async function MentorPage() {
             border: "2px solid #E5E7EB",
             borderRadius: 8,
             fontSize: 14,
-            fontWeight: 600,
+            fontWeight: 500,
             color: "#374151",
             cursor: "pointer",
             marginBottom: 24,
@@ -88,7 +87,7 @@ export default async function MentorPage() {
         <div style={{ marginBottom: 32 }}>
           <h1 style={{
             fontSize: 42,
-            fontWeight: 900,
+            fontWeight: 500,
             background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -131,7 +130,7 @@ export default async function MentorPage() {
                 <div style={{ fontSize: 48, marginBottom: 16, textAlign: "center" }}>
                   👤
                 </div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111", marginBottom: 8, textAlign: "center" }}>
+                <h3 style={{ fontSize: 18, fontWeight: 500, color: "#111", marginBottom: 8, textAlign: "center" }}>
                   {mentor.profiles?.nickname || "Mentor"}
                 </h3>
                 {mentor.bio && (
@@ -148,7 +147,7 @@ export default async function MentorPage() {
                         background: "#FBFAF5",
                         color: "#0B71FE",
                         borderRadius: 6,
-                        fontWeight: 600
+                        fontWeight: 500
                       }}>
                         {exp}
                       </span>
@@ -163,7 +162,7 @@ export default async function MentorPage() {
                   color: "white",
                   borderRadius: 12,
                   fontSize: 15,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   cursor: "pointer"
                 }}>
                   Contactar
@@ -182,7 +181,7 @@ export default async function MentorPage() {
             width: "100%"
           }}>
             <div style={{ fontSize: 64, marginBottom: 20 }}>🚧</div>
-            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: "#111" }}>
+            <h2 style={{ fontSize: 24, fontWeight: 500, marginBottom: 12, color: "#111" }}>
               Próximamente
             </h2>
             <p style={{ fontSize: 16, color: "#6B7280", maxWidth: 500, margin: "0 auto" }}>

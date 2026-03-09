@@ -326,7 +326,7 @@ export default function ProfilePage() {
           .prof-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
         }
         .prof-tab-btn {
-          flex: 1; padding: 14px; font-size: 13px; font-weight: 800;
+          flex: 1; padding: 14px; font-size: 13px; font-weight: 500;
           font-family: inherit; border: none; cursor: pointer;
           text-transform: uppercase; letter-spacing: 0.08em;
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); background: transparent;
@@ -363,8 +363,7 @@ export default function ProfilePage() {
 
       <div className="prof-outer" style={{
         minHeight: "100vh", background: "#FBFAF5",
-        fontFamily: "'Inter', 'Montserrat', sans-serif",
-        boxSizing: "border-box", color: "#0f172a",
+                boxSizing: "border-box", color: "#0f172a",
         position: "relative", overflowX: "hidden"
       }}>
         {/* Decorative elements */}
@@ -448,13 +447,13 @@ export default function ProfilePage() {
                 padding: "4px 12px", borderRadius: 999, marginBottom: 12
               }}>
                 <Trophy size={14} color="#0F62FE" />
-                <span style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", textTransform: "uppercase", letterSpacing: "0.02em" }}>Nivel {level}</span>
+                <span style={{ fontSize: 12, fontWeight: 500, color: "#0f172a", textTransform: "uppercase", letterSpacing: "0.02em" }}>Nivel {level}</span>
               </div>
 
-              <h1 style={{ margin: "0 0 6px", fontSize: 32, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+              <h1 style={{ margin: "0 0 6px", fontSize: 32, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
                 {displayName}
               </h1>
-              <p style={{ margin: "0 0 4px", fontSize: 16, color: "#64748b", fontWeight: 600 }}>
+              <p style={{ margin: "0 0 4px", fontSize: 16, color: "#64748b", fontWeight: 500 }}>
                 {nickname ? `@${nickname}` : user.email}
               </p>
               {joinDate && (
@@ -468,22 +467,22 @@ export default function ProfilePage() {
               <div style={{ display: "inline-flex", gap: 32, marginBottom: 24, justifyContent: "center" }}>
                 <button
                   onClick={() => { setRightTab("following"); fetchFollowingList() }}
-                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
                 >
                   <CustomFollowingIcon active={rightTab === "following"} />
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats?.followingCount ?? 0}</div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: rightTab === "following" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Siguiendo</div>
+                    <div style={{ fontSize: 18, fontWeight: 500, color: "#0f172a" }}>{profileStats?.followingCount ?? 0}</div>
+                    <div style={{ fontSize: 11, fontWeight: 500, color: rightTab === "following" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Siguiendo</div>
                   </div>
                 </button>
                 <button
                   onClick={() => { setRightTab("followers"); fetchFollowersList() }}
-                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
                 >
                   <CustomFollowersIcon active={rightTab === "followers"} />
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{profileStats?.followersCount ?? 0}</div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: rightTab === "followers" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Seguidores</div>
+                    <div style={{ fontSize: 18, fontWeight: 500, color: "#0f172a" }}>{profileStats?.followersCount ?? 0}</div>
+                    <div style={{ fontSize: 11, fontWeight: 500, color: rightTab === "followers" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Seguidores</div>
                   </div>
                 </button>
               </div>
@@ -499,11 +498,11 @@ export default function ProfilePage() {
               boxShadow: "0 4px 16px rgba(15,98,254,0.06)"
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
+                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 500, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
                   <Zap size={16} color="#0F62FE" />
                   Tu Progreso
                 </h3>
-                <span style={{ fontSize: 12, fontWeight: 800, color: "#0F62FE", background: "rgba(15,98,254,0.07)", padding: "3px 10px", borderRadius: 999 }}>{xpPct.toFixed(0)}%</span>
+                <span style={{ fontSize: 12, fontWeight: 500, color: "#0F62FE", background: "rgba(15,98,254,0.07)", padding: "3px 10px", borderRadius: 999 }}>{xpPct.toFixed(0)}%</span>
               </div>
               <div style={{ width: "100%", height: 10, background: "#e9f0ff", borderRadius: 10, overflow: "hidden", position: "relative" }}>
                 <div style={{
@@ -513,7 +512,7 @@ export default function ProfilePage() {
                 }} />
                 <div className="progress-shimmer" style={{ position: "absolute", inset: 0, width: `${xpPct}%`, borderRadius: 10 }} />
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 12, fontWeight: 700, color: "#94a3b8" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 12, fontWeight: 500, color: "#94a3b8" }}>
                 <span>{xpInLevel.toLocaleString()} XP</span>
                 <span>Nivel {level + 1} →</span>
               </div>
@@ -521,7 +520,7 @@ export default function ProfilePage() {
 
             {/* Statistics */}
             <div>
-              <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.02em" }}>
+              <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.02em" }}>
                 Estadísticas
               </h2>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
@@ -549,8 +548,8 @@ export default function ProfilePage() {
                       display: "flex", alignItems: "center", justifyContent: "center"
                     }}>{icon}</div>
                     <div>
-                      <div style={{ fontSize: 24, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{value}</div>
-                      <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
+                      <div style={{ fontSize: 24, fontWeight: 500, color: "#0f172a", lineHeight: 1 }}>{value}</div>
+                      <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
                     </div>
                   </div>
                 ))}
@@ -561,10 +560,10 @@ export default function ProfilePage() {
             {(userStats?.inventory?.length || dbProfile?.inventory?.length) ? (
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.01em" }}>
+                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.01em" }}>
                     Mis Compras
                   </h2>
-                  <Link href="/tienda" style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <Link href="/tienda" style={{ fontSize: 13, fontWeight: 500, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     VER TIENDA
                   </Link>
                 </div>
@@ -594,8 +593,8 @@ export default function ProfilePage() {
                           display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 8
                         }}>
                           <div style={{ fontSize: 24 }}>{details.icon}</div>
-                          <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", lineHeight: 1.2 }}>{details.name}</div>
-                          <div style={{ fontSize: 10, fontWeight: 700, color: "#10b981", background: "#f0fdf4", padding: "2px 8px", borderRadius: 10 }}>ADQUIRIDO</div>
+                          <div style={{ fontSize: 12, fontWeight: 500, color: "#0f172a", lineHeight: 1.2 }}>{details.name}</div>
+                          <div style={{ fontSize: 10, fontWeight: 500, color: "#10b981", background: "#f0fdf4", padding: "2px 8px", borderRadius: 10 }}>ADQUIRIDO</div>
                         </div>
                       );
                     });
@@ -609,10 +608,10 @@ export default function ProfilePage() {
             {ACHIEVEMENTS.length > 0 && (
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.01em" }}>
+                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.01em" }}>
                     Logros
                   </h2>
-                  <Link href="/puntos" style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <Link href="/puntos" style={{ fontSize: 13, fontWeight: 500, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     VER TODOS
                   </Link>
                 </div>
@@ -632,15 +631,15 @@ export default function ProfilePage() {
                           gap: 2, position: "relative"
                         }}>
                           <span style={{ fontSize: 22 }}>{a.icon}</span>
-                          <span style={{ fontSize: 9, fontWeight: 800, color: done ? "white" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                          <span style={{ fontSize: 9, fontWeight: 500, color: done ? "white" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                             {done ? "✓" : "NIV 1"}
                           </span>
                         </div>
 
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                            <span style={{ fontSize: 15, fontWeight: 800, color: "#0f172a" }}>{a.title}</span>
-                            <span style={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}>{cur}/{a.maxVal}</span>
+                            <span style={{ fontSize: 15, fontWeight: 500, color: "#0f172a" }}>{a.title}</span>
+                            <span style={{ fontSize: 13, fontWeight: 500, color: "#64748b" }}>{cur}/{a.maxVal}</span>
                           </div>
                           <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 999, overflow: "hidden", marginBottom: 6 }}>
                             <div style={{
@@ -689,7 +688,7 @@ export default function ProfilePage() {
                     }}>
                       {rightTab === "following" ? <FollowIllustration /> : <CommunityIllustration />}
                     </div>
-                    <p style={{ fontSize: 15, color: "#64748b", fontWeight: 600, lineHeight: 1.6, margin: 0 }}>
+                    <p style={{ fontSize: 15, color: "#64748b", fontWeight: 500, lineHeight: 1.6, margin: 0 }}>
                       {rightTab === "following"
                         ? "Aún no sigues a nadie. ¡Comienza a conectar con tus compañeros!"
                         : "Todavía no tienes seguidores. ¡Mantente activo y destaca!"}
@@ -712,7 +711,7 @@ export default function ProfilePage() {
                           />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.nickname}</div>
+                          <div style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.nickname}</div>
                           <div style={{ fontSize: 11, color: "#64748b" }}>Nivel {f.level}</div>
                         </div>
                         <ChevronRight size={15} color="#cbd5e1" />
@@ -725,7 +724,7 @@ export default function ProfilePage() {
 
             {/* Add friends & Actions */}
             <Card className="prof-card-hover" style={{ padding: "20px 16px", background: "linear-gradient(135deg, #f8faff 0%, #fff 100%)" }}>
-              <h3 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              <h3 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 500, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 Más Acciones
               </h3>
               <div className="prof-add-row" onClick={() => router.push("/forum")}>
@@ -733,7 +732,7 @@ export default function ProfilePage() {
                   <Search size={22} color="#0F62FE" />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>Buscar en el Foro</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a" }}>Buscar en el Foro</div>
                 </div>
                 <ChevronRight size={18} color="#cbd5e1" />
               </div>
@@ -742,7 +741,7 @@ export default function ProfilePage() {
                   <Mail size={22} color="#0F62FE" />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>Repetir tour BIZEN</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a" }}>Repetir tour BIZEN</div>
                 </div>
                 <ChevronRight size={18} color="#cbd5e1" />
               </div>
@@ -764,8 +763,7 @@ export default function ProfilePage() {
                     position: "relative",
                     overflow: "hidden",
                     boxShadow: "0 8px 30px rgba(15,98,254,0.25)",
-                    fontFamily: "Helvetica, 'Inter', sans-serif"
-                  }}>
+                                      }}>
                     {/* Glow orb */}
                     <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)", pointerEvents: "none" }} />
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, position: "relative" }}>
@@ -773,14 +771,14 @@ export default function ProfilePage() {
                         <Shield size={18} color="#93c5fd" />
                       </div>
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 900, color: "#fff", letterSpacing: "-0.01em" }}>Plan Premium Activo</div>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: "#93c5fd", marginTop: 2 }}>Tienes acceso completo a BIZEN</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: "#fff", letterSpacing: "-0.01em" }}>Plan Premium Activo</div>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", marginTop: 2 }}>Tienes acceso completo a BIZEN</div>
                       </div>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.08)", borderRadius: 10, padding: "8px 12px", position: "relative" }}>
                         <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 6px #4ade80", flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, fontWeight: 700, color: "#e2e8f0" }}>
+                        <span style={{ fontSize: 12, fontWeight: 500, color: "#e2e8f0" }}>
                           {hasActiveLicense ? `Acceso vía ${dbProfile?.school?.name || "Institución"}` : "Suscripción activa"}
                         </span>
                       </div>
@@ -796,7 +794,7 @@ export default function ProfilePage() {
                             borderRadius: "10px",
                             color: "#fff",
                             fontSize: "12px",
-                            fontWeight: 700,
+                            fontWeight: 500,
                             cursor: "pointer",
                             display: "flex",
                             alignItems: "center",
@@ -830,15 +828,14 @@ export default function ProfilePage() {
                     position: "relative",
                     overflow: "hidden",
                     boxShadow: "0 8px 30px rgba(15,98,254,0.25)",
-                    fontFamily: "Helvetica, 'Inter', sans-serif"
-                  }}>
+                                      }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                       <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                         <Shield size={18} color="#93c5fd" />
                       </div>
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 900, color: "#fff", letterSpacing: "-0.01em" }}>Plan Institucional</div>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: "#93c5fd", marginTop: 2 }}>Tu acceso es provisto por tu institución.</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: "#fff", letterSpacing: "-0.01em" }}>Plan Institucional</div>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", marginTop: 2 }}>Tu acceso es provisto por tu institución.</div>
                       </div>
                     </div>
                   </div>
@@ -860,8 +857,7 @@ export default function ProfilePage() {
                     boxShadow: "0 8px 30px rgba(15,98,254,0.2)",
                     cursor: "pointer",
                     transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    fontFamily: "Helvetica, 'Inter', sans-serif"
-                  }}
+                                      }}
                 >
                   {/* Decorative orbs */}
                   <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.5) 0%, transparent 70%)", pointerEvents: "none" }} />
@@ -870,11 +866,11 @@ export default function ProfilePage() {
                   {/* Badge */}
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.2)", padding: "4px 12px", borderRadius: 999, marginBottom: 14, position: "relative" }}>
                     <Zap size={11} color="#e0f2fe" />
-                    <span style={{ fontSize: 11, fontWeight: 800, color: "#e0f2fe", letterSpacing: "0.08em", textTransform: "uppercase" }}>BIZEN PRO</span>
+                    <span style={{ fontSize: 11, fontWeight: 500, color: "#e0f2fe", letterSpacing: "0.08em", textTransform: "uppercase" }}>BIZEN PRO</span>
                   </div>
 
                   <div style={{ position: "relative" }}>
-                    <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 900, color: "#fff", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
+                    <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, color: "#fff", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
                       Accede a todo el contenido
                     </h3>
                     <p style={{ margin: "0 0 18px", fontSize: 13, color: "#93c5fd", fontWeight: 500, lineHeight: 1.6 }}>
@@ -883,8 +879,8 @@ export default function ProfilePage() {
 
                     {/* Price */}
                     <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 18 }}>
-                      <span style={{ fontSize: 30, fontWeight: 900, color: "#fff", lineHeight: 1 }}>$49</span>
-                      <span style={{ fontSize: 14, color: "#93c5fd", fontWeight: 600 }}>/mes MXN</span>
+                      <span style={{ fontSize: 30, fontWeight: 500, color: "#fff", lineHeight: 1 }}>$49</span>
+                      <span style={{ fontSize: 14, color: "#93c5fd", fontWeight: 500 }}>/mes MXN</span>
                     </div>
 
                     {/* CTA Button */}
@@ -897,7 +893,7 @@ export default function ProfilePage() {
                         border: "none",
                         borderRadius: 12,
                         fontSize: 14,
-                        fontWeight: 900,
+                        fontWeight: 500,
                         color: "#1e3a8a",
                         cursor: "pointer",
                         letterSpacing: "-0.01em",
@@ -936,7 +932,7 @@ export default function ProfilePage() {
               <button onClick={() => setIsPickerOpen(false)} style={{ position: "absolute", top: 20, right: 20, background: "#f1f5f9", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <CloseIcon size={18} />
               </button>
-              <h3 style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", margin: "0 0 6px" }}>Elige tu Mascota</h3>
+              <h3 style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", margin: "0 0 6px" }}>Elige tu Mascota</h3>
               <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 24px" }}>Selecciona el avatar que más te represente</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(76px, 1fr))", gap: 14 }}>
                 {avatarOptions.map(av => {
@@ -952,12 +948,12 @@ export default function ProfilePage() {
                       }}>
                         <AvatarDisplay avatar={av} size={48} />
                       </button>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: isSelected ? "#0F62FE" : "#64748b" }}>{av.label}</span>
+                      <span style={{ fontSize: 10, fontWeight: 500, color: isSelected ? "#0F62FE" : "#64748b" }}>{av.label}</span>
                     </div>
                   )
                 })}
               </div>
-              {savingAvatar && <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#0F62FE", fontWeight: 700 }}>Guardando...</div>}
+              {savingAvatar && <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#0F62FE", fontWeight: 500 }}>Guardando...</div>}
             </div>
           </div>
         )

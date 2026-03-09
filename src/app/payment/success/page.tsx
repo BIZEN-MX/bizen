@@ -35,10 +35,10 @@ function PaymentSuccessContent() {
 
   if (loading) {
     return (
-      <div style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5", fontFamily: "'Inter', sans-serif" }}>
+      <div style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5", }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ width: 44, height: 44, border: "3px solid rgba(15,98,254,0.12)", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "ps-spin 0.8s linear infinite", margin: "0 auto 16px" }} />
-          <p style={{ color: "#64748b", fontSize: 15, fontWeight: 600, margin: 0 }}>Verificando suscripción...</p>
+          <p style={{ color: "#64748b", fontSize: 15, fontWeight: 500, margin: 0 }}>Verificando suscripción...</p>
         </div>
         <style>{`@keyframes ps-spin { to { transform: rotate(360deg); } }`}</style>
       </div>
@@ -46,7 +46,7 @@ function PaymentSuccessContent() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#FBFAF5", fontFamily: "'Inter', sans-serif", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", background: "#FBFAF5", display: "flex", flexDirection: "column" }}>
       <style>{`
         @keyframes ps-fadeUp   { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes ps-scaleIn  { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
@@ -57,7 +57,7 @@ function PaymentSuccessContent() {
 
         .ps-btn-primary {
           display: inline-flex; align-items: center; gap: 10px;
-          padding: 16px 36px; border-radius: 16px; font-size: 16px; font-weight: 800;
+          padding: 16px 36px; border-radius: 16px; font-size: 16px; font-weight: 500;
           cursor: pointer; text-decoration: none;
           background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
           color: white; border: none;
@@ -92,12 +92,12 @@ function PaymentSuccessContent() {
         position: "sticky", top: 0,
       }}>
         <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
-          <span style={{ fontSize: 28, fontWeight: 900, color: "#64748b", letterSpacing: "-0.04em" }}>BIZEN</span>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "#0F62FE", letterSpacing: "0.08em", marginTop: 2 }}>.</span>
+          <span style={{ fontSize: 28, fontWeight: 500, color: "#64748b", letterSpacing: "-0.04em" }}>BIZEN</span>
+          <span style={{ fontSize: 11, fontWeight: 500, color: "#0F62FE", letterSpacing: "0.08em", marginTop: 2 }}>.</span>
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #eff6ff, #dbeafe)", padding: "6px 14px", borderRadius: 999, border: "1px solid #bfdbfe" }}>
           <ShieldCheck size={14} color="#2563eb" />
-          <span style={{ fontSize: 11, fontWeight: 800, color: "#1e40af", textTransform: "uppercase", letterSpacing: "0.06em" }}>Suscripción Activa</span>
+          <span style={{ fontSize: 11, fontWeight: 500, color: "#1e40af", textTransform: "uppercase", letterSpacing: "0.06em" }}>Suscripción Activa</span>
         </div>
       </header>
 
@@ -128,10 +128,10 @@ function PaymentSuccessContent() {
           {/* Shimmer badge */}
           <div style={{ animation: "ps-fadeUp 0.5s 0.2s ease both", marginBottom: 20, display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(90deg, #eff6ff, #dbeafe, #eff6ff)", backgroundSize: "200% auto", border: "1px solid #bfdbfe", borderRadius: 40, padding: "6px 16px", animation: "ps-shimmer 4s linear infinite" }}>
             <Trophy size={13} color="#2563eb" />
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#1e40af", letterSpacing: "0.06em" }}>¡ACCESO COMPLETO DESBLOQUEADO!</span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: "#1e40af", letterSpacing: "0.06em" }}>¡ACCESO COMPLETO DESBLOQUEADO!</span>
           </div>
 
-          <h1 style={{ margin: "0 0 14px", fontSize: "clamp(32px,6vw,48px)", fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+          <h1 style={{ margin: "0 0 14px", fontSize: "clamp(32px,6vw,48px)", fontWeight: 500, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
             ¡Ya eres{" "}
             <span style={{ background: "linear-gradient(135deg, #3b82f6, #1d4ed8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Premium!
@@ -140,7 +140,7 @@ function PaymentSuccessContent() {
 
           <p style={{ margin: "0 0 36px", fontSize: 17, color: "#64748b", fontWeight: 500, lineHeight: 1.65, maxWidth: 440, marginInline: "auto" }}>
             Pago procesado exitosamente. Tienes acceso total a todos los cursos y funciones de{" "}
-            <strong style={{ color: "#0f172a", fontWeight: 800 }}>BIZEN</strong>.
+            <strong style={{ color: "#0f172a", fontWeight: 500 }}>BIZEN</strong>.
           </p>
 
           {/* Feature cards */}
@@ -155,7 +155,7 @@ function PaymentSuccessContent() {
                   {f.icon}
                 </div>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", marginBottom: 2 }}>{f.title}</div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", marginBottom: 2 }}>{f.title}</div>
                   <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.5 }}>{f.desc}</div>
                 </div>
               </div>
@@ -168,7 +168,7 @@ function PaymentSuccessContent() {
               Empezar a aprender
               <ArrowRight size={18} />
             </Link>
-            <Link href="/dashboard" style={{ fontSize: 14, fontWeight: 700, color: "#94a3b8", textDecoration: "none", transition: "opacity 0.2s" }}
+            <Link href="/dashboard" style={{ fontSize: 14, fontWeight: 500, color: "#94a3b8", textDecoration: "none", transition: "opacity 0.2s" }}
               onMouseDown={e => (e.currentTarget.style.opacity = "0.6")}
               onMouseUp={e => (e.currentTarget.style.opacity = "1")}
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}

@@ -58,12 +58,11 @@ export function ImageChoiceStep({
         <ExerciseInstruction type="image_choice" />
         <h3 style={{
           fontSize: "clamp(20px, 3vw, 26px)",
-          fontWeight: 800,
+          fontWeight: 500,
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-          fontFamily: "'Inter', sans-serif",
-        }}>
+                  }}>
           {step.question}
         </h3>
       </div>
@@ -127,8 +126,7 @@ export function ImageChoiceStep({
                 cursor: hasChecked ? "default" : "pointer",
                 color,
                 transition: "all 0.2s ease",
-                fontFamily: "'Inter', sans-serif",
-                opacity: 1,
+                                opacity: 1,
               }}
               onMouseEnter={(e) => { if (!hasChecked) e.currentTarget.style.opacity = "0.72" }}
               onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
@@ -163,13 +161,13 @@ export function ImageChoiceStep({
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: 14,
-                    fontWeight: 900
+                    fontWeight: 500
                   }}>
                     {isCorrect ? "✓" : "✗"}
                   </div>
                 )}
               </div>
-              <span style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Inter', sans-serif" }}>{option.label}</span>
+              <span style={{ fontSize: 16, fontWeight: 500, }}>{option.label}</span>
             </motion.button>
           )
         })}

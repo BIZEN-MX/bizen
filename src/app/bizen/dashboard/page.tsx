@@ -16,8 +16,7 @@ export default function BizenDashboardRedirect() {
       display: "grid", 
       placeItems: "center", 
       minHeight: "100vh",
-      fontFamily: "Montserrat, sans-serif" 
-    }}>
+          }}>
       <div style={{ textAlign: "center" }}>
         <p style={{ color: "#666", fontSize: 16 }}>Redirigiendo...</p>
       </div>

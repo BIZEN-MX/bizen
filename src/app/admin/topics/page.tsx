@@ -65,7 +65,7 @@ export default function AdminTopicsPage() {
 
   if (loading || loadingTopics) {
     return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "Montserrat, sans-serif" }}>
+      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando temas...</p>
         </div>
@@ -92,14 +92,13 @@ export default function AdminTopicsPage() {
       maxWidth: 1200,
       margin: "0 auto",
       padding: "clamp(20px, 4vw, 40px)",
-      fontFamily: "Montserrat, sans-serif"
-    }}>
+          }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{
           margin: 0,
           fontSize: "clamp(28px, 6vw, 36px)",
-          fontWeight: 800,
+          fontWeight: 500,
           background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -120,15 +119,15 @@ export default function AdminTopicsPage() {
         marginBottom: 40
       }}>
         <Card style={{ textAlign: "center", padding: "20px 16px" }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: "#0F62FE" }}>{topics.length}</div>
+          <div style={{ fontSize: 32, fontWeight: 500, color: "#0F62FE" }}>{topics.length}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Total Temas</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "20px 16px" }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: "#10B981" }}>{enabledTopics.length}</div>
+          <div style={{ fontSize: 32, fontWeight: 500, color: "#10B981" }}>{enabledTopics.length}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Habilitados</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "20px 16px" }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: "#9CA3AF" }}>{disabledTopics.length}</div>
+          <div style={{ fontSize: 32, fontWeight: 500, color: "#9CA3AF" }}>{disabledTopics.length}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Deshabilitados</div>
         </Card>
       </div>
@@ -136,7 +135,7 @@ export default function AdminTopicsPage() {
       {/* Enabled Topics */}
       {enabledTopics.length > 0 && (
         <div style={{ marginBottom: 40 }}>
-          <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+          <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
             ✓ Temas Habilitados
           </h2>
           <div style={{
@@ -156,13 +155,13 @@ export default function AdminTopicsPage() {
                   color: getLevelColor(topic.level),
                   borderRadius: 12,
                   fontSize: 12,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   marginBottom: 12
                 }}>
                   {topic.level === "Beginner" ? "Principiante" : topic.level === "Intermediate" ? "Intermedio" : "Avanzado"}
                 </div>
 
-                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700, lineHeight: 1.3 }}>
+                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, lineHeight: 1.3 }}>
                   {topic.title}
                 </h3>
 
@@ -198,7 +197,7 @@ export default function AdminTopicsPage() {
       {/* Disabled Topics */}
       {disabledTopics.length > 0 && (
         <div>
-          <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+          <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
             ⊗ Temas Disponibles
           </h2>
           <div style={{
@@ -221,13 +220,13 @@ export default function AdminTopicsPage() {
                   color: "#6B7280",
                   borderRadius: 12,
                   fontSize: 12,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   marginBottom: 12
                 }}>
                   {topic.level === "Beginner" ? "Principiante" : topic.level === "Intermediate" ? "Intermedio" : "Avanzado"}
                 </div>
 
-                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700, lineHeight: 1.3 }}>
+                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, lineHeight: 1.3 }}>
                   {topic.title}
                 </h3>
 
@@ -259,7 +258,7 @@ export default function AdminTopicsPage() {
       {topics.length === 0 && (
         <Card style={{ padding: "60px 40px", textAlign: "center" }}>
           <div style={{ fontSize: 64, marginBottom: 16 }}>📚</div>
-          <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700 }}>
+          <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 500 }}>
             No hay temas disponibles
           </h3>
           <p style={{ margin: 0, color: "#666", fontSize: 14 }}>

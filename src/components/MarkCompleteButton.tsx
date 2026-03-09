@@ -51,7 +51,7 @@ export default function MarkCompleteButton({ moduleId, section }: Props) {
           border: "1px solid rgba(0,0,0,.15)",
           background: "#0F62FE",
           color: "#fff",
-          fontWeight: 700,
+          fontWeight: 500,
           cursor: "pointer",
         }}
       >
@@ -65,7 +65,7 @@ export default function MarkCompleteButton({ moduleId, section }: Props) {
           gap: 8,
           color: msg.includes('¡Sección completada!') ? '#15803D' : '#DC2626',
           fontSize: '14px',
-          fontWeight: 600
+          fontWeight: 500
         }}>
           {msg.includes('¡Sección completada!') ? <CheckIcon size={16} color="#15803D" /> : <WarningIcon size={16} color="#DC2626" />}
           {msg}

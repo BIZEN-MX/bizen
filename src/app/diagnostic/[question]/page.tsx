@@ -258,9 +258,9 @@ export default function DiagnosticQuestionPage() {
             }}
           >
             <div style={{ fontSize: "64px", marginBottom: "20px" }}>🎉</div>
-            <h2 style={{ fontSize: "28px", fontWeight: 900, color: "#111827", marginBottom: "16px", fontFamily: "'Inter', sans-serif", letterSpacing: "-0.02em" }}>¡Excelente trabajo!</h2>
-            <p style={{ fontSize: "17px", color: "#6B7280", lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>Tu examen diagnóstico ha sido enviado con éxito. Valoramos mucho tu participación.</p>
-            <div style={{ marginTop: "32px", fontSize: "14px", color: "#9CA3AF", fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>Redirigiendo de vuelta a BIZEN...</div>
+            <h2 style={{ fontSize: "28px", fontWeight: 500, color: "#111827", marginBottom: "16px", letterSpacing: "-0.02em" }}>¡Excelente trabajo!</h2>
+            <p style={{ fontSize: "17px", color: "#6B7280", lineHeight: 1.6, }}>Tu examen diagnóstico ha sido enviado con éxito. Valoramos mucho tu participación.</p>
+            <div style={{ marginTop: "32px", fontSize: "14px", color: "#9CA3AF", fontWeight: 500, }}>Redirigiendo de vuelta a BIZEN...</div>
           </motion.div>
         ) : !userInfo ? (
           <motion.div
@@ -298,12 +298,11 @@ export default function DiagnosticQuestionPage() {
               <ExerciseInstruction type="mcq" />
               <h3 style={{
                 fontSize: "clamp(20px, 3vw, 26px)",
-                fontWeight: 800,
+                fontWeight: 500,
                 color: "#111827",
                 margin: 0,
                 lineHeight: 1.3,
-                fontFamily: "'Inter', sans-serif",
-                textAlign: "left",
+                                textAlign: "left",
               }}>
                 {currentQuestion.question}
               </h3>
@@ -385,11 +384,10 @@ export default function DiagnosticQuestionPage() {
                       alignItems: "center",
                       justifyContent: "center",
                       fontSize: 14,
-                      fontWeight: 900,
+                      fontWeight: 500,
                       color: labelColor,
                       flexShrink: 0,
-                      fontFamily: "'Inter', sans-serif",
-                      border: `1.5px solid ${borderColor}`,
+                                            border: `1.5px solid ${borderColor}`,
                       transition: "all 0.2s ease",
                     }}>
                       {option.value}
@@ -397,9 +395,8 @@ export default function DiagnosticQuestionPage() {
                     <span style={{
                       flex: 1,
                       fontSize: "clamp(15px, 1.8vw, 18px)",
-                      fontWeight: 700,
-                      fontFamily: "'Inter', sans-serif",
-                      lineHeight: 1.4,
+                      fontWeight: 500,
+                                            lineHeight: 1.4,
                     }}>
                       {option.text}
                     </span>

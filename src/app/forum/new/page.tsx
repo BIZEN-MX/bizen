@@ -126,7 +126,7 @@ export default function NewThreadPage() {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <div style={{ width: 44, height: 44, border: "3px solid rgba(30,58,138,0.1)", borderTopColor: "#1e3a8a", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-          <span style={{ fontSize: 14, fontWeight: 600, color: "#64748b", fontFamily: "'Montserrat', sans-serif" }}>Cargando formulario...</span>
+          <span style={{ fontSize: 14, fontWeight: 500, color: "#64748b", }}>Cargando formulario...</span>
         </div>
       </div>
     )
@@ -135,7 +135,7 @@ export default function NewThreadPage() {
   if (!user) return null
 
   return (
-    <div className="fn-outer" style={{ minHeight: "100vh", background: "#FBFAF5", fontFamily: "'Montserrat', sans-serif" }}>
+    <div className="fn-outer" style={{ minHeight: "100vh", background: "#FBFAF5", }}>
       <style>{`
         @media (max-width: 767px) { .fn-outer { margin-left: 0 !important; } .fn-layout { flex-direction: column !important; } }
         @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 220px !important; } }
@@ -163,7 +163,7 @@ export default function NewThreadPage() {
         <div style={{ position: "relative", zIndex: 1, animation: "fadeUp 0.5s ease both" }}>
           <button
             onClick={() => router.push("/forum")}
-            style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 14px", color: "#93c5fd", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", marginBottom: 20 }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 14px", color: "#93c5fd", fontSize: 12, fontWeight: 500, cursor: "pointer", marginBottom: 20 }}
           >
             <ChevronLeft size={13} /> Volver al Foro
           </button>
@@ -173,10 +173,10 @@ export default function NewThreadPage() {
               <MessageSquarePlus size={26} color="#93c5fd" />
             </div>
             <div>
-              <h1 style={{ margin: "0 0 6px", fontSize: "clamp(22px, 4vw, 34px)", fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              <h1 style={{ margin: "0 0 6px", fontSize: "clamp(22px, 4vw, 34px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
                 Crear Nuevo Tema
               </h1>
-              <p style={{ margin: 0, fontSize: 14, color: "#93c5fd", fontWeight: 600 }}>
+              <p style={{ margin: 0, fontSize: 14, color: "#93c5fd", fontWeight: 500 }}>
                 Comparte una pregunta, idea o proyecto con la comunidad
               </p>
             </div>
@@ -194,7 +194,7 @@ export default function NewThreadPage() {
 
               {/* Card: Título */}
               <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
                   Título *
                 </label>
                 <input
@@ -207,7 +207,7 @@ export default function NewThreadPage() {
                   required
                   style={{
                     width: "100%", padding: "14px 16px", fontSize: 15,
-                    fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
+                    fontWeight: 500,
                     border: "2px solid #f1f5f9", borderRadius: 12,
                     background: "#FBFAF5", color: "#0f172a",
                     boxSizing: "border-box", transition: "all 0.2s"
@@ -215,16 +215,16 @@ export default function NewThreadPage() {
                 />
                 <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   {title.length > 5
-                    ? <span style={{ fontSize: 11, color: "#10b981", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}><CheckCircle2 size={11} /> Buen título</span>
-                    : <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>Mínimo 6 caracteres</span>
+                    ? <span style={{ fontSize: 11, color: "#10b981", fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><CheckCircle2 size={11} /> Buen título</span>
+                    : <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>Mínimo 6 caracteres</span>
                   }
-                  <span style={{ fontSize: 11, color: title.length > 120 ? "#ef4444" : "#94a3b8", fontWeight: 700 }}>{title.length}/150</span>
+                  <span style={{ fontSize: 11, color: title.length > 120 ? "#ef4444" : "#94a3b8", fontWeight: 500 }}>{title.length}/150</span>
                 </div>
               </div>
 
               {/* Card: Categoría */}
               <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
                   Categoría *
                 </label>
                 <div style={{ position: "relative" }}>
@@ -235,7 +235,7 @@ export default function NewThreadPage() {
                     required
                     style={{
                       width: "100%", padding: "14px 16px", fontSize: 15,
-                      fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
+                      fontWeight: 500,
                       border: `2px solid ${selectedTopicId ? accent : "#f1f5f9"}`, borderRadius: 12,
                       background: selectedTopicId ? `${accent}08` : "#f8fafc",
                       color: selectedTopicId ? "#0f172a" : "#94a3b8",
@@ -257,16 +257,16 @@ export default function NewThreadPage() {
               {/* Card: Etiquetas */}
               <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <label style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                  <label style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
                     Etiquetas
                   </label>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8" }}>{selectedTags.length}/5</span>
+                  <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8" }}>{selectedTags.length}/5</span>
                 </div>
 
                 {selectedTags.length > 0 && (
                   <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
                     {selectedTags.map(tag => (
-                      <span key={tag} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px 5px 12px", background: `${accent}15`, color: accent, fontSize: 12, fontWeight: 700, borderRadius: 999, border: `1.5px solid ${accent}30` }}>
+                      <span key={tag} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px 5px 12px", background: `${accent}15`, color: accent, fontSize: 12, fontWeight: 500, borderRadius: 999, border: `1.5px solid ${accent}30` }}>
                         #{tag}
                         <button
                           type="button"
@@ -294,7 +294,7 @@ export default function NewThreadPage() {
                       disabled={selectedTags.length >= 5}
                       style={{
                         width: "100%", padding: "11px 14px 11px 34px", fontSize: 13,
-                        fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
+                        fontWeight: 500,
                         border: "2px solid #f1f5f9", borderRadius: 10,
                         background: "#FBFAF5", color: "#0f172a",
                         boxSizing: "border-box", transition: "all 0.2s",
@@ -310,9 +310,8 @@ export default function NewThreadPage() {
                       padding: "11px 18px", borderRadius: 10, border: "none",
                       background: newTagInput.trim() && selectedTags.length < 5 ? accent : "#f1f5f9",
                       color: newTagInput.trim() && selectedTags.length < 5 ? "#fff" : "#94a3b8",
-                      fontWeight: 700, fontSize: 13, cursor: newTagInput.trim() && selectedTags.length < 5 ? "pointer" : "not-allowed",
-                      display: "flex", alignItems: "center", gap: 5, fontFamily: "'Montserrat', sans-serif",
-                      transition: "all 0.2s", flexShrink: 0
+                      fontWeight: 500, fontSize: 13, cursor: newTagInput.trim() && selectedTags.length < 5 ? "pointer" : "not-allowed",
+                      display: "flex", alignItems: "center", gap: 5,                       transition: "all 0.2s", flexShrink: 0
                     }}
                   >
                     <Plus size={14} /> Agregar
@@ -323,13 +322,13 @@ export default function NewThreadPage() {
               {/* Card: Contenido */}
               <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: "clamp(20px, 4vw, 28px)", marginBottom: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <label style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                  <label style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase" }}>
                     Contenido *
                   </label>
                   <button
                     type="button"
                     onClick={() => setShowPreview(!showPreview)}
-                    style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 14px", background: showPreview ? `${accent}15` : "#f8fafc", border: `1.5px solid ${showPreview ? accent : "#e2e8f0"}`, borderRadius: 999, fontSize: 12, fontWeight: 700, color: showPreview ? accent : "#64748b", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
+                    style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 14px", background: showPreview ? `${accent}15` : "#f8fafc", border: `1.5px solid ${showPreview ? accent : "#e2e8f0"}`, borderRadius: 999, fontSize: 12, fontWeight: 500, color: showPreview ? accent : "#64748b", cursor: "pointer", transition: "all 0.2s" }}
                   >
                     {showPreview ? <><Edit3 size={12} /> Editar</> : <><Eye size={12} /> Vista Previa</>}
                   </button>
@@ -344,8 +343,7 @@ export default function NewThreadPage() {
                     required
                     style={{
                       width: "100%", minHeight: 280, padding: "16px",
-                      fontSize: 14, fontFamily: "'Montserrat', sans-serif",
-                      fontWeight: 500, lineHeight: 1.75,
+                      fontSize: 14,                       fontWeight: 500, lineHeight: 1.75,
                       border: "2px solid #f1f5f9", borderRadius: 12,
                       background: "#FBFAF5", color: "#0f172a",
                       resize: "vertical", boxSizing: "border-box", transition: "all 0.2s"
@@ -354,8 +352,7 @@ export default function NewThreadPage() {
                 ) : (
                   <div style={{
                     width: "100%", minHeight: 280, padding: "16px",
-                    fontSize: 14, fontFamily: "'Montserrat', sans-serif",
-                    fontWeight: 500, lineHeight: 1.75,
+                    fontSize: 14,                     fontWeight: 500, lineHeight: 1.75,
                     border: "2px solid #f1f5f9", borderRadius: 12,
                     background: "#FBFAF5", color: "#0f172a",
                     boxSizing: "border-box", whiteSpace: "pre-wrap", overflowY: "auto"
@@ -366,10 +363,10 @@ export default function NewThreadPage() {
 
                 <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between" }}>
                   {body.trim().length > 10
-                    ? <span style={{ fontSize: 11, color: "#10b981", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}><CheckCircle2 size={11} /> Contenido listo</span>
-                    : <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>Mínimo 10 caracteres</span>
+                    ? <span style={{ fontSize: 11, color: "#10b981", fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><CheckCircle2 size={11} /> Contenido listo</span>
+                    : <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>Mínimo 10 caracteres</span>
                   }
-                  <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700 }}>{body.length} caracteres</span>
+                  <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>{body.length} caracteres</span>
                 </div>
               </div>
 
@@ -384,10 +381,10 @@ export default function NewThreadPage() {
                     padding: "15px 28px",
                     background: canSubmit && !submitting ? `linear-gradient(135deg, #0f172a, #1e3a8a)` : "#cbd5e1",
                     color: "white", border: "none", borderRadius: 14,
-                    fontSize: 15, fontWeight: 800, letterSpacing: "-0.01em",
+                    fontSize: 15, fontWeight: 500, letterSpacing: "-0.01em",
                     cursor: canSubmit && !submitting ? "pointer" : "not-allowed",
                     boxShadow: canSubmit && !submitting ? `0 4px 14px rgba(15,23,42,0.4)` : "none",
-                    fontFamily: "'Montserrat', sans-serif", transition: "all 0.25s"
+                    transition: "all 0.25s"
                   }}
                 >
                   {submitting
@@ -399,7 +396,7 @@ export default function NewThreadPage() {
                   <button
                     type="button"
                     className="fn-cancel"
-                    style={{ padding: "15px 24px", background: "#FBFAF5", border: "2px solid #e2e8f0", borderRadius: 14, fontSize: 14, fontWeight: 700, color: "#64748b", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", transition: "all 0.2s" }}
+                    style={{ padding: "15px 24px", background: "#FBFAF5", border: "2px solid #e2e8f0", borderRadius: 14, fontSize: 14, fontWeight: 500, color: "#64748b", cursor: "pointer", transition: "all 0.2s" }}
                   >
                     Cancelar
                   </button>
@@ -413,7 +410,7 @@ export default function NewThreadPage() {
 
             {/* Progress Card */}
             <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
-              <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Estado del Tema</div>
+              <div style={{ fontSize: 12, fontWeight: 500, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Estado del Tema</div>
               {[
                 { label: "Título", done: title.trim().length > 5 },
                 { label: "Categoría", done: !!selectedTopicId },
@@ -423,7 +420,7 @@ export default function NewThreadPage() {
                   <div style={{ width: 22, height: 22, borderRadius: "50%", background: item.done ? "#10b981" : "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.3s" }}>
                     <CheckCircle2 size={12} color={item.done ? "#fff" : "#94a3b8"} />
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: item.done ? "#0f172a" : "#94a3b8", transition: "color 0.3s" }}>{item.label}</span>
+                  <span style={{ fontSize: 13, fontWeight: 500, color: item.done ? "#0f172a" : "#94a3b8", transition: "color 0.3s" }}>{item.label}</span>
                 </div>
               ))}
             </div>
@@ -432,7 +429,7 @@ export default function NewThreadPage() {
             <div style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)", borderRadius: 20, padding: 20, boxShadow: "0 4px 18px rgba(15,98,254,0.2)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
                 <Lightbulb size={16} color="#60a5fa" />
-                <span style={{ fontSize: 12, fontWeight: 800, color: "#93c5fd", letterSpacing: "0.04em", textTransform: "uppercase" }}>Consejos para un buen tema</span>
+                <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", letterSpacing: "0.04em", textTransform: "uppercase" }}>Consejos para un buen tema</span>
               </div>
               {[
                 "Usa un título específico y claro",
@@ -443,14 +440,14 @@ export default function NewThreadPage() {
               ].map((tip, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: i < 4 ? 10 : 0 }}>
                   <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#60a5fa", flexShrink: 0, marginTop: 6 }} />
-                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", fontWeight: 600, lineHeight: 1.5 }}>{tip}</span>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", fontWeight: 500, lineHeight: 1.5 }}>{tip}</span>
                 </div>
               ))}
             </div>
 
             {/* Quick Actions */}
             <div style={{ background: "#FBFAF5", borderRadius: 20, border: "1.5px solid rgba(15, 23, 42, 0.12)", boxShadow: "0 2px 16px rgba(0,0,0,0.05)", padding: 20 }}>
-              <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Ver antes de publicar</div>
+              <div style={{ fontSize: 12, fontWeight: 500, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Ver antes de publicar</div>
               {[
                 { label: "Explorar temas", href: "/forum", icon: <FileText size={14} /> },
                 { label: "Reto del día", href: "/forum/topic/reto-del-dia", icon: <Zap size={14} /> },
@@ -461,7 +458,7 @@ export default function NewThreadPage() {
                     onMouseLeave={e => (e.currentTarget.style.background = "#f8fafc")}
                   >
                     <span style={{ color: "#0F62FE" }}>{link.icon}</span>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#374151" }}>{link.label}</span>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: "#374151" }}>{link.label}</span>
                     <ChevronLeft size={13} style={{ marginLeft: "auto", transform: "rotate(180deg)", color: "#94a3b8" }} />
                   </div>
                 </Link>

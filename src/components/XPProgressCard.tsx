@@ -65,7 +65,7 @@ export default function XPProgressCard({ xpEarned, initialXP, delay = 500 }: XPP
             <div style={{ position: "absolute", top: 0, right: 0, width: 120, height: 120, background: "radial-gradient(circle, rgba(15, 98, 254, 0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
 
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-                <span style={{ fontSize: 13, fontWeight: 800, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>XP ganado</span>
+                <span style={{ fontSize: 13, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>XP ganado</span>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
                     <motion.span
                         style={{
@@ -73,18 +73,16 @@ export default function XPProgressCard({ xpEarned, initialXP, delay = 500 }: XPP
                             fontWeight: 950,
                             color: "#FFFFFF",
                             lineHeight: 1,
-                            fontFamily: "'Montserrat', sans-serif",
-                            textShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                                                        textShadow: "0 4px 20px rgba(0,0,0,0.3)",
                         }}
                     >
                         +{displayXP}
                     </motion.span>
                     <span style={{
                         fontSize: 22,
-                        fontWeight: 800,
+                        fontWeight: 500,
                         color: "#93c5fd",
-                        fontFamily: "'Montserrat', sans-serif",
-                    }}>
+                                            }}>
                         XP
                     </span>
                 </div>
@@ -93,8 +91,8 @@ export default function XPProgressCard({ xpEarned, initialXP, delay = 500 }: XPP
             {/* Dynamic Progress Bar */}
             <div style={{ width: "100%" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, width: "100%" }}>
-                    <span style={{ fontSize: 12, fontWeight: 900, color: "white", textTransform: "uppercase", letterSpacing: "0.1em" }}>Nivel {currentLevel}</span>
-                    <span style={{ fontSize: 12, fontWeight: 800, color: "#93c5fd" }}>{Math.min(xpNeededForNext, xpInLevelInitial + displayXP)} / {xpNeededForNext} XP</span>
+                    <span style={{ fontSize: 12, fontWeight: 500, color: "white", textTransform: "uppercase", letterSpacing: "0.1em" }}>Nivel {currentLevel}</span>
+                    <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd" }}>{Math.min(xpNeededForNext, xpInLevelInitial + displayXP)} / {xpNeededForNext} XP</span>
                 </div>
 
                 <div style={{

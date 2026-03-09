@@ -103,8 +103,7 @@ export default function AccountSettingsPage() {
         display: "grid",
         placeItems: "center",
         minHeight: "60vh",
-        fontFamily: "Montserrat, sans-serif",
-        background: "#FBFAF5"
+                background: "#FBFAF5"
       }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
@@ -121,8 +120,7 @@ export default function AccountSettingsPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "#FBFAF5",
+            background: "#FBFAF5",
       backgroundAttachment: "fixed"
     }}>
       <style>{`
@@ -156,10 +154,10 @@ export default function AccountSettingsPage() {
         padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1
       }}>
-        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 800, color: "#1E40AF" }}>
+        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 500, color: "#1E40AF" }}>
           Configuración de Cuenta
         </h1>
-        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 600 }}>
+        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 500 }}>
           Gestiona tu perfil del foro y preferencias
         </p>
 
@@ -178,7 +176,7 @@ export default function AccountSettingsPage() {
                 display: "block",
                 marginBottom: 8,
                 fontSize: 15,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#1E40AF"
               }}>
                 Apodo (Pseudónimo del Foro)
@@ -193,8 +191,7 @@ export default function AccountSettingsPage() {
                   width: "100%",
                   padding: "14px 16px",
                   fontSize: 15,
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 600,
+                                    fontWeight: 500,
                   border: "2px solid rgba(255, 255, 255, 0.6)",
                   borderRadius: 12,
                   background: "rgba(255, 255, 255, 0.6)",
@@ -215,7 +212,7 @@ export default function AccountSettingsPage() {
                 gap: 12,
                 cursor: "pointer",
                 fontSize: 15,
-                fontWeight: 600,
+                fontWeight: 500,
                 color: "#374151"
               }}>
                 <input
@@ -236,7 +233,7 @@ export default function AccountSettingsPage() {
                 gap: 12,
                 cursor: "pointer",
                 fontSize: 15,
-                fontWeight: 600,
+                fontWeight: 500,
                 color: "#374151"
               }}>
                 <input
@@ -257,7 +254,7 @@ export default function AccountSettingsPage() {
                 borderRadius: 12,
                 marginBottom: 24,
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 500,
                 color: message.includes('✅') ? "#10B981" : "#EF4444"
               }}>
                 {message}
@@ -270,7 +267,7 @@ export default function AccountSettingsPage() {
               paddingTop: 32,
               borderTop: "2px dashed rgba(30, 64, 175, 0.1)"
             }}>
-              <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 800, color: "#1E40AF" }}>
+              <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 500, color: "#1E40AF" }}>
                 Sesión
               </h3>
               <button
@@ -286,11 +283,10 @@ export default function AccountSettingsPage() {
                   border: "2px solid #FEE2E2",
                   borderRadius: 12,
                   fontSize: 14,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#FEE2E2"
                   e.currentTarget.style.transform = "translateY(-1px)"
@@ -317,11 +313,10 @@ export default function AccountSettingsPage() {
                   border: "none",
                   borderRadius: 12,
                   fontSize: 15,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   cursor: saving ? "not-allowed" : "pointer",
                   boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
               >
                 {saving ? "Guardando..." : "Guardar Cambios"}
               </button>
@@ -337,10 +332,9 @@ export default function AccountSettingsPage() {
                   border: "none",
                   borderRadius: 12,
                   fontSize: 15,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   textDecoration: "none",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
               >
                 Volver al Foro
               </Link>

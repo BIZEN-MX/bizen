@@ -185,9 +185,9 @@ export default function ForumProfilePage() {
           }}>
             <User size={40} />
           </div>
-          <h2 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 12 }}>Perfil no encontrado</h2>
+          <h2 style={{ fontSize: 24, fontWeight: 500, color: "#0f172a", marginBottom: 12 }}>Perfil no encontrado</h2>
           <p style={{ color: "#64748b", marginBottom: 28, lineHeight: 1.6 }}>No pudimos encontrar la información de este usuario en el foro.</p>
-          <Link href="/forum" style={{ display: "inline-block", background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white", padding: "13px 28px", borderRadius: 12, fontWeight: 700, textDecoration: "none", fontSize: 15 }}>
+          <Link href="/forum" style={{ display: "inline-block", background: "linear-gradient(135deg, #0F62FE, #2563EB)", color: "white", padding: "13px 28px", borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 15 }}>
             Volver al Foro
           </Link>
         </div>
@@ -266,8 +266,7 @@ export default function ForumProfilePage() {
         position: "relative",
         minHeight: "100vh",
         paddingBottom: "clamp(60px, 10vw, 100px)",
-        fontFamily: "'Montserrat', sans-serif",
-        background: "#FBFAF5",
+                background: "#FBFAF5",
         width: "100%",
         boxSizing: "border-box"
       }}>
@@ -280,7 +279,7 @@ export default function ForumProfilePage() {
         }}>
 
           {/* Breadcrumb */}
-          <div style={{ marginBottom: 28, display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700 }}>
+          <div style={{ marginBottom: 28, display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 500 }}>
             <Link href="/forum" style={{ color: "#0F62FE", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
               <TrendingUp size={14} /> Foro
             </Link>
@@ -333,12 +332,12 @@ export default function ForumProfilePage() {
                     display: "inline-flex", alignItems: "center", gap: 6,
                     background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)",
                     borderRadius: 999, padding: "4px 12px", marginBottom: 10,
-                    fontSize: 11, fontWeight: 700, color: "#fbbf24", letterSpacing: "0.07em", textTransform: "uppercase"
+                    fontSize: 11, fontWeight: 500, color: "#fbbf24", letterSpacing: "0.07em", textTransform: "uppercase"
                   }}>
                     <Star size={12} fill="#fbbf24" strokeWidth={0} /> Nivel {profile.level}
                   </div>
 
-                  <h1 style={{ margin: "0 0 6px", fontSize: "clamp(20px, 3vw, 30px)", fontWeight: 900, color: "white", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                  <h1 style={{ margin: "0 0 6px", fontSize: "clamp(20px, 3vw, 30px)", fontWeight: 500, color: "white", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
                     {profile.nickname}
                   </h1>
 
@@ -354,9 +353,8 @@ export default function ForumProfilePage() {
                         style={{
                           background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
                           color: "rgba(255,255,255,0.9)", borderRadius: 8, padding: "6px 14px",
-                          fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
-                          fontFamily: "'Montserrat', sans-serif"
-                        }}
+                          fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s",
+                                                  }}
                         onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
                         onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
                       >
@@ -367,9 +365,8 @@ export default function ForumProfilePage() {
                         style={{
                           background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
                           color: "rgba(255,255,255,0.9)", borderRadius: 8, padding: "6px 14px",
-                          fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
-                          fontFamily: "'Montserrat', sans-serif"
-                        }}
+                          fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s",
+                                                  }}
                         onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
                         onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
                       >
@@ -393,14 +390,13 @@ export default function ForumProfilePage() {
                       color: "white",
                       border: isFollowing ? "1.5px solid rgba(255,255,255,0.25)" : "none",
                       borderRadius: 14,
-                      fontSize: 15, fontWeight: 800,
+                      fontSize: 15, fontWeight: 500,
                       cursor: isLoadingFollow ? "not-allowed" : "pointer",
                       opacity: isLoadingFollow ? 0.65 : 1,
                       whiteSpace: "nowrap",
                       letterSpacing: "-0.01em",
                       boxShadow: isFollowing ? "none" : "0 4px 18px rgba(15,98,254,0.45)",
-                      fontFamily: "'Montserrat', sans-serif",
-                      alignSelf: "flex-start"
+                                            alignSelf: "flex-start"
                     }}
                   >
                     {isLoadingFollow ? "..." : isFollowing ? (
@@ -429,8 +425,8 @@ export default function ForumProfilePage() {
                     display: "flex", flexDirection: "column", justifyContent: "center"
                   }}>
                     <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, opacity: 0.8 }}>{icon}</div>
-                    <div style={{ fontSize: 28, fontWeight: 900, color: "white", lineHeight: 1, marginBottom: 6 }}>{value}</div>
-                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
+                    <div style={{ fontSize: 28, fontWeight: 500, color: "white", lineHeight: 1, marginBottom: 6 }}>{value}</div>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
                   </div>
                 ))}
 
@@ -461,13 +457,13 @@ export default function ForumProfilePage() {
                     textStyle={{
                       fontSize: 28,
                       color: "white",
-                      fontWeight: "900",
+                      fontWeight: 500,
                       marginBottom: 6
                     }}
                     labelStyle={{
                       color: "rgba(255,255,255,0.5)",
                       fontSize: 12,
-                      fontWeight: "600"
+                      fontWeight: 500
                     }}
                   />
                   <style>{`
@@ -485,14 +481,14 @@ export default function ForumProfilePage() {
               {/* Badges inside hero */}
               {profile.badges.length > 0 && (
                 <div style={{ marginTop: 24, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
                     <Award size={12} /> Insignias
                   </div>
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     {profile.badges.map(ub => (
                       <div key={ub.badge.name} className="fp-badge-pill" title={ub.badge.description}>
                         <span style={{ fontSize: 18 }}>{ub.badge.icon}</span>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>{ub.badge.name}</span>
+                        <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.85)" }}>{ub.badge.name}</span>
                       </div>
                     ))}
                   </div>
@@ -505,7 +501,7 @@ export default function ForumProfilePage() {
           <div style={{ animation: "fadeInUp 0.45s ease 0.1s both" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
               <div style={{ width: 4, height: 22, borderRadius: 3, background: "linear-gradient(180deg, #0F62FE, #6366f1)" }} />
-              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>Actividad Reciente</h2>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.02em" }}>Actividad Reciente</h2>
             </div>
 
             {profile.recentActivity.length === 0 ? (
@@ -521,7 +517,7 @@ export default function ForumProfilePage() {
                 }}>
                   <Inbox size={32} />
                 </div>
-                <p style={{ fontSize: 16, color: "#64748b", margin: 0, fontWeight: 600 }}>Este usuario aún no tiene actividad pública</p>
+                <p style={{ fontSize: 16, color: "#64748b", margin: 0, fontWeight: 500 }}>Este usuario aún no tiene actividad pública</p>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -535,11 +531,11 @@ export default function ForumProfilePage() {
                       style={{ borderLeftColor: isThread ? "#0F62FE" : "#10b981" }}
                     >
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-                        <h3 style={{ margin: "0 0 10px", fontSize: 16, fontWeight: 700, color: "#0f172a", lineHeight: 1.4, flex: 1 }}>
+                        <h3 style={{ margin: "0 0 10px", fontSize: 16, fontWeight: 500, color: "#0f172a", lineHeight: 1.4, flex: 1 }}>
                           {item.title}
                         </h3>
                         <span style={{
-                          fontSize: 10, fontWeight: 800, padding: "3px 8px", borderRadius: 6,
+                          fontSize: 10, fontWeight: 500, padding: "3px 8px", borderRadius: 6,
                           textTransform: "uppercase",
                           background: isThread ? "rgba(15,98,254,0.1)" : "rgba(16,185,129,0.1)",
                           color: isThread ? "#0F62FE" : "#10b981"
@@ -547,7 +543,7 @@ export default function ForumProfilePage() {
                           {isThread ? "Foro" : "Reto"}
                         </span>
                       </div>
-                      <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>
+                      <div style={{ display: "flex", gap: 16, fontSize: 13, color: "#94a3b8", fontWeight: 500 }}>
                         {isThread && (
                           <>
                             <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -581,7 +577,7 @@ export default function ForumProfilePage() {
               boxShadow: "0 24px 64px rgba(0,0,0,0.5)"
             }} onClick={e => e.stopPropagation()}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "white" }}>
+                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 500, color: "white" }}>
                   Seguidores <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 18 }}>({followStats?.followersCount || 0})</span>
                 </h2>
                 <button onClick={() => setShowFollowers(false)} style={{
@@ -612,12 +608,12 @@ export default function ForumProfilePage() {
                         width: 44, height: 44, borderRadius: "50%",
                         background: "linear-gradient(135deg, #0F62FE, #6366f1)",
                         display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 18, fontWeight: 800, color: "white", flexShrink: 0
+                        fontSize: 18, fontWeight: 500, color: "white", flexShrink: 0
                       }}>
                         {follower.nickname[0].toUpperCase()}
                       </div>
                       <div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: "white", marginBottom: 2 }}>{follower.nickname}</div>
+                        <div style={{ fontSize: 15, fontWeight: 500, color: "white", marginBottom: 2 }}>{follower.nickname}</div>
                         <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Nivel {follower.level} • {follower.reputation} pts</div>
                       </div>
                     </Link>
@@ -643,7 +639,7 @@ export default function ForumProfilePage() {
               boxShadow: "0 24px 64px rgba(0,0,0,0.5)"
             }} onClick={e => e.stopPropagation()}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "white" }}>
+                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 500, color: "white" }}>
                   Siguiendo <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 18 }}>({followStats?.followingCount || 0})</span>
                 </h2>
                 <button onClick={() => setShowFollowing(false)} style={{
@@ -674,12 +670,12 @@ export default function ForumProfilePage() {
                         width: 44, height: 44, borderRadius: "50%",
                         background: "linear-gradient(135deg, #0F62FE, #6366f1)",
                         display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 18, fontWeight: 800, color: "white", flexShrink: 0
+                        fontSize: 18, fontWeight: 500, color: "white", flexShrink: 0
                       }}>
                         {followed.nickname[0].toUpperCase()}
                       </div>
                       <div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: "white", marginBottom: 2 }}>{followed.nickname}</div>
+                        <div style={{ fontSize: 15, fontWeight: 500, color: "white", marginBottom: 2 }}>{followed.nickname}</div>
                         <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Nivel {followed.level} • {followed.reputation} pts</div>
                       </div>
                     </Link>

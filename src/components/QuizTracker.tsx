@@ -316,7 +316,7 @@ export function QuizTracker({
             textAlign: 'center',
           }}>
             <div style={{ fontSize: 64, marginBottom: 20 }}>✅</div>
-            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16, color: '#0F62FE' }}>
+            <h2 style={{ fontSize: 32, fontWeight: 500, marginBottom: 16, color: '#0F62FE' }}>
               Quiz Ya Completado
             </h2>
             <p style={{ fontSize: 18, color: '#666', marginBottom: 24 }}>
@@ -404,7 +404,7 @@ export function QuizTracker({
             }}>
               <h2 style={{
                 fontSize: 28,
-                fontWeight: 800,
+                fontWeight: 500,
                 color: '#0F62FE',
                 margin: '0 0 10px 0',
               }}>
@@ -432,7 +432,7 @@ export function QuizTracker({
                 }}>
                   {/* Question */}
                   <div style={{
-                    fontWeight: 700,
+                    fontWeight: 500,
                     fontSize: 16,
                     color: '#1F2937',
                     marginBottom: 12,
@@ -449,7 +449,7 @@ export function QuizTracker({
                       gap: 10,
                     }}>
                       <span style={{
-                        fontWeight: 600,
+                        fontWeight: 500,
                         color: '#6B7280',
                         minWidth: 80,
                       }}>
@@ -460,7 +460,7 @@ export function QuizTracker({
                         borderRadius: 6,
                         background: answer.isCorrect ? '#D1FAE5' : '#FEE2E2',
                         color: answer.isCorrect ? '#065F46' : '#991B1B',
-                        fontWeight: 600,
+                        fontWeight: 500,
                       }}>
                         {typeof answer.userAnswer === 'boolean' 
                           ? (answer.userAnswer ? 'VERDADERO' : 'FALSO')
@@ -474,7 +474,7 @@ export function QuizTracker({
                       gap: 10,
                     }}>
                       <span style={{
-                        fontWeight: 600,
+                        fontWeight: 500,
                         color: '#6B7280',
                         minWidth: 80,
                       }}>
@@ -485,7 +485,7 @@ export function QuizTracker({
                         borderRadius: 6,
                         background: '#E0E7FF',
                         color: '#3730A3',
-                        fontWeight: 600,
+                        fontWeight: 500,
                       }}>
                         {typeof answer.correctAnswer === 'boolean' 
                           ? (answer.correctAnswer ? 'VERDADERO' : 'FALSO')
@@ -518,7 +518,7 @@ export function QuizTracker({
                   borderRadius: 12,
                   padding: '12px 30px',
                   fontSize: 16,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: 'pointer',
                   boxShadow: '0 4px 12px rgba(15, 98, 254, 0.3)',
                 }}

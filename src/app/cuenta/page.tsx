@@ -148,8 +148,7 @@ export default function CuentaPage() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        fontFamily: "Montserrat, sans-serif",
-        marginRight: "340px"
+                marginRight: "340px"
       }}>
         <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
       </div>
@@ -164,8 +163,7 @@ export default function CuentaPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-      fontFamily: "Montserrat, sans-serif",
-      background: "#FBFAF5",
+            background: "#FBFAF5",
       backgroundAttachment: "fixed",
       marginRight: "340px"
     }}>
@@ -229,7 +227,7 @@ export default function CuentaPage() {
             alignItems: "center",
             gap: 12,
             color: "#065F46",
-            fontWeight: 600,
+            fontWeight: 500,
             fontSize: 14
           }}>
             <CheckIcon size={16} color="#065F46" />
@@ -249,7 +247,7 @@ export default function CuentaPage() {
             alignItems: "center",
             gap: 12,
             color: "#991B1B",
-            fontWeight: 600,
+            fontWeight: 500,
             fontSize: 14
           }}>
             <CrossIcon size={16} color="#991B1B" />
@@ -271,7 +269,7 @@ export default function CuentaPage() {
             margin: 0,
             marginBottom: 24,
             fontSize: 22,
-            fontWeight: 800,
+            fontWeight: 500,
             color: "#1E40AF",
             display: "flex",
             alignItems: "center",
@@ -286,7 +284,7 @@ export default function CuentaPage() {
               <label style={{
                 display: "block",
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#374151",
                 marginBottom: 8
               }}>
@@ -299,7 +297,7 @@ export default function CuentaPage() {
                 border: "2px solid rgba(147, 197, 253, 0.4)",
                 fontSize: 16,
                 color: "#1E40AF",
-                fontWeight: 600
+                fontWeight: 500
               }}>
                 {user.email}
               </div>
@@ -317,7 +315,7 @@ export default function CuentaPage() {
               <label style={{
                 display: "block",
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#374151",
                 marginBottom: 8
               }}>
@@ -337,9 +335,8 @@ export default function CuentaPage() {
                     borderRadius: 12,
                     background: "rgba(255, 255, 255, 0.7)",
                     color: "#1E40AF",
-                    fontWeight: 600,
-                    fontFamily: "Montserrat, sans-serif",
-                    outline: "none",
+                    fontWeight: 500,
+                                        outline: "none",
                     transition: "all 0.2s ease",
                   }}
                   onFocus={(e) => {
@@ -361,11 +358,10 @@ export default function CuentaPage() {
                     borderRadius: 12,
                     color: "#fff",
                     fontSize: 14,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: saving ? "not-allowed" : "pointer",
                     transition: "all 0.2s ease",
-                    fontFamily: "Montserrat, sans-serif",
-                    whiteSpace: "nowrap"
+                                        whiteSpace: "nowrap"
                   }}
                   onMouseEnter={(e) => {
                     if (!saving) {
@@ -388,7 +384,7 @@ export default function CuentaPage() {
               <label style={{
                 display: "block",
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#374151",
                 marginBottom: 8
               }}>
@@ -406,11 +402,10 @@ export default function CuentaPage() {
                     borderRadius: 12,
                     color: "#fff",
                     fontSize: 15,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                    fontFamily: "Montserrat, sans-serif"
-                  }}
+                                      }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-2px)"
                     e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.4)"
@@ -437,9 +432,8 @@ export default function CuentaPage() {
                       borderRadius: 12,
                       background: "rgba(255, 255, 255, 0.7)",
                       color: "#1E40AF",
-                      fontWeight: 600,
-                      fontFamily: "Montserrat, sans-serif",
-                      outline: "none",
+                      fontWeight: 500,
+                                            outline: "none",
                       transition: "all 0.2s ease",
                       boxSizing: "border-box"
                     }}
@@ -466,9 +460,8 @@ export default function CuentaPage() {
                       borderRadius: 12,
                       background: "rgba(255, 255, 255, 0.7)",
                       color: "#1E40AF",
-                      fontWeight: 600,
-                      fontFamily: "Montserrat, sans-serif",
-                      outline: "none",
+                      fontWeight: 500,
+                                            outline: "none",
                       transition: "all 0.2s ease",
                       boxSizing: "border-box"
                     }}
@@ -494,11 +487,10 @@ export default function CuentaPage() {
                         borderRadius: 12,
                         color: "#fff",
                         fontSize: 14,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: saving ? "not-allowed" : "pointer",
                         transition: "all 0.2s ease",
-                        fontFamily: "Montserrat, sans-serif"
-                      }}
+                                              }}
                       onMouseEnter={(e) => {
                         if (!saving) {
                           e.currentTarget.style.transform = "translateY(-2px)"
@@ -527,11 +519,10 @@ export default function CuentaPage() {
                         borderRadius: 12,
                         color: "#374151",
                         fontSize: 14,
-                        fontWeight: 700,
+                        fontWeight: 500,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                        fontFamily: "Montserrat, sans-serif"
-                      }}
+                                              }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background = "rgba(107, 114, 128, 0.3)"
                       }}
@@ -551,7 +542,7 @@ export default function CuentaPage() {
               <label style={{
                 display: "block",
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#374151",
                 marginBottom: 8
               }}>
@@ -566,7 +557,7 @@ export default function CuentaPage() {
                 alignItems: "center",
                 gap: 10
               }}>
-                <span style={{ fontSize: 15, color: "#1E40AF", fontWeight: 600 }}>
+                <span style={{ fontSize: 15, color: "#1E40AF", fontWeight: 500 }}>
                   Email y Contraseña
                 </span>
               </div>
@@ -577,7 +568,7 @@ export default function CuentaPage() {
               <label style={{
                 display: "block",
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#374151",
                 marginBottom: 12
               }}>
@@ -617,7 +608,7 @@ export default function CuentaPage() {
                     <div style={{
                       fontSize: 16,
                       color: selectedPlan === "gratuito" ? "#fff" : "#059669",
-                      fontWeight: 800,
+                      fontWeight: 500,
                       marginBottom: 2
                     }}>
                       Plan Gratuito
@@ -625,7 +616,7 @@ export default function CuentaPage() {
                     <div style={{
                       fontSize: 12,
                       color: selectedPlan === "gratuito" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                      fontWeight: 600
+                      fontWeight: 500
                     }}>
                       Acceso ilimitado a todos los cursos
                     </div>
@@ -636,7 +627,7 @@ export default function CuentaPage() {
                       background: "rgba(255, 255, 255, 0.2)",
                       borderRadius: 8,
                       fontSize: 12,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: "#fff"
                     }}>
                       ACTIVO
@@ -676,7 +667,7 @@ export default function CuentaPage() {
                     <div style={{
                       fontSize: 16,
                       color: selectedPlan === "estudiante" ? "#fff" : "#2563EB",
-                      fontWeight: 800,
+                      fontWeight: 500,
                       marginBottom: 2
                     }}>
                       Plan Estudiante
@@ -684,7 +675,7 @@ export default function CuentaPage() {
                     <div style={{
                       fontSize: 12,
                       color: selectedPlan === "estudiante" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                      fontWeight: 600
+                      fontWeight: 500
                     }}>
                       Funciones adicionales para estudiantes
                     </div>
@@ -695,7 +686,7 @@ export default function CuentaPage() {
                       background: "rgba(255, 255, 255, 0.2)",
                       borderRadius: 8,
                       fontSize: 12,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: "#fff"
                     }}>
                       ACTIVO
@@ -735,7 +726,7 @@ export default function CuentaPage() {
                     <div style={{
                       fontSize: 16,
                       color: selectedPlan === "premium" ? "#fff" : "#F59E0B",
-                      fontWeight: 800,
+                      fontWeight: 500,
                       marginBottom: 2
                     }}>
                       Plan Premium
@@ -743,7 +734,7 @@ export default function CuentaPage() {
                     <div style={{
                       fontSize: 12,
                       color: selectedPlan === "premium" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                      fontWeight: 600
+                      fontWeight: 500
                     }}>
                       Acceso completo + certificados + soporte prioritario
                     </div>
@@ -754,7 +745,7 @@ export default function CuentaPage() {
                       background: "rgba(255, 255, 255, 0.2)",
                       borderRadius: 8,
                       fontSize: 12,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: "#fff"
                     }}>
                       ACTIVO
@@ -769,7 +760,7 @@ export default function CuentaPage() {
               <label style={{
                 display: "block",
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "#374151",
                 marginBottom: 8
               }}>
@@ -782,7 +773,7 @@ export default function CuentaPage() {
                 border: "2px solid rgba(147, 197, 253, 0.4)",
                 fontSize: 16,
                 color: "#1E40AF",
-                fontWeight: 600
+                fontWeight: 500
               }}>
                 {new Date(user.created_at || Date.now()).toLocaleDateString('es-MX', {
                   day: 'numeric',
@@ -807,7 +798,7 @@ export default function CuentaPage() {
             margin: 0,
             marginBottom: 16,
             fontSize: 22,
-            fontWeight: 800,
+            fontWeight: 500,
             color: "#1E40AF",
             display: "flex",
             alignItems: "center",
@@ -821,7 +812,7 @@ export default function CuentaPage() {
             marginBottom: 20,
             fontSize: 14,
             color: "#374151",
-            fontWeight: 600
+            fontWeight: 500
           }}>
             Cierra sesión de forma segura en este dispositivo.
           </p>
@@ -848,11 +839,10 @@ export default function CuentaPage() {
               borderRadius: 12,
               color: "#fff",
               fontSize: 16,
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: saving ? "not-allowed" : "pointer",
               transition: "all 0.2s ease",
-              fontFamily: "Montserrat, sans-serif"
-            }}
+                          }}
             onMouseEnter={(e) => {
               if (!saving) {
                 e.currentTarget.style.transform = "translateY(-2px)"

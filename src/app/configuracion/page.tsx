@@ -79,7 +79,7 @@ function ToggleRow({ label, desc, checked, onChange }: {
       onMouseEnter={e => { e.currentTarget.style.borderColor = T.blueMid; e.currentTarget.style.background = T.blueLight }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = checked ? T.blueMid : T.border; e.currentTarget.style.background = T.surface }}>
       <div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: T.text, fontFamily: T.font }}>{label}</div>
+        <div style={{ fontSize: 14, fontWeight: 500, color: T.text, fontFamily: T.font }}>{label}</div>
         {desc && <div style={{ fontSize: 12, color: T.textMuted, marginTop: 2, lineHeight: 1.4 }}>{desc}</div>}
       </div>
       <Toggle checked={checked} onChange={onChange} />
@@ -101,7 +101,7 @@ function SectionHeading({ icon, children, subtitle }: { icon: React.ReactNode; c
           {icon}
         </div>
         <div>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: T.text, fontFamily: T.font, letterSpacing: "-0.02em" }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 500, color: T.text, fontFamily: T.font, letterSpacing: "-0.02em" }}>
             {children}
           </h2>
           {subtitle && <p style={{ margin: 0, fontSize: 13, color: T.textMuted, marginTop: 1 }}>{subtitle}</p>}
@@ -124,7 +124,7 @@ function PillSelect({ options, value, onChange }: {
           border: `1.5px solid ${value === v ? T.blue : T.border}`,
           background: value === v ? T.blue : T.surface,
           color: value === v ? "#fff" : T.textMid,
-          fontSize: 13, fontWeight: 700, cursor: "pointer",
+          fontSize: 13, fontWeight: 500, cursor: "pointer",
           fontFamily: T.font, transition: "all .18s",
           boxShadow: value === v ? "0 3px 10px rgba(15,98,254,.25)" : "none"
         }}>
@@ -154,7 +154,7 @@ function Card({ children, style }: { children: React.ReactNode; style?: React.CS
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 11, fontWeight: 800, color: T.textLight, letterSpacing: "0.1em",
+      fontSize: 11, fontWeight: 500, color: T.textLight, letterSpacing: "0.1em",
       textTransform: "uppercase", marginBottom: 8, fontFamily: T.font
     }}>{children}</div>
   )
@@ -166,7 +166,7 @@ function SaveBtn({ onClick, loading, label = "Guardar cambios" }: { onClick: () 
     <button onClick={onClick} disabled={loading} style={{
       display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
       padding: "12px 24px", background: T.blue, border: "none",
-      borderRadius: T.radiusSm, color: "#fff", fontSize: 14, fontWeight: 700,
+      borderRadius: T.radiusSm, color: "#fff", fontSize: 14, fontWeight: 500,
       cursor: "pointer", fontFamily: T.font, transition: "all .18s",
       opacity: loading ? .6 : 1, boxShadow: "0 4px 14px rgba(15,98,254,.3)",
       width: "100%", marginTop: 20
@@ -360,7 +360,7 @@ function SettingsContent() {
           <div style={{ position: "absolute", bottom: -40, left: "20%", width: 180, height: 180, borderRadius: "50%", background: "rgba(255,255,255,.04)", pointerEvents: "none" }} />
 
           <div style={{ position: "relative", zIndex: 1 }}>
-            <h1 style={{ margin: "0 0 6px", fontSize: "clamp(24px,4vw,36px)", fontWeight: 900, color: "#fff", letterSpacing: "-0.03em", fontFamily: T.font }}>
+            <h1 style={{ margin: "0 0 6px", fontSize: "clamp(24px,4vw,36px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.03em", fontFamily: T.font }}>
               Configuración
             </h1>
             <p style={{ margin: "0 0 18px", fontSize: 14, color: "rgba(255,255,255,.65)", fontWeight: 500 }}>
@@ -375,14 +375,14 @@ function SettingsContent() {
                 width: 28, height: 28, borderRadius: "50%",
                 background: "linear-gradient(135deg,#60A5FA,#A78BFA)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 12, fontWeight: 900, color: "#fff", flexShrink: 0
+                fontSize: 12, fontWeight: 500, color: "#fff", flexShrink: 0
               }}>
                 {(user.email || "?")[0].toUpperCase()}
               </div>
-              <span style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>{user.email}</span>
+              <span style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{user.email}</span>
               <span style={{
                 fontSize: 10, color: "rgba(255,255,255,.8)", background: "rgba(255,255,255,.15)",
-                padding: "2px 9px", borderRadius: 20, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em"
+                padding: "2px 9px", borderRadius: 20, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.06em"
               }}>
                 {dbProfile?.role || "Estudiante"}
               </span>
@@ -403,7 +403,7 @@ function SettingsContent() {
             height: "fit-content", position: "sticky", top: 16, alignSelf: "start"
           }}>
             <div style={{
-              fontSize: 10, fontWeight: 800, color: T.textLight, letterSpacing: "0.12em",
+              fontSize: 10, fontWeight: 500, color: T.textLight, letterSpacing: "0.12em",
               padding: "0 8px 10px", borderBottom: `1px solid ${T.border}`,
               marginBottom: 8, textTransform: "uppercase", fontFamily: T.font
             }}>Navegación</div>
@@ -437,7 +437,7 @@ function SettingsContent() {
               <button onClick={() => setShowResetConfirm(true)} style={{
                 width: "100%", padding: "9px 12px",
                 background: "transparent", border: `1.5px solid ${T.border}`,
-                borderRadius: T.radiusSm, cursor: "pointer", fontSize: 12, fontWeight: 700,
+                borderRadius: T.radiusSm, cursor: "pointer", fontSize: 12, fontWeight: 500,
                 color: T.red, fontFamily: T.font,
                 display: "flex", alignItems: "center", gap: 8, transition: "all .18s"
               }}
@@ -458,7 +458,7 @@ function SettingsContent() {
             {toast && (
               <div style={{
                 marginBottom: 18, padding: "13px 18px", borderRadius: T.radiusSm,
-                display: "flex", alignItems: "center", gap: 10, fontSize: 14, fontWeight: 600,
+                display: "flex", alignItems: "center", gap: 10, fontSize: 14, fontWeight: 500,
                 background: toast.ok ? T.greenLight : T.redLight,
                 border: `1.5px solid ${toast.ok ? "#86EFAC" : "#FCA5A5"}`,
                 color: toast.ok ? "#15803D" : "#DC2626",
@@ -478,7 +478,7 @@ function SettingsContent() {
                 <Card style={{ marginBottom: 16 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                     <Globe size={16} color={T.blue} />
-                    <span style={{ fontSize: 14, fontWeight: 700, color: T.text }}>Idioma / Language</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: T.text }}>Idioma / Language</span>
                   </div>
                   <PillSelect
                     options={[{ v: "es", l: "🇲🇽 Español" }, { v: "en", l: "🇺🇸 English" }]}
@@ -488,7 +488,7 @@ function SettingsContent() {
                 <Card>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                     <Zap size={16} color={T.blue} />
-                    <span style={{ fontSize: 14, fontWeight: 700, color: T.text }}>Preferencias del sistema</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: T.text }}>Preferencias del sistema</span>
                   </div>
                   <ToggleRow label="Efectos de Sonido" desc="Activar efectos de sonido en la app"
                     checked={settings.soundsEnabled} onChange={v => updateSettings({ soundsEnabled: v })} />
@@ -521,7 +521,7 @@ function SettingsContent() {
                     />
                   </div>
                   <div>
-                    <div style={{ fontSize: 16, fontWeight: 800, color: T.text, fontFamily: T.font }}>{fullName || "(Sin nombre)"}</div>
+                    <div style={{ fontSize: 16, fontWeight: 500, color: T.text, fontFamily: T.font }}>{fullName || "(Sin nombre)"}</div>
                     <div style={{ fontSize: 13, color: T.textMuted, marginTop: 2 }}>{username ? `@${username.replace('@', '')}` : user.email}</div>
                   </div>
                 </Card>
@@ -588,10 +588,10 @@ function SettingsContent() {
                 <Card style={{ marginBottom: 14, display: "flex", alignItems: "center", gap: 14, justifyContent: "space-between" }}>
                   <div>
                     <FieldLabel>Correo electrónico</FieldLabel>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: T.text, fontFamily: T.font }}>{user.email}</div>
+                    <div style={{ fontSize: 14, fontWeight: 500, color: T.text, fontFamily: T.font }}>{user.email}</div>
                   </div>
                   <span style={{
-                    fontSize: 11, fontWeight: 800, color: T.green, background: T.greenLight,
+                    fontSize: 11, fontWeight: 500, color: T.green, background: T.greenLight,
                     border: `1.5px solid #86EFAC`, padding: "4px 12px", borderRadius: 20,
                     display: "flex", alignItems: "center", gap: 4, flexShrink: 0, fontFamily: T.font
                   }}>
@@ -612,7 +612,7 @@ function SettingsContent() {
                       onBlur={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.boxShadow = "none" }} />
                     <button onClick={savePhone} disabled={saving} style={{
                       padding: "11px 20px", background: T.blue, border: "none", borderRadius: T.radiusSm,
-                      color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer",
+                      color: "#fff", fontSize: 13, fontWeight: 500, cursor: "pointer",
                       fontFamily: T.font, opacity: saving ? .6 : 1, whiteSpace: "nowrap",
                       boxShadow: "0 3px 10px rgba(15,98,254,.3)"
                     }}>
@@ -625,7 +625,7 @@ function SettingsContent() {
                 <Card style={{ marginBottom: 14 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: T.text, display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ fontSize: 14, fontWeight: 500, color: T.text, display: "flex", alignItems: "center", gap: 8 }}>
                         <Lock size={14} color={T.textMuted} /> Contraseña
                       </div>
                       <div style={{ fontSize: 12, color: T.textMuted, marginTop: 2 }}>Seguridad de tu cuenta</div>
@@ -633,7 +633,7 @@ function SettingsContent() {
                     <button onClick={() => { setShowPwFields(!showPwFields); setPw({ new: "", confirm: "" }) }}
                       style={{
                         padding: "9px 16px", background: T.surfaceAlt, border: `1.5px solid ${T.border}`,
-                        borderRadius: T.radiusSm, color: T.textMid, fontSize: 13, fontWeight: 700,
+                        borderRadius: T.radiusSm, color: T.textMid, fontSize: 13, fontWeight: 500,
                         cursor: "pointer", fontFamily: T.font, transition: "all .18s"
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = T.blueLight; e.currentTarget.style.borderColor = T.blueMid }}
@@ -682,12 +682,12 @@ function SettingsContent() {
                                 {icon}
                               </div>
                               <div>
-                                <div style={{ fontSize: 14, fontWeight: 700, color: isSelected ? c : T.text, fontFamily: T.font }}>{l}</div>
+                                <div style={{ fontSize: 14, fontWeight: 500, color: isSelected ? c : T.text, fontFamily: T.font }}>{l}</div>
                                 <div style={{ fontSize: 12, color: T.textMuted }}>{d}</div>
                               </div>
                             </div>
                             {isSelected && <span style={{
-                              fontSize: 10, fontWeight: 800, color: c,
+                              fontSize: 10, fontWeight: 500, color: c,
                               background: `${c}18`, padding: "3px 10px", borderRadius: 20, border: `1.5px solid ${c}40`,
                               fontFamily: T.font, textTransform: "uppercase", letterSpacing: "0.06em"
                             }}>Activo</span>}
@@ -700,7 +700,7 @@ function SettingsContent() {
                       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <div style={{ width: 34, height: 34, borderRadius: T.radiusSm, background: `linear-gradient(135deg,${T.blue},#4A9EFF)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🏫</div>
                         <div>
-                          <div style={{ fontSize: 14, fontWeight: 700, color: T.blue, fontFamily: T.font }}>Plan Institucional</div>
+                          <div style={{ fontSize: 14, fontWeight: 500, color: T.blue, fontFamily: T.font }}>Plan Institucional</div>
                           <div style={{ fontSize: 12, color: T.textMuted }}>Gestionado por tu escuela o institución.</div>
                         </div>
                       </div>
@@ -716,7 +716,7 @@ function SettingsContent() {
                   ].map(({ l, v }) => (
                     <Card key={l}>
                       <FieldLabel>{l}</FieldLabel>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: T.text, fontFamily: T.font }}>{v}</div>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: T.text, fontFamily: T.font }}>{v}</div>
                     </Card>
                   ))}
                 </div>
@@ -725,7 +725,7 @@ function SettingsContent() {
                 <div style={{ borderRadius: T.radius, border: `1.5px solid #FCA5A5`, background: T.redLight, padding: "18px 20px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                     <LogOut size={14} color={T.red} />
-                    <span style={{ fontSize: 14, fontWeight: 700, color: T.text, fontFamily: T.font }}>Sesión</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: T.text, fontFamily: T.font }}>Sesión</span>
                   </div>
                   <div style={{ fontSize: 12, color: T.textMuted, marginBottom: 14 }}>
                     Cierra tu sesión de forma segura en este dispositivo.
@@ -737,7 +737,7 @@ function SettingsContent() {
                       catch { flash(false, "Error al cerrar sesión") } finally { setSaving(false) }
                     }} style={{
                       padding: "10px 22px", background: T.red, border: "none", borderRadius: T.radiusSm,
-                      color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer",
+                      color: "#fff", fontSize: 13, fontWeight: 500, cursor: "pointer",
                       fontFamily: T.font, opacity: saving ? .6 : 1,
                       boxShadow: "0 3px 10px rgba(239,68,68,.3)"
                     }}>
@@ -749,7 +749,7 @@ function SettingsContent() {
                       catch { flash(false, "Error al cerrar sesión") } finally { setSaving(false) }
                     }} style={{
                       padding: "10px 22px", background: T.surface, border: `1.5px solid ${T.border}`, borderRadius: T.radiusSm,
-                      color: T.textMid, fontSize: 13, fontWeight: 700, cursor: "pointer",
+                      color: T.textMid, fontSize: 13, fontWeight: 500, cursor: "pointer",
                       fontFamily: T.font, display: "flex", alignItems: "center", gap: 6
                     }}>
                       <LogOut size={13} /> Cambiar de Cuenta
@@ -846,7 +846,7 @@ function SettingsContent() {
                 <Card style={{ marginBottom: 14 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
                     <FileText size={14} color={T.blue} />
-                    <span style={{ fontSize: 14, fontWeight: 700, color: T.text }}>Tamaño de Texto</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: T.text }}>Tamaño de Texto</span>
                   </div>
                   <PillSelect
                     options={[{ v: "small", l: "Pequeño" }, { v: "medium", l: "Mediano" }, { v: "large", l: "Grande" }, { v: "extra-large", l: "XL" }]}
@@ -856,7 +856,7 @@ function SettingsContent() {
                 <Card style={{ marginBottom: 14 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
                     <Contrast size={14} color={T.blue} />
-                    <span style={{ fontSize: 14, fontWeight: 700, color: T.text }}>Modo de Contraste</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: T.text }}>Modo de Contraste</span>
                   </div>
                   <PillSelect
                     options={[{ v: "normal", l: "Normal" }, { v: "high", l: "Alto Contraste" }]}
@@ -905,7 +905,7 @@ function SettingsContent() {
                   <AlertTriangle size={28} color={T.red} />
                 </div>
               </div>
-              <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 800, color: T.text, textAlign: "center", fontFamily: T.font }}>
+              <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, color: T.text, textAlign: "center", fontFamily: T.font }}>
                 ¿Restaurar configuración?
               </h3>
               <p style={{ margin: "0 0 24px", fontSize: 13, color: T.textMuted, lineHeight: 1.6, textAlign: "center" }}>
@@ -915,7 +915,7 @@ function SettingsContent() {
                 <button onClick={() => setShowResetConfirm(false)}
                   style={{
                     flex: 1, padding: "12px", background: T.surfaceAlt, border: `1.5px solid ${T.border}`,
-                    borderRadius: T.radiusSm, color: T.textMid, fontSize: 14, fontWeight: 700,
+                    borderRadius: T.radiusSm, color: T.textMid, fontSize: 14, fontWeight: 500,
                     cursor: "pointer", fontFamily: T.font
                   }}>
                   Cancelar
@@ -927,7 +927,7 @@ function SettingsContent() {
                 }}
                   style={{
                     flex: 1, padding: "12px", background: T.red, border: "none",
-                    borderRadius: T.radiusSm, color: "#fff", fontSize: 14, fontWeight: 700,
+                    borderRadius: T.radiusSm, color: "#fff", fontSize: 14, fontWeight: 500,
                     cursor: "pointer", fontFamily: T.font,
                     boxShadow: "0 4px 12px rgba(239,68,68,.3)"
                   }}>
@@ -947,7 +947,7 @@ export default function SettingsPage() {
     <Suspense fallback={
       <div style={{
         flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
-        fontFamily: "'Montserrat', sans-serif", fontSize: 14, fontWeight: 700, color: "#0F62FE",
+        fontSize: 14, fontWeight: 500, color: "#0F62FE",
         background: "#FBFAF5"
       }}>
         Cargando configuración...

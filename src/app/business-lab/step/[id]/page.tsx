@@ -154,7 +154,7 @@ export default function StepDetailPage() {
           }
         `}</style>
         <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16, fontFamily: "Montserrat, sans-serif" }}>
+          <p style={{ color: "#666", fontSize: 16, }}>
             Cargando paso...
           </p>
         </div>
@@ -170,8 +170,7 @@ export default function StepDetailPage() {
         alignItems: "center",
         justifyContent: "center",
         background: "#FBFAF5",
-        fontFamily: "Montserrat, sans-serif"
-      }}>
+              }}>
         <style>{`
           @media (min-width: 1161px) {
             .step-notfound-container { margin-left: 280px !important; width: calc(100% - 280px) !important; }
@@ -181,7 +180,7 @@ export default function StepDetailPage() {
           }
         `}</style>
         <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16 }}>Paso no encontrado</h2>
+          <h2 style={{ fontSize: 24, fontWeight: 500, marginBottom: 16 }}>Paso no encontrado</h2>
           <Link href="/business-lab">
             <button style={{
               padding: "12px 24px",
@@ -189,7 +188,7 @@ export default function StepDetailPage() {
               color: "white",
               border: "none",
               borderRadius: 12,
-              fontWeight: 700,
+              fontWeight: 500,
               fontSize: 15,
               cursor: "pointer"
             }}>
@@ -240,8 +239,7 @@ export default function StepDetailPage() {
         minHeight: "100vh",
         background: "#FBFAF5",
         padding: "40px",
-        fontFamily: "Montserrat, sans-serif",
-        width: "100%",
+                width: "100%",
         boxSizing: "border-box",
         overflowX: "hidden",
         overflowY: "visible"
@@ -255,7 +253,7 @@ export default function StepDetailPage() {
             border: "2px solid #E5E7EB",
             borderRadius: 8,
             fontSize: 14,
-            fontWeight: 600,
+            fontWeight: 500,
             color: "#374151",
             cursor: "pointer",
             marginBottom: 24,
@@ -274,7 +272,7 @@ export default function StepDetailPage() {
         <div style={{ marginBottom: 32, width: "100%" }}>
           <h1 style={{
             fontSize: 36,
-            fontWeight: 900,
+            fontWeight: 500,
             marginBottom: 12,
             color: "#111"
           }}>
@@ -295,7 +293,7 @@ export default function StepDetailPage() {
               padding: "10px 20px",
               borderRadius: 24,
               fontSize: 14,
-              fontWeight: 600
+              fontWeight: 500
             }}>
               🎯 <span>Objetivo:</span> {stepData.goal}
             </div>
@@ -319,7 +317,7 @@ export default function StepDetailPage() {
               border: "2px solid #E5E7EB",
               width: "100%"
             }}>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 8 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 500, color: "#111", marginBottom: 8 }}>
                 Checklist
               </h2>
               <p style={{ fontSize: 14, color: "#6B7280", marginBottom: 20 }}>
@@ -380,7 +378,7 @@ export default function StepDetailPage() {
                   border: "none",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer"
                 }}>
                   +
@@ -399,7 +397,7 @@ export default function StepDetailPage() {
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                 <div>
-                  <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 4 }}>
+                  <h2 style={{ fontSize: 20, fontWeight: 500, color: "#111", marginBottom: 4 }}>
                     Mis Artefactos
                   </h2>
                   <p style={{ fontSize: 14, color: "#6B7280" }}>
@@ -413,7 +411,7 @@ export default function StepDetailPage() {
                   border: "none",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
@@ -440,7 +438,7 @@ export default function StepDetailPage() {
                         <span style={{ fontSize: 18 }}>
                           {artifact.type === "canvas" ? "📊" : artifact.type === "persona" ? "👤" : "📝"}
                         </span>
-                        <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>
+                        <h3 style={{ fontSize: 16, fontWeight: 500, color: "#111" }}>
                           {artifact.title}
                         </h3>
                       </div>
@@ -467,7 +465,7 @@ export default function StepDetailPage() {
               }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <div>
-                    <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, color: "#065F46" }}>
+                    <h3 style={{ fontSize: 18, fontWeight: 500, marginBottom: 6, color: "#065F46" }}>
                       ¿Listo para continuar?
                     </h3>
                     <p style={{ fontSize: 14, color: "#047857" }}>
@@ -480,7 +478,7 @@ export default function StepDetailPage() {
                     color: "white",
                     border: "none",
                     borderRadius: 12,
-                    fontWeight: 700,
+                    fontWeight: 500,
                     fontSize: 15,
                     cursor: "pointer",
                     whiteSpace: "nowrap"
@@ -504,7 +502,7 @@ export default function StepDetailPage() {
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <span style={{ fontSize: 20 }}>✨</span>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#7C3AED" }}>
+                <h3 style={{ fontSize: 16, fontWeight: 500, color: "#7C3AED" }}>
                   Herramientas AI
                 </h3>
               </div>
@@ -519,7 +517,7 @@ export default function StepDetailPage() {
                   border: "1px solid #E5E7EB",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   color: "#374151",
                   cursor: "pointer",
                   textAlign: "left",
@@ -542,7 +540,7 @@ export default function StepDetailPage() {
                   border: "1px solid #E5E7EB",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   color: "#374151",
                   cursor: "pointer",
                   textAlign: "left",
@@ -565,7 +563,7 @@ export default function StepDetailPage() {
                   border: "1px solid #E5E7EB",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   color: "#374151",
                   cursor: "pointer",
                   textAlign: "left",
@@ -595,7 +593,7 @@ export default function StepDetailPage() {
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <span style={{ fontSize: 20 }}>💬</span>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1E40AF" }}>
+                <h3 style={{ fontSize: 16, fontWeight: 500, color: "#1E40AF" }}>
                   ¿Necesitas ayuda?
                 </h3>
               </div>
@@ -611,7 +609,7 @@ export default function StepDetailPage() {
                   color: "#0B71FE",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease"
                 }}
@@ -637,7 +635,7 @@ export default function StepDetailPage() {
               boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
               border: "2px solid #E5E7EB"
             }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111", marginBottom: 12 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 500, color: "#111", marginBottom: 12 }}>
                 📄 Templates
               </h3>
               <Link href="/business-lab/templates">
@@ -649,7 +647,7 @@ export default function StepDetailPage() {
                   color: "#374151",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease"
                 }}
@@ -690,7 +688,7 @@ export default function StepDetailPage() {
             }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
+              <h2 style={{ fontSize: 24, fontWeight: 500, marginBottom: 8 }}>
                 Crear Nuevo Artefacto
               </h2>
               <p style={{ fontSize: 14, color: "#6B7280", marginBottom: 24 }}>
@@ -698,7 +696,7 @@ export default function StepDetailPage() {
               </p>
 
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 6 }}>
                   Título
                 </label>
                 <input
@@ -718,7 +716,7 @@ export default function StepDetailPage() {
               </div>
 
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 6 }}>
                   Tipo
                 </label>
                 <select
@@ -742,7 +740,7 @@ export default function StepDetailPage() {
               </div>
 
               <div style={{ marginBottom: 24 }}>
-                <label style={{ display: "block", fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 6 }}>
                   Contenido
                 </label>
                 <textarea
@@ -758,8 +756,7 @@ export default function StepDetailPage() {
                     fontSize: 14,
                     outline: "none",
                     resize: "vertical",
-                    fontFamily: "inherit"
-                  }}
+                                      }}
                 />
               </div>
 
@@ -771,7 +768,7 @@ export default function StepDetailPage() {
                   color: "#374151",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer"
                 }}>
                   Cancelar
@@ -783,7 +780,7 @@ export default function StepDetailPage() {
                   color: "white",
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer"
                 }}>
                   Guardar Artefacto

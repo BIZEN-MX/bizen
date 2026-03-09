@@ -272,7 +272,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
           align-items: center;
           gap: 6px;
           font-size: clamp(10px, 2vw, 12px);
-          font-weight: 700;
+          font-weight: 500;
           padding: 4px 12px;
           border-radius: 999px;
           letter-spacing: 0.04em;
@@ -283,7 +283,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
         .tc-title {
           margin: 0 0 2px;
           font-size: clamp(15px, 3.5vw, 20px);
-          font-weight: 800;
+          font-weight: 500;
           color: #0f172a;
           line-height: 1.25;
         }
@@ -322,7 +322,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
           border-radius: 11px;
           font-family: 'Inter', sans-serif;
           font-size: clamp(12px, 2.8vw, 14px);
-          font-weight: 700;
+          font-weight: 500;
           cursor: pointer;
           transition: all 0.2s;
           white-space: nowrap;

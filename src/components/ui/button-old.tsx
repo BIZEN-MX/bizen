@@ -20,14 +20,13 @@ export default function Button({ variant = "primary", loading, style, children, 
     backgroundSize: rest.disabled || variant === "ghost" ? "auto" : "200% auto",
     backgroundPosition: rest.disabled || variant === "ghost" ? "left" : "0% 0%",
     color: variant === "ghost" ? "#0B71FE" : "#fff",
-    fontWeight: 700,
+    fontWeight: 500,
     letterSpacing: 0.2,
     cursor: rest.disabled ? "not-allowed" : "pointer",
     transform: "translateZ(0)",
     transition: "transform .06s, filter .2s, box-shadow .2s",
     boxShadow: rest.disabled || variant === "ghost" ? "none" : "0 6px 16px rgba(0,0,0,0.12)",
-    fontFamily: 'Montserrat, sans-serif',
-    animation: rest.disabled || variant === "ghost" ? "none" : "shimmer-button 3s ease-in-out infinite",
+        animation: rest.disabled || variant === "ghost" ? "none" : "shimmer-button 3s ease-in-out infinite",
   }
 
   return (

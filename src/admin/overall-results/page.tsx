@@ -118,7 +118,7 @@ export default function OverallResultsAdmin() {
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 800 }}>
+              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 500 }}>
                 📊 Resultados Generales - Todos los Módulos
               </h1>
               <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
@@ -134,7 +134,7 @@ export default function OverallResultsAdmin() {
                 color: "#fff",
                 border: "none",
                 fontSize: 16,
-                fontWeight: 600,
+                fontWeight: 500,
                 cursor: "pointer",
                 transition: "transform 0.2s ease",
               }}
@@ -159,7 +159,7 @@ export default function OverallResultsAdmin() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
             }}>
               <div style={{ fontSize: 14, color: "#64748b", marginBottom: 8 }}>Total Estudiantes</div>
-              <div style={{ fontSize: 32, fontWeight: 700, color: "#0F62FE" }}>
+              <div style={{ fontSize: 32, fontWeight: 500, color: "#0F62FE" }}>
                 {results.length}
               </div>
             </div>
@@ -170,7 +170,7 @@ export default function OverallResultsAdmin() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
             }}>
               <div style={{ fontSize: 14, color: "#64748b", marginBottom: 8 }}>Promedio General</div>
-              <div style={{ fontSize: 32, fontWeight: 700, color: "#16a34a" }}>
+              <div style={{ fontSize: 32, fontWeight: 500, color: "#16a34a" }}>
                 {results.length > 0 
                   ? Math.round(results.reduce((acc, r) => acc + r.overallPercentage, 0) / results.length)
                   : 0}%
@@ -183,7 +183,7 @@ export default function OverallResultsAdmin() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
             }}>
               <div style={{ fontSize: 14, color: "#64748b", marginBottom: 8 }}>Total Quizzes</div>
-              <div style={{ fontSize: 32, fontWeight: 700, color: "#ea580c" }}>
+              <div style={{ fontSize: 32, fontWeight: 500, color: "#ea580c" }}>
                 {results.reduce((acc, r) => acc + r.totalQuizzes, 0)}
               </div>
             </div>
@@ -227,13 +227,13 @@ export default function OverallResultsAdmin() {
                       alignItems: "center",
                       justifyContent: "center",
                       fontSize: 20,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: "#fff",
                     }}>
                       {user.overallPercentage}%
                     </div>
                     <div>
-                      <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
+                      <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 4 }}>
                         {user.userName} ({user.email})
                       </div>
                       <div style={{ fontSize: 13, color: "#64748b" }}>
@@ -244,7 +244,7 @@ export default function OverallResultsAdmin() {
                   <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 12, color: "#64748b" }}>Total</div>
-                      <div style={{ fontSize: 16, fontWeight: 600 }}>
+                      <div style={{ fontSize: 16, fontWeight: 500 }}>
                         {user.overallScore}/{user.totalQuestions}
                       </div>
                     </div>
@@ -254,7 +254,7 @@ export default function OverallResultsAdmin() {
                       background: getPerformanceColor(user.overallPercentage),
                       color: "#fff",
                       fontSize: 12,
-                      fontWeight: 600,
+                      fontWeight: 500,
                     }}>
                       {getPerformanceText(user.overallPercentage)}
                     </div>
@@ -270,7 +270,7 @@ export default function OverallResultsAdmin() {
                     background: "#f8fafc",
                     borderTop: "2px solid #e5e7eb"
                   }}>
-                    <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
+                    <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 16 }}>
                       Desglose por Módulo
                     </div>
                     <div style={{
@@ -292,7 +292,7 @@ export default function OverallResultsAdmin() {
                           <div style={{ fontSize: 13, color: "#64748b", marginBottom: 8 }}>
                             Módulo {module.moduleId}
                           </div>
-                          <div style={{ fontSize: 24, fontWeight: 700, color: getPerformanceColor(module.percentage), marginBottom: 4 }}>
+                          <div style={{ fontSize: 24, fontWeight: 500, color: getPerformanceColor(module.percentage), marginBottom: 4 }}>
                             {module.percentage}%
                           </div>
                           {module.totalQuestions > 0 && (

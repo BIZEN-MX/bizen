@@ -86,12 +86,11 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
           animate={{ y: 0, opacity: 1 }}
           style={{
             fontSize: "clamp(20px, 3vw, 26px)",
-            fontWeight: 800,
+            fontWeight: 500,
             color: "#111827",
             margin: 0,
             lineHeight: 1.3,
-            fontFamily: "'Inter', sans-serif",
-          }}
+                      }}
         >
           {step.question}
         </motion.h3>
@@ -214,11 +213,10 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 13,
-                fontWeight: 900,
+                fontWeight: 500,
                 color: labelColor,
                 flexShrink: 0,
-                fontFamily: "'Inter', sans-serif",
-                border: `1.5px solid ${borderColor}`,
+                                border: `1.5px solid ${borderColor}`,
                 transition: "all 0.2s ease",
               }}>
                 {['A', 'B', 'C', 'D', 'E', 'F'][index]}
@@ -228,9 +226,8 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
               <span style={{
                 flex: 1,
                 fontSize: "clamp(14px, 3.5vw, 18px)",
-                fontWeight: 700,
-                fontFamily: "'Inter', sans-serif",
-                lineHeight: 1.3,
+                fontWeight: 500,
+                                lineHeight: 1.3,
               }}>
                 {option.label}
               </span>

@@ -93,7 +93,7 @@ export default function BookmarksPage() {
   return (
     <>
       <LoadingBar />
-      <div className="fb-outer" style={{ minHeight: "100vh", background: "#FBFAF5", fontFamily: "'Montserrat', sans-serif" }}>
+      <div className="fb-outer" style={{ minHeight: "100vh", background: "#FBFAF5", }}>
         <style>{`
           @media (max-width: 767px) { .fb-outer { margin-left: 0 !important; } }
           @media (min-width: 768px) and (max-width: 1160px) { .fb-outer { margin-left: 220px !important; } }
@@ -118,7 +118,7 @@ export default function BookmarksPage() {
           <div style={{ position: "relative", zIndex: 1, animation: "fadeUp 0.5s ease both" }}>
             <button
               onClick={() => router.push("/forum")}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 14px", color: "#93c5fd", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", marginBottom: 20 }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 14px", color: "#93c5fd", fontSize: 12, fontWeight: 500, cursor: "pointer", marginBottom: 20 }}
             >
               <ChevronLeft size={13} /> Volver al Foro
             </button>
@@ -128,10 +128,10 @@ export default function BookmarksPage() {
                 <Bookmark size={28} color="#93c5fd" strokeWidth={2} />
               </div>
               <div style={{ flex: 1 }}>
-                <h1 style={{ margin: "0 0 6px", fontSize: "clamp(22px, 4vw, 34px)", fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                <h1 style={{ margin: "0 0 6px", fontSize: "clamp(22px, 4vw, 34px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
                   Mis Temas Guardados
                 </h1>
-                <p style={{ margin: 0, fontSize: 14, color: "#93c5fd", fontWeight: 600 }}>
+                <p style={{ margin: 0, fontSize: 14, color: "#93c5fd", fontWeight: 500 }}>
                   Temas que has marcado para leer después
                 </p>
               </div>
@@ -141,15 +141,15 @@ export default function BookmarksPage() {
                   <div style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, padding: "10px 18px", display: "flex", alignItems: "center", gap: 10 }}>
                     <Bookmark size={16} color="#60a5fa" />
                     <div>
-                      <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{threads.length}</div>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Guardados</div>
+                      <div style={{ fontSize: 22, fontWeight: 500, color: "#fff", lineHeight: 1 }}>{threads.length}</div>
+                      <div style={{ fontSize: 10, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Guardados</div>
                     </div>
                   </div>
                   <div style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, padding: "10px 18px", display: "flex", alignItems: "center", gap: 10 }}>
                     <CheckCircle2 size={16} color="#60a5fa" />
                     <div>
-                      <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{threads.filter(t => t.status === "resolved").length}</div>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Resueltos</div>
+                      <div style={{ fontSize: 22, fontWeight: 500, color: "#fff", lineHeight: 1 }}>{threads.filter(t => t.status === "resolved").length}</div>
+                      <div style={{ fontSize: 10, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Resueltos</div>
                     </div>
                   </div>
                 </div>
@@ -173,7 +173,7 @@ export default function BookmarksPage() {
                 placeholder="Buscar en tus guardados..."
                 style={{
                   width: "100%", padding: "13px 16px 13px 42px",
-                  fontSize: 14, fontFamily: "'Montserrat', sans-serif", fontWeight: 600,
+                  fontSize: 14, fontWeight: 500,
                   border: "2px solid #f1f5f9", borderRadius: 14,
                   background: "#FBFAF5", color: "#0f172a",
                   boxSizing: "border-box", transition: "all 0.2s"
@@ -182,7 +182,7 @@ export default function BookmarksPage() {
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "#f1f5f9", border: "none", borderRadius: "50%", width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#64748b", fontSize: 14, fontWeight: 700 }}
+                  style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "#f1f5f9", border: "none", borderRadius: "50%", width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#64748b", fontSize: 14, fontWeight: 500 }}
                 >×</button>
               )}
             </div>
@@ -209,10 +209,10 @@ export default function BookmarksPage() {
                   <div style={{ width: 80, height: 80, borderRadius: 24, background: "linear-gradient(135deg, #f8fafc, #f1f5f9)", border: "1.5px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
                     <Bookmark size={36} color="#1e3a8a" strokeWidth={1.5} />
                   </div>
-                  <h3 style={{ margin: "0 0 8px", fontSize: 22, fontWeight: 800, color: "#0f172a" }}>
+                  <h3 style={{ margin: "0 0 8px", fontSize: 22, fontWeight: 500, color: "#0f172a" }}>
                     {search ? "Sin resultados" : "No tienes temas guardados"}
                   </h3>
-                  <p style={{ margin: "0 0 28px", fontSize: 14, color: "#64748b", lineHeight: 1.6, fontWeight: 600, maxWidth: 380, marginLeft: "auto", marginRight: "auto" }}>
+                  <p style={{ margin: "0 0 28px", fontSize: 14, color: "#64748b", lineHeight: 1.6, fontWeight: 500, maxWidth: 380, marginLeft: "auto", marginRight: "auto" }}>
                     {search
                       ? `No encontramos temas que coincidan con "${search}" en tus guardados.`
                       : "Explora el foro y guarda los temas que te interesen tocando el ícono de marcador en cualquier hilo."}
@@ -221,13 +221,13 @@ export default function BookmarksPage() {
                     {search && (
                       <button
                         onClick={() => setSearch("")}
-                        style={{ padding: "12px 22px", background: "#FBFAF5", border: "2px solid #e2e8f0", borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", color: "#374151" }}
+                        style={{ padding: "12px 22px", background: "#FBFAF5", border: "2px solid #e2e8f0", borderRadius: 12, fontWeight: 500, fontSize: 14, cursor: "pointer", color: "#374151" }}
                       >
                         Limpiar búsqueda
                       </button>
                     )}
                     <Link href="/forum" style={{ textDecoration: "none" }}>
-                      <button style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)", color: "#fff", border: "none", borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'Montserrat', sans-serif", boxShadow: "0 4px 14px rgba(15,23,42,0.25)", display: "flex", alignItems: "center", gap: 8 }}>
+                      <button style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)", color: "#fff", border: "none", borderRadius: 12, fontWeight: 500, fontSize: 14, cursor: "pointer", boxShadow: "0 4px 14px rgba(15,23,42,0.25)", display: "flex", alignItems: "center", gap: 8 }}>
                         <Search size={14} /> Explorar el Foro
                       </button>
                     </Link>
@@ -265,19 +265,19 @@ export default function BookmarksPage() {
                   <div style={{ padding: "clamp(16px, 3vw, 22px) clamp(16px, 3vw, 22px) clamp(16px, 3vw, 22px) 0", display: "flex", gap: 16 }}>
                     {/* Vote score */}
                     <div style={{ minWidth: 52, textAlign: "center", paddingLeft: 16, paddingTop: 2, flexShrink: 0 }}>
-                      <div style={{ fontSize: 22, fontWeight: 900, color: thread.score > 0 ? tc.accent : thread.score < 0 ? "#ef4444" : "#94a3b8", lineHeight: 1 }}>{thread.score}</div>
-                      <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 700, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.04em" }}>votos</div>
+                      <div style={{ fontSize: 22, fontWeight: 500, color: thread.score > 0 ? tc.accent : thread.score < 0 ? "#ef4444" : "#94a3b8", lineHeight: 1 }}>{thread.score}</div>
+                      <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 500, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.04em" }}>votos</div>
                     </div>
 
                     {/* Content */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 8 }}>
-                        <h3 style={{ margin: 0, flex: 1, fontSize: "clamp(14px, 2.5vw, 16px)", fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>
+                        <h3 style={{ margin: 0, flex: 1, fontSize: "clamp(14px, 2.5vw, 16px)", fontWeight: 500, color: "#0f172a", lineHeight: 1.4 }}>
                           {thread.title}
                         </h3>
                         {/* Status badge */}
                         <span style={{
-                          padding: "3px 10px", borderRadius: 8, fontSize: 11, fontWeight: 700, whiteSpace: "nowrap", flexShrink: 0,
+                          padding: "3px 10px", borderRadius: 8, fontSize: 11, fontWeight: 500, whiteSpace: "nowrap", flexShrink: 0,
                           background: thread.status === "resolved" ? "#ecfdf5" : thread.status === "locked" ? "#fef2f2" : tc.light,
                           color: thread.status === "resolved" ? "#065f46" : thread.status === "locked" ? "#dc2626" : tc.accent,
                           display: "flex", alignItems: "center", gap: 4
@@ -291,15 +291,15 @@ export default function BookmarksPage() {
                       {thread.tags.length > 0 && (
                         <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 10 }}>
                           {thread.tags.map(tag => (
-                            <span key={tag.id} style={{ padding: "2px 8px", background: tc.light, color: tc.accent, fontSize: 11, fontWeight: 700, borderRadius: 6 }}>#{tag.name}</span>
+                            <span key={tag.id} style={{ padding: "2px 8px", background: tc.light, color: tc.accent, fontSize: 11, fontWeight: 500, borderRadius: 6 }}>#{tag.name}</span>
                           ))}
                         </div>
                       )}
 
                       {/* Meta row */}
-                      <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 600, alignItems: "center", flexWrap: "wrap" }}>
+                      <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#94a3b8", fontWeight: 500, alignItems: "center", flexWrap: "wrap" }}>
                         {/* Topic chip */}
-                        <span style={{ padding: "2px 9px", background: tc.light, color: tc.accent, borderRadius: 999, fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+                        <span style={{ padding: "2px 9px", background: tc.light, color: tc.accent, borderRadius: 999, fontSize: 11, fontWeight: 500, flexShrink: 0 }}>
                           {thread.topic.name}
                         </span>
                         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
@@ -346,8 +346,8 @@ export default function BookmarksPage() {
                     <Search size={20} color="#60a5fa" />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", marginBottom: 2 }}>Explorar más temas</div>
-                    <div style={{ fontSize: 12, color: "#93c5fd", fontWeight: 600 }}>Encuentra nuevas discusiones para guardar</div>
+                    <div style={{ fontSize: 15, fontWeight: 500, color: "#fff", marginBottom: 2 }}>Explorar más temas</div>
+                    <div style={{ fontSize: 12, color: "#93c5fd", fontWeight: 500 }}>Encuentra nuevas discusiones para guardar</div>
                   </div>
                   <ChevronRight size={20} color="#93c5fd" />
                 </div>

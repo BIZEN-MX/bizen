@@ -50,7 +50,7 @@ export const BizenCourseCompletionEmail = ({
           }
           .logo {
             font-size: 28px;
-            font-weight: bold;
+            font-weight: 500;
             letter-spacing: 2px;
             opacity: 0.95;
             margin-top: 10px;
@@ -63,7 +63,7 @@ export const BizenCourseCompletionEmail = ({
             font-size: 28px;
             color: #047857;
             margin-bottom: 20px;
-            font-weight: 700;
+            font-weight: 500;
             text-align: center;
           }
           .message {
@@ -88,7 +88,7 @@ export const BizenCourseCompletionEmail = ({
           .achievement-box .module-name {
             font-size: 18px;
             color: #059669;
-            font-weight: 600;
+            font-weight: 500;
             margin: 10px 0;
           }
           .achievement-box .date {
@@ -119,7 +119,7 @@ export const BizenCourseCompletionEmail = ({
           }
           .stat-value {
             font-size: 24px;
-            font-weight: 700;
+            font-weight: 500;
             color: #059669;
           }
           .stat-label {
@@ -134,7 +134,7 @@ export const BizenCourseCompletionEmail = ({
             color: white !important;
             text-decoration: none;
             border-radius: 12px;
-            font-weight: 700;
+            font-weight: 500;
             font-size: 16px;
             text-align: center;
             margin: 10px;
@@ -240,7 +240,7 @@ export const BizenCourseCompletionEmail = ({
 
             <div class="quote-box">
               "El éxito es la suma de pequeños esfuerzos repetidos día tras día."
-              <div style="text-align: right; margin-top: 10px; font-weight: 600;">— Robert Collier</div>
+              <div style="text-align: right; margin-top: 10px; font-weight: 500;">— Robert Collier</div>
             </div>
 
             <h3 style="color: #0E4A7A; margin-top: 30px; margin-bottom: 15px; text-align: center;">
@@ -262,7 +262,7 @@ export const BizenCourseCompletionEmail = ({
               Tu progreso se ha guardado automáticamente. Puedes revisar tus logros y estadísticas en cualquier momento desde tu dashboard.
             </p>
 
-            <p style="margin-top: 25px; font-weight: 600; color: #0E4A7A; text-align: center;">
+            <p style="margin-top: 25px; font-weight: 500; color: #0E4A7A; text-align: center;">
               ¡Sigue así! 💪<br>
               El equipo de BIZEN
             </p>
@@ -271,7 +271,7 @@ export const BizenCourseCompletionEmail = ({
           <!-- Footer -->
           <div class="footer">
             <p style="margin-bottom: 10px;">
-              <a href="${dashboardUrl}" style="color: #059669; text-decoration: none; font-weight: 600;">
+              <a href="${dashboardUrl}" style="color: #059669; text-decoration: none; font-weight: 500;">
                 Ver mi progreso
               </a> • 
               <a href="mailto:soport@bizen.site" style="color: #0B71FE; text-decoration: none;">

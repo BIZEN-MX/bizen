@@ -262,7 +262,7 @@ export default function BillyWelcomeScreen({
               }}
               style={{
                 fontSize: "clamp(32px, 8vw, 48px)",
-                fontWeight: 900,
+                fontWeight: 500,
                 margin: 0,
                 lineHeight: 1.4,
                 background: "linear-gradient(45deg, #0F62FE, #10B981, #8B5CF6, #0F62FE)",
@@ -271,8 +271,7 @@ export default function BillyWelcomeScreen({
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
                 animation: "shimmer 4s ease-in-out infinite",
-                fontFamily: 'Montserrat, sans-serif',
-              }}
+                              }}
             >
               {message}
             </motion.p>
@@ -288,15 +287,14 @@ export default function BillyWelcomeScreen({
               }}
               style={{
                 fontSize: "clamp(22px, 5vw, 28px)",
-                fontWeight: 600,
+                fontWeight: 500,
                 margin: "8px 0 0 0",
                 lineHeight: 1.3,
                 background: "linear-gradient(45deg, #0F62FE, #10B981)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                fontFamily: 'Montserrat, sans-serif',
-              }}
+                              }}
             >
               {description || (isReturningUser ? (
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
@@ -402,12 +400,11 @@ export default function BillyWelcomeScreen({
               borderRadius: 30,
               color: "#0F62FE",
               fontSize: "clamp(18px, 4vw, 22px)",
-              fontWeight: 700,
+              fontWeight: 500,
               cursor: "pointer",
               boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
               transition: "all 0.3s ease",
-              fontFamily: 'Montserrat, sans-serif',
-            }}
+                          }}
           >
             {timeRemaining > 0 ? `Continuar en ${timeRemaining}s` : 'Continuar →'}
           </motion.button>

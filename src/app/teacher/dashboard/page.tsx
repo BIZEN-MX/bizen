@@ -69,7 +69,7 @@ export default function AdminDashboardPage() {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', flexDirection: 'column', gap: 16 }}>
                 <div style={{ width: 40, height: 40, border: '4px solid #e2e8f0', borderTopColor: '#0F62FE', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                <p style={{ color: '#64748b', fontWeight: 600 }}>Cargando panel de administración...</p>
+                <p style={{ color: '#64748b', fontWeight: 500 }}>Cargando panel de administración...</p>
                 <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
             </div>
         )
@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
         return (
             <div style={{ padding: 32, textAlign: 'center' }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-                <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>Oh no, algo salió mal</h2>
+                <h2 style={{ fontSize: 24, fontWeight: 500, color: '#0f172a', marginBottom: 8 }}>Oh no, algo salió mal</h2>
                 <p style={{ color: '#64748b' }}>{error || "No se pudo cargar la información."}</p>
             </div>
         )
@@ -119,10 +119,10 @@ export default function AdminDashboardPage() {
 
             {/* Header */}
             <div style={{ marginBottom: 40 }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#eff6ff", color: "#0F62FE", padding: "6px 14px", borderRadius: "99px", fontSize: 13, fontWeight: 700, marginBottom: 16 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#eff6ff", color: "#0F62FE", padding: "6px 14px", borderRadius: "99px", fontSize: 13, fontWeight: 500, marginBottom: 16 }}>
                     <School size={16} /> Panel de Administración
                 </div>
-                <h1 style={{ fontSize: "clamp(32px, 5vw, 44px)", fontWeight: 900, color: "#0f172a", margin: 0, lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+                <h1 style={{ fontSize: "clamp(32px, 5vw, 44px)", fontWeight: 500, color: "#0f172a", margin: 0, lineHeight: 1.1, letterSpacing: "-0.02em" }}>
                     Visión General<br />
                     <span style={{ color: "#0F62FE" }}>{data.school || "Tu Institución"}</span>
                 </h1>
@@ -140,10 +140,10 @@ export default function AdminDashboardPage() {
                             {kpi.icon}
                         </div>
                         <div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
+                            <div style={{ fontSize: 13, fontWeight: 500, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
                                 {kpi.label}
                             </div>
-                            <div style={{ fontSize: 32, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>
+                            <div style={{ fontSize: 32, fontWeight: 500, color: "#0f172a", lineHeight: 1 }}>
                                 {kpi.value}
                             </div>
                         </div>
@@ -156,7 +156,7 @@ export default function AdminDashboardPage() {
 
                 {/* Table Toolbar */}
                 <div style={{ padding: "24px", borderBottom: "1px solid #raw_e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-                    <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: 0, display: "flex", alignItems: "center", gap: 10 }}>
+                    <h2 style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", margin: 0, display: "flex", alignItems: "center", gap: 10 }}>
                         Listado de Alumnos <span style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: 99, fontSize: 13, color: "#64748b" }}>{data.students.length}</span>
                     </h2>
 
@@ -178,7 +178,7 @@ export default function AdminDashboardPage() {
                         <button style={{
                             display: "flex", alignItems: "center", gap: 8, padding: "0 16px",
                             height: 42, borderRadius: 12, background: "#FBFAF5", border: "1px solid #e2e8f0",
-                            color: "#475569", fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "background 0.2s"
+                            color: "#475569", fontSize: 14, fontWeight: 500, cursor: "pointer", transition: "background 0.2s"
                         }}>
                             <Filter size={16} /> Filtros
                         </button>
@@ -190,11 +190,11 @@ export default function AdminDashboardPage() {
                     <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 800 }}>
                         <thead>
                             <tr style={{ background: "#FBFAF5", borderBottom: "1px solid #e2e8f0", textAlign: "left" }}>
-                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Alumno</th>
-                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Nivel</th>
-                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>XP Acumulada</th>
-                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Lecciones Completadas</th>
-                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 700, color: "#64748b", textTransform: "uppercase", textAlign: "right" }}>Acciones</th>
+                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 500, color: "#64748b", textTransform: "uppercase" }}>Alumno</th>
+                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 500, color: "#64748b", textTransform: "uppercase" }}>Nivel</th>
+                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 500, color: "#64748b", textTransform: "uppercase" }}>XP Acumulada</th>
+                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 500, color: "#64748b", textTransform: "uppercase" }}>Lecciones Completadas</th>
+                                <th style={{ padding: "16px 24px", fontSize: 13, fontWeight: 500, color: "#64748b", textTransform: "uppercase", textAlign: "right" }}>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -207,17 +207,17 @@ export default function AdminDashboardPage() {
                                                     <UserIcon size={18} />
                                                 </div>
                                                 <div>
-                                                    <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 15 }}>{student.name}</div>
+                                                    <div style={{ fontWeight: 500, color: "#0f172a", fontSize: 15 }}>{student.name}</div>
                                                     <div style={{ fontSize: 13, color: "#64748b" }}>Inscrito en {student.coursesEnrolled.length} cursos</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td style={{ padding: "16px 24px" }}>
-                                            <span style={{ display: "inline-flex", alignItems: "center", background: "#f5f3ff", color: "#7c3aed", padding: "4px 10px", borderRadius: 8, fontSize: 13, fontWeight: 700 }}>
+                                            <span style={{ display: "inline-flex", alignItems: "center", background: "#f5f3ff", color: "#7c3aed", padding: "4px 10px", borderRadius: 8, fontSize: 13, fontWeight: 500 }}>
                                                 Nivel {student.level}
                                             </span>
                                         </td>
-                                        <td style={{ padding: "16px 24px", color: "#475569", fontWeight: 600 }}>
+                                        <td style={{ padding: "16px 24px", color: "#475569", fontWeight: 500 }}>
                                             {student.xp.toLocaleString()} XP
                                         </td>
                                         <td style={{ padding: "16px 24px" }}>
@@ -226,12 +226,12 @@ export default function AdminDashboardPage() {
                                                     {/* Mock logic for progress bar width */}
                                                     <div style={{ width: `${Math.min(100, (student.completedLessonsCount / 10) * 100)}%`, height: "100%", background: "#10b981", borderRadius: 3 }} />
                                                 </div>
-                                                <span style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", width: 24 }}>{student.completedLessonsCount}</span>
+                                                <span style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", width: 24 }}>{student.completedLessonsCount}</span>
                                             </div>
                                         </td>
                                         <td style={{ padding: "16px 24px", textAlign: "right" }}>
                                             <button style={{
-                                                background: "none", border: "none", color: "#0F62FE", fontSize: 14, fontWeight: 700,
+                                                background: "none", border: "none", color: "#0F62FE", fontSize: 14, fontWeight: 500,
                                                 cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4
                                             }}>
                                                 Ver detalle <ChevronRight size={16} />

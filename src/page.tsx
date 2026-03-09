@@ -31,8 +31,7 @@ export default function WelcomePage() {
         background: "linear-gradient(to bottom, #ffffff 0%, #f0f7ff 100%)",
         position: "relative",
         overflow: "hidden",
-        fontFamily: "Montserrat, sans-serif",
-        display: "flex",
+                display: "flex",
         flexDirection: "column",
       }}>
       {/* Header */}
@@ -52,7 +51,7 @@ export default function WelcomePage() {
           <Link href="/" style={{
             color: "#0F62FE",
             textDecoration: "none",
-            fontWeight: 600,
+            fontWeight: 500,
             fontSize: "16px",
             transition: "color 0.3s",
           }}>Explorar</Link>
@@ -133,11 +132,10 @@ export default function WelcomePage() {
             <div>
               <h1 style={{
                 fontSize: "clamp(180px, 25vw, 400px)",
-                fontWeight: 900,
+                fontWeight: 500,
                 margin: "0 0 24px 0",
                 letterSpacing: "0.03em",
-                fontFamily: "Montserrat, sans-serif",
-                lineHeight: 1,
+                                lineHeight: 1,
                 background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
                 backgroundSize: "200% auto",
                 WebkitBackgroundClip: "text",
@@ -179,9 +177,8 @@ export default function WelcomePage() {
                 style={{
                   padding: "20px 48px",
                   fontSize: "18px",
-                  fontWeight: 700,
-                  fontFamily: "Montserrat, sans-serif",
-                  background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
+                  fontWeight: 500,
+                                    background: "linear-gradient(135deg, #0F62FE 0%, #4A90E2 50%, #0F62FE 100%)",
                   backgroundSize: "200% auto",
                   color: "white",
                   border: "none",
@@ -213,9 +210,8 @@ export default function WelcomePage() {
                 style={{
                   padding: "20px 48px",
                   fontSize: "18px",
-                  fontWeight: 700,
-                  fontFamily: "Montserrat, sans-serif",
-                  background: "white",
+                  fontWeight: 500,
+                                    background: "white",
                   color: "#0F62FE",
                   border: "2px solid #0F62FE",
                   borderRadius: "12px",

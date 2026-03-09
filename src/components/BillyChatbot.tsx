@@ -209,7 +209,7 @@ export default function BillyChatbot() {
                   <BotIcon size={20} color="white" />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: "16px", fontWeight: 600, margin: 0, lineHeight: 1.2 }}>Asistente BIZEN</h3>
+                  <h3 style={{ fontSize: "16px", fontWeight: 500, margin: 0, lineHeight: 1.2 }}>Asistente BIZEN</h3>
                 </div>
               </div>
               <div style={{ display: "flex", gap: "8px" }}>
@@ -378,7 +378,7 @@ export default function BillyChatbot() {
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: "14px",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     transition: "all 0.2s",
                     boxShadow: isLoading || !input.trim() ? "none" : "0 4px 12px rgba(59,130,246,.4)",
                   }}

@@ -37,12 +37,11 @@ export function ExerciseInstruction({ type }: ExerciseInstructionProps) {
       <Icon size={14} color={color} strokeWidth={2.5} />
       <span style={{
         fontSize: 12,
-        fontWeight: 800,
+        fontWeight: 500,
         color,
         letterSpacing: "0.04em",
         textTransform: "uppercase",
-        fontFamily: "'Montserrat', sans-serif",
-      }}>
+              }}>
         {label}
       </span>
     </div>

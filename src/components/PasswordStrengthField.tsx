@@ -86,7 +86,7 @@ export default function PasswordStrengthField({
   return (
     <div>
       <div style={{ display: "flex" as const, justifyContent: "space-between" as const, alignItems: "end" }}>
-        <label htmlFor={name} style={{ display: "block" as const, fontSize: 12, fontWeight: 600, color: "#333", marginBottom: 6 }}>
+        <label htmlFor={name} style={{ display: "block" as const, fontSize: 12, fontWeight: 500, color: "#333", marginBottom: 6 }}>
           Contraseña
         </label>
         <button type="button" onClick={onToggleShow}

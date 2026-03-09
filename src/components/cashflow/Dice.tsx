@@ -136,7 +136,7 @@ export default function Dice({ isRolling, result, size = 70 }: DiceProps) {
           ))}
         </motion.div>
       </div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: "#1f2937" }}>
+      <div style={{ fontSize: 12, fontWeight: 500, color: "#1f2937" }}>
         {isRolling ? "Tirando..." : `Resultado: ${finalResult}`}
       </div>
     </div>

@@ -228,8 +228,7 @@ export default function TiendaPage() {
             style={{
                 minHeight: "100vh",
                 background: "#FBFAF5",
-                fontFamily: "'Montserrat', sans-serif",
-                width: "100%",
+                                width: "100%",
                 boxSizing: "border-box",
             }}
         >
@@ -292,7 +291,7 @@ export default function TiendaPage() {
           border-radius: 12px;
           font-family: 'Montserrat', sans-serif;
           font-size: 14px;
-          font-weight: 800;
+          font-weight: 500;
           cursor: pointer;
           transition: all 0.22s ease;
           display: flex;
@@ -361,7 +360,7 @@ export default function TiendaPage() {
                                 }}>
                                     <PartyPopper size={48} />
                                 </div>
-                                <h2 style={{ fontSize: 22, fontWeight: 900, color: "#0f172a", marginBottom: 8 }}>¡Canje exitoso!</h2>
+                                <h2 style={{ fontSize: 22, fontWeight: 500, color: "#0f172a", marginBottom: 8 }}>¡Canje exitoso!</h2>
                                 <p style={{ fontSize: 14, color: "#64748b", marginBottom: 28 }}>
                                     <strong>{selectedProduct.name}</strong> ya está en tu perfil.
                                 </p>
@@ -370,7 +369,7 @@ export default function TiendaPage() {
                                     style={{
                                         padding: "13px 32px", background: "linear-gradient(135deg,#0F62FE,#4A9EFF)",
                                         color: "white", border: "none", borderRadius: 12,
-                                        fontWeight: 800, fontFamily: "'Montserrat',sans-serif", fontSize: 14, cursor: "pointer",
+                                        fontWeight: 500, fontSize: 14, cursor: "pointer",
                                         display: "inline-flex", alignItems: "center", gap: 8
                                     }}
                                 >
@@ -401,9 +400,9 @@ export default function TiendaPage() {
                                         {selectedProduct.icon}
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 3 }}>{selectedProduct.name}</div>
-                                        <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600, marginBottom: 6 }}>{selectedProduct.category}</div>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 900, color: selectedProduct.accent, fontSize: 17 }}>
+                                        <div style={{ fontSize: 16, fontWeight: 500, color: "#0f172a", marginBottom: 3 }}>{selectedProduct.name}</div>
+                                        <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500, marginBottom: 6 }}>{selectedProduct.category}</div>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 500, color: selectedProduct.accent, fontSize: 17 }}>
                                             <Zap size={14} fill={selectedProduct.accent} color={selectedProduct.accent} />
                                             {selectedProduct.price.toLocaleString()} BIZCOINS
                                         </div>
@@ -416,19 +415,19 @@ export default function TiendaPage() {
 
                                 {/* Balance check */}
                                 {bizcoins < selectedProduct.price ? (
-                                    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: "11px 16px", marginBottom: 18, display: "flex", gap: 8, alignItems: "center", color: "#dc2626", fontSize: 13, fontWeight: 600 }}>
+                                    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: "11px 16px", marginBottom: 18, display: "flex", gap: 8, alignItems: "center", color: "#dc2626", fontSize: 13, fontWeight: 500 }}>
                                         <Lock size={14} />
                                         Te faltan {(selectedProduct.price - bizcoins).toLocaleString()} BIZCOINS para este canje.
                                     </div>
                                 ) : (
-                                    <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 12, padding: "11px 16px", marginBottom: 18, display: "flex", gap: 8, alignItems: "center", color: "#16a34a", fontSize: 13, fontWeight: 700 }}>
+                                    <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 12, padding: "11px 16px", marginBottom: 18, display: "flex", gap: 8, alignItems: "center", color: "#16a34a", fontSize: 13, fontWeight: 500 }}>
                                         <CheckCircle2 size={14} />
                                         Saldo disponible: {bizcoins.toLocaleString()} BIZCOINS
                                     </div>
                                 )}
 
                                 {error && (
-                                    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: "11px 16px", marginBottom: 18, color: "#dc2626", fontSize: 12, fontWeight: 600 }}>
+                                    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: "11px 16px", marginBottom: 18, color: "#dc2626", fontSize: 12, fontWeight: 500 }}>
                                         {error}
                                     </div>
                                 )}
@@ -437,7 +436,7 @@ export default function TiendaPage() {
                                     <button
                                         onClick={() => { setSelectedProduct(null); setPurchaseSuccess(false); setError(null) }}
                                         disabled={purchasing}
-                                        style={{ flex: 1, padding: "13px", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 12, fontWeight: 700, cursor: "pointer", fontSize: 14, color: "#64748b", fontFamily: "'Montserrat',sans-serif" }}
+                                        style={{ flex: 1, padding: "13px", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 12, fontWeight: 500, cursor: "pointer", fontSize: 14, color: "#64748b", }}
                                     >
                                         Cancelar
                                     </button>
@@ -450,9 +449,8 @@ export default function TiendaPage() {
                                                 ? "linear-gradient(135deg,#0F62FE,#4A9EFF)"
                                                 : "#e2e8f0",
                                             color: bizcoins >= selectedProduct.price && !purchasing ? "white" : "#94a3b8",
-                                            fontWeight: 800, fontSize: 14, cursor: (bizcoins >= selectedProduct.price && !purchasing) ? "pointer" : "not-allowed",
-                                            fontFamily: "'Montserrat',sans-serif",
-                                            display: "flex", alignItems: "center", justifyContent: "center", gap: 8
+                                            fontWeight: 500, fontSize: 14, cursor: (bizcoins >= selectedProduct.price && !purchasing) ? "pointer" : "not-allowed",
+                                                                                        display: "flex", alignItems: "center", justifyContent: "center", gap: 8
                                         }}
                                     >
                                         {purchasing ? (
@@ -503,9 +501,9 @@ export default function TiendaPage() {
                         <div>
                             <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
                                 <ShoppingBag size={13} color="#60a5fa" />
-                                <span style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tienda BIZEN</span>
+                                <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tienda BIZEN</span>
                             </div>
-                            <h1 style={{ fontSize: "clamp(26px,5vw,42px)", fontWeight: 900, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+                            <h1 style={{ fontSize: "clamp(26px,5vw,42px)", fontWeight: 500, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
                                 Canjea tus BIZCOINS
                             </h1>
                             <p style={{ fontSize: "clamp(13px,1.5vw,16px)", color: "#93c5fd", margin: 0, maxWidth: 480 }}>
@@ -523,14 +521,14 @@ export default function TiendaPage() {
                             backdropFilter: "blur(10px)",
                             flexShrink: 0,
                         }}>
-                            <div style={{ fontSize: "clamp(40px,8vw,62px)", fontWeight: 900, lineHeight: 1, background: "linear-gradient(135deg,#fff,#93c5fd)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                            <div style={{ fontSize: "clamp(40px,8vw,62px)", fontWeight: 500, lineHeight: 1, background: "linear-gradient(135deg,#fff,#93c5fd)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                                 {loadingStats ? (
                                     <div style={{ width: 120, height: 50, background: "rgba(255,255,255,0.1)", borderRadius: 12, animation: "tienda-fadeUp 1.5s infinite" }} />
                                 ) : (
                                     bizcoins.toLocaleString()
                                 )}
                             </div>
-                            <div style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4, display: "flex", alignItems: "center", gap: 5, justifyContent: "center" }}>
+                            <div style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4, display: "flex", alignItems: "center", gap: 5, justifyContent: "center" }}>
                                 <Zap size={12} color="#93c5fd" />
                                 BIZCOINS disponibles
                             </div>
@@ -559,11 +557,11 @@ export default function TiendaPage() {
                         <div style={{ animation: "tienda-wiggle 2s ease infinite" }}>
                             <Gift size={28} color="#fbbf24" fill="#fbbf2430" />
                         </div>
-                        <span style={{ fontWeight: 800, fontSize: "clamp(14px,2vw,17px)" }}>¡Oferta de la semana! Doble beneficios en todos los Accesorios</span>
+                        <span style={{ fontWeight: 500, fontSize: "clamp(14px,2vw,17px)" }}>¡Oferta de la semana! Doble beneficios en todos los Accesorios</span>
                     </div>
                     <button
                         onClick={() => setActiveCategory("Accesorios")}
-                        style={{ whiteSpace: "nowrap", padding: "10px 22px", background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.35)", borderRadius: 10, color: "white", fontWeight: 800, fontFamily: "'Montserrat',sans-serif", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, backdropFilter: "blur(6px)", transition: "all 0.2s" }}
+                        style={{ whiteSpace: "nowrap", padding: "10px 22px", background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.35)", borderRadius: 10, color: "white", fontWeight: 500, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, backdropFilter: "blur(6px)", transition: "all 0.2s" }}
                         onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.3)" }}
                         onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.2)" }}
                     >
@@ -595,8 +593,7 @@ export default function TiendaPage() {
                                 border: "none",
                                 borderBottom: activeTab === tab.id ? "3px solid #0F62FE" : "3px solid transparent",
                                 color: activeTab === tab.id ? "#0F62FE" : "#64748b",
-                                fontFamily: "'Montserrat', sans-serif",
-                                fontWeight: 800,
+                                                                fontWeight: 500,
                                 fontSize: 15,
                                 cursor: "pointer",
                                 transition: "all 0.2s ease",
@@ -614,7 +611,7 @@ export default function TiendaPage() {
                                     fontSize: 10,
                                     padding: "2px 7px",
                                     borderRadius: 10,
-                                    fontWeight: 900
+                                    fontWeight: 500
                                 }}>
                                     {ownedProducts.length}
                                 </span>
@@ -642,8 +639,7 @@ export default function TiendaPage() {
                                 borderRadius: 12,
                                 border: `1.5px solid ${searchFocused ? "#0F62FE" : "#e2e8f0"}`,
                                 fontSize: 14,
-                                fontFamily: "'Montserrat', sans-serif",
-                                fontWeight: 500,
+                                                                fontWeight: 500,
                                 color: "#0f172a",
                                 background: "white",
                                 boxShadow: searchFocused ? "0 0 0 3px rgba(15,98,254,0.12)" : "none",
@@ -664,8 +660,7 @@ export default function TiendaPage() {
                                 style={{
                                     padding: "10px 20px",
                                     borderRadius: 999,
-                                    fontFamily: "'Montserrat',sans-serif",
-                                    fontWeight: 700,
+                                                                        fontWeight: 500,
                                     fontSize: 13,
                                     cursor: "pointer",
                                     whiteSpace: "nowrap",
@@ -686,7 +681,7 @@ export default function TiendaPage() {
                 </div>
 
                 {/* ── COUNT ── */}
-                <div style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600, marginBottom: 20, animation: "tienda-fadeUp 0.5s ease 0.2s both" }}>
+                <div style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500, marginBottom: 20, animation: "tienda-fadeUp 0.5s ease 0.2s both" }}>
                     {filtered.length} producto{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
                 </div>
 
@@ -695,7 +690,7 @@ export default function TiendaPage() {
                     filtered.length === 0 ? (
                         <div style={{ textAlign: "center", padding: "80px 24px", color: "#94a3b8", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
                             <Search size={48} strokeWidth={1} style={{ opacity: 0.5 }} />
-                            <div style={{ fontSize: 15, fontWeight: 600 }}>No encontramos productos que coincidan.</div>
+                            <div style={{ fontSize: 15, fontWeight: 500 }}>No encontramos productos que coincidan.</div>
                         </div>
                     ) : (
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 24 }}>
@@ -715,7 +710,7 @@ export default function TiendaPage() {
                                             </div>
 
                                             {isOwned ? (
-                                                <div style={{ position: "absolute", top: 14, right: 14, background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 800, padding: "4px 10px", borderRadius: 999 }}>
+                                                <div style={{ position: "absolute", top: 14, right: 14, background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 500, padding: "4px 10px", borderRadius: 999 }}>
                                                     ADQUIRIDO
                                                 </div>
                                             ) : (
@@ -723,7 +718,7 @@ export default function TiendaPage() {
                                                     <div style={{
                                                         position: "absolute", top: 14, right: 14,
                                                         background: badgeStyle.bg, color: badgeStyle.text,
-                                                        fontSize: 10, fontWeight: 800, padding: "4px 10px",
+                                                        fontSize: 10, fontWeight: 500, padding: "4px 10px",
                                                         borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.05em",
                                                         boxShadow: `0 3px 10px ${badgeStyle.bg}60`,
                                                     }}>
@@ -736,7 +731,7 @@ export default function TiendaPage() {
                                                 <div style={{
                                                     position: "absolute", top: 14, left: 14,
                                                     background: "rgba(0,0,0,0.55)", color: "#fff",
-                                                    fontSize: 11, fontWeight: 700, padding: "4px 10px",
+                                                    fontSize: 11, fontWeight: 500, padding: "4px 10px",
                                                     borderRadius: 999, display: "flex", alignItems: "center", gap: 5,
                                                     backdropFilter: "blur(4px)",
                                                 }}>
@@ -748,17 +743,17 @@ export default function TiendaPage() {
 
                                         <div style={{ padding: "22px 22px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                                                <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                                <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                                                     {product.category}
                                                 </span>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 900, fontSize: 15, color: isOwned ? "#10b981" : (canAfford ? product.accent : "#94a3b8") }}>
+                                                <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 500, fontSize: 15, color: isOwned ? "#10b981" : (canAfford ? product.accent : "#94a3b8") }}>
                                                     {isOwned ? <CheckCircle2 size={13} color="#10b981" /> : <Zap size={13} fill={canAfford ? product.accent : "#94a3b8"} color={canAfford ? product.accent : "#94a3b8"} />}
                                                     {isOwned ? "Canjeado" : product.price.toLocaleString()}
-                                                    {!isOwned && <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.05em" }}> BIZCOINS</span>}
+                                                    {!isOwned && <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.05em" }}> BIZCOINS</span>}
                                                 </div>
                                             </div>
 
-                                            <h3 style={{ fontSize: 17, fontWeight: 800, color: "#0f172a", marginBottom: 8, lineHeight: 1.3 }}>
+                                            <h3 style={{ fontSize: 17, fontWeight: 500, color: "#0f172a", marginBottom: 8, lineHeight: 1.3 }}>
                                                 {product.name}
                                             </h3>
 
@@ -791,13 +786,13 @@ export default function TiendaPage() {
                     ownedProducts.length === 0 ? (
                         <div style={{ textAlign: "center", padding: "80px 24px", background: "white", borderRadius: 28, border: "2px dashed #e2e8f0" }}>
                             <div style={{ marginBottom: 20, color: "#cbd5e1" }}><ShoppingBag size={64} style={{ margin: "0 auto" }} /></div>
-                            <h3 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginBottom: 8 }}>Aún no tienes compras</h3>
+                            <h3 style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", marginBottom: 8 }}>Aún no tienes compras</h3>
                             <p style={{ fontSize: 14, color: "#64748b", maxWidth: 320, margin: "0 auto 24px" }}>
                                 Recorre el catálogo y canjea tus BIZCOINS por marcos exclusivos y herramientas para tu estudio.
                             </p>
                             <button
                                 onClick={() => setActiveTab("catalogo")}
-                                style={{ padding: "12px 24px", background: "#0F62FE", color: "white", border: "none", borderRadius: 12, fontWeight: 800, cursor: "pointer", fontFamily: "'Montserrat', sans-serif" }}
+                                style={{ padding: "12px 24px", background: "#0F62FE", color: "white", border: "none", borderRadius: 12, fontWeight: 500, cursor: "pointer", }}
                             >
                                 Explorar catálogo
                             </button>
@@ -808,14 +803,14 @@ export default function TiendaPage() {
                                 <div key={product.id} className="tienda-card" style={{ animationDelay: `${idx * 0.05}s` }}>
                                     <div style={{ height: 140, background: product.bg, display: "flex", alignItems: "center", justifyContent: "center", color: product.accent, position: "relative" }}>
                                         {product.icon}
-                                        <div style={{ position: "absolute", top: 12, right: 12, background: "#10b981", color: "white", fontSize: 10, fontWeight: 900, padding: "4px 10px", borderRadius: 999 }}>
+                                        <div style={{ position: "absolute", top: 12, right: 12, background: "#10b981", color: "white", fontSize: 10, fontWeight: 500, padding: "4px 10px", borderRadius: 999 }}>
                                             ARTÍCULO ADQUIRIDO
                                         </div>
                                     </div>
                                     <div style={{ padding: 20 }}>
-                                        <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", marginBottom: 6 }}>{product.category}</div>
-                                        <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 12 }}>{product.name}</h3>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#10b981", fontSize: 13, fontWeight: 700 }}>
+                                        <div style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8", textTransform: "uppercase", marginBottom: 6 }}>{product.category}</div>
+                                        <h3 style={{ fontSize: 16, fontWeight: 500, color: "#0f172a", marginBottom: 12 }}>{product.name}</h3>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#10b981", fontSize: 13, fontWeight: 500 }}>
                                             <CheckCircle2 size={16} />
                                             Disponible en tu perfil
                                         </div>
@@ -828,7 +823,7 @@ export default function TiendaPage() {
 
                 {/* ── HOW TO EARN MORE ── */}
                 <div style={{ background: "white", borderRadius: 24, padding: "clamp(24px,4vw,36px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.04)", marginTop: 48, animation: "tienda-fadeUp 0.5s ease 0.3s both" }}>
-                    <h2 style={{ fontSize: "clamp(17px,2.5vw,21px)", fontWeight: 800, color: "#0f172a", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 10 }}>
+                    <h2 style={{ fontSize: "clamp(17px,2.5vw,21px)", fontWeight: 500, color: "#0f172a", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 10 }}>
                         <Sparkles size={20} color="#0F62FE" />
                         ¿Cómo ganar más BIZCOINS?
                     </h2>
@@ -847,9 +842,9 @@ export default function TiendaPage() {
                                 }}>
                                     {item.icon}
                                 </div>
-                                <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", marginBottom: 4 }}>{item.label}</div>
+                                <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a", marginBottom: 4 }}>{item.label}</div>
                                 <div style={{ fontSize: 12, color: "#64748b", marginBottom: 10, lineHeight: 1.5 }}>{item.desc}</div>
-                                <div style={{ fontSize: 16, fontWeight: 900, color: item.color }}>{item.xp} BIZCOINS</div>
+                                <div style={{ fontSize: 16, fontWeight: 500, color: item.color }}>{item.xp} BIZCOINS</div>
                             </div>
                         ))}
                     </div>

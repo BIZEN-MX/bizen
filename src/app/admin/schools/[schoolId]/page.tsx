@@ -111,7 +111,7 @@ export default function AdminSchoolDetailPage() {
 
   if (loading || loadingSchool) {
     return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", fontFamily: "Montserrat, sans-serif" }}>
+      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", fontSize: 16 }}>Cargando datos...</p>
         </div>
@@ -129,14 +129,13 @@ export default function AdminSchoolDetailPage() {
       maxWidth: 1200, 
       margin: "0 auto", 
       padding: "clamp(20px, 4vw, 40px)",
-      fontFamily: "Montserrat, sans-serif"
-    }}>
+          }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ 
           margin: "0 0 8px", 
           fontSize: "clamp(28px, 6vw, 36px)", 
-          fontWeight: 800,
+          fontWeight: 500,
           background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -158,7 +157,7 @@ export default function AdminSchoolDetailPage() {
           : "#F3F4F6",
         color: school.license.status === "active" ? "#fff" : "#111"
       }}>
-        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
           🔑 Estado de Licencia
         </h2>
         
@@ -169,13 +168,13 @@ export default function AdminSchoolDetailPage() {
         }}>
           <div>
             <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 4 }}>Plan</div>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>
+            <div style={{ fontSize: 24, fontWeight: 500 }}>
               {school.license.plan === "annual" ? "Anual" : "Mensual"}
             </div>
           </div>
           <div>
             <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 4 }}>Asientos Usados</div>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>
+            <div style={{ fontSize: 24, fontWeight: 500 }}>
               {school.license.seatsUsed} / {school.license.seats}
             </div>
             <div style={{
@@ -196,7 +195,7 @@ export default function AdminSchoolDetailPage() {
           </div>
           <div>
             <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 4 }}>Días Restantes</div>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>
+            <div style={{ fontSize: 24, fontWeight: 500 }}>
               {daysRemaining}
             </div>
           </div>
@@ -208,7 +207,7 @@ export default function AdminSchoolDetailPage() {
               background: "rgba(255,255,255,0.2)",
               borderRadius: 12,
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 500,
               marginTop: 4
             }}>
               {school.license.status === "active" ? "✓ Activa" : "Inactiva"}
@@ -238,26 +237,26 @@ export default function AdminSchoolDetailPage() {
         marginBottom: 32
       }}>
         <Card style={{ textAlign: "center", padding: "24px 16px" }}>
-          <div style={{ fontSize: 40, fontWeight: 800, color: "#0F62FE" }}>{school.stats.totalUsers}</div>
+          <div style={{ fontSize: 40, fontWeight: 500, color: "#0F62FE" }}>{school.stats.totalUsers}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Total Usuarios</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "24px 16px" }}>
-          <div style={{ fontSize: 40, fontWeight: 800, color: "#10B981" }}>{school.stats.students}</div>
+          <div style={{ fontSize: 40, fontWeight: 500, color: "#10B981" }}>{school.stats.students}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Estudiantes</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "24px 16px" }}>
-          <div style={{ fontSize: 40, fontWeight: 800, color: "#F59E0B" }}>{school.stats.teachers}</div>
+          <div style={{ fontSize: 40, fontWeight: 500, color: "#F59E0B" }}>{school.stats.teachers}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Profesores</div>
         </Card>
         <Card style={{ textAlign: "center", padding: "24px 16px" }}>
-          <div style={{ fontSize: 40, fontWeight: 800, color: "#8B5CF6" }}>{school.stats.coursesEnabled}</div>
+          <div style={{ fontSize: 40, fontWeight: 500, color: "#8B5CF6" }}>{school.stats.coursesEnabled}</div>
           <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>Cursos Habilitados</div>
         </Card>
       </div>
 
       {/* Recent Activity */}
       <Card style={{ padding: "28px 24px" }}>
-        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 700 }}>
+        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
           📊 Actividad Reciente
         </h2>
         {school.recentActivity.length > 0 ? (
@@ -272,7 +271,7 @@ export default function AdminSchoolDetailPage() {
                   borderLeft: "4px solid #0F62FE"
                 }}
               >
-                <div style={{ fontSize: 15, fontWeight: 600, color: "#111", marginBottom: 4 }}>
+                <div style={{ fontSize: 15, fontWeight: 500, color: "#111", marginBottom: 4 }}>
                   {activity.description}
                 </div>
                 <div style={{ fontSize: 13, color: "#666" }}>

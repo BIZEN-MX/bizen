@@ -86,7 +86,7 @@ export default function SimulatorPage() {
             .simulador-detail-loading { margin-left: 280px !important; width: calc(100% - 280px) !important; }
           }
         `}</style>
-        <div className="simulador-detail-loading" style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', fontFamily: 'Montserrat, sans-serif', marginLeft: 280, width: 'calc(100% - 280px)' }}>
+        <div className="simulador-detail-loading" style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', marginLeft: 280, width: 'calc(100% - 280px)' }}>
           <p style={{ color: '#666', fontSize: 16 }}>Cargando simulador...</p>
         </div>
       </>
@@ -157,7 +157,7 @@ export default function SimulatorPage() {
           }
         }
       `}</style>
-      <div className="simulador-detail-outer" style={{ width: '100%', flex: 1, background: '#FBFAF5', fontFamily: 'Montserrat, sans-serif', overflowX: 'hidden', overflowY: 'auto', boxSizing: 'border-box' }}>
+      <div className="simulador-detail-outer" style={{ width: '100%', flex: 1, background: '#FBFAF5', overflowX: 'hidden', overflowY: 'auto', boxSizing: 'border-box' }}>
         <main className="simulador-detail-main" style={{
           paddingTop: "40px",
           paddingBottom: "40px",
@@ -165,8 +165,7 @@ export default function SimulatorPage() {
           paddingRight: "40px",
           minHeight: "100vh",
           background: "#FBFAF5",
-          fontFamily: "Montserrat, sans-serif",
-          boxSizing: "border-box" as const,
+                    boxSizing: "border-box" as const,
           overflowX: "hidden",
           overflowY: "visible"
         }}>
@@ -180,11 +179,10 @@ export default function SimulatorPage() {
                 border: "2px solid #0B71FE",
                 borderRadius: 10,
                 fontSize: 14,
-                fontWeight: 700,
+                fontWeight: 500,
                 cursor: "pointer",
                 transition: "all 0.2s ease",
-                fontFamily: "Montserrat, sans-serif",
-                marginBottom: 16
+                                marginBottom: 16
               }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#0B71FE"
@@ -202,7 +200,7 @@ export default function SimulatorPage() {
               <div style={{ flex: 1 }}>
                 <h1 style={{
                   fontSize: "clamp(24px, 6vw, 42px)",
-                  fontWeight: 900,
+                  fontWeight: 500,
                   margin: "0 0 12px",
                   background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
                   WebkitBackgroundClip: "text",
@@ -251,7 +249,7 @@ export default function SimulatorPage() {
             </p>
             <p style={{ fontSize: 14, color: "#78350F", lineHeight: 1.7, margin: 0 }}>
               Guarda tus simulaciones para consultarlas después en{' '}
-              <Link href="/simulador/history" style={{ color: "#0B71FE", fontWeight: 700, textDecoration: "none" }}>
+              <Link href="/simulador/history" style={{ color: "#0B71FE", fontWeight: 500, textDecoration: "none" }}>
                 Mis Simulaciones
               </Link>
               .

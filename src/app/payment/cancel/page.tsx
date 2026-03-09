@@ -8,7 +8,7 @@ export default function PaymentCancelPage() {
   const router = useRouter()
 
   return (
-    <div style={{ minHeight: "100vh", background: "#FBFAF5", fontFamily: "'Inter', sans-serif", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", background: "#FBFAF5", display: "flex", flexDirection: "column" }}>
       <style>{`
         @keyframes pc-fadeUp  { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pc-scaleIn { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
@@ -17,7 +17,7 @@ export default function PaymentCancelPage() {
 
         .pc-btn-primary {
           display: inline-flex; align-items: center; gap: 10px;
-          padding: 16px 36px; border-radius: 16px; font-size: 16px; font-weight: 800;
+          padding: 16px 36px; border-radius: 16px; font-size: 16px; font-weight: 500;
           cursor: pointer; text-decoration: none;
           background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
           color: white; border: none;
@@ -52,10 +52,10 @@ export default function PaymentCancelPage() {
         position: "sticky", top: 0,
       }}>
         <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
-          <span style={{ fontSize: 28, fontWeight: 900, color: "#64748b", letterSpacing: "-0.04em" }}>BIZEN</span>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "#0F62FE", letterSpacing: "0.08em", marginTop: 2 }}>.</span>
+          <span style={{ fontSize: 28, fontWeight: 500, color: "#64748b", letterSpacing: "-0.04em" }}>BIZEN</span>
+          <span style={{ fontSize: 11, fontWeight: 500, color: "#0F62FE", letterSpacing: "0.08em", marginTop: 2 }}>.</span>
         </Link>
-        <Link href="/" style={{ fontSize: 13, fontWeight: 700, color: "#64748b", textDecoration: "none", display: "flex", alignItems: "center", gap: 6, transition: "opacity 0.2s" }}
+        <Link href="/" style={{ fontSize: 13, fontWeight: 500, color: "#64748b", textDecoration: "none", display: "flex", alignItems: "center", gap: 6, transition: "opacity 0.2s" }}
           onMouseDown={e => (e.currentTarget.style.opacity = "0.6")}
           onMouseUp={e => (e.currentTarget.style.opacity = "1")}
           onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
@@ -90,10 +90,10 @@ export default function PaymentCancelPage() {
 
           {/* Badge */}
           <div style={{ animation: "pc-fadeUp 0.5s 0.2s ease both", marginBottom: 20, display: "inline-flex", alignItems: "center", gap: 8, background: "#dbeafe", border: "1px solid #bfdbfe", borderRadius: 40, padding: "6px 16px" }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#1e3a8a", letterSpacing: "0.06em" }}>PAGO NO COMPLETADO</span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: "#1e3a8a", letterSpacing: "0.06em" }}>PAGO NO COMPLETADO</span>
           </div>
 
-          <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px,5vw,42px)", fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+          <h1 style={{ margin: "0 0 14px", fontSize: "clamp(28px,5vw,42px)", fontWeight: 500, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
             No hay problema,{" "}
             <span style={{ background: "linear-gradient(135deg, #2563eb, #1d4ed8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               puedes reintentar
@@ -116,7 +116,7 @@ export default function PaymentCancelPage() {
                   {f.icon}
                 </div>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", marginBottom: 2 }}>{f.title}</div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", marginBottom: 2 }}>{f.title}</div>
                   <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.5 }}>{f.desc}</div>
                 </div>
               </div>
@@ -129,7 +129,7 @@ export default function PaymentCancelPage() {
               <RefreshCcw size={17} />
               Intentar de nuevo
             </Link>
-            <Link href="/courses" style={{ fontSize: 14, fontWeight: 700, color: "#94a3b8", textDecoration: "none", transition: "opacity 0.2s" }}
+            <Link href="/courses" style={{ fontSize: 14, fontWeight: 500, color: "#94a3b8", textDecoration: "none", transition: "opacity 0.2s" }}
               onMouseDown={e => (e.currentTarget.style.opacity = "0.6")}
               onMouseUp={e => (e.currentTarget.style.opacity = "1")}
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}

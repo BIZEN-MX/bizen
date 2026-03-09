@@ -186,8 +186,7 @@ export default function MobileBottomNav() {
           display: "none", // Hidden by default, shown via CSS media query
           paddingBottom: "calc(8px + env(safe-area-inset-bottom))",
           paddingTop: "8px",
-          fontFamily: "Montserrat, sans-serif"
-        }}
+                  }}
       >
         <div style={{
           display: "flex",
@@ -450,8 +449,7 @@ export default function MobileBottomNav() {
               padding: "12px",
               zIndex: 10001,
               minWidth: "160px",
-              fontFamily: "Montserrat, sans-serif",
-              border: "2px solid rgba(15, 98, 254, 0.1)",
+                            border: "2px solid rgba(15, 98, 254, 0.1)",
               animation: "slideUpFade 0.2s ease-out"
             }}
             onClick={(e) => e.stopPropagation()}
@@ -478,8 +476,7 @@ export default function MobileBottomNav() {
                     transition: "all 0.2s ease",
                     width: "100%",
                     textAlign: "left",
-                    fontFamily: "Montserrat, sans-serif",
-                    fontSize: 14,
+                                        fontSize: 14,
                     fontWeight: isActivePath(item.path) ? 700 : 600,
                     color: isActivePath(item.path) ? "#0F62FE" : "#374151"
                   }}
@@ -526,9 +523,8 @@ export default function MobileBottomNav() {
                   transition: "all 0.2s ease",
                   width: "100%",
                   textAlign: "left",
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: 14,
-                  fontWeight: 600,
+                                    fontSize: 14,
+                  fontWeight: 500,
                   color: "#DC2626"
                 }}
                 onTouchStart={(e) => {
@@ -582,8 +578,7 @@ export default function MobileBottomNav() {
             justifyContent: "center",
             zIndex: 10001, // Above mobile nav (10000)
             padding: 20,
-            fontFamily: "Montserrat, sans-serif",
-            backdropFilter: "blur(4px)"
+                        backdropFilter: "blur(4px)"
           }}
           onClick={() => setShowAuthDialog(false)}
         >
@@ -617,7 +612,7 @@ export default function MobileBottomNav() {
 
             <div style={{
               fontSize: 26,
-              fontWeight: 800,
+              fontWeight: 500,
               marginBottom: 16,
               textAlign: "center",
               background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
@@ -655,12 +650,11 @@ export default function MobileBottomNav() {
                   border: "none",
                   borderRadius: 12,
                   fontSize: 16,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                   boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-2px)"
                   e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.5)"
@@ -685,11 +679,10 @@ export default function MobileBottomNav() {
                   border: "2px solid #0B71FE",
                   borderRadius: 12,
                   fontSize: 16,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#EFF6FF"
                   e.currentTarget.style.transform = "translateY(-1px)"
@@ -710,11 +703,10 @@ export default function MobileBottomNav() {
                   color: "#6B7280",
                   border: "none",
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   cursor: "pointer",
                   transition: "color 0.2s ease",
-                  fontFamily: "Montserrat, sans-serif"
-                }}
+                                  }}
                 onMouseEnter={(e) => e.currentTarget.style.color = "#374151"}
                 onMouseLeave={(e) => e.currentTarget.style.color = "#6B7280"}
               >

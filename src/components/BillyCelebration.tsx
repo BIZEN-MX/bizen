@@ -121,7 +121,7 @@ export default function BillyCelebration({
               <p
                 style={{
                   fontSize: 32,
-                  fontWeight: 900,
+                  fontWeight: 500,
                   color: "#000000",
                   margin: 0,
                   lineHeight: 1.4,
@@ -168,7 +168,7 @@ export default function BillyCelebration({
                 transform: "translateX(-50%)",
                 padding: "12px 30px",
                 fontSize: 18,
-                fontWeight: 800,
+                fontWeight: 500,
                 background: accentColor,
                 color: "white",
                 border: "none",
