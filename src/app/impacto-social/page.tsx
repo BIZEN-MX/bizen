@@ -1149,7 +1149,7 @@ export default function ImpactoSocialPage() {
                                 ].map((kpi, i) => (
                                     <div key={i} className="school-kpi-card" style={{ animationDelay: `${i * 0.07}s`, padding: "28px" }}>
                                         <div style={{ marginBottom: 12, display: "flex" }}>{kpi.icon}</div>
-                                        <div style={{ fontSize: 44, fontWeight: 500, color: i === 0 ? "#0F62FE" : i === 1 ? "#3b82f6" : "#60a5fa", lineHeight: 1 }}>{kpi.value}</div>
+                                        <div style={{ fontSize: 44, fontWeight: 500, color: "#0f172a", lineHeight: 1 }}>{kpi.value}</div>
                                         <div style={{ fontSize: 15, fontWeight: 500, color: "#374151" }}>{kpi.label}</div>
                                         <div style={{
                                             fontSize: 11, fontWeight: 500,
