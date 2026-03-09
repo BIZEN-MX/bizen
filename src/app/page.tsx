@@ -1,18 +1,28 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/contexts/AuthContext"
-import { LandingWaitlistFooter } from "@/components/LandingWaitlistFooter"
-import { ClipboardCheck, LogIn, ChevronRight, Play, UserPlus, Calendar, User, Check, X } from "lucide-react"
-import { CheckIcon, CrossIcon } from "@/components/CustomIcons"
-import * as React from "react"
-import Hero3DScene from "@/components/landing/Hero3DScene"
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { LandingWaitlistFooter } from "@/components/LandingWaitlistFooter";
+import {
+  ClipboardCheck,
+  LogIn,
+  ChevronRight,
+  Play,
+  UserPlus,
+  Calendar,
+  User,
+  Check,
+  X,
+} from "lucide-react";
+import { CheckIcon, CrossIcon } from "@/components/CustomIcons";
+import * as React from "react";
+import Hero3DScene from "@/components/landing/Hero3DScene";
 
 // Force dynamic rendering to avoid prerendering issues
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 const modalInputStyle = {
   width: "100%",
@@ -25,179 +35,211 @@ const modalInputStyle = {
   boxSizing: "border-box" as const,
   transition: "border-color 0.2s, box-shadow 0.2s",
   outline: "none",
-  textAlign: "center" as const
-}
+  textAlign: "center" as const,
+};
 
 export default function WelcomePage() {
-  const { user, loading } = useAuth()
-  const router = useRouter()
-  const [isMouthOpen, setIsMouthOpen] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-  const [activeHeroCard, setActiveHeroCard] = useState<number | null>(null)
-  const [activeProfile, setActiveProfile] = useState<"docentes" | "estudiantes" | "padres">("docentes")
-  const [activeTestimonial, setActiveTestimonial] = useState(0)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [authDropdownOpen, setAuthDropdownOpen] = useState(false)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [navScrolled, setNavScrolled] = useState(false)
+  const { user, loading } = useAuth();
+  const router = useRouter();
+  const [isMouthOpen, setIsMouthOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeHeroCard, setActiveHeroCard] = useState<number | null>(null);
+  const [activeProfile, setActiveProfile] = useState<
+    "docentes" | "estudiantes" | "padres"
+  >("docentes");
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [navScrolled, setNavScrolled] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener("mousemove", handleMouseMove)
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
 
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (authDropdownOpen && !target.closest('.auth-dropdown-wrapper')) {
+      if (authDropdownOpen && !target.closest(".auth-dropdown-wrapper")) {
         setAuthDropdownOpen(false);
       }
-    }
-    window.addEventListener("click", handleClickOutside)
+    };
+    window.addEventListener("click", handleClickOutside);
 
     // Scroll-aware nav
     const handleScroll = () => {
       // Hero section is roughly 100vh tall, switch after scrolling past it
-      setNavScrolled(window.scrollY > window.innerHeight * 0.75)
-    }
-    window.addEventListener("scroll", handleScroll, { passive: true })
+      setNavScrolled(window.scrollY > window.innerHeight * 0.75);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("click", handleClickOutside)
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [authDropdownOpen])
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("click", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [authDropdownOpen]);
 
   // Fix scroll when mobile menu is open (Robust fix for iOS)
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     if (mobileMenuOpen) {
       const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
+      document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
+      document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
     } else {
       const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
       if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        window.scrollTo(0, parseInt(scrollY || "0") * -1);
       }
     }
 
     return () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
     };
-  }, [mobileMenuOpen])
+  }, [mobileMenuOpen]);
 
   const heroCardSummaries: { title: string; summary: string }[] = [
     {
       title: "Finanzas personales",
-      summary: "Aprendemos a controlar ingresos, gastos y deudas con cosas simples como presupuesto y hábitos.",
+      summary:
+        "Aprendemos a controlar ingresos, gastos y deudas con cosas simples como presupuesto y hábitos.",
     },
     {
       title: "Simuladores financieros",
-      summary: "Probamos escenarios (crédito, inversión, ahorro) para ver resultados sin arriesgar dinero real.",
+      summary:
+        "Probamos escenarios (crédito, inversión, ahorro) para ver resultados sin arriesgar dinero real.",
     },
     {
       title: "Plan de ahorro",
-      summary: "Definimos una meta y un monto mensual para ahorrar con orden y constancia.",
+      summary:
+        "Definimos una meta y un monto mensual para ahorrar con orden y constancia.",
     },
-  ]
+  ];
 
   useEffect(() => {
-    setTimeout(() => setIsVisible(true), 100)
+    setTimeout(() => setIsVisible(true), 100);
 
     const mouthInterval = setInterval(() => {
-      setIsMouthOpen(prev => !prev)
-    }, 400)
+      setIsMouthOpen((prev) => !prev);
+    }, 400);
 
-    return () => clearInterval(mouthInterval)
-  }, [])
+    return () => clearInterval(mouthInterval);
+  }, []);
 
   // Reveal-on-scroll: add .revealed when .reveal-element enters viewport
   useEffect(() => {
-    if (typeof window === "undefined" || !window.IntersectionObserver) return
-    const els = document.querySelectorAll(".reveal-element")
-    if (!els.length) return
+    if (typeof window === "undefined" || !window.IntersectionObserver) return;
+    const els = document.querySelectorAll(".reveal-element");
+    if (!els.length) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("revealed")
-        })
+          if (entry.isIntersecting) entry.target.classList.add("revealed");
+        });
       },
-      { rootMargin: "0px 0px -60px 0px", threshold: 0.1 }
-    )
-    els.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
+      { rootMargin: "0px 0px -60px 0px", threshold: 0.1 },
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   const gradientStyle = {
-    background: "linear-gradient(160deg, #020e27 0%, #041640 50%, #061852 100%)",
+    background:
+      "linear-gradient(135deg, #010812 0%, #020d1f 20%, #031535 40%, #041d4d 60%, #051a44 80%, #020c1c 100%)",
     backgroundAttachment: "scroll" as const,
     overflow: "visible",
-    position: "relative" as const
-  }
+    position: "relative" as const,
+  };
 
   return (
-    <div style={{
-      background: "#FFFFFF",
-      flex: "1 0 auto",
-      height: "auto",
-      width: "100%",
-      margin: 0,
-      padding: 0,
-      display: "flex",
-      flexDirection: "column",
-      position: "relative"
-    }} className="main-page-container landing-page-root" data-landing-root style={{ overflow: "visible" }}>
-      {/* Header: transparent on hero, glass when scrolled */}
-      <header className="main-header landing-header glass-header" style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
+    <div
+      style={{
+        background: "transparent",
+        flex: "1 0 auto",
+        height: "auto",
         width: "100%",
-        boxSizing: "border-box",
-        padding: "clamp(12px, 1.5vw, 18px) 0",
+        margin: 0,
+        padding: 0,
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: navScrolled ? "rgba(255, 255, 255, 0.94)" : "transparent",
-        backdropFilter: navScrolled ? "blur(20px)" : "none",
-        WebkitBackdropFilter: navScrolled ? "blur(20px)" : "none",
-        zIndex: 10000,
-        borderBottom: navScrolled ? "1px solid rgba(0, 0, 0, 0.06)" : "none",
-        boxShadow: navScrolled ? "0 2px 20px rgba(0, 0, 0, 0.08)" : "none",
-        transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
-      }}>
-        <div className="landing-header-container" style={{
+        flexDirection: "column",
+        position: "relative",
+        overflow: "visible",
+      }}
+      className="main-page-container landing-page-root"
+      data-landing-root
+    >
+      {/* Header: transparent on hero, glass when scrolled */}
+      <header
+        className="main-header landing-header glass-header"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
           width: "100%",
-          maxWidth: "1200px",
-          padding: "0 clamp(20px, 4vw, 48px)",
+          boxSizing: "border-box",
+          padding: "clamp(12px, 1.5vw, 18px) 0",
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "center",
           alignItems: "center",
-          gap: "16px",
-        }}>
+          background: navScrolled ? "rgba(255, 255, 255, 0.94)" : "transparent",
+          backdropFilter: navScrolled ? "blur(20px)" : "none",
+          WebkitBackdropFilter: navScrolled ? "blur(20px)" : "none",
+          zIndex: 10000,
+          borderBottom: navScrolled ? "1px solid rgba(0, 0, 0, 0.06)" : "none",
+          boxShadow: navScrolled ? "0 2px 20px rgba(0, 0, 0, 0.08)" : "none",
+          transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
+        }}
+      >
+        <div
+          className="landing-header-container"
+          style={{
+            width: "100%",
+            maxWidth: "1200px",
+            padding: "0 clamp(20px, 4vw, 48px)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "16px",
+          }}
+        >
           {/* Logo */}
-          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }} aria-label="BIZEN home">
-            <span style={{
-              fontSize: "clamp(18px, 2vw, 22px)",
-              fontWeight: 700,
-              color: navScrolled ? "#0056E7" : "#FFFFFF",
-              letterSpacing: "0.01em",
-              transition: "color 0.3s ease",
-              textShadow: navScrolled ? "none" : "0 0 20px rgba(15, 98, 254, 0.4)"
-            }}>BIZEN</span>
+          <Link
+            href="/"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              textDecoration: "none",
+              flexShrink: 0,
+            }}
+            aria-label="BIZEN home"
+          >
+            <span
+              style={{
+                fontSize: "clamp(18px, 2vw, 22px)",
+                fontWeight: 700,
+                color: navScrolled ? "#0056E7" : "#FFFFFF",
+                letterSpacing: "0.01em",
+                transition: "color 0.3s ease",
+                textShadow: navScrolled
+                  ? "none"
+                  : "0 0 20px rgba(15, 98, 254, 0.4)",
+              }}
+            >
+              BIZEN
+            </span>
           </Link>
 
           {/* Hamburger (mobile only) */}
@@ -219,35 +261,152 @@ export default function WelcomePage() {
               cursor: "pointer",
               order: 2,
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
-            <div style={{ width: 26, height: 2, background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(45deg) translateY(8px)" : "none" }} />
-            <div style={{ width: 26, height: 2, background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", borderRadius: 2, transition: "0.3s", opacity: mobileMenuOpen ? 0 : 1 }} />
-            <div style={{ width: 26, height: 2, background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(-45deg) translateY(-8px)" : "none" }} />
+            <div
+              style={{
+                width: 26,
+                height: 2,
+                background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
+                borderRadius: 2,
+                transition: "0.3s",
+                transform: mobileMenuOpen
+                  ? "rotate(45deg) translateY(8px)"
+                  : "none",
+              }}
+            />
+            <div
+              style={{
+                width: 26,
+                height: 2,
+                background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
+                borderRadius: 2,
+                transition: "0.3s",
+                opacity: mobileMenuOpen ? 0 : 1,
+              }}
+            />
+            <div
+              style={{
+                width: 26,
+                height: 2,
+                background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
+                borderRadius: 2,
+                transition: "0.3s",
+                transform: mobileMenuOpen
+                  ? "rotate(-45deg) translateY(-8px)"
+                  : "none",
+              }}
+            />
           </button>
 
           {/* Centered pill nav — scroll-aware: dark on hero, light on white sections */}
-          <nav className={`header-bar-nav landing-header-nav ${navScrolled ? 'is-light' : 'is-dark'}`} style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            borderRadius: "9999px",
-            padding: "6px 8px",
-            transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
-            flexShrink: 0,
-          }}>
-            <Link href="/" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Inicio</Link>
-            <Link href="#sobre-bizen" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Somos BIZEN</Link>
-            <Link href="#perfiles" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Perfil educativo</Link>
-            <Link href="#impacto" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Impacto social</Link>
-            <Link href="#problema" className="header-nav-link landing-header-nav-link" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", fontWeight: 500, color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", textDecoration: "none", whiteSpace: "nowrap", padding: "8px 12px", borderRadius: "9999px", transition: "color 0.3s ease" }}>Blog</Link>
+          <nav
+            className={`header-bar-nav landing-header-nav ${navScrolled ? "is-light" : "is-dark"}`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+              borderRadius: "9999px",
+              padding: "6px 8px",
+              transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
+              flexShrink: 0,
+            }}
+          >
+            <Link
+              href="/"
+              className="header-nav-link landing-header-nav-link"
+              style={{
+                fontSize: "clamp(13px, 1.3vw, 15px)",
+                fontWeight: 500,
+                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                padding: "8px 12px",
+                borderRadius: "9999px",
+                transition: "color 0.3s ease",
+              }}
+            >
+              Inicio
+            </Link>
+            <Link
+              href="#sobre-bizen"
+              className="header-nav-link landing-header-nav-link"
+              style={{
+                fontSize: "clamp(13px, 1.3vw, 15px)",
+                fontWeight: 500,
+                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                padding: "8px 12px",
+                borderRadius: "9999px",
+                transition: "color 0.3s ease",
+              }}
+            >
+              Somos BIZEN
+            </Link>
+            <Link
+              href="#perfiles"
+              className="header-nav-link landing-header-nav-link"
+              style={{
+                fontSize: "clamp(13px, 1.3vw, 15px)",
+                fontWeight: 500,
+                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                padding: "8px 12px",
+                borderRadius: "9999px",
+                transition: "color 0.3s ease",
+              }}
+            >
+              Perfil educativo
+            </Link>
+            <Link
+              href="#impacto"
+              className="header-nav-link landing-header-nav-link"
+              style={{
+                fontSize: "clamp(13px, 1.3vw, 15px)",
+                fontWeight: 500,
+                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                padding: "8px 12px",
+                borderRadius: "9999px",
+                transition: "color 0.3s ease",
+              }}
+            >
+              Impacto social
+            </Link>
+            <Link
+              href="#problema"
+              className="header-nav-link landing-header-nav-link"
+              style={{
+                fontSize: "clamp(13px, 1.3vw, 15px)",
+                fontWeight: 500,
+                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                padding: "8px 12px",
+                borderRadius: "9999px",
+                transition: "color 0.3s ease",
+              }}
+            >
+              Blog
+            </Link>
           </nav>
 
           {/* Header Actions */}
-          <div className="landing-header-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+          <div
+            className="landing-header-actions"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              flexShrink: 0,
+            }}
+          >
             {/* Agendar DEMO */}
             <a
               href="https://calendly.com/diego-bizen"
@@ -264,8 +423,12 @@ export default function WelcomePage() {
                 color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.85)",
                 textDecoration: "none",
                 borderRadius: "9999px",
-                background: navScrolled ? "rgba(0, 86, 231, 0.08)" : "rgba(255, 255, 255, 0.1)",
-                border: navScrolled ? "none" : "1px solid rgba(255, 255, 255, 0.18)",
+                background: navScrolled
+                  ? "rgba(0, 86, 231, 0.08)"
+                  : "rgba(255, 255, 255, 0.1)",
+                border: navScrolled
+                  ? "none"
+                  : "1px solid rgba(255, 255, 255, 0.18)",
                 transition: "all 0.3s ease",
               }}
             >
@@ -274,7 +437,9 @@ export default function WelcomePage() {
             </a>
 
             {/* Comenzar ahora with Dropdown */}
-            <div className={`auth-dropdown-wrapper ${authDropdownOpen ? 'is-open' : ''}`}>
+            <div
+              className={`auth-dropdown-wrapper ${authDropdownOpen ? "is-open" : ""}`}
+            >
               <button
                 className="premium-button landing-header-actions-main landing-hero-cta-primary"
                 onClick={(e) => {
@@ -289,7 +454,8 @@ export default function WelcomePage() {
                   fontSize: "clamp(13px, 1.3vw, 15px)",
                   fontWeight: 600,
                   borderRadius: "9999px",
-                  background: "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
+                  background:
+                    "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
                   backgroundSize: "200% auto",
                   color: "#fff",
                   border: "none",
@@ -304,11 +470,16 @@ export default function WelcomePage() {
               >
                 Comenzar ahora
               </button>
-              <div className="auth-dropdown-content" style={{
-                opacity: authDropdownOpen ? 1 : 0,
-                visibility: authDropdownOpen ? "visible" : "hidden",
-                transform: authDropdownOpen ? "translateY(0)" : "translateY(10px)",
-              }}>
+              <div
+                className="auth-dropdown-content"
+                style={{
+                  opacity: authDropdownOpen ? 1 : 0,
+                  visibility: authDropdownOpen ? "visible" : "hidden",
+                  transform: authDropdownOpen
+                    ? "translateY(0)"
+                    : "translateY(10px)",
+                }}
+              >
                 <Link href="/diagnostic" className="auth-dropdown-item">
                   <ClipboardCheck size={18} />
                   <span>Quiz diagnóstico</span>
@@ -326,7 +497,6 @@ export default function WelcomePage() {
           </div>
         </div>
       </header>
-
       {/* Mobile nav overlay */}
       {mobileMenuOpen && (
         <div
@@ -337,7 +507,8 @@ export default function WelcomePage() {
             position: "fixed",
             inset: 0,
             zIndex: 9999,
-            background: "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)",
+            background:
+              "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -345,14 +516,52 @@ export default function WelcomePage() {
             overflowY: "auto",
             WebkitOverflowScrolling: "touch",
             padding: "40px 0",
-            boxSizing: "border-box"
+            boxSizing: "border-box",
           }}
           onClick={() => setMobileMenuOpen(false)}
         >
           {/* Decorative elements to match login/signup */}
-          <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, backgroundImage: "linear-gradient(rgba(0,86,231,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.06) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
-          <div aria-hidden style={{ position: "absolute", top: "-10%", left: "-10%", width: "70vw", height: "70vw", borderRadius: "50%", background: "radial-gradient(circle, rgba(0,86,231,0.2) 0%, transparent 70%)", filter: "blur(40px)", zIndex: 0 }} />
-          <div aria-hidden style={{ position: "absolute", bottom: "-10%", right: "-10%", width: "60vw", height: "60vw", borderRadius: "50%", background: "radial-gradient(circle, rgba(25,131,253,0.15) 0%, transparent 70%)", filter: "blur(40px)", zIndex: 0 }} />
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 0,
+              backgroundImage:
+                "linear-gradient(rgba(0,86,231,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.06) 1px, transparent 1px)",
+              backgroundSize: "48px 48px",
+            }}
+          />
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: "-10%",
+              left: "-10%",
+              width: "70vw",
+              height: "70vw",
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle, rgba(0,86,231,0.2) 0%, transparent 70%)",
+              filter: "blur(40px)",
+              zIndex: 0,
+            }}
+          />
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              bottom: "-10%",
+              right: "-10%",
+              width: "60vw",
+              height: "60vw",
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle, rgba(25,131,253,0.15) 0%, transparent 70%)",
+              filter: "blur(40px)",
+              zIndex: 0,
+            }}
+          />
 
           <div
             className="landing-mobile-nav-drawer"
@@ -363,7 +572,7 @@ export default function WelcomePage() {
               textAlign: "center",
               position: "relative",
               zIndex: 1,
-              boxSizing: "border-box"
+              boxSizing: "border-box",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -384,7 +593,7 @@ export default function WelcomePage() {
                   fontSize: "24px",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center"
+                  justifyContent: "center",
                 }}
               >
                 <CrossIcon size={20} />
@@ -392,18 +601,33 @@ export default function WelcomePage() {
             </div>
 
             <div style={{ marginBottom: "40px" }}>
-              <span style={{ fontSize: "28px", fontWeight: 500, color: "#fff", letterSpacing: "-0.02em" }}>
+              <span
+                style={{
+                  fontSize: "28px",
+                  fontWeight: 500,
+                  color: "#fff",
+                  letterSpacing: "-0.02em",
+                }}
+              >
                 BIZEN<span style={{ color: "#1983FD" }}>.</span>
               </span>
             </div>
 
-            <nav style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center", width: "100%" }}>
+            <nav
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
               {[
                 { label: "Inicio", href: "/" },
                 { label: "Somos BIZEN", href: "#sobre-bizen" },
                 { label: "Perfil educativo", href: "#perfiles" },
                 { label: "Impacto social", href: "#impacto" },
-                { label: "Blog", href: "#problema" }
+                { label: "Blog", href: "#problema" },
               ].map((link) => (
                 <Link
                   key={link.label}
@@ -421,16 +645,29 @@ export default function WelcomePage() {
                     transition: "all 0.2s",
                     display: "block",
                     boxSizing: "border-box",
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "#fff" }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "rgba(255,255,255,0.9)" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                    e.currentTarget.style.color = "#fff";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                    e.currentTarget.style.color = "rgba(255,255,255,0.9)";
+                  }}
                 >
                   {link.label}
                 </Link>
               ))}
 
-              <div style={{ height: "1px", width: "80%", background: "rgba(255,255,255,0.1)", margin: "10px 0" }} />
+              <div
+                style={{
+                  height: "1px",
+                  width: "80%",
+                  background: "rgba(255,255,255,0.1)",
+                  margin: "10px 0",
+                }}
+              />
 
               <Link
                 href="/diagnostic"
@@ -449,7 +686,7 @@ export default function WelcomePage() {
                   border: "1.5px solid rgba(255, 255, 255, 0.2)",
                   padding: "16px",
                   borderRadius: "14px",
-                  backdropFilter: "blur(8px)"
+                  backdropFilter: "blur(8px)",
                 }}
               >
                 <ClipboardCheck size={20} />
@@ -473,7 +710,7 @@ export default function WelcomePage() {
                   border: "1.5px solid rgba(25, 131, 253, 0.3)",
                   padding: "16px",
                   borderRadius: "14px",
-                  backdropFilter: "blur(8px)"
+                  backdropFilter: "blur(8px)",
                 }}
               >
                 <LogIn size={20} />
@@ -495,7 +732,7 @@ export default function WelcomePage() {
                   background: "linear-gradient(135deg, #0056E7, #1983FD)",
                   padding: "16px",
                   borderRadius: "14px",
-                  boxShadow: "0 8px 20px rgba(0, 86, 231, 0.3)"
+                  boxShadow: "0 8px 20px rgba(0, 86, 231, 0.3)",
                 }}
               >
                 <UserPlus size={20} />
@@ -516,7 +753,7 @@ export default function WelcomePage() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "8px",
-                  marginTop: "16px"
+                  marginTop: "16px",
                 }}
               >
                 <Calendar size={18} />
@@ -526,90 +763,227 @@ export default function WelcomePage() {
           </div>
         </div>
       )}
-
-      <main className="landing-main" style={{ flex: "1 0 auto", width: "100%", maxWidth: "100vw", display: "block", overflowX: "clip" }}>
-        <div className="landing-gradient-wrapper" style={gradientStyle}>
-          {/* Hero Section - deep space dark with animated orbs */}
-          <div className="landing-hero-wrapper" style={{
-            paddingTop: "clamp(100px, 14vw, 180px)",
-            paddingBottom: "clamp(80px, 12vw, 160px)",
-            position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            maxWidth: "100%",
-            boxSizing: "border-box",
-            minHeight: "100vh",
-            overflow: "visible",
-            isolation: "isolate"
-          }}>
-
+      <main
+        className="landing-main"
+        style={{
+          flex: "1 0 auto",
+          width: "100%",
+          maxWidth: "100vw",
+          display: "block",
+          overflowX: "clip",
+        }}
+      >
+        <div
+          className="landing-gradient-wrapper"
+          style={{
+            ...gradientStyle,
+            background:
+              "linear-gradient(180deg, #010a1c 0%, #020f28 30%, #031535 60%, #020c1c 100%)",
+          }}
+        >
+          {/* Hero Section */}
+          <div
+            className="landing-hero-wrapper"
+            style={{
+              paddingTop: "clamp(100px, 14vw, 180px)",
+              paddingBottom: "clamp(80px, 12vw, 160px)",
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              maxWidth: "100%",
+              boxSizing: "border-box",
+              minHeight: "100vh",
+              overflow: "visible",
+              isolation: "isolate",
+              background:
+                "radial-gradient(ellipse at 50% -10%, rgba(0, 86, 231, 0.2) 0%, transparent 60%)",
+            }}
+          >
             {/* Grid dot pattern */}
-            <div aria-hidden style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: 0,
-              backgroundImage: "linear-gradient(rgba(0,86,231,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.07) 1px, transparent 1px)",
-              backgroundSize: "56px 56px",
-              animation: "grid-fade-in 1.5s ease forwards",
-              opacity: 0,
-              pointerEvents: "none"
-            }} />
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                zIndex: 0,
+                backgroundImage:
+                  "linear-gradient(rgba(0,86,231,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.07) 1px, transparent 1px)",
+                backgroundSize: "56px 56px",
+                animation: "grid-fade-in 1.5s ease forwards",
+                opacity: 0,
+                pointerEvents: "none",
+              }}
+            />
 
             {/* Glow orb 1 — top-left blue */}
-            <div aria-hidden style={{
-              position: "absolute",
-              top: "-10%",
-              left: "-8%",
-              width: "min(70vw, 600px)",
-              height: "min(70vw, 600px)",
-              background: "radial-gradient(circle, rgba(0, 86, 231, 0.3) 0%, rgba(0, 86, 231, 0.0) 70%)",
-              borderRadius: "50%",
-              filter: "blur(50px)",
-              animation: "landing-orb-drift 12s ease-in-out infinite",
-              pointerEvents: "none",
-              zIndex: 0
-            }} />
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: "-10%",
+                left: "-8%",
+                width: "min(70vw, 600px)",
+                height: "min(70vw, 600px)",
+                background:
+                  "radial-gradient(circle, rgba(0, 86, 231, 0.3) 0%, rgba(0, 86, 231, 0.0) 70%)",
+                borderRadius: "50%",
+                filter: "blur(50px)",
+                animation: "landing-orb-drift 12s ease-in-out infinite",
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            />
 
             {/* Glow orb 2 — bottom-right teal-blue — kept well within bounds */}
-            <div aria-hidden style={{
-              position: "absolute",
-              bottom: "-10%",
-              right: "-5%",
-              width: "min(55vw, 500px)",
-              height: "min(55vw, 500px)",
-              background: "radial-gradient(circle, rgba(25, 131, 253, 0.22) 0%, rgba(25, 131, 253, 0.0) 70%)",
-              borderRadius: "50%",
-              filter: "blur(55px)",
-              animation: "landing-orb-drift 15s ease-in-out infinite 3s",
-              pointerEvents: "none",
-              zIndex: 0
-            }} />
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                bottom: "-10%",
+                right: "-5%",
+                width: "min(55vw, 500px)",
+                height: "min(55vw, 500px)",
+                background:
+                  "radial-gradient(circle, rgba(25, 131, 253, 0.22) 0%, rgba(25, 131, 253, 0.0) 70%)",
+                borderRadius: "50%",
+                filter: "blur(55px)",
+                animation: "landing-orb-drift 15s ease-in-out infinite 3s",
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            />
 
             {/* Glow orb 3 — center, subtle teal accent */}
-            <div aria-hidden style={{
-              position: "absolute",
-              top: "35%",
-              right: "20%",
-              width: "min(35vw, 350px)",
-              height: "min(35vw, 350px)",
-              background: "radial-gradient(circle, rgba(96, 165, 250, 0.14) 0%, transparent 70%)",
-              borderRadius: "50%",
-              filter: "blur(35px)",
-              animation: "pulse-glow-slow 9s ease-in-out infinite 1.5s",
-              pointerEvents: "none",
-              zIndex: 0
-            }} />
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: "35%",
+                right: "20%",
+                width: "min(35vw, 350px)",
+                height: "min(35vw, 350px)",
+                background:
+                  "radial-gradient(circle, rgba(96, 165, 250, 0.14) 0%, transparent 70%)",
+                borderRadius: "50%",
+                filter: "blur(35px)",
+                animation: "pulse-glow-slow 9s ease-in-out infinite 1.5s",
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            />
+
+            {/* Floating Decorative Cards */}
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+              @keyframes float-hero-card {
+                0% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+                50% { transform: translateY(-15px) rotate(1deg); opacity: 1; }
+                100% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+              }
+              .floating-card-glass {
+                background: rgba(255, 255, 255, 0.04);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 20px;
+                padding: 16px 20px;
+                display: flex;
+                align-items: center;
+                white-space: nowrap;
+                gap: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+                animation: float-hero-card 4s ease-in-out infinite;
+                z-index: 2;
+                pointer-events: none;
+              }
+              .floating-card-glass:hover {
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(64, 150, 255, 0.3);
+              }
+              @media (max-width: 1024px) {
+                .floating-card-glass { display: none; }
+              }
+            `,
+              }}
+            />
+
+            {/* Card 1: AI Billy */}
+            <div
+              className="floating-card-glass"
+              style={{
+                position: "absolute",
+                top: "18%",
+                left: "10%",
+                animationDelay: "0s",
+              }}
+            >
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  background: "#4096ff",
+                  boxShadow: "0 0 10px #4096ff",
+                }}
+              />
+              <span
+                style={{
+                  color: "#fff",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  letterSpacing: "0.02em",
+                }}
+              >
+                Billy IA Integrado
+              </span>
+            </div>
+
+            {/* Card 2: Gamificado */}
+            <div
+              className="floating-card-glass"
+              style={{
+                position: "absolute",
+                top: "42%",
+                right: "10%",
+                animationDelay: "1.2s",
+              }}
+            >
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  background: "#19d1cb",
+                  boxShadow: "0 0 10px #19d1cb",
+                }}
+              />
+              <span
+                style={{
+                  color: "#fff",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  letterSpacing: "0.02em",
+                }}
+              >
+                Gamificación Activa
+              </span>
+            </div>
+
 
             {/* Floating star-particles layer */}
-            <div aria-hidden style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: 0,
-              pointerEvents: "none",
-              backgroundImage: `
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                zIndex: 0,
+                pointerEvents: "none",
+                backgroundImage: `
                 radial-gradient(1.5px 1.5px at 15% 20%, rgba(255,255,255,0.35) 0%, transparent 100%),
                 radial-gradient(1px 1px at 75% 8%, rgba(255,255,255,0.3) 0%, transparent 100%),
                 radial-gradient(1.5px 1.5px at 42% 55%, rgba(255,255,255,0.2) 0%, transparent 100%),
@@ -619,46 +993,65 @@ export default function WelcomePage() {
                 radial-gradient(1px 1px at 55% 30%, rgba(180,210,255,0.3) 0%, transparent 100%),
                 radial-gradient(1px 1px at 10% 65%, rgba(180,210,255,0.2) 0%, transparent 100%)
               `,
-              backgroundSize: "100% 100%",
-            }} />
+                backgroundSize: "100% 100%",
+              }}
+            />
 
             <Hero3DScene />
 
             {/* Mascot leaning out from the left - updated character */}
-            <div className="landing-hero-mascot reveal-element" style={{
-              position: "absolute",
-              left: 0,
-              top: "clamp(80px, 14vw, 200px)", // Precisely aligned with the main title top
-              zIndex: 0,
-              width: "clamp(250px, 25vw, 450px)",
-              transform: "translateX(0)", // Show 100% of the image
-              pointerEvents: "none",
-              transition: "all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)",
-              opacity: 0,
-            }}>
-              <style dangerouslySetInnerHTML={{
-                __html: `
+            <div
+              className="landing-hero-mascot reveal-element"
+              style={{
+                position: "absolute",
+                left: "-200px", // Pushed even further left
+                top: "clamp(120px, 18vw, 260px)",
+                zIndex: 0,
+                width: "clamp(450px, 35vw, 750px)",
+                transform: "translateX(0)",
+                pointerEvents: "none",
+                transition: "all 1s cubic-bezier(0.23, 1, 0.32, 1)",
+                opacity: 0,
+              }}
+            >
+              <style
+                dangerouslySetInnerHTML={{
+                  __html: `
                 .landing-hero-mascot.revealed {
                   opacity: 1 !important;
                   transform: translateX(0) translateY(0) !important;
                 }
+                @media (max-width: 1400px) {
+                  .landing-hero-mascot {
+                    left: -170px !important;
+                    width: clamp(400px, 32vw, 650px) !important;
+                  }
+                }
+                @media (max-width: 1200px) {
+                  .landing-hero-mascot {
+                    left: -140px !important;
+                    width: clamp(350px, 28vw, 550px) !important;
+                  }
+                }
                 @media (max-width: 1023px) {
                   .landing-hero-mascot {
-                    width: 180px !important;
-                    top: 140px !important;
-                    transform: translateX(-20%) !important;
-                    opacity: 0.6 !important;
+                    width: 300px !important;
+                    top: 170px !important;
+                    left: -110px !important;
+                    opacity: 0.95 !important;
                   }
                 }
                 @media (max-width: 768px) {
                   .landing-hero-mascot {
-                    width: 120px !important;
-                    top: 110px !important;
-                    transform: translateX(-40%) !important;
-                    opacity: 0.4 !important;
+                    width: 220px !important;
+                    top: 130px !important;
+                    left: -80px !important;
+                    opacity: 0.9 !important;
                   }
                 }
-              `}} />
+              `,
+                }}
+              />
               <Image
                 src="/bizen-mascot.png"
                 alt="Bizen Mascot"
@@ -668,85 +1061,133 @@ export default function WelcomePage() {
                 style={{
                   width: "100%",
                   height: "auto",
-                  filter: "drop-shadow(20px 0 30px rgba(44, 123, 239, 0.15))"
+                  filter: "drop-shadow(20px 0 30px rgba(44, 123, 239, 0.15))",
                 }}
               />
             </div>
 
             {/* Right side mascot restored (the hand) - strictly clipped to prevent horizontal scroll */}
-            <div aria-hidden style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "100%", overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
-              <div className="landing-hero-right-mascot reveal-element" style={{
+            <div
+              aria-hidden
+              style={{
                 position: "absolute",
+                top: 0,
                 right: 0,
-                bottom: "clamp(80px, 10vw, 180px)",
-                width: "clamp(240px, 24vw, 460px)",
-                transform: "translateX(25%)",
-                opacity: 0,
-                transition: "all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)",
-              }}>
-                <style dangerouslySetInnerHTML={{
-                  __html: `
-                  .landing-hero-right-mascot.revealed { opacity: 1 !important; transform: translateX(18%) !important; }
+                bottom: 0,
+                width: "100%",
+                overflow: "hidden",
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            >
+              <div
+                className="landing-hero-right-mascot reveal-element"
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  bottom: "clamp(80px, 10vw, 180px)",
+                  width: "clamp(240px, 24vw, 460px)",
+                  transform: "translateX(25%)",
+                  opacity: 0,
+                  transition: "all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)",
+                }}
+              >
+                <style
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                  .landing-hero-right-mascot.revealed { opacity: 1 !important; transform: translateX(28%) !important; }
                   @media (max-width: 768px) { .landing-hero-right-mascot { display: none; } }
-                `}} />
+                `,
+                  }}
+                />
                 <Image
                   src="/image.png"
                   alt=""
                   width={600}
                   height={600}
                   priority
-                  style={{ width: "100%", height: "auto", filter: "drop-shadow(-20px 0 40px rgba(44, 123, 239, 0.2))" }}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    filter: "drop-shadow(-20px 0 40px rgba(44, 123, 239, 0.2))",
+                  }}
                 />
               </div>
             </div>
 
-
-
             {/* Main content - centered */}
-            <div className="landing-hero-content reveal-element" style={{
-              position: "relative",
-              zIndex: 1,
-              textAlign: "center",
-              width: "100%",
-              maxWidth: "min(90%, 1100px)",
-              margin: "clamp(32px, 5vw, 64px) auto 0",
-              padding: "0 clamp(20px, 4vw, 40px)",
-              boxSizing: "border-box",
-              opacity: isVisible ? 1 : 0,
-              transition: "opacity 0.6s ease 0.3s",
-            }}>
+            <div
+              className="landing-hero-content reveal-element"
+              style={{
+                position: "relative",
+                zIndex: 1,
+                textAlign: "center",
+                width: "100%",
+                maxWidth: "min(90%, 1100px)",
+                margin: "clamp(32px, 5vw, 64px) auto 0",
+                padding: "0 clamp(20px, 4vw, 40px)",
+                boxSizing: "border-box",
+                opacity: isVisible ? 1 : 0,
+                transition: "opacity 0.6s ease 0.3s",
+              }}
+            >
               {/* Main headline */}
-              <h1 style={{
-                fontSize: "clamp(34px, 6vw, 68px)",
-                color: "#FFFFFF",
-                fontWeight: 800,
-                margin: "0 0 clamp(40px, 6vw, 72px) 0",
-                lineHeight: 1.08,
-                letterSpacing: "-0.04em",
-                wordWrap: "break-word",
-                overflowWrap: "break-word",
-                textShadow: "0 2px 40px rgba(0,0,0,0.3)"
-              }}>
-                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>El futuro de la{" "}<span style={{
-                  background: "linear-gradient(90deg, #60a5fa, #1983FD, #4A9EFF)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}>Educación Financiera</span></span><br />
-                para jóvenes en un click<br />
-                con <span className="brand-highlight-blue" style={{ fontWeight: 900, background: "linear-gradient(90deg, #ffffff, #a5c8ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>BIZEN</span>
+              <h1
+                style={{
+                  fontSize: "clamp(34px, 6vw, 68px)",
+                  color: "#FFFFFF",
+                  fontWeight: 800,
+                  margin: "0 0 clamp(40px, 6vw, 72px) 0",
+                  lineHeight: 1.08,
+                  letterSpacing: "-0.04em",
+                  wordWrap: "break-word",
+                  overflowWrap: "break-word",
+                  textShadow: "0 2px 40px rgba(0,0,0,0.3)",
+                }}
+              >
+                <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+                  El futuro de la{" "}
+                  <span
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #60a5fa, #1983FD, #4A9EFF)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    Educación Financiera
+                  </span>
+                </span>
+                <br />
+                para jóvenes en un click
+                <br />
+                con{" "}
+                <span
+                  className="brand-highlight-blue"
+                  style={{
+                    fontWeight: 900,
+                    background: "linear-gradient(90deg, #ffffff, #a5c8ff)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  BIZEN
+                </span>
               </h1>
 
               {/* Subheading with highlighted text - responsive, never overlaps */}
               <div className="landing-hero-sub-container">
-                <style dangerouslySetInnerHTML={{
-                  __html: `
+                <style
+                  dangerouslySetInnerHTML={{
+                    __html: `
                   .landing-hero-sub {
                     font-size: clamp(14px, 2vw, 20px) !important;
                     line-height: 1.6;
                     max-width: 900px;
                     margin: 0 auto;
-                    color: #374151;
+                    color: rgba(255, 255, 255, 0.85);
                     font-family: 'Inter', sans-serif;
                     text-align: center;
                   }
@@ -757,77 +1198,109 @@ export default function WelcomePage() {
                       padding: 0 16px;
                     }
                   }
-                `}} />
-                <div style={{
-                  marginTop: "clamp(48px, 8vw, 100px)",
-                  marginBottom: "clamp(24px, 4vw, 48px)",
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                  padding: "0 clamp(24px, 10vw, 140px)",
-                  boxSizing: "border-box",
-                }}>
-                  {/* Animated gradient border wrapper */}
-                  <div className="hero-tagline-border-wrap" style={{
-                    padding: "2px",
-                    borderRadius: "18px",
-                    backgroundImage: "linear-gradient(135deg, #0056E7, #1983FD, #93c5fd, #0056E7)",
-                    backgroundSize: "300% 300%",
-                    animation: "border-shimmer 6s ease infinite",
+                `,
+                  }}
+                />
+                <div
+                  style={{
+                    marginTop: "clamp(48px, 8vw, 100px)",
+                    marginBottom: "clamp(24px, 4vw, 48px)",
+                    display: "flex",
+                    justifyContent: "center",
                     width: "100%",
-                    maxWidth: "600px",
-                  }}>
-                    <div style={{
-                      borderRadius: "16px",
-                      background: "rgba(10, 20, 50, 0.55)",
-                      backdropFilter: "blur(24px)",
-                      WebkitBackdropFilter: "blur(24px)",
-                      padding: "clamp(20px, 3vw, 32px) clamp(24px, 4vw, 44px)",
-                      textAlign: "center",
-                      border: "1px solid rgba(96, 165, 250, 0.2)",
-                      boxShadow: "0 4px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
-                    }}>
+                    padding: "0 clamp(24px, 10vw, 140px)",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  {/* Animated gradient border wrapper */}
+                  <div
+                    className="hero-tagline-border-wrap"
+                    style={{
+                      padding: "2px",
+                      borderRadius: "18px",
+                      backgroundImage:
+                        "linear-gradient(135deg, #0056E7, #1983FD, #93c5fd, #0056E7)",
+                      backgroundSize: "300% 300%",
+                      animation: "border-shimmer 6s ease infinite",
+                      width: "100%",
+                      maxWidth: "600px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        borderRadius: "16px",
+                        background: "rgba(10, 20, 50, 0.55)",
+                        backdropFilter: "blur(24px)",
+                        WebkitBackdropFilter: "blur(24px)",
+                        padding:
+                          "clamp(20px, 3vw, 32px) clamp(24px, 4vw, 44px)",
+                        textAlign: "center",
+                        border: "1px solid rgba(96, 165, 250, 0.2)",
+                        boxShadow:
+                          "0 4px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+                      }}
+                    >
                       {/* Thin accent bar */}
-                      <div style={{
-                        width: "32px",
-                        height: "3px",
-                        borderRadius: "99px",
-                        background: "linear-gradient(90deg, #60a5fa, #1983FD)",
-                        margin: "0 auto 16px",
-                      }} />
+                      <div
+                        style={{
+                          width: "32px",
+                          height: "3px",
+                          borderRadius: "99px",
+                          background:
+                            "linear-gradient(90deg, #60a5fa, #1983FD)",
+                          margin: "0 auto 16px",
+                        }}
+                      />
 
                       {/* Main text */}
-                      <p style={{
-                        margin: 0,
-                        fontSize: "clamp(13px, 1.15vw, 17px)",
-                        lineHeight: 1.9,
-                        fontWeight: 400,
-                        color: "rgba(255, 255, 255, 0.92)",
-                        letterSpacing: "0.01em",
-                        wordWrap: "break-word",
-                      }}>
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize: "clamp(13px, 1.15vw, 17px)",
+                          lineHeight: 1.9,
+                          fontWeight: 400,
+                          color: "rgba(255, 255, 255, 0.92)",
+                          letterSpacing: "0.01em",
+                          wordWrap: "break-word",
+                        }}
+                      >
                         La plataforma educativa que combina{" "}
-                        <span style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          background: "linear-gradient(90deg, #1983FD, #60a5fa)",
-                          color: "#fff",
-                          borderRadius: "6px",
-                          padding: "2px 10px 2px 8px",
-                          fontWeight: 600,
-                          fontSize: "0.95em",
-                          letterSpacing: "0.02em",
-                          whiteSpace: "nowrap",
-                          boxShadow: "0 2px 12px rgba(25, 131, 253, 0.35)"
-                        }}>gamificación e IA</span>{" "}
-                        para enseñar finanzas personales a jóvenes de preparatoria y universidad de forma{" "}
-                        <em style={{ fontStyle: "normal", fontWeight: 600, color: "#93c5fd" }}>práctica, clara y relevante.</em>
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "5px",
+                            background:
+                              "linear-gradient(90deg, #1983FD, #60a5fa)",
+                            color: "#fff",
+                            borderRadius: "6px",
+                            padding: "2px 10px 2px 8px",
+                            fontWeight: 600,
+                            fontSize: "0.95em",
+                            letterSpacing: "0.02em",
+                            whiteSpace: "nowrap",
+                            boxShadow: "0 2px 12px rgba(25, 131, 253, 0.35)",
+                          }}
+                        >
+                          gamificación e IA
+                        </span>{" "}
+                        para enseñar finanzas personales a jóvenes de
+                        preparatoria y universidad de forma{" "}
+                        <em
+                          style={{
+                            fontStyle: "normal",
+                            fontWeight: 600,
+                            color: "#93c5fd",
+                          }}
+                        >
+                          práctica, clara y relevante.
+                        </em>
                       </p>
                     </div>
                   </div>
-                  <style dangerouslySetInnerHTML={{
-                    __html: `
+                  <style
+                    dangerouslySetInnerHTML={{
+                      __html: `
                     @keyframes border-shimmer {
                       0% { background-position: 0% 50%; }
                       50% { background-position: 100% 50%; }
@@ -836,19 +1309,23 @@ export default function WelcomePage() {
                     @media (max-width: 640px) {
                       .hero-tagline-border-wrap { border-radius: 14px !important; }
                     }
-                  `}} />
+                  `,
+                    }}
+                  />
                 </div>
               </div>
 
               {/* Hero inline CTAs */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "clamp(10px, 2vw, 16px)",
-                marginTop: "clamp(28px, 5vw, 48px)",
-                flexWrap: "wrap",
-              }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "clamp(10px, 2vw, 16px)",
+                  marginTop: "clamp(28px, 5vw, 48px)",
+                  flexWrap: "wrap",
+                }}
+              >
                 <a
                   href="/signup"
                   className="landing-hero-cta-primary"
@@ -860,17 +1337,30 @@ export default function WelcomePage() {
                     fontSize: "clamp(14px, 1.4vw, 17px)",
                     fontWeight: 600,
                     borderRadius: "9999px",
-                    background: "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
+                    background:
+                      "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
                     backgroundSize: "200% auto",
                     color: "#fff",
                     textDecoration: "none",
-                    boxShadow: "0 4px 24px rgba(15, 98, 254, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
+                    boxShadow:
+                      "0 4px 24px rgba(15, 98, 254, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
                     transition: "all 0.3s ease",
                     letterSpacing: "0.01em",
                   }}
                 >
                   Comenzar gratis
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
                 </a>
                 <a
                   href="https://calendly.com/diego-bizen"
@@ -897,8 +1387,10 @@ export default function WelcomePage() {
                     e.currentTarget.style.borderColor = "rgba(255,255,255,0.4)";
                   }}
                   onMouseOut={(e) => {
-                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.06)";
-                    e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                    e.currentTarget.style.background =
+                      "rgba(255, 255, 255, 0.06)";
+                    e.currentTarget.style.borderColor =
+                      "rgba(255, 255, 255, 0.2)";
                   }}
                 >
                   <Calendar size={16} />
@@ -907,294 +1399,528 @@ export default function WelcomePage() {
               </div>
             </div>
 
-
-            <div className="landing-hero-logos-wrap" style={{
-              position: "relative",
-              zIndex: 1,
-              width: "100%",
-              maxWidth: "min(90%, 1200px)",
-              margin: "clamp(60px, 10vw, 120px) auto 0",
-              textAlign: "center",
-            }}>
-              <p style={{
-                fontSize: "clamp(12px, 1.3vw, 15px)",
-                color: "rgba(255, 255, 255, 0.4)",
-                fontWeight: 500,
-                margin: "0 0 clamp(20px, 3vw, 36px) 0",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}>
+            <div
+              className="landing-hero-logos-wrap"
+              style={{
+                position: "relative",
+                zIndex: 1,
+                width: "100%",
+                maxWidth: "min(90%, 1200px)",
+                margin: "clamp(60px, 10vw, 120px) auto 0",
+                textAlign: "center",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "clamp(12px, 1.3vw, 15px)",
+                  color: "rgba(255, 255, 255, 0.4)",
+                  fontWeight: 500,
+                  margin: "0 0 clamp(20px, 3vw, 36px) 0",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                }}
+              >
                 Empresas que ya confían
               </p>
 
               {/* Logos carousel */}
               <div style={{ overflow: "hidden", width: "100%" }}>
-                <div className="logos-carousel-track" style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "clamp(40px, 6vw, 80px)",
-                  animation: "scroll-logos 30s linear infinite",
-                }}>
-                  {[...logoCarouselLogos, ...logoCarouselLogos].map((logo, i) => {
-                    const isGoogle = logo.src.includes("google");
-                    return (
-                      <div key={i} style={{
-                        flexShrink: 0,
-                        height: isGoogle ? "clamp(28px, 3.5vw, 42px)" : "clamp(40px, 5vw, 60px)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}>
-                        <Image
-                          src={logo.src}
-                          alt={logo.alt}
-                          width={isGoogle ? 80 : 120}
-                          height={isGoogle ? 40 : 60}
+                <div
+                  className="logos-carousel-track"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "clamp(40px, 6vw, 80px)",
+                    animation: "scroll-logos 30s linear infinite",
+                  }}
+                >
+                  {[...logoCarouselLogos, ...logoCarouselLogos].map(
+                    (logo, i) => {
+                      const isGoogle = logo.src.includes("google");
+                      return (
+                        <div
+                          key={i}
                           style={{
-                            height: "100%",
-                            width: "auto",
-                            objectFit: "contain",
-                            filter: "brightness(0) invert(1)",
-                            opacity: 0.55
+                            flexShrink: 0,
+                            height: isGoogle
+                              ? "clamp(28px, 3.5vw, 42px)"
+                              : "clamp(40px, 5vw, 60px)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
-                        />
-                      </div>
-                    );
-                  })}
+                        >
+                          <Image
+                            src={logo.src}
+                            alt={logo.alt}
+                            width={isGoogle ? 80 : 120}
+                            height={isGoogle ? 40 : 60}
+                            style={{
+                              height: "100%",
+                              width: "auto",
+                              objectFit: "contain",
+                              filter: "brightness(0) invert(1)",
+                              opacity: 0.55,
+                            }}
+                          />
+                        </div>
+                      );
+                    },
+                  )}
                 </div>
               </div>
             </div>
-
           </div>
 
-          {/* Section fade divider: dark → white */}
-          <div aria-hidden style={{
-            width: "100%",
-            height: "clamp(80px, 12vw, 160px)",
-            background: "linear-gradient(180deg, #061852 0%, #FFFFFF 100%)",
-            marginTop: 0,
-            flexShrink: 0,
-            pointerEvents: "none"
-          }} />
+          {/* SOMOS BIZEN Section */}
+          <div
+            id="sobre-bizen"
+            style={{
+              width: "100%",
+              background: "transparent",
+              padding:
+                "clamp(72px, 10vw, 120px) clamp(24px, 6vw, 80px) clamp(56px, 8vw, 96px)",
+              boxSizing: "border-box",
+              position: "relative",
+            }}
+          >
+            {/* Subtle background glows - low opacity, no harsh edges */}
+            <div
+              style={{
+                position: "absolute",
+                top: "-40px",
+                right: "-60px",
+                width: "600px",
+                height: "600px",
+                background:
+                  "radial-gradient(circle, rgba(0,86,231,0.08) 0%, transparent 65%)",
+                borderRadius: "50%",
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                bottom: "-40px",
+                left: "-60px",
+                width: "500px",
+                height: "500px",
+                background:
+                  "radial-gradient(circle, rgba(0,86,231,0.06) 0%, transparent 65%)",
+                borderRadius: "50%",
+                pointerEvents: "none",
+              }}
+            />
 
-          {/* SOMOS BIZEN Section — redesigned */}
-          <div id="sobre-bizen" style={{
-            width: "100%",
-            background: "linear-gradient(160deg, #0a1628 0%, #0d1f40 40%, #0056E7 100%)",
-            padding: "clamp(72px, 10vw, 120px) clamp(24px, 6vw, 80px) clamp(56px, 8vw, 96px)",
-            boxSizing: "border-box",
-            position: "relative",
-          }}>
-
-            {/* Background decorative blobs */}
-            <div style={{ position: "absolute", top: "-80px", right: "-100px", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(25,131,253,0.18) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", bottom: "-60px", left: "-80px", width: "420px", height: "420px", background: "radial-gradient(circle, rgba(1,92,248,0.14) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", top: "40%", left: "38%", width: "320px", height: "320px", background: "radial-gradient(circle, rgba(0,86,231,0.10) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-
-            <div style={{ maxWidth: "1400px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-
-
-
+            <div
+              style={{
+                maxWidth: "1400px",
+                margin: "0 auto",
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
               {/* Title */}
-              <h2 style={{
-                textAlign: "center",
-                fontSize: "clamp(40px, 6vw, 76px)",
-                fontWeight: 500,
-                color: "#ffffff",
-                letterSpacing: "-0.03em",
-                lineHeight: 1.05,
-                marginBottom: "clamp(24px, 3vw, 36px)",
-              }}>
-                SOMOS{" "}
-                <span style={{
-                  background: "linear-gradient(90deg, #60a5fa, #1983FD, #015CF8)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}>BIZEN</span>
-              </h2>
-
-              {/* Description */}
-              <p style={{
-                textAlign: "center",
-                fontSize: "clamp(17px, 1.6vw, 22px)",
-                color: "rgba(255,255,255,0.75)",
-                lineHeight: 1.8,
-                maxWidth: "860px",
-                margin: "0 auto clamp(56px, 7vw, 88px)",
-                fontWeight: 400,
-              }}>
-                En <strong style={{ color: "#fff", fontWeight: 500 }}>BIZEN</strong> combinamos{" "}
-                <strong style={{ color: "#60a5fa" }}>aprendizaje gamificado</strong>{" "}
-                para que los alumnos entiendan el dinero practicando, desarrollamos{" "}
-                <strong style={{ color: "#60a5fa" }}>competencias reales</strong>{" "}
-                a través de decisiones financieras aplicadas al contexto mexicano y generamos{" "}
-                <strong style={{ color: "#60a5fa" }}>impacto real</strong>{" "}
-                formando jóvenes capaces de organizar su dinero, evitar deudas y generar ingresos desde temprana edad.
-              </p>
-
-              {/* Stats row — 3 glowing cards */}
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "clamp(16px, 2vw, 28px)",
-                marginBottom: "clamp(48px, 7vw, 80px)",
-              }} className="somos-stats-grid">
-
-                {/* Stat 1 */}
-                <div className="somos-stat-card" style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  borderRadius: "24px",
-                  padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
+              <h2
+                style={{
                   textAlign: "center",
-                  backdropFilter: "blur(10px)",
-                  position: "relative",
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                }}>
-
-                  <div style={{
-                    fontSize: "clamp(36px, 5vw, 56px)",
-                    fontWeight: 800,
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1,
-                    marginBottom: "10px",
-                    background: "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
+                  fontSize: "clamp(40px, 6vw, 76px)",
+                  fontWeight: 500,
+                  color: "#ffffff",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                  marginBottom: "clamp(24px, 3vw, 36px)",
+                }}
+              >
+                SOMOS{" "}
+                <span
+                  style={{
+                    background:
+                      "linear-gradient(90deg, #60a5fa, #1983FD, #015CF8)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
-                  }}>
+                  }}
+                >
+                  BIZEN
+                </span>
+              </h2>
+
+              {/* Description */}
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: "clamp(17px, 1.6vw, 22px)",
+                  color: "rgba(255,255,255,0.75)",
+                  lineHeight: 1.8,
+                  maxWidth: "860px",
+                  margin: "0 auto clamp(56px, 7vw, 88px)",
+                  fontWeight: 400,
+                }}
+              >
+                En{" "}
+                <strong style={{ color: "#fff", fontWeight: 500 }}>
+                  BIZEN
+                </strong>{" "}
+                combinamos{" "}
+                <strong style={{ color: "#60a5fa" }}>
+                  aprendizaje gamificado
+                </strong>{" "}
+                para que los alumnos entiendan el dinero practicando,
+                desarrollamos{" "}
+                <strong style={{ color: "#60a5fa" }}>
+                  competencias reales
+                </strong>{" "}
+                a través de decisiones financieras aplicadas al contexto
+                mexicano y generamos{" "}
+                <strong style={{ color: "#60a5fa" }}>impacto real</strong>{" "}
+                formando jóvenes capaces de organizar su dinero, evitar deudas y
+                generar ingresos desde temprana edad.
+              </p>
+
+              {/* Stats row — 3 glowing cards */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "clamp(16px, 2vw, 28px)",
+                  marginBottom: "clamp(48px, 7vw, 80px)",
+                }}
+                className="somos-stats-grid"
+              >
+                {/* Stat 1 */}
+                <div
+                  className="somos-stat-card"
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: "24px",
+                    padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
+                    textAlign: "center",
+                    backdropFilter: "blur(10px)",
+                    position: "relative",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "clamp(36px, 5vw, 56px)",
+                      fontWeight: 800,
+                      letterSpacing: "-0.04em",
+                      lineHeight: 1,
+                      marginBottom: "10px",
+                      background:
+                        "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
                     +50
                   </div>
-                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <div
+                    style={{
+                      fontSize: "clamp(14px, 1.2vw, 17px)",
+                      fontWeight: 500,
+                      color: "#60a5fa",
+                      marginBottom: "10px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
                     Startups
                   </div>
-                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, }}>
-                    Seleccionados entre +50 startups. Parte del Programa de Incubación de la Secretaría de Desarrollo Económico.
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "clamp(13px, 1vw, 15px)",
+                      color: "rgba(255,255,255,0.55)",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Seleccionados entre +50 startups. Parte del Programa de
+                    Incubación de la Secretaría de Desarrollo Económico.
                   </p>
                 </div>
 
                 {/* Stat 2 */}
-                <div className="somos-stat-card" style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  borderRadius: "24px",
-                  padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
-                  textAlign: "center",
-                  backdropFilter: "blur(10px)",
-                  position: "relative",
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                }}>
-
-                  <div style={{
-                    fontSize: "clamp(36px, 5vw, 56px)",
-                    fontWeight: 800,
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1,
-                    marginBottom: "10px",
-                    background: "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}>
+                <div
+                  className="somos-stat-card"
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: "24px",
+                    padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
+                    textAlign: "center",
+                    backdropFilter: "blur(10px)",
+                    position: "relative",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "clamp(36px, 5vw, 56px)",
+                      fontWeight: 800,
+                      letterSpacing: "-0.04em",
+                      lineHeight: 1,
+                      marginBottom: "10px",
+                      background:
+                        "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
                     +10
                   </div>
-                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <div
+                    style={{
+                      fontSize: "clamp(14px, 1.2vw, 17px)",
+                      fontWeight: 500,
+                      color: "#60a5fa",
+                      marginBottom: "10px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
                     Instituciones
                   </div>
-                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, }}>
-                    Más de 10 instituciones en Querétaro nos respaldan. BIZEN enseña ahorro, inversión y emprendimiento con metodología práctica.
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "clamp(13px, 1vw, 15px)",
+                      color: "rgba(255,255,255,0.55)",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Más de 10 instituciones en Querétaro nos respaldan. BIZEN
+                    enseña ahorro, inversión y emprendimiento con metodología
+                    práctica.
                   </p>
                 </div>
 
                 {/* Stat 3 */}
-                <div className="somos-stat-card" style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  borderRadius: "24px",
-                  padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
-                  textAlign: "center",
-                  backdropFilter: "blur(10px)",
-                  position: "relative",
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                }}>
-
-                  <div style={{
-                    fontSize: "clamp(36px, 5vw, 56px)",
-                    fontWeight: 800,
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1,
-                    marginBottom: "10px",
-                    background: "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}>
+                <div
+                  className="somos-stat-card"
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: "24px",
+                    padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
+                    textAlign: "center",
+                    backdropFilter: "blur(10px)",
+                    position: "relative",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "clamp(36px, 5vw, 56px)",
+                      fontWeight: 800,
+                      letterSpacing: "-0.04em",
+                      lineHeight: 1,
+                      marginBottom: "10px",
+                      background:
+                        "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
                     $25K
                   </div>
-                  <div style={{ fontSize: "clamp(14px, 1.2vw, 17px)", fontWeight: 500, color: "#60a5fa", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  <div
+                    style={{
+                      fontSize: "clamp(14px, 1.2vw, 17px)",
+                      fontWeight: 500,
+                      color: "#60a5fa",
+                      marginBottom: "10px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
                     USD en créditos
                   </div>
-                  <p style={{ margin: 0, fontSize: "clamp(13px, 1vw, 15px)", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, }}>
-                    Más de 25,000 USD en créditos de Google invertidos en nosotros. Parte de la comunidad EdTech más grande de LATAM.
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "clamp(13px, 1vw, 15px)",
+                      color: "rgba(255,255,255,0.55)",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Más de 25,000 USD en créditos de Google invertidos en
+                    nosotros. Parte de la comunidad EdTech más grande de LATAM.
                   </p>
                 </div>
-
               </div>
 
               {/* Manifesto bar */}
-              <div style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "20px",
-                padding: "clamp(20px, 3vw, 28px) clamp(24px, 4vw, 48px)",
-                textAlign: "center",
-                marginBottom: "clamp(40px, 5vw, 64px)",
-                backdropFilter: "blur(8px)",
-              }}>
-                <p style={{ margin: 0, fontSize: "clamp(16px, 1.4vw, 20px)", color: "rgba(255,255,255,0.85)", fontWeight: 500, lineHeight: 1.7 }}>
-                  BIZEN enseña <strong style={{ color: "#fff" }}>ahorro, inversión y emprendimiento</strong> con metodología práctica, gamificada y alineada al mundo real.
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "20px",
+                  padding: "clamp(20px, 3vw, 28px) clamp(24px, 4vw, 48px)",
+                  textAlign: "center",
+                  marginBottom: "clamp(40px, 5vw, 64px)",
+                  backdropFilter: "blur(8px)",
+                }}
+              >
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: "clamp(16px, 1.4vw, 20px)",
+                    color: "rgba(255,255,255,0.85)",
+                    fontWeight: 500,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  BIZEN enseña{" "}
+                  <strong style={{ color: "#fff" }}>
+                    ahorro, inversión y emprendimiento
+                  </strong>{" "}
+                  con metodología práctica, gamificada y alineada al mundo real.
                 </p>
               </div>
 
               {/* Partner logos strip */}
-              <div style={{ textAlign: "center", marginBottom: "clamp(20px, 3vw, 32px)" }}>
-                <p style={{ margin: "0 0 24px", fontSize: "12px", fontWeight: 500, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "clamp(20px, 3vw, 32px)",
+                }}
+              >
+                <p
+                  style={{
+                    margin: "0 0 24px",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                    color: "rgba(255,255,255,0.4)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                  }}
+                >
                   Nos respaldan
                 </p>
-                <div style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "clamp(32px, 6vw, 72px)",
-                  flexWrap: "wrap",
-                }}>
-                  <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: "16px", padding: "16px 28px", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Image src="/logos/logo-hex.png" alt="BLOQUE" width={200} height={60} style={{ height: "52px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.85 }} />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "clamp(32px, 6vw, 72px)",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "rgba(255,255,255,0.08)",
+                      borderRadius: "16px",
+                      padding: "16px 28px",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Image
+                      src="/logos/logo-hex.png"
+                      alt="BLOQUE"
+                      width={200}
+                      height={60}
+                      style={{
+                        height: "52px",
+                        width: "auto",
+                        objectFit: "contain",
+                        filter: "brightness(0) invert(1)",
+                        opacity: 0.85,
+                      }}
+                    />
                   </div>
-                  <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: "16px", padding: "16px 28px", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Image src="/logos/logo-queretaro.png" alt="Querétaro" width={140} height={52} style={{ height: "52px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.85 }} />
+                  <div
+                    style={{
+                      background: "rgba(255,255,255,0.08)",
+                      borderRadius: "16px",
+                      padding: "16px 28px",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Image
+                      src="/logos/logo-queretaro.png"
+                      alt="Querétaro"
+                      width={140}
+                      height={52}
+                      style={{
+                        height: "52px",
+                        width: "auto",
+                        objectFit: "contain",
+                        filter: "brightness(0) invert(1)",
+                        opacity: 0.85,
+                      }}
+                    />
                   </div>
-                  <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: "16px", padding: "16px 28px", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Image src="/logos/logo-google.png" alt="Google for Startups" width={160} height={52} style={{ height: "52px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.85 }} />
+                  <div
+                    style={{
+                      background: "rgba(255,255,255,0.08)",
+                      borderRadius: "16px",
+                      padding: "16px 28px",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Image
+                      src="/logos/logo-google.png"
+                      alt="Google for Startups"
+                      width={160}
+                      height={52}
+                      style={{
+                        height: "52px",
+                        width: "auto",
+                        objectFit: "contain",
+                        filter: "brightness(0) invert(1)",
+                        opacity: 0.85,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
-
             </div>
 
-            <style>{`
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+              @keyframes premium-float {
+                0% { transform: translateY(0px) rotate(0deg); }
+                33% { transform: translateY(-8px) rotate(0.2deg); }
+                66% { transform: translateY(-4px) rotate(-0.2deg); }
+                100% { transform: translateY(0px) rotate(0deg); }
+              }
+              .somos-stat-card {
+                animation: premium-float 6s ease-in-out infinite;
+              }
+              .somos-stat-card:nth-child(2) { animation-delay: 1.5s; }
+              .somos-stat-card:nth-child(3) { animation-delay: 3s; }
+              
               .somos-stat-card:hover {
-                transform: translateY(-6px);
-                box-shadow: 0 20px 50px rgba(0, 86, 231, 0.25) !important;
-                border-color: rgba(25, 131, 253, 0.3) !important;
+                transform: translateY(-12px) scale(1.02) !important;
+                box-shadow: 0 30px 60px rgba(0, 86, 231, 0.35) !important;
+                border-color: rgba(25, 131, 253, 0.4) !important;
+                z-index: 10;
               }
               @media (max-width: 768px) {
                 .somos-stats-grid {
                   grid-template-columns: 1fr !important;
                 }
+                .somos-stat-card { animation: none; }
               }
-            `}</style>
+            `,
+              }}
+            />
           </div>
 
           <style>{`
@@ -1340,6 +2066,24 @@ export default function WelcomePage() {
           transform: translateX(4px);
         }
         
+        /* Floating animations for all cards */
+        @keyframes global-float {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(0.2deg); }
+        }
+        .somos-stat-card, .glass-card-premium, .curiosidad-card, .how-it-works-step-card, .bento-item {
+          animation: global-float 6s ease-in-out infinite;
+        }
+        .somos-stat-card:nth-child(2), .curiosidad-card:nth-child(2), .how-it-works-step-card:nth-child(2) { animation-delay: 1.5s; }
+        .somos-stat-card:nth-child(3), .curiosidad-card:nth-child(3), .how-it-works-step-card:nth-child(3) { animation-delay: 3s; }
+        
+        .somos-stat-card:hover, .glass-card-premium:hover, .bento-item:hover {
+          transform: translateY(-15px) scale(1.02) !important;
+          box-shadow: 0 30px 60px rgba(0, 86, 231, 0.3) !important;
+          z-index: 10;
+          animation-play-state: paused;
+        }
+
         /* ELIMINATE left gap - force zero padding on ALL layout ancestors (no sidebar on landing) */
         html:has(.main-page-container) body,
         html:has(.main-page-container) body > div,
@@ -1348,6 +2092,7 @@ export default function WelcomePage() {
         html:has(.main-page-container) .app-shell,
         html:has(.main-page-container) .app-scroll,
         html:has(.main-page-container) .app-main,
+
         html:has(.main-page-container) main {
           padding-left: 0 !important;
           margin-left: 0 !important;
@@ -1416,7 +2161,7 @@ export default function WelcomePage() {
         .landing-main,
         .main-page-container main,
         main.landing-main { 
-          overflow: visible !important; 
+          overflow-y: visible !important;
           max-width: 100% !important; 
           width: 100% !important; 
           height: auto !important; 
@@ -1564,8 +2309,8 @@ export default function WelcomePage() {
         }
         @media (max-width: 380px) {
           .landing-hero-wrapper .landing-hero-sub {
-            font-size: 11px !important;
-            line-height: 1.5 !important;
+            color: rgba(255, 255, 255, 0.75) !important;
+            font-size: clamp(14px, 2vw, 19px) !important;
             padding-left: 10px !important;
             padding-right: 10px !important;
           }
@@ -2550,48 +3295,120 @@ export default function WelcomePage() {
         
       `}</style>
 
-          {/* Landing Page Content - gradient: hero through perfiles */}
+          {/* Landing Page Content - Block 1: Hero through Conoce BIZEN (Dark Continuous) */}
           <LandingContent sectionRange="gradient" />
+          <LandingContent sectionRange="conoce" />
+        </div>
+
+        {/* Block 2: Adventure Carousel (Light) */}
+        <LandingContent sectionRange="carousel" />
+
+        {/* Block 3: Problema + How it works (Dark Continuous) */}
+        <div
+          style={{
+            background:
+              "linear-gradient(180deg, #0a1628 0%, #040f26 40%, #071840 70%, #040e24 100%)",
+            position: "relative",
+          }}
+        >
+          <LandingContent sectionRange="problema_flow" />
         </div>
 
         {/* Rest of landing (white background) */}
         <LandingContent sectionRange="rest" />
       </main>
-      <section id="impacto" className="section testimonials-section reveal-element" style={{ background: "linear-gradient(160deg, #f0f6ff 0%, #f8fcff 60%, #ffffff 100%)", padding: "clamp(72px, 10vw, 112px) clamp(20px, 4vw, 56px) clamp(40px, 5vw, 64px)", marginBottom: "clamp(12px, 2vw, 24px)" }}>
+      <section
+        id="impacto"
+        className="section testimonials-section reveal-element"
+        style={{
+          background:
+            "linear-gradient(160deg, #f0f6ff 0%, #f8fcff 60%, #ffffff 100%)",
+          padding:
+            "clamp(72px, 10vw, 112px) clamp(20px, 4vw, 56px) clamp(40px, 5vw, 64px)",
+          marginBottom: "clamp(12px, 2vw, 24px)",
+        }}
+      >
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 72px)" }}>
-            <span style={{
-              display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
-              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 500,
-              letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
-            }}>Testimonios</span>
-            <h2 style={{
-              textAlign: "center", margin: "0",
-              fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 500, color: "#111",
-              lineHeight: 1.15, letterSpacing: "-0.02em",
-            }}>
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: "clamp(48px, 7vw, 72px)",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-block",
+                background: "rgba(0,86,231,0.08)",
+                color: "#0056E7",
+                borderRadius: "999px",
+                padding: "6px 18px",
+                fontSize: "13px",
+                fontWeight: 500,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                marginBottom: "20px",
+              }}
+            >
+              Testimonios
+            </span>
+            <h2
+              style={{
+                textAlign: "center",
+                margin: "0",
+                fontSize: "clamp(30px, 4.5vw, 48px)",
+                fontWeight: 500,
+                color: "#111",
+                lineHeight: 1.15,
+                letterSpacing: "-0.02em",
+              }}
+            >
               Colegios líderes en México{" "}
-              <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>ya evolucionaron</span>{" "}con BIZEN.
+              <span
+                style={{
+                  background: "linear-gradient(90deg, #0056E7, #1983FD)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                ya evolucionaron
+              </span>{" "}
+              con BIZEN.
             </h2>
           </div>
 
-          <div style={{ position: "relative", maxWidth: "900px", margin: "0 auto" }}>
-            <div style={{ position: "relative", perspective: "1000px", minHeight: "320px" }}>
+          <div
+            style={{
+              position: "relative",
+              maxWidth: "900px",
+              margin: "0 auto",
+            }}
+          >
+            <div
+              style={{
+                position: "relative",
+                perspective: "1000px",
+                minHeight: "320px",
+              }}
+            >
               {[
                 {
-                  quote: "Una plataforma increíble para aprender finanzas personales de forma clara y práctica. A mi hijo le encantó.",
+                  quote:
+                    "Una plataforma increíble para aprender finanzas personales de forma clara y práctica. A mi hijo le encantó.",
                   name: "Gabriela Burgos",
                   title: "Directora de Programas de Emprendimiento · BLOQUE",
                   image: "/uploads/Landing_page/image.png",
                 },
                 {
-                  quote: "Una herramienta excepcional para quienes buscan desarrollar educación financiera de forma práctica.",
+                  quote:
+                    "Una herramienta excepcional para quienes buscan desarrollar educación financiera de forma práctica.",
                   name: "Alejandro Rolland",
                   title: "Secretaría de Desarrollo Sustentable · Querétaro",
                   image: "/uploads/Landing_page/image%20copy.png",
                 },
                 {
-                  quote: "Una plataforma innovadora que acerca las finanzas personales de manera sencilla y atractiva para jóvenes.",
+                  quote:
+                    "Una plataforma innovadora que acerca las finanzas personales de manera sencilla y atractiva para jóvenes.",
                   name: "Joanna Vazquez",
                   title: "Coordinadora Universidad · Mondragón México",
                   image: "/uploads/Landing_page/joanna.png",
@@ -2605,53 +3422,132 @@ export default function WelcomePage() {
                     right: 0,
                     top: 0,
                     opacity: activeTestimonial === idx ? 1 : 0,
-                    transform: activeTestimonial === idx ? "translateX(0)" : idx < activeTestimonial ? "translateX(-36px)" : "translateX(36px)",
+                    transform:
+                      activeTestimonial === idx
+                        ? "translateX(0)"
+                        : idx < activeTestimonial
+                          ? "translateX(-36px)"
+                          : "translateX(36px)",
                     pointerEvents: activeTestimonial === idx ? "auto" : "none",
-                    transition: "opacity 0.45s ease, transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                    transition:
+                      "opacity 0.45s ease, transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                     zIndex: activeTestimonial === idx ? 2 : 1,
                   }}
                   className="testimonial-card-animate"
                 >
-                  <div className="testimonial-premium-card" style={{
-                    background: "#FBFAF5",
-                    borderRadius: "28px",
-                    padding: "clamp(28px, 4vw, 48px)",
-                    border: "1px solid rgba(0, 86, 231, 0.1)",
-                    boxShadow: "0 16px 48px rgba(0, 86, 231, 0.08), 0 2px 8px rgba(0,0,0,0.04)",
-                    display: "grid",
-                    gridTemplateColumns: "auto 1fr",
-                    gap: "clamp(24px, 4vw, 40px)",
-                    alignItems: "flex-start",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}>
-                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "linear-gradient(90deg, #0056E7, #1983FD)" }} />
-                    <div style={{
-                      width: "clamp(96px, 13vw, 140px)",
-                      height: "clamp(96px, 13vw, 140px)",
-                      borderRadius: "20px",
-                      overflow: "hidden",
-                      flexShrink: 0,
+                  <div
+                    className="testimonial-premium-card"
+                    style={{
+                      background: "#FBFAF5",
+                      borderRadius: "28px",
+                      padding: "clamp(28px, 4vw, 48px)",
+                      border: "1px solid rgba(0, 86, 231, 0.1)",
+                      boxShadow:
+                        "0 16px 48px rgba(0, 86, 231, 0.08), 0 2px 8px rgba(0,0,0,0.04)",
+                      display: "grid",
+                      gridTemplateColumns: "auto 1fr",
+                      gap: "clamp(24px, 4vw, 40px)",
+                      alignItems: "flex-start",
                       position: "relative",
-                      boxShadow: "0 8px 24px rgba(0,86,231,0.15)",
-                      border: "3px solid rgba(0,86,231,0.12)",
-                    }}>
-                      <Image src={testimonial.image} alt={testimonial.name} fill style={{ objectFit: "cover" }} />
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "4px",
+                        background: "linear-gradient(90deg, #0056E7, #1983FD)",
+                      }}
+                    />
+                    <div
+                      style={{
+                        width: "clamp(96px, 13vw, 140px)",
+                        height: "clamp(96px, 13vw, 140px)",
+                        borderRadius: "20px",
+                        overflow: "hidden",
+                        flexShrink: 0,
+                        position: "relative",
+                        boxShadow: "0 8px 24px rgba(0,86,231,0.15)",
+                        border: "3px solid rgba(0,86,231,0.12)",
+                      }}
+                    >
+                      <Image
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        fill
+                        style={{ objectFit: "cover" }}
+                      />
                     </div>
                     <div>
-                      <div style={{ display: "flex", gap: "4px", marginBottom: "14px" }}>
-                        {[0, 1, 2, 3, 4].map(s => (
-                          <svg key={s} width="18" height="18" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "4px",
+                          marginBottom: "14px",
+                        }}
+                      >
+                        {[0, 1, 2, 3, 4].map((s) => (
+                          <svg
+                            key={s}
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="#FBBF24"
+                          >
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          </svg>
                         ))}
                       </div>
-                      <p style={{ margin: "0 0 20px", fontSize: "clamp(15px, 1.1vw, 18px)", lineHeight: 1.7, color: "#1e293b", fontStyle: "italic" }}>
+                      <p
+                        style={{
+                          margin: "0 0 20px",
+                          fontSize: "clamp(15px, 1.1vw, 18px)",
+                          lineHeight: 1.7,
+                          color: "#1e293b",
+                          fontStyle: "italic",
+                        }}
+                      >
                         "{testimonial.quote}"
                       </p>
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <div style={{ width: "32px", height: "2px", background: "linear-gradient(90deg,#0056E7,#1983FD)", borderRadius: "2px" }} />
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "32px",
+                            height: "2px",
+                            background:
+                              "linear-gradient(90deg,#0056E7,#1983FD)",
+                            borderRadius: "2px",
+                          }}
+                        />
                         <div>
-                          <p style={{ margin: 0, fontSize: "clamp(14px, 1rem, 16px)", fontWeight: 500, color: "#111" }}>{testimonial.name}</p>
-                          <p style={{ margin: "3px 0 0", fontSize: "clamp(12px, 0.85rem, 14px)", color: "#64748b" }}>{testimonial.title}</p>
+                          <p
+                            style={{
+                              margin: 0,
+                              fontSize: "clamp(14px, 1rem, 16px)",
+                              fontWeight: 500,
+                              color: "#111",
+                            }}
+                          >
+                            {testimonial.name}
+                          </p>
+                          <p
+                            style={{
+                              margin: "3px 0 0",
+                              fontSize: "clamp(12px, 0.85rem, 14px)",
+                              color: "#64748b",
+                            }}
+                          >
+                            {testimonial.title}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -2660,34 +3556,108 @@ export default function WelcomePage() {
               ))}
             </div>
 
-            <div className="carousel-nav-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", width: "max-content", margin: "40px auto 0" }}>
+            <div
+              className="carousel-nav-wrapper"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "24px",
+                width: "max-content",
+                margin: "40px auto 0",
+              }}
+            >
               <button
                 type="button"
                 className="landing-carousel-arrow prev"
                 aria-label="Anterior"
-                onClick={() => setActiveTestimonial(prev => prev === 0 ? 2 : prev - 1)}
-                style={{ width: "52px", height: "52px", borderRadius: "50%", background: "rgba(0, 86, 231, 0.1)", border: "1.5px solid rgba(0, 86, 231, 0.2)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                onClick={() =>
+                  setActiveTestimonial((prev) => (prev === 0 ? 2 : prev - 1))
+                }
+                style={{
+                  width: "52px",
+                  height: "52px",
+                  borderRadius: "50%",
+                  background: "rgba(0, 86, 231, 0.1)",
+                  border: "1.5px solid rgba(0, 86, 231, 0.2)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0056E7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#0056E7"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
               </button>
               <div style={{ display: "flex", gap: "10px" }}>
-                {[0, 1, 2].map(idx => (
-                  <button key={idx} onClick={() => setActiveTestimonial(idx)} style={{ width: activeTestimonial === idx ? "32px" : "12px", height: "12px", borderRadius: "6px", background: activeTestimonial === idx ? "#0056E7" : "rgba(0,86,231,0.2)", border: "none", cursor: "pointer", transition: "all 0.3s ease" }} aria-label={`Testimonio ${idx + 1}`} />
+                {[0, 1, 2].map((idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveTestimonial(idx)}
+                    style={{
+                      width: activeTestimonial === idx ? "32px" : "12px",
+                      height: "12px",
+                      borderRadius: "6px",
+                      background:
+                        activeTestimonial === idx
+                          ? "#0056E7"
+                          : "rgba(0,86,231,0.2)",
+                      border: "none",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                    }}
+                    aria-label={`Testimonio ${idx + 1}`}
+                  />
                 ))}
               </div>
               <button
                 type="button"
                 className="landing-carousel-arrow next"
                 aria-label="Siguiente"
-                onClick={() => setActiveTestimonial(prev => prev === 2 ? 0 : prev + 1)}
-                style={{ width: "52px", height: "52px", borderRadius: "50%", background: "#0056E7", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 16px rgba(0, 86, 231, 0.3)" }}
+                onClick={() =>
+                  setActiveTestimonial((prev) => (prev === 2 ? 0 : prev + 1))
+                }
+                style={{
+                  width: "52px",
+                  height: "52px",
+                  borderRadius: "50%",
+                  background: "#0056E7",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 6px 16px rgba(0, 86, 231, 0.3)",
+                }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
               </button>
             </div>
           </div>
         </div>
-      </section> {/* TESTIMONIALS FIX VERIFIED */}
+      </section>{" "}
+      {/* TESTIMONIALS FIX VERIFIED */}
       <LandingWaitlistFooter />
       {/* Blue Dot Cursor */}
       <div
@@ -2704,25 +3674,25 @@ export default function WelcomePage() {
           zIndex: 9999,
           transform: `translate3d(${mousePos.x - 10}px, ${mousePos.y - 10}px, 0)`,
           boxShadow: "0 0 15px rgba(37, 99, 235, 0.4)",
-          transition: "transform 0.05s ease-out"
+          transition: "transform 0.05s ease-out",
         }}
       />
     </div>
-  )
+  );
 }
 
 // Landing Content Component - extracted from /landing page
-type Level = "Principiante" | "Intermedio" | "Avanzado"
+type Level = "Principiante" | "Intermedio" | "Avanzado";
 
 type Course = {
-  title: string
-  level: Level
-  duration: string
-  image: string
-  url: string
-}
+  title: string;
+  level: Level;
+  duration: string;
+  image: string;
+  url: string;
+};
 
-type FAQ = { q: string; a: string }
+type FAQ = { q: string; a: string };
 
 const defaultCourses: Course[] = [
   {
@@ -2773,7 +3743,7 @@ const defaultCourses: Course[] = [
       "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop",
     url: "#ver-curso-6",
   },
-]
+];
 
 const logoCarouselLogos: { src: string; alt: string }[] = [
   { src: "/logos/logo-imef.png", alt: "IMEF Ejecutivos de Finanzas" },
@@ -2782,18 +3752,34 @@ const logoCarouselLogos: { src: string; alt: string }[] = [
   { src: "/logos/logo-queretaro.png", alt: "Querétaro - Juntos, Adelante" },
   { src: "/logos/logo-hex.png", alt: "Partner" },
   { src: "/logos/logo-balmoral.png", alt: "Balmoral Escocés Preparatoria" },
-]
+];
 
 const problemSchools: { title: string; description: string }[] = [
-  { title: "Teoría sin práctica", description: "Se enseña el concepto pero no se practica con casos reales." },
-  { title: "Difícil medir avance", description: "No hay forma clara de ver el progreso de cada estudiante." },
-  { title: "Falta de tiempo del docente", description: "Los profesores no tienen tiempo para personalizar la enseñanza." },
-]
+  {
+    title: "Teoría sin práctica",
+    description: "Se enseña el concepto pero no se practica con casos reales.",
+  },
+  {
+    title: "Difícil medir avance",
+    description: "No hay forma clara de ver el progreso de cada estudiante.",
+  },
+  {
+    title: "Falta de tiempo del docente",
+    description:
+      "Los profesores no tienen tiempo para personalizar la enseñanza.",
+  },
+];
 const howItWorksSteps: { title: string; schoolsText: string }[] = [
   { title: "Empiezo", schoolsText: "El colegio crea grupos y accesos." },
-  { title: "Practico", schoolsText: "Los estudiantes usan simuladores y retos en clase." },
-  { title: "Mido mi progreso", schoolsText: "El docente ve reportes y avance por alumno." },
-]
+  {
+    title: "Practico",
+    schoolsText: "Los estudiantes usan simuladores y retos en clase.",
+  },
+  {
+    title: "Mido mi progreso",
+    schoolsText: "El docente ve reportes y avance por alumno.",
+  },
+];
 
 const defaultFaqs: FAQ[] = [
   {
@@ -2820,14 +3806,25 @@ const defaultFaqs: FAQ[] = [
     q: "¿Hay plan gratuito?",
     a: "Periódicamente abrimos retos gratuitos. Suscríbete para enterarte.",
   },
-]
+];
 
-function AccordionItem({ question, answer }: { question: string; answer: string }) {
-  const [open, setOpen] = React.useState(false)
-  const id = React.useMemo(() =>
-    question.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, "").slice(0, 64),
-    [question]
-  )
+function AccordionItem({
+  question,
+  answer,
+}: {
+  question: string;
+  answer: string;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const id = React.useMemo(
+    () =>
+      question
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-_]/g, "")
+        .slice(0, 64),
+    [question],
+  );
 
   return (
     <div className={`accordion-item ${open ? "open" : ""}`} role="listitem">
@@ -2839,7 +3836,13 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
         type="button"
       >
         <span>{question}</span>
-        <svg className="chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+        <svg
+          className="chev"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
           <path
             d="M6 9l6 6 6-6"
             stroke="currentColor"
@@ -2849,1291 +3852,88 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
           />
         </svg>
       </button>
-      <div id={id} className="accordion-panel" role="region" aria-labelledby={id}>
+      <div
+        id={id}
+        className="accordion-panel"
+        role="region"
+        aria-labelledby={id}
+      >
         <p>{answer}</p>
       </div>
     </div>
-  )
+  );
 }
 
 function StepIcon1({ color }: { color: string }) {
   return (
-    <svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true" className="step-icon">
+    <svg
+      width="36"
+      height="36"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="step-icon"
+    >
       <path
         fill={color}
         d="M12 2a5 5 0 015 5v1h1a3 3 0 013 3v8a3 3 0 01-3 3H6a3 3 0 01-3-3v-8a3 3 0 013-3h1V7a5 5 0 015-5zm-3 6v1h6V8a3 3 0 10-6 0z"
       />
     </svg>
-  )
+  );
 }
 
 function StepIcon2({ color }: { color: string }) {
   return (
-    <svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true" className="step-icon">
-      <path fill={color} d="M3 4h18v2H3V4zm0 4h10v2H3V8zm0 4h14v2H3v-2zm0 4h18v2H3v-2z" />
+    <svg
+      width="36"
+      height="36"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="step-icon"
+    >
+      <path
+        fill={color}
+        d="M3 4h18v2H3V4zm0 4h10v2H3V8zm0 4h14v2H3v-2zm0 4h18v2H3v-2z"
+      />
     </svg>
-  )
+  );
 }
 
 function StepIcon3({ color }: { color: string }) {
   return (
-    <svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true" className="step-icon">
+    <svg
+      width="36"
+      height="36"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="step-icon"
+    >
       <path
         fill={color}
         d="M12 2l2.39 4.84L20 8l-4 3.9L17.48 18 12 15.7 6.52 18 8 11.9 4 8l5.61-1.16L12 2z"
       />
     </svg>
-  )
+  );
 }
 
-function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 'rest' | 'all' }) {
-  const primary = "#0056E7"
-  const accent = "#10B981"
-  const [activeProfile, setActiveProfile] = React.useState<"docentes" | "estudiantes" | "padres">("docentes")
-  const [activeAdventureSlide, setActiveAdventureSlide] = React.useState(0)
-
-  return (
-    <>
-      <style>{landingCSS}</style>
-      {(sectionRange === 'all' || sectionRange === 'gradient') && (<>
-
-        {/* Somos BIZEN - 4 blue cards */}
-
-        {/* 4 Perfiles Educativos — Premium Dark mode */}
-        <section id="perfiles" className="section perfiles-section reveal-element" style={{
-          background: "linear-gradient(180deg, #FFFFFF 0%, #f4f8ff 100%)", // Gentle transition from previous section
-          position: "relative",
-          overflow: "visible"
-        }}>
-          {/* Internal dark container for the actual perfiles content to match the premium theme */}
-          <div style={{
-            background: "linear-gradient(170deg, #040f26 0%, #06184d 50%, #040f26 100%)",
-            margin: "clamp(0px, 4vw, 60px) clamp(16px, 4vw, 40px)",
-            borderRadius: "48px",
-            padding: "clamp(64px, 10vw, 110px) clamp(24px, 5vw, 60px)",
-            position: "relative",
-            overflow: "visible",
-            boxShadow: "0 24px 80px rgba(0, 0, 0, 0.25)"
-          }}>
-            {/* Grid pattern */}
-            <div aria-hidden style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(25,131,253,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(25,131,253,0.04) 1px, transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />
-
-            <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-              {/* Header */}
-              <div style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 72px)" }}>
-                <span style={{
-                  display: "inline-block",
-                  background: "rgba(96, 165, 250, 0.15)",
-                  color: "#60a5fa",
-                  borderRadius: "999px",
-                  padding: "6px 20px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  marginBottom: "20px",
-                  border: "1px solid rgba(96, 165, 250, 0.2)"
-                }}>Comunidad educativa</span>
-                <h2 style={{
-                  textAlign: "center",
-                  fontSize: "clamp(34px, 5vw, 60px)",
-                  fontWeight: 700,
-                  color: "#FFFFFF",
-                  lineHeight: 1.1,
-                  marginBottom: "clamp(16px, 2vw, 24px)",
-                  letterSpacing: "-0.03em",
-                }}>
-                  1 solución,{" "}
-                  <span style={{
-                    background: "linear-gradient(90deg, #60a5fa, #1983FD)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}>3 perfiles educativos</span>.
-                </h2>
-                <p style={{ margin: "0 auto", maxWidth: "520px", fontSize: "clamp(16px, 1.3vw, 19px)", color: "#FFFFFF", fontWeight: 400, lineHeight: 1.7 }}>
-                  Un diseño inteligente que adapta toda la experiencia a quién eres.
-                </p>
-              </div>
-
-              {/* Content Card - dark premium frost */}
-              <div className="glass-card-premium" style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                backdropFilter: "blur(32px)",
-                WebkitBackdropFilter: "blur(32px)",
-                borderRadius: "36px",
-                padding: "clamp(32px, 4vw, 48px) clamp(28px, 4vw, 56px) clamp(40px, 5vw, 64px)",
-                boxShadow: "0 24px 64px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                position: "relative",
-                zIndex: 1,
-              }}>
-                {/* Tabs */}
-                <div style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "10px",
-                  marginBottom: "clamp(36px, 5vw, 52px)",
-                  flexWrap: "wrap",
-                  background: "rgba(255, 255, 255, 0.04)",
-                  borderRadius: "20px",
-                  padding: "6px",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  maxWidth: "480px",
-                  margin: "0 auto clamp(36px, 5vw, 52px)",
-                }}
-                  className="perfiles-tabs-row"
-                >
-                  {[
-                    { id: "docentes" as const, label: "Docentes" },
-                    { id: "estudiantes" as const, label: "Estudiantes" },
-                    { id: "padres" as const, label: "Padres" },
-                  ].map((profile) => (
-                    <button
-                      key={profile.id}
-                      onClick={() => setActiveProfile(profile.id)}
-                      style={{
-                        flex: 1,
-                        padding: "12px 20px",
-                        fontSize: "clamp(14px, 1rem, 16px)",
-                        fontWeight: 500,
-                        border: "none",
-                        borderRadius: "14px",
-                        cursor: "pointer",
-                        transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-                        background: activeProfile === profile.id ? "#0056E7" : "transparent",
-                        color: activeProfile === profile.id ? "#ffffff" : "#64748b",
-                        boxShadow: activeProfile === profile.id ? "0 6px 20px rgba(0, 86, 231, 0.25)" : "none",
-                      }}
-                      className="profile-tab-button"
-                    >
-                      {profile.label}
-                    </button>
-                  ))}
-                </div>
-
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "clamp(32px, 5vw, 64px)",
-                  alignItems: "center",
-                }}
-                  className="perfiles-content-grid"
-                >
-                  {/* Left: Text Content - slide animation on tab change */}
-                  <div className="perfiles-content-left" style={{ overflow: "hidden", position: "relative" }}>
-                    <div key={activeProfile} className="perfiles-slide-in">
-                      <div style={{ marginBottom: "clamp(16px, 3vw, 24px)" }}>
-                        <span style={{
-                          display: "inline-block",
-                          background: "linear-gradient(135deg, #0056E7, #1983FD)",
-                          color: "#fff",
-                          borderRadius: "12px",
-                          padding: "6px 16px",
-                          fontSize: "13px",
-                          fontWeight: 500,
-                          letterSpacing: "0.05em",
-                          textTransform: "uppercase",
-                          marginBottom: "14px",
-                        }}>
-                          {activeProfile === "docentes" && "Para docentes"}
-                          {activeProfile === "estudiantes" && "Para estudiantes"}
-                          {activeProfile === "padres" && "Para padres"}
-                        </span>
-                        <h3 style={{
-                          fontSize: "clamp(28px, 3.5vw, 44px)",
-                          fontWeight: 500,
-                          color: "#111",
-                          marginBottom: 0,
-                          letterSpacing: "-0.02em",
-                          lineHeight: 1.15,
-                        }}>
-                          {activeProfile === "docentes" && "Enseña más con menos esfuerzo"}
-                          {activeProfile === "estudiantes" && "Aprende haciendo, no memorizando"}
-                          {activeProfile === "padres" && "Acompaña su camino financiero"}
-                        </h3>
-                      </div>
-
-                      <p style={{
-                        fontSize: "clamp(16px, 1.15rem, 19px)",
-                        lineHeight: 1.65,
-                        color: "#374151",
-                        marginBottom: "clamp(24px, 4vw, 32px)",
-                      }}>
-                        {activeProfile === "docentes" && "Herramientas prácticas para enseñar finanzas con contenido listo para usar, seguimiento en tiempo real y recursos descargables."}
-                        {activeProfile === "estudiantes" && "Aprende finanzas de forma divertida con cursos interactivos, simuladores reales y recompensas por tu progreso."}
-                        {activeProfile === "padres" && "Acompaña el aprendizaje financiero de tus hijos con acceso a su progreso, recursos compartidos y actividades familiares."}
-                      </p>
-
-                      {/* Bullet Points */}
-                      <ul style={{
-                        listStyle: "none",
-                        margin: "0 0 clamp(28px, 4vw, 36px) 0",
-                        padding: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "16px",
-                      }}>
-                        {activeProfile === "docentes" && (
-                          <>
-                            {[
-                              { text: <>Contenido listo para usar con <strong>lecciones interactivas</strong>.</> },
-                              { text: <>Seguimiento en <strong>tiempo real</strong> del progreso de tus estudiantes.</> },
-                              { text: <>Recursos <strong>descargables</strong> y materiales de apoyo.</> },
-                            ].map((item, i) => (
-                              <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
-                                <span style={{
-                                  width: "26px",
-                                  height: "26px",
-                                  background: "linear-gradient(135deg, #0056E7, #1983FD)",
-                                  borderRadius: "8px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#fff",
-                                  fontWeight: 500,
-                                  fontSize: "13px",
-                                  flexShrink: 0,
-                                  boxShadow: "0 4px 10px rgba(0, 86, 231, 0.3)",
-                                }}><CheckIcon size={14} color="white" /></span>
-                                <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.6, color: "#374151" }}>
-                                  {item.text}
-                                </span>
-                              </li>
-                            ))}
-                          </>
-                        )}
-                        {activeProfile === "estudiantes" && (
-                          <>
-                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                              <span style={{
-                                width: "24px",
-                                height: "24px",
-                                background: "#0056E7",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "#fff",
-                                fontWeight: 500,
-                                fontSize: "14px",
-                                flexShrink: 0,
-                              }}><CheckIcon size={14} color="white" /></span>
-                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
-                                Aprende con <strong>gamificación</strong> y recompensas.
-                              </span>
-                            </li>
-                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                              <span style={{
-                                width: "24px",
-                                height: "24px",
-                                background: "#0056E7",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "#fff",
-                                fontWeight: 500,
-                                fontSize: "14px",
-                                flexShrink: 0,
-                              }}><CheckIcon size={14} color="white" /></span>
-                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
-                                Practica con <strong>simuladores reales</strong> sin riesgo.
-                              </span>
-                            </li>
-                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                              <span style={{
-                                width: "24px",
-                                height: "24px",
-                                background: "#0056E7",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "#fff",
-                                fontWeight: 500,
-                                fontSize: "14px",
-                                flexShrink: 0,
-                              }}><CheckIcon size={14} color="white" /></span>
-                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
-                                Rastrea tu <strong>progreso</strong> y gana certificaciones.
-                              </span>
-                            </li>
-                          </>
-                        )}
-                        {activeProfile === "padres" && (
-                          <>
-                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                              <span style={{
-                                width: "24px",
-                                height: "24px",
-                                background: "#0056E7",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "#fff",
-                                fontWeight: 500,
-                                fontSize: "14px",
-                                flexShrink: 0,
-                              }}><CheckIcon size={14} color="white" /></span>
-                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
-                                Visualiza el <strong>progreso</strong> de tus hijos en tiempo real.
-                              </span>
-                            </li>
-                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                              <span style={{
-                                width: "24px",
-                                height: "24px",
-                                background: "#0056E7",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "#fff",
-                                fontWeight: 500,
-                                fontSize: "14px",
-                                flexShrink: 0,
-                              }}><CheckIcon size={14} color="white" /></span>
-                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
-                                Accede a <strong>recursos compartidos</strong> y actividades familiares.
-                              </span>
-                            </li>
-                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                              <span style={{
-                                width: "24px",
-                                height: "24px",
-                                background: "#0056E7",
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "#fff",
-                                fontWeight: 500,
-                                fontSize: "14px",
-                                flexShrink: 0,
-                              }}>✓</span>
-                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
-                                Fomenta la <strong>educación financiera</strong> desde casa.
-                              </span>
-                            </li>
-                          </>
-                        )}
-                      </ul>
-
-                      {/* CTA Button - opens demo modal */}
-                      <a
-                        href="https://calendly.com/diego-bizen"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          padding: "clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 32px)",
-                          fontSize: "clamp(14px, 2vw, 18px)",
-                          fontWeight: 600,
-                          background: "linear-gradient(135deg, #0056E7, #1983FD)",
-                          color: "#ffffff",
-                          border: "none",
-                          borderRadius: 9999,
-                          cursor: "pointer",
-                          transition: "all 0.3s ease",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "clamp(6px, 1.5vw, 10px)",
-                          boxShadow: "0 8px 24px rgba(0, 86, 231, 0.45)",
-                          minHeight: 44,
-                          textDecoration: "none",
-                        }}
-                        className="quiero-demo-button landing-hero-cta-primary"
-                      >
-                        Quiero una demo
-                        <span className="quiero-demo-arrow" style={{ fontSize: "clamp(16px, 4vw, 20px)" }} aria-hidden>→</span>
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Right: Photo for active profile (1 solución, 3 perfiles educativos) */}
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minHeight: "360px",
-                  }}>
-                    <div key={activeProfile} className="perfiles-slide-in" style={{
-                      width: "100%",
-                      maxWidth: "400px",
-                      borderRadius: "28px",
-                      overflow: "hidden",
-                      position: "relative",
-                      boxShadow: "0 12px 40px rgba(0, 0, 0, 0.12)",
-                    }}>
-                      <Image
-                        src={
-                          activeProfile === "docentes" ? "/uploads/Landing_page/perfil-docentes.png" :
-                            activeProfile === "estudiantes" ? "/uploads/Landing_page/perfil-estudiantes.png" :
-                              "/uploads/Landing_page/perfil-padres.png"
-                        }
-                        alt={
-                          activeProfile === "docentes" ? "Docentes en el aula" :
-                            activeProfile === "estudiantes" ? "Estudiante con la plataforma" :
-                              "Padres e hijos aprendiendo"
-                        }
-                        width={400}
-                        height={300}
-                        style={{
-                          width: "100%",
-                          height: "auto",
-                          display: "block",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </>)}
-      {(sectionRange === 'all' || sectionRange === 'rest') && (<>
-        {/* Conoce BIZEN - deep spatial blue enhanced */}
-        <section id="conoce-bizen" className="section conoce-bizen-section reveal-element" style={{
-          background: "linear-gradient(160deg, #020c1f 0%, #041640 40%, #071e52 70%, #020c1f 100%)",
-          padding: "clamp(80px, 10vw, 120px) clamp(16px, 4vw, 48px)",
-          margin: "0",
-          width: "100%",
-          maxWidth: "100%",
-          boxSizing: "border-box" as const,
-          height: "auto",
-          overflow: "hidden",
-          position: "relative" as const,
-        }}>
-
-          {/* Animated dot-grid overlay */}
-          <div aria-hidden style={{
-            position: "absolute", inset: 0, zIndex: 0,
-            backgroundImage: "radial-gradient(rgba(25, 131, 253, 0.18) 1px, transparent 1px)",
-            backgroundSize: "36px 36px",
-            pointerEvents: "none",
-          }} />
-
-          {/* Floating glow orbs */}
-          <div aria-hidden style={{
-            position: "absolute", top: "-120px", left: "-120px",
-            width: "520px", height: "520px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0,86,231,0.28) 0%, transparent 70%)",
-            filter: "blur(60px)", zIndex: 0, pointerEvents: "none",
-          }} />
-          <div aria-hidden style={{
-            position: "absolute", bottom: "-100px", right: "-80px",
-            width: "480px", height: "480px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(25,131,253,0.22) 0%, transparent 70%)",
-            filter: "blur(60px)", zIndex: 0, pointerEvents: "none",
-          }} />
-          <div aria-hidden style={{
-            position: "absolute", top: "40%", left: "50%", transform: "translate(-50%, -50%)",
-            width: "300px", height: "300px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0,86,231,0.12) 0%, transparent 70%)",
-            filter: "blur(80px)", zIndex: 0, pointerEvents: "none",
-          }} />
-
-          {/* Inner container */}
-          <div style={{ position: "relative", zIndex: 1, maxWidth: "1320px", margin: "0 auto" }}>
-
-            {/* Section label + heading centered */}
-            <div style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 72px)" }}>
-              <span style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                background: "rgba(25, 131, 253, 0.15)",
-                color: "#60aeff",
-                borderRadius: "999px",
-                padding: "6px 18px",
-                fontSize: "13px",
-                fontWeight: 500,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                marginBottom: "24px",
-                border: "1px solid rgba(25, 131, 253, 0.25)",
-                backdropFilter: "blur(4px)",
-              }}>
-                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#1983FD", display: "inline-block", boxShadow: "0 0 8px #1983FD" }} />
-                Conoce BIZEN
-              </span>
-              <h2 style={{
-                fontSize: "clamp(32px, 4.5vw, 58px)",
-                fontWeight: 500,
-                color: "#fff",
-                lineHeight: 1.12,
-                marginBottom: "clamp(16px, 2vw, 20px)",
-                letterSpacing: "-0.025em",
-              }}>
-                Aprender finanzas nunca ha sido{" "}
-                <span style={{
-                  background: "linear-gradient(90deg, #4da3ff, #1983FD, #60aeff)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}>tan claro y relevante</span>.
-              </h2>
-              <p style={{
-                fontSize: "clamp(16px, 1.2vw, 19px)",
-                lineHeight: 1.7,
-                color: "rgba(180, 205, 255, 0.75)",
-                maxWidth: "580px",
-                margin: "0 auto",
-              }}>
-                Impulsa a tu escuela a desarrollar habilidades clave mientras los estudiantes aprenden de forma práctica y guiada.
-              </p>
-            </div>
-
-            {/* Stats row */}
-            <div className="conoce-stats-row" style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "clamp(16px, 3vw, 48px)",
-              marginBottom: "clamp(48px, 6vw, 72px)",
-              flexWrap: "wrap",
-            }}>
-              {[
-                { value: "+500", label: "Estudiantes activos" },
-                { value: "6", label: "Habilidades clave" },
-                { value: "98%", label: "Satisfacción docente" },
-              ].map((stat, i) => (
-                <div key={i} style={{
-                  textAlign: "center",
-                  padding: "clamp(16px,2vw,24px) clamp(24px,3vw,40px)",
-                  background: "rgba(255,255,255,0.04)",
-                  borderRadius: "20px",
-                  border: "1px solid rgba(25, 131, 253, 0.2)",
-                  backdropFilter: "blur(12px)",
-                  minWidth: "140px",
-                }}>
-                  <div style={{
-                    fontSize: "clamp(28px, 3.5vw, 44px)",
-                    fontWeight: 500,
-                    color: "#fff",
-                    letterSpacing: "-0.03em",
-                    background: "linear-gradient(135deg, #fff 40%, #60aeff 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}>{stat.value}</div>
-                  <div style={{
-                    fontSize: "clamp(12px, 0.85rem, 14px)",
-                    color: "rgba(180, 205, 255, 0.65)",
-                    fontWeight: 500,
-                    marginTop: "4px",
-                    letterSpacing: "0.03em",
-                  }}>{stat.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* 6 skills — 3-column card grid */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "clamp(14px, 2vw, 22px)",
-            }} className="conoce-skills-grid">
-              {[
-                { label: "Toma de decisiones informadas", desc: "Evalúa opciones y elige con criterio financiero en situaciones reales.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg> },
-                { label: "Pensamiento crítico aplicado", desc: "Analiza información y cuestiona supuestos para resolver mejor.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg> },
-                { label: "Resolución de problemas financieros", desc: "Enfrenta retos económicos reales con herramientas prácticas.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></svg> },
-                { label: "Planeación y visión a futuro", desc: "Establece metas claras y administra recursos con perspectiva.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> },
-                { label: "Trabajo colaborativo en el aula", desc: "Potencia el aprendizaje compartido en equipos.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> },
-                { label: "Responsabilidad socioemocional", desc: "Desarrolla autonomía, empatía y habilidades para la vida.", Icon: () => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></svg> },
-              ].map((item, i) => (
-                <div key={i} className={`reveal-element reveal-delay-${i % 3 + 1} conoce-skill-card`} style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(25, 131, 253, 0.18)",
-                  borderRadius: "24px",
-                  padding: "clamp(22px, 2.5vw, 30px)",
-                  display: "flex",
-                  flexDirection: "column" as const,
-                  gap: "16px",
-                  backdropFilter: "blur(16px)",
-                  WebkitBackdropFilter: "blur(16px)" as any,
-                  transition: "transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease",
-                  maxWidth: "340px",
-                  margin: "0 auto",
-                  width: "100%",
-                  cursor: "default",
-                  position: "relative" as const,
-                  overflow: "hidden",
-                }}>
-                  {/* card inner glow on hover — handled via CSS */}
-                  <div style={{
-                    width: "52px",
-                    height: "52px",
-                    borderRadius: "14px",
-                    background: "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
-                    color: "#fff",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 6px 20px rgba(0, 86, 231, 0.45)",
-                    flexShrink: 0,
-                  }}>
-                    <item.Icon />
-                  </div>
-                  <div>
-                    <div style={{
-                      fontSize: "clamp(15px, 1.05rem, 17px)",
-                      fontWeight: 500,
-                      color: "#e8f0ff",
-                      marginBottom: "8px",
-                      lineHeight: 1.3,
-                    }}>{item.label}</div>
-                    <div style={{
-                      fontSize: "clamp(13px, 0.88rem, 15px)",
-                      color: "rgba(180, 205, 255, 0.65)",
-                      lineHeight: 1.65,
-                    }}>{item.desc}</div>
-                  </div>
-                  {/* Hover arrow indicator */}
-                  <div className="conoce-card-arrow" style={{
-                    position: "absolute", bottom: "22px", right: "22px",
-                    width: "28px", height: "28px", borderRadius: "50%",
-                    background: "rgba(25,131,253,0.15)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    opacity: 0, transition: "opacity 0.2s ease, transform 0.2s ease",
-                    transform: "translateX(-4px)",
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60aeff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <style>{`
-            .conoce-skill-card:hover {
-              transform: translateY(-6px);
-              box-shadow: 0 20px 50px rgba(0, 86, 231, 0.35), 0 0 0 1px rgba(25, 131, 253, 0.4);
-              border-color: rgba(25, 131, 253, 0.45) !important;
-              background: rgba(255,255,255,0.07) !important;
-            }
-            .conoce-skill-card:hover .conoce-card-arrow {
-              opacity: 1 !important;
-              transform: translateX(0) !important;
-            }
-            @media (max-width: 900px) {
-              .conoce-skills-grid {
-                grid-template-columns: 1fr 1fr !important;
-              }
-              .conoce-stats-row > div {
-                min-width: 110px !important;
-              }
-            }
-            @media (max-width: 580px) {
-              .conoce-skills-grid {
-                grid-template-columns: 1fr !important;
-              }
-              .conoce-stats-row {
-                gap: 12px !important;
-              }
-            }
-            /* Force deep blue spatial background regardless of global overrides */
-            #conoce-bizen,
-            .conoce-bizen-section {
-              background: linear-gradient(160deg, #020c1f 0%, #041640 40%, #071e52 70%, #020c1f 100%) !important;
-              overflow: hidden !important;
-              position: relative !important;
-            }
-          `}</style>
-        </section>
-
-        {/* Cada clase, una aventura divertida — enhanced carousel */}
-        <section className="section adventure-carousel-section reveal-element" style={{
-          background: "#FBFAF5",
-          padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 60px)",
-          maxWidth: "1440px",
-          margin: "0 auto",
-          overflow: "visible",
-          height: "auto"
-        }}>
-
-          {/* Section header */}
-          <div style={{ textAlign: "center", marginBottom: "clamp(40px, 5vw, 60px)" }}>
-            <span style={{
-              display: "inline-block", background: "rgba(0,86,231,0.08)", color: "#0056E7",
-              borderRadius: "999px", padding: "6px 18px", fontSize: "13px", fontWeight: 500,
-              letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "20px",
-            }}>Metodología</span>
-            <h2 style={{
-              margin: 0,
-              fontSize: "clamp(30px, 4.5vw, 52px)",
-              fontWeight: 500,
-              color: "#111",
-              lineHeight: 1.15,
-              letterSpacing: "-0.02em",
-            }}>
-              Cada clase,{" "}
-              <span style={{ background: "linear-gradient(90deg, #0056E7, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-                una aventura divertida
-              </span>
-            </h2>
-          </div>
-
-          {/* Carousel */}
-          <div style={{ position: "relative", overflow: "visible" }}>
-            <div className="adventure-carousel-content-wrap" style={{ position: "relative", minHeight: "clamp(420px, 65vh, 680px)", overflow: "visible" }}>
-              {[
-                {
-                  title: "Microlearning",
-                  tag: "Lecciones cortas",
-                  description: "Utilizamos contenidos digitales y videos cortos interactivos en todas nuestras lecciones, creados por especialistas académicos y de animación infantil (Netflix) para facilitar el aprendizaje de tus estudiantes.",
-                  imageSrc: "/uploads/Landing_page/landing-1.png",
-                  imageAlt: "Microlearning",
-                },
-                {
-                  title: "Gamificación",
-                  tag: "Motivación constante",
-                  description: "Cada lección incluye retos y recompensas que mantienen a los estudiantes motivados y comprometidos con su aprendizaje financiero desde el primer día.",
-                  imageSrc: "/uploads/Landing_page/landing-2.png",
-                  imageAlt: "Gamificación",
-                },
-                {
-                  title: "Contenido Interactivo",
-                  tag: "Aprende haciendo",
-                  description: "Material multimedia diseñado para captar la atención y facilitar la comprensión de conceptos financieros complejos de forma práctica y atractiva.",
-                  imageSrc: "/uploads/Landing_page/landing-3.png",
-                  imageAlt: "Contenido Interactivo",
-                },
-              ].map((slide, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    position: activeAdventureSlide === idx ? "relative" : "absolute",
-                    top: 0, left: 0, right: 0, width: "100%",
-                    opacity: activeAdventureSlide === idx ? 1 : 0,
-                    visibility: activeAdventureSlide === idx ? "visible" : "hidden",
-                    pointerEvents: activeAdventureSlide === idx ? "auto" : "none",
-                    transition: "opacity 0.55s ease, visibility 0.55s ease",
-                    zIndex: activeAdventureSlide === idx ? 2 : 1,
-                  }}
-                >
-                  {/* Two-column card */}
-                  <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "clamp(24px, 4vw, 56px)",
-                    alignItems: "center",
-                    background: "linear-gradient(135deg, #0a1628 0%, #0d2050 60%, #0056E7 100%)",
-                    borderRadius: "32px",
-                    padding: "clamp(32px, 5vw, 56px)",
-                    boxSizing: "border-box",
-                    position: "relative",
-                    overflow: "visible", // Changed from hidden to fix internal scroll issue
-                    boxShadow: "0 24px 64px rgba(0, 86, 231, 0.2)",
-                    maxWidth: "1280px",
-                    margin: "0 auto",
-                  }} className="adventure-slide-grid">
-                    {/* Glow blobs */}
-                    <div style={{ position: "absolute", top: "-60px", right: "30%", width: "300px", height: "300px", background: "radial-gradient(circle, rgba(25,131,253,0.15) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-                    <div style={{ position: "absolute", bottom: "-40px", left: "10%", width: "240px", height: "240px", background: "radial-gradient(circle, rgba(0,86,231,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-
-                    {/* Left: Text */}
-                    <div style={{ position: "relative", zIndex: 1 }}>
-                      {/* Slide tag */}
-                      <span style={{
-                        display: "inline-block",
-                        background: "rgba(255,255,255,0.1)",
-                        border: "1px solid rgba(255,255,255,0.18)",
-                        color: "#93c5fd",
-                        borderRadius: "999px",
-                        padding: "5px 14px",
-                        fontSize: "12px",
-                        fontWeight: 500,
-                        letterSpacing: "0.07em",
-                        textTransform: "uppercase",
-                        marginBottom: "20px",
-                      }}>{slide.tag}</span>
-
-                      <h3 style={{
-                        margin: "0 0 clamp(14px, 2vw, 20px)",
-                        fontSize: "clamp(26px, 3vw, 42px)",
-                        fontWeight: 500,
-                        color: "#fff",
-                        lineHeight: 1.15,
-                        letterSpacing: "-0.02em",
-                      }}>
-                        {slide.title}
-                      </h3>
-
-                      <p style={{
-                        margin: "0 0 clamp(24px, 3vw, 36px)",
-                        fontSize: "clamp(15px, 1.05vw, 18px)",
-                        lineHeight: 1.75,
-                        color: "rgba(255,255,255,0.72)",
-                        maxWidth: "480px",
-                      }}>
-                        {slide.description}
-                      </p>
-
-                      <a
-                        href="https://calendly.com/diego-bizen"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          padding: "14px 28px",
-                          fontSize: "clamp(14px, 1rem, 17px)",
-                          fontWeight: 500,
-                          background: "#FBFAF5",
-                          color: "#0056E7",
-                          borderRadius: "999px",
-                          cursor: "pointer",
-                          boxShadow: "0 6px 20px rgba(255,255,255,0.15)",
-                          transition: "all 0.25s ease",
-                          textDecoration: "none",
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.transform = "translateY(-2px)"
-                          e.currentTarget.style.boxShadow = "0 10px 28px rgba(255,255,255,0.22)"
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.transform = "translateY(0)"
-                          e.currentTarget.style.boxShadow = "0 6px 20px rgba(255,255,255,0.15)"
-                        }}
-                      >
-                        Solicita tu demo
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                      </a>
-                    </div>
-
-                    {/* Right: Image */}
-                    <div style={{
-                      position: "relative",
-                      zIndex: 1,
-                      borderRadius: "20px",
-                      overflow: "hidden",
-                      aspectRatio: "4/3",
-                      background: "rgba(0,0,0,0.15)",
-                      boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
-                    }}>
-                      <Image
-                        src={slide.imageSrc}
-                        alt={slide.imageAlt}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 600px"
-                        style={{ objectFit: "cover", borderRadius: "20px" }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-
-            {/* Navigation Dots/Counter */}
-            <div className="carousel-nav-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "clamp(20px, 4vw, 32px)", margin: "clamp(24px, 3vw, 40px) auto 0", position: "relative", zIndex: 5 }}>
-              {/* Prev */}
-              <button
-                type="button"
-                onClick={() => setActiveAdventureSlide(prev => prev === 0 ? 2 : prev - 1)}
-                style={{
-                  width: "56px", height: "56px", borderRadius: "50%",
-                  background: "#FBFAF5", border: "1.5px solid rgba(0, 86, 231, 0.15)",
-                  boxShadow: "0 4px 12px rgba(0, 86, 231, 0.1)",
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "all 0.2s ease"
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.borderColor = "#0056E7"; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "rgba(0, 86, 231, 0.15)"; }}
-                aria-label="Slide anterior"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0056E7" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-              </button>
-
-              {/* Dots */}
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                {[0, 1, 2].map(idx => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveAdventureSlide(idx)}
-                    style={{
-                      width: activeAdventureSlide === idx ? "40px" : "10px",
-                      height: "10px",
-                      borderRadius: "999px",
-                      background: activeAdventureSlide === idx ? "#0056E7" : "rgba(0, 86, 231, 0.15)",
-                      border: "none",
-                      cursor: "pointer",
-                      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                    }}
-                    aria-label={`Ir al slide ${idx + 1}`}
-                  />
-                ))}
-              </div>
-
-              {/* Next */}
-              <button
-                type="button"
-                onClick={() => setActiveAdventureSlide(prev => prev === 2 ? 0 : prev + 1)}
-                style={{
-                  width: "56px", height: "56px", borderRadius: "50%",
-                  background: "#0056E7", border: "none",
-                  boxShadow: "0 6px 16px rgba(0, 86, 231, 0.3)",
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "all 0.2s ease"
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = "#015cf8"; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = "#0056E7"; }}
-                aria-label="Siguiente slide"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
-              </button>
-
-              {/* Counter */}
-              <span style={{ fontSize: "14px", fontWeight: 500, color: "rgba(0, 86, 231, 0.4)", minWidth: "40px" }}>
-                {activeAdventureSlide + 1} / 3
-              </span>
-            </div>
-
-
-          </div>
-        </section>
-
-        {/* Tres obstáculos — redesigned */}
-        <section id="problema" className="section curiosidad-section reveal-element" style={{
-          background: "linear-gradient(160deg, #0a1628 0%, #0d1f40 50%, #0a2050 100%)",
-          padding: "clamp(64px, 9vw, 112px) clamp(24px, 4vw, 56px)",
-          position: "relative",
-          overflow: "visible",
-          height: "auto",
-          maxWidth: "1400px",
-          margin: "0 auto",
-        }}>
-          {/* Decorative blobs */}
-          <div style={{ position: "absolute", top: "-100px", right: "-60px", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(25,131,253,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", bottom: "-80px", left: "-80px", width: "420px", height: "420px", background: "radial-gradient(circle, rgba(0,86,231,0.10) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-
-          {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 72px)", position: "relative", zIndex: 1 }}>
-            <span style={{
-              display: "inline-block",
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              color: "rgba(255,255,255,0.75)",
-              borderRadius: "999px",
-              padding: "6px 18px",
-              fontSize: "13px",
-              fontWeight: 500,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              marginBottom: "20px",
-            }}>El reto en educación financiera</span>
-            <h2 style={{
-              fontSize: "clamp(36px, 5vw, 62px)",
-              fontWeight: 500,
-              color: "#fff",
-              lineHeight: 1.1,
-              marginBottom: "16px",
-              letterSpacing: "-0.02em",
-            }}>
-              Tres obstáculos{" "}
-              <span style={{
-                background: "linear-gradient(90deg, #60a5fa, #1983FD)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>comunes.</span>
-            </h2>
-            <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "rgba(255,255,255,0.6)", lineHeight: 1.65 }}>
-              La educación financiera tropieza con lo mismo una y otra vez.
-            </p>
-          </div>
-
-          {/* Cards */}
-          <div className="curiosidad-cards-grid" style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "clamp(32px, 5vw, 64px)",
-            alignItems: "stretch",
-            maxWidth: "1280px",
-            margin: "0 auto clamp(40px, 5vw, 56px)",
-          }}>
-            {
-              [
-                { n: "01", title: "Teoría sin práctica", desc: "Se enseña el concepto pero no se practica con casos reales.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M8 13h8" /><path d="M8 17h8" /><path d="M10 9H8" /></svg>, delay: "0s" },
-                { n: "02", title: "Difícil medir avance", desc: "No hay forma clara de ver el progreso de cada estudiante.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><circle cx="9" cy="12" r="1" fill="rgba(255,255,255,0.8)" /><circle cx="12" cy="12" r="1" fill="rgba(255,255,255,0.8)" /><circle cx="15" cy="12" r="1" fill="rgba(255,255,255,0.8)" /></svg>, delay: "1.2s" },
-                { n: "03", title: "Falta de tiempo del docente", desc: "Los profesores no tienen tiempo para personalizar la enseñanza.", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>, delay: "2.4s" },
-              ].map((card, i) => (
-                <div key={i} style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "28px",
-                  padding: "clamp(28px, 4vw, 44px) clamp(24px, 3vw, 36px)",
-                  backdropFilter: "blur(10px)",
-                  position: "relative",
-                  animation: "float-premium-card 6s ease-in-out infinite",
-                  animationDelay: card.delay,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "20px",
-                  maxWidth: "360px",
-                  margin: "0 auto",
-                  width: "100%",
-                }}>
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
-                    <div style={{
-                      width: "64px", height: "64px", borderRadius: "18px",
-                      background: "linear-gradient(135deg, #0056E7, #1983FD)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      boxShadow: "0 8px 24px rgba(0, 86, 231, 0.35)", flexShrink: 0,
-                    }}>{card.icon}</div>
-                    <span style={{
-                      fontSize: "clamp(40px, 5vw, 60px)", fontWeight: 500, color: "rgba(255,255,255,0.07)",
-                      letterSpacing: "-0.04em", lineHeight: 1, userSelect: "none",
-                    }}>{card.n}</span>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: "clamp(11px, 0.8rem, 13px)", fontWeight: 500, color: "#60a5fa", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "8px" }}>
-                      Obstáculo {card.n}
-                    </div>
-                    <h3 style={{ margin: "0 0 10px", fontSize: "clamp(20px, 1.4rem, 24px)", fontWeight: 500, color: "#fff", lineHeight: 1.25 }}>
-                      {card.title}
-                    </h3>
-                    <p style={{ margin: 0, fontSize: "clamp(15px, 1rem, 17px)", lineHeight: 1.65, color: "rgba(255,255,255,0.55)", }}>
-                      {card.desc}
-                    </p>
-                  </div>
-                </div>
-              ))
-            }
-          </div>
-
-          {/* CTA bar */}
-          <div style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            borderRadius: "20px",
-            padding: "clamp(20px, 3vw, 28px) clamp(28px, 4vw, 56px)",
-            textAlign: "center",
-            backdropFilter: "blur(8px)",
-            maxWidth: "900px",
-            margin: "0 auto",
-          }}>
-            <p style={{ margin: 0, fontSize: "clamp(17px, 1.4vw, 21px)", color: "#fff", fontWeight: 500, lineHeight: 1.6 }}>
-              <span style={{ background: "linear-gradient(90deg, #60a5fa, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>BIZEN</span>
-              {" "}está diseñado para superar estos obstáculos.
-            </p>
-          </div>
-
-          <style>{`
-                @media (max-width: 700px) {
-                  .curiosidad-cards-grid { grid-template-columns: 1fr !important; }
-                }
-              `}</style>
-        </section>
-
-        {/* Cómo funciona  — Premium redesign */}
-        <section id="como-funciona" className="section how-it-works reveal-element reveal-delay-2" style={{
-          background: "linear-gradient(170deg, #040f26 0%, #071840 50%, #040e24 100%)",
-          padding: "clamp(80px, 10vw, 130px) clamp(24px, 5vw, 48px)",
-          overflow: "visible",
-          position: "relative",
-        }}>
-
-          {/* Background grid */}
-          <div aria-hidden style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "linear-gradient(rgba(0,86,231,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.05) 1px, transparent 1px)",
-            backgroundSize: "52px 52px",
-            pointerEvents: "none",
-          }} />
-
-          {/* Glow accent */}
-          <div aria-hidden style={{
-            position: "absolute",
-            top: "-20%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "min(80vw, 600px)",
-            height: "min(80vw, 600px)",
-            background: "radial-gradient(circle, rgba(0, 86, 231, 0.18) 0%, transparent 70%)",
-            borderRadius: "50%",
-            filter: "blur(60px)",
-            pointerEvents: "none",
-          }} />
-
-          {/* Content */}
-          <div style={{ maxWidth: "1100px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-
-            {/* Section label */}
-            <div style={{ textAlign: "center", marginBottom: "clamp(48px, 7vw, 80px)" }}>
-              <span style={{
-                display: "inline-block",
-                background: "rgba(25, 131, 253, 0.15)",
-                color: "#60a5fa",
-                borderRadius: "999px",
-                padding: "6px 18px",
-                fontSize: "12px",
-                fontWeight: 600,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                marginBottom: "20px",
-                border: "1px solid rgba(96, 165, 250, 0.2)",
-              }}>Proceso</span>
-              <h2 style={{
-                margin: "0 0 16px",
-                fontSize: "clamp(30px, 5vw, 56px)",
-                fontWeight: 700,
-                color: "#fff",
-                lineHeight: 1.08,
-                letterSpacing: "-0.03em",
-              }}>
-                ¿Cómo{" "}
-                <span style={{
-                  background: "linear-gradient(90deg, #60a5fa, #1983FD)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}>funciona?</span>
-              </h2>
-              <p style={{
-                margin: "0 auto",
-                fontSize: "clamp(15px, 1.2vw, 19px)",
-                color: "#FFFFFF",
-                maxWidth: "480px",
-                lineHeight: 1.7,
-              }}>
-                Tres pasos: empiezas, practicas y mides tu avance.
-              </p>
-            </div>
-
-            {/* Steps grid */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "clamp(16px, 3vw, 28px)",
-              alignItems: "stretch",
-              position: "relative",
-            }} className="how-it-works-steps">
-
-              {/* Connecting line (desktop only) */}
-              <div aria-hidden style={{
-                position: "absolute",
-                top: "64px",
-                left: "calc(16.67% + 40px)",
-                right: "calc(16.67% + 40px)",
-                height: "2px",
-                background: "linear-gradient(90deg, rgba(25,131,253,0.5), rgba(96,165,250,0.8), rgba(25,131,253,0.5))",
-                zIndex: 0,
-                pointerEvents: "none",
-              }} className="how-works-connector-line" />
-
-              {howItWorksSteps.map((step, i) => (
-                <div key={i} className={`step-card reveal-element reveal-delay-${i + 1}`} style={{
-                  padding: "clamp(32px, 4vw, 48px) clamp(24px, 3vw, 36px)",
-                  borderRadius: "28px",
-                  background: "rgba(255, 255, 255, 0.04)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  boxShadow: "0 8px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
-                  backdropFilter: "blur(16px)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  textAlign: "center",
-                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                  cursor: "default",
-                  position: "relative",
-                  zIndex: 1,
-                }}>
-                  {/* Step number badge */}
-                  <div style={{
-                    position: "absolute",
-                    top: "-16px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: "32px",
-                    height: "32px",
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #0056E7, #1983FD)",
-                    color: "#fff",
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 4px 16px rgba(0, 86, 231, 0.5)",
-                    border: "2px solid rgba(255,255,255,0.15)",
-                  }}>{i + 1}</div>
-
-                  {/* Icon container */}
-                  <div style={{
-                    width: "72px",
-                    height: "72px",
-                    borderRadius: "20px",
-                    background: "linear-gradient(135deg, rgba(0,86,231,0.3) 0%, rgba(25,131,253,0.2) 100%)",
-                    border: "1px solid rgba(96, 165, 250, 0.25)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: "24px",
-                    marginTop: "8px",
-                    boxShadow: "0 8px 24px rgba(0, 86, 231, 0.2)",
-                  }}>
-                    {i === 0 && (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polygon points="5 3 19 12 5 21 5 3" /></svg>)}
-                    {i === 1 && (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8" /><path d="M16 17H8" /><path d="M10 9H8" /></svg>)}
-                    {i === 2 && (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg>)}
-                  </div>
-
-                  <h3 style={{
-                    margin: "0 0 12px",
-                    fontSize: "clamp(17px, 1.5vw, 22px)",
-                    fontWeight: 600,
-                    color: "#ffffff",
-                    letterSpacing: "-0.01em",
-                  }}>{step.title}</h3>
-                  <p style={{
-                    margin: 0,
-                    fontSize: "clamp(13px, 1rem, 15px)",
-                    color: "rgba(255, 255, 255, 0.6)",
-                    lineHeight: 1.7,
-                  }}>
-                    {step.schoolsText}
-                  </p>
-                </div>
-              ))}
-              <style>{`
-                .step-card:hover {
-                  border-color: rgba(96, 165, 250, 0.3) !important;
-                  box-shadow: 0 16px 48px rgba(0, 86, 231, 0.3), inset 0 1px 0 rgba(255,255,255,0.08) !important;
-                  transform: translateY(-6px);
-                  background: rgba(255, 255, 255, 0.07) !important;
-                }
-                .how-works-connector-line {
-                  display: block;
-                }
-                @media (max-width: 767px) {
-                  .how-it-works-steps { grid-template-columns: 1fr !important; }
-                  .how-works-connector-line { display: none !important; }
-                }
-                @media (min-width: 768px) and (max-width: 899px) {
-                  .how-it-works-steps { grid-template-columns: repeat(2, 1fr) !important; }
-                  .how-works-connector-line { display: none !important; }
-                }
-                @media (min-width: 900px) {
-                  .how-it-works-steps { grid-template-columns: repeat(3, 1fr) !important; }
-                }
-              `}</style>
-            </div>
-          </div>
-        </section>
-      </>
-      )}
-
-    </>
-  )
-}
 const landingCSS = `
+        /* Floating animations for all cards */
+        @keyframes global-float {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(0.2deg); }
+        }
+        .somos-stat-card, .glass-card-premium, .curiosidad-card, .how-it-works-step-card, .bento-item {
+          animation: global-float 6s ease-in-out infinite;
+        }
+        .somos-stat-card:nth-child(2), .curiosidad-card:nth-child(2), .how-it-works-step-card:nth-child(2) { animation-delay: 1.5s; }
+        .somos-stat-card:nth-child(3), .curiosidad-card:nth-child(3), .how-it-works-step-card:nth-child(3) { animation-delay: 3s; }
+        
+        .somos-stat-card:hover, .glass-card-premium:hover, .bento-item:hover {
+          transform: translateY(-15px) scale(1.02) !important;
+          box-shadow: 0 30px 60px rgba(0, 86, 231, 0.3) !important;
+          z-index: 10;
+          animation-play-state: paused;
+        }
+
         @media (pointer: fine) {
           .landing-page-root {
             cursor: none !important;
@@ -4145,901 +3945,2405 @@ const landingCSS = `
           }
         }
         @keyframes shimmer {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
         }
 
-:root{
-  --c-primary:#0056E7;
-  --c-accent:#10B981;
-  --c-text:#1E293B;
-  --c-muted:#334155;
-  --c-bg:transparent;
-  --c-card:#FFFFFF;
-  --c-border:rgba(15, 23, 42, 0.12);
-  --radius:16px;
-  --shadow:0 10px 30px rgba(0,0,0,.06);
-  --shadow-sm:0 4px 16px rgba(0,0,0,.06);
-  --transition:180ms cubic-bezier(.2,.8,.2,1);
-  --font-weight-normal:400;
-  --font-weight-medium:500;
-  --font-weight-semibold:600;
-  --premium-shadow: 0 20px 40px rgba(0, 86, 231, 0.1);
-}
+        :root {
+          --c-primary: #0056E7;
+          --c-accent: #10B981;
+          --c-text: #1E293B;
+          --c-muted: #334155;
+          --c-bg: transparent;
+          --c-card: #FFFFFF;
+          --c-border: rgba(15, 23, 42, 0.12);
+          --radius: 16px;
+          --shadow: 0 10px 30px rgba(0,0,0,.06);
+          --shadow-sm: 0 4px 16px rgba(0,0,0,.06);
+          --transition: 180ms cubic-bezier(.2,.8,.2,1);
+          --font-weight-normal: 400;
+          --font-weight-medium: 500;
+          --font-weight-semibold: 600;
+          --premium-shadow: 0 20px 40px rgba(0, 86, 231, 0.1);
+        }
 
-@keyframes float-perfiles {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  100% { transform: translate(30px, -20px) rotate(5deg); }
-}
-@keyframes float-perfiles-reverse {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  100% { transform: translate(-40px, 30px) rotate(-10deg); }
-}
+        @keyframes float-perfiles {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          100% { transform: translate(30px, -20px) rotate(5deg); }
+        }
+        @keyframes float-perfiles-reverse {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          100% { transform: translate(-40px, 30px) rotate(-10deg); }
+        }
 
-.skill-icon-container {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(0, 86, 231, 0.1);
-}
-.skill-icon-container:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 8px 24px rgba(0, 86, 231, 0.2);
-  background: linear-gradient(135deg, #0056E7 0%, #1983FD 100%) !important;
-}
+        .skill-icon-container {
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 12px rgba(0, 86, 231, 0.1);
+        }
+        .skill-icon-container:hover {
+          transform: scale(1.1) rotate(5deg);
+          box-shadow: 0 8px 24px rgba(0, 86, 231, 0.2);
+          background: linear-gradient(135deg, #0056E7 0%, #1983FD 100%) !important;
+        }
 
-.perfiles-slide-in {
-  animation: slide-up-soft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-@keyframes slide-up-soft {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
+        .perfiles-slide-in {
+          animation: slide-up-soft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes slide-up-soft {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
 
-@keyframes float-premium-card {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
+        @keyframes float-premium-card {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-12px); }
+        }
 
-@keyframes float-step {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
+        @keyframes float-step {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
 
+        body {
+          background: #020e27 !important;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+          overflow-y: visible !important;
+          margin: 0;
+          padding: 0;
+        }
 
-body {
-  background: #ffffff !important;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
-  font-weight: 400 !important;
-}
+        html {
+          background: #020e27;
+          overflow-y: scroll !important;
+          overflow-x: hidden !important;
+          scroll-behavior: smooth;
+          height: auto !important;
+        }
 
-html {
-  background: #ffffff !important;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
-  scroll-behavior: smooth;
-}
+        .section { padding: clamp(64px, 8vw, 120px) 0; scroll-margin-top: 80px; overflow: visible !important; background: transparent; }
 
-.section{padding: clamp(64px, 8vw, 120px) 0; scroll-margin-top: 80px; background: transparent !important; overflow-x: hidden !important; overflow-y: visible !important;}
+        #problema.section,
+        section#problema {
+          background: transparent !important;
+        }
 
-/* Dark sections must override the transparent !important above */
-#problema.section,
-section#problema {
-  background: linear-gradient(160deg, #0a1628 0%, #0d1f40 50%, #0a2050 100%) !important;
-}
-#sobre-bizen {
-  background: linear-gradient(160deg, #0a1628 0%, #0d1f40 40%, #0056E7 100%) !important;
-}
-
-/* Reveal on scroll - fade up when section enters viewport */
-.reveal-element {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-.reveal-element.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-.reveal-element.reveal-delay-1 { transition-delay: 0.12s; }
-.reveal-element.reveal-delay-2 { transition-delay: 0.22s; }
+        .reveal-element {
+          opacity: 0;
+          transform: translateY(28px);
+          transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal-element.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .reveal-element.reveal-delay-1 { transition-delay: 0.12s; }
+        .reveal-element.reveal-delay-2 { transition-delay: 0.22s; }
+        .reveal-element.reveal-delay-3 { transition-delay: 0.32s; }
 
         .section.contact,
         #contacto {
           padding-bottom: clamp(64px, 8vw, 128px) !important;
           overflow: visible !important;
         }
-.section-head{max-width:900px; margin:0 auto 28px auto; text-align:center; overflow:visible; word-wrap:break-word; overflow-wrap:break-word;}
-.section-head h2{margin:0 0 8px 0; font-size:clamp(28px, 4.2vw, 40px); font-weight: 500; line-height:1.15; white-space:normal;}
-.section-head p{margin:0; color:var(--c-muted); font-weight:400; white-space:normal;}
+        .section-head { max-width: 900px; margin: 0 auto 28px auto; text-align: center; overflow: visible; word-wrap: break-word; overflow-wrap: break-word; }
+        .section-head h2 { margin: 0 0 8px 0; font-size: clamp(28px, 4.2vw, 40px); font-weight: 500; line-height: 1.15; white-space: normal; }
+        .section-head p { margin: 0; color: var(--c-muted); font-weight: 400; white-space: normal; }
 
-.container{
-  width:100%;
-  max-width:1400px;
-  margin:0 auto;
-  padding:0 clamp(16px, 4vw, 32px);
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
+        .container {
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 clamp(16px, 4vw, 32px);
+          overflow-x: hidden;
+          box-sizing: border-box;
+        }
+        
         .main-page-container .section,
-        .main-page-container .adventure-carousel-section,
-        .adventure-carousel-section,
         .main-page-container section {
           overflow: visible !important;
           max-width: 100% !important;
           box-sizing: border-box !important;
           height: auto !important;
-          max-height: none !important;
-          min-height: 0 !important;
         }
-/* Cada clase section: NO internal scroll - only document/body scrolls */
-.main-page-container .landing-gradient-wrapper,
-.main-page-container .landing-rest-wrapper,
-.landing-gradient-wrapper,
-.landing-rest-wrapper,
-.conoce-bizen-section,
-.conoce-skills-grid {
-  overflow: visible !important;
-  height: auto !important;
-  max-height: none !important;
-  flex-shrink: 0 !important;
-}
-.main-page-container .adventure-carousel-section,
-.adventure-carousel-section {
-  overflow: visible !important;
-  height: auto !important;
-  max-height: none !important;
-  min-height: 0 !important;
-}
-.main-page-container .adventure-carousel-inner,
-.main-page-container .adventure-carousel-section > div,
-.adventure-carousel-inner,
-.adventure-carousel-content-wrap,
-.adventure-slide-grid {
-  overflow: visible !important;
-  max-height: none !important;
-  height: auto !important;
-}
-@media (min-width: 768px){
-  .container{ padding:0 clamp(24px, 4vw, 40px) !important; overflow-x: hidden !important; }
-  .section{ padding: clamp(72px, 10vw, 120px) 0 !important; }
-  .section-head{ max-width: 920px !important; }
-}
-@media (min-width: 1024px){
-  .container{ padding:0 clamp(32px, 4vw, 48px) !important; }
-  .section{ padding: clamp(80px, 10vw, 128px) 0 !important; }
-}
 
-.hero{padding-top: clamp(24px, 3vw, 48px)}
-.hero-inner{display:grid; gap:28px; align-items:center; grid-template-columns:1fr}
-.hero-copy .sub{font-size:clamp(16px, 2.4vw, 20px); color:var(--c-muted); margin:0 0 14px 0}
-.hero-actions{display:flex; gap:12px; flex-wrap:wrap}
-.badges{display:flex; gap:10px; margin:18px 0 0 0; padding:0; list-style:none; flex-wrap:wrap}
-.badges li{background:white; border:1px solid var(--c-border); padding:8px 12px; border-radius:999px; font-weight:500;}
-.badges li a{color:inherit; transition:opacity var(--transition); cursor:pointer;}
-.badges li a:hover{opacity:.7;}
-.hero-media img{object-fit:contain; width:100%; height:auto; max-height:700px}
-@media (min-width: 980px){ .hero-inner{grid-template-columns: 1.15fr .85fr} }
-
-.card{background:var(--c-card); border:1px solid var(--c-border); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition);}
-.card:hover{transform:translateY(-2px); box-shadow:0 14px 34px rgba(0,0,0,.08); border-color:rgba(14,165,233,.35)}
-.grid-3{display:grid; gap:24px; grid-template-columns:1fr; min-width:0; overflow-x:hidden;}
-.grid-6{display:grid; gap:16px; grid-template-columns:1fr 1fr; min-width:0; overflow-x:hidden;}
-.main-page-container .grid-3 > *,
-.main-page-container .grid-6 > *,
-.main-page-container .steps > *,
-.main-page-container .plan{ min-width: 0 !important; max-width: 100% !important; }
-@media (min-width: 768px){
-  .grid-3{ grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; }
-  .grid-6{ grid-template-columns: repeat(2, 1fr) !important; gap: 20px !important; }
-}
-@media (min-width: 900px){
-  .grid-3{ grid-template-columns: repeat(3, 1fr) !important; gap: 32px !important; }
-  .grid-6{ grid-template-columns: repeat(3, 1fr) !important; gap: 24px !important; }
-}
-@media (min-width: 1025px){
-  .grid-3{ gap: 40px !important; }
-}
-
-@media (min-width: 1200px){ .grid-6{grid-template-columns:repeat(6, 1fr)} }
-
-.steps{display:grid; gap:16px; grid-template-columns:1fr; counter-reset: step}
-.step{display:grid; gap:8px; padding:20px}
-.step .step-icon{filter: drop-shadow(0 2px 8px rgba(14,165,233,.25))}
-.steps .step h3{margin-top:4px}
-@media (min-width: 768px){ .steps{ grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; } }
-@media (min-width: 900px){ .steps{ grid-template-columns: repeat(3, 1fr) !important; gap: 28px !important; } }
-
-.benefit{display:grid; gap:10px; text-align:left}
-.benefit .benefit-icon{width:40px; height:40px; display:grid; place-items:center; background:rgba(16,185,129,.15); color:#065F46; border-radius:12px; font-weight: 500;}
-
-.course-media img{width:100%; height:auto; aspect-ratio: 16/10; object-fit:cover}
-.course-title{margin:2px 0 8px}
-.course-body{padding:6px 2px 8px 2px}
-.course-meta{display:flex; align-items:center; gap:8px; color:var(--c-muted)}
-.pill{display:inline-flex; align-items:center; height:28px; padding:0 10px; border-radius:999px; background:rgba(0, 86, 231, 0.12); color:#0056E7; font-weight:500; font-size:13px;}
-.dot{opacity:.4}
-.course-actions{padding-top:6px}
-
-.plan{position:relative; padding:32px 24px; display:flex; flex-direction:column; height:auto; min-height:480px; border:1px solid rgba(255, 255, 255, 0.3); background:rgba(255, 255, 255, 0.6); backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%); border-radius:32px; box-shadow:0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5); transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow:visible;}
-.plan:hover{transform:translateY(-8px); box-shadow:0 20px 40px rgba(0, 86, 231, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6); border-color:rgba(0, 86, 231, 0.3);}
-.plan--highlight{background:rgba(240, 247, 255, 0.7); border:2px solid rgba(0, 86, 231, 0.4); box-shadow:0 12px 32px rgba(0, 86, 231, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6); position:relative; overflow:visible;}
-.plan--highlight::before{content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, #0056E7 0%, #1983FD 50%, #0056E7 100%); background-size:200% auto; animation:shimmer 3s ease-in-out infinite;}
-.tag{position:absolute; top:16px; right:16px; background:linear-gradient(135deg, #0056E7 0%, #1983FD 100%); color:#fff; border-radius:999px; font-weight:500; padding:8px 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 4px 12px rgba(0, 86, 231, 0.3); z-index:2;}
-.plan-name{font-size:clamp(24px, 3vw, 32px); margin:0 0 12px 0; font-weight: 500; letter-spacing:-0.02em; background:linear-gradient(135deg, #0056E7 0%, #1983FD 50%, #0056E7 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 3s ease-in-out infinite; font-family:'Inter', system-ui, -apple-system, sans-serif; white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
-.plan-note{font-size:14px; margin:0 0 24px 0; color:var(--c-muted); font-weight:400; white-space:normal;}
-.plan-list{list-style:none; margin:0 0 24px 0; padding:0; display:grid; gap:14px; flex-grow:1; overflow:visible;}
-.plan-list li{display:flex; gap:12px; align-items:flex-start; font-size:15px; line-height:1.6; color:var(--c-text); white-space:normal; word-wrap:break-word; overflow-wrap:break-word;}
-.check{color:var(--c-accent); font-weight: 500; font-size:18px; min-width:20px; margin-top:2px;}
-.plan-btn:hover{transform:none !important;}
-.plan-btn:active{transform:none !important;}
-
+        .hero { padding-top: clamp(24px, 3vw, 48px) }
+        .hero-inner { display: grid; gap: 28px; align-items: center; grid-template-columns: 1fr }
+        .hero-copy .sub { font-size: clamp(16px, 2.4vw, 20px); color: var(--c-muted); margin: 0 0 14px 0 }
+        
         .carousel-track {
           display: flex;
           overflow-x: auto;
           overflow-y: hidden !important;
-          -webkit-overflow-scrolling: touch;
-          overscroll-behavior-x: contain;
           scrollbar-width: none;
-          ms-overflow-style: none;
         }
-        .carousel-track::-webkit-scrollbar {
-          display: none;
-        }
+        .carousel-track::-webkit-scrollbar { display: none; }
 
-        /* Responsive Arrows Logic */
-        .landing-carousel-arrow {
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           transition: all 0.2s ease;
-           z-index: 10;
-        }
-
-        @media (min-width: 1281px) {
-          .landing-adventure-arrow.prev { left: -70px !important; top: 50% !important; transform: translateY(-50%) !important; position: absolute !important; }
-          .landing-adventure-arrow.next { right: -70px !important; top: 50% !important; transform: translateY(-50%) !important; position: absolute !important; }
-          .landing-testimonial-arrow.prev { left: -60px !important; top: 50% !important; transform: translateY(-50%) !important; position: absolute !important; }
-          .landing-testimonial-arrow.next { right: -60px !important; top: 50% !important; transform: translateY(-50%) !important; position: absolute !important; }
-        }
-
-        @media (max-width: 1280px) {
-          .landing-adventure-arrow.prev,
-          .landing-adventure-arrow.next,
-          .landing-testimonial-arrow.prev,
-          .landing-testimonial-arrow.next {
-            position: relative !important;
-            left: auto !important;
-            right: auto !important;
-            top: auto !important;
-            transform: none !important;
-            margin: 0 !important;
-            display: flex !important;
-          }
-        }
-
-        .carousel-nav-wrapper {
+        .logos-carousel-track {
           display: flex;
           align-items: center;
-          justify-content: center;
-          gap: clamp(16px, 4vw, 32px);
-          width: 100%;
+          gap: clamp(48px, 8vw, 80px);
+          width: max-content;
+          animation: logo-carousel-scroll 25s linear infinite;
+        }
+        @keyframes logo-carousel-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
 
-/* Logo carousel - infinite horizontal scroll */
-.logos-carousel-section { width: 100%; overflow: hidden; }
-.logos-carousel { width: 100%; overflow: hidden; }
-.logos-carousel-track {
-  display: flex;
-  align-items: center;
-  gap: clamp(48px, 8vw, 80px);
-  width: max-content;
-  animation: logo-carousel-scroll 25s linear infinite;
-  padding: 0 clamp(24px, 4vw, 48px);
-}
-.logos-carousel-item {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 88px;
-  min-width: 160px;
-  max-width: 240px;
-}
-.logos-carousel-item img { width: auto; height: 100%; max-width: 100%; object-fit: contain; }
-@keyframes logo-carousel-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+        .btn {
+          display: inline-flex; align-items: center; justify-content: center;
+          height: 42px; padding: 0 16px; border-radius: 12px;
+          cursor: pointer; font-weight: 500;
+          transition: transform 60ms ease, background 180ms ease;
+        }
+        .btn.primary { background: var(--c-primary); color: white; }
+`;
 
-.problem-columns,
-.how-it-works-steps {
-  min-width: 0 !important;
-  max-width: 100% !important;
-  overflow: visible !important;
-  box-sizing: border-box !important;
-}
+function LandingContent({
+  sectionRange = "all",
+}: {
+  sectionRange?:
+  | "gradient"
+  | "conoce"
+  | "carousel"
+  | "problema_flow"
+  | "impacto"
+  | "rest"
+  | "all";
+}) {
+  const primary = "#0056E7";
+  const accent = "#10B981";
+  const [activeProfile, setActiveProfile] = React.useState<
+    "docentes" | "estudiantes" | "padres"
+  >("docentes");
+  const [activeAdventureSlide, setActiveAdventureSlide] = React.useState(0);
 
-/* Somos BIZEN Cards - Hover Effects */
-.somos-bizen-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(0, 86, 231, 0.5) !important;
-}
+  return (
+    <>
+      <style>{landingCSS}</style>
+      {(sectionRange === "all" || sectionRange === "gradient") && (
+        <>
+          {/* Somos BIZEN - 4 blue cards */}
 
-@media (max-width: 767px) {
-  .somos-bizen-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
+          {/* 4 Perfiles Educativos — Premium Dark mode */}
+          <section
+            id="perfiles"
+            className="section perfiles-section reveal-element"
+            style={{
+              background: "transparent",
+              position: "relative",
+              overflow: "visible",
+              paddingTop: 0,
+              marginTop: "-20px",
+            }}
+          >
+            {/* Internal dark container for the actual perfiles content to match the premium theme */}
+            <div
+              style={{
+                background:
+                  "linear-gradient(170deg, #040f26 0%, #06184d 50%, #040f26 100%)",
+                margin: "clamp(0px, 4vw, 60px) clamp(16px, 4vw, 40px)",
+                borderRadius: "48px",
+                padding: "clamp(64px, 10vw, 110px) clamp(24px, 5vw, 60px)",
+                position: "relative",
+                overflow: "visible",
+                boxShadow: "0 24px 80px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              {/* Grid pattern */}
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  backgroundImage:
+                    "linear-gradient(rgba(25,131,253,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(25,131,253,0.04) 1px, transparent 1px)",
+                  backgroundSize: "44px 44px",
+                  pointerEvents: "none",
+                }}
+              />
 
-@media (max-width: 767px) {
-  .conoce-bizen-grid {
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
-  }
-}
+              <div
+                className="container"
+                style={{
+                  maxWidth: "1200px",
+                  margin: "0 auto",
+                  position: "relative",
+                  zIndex: 1,
+                }}
+              >
+                {/* Header */}
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "clamp(48px, 6vw, 72px)",
+                  }}
+                >
+                  <span
+                    style={{
+                      display: "inline-block",
+                      background: "rgba(96, 165, 250, 0.15)",
+                      color: "#60a5fa",
+                      borderRadius: "999px",
+                      padding: "6px 20px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      letterSpacing: "0.12em",
+                      textTransform: "uppercase",
+                      marginBottom: "20px",
+                      border: "1px solid rgba(96, 165, 250, 0.2)",
+                    }}
+                  >
+                    Comunidad educativa
+                  </span>
+                  <h2
+                    style={{
+                      textAlign: "center",
+                      fontSize: "clamp(34px, 5vw, 60px)",
+                      fontWeight: 700,
+                      color: "#FFFFFF",
+                      lineHeight: 1.1,
+                      marginBottom: "clamp(16px, 2vw, 24px)",
+                      letterSpacing: "-0.03em",
+                    }}
+                  >
+                    1 solución,{" "}
+                    <span
+                      style={{
+                        background: "linear-gradient(90deg, #60a5fa, #1983FD)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      3 perfiles educativos
+                    </span>
+                    .
+                  </h2>
+                  <p
+                    style={{
+                      margin: "0 auto",
+                      maxWidth: "520px",
+                      fontSize: "clamp(16px, 1.3vw, 19px)",
+                      color: "#FFFFFF",
+                      fontWeight: 400,
+                      lineHeight: 1.7,
+                    }}
+                  >
+                    Un diseño inteligente que adapta toda la experiencia a quién
+                    eres.
+                  </p>
+                </div>
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .somos-bizen-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
+                {/* Content Card - dark premium frost */}
+                <div
+                  className="glass-card-premium"
+                  style={{
+                    animation: "premium-float 8s ease-in-out infinite",
 
-/* Profiles Section - slide animation: next tab content slides in very smooth */
-@keyframes perfiles-slide-in {
-  from {
-    opacity: 0;
-    transform: translateX(32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-.perfiles-slide-in {
-  animation: perfiles-slide-in 1.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
+                    background: "rgba(255, 255, 255, 0.03)",
+                    backdropFilter: "blur(32px)",
+                    WebkitBackdropFilter: "blur(32px)",
+                    borderRadius: "36px",
+                    padding:
+                      "clamp(32px, 4vw, 48px) clamp(28px, 4vw, 56px) clamp(40px, 5vw, 64px)",
+                    boxShadow:
+                      "0 24px 64px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  {/* Tabs */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: "10px",
+                      marginBottom: "clamp(36px, 5vw, 52px)",
+                      flexWrap: "wrap",
+                      background: "rgba(255, 255, 255, 0.04)",
+                      borderRadius: "20px",
+                      padding: "6px",
+                      border: "1px solid rgba(255, 255, 255, 0.1)",
+                      maxWidth: "480px",
+                      margin: "0 auto clamp(36px, 5vw, 52px)",
+                    }}
+                    className="perfiles-tabs-row"
+                  >
+                    {[
+                      { id: "docentes" as const, label: "Docentes" },
+                      { id: "estudiantes" as const, label: "Estudiantes" },
+                      { id: "padres" as const, label: "Padres" },
+                    ].map((profile) => (
+                      <button
+                        key={profile.id}
+                        onClick={() => setActiveProfile(profile.id)}
+                        style={{
+                          flex: 1,
+                          padding: "12px 20px",
+                          fontSize: "clamp(14px, 1rem, 16px)",
+                          fontWeight: 500,
+                          border: "none",
+                          borderRadius: "14px",
+                          cursor: "pointer",
+                          transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                          background:
+                            activeProfile === profile.id
+                              ? "#0056E7"
+                              : "transparent",
+                          color:
+                            activeProfile === profile.id
+                              ? "#ffffff"
+                              : "rgba(255, 255, 255, 0.7)",
+                          boxShadow:
+                            activeProfile === profile.id
+                              ? "0 6px 20px rgba(0, 86, 231, 0.25)"
+                              : "none",
+                        }}
+                        className="profile-tab-button"
+                      >
+                        {profile.label}
+                      </button>
+                    ))}
+                  </div>
 
-/* Profiles Section Responsive */
-.profile-tab-button:hover {
-  background: #0056E7 !important;
-  color: #ffffff !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 86, 231, 0.35);
-}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "clamp(32px, 5vw, 64px)",
+                      alignItems: "center",
+                    }}
+                    className="perfiles-content-grid"
+                  >
+                    {/* Left: Text Content - slide animation on tab change */}
+                    <div
+                      className="perfiles-content-left"
+                      style={{ overflow: "hidden", position: "relative" }}
+                    >
+                      <div
+                        key={activeProfile}
+                        className="perfiles-slide-in"
+                        style={{ overflow: "visible" }}
+                      >
+                        <div style={{ marginBottom: "clamp(16px, 3vw, 24px)" }}>
+                          <span
+                            style={{
+                              display: "inline-block",
+                              background:
+                                "linear-gradient(135deg, #0056E7, #1983FD)",
+                              color: "#fff",
+                              borderRadius: "12px",
+                              padding: "6px 16px",
+                              fontSize: "13px",
+                              fontWeight: 500,
+                              letterSpacing: "0.05em",
+                              textTransform: "uppercase",
+                              marginBottom: "14px",
+                            }}
+                          >
+                            {activeProfile === "docentes" && "Para docentes"}
+                            {activeProfile === "estudiantes" &&
+                              "Para estudiantes"}
+                            {activeProfile === "padres" && "Para padres"}
+                          </span>
+                          <h3
+                            style={{
+                              fontSize: "clamp(28px, 3.5vw, 44px)",
+                              fontWeight: 700,
+                              color: "#FFFFFF",
+                              marginBottom: 0,
+                              letterSpacing: "-0.02em",
+                              lineHeight: 1.15,
+                            }}
+                          >
+                            {activeProfile === "docentes" &&
+                              "Enseña más con menos esfuerzo"}
+                            {activeProfile === "estudiantes" &&
+                              "Aprende haciendo, no memorizando"}
+                            {activeProfile === "padres" &&
+                              "Acompaña su camino financiero"}
+                          </h3>
+                        </div>
 
-.quiero-demo-button:hover {
-  background: #015CF8 !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 86, 231, 0.45) !important;
-}
+                        <p
+                          style={{
+                            fontSize: "clamp(16px, 1.15rem, 19px)",
+                            lineHeight: 1.65,
+                            color: "#FFFFFF",
+                            marginBottom: "clamp(24px, 4vw, 32px)",
+                          }}
+                        >
+                          {activeProfile === "docentes" &&
+                            "Herramientas prácticas para enseñar finanzas con contenido listo para usar, seguimiento en tiempo real y recursos descargables."}
+                          {activeProfile === "estudiantes" &&
+                            "Aprende finanzas de forma divertida con cursos interactivos, simuladores reales y recompensas por tu progreso."}
+                          {activeProfile === "padres" &&
+                            "Acompaña el aprendizaje financiero de tus hijos con acceso a su progreso, recursos compartidos y actividades familiares."}
+                        </p>
 
-@media (max-width: 767px) {
-  .perfiles-content-grid {
-    grid-template-columns: 1fr !important;
-    gap: 24px !important;
-  }
-  .perfiles-content-grid > div:last-child {
-    display: none !important;
-  }
-}
+                        {/* Bullet Points */}
+                        <ul
+                          style={{
+                            listStyle: "none",
+                            margin: "0 0 clamp(28px, 4vw, 36px) 0",
+                            padding: 0,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "16px",
+                          }}
+                        >
+                          {activeProfile === "docentes" && (
+                            <>
+                              {[
+                                {
+                                  text: (
+                                    <>
+                                      Contenido listo para usar con{" "}
+                                      <strong>lecciones interactivas</strong>.
+                                    </>
+                                  ),
+                                },
+                                {
+                                  text: (
+                                    <>
+                                      Seguimiento en{" "}
+                                      <strong>tiempo real</strong> del progreso
+                                      de tus estudiantes.
+                                    </>
+                                  ),
+                                },
+                                {
+                                  text: (
+                                    <>
+                                      Recursos <strong>descargables</strong> y
+                                      materiales de apoyo.
+                                    </>
+                                  ),
+                                },
+                              ].map((item, i) => (
+                                <li
+                                  key={i}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    gap: "14px",
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      width: "26px",
+                                      height: "26px",
+                                      background:
+                                        "linear-gradient(135deg, #0056E7, #1983FD)",
+                                      borderRadius: "8px",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      color: "#fff",
+                                      fontWeight: 500,
+                                      fontSize: "13px",
+                                      flexShrink: 0,
+                                      boxShadow:
+                                        "0 4px 10px rgba(0, 86, 231, 0.3)",
+                                    }}
+                                  >
+                                    <CheckIcon size={14} color="white" />
+                                  </span>
+                                  <span
+                                    style={{
+                                      fontSize: "clamp(15px, 1.05rem, 17px)",
+                                      lineHeight: 1.6,
+                                      color: "rgba(255, 255, 255, 0.85)",
+                                    }}
+                                  >
+                                    {item.text}
+                                  </span>
+                                </li>
+                              ))}
+                            </>
+                          )}
+                          {activeProfile === "estudiantes" && (
+                            <>
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                  gap: "12px",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    background: "#0056E7",
+                                    borderRadius: "50%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#fff",
+                                    fontWeight: 500,
+                                    fontSize: "14px",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  <CheckIcon size={14} color="white" />
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "clamp(15px, 1.05rem, 17px)",
+                                    lineHeight: 1.5,
+                                    color: "rgba(255,255,255,0.85)",
+                                  }}
+                                >
+                                  Aprende con <strong>gamificación</strong> y
+                                  recompensas.
+                                </span>
+                              </li>
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                  gap: "12px",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    background: "#0056E7",
+                                    borderRadius: "50%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#fff",
+                                    fontWeight: 500,
+                                    fontSize: "14px",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  <CheckIcon size={14} color="white" />
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "clamp(15px, 1.05rem, 17px)",
+                                    lineHeight: 1.5,
+                                    color: "rgba(255,255,255,0.85)",
+                                  }}
+                                >
+                                  Practica con{" "}
+                                  <strong>simuladores reales</strong> sin
+                                  riesgo.
+                                </span>
+                              </li>
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                  gap: "12px",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    background: "#0056E7",
+                                    borderRadius: "50%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#fff",
+                                    fontWeight: 500,
+                                    fontSize: "14px",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  <CheckIcon size={14} color="white" />
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "clamp(15px, 1.05rem, 17px)",
+                                    lineHeight: 1.5,
+                                    color: "rgba(255,255,255,0.85)",
+                                  }}
+                                >
+                                  Rastrea tu <strong>progreso</strong> y gana
+                                  certificaciones.
+                                </span>
+                              </li>
+                            </>
+                          )}
+                          {activeProfile === "padres" && (
+                            <>
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                  gap: "12px",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    background: "#0056E7",
+                                    borderRadius: "50%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#fff",
+                                    fontWeight: 500,
+                                    fontSize: "14px",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  <CheckIcon size={14} color="white" />
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "clamp(15px, 1.05rem, 17px)",
+                                    lineHeight: 1.5,
+                                    color: "rgba(255,255,255,0.85)",
+                                  }}
+                                >
+                                  Visualiza el <strong>progreso</strong> de tus
+                                  hijos en tiempo real.
+                                </span>
+                              </li>
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                  gap: "12px",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    background: "#0056E7",
+                                    borderRadius: "50%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#fff",
+                                    fontWeight: 500,
+                                    fontSize: "14px",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  <CheckIcon size={14} color="white" />
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "clamp(15px, 1.05rem, 17px)",
+                                    lineHeight: 1.5,
+                                    color: "rgba(255,255,255,0.85)",
+                                  }}
+                                >
+                                  Accede a <strong>recursos compartidos</strong>{" "}
+                                  y actividades familiares.
+                                </span>
+                              </li>
+                              <li
+                                style={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                  gap: "12px",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    background: "#0056E7",
+                                    borderRadius: "50%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#fff",
+                                    fontWeight: 500,
+                                    fontSize: "14px",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  ✓
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "clamp(15px, 1.05rem, 17px)",
+                                    lineHeight: 1.5,
+                                    color: "rgba(255,255,255,0.85)",
+                                  }}
+                                >
+                                  Fomenta la{" "}
+                                  <strong>educación financiera</strong> desde
+                                  casa.
+                                </span>
+                              </li>
+                            </>
+                          )}
+                        </ul>
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .perfiles-content-grid {
-    gap: 32px !important;
-  }
-}
+                        {/* CTA Button - opens demo modal */}
+                        <a
+                          href="https://calendly.com/diego-bizen"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            padding:
+                              "clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 32px)",
+                            fontSize: "clamp(14px, 2vw, 18px)",
+                            fontWeight: 600,
+                            background:
+                              "linear-gradient(135deg, #0056E7, #1983FD)",
+                            color: "#ffffff",
+                            border: "none",
+                            borderRadius: 9999,
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "clamp(6px, 1.5vw, 10px)",
+                            boxShadow: "0 8px 24px rgba(0, 86, 231, 0.45)",
+                            minHeight: 44,
+                            textDecoration: "none",
+                          }}
+                          className="quiero-demo-button landing-hero-cta-primary"
+                        >
+                          Quiero una demo
+                          <span
+                            className="quiero-demo-arrow"
+                            style={{ fontSize: "clamp(16px, 4vw, 20px)" }}
+                            aria-hidden
+                          >
+                            →
+                          </span>
+                        </a>
+                      </div>
+                    </div>
 
-@media (max-width: 767px) {
-  .problem-columns { grid-template-columns: 1fr !important; }
-}
-@media (min-width: 768px) {
-  .problem-columns { grid-template-columns: 1fr 1fr !important; gap: clamp(24px, 4vw, 36px) !important; }
-}
+                    {/* Right: Photo for active profile (1 solución, 3 perfiles educativos) */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minHeight: "360px",
+                      }}
+                    >
+                      <div
+                        key={activeProfile}
+                        className="perfiles-slide-in"
+                        style={{
+                          width: "100%",
+                          maxWidth: "400px",
+                          borderRadius: "28px",
+                          overflow: "hidden",
+                          position: "relative",
+                          boxShadow: "0 12px 40px rgba(0, 0, 0, 0.12)",
+                        }}
+                      >
+                        <Image
+                          src={
+                            activeProfile === "docentes"
+                              ? "/uploads/Landing_page/perfil-docentes.png"
+                              : activeProfile === "estudiantes"
+                                ? "/uploads/Landing_page/perfil-estudiantes.png"
+                                : "/uploads/Landing_page/perfil-padres.png"
+                          }
+                          alt={
+                            activeProfile === "docentes"
+                              ? "Docentes en el aula"
+                              : activeProfile === "estudiantes"
+                                ? "Estudiante con la plataforma"
+                                : "Padres e hijos aprendiendo"
+                          }
+                          width={400}
+                          height={300}
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            display: "block",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+      {(sectionRange === "all" || sectionRange === "conoce") && (
+        <>
+          {/* Conoce BIZEN - deep spatial blue enhanced */}
+          <section
+            id="conoce-bizen"
+            className="section conoce-bizen-section reveal-element"
+            style={{
+              background: "transparent",
+              padding: "clamp(80px, 10vw, 120px) clamp(16px, 4vw, 48px)",
+              margin: "0",
+              width: "100%",
+              maxWidth: "100%",
+              boxSizing: "border-box" as const,
+              height: "auto",
+              overflow: "hidden",
+              position: "relative" as const,
+            }}
+          >
+            {/* Animated dot-grid overlay */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                zIndex: 0,
+                backgroundImage:
+                  "radial-gradient(rgba(25, 131, 253, 0.18) 1px, transparent 1px)",
+                backgroundSize: "36px 36px",
+                pointerEvents: "none",
+              }}
+            />
 
-@media (max-width: 767px) {
-  .how-it-works-steps { grid-template-columns: 1fr !important; }
-}
-@media (min-width: 768px) and (max-width: 899px) {
-  .how-it-works-steps { grid-template-columns: repeat(2, 1fr) !important; }
-}
-@media (min-width: 900px) {
-  .how-it-works-steps { grid-template-columns: repeat(3, 1fr) !important; }
-}
+            {/* Floating glow orbs */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: "-120px",
+                left: "-120px",
+                width: "520px",
+                height: "520px",
+                borderRadius: "50%",
+                background:
+                  "radial-gradient(circle, rgba(0,86,231,0.28) 0%, transparent 70%)",
+                filter: "blur(60px)",
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                bottom: "-100px",
+                right: "-80px",
+                width: "480px",
+                height: "480px",
+                borderRadius: "50%",
+                background:
+                  "radial-gradient(circle, rgba(25,131,253,0.22) 0%, transparent 70%)",
+                filter: "blur(60px)",
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: "40%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "300px",
+                height: "300px",
+                borderRadius: "50%",
+                background:
+                  "radial-gradient(circle, rgba(0,86,231,0.12) 0%, transparent 70%)",
+                filter: "blur(80px)",
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+            />
 
-.cta-button:hover {
-  background: #0056E7 !important;
-  filter: brightness(1.05);
-  box-shadow: 0 6px 20px rgba(0, 86, 231, 0.45);
-}
+            {/* Inner container */}
+            <div
+              style={{
+                position: "relative",
+                zIndex: 1,
+                maxWidth: "1320px",
+                margin: "0 auto",
+              }}
+            >
+              {/* Section label + heading centered */}
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "clamp(48px, 6vw, 72px)",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    background: "rgba(25, 131, 253, 0.15)",
+                    color: "#60aeff",
+                    borderRadius: "999px",
+                    padding: "6px 18px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    marginBottom: "24px",
+                    border: "1px solid rgba(25, 131, 253, 0.25)",
+                    backdropFilter: "blur(4px)",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "#1983FD",
+                      display: "inline-block",
+                      boxShadow: "0 0 8px #1983FD",
+                    }}
+                  />
+                  Conoce BIZEN
+                </span>
+                <h2
+                  style={{
+                    fontSize: "clamp(32px, 4.5vw, 58px)",
+                    fontWeight: 500,
+                    color: "#fff",
+                    lineHeight: 1.12,
+                    marginBottom: "clamp(16px, 2vw, 20px)",
+                    letterSpacing: "-0.025em",
+                  }}
+                >
+                  Aprender finanzas nunca ha sido{" "}
+                  <span
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #4da3ff, #1983FD, #60aeff)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    tan claro y relevante
+                  </span>
+                  .
+                </h2>
+                <p
+                  style={{
+                    fontSize: "clamp(16px, 1.2vw, 19px)",
+                    lineHeight: 1.7,
+                    color: "rgba(180, 205, 255, 0.75)",
+                    maxWidth: "580px",
+                    margin: "0 auto",
+                  }}
+                >
+                  Impulsa a tu escuela a desarrollar habilidades clave mientras
+                  los estudiantes aprenden de forma práctica y guiada.
+                </p>
+              </div>
 
-.accordion{display:grid; gap:16px}
-.accordion-item{
-  border:1px solid rgba(255, 255, 255, 0.3);
-  border-radius:20px;
-  background:rgba(255, 255, 255, 0.6);
-  backdrop-filter:blur(20px) saturate(180%);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  box-shadow:0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.accordion-item:hover{
-  transform:translateY(-2px);
-  box-shadow:0 12px 40px rgba(0, 86, 231, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  border-color:rgba(0, 86, 231, 0.3);
-}
-.accordion-trigger{
-  width:100%;
-  border:0;
-  background:transparent;
-  text-align:left;
-  padding:18px 20px;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-weight:500;
-  font-family:'Inter', system-ui, -apple-system, sans-serif;
-  font-size:clamp(16px, 2vw, 20px);
-  color:#0056E7;
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin:center;
-  word-wrap:break-word;
-  overflow-wrap:break-word;
-  white-space:normal;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.accordion-trigger:hover, .accordion-trigger:active{transform:none; color:#0056E7}
-.accordion-trigger:focus-visible{outline:2px solid rgba(0, 86, 231, 0.6); border-radius:20px}
-.chev{transition:transform var(--transition); color:#0056E7}
-.accordion-item.open .chev{transform:rotate(180deg)}
-.accordion-panel{
-  padding:0 20px 18px 20px;
-  color:var(--c-muted);
-  display:none;
-  font-family:'Inter', system-ui, -apple-system, sans-serif;
-  font-size:clamp(15px, 1.8vw, 18px);
-  line-height:1.7;
-  word-wrap:break-word;
-  overflow-wrap:break-word;
-  white-space:normal;
-  overflow:visible;
-}
-.accordion-item.open .accordion-panel{display:block}
+              {/* Stats row */}
+              <div
+                className="conoce-stats-row"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "clamp(16px, 3vw, 48px)",
+                  marginBottom: "clamp(48px, 6vw, 72px)",
+                  flexWrap: "wrap",
+                }}
+              >
+                {[
+                  { value: "+500", label: "Estudiantes activos" },
+                  { value: "6", label: "Habilidades clave" },
+                  { value: "98%", label: "Satisfacción docente" },
+                ].map((stat, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      textAlign: "center",
+                      padding: "clamp(16px,2vw,24px) clamp(24px,3vw,40px)",
+                      background: "rgba(255,255,255,0.04)",
+                      borderRadius: "20px",
+                      border: "1px solid rgba(25, 131, 253, 0.2)",
+                      backdropFilter: "blur(12px)",
+                      minWidth: "140px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "clamp(28px, 3.5vw, 44px)",
+                        fontWeight: 500,
+                        color: "#fff",
+                        letterSpacing: "-0.03em",
+                        background:
+                          "linear-gradient(135deg, #fff 40%, #60aeff 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      {stat.value}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "clamp(12px, 0.85rem, 14px)",
+                        color: "rgba(180, 205, 255, 0.65)",
+                        fontWeight: 500,
+                        marginTop: "4px",
+                        letterSpacing: "0.03em",
+                      }}
+                    >
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
 
+              {/* 6 skills — 3-column card grid */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "clamp(14px, 2vw, 22px)",
+                }}
+                className="conoce-skills-grid"
+              >
+                {[
+                  {
+                    label: "Toma de decisiones informadas",
+                    desc: "Evalúa opciones y elige con criterio financiero en situaciones reales.",
+                    Icon: () => (
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M9 11l3 3L22 4" />
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    label: "Pensamiento crítico aplicado",
+                    desc: "Analiza información y cuestiona supuestos para resolver mejor.",
+                    Icon: () => (
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4M12 8h.01" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    label: "Resolución de problemas financieros",
+                    desc: "Enfrenta retos económicos reales con herramientas prácticas.",
+                    Icon: () => (
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                        <path d="M22 12A10 10 0 0 0 12 2v10z" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    label: "Planeación y visión a futuro",
+                    desc: "Establece metas claras y administra recursos con perspectiva.",
+                    Icon: () => (
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    label: "Trabajo colaborativo en el aula",
+                    desc: "Potencia el aprendizaje compartido en equipos.",
+                    Icon: () => (
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    label: "Responsabilidad socioemocional",
+                    desc: "Desarrolla autonomía, empatía y habilidades para la vida.",
+                    Icon: () => (
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <path d="M22 4L12 14.01l-3-3" />
+                      </svg>
+                    ),
+                  },
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className={`reveal-element reveal-delay-${(i % 3) + 1} conoce-skill-card`}
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(25, 131, 253, 0.18)",
+                      borderRadius: "24px",
+                      padding: "clamp(22px, 2.5vw, 30px)",
+                      display: "flex",
+                      flexDirection: "column" as const,
+                      gap: "16px",
+                      backdropFilter: "blur(16px)",
+                      WebkitBackdropFilter: "blur(16px)" as any,
+                      transition:
+                        "transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease",
+                      maxWidth: "340px",
+                      margin: "0 auto",
+                      width: "100%",
+                      cursor: "default",
+                      position: "relative" as const,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {/* card inner glow on hover — handled via CSS */}
+                    <div
+                      style={{
+                        width: "52px",
+                        height: "52px",
+                        borderRadius: "14px",
+                        background:
+                          "linear-gradient(135deg, #0056E7 0%, #1983FD 100%)",
+                        color: "#fff",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 6px 20px rgba(0, 86, 231, 0.45)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <item.Icon />
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "clamp(15px, 1.05rem, 17px)",
+                          fontWeight: 500,
+                          color: "#e8f0ff",
+                          marginBottom: "8px",
+                          lineHeight: 1.3,
+                        }}
+                      >
+                        {item.label}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "clamp(13px, 0.88rem, 15px)",
+                          color: "rgba(180, 205, 255, 0.65)",
+                          lineHeight: 1.65,
+                        }}
+                      >
+                        {item.desc}
+                      </div>
+                    </div>
+                    {/* Hover arrow indicator */}
+                    <div
+                      className="conoce-card-arrow"
+                      style={{
+                        position: "absolute",
+                        bottom: "22px",
+                        right: "22px",
+                        width: "28px",
+                        height: "28px",
+                        borderRadius: "50%",
+                        background: "rgba(25,131,253,0.15)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        opacity: 0,
+                        transition: "opacity 0.2s ease, transform 0.2s ease",
+                        transform: "translateX(-4px)",
+                      }}
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#60aeff"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-.hero-image-small {
-  width: 100% !important;
-  max-width: clamp(200px, 30vw, 300px) !important;
-  height: auto !important;
+            <style>{`
+  .conoce-skill-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0, 86, 231, 0.35), 0 0 0 1px rgba(25, 131, 253, 0.4);
+  border-color: rgba(25, 131, 253, 0.45)!important;
+  background: rgba(255, 255, 255, 0.07)!important;
 }
-/* Larger screens: increase max-width for hero images */
-@media (min-width: 768px){
-  .hero-image-small{max-width: clamp(300px, 40vw, 500px) !important;}
+            .conoce-skill-card:hover .conoce-card-arrow {
+  opacity: 1!important;
+  transform: translateX(0)!important;
 }
-@media (min-width: 1025px){
-  .hero-image-small{max-width: clamp(350px, 45vw, 600px) !important;}
-}
-
-/* ==========================================
-   COMPREHENSIVE RESPONSIVE BREAKPOINTS
-   ========================================== */
-
-/* Mobile First - Stack all grids on small screens */
-@media (max-width: 767px) {
-  /* Hero section grids - stack vertically */
-  .hero-section-grid {
-    grid-template-columns: 1fr !important;
-    gap: clamp(24px, 6vw, 48px) !important;
-    min-height: auto !important;
+@media(max-width: 900px) {
+              .conoce-skills-grid {
+    grid-template-columns: 1fr 1fr!important;
   }
-  
-  /* CTA section grid - stack vertically */
-  .cta-section-grid {
-    grid-template-columns: 1fr !important;
-    gap: clamp(32px, 6vw, 48px) !important;
-    min-height: auto !important;
-  }
-  
-  /* Hero images - responsive sizing for mobile */
-  .hero-image-small {
-            width: 100% !important;
-    max-width: clamp(150px, 50vw, 220px) !important;
-            height: auto !important;
-          }
-  
-  /* Hero text sections */
-  .hero-text {
-    order: 2 !important;
-            text-align: center !important;
-    padding: 0 clamp(16px, 4vw, 24px) !important;
-  }
-  
-  /* Hero image sections */
-  .hero-image {
-    order: 1 !important;
-    justify-content: center !important;
-  }
-  
-  /* Alternating layout - first section text after image */
-  .hero-section-grid:first-of-type .hero-text {
-    order: 2 !important;
-  }
-  
-  .hero-section-grid:first-of-type .hero-image {
-    order: 1 !important;
-  }
-  
-  /* Y MUCHO MÁS text - smaller on mobile */
-  .y-mucho-mas-text {
-    font-size: clamp(32px, 8vw, 56px) !important;
-    padding: clamp(32px, 6vw, 64px) clamp(16px, 4vw, 24px) !important;
-  }
-  
-  /* CTA text - smaller on mobile */
-  .cta-section-grid p {
-    font-size: clamp(28px, 7vw, 48px) !important;
-    line-height: 1.2 !important;
-  }
-  
-  /* CTA button - full width on mobile */
-  .empieza-ya-button {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: clamp(14px, 3vw, 18px) clamp(24px, 6vw, 36px) !important;
-    font-size: clamp(16px, 3vw, 20px) !important;
-  }
-  
-  
-  /* Plans grid - stack on mobile */
-  .grid-3 {
-    grid-template-columns: 1fr !important;
-    gap: clamp(20px, 4vw, 24px) !important;
-  }
-  
-  /* Contact section - stack on mobile */
-  #contacto .container > div {
-    grid-template-columns: 1fr !important;
-    gap: clamp(32px, 5vw, 48px) !important;
-  }
-  
-  #contacto form,
-  #contacto aside {
-    width: 100% !important;
-  }
-  
-  /* Schedule demo - two columns on desktop */
-  @media (min-width: 768px) {
-    .schedule-demo-two-col {
-      grid-template-columns: 1fr 1fr !important;
-      gap: clamp(40px, 6vw, 56px) !important;
-    }
-  }
-  
-  /* Schedule demo form - 1 column on mobile, 2 per row on desktop */
-  .schedule-demo-form {
-    grid-template-columns: 1fr !important;
-  }
-  @media (min-width: 520px) {
-    .schedule-demo-form {
-      grid-template-columns: 1fr 1fr !important;
-    }
-  }
-  
-  /* Section padding - reduce on mobile */
-  .section {
-    padding: clamp(32px, 6vw, 64px) 0 !important;
-  }
-  .main-page-container .adventure-carousel-section {
-    padding: clamp(12px, 2vw, 20px) clamp(20px, 4vw, 48px) !important;
-  }
-  
-  /* Container padding - increase on mobile for better spacing */
-  .container {
-    padding: 0 clamp(20px, 5vw, 32px) !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-  
-  /* Main content wrapper - full width on mobile */
-  .main-content-wrapper {
-    max-width: 100% !important;
-    width: 100% !important;
-    padding-left: clamp(12px, 3vw, 24px) !important;
-    padding-right: clamp(12px, 3vw, 24px) !important;
-  }
-  
-  /* Main page container - full width, gradient background on mobile */
-  .main-page-container {
-    background: linear-gradient(180deg, #ffffff 0%, rgba(0, 86, 231, 0.03) 18%, rgba(0, 86, 231, 0.05) 40%, rgba(25, 131, 253, 0.08) 60%, rgba(25, 131, 253, 0.1) 100%) !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
-  /* Main element - full width */
-  main {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: visible !important;
-    height: auto !important;
-  }
-  
-  /* Hide decorative elements on mobile */
-  .decorative-blue-accent,
-  .decorative-contact-bg-1,
-  .decorative-contact-bg-2 {
-    display: none !important;
-  }
-  
-  /* Remove any body/html margins/padding that might cause gaps */
-  body, html {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    overflow-x: hidden !important;
-  }
-  
-  /* Main hero section - adjust for mobile */
-  .main-content-wrapper {
-    padding: clamp(60px, 12vw, 100px) clamp(20px, 5vw, 32px) !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  
-  /* Main content grid - stack on mobile */
-          .main-content {
-    grid-template-columns: 1fr !important;
-    gap: clamp(32px, 6vw, 48px) !important;
-  }
-  
-  /* Responsive title for mobile */
-  .main-content h1 {
-    font-size: clamp(20px, 5.5vw, 38px) !important;
-    line-height: 1.4 !important;
-    color: #6B7280 !important;
-    padding: 0 clamp(12px, 3vw, 20px) !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-  }
-}
-
-/* Small mobile devices (up to 480px) */
-@media (max-width: 480px) {
-  .hero-image-small {
-    max-width: clamp(120px, 60vw, 180px) !important;
-    width: 100% !important;
-  }
-  
-  .y-mucho-mas-text {
-    font-size: clamp(28px, 9vw, 48px) !important;
-  }
-  
-  .cta-section-grid p {
-    font-size: clamp(24px, 8vw, 40px) !important;
-  }
-  
-  /* Reduce gaps even more on very small screens */
-  .hero-section-grid {
-    gap: clamp(20px, 5vw, 32px) !important;
-  }
-  
-  .cta-section-grid {
-    gap: clamp(24px, 5vw, 40px) !important;
-  }
-  
-  /* Extra small screens - title */
-  .main-content h1 {
-    font-size: clamp(18px, 6vw, 32px) !important;
-    line-height: 1.35 !important;
-    color: #6B7280 !important;
-    padding: 0 clamp(12px, 3vw, 20px) !important;
-  }
-  
-  /* Extra small screens - hero images even smaller */
-  .hero-image-small {
-    max-width: clamp(100px, 55vw, 150px) !important;
-    width: 100% !important;
-  }
-}
-
-/* Extra extra small devices (up to 375px) */
-@media (max-width: 375px) {
-  .hero-image-small {
-    max-width: clamp(90px, 50vw, 130px) !important;
-    width: 100% !important;
-  }
-}
-
-/* Show decorative elements on tablet and desktop */
-@media (min-width: 768px) {
-  .decorative-blue-accent,
-  .decorative-contact-bg-1,
-  .decorative-contact-bg-2 {
-    display: block !important;
-  }
-  
-  .main-page-container {
-    background: linear-gradient(180deg, #f5f9ff 0%, #eef6ff 18%, #e0efff 40%, #d4e8ff 60%, #dbeafe 75%, #d4e8ff 88%, #bfdbfe 100%) !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  
-  /* Ensure full width background for all devices */
-  body,
-  html {
-    width: 100% !important;
-    max-width: 100% !important;
+              .conoce-stats-row > div {
+    min-width: 110px!important;
   }
 }
-
-/* Tablet Portrait (768px - 1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .hero-section-grid {
-    gap: clamp(40px, 5vw, 56px) !important;
+@media(max-width: 580px) {
+              .conoce-skills-grid {
+    grid-template-columns: 1fr!important;
   }
-  
-  .hero-image-small {
-    max-width: clamp(220px, 40vw, 280px) !important;
-    width: 100% !important;
-  }
-  
-  .cta-section-grid {
-    gap: clamp(40px, 5vw, 56px) !important;
-  }
-  
-  /* Contact section - two columns on tablet (768px+) */
-  #contacto .container > div {
-    grid-template-columns: 1fr 1fr !important;
-    gap: clamp(32px, 4vw, 40px) !important;
-  }
-  
-  /* Tablet title */
-  .main-content h1 {
-    font-size: clamp(28px, 4.5vw, 42px) !important;
-    line-height: 1.3 !important;
-    color: #6B7280 !important;
-  }
-  
-  /* Tablet - two columns for main content */
-  .main-content {
-    grid-template-columns: 1.1fr 0.9fr !important;
-    gap: clamp(40px, 5vw, 60px) !important;
-  }
-  
-  .text-and-buttons-container {
-    padding-left: 0 !important;
-    padding-right: clamp(4px, 1vw, 16px) !important;
-    margin-left: clamp(-12px, -1.5vw, -4px) !important;
-  }
-  
-  .billy-container {
-    padding-right: clamp(4px, 1vw, 12px) !important;
-  }
-  
-  /* Tablet Billy image */
-  .billy-image {
-    max-width: clamp(240px, 35vw, 300px) !important;
-    width: 100% !important;
-  }
-  
-  .billy-container {
-    padding: clamp(20px, 3.5vw, 45px) !important;
-    padding-right: clamp(8px, 1.5vw, 16px) !important;
+              .conoce-stats-row {
+    gap: 12px!important;
   }
 }
-
-/* Tablet Landscape and Small Desktop (1025px - 1280px) */
-@media (min-width: 1025px) and (max-width: 1280px) {
-  .hero-section-grid {
-    gap: clamp(48px, 5vw, 64px) !important;
-  }
-  
-  .hero-image-small {
-    max-width: clamp(280px, 35vw, 320px) !important;
-    width: 100% !important;
-  }
-  
-  /* Small Desktop - two columns for main content */
-  .main-content {
-    grid-template-columns: 1.1fr 0.9fr !important;
-    gap: clamp(0px, 0.5vw, 12px) !important;
-  }
-  
-  .text-and-buttons-container {
-    padding-left: 0 !important;
-    padding-right: clamp(8px, 1.5vw, 24px) !important;
-    margin-left: clamp(-16px, -2vw, -8px) !important;
-  }
-  
-  .billy-container {
-    padding-right: clamp(8px, 1.5vw, 16px) !important;
-  }
-  
-  /* Small Desktop Billy image */
-  .billy-image {
-    max-width: clamp(260px, 32vw, 300px) !important;
-    width: 100% !important;
-  }
-  
-  .billy-container {
-    padding: clamp(25px, 3.5vw, 48px) !important;
-    padding-right: clamp(8px, 1.5vw, 20px) !important;
-  }
+/* Force deep blue spatial background regardless of global overrides */
+#conoce-bizen,
+            .conoce-bizen-section {
+  background: linear-gradient(160deg, #020c1f 0%, #041640 40%, #071e52 70%, #020c1f 100%)!important;
+  overflow: hidden!important;
+  position: relative!important;
 }
+`}</style>
+          </section>
+        </>
+      )}
 
-/* Large Desktop (1281px+) */
-@media (min-width: 1281px) {
-  .hero-section-grid {
-    gap: 64px !important;
-  }
-  
-  .hero-image-small {
-    max-width: clamp(300px, 32vw, 350px) !important;
-    width: 100% !important;
-  }
-  
-  /* Desktop - two columns for main content */
-  .main-content {
-    grid-template-columns: 1.1fr 0.9fr !important;
-    gap: clamp(0px, 0.5vw, 16px) !important;
-  }
-  
-  .text-and-buttons-container {
-    padding-left: 0 !important;
-    padding-right: clamp(8px, 2vw, 28px) !important;
-    margin-left: clamp(-20px, -2.5vw, -12px) !important;
-  }
-  
-  .billy-container {
-    padding-right: clamp(8px, 2vw, 20px) !important;
-  }
-  
-  /* Desktop Billy image */
-  .billy-image {
-    max-width: clamp(280px, 30vw, 320px) !important;
-    width: 100% !important;
-  }
-  
-  .billy-container {
-    padding: clamp(30px, 4vw, 50px) !important;
-  }
+      {(sectionRange === "all" || sectionRange === "carousel") && (
+        <>
+          {/* Cada clase, una aventura divertida — enhanced carousel */}
+          <section
+            className="section adventure-carousel-section reveal-element"
+            style={{
+              background: "#FBFAF5",
+              padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 60px)",
+              maxWidth: "1440px",
+              margin: "0 auto",
+              overflow: "visible",
+              height: "auto",
+            }}
+          >
+            {/* Section header */}
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: "clamp(40px, 5vw, 60px)",
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  background: "rgba(0,86,231,0.08)",
+                  color: "#0056E7",
+                  borderRadius: "999px",
+                  padding: "6px 18px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  marginBottom: "20px",
+                }}
+              >
+                Metodología
+              </span>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: "clamp(30px, 4.5vw, 52px)",
+                  fontWeight: 500,
+                  color: "#111",
+                  lineHeight: 1.15,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                Cada clase,{" "}
+                <span
+                  style={{
+                    background: "linear-gradient(90deg, #0056E7, #1983FD)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  una aventura divertida
+                </span>
+              </h2>
+            </div>
+
+            {/* Carousel */}
+            <div style={{ position: "relative", overflow: "visible" }}>
+              <div
+                className="adventure-carousel-content-wrap"
+                style={{
+                  position: "relative",
+                  minHeight: "clamp(420px, 65vh, 680px)",
+                  overflow: "visible",
+                }}
+              >
+                {[
+                  {
+                    title: "Microlearning",
+                    tag: "Lecciones cortas",
+                    description:
+                      "Utilizamos contenidos digitales y videos cortos interactivos en todas nuestras lecciones, creados por especialistas académicos y de animación infantil (Netflix) para facilitar el aprendizaje de tus estudiantes.",
+                    imageSrc: "/uploads/Landing_page/landing-1.png",
+                    imageAlt: "Microlearning",
+                  },
+                  {
+                    title: "Gamificación",
+                    tag: "Motivación constante",
+                    description:
+                      "Cada lección incluye retos y recompensas que mantienen a los estudiantes motivados y comprometidos con su aprendizaje financiero desde el primer día.",
+                    imageSrc: "/uploads/Landing_page/landing-2.png",
+                    imageAlt: "Gamificación",
+                  },
+                  {
+                    title: "Contenido Interactivo",
+                    tag: "Aprende haciendo",
+                    description:
+                      "Material multimedia diseñado para captar la atención y facilitar la comprensión de conceptos financieros complejos de forma práctica y atractiva.",
+                    imageSrc: "/uploads/Landing_page/landing-3.png",
+                    imageAlt: "Contenido Interactivo",
+                  },
+                ].map((slide, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      position:
+                        activeAdventureSlide === idx ? "relative" : "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      width: "100%",
+                      opacity: activeAdventureSlide === idx ? 1 : 0,
+                      visibility:
+                        activeAdventureSlide === idx ? "visible" : "hidden",
+                      pointerEvents:
+                        activeAdventureSlide === idx ? "auto" : "none",
+                      transition: "opacity 0.55s ease, visibility 0.55s ease",
+                      zIndex: activeAdventureSlide === idx ? 2 : 1,
+                    }}
+                  >
+                    {/* Two-column card */}
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: "clamp(24px, 4vw, 56px)",
+                        alignItems: "center",
+                        background:
+                          "linear-gradient(135deg, #0a1628 0%, #0d2050 60%, #0056E7 100%)",
+                        borderRadius: "32px",
+                        padding: "clamp(32px, 5vw, 56px)",
+                        boxSizing: "border-box",
+                        position: "relative",
+                        overflow: "visible", // Changed from hidden to fix internal scroll issue
+                        boxShadow: "0 24px 64px rgba(0, 86, 231, 0.2)",
+                        maxWidth: "1280px",
+                        margin: "0 auto",
+                      }}
+                      className="adventure-slide-grid"
+                    >
+                      {/* Glow blobs */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "-60px",
+                          right: "30%",
+                          width: "300px",
+                          height: "300px",
+                          background:
+                            "radial-gradient(circle, rgba(25,131,253,0.15) 0%, transparent 70%)",
+                          borderRadius: "50%",
+                          pointerEvents: "none",
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: "-40px",
+                          left: "10%",
+                          width: "240px",
+                          height: "240px",
+                          background:
+                            "radial-gradient(circle, rgba(0,86,231,0.12) 0%, transparent 70%)",
+                          borderRadius: "50%",
+                          pointerEvents: "none",
+                        }}
+                      />
+
+                      {/* Left: Text */}
+                      <div style={{ position: "relative", zIndex: 1 }}>
+                        {/* Slide tag */}
+                        <span
+                          style={{
+                            display: "inline-block",
+                            background: "rgba(255,255,255,0.1)",
+                            border: "1px solid rgba(255,255,255,0.18)",
+                            color: "#93c5fd",
+                            borderRadius: "999px",
+                            padding: "5px 14px",
+                            fontSize: "12px",
+                            fontWeight: 500,
+                            letterSpacing: "0.07em",
+                            textTransform: "uppercase",
+                            marginBottom: "20px",
+                          }}
+                        >
+                          {slide.tag}
+                        </span>
+
+                        <h3
+                          style={{
+                            margin: "0 0 clamp(14px, 2vw, 20px)",
+                            fontSize: "clamp(26px, 3vw, 42px)",
+                            fontWeight: 500,
+                            color: "#fff",
+                            lineHeight: 1.15,
+                            letterSpacing: "-0.02em",
+                          }}
+                        >
+                          {slide.title}
+                        </h3>
+
+                        <p
+                          style={{
+                            margin: "0 0 clamp(24px, 3vw, 36px)",
+                            fontSize: "clamp(15px, 1.05vw, 18px)",
+                            lineHeight: 1.75,
+                            color: "rgba(255,255,255,0.72)",
+                            maxWidth: "480px",
+                          }}
+                        >
+                          {slide.description}
+                        </p>
+
+                        <a
+                          href="https://calendly.com/diego-bizen"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            padding: "14px 28px",
+                            fontSize: "clamp(14px, 1rem, 17px)",
+                            fontWeight: 500,
+                            background: "#FBFAF5",
+                            color: "#0056E7",
+                            borderRadius: "999px",
+                            cursor: "pointer",
+                            boxShadow: "0 6px 20px rgba(255,255,255,0.15)",
+                            transition: "all 0.25s ease",
+                            textDecoration: "none",
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.transform =
+                              "translateY(-2px)";
+                            e.currentTarget.style.boxShadow =
+                              "0 10px 28px rgba(255,255,255,0.22)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.transform = "translateY(0)";
+                            e.currentTarget.style.boxShadow =
+                              "0 6px 20px rgba(255,255,255,0.15)";
+                          }}
+                        >
+                          Solicita tu demo
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                          </svg>
+                        </a>
+                      </div>
+
+                      {/* Right: Image */}
+                      <div
+                        style={{
+                          position: "relative",
+                          zIndex: 1,
+                          borderRadius: "20px",
+                          overflow: "hidden",
+                          aspectRatio: "4/3",
+                          background: "rgba(0,0,0,0.15)",
+                          boxShadow: "0 12px 40px rgba(0,0,0,0.2)",
+                        }}
+                      >
+                        <Image
+                          src={slide.imageSrc}
+                          alt={slide.imageAlt}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 600px"
+                          style={{ objectFit: "cover", borderRadius: "20px" }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Navigation Dots/Counter */}
+              <div
+                className="carousel-nav-wrapper"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "clamp(20px, 4vw, 32px)",
+                  margin: "clamp(24px, 3vw, 40px) auto 0",
+                  position: "relative",
+                  zIndex: 5,
+                }}
+              >
+                {/* Prev */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveAdventureSlide((prev) =>
+                      prev === 0 ? 2 : prev - 1,
+                    )
+                  }
+                  style={{
+                    width: "56px",
+                    height: "56px",
+                    borderRadius: "50%",
+                    background: "#FBFAF5",
+                    border: "1.5px solid rgba(0, 86, 231, 0.15)",
+                    boxShadow: "0 4px 12px rgba(0, 86, 231, 0.1)",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.borderColor = "#0056E7";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.borderColor =
+                      "rgba(0, 86, 231, 0.15)";
+                  }}
+                  aria-label="Slide anterior"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#0056E7"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+
+                {/* Dots */}
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
+                  {[0, 1, 2].map((idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveAdventureSlide(idx)}
+                      style={{
+                        width: activeAdventureSlide === idx ? "40px" : "10px",
+                        height: "10px",
+                        borderRadius: "999px",
+                        background:
+                          activeAdventureSlide === idx
+                            ? "#0056E7"
+                            : "rgba(0, 86, 231, 0.15)",
+                        border: "none",
+                        cursor: "pointer",
+                        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                      }}
+                      aria-label={`Ir al slide ${idx + 1} `}
+                    />
+                  ))}
+                </div>
+
+                {/* Next */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveAdventureSlide((prev) =>
+                      prev === 2 ? 0 : prev + 1,
+                    )
+                  }
+                  style={{
+                    width: "56px",
+                    height: "56px",
+                    borderRadius: "50%",
+                    background: "#0056E7",
+                    border: "none",
+                    boxShadow: "0 6px 16px rgba(0, 86, 231, 0.3)",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.background = "#015cf8";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.background = "#0056E7";
+                  }}
+                  aria-label="Siguiente slide"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </button>
+
+                {/* Counter */}
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "rgba(0, 86, 231, 0.4)",
+                    minWidth: "40px",
+                  }}
+                >
+                  {activeAdventureSlide + 1} / 3
+                </span>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {(sectionRange === "all" || sectionRange === "problema_flow") && (
+        <>
+          {/* Tres obstáculos — redesigned */}
+          <section
+            id="problema"
+            className="section curiosidad-section reveal-element"
+            style={{
+              background: "transparent",
+              padding: "clamp(64px, 9vw, 112px) clamp(24px, 4vw, 56px)",
+              position: "relative",
+              overflow: "visible",
+              height: "auto",
+              maxWidth: "1400px",
+              margin: "0 auto",
+            }}
+          >
+            {/* Decorative blobs */}
+            <div
+              style={{
+                position: "absolute",
+                top: "-100px",
+                right: "-60px",
+                width: "500px",
+                height: "500px",
+                background:
+                  "radial-gradient(circle, rgba(25,131,253,0.12) 0%, transparent 70%)",
+                borderRadius: "50%",
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                bottom: "-80px",
+                left: "-80px",
+                width: "420px",
+                height: "420px",
+                background:
+                  "radial-gradient(circle, rgba(0,86,231,0.10) 0%, transparent 70%)",
+                borderRadius: "50%",
+                pointerEvents: "none",
+              }}
+            />
+
+            {/* Header */}
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: "clamp(48px, 6vw, 72px)",
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                  color: "rgba(255,255,255,0.75)",
+                  borderRadius: "999px",
+                  padding: "6px 18px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  marginBottom: "20px",
+                }}
+              >
+                El reto en educación financiera
+              </span>
+              <h2
+                style={{
+                  fontSize: "clamp(36px, 5vw, 62px)",
+                  fontWeight: 500,
+                  color: "#fff",
+                  lineHeight: 1.1,
+                  marginBottom: "16px",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                Tres obstáculos{" "}
+                <span
+                  style={{
+                    background: "linear-gradient(90deg, #60a5fa, #1983FD)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  comunes.
+                </span>
+              </h2>
+              <p
+                style={{
+                  margin: "0 auto",
+                  maxWidth: "480px",
+                  fontSize: "clamp(17px, 1.3vw, 20px)",
+                  color: "rgba(255,255,255,0.6)",
+                  lineHeight: 1.65,
+                }}
+              >
+                La educación financiera tropieza con lo mismo una y otra vez.
+              </p>
+            </div>
+
+            {/* Cards */}
+            <div
+              className="curiosidad-cards-grid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "clamp(32px, 5vw, 64px)",
+                alignItems: "stretch",
+                maxWidth: "1280px",
+                margin: "0 auto clamp(40px, 5vw, 56px)",
+              }}
+            >
+              {[
+                {
+                  n: "01",
+                  title: "Teoría sin práctica",
+                  desc: "Se enseña el concepto pero no se practica con casos reales.",
+                  icon: (
+                    <svg
+                      width="36"
+                      height="36"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.8)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <path d="M14 2v6h6" />
+                      <path d="M8 13h8" />
+                      <path d="M8 17h8" />
+                      <path d="M10 9H8" />
+                    </svg>
+                  ),
+                  delay: "0s",
+                },
+                {
+                  n: "02",
+                  title: "Difícil medir avance",
+                  desc: "No hay forma clara de ver el progreso de cada estudiante.",
+                  icon: (
+                    <svg
+                      width="36"
+                      height="36"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.8)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      <circle
+                        cx="9"
+                        cy="12"
+                        r="1"
+                        fill="rgba(255,255,255,0.8)"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                        fill="rgba(255,255,255,0.8)"
+                      />
+                      <circle
+                        cx="15"
+                        cy="12"
+                        r="1"
+                        fill="rgba(255,255,255,0.8)"
+                      />
+                    </svg>
+                  ),
+                  delay: "1.2s",
+                },
+                {
+                  n: "03",
+                  title: "Falta de tiempo del docente",
+                  desc: "Los profesores no tienen tiempo para personalizar la enseñanza.",
+                  icon: (
+                    <svg
+                      width="36"
+                      height="36"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.8)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                  ),
+                  delay: "2.4s",
+                },
+              ].map((card, i) => (
+                <div
+                  key={i}
+                  className="curiosidad-card"
+                  style={{
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: "28px",
+                    padding: "clamp(28px, 4vw, 44px) clamp(24px, 3vw, 36px)",
+                    backdropFilter: "blur(10px)",
+                    position: "relative",
+                    animationDelay: card.delay,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "20px",
+                    maxWidth: "360px",
+                    margin: "0 auto",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      gap: "12px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "64px",
+                        height: "64px",
+                        borderRadius: "18px",
+                        background: "linear-gradient(135deg, #0056E7, #1983FD)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 8px 24px rgba(0, 86, 231, 0.35)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {card.icon}
+                    </div>
+                    <span
+                      style={{
+                        fontSize: "clamp(40px, 5vw, 60px)",
+                        fontWeight: 500,
+                        color: "rgba(255,255,255,0.07)",
+                        letterSpacing: "-0.04em",
+                        lineHeight: 1,
+                        userSelect: "none",
+                      }}
+                    >
+                      {card.n}
+                    </span>
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: "clamp(11px, 0.8rem, 13px)",
+                        fontWeight: 500,
+                        color: "#60a5fa",
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      Obstáculo {card.n}
+                    </div>
+                    <h3
+                      style={{
+                        margin: "0 0 10px",
+                        fontSize: "clamp(20px, 1.4rem, 24px)",
+                        fontWeight: 500,
+                        color: "#fff",
+                        lineHeight: 1.25,
+                      }}
+                    >
+                      {card.title}
+                    </h3>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "clamp(15px, 1rem, 17px)",
+                        lineHeight: 1.65,
+                        color: "rgba(255,255,255,0.55)",
+                      }}
+                    >
+                      {card.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA bar */}
+            <div
+              style={{
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: "20px",
+                padding: "clamp(20px, 3vw, 28px) clamp(28px, 4vw, 56px)",
+                textAlign: "center",
+                backdropFilter: "blur(8px)",
+                maxWidth: "900px",
+                margin: "0 auto",
+              }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "clamp(17px, 1.4vw, 21px)",
+                  color: "#fff",
+                  fontWeight: 500,
+                  lineHeight: 1.6,
+                }}
+              >
+                <span
+                  style={{
+                    background: "linear-gradient(90deg, #60a5fa, #1983FD)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  BIZEN
+                </span>{" "}
+                está diseñado para superar estos obstáculos.
+              </p>
+            </div>
+
+            <style>{`
+@media(max-width: 700px) {
+                  .curiosidad-cards-grid { grid-template-columns: 1fr!important; }
 }
+`}</style>
+          </section>
 
-/* Contact section - side by side on large screens */
-@media (min-width: 980px) {
-  #contacto .container > div {
-    grid-template-columns: 1.2fr 0.8fr !important;
-    gap: clamp(40px, 5vw, 48px) !important;
-  }
+          {/* Cómo funciona  — Premium redesign */}
+          <section
+            id="como-funciona"
+            className="section how-it-works reveal-element reveal-delay-2"
+            style={{
+              background: "transparent",
+              padding: "clamp(80px, 10vw, 130px) clamp(24px, 5vw, 48px)",
+              overflow: "visible",
+              position: "relative",
+              zIndex: 1,
+            }}
+          >
+            {/* Background grid */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage:
+                  "linear-gradient(rgba(0,86,231,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.05) 1px, transparent 1px)",
+                backgroundSize: "52px 52px",
+                pointerEvents: "none",
+              }}
+            />
+
+            {/* Glow accent */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: "-20%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "min(80vw, 600px)",
+                height: "min(80vw, 600px)",
+                background:
+                  "radial-gradient(circle, rgba(0, 86, 231, 0.18) 0%, transparent 70%)",
+                borderRadius: "50%",
+                filter: "blur(60px)",
+                pointerEvents: "none",
+              }}
+            />
+
+            {/* Content */}
+            <div
+              style={{
+                maxWidth: "1100px",
+                margin: "0 auto",
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              {/* Section label */}
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "clamp(48px, 7vw, 80px)",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-block",
+                    background: "rgba(25, 131, 253, 0.15)",
+                    color: "#60a5fa",
+                    borderRadius: "999px",
+                    padding: "6px 18px",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    marginBottom: "20px",
+                    border: "1px solid rgba(96, 165, 250, 0.2)",
+                  }}
+                >
+                  Proceso
+                </span>
+                <h2
+                  style={{
+                    margin: "0 0 16px",
+                    fontSize: "clamp(30px, 5vw, 56px)",
+                    fontWeight: 700,
+                    color: "#fff",
+                    lineHeight: 1.08,
+                    letterSpacing: "-0.03em",
+                  }}
+                >
+                  ¿Cómo{" "}
+                  <span
+                    style={{
+                      background: "linear-gradient(90deg, #60a5fa, #1983FD)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    funciona?
+                  </span>
+                </h2>
+                <p
+                  style={{
+                    margin: "0 auto",
+                    fontSize: "clamp(15px, 1.2vw, 19px)",
+                    color: "#FFFFFF",
+                    fontWeight: 500,
+                    maxWidth: "480px",
+                    lineHeight: 1.7,
+                    opacity: 0.9,
+                  }}
+                >
+                  Tres pasos: empiezas, practicas y mides tu avance.
+                </p>
+              </div>
+
+              {/* Steps grid */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "clamp(16px, 3vw, 28px)",
+                  alignItems: "stretch",
+                  position: "relative",
+                }}
+                className="how-it-works-steps"
+              >
+                {/* Connecting line (desktop only) */}
+                <div
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    top: "64px",
+                    left: "calc(16.67% + 40px)",
+                    right: "calc(16.67% + 40px)",
+                    height: "2px",
+                    background:
+                      "linear-gradient(90deg, rgba(25,131,253,0.5), rgba(96,165,250,0.8), rgba(25,131,253,0.5))",
+                    zIndex: 0,
+                    pointerEvents: "none",
+                  }}
+                  className="how-works-connector-line"
+                />
+
+                {howItWorksSteps.map((step, i) => (
+                  <div
+                    key={i}
+                    className={`step-card reveal-element reveal-delay-${i + 1} `}
+                    style={{
+                      padding: "clamp(32px, 4vw, 48px) clamp(24px, 3vw, 36px)",
+                      borderRadius: "28px",
+                      background: "rgba(255, 255, 255, 0.04)",
+                      border: "1px solid rgba(255, 255, 255, 0.1)",
+                      boxShadow:
+                        "0 8px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+                      backdropFilter: "blur(16px)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      cursor: "default",
+                      position: "relative",
+                      zIndex: 1,
+                    }}
+                  >
+                    {/* Step number badge */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "-16px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "50%",
+                        background: "linear-gradient(135deg, #0056E7, #1983FD)",
+                        color: "#fff",
+                        fontSize: "14px",
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 4px 16px rgba(0, 86, 231, 0.5)",
+                        border: "2px solid rgba(255,255,255,0.15)",
+                      }}
+                    >
+                      {i + 1}
+                    </div>
+
+                    {/* Icon container */}
+                    <div
+                      style={{
+                        width: "72px",
+                        height: "72px",
+                        borderRadius: "20px",
+                        background:
+                          "linear-gradient(135deg, rgba(0,86,231,0.3) 0%, rgba(25,131,253,0.2) 100%)",
+                        border: "1px solid rgba(96, 165, 250, 0.25)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: "24px",
+                        marginTop: "8px",
+                        boxShadow: "0 8px 24px rgba(0, 86, 231, 0.2)",
+                      }}
+                    >
+                      {i === 0 && (
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#60a5fa"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden
+                        >
+                          <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                      )}
+                      {i === 1 && (
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#60a5fa"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden
+                        >
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                          <path d="M14 2v6h6" />
+                          <path d="M16 13H8" />
+                          <path d="M16 17H8" />
+                          <path d="M10 9H8" />
+                        </svg>
+                      )}
+                      {i === 2 && (
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#60a5fa"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden
+                        >
+                          <path d="M3 3v18h18" />
+                          <path d="M18 17V9" />
+                          <path d="M13 17V5" />
+                          <path d="M8 17v-3" />
+                        </svg>
+                      )}
+                    </div>
+
+                    <h3
+                      style={{
+                        margin: "0 0 12px",
+                        fontSize: "clamp(17px, 1.5vw, 22px)",
+                        fontWeight: 600,
+                        color: "#ffffff",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      {step.title}
+                    </h3>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "clamp(13px, 1rem, 15px)",
+                        color: "rgba(255, 255, 255, 0.7)",
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {step.schoolsText}
+                    </p>
+                  </div>
+                ))}
+                <style>{`
+  .step-card:hover {
+  border-color: rgba(96, 165, 250, 0.3)!important;
+  box-shadow: 0 16px 48px rgba(0, 86, 231, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)!important;
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.07)!important;
 }
-
-.btn{
-  --ring:0 0 0 0 rgba(14,165,233,.35);
-  display:inline-flex; align-items:center; justify-content:center;
-  height:42px; padding:0 16px; border-radius:12px;
-  border:1px solid var(--c-border); cursor:pointer; font-weight:500;
-  transition:transform 60ms ease, box-shadow var(--transition), background var(--transition), color var(--transition), border-color var(--transition);
-  box-shadow:var(--shadow-sm);
-  transform-origin:center;
-  text-decoration:none;
-  color:inherit;
+                    .how-works-connector-line {
+  display: block;
 }
-.btn.large{height:48px; padding:0 20px}
-.btn:hover, .btn:active, .btn:focus-visible{transform:scale(.9)}
-.btn:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(14,165,233,.25)}
-.btn.primary{background:var(--c-primary); color:white; border-color:var(--c-primary);}
-.btn.ghost{background:white; color:var(--c-text);}
-.btn[disabled]{opacity:.6; cursor:not-allowed}
-`
-
-// Build trigger: Wed Feb 18 17:31:00 CST 2026
+@media(max-width: 767px) {
+                      .how-it-works-steps { grid-template-columns: 1fr!important; }
+                      .how-works-connector-line { display: none!important; }
+}
+@media(min-width: 768px) and(max-width: 899px) {
+                      .how-it-works-steps { grid-template-columns: repeat(2, 1fr)!important; }
+                      .how-works-connector-line { display: none!important; }
+}
+@media(min-width: 900px) {
+                      .how-it-works-steps { grid-template-columns: repeat(3, 1fr)!important; }
+}
+`}</style>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+    </>
+  );
+}
