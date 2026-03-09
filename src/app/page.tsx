@@ -143,7 +143,7 @@ export default function WelcomePage() {
   const gradientStyle = {
     background: "linear-gradient(160deg, #020e27 0%, #041640 50%, #061852 100%)",
     backgroundAttachment: "scroll" as const,
-    overflow: "hidden",
+    overflow: "visible",
     position: "relative" as const
   }
 
@@ -158,7 +158,7 @@ export default function WelcomePage() {
       display: "flex",
       flexDirection: "column",
       position: "relative"
-    }} className="main-page-container landing-page-root" data-landing-root>
+    }} className="main-page-container landing-page-root" data-landing-root style={{ overflow: "visible" }}>
       {/* Header: transparent on hero, glass when scrolled */}
       <header className="main-header landing-header glass-header" style={{
         position: "fixed",
@@ -542,7 +542,7 @@ export default function WelcomePage() {
             maxWidth: "100%",
             boxSizing: "border-box",
             minHeight: "100vh",
-            overflow: "hidden",
+            overflow: "visible",
             isolation: "isolate"
           }}>
 
@@ -2903,7 +2903,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
         <section id="perfiles" className="section perfiles-section reveal-element" style={{
           background: "linear-gradient(180deg, #FFFFFF 0%, #f4f8ff 100%)", // Gentle transition from previous section
           position: "relative",
-          overflow: "hidden"
+          overflow: "visible"
         }}>
           {/* Internal dark container for the actual perfiles content to match the premium theme */}
           <div style={{
@@ -2912,7 +2912,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
             borderRadius: "48px",
             padding: "clamp(64px, 10vw, 110px) clamp(24px, 5vw, 60px)",
             position: "relative",
-            overflow: "hidden",
+            overflow: "visible",
             boxShadow: "0 24px 80px rgba(0, 0, 0, 0.25)"
           }}>
             {/* Grid pattern */}
@@ -2951,7 +2951,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
                     backgroundClip: "text",
                   }}>3 perfiles educativos</span>.
                 </h2>
-                <p style={{ margin: "0 auto", maxWidth: "520px", fontSize: "clamp(16px, 1.3vw, 19px)", color: "rgba(255, 255, 255, 0.65)", lineHeight: 1.7 }}>
+                <p style={{ margin: "0 auto", maxWidth: "520px", fontSize: "clamp(16px, 1.3vw, 19px)", color: "#FFFFFF", fontWeight: 400, lineHeight: 1.7 }}>
                   Un diseño inteligente que adapta toda la experiencia a quién eres.
                 </p>
               </div>
@@ -3936,7 +3936,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
         <section id="como-funciona" className="section how-it-works reveal-element reveal-delay-2" style={{
           background: "linear-gradient(170deg, #040f26 0%, #071840 50%, #040e24 100%)",
           padding: "clamp(80px, 10vw, 130px) clamp(24px, 5vw, 48px)",
-          overflow: "hidden",
+          overflow: "visible",
           position: "relative",
         }}>
 
@@ -4000,7 +4000,7 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
               <p style={{
                 margin: "0 auto",
                 fontSize: "clamp(15px, 1.2vw, 19px)",
-                color: "rgba(255, 255, 255, 0.6)",
+                color: "#FFFFFF",
                 maxWidth: "480px",
                 lineHeight: 1.7,
               }}>
@@ -4460,7 +4460,7 @@ section#problema {
 .how-it-works-steps {
   min-width: 0 !important;
   max-width: 100% !important;
-  overflow-x: hidden !important;
+  overflow: visible !important;
   box-sizing: border-box !important;
 }
 
