@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/AuthContext"
-import { SchoolIcon, CakeIcon, PartyIcon, RocketIcon } from "@/components/CustomIcons"
+import { SchoolIcon, CakeIcon, PartyIcon, RocketIcon, ChevronRightIcon } from "@/components/CustomIcons"
 
 // ─── Avatar Options ───────────────────────────────────────────────────────────
 
@@ -156,7 +156,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         @keyframes ob-fadeIn    { from { opacity: 0 } to { opacity: 1 } }
         @keyframes ob-slideUp   { from { opacity: 0; transform: translateY(48px) scale(0.96) } to { opacity: 1; transform: translateY(0) scale(1) } }
         @keyframes ob-slideOut  { from { opacity: 1; transform: translateY(0) scale(1) } to { opacity: 0; transform: translateY(-24px) scale(0.95) } }
-        @keyframes ob-float     { 0%,100% { transform: translateY(0) rotate(-2deg) } 50% { transform: translateY(-12px) rotate(2deg) } }
         @keyframes ob-spin      { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
         @keyframes ob-pop       { 0% { transform: scale(0.7); opacity: 0 } 70% { transform: scale(1.1) } 100% { transform: scale(1); opacity: 1 } }
         @keyframes ob-breathe   {
@@ -170,6 +169,18 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         @keyframes ob-pulse-ring {
           0%   { transform: scale(0.94); opacity: 0.4 }
           100% { transform: scale(1.4); opacity: 0 }
+        }
+        @keyframes ob-twinkle {
+          0%, 100% { opacity: 0.2; transform: scale(0.8); }
+          50%       { opacity: 1;   transform: scale(1.3); }
+        }
+        @keyframes ob-glow-pulse {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50%       { opacity: 1;   transform: scale(1.06); }
+        }
+        @keyframes ob-hero-in {
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1); }
         }
 
         /* ── Overlay ── */
@@ -305,6 +316,103 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           pointer-events: none;
         }
 
+        /* ── Welcome hero panel ── */
+        .ob-welcome-hero {
+          position: relative;
+          overflow: hidden;
+          background:
+            radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56,100,254,0.55) 0%, transparent 70%),
+            radial-gradient(ellipse 60% 80% at 20% 100%, rgba(82,36,200,0.35) 0%, transparent 70%),
+            linear-gradient(175deg, #020b24 0%, #050e30 40%, #03061a 100%);
+          padding: clamp(32px, 7vw, 56px) clamp(24px, 5vw, 40px) clamp(24px, 5vw, 40px);
+          text-align: center;
+          animation: ob-hero-in 0.55s ease both;
+        }
+        /* tiny star dots */
+        .ob-star {
+          position: absolute;
+          border-radius: 50%;
+          background: #fff;
+          animation: ob-twinkle var(--dur, 3s) ease-in-out infinite;
+          animation-delay: var(--del, 0s);
+        }
+        /* Billy glow disc */
+        .ob-billy-glow {
+          position: absolute;
+          inset: -40%;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(56,110,255,0.45) 0%, rgba(56,110,255,0.12) 45%, transparent 70%);
+          animation: ob-glow-pulse 3.5s ease-in-out infinite;
+          pointer-events: none;
+        }
+        .ob-welcome-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.14);
+          border-radius: 999px;
+          padding: 5px 16px;
+          margin-bottom: clamp(10px,2.5vw,16px);
+          backdrop-filter: blur(6px);
+        }
+        .ob-welcome-badge span {
+          font-size: clamp(10px,2.5vw,11px);
+          font-weight: 700;
+          color: rgba(255,255,255,0.85);
+          letter-spacing: 0.07em;
+          text-transform: uppercase;
+        }
+        .ob-welcome-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: #4ade80;
+          box-shadow: 0 0 6px #4ade80;
+        }
+        .ob-welcome-h1 {
+          font-size: clamp(22px,5.5vw,32px);
+          font-weight: 900;
+          color: #fff;
+          margin: 0 0 clamp(8px,2vw,14px);
+          letter-spacing: -0.03em;
+          line-height: 1.15;
+          text-shadow: 0 2px 16px rgba(56,110,255,0.5);
+        }
+        .ob-welcome-sub {
+          font-size: clamp(13px,3.2vw,15px);
+          color: rgba(200,214,255,0.80);
+          margin: 0 0 6px;
+          line-height: 1.7;
+        }
+        .ob-welcome-hint {
+          font-size: clamp(11px,2.8vw,12.5px);
+          color: rgba(148,172,255,0.65);
+          margin: 0 0 clamp(22px,5vw,34px);
+        }
+        .ob-welcome-btn {
+          width: 100%; padding: clamp(13px,3vw,16px) 24px;
+          background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+          color: white; border: none; border-radius: 14px;
+          font-size: clamp(14px,3.5vw,15px); font-weight: 700; font-family: 'Inter', sans-serif;
+          cursor: pointer;
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+          letter-spacing: 0.02em;
+          box-shadow: 0 8px 32px rgba(37,99,235,0.55), 0 0 0 1px rgba(255,255,255,0.08) inset;
+          transition: all 0.22s;
+        }
+        .ob-welcome-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+        .ob-welcome-btn:active { transform: scale(0.98); }
+        .ob-welcome-step-dots {
+          display: flex; gap: 5px; justify-content: center;
+          margin-top: clamp(16px,4vw,24px);
+        }
+        .ob-welcome-step-dot {
+          height: 5px; border-radius: 99px;
+          transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
+          background: rgba(255,255,255,0.15);
+        }
+        .ob-welcome-step-dot.active { background: rgba(255,255,255,0.85); width: 24px !important; }
+        .ob-welcome-step-dot.done { background: rgba(255,255,255,0.35); }
+
         /* ── Section header inside steps ── */
         .ob-section-icon {
           width: clamp(64px, 16vw, 80px);
@@ -322,6 +430,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         @media (max-width: 480px) {
           .ob-card { border-radius: 22px; }
           .ob-avatar-btn { border-width: 2.5px; }
+          .ob-welcome-hero { padding: 28px 20px 24px; }
         }
       `}</style>
 
@@ -335,44 +444,76 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                     {/* ─── WELCOME ─────────────────────────────────────────────────────── */}
                     {step === "welcome" && (
-                        <div className="ob-pad-welcome">
-                            {/* Billy mascot with pulse ring */}
-                            <div style={{ position: "relative", width: "clamp(100px,22vw,130px)", height: "clamp(100px,22vw,130px)", margin: "0 auto clamp(20px,5vw,32px)" }}>
-                                <div className="ob-mascot-ring" />
-                                <div style={{
-                                    position: "absolute", inset: -8, borderRadius: "50%",
-                                    background: "radial-gradient(circle, rgba(15,98,254,0.15) 0%, transparent 70%)",
-                                }} />
+                        <div className="ob-welcome-hero">
+
+                            {/* ── Star field ── */}
+                            {[
+                                { top: "8%", left: "7%", size: 2, dur: 2.8, del: 0 },
+                                { top: "14%", left: "88%", size: 1.5, dur: 3.5, del: 0.4 },
+                                { top: "5%", left: "55%", size: 1, dur: 2.2, del: 0.9 },
+                                { top: "22%", left: "92%", size: 2.5, dur: 4.0, del: 0.2 },
+                                { top: "30%", left: "3%", size: 1, dur: 3.1, del: 1.2 },
+                                { top: "60%", left: "95%", size: 1.5, dur: 2.6, del: 0.7 },
+                                { top: "70%", left: "5%", size: 2, dur: 3.8, del: 0.3 },
+                                { top: "82%", left: "80%", size: 1, dur: 4.2, del: 1.0 },
+                                { top: "88%", left: "15%", size: 1.5, dur: 2.9, del: 0.6 },
+                                { top: "18%", left: "40%", size: 1, dur: 3.3, del: 1.5 },
+                            ].map((s, i) => (
+                                <div
+                                    key={i}
+                                    className="ob-star"
+                                    style={{
+                                        top: s.top, left: s.left,
+                                        width: s.size, height: s.size,
+                                        "--dur": `${s.dur}s`,
+                                        "--del": `${s.del}s`,
+                                    } as React.CSSProperties}
+                                />
+                            ))}
+
+                            {/* ── Billy with glow disc ── */}
+                            <div style={{ position: "relative", width: "clamp(110px,24vw,150px)", height: "clamp(110px,24vw,150px)", margin: "0 auto clamp(20px,5vw,32px)" }}>
+                                <div className="ob-billy-glow" />
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src="/hero4.png"
                                     alt="Billy, mascota BIZEN"
-                                    style={{ width: "100%", height: "100%", objectFit: "contain", animation: "ob-float 3.2s ease infinite", position: "relative", zIndex: 1, filter: "drop-shadow(0 8px 16px rgba(15,98,254,0.25))" }}
+                                    style={{
+                                        width: "100%", height: "100%", objectFit: "contain",
+                                        position: "relative", zIndex: 1,
+                                        filter: "drop-shadow(0 0 20px rgba(56,110,255,0.6)) drop-shadow(0 4px 8px rgba(0,0,20,0.5))"
+                                    }}
                                 />
                             </div>
 
-                            {/* Badge */}
-                            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, rgba(15,98,254,0.1), rgba(99,102,241,0.1))", border: "1px solid rgba(15,98,254,0.2)", borderRadius: 99, padding: "5px 16px", marginBottom: "clamp(12px,3vw,18px)" }}>
-                                <span style={{ fontSize: "clamp(10px,2.5vw,11px)", fontWeight: 500, color: "#0F62FE", letterSpacing: "0.06em", textTransform: "uppercase" }}>Bienvenido a BIZEN</span>
+                            {/* ── Badge ── */}
+                            <div className="ob-welcome-badge">
+                                <span className="ob-welcome-dot" />
+                                <span>Bienvenido a BIZEN</span>
                             </div>
 
-                            <h1 style={{ fontSize: "clamp(20px,5vw,28px)", fontWeight: 500, color: "#0f172a", margin: "0 0 clamp(8px,2vw,12px)", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-                                Hola, <span style={{ color: "#0F62FE" }}>{profileName}</span>
+                            {/* ── Heading ── */}
+                            <h1 className="ob-welcome-h1">
+                                Hola, <span style={{ color: "#93c5fd" }}>{profileName}</span>
                             </h1>
-                            <p style={{ fontSize: "clamp(13px,3.5vw,15px)", color: "#64748b", margin: "0 0 6px", lineHeight: 1.75 }}>
-                                Antes de explorar la plataforma, vamos a configurar tu perfil. Solo toma un minuto.
+                            <p className="ob-welcome-sub">
+                                Antes de explorar la plataforma, vamos a configurar tu perfil.
+                                Solo toma un minuto.
                             </p>
-                            <p style={{ fontSize: "clamp(11px,3vw,13px)", color: "#94a3b8", margin: "0 0 clamp(24px,5vw,36px)" }}>
-                                Al terminar, <strong style={{ color: "#0F62FE" }}>Billy</strong> te dará un recorrido completo por la app.
+                            <p className="ob-welcome-hint">
+                                Al terminar, <strong style={{ color: "#93c5fd", fontWeight: 700 }}>Billy</strong> te dará un recorrido completo por la app.
                             </p>
 
-                            <button className="ob-btn-primary" onClick={() => goToStep("avatar")}>
-                                Comenzar configuración →
+                            {/* ── CTA ── */}
+                            <button className="ob-welcome-btn" onClick={() => goToStep("avatar")}>
+                                <ChevronRightIcon size={18} color="white" />
+                                Comenzar configuración
                             </button>
 
-                            <div className="ob-step-dots">
+                            {/* ── Step dots (light on dark) ── */}
+                            <div className="ob-welcome-step-dots">
                                 {stepList.map((s, i) => (
-                                    <div key={s} className={`ob-step-dot${s === step ? " active" : i < stepList.indexOf(step) ? " done" : ""}`} style={{ width: s === step ? 24 : 8 }} />
+                                    <div key={s} className={`ob-welcome-step-dot${s === step ? " active" : i < stepList.indexOf(step) ? " done" : ""}`} style={{ width: s === step ? 24 : 8 }} />
                                 ))}
                             </div>
                         </div>
