@@ -108,3 +108,16 @@ a {
         opacity: 0.1;
     }
 }
+
+/* App layout spacing for fixed headers */
+.app-main {
+    padding-top: 46px;
+    /* Header height */
+    box-sizing: border-box;
+}
+
+/* On courses page, the header is not shown, so we remove padding */
+[data-no-sidebar] .app-main,
+.courses-page-active .app-main {
+    padding-top: 0;
+}

@@ -181,7 +181,7 @@ export default function CoursesPage() {
   }
 
   return (
-    <div style={{
+    <div className="courses-page-active" style={{
       position: "relative",
       top: 0,
       left: 0,

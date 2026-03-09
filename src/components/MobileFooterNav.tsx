@@ -187,21 +187,23 @@ export default function MobileFooterNav() {
         data-mobile-bottom-nav
         style={{
           position: "fixed",
-          bottom: "max(16px, env(safe-area-inset-bottom, 16px))",
-          left: "clamp(16px, 4vw, 32px)",
-          right: "clamp(16px, 4vw, 32px)",
-          height: "64px",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "calc(65px + env(safe-area-inset-bottom, 0px))",
           boxSizing: "border-box",
           zIndex: 10000,
           transform: "translate3d(0, 0, 0)",
           WebkitTransform: "translate3d(0, 0, 0)",
           display: "block",
-          background: "rgba(20, 25, 40, 0.8)",
+          background: "rgba(20, 25, 40, 0.95)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
-          borderRadius: "24px",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          boxShadow: "0 16px 32px -8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
+          borderRadius: 0,
+          border: "none",
+          borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+          boxShadow: "0 -4px 16px rgba(0, 0, 0, 0.2)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)"
         }}
       >
         <div className="mobile-footer-inner">

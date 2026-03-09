@@ -27,15 +27,18 @@ export default function AppHeader() {
   return (
     <>
       <div style={{
-        position: "sticky",
+        position: "fixed",
         top: 0,
+        left: 0,
+        right: 0,
         zIndex: 999,
         background: "rgba(255, 255, 255, 0.95)",
         backdropFilter: "blur(10px)",
         borderBottom: "1px solid rgba(15, 98, 254, 0.1)",
         padding: "8px 16px",
-        marginBottom: 0,
-        height: "auto"
+        height: "46px",
+        display: "flex",
+        alignItems: "center"
       }}>
         <div
           style={{
@@ -61,7 +64,7 @@ export default function AppHeader() {
             fontSize: "18px",
             fontWeight: 500,
             color: "#0F62FE",
-                        letterSpacing: "0.5px"
+            letterSpacing: "0.5px"
           }}>
             BIZEN
           </span>

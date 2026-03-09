@@ -64,11 +64,14 @@ export default function WelcomePage() {
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
+      document.documentElement.style.overflow = 'unset'
     }
     return () => {
       document.body.style.overflow = 'unset'
+      document.documentElement.style.overflow = 'unset'
     }
   }, [mobileMenuOpen])
 
@@ -138,23 +141,22 @@ export default function WelcomePage() {
       position: "relative"
     }} className="main-page-container landing-page-root" data-landing-root>
       {/* Header: pill nav design matching reference screenshot */}
-      <header className="main-header landing-header glass-header" style={{
+      <header className="landing-header" style={{
         width: "100%",
-        maxWidth: "100%",
-        boxSizing: "border-box",
-        padding: "clamp(10px, 1.5vw, 16px) 0",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "transparent",
-        backdropFilter: "none",
-        WebkitBackdropFilter: "none",
-        position: "absolute",
+        padding: "16px 0",
+        transition: "all 0.3s ease",
+        zIndex: 1000,
+        position: "fixed",
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 1000,
-        borderBottom: "none",
+        background: "rgba(255, 255, 255, 0.9)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        borderBottom: "1px solid rgba(15, 98, 254, 0.08)"
       }}>
         <div className="landing-header-container" style={{
           width: "100%",
@@ -307,10 +309,10 @@ export default function WelcomePage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "flex-start",
+            justifyContent: "center",
             overflowY: "auto",
             overflowX: "hidden",
-            padding: "min(12vh, 100px) 0 60px",
+            padding: "60px 0",
             boxSizing: "border-box"
           }}
           onClick={() => setMobileMenuOpen(false)}
