@@ -157,30 +157,38 @@ export default function WelcomePage() {
       maxWidth: "100vw",
       margin: 0,
       padding: 0,
-      overflowX: "hidden",
+      overflowX: "clip",
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
       position: "relative"
     }} className="main-page-container landing-page-root" data-landing-root>
-      {/* Header: pill nav design matching reference screenshot */}
+      {/* Header: sticky with scroll-aware glass */}
       <header className="main-header landing-header glass-header" style={{
         width: "100%",
         maxWidth: "100%",
         boxSizing: "border-box",
-        padding: "clamp(10px, 1.5vw, 16px) 0",
+        padding: navScrolled ? "clamp(8px, 1vw, 12px) 0" : "clamp(10px, 1.5vw, 16px) 0",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "transparent",
-        backdropFilter: "none",
-        WebkitBackdropFilter: "none",
-        position: "absolute",
+        background: navScrolled
+          ? "rgba(255, 255, 255, 0.92)"
+          : "rgba(4, 9, 30, 0.2)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        position: "fixed",
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 1000,
-        borderBottom: "none",
+        zIndex: 10000,
+        borderBottom: navScrolled
+          ? "1px solid rgba(0, 0, 0, 0.06)"
+          : "1px solid rgba(255, 255, 255, 0.08)",
+        boxShadow: navScrolled
+          ? "0 2px 20px rgba(0, 0, 0, 0.08)"
+          : "none",
+        transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
       }}>
         <div className="landing-header-container" style={{
           width: "100%",
@@ -193,7 +201,14 @@ export default function WelcomePage() {
         }}>
           {/* Logo */}
           <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }} aria-label="BIZEN home">
-            <span style={{ fontSize: "clamp(18px, 2vw, 22px)", fontWeight: 500, color: "#0056E7", letterSpacing: "0.01em" }}>BIZEN</span>
+            <span style={{
+              fontSize: "clamp(18px, 2vw, 22px)",
+              fontWeight: 700,
+              color: navScrolled ? "#0056E7" : "#FFFFFF",
+              letterSpacing: "0.01em",
+              transition: "color 0.3s ease",
+              textShadow: navScrolled ? "none" : "0 0 20px rgba(15, 98, 254, 0.4)"
+            }}>BIZEN</span>
           </Link>
 
           {/* Hamburger (mobile only) */}
@@ -218,9 +233,9 @@ export default function WelcomePage() {
               justifyContent: "center"
             }}
           >
-            <div style={{ width: 26, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(45deg) translateY(8px)" : "none" }} />
-            <div style={{ width: 26, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", opacity: mobileMenuOpen ? 0 : 1 }} />
-            <div style={{ width: 26, height: 2, background: "#0056E7", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(-45deg) translateY(-8px)" : "none" }} />
+            <div style={{ width: 26, height: 2, background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(45deg) translateY(8px)" : "none" }} />
+            <div style={{ width: 26, height: 2, background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", borderRadius: 2, transition: "0.3s", opacity: mobileMenuOpen ? 0 : 1 }} />
+            <div style={{ width: 26, height: 2, background: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)", borderRadius: 2, transition: "0.3s", transform: mobileMenuOpen ? "rotate(-45deg) translateY(-8px)" : "none" }} />
           </button>
 
           {/* Centered pill nav — scroll-aware: dark on hero, light on white sections */}
@@ -523,7 +538,7 @@ export default function WelcomePage() {
         </div>
       )}
 
-      <main className="landing-main" style={{ flex: "1 0 auto", width: "100%", maxWidth: "100vw", display: "block", overflowX: "hidden" }}>
+      <main className="landing-main" style={{ flex: "1 0 auto", width: "100%", maxWidth: "100vw", display: "block", overflowX: "clip" }}>
         <div className="landing-gradient-wrapper" style={gradientStyle}>
           {/* Hero Section - deep space dark with animated orbs */}
           <div className="landing-hero-wrapper" style={{
@@ -557,46 +572,65 @@ export default function WelcomePage() {
             {/* Glow orb 1 — top-left blue */}
             <div aria-hidden style={{
               position: "absolute",
-              top: "-15%",
-              left: "-10%",
-              width: "min(80vw, 700px)",
-              height: "min(80vw, 700px)",
-              background: "radial-gradient(circle, rgba(0, 86, 231, 0.28) 0%, rgba(0, 86, 231, 0.0) 70%)",
+              top: "-10%",
+              left: "-8%",
+              width: "min(70vw, 600px)",
+              height: "min(70vw, 600px)",
+              background: "radial-gradient(circle, rgba(0, 86, 231, 0.3) 0%, rgba(0, 86, 231, 0.0) 70%)",
               borderRadius: "50%",
-              filter: "blur(40px)",
+              filter: "blur(50px)",
               animation: "landing-orb-drift 12s ease-in-out infinite",
               pointerEvents: "none",
               zIndex: 0
             }} />
 
-            {/* Glow orb 2 — bottom-right teal-blue */}
+            {/* Glow orb 2 — bottom-right teal-blue — kept well within bounds */}
             <div aria-hidden style={{
               position: "absolute",
-              bottom: "-20%",
-              right: "-15%",
-              width: "min(70vw, 600px)",
-              height: "min(70vw, 600px)",
+              bottom: "-10%",
+              right: "-5%",
+              width: "min(55vw, 500px)",
+              height: "min(55vw, 500px)",
               background: "radial-gradient(circle, rgba(25, 131, 253, 0.22) 0%, rgba(25, 131, 253, 0.0) 70%)",
               borderRadius: "50%",
-              filter: "blur(50px)",
+              filter: "blur(55px)",
               animation: "landing-orb-drift 15s ease-in-out infinite 3s",
               pointerEvents: "none",
               zIndex: 0
             }} />
 
-            {/* Glow orb 3 — center-right accent */}
+            {/* Glow orb 3 — center, subtle teal accent */}
             <div aria-hidden style={{
               position: "absolute",
-              top: "30%",
-              right: "5%",
-              width: "min(40vw, 400px)",
-              height: "min(40vw, 400px)",
-              background: "radial-gradient(circle, rgba(96, 165, 250, 0.12) 0%, transparent 70%)",
+              top: "35%",
+              right: "20%",
+              width: "min(35vw, 350px)",
+              height: "min(35vw, 350px)",
+              background: "radial-gradient(circle, rgba(96, 165, 250, 0.14) 0%, transparent 70%)",
               borderRadius: "50%",
-              filter: "blur(30px)",
+              filter: "blur(35px)",
               animation: "pulse-glow-slow 9s ease-in-out infinite 1.5s",
               pointerEvents: "none",
               zIndex: 0
+            }} />
+
+            {/* Floating star-particles layer */}
+            <div aria-hidden style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 0,
+              pointerEvents: "none",
+              backgroundImage: `
+                radial-gradient(1.5px 1.5px at 15% 20%, rgba(255,255,255,0.35) 0%, transparent 100%),
+                radial-gradient(1px 1px at 75% 8%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 42% 55%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(1px 1px at 88% 40%, rgba(255,255,255,0.25) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 65% 72%, rgba(255,255,255,0.15) 0%, transparent 100%),
+                radial-gradient(1px 1px at 55% 30%, rgba(180,210,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 10% 65%, rgba(180,210,255,0.2) 0%, transparent 100%)
+              `,
+              backgroundSize: "100% 100%",
             }} />
 
             <Hero3DScene />
@@ -782,12 +816,13 @@ export default function WelcomePage() {
                   }}>
                     <div style={{
                       borderRadius: "16px",
-                      background: "rgba(255, 255, 255, 0.07)",
-                      backdropFilter: "blur(20px)",
-                      WebkitBackdropFilter: "blur(20px)",
-                      padding: "clamp(20px, 3vw, 30px) clamp(24px, 4vw, 40px)",
+                      background: "rgba(10, 20, 50, 0.55)",
+                      backdropFilter: "blur(24px)",
+                      WebkitBackdropFilter: "blur(24px)",
+                      padding: "clamp(20px, 3vw, 32px) clamp(24px, 4vw, 44px)",
                       textAlign: "center",
-                      border: "1px solid rgba(255, 255, 255, 0.12)",
+                      border: "1px solid rgba(96, 165, 250, 0.2)",
+                      boxShadow: "0 4px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
                     }}>
                       {/* Thin accent bar */}
                       <div style={{
@@ -801,11 +836,11 @@ export default function WelcomePage() {
                       {/* Main text */}
                       <p style={{
                         margin: 0,
-                        fontSize: "clamp(13px, 1.15vw, 16px)",
-                        lineHeight: 1.85,
-                        fontWeight: 500,
-                        color: "rgba(255, 255, 255, 0.82)",
-                        letterSpacing: "0.015em",
+                        fontSize: "clamp(13px, 1.15vw, 17px)",
+                        lineHeight: 1.9,
+                        fontWeight: 400,
+                        color: "rgba(255, 255, 255, 0.92)",
+                        letterSpacing: "0.01em",
                         wordWrap: "break-word",
                       }}>
                         La plataforma educativa que combina{" "}
@@ -817,13 +852,14 @@ export default function WelcomePage() {
                           color: "#fff",
                           borderRadius: "6px",
                           padding: "2px 10px 2px 8px",
-                          fontWeight: 500,
+                          fontWeight: 600,
                           fontSize: "0.95em",
                           letterSpacing: "0.02em",
                           whiteSpace: "nowrap",
+                          boxShadow: "0 2px 12px rgba(25, 131, 253, 0.35)"
                         }}>gamificación e IA</span>{" "}
-                        para enseñar finanzas personales a estudiantes de preparatoria y universidad de forma{" "}
-                        <em style={{ fontStyle: "normal", fontWeight: 500, color: "#60a5fa" }}>práctica, clara y relevante.</em>
+                        para enseñar finanzas personales a jóvenes de preparatoria y universidad de forma{" "}
+                        <em style={{ fontStyle: "normal", fontWeight: 600, color: "#93c5fd" }}>práctica, clara y relevante.</em>
                       </p>
                     </div>
                   </div>
@@ -840,9 +876,75 @@ export default function WelcomePage() {
                   `}} />
                 </div>
               </div>
+
+              {/* Hero inline CTAs */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "clamp(10px, 2vw, 16px)",
+                marginTop: "clamp(28px, 5vw, 48px)",
+                flexWrap: "wrap",
+              }}>
+                <a
+                  href="/signup"
+                  className="landing-hero-cta-primary"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "clamp(14px, 2vw, 18px) clamp(28px, 4vw, 48px)",
+                    fontSize: "clamp(14px, 1.4vw, 17px)",
+                    fontWeight: 600,
+                    borderRadius: "9999px",
+                    background: "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
+                    backgroundSize: "200% auto",
+                    color: "#fff",
+                    textDecoration: "none",
+                    boxShadow: "0 4px 24px rgba(15, 98, 254, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
+                    transition: "all 0.3s ease",
+                    letterSpacing: "0.01em",
+                  }}
+                >
+                  Comenzar gratis
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </a>
+                <a
+                  href="https://calendly.com/diego-bizen"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "clamp(13px, 2vw, 17px) clamp(24px, 3.5vw, 40px)",
+                    fontSize: "clamp(14px, 1.4vw, 17px)",
+                    fontWeight: 500,
+                    borderRadius: "9999px",
+                    background: "rgba(255, 255, 255, 0.06)",
+                    border: "1.5px solid rgba(255, 255, 255, 0.2)",
+                    color: "rgba(255, 255, 255, 0.88)",
+                    textDecoration: "none",
+                    backdropFilter: "blur(10px)",
+                    transition: "all 0.3s ease",
+                    letterSpacing: "0.01em",
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.12)";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.4)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.06)";
+                    e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                  }}
+                >
+                  <Calendar size={16} />
+                  Agendar demo
+                </a>
+              </div>
             </div>
 
-            {/* Company logos section - carousel */}
+
             <div className="landing-hero-logos-wrap" style={{
               position: "relative",
               zIndex: 1,

@@ -8,6 +8,11 @@
     --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+html {
+    overflow-x: clip;
+    scroll-behavior: smooth;
+}
+
 * {
     box-sizing: border-box;
 }
