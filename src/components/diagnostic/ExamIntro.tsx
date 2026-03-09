@@ -52,72 +52,95 @@ export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: Ex
     outline: "none",
     transition: "border-color 0.2s, box-shadow 0.2s",
     boxSizing: "border-box",
-        color: "#111827",
+    color: "#111827",
     background: "#FFFFFF",
   }
 
   const labelStyle: React.CSSProperties = {
     display: "block",
-    fontSize: "13px",
+    fontSize: "clamp(11px, 3vw, 13px)",
     fontWeight: 500,
     color: "#6B7280",
-    marginBottom: "8px",
+    marginBottom: "6px",
     letterSpacing: "0.03em",
     textTransform: "uppercase",
-      }
+  }
 
   return (
-    <div style={{
+    <div className="exam-intro-container" style={{
       width: "100%",
       maxWidth: 520,
       margin: "0 auto",
-      padding: "20px 0",
+      padding: "clamp(12px, 3vh, 32px) 0",
     }}>
+      <style>{`
+        .exam-intro-card {
+          padding: 36px;
+        }
+        @media (max-width: 480px) {
+          .exam-intro-card {
+            padding: 24px 16px;
+            border-radius: 20px;
+            gap: 20px !important;
+          }
+          .exam-intro-container h1 {
+            font-size: 24px !important;
+          }
+          .exam-intro-container p {
+            font-size: 13px !important;
+            padding: 0 10px;
+          }
+        }
+        @media (max-width: 360px) {
+           .exam-intro-card {
+             padding: 20px 12px;
+           }
+        }
+      `}</style>
+
       {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: "32px" }}>
+      <div style={{ textAlign: "center", marginBottom: "clamp(24px, 5vh, 40px)" }}>
         <div style={{
           display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",
-          width: 64,
-          height: 64,
-          borderRadius: "20px",
+          width: "clamp(52px, 12vw, 64px)",
+          height: "clamp(52px, 12vw, 64px)",
+          borderRadius: "16px",
           background: "linear-gradient(135deg, rgba(15, 98, 254, 0.1) 0%, rgba(74, 158, 255, 0.1) 100%)",
-          marginBottom: "24px",
+          marginBottom: "clamp(16px, 3vh, 24px)",
           border: "2px solid rgba(15, 98, 254, 0.05)",
         }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 11l3 3L22 4" />
             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
           </svg>
         </div>
         <h1 style={{
-          fontSize: "clamp(26px, 5vw, 32px)",
+          fontSize: "clamp(22px, 6vw, 32px)",
           fontWeight: 500,
           color: "#111827",
           lineHeight: 1.15,
-          margin: "0 0 12px 0",
+          margin: "0 0 10px 0",
           letterSpacing: "-0.03em",
-                  }}>
+        }}>
           Examen <span style={{ color: "#0F62FE" }}>Diagnóstico</span>
         </h1>
         <p style={{
-          fontSize: "16px",
+          fontSize: "clamp(14px, 3vw, 16px)",
           color: "#6B7280",
-          lineHeight: 1.6,
+          lineHeight: 1.5,
           margin: 0,
-                    fontWeight: 500,
+          fontWeight: 500,
         }}>
           Completa tu información para comenzar. Solo toma 2 minutos.
         </p>
       </div>
 
-      {/* Form Card */}
-      <div style={{
+      <div className="exam-intro-card" style={{
         background: "#FFFFFF",
         borderRadius: "28px",
         border: "2px solid #E5E7EB",
-        padding: "36px",
         boxShadow: "0 10px 40px rgba(0,0,0,0.04)",
         display: "flex",
         flexDirection: "column",
@@ -242,7 +265,7 @@ export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: Ex
               color: "#FFFFFF",
               fontSize: "17px",
               fontWeight: 500,
-                            border: "none",
+              border: "none",
               cursor: isLoading ? "not-allowed" : "pointer",
               transition: "all 0.15s ease",
               letterSpacing: "0.01em",

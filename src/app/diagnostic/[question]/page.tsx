@@ -199,7 +199,7 @@ export default function DiagnosticQuestionPage() {
             <StickyFooterButton
               variant="secondary"
               onClick={() => goToPage(currentPage - 1)}
-              style={{ width: "auto", minWidth: "140px" }}
+              style={{ width: "auto", minWidth: "clamp(80px, 20vw, 140px)" }}
             >
               Anterior
             </StickyFooterButton>
@@ -212,7 +212,7 @@ export default function DiagnosticQuestionPage() {
               variant="blue"
               onClick={() => goToPage(currentPage + 1)}
               disabled={userAnswers[currentQuestion.id] === undefined}
-              style={{ width: "auto", minWidth: "200px" }}
+              style={{ width: "auto", minWidth: "clamp(120px, 35vw, 200px)" }}
             >
               Siguiente
             </StickyFooterButton>
@@ -221,7 +221,7 @@ export default function DiagnosticQuestionPage() {
               variant="blue"
               onClick={handleQuizSubmit}
               disabled={quizIncomplete || quizSubmitted}
-              style={{ width: "auto", minWidth: "200px" }}
+              style={{ width: "auto", minWidth: "clamp(120px, 35vw, 200px)" }}
             >
               {quizSubmitted ? "Enviado" : "Finalizar examen"}
             </StickyFooterButton>
@@ -246,20 +246,23 @@ export default function DiagnosticQuestionPage() {
             key="success"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
+            className="diagnostic-success-card"
             style={{
               textAlign: "center",
-              padding: "40px",
+              padding: "clamp(24px, 5vw, 40px)",
               background: "#FFFFFF",
               borderRadius: "32px",
               border: "2px solid #E5E7EB",
               boxShadow: "0 12px 40px rgba(0,0,0,0.06)",
               maxWidth: "560px",
-              margin: "60px auto"
+              margin: "60px auto",
+              width: "100%",
+              boxSizing: "border-box"
             }}
           >
-            <div style={{ fontSize: "64px", marginBottom: "20px" }}>🎉</div>
-            <h2 style={{ fontSize: "28px", fontWeight: 500, color: "#111827", marginBottom: "16px", letterSpacing: "-0.02em" }}>¡Excelente trabajo!</h2>
-            <p style={{ fontSize: "17px", color: "#6B7280", lineHeight: 1.6, }}>Tu examen diagnóstico ha sido enviado con éxito. Valoramos mucho tu participación.</p>
+            <div style={{ fontSize: "clamp(48px, 10vw, 64px)", marginBottom: "20px" }}>🎉</div>
+            <h2 style={{ fontSize: "clamp(22px, 5vw, 28px)", fontWeight: 500, color: "#111827", marginBottom: "16px", letterSpacing: "-0.02em" }}>¡Excelente trabajo!</h2>
+            <p style={{ fontSize: "clamp(15px, 2vw, 17px)", color: "#6B7280", lineHeight: 1.6, }}>Tu examen diagnóstico ha sido enviado con éxito. Valoramos mucho tu participación.</p>
             <div style={{ marginTop: "32px", fontSize: "14px", color: "#9CA3AF", fontWeight: 500, }}>Redirigiendo de vuelta a BIZEN...</div>
           </motion.div>
         ) : !userInfo ? (
@@ -297,12 +300,12 @@ export default function DiagnosticQuestionPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <ExerciseInstruction type="mcq" />
               <h3 style={{
-                fontSize: "clamp(20px, 3vw, 26px)",
+                fontSize: "clamp(19px, 5vw, 26px)",
                 fontWeight: 500,
                 color: "#111827",
                 margin: 0,
-                lineHeight: 1.3,
-                                textAlign: "left",
+                lineHeight: 1.25,
+                textAlign: "left",
               }}>
                 {currentQuestion.question}
               </h3>
@@ -387,7 +390,7 @@ export default function DiagnosticQuestionPage() {
                       fontWeight: 500,
                       color: labelColor,
                       flexShrink: 0,
-                                            border: `1.5px solid ${borderColor}`,
+                      border: `1.5px solid ${borderColor}`,
                       transition: "all 0.2s ease",
                     }}>
                       {option.value}
@@ -396,7 +399,9 @@ export default function DiagnosticQuestionPage() {
                       flex: 1,
                       fontSize: "clamp(15px, 1.8vw, 18px)",
                       fontWeight: 500,
-                                            lineHeight: 1.4,
+                      lineHeight: 1.4,
+                      wordBreak: "break-word",
+                      overflowWrap: "anywhere"
                     }}>
                       {option.text}
                     </span>

@@ -52,7 +52,7 @@ export function LessonScreen({
         background: "#FFFFFF",
         paddingTop: "env(safe-area-inset-top)",
         position: "relative",
-              }}
+      }}
     >
       {/* Progress header — slim, clean, Duolingo-style */}
       {showProgressBar && (
@@ -93,12 +93,12 @@ export function LessonScreen({
           className="lesson-step-transition"
           style={{
             flex: 1,
-            minHeight: 0,
+            minHeight: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            justifyContent: "flex-start", // Start from top to prevent cut-off on small screens
             alignItems: "center",
-            padding: "0 clamp(16px, 4vw, 48px)",
+            padding: "min(40px, 5vh) clamp(16px, 4vw, 48px)",
             boxSizing: "border-box",
           }}
         >
