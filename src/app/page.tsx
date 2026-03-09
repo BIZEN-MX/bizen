@@ -153,32 +153,27 @@ export default function WelcomePage() {
       flex: "1 0 auto",
       height: "auto",
       width: "100%",
-      minWidth: "100%",
-      maxWidth: "100vw",
       margin: 0,
       padding: 0,
-      overflowX: "clip",
-      boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
       position: "relative"
     }} className="main-page-container landing-page-root" data-landing-root>
       {/* Header: transparent on hero, glass when scrolled */}
       <header className="main-header landing-header glass-header" style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
         width: "100%",
-        maxWidth: "100%",
         boxSizing: "border-box",
-        padding: "clamp(10px, 1.5vw, 16px) 0",
+        padding: "clamp(12px, 1.5vw, 18px) 0",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         background: navScrolled ? "rgba(255, 255, 255, 0.94)" : "transparent",
         backdropFilter: navScrolled ? "blur(20px)" : "none",
         WebkitBackdropFilter: navScrolled ? "blur(20px)" : "none",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
         zIndex: 10000,
         borderBottom: navScrolled ? "1px solid rgba(0, 0, 0, 0.06)" : "none",
         boxShadow: navScrolled ? "0 2px 20px rgba(0, 0, 0, 0.08)" : "none",
@@ -676,6 +671,33 @@ export default function WelcomePage() {
                   filter: "drop-shadow(20px 0 30px rgba(44, 123, 239, 0.15))"
                 }}
               />
+            </div>
+
+            {/* Right side mascot restored (the hand) - strictly clipped to prevent horizontal scroll */}
+            <div aria-hidden style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "100%", overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
+              <div className="landing-hero-right-mascot reveal-element" style={{
+                position: "absolute",
+                right: 0,
+                bottom: "clamp(80px, 10vw, 180px)",
+                width: "clamp(240px, 24vw, 460px)",
+                transform: "translateX(25%)",
+                opacity: 0,
+                transition: "all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)",
+              }}>
+                <style dangerouslySetInnerHTML={{
+                  __html: `
+                  .landing-hero-right-mascot.revealed { opacity: 1 !important; transform: translateX(18%) !important; }
+                  @media (max-width: 768px) { .landing-hero-right-mascot { display: none; } }
+                `}} />
+                <Image
+                  src="/image.png"
+                  alt=""
+                  width={600}
+                  height={600}
+                  priority
+                  style={{ width: "100%", height: "auto", filter: "drop-shadow(-20px 0 40px rgba(44, 123, 239, 0.2))" }}
+                />
+              </div>
             </div>
 
 
@@ -2877,387 +2899,394 @@ function LandingContent({ sectionRange = 'all' }: { sectionRange?: 'gradient' | 
 
         {/* Somos BIZEN - 4 blue cards */}
 
-        {/* 4 Perfiles Educativos */}
+        {/* 4 Perfiles Educativos — Premium Dark mode */}
         <section id="perfiles" className="section perfiles-section reveal-element" style={{
-          background: "linear-gradient(160deg, #f0f6ff 0%, #fafcff 60%, #ffffff 100%)",
-          paddingTop: "clamp(48px, 6vw, 80px)",
-          paddingBottom: "clamp(64px, 10vw, 100px)",
-          paddingLeft: "clamp(16px, 4vw, 24px)",
-          paddingRight: "clamp(16px, 4vw, 24px)",
+          background: "linear-gradient(180deg, #FFFFFF 0%, #f4f8ff 100%)", // Gentle transition from previous section
           position: "relative",
-          overflow: "visible"
+          overflow: "hidden"
         }}>
-          {/* Decorative Blobs for Depth */}
-          <div className="perfiles-blob perfiles-blob-1" style={{ position: "absolute", top: "10%", right: "-5%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(0, 86, 231, 0.10) 0%, transparent 70%)", filter: "blur(80px)", zIndex: 0, animation: "float-perfiles 15s infinite alternate" }} />
-          <div className="perfiles-blob perfiles-blob-2" style={{ position: "absolute", bottom: "5%", left: "-5%", width: "600px", height: "600px", borderRadius: "50%", background: "radial-gradient(circle, rgba(0, 86, 231, 0.06) 0%, transparent 70%)", filter: "blur(100px)", zIndex: 0, animation: "float-perfiles-reverse 20s infinite alternate" }} />
+          {/* Internal dark container for the actual perfiles content to match the premium theme */}
+          <div style={{
+            background: "linear-gradient(170deg, #040f26 0%, #06184d 50%, #040f26 100%)",
+            margin: "clamp(0px, 4vw, 60px) clamp(16px, 4vw, 40px)",
+            borderRadius: "48px",
+            padding: "clamp(64px, 10vw, 110px) clamp(24px, 5vw, 60px)",
+            position: "relative",
+            overflow: "hidden",
+            boxShadow: "0 24px 80px rgba(0, 0, 0, 0.25)"
+          }}>
+            {/* Grid pattern */}
+            <div aria-hidden style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(25,131,253,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(25,131,253,0.04) 1px, transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />
 
-          <div className="container" style={{ maxWidth: "1400px", margin: "0 auto" }}>
-            {/* Header */}
-            <div style={{ textAlign: "center", marginBottom: "clamp(40px, 5vw, 56px)" }}>
-              <span style={{
-                display: "inline-block",
-                background: "rgba(0, 86, 231, 0.08)",
-                color: "#0056E7",
-                borderRadius: "999px",
-                padding: "6px 18px",
-                fontSize: "13px",
-                fontWeight: 500,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                marginBottom: "20px",
-              }}>Para cada miembro de la comunidad educativa</span>
-              <h2 style={{
-                textAlign: "center",
-                fontSize: "clamp(36px, 5vw, 62px)",
-                fontWeight: 500,
-                color: "#111",
-                lineHeight: 1.15,
-                marginBottom: "clamp(12px, 2vw, 16px)",
-                letterSpacing: "-0.02em",
-              }}>
-                1 solución,{" "}
+            <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+              {/* Header */}
+              <div style={{ textAlign: "center", marginBottom: "clamp(48px, 6vw, 72px)" }}>
                 <span style={{
-                  background: "linear-gradient(90deg, #0056E7, #1983FD)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}>3 perfiles educativos</span>.
-              </h2>
-              <p style={{ margin: "0 auto", maxWidth: "480px", fontSize: "clamp(17px, 1.3vw, 20px)", color: "#64748b", lineHeight: 1.6 }}>
-                Un clic que adapta toda la experiencia a quién eres.
-              </p>
-            </div>
-
-            {/* Content Card - enhanced */}
-            <div className="glass-card-premium" style={{
-              background: "rgba(255, 255, 255, 0.9)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              borderRadius: "36px",
-              padding: "clamp(32px, 4vw, 48px) clamp(28px, 4vw, 56px) clamp(40px, 5vw, 64px)",
-              boxShadow: "0 24px 64px rgba(0, 86, 231, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.7)",
-              border: "1px solid rgba(0, 86, 231, 0.12)",
-              position: "relative",
-              zIndex: 1,
-            }}>
-              {/* Tabs */}
-              <div style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "10px",
-                marginBottom: "clamp(36px, 5vw, 52px)",
-                flexWrap: "wrap",
-                background: "rgba(0, 86, 231, 0.04)",
-                borderRadius: "20px",
-                padding: "6px",
-                border: "1px solid rgba(0, 86, 231, 0.08)",
-                maxWidth: "480px",
-                margin: "0 auto clamp(36px, 5vw, 52px)",
-              }}
-                className="perfiles-tabs-row"
-              >
-                {[
-                  { id: "docentes" as const, label: "Docentes" },
-                  { id: "estudiantes" as const, label: "Estudiantes" },
-                  { id: "padres" as const, label: "Padres" },
-                ].map((profile) => (
-                  <button
-                    key={profile.id}
-                    onClick={() => setActiveProfile(profile.id)}
-                    style={{
-                      flex: 1,
-                      padding: "12px 20px",
-                      fontSize: "clamp(14px, 1rem, 16px)",
-                      fontWeight: 500,
-                      border: "none",
-                      borderRadius: "14px",
-                      cursor: "pointer",
-                      transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-                      background: activeProfile === profile.id ? "#0056E7" : "transparent",
-                      color: activeProfile === profile.id ? "#ffffff" : "#64748b",
-                      boxShadow: activeProfile === profile.id ? "0 6px 20px rgba(0, 86, 231, 0.25)" : "none",
-                    }}
-                    className="profile-tab-button"
-                  >
-                    {profile.label}
-                  </button>
-                ))}
+                  display: "inline-block",
+                  background: "rgba(96, 165, 250, 0.15)",
+                  color: "#60a5fa",
+                  borderRadius: "999px",
+                  padding: "6px 20px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  marginBottom: "20px",
+                  border: "1px solid rgba(96, 165, 250, 0.2)"
+                }}>Comunidad educativa</span>
+                <h2 style={{
+                  textAlign: "center",
+                  fontSize: "clamp(34px, 5vw, 60px)",
+                  fontWeight: 700,
+                  color: "#FFFFFF",
+                  lineHeight: 1.1,
+                  marginBottom: "clamp(16px, 2vw, 24px)",
+                  letterSpacing: "-0.03em",
+                }}>
+                  1 solución,{" "}
+                  <span style={{
+                    background: "linear-gradient(90deg, #60a5fa, #1983FD)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}>3 perfiles educativos</span>.
+                </h2>
+                <p style={{ margin: "0 auto", maxWidth: "520px", fontSize: "clamp(16px, 1.3vw, 19px)", color: "rgba(255, 255, 255, 0.65)", lineHeight: 1.7 }}>
+                  Un diseño inteligente que adapta toda la experiencia a quién eres.
+                </p>
               </div>
 
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "clamp(32px, 5vw, 64px)",
-                alignItems: "center",
-              }}
-                className="perfiles-content-grid"
-              >
-                {/* Left: Text Content - slide animation on tab change */}
-                <div className="perfiles-content-left" style={{ overflow: "hidden", position: "relative" }}>
-                  <div key={activeProfile} className="perfiles-slide-in">
-                    <div style={{ marginBottom: "clamp(16px, 3vw, 24px)" }}>
-                      <span style={{
-                        display: "inline-block",
-                        background: "linear-gradient(135deg, #0056E7, #1983FD)",
-                        color: "#fff",
-                        borderRadius: "12px",
-                        padding: "6px 16px",
-                        fontSize: "13px",
+              {/* Content Card - dark premium frost */}
+              <div className="glass-card-premium" style={{
+                background: "rgba(255, 255, 255, 0.03)",
+                backdropFilter: "blur(32px)",
+                WebkitBackdropFilter: "blur(32px)",
+                borderRadius: "36px",
+                padding: "clamp(32px, 4vw, 48px) clamp(28px, 4vw, 56px) clamp(40px, 5vw, 64px)",
+                boxShadow: "0 24px 64px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                position: "relative",
+                zIndex: 1,
+              }}>
+                {/* Tabs */}
+                <div style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "10px",
+                  marginBottom: "clamp(36px, 5vw, 52px)",
+                  flexWrap: "wrap",
+                  background: "rgba(255, 255, 255, 0.04)",
+                  borderRadius: "20px",
+                  padding: "6px",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  maxWidth: "480px",
+                  margin: "0 auto clamp(36px, 5vw, 52px)",
+                }}
+                  className="perfiles-tabs-row"
+                >
+                  {[
+                    { id: "docentes" as const, label: "Docentes" },
+                    { id: "estudiantes" as const, label: "Estudiantes" },
+                    { id: "padres" as const, label: "Padres" },
+                  ].map((profile) => (
+                    <button
+                      key={profile.id}
+                      onClick={() => setActiveProfile(profile.id)}
+                      style={{
+                        flex: 1,
+                        padding: "12px 20px",
+                        fontSize: "clamp(14px, 1rem, 16px)",
                         fontWeight: 500,
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                        marginBottom: "14px",
-                      }}>
-                        {activeProfile === "docentes" && "Para docentes"}
-                        {activeProfile === "estudiantes" && "Para estudiantes"}
-                        {activeProfile === "padres" && "Para padres"}
-                      </span>
-                      <h3 style={{
-                        fontSize: "clamp(28px, 3.5vw, 44px)",
-                        fontWeight: 500,
-                        color: "#111",
-                        marginBottom: 0,
-                        letterSpacing: "-0.02em",
-                        lineHeight: 1.15,
-                      }}>
-                        {activeProfile === "docentes" && "Enseña más con menos esfuerzo"}
-                        {activeProfile === "estudiantes" && "Aprende haciendo, no memorizando"}
-                        {activeProfile === "padres" && "Acompaña su camino financiero"}
-                      </h3>
-                    </div>
+                        border: "none",
+                        borderRadius: "14px",
+                        cursor: "pointer",
+                        transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                        background: activeProfile === profile.id ? "#0056E7" : "transparent",
+                        color: activeProfile === profile.id ? "#ffffff" : "#64748b",
+                        boxShadow: activeProfile === profile.id ? "0 6px 20px rgba(0, 86, 231, 0.25)" : "none",
+                      }}
+                      className="profile-tab-button"
+                    >
+                      {profile.label}
+                    </button>
+                  ))}
+                </div>
 
-                    <p style={{
-                      fontSize: "clamp(16px, 1.15rem, 19px)",
-                      lineHeight: 1.65,
-                      color: "#374151",
-                      marginBottom: "clamp(24px, 4vw, 32px)",
-                    }}>
-                      {activeProfile === "docentes" && "Herramientas prácticas para enseñar finanzas con contenido listo para usar, seguimiento en tiempo real y recursos descargables."}
-                      {activeProfile === "estudiantes" && "Aprende finanzas de forma divertida con cursos interactivos, simuladores reales y recompensas por tu progreso."}
-                      {activeProfile === "padres" && "Acompaña el aprendizaje financiero de tus hijos con acceso a su progreso, recursos compartidos y actividades familiares."}
-                    </p>
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "clamp(32px, 5vw, 64px)",
+                  alignItems: "center",
+                }}
+                  className="perfiles-content-grid"
+                >
+                  {/* Left: Text Content - slide animation on tab change */}
+                  <div className="perfiles-content-left" style={{ overflow: "hidden", position: "relative" }}>
+                    <div key={activeProfile} className="perfiles-slide-in">
+                      <div style={{ marginBottom: "clamp(16px, 3vw, 24px)" }}>
+                        <span style={{
+                          display: "inline-block",
+                          background: "linear-gradient(135deg, #0056E7, #1983FD)",
+                          color: "#fff",
+                          borderRadius: "12px",
+                          padding: "6px 16px",
+                          fontSize: "13px",
+                          fontWeight: 500,
+                          letterSpacing: "0.05em",
+                          textTransform: "uppercase",
+                          marginBottom: "14px",
+                        }}>
+                          {activeProfile === "docentes" && "Para docentes"}
+                          {activeProfile === "estudiantes" && "Para estudiantes"}
+                          {activeProfile === "padres" && "Para padres"}
+                        </span>
+                        <h3 style={{
+                          fontSize: "clamp(28px, 3.5vw, 44px)",
+                          fontWeight: 500,
+                          color: "#111",
+                          marginBottom: 0,
+                          letterSpacing: "-0.02em",
+                          lineHeight: 1.15,
+                        }}>
+                          {activeProfile === "docentes" && "Enseña más con menos esfuerzo"}
+                          {activeProfile === "estudiantes" && "Aprende haciendo, no memorizando"}
+                          {activeProfile === "padres" && "Acompaña su camino financiero"}
+                        </h3>
+                      </div>
 
-                    {/* Bullet Points */}
-                    <ul style={{
-                      listStyle: "none",
-                      margin: "0 0 clamp(28px, 4vw, 36px) 0",
-                      padding: 0,
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "16px",
-                    }}>
-                      {activeProfile === "docentes" && (
-                        <>
-                          {[
-                            { text: <>Contenido listo para usar con <strong>lecciones interactivas</strong>.</> },
-                            { text: <>Seguimiento en <strong>tiempo real</strong> del progreso de tus estudiantes.</> },
-                            { text: <>Recursos <strong>descargables</strong> y materiales de apoyo.</> },
-                          ].map((item, i) => (
-                            <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
+                      <p style={{
+                        fontSize: "clamp(16px, 1.15rem, 19px)",
+                        lineHeight: 1.65,
+                        color: "#374151",
+                        marginBottom: "clamp(24px, 4vw, 32px)",
+                      }}>
+                        {activeProfile === "docentes" && "Herramientas prácticas para enseñar finanzas con contenido listo para usar, seguimiento en tiempo real y recursos descargables."}
+                        {activeProfile === "estudiantes" && "Aprende finanzas de forma divertida con cursos interactivos, simuladores reales y recompensas por tu progreso."}
+                        {activeProfile === "padres" && "Acompaña el aprendizaje financiero de tus hijos con acceso a su progreso, recursos compartidos y actividades familiares."}
+                      </p>
+
+                      {/* Bullet Points */}
+                      <ul style={{
+                        listStyle: "none",
+                        margin: "0 0 clamp(28px, 4vw, 36px) 0",
+                        padding: 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "16px",
+                      }}>
+                        {activeProfile === "docentes" && (
+                          <>
+                            {[
+                              { text: <>Contenido listo para usar con <strong>lecciones interactivas</strong>.</> },
+                              { text: <>Seguimiento en <strong>tiempo real</strong> del progreso de tus estudiantes.</> },
+                              { text: <>Recursos <strong>descargables</strong> y materiales de apoyo.</> },
+                            ].map((item, i) => (
+                              <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
+                                <span style={{
+                                  width: "26px",
+                                  height: "26px",
+                                  background: "linear-gradient(135deg, #0056E7, #1983FD)",
+                                  borderRadius: "8px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  color: "#fff",
+                                  fontWeight: 500,
+                                  fontSize: "13px",
+                                  flexShrink: 0,
+                                  boxShadow: "0 4px 10px rgba(0, 86, 231, 0.3)",
+                                }}><CheckIcon size={14} color="white" /></span>
+                                <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.6, color: "#374151" }}>
+                                  {item.text}
+                                </span>
+                              </li>
+                            ))}
+                          </>
+                        )}
+                        {activeProfile === "estudiantes" && (
+                          <>
+                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
                               <span style={{
-                                width: "26px",
-                                height: "26px",
-                                background: "linear-gradient(135deg, #0056E7, #1983FD)",
-                                borderRadius: "8px",
+                                width: "24px",
+                                height: "24px",
+                                background: "#0056E7",
+                                borderRadius: "50%",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 color: "#fff",
                                 fontWeight: 500,
-                                fontSize: "13px",
+                                fontSize: "14px",
                                 flexShrink: 0,
-                                boxShadow: "0 4px 10px rgba(0, 86, 231, 0.3)",
                               }}><CheckIcon size={14} color="white" /></span>
-                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.6, color: "#374151" }}>
-                                {item.text}
+                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
+                                Aprende con <strong>gamificación</strong> y recompensas.
                               </span>
                             </li>
-                          ))}
-                        </>
-                      )}
-                      {activeProfile === "estudiantes" && (
-                        <>
-                          <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                            <span style={{
-                              width: "24px",
-                              height: "24px",
-                              background: "#0056E7",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "#fff",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              flexShrink: 0,
-                            }}><CheckIcon size={14} color="white" /></span>
-                            <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
-                              Aprende con <strong>gamificación</strong> y recompensas.
-                            </span>
-                          </li>
-                          <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                            <span style={{
-                              width: "24px",
-                              height: "24px",
-                              background: "#0056E7",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "#fff",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              flexShrink: 0,
-                            }}><CheckIcon size={14} color="white" /></span>
-                            <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
-                              Practica con <strong>simuladores reales</strong> sin riesgo.
-                            </span>
-                          </li>
-                          <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                            <span style={{
-                              width: "24px",
-                              height: "24px",
-                              background: "#0056E7",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "#fff",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              flexShrink: 0,
-                            }}><CheckIcon size={14} color="white" /></span>
-                            <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
-                              Rastrea tu <strong>progreso</strong> y gana certificaciones.
-                            </span>
-                          </li>
-                        </>
-                      )}
-                      {activeProfile === "padres" && (
-                        <>
-                          <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                            <span style={{
-                              width: "24px",
-                              height: "24px",
-                              background: "#0056E7",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "#fff",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              flexShrink: 0,
-                            }}><CheckIcon size={14} color="white" /></span>
-                            <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
-                              Visualiza el <strong>progreso</strong> de tus hijos en tiempo real.
-                            </span>
-                          </li>
-                          <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                            <span style={{
-                              width: "24px",
-                              height: "24px",
-                              background: "#0056E7",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "#fff",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              flexShrink: 0,
-                            }}><CheckIcon size={14} color="white" /></span>
-                            <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
-                              Accede a <strong>recursos compartidos</strong> y actividades familiares.
-                            </span>
-                          </li>
-                          <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                            <span style={{
-                              width: "24px",
-                              height: "24px",
-                              background: "#0056E7",
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "#fff",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              flexShrink: 0,
-                            }}>✓</span>
-                            <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "#374151" }}>
-                              Fomenta la <strong>educación financiera</strong> desde casa.
-                            </span>
-                          </li>
-                        </>
-                      )}
-                    </ul>
+                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+                              <span style={{
+                                width: "24px",
+                                height: "24px",
+                                background: "#0056E7",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#fff",
+                                fontWeight: 500,
+                                fontSize: "14px",
+                                flexShrink: 0,
+                              }}><CheckIcon size={14} color="white" /></span>
+                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
+                                Practica con <strong>simuladores reales</strong> sin riesgo.
+                              </span>
+                            </li>
+                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+                              <span style={{
+                                width: "24px",
+                                height: "24px",
+                                background: "#0056E7",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#fff",
+                                fontWeight: 500,
+                                fontSize: "14px",
+                                flexShrink: 0,
+                              }}><CheckIcon size={14} color="white" /></span>
+                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
+                                Rastrea tu <strong>progreso</strong> y gana certificaciones.
+                              </span>
+                            </li>
+                          </>
+                        )}
+                        {activeProfile === "padres" && (
+                          <>
+                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+                              <span style={{
+                                width: "24px",
+                                height: "24px",
+                                background: "#0056E7",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#fff",
+                                fontWeight: 500,
+                                fontSize: "14px",
+                                flexShrink: 0,
+                              }}><CheckIcon size={14} color="white" /></span>
+                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
+                                Visualiza el <strong>progreso</strong> de tus hijos en tiempo real.
+                              </span>
+                            </li>
+                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+                              <span style={{
+                                width: "24px",
+                                height: "24px",
+                                background: "#0056E7",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#fff",
+                                fontWeight: 500,
+                                fontSize: "14px",
+                                flexShrink: 0,
+                              }}><CheckIcon size={14} color="white" /></span>
+                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
+                                Accede a <strong>recursos compartidos</strong> y actividades familiares.
+                              </span>
+                            </li>
+                            <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+                              <span style={{
+                                width: "24px",
+                                height: "24px",
+                                background: "#0056E7",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#fff",
+                                fontWeight: 500,
+                                fontSize: "14px",
+                                flexShrink: 0,
+                              }}>✓</span>
+                              <span style={{ fontSize: "clamp(15px, 1.05rem, 17px)", lineHeight: 1.5, color: "rgba(255,255,255,0.75)" }}>
+                                Fomenta la <strong>educación financiera</strong> desde casa.
+                              </span>
+                            </li>
+                          </>
+                        )}
+                      </ul>
 
-                    {/* CTA Button - opens demo modal */}
-                    <a
-                      href="https://calendly.com/diego-bizen"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        padding: "clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 32px)",
-                        fontSize: "clamp(14px, 2vw, 18px)",
-                        fontWeight: 500,
-                        background: "#0056E7",
-                        color: "#ffffff",
-                        border: "none",
-                        borderRadius: 9999,
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "clamp(6px, 1.5vw, 10px)",
-                        boxShadow: "0 4px 16px rgba(0, 86, 231, 0.35)",
-                        minHeight: 44,
-                        textDecoration: "none",
-                      }}
-                      className="quiero-demo-button"
-                    >
-                      Quiero una demo
-                      <span className="quiero-demo-arrow" style={{ fontSize: "clamp(16px, 4vw, 20px)" }} aria-hidden>→</span>
-                    </a>
+                      {/* CTA Button - opens demo modal */}
+                      <a
+                        href="https://calendly.com/diego-bizen"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          padding: "clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 32px)",
+                          fontSize: "clamp(14px, 2vw, 18px)",
+                          fontWeight: 600,
+                          background: "linear-gradient(135deg, #0056E7, #1983FD)",
+                          color: "#ffffff",
+                          border: "none",
+                          borderRadius: 9999,
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "clamp(6px, 1.5vw, 10px)",
+                          boxShadow: "0 8px 24px rgba(0, 86, 231, 0.45)",
+                          minHeight: 44,
+                          textDecoration: "none",
+                        }}
+                        className="quiero-demo-button landing-hero-cta-primary"
+                      >
+                        Quiero una demo
+                        <span className="quiero-demo-arrow" style={{ fontSize: "clamp(16px, 4vw, 20px)" }} aria-hidden>→</span>
+                      </a>
+                    </div>
                   </div>
-                </div>
 
-                {/* Right: Photo for active profile (1 solución, 3 perfiles educativos) */}
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  minHeight: "360px",
-                }}>
-                  <div key={activeProfile} className="perfiles-slide-in" style={{
-                    width: "100%",
-                    maxWidth: "400px",
-                    borderRadius: "28px",
-                    overflow: "hidden",
-                    position: "relative",
-                    boxShadow: "0 12px 40px rgba(0, 0, 0, 0.12)",
+                  {/* Right: Photo for active profile (1 solución, 3 perfiles educativos) */}
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: "360px",
                   }}>
-                    <Image
-                      src={
-                        activeProfile === "docentes" ? "/uploads/Landing_page/perfil-docentes.png" :
-                          activeProfile === "estudiantes" ? "/uploads/Landing_page/perfil-estudiantes.png" :
-                            "/uploads/Landing_page/perfil-padres.png"
-                      }
-                      alt={
-                        activeProfile === "docentes" ? "Docentes en el aula" :
-                          activeProfile === "estudiantes" ? "Estudiante con la plataforma" :
-                            "Padres e hijos aprendiendo"
-                      }
-                      width={400}
-                      height={300}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        display: "block",
-                        objectFit: "cover",
-                      }}
-                    />
+                    <div key={activeProfile} className="perfiles-slide-in" style={{
+                      width: "100%",
+                      maxWidth: "400px",
+                      borderRadius: "28px",
+                      overflow: "hidden",
+                      position: "relative",
+                      boxShadow: "0 12px 40px rgba(0, 0, 0, 0.12)",
+                    }}>
+                      <Image
+                        src={
+                          activeProfile === "docentes" ? "/uploads/Landing_page/perfil-docentes.png" :
+                            activeProfile === "estudiantes" ? "/uploads/Landing_page/perfil-estudiantes.png" :
+                              "/uploads/Landing_page/perfil-padres.png"
+                        }
+                        alt={
+                          activeProfile === "docentes" ? "Docentes en el aula" :
+                            activeProfile === "estudiantes" ? "Estudiante con la plataforma" :
+                              "Padres e hijos aprendiendo"
+                        }
+                        width={400}
+                        height={300}
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          display: "block",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
