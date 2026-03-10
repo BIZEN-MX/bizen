@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT
     const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION || "us-central1"
 
-    const { message, conversationHistory = [] } = await request.json()
+    const { message, conversationHistory = [], userName = "Estudiante" } = await request.json()
 
     if (!message || typeof message !== "string") {
       return NextResponse.json({ error: "Mensaje requerido" }, { status: 400 })
@@ -41,24 +41,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const systemPrompt = `Eres Billy, el tutor asistente virtual definitivo de BIZEN. BIZEN es la plataforma líder en educación financiera para jóvenes (preparatoria y universidad). 
+    const systemPrompt = `Eres Billy, el mentor asistente de BIZEN. BIZEN enseña educación financiera a jóvenes.
+ESTÁS HABLANDO CON: ${userName}. Dirígete a esta persona por su nombre de forma natural.
 
-TU PERSONALIDAD:
-- Eres entusiasta, empático, divertido y un poco "tech-savvy".
-- Usas un lenguaje fresco pero profesional. No hablas como un robot viejo, hablas como un mentor joven que realmente quiere que el usuario tenga éxito.
-- Usas emojis (pero no en cada palabra, solo para dar énfasis 🚀, 💡, 📈).
-- Eres mexicano/latino, así que usa términos familiares como "cuenta", "lana", "ahorro", "emprender".
+PERSONALIDAD:
+- Eres relajado, entusiasta y muy "tech-savvy". 
+- Hablas como un mentor joven mexicano: usa términos como "lana", "feria", "papeleo", "emprender", "chamba".
+- NO USES EMOJIS: Tienes prohibido usar emojis en tus respuestas. Mantén el texto limpio.
 
-TUS REGLAS DE ORO:
-1. EDUCACIÓN, NO ASESORÍAS: Si te preguntan en qué invertir su dinero hoy, responde que eres un tutor educativo. Explica los CONCEPTOS (ej. "Qué es un fondo de inversión") pero nunca digas "compra la acción X".
-2. BREVEDAD INTELIGENTE: Si la pregunta es simple, responde en 1 párrafo. Si es compleja, usa viñetas. NUNCA respondas con bloques gigantes de texto.
-3. CONTEXTO BIZEN: Estás aquí para ayudar a los alumnos a navegar los 6 módulos: 1. Identidad Digital, 2. Finanzas Personales, 3. Presupuesto, 4. Inversiones, 5. Deuda, 6. Temas Avanzados.
-4. SOPORTE: Si el usuario tiene problemas con su contraseña o la página, dile que contacte a soporte@bizen.mx.
+REGLA DE LONGITUD DINÁMICA:
+- Si la pregunta es simple (saludos, definiciones cortas, soporte técnico): Sé MUY breve y conciso (1-2 párrafos cortos).
+- Si la pregunta es abierta o compleja (ej. "¿Cómo hago un presupuesto?", "¿Qué son las inversiones?"): Tómate el espacio necesario para explicar bien los conceptos, pero sin rollos innecesarios. Usa viñetas para que sea legible.
+- Evita los bloques masivos de texto. Divide la información.
 
-RECUERDA: Tu objetivo es que el usuario se sienta motivado a completar sus lecciones.`
+LO QUE HACES:
+1. EDUCACIÓN: Explica conceptos pero NO des asesoría financiera real.
+2. CONTEXTO BIZEN: Módulos de Identidad Digital, Finanzas Personales, Presupuesto, Inversiones, Deuda y Temas Avanzados.
+3. SOPORTE: Problemas técnicos a soporte@bizen.mx.
 
-    // Vertex AI specific endpoint
-    const GEMINI_API_URL = `https://${GOOGLE_CLOUD_LOCATION}-aiplatform.googleapis.com/v1/projects/${GOOGLE_CLOUD_PROJECT}/locations/${GOOGLE_CLOUD_LOCATION}/publishers/google/models/gemini-1.5-flash:generateContent`
+RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. NO USES EMOJIS. Sé divertido y motivador.`
+
+    // Using 'gemini-flash-latest' to ensure we use an available model in the project.
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`
 
     // Map conversation history to Gemini format
     const contents = [
@@ -75,7 +79,7 @@ RECUERDA: Tu objetivo es que el usuario se sienta motivado a completar sus lecci
         parts: [{ text: systemPrompt }]
       },
       generationConfig: {
-        temperature: 0.8, // Slightly higher for more "human" feel
+        temperature: 0.85,
         maxOutputTokens: 600,
         topP: 0.95,
       }
@@ -84,31 +88,38 @@ RECUERDA: Tu objetivo es que el usuario se sienta motivado a completar sus lecci
     const geminiResponse = await fetch(GEMINI_API_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": GEMINI_API_KEY // Standard Gemini Vertex REST Auth
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(geminiBody)
     })
 
     if (!geminiResponse.ok) {
       const errorText = await geminiResponse.text()
-      console.error("Gemini Vertex API error detailed:", {
+      console.error("Gemini API error detailed:", {
         status: geminiResponse.status,
         error: errorText,
-        project: GOOGLE_CLOUD_PROJECT
       })
-      throw new Error(`Failed to communicate with Gemini on Vertex AI. Status: ${geminiResponse.status}`)
+
+      // Special handling for disabled API
+      if (errorText.includes("SERVICE_DISABLED") || errorText.includes("Generative Language API")) {
+        return NextResponse.json({
+          response: "¡Hola! Billy está casi listo, pero tu administrador necesita habilitar la 'Generative Language API' en el Google Cloud Console para que podamos hablar. 🛠️",
+          source: "error:api_disabled"
+        })
+      }
+
+      throw new Error(`Failed to communicate with Gemini API. Status: ${geminiResponse.status}`)
     }
 
     const data = await geminiResponse.json()
     const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "¡Ups! Me quedé pensando. ¿Puedes repetir eso?"
 
     dailyAIRequests++
-    console.log(`[Billy:Vertex] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
+    console.log(`[Billy:Gemini] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
 
     return NextResponse.json({
       response: responseText,
-      source: "google:gemini-1.5-flash-vertex"
+      source: "google:gemini-1.5-flash"
     })
 
   } catch (error: any) {

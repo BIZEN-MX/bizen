@@ -112,12 +112,20 @@ export default function CoursesPage() {
   const progressPct = Math.min(100, Math.round((completedCount / APPROX_TOTAL_LESSONS) * 100))
 
   const nextTopicId = React.useMemo(() => {
-    if (dbTopics.length === 0) return 1
-    // For now, if user has completed any lessons, they are at least on topic 1.
-    // We'd need to fetch lesson slugs per topic to be precise, but for now
-    // let's assume they can at least see topic 1 and 2 if they have significant progress.
-    // Or just make it 2 for now to avoid complete locking during testing.
-    return 1 // Keep it 1 for now as strict locking might be annoying while we migrate
+    if (dbTopics.length === 0) return null
+    // Find first topic that is NOT fully completed
+    for (let i = 0; i < dbTopics.length; i++) {
+      const topic = dbTopics[i]
+      const subtemas = SUBTEMAS_BY_COURSE[i]
+      if (!subtemas) continue
+
+      const topicLessons = subtemas.flatMap(s => s.lessons.map(l => l.slug))
+      if (topicLessons.length === 0) continue
+
+      const isTopicDone = topicLessons.every(slug => completedLessons.includes(slug))
+      if (!isTopicDone) return topic.id
+    }
+    return null // Stay on overview if everything is finished or no incomplete found
   }, [dbTopics, completedLessons])
 
   // Redirect unauthenticated users
@@ -163,6 +171,17 @@ export default function CoursesPage() {
     document.addEventListener("visibilitychange", onVisibility)
     return () => document.removeEventListener("visibilitychange", onVisibility)
   }, [user, loading])
+
+  // Automatic redirection to the next topic to complete
+  useEffect(() => {
+    // Check if the user explicitly wants to stay on the overview (e.g. they clicked "Back")
+    const searchParams = new URLSearchParams(window.location.search)
+    const noRedirect = searchParams.get("noredirect") === "true"
+
+    if (!loading && !loadingData && user && nextTopicId && !noRedirect) {
+      router.replace(`/courses/${nextTopicId}`)
+    }
+  }, [loading, loadingData, user, nextTopicId, router])
 
   // Set body and html background for this page
   useEffect(() => {

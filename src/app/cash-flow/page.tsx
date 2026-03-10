@@ -230,7 +230,7 @@ export default function CombinedSimulatorsPage() {
           width: 100%;
           min-height: 100vh;
           background: #f8fafc;
-          font-family: 'Montserrat', sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
           overflow-x: hidden;
         }
         @media (max-width: 767px) {
@@ -264,12 +264,12 @@ export default function CombinedSimulatorsPage() {
           cursor: pointer;
           transition: all 0.25s ease;
           border: none;
-          font-family: 'Montserrat', sans-serif;
+          font-family: inherit;
           white-space: nowrap;
         }
         .tab-btn.active   { background: #0B71FE; color: white; box-shadow: 0 4px 14px rgba(11,113,254,0.35); }
-        .tab-btn.inactive { background: transparent; color: #64748b; }
-        .tab-btn.inactive:hover { background: rgba(255,255,255,0.6); color: #0B71FE; }
+        .tab-btn.inactive { background: transparent; color: #0f172a; opacity: 0.6; }
+        .tab-btn.inactive:hover { background: rgba(255,255,255,0.6); color: #0B71FE; opacity: 1; }
 
         /* Profession card hover */
         .prof-card { transition: all 0.2s ease; }
@@ -313,40 +313,27 @@ export default function CombinedSimulatorsPage() {
               marginBottom: 0,
             }}>
               <div>
-                <div style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "rgba(11,113,254,0.08)",
-                  border: "1px solid rgba(11,113,254,0.2)",
-                  borderRadius: 999,
-                  padding: "6px 16px",
-                  marginBottom: 16,
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: "#0B71FE",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase"
-                }}>
-                  <BarChart2 size={14} />
-                  Herramientas Interactivas
-                </div>
                 <h1 style={{
-                  fontSize: "clamp(28px, 4vw, 48px)",
-                  fontWeight: 500,
-                  margin: "0 0 12px",
-                  color: "#0f172a",
-                  letterSpacing: "-0.02em",
-                  lineHeight: 1.15
+                  fontSize: "clamp(28px, 5.5vw, 56px)",
+                  fontWeight: 600,
+                  margin: "0 0 16px",
+                  background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.1
                 }}>
                   Simulador Financiero
                 </h1>
                 <p style={{
-                  fontSize: "clamp(15px, 1.3vw, 18px)",
-                  color: "#64748b",
-                  maxWidth: "640px",
+                  fontSize: "clamp(15px, 1.3vw, 19px)",
+                  color: "#0f172a",
+                  opacity: 0.75,
+                  maxWidth: "700px",
                   margin: 0,
-                  lineHeight: 1.65
+                  lineHeight: 1.6,
+                  fontWeight: 450
                 }}>
                   Explora herramientas interactivas y juegos para dominar tus finanzas personales y construir riqueza real.
                 </p>

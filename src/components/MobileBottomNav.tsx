@@ -162,6 +162,14 @@ export default function MobileBottomNav() {
       icon: Settings,
       path: "/configuracion",
       protected: true
+    },
+    {
+      id: "billy-chat",
+      label: "Preguntar a Billy",
+      icon: MessageSquare,
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('open-billy-chat'));
+      }
     }
   ] : []
 
@@ -186,7 +194,7 @@ export default function MobileBottomNav() {
           display: "none", // Hidden by default, shown via CSS media query
           paddingBottom: "calc(8px + env(safe-area-inset-bottom))",
           paddingTop: "8px",
-                  }}
+        }}
       >
         <div style={{
           display: "flex",
@@ -449,19 +457,24 @@ export default function MobileBottomNav() {
               padding: "12px",
               zIndex: 10001,
               minWidth: "160px",
-                            border: "2px solid rgba(15, 98, 254, 0.1)",
+              border: "2px solid rgba(15, 98, 254, 0.1)",
               animation: "slideUpFade 0.2s ease-out"
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {moreMenuItems.map((item) => {
+            {moreMenuItems.map((item: any) => {
               const Icon = item.icon
+              const isBilly = item.id === 'billy-chat'
               return (
                 <button
                   key={item.id}
                   onClick={() => {
                     haptic.light()
-                    navigateTo(item.path)
+                    if (isBilly && item.onClick) {
+                      item.onClick()
+                    } else if (item.path) {
+                      navigateTo(item.path)
+                    }
                     setShowMoreMenu(false)
                   }}
                   style={{
@@ -469,31 +482,31 @@ export default function MobileBottomNav() {
                     alignItems: "center",
                     gap: 12,
                     padding: "12px 16px",
-                    background: isActivePath(item.path) ? "rgba(15, 98, 254, 0.1)" : "transparent",
+                    background: (item.path && isActivePath(item.path)) ? "rgba(15, 98, 254, 0.1)" : "transparent",
                     border: "none",
                     borderRadius: 10,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                     width: "100%",
                     textAlign: "left",
-                                        fontSize: 14,
-                    fontWeight: isActivePath(item.path) ? 700 : 600,
-                    color: isActivePath(item.path) ? "#0F62FE" : "#374151"
+                    fontSize: 14,
+                    fontWeight: (item.path && isActivePath(item.path)) ? 700 : 600,
+                    color: (isBilly) ? "#0F62FE" : (item.path && isActivePath(item.path)) ? "#0F62FE" : "#374151"
                   }}
                   onTouchStart={(e) => {
                     e.currentTarget.style.background = "rgba(15, 98, 254, 0.15)"
                   }}
                   onTouchEnd={(e) => {
-                    e.currentTarget.style.background = isActivePath(item.path) ? "rgba(15, 98, 254, 0.1)" : "transparent"
+                    e.currentTarget.style.background = (item.path && isActivePath(item.path)) ? "rgba(15, 98, 254, 0.1)" : "transparent"
                   }}
                 >
                   <span style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: isActivePath(item.path) ? "#0B71FE" : "#64748b",
+                    color: isBilly ? "#0B71FE" : (item.path && isActivePath(item.path)) ? "#0B71FE" : "#64748b",
                   }}>
-                    <Icon size={20} strokeWidth={isActivePath(item.path) ? 2.5 : 2} />
+                    <Icon size={20} strokeWidth={(item.path && isActivePath(item.path)) ? 2.5 : 2} />
                   </span>
                   <span>{item.label}</span>
                 </button>
@@ -523,7 +536,7 @@ export default function MobileBottomNav() {
                   transition: "all 0.2s ease",
                   width: "100%",
                   textAlign: "left",
-                                    fontSize: 14,
+                  fontSize: 14,
                   fontWeight: 500,
                   color: "#DC2626"
                 }}
@@ -578,7 +591,7 @@ export default function MobileBottomNav() {
             justifyContent: "center",
             zIndex: 10001, // Above mobile nav (10000)
             padding: 20,
-                        backdropFilter: "blur(4px)"
+            backdropFilter: "blur(4px)"
           }}
           onClick={() => setShowAuthDialog(false)}
         >
@@ -654,7 +667,7 @@ export default function MobileBottomNav() {
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                   boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
-                                  }}
+                }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-2px)"
                   e.currentTarget.style.boxShadow = "0 6px 20px rgba(11, 113, 254, 0.5)"
@@ -682,7 +695,7 @@ export default function MobileBottomNav() {
                   fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                                  }}
+                }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#EFF6FF"
                   e.currentTarget.style.transform = "translateY(-1px)"
@@ -706,7 +719,7 @@ export default function MobileBottomNav() {
                   fontWeight: 500,
                   cursor: "pointer",
                   transition: "color 0.2s ease",
-                                  }}
+                }}
                 onMouseEnter={(e) => e.currentTarget.style.color = "#374151"}
                 onMouseLeave={(e) => e.currentTarget.style.color = "#6B7280"}
               >

@@ -242,7 +242,7 @@ export default function CoursePageTemplate({
                     Para acceder a este tema, primero debes completar todas las lecciones del <strong>Tema {Number(topicId) - 1}</strong>.
                 </p>
                 <button
-                    onClick={() => router.push('/courses')}
+                    onClick={() => router.push('/courses?noredirect=true')}
                     style={{ padding: "14px 32px", background: "#1e3a8a", color: "#fff", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 500, cursor: "pointer", boxShadow: "0 8px 24px rgba(30,58,138,0.25)" }}
                 >
                     Volver al Camino Financiero
@@ -316,7 +316,7 @@ export default function CoursePageTemplate({
                                 {/* Breadcrumb */}
                                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
                                     <button
-                                        onClick={() => router.push("/courses")}
+                                        onClick={() => router.push("/courses?noredirect=true")}
                                         style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "4px 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, color: "#93c5fd", fontSize: 12, fontWeight: 500, }}
                                     >
                                         <ChevronLeft size={12} /> Todos los Temas

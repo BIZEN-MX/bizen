@@ -58,7 +58,7 @@ export default function DynamicTopicPage() {
                     {error || "No se pudo cargar la información del tema."}
                 </p>
                 <button
-                    onClick={() => router.push("/courses")}
+                    onClick={() => router.push("/courses?noredirect=true")}
                     style={{ padding: "14px 24px", background: "#0B71FE", color: "white", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 500, cursor: "pointer" }}
                 >
                     Volver a Cursos

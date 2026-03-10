@@ -31,7 +31,7 @@ const AVATAR_OPTIONS = [
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Step = "welcome" | "avatar" | "username" | "school" | "birthday"
+type Step = "welcome" | "billy_intro" | "avatar" | "username" | "school" | "birthday"
 
 interface OnboardingModalProps {
     onComplete: () => void
@@ -127,14 +127,15 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const emailForRole = user?.email?.toLowerCase() || ''
     const isInstitutional = emailForRole.endsWith('.edu') || emailForRole.includes('.edu.')
     const stepList = isInstitutional
-        ? ["welcome", "avatar", "username", "school", "birthday"]
-        : ["welcome", "avatar", "username", "birthday"]
+        ? ["welcome", "billy_intro", "avatar", "username", "school", "birthday"]
+        : ["welcome", "billy_intro", "avatar", "username", "birthday"]
     const totalSteps = stepList.length - 1
 
     const getProgressPct = () => {
         if (step === "welcome") return 0
-        if (step === "avatar") return isInstitutional ? 25 : 33
-        if (step === "username") return isInstitutional ? 50 : 66
+        if (step === "billy_intro") return isInstitutional ? 15 : 20
+        if (step === "avatar") return isInstitutional ? 30 : 40
+        if (step === "username") return isInstitutional ? 50 : 60
         if (step === "school") return 75
         return 100
     }
@@ -517,6 +518,68 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                 {stepList.map((s, i) => (
                                     <div key={s} className={`ob-welcome-step-dot${s === step ? " active" : i < stepList.indexOf(step) ? " done" : ""}`} style={{ width: s === step ? 24 : 8 }} />
                                 ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ─── BILLY INTRO ─────────────────────────────────────────────────── */}
+                    {step === "billy_intro" && (
+                        <div className="ob-pad" style={{ position: "relative" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "clamp(14px,3vw,22px)" }}>
+                                <button className="ob-btn-ghost" onClick={() => goToStep("welcome")}>← Atrás</button>
+                                <span style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#94a3b8", fontWeight: 500 }}>Conoce a tu mentor</span>
+                            </div>
+
+                            <div style={{ textAlign: "center", marginBottom: "clamp(20px,5vw,32px)" }}>
+                                <div style={{
+                                    width: 120, height: 120, borderRadius: "50%",
+                                    background: "linear-gradient(135deg, #dbeafe, #eff6ff)",
+                                    border: "4px solid #3b82f6",
+                                    margin: "0 auto 20px", position: "relative",
+                                    boxShadow: "0 10px 25px rgba(59,130,246,0.2)",
+                                    overflow: "hidden",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}>
+                                    <img src="/billy_chatbot.png" alt="Billy Chatbot" style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "contain",
+                                        padding: "8px"
+                                    }} />
+                                </div>
+                                <h2 style={{ fontSize: "clamp(20px,5vw,26px)", fontWeight: 800, color: "#1e3a8a", margin: "0 0 10px" }}>¡Hola! Soy Billy</h2>
+                                <p style={{ fontSize: "clamp(14px,3.2vw,16px)", color: "#475569", lineHeight: 1.6, marginBottom: 20 }}>
+                                    Estaré contigo en cada paso. Si tienes dudas sobre una lección o quieres aprender algo nuevo sobre finanzas, ¡solo pregúntame!
+                                </p>
+
+                                <div style={{
+                                    background: "#f8fafc", padding: "16px", borderRadius: "16px",
+                                    border: "1px dashed #3b82f6", display: "flex", alignItems: "center", gap: 12,
+                                    textAlign: "left"
+                                }}>
+                                    <div style={{ fontSize: 24 }}>💡</div>
+                                    <div style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>
+                                        Búscame siempre en la esquina inferior derecha. ¡Estaré ahí para ayudarte en lo que necesites!
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button className="ob-btn-primary" onClick={() => goToStep("avatar")}>
+                                ¡Genial, Billy! Sigamos →
+                            </button>
+
+                            {/* Pointer arrow effect */}
+                            <div style={{
+                                position: "absolute", bottom: -120, right: 30,
+                                display: "flex", flexDirection: "column", alignItems: "center",
+                                animation: "ob-fadeIn 0.5s ease 0.5s both"
+                            }}>
+                                <div style={{ color: "white", fontSize: 13, fontWeight: 700, marginBottom: 5 }}>¡Aquí estoy!</div>
+                                <svg width="30" height="60" viewBox="0 0 30 60" fill="none">
+                                    <path d="M15 0V45M15 45L5 35M15 45L25 35" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
                             </div>
                         </div>
                     )}

@@ -153,7 +153,7 @@ export function InfoStep({
                   fontSize: 14,
                   color: "#FFFFFF",
                   fontWeight: 500,
-                                    letterSpacing: "0.03em",
+                  letterSpacing: "0.03em",
                 }}>
                   ¡Toca para ver la nota! →
                 </p>
@@ -162,7 +162,7 @@ export function InfoStep({
                 margin: 0,
                 fontSize: 12,
                 color: "#94A3B8",
-                                fontWeight: 500,
+                fontWeight: 500,
               }}>
                 Tenemos algo importante para ti
               </p>
@@ -198,6 +198,8 @@ export function InfoStep({
               background: "linear-gradient(90deg, #1e40af 0%, #2563eb 35%, #3b82f6 65%, #60a5fa 100%)",
               position: "relative",
               overflow: "hidden",
+              borderTopLeftRadius: "inherit",
+              borderTopRightRadius: "inherit",
             }}>
               <motion.div
                 animate={{ x: ["-100%", "200%"] }}
@@ -259,7 +261,7 @@ export function InfoStep({
                       color: "#1D4ED8",
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
-                                          }}>
+                    }}>
                       {step.description}
                     </span>
                   </motion.div>
@@ -277,7 +279,7 @@ export function InfoStep({
                       fontWeight: 500,
                       letterSpacing: "-0.03em",
                       lineHeight: 1.18,
-                                            // Gradient title text
+                      // Gradient title text
                       background: "linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #3b82f6 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -346,7 +348,7 @@ export function InfoStep({
                     color: "#2563EB",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
-                                      }}>
+                  }}>
                     Nota de clase
                   </span>
                 </motion.div>

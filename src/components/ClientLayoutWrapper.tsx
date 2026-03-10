@@ -215,7 +215,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
       {!isUnauthProtected && <GlobalLogo />}
       {children}
-      {!isUnauthProtected && <BillyChatbot />}
+      {!hideAppNavigation && user && <BillyChatbot />}
       <NavigationLoading isLoading={isNavigating} />
     </>
   );
