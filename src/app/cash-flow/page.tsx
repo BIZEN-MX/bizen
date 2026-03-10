@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from '@/lib/supabase/client-microcred'
 import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop } from "lucide-react"
 import StreakWidget from "@/components/StreakWidget"
+import PageLoader from "@/components/PageLoader"
 
 interface Simulator {
   id: string;
@@ -220,7 +221,7 @@ export default function CombinedSimulatorsPage() {
   const calculateCashFlow = (prof: Profession) =>
     prof.salary - calculateTotalExpenses(prof)
 
-  if (authLoading) return null
+  if (authLoading) return <PageLoader />
 
   return (
     <>

@@ -45,6 +45,7 @@ import {
   GraduationCap
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import PageLoader from "@/components/PageLoader"
 
 interface Lesson {
   id: string
@@ -219,31 +220,7 @@ export default function CoursesPage() {
   // Show loading placeholder if data is missing OR if we are about to redirect
   // This prevents the "Overview" page from blinking for one frame before jumping to the topic.
   if (loading || loadingData || !user || (willRedirect && nextTopicId)) {
-    return (
-      <div
-        style={{
-          minHeight: "50vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingLeft: 16,
-          paddingRight: 16,
-          marginLeft: 0,
-          boxSizing: "border-box",
-        }}
-        className="courses-loading-placeholder"
-      >
-        <style>{`
-          @media (min-width: 768px) and (max-width: 1160px) {
-            .courses-loading-placeholder { margin-left: 220px; }
-          }
-          @media (min-width: 1161px) {
-            .courses-loading-placeholder { margin-left: 280px; }
-          }
-        `}</style>
-        {/* No spinner - blank or redirect handles it */}
-      </div>
-    )
+    return <PageLoader />
   }
 
   return (

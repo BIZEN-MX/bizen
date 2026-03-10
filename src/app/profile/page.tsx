@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { useOnboarding } from "@/contexts/OnboardingContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
+import PageLoader from "@/components/PageLoader"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import Link from "next/link"
 import {
@@ -241,15 +242,7 @@ export default function ProfilePage() {
     </div>
   )
 
-  if (loading || !mounted) return (
-    <>
-      <style>{`
-        @keyframes skeleton-pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
-        .skeleton-pulse { animation: skeleton-pulse 1.5s infinite ease-in-out; }
-      `}</style>
-      <ProfileSkeleton />
-    </>
-  )
+  if (loading || !mounted) return <PageLoader />
   if (!user) return null
 
   const displayName = formData.fullName || user.email?.split("@")[0] || "Usuario"

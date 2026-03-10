@@ -21,6 +21,8 @@ const GIFT_CARDS = [
     { id: 6, store: "Spotify", color: "#1DB954", bg: "linear-gradient(135deg, #001a06 0%, #004a1a 100%)", logo: "spotify", points: 6000, value: "1 mes Premium", description: "Música sin anuncios por 30 días" },
 ]
 
+import PageLoader from "@/components/PageLoader"
+
 export default function PuntosPage() {
     const { user, loading, dbProfile } = useAuth()
     const router = useRouter()
@@ -45,17 +47,15 @@ export default function PuntosPage() {
     }, [user, loading, router])
 
     const userPoints = stats?.bizcoins ?? (dbProfile as any)?.bizcoins ?? 0
-
-    // No longer returning early for loading to avoid "ugly" center screens
-    // Instead we will render skeletons in the main UI
-
     const selectedGC = GIFT_CARDS.find(c => c.id === selectedCard)
+
+    if (loading) return <PageLoader />
 
     return (
         <div className="puntos-outer" style={{
             minHeight: "100vh",
             background: "#FBFAF5",
-                        width: "100%",
+            width: "100%",
             boxSizing: "border-box"
         }}>
             <style>{`

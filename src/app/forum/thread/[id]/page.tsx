@@ -8,6 +8,7 @@ import { CommentSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { ThumbsUpIcon, ThumbsDownIcon } from "@/components/CustomIcons"
+import PageLoader from "@/components/PageLoader"
 
 interface ThreadDetail {
   id: string
@@ -491,7 +492,7 @@ export default function ThreadDetailPage() {
   )
 
   if (loading) {
-    return null // Quick flash
+    return <PageLoader />
   }
 
   if (!user) return null
@@ -571,7 +572,7 @@ export default function ThreadDetailPage() {
         minHeight: "100vh",
         paddingTop: "clamp(20px, 4vw, 40px)",
         paddingBottom: "clamp(80px, 12vw, 120px)",
-                background: "#FBFAF5",
+        background: "#FBFAF5",
         backgroundAttachment: "fixed",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -605,7 +606,7 @@ export default function ThreadDetailPage() {
                 gap: 8,
                 transition: "all 0.2s ease",
                 boxShadow: "0 2px 8px rgba(30, 58, 138, 0.05)",
-                              }}
+              }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "rgba(30, 58, 138, 0.12)"
                   e.currentTarget.style.borderColor = "rgba(30, 58, 138, 0.25)"
@@ -744,7 +745,7 @@ export default function ThreadDetailPage() {
                     fontSize: 14,
                     fontWeight: 500,
                     cursor: "pointer",
-                                        display: "flex",
+                    display: "flex",
                     alignItems: "center",
                     gap: 6,
                     transition: "all 0.2s ease",
@@ -775,7 +776,7 @@ export default function ThreadDetailPage() {
                     fontSize: 14,
                     fontWeight: 500,
                     cursor: "pointer",
-                                        transition: "all 0.2s ease",
+                    transition: "all 0.2s ease",
                     boxShadow: thread.userVote === -1 ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
                   }}
                   onMouseDown={(e) => {
@@ -802,7 +803,7 @@ export default function ThreadDetailPage() {
                     fontSize: 14,
                     fontWeight: 500,
                     cursor: "pointer",
-                                        display: "flex",
+                    display: "flex",
                     alignItems: "center",
                     gap: 6,
                     transition: "all 0.2s ease",
@@ -844,7 +845,7 @@ export default function ThreadDetailPage() {
                     fontSize: 14,
                     fontWeight: 500,
                     cursor: "pointer",
-                                        transition: "all 0.2s ease",
+                    transition: "all 0.2s ease",
                     boxShadow: thread.isFollowing ? "0 2px 8px rgba(11, 113, 254, 0.3)" : "none"
                   }}
                   onMouseDown={(e) => {
@@ -872,7 +873,7 @@ export default function ThreadDetailPage() {
                       fontSize: 14,
                       fontWeight: 500,
                       cursor: "pointer",
-                                            transition: "all 0.2s ease"
+                      transition: "all 0.2s ease"
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"
@@ -950,7 +951,7 @@ export default function ThreadDetailPage() {
                     minHeight: 150,
                     padding: 16,
                     fontSize: 15,
-                                        fontWeight: 500,
+                    fontWeight: 500,
                     border: "2px solid rgba(255, 255, 255, 0.6)",
                     borderRadius: 12,
                     background: "rgba(255, 255, 255, 0.6)",
@@ -978,7 +979,7 @@ export default function ThreadDetailPage() {
                       fontWeight: 500,
                       cursor: submitting || !newComment.trim() ? "not-allowed" : "pointer",
                       boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                                          }}
+                    }}
                   >
                     {submitting ? "Enviando..." : "Publicar Respuesta"}
                   </button>
@@ -996,7 +997,7 @@ export default function ThreadDetailPage() {
                         fontSize: 15,
                         fontWeight: 500,
                         cursor: "pointer",
-                                              }}
+                      }}
                     >
                       Cancelar
                     </button>

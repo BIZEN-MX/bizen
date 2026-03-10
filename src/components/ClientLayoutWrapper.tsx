@@ -126,8 +126,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       setIsNavigating(true);
       previousPathname.current = pathname;
 
-      // Timeout to allow smooth progress bar animation
-      const timer = setTimeout(() => setIsNavigating(false), 400);
+      // Timeout covers route change + data fetch time (reduced glitch)
+      const timer = setTimeout(() => setIsNavigating(false), 1200);
       return () => clearTimeout(timer);
     }
   }, [pathname]);
