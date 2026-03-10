@@ -276,8 +276,17 @@ export default function CombinedSimulatorsPage() {
         .prof-card:hover { transform: translateY(-2px); }
 
         /* Simulator card hover */
-        .sim-card { transition: all 0.25s ease; }
-        .sim-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(11,113,254,0.15) !important; border-color: #0B71FE !important; }
+        .sim-card { 
+          transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+        }
+        .sim-card:hover { 
+          transform: translateY(-8px) scale(1.01); 
+          box-shadow: 0 25px 60px rgba(11,113,254,0.18) !important; 
+          border-color: rgba(11, 113, 254, 0.4) !important;
+          background: rgba(255, 255, 255, 0.9) !important;
+        }
 
         /* Game card hover */
         .game-card { transition: all 0.2s ease; }
@@ -293,8 +302,15 @@ export default function CombinedSimulatorsPage() {
         }
       `}</style>
 
-      <div className="simulador-outer">
+      <div className="simulador-outer" style={{ position: "relative" }}>
+        {/* Decorative Orbs for Glassmorphism */}
+        <div style={{ position: "fixed", top: "-10%", right: "-10%", width: 600, height: 600, background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "fixed", bottom: "5%", left: "-5%", width: 500, height: 500, background: "radial-gradient(circle, rgba(34,197,94,0.1) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(90px)", pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "fixed", top: "40%", left: "30%", width: 400, height: 400, background: "radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(70px)", pointerEvents: "none", zIndex: 0 }} />
+
         <main className="simulador-main" style={{
+          position: "relative",
+          zIndex: 1,
           padding: "clamp(24px, 4vw, 56px) clamp(16px, 4vw, 56px)",
           maxWidth: "1800px",
           margin: "0 auto",
@@ -342,16 +358,19 @@ export default function CombinedSimulatorsPage() {
             </div>
           </div>
 
-          {/* Tab Selection */}
+          {/* Tab Selection - Glassmorphism */}
           <div style={{
             display: "flex",
             gap: "6px",
-            marginBottom: "40px",
-            background: "#f1f5f9",
+            marginBottom: "44px",
+            background: "rgba(241, 245, 249, 0.45)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
             padding: "6px",
-            borderRadius: "14px",
+            borderRadius: "16px",
             width: "fit-content",
-            border: "1px solid #e2e8f0"
+            border: "1px solid rgba(255, 255, 255, 0.5)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.02)"
           }}>
             <button className={`tab-btn ${activeTab === "simulators" ? "active" : "inactive"}`} onClick={() => setActiveTab("simulators")}>
               Simuladores Financieros
@@ -362,22 +381,25 @@ export default function CombinedSimulatorsPage() {
           </div>
 
           {/* Content */}
-          <div style={{ minHeight: "50vh" }}>
+          <div style={{ minHeight: "50vh", position: "relative", zIndex: 1 }}>
 
             {/* ─── SIMULADORES ─── */}
             {activeTab === "simulators" && (
               <div>
-                {/* Disclaimer */}
+                {/* Disclaimer - Glassmorphism */}
                 <div style={{
-                  background: "linear-gradient(135deg, rgba(239,246,255,0.8), rgba(219,234,254,0.8))",
-                  border: "1.5px solid rgba(59,130,246,0.25)",
-                  borderRadius: 16,
-                  padding: "18px 22px",
-                  marginBottom: "32px",
-                  maxWidth: "900px",
+                  background: "rgba(239, 246, 255, 0.4)",
+                  backdropFilter: "blur(10px)",
+                  WebkitBackdropFilter: "blur(10px)",
+                  border: "1.5px solid rgba(255, 255, 255, 0.6)",
+                  boxShadow: "0 8px 32px rgba(59, 130, 246, 0.05)",
+                  borderRadius: 20,
+                  padding: "20px 24px",
+                  marginBottom: "40px",
+                  maxWidth: "920px",
                   display: "flex",
                   alignItems: "flex-start",
-                  gap: "14px"
+                  gap: "16px"
                 }}>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(59,130,246,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
                     <BarChart2 size={16} color="#2563eb" />
@@ -428,11 +450,11 @@ export default function CombinedSimulatorsPage() {
                       return (
                         <Link key={simulator.id} href={`/cash-flow/${simulator.slug}`} style={{ textDecoration: "none" }}>
                           <div className="sim-card" style={{
-                            background: "white",
-                            borderRadius: 20,
+                            background: "rgba(255, 255, 255, 0.75)",
+                            borderRadius: 24,
                             padding: "26px 24px",
-                            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                            border: "1.5px solid #f1f5f9",
+                            boxShadow: "0 8px 32px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.7)",
+                            border: "1.5px solid rgba(255, 255, 255, 0.6)",
                             height: "100%",
                             display: "flex",
                             flexDirection: "column",

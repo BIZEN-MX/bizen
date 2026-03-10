@@ -254,29 +254,11 @@ export default function CoursesPage() {
       margin: 0,
       padding: 0
     }}>
-      {/* Decorative Orbs */}
-      <div style={{
-        position: "fixed",
-        top: "15%",
-        right: "8%",
-        width: "400px",
-        height: "400px",
-        background: "radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%)",
-        borderRadius: "50%",
-        filter: "blur(60px)",
-        pointerEvents: "none"
-      }} />
-      <div style={{
-        position: "fixed",
-        bottom: "15%",
-        left: "8%",
-        width: "450px",
-        height: "450px",
-        background: "radial-gradient(circle, rgba(34, 197, 94, 0.15) 0%, transparent 70%)",
-        borderRadius: "50%",
-        filter: "blur(70px)",
-        pointerEvents: "none"
-      }} />
+      {/* Decorative Orbs for Glassmorphism */}
+      <div style={{ position: "fixed", top: "5%", right: "-5%", width: 500, height: 500, background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 0 }} />
+      <div style={{ position: "fixed", bottom: "5%", left: "-5%", width: 600, height: 600, background: "radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(90px)", pointerEvents: "none", zIndex: 0 }} />
+      <div style={{ position: "fixed", top: "40%", left: "20%", width: 450, height: 450, background: "radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(70px)", pointerEvents: "none", zIndex: 0 }} />
+      <div style={{ position: "fixed", bottom: "35%", right: "15%", width: 350, height: 350, background: "radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 0 }} />
       <div style={{
         position: "fixed",
         top: "40%",
@@ -479,16 +461,19 @@ export default function CoursesPage() {
                                 flex: "0 1 550px",
                                 minHeight: 180,
                                 cursor: isLocked && !isPaywalled ? "default" : "pointer",
-                                border: isLocked ? "1px solid rgba(148, 163, 184, 0.15)" : "1px solid rgba(15, 98, 254, 0.12)",
+                                border: isLocked ? "1.5px solid rgba(148, 163, 184, 0.12)" : "1.5px solid rgba(255, 255, 255, 0.6)",
                                 borderRadius: "32px",
-                                background: isLocked ? "#F1F5F9" : "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
-                                boxShadow: isLocked ? "none" : "0 24px 48px -12px rgba(15, 98, 254, 0.08)",
-                                transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                                background: isLocked ? "rgba(241, 245, 249, 0.8)" : "rgba(255, 255, 255, 0.75)",
+                                backdropFilter: "blur(14px)",
+                                WebkitBackdropFilter: "blur(14px)",
+                                boxShadow: isLocked ? "none" : "0 12px 40px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255,255,255,0.7)",
+                                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
                                 overflow: "hidden",
                                 display: "flex",
                                 flexDirection: "column",
                                 minWidth: 0,
-                                opacity: isLocked ? 0.6 : 1
+                                opacity: isLocked ? 0.6 : 1,
+                                position: "relative"
                               }}
                             >
 

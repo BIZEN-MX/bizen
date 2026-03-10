@@ -517,15 +517,21 @@ export default function CoursePageTemplate({
                                                             display: "flex",
                                                             flexDirection: "column",
                                                             padding: "clamp(12px, 3.5vw, 32px) clamp(10px, 3vw, 28px)",
-                                                            background: isDone ? "linear-gradient(135deg, rgba(15,98,254,0.07) 0%, rgba(59,130,246,0.03) 100%)" : "#fff",
+                                                            background: isDone
+                                                                ? "rgba(15, 98, 254, 0.08)"
+                                                                : "rgba(255, 255, 255, 0.75)",
+                                                            backdropFilter: "blur(12px)",
+                                                            WebkitBackdropFilter: "blur(12px)",
                                                             borderRadius: 24,
-                                                            border: isLocked ? "2.5px dashed rgba(148, 163, 184, 0.4)" : (isDone ? "3px solid rgba(59,130,246,0.5)" : "2.5px solid rgba(15, 98, 254, 0.25)"),
+                                                            border: isLocked
+                                                                ? "2.5px dashed rgba(148, 163, 184, 0.3)"
+                                                                : (isDone ? "3px solid rgba(15, 98, 254, 0.6)" : "2.5px solid rgba(255, 255, 255, 0.7)"),
                                                             boxSizing: "border-box",
                                                             scrollSnapAlign: "start",
                                                             cursor: "pointer",
-                                                            boxShadow: isLocked ? "none" : (isDone ? "0 6px 20px rgba(15,98,254,0.12)" : "0 3px 12px rgba(0,0,0,0.04)"),
+                                                            boxShadow: isLocked ? "none" : "0 10px 30px rgba(0,0,0,0.03), inset 0 0 0 1px rgba(255,255,255,0.6)",
                                                             gap: "clamp(8px, 2vw, 12px)",
-                                                            transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
+                                                            transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                                             position: "relative",
                                                             overflow: "hidden",
                                                             opacity: isLocked ? 0.75 : 1
