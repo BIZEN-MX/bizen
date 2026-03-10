@@ -156,10 +156,14 @@ export default function InteractiveLessonPage() {
     }
   }, [lessonIdStr, user, isRepeated, topicIdStr])
 
-  const handleExit = () => {
-    const topicNum = topicIdStr.replace(/^course-/, "") || "1"
+  const handleExit = useCallback(() => {
+    const topicNum = topicIdStr.replace(/^tema-/, "").replace(/^0+/, "") || "1"
     router.push(`/courses/${topicNum}`)
-  }
+  }, [topicIdStr, router])
+
+  const handleProgressChange = useCallback((p: any) => {
+    setProgress(prev => ({ ...prev, ...p }))
+  }, [])
 
   // Lesson is loading
   if (loadingLesson) {
@@ -176,7 +180,7 @@ export default function InteractiveLessonPage() {
 
   // Lesson has no content yet (not in registry or slug typo)
   if (!lessonSteps.length) {
-    const courseNum = courseIdStr.replace(/^course-/, "") || "1"
+    const topicNum = topicIdStr.replace(/^tema-/, "").replace(/^0+/, "") || "1"
     return (
       <div
         style={{
@@ -195,7 +199,7 @@ export default function InteractiveLessonPage() {
         </p>
         <button
           type="button"
-          onClick={() => router.push(`/courses/${courseNum}`)}
+          onClick={() => router.push(`/courses/${topicNum}`)}
           style={{
             padding: "14px 24px",
             background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
@@ -212,10 +216,6 @@ export default function InteractiveLessonPage() {
       </div>
     )
   }
-
-  const handleProgressChange = useCallback((p: any) => {
-    setProgress(prev => ({ ...prev, ...p }))
-  }, [])
 
   return (
     <>
@@ -264,7 +264,6 @@ export default function InteractiveLessonPage() {
           onProgressChange={handleProgressChange}
         />
       </div>
-
     </>
   )
 }

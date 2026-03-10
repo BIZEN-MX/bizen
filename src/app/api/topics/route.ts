@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
           }
         },
         orderBy: {
-          id: 'asc'
+          displayOrder: 'asc'
         }
       })
     } else {
@@ -56,13 +56,13 @@ export async function GET(request: NextRequest) {
           }
         },
         orderBy: {
-          id: 'asc'
+          displayOrder: 'asc'
         }
       })
     }
 
     return NextResponse.json(topics)
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching topics:', error)
     return NextResponse.json(
       { error: 'Failed to fetch topics' },

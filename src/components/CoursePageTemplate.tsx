@@ -325,7 +325,7 @@ export default function CoursePageTemplate({
                                     <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
                                         <Zap size={12} color="#60a5fa" />
                                         <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                                            {typeof topicId === 'number' ? `Tema ${topicId.toString().padStart(2, "0")}` : 'Tema'}
+                                            {topicId.toString().replace('tema-', '').padStart(2, "0")}
                                         </span>
                                     </div>
                                 </div>

@@ -478,7 +478,7 @@ export default function CoursesPage() {
                                   <IconComp size={36} strokeWidth={2} />
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", marginBottom: 6, letterSpacing: "0.08em", textTransform: "uppercase" }}>TEMA {topic.id.toString().padStart(2, "0")}</div>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", marginBottom: 6, letterSpacing: "0.08em", textTransform: "uppercase" }}>{topic.id.toString().replace('tema-', '').padStart(2, "0")}</div>
                                   <div style={{ fontSize: 20, fontWeight: 800, color: "#0F172A", lineHeight: 1.15, letterSpacing: "-0.02em" }}>{topic.title}</div>
                                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 500, color: isLocked ? "#64748b" : "#3b82f6" }}>
                                     <BookOpen size={16} /><span>{topic.lessons} cursos</span>

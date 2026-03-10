@@ -114,6 +114,7 @@ model Topic {
   createdAt    DateTime      @default(now()) @map("created_at")
   bannerUrl    String?       @map("banner_url")
   icon         String?
+  displayOrder Int?          @map("display_order")
   certificates Certificate[]
   courses      Course[]
   enrollments  Enrollment[]
