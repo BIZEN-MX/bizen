@@ -10,6 +10,7 @@ export async function GET(
     const { id } = await params
     let topic: any = null
     try {
+      // 1. Try finding by the provided ID
       topic = await prisma.topic.findUnique({
         where: { id },
         include: {
@@ -35,6 +36,36 @@ export async function GET(
           }
         }
       })
+
+      // 2. Fallback for numeric IDs (Legacy support: '1' -> 'tema-01')
+      if (!topic && !id.includes('tema-') && !isNaN(parseInt(id))) {
+        const legacyId = `tema-${id.padStart(2, '0')}`
+        topic = await prisma.topic.findUnique({
+          where: { id: legacyId },
+          include: {
+            courses: {
+              include: {
+                lessons: {
+                  include: {
+                    quizzes: true
+                  },
+                  orderBy: {
+                    order: 'asc'
+                  }
+                }
+              },
+              orderBy: {
+                order: 'asc'
+              }
+            },
+            _count: {
+              select: {
+                enrollments: true
+              }
+            }
+          }
+        })
+      }
     } catch (dbErr: any) {
       console.warn("Soft error fetching topic relations:", dbErr.message)
       topic = await prisma.topic.findUnique({ where: { id } }).catch(() => null)

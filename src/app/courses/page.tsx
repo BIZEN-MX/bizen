@@ -187,7 +187,11 @@ export default function CoursesPage() {
   // Automatic redirection to the next topic to complete
   useEffect(() => {
     if (willRedirect && nextTopicId) {
-      router.replace(`/courses/${nextTopicId}`)
+      const id = nextTopicId.toString()
+      const redirectId = (!id.startsWith("tema-") && !isNaN(parseInt(id)))
+        ? `tema-${id.padStart(2, "0")}`
+        : id;
+      router.replace(`/courses/${redirectId}`)
     }
   }, [willRedirect, nextTopicId, router])
 

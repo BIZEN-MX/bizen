@@ -116,13 +116,27 @@ export default function LessonPage() {
             }
         }
 
-        // Redirect back to topic page after finishing the lesson
-        const topicNum = topicIdStr.replace(/^topic-|course-/, "") || "1"
-        router.push(`/courses/${topicNum}`)
+        // Helper for redirect (Legacy support: '1' -> 'tema-01')
+        const getRedirectUrl = (id: string) => {
+            if (!id) return "/courses"
+            if (!id.startsWith("tema-") && !isNaN(parseInt(id))) {
+                return `/courses/tema-${id.padStart(2, "0")}`
+            }
+            return `/courses/${id}`
+        }
+
+        router.push(getRedirectUrl(topicIdStr))
     }, [lessonIdStr, user, refreshUser, router, topicIdStr])
 
     const handleExit = () => {
-        router.push(`/courses/${topicIdStr.replace(/^topic-|course-/, "") || "1"}`)
+        const getRedirectUrl = (id: string) => {
+            if (!id) return "/courses"
+            if (!id.startsWith("tema-") && !isNaN(parseInt(id))) {
+                return `/courses/tema-${id.padStart(2, "0")}`
+            }
+            return `/courses/${id}`
+        }
+        router.push(getRedirectUrl(topicIdStr))
     }
 
     // Loading State
@@ -147,7 +161,16 @@ export default function LessonPage() {
                     {error || "Esta lección no tiene contenido disponible."}
                 </p>
                 <button
-                    onClick={() => router.push(`/courses/${topicIdStr.replace(/^topic-|course-/, "") || "1"}`)}
+                    onClick={() => {
+                        const getRedirectUrl = (id: string) => {
+                            if (!id) return "/courses"
+                            if (!id.startsWith("tema-") && !isNaN(parseInt(id))) {
+                                return `/courses/tema-${id.padStart(2, "0")}`
+                            }
+                            return `/courses/${id}`
+                        }
+                        router.push(getRedirectUrl(topicIdStr))
+                    }}
                     style={{ padding: "14px 24px", background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)", color: "white", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 500, cursor: "pointer" }}
                 >
                     Volver al tema

@@ -157,8 +157,15 @@ export default function InteractiveLessonPage() {
   }, [lessonIdStr, user, isRepeated, topicIdStr])
 
   const handleExit = useCallback(() => {
-    const topicNum = topicIdStr.replace(/^tema-/, "").replace(/^0+/, "") || "1"
-    router.push(`/courses/${topicNum}`)
+    // Helper for redirect (Legacy support: '1' -> 'tema-01')
+    const getRedirectUrl = (id: string) => {
+      if (!id) return "/courses"
+      if (!id.startsWith("tema-") && !isNaN(parseInt(id))) {
+        return `/courses/tema-${id.padStart(2, "0")}`
+      }
+      return `/courses/${id}`
+    }
+    router.push(getRedirectUrl(topicIdStr))
   }, [topicIdStr, router])
 
   const handleProgressChange = useCallback((p: any) => {
@@ -180,7 +187,6 @@ export default function InteractiveLessonPage() {
 
   // Lesson has no content yet (not in registry or slug typo)
   if (!lessonSteps.length) {
-    const topicNum = topicIdStr.replace(/^tema-/, "").replace(/^0+/, "") || "1"
     return (
       <div
         style={{
@@ -199,7 +205,16 @@ export default function InteractiveLessonPage() {
         </p>
         <button
           type="button"
-          onClick={() => router.push(`/courses/${topicNum}`)}
+          onClick={() => {
+            const getRedirectUrl = (id: string) => {
+              if (!id) return "/courses"
+              if (!id.startsWith("tema-") && !isNaN(parseInt(id))) {
+                return `/courses/tema-${id.padStart(2, "0")}`
+              }
+              return `/courses/${id}`
+            }
+            router.push(getRedirectUrl(topicIdStr))
+          }}
           style={{
             padding: "14px 24px",
             background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
