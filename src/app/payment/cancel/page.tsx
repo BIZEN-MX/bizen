@@ -23,7 +23,6 @@ export default function PaymentCancelPage() {
           color: white; border: none;
           box-shadow: 0 8px 28px rgba(15,98,254,0.35);
           transition: opacity 0.2s;
-          font-family: 'Inter', sans-serif;
         }
         .pc-btn-primary:hover { opacity: 0.85; }
         .pc-btn-primary:active { opacity: 0.7; }

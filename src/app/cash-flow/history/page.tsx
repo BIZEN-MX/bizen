@@ -1,16 +1,34 @@
 'use client';
 
 /**
- * Page: /simuladores/history
- * View saved simulator runs
+ * Page: /cash-flow/history
+ * Premium BIZEN UI — View and manage saved simulator runs
  */
 
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { 
+  ChevronLeft, 
+  Trash2, 
+  ExternalLink, 
+  Clock, 
+  Calendar,
+  Filter,
+  Inbox,
+  ArrowRight,
+  Calculator,
+  Wallet,
+  Target,
+  CreditCard,
+  TrendingUp,
+  History,
+  Search
+} from 'lucide-react';
 import { currencyMXN } from '@/lib/simulators';
 import PageLoader from '@/components/PageLoader';
 
+/* ─────────────────────────────────── types ── */
 interface SimulatorRun {
   id: string;
   simulator_slug: string;
@@ -21,49 +39,210 @@ interface SimulatorRun {
   created_at: string;
 }
 
-const simulatorNames: Record<string, string> = {
-  'monthly-budget': 'Presupuesto Mensual 50/30/20',
-  'savings-goal': 'Meta de Ahorro',
-  'credit-card-payoff': 'Liquidación de Tarjeta',
-  'simple-loan': 'Préstamo Simple',
-  'investment-comparison': 'Comparación de Inversiones',
-  'inflation-calculator': 'Calculadora de Inflación',
+const simulatorConfig: Record<string, { name: string; icon: any; color: string; bg: string }> = {
+  'monthly-budget': { 
+    name: 'Presupuesto Mensual 50/30/20', 
+    icon: Wallet, 
+    color: '#059669', 
+    bg: '#f0fdf4' 
+  },
+  'savings-goal': { 
+    name: 'Meta de Ahorro e Interés Compuesto', 
+    icon: Target, 
+    color: '#0B71FE', 
+    bg: '#eff6ff' 
+  },
+  'credit-card-payoff': { 
+    name: 'Liquidación de Tarjeta de Crédito', 
+    icon: CreditCard, 
+    color: '#7c3aed', 
+    bg: '#f5f3ff' 
+  },
+  'simple-loan': { 
+    name: 'Calculadora de Préstamo Personal', 
+    icon: Calculator, 
+    color: '#ea580c', 
+    bg: '#fff7ed' 
+  },
+  'investment-comparison': { 
+    name: 'Comparativa de Inversión', 
+    icon: TrendingUp, 
+    color: '#0891b2', 
+    bg: '#ecfeff' 
+  },
+  'inflation-calculator': { 
+    name: 'Calculadora de Inflación', 
+    icon: Clock, 
+    color: '#64748b', 
+    bg: '#f8fafc' 
+  },
 };
+
+/* ─────────────────────────────────── components ── */
+
+function RunCard({ 
+  run, 
+  onDelete 
+}: { 
+  run: SimulatorRun; 
+  onDelete: (id: string) => void 
+}) {
+  const config = simulatorConfig[run.simulator_slug] || { 
+    name: run.simulator_slug, 
+    icon: History, 
+    color: '#0B71FE', 
+    bg: '#f8fafc' 
+  };
+  const Icon = config.icon;
+
+  const formatDate = (dateString: string) => {
+    return new Intl.DateTimeFormat('es-MX', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(dateString));
+  };
+
+  const [hovered, setHovered] = React.useState(false);
+
+  return (
+    <div 
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: 'white',
+        borderRadius: 20,
+        border: `1px solid ${hovered ? '#0B71FE30' : '#E8ECF1'}`,
+        padding: '20px 24px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+        boxShadow: hovered ? '0 8px 32px rgba(11, 113, 254, 0.08)' : '0 2px 12px rgba(0,0,0,0.02)',
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
+      {/* Top accent line */}
+      <div style={{
+        position: 'absolute',
+        top: 0, left: 0, right: 0,
+        height: 3,
+        background: hovered ? config.color : `${config.color}20`,
+        transition: 'all 0.3s'
+      }} />
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+          <div style={{
+            width: 44, height: 44, borderRadius: 14,
+            background: config.bg,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: config.color, border: `1px solid ${config.color}20`
+          }}>
+            <Icon size={22} strokeWidth={2} />
+          </div>
+          <div>
+            <h4 style={{ fontSize: 13, fontWeight: 700, color: config.color, margin: '0 0 2px', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+              {config.name}
+            </h4>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0F172A', margin: 0 }}>
+              {run.run_name || 'Simulación sin nombre'}
+            </h3>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            onClick={() => onDelete(run.id)}
+            style={{
+              width: 38, height: 38, borderRadius: 12,
+              border: '1px solid #fee2e2', background: '#fef2f2',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#dc2626', transition: 'all 0.2s'
+            }}
+            title="Eliminar"
+            onMouseEnter={e => { e.currentTarget.style.background = '#fee2e2'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#fef2f2'; }}
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      </div>
+
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        paddingTop: 12,
+        borderTop: '1px solid #F1F5F9'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748B', fontSize: 13 }}>
+            <Calendar size={14} />
+            {formatDate(run.created_at)}
+          </div>
+          {run.notes && (
+             <div style={{ fontSize: 13, color: '#64748B', fontStyle: 'italic', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+               "{run.notes}"
+             </div>
+          )}
+        </div>
+
+        <Link 
+          href={`/cash-flow/${run.simulator_slug}?runId=${run.id}`}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '8px 16px', borderRadius: 12,
+            background: '#0B71FE', color: 'white',
+            fontSize: 14, fontWeight: 700, textDecoration: 'none',
+            boxShadow: '0 4px 12px rgba(11, 113, 254, 0.2)',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(11, 113, 254, 0.3)'; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(11, 113, 254, 0.2)'; }}
+        >
+          Cargar Simulación
+          <ArrowRight size={14} strokeWidth={2.5} />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────── main page ── */
 
 export default function HistoryPage() {
   const [runs, setRuns] = React.useState<SimulatorRun[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState('');
-  const [filterSlug, setFilterSlug] = React.useState<string>('');
+  const [filterSlug, setFilterSlug] = React.useState<string>('all');
   const router = useRouter();
 
-  React.useEffect(() => {
-    loadRuns();
-  }, [filterSlug]);
-
-  async function loadRuns() {
+  const loadRuns = React.useCallback(async () => {
     setLoading(true);
-    setError('');
-
     try {
-      const url = filterSlug
+      const url = filterSlug !== 'all'
         ? `/api/simuladores/runs?slug=${filterSlug}`
         : '/api/simuladores/runs';
 
       const response = await fetch(url);
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Error al cargar');
-      }
-
+      if (!response.ok) throw new Error(data.error || 'Error al cargar');
       setRuns(data.runs || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
       setLoading(false);
     }
-  }
+  }, [filterSlug]);
+
+  React.useEffect(() => {
+    loadRuns();
+  }, [loadRuns]);
 
   async function handleDelete(id: string) {
     if (!confirm('¿Estás seguro de que quieres eliminar esta simulación?')) return;
@@ -73,319 +252,175 @@ export default function HistoryPage() {
         method: 'DELETE',
       });
 
-      if (!response.ok) {
-        throw new Error('Error al eliminar');
-      }
-
-      // Reload runs
+      if (!response.ok) throw new Error('Error al eliminar');
       loadRuns();
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Error al eliminar');
     }
   }
 
-  function formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('es-MX', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date);
-  }
-
-  function getRunSummary(run: SimulatorRun): string {
-    // Generate a quick summary based on simulator type
-    const { simulator_slug, outputs } = run;
-
-    switch (simulator_slug) {
-      case 'monthly-budget':
-        return `Ingreso: ${currencyMXN(outputs.totalExpenses || 0)}`;
-      case 'savings-goal':
-        return `Resultado: ${currencyMXN(outputs.futureValue || 0)}`;
-      case 'credit-card-payoff':
-        return `Ahorro: ${currencyMXN(outputs.savings?.interestSaved || 0)}`;
-      case 'simple-loan':
-        return `Pago mensual: ${currencyMXN(outputs.monthlyPayment || 0)}`;
-      case 'investment-comparison':
-        return `Ganador: Opción ${outputs.winner || '?'}`;
-      case 'inflation-calculator':
-        return `Precio futuro: ${currencyMXN(outputs.futurePrice || 0)}`;
-      default:
-        return 'Ver detalles';
-    }
-  }
-
   const uniqueSlugs = Array.from(new Set(runs.map((r) => r.simulator_slug)));
 
   return (
-    <>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: '#FBFAF5',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif',
+      color: '#0F172A',
+      paddingBottom: 80
+    }}>
       <style>{`
-        .history-outer {
+        .history-container {
           width: 100%;
-          min-height: 100vh;
-          background: #ffffff;
-          font-family: 'Montserrat', sans-serif;
-          overflow-x: hidden;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 40px;
+          box-sizing: border-box;
         }
         @media (max-width: 767px) {
-          .history-outer { padding-bottom: 65px !important; }
-          .history-main  { padding: 24px 16px !important; }
+          .history-container { padding: 20px 16px 80px; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .history-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
+          .history-container { width: calc(100% - 220px); margin-left: 220px; }
         }
         @media (min-width: 1161px) {
-          .history-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
+          .history-container { width: calc(100% - 280px); margin-left: 280px; }
         }
+
+        .category-chip {
+          padding: 8px 18px;
+          border-radius: 100px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          border: 1px solid #E2E8F0;
+          background: white;
+          color: #64748B;
+          white-space: nowrap;
+        }
+        .category-chip:hover { border-color: #0B71FE; color: #0B71FE; }
+        .category-chip.active { background: #0B71FE; color: white; border-color: #0B71FE; box-shadow: 0 4px 12px rgba(11, 113, 254, 0.2); }
       `}</style>
-      <div className="history-outer">
-        <main className="history-main" style={{
-          padding: "40px clamp(16px, 5vw, 64px)",
-          maxWidth: "1400px",
-          margin: "0 auto",
-          width: "100%",
-          boxSizing: "border-box"
-        }}>
-          {/* Header */}
-          <div style={{ marginBottom: 32 }}>
-            <Link href="/cash-flow" style={{ textDecoration: "none" }}>
-              <button style={{
-                padding: "10px 20px",
-                background: "white",
-                color: "#0B71FE",
-                border: "2px solid #0B71FE",
-                borderRadius: 10,
-                fontSize: 14,
-                fontWeight: 500,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                marginBottom: 16
-              }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#0B71FE"
-                  e.currentTarget.style.color = "white"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "white"
-                  e.currentTarget.style.color = "#0B71FE"
-                }}>
-                ← Volver a Simulador
-              </button>
-            </Link>
-            <h1 style={{
-              fontSize: 42,
-              fontWeight: 500,
-              margin: "0 0 12px",
-              background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text"
-            }}>
-              Mis Simulaciones Guardadas
-            </h1>
-            <p style={{ fontSize: 18, color: "#64748b", margin: 0 }}>
-              Revisa y administra tus simulaciones anteriores
-            </p>
-          </div>
 
-          {/* Filter */}
-          {uniqueSlugs.length > 0 && (
-            <div style={{ marginBottom: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <button
-                onClick={() => setFilterSlug('')}
-                style={{
-                  padding: "8px 16px",
-                  background: filterSlug === '' ? "linear-gradient(135deg, #0B71FE, #4A9EFF)" : "white",
-                  color: filterSlug === '' ? "white" : "#0B71FE",
-                  border: `2px solid ${filterSlug === '' ? "#0B71FE" : "#E5E7EB"}`,
-                  borderRadius: 10,
-                  fontSize: 14,
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                }}
-              >
-                Todos
-              </button>
-              {uniqueSlugs.map((slug) => (
-                <button
-                  key={slug}
-                  onClick={() => setFilterSlug(slug)}
-                  style={{
-                    padding: "8px 16px",
-                    background: filterSlug === slug ? "linear-gradient(135deg, #0B71FE, #4A9EFF)" : "white",
-                    color: filterSlug === slug ? "white" : "#0B71FE",
-                    border: `2px solid ${filterSlug === slug ? "#0B71FE" : "#E5E7EB"}`,
-                    borderRadius: 10,
-                    fontSize: 14,
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  {simulatorNames[slug] || slug}
-                </button>
-              ))}
-            </div>
-          )}
+      <div className="history-container">
+        {/* Header Section */}
+        <div style={{ marginBottom: 40 }}>
+          <Link href="/cash-flow" style={{ 
+            display: 'inline-flex', alignItems: 'center', gap: 8, 
+            color: '#64748B', fontWeight: 600, fontSize: 14, 
+            textDecoration: 'none', marginBottom: 24,
+            transition: 'color 0.2s'
+          }} onMouseEnter={e => e.currentTarget.style.color = '#0B71FE'} onMouseLeave={e => e.currentTarget.style.color = '#64748B'}>
+            <ChevronLeft size={18} />
+            Volver a Simuladores
+          </Link>
 
-          {/* Loading / Error States */}
-          {loading && <PageLoader />}
-
-          {error && (
-            <div style={{
-              background: "rgba(239, 68, 68, 0.1)",
-              border: "2px solid rgba(239, 68, 68, 0.3)",
-              borderRadius: 16,
-              padding: 20,
-              marginBottom: 24,
-              color: "#991b1b"
-            }}>
-              {error}
-            </div>
-          )}
-
-          {/* Empty State */}
-          {!loading && !error && runs.length === 0 && (
-            <div style={{
-              background: "white",
-              borderRadius: 20,
-              padding: 48,
-              textAlign: "center",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-              border: "2px solid #E5E7EB"
-            }}>
-              <div style={{ fontSize: 64, marginBottom: 16 }}>📭</div>
-              <h3 style={{ fontSize: 24, fontWeight: 500, color: "#111", marginBottom: 12 }}>
-                No tienes simulaciones guardadas
-              </h3>
-              <p style={{ fontSize: 16, color: "#6B7280", marginBottom: 24 }}>
-                Usa cualquiera de los simuladores y guarda tus resultados para consultarlos después
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
+            <div>
+              <h1 style={{ 
+                fontSize: 'clamp(32px, 5vw, 42px)', 
+                fontWeight: 800, 
+                margin: '0 0 12px',
+                letterSpacing: '-0.04em',
+                background: 'linear-gradient(135deg, #0F172A 0%, #0B71FE 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                Mis Simulaciones
+              </h1>
+              <p style={{ fontSize: 17, color: '#64748B', margin: 0, fontWeight: 500 }}>
+                Recupera tus análisis guardados y sigue planificando tu futuro financiero.
               </p>
-              <Link href="/cash-flow" style={{ textDecoration: "none" }}>
-                <button style={{
-                  padding: "14px 28px",
-                  background: "linear-gradient(135deg, #0B71FE, #4A9EFF)",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 12,
-                  fontSize: 16,
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  transition: "transform 0.2s ease",
-                  boxShadow: "0 4px 12px rgba(11,113,254,0.3)"
-                }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>
-                  Explorar Simulador
-                </button>
-              </Link>
             </div>
-          )}
+          </div>
+        </div>
 
-          {/* Runs List */}
-          {!loading && !error && runs.length > 0 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {runs.map((run) => (
-                <div key={run.id} style={{
-                  background: "white",
-                  borderRadius: 16,
-                  padding: 24,
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                  border: "2px solid #E5E7EB",
-                  transition: "all 0.2s ease"
-                }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = "0 8px 32px rgba(11,113,254,0.2)"
-                    e.currentTarget.style.borderColor = "#0B71FE"
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"
-                    e.currentTarget.style.borderColor = "#E5E7EB"
-                  }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 6, fontWeight: 500 }}>
-                        {simulatorNames[run.simulator_slug] || run.simulator_slug}
-                      </div>
-                      <h3 style={{ fontSize: 20, fontWeight: 500, color: "#111", marginBottom: 4 }}>
-                        {run.run_name || 'Sin nombre'}
-                      </h3>
-                      <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-                        {formatDate(run.created_at)}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleDelete(run.id)}
-                      style={{
-                        padding: "8px 16px",
-                        background: "white",
-                        color: "#ef4444",
-                        border: "2px solid #ef4444",
-                        borderRadius: 10,
-                        fontSize: 14,
-                        fontWeight: 500,
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#ef4444"
-                        e.currentTarget.style.color = "white"
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "white"
-                        e.currentTarget.style.color = "#ef4444"
-                      }}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
-                      <p style={{ fontSize: 14, color: "#374151", fontWeight: 500 }}>
-                        {getRunSummary(run)}
-                      </p>
-                      {run.notes && (
-                        <p style={{ fontSize: 13, color: "#6B7280", marginTop: 8, fontStyle: "italic" }}>
-                          {run.notes}
-                        </p>
-                      )}
-                    </div>
-                    <Link href={`/cash-flow/${run.simulator_slug}?runId=${run.id}`} style={{ textDecoration: "none" }}>
-                      <button style={{
-                        padding: "10px 20px",
-                        background: "white",
-                        color: "#0B71FE",
-                        border: "2px solid #0B71FE",
-                        borderRadius: 10,
-                        fontSize: 14,
-                        fontWeight: 500,
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                        marginLeft: 16
-                      }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "#0B71FE"
-                          e.currentTarget.style.color = "white"
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "white"
-                          e.currentTarget.style.color = "#0B71FE"
-                        }}>
-                        Ver Detalles
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
+        {/* Filters */}
+        {!loading && (runs.length > 0 || filterSlug !== 'all') && (
+          <div style={{ 
+            display: 'flex', alignItems: 'center', gap: 12, 
+            marginBottom: 32, overflowX: 'auto', padding: '4px 0',
+            scrollbarWidth: 'none'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#64748B', marginRight: 8, flexShrink: 0 }}>
+              <Filter size={16} />
+              <span style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Filtrar:</span>
             </div>
-          )}
-        </main>
+            
+            <button 
+              className={`category-chip ${filterSlug === 'all' ? 'active' : ''}`}
+              onClick={() => setFilterSlug('all')}
+            >
+              Todas
+            </button>
+            {uniqueSlugs.map(slug => (
+              <button 
+                key={slug}
+                className={`category-chip ${filterSlug === slug ? 'active' : ''}`}
+                onClick={() => setFilterSlug(slug)}
+              >
+                {simulatorConfig[slug]?.name.split(' ')[0] || slug}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Content */}
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '100px 0' }}>
+            <PageLoader />
+          </div>
+        ) : error ? (
+          <div style={{ 
+            padding: 32, borderRadius: 24, background: '#fef2f2', border: '1px solid #fee2e2',
+            textAlign: 'center', color: '#dc2626'
+          }}>
+            <h3 style={{ margin: '0 0 8px' }}>Error al cargar</h3>
+            <p style={{ margin: 0 }}>{error}</p>
+          </div>
+        ) : runs.length === 0 ? (
+          <div style={{ 
+            background: 'white', borderRadius: 32, border: '1px solid #E8ECF1',
+            padding: '80px 40px', textAlign: 'center',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.03)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24
+          }}>
+            <div style={{ 
+              width: 80, height: 80, borderRadius: 28, background: '#F8FAFC',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B' 
+            }}>
+              <Inbox size={40} strokeWidth={1.5} />
+            </div>
+            <div>
+              <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', margin: '0 0 12px' }}>
+                Aún no tienes simulaciones guardadas
+              </h2>
+              <p style={{ fontSize: 16, color: '#64748B', maxWidth: 450, margin: '0 auto', lineHeight: 1.6 }}>
+                Prueba cualquiera de nuestros simuladores financieros y guarda tus resultados para verlos aquí más tarde.
+              </p>
+            </div>
+            <Link href="/cash-flow" style={{ 
+              padding: '14px 32px', borderRadius: 16, background: '#0B71FE', color: 'white',
+              fontSize: 16, fontWeight: 700, textDecoration: 'none',
+              boxShadow: '0 8px 16px rgba(11, 113, 254, 0.25)',
+              transition: 'all 0.2s'
+            }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+              Explorar Simuladores
+            </Link>
+          </div>
+        ) : (
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
+            gap: 24 
+          }}>
+            {runs.map(run => (
+              <RunCard key={run.id} run={run} onDelete={handleDelete} />
+            ))}
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 }
-

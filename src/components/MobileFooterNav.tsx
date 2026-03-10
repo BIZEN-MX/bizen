@@ -128,7 +128,6 @@ export default function MobileFooterNav() {
       <style jsx>{`
         .mobile-footer-container {
           z-index: 10000 !important;
-          font-family: Montserrat, sans-serif !important;
           margin: 0 !important;
           box-sizing: border-box !important;
         }

@@ -17,9 +17,7 @@ export async function POST(request: NextRequest) {
   try {
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY
     const MAX_DAILY_REQUESTS = parseInt(process.env.MAX_AI_DAILY_REQUESTS || "500")
-    const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT
-    const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION || "us-central1"
-
+    
     const {
       message,
       conversationHistory = [],
@@ -51,9 +49,10 @@ export async function POST(request: NextRequest) {
     const userStats = `\nESTADÍSTICAS DEL USUARIO: XP: ${xp}, Nivel: ${level}.`
 
     if (!GEMINI_API_KEY) {
-      console.error("Missing GEMINI_API_KEY")
+      const timestamp = new Date().toISOString();
+      console.error(`[${timestamp}] Missing GEMINI_API_KEY`);
       return NextResponse.json(
-        { response: "Hola, BIZEN pronto será más inteligente. Por el momento, el administrador necesita configurar mi conexión (Faltará GEMINI_API_KEY)." },
+        { response: `Hola, BIZEN pronto será más inteligente. (Error: KEY_MISSING_${timestamp})` },
         { status: 200 }
       )
     }

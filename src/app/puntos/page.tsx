@@ -122,7 +122,7 @@ export default function PuntosPage() {
                 .redeem-btn {
                     background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
                     color: white; border: none; border-radius: 16px;
-                    font-family: 'Inter', sans-serif; font-weight: 500; font-size: 16px;
+                    font-weight: 500; font-size: 16px;
                     cursor: pointer; transition: all 0.3s ease;
                     box-shadow: 0 8px 30px rgba(15,98,254,0.4);
                     animation: puntos-pulse 2.5s ease infinite;

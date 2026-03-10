@@ -1155,7 +1155,7 @@ export default function WelcomePage() {
                     max-width: 900px;
                     margin: 0 auto;
                     color: rgba(255, 255, 255, 0.85);
-                    font-family: 'Inter', sans-serif;
+                    font-weight: 500;
                     text-align: center;
                   }
                   @media (max-width: 768px) {
@@ -1975,12 +1975,12 @@ export default function WelcomePage() {
         .main-page-container,
         .main-page-container .section,
         .main-page-container .container {
-          font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+          /* Inherit from global San Francisco font */
         }
         
         /* Keep Inter for bold text if preferred, but user requested Open Sans for non-bold specifically */
         b, strong, h1, h2, h3, .bold-text {
-          font-family: 'Inter', sans-serif !important;
+          font-weight: 700;
         }
 
 
@@ -2755,7 +2755,6 @@ export default function WelcomePage() {
         
         .hero-main-text {
           font-size: clamp(32px, 5vw, 48px) !important;
-          font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
         }
         
         .y-mucho-mas-text {
@@ -3981,7 +3980,7 @@ const landingCSS = `
 
         body {
           background: #020e27 !important;
-          font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+          font-weight: 600;
           overflow-y: visible !important;
           margin: 0;
           padding: 0;

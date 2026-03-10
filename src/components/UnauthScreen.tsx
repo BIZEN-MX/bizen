@@ -27,7 +27,6 @@ export function UnauthScreen() {
                     padding: 20px 52px;
                     font-size: 19px;
                     font-weight: 500;
-                    font-family: 'Inter', sans-serif;
                     cursor: pointer;
                     box-shadow: 0 8px 32px rgba(15, 98, 254, 0.45);
                     transition: transform 0.2s, box-shadow 0.2s;
@@ -43,7 +42,6 @@ export function UnauthScreen() {
                     color: rgba(255,255,255,0.7);
                     font-size: 15px;
                     font-weight: 500;
-                    font-family: 'Inter', sans-serif;
                     text-decoration: none;
                     border-bottom: 1px solid rgba(255,255,255,0.28);
                     padding-bottom: 2px;

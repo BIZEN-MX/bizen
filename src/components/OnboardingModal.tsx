@@ -193,7 +193,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           display: flex; align-items: center; justify-content: center;
           padding: clamp(8px, 3vw, 24px);
           animation: ob-fadeIn 0.35s ease both;
-          font-family: 'Inter', system-ui, sans-serif;
+          background-color: #030712;
+          color: #ffffff;
+          line-height: 1.5;
         }
 
         /* ── Card ── */
@@ -267,7 +269,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         .ob-input {
           width: 100%; padding: clamp(11px, 2.5vw, 14px) clamp(12px, 3vw, 16px);
           border: 2px solid #e5e7eb; border-radius: 14px;
-          font-size: clamp(14px, 3.5vw, 15px); font-family: 'Inter', sans-serif;
+          font-size: clamp(14px, 3.5vw, 15px);
           color: #111827; outline: none;
           transition: all 0.2s; box-sizing: border-box;
           background: #f9fafb;
@@ -280,7 +282,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           width: 100%; padding: clamp(13px, 3vw, 16px) 24px;
           background: linear-gradient(135deg, #0F62FE 0%, #4F8EFF 100%);
           color: white; border: none; border-radius: 14px;
-          font-size: clamp(14px, 3.5vw, 15px); font-weight: 500; font-family: 'Inter', sans-serif;
+          font-size: clamp(14px, 3.5vw, 15px); font-weight: 500;
           cursor: pointer;
           display: flex; align-items: center; justify-content: center; gap: 8px;
           letter-spacing: 0.02em;
@@ -294,7 +296,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         /* ── Ghost button ── */
         .ob-btn-ghost {
           background: none; border: none; cursor: pointer;
-          color: #9ca3af; font-size: clamp(12px, 3vw, 13px); font-family: 'Inter', sans-serif;
+          color: #9ca3af; font-size: clamp(12px, 3vw, 13px);
           padding: 6px; transition: color 0.2s;
         }
         .ob-btn-ghost:hover { color: #64748b; }
@@ -395,7 +397,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           width: 100%; padding: clamp(13px,3vw,16px) 24px;
           background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
           color: white; border: none; border-radius: 14px;
-          font-size: clamp(14px,3.5vw,15px); font-weight: 700; font-family: 'Inter', sans-serif;
+          font-size: clamp(14px,3.5vw,15px); font-weight: 700;
           cursor: pointer;
           display: flex; align-items: center; justify-content: center; gap: 10px;
           letter-spacing: 0.02em;

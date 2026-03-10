@@ -234,7 +234,7 @@ export default function RetoDiarioPage() {
           width: fit-content; padding: 16px 36px; margin: 0 auto;
           background: linear-gradient(135deg, #0F62FE 0%, #4A9EFF 100%);
           color: white; border: none; border-radius: 16px;
-          font-family: 'Inter', sans-serif; font-weight: 500; font-size: 17px;
+          font-weight: 500; font-size: 17px;
           cursor: pointer; transition: all 0.25s ease;
           box-shadow: 0 8px 40px rgba(15,98,254,0.6);
           animation: pulse 2.5s ease infinite;
@@ -246,7 +246,7 @@ export default function RetoDiarioPage() {
           width: 100%; padding: 14px 16px;
           border: 1.5px solid rgba(0,0,0,0.08);
           border-radius: 14px; font-size: 14px; line-height: 1.7;
-          font-family: 'Inter', sans-serif; resize: vertical; outline: none;
+          resize: vertical; outline: none;
           color: #1f2937; background: #f9fafb;
           transition: all 0.2s; box-sizing: border-box;
         }
@@ -273,7 +273,7 @@ export default function RetoDiarioPage() {
           display: flex; align-items: center; justify-content: center; gap: 10px;
           width: fit-content; padding: 14px 28px; border: none; border-radius: 16px;
           margin: 0 auto;
-          font-family: 'Inter', sans-serif; font-weight: 500; font-size: 16px;
+          font-weight: 500; font-size: 16px;
           cursor: pointer; transition: all 0.25s ease;
           background: linear-gradient(135deg, #0F62FE 0%, #2563EB 100%);
           color: white; box-shadow: 0 8px 32px rgba(15,98,254,0.55);
@@ -284,7 +284,7 @@ export default function RetoDiarioPage() {
           display: flex; align-items: center; justify-content: center; gap: 10px;
           width: fit-content; padding: 12px 24px; border-radius: 16px;
           margin: 0 auto;
-          font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px;
+          font-weight: 500; font-size: 15px;
           cursor: pointer; transition: all 0.25s ease;
           background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.15);
           color: rgba(255,255,255,0.85);
@@ -294,7 +294,7 @@ export default function RetoDiarioPage() {
         .rd-cta-tertiary {
           display: flex; align-items: center; justify-content: center; gap: 8px;
           width: 100%; padding: 13px 28px; border-radius: 12px;
-          font-family: 'Inter', sans-serif; font-weight: 500; font-size: 14px;
+          font-weight: 500; font-size: 14px;
           cursor: pointer; transition: all 0.2s ease;
           background: transparent; border: 1px solid rgba(255,255,255,0.10);
           color: rgba(255,255,255,0.45);

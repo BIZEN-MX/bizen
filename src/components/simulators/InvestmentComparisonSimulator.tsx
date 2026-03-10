@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
 import { ResultsCard } from './ResultsCard';
 import { SaveRunButton } from './SaveRunButton';
@@ -27,12 +28,15 @@ import { currencyMXN } from '@/lib/simulators';
 
 export function InvestmentComparisonSimulator() {
   const [result, setResult] = React.useState<InvestmentComparisonOutput | null>(null);
+  const searchParams = useSearchParams();
+  const runId = searchParams.get('runId');
   
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<InvestmentComparisonInput>({
     resolver: zodResolver(investmentComparisonSchema),
@@ -48,6 +52,23 @@ export function InvestmentComparisonSimulator() {
       labelC: 'Fondo de Inversión',
     },
   });
+
+  // Load saved run if runId exists
+  React.useEffect(() => {
+    async function fetchRun() {
+      if (!runId) return;
+      try {
+        const response = await fetch(`/api/simuladores/runs/${runId}`);
+        const data = await response.json();
+        if (response.ok && data.run) {
+          reset(data.run.inputs);
+        }
+      } catch (err) {
+        console.error('Error loading run:', err);
+      }
+    }
+    fetchRun();
+  }, [runId, reset]);
   
   function onSubmit(data: InvestmentComparisonInput) {
     const output = calculateInvestmentComparison(data);

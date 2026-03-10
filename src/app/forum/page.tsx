@@ -457,7 +457,6 @@ function ForumContent() {
           font-size: 14px;
           cursor: pointer;
           transition: all 0.2s ease;
-          font-family: 'Montserrat', sans-serif;
           white-space: nowrap;
           display: flex;
           align-items: center;

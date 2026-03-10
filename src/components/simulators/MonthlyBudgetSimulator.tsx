@@ -30,7 +30,9 @@ import {
   Info,
   CreditCard,
   PiggyBank,
+  Loader2,
 } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
 import { SaveRunButton } from './SaveRunButton';
 import { Chart } from './Chart';
@@ -298,8 +300,11 @@ function MetricCard({
 /* ─────────────────────────────────── Main Component ── */
 export function MonthlyBudgetSimulator() {
   const [result, setResult] = React.useState<MonthlyBudgetOutput | null>(null);
+  const [loadingRun, setLoadingRun] = React.useState(false);
+  const searchParams = useSearchParams();
+  const runId = searchParams.get('runId');
 
-  const { register, control, handleSubmit, watch, setValue, formState: { errors } } =
+  const { register, control, handleSubmit, watch, setValue, reset, formState: { errors } } =
     useForm<MonthlyBudgetInput>({
       resolver: zodResolver(monthlyBudgetSchema),
       defaultValues: {
@@ -310,6 +315,26 @@ export function MonthlyBudgetSimulator() {
         mode: '50/30/20',
       },
     });
+
+  // Load saved run if runId exists
+  React.useEffect(() => {
+    async function fetchRun() {
+      if (!runId) return;
+      setLoadingRun(true);
+      try {
+        const response = await fetch(`/api/simuladores/runs/${runId}`);
+        const data = await response.json();
+        if (response.ok && data.run) {
+          reset(data.run.inputs);
+        }
+      } catch (err) {
+        console.error('Error loading run:', err);
+      } finally {
+        setLoadingRun(false);
+      }
+    }
+    fetchRun();
+  }, [runId, reset]);
 
   const { fields: fixedFields, append: appendFixed, remove: removeFixed } =
     useFieldArray({ control, name: 'fixedExpenses' });
@@ -337,6 +362,15 @@ export function MonthlyBudgetSimulator() {
     return () => sub.unsubscribe();
   }, [handleSubmit, watch]);
 
+  if (loadingRun) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 0', gap: 20 }}>
+        <Loader2 className="animate-spin" size={42} color={BLUE} />
+        <p style={{ color: MUTED, fontWeight: 500 }}>Cargando tu simulación guardada...</p>
+      </div>
+    );
+  }
+
   const chartData = result?.breakdown
     ? [
         { category: 'Esenciales', target: result.breakdown.essentialTarget || 0, actual: result.breakdown.essentialActual },
@@ -356,12 +390,11 @@ export function MonthlyBudgetSimulator() {
     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right 16px center',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif',
     transition: 'all 0.2s ease',
   };
 
   return (
-    <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif' }}>
+    <div>
 
       {/* ── HERO STRIP ── */}
       <div style={{

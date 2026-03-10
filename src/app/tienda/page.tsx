@@ -289,7 +289,6 @@ export default function TiendaPage() {
           padding: 13px;
           border: none;
           border-radius: 12px;
-          font-family: 'Montserrat', sans-serif;
           font-size: 14px;
           font-weight: 500;
           cursor: pointer;

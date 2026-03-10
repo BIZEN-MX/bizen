@@ -1327,7 +1327,7 @@ html,body{height:100%}
 html{scroll-behavior:smooth; scroll-padding-top:84px}
 body{
   margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial;
+  font-family: var(--font-family);
   color:var(--c-text);
   background:var(--c-bg);
   line-height:1.6;
@@ -1361,7 +1361,7 @@ img{max-width:100%; display:block; border-radius:12px}
 .brand{display:inline-flex; align-items:center; gap:10px; font-weight: 500; letter-spacing:.2px}
 .logo{width:36px; height:36px; display:grid; place-items:center; border-radius:10px; background:var(--c-primary); color:white; font-weight: 500;}
 .logo-image{width:36px; height:36px; border-radius:10px; object-fit:contain;}
-.brand-text{font-family:'Helvetica','Arial',sans-serif; font-size:30px; color:#1e293b; font-weight: 500; letter-spacing:-1px; display:flex; align-items:baseline; gap:2px;}
+.brand-text{font-size:30px; color:#1e293b; font-weight: 500; letter-spacing:-1px; display:flex; align-items:baseline; gap:2px;}
 .brand-dot{width:6px; height:6px; border-radius:50%; background:#0F62FE; display:inline-block; margin-bottom:3px;}
 .nav{margin-left:auto; display:none; gap:18px}
 .nav a{
@@ -1502,7 +1502,7 @@ img{max-width:100%; display:block; border-radius:12px}
 .footer-brand{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
 .footer-brand .logo{width:32px; height:32px; border-radius:10px; background:var(--c-primary); color:#fff; display:grid; place-items:center; font-weight: 500}
 .footer-logo-image{width:24px; height:24px; border-radius:10px; object-fit:contain;}
-.footer-brand-text{color:#1e293b; font-family:'Helvetica','Arial',sans-serif; font-size:24px; font-weight: 500; letter-spacing:-0.5px; display:flex; align-items:baseline; gap:2px;}
+.footer-brand-text{color:#1e293b; font-size:24px; font-weight: 500; letter-spacing:-0.5px; display:flex; align-items:baseline; gap:2px;}
 .footer-brand-text .brand-dot{width:5px; height:5px;}
 .foot-note{color:var(--c-muted); font-size:14px}
 .footer-links{margin-left:auto; display:flex; gap:14px; flex-wrap:wrap}

@@ -142,7 +142,6 @@ export default function RankingsPage() {
           padding: 10px 24px;
           border: none;
           border-radius: 10px;
-          font-family: 'Montserrat', sans-serif;
           font-weight: 500;
           font-size: 14px;
           cursor: pointer;

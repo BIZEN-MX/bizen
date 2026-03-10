@@ -63,7 +63,6 @@ function PaymentSuccessContent() {
           color: white; border: none;
           box-shadow: 0 8px 28px rgba(15,98,254,0.35);
           transition: opacity 0.2s;
-          font-family: 'Inter', sans-serif;
         }
         .ps-btn-primary:hover { opacity: 0.85; }
         .ps-btn-primary:active { opacity: 0.7; }
@@ -126,7 +125,7 @@ function PaymentSuccessContent() {
           </div>
 
           {/* Shimmer badge */}
-          <div style={{ animation: "ps-fadeUp 0.5s 0.2s ease both", marginBottom: 20, display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(90deg, #eff6ff, #dbeafe, #eff6ff)", backgroundSize: "200% auto", border: "1px solid #bfdbfe", borderRadius: 40, padding: "6px 16px", animation: "ps-shimmer 4s linear infinite" }}>
+          <div style={{ animation: "ps-fadeUp 0.5s 0.2s ease both, ps-shimmer 4s linear infinite", marginBottom: 20, display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(90deg, #eff6ff, #dbeafe, #eff6ff)", backgroundSize: "200% auto", border: "1px solid #bfdbfe", borderRadius: 40, padding: "6px 16px" }}>
             <Trophy size={13} color="#2563eb" />
             <span style={{ fontSize: 12, fontWeight: 500, color: "#1e40af", letterSpacing: "0.06em" }}>¡ACCESO COMPLETO DESBLOQUEADO!</span>
           </div>

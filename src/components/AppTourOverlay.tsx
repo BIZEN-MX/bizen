@@ -217,7 +217,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
             0 16px 48px rgba(0,0,0,0.18),
             0 0 0 1px rgba(0,0,0,0.05);
           overflow: hidden;
-          font-family: 'Inter', system-ui, sans-serif;
+          line-height: 1.5;
           width: calc(100vw - clamp(20px, 6vw, 80px));
           max-width: clamp(280px, 94vw, 520px);
           word-wrap: break-word;
@@ -322,7 +322,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
         .tc-actions { display: flex; gap: 8px; }
         .tc-btn {
           border-radius: 11px;
-          font-family: 'Inter', sans-serif;
+          font-weight: 500;
           font-size: clamp(12px, 2.8vw, 14px);
           font-weight: 500;
           cursor: pointer;

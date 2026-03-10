@@ -260,7 +260,6 @@ export default function ImpactoSocialPage() {
                 justifyContent: "center",
                 position: "relative",
                 overflow: "hidden",
-                fontFamily: "'Inter', sans-serif",
             }}>
                 <style>{`
                     @keyframes is-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
@@ -275,7 +274,7 @@ export default function ImpactoSocialPage() {
                         padding: 20px 48px;
                         font-size: 18px;
                         font-weight: 800;
-                        font-family: 'Inter', sans-serif;
+                        /* font-family: 'Inter', sans-serif; */
                         cursor: pointer;
                         box-shadow: 0 8px 32px rgba(15, 98, 254, 0.45);
                         transition: transform 0.2s, box-shadow 0.2s;
@@ -291,7 +290,7 @@ export default function ImpactoSocialPage() {
                         color: rgba(255,255,255,0.75);
                         font-size: 15px;
                         font-weight: 600;
-                        font-family: 'Inter', sans-serif;
+                        /* font-family: 'Inter', sans-serif; */
                         text-decoration: none;
                         border-bottom: 1px solid rgba(255,255,255,0.3);
                         padding-bottom: 2px;
@@ -405,7 +404,6 @@ export default function ImpactoSocialPage() {
         <div className="impacto-outer" style={{
             minHeight: "100vh",
             background: "#FBFAF5",
-            fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif',
             color: "#1e3a5f",
             width: "100%",
             overflowX: "hidden",
@@ -744,7 +742,7 @@ export default function ImpactoSocialPage() {
                                     align-items: center;
                                     font-size: 14px;
                                     font-weight: 700;
-                                    font-family: 'Inter', sans-serif;
+                                    /* font-family: 'Inter', sans-serif; */
                                     transition: background 0.2s, transform 0.15s;
                                 }
                                 .cta-action-btn:hover {
