@@ -829,15 +829,24 @@ function BillyInsights() {
   }, [])
 
   if (loading) return (
-    <div style={{
-      width: "100%", maxWidth: 1188, margin: "0 auto 40px",
-      height: 100, borderRadius: 24, background: "rgba(255,255,255,0.4)",
-      border: "1px solid rgba(255,255,255,0.5)", backdropFilter: "blur(10px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      color: "#94a3b8", fontSize: 14
-    }}>
-      Analizando tu progreso financiero...
-    </div>
+    <motion.div
+      animate={{ opacity: [0.5, 0.8, 0.5] }}
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      style={{
+        width: "100%", maxWidth: 1188, margin: "0 auto 40px",
+        height: 104, borderRadius: 24,
+        background: "rgba(255, 255, 255, 0.5)",
+        backdropFilter: "blur(12px)",
+        border: "1px solid rgba(255, 255, 255, 0.6)",
+        display: "flex", alignItems: "center", padding: "0 32px", gap: 24
+      }}
+    >
+      <div style={{ width: 60, height: 60, borderRadius: "50%", background: "rgba(255,255,255,0.4)" }} />
+      <div style={{ flex: 1 }}>
+        <div style={{ width: 120, height: 12, borderRadius: 6, background: "rgba(37,99,235,0.1)", marginBottom: 8 }} />
+        <div style={{ width: "70%", height: 16, borderRadius: 8, background: "rgba(255,255,255,0.6)" }} />
+      </div>
+    </motion.div>
   )
 
   if (!insight) return null

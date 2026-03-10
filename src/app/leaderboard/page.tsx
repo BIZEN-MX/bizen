@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
+import PageLoader from "@/components/PageLoader"
 
 interface LeaderboardEntry {
   userId: string
@@ -67,18 +68,7 @@ export default function LeaderboardPage() {
   }
 
   if (loading || loadingData) {
-    return (
-      <div style={{ 
-        display: "grid", 
-        placeItems: "center", 
-        minHeight: "60vh", 
-                background: "#FBFAF5"
-      }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
-        </div>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user) return null
@@ -89,12 +79,12 @@ export default function LeaderboardPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-            background: "#FBFAF5",
+      background: "#FBFAF5",
     }}>
-      <main style={{ 
+      <main style={{
         position: "relative",
-        maxWidth: 1000, 
-        margin: "0 auto", 
+        maxWidth: 1000,
+        margin: "0 auto",
         padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1
       }}>
@@ -118,7 +108,7 @@ export default function LeaderboardPage() {
               fontSize: 14,
               fontWeight: 500,
               cursor: "pointer",
-                          }}
+            }}
           >
             Esta Semana
           </button>
@@ -133,7 +123,7 @@ export default function LeaderboardPage() {
               fontSize: 14,
               fontWeight: 500,
               cursor: "pointer",
-                          }}
+            }}
           >
             Histórico
           </button>

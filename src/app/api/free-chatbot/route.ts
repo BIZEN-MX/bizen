@@ -50,10 +50,10 @@ export async function POST(request: NextRequest) {
 
     const userStats = `\nESTADÍSTICAS DEL USUARIO: XP: ${xp}, Nivel: ${level}.`
 
-    if (!GEMINI_API_KEY || !GOOGLE_CLOUD_PROJECT) {
-      console.error("Missing credentials:", { hasKey: !!GEMINI_API_KEY, hasProject: !!GOOGLE_CLOUD_PROJECT })
+    if (!GEMINI_API_KEY) {
+      console.error("Missing GEMINI_API_KEY")
       return NextResponse.json(
-        { response: "Hola, BIZEN pronto será más inteligente. Por el momento, el administrador necesita configurar mi conexión (Falta GEMINI_API_KEY o GOOGLE_CLOUD_PROJECT)." },
+        { response: "Hola, BIZEN pronto será más inteligente. Por el momento, el administrador necesita configurar mi conexión (Faltará GEMINI_API_KEY)." },
         { status: 200 }
       )
     }
@@ -85,8 +85,8 @@ LO QUE HACES:
 
 RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé divertido y motivador. Si el contexto indica que está en una lección específica, puedes hacer referencias a lo que está aprendiendo. NO USES EMOJIS.`
 
-    // Using 'gemini-flash-latest' to ensure we use an available model in the project.
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`
+    // Using 'gemini-1.5-flash' in v1beta API for stability
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
 
     // Map conversation history to Gemini format
     const contents = [
@@ -108,6 +108,9 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé divertido y m
         topP: 0.95,
       }
     }
+
+    console.log(`[Billy:Gemini] Fetching from ${GEMINI_API_URL}`)
+    console.log(`[Billy:Gemini] Payload:`, JSON.stringify(geminiBody, null, 2))
 
     const geminiResponse = await fetch(GEMINI_API_URL, {
       method: "POST",
@@ -138,6 +141,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé divertido y m
     const data = await geminiResponse.json()
     const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "¡Ups! Me quedé pensando. ¿Puedes repetir eso?"
 
+    console.log(`[Billy:Gemini] Successfully generated response (length: ${responseText.length})`)
     dailyAIRequests++
     console.log(`[Billy:Gemini] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
 

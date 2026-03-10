@@ -14,6 +14,7 @@ import {
   Send, ExternalLink, X, BookOpen
 } from "lucide-react"
 import { RocketIcon, LeafIcon, NoteIcon, ThumbsUpIcon, IdeaIcon, WarningIcon, ZapIcon } from "@/components/CustomIcons"
+import PageLoader from "@/components/PageLoader"
 
 export const dynamic = 'force-dynamic'
 
@@ -429,7 +430,7 @@ function ForumContent() {
     return `hace ${Math.floor(diff / 86400)}d`
   }
 
-  if (loading) return null
+  if (loading) return <PageLoader />
   if (!user) return null
 
   return (

@@ -4,8 +4,11 @@ interface NavigationLoadingProps {
   isLoading: boolean;
 }
 
-export default function NavigationLoading(_props: NavigationLoadingProps) {
-  return null;
+import PageLoader from "./PageLoader"
+
+export default function NavigationLoading({ isLoading }: NavigationLoadingProps) {
+  if (!isLoading) return null;
+  return <PageLoader />;
 }
 
 

@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, { apiVersion: "v1" });
 
 export async function generateFinancialInsights(userData: {
     name: string;
@@ -27,6 +27,7 @@ export async function generateFinancialInsights(userData: {
   
   TAREA: Proporciona un "Insight de Billy" personalizado.
   REGLAS:
+  - Dirígete al usuario por su nombre (${userData.name}) de forma natural.
   - Sé motivador y usa "slang" mexicano ligero ("feria", "lana", "chamba").
   - Dale un consejo financiero real basado en su progreso.
   - Si ha completado pocas lecciones, motívalo a empezar el Tema 1.

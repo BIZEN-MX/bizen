@@ -5,6 +5,7 @@ import { Trophy, Users, School, Zap, Star, TrendingUp, Medal, Crown } from "luci
 import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { useAuth } from "@/contexts/AuthContext"
+import PageLoader from "@/components/PageLoader"
 
 interface UserRank {
     rank: number
@@ -96,7 +97,7 @@ export default function RankingsPage() {
             style={{
                 minHeight: "100vh",
                 background: "#FBFAF5",
-                                width: "100%",
+                width: "100%",
                 boxSizing: "border-box",
             }}
         >
@@ -306,10 +307,7 @@ export default function RankingsPage() {
 
                 {/* ── Loading / Error ── */}
                 {loading && (
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 260, flexDirection: "column", gap: 16 }}>
-                        <div style={{ width: 44, height: 44, border: "4px solid rgba(15,98,254,0.15)", borderTop: "4px solid #0F62FE", borderRadius: "50%", animation: "rk-spin 0.9s linear infinite" }} />
-                        <span style={{ fontSize: 14, color: "#94a3b8", fontWeight: 500 }}>Cargando rankings…</span>
-                    </div>
+                    <PageLoader />
                 )}
                 {!loading && error && (
                     <div style={{ textAlign: "center", padding: "60px 24px", color: "#dc2626", fontSize: 15, fontWeight: 500 }}>
