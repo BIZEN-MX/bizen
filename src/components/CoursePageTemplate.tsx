@@ -221,7 +221,9 @@ export default function CoursePageTemplate({
         return 1;
     }, [completedLessons]);
 
-    const isTopicLockedBySequence = typeof topicId === 'number' && topicId > nextTopicId;
+    const currentTopicNumStr = topicId.toString().replace('tema-', '').replace(/^0+/, '')
+    const currentTopicNum = parseInt(currentTopicNumStr)
+    const isTopicLockedBySequence = !isNaN(currentTopicNum) && currentTopicNum > nextTopicId;
 
     const completedInTopic = allLessonsInTopic.filter((l) => completedLessons.includes(l.slug)).length
     const totalInTopic = allLessonsInTopic.length
@@ -249,7 +251,10 @@ export default function CoursePageTemplate({
         )
     }
 
-    const topic = ALL_TOPICS.find((t) => t.id.toString() === topicId.toString()) || {
+    const topicNumStr = topicId.toString().replace('tema-', '').replace(/^0+/, '')
+    const topicNum = parseInt(topicNumStr)
+
+    const topic = ALL_TOPICS.find((t) => t.id === topicNum) || {
         id: topicId,
         title: topicTitle || "Cargando...",
         icon: BookOpen,
@@ -257,8 +262,8 @@ export default function CoursePageTemplate({
         lessons: totalInTopic
     }
     const IconComp = topic.icon
-    const prevTopic = typeof topicId === 'number' ? ALL_TOPICS.find((t) => t.id === topicId - 1) : null
-    const nextTopic = typeof topicId === 'number' ? ALL_TOPICS.find((t) => t.id === topicId + 1) : null
+    const prevTopic = !isNaN(topicNum) ? ALL_TOPICS.find((t) => t.id === topicNum - 1) : null
+    const nextTopic = !isNaN(topicNum) ? ALL_TOPICS.find((t) => t.id === topicNum + 1) : null
 
     return (
         <div style={{ position: "relative", width: "100%", maxWidth: "100%", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>

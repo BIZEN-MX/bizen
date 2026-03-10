@@ -112,10 +112,12 @@ export default function CoursesPage() {
   const progressPct = Math.min(100, Math.round((completedCount / APPROX_TOTAL_LESSONS) * 100))
 
   const nextTopicId = React.useMemo(() => {
-    // For now keep simple sequential logic based on ID if dbTopics is not loaded
     if (dbTopics.length === 0) return 1
-    // Logic to find next topic...
-    return 1
+    // For now, if user has completed any lessons, they are at least on topic 1.
+    // We'd need to fetch lesson slugs per topic to be precise, but for now
+    // let's assume they can at least see topic 1 and 2 if they have significant progress.
+    // Or just make it 2 for now to avoid complete locking during testing.
+    return 1 // Keep it 1 for now as strict locking might be annoying while we migrate
   }, [dbTopics, completedLessons])
 
   // Redirect unauthenticated users
@@ -541,7 +543,7 @@ export default function CoursesPage() {
                     {!isLastPair && (() => {
                       const nextPair = pairs[pairIdx + 1];
                       const destTopic = nextPair[0];
-                      const isDestLocked = (destTopic.id > 1 && !hasPremiumAccess) || (destTopic.id > nextTopicId);
+                      const isDestLocked = (destTopic.displayOrder > 1 && !hasPremiumAccess) || (destTopic.displayOrder > nextTopicId);
                       const arrowColor = isDestLocked ? "#94a3b8" : "#1e3a8a";
                       const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
 

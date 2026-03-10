@@ -1,24 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
 
-// Switched to Gemini to leverage Google credits!
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY
-const MAX_DAILY_REQUESTS = parseInt(process.env.MAX_AI_DAILY_REQUESTS || "500")
-
 // Simple in-memory tracker (resets daily, resets on server restart).
 let dailyAIRequests = 0
 let lastResetDate = new Date().toDateString()
 
-function checkLimit(): boolean {
+function checkLimit(maxLimit: number): boolean {
   const today = new Date().toDateString()
   if (today !== lastResetDate) {
     dailyAIRequests = 0
     lastResetDate = today
   }
-  return dailyAIRequests < MAX_DAILY_REQUESTS
+  return dailyAIRequests < maxLimit
 }
 
 export async function POST(request: NextRequest) {
   try {
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY
+    const MAX_DAILY_REQUESTS = parseInt(process.env.MAX_AI_DAILY_REQUESTS || "500")
+
     const { message, conversationHistory = [] } = await request.json()
 
     if (!message || typeof message !== "string") {
@@ -27,12 +26,12 @@ export async function POST(request: NextRequest) {
 
     if (!GEMINI_API_KEY) {
       return NextResponse.json(
-        { response: "Hola, BIZEN pronto será más inteligente. Por el momento, el administrador necesita configurar mi conexión (Falta GEMINI_API_KEY en .env)." },
+        { response: "Hola, BIZEN pronto será más inteligente. Por el momento, el administrador necesita configurar mi conexión (Falta configurar GEMINI_API_KEY)." },
         { status: 200 }
       )
     }
 
-    if (!checkLimit()) {
+    if (!checkLimit(MAX_DAILY_REQUESTS)) {
       return NextResponse.json(
         { response: "¡Vaya! He hablado demasiado hoy y necesito descansar (Límite diario alcanzado). Inténtalo de nuevo mañana." },
         { status: 200 }
