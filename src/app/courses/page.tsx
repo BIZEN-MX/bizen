@@ -128,6 +128,16 @@ export default function CoursesPage() {
     return null // Stay on overview if everything is finished or no incomplete found
   }, [dbTopics, completedLessons])
 
+  // Determine if we are about to redirect (to avoid the "blink" glitch)
+  const willRedirect = React.useMemo(() => {
+    if (loading || loadingData || !user || !nextTopicId) return false
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search)
+      if (sp.get("noredirect") === "true") return false
+    }
+    return true
+  }, [loading, loadingData, user, nextTopicId])
+
   // Redirect unauthenticated users
   useEffect(() => {
     if (!loading && !user) {
@@ -174,14 +184,10 @@ export default function CoursesPage() {
 
   // Automatic redirection to the next topic to complete
   useEffect(() => {
-    // Check if the user explicitly wants to stay on the overview (e.g. they clicked "Back")
-    const searchParams = new URLSearchParams(window.location.search)
-    const noRedirect = searchParams.get("noredirect") === "true"
-
-    if (!loading && !loadingData && user && nextTopicId && !noRedirect) {
+    if (willRedirect && nextTopicId) {
       router.replace(`/courses/${nextTopicId}`)
     }
-  }, [loading, loadingData, user, nextTopicId, router])
+  }, [willRedirect, nextTopicId, router])
 
   // Set body and html background for this page
   useEffect(() => {
@@ -202,8 +208,9 @@ export default function CoursesPage() {
   }, [])
 
 
-  // Show loading or redirect if not authenticated - minimal placeholder in usable content area
-  if (loading || loadingData || !user) {
+  // Show loading placeholder if data is missing OR if we are about to redirect
+  // This prevents the "Overview" page from blinking for one frame before jumping to the topic.
+  if (loading || loadingData || !user || (willRedirect && nextTopicId)) {
     return (
       <div
         style={{
