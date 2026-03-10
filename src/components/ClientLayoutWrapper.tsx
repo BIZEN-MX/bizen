@@ -144,10 +144,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     pathname === '/bizen/privacidad' || // Privacy page
     pathname === '/bizen/terminos' // Terms page
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
-  const hideAppNavigation = isAuthPage || isDiagnosticPage
-
-  // Hide app navigation (sidebar/mobile footer) when the user is inside any lesson module
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
+  const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {
