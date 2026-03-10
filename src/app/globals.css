@@ -124,8 +124,8 @@ a {
 
 /* App layout spacing for fixed headers */
 .app-main {
-    padding-top: 46px;
-    /* Header height */
+    padding-top: 0;
+    /* Header height removed globally */
     box-sizing: border-box;
 }
 
