@@ -23,6 +23,7 @@
     "@capacitor/keyboard": "^7.0.3",
     "@capacitor/splash-screen": "^7.0.3",
     "@capacitor/status-bar": "^7.0.3",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.17.0",
     "@react-email/components": "^0.5.7",

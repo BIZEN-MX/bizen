@@ -6,10 +6,11 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
 ) {
+  const { gameId: rawGameId } = await params
   try {
     console.log("🎴 Draw card API called")
     const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data: { user }, error: authError } = await (supabase as any).auth.getUser()
 
     if (authError || !user) {
       console.error("❌ Auth error:", authError)
@@ -19,11 +20,11 @@ export async function POST(
       )
     }
 
-    const gameId = parseInt(params.gameId)
+    const gameId = parseInt(rawGameId)
     console.log("🎲 Game ID:", gameId)
 
     // Verify game belongs to user and get player
-    const { data: gameSession, error: sessionError } = await supabase
+    const { data: gameSession, error: sessionError } = await (supabase as any)
       .from('game_sessions')
       .select('*')
       .eq('id', gameId)
@@ -37,13 +38,13 @@ export async function POST(
 
     console.log("✅ Game session found")
 
-    const { data: players, error: playersError } = await supabase
+    const { data: players, error: playersError } = await (supabase as any)
       .from('players')
       .select('*, professions(*)')
       .eq('game_session_id', gameId)
       .eq('user_id', user.id)
 
-    const player = players?.[0]
+    const player = players?.[0] as any
     if (playersError || !player) {
       console.error("❌ Player fetch error:", playersError)
       return NextResponse.json({ error: "Player not found", details: playersError?.message }, { status: 404 })
@@ -51,7 +52,96 @@ export async function POST(
 
     console.log("✅ Player found:", { playerId: player.id, isOnFastTrack: player.is_on_fast_track })
 
-    // Random card type: 15% doodad, 20% market event, 65% opportunity
+    // AI Chance Configuration: 15% total (5% AI Market, 10% AI Doodad)
+    const aiRand = Math.random()
+    const useAI = aiRand < 0.15
+    const isAIDoodad = useAI && aiRand < 0.10
+    const isAIMarket = useAI && !isAIDoodad
+
+    if (useAI) {
+      console.log(`🤖 AI Event Triggered (Doodad: ${isAIDoodad}, Market: ${isAIMarket})`)
+      const { generateDynamicMarketEvent, generatePersonalizedDoodad } = await import("@/lib/ai/cashflow-ai")
+
+      // Get fuller player context for AI
+      const { data: fullPlayer } = await (supabase as any)
+        .from('players')
+        .select('*, professions(*), player_investments(*, opportunity_cards(*))')
+        .eq('id', player.id)
+        .single()
+
+      if (isAIDoodad) {
+        const aiDoodad = await generatePersonalizedDoodad({
+          ...player,
+          investments: fullPlayer?.player_investments || []
+        })
+
+        // Log AI event
+        await (supabase as any).from('game_events').insert({
+          game_session_id: gameId,
+          player_id: player.id,
+          event_type: "opportunity_drawn",
+          event_data: {
+            doodadName: aiDoodad.name,
+            type: "doodad",
+            isAI: true
+          },
+          turn_number: player.current_turn
+        })
+
+        return NextResponse.json({
+          isDoodad: true,
+          isAI: true,
+          doodad: {
+            id: 9999, // Pseudo-ID for AI
+            ...aiDoodad
+          }
+        })
+      }
+
+      if (isAIMarket) {
+        const aiEvent = await generateDynamicMarketEvent({
+          ...player,
+          investments: fullPlayer?.player_investments || []
+        })
+
+        let cashChange = aiEvent.cashChange || 0
+        if (cashChange !== 0) {
+          await (supabase as any)
+            .from('players')
+            .update({ cash_on_hand: player.cash_on_hand + cashChange })
+            .eq('id', player.id)
+        }
+
+        // Log AI event
+        await (supabase as any).from('game_events').insert({
+          game_session_id: gameId,
+          player_id: player.id,
+          event_type: "market_event",
+          event_data: {
+            eventName: aiEvent.name,
+            eventType: aiEvent.type,
+            isAI: true
+          },
+          cash_change: cashChange,
+          turn_number: player.current_turn
+        })
+
+        return NextResponse.json({
+          isMarketEvent: true,
+          isAI: true,
+          marketEvent: {
+            id: 8888, // Pseudo-ID for AI
+            name: aiEvent.name,
+            description: aiEvent.description,
+            type: aiEvent.type,
+            message: aiEvent.description
+          },
+          cashChange
+        })
+      }
+    }
+
+    // fallback to original random logic if AI is skipped or failed
     const rand = Math.random()
     const isDoodad = rand < 0.15
     const isMarketEvent = rand >= 0.15 && rand < 0.35
@@ -59,9 +149,9 @@ export async function POST(
     if (isDoodad) {
       console.log("🎰 Drawing doodad...")
       // Get random doodad
-      const { data: doodads, count, error: doodadError } = await supabase
+      const { data: doodads, error: doodadError } = await (supabase as any)
         .from('doodads')
-        .select('*', { count: 'exact' })
+        .select('*')
         .eq('is_active', true)
 
       if (doodadError) {
@@ -73,7 +163,7 @@ export async function POST(
         console.log("✅ Doodad drawn:", randomDoodad.name)
 
         // Log doodad drawn
-        await supabase.from('game_events').insert({
+        await (supabase as any).from('game_events').insert({
           game_session_id: gameId,
           player_id: player.id,
           event_type: "opportunity_drawn",
@@ -89,15 +179,13 @@ export async function POST(
           isDoodad: true,
           doodad: randomDoodad
         })
-      } else {
-        console.warn("⚠️ No doodads found, falling through to opportunity cards")
       }
     }
 
     if (isMarketEvent) {
       console.log("📉 Drawing market event...")
       // Get random market event
-      const { data: marketCards, error: marketError } = await supabase
+      const { data: marketCards, error: marketError } = await (supabase as any)
         .from('market_cards')
         .select('*')
         .eq('is_active', true)
@@ -107,7 +195,6 @@ export async function POST(
       }
 
       if (marketCards && marketCards.length > 0) {
-        console.log(`✅ Found ${marketCards.length} market cards`)
         const marketEvent = marketCards[Math.floor(Math.random() * marketCards.length)]
         let cashChange = 0
         let message = ""
@@ -116,7 +203,7 @@ export async function POST(
         // Apply market event effects
         switch (marketEvent.type) {
           case "baby":
-            await supabase
+            await (supabase as any)
               .from('players')
               .update({ num_children: player.num_children + 1 })
               .eq('id', player.id)
@@ -125,7 +212,7 @@ export async function POST(
 
           case "downsized":
             cashChange = -(profession.salary * 2)
-            await supabase
+            await (supabase as any)
               .from('players')
               .update({ cash_on_hand: player.cash_on_hand + cashChange })
               .eq('id', player.id)
@@ -135,7 +222,7 @@ export async function POST(
           case "charity":
             const donation = Math.floor(profession.salary * 0.1)
             cashChange = -donation
-            await supabase
+            await (supabase as any)
               .from('players')
               .update({ cash_on_hand: player.cash_on_hand + cashChange })
               .eq('id', player.id)
@@ -144,7 +231,7 @@ export async function POST(
 
           case "paycheck":
             cashChange = profession.salary
-            await supabase
+            await (supabase as any)
               .from('players')
               .update({ cash_on_hand: player.cash_on_hand + cashChange })
               .eq('id', player.id)
@@ -155,15 +242,8 @@ export async function POST(
             message = marketEvent.description
         }
 
-        // Get updated player
-        const { data: updatedPlayers } = await supabase
-          .from('players')
-          .select('num_children')
-          .eq('id', player.id)
-          .single()
-
         // Log market event
-        await supabase.from('game_events').insert({
+        await (supabase as any).from('game_events').insert({
           game_session_id: gameId,
           player_id: player.id,
           event_type: "market_event",
@@ -184,59 +264,34 @@ export async function POST(
             ...translatedMarketEvent,
             message: message || translatedMarketEvent.description
           },
-          cashChange,
-          newChildren: updatedPlayers?.num_children
+          cashChange
         })
       }
     }
 
-    // Get random opportunity card (filter by phase)
+    // Get random opportunity card
     const isOnFastTrack = player.is_on_fast_track
-    console.log(`🃏 Drawing opportunity card (Fast Track: ${isOnFastTrack})...`)
-    
-    // Filter cards based on game phase
-    // Rat Race players get basic cards, Fast Track players get advanced cards
-    const { data: cards, error: cardsError } = await supabase
+    const { data: cards, error: cardsError } = await (supabase as any)
       .from('opportunity_cards')
       .select('*')
       .eq('is_active', true)
       .eq('is_fast_track', isOnFastTrack)
 
-    if (cardsError) {
-      console.error("❌ Error fetching opportunity cards:", cardsError)
-      return NextResponse.json({ 
-        error: "Failed to fetch opportunity cards",
-        details: cardsError.message 
-      }, { status: 500 })
+    if (cardsError || !cards || cards.length === 0) {
+      return NextResponse.json({ error: "No cards available" }, { status: 404 })
     }
 
-    if (!cards || cards.length === 0) {
-      console.error("❌ No opportunity cards available")
-      return NextResponse.json({ error: "No cards available for this phase" }, { status: 404 })
-    }
-
-    console.log(`✅ Found ${cards.length} opportunity cards`)
     const card = cards[Math.floor(Math.random() * cards.length)]
     const translatedCard = translateOpportunityCard(card)
 
-    // Log the draw event
-    const { error: eventError } = await supabase.from('game_events').insert({
+    await (supabase as any).from('game_events').insert({
       game_session_id: gameId,
       player_id: player.id,
       event_type: "opportunity_drawn",
-      event_data: {
-        cardId: card.id,
-        cardName: card.name,
-        cardType: card.type
-      },
+      event_data: { cardId: card.id, cardName: card.name },
       turn_number: player.current_turn
     })
 
-    if (eventError) {
-      console.warn("⚠️ Error logging event (non-critical):", eventError.message)
-    }
-
-    console.log(`✅ Card drawn successfully:`, { cardId: card.id, cardName: card.name, cardType: card.type })
     return NextResponse.json({ isDoodad: false, isMarketEvent: false, card: translatedCard })
 
   } catch (error) {

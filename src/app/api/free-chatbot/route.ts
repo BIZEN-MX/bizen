@@ -20,11 +20,35 @@ export async function POST(request: NextRequest) {
     const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT
     const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION || "us-central1"
 
-    const { message, conversationHistory = [], userName = "Estudiante" } = await request.json()
+    const {
+      message,
+      conversationHistory = [],
+      userName = "Estudiante",
+      xp = 0,
+      level = 1,
+      currentPath = ""
+    } = await request.json()
 
     if (!message || typeof message !== "string") {
       return NextResponse.json({ error: "Mensaje requerido" }, { status: 400 })
     }
+
+    // Context analysis
+    let contextDescription = ""
+    if (currentPath.includes('/learn/')) {
+      const parts = currentPath.split('/').filter(Boolean)
+      const topicId = parts[1] // tema-01, tema-02...
+      const lessonSlug = parts[parts.length - 1] === 'interactive' ? parts[parts.length - 2] : parts[parts.length - 1]
+
+      const topicNum = topicId?.replace('tema-', '')
+      const lessonTitle = lessonSlug?.replace(/-/g, ' ')
+
+      contextDescription = `\nCONTEXTO ACTUAL: El usuario está en la lección "${lessonTitle}" del Tema ${topicNum}.`
+    } else if (currentPath.includes('/courses')) {
+      contextDescription = `\nCONTEXTO ACTUAL: El usuario está explorando el catálogo de cursos.`
+    }
+
+    const userStats = `\nESTADÍSTICAS DEL USUARIO: XP: ${xp}, Nivel: ${level}.`
 
     if (!GEMINI_API_KEY || !GOOGLE_CLOUD_PROJECT) {
       console.error("Missing credentials:", { hasKey: !!GEMINI_API_KEY, hasProject: !!GOOGLE_CLOUD_PROJECT })
@@ -42,7 +66,7 @@ export async function POST(request: NextRequest) {
     }
 
     const systemPrompt = `Eres Billy, el mentor asistente de BIZEN. BIZEN enseña educación financiera a jóvenes.
-ESTÁS HABLANDO CON: ${userName}. Dirígete a esta persona por su nombre de forma natural.
+ESTÁS HABLANDO CON: ${userName}. Dirígete a esta persona por su nombre de forma natural.${userStats}${contextDescription}
 
 PERSONALIDAD:
 - Eres relajado, entusiasta y muy "tech-savvy". 
@@ -55,11 +79,11 @@ REGLA DE LONGITUD DINÁMICA:
 - Evita los bloques masivos de texto. Divide la información.
 
 LO QUE HACES:
-1. EDUCACIÓN: Explica conceptos pero NO des asesoría financiera real.
-2. CONTEXTO BIZEN: Módulos de Identidad Digital, Finanzas Personales, Presupuesto, Inversiones, Deuda y Temas Avanzados.
+1. EDUCACIÓN: Explica conceptos pero NO des asesoría financiera real. Sé un guía que motiva.
+2. CONTEXTO BIZEN: Conoces los temas de Identidad Digital, Finanzas Personales, Presupuesto, Inversiones, Emprendimiento y Bienestar.
 3. SOPORTE: Problemas técnicos a soporte@bizen.mx.
 
-RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. NO USES EMOJIS. Sé divertido y motivador.`
+RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé divertido y motivador. Si el contexto indica que está en una lección específica, puedes hacer referencias a lo que está aprendiendo. NO USES EMOJIS.`
 
     // Using 'gemini-flash-latest' to ensure we use an available model in the project.
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`
@@ -117,9 +141,63 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. NO USES EMOJIS. S
     dailyAIRequests++
     console.log(`[Billy:Gemini] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
 
+    // Gamified AI Tutoring: Reward XP for educational interactions
+    let xpReward = 0
+    let rewardMessage = ""
+
+    try {
+      const supabase = await (await import("@/lib/supabase/server")).createSupabaseServer()
+      const { data: { user } } = await (supabase as any).auth.getUser()
+      const { prisma } = await import("@/lib/prisma")
+
+      if (user) {
+        const { detectEducationalIntent } = await import("@/lib/ai/tutoring")
+        const isEducational = await detectEducationalIntent(message)
+
+        if (isEducational) {
+          const profile = await prisma.profile.findUnique({
+            where: { userId: user.id },
+            select: { xp: true, settings: true }
+          })
+
+          if (profile) {
+            const settings = (profile.settings as any) || {}
+            const today = new Date().toDateString()
+            const lastBillyDate = settings.lastBillyDate
+            let billyXpToday = lastBillyDate === today ? (settings.billyXpToday || 0) : 0
+
+            if (billyXpToday < 25) { // Daily limit of 25 XP from Billy
+              xpReward = 5
+              billyXpToday += xpReward
+
+              await prisma.profile.update({
+                where: { userId: user.id },
+                data: {
+                  xp: { increment: xpReward },
+                  settings: {
+                    ...settings,
+                    lastBillyDate: today,
+                    billyXpToday
+                  }
+                }
+              })
+              rewardMessage = `¡Ganaste +${xpReward} XP por aprender con Billy!`
+              console.log(`[Billy:Gamification] Rewarded ${xpReward} XP to user ${user.id}`)
+            } else {
+              console.log(`[Billy:Gamification] Daily limit reached for user ${user.id}`)
+            }
+          }
+        }
+      }
+    } catch (gamificationError) {
+      console.error("⚠️ Gamification reward failed:", gamificationError)
+    }
+
     return NextResponse.json({
       response: responseText,
-      source: "google:gemini-1.5-flash"
+      source: "google:gemini-1.5-flash",
+      xpReward,
+      rewardMessage
     })
 
   } catch (error: any) {

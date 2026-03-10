@@ -281,54 +281,123 @@ export async function POST(request: NextRequest) {
     const requiresModeration = isMinor && !hasParentalOverride
     const moderationStatus = requiresModeration || (profile?.postsCreated || 0) < 3 ? 'pending' : 'approved'
 
-    // Get or create tags
-    const tagIds: string[] = []
-    for (const slug of tagSlugs) {
-      let tag = await prisma.forumTag.findUnique({ where: { slug } })
-      if (!tag) {
-        tag = await prisma.forumTag.create({
-          data: {
-            name: slug.replace(/-/g, ' '),
-            slug
-          }
-        })
+    // AI Moderation and Tagging
+    try {
+      const { checkToxicity, suggestTags } = await import("@/lib/ai/moderation")
+      const aiMod = await checkToxicity(title, content)
+
+      if (aiMod.isToxic) {
+        return NextResponse.json({
+          error: "Contenido bloqueado por moderación automática",
+          reason: aiMod.reason
+        }, { status: 400 })
       }
-      tagIds.push(tag.id)
+
+      // Smart Tagging
+      const availableTagsRaw = await prisma.forumTag.findMany({
+        orderBy: { usageCount: 'desc' },
+        take: 20
+      })
+      const availableTagNames = availableTagsRaw.map(t => t.name)
+      const aiTags = await suggestTags(title, content, availableTagNames)
+
+      // Merge AI tags with user tags, limiting to unique slugs
+      const combinedTagSlugs = Array.from(new Set([...tagSlugs, ...aiTags]))
+
+      // Update tagIds logic to handle merged tags
+      const tagIds: string[] = []
+      for (const slug of combinedTagSlugs) {
+        let tag = await prisma.forumTag.findUnique({ where: { slug } })
+        if (!tag) {
+          tag = await prisma.forumTag.create({
+            data: {
+              name: slug.replace(/-/g, ' '),
+              slug
+            }
+          })
+        }
+        tagIds.push(tag.id)
+      }
+
+      // Create thread with AI-enhanced tags
+      const thread = await prisma.forumThread.create({
+        data: {
+          title: title.trim(),
+          body: content.trim(),
+          authorId: user.id,
+          topicId,
+          moderationStatus,
+          tags: {
+            create: tagIds.map(tagId => ({ tagId }))
+          }
+        },
+        include: {
+          topic: true,
+          author: {
+            select: {
+              nickname: true,
+              fullName: true,
+              avatar: true
+            }
+          }
+        }
+      })
+
+      // Update profile stats
+      await prisma.profile.update({
+        where: { userId: user.id },
+        data: { postsCreated: { increment: 1 } }
+      })
+
+      return NextResponse.json(thread, { status: 201 })
+
+    } catch (aiError) {
+      console.error("⚠️ AI Moderation/Tagging failed (falling back to standard):", aiError)
+      // Fallback: Create thread without AI if it fails
+      const tagIds: string[] = []
+      for (const slug of tagSlugs) {
+        let tag = await prisma.forumTag.findUnique({ where: { slug } })
+        if (!tag) {
+          tag = await prisma.forumTag.create({
+            data: {
+              name: slug.replace(/-/g, ' '),
+              slug
+            }
+          })
+        }
+        tagIds.push(tag.id)
+      }
+
+      const thread = await prisma.forumThread.create({
+        data: {
+          title: title.trim(),
+          body: content.trim(),
+          authorId: user.id,
+          topicId,
+          moderationStatus,
+          tags: {
+            create: tagIds.map(tagId => ({ tagId }))
+          }
+        },
+        include: {
+          topic: true,
+          author: {
+            select: {
+              nickname: true,
+              fullName: true,
+              avatar: true
+            }
+          }
+        }
+      })
+
+      await prisma.profile.update({
+        where: { userId: user.id },
+        data: { postsCreated: { increment: 1 } }
+      })
+
+      return NextResponse.json(thread, { status: 201 })
     }
-
-    // Create thread
-    const thread = await prisma.forumThread.create({
-      data: {
-        title: title.trim(),
-        body: content.trim(),
-        authorId: user.id,
-        topicId,
-        moderationStatus,
-        tags: {
-          create: tagIds.map(tagId => ({ tagId }))
-        }
-      },
-      include: {
-        topic: true,
-        author: {
-          select: {
-            nickname: true,
-            fullName: true,
-            avatar: true
-          }
-        }
-      }
-    })
-
-    // Update profile stats
-    await prisma.profile.update({
-      where: { userId: user.id },
-      data: { postsCreated: { increment: 1 } }
-    })
-
-    console.log(`✅ Created thread: "${title}" by user ${user.id}`)
-
-    return NextResponse.json(thread, { status: 201 })
   } catch (error) {
     console.error("❌ Error creating thread:", error)
     console.error("Error details:", error instanceof Error ? error.message : String(error))
