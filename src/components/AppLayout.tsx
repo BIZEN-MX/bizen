@@ -4,6 +4,7 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { UnauthScreen } from "@/components/UnauthScreen";
+import PageLoader from "@/components/PageLoader";
 
 // Pages that are publicly accessible (no auth required)
 const PUBLIC_PATHS = [
@@ -37,12 +38,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   // On protected routes, don't render children while auth is loading.
   // This prevents individual pages from firing router.push('/login') before we know the user.
   if (isProtected && loading) {
-    return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5" }}>
-        <div style={{ width: 40, height: 40, border: "3px solid rgba(15,98,254,0.15)", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Show unauthenticated screen on any protected page if user is not logged in

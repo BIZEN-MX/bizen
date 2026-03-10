@@ -104,6 +104,8 @@ export default function CoursesPage() {
   const [refreshKey, setRefreshKey] = useState(0)
   const [topicWarning, setTopicWarning] = useState(false)
   const [dbTopics, setDbTopics] = useState<any[]>([])
+  const [insight, setInsight] = useState<string | null>(null)
+  const [loadingInsight, setLoadingInsight] = useState(true)
 
   // Calculate premium access based on Profile API data
   const hasActiveLicense = !!dbProfile?.school?.licenses?.length;
@@ -173,7 +175,21 @@ export default function CoursesPage() {
       }
     }
 
+    const fetchInsight = async () => {
+      try {
+        setLoadingInsight(true)
+        const res = await fetch("/api/dashboard/insights")
+        const data = await res.json()
+        setInsight(data.insight)
+      } catch (e) {
+        console.error("Failed to fetch insights", e)
+      } finally {
+        setLoadingInsight(false)
+      }
+    }
+
     fetchCoursesData()
+    fetchInsight()
   }, [user, loading, router, refreshKey])
 
   // Refetch when user returns to tab so progress bar reflects latest completions
@@ -219,7 +235,7 @@ export default function CoursesPage() {
 
   // Show loading placeholder if data is missing OR if we are about to redirect
   // This prevents the "Overview" page from blinking for one frame before jumping to the topic.
-  if (loading || loadingData || !user || (willRedirect && nextTopicId)) {
+  if (loading || loadingData || loadingInsight || !user || (willRedirect && nextTopicId)) {
     return <PageLoader />
   }
 
@@ -381,7 +397,7 @@ export default function CoursesPage() {
           </div>
 
           {/* Billy Insights Card */}
-          <BillyInsights />
+          <BillyInsights insight={insight} />
 
 
 
@@ -786,46 +802,7 @@ export default function CoursesPage() {
 
 // --- Sub-components ---
 
-function BillyInsights() {
-  const [insight, setInsight] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchInsight = async () => {
-      try {
-        const res = await fetch("/api/dashboard/insights")
-        const data = await res.json()
-        setInsight(data.insight)
-      } catch (e) {
-        console.error("Failed to fetch insights", e)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchInsight()
-  }, [])
-
-  if (loading) return (
-    <motion.div
-      animate={{ opacity: [0.5, 0.8, 0.5] }}
-      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-      style={{
-        width: "100%", maxWidth: 1188, margin: "0 auto 40px",
-        height: 104, borderRadius: 24,
-        background: "rgba(255, 255, 255, 0.5)",
-        backdropFilter: "blur(12px)",
-        border: "1px solid rgba(255, 255, 255, 0.6)",
-        display: "flex", alignItems: "center", padding: "0 32px", gap: 24
-      }}
-    >
-      <div style={{ width: 60, height: 60, borderRadius: "50%", background: "rgba(255,255,255,0.4)" }} />
-      <div style={{ flex: 1 }}>
-        <div style={{ width: 120, height: 12, borderRadius: 6, background: "rgba(37,99,235,0.1)", marginBottom: 8 }} />
-        <div style={{ width: "70%", height: 16, borderRadius: 8, background: "rgba(255,255,255,0.6)" }} />
-      </div>
-    </motion.div>
-  )
-
+function BillyInsights({ insight }: { insight: string | null }) {
   if (!insight) return null
 
   return (

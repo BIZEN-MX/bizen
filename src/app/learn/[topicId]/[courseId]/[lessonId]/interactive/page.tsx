@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
 import { getStepsForLesson } from "@/data/lessons/registry"
 import { FooterNav } from "@/components/FooterNav"
+import PageLoader from "@/components/PageLoader"
 
 /**
  * Interactive Lesson Page
@@ -173,16 +174,8 @@ export default function InteractiveLessonPage() {
   }, [])
 
   // Lesson is loading
-  if (loadingLesson) {
-    return (
-      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5", gap: 16, flexDirection: "column" }}>
-        <div style={{ width: 40, height: 40, border: "4px solid #E2E8F0", borderTopColor: "#0B71FE", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-        <p style={{ fontWeight: 500, color: "#64748B" }}>Cargando lección...</p>
-        <style>{`
-          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        `}</style>
-      </div>
-    )
+  if (loadingLesson || loading) {
+    return <PageLoader />
   }
 
   // Lesson has no content yet (not in registry or slug typo)

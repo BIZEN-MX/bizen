@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
+import PageLoader from "@/components/PageLoader"
 
 interface Report {
   id: string
@@ -88,13 +89,7 @@ export default function ModerationPage() {
   }
 
   if (loading || loadingData) {
-    return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
-        </div>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user) return null
@@ -105,7 +100,7 @@ export default function ModerationPage() {
         display: "grid",
         placeItems: "center",
         minHeight: "60vh",
-                padding: 40
+        padding: 40
       }}>
         <div style={{ textAlign: "center", maxWidth: 500 }}>
           <div style={{ fontSize: 64, marginBottom: 16 }}>🔒</div>
@@ -138,13 +133,13 @@ export default function ModerationPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-            background: "#FBFAF5",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed"
     }}>
-      <main style={{ 
+      <main style={{
         position: "relative",
-        maxWidth: 1200, 
-        margin: "0 auto", 
+        maxWidth: 1200,
+        margin: "0 auto",
         padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1
       }}>
@@ -170,7 +165,7 @@ export default function ModerationPage() {
                 fontSize: 14,
                 fontWeight: 500,
                 cursor: "pointer",
-                                textTransform: "capitalize"
+                textTransform: "capitalize"
               }}
             >
               {status === 'all' ? 'Todos' : status === 'open' ? 'Abiertos' : status === 'reviewing' ? 'En revisión' : 'Cerrados'}
@@ -271,7 +266,7 @@ export default function ModerationPage() {
                       fontSize: 13,
                       fontWeight: 500,
                       cursor: "pointer",
-                                          }}
+                    }}
                   >
                     Aprobar
                   </button>
@@ -286,7 +281,7 @@ export default function ModerationPage() {
                       fontSize: 13,
                       fontWeight: 500,
                       cursor: "pointer",
-                                          }}
+                    }}
                   >
                     Ocultar
                   </button>
@@ -301,7 +296,7 @@ export default function ModerationPage() {
                       fontSize: 13,
                       fontWeight: 500,
                       cursor: "pointer",
-                                          }}
+                    }}
                   >
                     Eliminar
                   </button>
@@ -316,7 +311,7 @@ export default function ModerationPage() {
                       fontSize: 13,
                       fontWeight: 500,
                       cursor: "pointer",
-                                          }}
+                    }}
                   >
                     Cerrar Reporte
                   </button>

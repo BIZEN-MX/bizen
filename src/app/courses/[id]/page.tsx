@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import CoursePageTemplate from "@/components/CoursePageTemplate"
-import { motion } from "framer-motion"
+import PageLoader from "@/components/PageLoader"
 
 export default function DynamicTopicPage() {
     const params = useParams()
@@ -39,16 +39,7 @@ export default function DynamicTopicPage() {
     }, [id])
 
     if (loading) {
-        return (
-            <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5", gap: 16, flexDirection: "column" }}>
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    style={{ width: 40, height: 40, border: "4px solid #E2E8F0", borderTopColor: "#0B71FE", borderRadius: "50%" }}
-                />
-                <p style={{ fontWeight: 500, color: "#64748B" }}>Cargando tema...</p>
-            </div>
-        )
+        return <PageLoader />
     }
 
     if (error || !topicData) {

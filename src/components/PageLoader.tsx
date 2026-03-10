@@ -17,56 +17,60 @@ export default function PageLoader() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 24
+            gap: 12
         }}>
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{
-                    opacity: [0.4, 1, 0.4],
-                    scale: [0.95, 1, 0.95]
-                }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                style={{
-                    width: 80,
-                    height: 80,
-                    background: "white",
-                    borderRadius: 24,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 10px 30px rgba(15, 98, 254, 0.1)",
-                    border: "1.5px solid #e8f0fe"
-                }}
-            >
-                <Image src="/logo.png" alt="BIZEN" width={60} height={60} priority />
-            </motion.div>
+            <style>{`
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                @keyframes counter-spin { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+                @keyframes pulse-inner { 0%, 100% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+            `}</style>
 
-            <div style={{ position: "relative" }}>
-                <p style={{
-                    fontSize: 14,
-                    fontWeight: 500,
-                    color: "#64748b",
-                    margin: 0,
-                    fontFamily: "'Montserrat', sans-serif"
-                }}>
-                    Cargando experiencias...
-                </p>
-                <motion.div
-                    style={{
-                        position: "absolute",
-                        bottom: -6,
-                        left: 0,
-                        height: 2,
-                        background: "linear-gradient(90deg, transparent, #0F62FE, transparent)",
-                        width: "100%"
-                    }}
-                    animate={{ x: ["-100%", "100%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            <div style={{
+                position: "relative",
+                width: 100,
+                height: 100,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                animation: "pulse-inner 2s ease-in-out infinite",
+                zIndex: 2
+            }}>
+                <Image
+                    src="/billy_loading.png"
+                    alt="Billy"
+                    fill
+                    style={{ objectFit: "contain" }}
+                    priority
                 />
+            </div>
+
+            <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 12 }}>
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    style={{
+                        fontSize: 16,
+                        fontWeight: 600,
+                        color: "#0f172a",
+                        margin: 0,
+                        letterSpacing: "0.1em",
+                        textTransform: "uppercase",
+                        fontFamily: "'Inter', sans-serif"
+                    }}
+                >
+                    BIZEN
+                </motion.p>
+                <div style={{ display: "flex", gap: 4, justifyContent: "center" }}>
+                    {[0, 1, 2].map(i => (
+                        <motion.div
+                            key={i}
+                            style={{ width: 6, height: 6, borderRadius: "50%", background: "#0F62FE" }}
+                            animate={{ opacity: [0.2, 1, 0.2] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     )

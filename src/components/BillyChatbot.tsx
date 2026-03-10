@@ -262,7 +262,12 @@ export default function BillyChatbot() {
         @media (max-width: 767px) {
           #chatbot-launcher,
           .chatbot-launcher {
-            display: ${pathname?.startsWith('/learn/') ? 'flex' : 'none'} !important;
+            /* Show on all mobile screens but make him smaller and bump up to clear the bottom nav */
+            display: flex !important;
+            width: 56px !important;
+            height: 56px !important;
+            bottom: 90px !important; /* clears mobile bottom nav */
+            right: 16px !important;
           }
         }
       `}</style>
@@ -303,6 +308,8 @@ export default function BillyChatbot() {
           style={{
             pointerEvents: "none",
             objectFit: "contain",
+            width: "100%",
+            height: "100%",
             padding: "4px",
             filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))"
           }}

@@ -845,7 +845,7 @@ function ForumContent() {
 
 export default function ForumPage() {
   return (
-    <Suspense fallback={<div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>Cargando...</div>}>
+    <Suspense fallback={<PageLoader />}>
       <ForumContent />
     </Suspense>
   )

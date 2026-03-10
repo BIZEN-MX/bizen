@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
+import PageLoader from "@/components/PageLoader"
 
 interface ForumThread {
   id: string
@@ -76,16 +77,7 @@ export default function TagFeedPage() {
   }
 
   if (loading || loadingData) {
-    return (
-      <div style={{ 
-        display: "grid", 
-        placeItems: "center", 
-        minHeight: "60vh", 
-                background: "#FBFAF5"
-      }}>
-        <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user) return null
@@ -96,7 +88,7 @@ export default function TagFeedPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-            background: "#FBFAF5",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed",
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat"
@@ -112,10 +104,10 @@ export default function TagFeedPage() {
           .forum-tag-outer { margin-left: 280px !important; max-width: calc(100% - 280px) !important; width: auto !important; }
         }
       `}</style>
-      <main style={{ 
+      <main style={{
         position: "relative",
-        maxWidth: 1200, 
-        margin: "0 auto", 
+        maxWidth: 1200,
+        margin: "0 auto",
         padding: "clamp(20px, 4vw, 40px)",
         zIndex: 1
       }}>

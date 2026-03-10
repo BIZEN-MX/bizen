@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { Card } from "../../../components/ui/card"
 import { Button } from "../../../components/ui/button"
+import PageLoader from "@/components/PageLoader"
 
 interface Topic {
   id: string
@@ -64,13 +65,7 @@ export default function AdminTopicsPage() {
   }
 
   if (loading || loadingTopics) {
-    return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Cargando temas...</p>
-        </div>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user) return null
@@ -92,7 +87,7 @@ export default function AdminTopicsPage() {
       maxWidth: 1200,
       margin: "0 auto",
       padding: "clamp(20px, 4vw, 40px)",
-          }}>
+    }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{

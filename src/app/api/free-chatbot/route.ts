@@ -20,12 +20,6 @@ export async function POST(request: NextRequest) {
     const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT
     const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION || "us-central1"
 
-    console.log("[BillyChat] Env Check:", {
-      hasKey: !!GEMINI_API_KEY,
-      hasProject: !!GOOGLE_CLOUD_PROJECT,
-      keyLength: GEMINI_API_KEY?.length || 0
-    })
-
     const {
       message,
       conversationHistory = [],
@@ -91,61 +85,18 @@ LO QUE HACES:
 
 RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé divertido y motivador. Si el contexto indica que está en una lección específica, puedes hacer referencias a lo que está aprendiendo. NO USES EMOJIS.`
 
-    // Using 'gemini-1.5-flash' in v1beta API for stability
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
+    const { GoogleGenerativeAI } = await import("@google/generative-ai")
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
+    const geminiModel = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash-lite"
+    }, { apiVersion: "v1beta" })
 
-    // Map conversation history to Gemini format
-    const contents = [
-      ...conversationHistory.slice(-5).map((m: { role: string; content: string }) => ({
-        role: m.role === "user" ? "user" : "model",
-        parts: [{ text: m.content }]
-      })),
-      { role: "user", parts: [{ text: message }] }
-    ]
+    // Build the final prompt by including the system/personality instructions
+    const fullPromptForAI = `SISTEMA: ${systemPrompt}\n\nMENSAJE DEL USUARIO: ${message}`
 
-    const geminiBody = {
-      contents,
-      system_instruction: {
-        parts: [{ text: systemPrompt }]
-      },
-      generationConfig: {
-        temperature: 0.85,
-        maxOutputTokens: 600,
-        topP: 0.95,
-      }
-    }
-
-    console.log(`[Billy:Gemini] Fetching from ${GEMINI_API_URL}`)
-    console.log(`[Billy:Gemini] Payload:`, JSON.stringify(geminiBody, null, 2))
-
-    const geminiResponse = await fetch(GEMINI_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(geminiBody)
-    })
-
-    if (!geminiResponse.ok) {
-      const errorText = await geminiResponse.text()
-      console.error("Gemini API error detailed:", {
-        status: geminiResponse.status,
-        error: errorText,
-      })
-
-      // Special handling for disabled API
-      if (errorText.includes("SERVICE_DISABLED") || errorText.includes("Generative Language API")) {
-        return NextResponse.json({
-          response: "¡Hola! Billy está casi listo, pero tu administrador necesita habilitar la 'Generative Language API' en el Google Cloud Console para que podamos hablar. 🛠️",
-          source: "error:api_disabled"
-        })
-      }
-
-      throw new Error(`Failed to communicate with Gemini API. Status: ${geminiResponse.status}`)
-    }
-
-    const data = await geminiResponse.json()
-    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "¡Ups! Me quedé pensando. ¿Puedes repetir eso?"
+    const result = await geminiModel.generateContent(fullPromptForAI)
+    const data = result.response
+    const responseText = data.text().trim() || "¡Ups! Me quedé pensando. ¿Puedes repetir eso?"
 
     console.log(`[Billy:Gemini] Successfully generated response (length: ${responseText.length})`)
     dailyAIRequests++
@@ -205,14 +156,15 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé divertido y m
 
     return NextResponse.json({
       response: responseText,
-      source: "google:gemini-1.5-flash",
+      source: "google:gemini-2.5-flash-lite",
       xpReward,
       rewardMessage
     })
 
   } catch (error: any) {
     console.error("Billy Chatbot backend error detailed:", {
-      message: error.message
+      message: error.message,
+      stack: error.stack
     })
     return NextResponse.json(
       { response: "¡Ups! Mis circuitos se recalentaron un poco. ¿Podrías intentar enviarme tu mensaje de nuevo? 😅" },

@@ -3,6 +3,7 @@
 /**
  * Label Component
  * Simple label for form fields with optional tooltip
+ * Light theme version matching BIZEN white aesthetic
  */
 
 import * as React from 'react';
@@ -18,7 +19,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
     return (
       <label
         ref={ref}
-        className={cn('text-sm font-semibold text-gray-800', className)}
+        className={cn('text-sm font-semibold text-[#1e293b]', className)}
         style={{ marginBottom: 10, display: 'block' }}
         {...props}
       >
@@ -44,4 +45,3 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
 );
 
 Label.displayName = 'Label';
-

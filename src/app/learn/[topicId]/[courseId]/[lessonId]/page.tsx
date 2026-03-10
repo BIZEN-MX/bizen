@@ -4,6 +4,7 @@ import { useEffect, useCallback, useRef, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
+import PageLoader from "@/components/PageLoader"
 import { motion, AnimatePresence } from "framer-motion"
 
 export default function LessonPage() {
@@ -141,16 +142,7 @@ export default function LessonPage() {
 
     // Loading State
     if (loading) {
-        return (
-            <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5", gap: 16, flexDirection: "column" }}>
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    style={{ width: 40, height: 40, border: "4px solid #E2E8F0", borderTopColor: "#0B71FE", borderRadius: "50%" }}
-                />
-                <p style={{ fontWeight: 500, color: "#64748B" }}>Cargando lección...</p>
-            </div>
-        )
+        return <PageLoader />
     }
 
     // Error State

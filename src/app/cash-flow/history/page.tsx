@@ -9,6 +9,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { currencyMXN } from '@/lib/simulators';
+import PageLoader from '@/components/PageLoader';
 
 interface SimulatorRun {
   id: string;
@@ -160,7 +161,7 @@ export default function HistoryPage() {
                 fontWeight: 500,
                 cursor: "pointer",
                 transition: "all 0.2s ease",
-                                marginBottom: 16
+                marginBottom: 16
               }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#0B71FE"
@@ -204,7 +205,7 @@ export default function HistoryPage() {
                   fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                                  }}
+                }}
               >
                 Todos
               </button>
@@ -222,7 +223,7 @@ export default function HistoryPage() {
                     fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                                      }}
+                  }}
                 >
                   {simulatorNames[slug] || slug}
                 </button>
@@ -231,11 +232,7 @@ export default function HistoryPage() {
           )}
 
           {/* Loading / Error States */}
-          {loading && (
-            <div style={{ textAlign: "center", padding: "48px 0" }}>
-              <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
-            </div>
-          )}
+          {loading && <PageLoader />}
 
           {error && (
             <div style={{
@@ -278,7 +275,7 @@ export default function HistoryPage() {
                   fontWeight: 500,
                   cursor: "pointer",
                   transition: "transform 0.2s ease",
-                                    boxShadow: "0 4px 12px rgba(11,113,254,0.3)"
+                  boxShadow: "0 4px 12px rgba(11,113,254,0.3)"
                 }}
                   onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
                   onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}>
@@ -332,7 +329,7 @@ export default function HistoryPage() {
                         fontWeight: 500,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                                              }}
+                      }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background = "#ef4444"
                         e.currentTarget.style.color = "white"
@@ -368,7 +365,7 @@ export default function HistoryPage() {
                         fontWeight: 500,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                                                marginLeft: 16
+                        marginLeft: 16
                       }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = "#0B71FE"

@@ -3,6 +3,7 @@
 /**
  * ResultsCard Component
  * Display key metrics from simulator calculations
+ * Light theme version matching BIZEN white aesthetic
  */
 
 import * as React from 'react';
@@ -53,7 +54,7 @@ export function ResultsCard({
   };
 
   return (
-    <Card className={cn(variantStyles[variant], 'border-2', className)}>
+    <Card className={cn(variantStyles[variant], 'border-2 transition-all duration-300 hover:shadow-md', className)}>
       <CardContent className="p-5">
         <div className="flex items-start justify-between">
           <div className="flex-1">

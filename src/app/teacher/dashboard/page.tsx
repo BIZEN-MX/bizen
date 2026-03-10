@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Card from '@/components/ui/card'
+import PageLoader from '@/components/PageLoader'
 import {
     Users,
     BookOpen,
@@ -66,13 +67,7 @@ export default function AdminDashboardPage() {
     }, [router])
 
     if (loading) {
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', flexDirection: 'column', gap: 16 }}>
-                <div style={{ width: 40, height: 40, border: '4px solid #e2e8f0', borderTopColor: '#0F62FE', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                <p style={{ color: '#64748b', fontWeight: 500 }}>Cargando panel de administración...</p>
-                <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
-            </div>
-        )
+        return <PageLoader />
     }
 
     if (error || !data) {

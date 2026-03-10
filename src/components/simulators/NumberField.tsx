@@ -3,6 +3,7 @@
 /**
  * NumberField Component
  * Currency and numeric input field with proper formatting
+ * Light theme version matching BIZEN white aesthetic
  */
 
 import * as React from 'react';
@@ -23,9 +24,9 @@ export interface NumberFieldProps extends Omit<React.InputHTMLAttributes<HTMLInp
 }
 
 export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
-  ({ 
-    value, 
-    onChange, 
+  ({
+    value,
+    onChange,
     currency = false,
     percentage = false,
     min = 0,
@@ -35,45 +36,39 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
     hint,
     error,
     className,
-    ...props 
+    ...props
   }, ref) => {
     const [displayValue, setDisplayValue] = React.useState(value.toString());
     const [isFocused, setIsFocused] = React.useState(false);
-    
+
     React.useEffect(() => {
       if (!isFocused) {
         setDisplayValue(formatDisplay(value));
       }
     }, [value, isFocused]);
-    
+
     function formatDisplay(num: number): string {
       if (isNaN(num)) return '';
-      
-      if (percentage) {
-        return num.toFixed(2);
-      }
-      
+      if (percentage) return num.toFixed(2);
+
       if (currency) {
         return new Intl.NumberFormat('es-MX', {
           minimumFractionDigits: 0,
           maximumFractionDigits: 2,
         }).format(num);
       }
-      
       return num.toString();
     }
-    
+
     function parseInput(str: string): number {
-      // Remove currency formatting (spaces, commas)
       const cleaned = str.replace(/[,\s]/g, '');
       const parsed = parseFloat(cleaned);
       return isNaN(parsed) ? 0 : parsed;
     }
-    
+
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
       const raw = e.target.value;
       setDisplayValue(raw);
-      
       const parsed = parseInput(raw);
       if (!isNaN(parsed)) {
         let clamped = parsed;
@@ -82,32 +77,30 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
         onChange(clamped);
       }
     }
-    
+
     function handleFocus() {
       setIsFocused(true);
-      // Show raw number when focused
       setDisplayValue(value.toString());
     }
-    
+
     function handleBlur() {
       setIsFocused(false);
-      // Format when blurred
       setDisplayValue(formatDisplay(value));
     }
-    
+
     const prefix = currency ? '$' : '';
     const suffix = percentage ? '%' : '';
-    
+
     return (
-      <div className="flex flex-col gap-3" style={{ marginBottom: 16 }}>
+      <div className="flex flex-col gap-2.5 mb-5">
         {label && (
-          <label className="text-sm font-semibold text-gray-700" style={{ marginBottom: 6 }}>
+          <label className="text-sm font-semibold text-[#1e293b] mb-1">
             {label}
           </label>
         )}
         <div className="relative group">
           {prefix && (
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-base font-semibold pointer-events-none transition-colors duration-200 group-focus-within:text-blue-600">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base font-semibold pointer-events-none transition-colors duration-200 group-focus-within:text-blue-600">
               {prefix}
             </span>
           )}
@@ -120,24 +113,27 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             className={cn(
+              "h-12 border-gray-200 bg-[#FBFAF5] text-gray-900 font-medium rounded-xl transition-all duration-200",
+              "hover:border-gray-300",
+              "focus:border-blue-500 focus:ring-4 focus:ring-blue-100",
               prefix && 'pl-8',
               suffix && 'pr-10',
-              error && 'border-red-400 focus-visible:border-red-500 focus-visible:ring-red-100 hover:border-red-300',
+              error && 'border-red-400 focus-visible:border-red-500 hover:border-red-300',
               className
             )}
             {...props}
           />
           {suffix && (
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-base font-semibold pointer-events-none transition-colors duration-200 group-focus-within:text-blue-600">
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-base font-semibold pointer-events-none transition-colors duration-200 group-focus-within:text-blue-600">
               {suffix}
             </span>
           )}
         </div>
         {hint && !error && (
-          <p className="text-xs text-gray-500 italic leading-relaxed">{hint}</p>
+          <p className="text-xs text-gray-500 italic leading-relaxed pl-1">{hint}</p>
         )}
         {error && (
-          <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+          <p className="text-xs text-red-600 font-medium flex items-center gap-1.5 pl-1">
             <span>⚠️</span> {error}
           </p>
         )}
@@ -147,4 +143,3 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
 );
 
 NumberField.displayName = 'NumberField';
-

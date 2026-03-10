@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import Image from "next/image"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import { CheckIcon, CrossIcon, ShieldIcon, StarIcon, RocketIcon, BotIcon, MailIcon, PhoneIcon, CreditCardIcon, WarningIcon } from "@/components/CustomIcons"
+import PageLoader from "@/components/PageLoader"
 
 export default function CuentaPage() {
   const { user, loading } = useAuth()
@@ -142,17 +143,7 @@ export default function CuentaPage() {
   }
 
   if (loading) {
-    return (
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-                marginRight: "340px"
-      }}>
-        <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user) return null
@@ -163,7 +154,7 @@ export default function CuentaPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-            background: "#FBFAF5",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed",
       marginRight: "340px"
     }}>
@@ -336,7 +327,7 @@ export default function CuentaPage() {
                     background: "rgba(255, 255, 255, 0.7)",
                     color: "#1E40AF",
                     fontWeight: 500,
-                                        outline: "none",
+                    outline: "none",
                     transition: "all 0.2s ease",
                   }}
                   onFocus={(e) => {
@@ -361,7 +352,7 @@ export default function CuentaPage() {
                     fontWeight: 500,
                     cursor: saving ? "not-allowed" : "pointer",
                     transition: "all 0.2s ease",
-                                        whiteSpace: "nowrap"
+                    whiteSpace: "nowrap"
                   }}
                   onMouseEnter={(e) => {
                     if (!saving) {
@@ -405,7 +396,7 @@ export default function CuentaPage() {
                     fontWeight: 500,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                                      }}
+                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-2px)"
                     e.currentTarget.style.boxShadow = "0 8px 24px rgba(15, 98, 254, 0.4)"
@@ -433,7 +424,7 @@ export default function CuentaPage() {
                       background: "rgba(255, 255, 255, 0.7)",
                       color: "#1E40AF",
                       fontWeight: 500,
-                                            outline: "none",
+                      outline: "none",
                       transition: "all 0.2s ease",
                       boxSizing: "border-box"
                     }}
@@ -461,7 +452,7 @@ export default function CuentaPage() {
                       background: "rgba(255, 255, 255, 0.7)",
                       color: "#1E40AF",
                       fontWeight: 500,
-                                            outline: "none",
+                      outline: "none",
                       transition: "all 0.2s ease",
                       boxSizing: "border-box"
                     }}
@@ -490,7 +481,7 @@ export default function CuentaPage() {
                         fontWeight: 500,
                         cursor: saving ? "not-allowed" : "pointer",
                         transition: "all 0.2s ease",
-                                              }}
+                      }}
                       onMouseEnter={(e) => {
                         if (!saving) {
                           e.currentTarget.style.transform = "translateY(-2px)"
@@ -522,7 +513,7 @@ export default function CuentaPage() {
                         fontWeight: 500,
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                                              }}
+                      }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background = "rgba(107, 114, 128, 0.3)"
                       }}
@@ -842,7 +833,7 @@ export default function CuentaPage() {
               fontWeight: 500,
               cursor: saving ? "not-allowed" : "pointer",
               transition: "all 0.2s ease",
-                          }}
+            }}
             onMouseEnter={(e) => {
               if (!saving) {
                 e.currentTarget.style.transform = "translateY(-2px)"

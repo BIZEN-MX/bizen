@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useAuth } from "@/contexts/AuthContext"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import PageLoader from "@/components/PageLoader"
 
 type Statistics = {
   overview: {
@@ -77,20 +78,7 @@ export default function CashFlowStatsPage() {
   }
 
   if (loading || loadingStats || !stats) {
-    return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#FBFAF5",
-        paddingRight: "340px"
-      }}>
-        <div style={{ color: "#333", fontSize: 24, fontWeight: 500 }}>
-          Cargando estadísticas...
-        </div>
-      </div>
-    )
+    return <PageLoader />
   }
 
   return (
@@ -98,7 +86,7 @@ export default function CashFlowStatsPage() {
       display: "flex",
       minHeight: "100vh",
       background: "#FBFAF5",
-          }}>
+    }}>
       <main style={{
         flex: 1,
         padding: "40px 20px",

@@ -5,6 +5,7 @@ import { Suspense } from "react"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
+import PageLoader from "@/components/PageLoader"
 
 // ===== Brand & Theme
 const brandName = "BIZEN"
@@ -264,18 +265,7 @@ function ResetPasswordContent() {
 // ===== Page (wrapped in Suspense)
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={
-      <div style={{
-        background: "#0B71FE",
-        minHeight: "100dvh",
-        display: "grid" as const,
-        placeItems: "center",
-        color: "#fff",
-        fontSize: 18
-      }}>
-        Cargando...
-      </div>
-    }>
+    <Suspense fallback={<PageLoader />}>
       <ResetPasswordContent />
     </Suspense>
   )

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { LogOut, ArrowLeft } from "lucide-react"
+import PageLoader from "@/components/PageLoader"
 
 export default function AccountSettingsPage() {
   const { user, loading } = useAuth()
@@ -98,18 +99,7 @@ export default function AccountSettingsPage() {
   }
 
   if (loading || loadingData) {
-    return (
-      <div style={{
-        display: "grid",
-        placeItems: "center",
-        minHeight: "60vh",
-                background: "#FBFAF5"
-      }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Cargando...</p>
-        </div>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user) return null
@@ -120,7 +110,7 @@ export default function AccountSettingsPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-            background: "#FBFAF5",
+      background: "#FBFAF5",
       backgroundAttachment: "fixed"
     }}>
       <style>{`
@@ -191,7 +181,7 @@ export default function AccountSettingsPage() {
                   width: "100%",
                   padding: "14px 16px",
                   fontSize: 15,
-                                    fontWeight: 500,
+                  fontWeight: 500,
                   border: "2px solid rgba(255, 255, 255, 0.6)",
                   borderRadius: 12,
                   background: "rgba(255, 255, 255, 0.6)",
@@ -286,7 +276,7 @@ export default function AccountSettingsPage() {
                   fontWeight: 500,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                                  }}
+                }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "#FEE2E2"
                   e.currentTarget.style.transform = "translateY(-1px)"
@@ -316,7 +306,7 @@ export default function AccountSettingsPage() {
                   fontWeight: 500,
                   cursor: saving ? "not-allowed" : "pointer",
                   boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
-                                  }}
+                }}
               >
                 {saving ? "Guardando..." : "Guardar Cambios"}
               </button>
@@ -334,7 +324,7 @@ export default function AccountSettingsPage() {
                   fontSize: 15,
                   fontWeight: 500,
                   textDecoration: "none",
-                                  }}
+                }}
               >
                 Volver al Foro
               </Link>

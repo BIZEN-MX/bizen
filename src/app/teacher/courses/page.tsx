@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Card from "../../../components/ui/card"
 import Button from "../../../components/ui/button"
+import PageLoader from "@/components/PageLoader"
 
 interface Course {
   id: string
@@ -90,13 +91,7 @@ export default function TeacherCoursesPage() {
   }
 
   if (loading || loadingCourses) {
-    return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Cargando cursos...</p>
-        </div>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user) return null
@@ -105,24 +100,24 @@ export default function TeacherCoursesPage() {
   const draftCourses = courses.filter(c => !c.isActive)
 
   return (
-    <main style={{ 
-      maxWidth: 1200, 
-      margin: "0 auto", 
+    <main style={{
+      maxWidth: 1200,
+      margin: "0 auto",
       padding: "clamp(20px, 4vw, 40px)",
-          }}>
+    }}>
       {/* Header */}
-      <div style={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
         alignItems: "flex-start",
         marginBottom: 32,
         gap: 20,
         flexWrap: "wrap"
       }}>
         <div>
-          <h1 style={{ 
-            margin: 0, 
-            fontSize: "clamp(28px, 6vw, 36px)", 
+          <h1 style={{
+            margin: 0,
+            fontSize: "clamp(28px, 6vw, 36px)",
             fontWeight: 500,
             background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
             WebkitBackgroundClip: "text",
@@ -182,9 +177,9 @@ export default function TeacherCoursesPage() {
             gap: 20
           }}>
             {activeCourses.map(course => (
-              <Card 
+              <Card
                 key={course.id}
-                style={{ 
+                style={{
                   padding: 0,
                   overflow: "hidden",
                   cursor: "pointer",
@@ -276,9 +271,9 @@ export default function TeacherCoursesPage() {
             gap: 20
           }}>
             {draftCourses.map(course => (
-              <Card 
+              <Card
                 key={course.id}
-                style={{ 
+                style={{
                   padding: "24px 20px",
                   cursor: "pointer",
                   opacity: 0.8,

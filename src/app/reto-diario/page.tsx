@@ -11,6 +11,7 @@ import {
 import confetti from "canvas-confetti"
 import StreakWidget from "@/components/StreakWidget"
 import XPProgressCard from "@/components/XPProgressCard"
+import PageLoader from "@/components/PageLoader"
 import { motion, AnimatePresence } from "framer-motion"
 
 type DailyChallenge = {
@@ -171,7 +172,7 @@ export default function RetoDiarioPage() {
   const handleViewGroup = () =>
     router.push(challenge ? `/forum?tab=reto-del-dia&challengeId=${challenge.id}` : "/forum?tab=reto-del-dia")
 
-  if (loading) return null
+  if (loading || loadingChallenge) return <PageLoader />
 
   return (
     <>

@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { CheckCircle, MessageCircle, Eye } from "lucide-react"
+import PageLoader from "@/components/PageLoader"
 
 interface ForumThread {
   id: string
@@ -129,16 +130,7 @@ export default function TopicFeedPage() {
   }
 
   if (loading || loadingData) {
-    return (
-      <div style={{
-        display: "grid",
-        placeItems: "center",
-        minHeight: "60vh",
-                background: "#FBFAF5"
-      }}>
-        <p style={{ color: "#64748b", fontSize: 15, fontWeight: 500 }}>Cargando...</p>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user || !topic) return null
@@ -151,7 +143,7 @@ export default function TopicFeedPage() {
       minHeight: "100vh",
       paddingTop: 40,
       paddingBottom: 80,
-            background: "#FBFAF5",
+      background: "#FBFAF5",
     }} className="forum-topic-outer">
       <style>{`
         @media (max-width: 767px) {

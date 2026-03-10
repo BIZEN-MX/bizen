@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import StreakWidget from "@/components/StreakWidget"
+import PageLoader from "@/components/PageLoader"
 import {
   User,
   Star,
@@ -166,12 +167,7 @@ export default function ForumProfilePage() {
   }, [user, userId])
 
   if (loading || loadingData) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#FBFAF5", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: 40, height: 40, border: "3px solid rgba(15,98,254,0.2)", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (errorProfile) {
@@ -266,7 +262,7 @@ export default function ForumProfilePage() {
         position: "relative",
         minHeight: "100vh",
         paddingBottom: "clamp(60px, 10vw, 100px)",
-                background: "#FBFAF5",
+        background: "#FBFAF5",
         width: "100%",
         boxSizing: "border-box"
       }}>
@@ -354,7 +350,7 @@ export default function ForumProfilePage() {
                           background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
                           color: "rgba(255,255,255,0.9)", borderRadius: 8, padding: "6px 14px",
                           fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s",
-                                                  }}
+                        }}
                         onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
                         onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
                       >
@@ -366,7 +362,7 @@ export default function ForumProfilePage() {
                           background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
                           color: "rgba(255,255,255,0.9)", borderRadius: 8, padding: "6px 14px",
                           fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s",
-                                                  }}
+                        }}
                         onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
                         onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
                       >
@@ -396,7 +392,7 @@ export default function ForumProfilePage() {
                       whiteSpace: "nowrap",
                       letterSpacing: "-0.01em",
                       boxShadow: isFollowing ? "none" : "0 4px 18px rgba(15,98,254,0.45)",
-                                            alignSelf: "flex-start"
+                      alignSelf: "flex-start"
                     }}
                   >
                     {isLoadingFollow ? "..." : isFollowing ? (

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Card from "../../../components/ui/card"
+import PageLoader from "@/components/PageLoader"
 
 interface AnalyticsData {
   totalStudents: number
@@ -124,28 +125,22 @@ export default function TeacherAnalyticsPage() {
   }, [user, loading, router])
 
   if (loading || loadingAnalytics) {
-    return (
-      <div style={{ display: "grid", placeItems: "center", minHeight: "60vh", }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "#666", fontSize: 16 }}>Cargando análisis...</p>
-        </div>
-      </div>
-    )
+    return <PageLoader />
   }
 
   if (!user || !analytics) return null
 
   return (
-    <main style={{ 
-      maxWidth: 1200, 
-      margin: "0 auto", 
+    <main style={{
+      maxWidth: 1200,
+      margin: "0 auto",
       padding: "clamp(20px, 4vw, 40px)",
-          }}>
+    }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
-        <h1 style={{ 
-          margin: 0, 
-          fontSize: "clamp(28px, 6vw, 36px)", 
+        <h1 style={{
+          margin: 0,
+          fontSize: "clamp(28px, 6vw, 36px)",
           fontWeight: 500,
           background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
           WebkitBackgroundClip: "text",
@@ -192,8 +187,8 @@ export default function TeacherAnalyticsPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           {analytics.courseStats.map(course => (
             <div key={course.id}>
-              <div style={{ 
-                display: "flex", 
+              <div style={{
+                display: "flex",
                 justifyContent: "space-between",
                 marginBottom: 12,
                 flexWrap: "wrap",
@@ -216,7 +211,7 @@ export default function TeacherAnalyticsPage() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Progress Bar */}
               <div style={{
                 width: "100%",
@@ -238,8 +233,8 @@ export default function TeacherAnalyticsPage() {
         </div>
       </Card>
 
-      <div style={{ 
-        display: "grid", 
+      <div style={{
+        display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
         gap: 24
       }}>
@@ -250,7 +245,7 @@ export default function TeacherAnalyticsPage() {
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {analytics.recentQuizzes.map(quiz => (
-              <div 
+              <div
                 key={quiz.id}
                 style={{
                   padding: 16,
@@ -259,8 +254,8 @@ export default function TeacherAnalyticsPage() {
                   borderLeft: `4px solid ${quiz.status === "passed" ? "#10B981" : "#EF4444"}`
                 }}
               >
-                <div style={{ 
-                  display: "flex", 
+                <div style={{
+                  display: "flex",
                   justifyContent: "space-between",
                   marginBottom: 8,
                   gap: 12
@@ -280,8 +275,8 @@ export default function TeacherAnalyticsPage() {
                   {quiz.quizTitle}
                 </div>
                 <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-                  {new Date(quiz.completedAt).toLocaleString('es-ES', { 
-                    month: 'short', 
+                  {new Date(quiz.completedAt).toLocaleString('es-ES', {
+                    month: 'short',
                     day: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit'
@@ -300,7 +295,7 @@ export default function TeacherAnalyticsPage() {
           {analytics.pendingGrading.length > 0 ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {analytics.pendingGrading.map(submission => (
-                <div 
+                <div
                   key={submission.id}
                   style={{
                     padding: 16,
@@ -328,8 +323,8 @@ export default function TeacherAnalyticsPage() {
                     {submission.assignmentTitle}
                   </div>
                   <div style={{ fontSize: 12, color: "#B45309" }}>
-                    Enviado: {new Date(submission.submittedAt).toLocaleString('es-ES', { 
-                      month: 'short', 
+                    Enviado: {new Date(submission.submittedAt).toLocaleString('es-ES', {
+                      month: 'short',
                       day: 'numeric',
                       hour: '2-digit',
                       minute: '2-digit'

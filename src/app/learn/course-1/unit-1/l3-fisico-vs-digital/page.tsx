@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
+import PageLoader from "@/components/PageLoader"
 import {
   MoneyIcon,
   CreditCardIcon,
@@ -2209,23 +2210,14 @@ export default function L3FisicoVsDigitalPage() {
   }
 
   if (loading || !user) {
-    return (
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-              }}>
-        <p>Cargando...</p>
-      </div>
-    )
+    return <PageLoader />
   }
 
   return (
     <div style={{
       minHeight: "100vh",
       background: "#FBFAF5",
-            paddingRight: "320px" // Space for sidebar
+      paddingRight: "320px" // Space for sidebar
     }}>
       {/* Header */}
       <div style={{
