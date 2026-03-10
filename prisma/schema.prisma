@@ -19,7 +19,6 @@ model School {
   cycleGoals    SchoolCycleGoal[]
   schoolImpacts SchoolImpact[]
   schoolTopics  SchoolTopic[]
-  profiles      Profile[]
 
   @@map("schools")
   @@schema("public")
@@ -55,53 +54,53 @@ model ContactMessage {
 }
 
 model Profile {
-  userId             String         @id @map("user_id")
-  fullName           String         @map("full_name")
-  username           String?        @unique @map("username")
-  bio                String?        @map("bio")
-  phone              String?        @map("phone")
-  role               String         @default("student")
-  schoolId           String?        @map("school_id")
-  xp                 Int            @default(0)
-  level              Int            @default(1)
-  nickname           String?        @unique
-  reputation         Int            @default(0)
-  postsCreated       Int            @default(0) @map("posts_created")
-  commentsCreated    Int            @default(0) @map("comments_created")
-  acceptedAnswers    Int            @default(0) @map("accepted_answers")
-  createdAt          DateTime       @default(now()) @map("created_at")
-  birthDate          DateTime?      @map("birth_date") @db.Timestamptz(6)
-  isMinor            Boolean        @default(false) @map("is_minor")
-  parentalOverride   Boolean        @default(false) @map("parental_override")
-  ageVerifiedAt      DateTime?      @map("age_verified_at") @db.Timestamptz(6)
-  avatar             Json?
-  settings           Json?          @default("{}") @map("settings")
-  currentStreak      Int?           @default(0) @map("current_streak")
-  longestStreak      Int?           @default(0) @map("longest_streak")
-  lastActive         DateTime?      @map("last_active")
-  bizcoins           Int?           @default(0)
-  stripeCustomerId   String?        @unique @map("stripe_customer_id")
-  subscriptionStatus String?        @default("none") @map("subscription_status")
-  subscriptionId     String?        @map("subscription_id")
-  planId             String?        @map("plan_id")
-  subscriptionEnds   DateTime?      @map("subscription_ends")
-  certificates       Certificate[]
-  enrollments        Enrollment[]
-  evidence_posts     EvidencePost[]
-  progress           Progress[]
-  forumThreads       ForumThread[]  @relation("ForumThreadAuthor")
-  forumComments      ForumComment[] @relation("ForumCommentAuthor")
-  forumVotes         ForumVote[]    @relation("ForumVotes")
-  forumBookmarks     ForumBookmark[] @relation("ForumBookmarks")
-  forumFollows       ForumFollow[]   @relation("ForumFollows")
-  forumReportsCreated  ForumReport[]   @relation("ForumReporter")
-  forumReportsReviewed ForumReport[]   @relation("ForumReviewer")
+  userId               String              @id @map("user_id")
+  fullName             String              @map("full_name")
+  role                 String              @default("student")
+  schoolId             String?             @map("school_id")
+  xp                   Int                 @default(0)
+  level                Int                 @default(1)
+  nickname             String?             @unique
+  reputation           Int                 @default(0)
+  postsCreated         Int                 @default(0) @map("posts_created")
+  commentsCreated      Int                 @default(0) @map("comments_created")
+  acceptedAnswers      Int                 @default(0) @map("accepted_answers")
+  createdAt            DateTime            @default(now()) @map("created_at")
+  birthDate            DateTime?           @map("birth_date") @db.Timestamptz(6)
+  isMinor              Boolean             @default(false) @map("is_minor")
+  parentalOverride     Boolean             @default(false) @map("parental_override")
+  ageVerifiedAt        DateTime?           @map("age_verified_at") @db.Timestamptz(6)
+  avatar               Json?
+  currentStreak        Int?                @default(0) @map("current_streak")
+  longestStreak        Int?                @default(0) @map("longest_streak")
+  lastActive           DateTime?           @map("last_active")
+  bizcoins             Int?                @default(0)
+  stripeCustomerId     String?             @unique @map("stripe_customer_id")
+  subscriptionStatus   String?             @default("none") @map("subscription_status")
+  subscriptionId       String?             @map("subscription_id")
+  planId               String?             @map("plan_id")
+  subscriptionEnds     DateTime?           @map("subscription_ends")
+  username             String?             @map("username")
+  bio                  String?             @map("bio")
+  phone                String?             @map("phone")
+  settings             Json?               @default("{}") @map("settings")
+  certificates         Certificate[]
+  enrollments          Enrollment[]
+  evidence_posts       EvidencePost[]
+  forumBookmarks       ForumBookmark[]     @relation("ForumBookmarks")
+  forumComments        ForumComment[]      @relation("ForumCommentAuthor")
+  forumFollows         ForumFollow[]       @relation("ForumFollows")
   forumNotifications   ForumNotification[] @relation("ForumNotifications")
+  forumReportsCreated  ForumReport[]       @relation("ForumReporter")
+  forumReportsReviewed ForumReport[]       @relation("ForumReviewer")
+  forumThreads         ForumThread[]       @relation("ForumThreadAuthor")
   forumUserBadges      ForumUserBadge[]    @relation("ForumUserBadges")
+  forumVotes           ForumVote[]         @relation("ForumVotes")
+  progress             Progress[]
   inventory            UserInventoryItem[] @relation("ProfileInventory")
-  school               School?             @relation(fields: [schoolId], references: [id], onDelete: SetNull)
 
   @@index([schoolId], map: "idx_profiles_school")
+  @@index([username], map: "idx_profiles_username")
   @@map("profiles")
   @@schema("public")
 }
@@ -382,10 +381,10 @@ model ForumThread {
   moderationStatus  String?          @default("approved") @map("moderation_status")
   createdAt         DateTime         @default(now()) @map("created_at")
   updatedAt         DateTime         @default(now()) @updatedAt @map("updated_at")
-  tags              ForumThreadTag[]
   bookmarks         ForumBookmark[]
   comments          ForumComment[]
   follows           ForumFollow[]
+  tags              ForumThreadTag[]
   author            Profile          @relation("ForumThreadAuthor", fields: [authorId], references: [userId], onDelete: Cascade)
   topic             ForumTopic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
@@ -423,10 +422,10 @@ model ForumComment {
   moderationStatus String?        @default("approved") @map("moderation_status")
   createdAt        DateTime       @default(now()) @map("created_at")
   updatedAt        DateTime       @default(now()) @updatedAt @map("updated_at")
+  author           Profile        @relation("ForumCommentAuthor", fields: [authorId], references: [userId], onDelete: Cascade)
   parentComment    ForumComment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   replies          ForumComment[] @relation("CommentReplies")
   thread           ForumThread    @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  author           Profile        @relation("ForumCommentAuthor", fields: [authorId], references: [userId], onDelete: Cascade)
 
   @@index([threadId])
   @@index([parentCommentId])
@@ -494,7 +493,7 @@ model ForumReport {
   actionTaken String?   @map("action_taken")
   createdAt   DateTime  @default(now()) @map("created_at")
   reporter    Profile   @relation("ForumReporter", fields: [reporterId], references: [userId], onDelete: Cascade)
-  reviewer    Profile?  @relation("ForumReviewer", fields: [reviewedBy], references: [userId], onDelete: SetNull)
+  reviewer    Profile?  @relation("ForumReviewer", fields: [reviewedBy], references: [userId])
 
   @@index([reporterId])
   @@index([targetType, targetId])
@@ -872,15 +871,15 @@ model EvidenceComment {
 }
 
 model Foundation {
-  id          String         @id @default(cuid())
-  name        String
-  logo        String?
+  id           String         @id @default(cuid())
+  name         String
+  logo         String?
   description  String?
   website      String?
-  instagramUrl String?        @map("instagram_url")
   createdAt    DateTime       @default(now()) @map("created_at")
-  cause       String?        @default("Educación")
-  impacts     SchoolImpact[]
+  cause        String?        @default("Educación")
+  instagramUrl String?        @map("instagram_url")
+  impacts      SchoolImpact[]
 
   @@map("foundations")
   @@schema("public")

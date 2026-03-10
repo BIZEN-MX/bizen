@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from "next/server"
 
-// We use the cheaper, faster, and smarter model for educational chatbots!
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY
-const MAX_OPENAI_DAILY_REQUESTS = parseInt(process.env.MAX_OPENAI_DAILY_REQUESTS || "500")
+// Switched to Gemini to leverage Google credits!
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY
+const MAX_DAILY_REQUESTS = parseInt(process.env.MAX_AI_DAILY_REQUESTS || "500")
 
 // Simple in-memory tracker (resets daily, resets on server restart).
-let dailyOpenAIRequests = 0
+let dailyAIRequests = 0
 let lastResetDate = new Date().toDateString()
 
 function checkLimit(): boolean {
   const today = new Date().toDateString()
   if (today !== lastResetDate) {
-    dailyOpenAIRequests = 0
+    dailyAIRequests = 0
     lastResetDate = today
   }
-  return dailyOpenAIRequests < MAX_OPENAI_DAILY_REQUESTS
+  return dailyAIRequests < MAX_DAILY_REQUESTS
 }
 
 export async function POST(request: NextRequest) {
@@ -25,9 +25,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Mensaje requerido" }, { status: 400 })
     }
 
-    if (!OPENAI_API_KEY) {
+    if (!GEMINI_API_KEY) {
       return NextResponse.json(
-        { response: "Hola, BIZEN pronto será más inteligente. Por el momento, el administrador necesita configurar mi conexión (Falta API KEY)." },
+        { response: "Hola, BIZEN pronto será más inteligente. Por el momento, el administrador necesita configurar mi conexión (Falta GEMINI_API_KEY en .env)." },
         { status: 200 }
       )
     }
@@ -50,41 +50,53 @@ Tus reglas principales:
 6. Usa emojis libremente (💸, 📈, 🚀) para mantener el texto amigable.
 7. Siempre responde en español.`
 
-    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini", // Very cheap, very fast, very smart.
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...conversationHistory.slice(-5).map((m: { role: string; content: string }) => ({
-            role: m.role === "user" ? "user" : "assistant",
-            content: m.content
-          })),
-          { role: "user", content: message }
-        ],
-        max_tokens: 400,
-        temperature: 0.7
-      })
-    })
+    // Gemini 1.5 Flash API endpoint
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
 
-    if (!openaiResponse.ok) {
-      console.error("OpenAI error:", await openaiResponse.text())
-      throw new Error("Failed to communicate with OpenAI")
+    // Map conversation history to Gemini format (user -> user, assistant -> model)
+    const contents = [
+      ...conversationHistory.slice(-5).map((m: { role: string; content: string }) => ({
+        role: m.role === "user" ? "user" : "model",
+        parts: [{ text: m.content }]
+      })),
+      { role: "user", parts: [{ text: message }] }
+    ]
+
+    const geminiBody = {
+      contents,
+      system_instruction: {
+        parts: [{ text: systemPrompt }]
+      },
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 500,
+        topP: 0.95,
+      }
     }
 
-    const data = await openaiResponse.json()
-    const responseText = data.choices[0]?.message?.content?.trim() || "Lo siento, me quedé sin palabras."
+    const geminiResponse = await fetch(GEMINI_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(geminiBody)
+    })
 
-    dailyOpenAIRequests++
-    console.log(`[Billy] Used 1 request. Daily count: ${dailyOpenAIRequests}/${MAX_OPENAI_DAILY_REQUESTS}`)
+    if (!geminiResponse.ok) {
+      const errorText = await geminiResponse.text()
+      console.error("Gemini API error:", errorText)
+      throw new Error("Failed to communicate with Gemini")
+    }
+
+    const data = await geminiResponse.json()
+    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "Lo siento, me quedé sin palabras."
+
+    dailyAIRequests++
+    console.log(`[Billy:Gemini] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
 
     return NextResponse.json({
       response: responseText,
-      source: "openai:gpt-4o-mini"
+      source: "google:gemini-1.5-flash"
     })
 
   } catch (error) {

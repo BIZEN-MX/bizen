@@ -51,6 +51,7 @@ import {
 export interface GenericLesson {
     title: string
     slug: string
+    courseId?: string
 }
 
 export interface GenericSubtema {
@@ -151,10 +152,11 @@ const SUBTEMA_VARIANTS = [
 // ─── Props ───────────────────────────────────────────────────────────────────
 
 interface CoursePageTemplateProps {
-    topicId: number
+    topicId: string | number
     subtemas: GenericSubtema[]
     /** The lesson URL builder. Receives the lesson slug and should return the full path. */
-    getLessonPath: (slug: string) => string
+    getLessonPath: (slug: string, courseId?: string) => string
+    topicTitle?: string // Optional override
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -163,6 +165,7 @@ export default function CoursePageTemplate({
     topicId,
     subtemas,
     getLessonPath,
+    topicTitle,
 }: CoursePageTemplateProps) {
     const router = useRouter()
     const { user, loading, dbProfile } = useAuth()
@@ -218,7 +221,7 @@ export default function CoursePageTemplate({
         return 1;
     }, [completedLessons]);
 
-    const isTopicLockedBySequence = topicId > nextTopicId;
+    const isTopicLockedBySequence = typeof topicId === 'number' && topicId > nextTopicId;
 
     const completedInTopic = allLessonsInTopic.filter((l) => completedLessons.includes(l.slug)).length
     const totalInTopic = allLessonsInTopic.length
@@ -234,7 +237,7 @@ export default function CoursePageTemplate({
                 <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(15,98,254,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, fontSize: 40 }}>🔒</div>
                 <h1 style={{ fontSize: 28, fontWeight: 500, color: "#0f172a", marginBottom: 12 }}>Tema Bloqueado</h1>
                 <p style={{ fontSize: 18, color: "#64748b", maxWidth: 500, lineHeight: 1.6, marginBottom: 32 }}>
-                    Para acceder a este tema, primero debes completar todas las lecciones del <strong>Tema {topicId - 1}</strong>.
+                    Para acceder a este tema, primero debes completar todas las lecciones del <strong>Tema {Number(topicId) - 1}</strong>.
                 </p>
                 <button
                     onClick={() => router.push('/courses')}
@@ -246,10 +249,16 @@ export default function CoursePageTemplate({
         )
     }
 
-    const topic = ALL_TOPICS.find((t) => t.id === topicId) || ALL_TOPICS[0]
+    const topic = ALL_TOPICS.find((t) => t.id.toString() === topicId.toString()) || {
+        id: topicId,
+        title: topicTitle || "Cargando...",
+        icon: BookOpen,
+        color: "#3b82f6",
+        lessons: totalInTopic
+    }
     const IconComp = topic.icon
-    const prevTopic = ALL_TOPICS.find((t) => t.id === topicId - 1)
-    const nextTopic = ALL_TOPICS.find((t) => t.id === topicId + 1)
+    const prevTopic = typeof topicId === 'number' ? ALL_TOPICS.find((t) => t.id === topicId - 1) : null
+    const nextTopic = typeof topicId === 'number' ? ALL_TOPICS.find((t) => t.id === topicId + 1) : null
 
     return (
         <div style={{ position: "relative", width: "100%", maxWidth: "100%", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>
@@ -311,7 +320,7 @@ export default function CoursePageTemplate({
                                     <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 14px", display: "inline-flex", alignItems: "center", gap: 6 }}>
                                         <Zap size={12} color="#60a5fa" />
                                         <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                                            Tema {topicId.toString().padStart(2, "0")}
+                                            {typeof topicId === 'number' ? `Tema ${topicId.toString().padStart(2, "0")}` : 'Tema'}
                                         </span>
                                     </div>
                                 </div>
@@ -446,7 +455,7 @@ export default function CoursePageTemplate({
                                             const stars = isDone ? (lessonStars[lesson.slug] ?? 0) : 0
                                             const isLastLesson = lessonIdx === sub.lessons.length - 1
                                             const absoluteLessonNumber = lessonOffset + lessonIdx + 1
-                                            const isPremiumLesson = topicId > 1 || absoluteLessonNumber > 3;
+                                            const isPremiumLesson = (typeof topicId === 'number' && topicId > 1) || absoluteLessonNumber > 3;
                                             const isPaywalled = isPremiumLesson && !hasPremiumAccess;
 
                                             // BIZEN Sequential Unlocking logic:
@@ -626,7 +635,7 @@ export default function CoursePageTemplate({
                                                             <button
                                                                 className="premium-action-cta"
                                                                 onClick={() => {
-                                                                    router.push(getLessonPath(lesson.slug));
+                                                                    router.push(getLessonPath(lesson.slug, lesson.courseId));
                                                                     setLessonModal(null);
                                                                 }}
                                                                 style={{
@@ -672,7 +681,7 @@ export default function CoursePageTemplate({
 
                                                     {!isLastLesson ? (() => {
                                                         const nextAbsoluteNumber = lessonOffset + (lessonIdx + 1) + 1;
-                                                        const isNextLocked = (topicId > 1 || nextAbsoluteNumber > 3) && !hasPremiumAccess;
+                                                        const isNextLocked = ((typeof topicId === 'number' && topicId > 1) || nextAbsoluteNumber > 3) && !hasPremiumAccess;
                                                         const arrowColor = isNextLocked ? "#94a3b8" : "#1e3a8a";
                                                         const strokeColor = isNextLocked ? "#cbd5e1" : "#3b82f6";
 
@@ -825,7 +834,7 @@ export default function CoursePageTemplate({
           .courses-main-content > div { max-width: calc(100vw - 312px - 48px) !important; width: 100% !important; margin: 0 auto !important; }
         }
         @media (max-width: 767px) {
-          .courses-main-content { padding-top: 80px !important; padding-bottom: calc(65px + env(safe-area-inset-bottom)) !important; padding-left: 12px !important; padding-right: 12px !important; }
+          .courses-main-content { padding-top: 20px !important; padding-bottom: calc(65px + env(safe-area-inset-bottom)) !important; padding-left: 12px !important; padding-right: 12px !important; }
           .courses-main-content > div { max-width: 100% !important; }
         }
 

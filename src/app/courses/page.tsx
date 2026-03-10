@@ -39,7 +39,8 @@ import {
   CheckCircle2,
   Clock,
   Zap,
-  Layout
+  Layout,
+  GraduationCap
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
@@ -69,12 +70,39 @@ export default function CoursesPage() {
   const { user, dbProfile, loading } = useAuth()
   const router = useRouter()
   const { completedLessons } = useLessonProgress()
+  // Icon mapping for dynamic topics
+  const ICON_MAP: Record<string, any> = {
+    Wallet, Coins, RefreshCw, Receipt, PiggyBank, CreditCard, Landmark, FileText, TrendingUp, Presentation,
+    BarChart4, Brain, ShieldCheck, AlertTriangle, Lightbulb, Rocket, Search, Zap, Layout, Calculator,
+    LineChart, BadgeDollarSign, Skull, Smile, Heart, ShieldAlert, Coffee, Target, BookOpen
+  }
+
+  // Category color mapping
+  const CATEGORY_COLORS: Record<string, string> = {
+    Fundamentos: "#3b82f6",
+    Presupuesto: "#0ea5e9",
+    Ahorro: "#10b981",
+    Deuda: "#f59e0b",
+    Impuestos: "#6366f1",
+    Economía: "#8b5cf6",
+    Inversión: "#2563eb",
+    Patrimonio: "#10b981",
+    Errores: "#f59e0b",
+    Mentalidad: "#facc15",
+    Emprender: "#ef4444",
+    Negocios: "#6366f1",
+    Bienestar: "#ec4899",
+    Resiliencia: "#dc2626",
+    Futuro: "#0ea5e9",
+  }
+
   const [courses, setCourses] = useState<Course[]>([])
   const [loadingData, setLoadingData] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
   const [topicWarning, setTopicWarning] = useState(false)
+  const [dbTopics, setDbTopics] = useState<any[]>([])
 
-  // Calcule premium access based on Profile API data
+  // Calculate premium access based on Profile API data
   const hasActiveLicense = !!dbProfile?.school?.licenses?.length;
   const hasActiveStripe = dbProfile?.subscriptionStatus === 'active';
   const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular');
@@ -84,14 +112,11 @@ export default function CoursesPage() {
   const progressPct = Math.min(100, Math.round((completedCount / APPROX_TOTAL_LESSONS) * 100))
 
   const nextTopicId = React.useMemo(() => {
-    for (let i = 0; i < SUBTEMAS_BY_COURSE.length; i++) {
-      const topicId = i + 1
-      const lessons = SUBTEMAS_BY_COURSE[i].flatMap(s => s.lessons)
-      const allDone = lessons.every(l => completedLessons.includes(l.slug))
-      if (!allDone) return topicId
-    }
+    // For now keep simple sequential logic based on ID if dbTopics is not loaded
+    if (dbTopics.length === 0) return 1
+    // Logic to find next topic...
     return 1
-  }, [completedLessons])
+  }, [dbTopics, completedLessons])
 
   // Redirect unauthenticated users
   useEffect(() => {
@@ -108,8 +133,13 @@ export default function CoursesPage() {
     const fetchCoursesData = async () => {
       try {
         setLoadingData(true)
-        // No legacy courses — only 30 temas principales (topic pages)
-        setCourses([])
+        const res = await fetch('/api/topics')
+        if (!res.ok) throw new Error("Failed to fetch topics")
+        const data = await res.json()
+
+        // Sort by 'order' if available, or just use chronological
+        setDbTopics(data)
+        setCourses([]) // Not used anymore for main list
 
       } catch (error) {
         console.error("Error fetching courses:", error)
@@ -322,11 +352,11 @@ export default function CoursesPage() {
                 </div>
               </div>
 
-              {/* Right Side: Stats Cluster */}
+              {/* Right Side: Stats */}
               <div style={{ flex: "0 1 auto", display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px", minWidth: "280px" }}>
                 {[
-                  { label: "Temas", value: "30", icon: BookOpen, color: "#60a5fa" },
-                  { label: "Cursos", value: "150+", icon: CheckCircle2, color: "#93c5fd" },
+                  { label: "Temas", value: dbTopics.length.toString(), icon: GraduationCap, color: "#60a5fa" },
+                  { label: "Secciones", value: dbTopics.reduce((acc, t) => acc + (t._count?.courses || 0), 0).toString(), icon: BookOpen, color: "#93c5fd" },
                 ].map((stat) => {
                   const StatIcon = stat.icon
                   return (
@@ -372,38 +402,16 @@ export default function CoursesPage() {
             aria-label="Temas"
           >
             {(() => {
-              const topics = [
-                { id: 1, title: "Mi relación con el dinero", icon: Wallet, category: "Fundamentos", catColor: "#3b82f6", lessons: 4 },
-                { id: 2, title: "¿Qué es el dinero y por qué existe?", icon: Coins, category: "Fundamentos", catColor: "#3b82f6", lessons: 5 },
-                { id: 3, title: "¿Cómo entra y sale el dinero de mi vida?", icon: RefreshCw, category: "Fundamentos", catColor: "#3b82f6", lessons: 6 },
-                { id: 4, title: "Presupuesto: tomar control sin ahogarme", icon: Receipt, category: "Presupuesto", catColor: "#0ea5e9", lessons: 8 },
-                { id: 5, title: "Ahorro con propósito", icon: PiggyBank, category: "Ahorro", catColor: "#10b981", lessons: 5 },
-                { id: 6, title: "¿Deuda: cuándo ayuda y cuándo destruye?", icon: CreditCard, category: "Deuda", catColor: "#f59e0b", lessons: 7 },
-                { id: 7, title: "Sistema financiero explicado fácil", icon: Landmark, category: "Fundamentos", catColor: "#3b82f6", lessons: 6 },
-                { id: 8, title: "Impuestos en la vida real", icon: FileText, category: "Impuestos", catColor: "#6366f1", lessons: 6 },
-                { id: 9, title: "Inflación y poder adquisitivo", icon: TrendingUp, category: "Economía", catColor: "#8b5cf6", lessons: 5 },
-                { id: 10, title: "Introducción a la inversión", icon: Presentation, category: "Inversión", catColor: "#2563eb", lessons: 8 },
-                { id: 11, title: "Instrumentos de inversión básicos", icon: BarChart4, category: "Inversión", catColor: "#2563eb", lessons: 10 },
-                { id: 12, title: "Psicología del inversionista", icon: Brain, category: "Inversión", catColor: "#2563eb", lessons: 7 },
-                { id: 13, title: "Construcción de patrimonio", icon: ShieldCheck, category: "Patrimonio", catColor: "#10b981", lessons: 9 },
-                { id: 14, title: "Errores financieros comunes", icon: AlertTriangle, category: "Errores", catColor: "#f59e0b", lessons: 6 },
-                { id: 15, title: "Decisiones financieras conscientes", icon: Lightbulb, category: "Mentalidad", catColor: "#facc15", lessons: 5 },
-                { id: 16, title: "Mentalidad emprendedora", icon: Rocket, category: "Emprender", catColor: "#ef4444", lessons: 8 },
-                { id: 17, title: "Oportunidades de negocio", icon: Search, category: "Emprender", catColor: "#ef4444", lessons: 6 },
-                { id: 18, title: "Validar ideas rápido", icon: Zap, category: "Emprender", catColor: "#ef4444", lessons: 7 },
-                { id: 19, title: "Modelo de negocio simple", icon: Layout, category: "Negocios", catColor: "#6366f1", lessons: 9 },
-                { id: 20, title: "Ingresos, costos y utilidad", icon: Calculator, category: "Negocios", catColor: "#6366f1", lessons: 8 },
-                { id: 21, title: "Flujo de efectivo", icon: LineChart, category: "Negocios", catColor: "#6366f1", lessons: 6 },
-                { id: 22, title: "Precios y valor", icon: BadgeDollarSign, category: "Negocios", catColor: "#6366f1", lessons: 5 },
-                { id: 23, title: "Contabilidad básica", icon: BookOpen, category: "Negocios", catColor: "#6366f1", lessons: 7 },
-                { id: 24, title: "Errores comunes al emprender", icon: Skull, category: "Errores", catColor: "#f59e0b", lessons: 6 },
-                { id: 25, title: "Escalar un negocio", icon: TrendingUp, category: "Negocios", catColor: "#6366f1", lessons: 8 },
-                { id: 26, title: "Dinero y estilo de vida", icon: Smile, category: "Bienestar", catColor: "#ec4899", lessons: 5 },
-                { id: 27, title: "Dinero y decisiones importantes", icon: Heart, category: "Bienestar", catColor: "#ec4899", lessons: 6 },
-                { id: 28, title: "Dinero en crisis", icon: ShieldAlert, category: "Resiliencia", catColor: "#dc2626", lessons: 7 },
-                { id: 29, title: "Estrés y bienestar financiero", icon: Coffee, category: "Bienestar", catColor: "#ec4899", lessons: 5 },
-                { id: 30, title: "Mi vida financiera a futuro", icon: Target, category: "Futuro", catColor: "#0ea5e9", lessons: 10 },
-              ]
+              const topics = dbTopics.map((dt, idx) => ({
+                id: dt.id,
+                title: dt.title,
+                icon: ICON_MAP[dt.icon || "BookOpen"] || BookOpen,
+                category: dt.level || "General",
+                catColor: CATEGORY_COLORS[dt.level] || "#3b82f6",
+                lessons: dt._count?.courses || 0,
+                displayOrder: idx + 1
+              }))
+
               const pairs: typeof topics[] = []
               for (let i = 0; i < topics.length; i += 2) pairs.push(topics.slice(i, i + 2))
 
@@ -418,9 +426,9 @@ export default function CoursesPage() {
                         const IconComp = topic.icon
                         const showArrow = i === 0 && displayPair.length > 1
 
-                        const isPremiumTopic = topic.id > 1;
+                        const isPremiumTopic = topic.displayOrder > 1; // Basic sequential logic for premium
                         const isPaywalled = isPremiumTopic && !hasPremiumAccess;
-                        const isSequenceLocked = topic.id > nextTopicId;
+                        const isSequenceLocked = false; // logic for sequence locking can be added later
                         const isLocked = isPaywalled || isSequenceLocked;
 
                         return (
@@ -664,7 +672,7 @@ export default function CoursesPage() {
           .courses-main-content {
             padding-left: 16px !important;
             padding-right: 16px !important;
-            padding-top: 80px !important;
+            padding-top: 20px !important;
             padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
           }
         }

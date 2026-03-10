@@ -576,42 +576,9 @@ export default function WelcomePage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ position: "absolute", top: "-20px", right: "20px" }}>
-              <button
-                type="button"
-                aria-label="Cerrar menú"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  width: 44,
-                  height: 44,
-                  padding: 0,
-                  border: "none",
-                  background: "rgba(255,255,255,0.1)",
-                  borderRadius: "50%",
-                  cursor: "pointer",
-                  color: "#fff",
-                  fontSize: "24px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <CrossIcon size={20} />
-              </button>
-            </div>
+            <div style={{ height: "clamp(60px, 8vh, 100px)", width: "100%" }} />
 
-            <div style={{ marginBottom: "40px" }}>
-              <span
-                style={{
-                  fontSize: "28px",
-                  fontWeight: 500,
-                  color: "#fff",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                BIZEN<span style={{ color: "#1983FD" }}>.</span>
-              </span>
-            </div>
+
 
             <nav
               style={{
@@ -1223,7 +1190,7 @@ export default function WelcomePage() {
                       backgroundSize: "300% 300%",
                       animation: "border-shimmer 6s ease infinite",
                       width: "100%",
-                      maxWidth: "600px",
+                      maxWidth: "clamp(240px, 50vw, 750px)",
                     }}
                   >
                     <div
@@ -1233,7 +1200,7 @@ export default function WelcomePage() {
                         backdropFilter: "blur(24px)",
                         WebkitBackdropFilter: "blur(24px)",
                         padding:
-                          "clamp(20px, 3vw, 32px) clamp(24px, 4vw, 44px)",
+                          "clamp(12px, 2.5vw, 32px) clamp(16px, 3.5vw, 44px)",
                         textAlign: "center",
                         border: "1px solid rgba(96, 165, 250, 0.2)",
                         boxShadow:
@@ -1248,7 +1215,7 @@ export default function WelcomePage() {
                           borderRadius: "99px",
                           background:
                             "linear-gradient(90deg, #60a5fa, #1983FD)",
-                          margin: "0 auto 16px",
+                          margin: "0 auto 12px",
                         }}
                       />
 
@@ -1256,8 +1223,8 @@ export default function WelcomePage() {
                       <p
                         style={{
                           margin: 0,
-                          fontSize: "clamp(13px, 1.15vw, 17px)",
-                          lineHeight: 1.9,
+                          fontSize: "clamp(14px, 1.6vw, 22px)",
+                          lineHeight: 1.5,
                           fontWeight: 400,
                           color: "rgba(255, 255, 255, 0.92)",
                           letterSpacing: "0.01em",
@@ -1308,6 +1275,13 @@ export default function WelcomePage() {
                     }
                     @media (max-width: 640px) {
                       .hero-tagline-border-wrap { border-radius: 14px !important; }
+                    }
+                    @media (max-width: 450px) {
+                      .hero-tagline-border-wrap { 
+                        transform: translateX(12%); 
+                        margin-left: auto !important;
+                        margin-right: 0 !important;
+                      }
                     }
                   `,
                     }}
@@ -1876,10 +1850,10 @@ export default function WelcomePage() {
                     <Image
                       src="/logos/logo-google.png"
                       alt="Google for Startups"
-                      width={160}
-                      height={52}
+                      width={140}
+                      height={38}
                       style={{
-                        height: "52px",
+                        height: "38px",
                         width: "auto",
                         objectFit: "contain",
                         filter: "brightness(0) invert(1)",
@@ -4311,17 +4285,19 @@ function LandingContent({
 
                   <div
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "clamp(32px, 5vw, 64px)",
+                      display: "flex",
+                      flexDirection: "column",
                       alignItems: "center",
+                      textAlign: "center",
+                      maxWidth: "900px",
+                      margin: "0 auto",
                     }}
                     className="perfiles-content-grid"
                   >
                     {/* Left: Text Content - slide animation on tab change */}
                     <div
                       className="perfiles-content-left"
-                      style={{ overflow: "hidden", position: "relative" }}
+                      style={{ overflow: "hidden", position: "relative", width: "100%" }}
                     >
                       <div
                         key={activeProfile}
@@ -4388,11 +4364,13 @@ function LandingContent({
                         <ul
                           style={{
                             listStyle: "none",
-                            margin: "0 0 clamp(28px, 4vw, 36px) 0",
+                            margin: "0 auto clamp(28px, 4vw, 36px)",
                             padding: 0,
                             display: "flex",
                             flexDirection: "column",
                             gap: "16px",
+                            maxWidth: "600px",
+                            textAlign: "left",
                           }}
                         >
                           {activeProfile === "docentes" && (
@@ -4725,53 +4703,7 @@ function LandingContent({
                       </div>
                     </div>
 
-                    {/* Right: Photo for active profile (1 solución, 3 perfiles educativos) */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        minHeight: "360px",
-                      }}
-                    >
-                      <div
-                        key={activeProfile}
-                        className="perfiles-slide-in"
-                        style={{
-                          width: "100%",
-                          maxWidth: "400px",
-                          borderRadius: "28px",
-                          overflow: "hidden",
-                          position: "relative",
-                          boxShadow: "0 12px 40px rgba(0, 0, 0, 0.12)",
-                        }}
-                      >
-                        <Image
-                          src={
-                            activeProfile === "docentes"
-                              ? "/uploads/Landing_page/perfil-docentes.png"
-                              : activeProfile === "estudiantes"
-                                ? "/uploads/Landing_page/perfil-estudiantes.png"
-                                : "/uploads/Landing_page/perfil-padres.png"
-                          }
-                          alt={
-                            activeProfile === "docentes"
-                              ? "Docentes en el aula"
-                              : activeProfile === "estudiantes"
-                                ? "Estudiante con la plataforma"
-                                : "Padres e hijos aprendiendo"
-                          }
-                          width={400}
-                          height={300}
-                          style={{
-                            width: "100%",
-                            height: "auto",
-                            display: "block",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               </div>
