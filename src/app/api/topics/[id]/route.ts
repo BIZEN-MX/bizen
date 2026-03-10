@@ -42,7 +42,7 @@ export async function GET(
 
     if (!topic) {
       return NextResponse.json(
-        { error: 'Topic not found' },
+        { error: `Topic with ID '${id}' not found in database.` },
         { status: 404 }
       )
     }
