@@ -20,6 +20,8 @@ function isPublicPath(p: string | null) {
   return PUBLIC_PATHS.some(pub => p === pub || p.startsWith(pub))
 }
 
+import BillyChatbot from './BillyChatbot';
+
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
@@ -215,6 +217,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
       {!isUnauthProtected && <GlobalLogo />}
       {children}
+      {!isUnauthProtected && <BillyChatbot />}
       <NavigationLoading isLoading={isNavigating} />
     </>
   );

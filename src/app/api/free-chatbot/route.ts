@@ -50,8 +50,11 @@ Tus reglas principales:
 6. Usa emojis libremente (💸, 📈, 🚀) para mantener el texto amigable.
 7. Siempre responde en español.`
 
-    // Gemini 1.5 Flash API endpoint
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
+    const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT
+    const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION || "us-central1"
+
+    // Vertex AI specific endpoint for Google Cloud Startup credits consumption
+    const GEMINI_API_URL = `https://${GOOGLE_CLOUD_LOCATION}-aiplatform.googleapis.com/v1/projects/${GOOGLE_CLOUD_PROJECT}/locations/${GOOGLE_CLOUD_LOCATION}/publishers/google/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
 
     // Map conversation history to Gemini format (user -> user, assistant -> model)
     const contents = [
@@ -84,19 +87,19 @@ Tus reglas principales:
 
     if (!geminiResponse.ok) {
       const errorText = await geminiResponse.text()
-      console.error("Gemini API error:", errorText)
-      throw new Error("Failed to communicate with Gemini")
+      console.error("Gemini Vertex API error:", errorText)
+      throw new Error("Failed to communicate with Gemini on Vertex AI")
     }
 
     const data = await geminiResponse.json()
     const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "Lo siento, me quedé sin palabras."
 
     dailyAIRequests++
-    console.log(`[Billy:Gemini] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
+    console.log(`[Billy:Vertex] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
 
     return NextResponse.json({
       response: responseText,
-      source: "google:gemini-1.5-flash"
+      source: "google:gemini-1.5-flash-vertex"
     })
 
   } catch (error) {

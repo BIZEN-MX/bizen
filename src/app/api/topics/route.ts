@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
           }
         },
         orderBy: {
-          createdAt: 'desc'
+          id: 'asc'
         }
       })
     } else {
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
           }
         },
         orderBy: {
-          createdAt: 'desc'
+          id: 'asc'
         }
       })
     }
