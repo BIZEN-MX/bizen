@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useCallback, useRef, useState } from "react"
+import React, { useEffect, useCallback, useRef, useState, useMemo } from "react"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
@@ -27,16 +27,60 @@ export default function InteractiveLessonPage() {
   const initialStepIndex = searchParams.get("step")
 
 
-  const lessonSteps = getStepsForLesson(lessonIdStr)
+  const [dbLesson, setDbLesson] = useState<any>(null)
+  const [loadingLesson, setLoadingLesson] = useState(true)
+
+  useEffect(() => {
+    async function fetchLessonData() {
+      if (!lessonIdStr) return
+      try {
+        setLoadingLesson(true)
+        const res = await fetch(`/api/lessons/${lessonIdStr}`)
+        if (res.ok) {
+          const data = await res.json()
+          setDbLesson(data)
+        }
+      } catch (e) {
+        console.error("Error fetching lesson from DB:", e)
+      } finally {
+        setLoadingLesson(false)
+      }
+    }
+    fetchLessonData()
+  }, [lessonIdStr])
+
+  const registrySteps = getStepsForLesson(lessonIdStr)
+
+  // Use DB steps if available, otherwise fallback to registry
+  const lessonSteps = React.useMemo(() => {
+    if (dbLesson?.steps?.length > 0) {
+      return dbLesson.steps.map((s: any) => ({
+        ...s.data, // original format is stored in 'data' field
+        id: s.id,
+        stepType: s.type,
+        title: s.title,
+        body: s.body,
+        xpReward: s.xpReward
+      }))
+    }
+    return registrySteps
+  }, [dbLesson, registrySteps])
 
   const [progress, setProgress] = useState({
     currentStepIndex: initialStepIndex ? parseInt(initialStepIndex) : 0,
-    totalSteps: lessonSteps.length || 1,
+    totalSteps: 1,
     streak: 0,
     mistakes: 0,
     stars: 3 as 0 | 1 | 2 | 3,
     xpEarned: 0,
   })
+
+  // Update total steps when lessonSteps changes
+  useEffect(() => {
+    if (lessonSteps.length > 0) {
+      setProgress(prev => ({ ...prev, totalSteps: lessonSteps.length }))
+    }
+  }, [lessonSteps.length])
 
   // Access derived state after all hooks
   const isRepeated = (user?.user_metadata?.completedLessons as string[] | undefined)?.includes(lessonIdStr) || false
@@ -117,6 +161,19 @@ export default function InteractiveLessonPage() {
     router.push(`/courses/${topicNum}`)
   }
 
+  // Lesson is loading
+  if (loadingLesson) {
+    return (
+      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5", gap: 16, flexDirection: "column" }}>
+        <div style={{ width: 40, height: 40, border: "4px solid #E2E8F0", borderTopColor: "#0B71FE", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+        <p style={{ fontWeight: 500, color: "#64748B" }}>Cargando lección...</p>
+        <style>{`
+          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        `}</style>
+      </div>
+    )
+  }
+
   // Lesson has no content yet (not in registry or slug typo)
   if (!lessonSteps.length) {
     const courseNum = courseIdStr.replace(/^course-/, "") || "1"
@@ -131,7 +188,7 @@ export default function InteractiveLessonPage() {
           gap: 24,
           padding: 24,
           background: "#f1f5f9",
-                  }}
+        }}
       >
         <p style={{ fontSize: 20, fontWeight: 500, color: "#334155", textAlign: "center" }}>
           Esta lección aún no tiene contenido.

@@ -486,7 +486,7 @@ export default function CoursesPage() {
                             </div>
                             {showArrow && (() => {
                               const destTopic = displayPair[i + 1];
-                              const isDestLocked = (destTopic.id > 1 && !hasPremiumAccess) || (destTopic.id > nextTopicId);
+                              const isDestLocked = (destTopic.displayOrder > 1 && !hasPremiumAccess) || (destTopic.displayOrder > nextTopicId);
                               const arrowColor = isDestLocked ? "#94a3b8" : "#2563eb";
                               const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
 
