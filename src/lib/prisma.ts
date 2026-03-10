@@ -16,7 +16,10 @@ const globalForPrisma = globalThis as unknown as {
 // Better to configure the DATABASE_URL correctly in .env directly.
 let customUrl = process.env.DATABASE_URL
 
-console.log("🛠️ Initializing Prisma Client with URL:", customUrl ? customUrl.substring(0, 20) + "..." : "null")
+console.log("🛠️ Initializing Prisma Client with URL:", customUrl ? customUrl.substring(0, 25) + "..." : "null")
+if (customUrl && !customUrl.includes("pgbouncer=true")) {
+  console.log("💡 Tip: If you see 'prepared statement already exists' in production, ensure pgbouncer=true is in your DATABASE_URL")
+}
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   datasourceUrl: customUrl,
