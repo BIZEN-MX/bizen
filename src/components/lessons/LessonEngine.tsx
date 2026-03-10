@@ -372,7 +372,6 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           height: "100dvh",
           overflow: "hidden",
           background: isSummaryStep ? "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)" : "#FFFFFF",
-          paddingTop: "env(safe-area-inset-top)",
         }}
       >
         {/* Header - Hidden on Summary Step for maximum immersion */}

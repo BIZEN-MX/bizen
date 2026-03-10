@@ -63,9 +63,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(topics)
   } catch (error: any) {
-    console.error('Error fetching topics:', error)
+    console.error('SERVER ERROR fetching topics:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch topics' },
+      { error: 'Failed to fetch topics', detail: error.message },
       { status: 500 }
     )
   }

@@ -50,7 +50,6 @@ export function LessonScreen({
         height: "100dvh",
         overflow: "hidden",
         background: "#FFFFFF",
-        paddingTop: "env(safe-area-inset-top)",
         position: "relative",
       }}
     >

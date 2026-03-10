@@ -154,15 +154,17 @@ export default function CoursesPage() {
       try {
         setLoadingData(true)
         const res = await fetch('/api/topics')
-        if (!res.ok) throw new Error("Failed to fetch topics")
         const data = await res.json()
 
-        // Sort by 'order' if available, or just use chronological
-        setDbTopics(data)
-        setCourses([]) // Not used anymore for main list
+        if (!res.ok) {
+          throw new Error(data.detail || data.error || "Failed to fetch topics")
+        }
 
-      } catch (error) {
+        setDbTopics(data)
+        setCourses([])
+      } catch (error: any) {
         console.error("Error fetching courses:", error)
+        setLoadingData(false)
       } finally {
         setLoadingData(false)
       }
