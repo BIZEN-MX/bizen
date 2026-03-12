@@ -1003,6 +1003,9 @@ model AuthUser {
   players                     Player[]
   sim_runs                    sim_runs[]
   achievements                UserAchievement[]
+  simulator_portfolios        simulator_portfolios[]
+  credit_sim_profiles         credit_sim_profiles[]
+  readiness_events            readiness_events[]
 
   @@index([instance_id])
   @@index([is_anonymous])
@@ -1713,6 +1716,119 @@ model sim_runs {
   @@index([simulator_slug], map: "idx_sim_runs_simulator_slug")
   @@index([user_id], map: "idx_sim_runs_user_id")
   @@index([user_id, simulator_slug, created_at(sort: Desc)], map: "idx_sim_runs_user_slug_created")
+  @@schema("public")
+}
+
+model simulator_portfolios {
+  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String               @db.Uuid
+  classroom_id   String?              @db.Uuid
+  currency       String               @default("USD")
+  starting_cash  Decimal              @db.Decimal(12, 2)
+  cash_balance   Decimal              @db.Decimal(12, 2)
+  created_at     DateTime?            @default(now()) @db.Timestamptz(6)
+  users          AuthUser             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  holdings       simulator_holdings[]
+  orders         simulator_orders[]
+
+  @@schema("public")
+}
+
+model simulator_holdings {
+  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  portfolio_id   String               @db.Uuid
+  symbol         String
+  quantity       Decimal              @db.Decimal(12, 4)
+  avg_cost       Decimal              @db.Decimal(12, 2)
+  created_at     DateTime?            @default(now()) @db.Timestamptz(6)
+  portfolio      simulator_portfolios @relation(fields: [portfolio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+model simulator_orders {
+  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  portfolio_id   String               @db.Uuid
+  symbol         String
+  side           String               // 'buy' | 'sell'
+  order_type     String               // 'market' | 'limit'
+  limit_price    Decimal?             @db.Decimal(12, 2)
+  quantity       Decimal              @db.Decimal(12, 4)
+  status         String               // 'pending' | 'filled' | 'cancelled'
+  placed_at      DateTime?            @default(now()) @db.Timestamptz(6)
+  filled_at      DateTime?            @db.Timestamptz(6)
+  fill_price     Decimal?             @db.Decimal(12, 2)
+  fee            Decimal?             @db.Decimal(12, 2)
+  portfolio      simulator_portfolios @relation(fields: [portfolio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+model market_prices_eod {
+  symbol         String
+  date           DateTime             @db.Date
+  open           Decimal              @db.Decimal(12, 4)
+  high           Decimal              @db.Decimal(12, 4)
+  low            Decimal              @db.Decimal(12, 4)
+  close          Decimal              @db.Decimal(12, 4)
+  volume         BigInt?
+
+  @@id([symbol, date])
+  @@schema("public")
+}
+
+model credit_sim_profiles {
+  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String                 @db.Uuid
+  created_at     DateTime?              @default(now()) @db.Timestamptz(6)
+  users          AuthUser               @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  scenarios      credit_sim_scenarios[]
+
+  @@schema("public")
+}
+
+model credit_sim_scenarios {
+  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  profile_id     String                 @db.Uuid
+  scenario_type  String                 // 'credit_card' | 'personal_loan' | 'installments'
+  inputs_json    Json
+  created_at     DateTime?              @default(now()) @db.Timestamptz(6)
+  profile        credit_sim_profiles    @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  results        credit_sim_results[]
+
+  @@schema("public")
+}
+
+model market_symbols {
+  symbol    String   @id
+  name      String?
+  type      String?
+  is_active Boolean? @default(true)
+
+  @@schema("public")
+}
+
+model credit_sim_results {
+  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scenario_id    String                 @db.Uuid
+  results_json   Json
+  created_at     DateTime?              @default(now()) @db.Timestamptz(6)
+  scenario       credit_sim_scenarios   @relation(fields: [scenario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+model readiness_events {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String    @db.Uuid
+  label          String    // e.g. 'financial_knowledge', 'credit_management', 'investment_acumen', 'budgeting'
+  event_type     String    // e.g. 'diagnostic', 'simulator_challenge', 'good_decision'
+  score_delta    Int       // positive or negative impact points
+  reason         String    // Explainability
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  users          AuthUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id])
   @@schema("public")
 }
 

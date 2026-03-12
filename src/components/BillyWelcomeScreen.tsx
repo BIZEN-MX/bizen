@@ -229,22 +229,23 @@ export default function BillyWelcomeScreen({
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            style={{
-              position: "absolute",
-              top: -40,
-              left: "50%",
-              transform: "translateX(-50%) translateY(-100%)",
-              background: "linear-gradient(135deg, #ffffff, #f8faff)",
-              border: "4px solid #0F62FE",
-              borderRadius: 30,
-              padding: "25px 40px",
-              boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
-              minWidth: 350,
-              maxWidth: "90vw",
-              textAlign: "center",
-              animation: "popIn 0.5s ease-out",
-              overflow: "hidden" as const,
-            }}
+              style={{
+                position: "absolute",
+                top: -20,
+                left: "50%",
+                transform: "translateX(-50%) translateY(-100%)",
+                background: "linear-gradient(135deg, #ffffff, #f8faff)",
+                border: "4px solid #0F62FE",
+                borderRadius: 24,
+                padding: "clamp(15px, 4vw, 25px) clamp(20px, 5vw, 40px)",
+                boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+                width: "max-content",
+                minWidth: "min(280px, 90vw)",
+                maxWidth: "92vw",
+                textAlign: "center",
+                animation: "popIn 0.5s ease-out",
+                overflow: "hidden" as const,
+              }}
           >
             <motion.p
               animate={{
@@ -337,15 +338,19 @@ export default function BillyWelcomeScreen({
           }}
           style={{
             filter: "drop-shadow(0 8px 25px rgba(15, 98, 254, 0.3))",
+            width: "clamp(200px, 60vw, 400px)",
+            height: "auto",
+            margin: "0 auto"
           }}
         >
-          <Image
+          <img
             src="/drago1.png"
             alt="Billy"
-            width={400}
-            height={400}
-            style={{ display: "block" }}
-            priority
+            style={{ 
+              display: "block",
+              width: "100%",
+              height: "auto"
+            }}
           />
         </motion.div>
 
@@ -393,17 +398,18 @@ export default function BillyWelcomeScreen({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             style={{
-              padding: "14px 40px",
+              padding: "clamp(12px, 3.5vw, 16px) clamp(30px, 8vw, 60px)",
               background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7))",
               backdropFilter: "blur(10px)",
               border: "2px solid rgba(255, 255, 255, 0.5)",
               borderRadius: 30,
               color: "#0F62FE",
-              fontSize: "clamp(18px, 4vw, 22px)",
-              fontWeight: 500,
+              fontSize: "clamp(16px, 4.5vw, 22px)",
+              fontWeight: 600,
               cursor: "pointer",
               boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
               transition: "all 0.3s ease",
+              whiteSpace: "nowrap" as const
                           }}
           >
             {timeRemaining > 0 ? `Continuar en ${timeRemaining}s` : 'Continuar →'}

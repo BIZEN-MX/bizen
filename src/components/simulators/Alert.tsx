@@ -1,57 +1,44 @@
 'use client';
 
 /**
- * Alert Component
- * Display notices and educational disclaimers
- * Light theme version matching BIZEN white aesthetic
+ * Alert Component — Premium BIZEN UI
  */
 
-import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { Info, Lightbulb, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
 
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'info' | 'warning' | 'success' | 'danger';
   icon?: React.ReactNode;
 }
 
-export function Alert({
-  variant = 'default',
-  icon,
-  className,
-  children,
-  ...props
-}: AlertProps) {
-  const variantStyles = {
-    default: 'bg-gray-100 border-gray-200 text-gray-800',
-    info: 'bg-blue-50 border-blue-100 text-blue-900',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-900',
-    success: 'bg-green-50 border-green-200 text-green-900',
-    danger: 'bg-red-50 border-red-200 text-red-900',
-  };
+const VARIANTS = {
+  default: { bg: 'linear-gradient(135deg,#f8fafc,#f1f5f9)', border: '#e2e8f0', text: '#475569', icon: <Info size={18} /> },
+  info:    { bg: 'linear-gradient(135deg,#eff6ff,#dbeafe)', border: '#93c5fd', text: '#1e40af', icon: <Lightbulb size={18} /> },
+  warning: { bg: 'linear-gradient(135deg,#fffbeb,#fef3c7)', border: '#fde68a', text: '#92400e', icon: <AlertTriangle size={18} /> },
+  success: { bg: 'linear-gradient(135deg,#f0fdf4,#dcfce7)', border: '#86efac', text: '#166534', icon: <CheckCircle2 size={18} /> },
+  danger:  { bg: 'linear-gradient(135deg,#fff1f2,#ffe4e6)', border: '#fca5a5', text: '#991b1b', icon: <XCircle size={18} /> },
+};
 
-  const defaultIcons = {
-    default: 'ℹ️',
-    info: 'ℹ️',
-    warning: '⚠️',
-    success: '✅',
-    danger: '❌',
-  };
-
+export function Alert({ variant = 'default', icon, className, children, style, ...props }: AlertProps) {
+  const v = VARIANTS[variant];
   return (
     <div
-      className={cn(
-        'flex items-start gap-3 p-4 rounded-xl border transition-all duration-200',
-        variantStyles[variant],
-        className
-      )}
+      role="alert"
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 12,
+        padding: '14px 18px',
+        borderRadius: 16,
+        border: `1.5px solid ${v.border}`,
+        background: v.bg,
+        color: v.text,
+        ...style,
+      }}
       {...props}
     >
-      <span className="text-xl flex-shrink-0 mt-0.5">
-        {icon || defaultIcons[variant]}
-      </span>
-      <div className="flex-1 text-sm leading-relaxed">
-        {children}
-      </div>
+      <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1, lineHeight: 1 }}>{icon || v.icon}</span>
+      <div style={{ flex: 1, fontSize: 14, lineHeight: 1.65, fontWeight: 500 }}>{children}</div>
     </div>
   );
 }

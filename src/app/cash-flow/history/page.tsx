@@ -412,7 +412,7 @@ export default function HistoryPage() {
         ) : (
           <div style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 380px), 1fr))', 
             gap: 24 
           }}>
             {runs.map(run => (

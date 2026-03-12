@@ -1,13 +1,11 @@
 'use client';
 
 /**
- * NumberField Component
- * Currency and numeric input field with proper formatting
- * Light theme version matching BIZEN white aesthetic
+ * NumberField Component — Premium BIZEN UI
+ * Currency and numeric input with floating prefix/suffix, smooth focus states
  */
 
 import * as React from 'react';
-import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 export interface NumberFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
@@ -31,26 +29,24 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
     percentage = false,
     min = 0,
     max,
-    step = currency ? 1 : 0.01,
+    step,
     label,
     hint,
     error,
     className,
     ...props
   }, ref) => {
+    const resolvedStep = step ?? (currency ? 1 : 0.01);
     const [displayValue, setDisplayValue] = React.useState(value.toString());
     const [isFocused, setIsFocused] = React.useState(false);
 
     React.useEffect(() => {
-      if (!isFocused) {
-        setDisplayValue(formatDisplay(value));
-      }
+      if (!isFocused) setDisplayValue(formatDisplay(value));
     }, [value, isFocused]);
 
     function formatDisplay(num: number): string {
       if (isNaN(num)) return '';
       if (percentage) return num.toFixed(2);
-
       if (currency) {
         return new Intl.NumberFormat('es-MX', {
           minimumFractionDigits: 0,
@@ -90,21 +86,51 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
 
     const prefix = currency ? '$' : '';
     const suffix = percentage ? '%' : '';
+    const hasError = !!error;
 
     return (
-      <div className="flex flex-col gap-2.5 mb-5">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 20 }}>
         {label && (
-          <label className="text-sm font-semibold text-[#1e293b] mb-1">
+          <label style={{
+            fontSize: 12,
+            fontWeight: 700,
+            color: '#475569',
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            marginBottom: 2,
+          }}>
             {label}
           </label>
         )}
-        <div className="relative group">
+
+        <div style={{ position: 'relative' }} className="group">
+          {/* Prefix badge */}
           {prefix && (
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base font-semibold pointer-events-none transition-colors duration-200 group-focus-within:text-blue-600">
-              {prefix}
-            </span>
+            <div style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 44,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none',
+              zIndex: 1,
+            }}>
+              <span style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: isFocused ? '#0B71FE' : '#94a3b8',
+                transition: 'color 0.2s',
+                userSelect: 'none',
+              }}>
+                {prefix}
+              </span>
+            </div>
           )}
-          <Input
+
+          <input
             ref={ref}
             type="text"
             inputMode="decimal"
@@ -112,29 +138,62 @@ export const NumberField = React.forwardRef<HTMLInputElement, NumberFieldProps>(
             onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            className={cn(
-              "h-12 border-gray-200 bg-[#FBFAF5] text-gray-900 font-medium rounded-xl transition-all duration-200",
-              "hover:border-gray-300",
-              "focus:border-blue-500 focus:ring-4 focus:ring-blue-100",
-              prefix && 'pl-8',
-              suffix && 'pr-10',
-              error && 'border-red-400 focus-visible:border-red-500 hover:border-red-300',
-              className
-            )}
+            style={{
+              width: '100%',
+              height: 48,
+              padding: `0 ${suffix ? '44px' : '16px'} 0 ${prefix ? '44px' : '16px'}`,
+              background: hasError ? '#fff1f2' : isFocused ? '#ffffff' : '#f8fafc',
+              border: `1.5px solid ${hasError ? '#fca5a5' : isFocused ? '#0B71FE' : '#e2e8f0'}`,
+              borderRadius: 14,
+              fontSize: 16,
+              fontWeight: 700,
+              color: '#0f172a',
+              outline: 'none',
+              transition: 'all 0.2s ease',
+              boxShadow: isFocused
+                ? hasError
+                  ? '0 0 0 3px rgba(239,68,68,0.12)'
+                  : '0 0 0 3px rgba(11,113,254,0.1)'
+                : 'none',
+              fontFamily: 'inherit',
+              boxSizing: 'border-box',
+            }}
             {...props}
           />
+
+          {/* Suffix badge */}
           {suffix && (
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-base font-semibold pointer-events-none transition-colors duration-200 group-focus-within:text-blue-600">
-              {suffix}
-            </span>
+            <div style={{
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: 44,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none',
+              zIndex: 1,
+            }}>
+              <span style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: isFocused ? '#0B71FE' : '#94a3b8',
+                transition: 'color 0.2s',
+                userSelect: 'none',
+              }}>
+                {suffix}
+              </span>
+            </div>
           )}
         </div>
+
         {hint && !error && (
-          <p className="text-xs text-gray-500 italic leading-relaxed pl-1">{hint}</p>
+          <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>{hint}</p>
         )}
         {error && (
-          <p className="text-xs text-red-600 font-medium flex items-center gap-1.5 pl-1">
-            <span>⚠️</span> {error}
+          <p style={{ fontSize: 12, color: '#ef4444', fontWeight: 600, margin: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span>⚠</span> {error}
           </p>
         )}
       </div>

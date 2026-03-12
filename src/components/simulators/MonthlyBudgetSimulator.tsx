@@ -678,8 +678,8 @@ export function MonthlyBudgetSimulator() {
                   </div>
                   <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {result.recommendations.map((rec, i) => {
-                      const isWarning = rec.includes('⚠️') || rec.toLowerCase().includes('excede') || rec.toLowerCase().includes('superior');
-                      const isSuccess = rec.includes('✅') || rec.toLowerCase().includes('excelente') || rec.toLowerCase().includes('cumple');
+                      const isWarning = rec.toLowerCase().includes('alerta') || rec.toLowerCase().includes('excede') || rec.toLowerCase().includes('superior') || rec.toLowerCase().includes('reducir') || rec.toLowerCase().includes('urgente');
+                      const isSuccess = rec.toLowerCase().includes('felicidades') || rec.toLowerCase().includes('excelente') || rec.toLowerCase().includes('cumple') || rec.toLowerCase().includes('perfecto');
                       type RecVariant = 'warning' | 'success' | 'info';
                       const variant: RecVariant = isWarning ? 'warning' : isSuccess ? 'success' : 'info';
                       const cfgs: Record<RecVariant, { bg: string; border: string; color: string; Icon: typeof AlertTriangle }> = {
@@ -688,7 +688,7 @@ export function MonthlyBudgetSimulator() {
                         info:    { bg: '#eff6ff', border: '#bfdbfe', color: '#1e40af', Icon: Info           },
                       };
                       const c = cfgs[variant];
-                      const cleanText = rec.replace(/^[⚠️✅ℹ️🎉💪]\s*/u, '');
+                      const cleanText = rec;
                       return (
                         <div key={i} style={{
                           display: 'flex', alignItems: 'flex-start', gap: 12,

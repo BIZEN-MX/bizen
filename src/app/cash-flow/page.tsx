@@ -447,6 +447,110 @@ export default function CombinedSimulatorsPage() {
                   </div>
                 ) : (
                   <div className="simuladores-grid">
+                    {/* Simulador Bolsa (Beta) */}
+                    <Link href="/simulators/stocks" style={{ textDecoration: "none" }}>
+                      <div className="sim-card" style={{
+                        background: "white",
+                        borderRadius: 20,
+                        padding: 24,
+                        border: "1px solid #f1f5f9",
+                        display: "flex",
+                        flexDirection: "column",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
+                        height: "100%",
+                        boxSizing: "border-box",
+                        position: "relative",
+                        overflow: "hidden"
+                      }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
+                          <div style={{ width: 52, height: 52, borderRadius: 16, background: `#10b98120`, border: `1px solid #10b98130`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 20px #10b98120` }}>
+                            <TrendingUp size={24} color="#10b981" />
+                          </div>
+                          <span style={{ fontSize: 10, fontWeight: 700, padding: "5px 12px", background: `#10b98115`, color: "#10b981", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: `1px solid #10b98125` }}>
+                            NUEVO
+                          </span>
+                        </div>
+                        <h3 style={{ fontSize: 19, fontWeight: 700, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+                          Simulador de Mercado (Beta)
+                        </h3>
+                        <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7, flex: 1, marginBottom: 24 }}>
+                          Aprende a invertir en la bolsa de valores real con precios al día. Compra acciones y ETFs sin usar dinero real.
+                        </p>
+                        <button style={{
+                          width: "100%",
+                          padding: "14px",
+                          background: `linear-gradient(135deg, #10b981ee, #10b98199)`,
+                          color: "white",
+                          border: `1px solid #10b98140`,
+                          borderRadius: 14,
+                          fontSize: 14,
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 8,
+                          boxShadow: `0 4px 20px #10b98130`,
+                          letterSpacing: "0.01em"
+                        }}>
+                          Abrir Simulador
+                          <ChevronRight size={16} />
+                        </button>
+                      </div>
+                    </Link>
+
+                    {/* Simulador Crédito (Beta) */}
+                    <Link href="/simulators/credit" style={{ textDecoration: "none" }}>
+                      <div className="sim-card" style={{
+                        background: "white",
+                        borderRadius: 20,
+                        padding: 24,
+                        border: "1px solid #f1f5f9",
+                        display: "flex",
+                        flexDirection: "column",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
+                        height: "100%",
+                        boxSizing: "border-box",
+                        position: "relative",
+                        overflow: "hidden"
+                      }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
+                          <div style={{ width: 52, height: 52, borderRadius: 16, background: `#f59e0b20`, border: `1px solid #f59e0b30`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 20px #f59e0b20` }}>
+                            <CreditCard size={24} color="#f59e0b" />
+                          </div>
+                          <span style={{ fontSize: 10, fontWeight: 700, padding: "5px 12px", background: `#f59e0b15`, color: "#f59e0b", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: `1px solid #f59e0b25` }}>
+                            NUEVO
+                          </span>
+                        </div>
+                        <h3 style={{ fontSize: 19, fontWeight: 700, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+                          Simulador de Crédito (Beta)
+                        </h3>
+                        <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7, flex: 1, marginBottom: 24 }}>
+                          Descubre cómo funcionan las tarjetas de crédito, los préstamos y compras a Meses Sin Intereses.
+                        </p>
+                        <button style={{
+                          width: "100%",
+                          padding: "14px",
+                          background: `linear-gradient(135deg, #f59e0bee, #f59e0b99)`,
+                          color: "white",
+                          border: `1px solid #f59e0b40`,
+                          borderRadius: 14,
+                          fontSize: 14,
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 8,
+                          boxShadow: `0 4px 20px #f59e0b30`,
+                          letterSpacing: "0.01em"
+                        }}>
+                          Abrir Simulador
+                          <ChevronRight size={16} />
+                        </button>
+                      </div>
+                    </Link>
+                    
                     {simulatorsList.map((simulator) => {
                       const IconComponent = CATEGORY_ICONS[simulator.category] || BarChart2
                       const accent = CATEGORY_ACCENT[simulator.category] || '#0B71FE'

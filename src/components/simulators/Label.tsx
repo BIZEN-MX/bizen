@@ -1,13 +1,6 @@
 'use client';
 
-/**
- * Label Component
- * Simple label for form fields with optional tooltip
- * Light theme version matching BIZEN white aesthetic
- */
-
 import * as React from 'react';
-import { cn } from '@/lib/utils';
 
 export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
@@ -15,30 +8,29 @@ export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> 
 }
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
-  ({ className, children, required, tooltip, ...props }, ref) => {
+  ({ className, children, required, tooltip, style, ...props }, ref) => {
     return (
       <label
         ref={ref}
-        className={cn('text-sm font-semibold text-[#1e293b]', className)}
-        style={{ marginBottom: 10, display: 'block' }}
+        style={{
+          display: 'block',
+          fontSize: 12,
+          fontWeight: 700,
+          color: '#475569',
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
+          marginBottom: 8,
+          ...style,
+        }}
         {...props}
       >
         {children}
-        {required && <span className="text-red-500 ml-1 font-bold">*</span>}
+        {required && <span style={{ color: '#ef4444', marginLeft: 4, fontWeight: 800 }}>*</span>}
         {tooltip && (
-          <span className="tooltip-text" style={{ marginLeft: 8, fontSize: '0.75rem', color: '#64748b', fontWeight: 400, fontStyle: 'italic' }}>
+          <span style={{ marginLeft: 8, fontSize: 11, color: '#94a3b8', fontWeight: 500, fontStyle: 'italic', textTransform: 'none', letterSpacing: 0 }}>
             ({tooltip})
           </span>
         )}
-        <style jsx>{`
-          @media (max-width: 640px) {
-            .tooltip-text {
-              display: block !important;
-              margin-left: 0 !important;
-              margin-top: 4px !important;
-            }
-          }
-        `}</style>
       </label>
     );
   }

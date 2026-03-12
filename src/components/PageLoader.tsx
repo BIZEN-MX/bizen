@@ -55,8 +55,7 @@ export default function PageLoader() {
                         color: "#0f172a",
                         margin: 0,
                         letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        fontFamily: "'Inter', sans-serif"
+                        textTransform: "uppercase"
                     }}
                 >
                     BIZEN

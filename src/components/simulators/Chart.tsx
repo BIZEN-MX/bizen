@@ -1,34 +1,22 @@
 'use client';
 
 /**
- * Chart Component
- * Recharts wrapper for financial simulators
+ * Chart Component — Premium BIZEN UI
+ * Recharts wrapper with custom premium tooltip and axis styles
  */
 
 import * as React from 'react';
 import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  TooltipProps,
+  LineChart, Line, BarChart, Bar,
+  XAxis, YAxis, CartesianGrid, Tooltip,
+  Legend, ResponsiveContainer,
 } from 'recharts';
 import { currencyMXN, formatNumber } from '@/lib/simulators';
 
 export interface ChartProps {
   data: any[];
   type?: 'line' | 'bar';
-  lines?: Array<{
-    dataKey: string;
-    name: string;
-    color: string;
-  }>;
+  lines?: Array<{ dataKey: string; name: string; color: string }>;
   xAxisKey: string;
   xAxisLabel?: string;
   yAxisLabel?: string;
@@ -47,74 +35,88 @@ export function Chart({
   height = 300,
 }: ChartProps) {
   function formatYValue(value: number): string {
-    if (formatYAxis === 'currency') {
-      return currencyMXN(value, 0);
-    } else if (formatYAxis === 'percent') {
-      return `${value.toFixed(1)}%`;
-    } else {
-      return formatNumber(value, 0);
-    }
+    if (formatYAxis === 'currency') return currencyMXN(value, 0);
+    if (formatYAxis === 'percent') return `${value.toFixed(1)}%`;
+    return formatNumber(value, 0);
   }
 
   function formatTooltipValue(value: number): string {
-    if (formatYAxis === 'currency') {
-      return currencyMXN(value, 2);
-    } else if (formatYAxis === 'percent') {
-      return `${value.toFixed(2)}%`;
-    } else {
-      return formatNumber(value, 2);
-    }
+    if (formatYAxis === 'currency') return currencyMXN(value, 2);
+    if (formatYAxis === 'percent') return `${value.toFixed(2)}%`;
+    return formatNumber(value, 2);
   }
 
   const CustomTooltip = ({ active, payload, label }: any) => {
-    if (!active || !payload || !payload.length) return null;
-
+    if (!active || !payload?.length) return null;
     return (
-      <div className="bg-[#FBFAF5] p-3 border border-gray-200 rounded-lg shadow-md">
-        <p className="text-sm font-semibold text-gray-900 mb-2">
-          {xAxisLabel || 'Periodo'}: {label}
+      <div style={{
+        background: 'white',
+        border: '1px solid #e2e8f0',
+        borderRadius: 14,
+        padding: '12px 16px',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+        minWidth: 180,
+        fontFamily: '-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif',
+      }}>
+        <p style={{ fontSize: 12, fontWeight: 700, color: '#64748b', margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          {xAxisLabel || 'Periodo'} {label}
         </p>
-        {payload.map((entry: any, index: number) => (
-          <p key={index} className="text-sm" style={{ color: entry.color }}>
-            <span className="font-medium">{entry.name}:</span>{' '}
-            {formatTooltipValue(entry.value as number)}
-          </p>
+        {payload.map((entry: any, i: number) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: i < payload.length - 1 ? 6 : 0 }}>
+            <span style={{ width: 10, height: 10, borderRadius: '50%', background: entry.color, flexShrink: 0, display: 'inline-block' }} />
+            <span style={{ fontSize: 13, color: '#475569', flex: 1 }}>{entry.name}</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>{formatTooltipValue(entry.value as number)}</span>
+          </div>
         ))}
       </div>
     );
   };
 
-  const chartMargin = { top: 20, right: 30, left: 20, bottom: 20 };
+  const axisStyle = { fontSize: 12, fill: '#94a3b8', fontFamily: '-apple-system,sans-serif' };
+  const gridStyle = { stroke: '#f1f5f9', strokeDasharray: '4 4' };
+  const margin = { top: 16, right: 20, left: 10, bottom: 24 };
+
+  const sharedXAxis = (
+    <XAxis
+      dataKey={xAxisKey}
+      tick={axisStyle}
+      axisLine={{ stroke: '#e2e8f0' }}
+      tickLine={false}
+      height={48}
+      label={xAxisLabel ? { value: xAxisLabel, position: 'insideBottom', offset: -8, fill: '#94a3b8', fontSize: 12 } : undefined}
+    />
+  );
+
+  const sharedYAxis = (
+    <YAxis
+      tickFormatter={formatYValue}
+      tick={axisStyle}
+      axisLine={false}
+      tickLine={false}
+      width={90}
+      label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft', fill: '#94a3b8', fontSize: 12 } : undefined}
+    />
+  );
+
+  const sharedLegend = (
+    <Legend
+      wrapperStyle={{ fontSize: '13px', paddingTop: '16px', color: '#475569', fontFamily: '-apple-system,sans-serif' }}
+      iconType={type === 'bar' ? 'square' : 'circle'}
+      iconSize={10}
+    />
+  );
 
   if (type === 'bar') {
     return (
       <ResponsiveContainer width="100%" height={height}>
-        <BarChart data={data} margin={chartMargin}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis
-            dataKey={xAxisKey}
-            label={xAxisLabel ? { value: xAxisLabel, position: 'insideBottom', offset: -5 } : undefined}
-            tick={{ fontSize: 13, fill: '#374151' }}
-            height={60}
-          />
-          <YAxis
-            tickFormatter={formatYValue}
-            tick={{ fontSize: 12, fill: '#374151' }}
-            label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft' } : undefined}
-            width={100}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend
-            wrapperStyle={{ fontSize: '14px', paddingTop: '20px', paddingBottom: '10px' }}
-            iconType="square"
-          />
-          {lines.map((line) => (
-            <Bar
-              key={line.dataKey}
-              dataKey={line.dataKey}
-              name={line.name}
-              fill={line.color}
-            />
+        <BarChart data={data} margin={margin}>
+          <CartesianGrid {...gridStyle} vertical={false} />
+          {sharedXAxis}
+          {sharedYAxis}
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(11,113,254,0.04)' }} />
+          {sharedLegend}
+          {lines.map(line => (
+            <Bar key={line.dataKey} dataKey={line.dataKey} name={line.name} fill={line.color} radius={[6, 6, 0, 0]} maxBarSize={48} />
           ))}
         </BarChart>
       </ResponsiveContainer>
@@ -123,39 +125,25 @@ export function Chart({
 
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <LineChart data={data} margin={chartMargin}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-        <XAxis
-          dataKey={xAxisKey}
-          label={xAxisLabel ? { value: xAxisLabel, position: 'insideBottom', offset: -5 } : undefined}
-          tick={{ fontSize: 13, fill: '#374151' }}
-          height={60}
-        />
-        <YAxis
-          tickFormatter={formatYValue}
-          tick={{ fontSize: 12, fill: '#374151' }}
-          label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft' } : undefined}
-          width={80}
-        />
+      <LineChart data={data} margin={margin}>
+        <CartesianGrid {...gridStyle} vertical={false} />
+        {sharedXAxis}
+        {sharedYAxis}
         <Tooltip content={<CustomTooltip />} />
-        <Legend
-          wrapperStyle={{ fontSize: '14px', paddingTop: '20px', paddingBottom: '10px' }}
-          iconType="circle"
-        />
-        {lines.map((line) => (
+        {sharedLegend}
+        {lines.map(line => (
           <Line
             key={line.dataKey}
             type="monotone"
             dataKey={line.dataKey}
             name={line.name}
             stroke={line.color}
-            strokeWidth={2}
+            strokeWidth={2.5}
             dot={false}
-            activeDot={{ r: 5 }}
+            activeDot={{ r: 5, strokeWidth: 2, stroke: 'white' }}
           />
         ))}
       </LineChart>
     </ResponsiveContainer>
   );
 }
-

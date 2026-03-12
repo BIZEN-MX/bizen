@@ -103,28 +103,30 @@ export default function BillyCelebration({
           {/* Speech Bubble */}
           {showMessage && (
             <div
-              style={{
-                position: "absolute",
-                top: -40,
-                left: "50%",
-                transform: "translateX(-50%) translateY(-100%)",
-                background: "white",
-                border: `4px solid ${accentColor}`,
-                borderRadius: 30,
-                padding: "25px 40px",
-                boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
-                minWidth: 350,
-                textAlign: "center",
-                animation: "popIn 0.3s ease-out",
-              }}
+                style={{
+                  position: "absolute",
+                  top: -20,
+                  left: "50%",
+                  transform: "translateX(-50%) translateY(-100%)",
+                  background: "white",
+                  border: `4px solid ${accentColor}`,
+                  borderRadius: 24,
+                  padding: "clamp(12px, 3vw, 25px) clamp(15px, 4vw, 40px)",
+                  boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+                  width: "max-content",
+                  minWidth: "min(280px, 90vw)",
+                  maxWidth: "92vw",
+                  textAlign: "center",
+                  animation: "popIn 0.3s ease-out",
+                }}
             >
               <p
                 style={{
-                  fontSize: 32,
-                  fontWeight: 500,
+                  fontSize: "clamp(20px, 6vw, 32px)",
+                  fontWeight: 600,
                   color: "#000000",
                   margin: 0,
-                  lineHeight: 1.4,
+                  lineHeight: 1.3,
                 }}
               >
                 {message}
@@ -148,14 +150,21 @@ export default function BillyCelebration({
           )}
 
           {/* Billy Character */}
-          <Image
-            src={isMouthOpen ? "/3.png" : "/2.png"}
-            alt="Billy"
-            width={400}
-            height={400}
-            style={{ display: "block" }}
-            priority
-          />
+          <div style={{
+            width: "clamp(200px, 60vw, 400px)",
+            height: "auto",
+            margin: "0 auto"
+          }}>
+            <img
+              src={isMouthOpen ? "/3.png" : "/2.png"}
+              alt="Billy"
+              style={{ 
+                display: "block",
+                width: "100%",
+                height: "auto"
+              }}
+            />
+          </div>
 
           {/* Close button (optional) */}
           {showCloseButton && (

@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { FileText, Wallet, TrendingUp, Clock } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
 import { ResultsCard } from './ResultsCard';
@@ -94,7 +95,7 @@ export function SavingsGoalSimulator() {
           <CardHeader>
             <CardTitle>Datos de Entrada</CardTitle>
             <Button onClick={loadPreset} variant="outline" size="sm">
-              📝 Cargar Valores de Prueba
+              <FileText className="w-4 h-4 mr-2" /> Cargar Valores de Prueba
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -169,7 +170,7 @@ export function SavingsGoalSimulator() {
                 title="Valor Futuro"
                 value={currencyMXN(result.futureValue)}
                 variant="success"
-                icon="💰"
+                icon={<Wallet size={24} />}
               />
               <ResultsCard
                 title="Total Aportado"
@@ -179,13 +180,13 @@ export function SavingsGoalSimulator() {
                 title="Interés Ganado"
                 value={currencyMXN(result.totalInterest)}
                 variant="info"
-                icon="📈"
+                icon={<TrendingUp size={24} />}
               />
               {result.months !== undefined && (
                 <ResultsCard
                   title="Tiempo"
                   value={formatMonths(result.months)}
-                  icon="⏱️"
+                  icon={<Clock size={24} />}
                 />
               )}
             </div>

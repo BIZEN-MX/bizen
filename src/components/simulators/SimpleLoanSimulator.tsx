@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { FileText } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
 import { ResultsCard } from './ResultsCard';
@@ -87,7 +88,7 @@ export function SimpleLoanSimulator() {
           <CardHeader>
             <CardTitle>Datos de Entrada</CardTitle>
             <Button onClick={loadPreset} variant="outline" size="sm">
-              📝 Cargar Valores de Prueba
+              <FileText className="w-4 h-4 mr-2" /> Cargar Valores de Prueba
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">

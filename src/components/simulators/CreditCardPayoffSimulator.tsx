@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { FileText, DollarSign } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
 import { ResultsCard } from './ResultsCard';
@@ -88,7 +89,7 @@ export function CreditCardPayoffSimulator() {
           <CardHeader>
             <CardTitle>Datos de Entrada</CardTitle>
             <Button onClick={loadPreset} variant="outline" size="sm">
-              📝 Cargar Valores de Prueba
+              <FileText className="w-4 h-4 mr-2" /> Cargar Valores de Prueba
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -187,7 +188,9 @@ export function CreditCardPayoffSimulator() {
             
             <Card className="border-2 border-blue-300 bg-blue-50">
               <CardHeader>
-                <CardTitle className="text-blue-900">💰 Ahorro con Pago Fijo</CardTitle>
+                <CardTitle className="text-blue-900 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" /> Ahorro con Pago Fijo
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <ResultsCard

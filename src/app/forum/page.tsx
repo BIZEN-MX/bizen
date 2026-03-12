@@ -300,7 +300,7 @@ function ForumContent() {
   // Reto del día state
   const [todayChallenge, setTodayChallenge] = useState<DailyChallenge | null>(null)
   const [evidencePosts, setEvidencePosts] = useState<EvidencePost[]>([])
-  const [loadingEvidence, setLoadingEvidence] = useState(false)
+  const [loadingEvidence, setLoadingEvidence] = useState(true)
   const [weeklyActiveDays, setWeeklyActiveDays] = useState<string[]>([])
   const [evidenceSort, setEvidenceSort] = useState<"new" | "validated">("new")
   const [evidenceScope, setEvidenceScope] = useState<"school" | "all">("school")
@@ -312,7 +312,7 @@ function ForumContent() {
   const [topics, setTopics] = useState<any[]>([])
   const [selectedTopic, setSelectedTopic] = useState<string>("all")
   const [sortBy, setSortBy] = useState<"new" | "top" | "unanswered">("new")
-  const [loadingData, setLoadingData] = useState(false)
+  const [loadingData, setLoadingData] = useState(true)
   const [fetchError, setFetchError] = useState<string | null>(null)
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -332,6 +332,12 @@ function ForumContent() {
       fetchForumData()
     }
   }, [activeTab, user, loading, sortBy, selectedTopic])
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login?callbackUrl=/forum")
+    }
+  }, [user, loading, router])
 
   const fetchUserStats = async () => {
     try {
@@ -361,7 +367,10 @@ function ForumContent() {
         setTodayChallenge(data)
         fetchEvidence(data.id)
       }
-    } catch (e) { console.error(e) }
+    } catch (e) {
+      console.error(e)
+      setLoadingEvidence(false)
+    }
   }
 
   const fetchEvidence = async (challengeId: string, scope = evidenceScope) => {
@@ -430,7 +439,11 @@ function ForumContent() {
     return `hace ${Math.floor(diff / 86400)}d`
   }
 
-  if (loading) return <PageLoader />
+  const showFullLoader = loading || (user && !dbProfile) ||
+    (activeTab === "reto-del-dia" && loadingEvidence && evidencePosts.length === 0) ||
+    (activeTab !== "reto-del-dia" && loadingData && threads.length === 0)
+
+  if (showFullLoader) return <PageLoader />
   if (!user) return null
 
   return (

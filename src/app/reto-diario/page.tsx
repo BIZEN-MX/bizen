@@ -172,7 +172,14 @@ export default function RetoDiarioPage() {
   const handleViewGroup = () =>
     router.push(challenge ? `/forum?tab=reto-del-dia&challengeId=${challenge.id}` : "/forum?tab=reto-del-dia")
 
-  if (loading || loadingChallenge) return <PageLoader />
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login?callbackUrl=/reto-diario")
+    }
+  }, [user, loading, router])
+
+  if (loading || loadingChallenge || (user && !dbProfile)) return <PageLoader />
+  if (!user) return null // Handled by redirect
 
   return (
     <>
@@ -705,9 +712,9 @@ export default function RetoDiarioPage() {
                     <XPProgressCard
                       xpEarned={earnedRewards?.xpAdded || 50}
                       initialXP={
-                        earnedRewards?.newTotalXP
-                          ? earnedRewards.newTotalXP - earnedRewards.xpAdded
-                          : (submitted ? (dbProfile?.xp || 0) - 50 : (dbProfile?.xp || 0))
+                        earnedRewards
+                          ? Math.max(0, earnedRewards.newTotalXP - earnedRewards.xpAdded)
+                          : Math.max(0, (dbProfile?.xp || 0) - (submitted ? 50 : 0))
                       }
                       delay={600}
                     />

@@ -1105,17 +1105,6 @@ export default function ImpactoSocialPage() {
                                         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", margin: "0 0 20px", lineHeight: 1.6, maxWidth: 380 }}>
                                             Tu escuela tiene un nivel de transparencia financiera <strong style={{ color: "#fff" }}>Excepcional</strong>. Toda donación cuenta con evidencia verificada y auditable.
                                         </p>
-                                        <div className="trust-badge-container" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                                            {[
-                                                { label: "Auditoría Independiente", color: "#10b981" },
-                                                { label: "Reportes Públicos", color: "#8b5cf6" },
-                                            ].map((b, i) => (
-                                                <span key={i} className="trust-badge" style={{ border: `1.5px solid ${b.color}44`, background: `${b.color}15`, color: "#fff", fontSize: 11, display: "flex", alignItems: "center", gap: 8 }}>
-                                                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: b.color }} />
-                                                    {b.label}
-                                                </span>
-                                            ))}
-                                        </div>
                                     </div>
                                     {/* Score ring */}
                                     <div style={{ position: "relative", flexShrink: 0 }}>

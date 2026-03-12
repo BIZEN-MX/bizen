@@ -534,7 +534,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                             <div style={{ textAlign: "center", marginBottom: "clamp(20px,5vw,32px)" }}>
                                 <div style={{
-                                    width: 120, height: 120, borderRadius: "50%",
+                                    width: "clamp(100px, 25vw, 140px)", height: "clamp(100px, 25vw, 140px)", borderRadius: "50%",
                                     background: "linear-gradient(135deg, #dbeafe, #eff6ff)",
                                     border: "4px solid #3b82f6",
                                     margin: "0 auto 20px", position: "relative",

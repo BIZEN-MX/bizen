@@ -47,14 +47,14 @@ export default function XPProgressCard({ xpEarned, initialXP, delay = 500 }: XPP
             transition={{ delay, type: "spring", stiffness: 200, damping: 20 }}
             style={{
                 background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-                border: "2px solid rgba(255, 255, 255, 0.1)",
+                border: "2px solid rgba(255, 255, 255, 0.15)",
                 borderRadius: 24,
                 padding: "24px 32px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 gap: 16,
-                boxShadow: "0 20px 40px rgba(15, 98, 254, 0.25)",
+                boxShadow: "0 24px 48px rgba(0, 0, 0, 0.5), 0 0 20px rgba(15, 98, 254, 0.2)",
                 width: "100%",
                 maxWidth: 360,
                 margin: "0 auto",

@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { FileText, Lightbulb, Banknote, AlertTriangle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
 import { ResultsCard } from './ResultsCard';
@@ -90,7 +91,7 @@ export function InflationCalculatorSimulator() {
           <CardHeader>
             <CardTitle>Datos de Entrada</CardTitle>
             <Button onClick={loadPreset} variant="outline" size="sm">
-              📝 Cargar Valores de Prueba
+              <FileText className="w-4 h-4 mr-2" /> Cargar Valores de Prueba
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -133,7 +134,7 @@ export function InflationCalculatorSimulator() {
         </Card>
 
         <Alert variant="info">
-          <strong>💡 Tip:</strong> La inflación reduce tu poder adquisitivo. Si ganas lo mismo
+          <strong>Tip:</strong> La inflación reduce tu poder adquisitivo. Si ganas lo mismo
           pero todo sube de precio, puedes comprar menos.
         </Alert>
       </div>
@@ -147,7 +148,7 @@ export function InflationCalculatorSimulator() {
                 title="Precio Futuro"
                 value={currencyMXN(result.futurePrice)}
                 variant="warning"
-                icon="💸"
+                icon={<Banknote size={24} />}
               />
               <ResultsCard
                 title="Aumento"
@@ -221,7 +222,7 @@ export function InflationCalculatorSimulator() {
             </Card>
 
             <Alert variant="warning">
-              <strong>📌 Importante:</strong> Estas proyecciones asumen una tasa de inflación
+              <strong>Importante:</strong> Estas proyecciones asumen una tasa de inflación
               constante. En la realidad, la inflación varía año con año.
             </Alert>
 
