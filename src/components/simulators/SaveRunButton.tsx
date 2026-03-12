@@ -102,7 +102,7 @@ export function SaveRunButton({
           borderRadius: 16,
           color: BLUE,
           fontSize: 15,
-          fontWeight: 800,
+          fontWeight: 600,
           cursor: disabled ? 'not-allowed' : 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -174,7 +174,7 @@ export function SaveRunButton({
               }}>
                 <Save size={26} strokeWidth={2} />
               </div>
-              <h2 style={{ fontSize: 24, fontWeight: 800, color: NAVY, margin: '0 0 8px', letterSpacing: '-0.02em' }}>
+              <h2 style={{ fontSize: 24, fontWeight: 600, color: NAVY, margin: '0 0 8px', letterSpacing: '-0.02em' }}>
                 Guardar Simulación
               </h2>
               <p style={{ fontSize: 15, color: MUTED, margin: 0, lineHeight: 1.5 }}>
@@ -184,7 +184,7 @@ export function SaveRunButton({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 32 }}>
               <div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: NAVY, marginBottom: 8 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: NAVY, marginBottom: 8 }}>
                   <Tag size={14} color={BLUE} />
                   NOMBRE DE LA SIMULACIÓN
                 </label>
@@ -206,7 +206,7 @@ export function SaveRunButton({
               </div>
 
               <div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: NAVY, marginBottom: 8 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: NAVY, marginBottom: 8 }}>
                   <FileText size={14} color={BLUE} />
                   NOTAS (OPCIONAL)
                 </label>
@@ -243,7 +243,7 @@ export function SaveRunButton({
                 disabled={isSaving}
                 style={{
                   flex: 1, height: 50, borderRadius: 16, background: 'white',
-                  border: '1.5px solid #E2E8F0', color: NAVY, fontSize: 15, fontWeight: 700,
+                  border: '1.5px solid #E2E8F0', color: NAVY, fontSize: 15, fontWeight: 500,
                   cursor: 'pointer', transition: 'all 0.2s'
                 }}
                 onMouseEnter={e => e.currentTarget.style.background = '#F8FAFC'}
@@ -256,7 +256,7 @@ export function SaveRunButton({
                 disabled={isSaving || saveSuccess}
                 style={{
                   flex: 2, height: 50, borderRadius: 16, background: saveSuccess ? '#059669' : BLUE,
-                  border: 'none', color: 'white', fontSize: 15, fontWeight: 700,
+                  border: 'none', color: 'white', fontSize: 15, fontWeight: 500,
                   cursor: (isSaving || saveSuccess) ? 'not-allowed' : 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                   transition: 'all 0.2s',

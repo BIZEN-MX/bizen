@@ -15,7 +15,7 @@ import { SimpleLoanSimulator } from '@/components/simulators/SimpleLoanSimulator
 import { InvestmentComparisonSimulator } from '@/components/simulators/InvestmentComparisonSimulator';
 import { InflationCalculatorSimulator } from '@/components/simulators/InflationCalculatorSimulator';
 import { createClientMicrocred } from '@/lib/supabase/client-microcred';
-import { AlertTriangle, Lightbulb } from 'lucide-react';
+import { AlertTriangle, Lightbulb, ArrowLeft } from 'lucide-react';
 import PageLoader from '@/components/PageLoader';
 
 interface Simulator {
@@ -118,7 +118,7 @@ export default function SimulatorPage() {
           text-decoration: none; margin-bottom: 28px;
           box-shadow: 0 2px 4px rgba(0,0,0,0.02); font-family: inherit;
         }
-        .sim-back-btn:hover { background: #f8fafc; color: #0B71FE !important; transform: translateX(-4px); border-color: #cbd5e1; }
+        .sim-back-btn:hover { background: #f8fafc; color: #0B1E5E !important; transform: translateX(-4px); border-color: #cbd5e1; }
 
         /* ─── Premium cascade overrides into simulator sub-components ─── */
         .sim-body [class*="card"], .sim-body .rounded-lg, .sim-body .rounded-xl,
@@ -132,8 +132,8 @@ export default function SimulatorPage() {
           padding: 18px 22px !important;
         }
         .sim-body [class*="CardTitle"], .sim-body [data-slot="card-title"] {
-          font-size: 15px !important; font-weight: 700 !important;
-          color: #0f172a !important; letter-spacing: -0.01em !important;
+          font-size: 15px !important; font-weight: 500 !important;
+          color: #0B1E5E !important; letter-spacing: -0.01em !important;
         }
         .sim-body [class*="CardContent"], .sim-body [data-slot="card-content"] { padding: 22px !important; }
 
@@ -147,13 +147,13 @@ export default function SimulatorPage() {
           box-shadow: 0 0 0 3px rgba(11,113,254,0.1) !important;
           outline: none !important; background: white !important;
         }
-        .sim-body label { font-size: 13px !important; font-weight: 600 !important; color: #475569 !important; display: block; }
+        .sim-body label { font-size: 13px !important; font-weight: 500 !important; color: #475569 !important; display: block; }
         .sim-body button { border-radius: 10px !important; font-family: inherit !important; }
 
         .sim-body table { border-collapse: collapse !important; width: 100%; }
         .sim-body thead tr { background: linear-gradient(135deg,#f1f5f9,#e8edf5) !important; }
         .sim-body th {
-          font-size: 11px !important; font-weight: 700 !important; color: #64748b !important;
+          font-size: 11px !important; font-weight: 500 !important; color: #64748b !important;
           text-transform: uppercase !important; letter-spacing: 0.05em !important; padding: 12px 14px !important;
         }
         .sim-body td { padding: 12px 14px !important; font-size: 13px !important; border-bottom: 1px solid #f1f5f9 !important; color: #334155 !important; }
@@ -165,7 +165,7 @@ export default function SimulatorPage() {
         .sim-body .border-red-200, .sim-body .border-red-300 { background: linear-gradient(135deg,#fff1f2,#ffe4e6) !important; border-color: #fca5a5 !important; }
         .sim-body .border-blue-200, .sim-body .border-blue-300 { background: linear-gradient(135deg,#eff6ff,#dbeafe) !important; border-color: #93c5fd !important; }
 
-        .sim-body .text-xl, .sim-body .text-2xl { font-size: 1.6rem !important; font-weight: 800 !important; letter-spacing: -0.02em !important; }
+        .sim-body .text-xl, .sim-body .text-2xl { font-size: 1.6rem !important; font-weight: 600 !important; letter-spacing: -0.02em !important; }
         .sim-body [role="alert"] { border-radius: 16px !important; font-size: 14px !important; line-height: 1.65 !important; }
 
         @keyframes sim-fade-up { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
@@ -177,16 +177,16 @@ export default function SimulatorPage() {
 
           {/* ─── Hero Header ─── */}
           <div className="sim-hero">
-            <Link href="/cash-flow" className="sim-back-btn">← Volver a Simuladores</Link>
+            <Link href="/cash-flow" className="sim-back-btn"><ArrowLeft size={14} /> Volver a Simuladores</Link>
 
             <div style={{ background: 'linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%)', borderRadius: 28, padding: 'clamp(28px,4vw,48px)', marginBottom: 20, position: 'relative', overflow: 'hidden' }}>
               <div aria-hidden style={{ position: 'absolute', top: '-40%', right: '-5%', width: '40%', height: '200%', background: 'radial-gradient(circle,rgba(11,113,254,0.25) 0%,transparent 70%)', pointerEvents: 'none' }} />
               <div aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px)', backgroundSize: '40px 40px', pointerEvents: 'none' }} />
               <div style={{ position: 'relative', zIndex: 1 }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(11,113,254,0.2)', border: '1px solid rgba(11,113,254,0.4)', borderRadius: 99, padding: '5px 14px', marginBottom: 16, fontSize: 11, fontWeight: 700, color: '#93c5fd', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(11,113,254,0.2)', border: '1px solid rgba(11,113,254,0.4)', borderRadius: 99, padding: '5px 14px', marginBottom: 16, fontSize: 11, fontWeight: 500, color: '#93c5fd', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>
                   <Lightbulb size={12} /> Simulador Educativo · BIZEN
                 </div>
-                <h1 style={{ fontSize: 'clamp(26px,5vw,44px)', fontWeight: 800, margin: '0 0 12px', color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1 }}>{simulator.name}</h1>
+                <h1 style={{ fontSize: 'clamp(26px,5vw,44px)', fontWeight: 600, margin: '0 0 12px', color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1 }}>{simulator.name}</h1>
                 <p style={{ fontSize: 'clamp(14px,1.5vw,17px)', color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.7, maxWidth: 680 }}>{simulator.description}</p>
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function SimulatorPage() {
             <div style={{ background: 'linear-gradient(135deg,#fffbeb,#fef3c7)', border: '1px solid #fde68a', padding: '14px 20px', marginBottom: 4, borderRadius: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
               <AlertTriangle size={18} style={{ flexShrink: 0, marginTop: 2 }} color="#d97706" />
               <p style={{ fontSize: 13, color: '#92400e', lineHeight: 1.65, margin: 0 }}>
-                <strong style={{ color: '#b45309' }}>Propósito educativo.</strong> Los resultados son aproximaciones y no constituyen asesoría financiera profesional. Consulta con un experto antes de tomar decisiones importantes.
+                <span style={{ color: '#b45309', fontWeight: 500 }}>Propósito educativo.</span> Los resultados son aproximaciones y no constituyen asesoría financiera profesional. Consulta con un experto antes de tomar decisiones importantes.
               </p>
             </div>
           </div>
@@ -211,7 +211,7 @@ export default function SimulatorPage() {
               <p style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', margin: '0 0 4px', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Lightbulb size={14} color="#f59e0b" /> Tip rápido
               </p>
-              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6, margin: 0 }}>Usa <strong>"Cargar Valores de Prueba"</strong> para explorar el simulador en segundos. Luego personaliza con tus propios datos.</p>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6, margin: 0 }}>Usa <span style={{ fontWeight: 500 }}>"Cargar Valores de Prueba"</span> para explorar el simulador en segundos. Luego personaliza con tus propios datos.</p>
             </div>
             <Link href="/cash-flow/history" style={{ padding: '10px 20px', background: 'white', border: '1px solid #e2e8f0', borderRadius: 12, fontSize: 13, fontWeight: 600, color: '#0B71FE', textDecoration: 'none', boxShadow: '0 2px 6px rgba(0,0,0,0.04)', whiteSpace: 'nowrap' as const, flexShrink: 0 }}>
               Ver Mis Simulaciones →

@@ -58,14 +58,14 @@ export function Chart({
         minWidth: 180,
         fontFamily: '-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif',
       }}>
-        <p style={{ fontSize: 12, fontWeight: 700, color: '#64748b', margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <p style={{ fontSize: 12, fontWeight: 500, color: '#64748b', margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           {xAxisLabel || 'Periodo'} {label}
         </p>
         {payload.map((entry: any, i: number) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: i < payload.length - 1 ? 6 : 0 }}>
             <span style={{ width: 10, height: 10, borderRadius: '50%', background: entry.color, flexShrink: 0, display: 'inline-block' }} />
             <span style={{ fontSize: 13, color: '#475569', flex: 1 }}>{entry.name}</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>{formatTooltipValue(entry.value as number)}</span>
+            <span style={{ fontSize: 13, fontWeight: 500, color: '#0f172a' }}>{formatTooltipValue(entry.value as number)}</span>
           </div>
         ))}
       </div>

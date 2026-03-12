@@ -193,7 +193,7 @@ export function SimpleLoanSimulator() {
                           <td className="p-2 text-right text-green-600">
                             {currencyMXN(row.principal, 0)}
                           </td>
-                          <td className="p-2 text-right font-semibold">
+                          <td className="p-2 text-right">
                             {currencyMXN(row.balance, 0)}
                           </td>
                         </tr>
@@ -210,7 +210,7 @@ export function SimpleLoanSimulator() {
             </Card>
 
             <Alert variant="info">
-              <strong>¿Qué es el CAT?</strong> El Costo Anual Total (CAT) incluye intereses y
+              ¿Qué es el CAT? El Costo Anual Total (CAT) incluye intereses y
               comisiones, mostrando el costo real del crédito. Entre menor CAT, mejor para ti.
             </Alert>
 

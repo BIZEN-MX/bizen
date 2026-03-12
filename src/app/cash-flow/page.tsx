@@ -339,13 +339,13 @@ export default function CombinedSimulatorsPage() {
               marginBottom: 0,
             }}>
               <div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(11,113,254,0.1)", border: "1px solid rgba(11,113,254,0.2)", borderRadius: 999, padding: "6px 16px", marginBottom: 20, fontSize: 12, fontWeight: 700, color: "#0B71FE", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(11,113,254,0.1)", border: "1px solid rgba(11,113,254,0.2)", borderRadius: 999, padding: "6px 16px", marginBottom: 20, fontSize: 12, fontWeight: 500, color: "#0B71FE", letterSpacing: "0.05em", textTransform: "uppercase" }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0B71FE", display: "inline-block" }} />
                   Centro Financiero Interactivo
                 </div>
                 <h1 style={{
                   fontSize: "clamp(28px, 5.5vw, 60px)",
-                  fontWeight: 800,
+                  fontWeight: 600,
                   margin: "0 0 18px",
                   background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
                   WebkitBackgroundClip: "text",
@@ -407,7 +407,7 @@ export default function CombinedSimulatorsPage() {
                     <BarChart2 size={18} color="#0B71FE" />
                   </div>
                   <p style={{ fontSize: 14, color: "#1e40af", lineHeight: 1.65, margin: 0 }}>
-                    <strong style={{ color: "#0B71FE" }}>Propósito educativo:</strong> Estos simuladores son herramientas de aprendizaje. Los resultados son aproximaciones y no constituyen asesoría financiera profesional.
+                    <span style={{ color: "#0B71FE", fontWeight: 500 }}>Propósito educativo:</span> Estos simuladores son herramientas de aprendizaje. Los resultados son aproximaciones y no constituyen asesoría financiera profesional.
                   </p>
                 </div>
 
@@ -421,7 +421,7 @@ export default function CombinedSimulatorsPage() {
                       border: "1px solid #e2e8f0",
                       borderRadius: 14,
                       fontSize: 14,
-                      fontWeight: 700,
+                      fontWeight: 500,
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
@@ -466,11 +466,11 @@ export default function CombinedSimulatorsPage() {
                           <div style={{ width: 52, height: 52, borderRadius: 16, background: `#10b98120`, border: `1px solid #10b98130`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 20px #10b98120` }}>
                             <TrendingUp size={24} color="#10b981" />
                           </div>
-                          <span style={{ fontSize: 10, fontWeight: 700, padding: "5px 12px", background: `#10b98115`, color: "#10b981", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: `1px solid #10b98125` }}>
+                          <span style={{ fontSize: 10, fontWeight: 500, padding: "5px 12px", background: `#10b98115`, color: "#10b981", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: `1px solid #10b98125` }}>
                             NUEVO
                           </span>
                         </div>
-                        <h3 style={{ fontSize: 19, fontWeight: 700, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+                        <h3 style={{ fontSize: 19, fontWeight: 600, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
                           Simulador de Mercado (Beta)
                         </h3>
                         <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7, flex: 1, marginBottom: 24 }}>
@@ -518,12 +518,12 @@ export default function CombinedSimulatorsPage() {
                           <div style={{ width: 52, height: 52, borderRadius: 16, background: `#f59e0b20`, border: `1px solid #f59e0b30`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 20px #f59e0b20` }}>
                             <CreditCard size={24} color="#f59e0b" />
                           </div>
-                          <span style={{ fontSize: 10, fontWeight: 700, padding: "5px 12px", background: `#f59e0b15`, color: "#f59e0b", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: `1px solid #f59e0b25` }}>
+                          <span style={{ fontSize: 10, fontWeight: 500, padding: "5px 12px", background: `#f59e0b15`, color: "#f59e0b", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: `1px solid #f59e0b25` }}>
                             NUEVO
                           </span>
                         </div>
-                        <h3 style={{ fontSize: 19, fontWeight: 700, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
-                          Simulador de Crédito (Beta)
+                        <h3 style={{ fontSize: 19, fontWeight: 600, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+                          BIZEN Score
                         </h3>
                         <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7, flex: 1, marginBottom: 24 }}>
                           Descubre cómo funcionan las tarjetas de crédito, los préstamos y compras a Meses Sin Intereses.
@@ -575,11 +575,11 @@ export default function CombinedSimulatorsPage() {
                               <div style={{ width: 52, height: 52, borderRadius: 16, background: `${accent}20`, border: `1px solid ${accent}30`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 20px ${accent}20` }}>
                                 <IconComponent size={24} color={accent} />
                               </div>
-                              <span style={{ fontSize: 10, fontWeight: 700, padding: "5px 12px", background: `${accent}15`, color: accent, borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: `1px solid ${accent}25` }}>
+                              <span style={{ fontSize: 10, fontWeight: 500, padding: "5px 12px", background: `${accent}15`, color: accent, borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: `1px solid ${accent}25` }}>
                                 {CATEGORY_LABELS[simulator.category] || simulator.category}
                               </span>
                             </div>
-                            <h3 style={{ fontSize: 19, fontWeight: 700, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+                            <h3 style={{ fontSize: 19, fontWeight: 600, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
                               {simulator.name}
                             </h3>
                             <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7, flex: 1, marginBottom: 24 }}>
@@ -663,7 +663,7 @@ export default function CombinedSimulatorsPage() {
                           <div style={{ display: "inline-block", background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 999, padding: "5px 14px", marginBottom: 16, fontSize: 11, fontWeight: 600, color: "#fbbf24", letterSpacing: "0.1em", textTransform: "uppercase" }}>
                             Juego de Simulación Interactivo
                           </div>
-                          <h2 style={{ fontSize: "clamp(28px, 4.5vw, 56px)", fontWeight: 800, marginBottom: 16, color: "white", letterSpacing: "-0.04em", lineHeight: 1.05 }}>
+                          <h2 style={{ fontSize: "clamp(28px, 4.5vw, 56px)", fontWeight: 600, marginBottom: 16, color: "white", letterSpacing: "-0.04em", lineHeight: 1.05 }}>
                             CASHFLOW GAME
                           </h2>
                           <p style={{ fontSize: "clamp(16px, 1.3vw, 20px)", color: "rgba(255,255,255,0.6)", maxWidth: 620, lineHeight: 1.7, margin: 0, fontWeight: 400 }}>
@@ -715,7 +715,7 @@ export default function CombinedSimulatorsPage() {
                         marginBottom: 32
                       }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, flexWrap: "wrap", gap: 16 }}>
-                          <h2 style={{ fontSize: "clamp(20px, 2vw, 26px)", fontWeight: 700, color: "#1e293b", margin: 0 }}>Mis Partidas</h2>
+                          <h2 style={{ fontSize: "clamp(20px, 2vw, 26px)", fontWeight: 600, color: "#1e293b", margin: 0 }}>Mis Partidas</h2>
                           <button
                             onClick={() => setShowNewGame(true)}
                             style={{
@@ -759,7 +759,7 @@ export default function CombinedSimulatorsPage() {
                                     <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #1d4ed8, #3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 10px rgba(59,130,246,0.3)" }}>
                                       <Briefcase size={15} color="white" />
                                     </div>
-                                    <div style={{ fontSize: 17, fontWeight: 600, color: "#1e293b" }}>{game.player.profession}</div>
+                                    <div style={{ fontSize: 17, fontWeight: 500, color: "#1e293b" }}>{game.player.profession}</div>
                                   </div>
                                   <div style={{ fontSize: 12, color: "#64748B", marginLeft: 40 }}>{getTimeSince(game.lastActivityAt)}</div>
                                 </div>
@@ -773,11 +773,11 @@ export default function CombinedSimulatorsPage() {
                               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 18 }}>
                                 <div style={{ background: "rgba(5,150,105,0.08)", padding: "10px 12px", borderRadius: 12, border: "1px solid rgba(5,150,105,0.15)" }}>
                                   <div style={{ fontSize: 11, color: "#64748B", fontWeight: 500, marginBottom: 2 }}>Efectivo</div>
-                                  <div style={{ fontWeight: 700, color: "#059669", fontSize: 16 }}>${game.player.cashOnHand.toLocaleString()}</div>
+                                  <div style={{ fontWeight: 500, color: "#059669", fontSize: 16 }}>${game.player.cashOnHand.toLocaleString()}</div>
                                 </div>
                                 <div style={{ background: "rgba(11,113,254,0.08)", padding: "10px 12px", borderRadius: 12, border: "1px solid rgba(11,113,254,0.15)" }}>
                                   <div style={{ fontSize: 11, color: "#64748B", fontWeight: 500, marginBottom: 2 }}>Ingreso Pasivo</div>
-                                  <div style={{ fontWeight: 700, color: "#0B71FE", fontSize: 16 }}>${game.player.passiveIncome.toLocaleString()}</div>
+                                  <div style={{ fontWeight: 500, color: "#0B71FE", fontSize: 16 }}>${game.player.passiveIncome.toLocaleString()}</div>
                                 </div>
                               </div>
 

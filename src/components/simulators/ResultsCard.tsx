@@ -50,10 +50,10 @@ export function ResultsCard({
     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: v.label, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 6px', opacity: 0.8 }}>
+        <p style={{ fontSize: 11, fontWeight: 500, color: v.label, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 6px', opacity: 0.8 }}>
           {title}
         </p>
-        <p style={{ fontSize: 26, fontWeight: 800, color: v.value, margin: '0 0 4px', letterSpacing: '-0.025em', lineHeight: 1.1, wordBreak: 'break-word' }}>
+        <p style={{ fontSize: 26, fontWeight: 600, color: v.value, margin: '0 0 4px', letterSpacing: '-0.025em', lineHeight: 1.1, wordBreak: 'break-word' }}>
           {value}
         </p>
         {subtitle && (
