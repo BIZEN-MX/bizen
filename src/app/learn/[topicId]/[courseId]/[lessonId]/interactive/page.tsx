@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useCallback, useRef, useState, useMemo } from "react"
+import React, { useEffect, useCallback, useRef, useState, useMemo, Suspense } from "react"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
@@ -16,7 +16,7 @@ import PageLoader from "@/components/PageLoader"
  * Lesson content is registered in src/data/lessons/registry.ts.
  * Add new lessons in src/data/lessons/lessonN.ts and register them in registry.ts.
  */
-export default function InteractiveLessonPage() {
+function InteractiveLessonContent() {
   const router = useRouter()
   const params = useParams()
   const searchParams = useSearchParams()
@@ -273,5 +273,13 @@ export default function InteractiveLessonPage() {
         />
       </div>
     </>
+  )
+}
+
+export default function InteractiveLessonPage() {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <InteractiveLessonContent />
+    </Suspense>
   )
 }

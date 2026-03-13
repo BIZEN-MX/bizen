@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import {
@@ -216,7 +216,7 @@ const TOOLTIP_STYLE = { background: 'rgba(15,23,42,0.92)', border: 'none', borde
 const fmt = (n: number) => `$${Math.round(n).toLocaleString('es-MX')}`
 
 // ══════════════════════════════════════════════════════════════════════════
-export default function CreditSimulatorPage() {
+function CreditSimulatorContent() {
   const { user, loading } = useAuth()
   const searchParams = useSearchParams()
   const runId = searchParams.get('runId')
@@ -693,5 +693,13 @@ export default function CreditSimulatorPage() {
         </div>
       </div>
     </>
+  )
+}
+
+export default function CreditSimulatorPage() {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <CreditSimulatorContent />
+    </Suspense>
   )
 }

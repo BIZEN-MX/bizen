@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
@@ -19,7 +19,7 @@ const CHALLENGES = [
   { title: 'Dollar-Cost Averaging', desc: 'Compra el mismo ETF en 3 momentos distintos.', pts: '+150 XP', icon: <BarChart3 size={24} color="#f59e0b" /> },
 ]
 
-export default function StockSimulatorPage() {
+function StockSimulatorContent() {
   const { user, loading } = useAuth()
   const searchParams = useSearchParams()
   const runId = searchParams.get('runId')
@@ -365,5 +365,13 @@ export default function StockSimulatorPage() {
         </div>
       </div>
     </>
+  )
+}
+
+export default function StockSimulatorPage() {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <StockSimulatorContent />
+    </Suspense>
   )
 }

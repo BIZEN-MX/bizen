@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { resend } from '@/lib/resend';
+import { getResend } from '@/lib/resend';
 
 /**
  * Generic email sending API route
@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     // }
 
+    const resend = await getResend();
     const { data, error } = await resend.emails.send({
       from: from || 'BIZEN <onboarding@resend.dev>', // Change to your verified domain
       to,
