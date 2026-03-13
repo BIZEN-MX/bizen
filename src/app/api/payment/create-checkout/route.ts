@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
             recurring: {
               interval: 'month',
             },
-            unit_amount: 4900, // $49.00 in cents
+            unit_amount: 17900, // $179.00 in cents
           },
           quantity: 1,
         },

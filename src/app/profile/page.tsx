@@ -887,7 +887,7 @@ export default function ProfilePage() {
 
                     {/* Price */}
                     <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 18 }}>
-                      <span style={{ fontSize: 30, fontWeight: 500, color: "#fff", lineHeight: 1 }}>$49</span>
+                      <span style={{ fontSize: 30, fontWeight: 500, color: "#fff", lineHeight: 1 }}>$179</span>
                       <span style={{ fontSize: 14, color: "#93c5fd", fontWeight: 500 }}>/mes MXN</span>
                     </div>
 
