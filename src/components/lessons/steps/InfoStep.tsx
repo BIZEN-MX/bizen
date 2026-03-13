@@ -127,7 +127,7 @@ export function InfoStep({
               }}
             >
               <div style={{ position: "relative", width: "70%", height: "70%" }}>
-                <Image src="/hero4.png" alt="Billy" fill style={{ objectFit: "contain" }} />
+                <Image src="/thumbs up.png" alt="Billy" fill style={{ objectFit: "contain" }} />
               </div>
             </motion.div>
 

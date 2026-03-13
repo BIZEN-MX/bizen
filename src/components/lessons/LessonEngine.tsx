@@ -506,7 +506,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 }}
               >
                 <img
-                  src="/image copy 2.png"
+                  src="/thumbs up.png"
                   alt="Mascot"
                   style={{
                     width: "clamp(100px, 18vw, 220px)",
