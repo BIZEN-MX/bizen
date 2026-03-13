@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import {
   TrendingUp, TrendingDown, AlertTriangle, DollarSign, Target,
@@ -9,6 +10,7 @@ import {
   RefreshCw, CheckCircle2, Rocket, Activity, BarChart3, ArrowLeft
 } from 'lucide-react'
 import PageLoader from '@/components/PageLoader'
+import { SaveRunButton } from '@/components/simulators/SaveRunButton'
 
 const CHALLENGES = [
   { title: 'Primera Inversión', desc: 'Compra tu primera fracción de un ETF indexado.', pts: '+50 XP', icon: <Rocket size={24} color="#10b981" /> },
@@ -19,6 +21,8 @@ const CHALLENGES = [
 
 export default function StockSimulatorPage() {
   const { user, loading } = useAuth()
+  const searchParams = useSearchParams()
+  const runId = searchParams.get('runId')
   const [portfolio, setPortfolio] = useState<any>(null)
   const [activeTab, setActiveTab] = useState('portfolio')
   const [orderForm, setOrderForm] = useState({ symbol: 'VOO', side: 'buy', qty: 1, type: 'market' })
@@ -184,6 +188,20 @@ export default function StockSimulatorPage() {
                         </tr>
                       ))}</tbody>
                     </table>
+                  </div>
+                )}
+                
+                {portfolio && (
+                  <div style={{ marginTop: 24, padding: '0 4px' }}>
+                    <SaveRunButton 
+                      simulatorSlug="stocks"
+                      inputs={{ date: new Date().toISOString() }}
+                      outputs={{ 
+                        cash: portfolio.cash_balance,
+                        holdingsCount: portfolio.holdings?.length ?? 0,
+                        totalValue: portfolio.cash_balance // simplified for now
+                      }}
+                    />
                   </div>
                 )}
               </div>

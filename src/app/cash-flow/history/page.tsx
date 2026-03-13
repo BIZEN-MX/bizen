@@ -76,6 +76,18 @@ const simulatorConfig: Record<string, { name: string; icon: any; color: string; 
     color: '#64748b', 
     bg: '#f8fafc' 
   },
+  'credit': { 
+    name: 'BIZEN Score y Crédito', 
+    icon: CreditCard, 
+    color: '#6366f1', 
+    bg: '#f0f4ff' 
+  },
+  'stocks': { 
+    name: 'Simulador de Mercados', 
+    icon: TrendingUp, 
+    color: '#10b981', 
+    bg: '#f0fdf4' 
+  },
 };
 
 /* ─────────────────────────────────── components ── */
@@ -192,7 +204,11 @@ function RunCard({
         </div>
 
         <Link 
-          href={`/cash-flow/${run.simulator_slug}?runId=${run.id}`}
+          href={
+            (run.simulator_slug === 'credit' || run.simulator_slug === 'stocks')
+              ? `/simulators/${run.simulator_slug}?runId=${run.id}`
+              : `/cash-flow/${run.simulator_slug}?runId=${run.id}`
+          }
           style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '8px 16px', borderRadius: 12,

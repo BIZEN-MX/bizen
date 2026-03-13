@@ -7,8 +7,20 @@ import { AppLayout } from "@/components/AppLayout"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "BIZEN App",
-  description: "Modern web app scaffold",
+  title: "BIZEN",
+  description: "Educación financiera premium para la nueva generación",
+  openGraph: {
+    title: "BIZEN",
+    description: "Educación financiera premium para la nueva generación",
+    type: "website",
+    locale: "es_MX",
+    siteName: "BIZEN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BIZEN",
+    description: "Educación financiera premium para la nueva generación",
+  },
   viewport: {
     width: "device-width",
     initialScale: 1,

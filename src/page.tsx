@@ -22,7 +22,7 @@ export default function WelcomePage() {
   return (
     <>
       <Head>
-        <title>BIZEN - Aprende, crece y domina tus finanzas</title>
+        <title>BIZEN</title>
         <meta name="description" content="En BIZEN nuestro lema es aprender. Aprende, crece y domina tus finanzas." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

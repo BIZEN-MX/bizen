@@ -12,6 +12,8 @@ import {
 import { simulateCreditCard, simulatePersonalLoan, simulateInstallments } from '@/lib/creditSimulator'
 import { ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import PageLoader from '@/components/PageLoader'
+import { SaveRunButton } from '@/components/simulators/SaveRunButton'
+import { useSearchParams } from 'next/navigation'
 
 type Tab = 'score' | 'cc' | 'loan' | 'msi' | 'guide'
 
@@ -216,7 +218,10 @@ const fmt = (n: number) => `$${Math.round(n).toLocaleString('es-MX')}`
 // ══════════════════════════════════════════════════════════════════════════
 export default function CreditSimulatorPage() {
   const { user, loading } = useAuth()
+  const searchParams = useSearchParams()
+  const runId = searchParams.get('runId')
   const [tab, setTab] = useState<Tab>('score')
+  const [loadingRun, setLoadingRun] = useState(false)
 
   // Score factors
   const [onTime, setOnTime] = useState(75)
@@ -244,6 +249,47 @@ export default function CreditSimulatorPage() {
 
   const score = useMemo(() => calcScore(onTime, util, yrHist, mixCount, inquiries), [onTime, util, yrHist, mixCount, inquiries])
   const { text: scoreText, color: scoreColor } = scoreLabel(score)
+
+  // Load saved run if runId exists
+  useEffect(() => {
+    async function fetchRun() {
+      if (!runId || !user) return;
+      setLoadingRun(true);
+      try {
+        const response = await fetch(`/api/simuladores/runs/${runId}`);
+        const data = await response.json();
+        if (response.ok && data.run && data.run.simulator_slug === 'credit') {
+          const { inputs } = data.run;
+          if (inputs.tab) setTab(inputs.tab);
+          
+          if (inputs.onTime !== undefined) setOnTime(inputs.onTime);
+          if (inputs.util !== undefined) setUtil(inputs.util);
+          if (inputs.yrHist !== undefined) setYrHist(inputs.yrHist);
+          if (inputs.mixCount !== undefined) setMixCount(inputs.mixCount);
+          if (inputs.inquiries !== undefined) setInquiries(inputs.inquiries);
+          
+          if (inputs.ccBal !== undefined) setCcBal(inputs.ccBal);
+          if (inputs.ccApr !== undefined) setCcApr(inputs.ccApr);
+          if (inputs.ccPay !== undefined) setCcPay(inputs.ccPay);
+          
+          if (inputs.lP !== undefined) setLP(inputs.lP);
+          if (inputs.lA !== undefined) setLA(inputs.lA);
+          if (inputs.lT !== undefined) setLT(inputs.lT);
+          
+          if (inputs.mPur !== undefined) setMPur(inputs.mPur);
+          if (inputs.mMo !== undefined) setMMo(inputs.mMo);
+          if (inputs.mFee !== undefined) setMFee(inputs.mFee);
+          if (inputs.mOpp !== undefined) setMOpp(inputs.mOpp);
+          if (inputs.mDis !== undefined) setMDis(inputs.mDis);
+        }
+      } catch (err) {
+        console.error('Error loading run:', err);
+      } finally {
+        setLoadingRun(false);
+      }
+    }
+    fetchRun();
+  }, [runId, user]);
 
   const ccRes = useMemo(() => simulateCreditCard({ startingBalance: ccBal, aprAnnual: ccApr, minPaymentRule: 200, minPaymentRuleType: 'fixed', monthlyPayment: ccPay, monthsToSimulate: 120 }), [ccBal, ccApr, ccPay])
   const ccMin = useMemo(() => simulateCreditCard({ startingBalance: ccBal, aprAnnual: ccApr, minPaymentRule: 200, minPaymentRuleType: 'fixed', monthlyPayment: 200, monthsToSimulate: 120 }), [ccBal, ccApr])
@@ -285,7 +331,7 @@ export default function CreditSimulatorPage() {
   ]
   const activeConf = TABS.find(t => t.id === tab)!
 
-  if (loading) return <PageLoader />
+  if (loading || loadingRun) return <PageLoader />
   if (!user) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', flexDirection: 'column', gap: 12 }}><Shield size={40} color="#94a3b8" /><p style={{ color: '#64748b' }}>Inicia sesión para usar el simulador.</p></div>
 
   return (
@@ -408,6 +454,12 @@ export default function CreditSimulatorPage() {
                       </div>
                       <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)', margin: 0, lineHeight: 1.65 }}>{weakest.msg}</p>
                     </div>
+
+                    <SaveRunButton 
+                      simulatorSlug="credit"
+                      inputs={{ tab: 'score', onTime, util, yrHist, mixCount, inquiries }}
+                      outputs={{ score, scoreText, scoreColor }}
+                    />
                   </div>
                 </>)}
 
@@ -442,6 +494,16 @@ export default function CreditSimulatorPage() {
                         <Area type="monotone" dataKey="tuPago" stroke="#8b5cf6" strokeWidth={2.5} fill="url(#gMy)" />
                       </AreaChart>
                     </ResponsiveContainer>
+
+                    <SaveRunButton 
+                      simulatorSlug="credit"
+                      inputs={{ tab: 'cc', ccBal, ccApr, ccPay }}
+                      outputs={{ 
+                        totalInterest: ccRes.totalInterestPaid,
+                        monthsToPayoff: ccRes.monthsToPayoff,
+                        totalPaid: ccRes.totalPaid
+                      }}
+                    />
                   </div>
                 </>)}
 
@@ -472,6 +534,16 @@ export default function CreditSimulatorPage() {
                         <Bar dataKey="interes" stackId="a" fill="#f87171" radius={[4, 4, 0, 0]} name="interes" />
                       </BarChart>
                     </ResponsiveContainer>
+
+                    <SaveRunButton 
+                      simulatorSlug="credit"
+                      inputs={{ tab: 'loan', lP, lA, lT }}
+                      outputs={{ 
+                        monthlyPayment: loanRes.monthlyPayment,
+                        totalInterest: loanRes.totalInterestPaid,
+                        totalPaid: loanRes.totalPaid
+                      }}
+                    />
                   </div>
                 </>)}
 
@@ -508,6 +580,16 @@ export default function CreditSimulatorPage() {
                       {msiRes.comparisonVsCash.betterOption === 'cash' ? 'Conviene pagar de contado. El descuento supera lo que ganarías invirtiendo.' : `Conviene usar MSI. Tu dinero puede generar ${fmt(msiRes.comparisonVsCash.investedGains)} invertido al ${mOpp}%.`}
                       {' '}<span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><AlertTriangle size={12} style={{ display: 'inline' }} /> Un solo pago atrasado cobra intereses retroactivos.</span>
                     </InsightBox>
+
+                    <SaveRunButton 
+                      simulatorSlug="credit"
+                      inputs={{ tab: 'msi', mPur, mMo, mFee, mOpp, mDis }}
+                      outputs={{ 
+                        betterOption: msiRes.comparisonVsCash.betterOption,
+                        monthlyPayment: msiRes.monthlyPayment,
+                        totalCost: msiRes.comparisonVsCash.cashPrice + msiRes.comparisonVsCash.difference
+                      }}
+                    />
                   </div>
                 </>)}
 
