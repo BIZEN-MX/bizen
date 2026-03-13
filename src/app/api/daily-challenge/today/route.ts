@@ -33,23 +33,45 @@ export async function GET() {
             return null;
         });
 
-        // 3. Fallback to most recent if none found for *exactly* today
+        // 3. Fallback to most recent UNCOMPLETED if none found for *exactly* today
         if (!challenge) {
             challenge = await prisma.dailyChallenge.findFirst({
+                where: {
+                    evidencePosts: {
+                        none: { authorUserId: user.id }
+                    }
+                },
                 orderBy: { activeDate: "desc" }
             }).catch(() => null);
         }
 
-        // 4. Critical fallback - Create a basic object if DB is totally empty/unreachable
+        // 4. Critical fallback - Ensure a challenge exists for today in the DB if none found
         if (!challenge) {
-            challenge = {
-                id: "fallback-challenge",
-                title: "Revisión de Gastos Semanal",
-                description: "Hoy enfoquémonos en revisar tus gastos recientes. Identifica uno que no fue necesario.",
-                challengeType: "reflection",
-                activeDate: startDate,
-                xpReward: 50
-            };
+            try {
+                challenge = await prisma.dailyChallenge.upsert({
+                    where: { activeDate: startDate },
+                    update: {},
+                    create: {
+                        title: "Reflexión del día",
+                        description: "¿Qué es lo más importante que aprendiste hoy sobre tus finanzas?",
+                        challengeType: "reflection",
+                        activeDate: startDate,
+                        xpReward: 50,
+                        estimatedTime: "5 min"
+                    }
+                });
+            } catch (err) {
+                console.error("Failed to upsert fallback challenge:", err);
+                // Last resort mock if DB write fails
+                challenge = {
+                    id: "fallback-challenge",
+                    title: "Revisión de Gastos Semanal",
+                    description: "Hoy enfoquémonos en revisar tus gastos recientes. Identifica uno que no fue necesario.",
+                    challengeType: "reflection",
+                    activeDate: startDate,
+                    xpReward: 50
+                };
+            }
         }
 
         // 5. Completion Status
