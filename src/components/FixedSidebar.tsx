@@ -346,7 +346,7 @@ export default function FixedSidebar() {
                         flex-shrink: 0;
                         box-shadow: 0 0 8px #0F62FE;
                       }
-                      .plan-badge-free {
+                      .plan-badge-gratuito {
                         display: inline-flex;
                         align-items: center;
                         gap: 6px;
@@ -362,7 +362,7 @@ export default function FixedSidebar() {
                         cursor: default;
                         user-select: none;
                       }
-                      .plan-badge-free .plan-dot {
+                      .plan-badge-gratuito .plan-dot {
                         width: 4px; height: 4px;
                         border-radius: 50%;
                         background: #94A3B8;
@@ -402,9 +402,9 @@ export default function FixedSidebar() {
                         Plan Institucional
                       </span>
                     ) : (
-                      <span className="plan-badge-free">
+                      <span className="plan-badge-gratuito">
                         <span className="plan-dot" />
-                        Plan Free
+                        Plan Gratuito
                       </span>
                     )}
                   </>

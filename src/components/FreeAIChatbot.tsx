@@ -167,8 +167,8 @@ export default function FreeAIChatbot() {
         </svg>
 
         {/* Free badge */}
-        <div className="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-          FREE
+        <div className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
+          GRATIS
         </div>
       </motion.button>
 

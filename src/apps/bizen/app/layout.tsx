@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "BIZEN",
-  description: "BIZEN Application",
+  description: "BIZEN",
 }
 
 export default function BizenLayout({ children }: { children: React.ReactNode }) {

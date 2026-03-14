@@ -9,12 +9,19 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "BIZEN",
   description: "Educación financiera premium para la nueva generación",
+  applicationName: "BIZEN",
+  appleWebApp: {
+    capable: true,
+    title: "BIZEN",
+    statusBarStyle: "default",
+  },
   openGraph: {
     title: "BIZEN",
     description: "Educación financiera premium para la nueva generación",
+    url: "https://bizen.mx",
+    siteName: "BIZEN",
     type: "website",
     locale: "es_MX",
-    siteName: "BIZEN",
   },
   twitter: {
     card: "summary_large_image",

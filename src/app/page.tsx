@@ -3632,24 +3632,7 @@ export default function WelcomePage() {
       </section>{" "}
       {/* TESTIMONIALS FIX VERIFIED */}
       <LandingWaitlistFooter />
-      {/* Blue Dot Cursor */}
-      <div
-        className="blue-dot-cursor"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "20px",
-          height: "20px",
-          background: "#0056E7",
-          borderRadius: "50%",
-          pointerEvents: "none",
-          zIndex: 9999,
-          transform: `translate3d(${mousePos.x - 10}px, ${mousePos.y - 10}px, 0)`,
-          boxShadow: "0 0 15px rgba(37, 99, 235, 0.4)",
-          transition: "transform 0.05s ease-out",
-        }}
-      />
+
     </div>
   );
 }
@@ -3907,16 +3890,7 @@ const landingCSS = `
           animation-play-state: paused;
         }
 
-        @media (pointer: fine) {
-          .landing-page-root {
-            cursor: none !important;
-          }
-        }
-        @media (pointer: coarse) {
-          .blue-dot-cursor {
-            display: none !important;
-          }
-        }
+
         @keyframes shimmer {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }

@@ -599,13 +599,14 @@ export default function CoursePageTemplate({
                                                             style={{
                                                                 width: "clamp(130px, 45vw, 230px)",
                                                                 minWidth: "initial",
-                                                                background: "rgba(255, 255, 255, 0.95)",
-                                                                backdropFilter: "blur(16px)",
-                                                                WebkitBackdropFilter: "blur(16px)",
+                                                                background: "rgba(245,249,255,0.97)",
+                                                                backdropFilter: "blur(24px) saturate(180%)",
+                                                                WebkitBackdropFilter: "blur(24px) saturate(180%)",
                                                                 borderRadius: 24,
                                                                 padding: "clamp(12px, 3.5vw, 20px)",
-                                                                border: "1px solid rgba(255, 255, 255, 0.8)",
-                                                                boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.15), 0 4px 24px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+                                                                border: "1px solid rgba(255, 255, 255, 0.85)",
+                                                                borderTop: "2px solid rgba(15,98,254,0.22)",
+                                                                boxShadow: "0 24px 56px -8px rgba(15,98,254,0.2), 0 6px 24px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)",
                                                                 display: "flex",
                                                                 flexDirection: "column",
                                                                 justifyContent: "center",
@@ -619,13 +620,19 @@ export default function CoursePageTemplate({
                                                                 overflow: "hidden"
                                                             }}
                                                         >
-                                                            {/* Premium animated glow background */}
-                                                            <div style={{ position: "absolute", top: -50, right: -50, width: 100, height: 100, background: "radial-gradient(circle, rgba(15,98,254,0.1) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                                                            {/* Decorative glow orb top-right */}
+                                                            <div style={{ position: "absolute", top: -40, right: -40, width: 90, height: 90, background: "radial-gradient(circle, rgba(15,98,254,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                                                            {/* Decorative glow orb bottom-left */}
+                                                            <div style={{ position: "absolute", bottom: -30, left: -30, width: 70, height: 70, background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                                                            {/* Shimmer sweep on entry */}
+                                                            {lessonModal?.lesson.slug === lesson.slug && (
+                                                                <div key={lesson.slug} className="cpt-panel-shimmer" style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2 }} />
+                                                            )}
 
                                                             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                                                 {/* Lesson number indicator */}
                                                                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                                                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: isDone ? "#10B981" : "#0F62FE", boxShadow: isDone ? "0 0 8px rgba(16,185,129,0.5)" : "0 0 8px rgba(15,98,254,0.5)" }} />
+                                                                     <div className="cpt-dot-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: isDone ? "#10B981" : "#0F62FE", boxShadow: isDone ? "0 0 8px rgba(16,185,129,0.5)" : "0 0 8px rgba(15,98,254,0.5)" }} />
                                                                     <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                                                                         Lección {absoluteLessonNumber}
                                                                     </div>
@@ -906,6 +913,32 @@ export default function CoursePageTemplate({
              gap: 8px !important;
              padding-bottom: 20px !important;
           }
+        }
+        @keyframes cpt-shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .cpt-panel-shimmer {
+          background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.65) 50%, transparent 65%);
+          background-size: 250% 100%;
+          animation: cpt-shimmer 0.65s ease 0.2s forwards;
+        }
+
+        @keyframes cpt-dot-pulse {
+          0%, 100% { transform: scale(1);   opacity: 1; }
+          50%       { transform: scale(1.7); opacity: 0.45; }
+        }
+        .cpt-dot-pulse {
+          animation: cpt-dot-pulse 2.2s ease-in-out infinite;
+        }
+
+        @keyframes cpt-btn-pop {
+          0%   { transform: scale(0.82) translateY(6px); opacity: 0; }
+          65%  { transform: scale(1.04) translateY(-1px); }
+          100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .premium-action-cta {
+          animation: cpt-btn-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.28s both;
         }
       `}</style>
         </div>

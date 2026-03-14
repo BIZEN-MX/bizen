@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       const fallbackProfile = {
         userId: user.id,
         fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
-        role: 'student',
+        role: 'particular',
         xp: 0,
         bizcoins: 0,
         level: 1,
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
           data: {
             userId: user.id,
             fullName: fallbackProfile.fullName,
-            role: 'student',
+            role: 'particular',
             xp: 0,
             bizcoins: 0,
             level: 1

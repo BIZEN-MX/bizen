@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Card from "@/components/ui/card"
+import PageLoader from "@/components/PageLoader"
 import {
     Award,
     CheckCircle2,
@@ -27,13 +28,7 @@ export default function HistorialLogrosPage() {
         }
     }, [user, loading, router])
 
-    if (loading) {
-        return (
-            <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ width: 40, height: 40, border: "3px solid #0F62FE22", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-            </div>
-        )
-    }
+    if (loading) return <PageLoader />
 
     if (!user) return null
 

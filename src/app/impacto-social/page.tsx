@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 import Card from "@/components/ui/card"
+import PageLoader from "@/components/PageLoader"
 import {
     Heart,
     Globe,
@@ -243,11 +244,7 @@ export default function ImpactoSocialPage() {
     }
 
     if (loading || isLoadingStats) {
-        return (
-            <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ width: 40, height: 40, border: "3px solid #0F62FE22", borderTopColor: "#0F62FE", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-            </div>
-        )
+        return <PageLoader />
     }
 
     if (!user) {

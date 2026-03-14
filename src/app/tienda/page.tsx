@@ -24,6 +24,7 @@ import {
     Trophy,
     Target,
 } from "lucide-react"
+import PageLoader from "@/components/PageLoader"
 
 // ─────────────────────────────────────────
 // Catalogue
@@ -220,7 +221,7 @@ export default function TiendaPage() {
 
     const ownedProducts = PRODUCTS.filter(p => inventory.includes(String(p.id)))
 
-    // No longer returning early for loading to keep navbar visible and show skeletons
+    if (loading || loadingStats) return <PageLoader />
 
     return (
         <div

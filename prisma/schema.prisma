@@ -56,7 +56,7 @@ model ContactMessage {
 model Profile {
   userId               String              @id @map("user_id")
   fullName             String              @map("full_name")
-  role                 String              @default("student")
+  role                 String              @default("particular")
   schoolId             String?             @map("school_id")
   xp                   Int                 @default(0)
   level                Int                 @default(1)

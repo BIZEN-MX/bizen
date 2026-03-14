@@ -2,32 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import { AVATAR_OPTIONS, AVATAR_CATEGORIES } from "@/lib/avatarOptions"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/AuthContext"
 import { SchoolIcon, CakeIcon, PartyIcon, RocketIcon, ChevronRightIcon } from "@/components/CustomIcons"
 
 // ─── Avatar Options ───────────────────────────────────────────────────────────
 
-const AVATAR_OPTIONS = [
-    { type: "character", id: "robot", character: "robot", label: "Robot" },
-    { type: "character", id: "astronaut", character: "astronaut", label: "Astronauta" },
-    { type: "mascot", id: "fox", label: "Zorro" },
-    { type: "mascot", id: "owl", label: "Búho" },
-    { type: "mascot", id: "dolphin", label: "Delfín" },
-    { type: "mascot", id: "turtle", label: "Tortuga" },
-    { type: "mascot", id: "beaver", label: "Castor" },
-    { type: "mascot", id: "squirrel", label: "Ardilla" },
-    { type: "mascot", id: "dog", label: "Perro" },
-    { type: "mascot", id: "cat", label: "Gato" },
-    { type: "mascot", id: "lion", label: "León" },
-    { type: "mascot", id: "koala", label: "Koala" },
-    { type: "mascot", id: "penguin", label: "Pingüino" },
-    { type: "gradient", id: "grad1", gradient: "linear-gradient(135deg, #0F62FE, #6366f1)", label: "Azure" },
-    { type: "pattern", id: "patt1", pattern: "dots", color: "#0F62FE", label: "Puntos" },
-    { type: "pattern", id: "patt2", pattern: "waves", color: "#0F62FE", label: "Ondas" },
-    { type: "shape", id: "shape1", shape: "star", color: "#0F62FE", label: "Estrella" },
-    { type: "abstract", id: "abst1", abstract: "circles", colors: ["#0F62FE", "#6366f1", "#93c5fd"], label: "Abstract" }
-]
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,7 +26,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const supabase = createClient()
 
     const [step, setStep] = useState<Step>("welcome")
-    const [selectedAvatar, setSelectedAvatar] = useState<any>({ type: "character", id: "robot", character: "robot", label: "Robot" })
+    const [selectedAvatar, setSelectedAvatar] = useState<any>(AVATAR_OPTIONS[0])
     const [username, setUsername] = useState("")
     const [bio, setBio] = useState("")
     const [birthDate, setBirthDate] = useState("")
@@ -53,6 +35,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const [usernameError, setUsernameError] = useState("")
     const [saving, setSaving] = useState(false)
     const [exiting, setExiting] = useState(false)
+    const [avatarCategory, setAvatarCategory] = useState(0) // index into AVATAR_CATEGORIES
 
     useEffect(() => {
         fetch("/api/schools")
@@ -610,33 +593,76 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                 <p style={{ fontSize: "clamp(12px,3vw,13px)", color: "#64748b", margin: 0 }}>Será tu cara en el foro y tu perfil</p>
                             </div>
 
-                            <div className="ob-avatar-grid" style={{ marginBottom: "clamp(20px,5vw,28px)" }}>
-                                {AVATAR_OPTIONS.map((av, idx) => {
-                                    const isSelected = JSON.stringify(selectedAvatar) === JSON.stringify(av)
-                                    return (
-                                        <div key={(av as any).id || idx} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
-                                            <button
-                                                className={`ob-avatar-btn${isSelected ? " selected" : ""}`}
-                                                onClick={() => setSelectedAvatar(av)}
-                                            >
-                                                <div style={{ width: "60%", height: "60%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                    <AvatarDisplay avatar={av} size={36} />
-                                                </div>
-                                            </button>
-                                            {(av as any).label && (
+                            {/* Category Tabs */}
+                            <div style={{ display: "flex", gap: 6, marginBottom: 16, justifyContent: "center", flexWrap: "wrap" }}>
+                                {AVATAR_CATEGORIES.map((cat, ci) => (
+                                    <button
+                                        key={cat.label}
+                                        onClick={() => setAvatarCategory(ci)}
+                                        style={{
+                                            padding: "6px 14px",
+                                            borderRadius: 999,
+                                            fontSize: "clamp(11px,2.5vw,13px)",
+                                            fontWeight: 600,
+                                            cursor: "pointer",
+                                            border: "none",
+                                            background: avatarCategory === ci
+                                                ? "linear-gradient(135deg, #0F62FE, #6366f1)"
+                                                : "#f1f5f9",
+                                            color: avatarCategory === ci ? "white" : "#64748b",
+                                            transition: "all 0.2s ease",
+                                            boxShadow: avatarCategory === ci ? "0 4px 12px rgba(15,98,254,0.3)" : "none",
+                                        }}
+                                    >
+                                        {cat.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Avatar Grid - 5 per category */}
+                            <div style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(5, 1fr)",
+                                gap: "clamp(8px,2vw,12px)",
+                                marginBottom: "clamp(20px,5vw,28px)"
+                            }}>
+                                {AVATAR_OPTIONS
+                                    .filter(av => AVATAR_CATEGORIES[avatarCategory].ids.includes(av.id))
+                                    .map((av) => {
+                                        const isSelected = selectedAvatar?.id === av.id
+                                        return (
+                                            <div key={av.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
+                                                <button
+                                                    onClick={() => setSelectedAvatar(av)}
+                                                    style={{
+                                                        width: "100%",
+                                                        aspectRatio: "1",
+                                                        borderRadius: "50%",
+                                                        cursor: "pointer",
+                                                        border: isSelected ? "3px solid #0F62FE" : "3px solid transparent",
+                                                        background: isSelected ? "rgba(15,98,254,0.08)" : "rgba(15,98,254,0.03)",
+                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                        padding: 0, outline: "none", overflow: "hidden",
+                                                        transition: "all 0.22s cubic-bezier(0.34,1.56,0.64,1)",
+                                                        transform: isSelected ? "scale(1.1)" : "scale(1)",
+                                                        boxShadow: isSelected ? "0 0 0 4px rgba(15,98,254,0.2)" : "none",
+                                                    }}
+                                                >
+                                                    <AvatarDisplay avatar={av} size={48} />
+                                                </button>
                                                 <span style={{
                                                     fontSize: "clamp(8px,2vw,10px)",
-                                                    fontWeight: isSelected ? 800 : 500,
+                                                    fontWeight: isSelected ? 700 : 500,
                                                     color: isSelected ? "#0F62FE" : "#94a3b8",
                                                     textAlign: "center", lineHeight: 1.2, transition: "color 0.2s"
                                                 }}>
-                                                    {(av as any).label}
+                                                    {av.label}
                                                 </span>
-                                            )}
-                                        </div>
-                                    )
-                                })}
+                                            </div>
+                                        )
+                                    })}
                             </div>
+
 
                             <button className="ob-btn-primary" onClick={() => goToStep("username")}>
                                 Continuar →

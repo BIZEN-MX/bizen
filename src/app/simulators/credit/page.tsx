@@ -41,17 +41,44 @@ function ScoreGauge({ score }: { score: number }) {
   const pct = (score - 300) / 550
   const arcLen = 251.3
   const fill = pct * arcLen
+  // Band boundary angles on a 180° arc (left=0°, right=180°)
+  const bandMarkers = [
+    { pct: (580-300)/550, col: '#ea580c' },
+    { pct: (670-300)/550, col: '#ca8a04' },
+    { pct: (740-300)/550, col: '#16a34a' },
+    { pct: (800-300)/550, col: '#0d9488' },
+  ]
   return (
     <div style={{ textAlign: 'center', position: 'relative', userSelect: 'none' }}>
-      <svg width="220" height="130" viewBox="0 0 200 115">
-        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" strokeWidth="18" strokeLinecap="round" />
-        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke={color} strokeWidth="18" strokeLinecap="round"
+      <svg width="240" height="140" viewBox="0 0 200 120">
+        {/* Background arc */}
+        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" strokeWidth="14" strokeLinecap="round" />
+        {/* Score fill arc */}
+        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke={color} strokeWidth="14" strokeLinecap="round"
           strokeDasharray={`${fill} ${arcLen}`} style={{ transition: 'stroke-dasharray 0.6s ease, stroke 0.6s ease' }} />
-        <text x="100" y="88" textAnchor="middle" fontSize="34" fontWeight="600" fill={color} fontFamily="-apple-system,sans-serif" style={{ transition: 'fill 0.4s' }}>{score}</text>
-        <text x="100" y="110" textAnchor="middle" fontSize="12" fontWeight="500" fill={color} fontFamily="-apple-system,sans-serif">{text}</text>
+        {/* Band divider dots on the arc */}
+        {bandMarkers.map((b, i) => {
+          const angle = Math.PI * (1 - b.pct)
+          const cx = 100 + 80 * Math.cos(angle)
+          const cy = 100 - 80 * Math.sin(angle)
+          return <circle key={i} cx={cx} cy={cy} r="4" fill="white" stroke={b.col} strokeWidth="2" />
+        })}
+        {/* Score value */}
+        <text x="100" y="88" textAnchor="middle" fontSize="34" fontWeight="700" fill={color} fontFamily="-apple-system,sans-serif" style={{ transition: 'fill 0.4s' }}>{score}</text>
+        <text x="100" y="108" textAnchor="middle" fontSize="11" fontWeight="700" fill={color} fontFamily="-apple-system,sans-serif"
+          style={{ transition: 'fill 0.4s', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{text}</text>
       </svg>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#94a3b8', marginTop: 4, padding: '0 8px' }}>
-        <span>300</span><span>580</span><span>670</span><span>740</span><span>850</span>
+      {/* Color band legend */}
+      <div style={{ display: 'flex', gap: 3, marginTop: 6, padding: '0 4px' }}>
+        {[
+          { l: 'Muy bajo', c: '#dc2626' }, { l: 'Regular', c: '#ea580c' },
+          { l: 'Bueno', c: '#ca8a04' }, { l: 'Muy bueno', c: '#16a34a' }, { l: 'Excelente', c: '#0d9488' }
+        ].map(b => (
+          <div key={b.l} style={{ flex: 1, textAlign: 'center' }}>
+            <div style={{ height: 4, borderRadius: 2, background: b.c, marginBottom: 3, opacity: 0.7 }} />
+            <span style={{ fontSize: 8, color: b.c, fontWeight: 700, letterSpacing: '0.01em', lineHeight: 1 }}>{b.l}</span>
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -212,6 +239,90 @@ function Accordion({ title, children, icon: Icon, color }: { title: string; chil
   )
 }
 
+// ── Term Tooltip ──────────────────────────────────────────────────────────
+function TermTooltip({ term, definition }: { term: string; definition: string }) {
+  const [show, setShow] = useState(false)
+  return (
+    <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+      <span
+        style={{ borderBottom: '1.5px dashed #0B71FE', color: '#0B71FE', cursor: 'help', fontWeight: 600 }}
+        onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}
+        onTouchStart={() => setShow(s => !s)}
+      >{term}</span>
+      <Info size={11} color="#0B71FE" style={{ cursor: 'help', flexShrink: 0 }}
+        onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} />
+      {show && (
+        <span style={{
+          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%', transform: 'translateX(-50%)',
+          background: '#0f172a', color: 'white', fontSize: 12, padding: '12px 15px', borderRadius: 12,
+          width: 230, lineHeight: 1.6, zIndex: 1000, boxShadow: '0 12px 32px rgba(0,0,0,0.3)',
+          pointerEvents: 'none', whiteSpace: 'normal',
+        }}>
+          <span style={{ fontWeight: 700, display: 'block', marginBottom: 4, color: '#7dd3fc', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{term}</span>
+          {definition}
+          <span style={{ position: 'absolute', bottom: -5, left: '50%', transform: 'translateX(-50%)', width: 10, height: 10, background: '#0f172a', clipPath: 'polygon(0 0, 100% 0, 50% 100%)' }} />
+        </span>
+      )}
+    </span>
+  )
+}
+
+// ── Onboarding Tour ───────────────────────────────────────────────────────
+const TOUR_STEPS = [
+  { title: '¡Bienvenido al Simulador de Crédito!', body: 'Aquí aprenderás cómo funciona el crédito en México. Todo es educativo — sin dinero real involucrado.', emoji: '👋' },
+  { title: 'Explora las 5 herramientas', body: 'Cada pestaña es un simulador diferente. Empieza por BIZEN Score para entender tu perfil crediticio y qué lo afecta.', emoji: '🗂️' },
+  { title: 'Ajusta tus hábitos financieros', body: 'Mueve los sliders y observa cómo tus decisiones cotidianas cambian tu score en tiempo real. ¡Intenta llegar a Excelente!', emoji: '🎛️' },
+  { title: 'Ve el impacto al instante', body: 'El marcador reacciona a cada ajuste. Intenta llevar tu score a 750 o más. Cuando termines, guarda tu simulación.', emoji: '🎯' },
+]
+
+function OnboardingTour({ onDone }: { onDone: () => void }) {
+  const [step, setStep] = useState(0)
+  const cur = TOUR_STEPS[step]
+  const isLast = step === TOUR_STEPS.length - 1
+  function finish() {
+    try { localStorage.setItem('bizen_credit_onboarded', '1') } catch {}
+    onDone()
+  }
+  return (
+    <>
+      <div style={{ position: 'fixed', inset: 0, background: 'rgba(10,15,30,0.75)', zIndex: 9000, backdropFilter: 'blur(4px)' }} onClick={finish} />
+      <div style={{
+        position: 'fixed', bottom: 36, left: '50%', transform: 'translateX(-50%)',
+        background: 'white', borderRadius: 24, padding: '28px 30px',
+        width: 'min(460px, calc(100vw - 32px))', zIndex: 9001,
+        boxShadow: '0 28px 80px rgba(0,0,0,0.35)', animation: 'fadeUp 0.35s cubic-bezier(0.16,1,0.3,1)',
+      }}>
+        <div style={{ display: 'flex', gap: 5, marginBottom: 22 }}>
+          {TOUR_STEPS.map((_, i) => (
+            <div key={i} style={{ height: 4, flex: 1, borderRadius: 99, background: i <= step ? '#0B71FE' : '#e2e8f0', transition: 'background 0.35s' }} />
+          ))}
+        </div>
+        <div style={{ fontSize: 38, marginBottom: 12, lineHeight: 1 }}>{cur.emoji}</div>
+        <p style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 10px', letterSpacing: '-0.02em' }}>{cur.title}</p>
+        <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.7, margin: '0 0 24px' }}>{cur.body}</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button onClick={finish} style={{ background: 'none', border: 'none', fontSize: 13, color: '#94a3b8', cursor: 'pointer', padding: '8px 0', fontFamily: 'inherit' }}>Saltar tour</button>
+          <div style={{ display: 'flex', gap: 10 }}>
+            {step > 0 && (
+              <button onClick={() => setStep(step - 1)} style={{ background: '#f1f5f9', border: 'none', borderRadius: 10, padding: '10px 18px', fontSize: 13, fontWeight: 600, color: '#64748b', cursor: 'pointer', fontFamily: 'inherit' }}>← Anterior</button>
+            )}
+            <button onClick={isLast ? finish : () => setStep(step + 1)} style={{ background: 'linear-gradient(135deg,#0B71FE,#1e40af)', border: 'none', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, color: 'white', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(11,113,254,0.35)' }}>
+              {isLast ? '¡Empezar! 🚀' : 'Siguiente →'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+// ── Scenario Presets ──────────────────────────────────────────────────────
+const SCENARIOS = [
+  { emoji: '🎓', label: 'Estudiante Típico', color: '#8b5cf6', values: { onTime: 60, util: 70, yrHist: 0, mixCount: 1, inquiries: 2 } },
+  { emoji: '📈', label: 'En Construcción', color: '#3b82f6', values: { onTime: 85, util: 35, yrHist: 2, mixCount: 2, inquiries: 1 } },
+  { emoji: '🏆', label: 'Perfil Ideal', color: '#0d9488', values: { onTime: 100, util: 10, yrHist: 7, mixCount: 3, inquiries: 0 } },
+]
+
 const TOOLTIP_STYLE = { background: 'rgba(15,23,42,0.92)', border: 'none', borderRadius: 12, color: 'white', fontSize: 12, fontWeight: 600 }
 const fmt = (n: number) => `$${Math.round(n).toLocaleString('es-MX')}`
 
@@ -222,6 +333,18 @@ function CreditSimulatorContent() {
   const runId = searchParams.get('runId')
   const [tab, setTab] = useState<Tab>('score')
   const [loadingRun, setLoadingRun] = useState(false)
+  const [showTour, setShowTour] = useState(false)
+  const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(new Set(['score']))
+  const [expandExplain, setExpandExplain] = useState<Record<string, boolean>>({})
+
+  function handleTabChange(t: Tab) {
+    setTab(t)
+    setVisitedTabs(prev => new Set([...prev, t]))
+  }
+
+  function applyScenario(v: { onTime: number; util: number; yrHist: number; mixCount: number; inquiries: number }) {
+    setOnTime(v.onTime); setUtil(v.util); setYrHist(v.yrHist); setMixCount(v.mixCount); setInquiries(v.inquiries)
+  }
 
   // Score factors
   const [onTime, setOnTime] = useState(75)
@@ -291,6 +414,13 @@ function CreditSimulatorContent() {
     fetchRun();
   }, [runId, user]);
 
+  // Tour init: show on first visit or ?tour=1
+  useEffect(() => {
+    const tourParam = searchParams.get('tour')
+    if (tourParam === '1') { setShowTour(true); return }
+    try { if (!localStorage.getItem('bizen_credit_onboarded')) setShowTour(true) } catch {}
+  }, [searchParams])
+
   const ccRes = useMemo(() => simulateCreditCard({ startingBalance: ccBal, aprAnnual: ccApr, minPaymentRule: 200, minPaymentRuleType: 'fixed', monthlyPayment: ccPay, monthsToSimulate: 120 }), [ccBal, ccApr, ccPay])
   const ccMin = useMemo(() => simulateCreditCard({ startingBalance: ccBal, aprAnnual: ccApr, minPaymentRule: 200, minPaymentRuleType: 'fixed', monthlyPayment: 200, monthsToSimulate: 120 }), [ccBal, ccApr])
   const loanRes = useMemo(() => simulatePersonalLoan({ principal: lP, aprAnnual: lA, termMonths: lT }), [lP, lA, lT])
@@ -323,11 +453,11 @@ function CreditSimulatorContent() {
   ].sort((a, b) => a.pct - b.pct)[0]
 
   const TABS = [
-    { id: 'score' as Tab, label: 'BIZEN Score', icon: Award, color: '#6366f1' },
-    { id: 'cc' as Tab, label: 'Tarjeta', icon: TrendingDown, color: '#ef4444' },
-    { id: 'loan' as Tab, label: 'Préstamo', icon: Banknote, color: '#3b82f6' },
-    { id: 'msi' as Tab, label: 'MSI', icon: CalendarDays, color: '#0d9488' },
-    { id: 'guide' as Tab, label: 'Guía Buró', icon: BookOpen, color: '#8b5cf6' },
+    { id: 'score' as Tab, label: 'BIZEN Score', sub: 'Entiende qué mueve tu puntaje', icon: Award, color: '#6366f1' },
+    { id: 'cc' as Tab, label: 'Tarjeta', sub: 'El verdadero costo de pagar el mínimo', icon: TrendingDown, color: '#ef4444' },
+    { id: 'loan' as Tab, label: 'Préstamo', sub: 'Cuota mensual y costo total', icon: Banknote, color: '#3b82f6' },
+    { id: 'msi' as Tab, label: 'MSI', sub: '¿Realmente sale gratis?', icon: CalendarDays, color: '#0d9488' },
+    { id: 'guide' as Tab, label: 'Guía Buró', sub: 'Todo sobre el historial crediticio', icon: BookOpen, color: '#8b5cf6' },
   ]
   const activeConf = TABS.find(t => t.id === tab)!
 
@@ -336,10 +466,14 @@ function CreditSimulatorContent() {
 
   return (
     <>
+      {/* Onboarding Tour overlay */}
+      {showTour && <OnboardingTour onDone={() => setShowTour(false)} />}
+
       <style>{`
         @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
         @keyframes panelIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
         .credit-panel{animation:panelIn 0.3s ease}
         .bizen-score-outer{
           width:100%;
@@ -351,29 +485,44 @@ function CreditSimulatorContent() {
         @media(max-width:767px){.bizen-score-outer{padding-bottom:65px!important}}
         @media(min-width:768px) and (max-width:1160px){.bizen-score-outer{width:calc(100% - 220px)!important;margin-left:220px!important;}}
         @media(min-width:1161px){.bizen-score-outer{width:calc(100% - 280px)!important;margin-left:280px!important;}}
-        .credit-tab-btn:hover{background:#F1F5F9!important;color:#1e293b!important;}
+        .credit-tab-btn:hover{background:#e8eef8!important;color:#1e293b!important;}
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none}
         input[type=range]::-moz-range-thumb{border:none;background:transparent}
+        .scenario-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.10)!important;}
       `}</style>
       <div className="bizen-score-outer">
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: 'clamp(24px,4vw,56px) clamp(16px,4vw,56px)', paddingBottom: 80, boxSizing: 'border-box' }}>
 
           {/* Header */}
-          <div style={{ marginBottom: 40, animation: 'fadeUp 0.5s ease' }}>
-            <Link href="/cash-flow" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', textDecoration: 'none', fontSize: 13, marginBottom: 20, transition: 'color 0.2s' }}
-              onMouseEnter={(e: React.MouseEvent<HTMLElement>) => e.currentTarget.style.color = '#0B71FE'}
-              onMouseLeave={(e: React.MouseEvent<HTMLElement>) => e.currentTarget.style.color = '#64748b'}
-            >
-              <ArrowLeft size={14} /> Volver al Centro Financiero
-            </Link>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(11,113,254,0.1)', border: '1px solid rgba(11,113,254,0.2)', borderRadius: 999, padding: '6px 16px', marginBottom: 20, alignSelf: 'flex-start', fontSize: 12, fontWeight: 500, color: '#0B71FE', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0B71FE', display: 'inline-block' }} />
-                Simulador Educativo — Sin dinero real
-              </div>
+          <div style={{ marginBottom: 32, animation: 'fadeUp 0.5s ease' }}>
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#94a3b8', marginBottom: 16, flexWrap: 'wrap' }}>
+              <Link href="/cash-flow" style={{ color: '#64748b', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, transition: 'color 0.2s' }}
+                onMouseEnter={(e: React.MouseEvent<HTMLElement>) => e.currentTarget.style.color = '#0B71FE'}
+                onMouseLeave={(e: React.MouseEvent<HTMLElement>) => e.currentTarget.style.color = '#64748b'}
+              ><ArrowLeft size={12} /> Centro Financiero</Link>
+              <span style={{ color: '#cbd5e1' }}>›</span>
+              <span style={{ color: '#475569', fontWeight: 500 }}>Simulador de Crédito</span>
+              <span style={{ color: '#cbd5e1' }}>›</span>
+              <span style={{ color: activeConf.color, fontWeight: 600 }}>{activeConf.label}</span>
             </div>
-            <h1 style={{ fontSize: 'clamp(28px,5.5vw,60px)', fontWeight: 600, margin: '0 0 18px', background: 'linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.04em', lineHeight: 1.15 }}>BIZEN Score</h1>
-            <p style={{ fontSize: 'clamp(15px,2vw,18px)', color: '#64748b', margin: 0, lineHeight: 1.6, maxWidth: 650 }}>Aprende cómo funciona el Buró de Crédito, construye un buen historial y entiende el costo real de las deudas — todo en un solo lugar.</p>
+
+            {/* EDU badge + replay */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(11,113,254,0.08)', border: '1.5px solid rgba(11,113,254,0.18)', borderRadius: 999, padding: '7px 16px', fontSize: 12, fontWeight: 700, color: '#0B71FE', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                <Shield size={13} color="#0B71FE" />
+                Simulador Educativo &mdash; Sin dinero real
+              </div>
+              <button onClick={() => setShowTour(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: '1px solid #e2e8f0', borderRadius: 999, padding: '6px 12px', fontSize: 12, color: '#64748b', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#0B71FE'; (e.currentTarget as HTMLElement).style.color = '#0B71FE' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.color = '#64748b' }}
+              >
+                <HelpCircle size={12} /> Ver tour
+              </button>
+            </div>
+
+            <h1 style={{ fontSize: 'clamp(28px,5.5vw,60px)', fontWeight: 700, margin: '0 0 14px', background: 'linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.04em', lineHeight: 1.15 }}>BIZEN Score</h1>
+            <p style={{ fontSize: 'clamp(15px,2vw,18px)', color: '#64748b', margin: 0, lineHeight: 1.6, maxWidth: 650 }}>Aprende cómo funciona el <TermTooltip term="Buró de Crédito" definition="Base de datos que registra todos tus créditos y pagos. Estar en Buró es normal — lo que importa es tu historial." />, construye un buen historial y entiende el costo real de las deudas — todo en un solo lugar.</p>
           </div>
 
           {/* Disclaimer */}
@@ -386,18 +535,36 @@ function CreditSimulatorContent() {
             </p>
           </div>
 
+          {/* Visited-tab progress dots */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 500 }}>Explorado:</span>
+            {TABS.map((t, i) => (
+              <div key={t.id} title={t.label} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: visitedTabs.has(t.id) ? t.color : '#e2e8f0', transition: 'background 0.4s', boxShadow: visitedTabs.has(t.id) ? `0 0 6px ${t.color}80` : 'none' }} />
+                {i < TABS.length - 1 && <div style={{ width: 12, height: 1.5, background: '#e2e8f0' }} />}
+              </div>
+            ))}
+            <span style={{ fontSize: 11, color: '#94a3b8' }}>{visitedTabs.size}/{TABS.length} pestañas</span>
+          </div>
+
           {/* Tabs */}
-          <div style={{ display: 'flex', gap: 8, marginBottom: 28, overflowX: 'auto', paddingBottom: 4 }}>
-            {TABS.map(t => {
+          <div style={{ display: 'flex', gap: 6, marginBottom: 8, overflowX: 'auto', paddingBottom: 4 }}>
+            {TABS.map((t, idx) => {
               const Icon = t.icon
               const active = tab === t.id
+              const visited = visitedTabs.has(t.id)
               return (
-                <button key={t.id} onClick={() => setTab(t.id)} className={active ? '' : 'credit-tab-btn'} style={{ border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, fontWeight: 500, fontSize: 14, borderRadius: 12, padding: '10px 18px', whiteSpace: 'nowrap', fontFamily: 'inherit', background: active ? 'linear-gradient(135deg,#0B71FE,#1e40af)' : '#F1F5F9', color: active ? 'white' : '#64748b', boxShadow: active ? '0 4px 14px rgba(11,113,254,0.25)' : 'none', transition: 'all 0.2s' }}>
-                  <Icon size={14} />{t.label}
+                <button key={t.id} onClick={() => handleTabChange(t.id)} className={active ? '' : 'credit-tab-btn'}
+                  style={{ border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, fontWeight: 600, fontSize: 13, borderRadius: 14, padding: '10px 16px', whiteSpace: 'nowrap', fontFamily: 'inherit', background: active ? `linear-gradient(135deg,${t.color},${t.color}cc)` : visited ? `${t.color}12` : '#F1F5F9', color: active ? 'white' : visited ? t.color : '#64748b', boxShadow: active ? `0 4px 14px ${t.color}45` : 'none', transition: 'all 0.2s', position: 'relative' }}>
+                  <span style={{ width: 18, height: 18, borderRadius: '50%', background: active ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.06)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{idx + 1}</span>
+                  <Icon size={13} />{t.label}
+                  {visited && !active && <span style={{ width: 5, height: 5, borderRadius: '50%', background: t.color, position: 'absolute', top: 6, right: 6 }} />}
                 </button>
               )
             })}
           </div>
+          {/* Active tab subtitle */}
+          <p style={{ fontSize: 12, color: '#64748b', margin: '0 0 20px', paddingLeft: 4 }}>↑ {activeConf.sub}</p>
 
           {/* Panel */}
           <div key={tab} className="credit-panel" style={{ background: 'white', borderRadius: 24, border: '1px solid #f1f5f9', boxShadow: '0 8px 30px rgba(11,113,254,0.04)', overflow: 'hidden' }}>
@@ -424,7 +591,18 @@ function CreditSimulatorContent() {
                 {/* ── SCORE TAB ── */}
                 {tab === 'score' && (<>
                   <div>
-                    <p style={{ fontSize: 11, fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 20 }}>Simula tus hábitos</p>
+                    {/* Scenario quick-start cards */}
+                    <p style={{ fontSize: 11, fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Perfil rápido — elige un punto de partida</p>
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
+                      {SCENARIOS.map(s => (
+                        <button key={s.label} className="scenario-card" onClick={() => applyScenario(s.values)}
+                          style={{ flex: '1 1 120px', background: `${s.color}0d`, border: `1.5px solid ${s.color}28`, borderRadius: 14, padding: '12px 10px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', textAlign: 'center' }}>
+                          <div style={{ fontSize: 22, marginBottom: 4 }}>{s.emoji}</div>
+                          <p style={{ fontSize: 12, fontWeight: 700, color: s.color, margin: 0, lineHeight: 1.3 }}>{s.label}</p>
+                        </button>
+                      ))}
+                    </div>
+                    <p style={{ fontSize: 11, fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 20 }}>O simula tus hábitos manualmente</p>
                     <Slider label="Pagos a tiempo" value={onTime} onChange={setOnTime} min={0} max={100} suffix="%" hint="¿Qué % de tus pagos haces antes de la fecha límite?" color="#6366f1" />
                     <Slider label="Uso de límite de crédito" value={util} onChange={setUtil} min={0} max={100} suffix="%" hint="Cuánto de tu línea de crédito usas. Ideal: menos del 30%" color="#f97316" />
                     <Slider label="Antigüedad del crédito" value={yrHist} onChange={setYrHist} min={0} max={20} suffix=" años" hint="Cuántos años llevas teniendo historial crediticio" color="#0d9488" />
@@ -479,6 +657,15 @@ function CreditSimulatorContent() {
                       <MetricCard label="Meses para pagar" value={ccRes.monthsToPayoff ? String(ccRes.monthsToPayoff) : '+120'} sub="meses aprox." bg="linear-gradient(135deg,#eff6ff,#dbeafe)" border="#93c5fd" tc="#1e40af" />
                     </div>
                     <DarkPanel label="Pagarás en total" value={fmt(ccRes.totalPaid)} sub={`Por una deuda de ${fmt(ccBal)} — ${(ccRes.totalPaid / Math.max(ccBal, 1)).toFixed(1)}x el valor original`} />
+                    {/* Expandable explainer */}
+                    <button onClick={() => setExpandExplain(p => ({ ...p, cc: !p.cc }))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#0B71FE', fontFamily: 'inherit', padding: '2px 0 14px', display: 'flex', alignItems: 'center', gap: 5, fontWeight: 600 }}>
+                      <HelpCircle size={13} /> ¿Qué significa esto? {expandExplain.cc ? '▲' : '▼'}
+                    </button>
+                    {expandExplain.cc && (
+                      <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 14, padding: '14px 16px', fontSize: 13, color: '#0c4a6e', lineHeight: 1.7, marginBottom: 14 }}>
+                        💡 Significa que tu deuda de <strong>{fmt(ccBal)}</strong> te costará <strong>{fmt(ccRes.totalInterestPaid)}</strong> en intereses si mantienes un pago de {fmt(ccPay)}/mes. Eso es <strong>{(ccRes.totalPaid / Math.max(ccBal, 1)).toFixed(1)}x</strong> el valor original. Subir tu pago mensual es la forma más rápida de ahorrar.
+                      </div>
+                    )}
                     <p style={{ fontSize: 11, fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Curva de deuda: tu pago vs. mínimo</p>
                     <ResponsiveContainer width="100%" height={190}>
                       <AreaChart data={ccChart} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
@@ -523,6 +710,15 @@ function CreditSimulatorContent() {
                       <MetricCard label="Intereses totales" value={fmt(loanRes.totalInterestPaid)} sub="costo del crédito" bg="linear-gradient(135deg,#fff1f2,#ffe4e6)" border="#fca5a5" tc="#9f1239" />
                     </div>
                     <DarkPanel label="Total a devolver" value={fmt(loanRes.totalPaid)} sub={`Por cada $1 pedido devolverás $${(loanRes.totalPaid / Math.max(lP, 1)).toFixed(2)}`} />
+                    {/* Expandable explainer */}
+                    <button onClick={() => setExpandExplain(p => ({ ...p, loan: !p.loan }))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#3b82f6', fontFamily: 'inherit', padding: '2px 0 14px', display: 'flex', alignItems: 'center', gap: 5, fontWeight: 600 }}>
+                      <HelpCircle size={13} /> ¿Qué significa esto? {expandExplain.loan ? '▲' : '▼'}
+                    </button>
+                    {expandExplain.loan && (
+                      <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 14, padding: '14px 16px', fontSize: 13, color: '#1e3a5f', lineHeight: 1.7, marginBottom: 14 }}>
+                        💡 Por un préstamo de <strong>{fmt(lP)}</strong> a <strong>{lT} meses</strong>, pagarás <strong>{fmt(loanRes.monthlyPayment)}</strong> cada mes. Al final habrás devuelto <strong>{fmt(loanRes.totalPaid)}</strong> — es decir, <strong>{fmt(loanRes.totalInterestPaid)}</strong> más de lo que pediste solo en intereses. Reducir el plazo baja ese número.
+                      </div>
+                    )}
                     <p style={{ fontSize: 11, fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Amortización: capital vs. interés</p>
                     <ResponsiveContainer width="100%" height={190}>
                       <BarChart data={loanChart} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>

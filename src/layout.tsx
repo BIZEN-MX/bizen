@@ -7,7 +7,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "BIZEN",
-  description: "App BIZEN",
+  description: "BIZEN",
   viewport: {
     width: "device-width",
     initialScale: 1,

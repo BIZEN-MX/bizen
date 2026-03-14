@@ -13,7 +13,7 @@ export function isValidEmail(email: string): boolean {
 }
 
 /**
- * Check if an email is allowed to access BIZEN app
+ * Check if an email is allowed to access BIZEN
  * BIZEN accepts any valid email address
  */
 export function canAccessBIZEN(email: string): boolean {

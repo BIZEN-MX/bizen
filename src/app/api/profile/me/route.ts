@@ -38,7 +38,7 @@ export async function GET() {
           data: {
             userId: user.id,
             fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
-            role: 'student',
+            role: 'particular',
             xp: 0,
             bizcoins: 0,
             level: 1
@@ -53,7 +53,7 @@ export async function GET() {
       userProfileRaw = {
         userId: user.id,
         fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
-        role: 'student',
+        role: 'particular',
         xp: 0,
         bizcoins: 0,
         level: 1,

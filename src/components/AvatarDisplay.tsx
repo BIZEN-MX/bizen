@@ -1,9 +1,38 @@
 // Reusable Avatar Display Component
 import { UserIcon } from "./CustomIcons"
+import { dicebearUrl } from "@/lib/avatarOptions"
+
 export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?: number; frame?: "ambassador" | "vip" | null | string }) => {
   const renderContent = () => {
     if (!avatar) {
       return <UserIcon size={size * 0.6} />
+    }
+
+    // ── DiceBear illustrated avatars (new system)
+    if (avatar.type === "dicebear") {
+      const url = dicebearUrl(avatar, Math.max(128, size * 2)) // 2× for retina
+      return (
+        <div style={{
+          width: "100%",
+          height: "100%",
+          borderRadius: "50%",
+          overflow: "hidden",
+          background: avatar.backgroundColor ? `#${avatar.backgroundColor}` : "#DBEAFE",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={url}
+            alt={avatar.label || "Avatar"}
+            width={size}
+            height={size}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            loading="lazy"
+          />
+        </div>
+      )
     }
 
     // Mascot image avatars (local PNGs in /public/avatars/)
@@ -27,8 +56,8 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              transform: "scale(1.1)", // Slight zoom to remove any edge artifacts
-              mixBlendMode: "multiply" // Blends the white background away
+              transform: "scale(1.1)",
+              mixBlendMode: "multiply"
             }}
           />
         </div>
@@ -135,8 +164,6 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
       return (
         <svg width="100%" height="100%" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="48" fill={avatar.bgColor || "#E0F2FE"} />
-
-          {/* Robot */}
           {avatar.character === "robot" && (
             <>
               <rect x="35" y="35" width="30" height="30" fill="#60A5FA" rx="3" />
@@ -149,8 +176,6 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
               <circle cx="60" cy="28" r="2" fill="#FBBF24" />
             </>
           )}
-
-          {/* Astronaut */}
           {avatar.character === "astronaut" && (
             <>
               <circle cx="50" cy="45" r="18" fill="#F3F4F6" />
@@ -162,8 +187,6 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
               <circle cx="50" cy="30" r="3" fill="#FBBF24" />
             </>
           )}
-
-          {/* Add other characters as needed - keeping it shorter for performance */}
           {avatar.character === "wizard" && (
             <>
               <circle cx="50" cy="50" r="15" fill="#F59E0B" />
@@ -174,8 +197,6 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
               <circle cx="50" cy="27" r="2" fill="#FBBF24" />
             </>
           )}
-
-          {/* Cat */}
           {avatar.character === "cat" && (
             <>
               <circle cx="50" cy="52" r="18" fill="#F97316" />
@@ -187,8 +208,6 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
               <circle cx="57" cy="50" r="1.5" fill="#FFF" />
             </>
           )}
-
-          {/* Dog */}
           {avatar.character === "dog" && (
             <>
               <circle cx="50" cy="52" r="18" fill="#92400E" />
@@ -246,6 +265,3 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
     </div>
   )
 }
-
-
-

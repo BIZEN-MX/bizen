@@ -49,7 +49,7 @@ export default function PuntosPage() {
     const userPoints = stats?.bizcoins ?? (dbProfile as any)?.bizcoins ?? 0
     const selectedGC = GIFT_CARDS.find(c => c.id === selectedCard)
 
-    if (loading) return <PageLoader />
+    if (loading || loadingStats) return <PageLoader />
 
     return (
         <div className="puntos-outer" style={{

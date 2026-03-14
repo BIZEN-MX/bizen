@@ -7,6 +7,7 @@ import { useOnboarding } from "@/contexts/OnboardingContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import PageLoader from "@/components/PageLoader"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import { AVATAR_OPTIONS, AVATAR_CATEGORIES, getDefaultAvatar } from "@/lib/avatarOptions"
 import Link from "next/link"
 import {
   Flame, Zap, Shield, Award, UserPlus, Users,
@@ -146,19 +147,7 @@ export default function ProfilePage() {
     catch { } finally { setLoadingFollowing(false) }
   }
 
-  const avatarOptions = [
-    { type: "character", id: "robot", character: "robot", label: "Robot" },
-    { type: "character", id: "astronaut", character: "astronaut", label: "Astronauta" },
-    { type: "mascot", id: "fox", label: "Zorro" }, { type: "mascot", id: "owl", label: "Búho" },
-    { type: "mascot", id: "dolphin", label: "Delfín" }, { type: "mascot", id: "turtle", label: "Tortuga" },
-    { type: "mascot", id: "beaver", label: "Castor" }, { type: "mascot", id: "squirrel", label: "Ardilla" },
-    { type: "mascot", id: "dog", label: "Perro" }, { type: "mascot", id: "cat", label: "Gato" },
-    { type: "mascot", id: "lion", label: "León" }, { type: "mascot", id: "koala", label: "Koala" },
-    { type: "mascot", id: "penguin", label: "Pingüino" },
-    { type: "gradient", id: "grad1", gradient: "linear-gradient(135deg, #0F62FE, #6366f1)", label: "Azure" },
-    { type: "pattern", id: "patt1", pattern: "dots", color: "#0F62FE", label: "Puntos" },
-    { type: "abstract", id: "abst1", abstract: "circles", colors: ["#0F62FE", "#6366f1", "#93c5fd"], label: "Abstract" }
-  ]
+  const [avatarPickerTab, setAvatarPickerTab] = useState(0)
 
   const updateAvatar = async (newAvatar: any) => {
     if (!supabase) return
@@ -242,7 +231,7 @@ export default function ProfilePage() {
     </div>
   )
 
-  if (loading || !mounted) return <PageLoader />
+  if (loading || !mounted || loadingStats) return <PageLoader />
   if (!user) return null
 
   const displayName = formData.fullName || user.email?.split("@")[0] || "Usuario"
@@ -931,37 +920,83 @@ export default function ProfilePage() {
       {
         isPickerOpen && (
           <div style={{
-            position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)",
-            backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center",
+            position: "fixed", inset: 0, background: "rgba(15,23,42,0.65)",
+            backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center",
             zIndex: 9999, padding: 20
           }} onClick={() => setIsPickerOpen(false)}>
-            <div style={{ background: "white", border: "1.5px solid #e2e8f0", borderRadius: 28, width: "100%", maxWidth: 440, padding: 32, position: "relative", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}
+            <div
+              style={{ background: "white", border: "1.5px solid #e2e8f0", borderRadius: 28, width: "100%", maxWidth: 480, padding: "32px 28px", position: "relative", boxShadow: "0 24px 80px rgba(0,0,0,0.2)" }}
               onClick={e => e.stopPropagation()}>
+
+              {/* Header */}
               <button onClick={() => setIsPickerOpen(false)} style={{ position: "absolute", top: 20, right: 20, background: "#f1f5f9", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <CloseIcon size={18} />
               </button>
-              <h3 style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", margin: "0 0 6px" }}>Elige tu Mascota</h3>
-              <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 24px" }}>Selecciona el avatar que más te represente</p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(76px, 1fr))", gap: 14 }}>
-                {avatarOptions.map(av => {
-                  const isSelected = (user.user_metadata?.avatar?.id || "robot") === av.id
-                  return (
-                    <div key={av.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                      <button onClick={() => updateAvatar(av)} disabled={savingAvatar} style={{
-                        width: 70, height: 70, borderRadius: "50%",
-                        border: `2.5px solid ${isSelected ? "#0F62FE" : "#f1f5f9"}`,
-                        background: isSelected ? "#eff6ff" : "white",
-                        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                        padding: 0, outline: "none", overflow: "hidden", transition: "all 0.2s"
-                      }}>
-                        <AvatarDisplay avatar={av} size={48} />
-                      </button>
-                      <span style={{ fontSize: 10, fontWeight: 500, color: isSelected ? "#0F62FE" : "#64748b" }}>{av.label}</span>
-                    </div>
-                  )
-                })}
+
+              {/* Live preview + title */}
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
+                <div style={{ width: 72, height: 72, borderRadius: "50%", overflow: "hidden", flexShrink: 0, boxShadow: "0 8px 24px rgba(15,98,254,0.25)", border: "3px solid #0F62FE" }}>
+                  <AvatarDisplay avatar={user.user_metadata?.avatar || getDefaultAvatar(displayName)} size={72} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>Elige tu Avatar</h3>
+                  <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>Tu cara en el foro y el ranking</p>
+                </div>
               </div>
-              {savingAvatar && <div style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#0F62FE", fontWeight: 500 }}>Guardando...</div>}
+
+              {/* Category Tabs */}
+              <div style={{ display: "flex", gap: 6, marginBottom: 18, flexWrap: "wrap" }}>
+                {AVATAR_CATEGORIES.map((cat, ci) => (
+                  <button
+                    key={cat.label}
+                    onClick={() => setAvatarPickerTab(ci)}
+                    style={{
+                      padding: "7px 16px", borderRadius: 999, fontSize: 13, fontWeight: 600,
+                      cursor: "pointer", border: "none", transition: "all 0.2s ease",
+                      background: avatarPickerTab === ci ? "linear-gradient(135deg, #0F62FE, #6366f1)" : "#f1f5f9",
+                      color: avatarPickerTab === ci ? "white" : "#64748b",
+                      boxShadow: avatarPickerTab === ci ? "0 4px 12px rgba(15,98,254,0.3)" : "none",
+                    }}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Avatar Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, marginBottom: 16 }}>
+                {AVATAR_OPTIONS
+                  .filter(av => AVATAR_CATEGORIES[avatarPickerTab].ids.includes(av.id))
+                  .map(av => {
+                    const isSelected = (user.user_metadata?.avatar?.id) === av.id
+                    return (
+                      <div key={av.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                        <button
+                          onClick={() => updateAvatar(av)}
+                          disabled={savingAvatar}
+                          style={{
+                            width: 72, height: 72, borderRadius: "50%",
+                            border: `3px solid ${isSelected ? "#0F62FE" : "transparent"}`,
+                            background: isSelected ? "#eff6ff" : "#f8fafc",
+                            cursor: savingAvatar ? "not-allowed" : "pointer",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            padding: 0, outline: "none", overflow: "hidden",
+                            transition: "all 0.22s cubic-bezier(0.34,1.56,0.64,1)",
+                            transform: isSelected ? "scale(1.08)" : "scale(1)",
+                            boxShadow: isSelected ? "0 0 0 4px rgba(15,98,254,0.2)" : "0 2px 8px rgba(0,0,0,0.06)",
+                          }}
+                        >
+                          <AvatarDisplay avatar={av} size={60} />
+                        </button>
+                        <span style={{ fontSize: 10, fontWeight: isSelected ? 700 : 500, color: isSelected ? "#0F62FE" : "#94a3b8", textAlign: "center" }}>
+                          {av.label}
+                        </span>
+                      </div>
+                    )
+                  })}
+              </div>
+
+              {savingAvatar && <div style={{ textAlign: "center", marginTop: 8, fontSize: 13, color: "#0F62FE", fontWeight: 500 }}>Guardando...</div>}
             </div>
           </div>
         )
