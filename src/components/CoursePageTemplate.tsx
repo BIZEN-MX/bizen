@@ -456,20 +456,21 @@ export default function CoursePageTemplate({
                             flexDirection: "column",
                             gap: 16
                         }}>
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                                    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #dbeafe, #eff6ff)", border: "2px solid #3b82f6", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                            <div className="billy-chat-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                <div className="billy-chat-info" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #dbeafe, #eff6ff)", border: "2px solid #3b82f6", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
                                         <Image src="/billy_chatbot.png" alt="Billy" width={40} height={40} />
                                     </div>
-                                    <div>
-                                        <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.05em" }}>¿Tienes dudas sobre "{topic.title}"?</div>
+                                    <div style={{ minWidth: 0 }}>
+                                        <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: 1.4 }}>¿Tienes dudas sobre "{topic.title}"?</div>
                                         <div style={{ fontSize: 13, color: "#64748b" }}>Pregúntale a Billy sobre este tema.</div>
                                     </div>
                                 </div>
                                 {!showChat && (
                                     <button 
+                                        className="billy-chat-btn"
                                         onClick={() => setShowChat(true)}
-                                        style={{ background: "#2563eb", color: "white", border: "none", borderRadius: 12, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+                                        style={{ background: "#2563eb", color: "white", border: "none", borderRadius: 12, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap", flexShrink: 0 }}
                                     >
                                         <Sparkles size={14} /> Empezar Chat
                                     </button>
@@ -1036,6 +1037,23 @@ export default function CoursePageTemplate({
           0% { opacity: 0; transform: scale(0.88) translateY(20px); }
           100% { opacity: 1; transform: scale(1) translateY(0); }
         }
+        @media (max-width: 600px) {
+          .billy-chat-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 20px !important;
+          }
+          .billy-chat-info {
+            width: 100% !important;
+          }
+          .billy-chat-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 12px 20px !important;
+            font-size: 14px !important;
+          }
+        }
+
         /* Media queries for smaller screens */
         @media (max-width: 480px) {
           .cpt-lesson-card {

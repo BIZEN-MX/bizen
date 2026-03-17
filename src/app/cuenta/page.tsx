@@ -116,6 +116,11 @@ export default function CuentaPage() {
   }
 
   const handlePlanUpdate = async (plan: "gratuito" | "estudiante" | "premium") => {
+    if (plan !== "gratuito") {
+      router.push("/payment")
+      return
+    }
+    
     setSaving(true)
     setSaveError(null)
     setSaveSuccess(null)

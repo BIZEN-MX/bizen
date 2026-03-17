@@ -113,7 +113,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         }
     }
 
-    const profileName = user?.user_metadata?.full_name?.split(" ")[0] || "nuevo estudiante"
+    const profileName = user?.user_metadata?.full_name?.split(" ")[0] || "usuario"
     const emailForRole = user?.email?.toLowerCase() || ''
     const isInstitutional = emailForRole.endsWith('.edu') || emailForRole.includes('.edu.')
     const stepList = isInstitutional

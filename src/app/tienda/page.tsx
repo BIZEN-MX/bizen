@@ -401,6 +401,137 @@ export default function TiendaPage() {
         @keyframes tienda-glow    { 0%,100% { filter: drop-shadow(0 0 4px rgba(15,98,254,0.3)); } 50% { filter: drop-shadow(0 0 12px rgba(15,98,254,0.6)); } }
         @keyframes card-scanline  { 0% { top: -100%; } 100% { top: 200%; } }
 
+        /* ── horizontal scroll helpers ── */
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* ── responsive adjustments ── */
+        @media (max-width: 767px) {
+            .tienda-tabs-container {
+                overflow-x: auto;
+                padding-bottom: 2px;
+                margin-bottom: 16px !important;
+            }
+            .tienda-tab-btn {
+                padding: 10px 14px !important;
+                font-size: 12px !important;
+                flex-shrink: 0;
+            }
+            .tienda-cat-container {
+                overflow-x: auto;
+                padding: 4px 0;
+                margin-top: 10px;
+                gap: 6px !important;
+            }
+            .tienda-cat {
+                padding: 6px 14px !important;
+                font-size: 11px !important;
+            }
+            .tienda-card {
+                border-radius: 18px !important;
+            }
+            .tienda-card > div:first-child {
+                height: 110px !important;
+            }
+            .tienda-card > div:nth-child(2) {
+                padding: 12px 14px !important;
+            }
+            .tienda-card h3 {
+                font-size: 12px !important;
+                margin-bottom: 2px !important;
+            }
+            .tienda-card p {
+                font-size: 10px !important;
+                margin-bottom: 8px !important;
+                line-height: 1.3 !important;
+            }
+            .canjear-btn {
+                padding: 7px 10px !important;
+                font-size: 10px !important;
+                border-radius: 8px !important;
+            }
+            .puntos-stat-card {
+                padding: 16px 12px !important;
+                border-radius: 16px !important;
+            }
+            .puntos-stat-card div:nth-child(2) {
+                font-size: 28px !important;
+            }
+            .tienda-inner {
+                padding: 12px !important;
+            }
+            .tienda-hero {
+                padding: 32px 24px !important;
+                border-radius: 24px !important;
+                margin-bottom: 20px !important;
+            }
+            .tienda-hero h1 {
+                font-size: 28px !important;
+            }
+            .tienda-hero p {
+                font-size: 13px !important;
+            }
+            .tienda-promo {
+                padding: 16px 20px !important;
+                border-radius: 16px !important;
+                margin-bottom: 24px !important;
+            }
+            .tienda-promo span {
+                font-size: 12px !important;
+            }
+            /* Stats widgets reduction */
+            .puntos-stat-card {
+                padding: 24px 16px !important;
+                gap: 12px !important;
+            }
+            .gift-card-item div:first-child {
+                padding: 24px 20px !important;
+                min-height: 120px !important;
+            }
+            .gift-card-item div:nth-child(2) {
+                padding: 14px 20px !important;
+            }
+            .tienda-modal {
+                padding: 24px !important;
+                border-radius: 24px !important;
+            }
+            /* Guide and Footers Section */
+            .tienda-guide-container {
+                padding: 24px !important;
+                border-radius: 24px !important;
+            }
+            .tienda-guide-container h3 {
+                font-size: 20px !important;
+                margin-bottom: 24px !important;
+            }
+            .tienda-guide-item {
+                padding: 20px !important;
+                border-radius: 20px !important;
+            }
+            .tienda-guide-item div:first-child {
+                width: 44px !important;
+                height: 44px !important;
+                margin-bottom: 12px !important;
+            }
+            .tienda-guide-item div:nth-child(2) {
+                font-size: 15px !important;
+            }
+            .tienda-guide-item div:nth-child(3) {
+                font-size: 12px !important;
+            }
+            .tienda-footer-section {
+                padding: 24px !important;
+                border-radius: 24px !important;
+                margin-top: 32px !important;
+            }
+            .tienda-footer-header h2 {
+                font-size: 18px !important;
+            }
+            .tienda-footer-header p {
+                font-size: 13px !important;
+            }
+        }
+
         /* ── product card ── */
         .tienda-card {
             background: white;
@@ -709,16 +840,19 @@ export default function TiendaPage() {
                 }}
             >
                 {/* ── HERO HEADER ── */}
-                <div style={{
-                    background: "linear-gradient(135deg, #0B1E5E 0%, #1e3a8a 55%, #0F62FE 100%)",
-                    borderRadius: 40,
-                    padding: "clamp(40px, 6vw, 80px) clamp(32px, 5vw, 64px)",
-                    marginBottom: 40,
-                    position: "relative",
-                    overflow: "hidden",
-                    boxShadow: "0 24px 70px rgba(15,98,254,0.3)",
-                    animation: "tienda-fadeUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both",
-                }}>
+                <div 
+                    className="tienda-hero"
+                    style={{
+                        background: "linear-gradient(135deg, #0B1E5E 0%, #1e3a8a 55%, #0F62FE 100%)",
+                        borderRadius: 40,
+                        padding: "clamp(40px, 6vw, 80px) clamp(32px, 5vw, 64px)",
+                        marginBottom: 40,
+                        position: "relative",
+                        overflow: "hidden",
+                        boxShadow: "0 24px 70px rgba(15,98,254,0.3)",
+                        animation: "tienda-fadeUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both",
+                    }}
+                >
                     {/* Artistic backgrounds */}
                     <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 600, height: 600, background: "radial-gradient(circle, rgba(96,165,250,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
                     <div style={{ position: "absolute", bottom: "-30%", left: "-5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
@@ -765,20 +899,23 @@ export default function TiendaPage() {
                 </div>
 
                 {/* ── FEATURED PROMO BANNER ── */}
-                <div style={{
-                    background: "linear-gradient(120deg, #6d28d9 0%, #4f46e5 50%, #0F62FE 100%)",
-                    borderRadius: 24,
-                    padding: "28px 36px",
-                    marginBottom: 32,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 20,
-                    flexWrap: "wrap",
-                    position: "relative",
-                    overflow: "hidden",
-                    animation: "tienda-fadeUp 0.55s ease 0.1s both",
-                }}>
+                <div 
+                    className="tienda-promo"
+                    style={{
+                        background: "linear-gradient(120deg, #6d28d9 0%, #4f46e5 50%, #0F62FE 100%)",
+                        borderRadius: 24,
+                        padding: "28px 36px",
+                        marginBottom: 32,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 20,
+                        flexWrap: "wrap",
+                        position: "relative",
+                        overflow: "hidden",
+                        animation: "tienda-fadeUp 0.55s ease 0.1s both",
+                    }}
+                >
                     {/* Shine sweep */}
                     <div style={{ position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%", background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)", animation: "tienda-shine 4s ease-in-out infinite", pointerEvents: "none" }} />
                     <div style={{ display: "inline-flex", alignItems: "center", gap: 12, color: "white" }}>
@@ -798,13 +935,17 @@ export default function TiendaPage() {
                 </div>
 
                 {/* ── NAVIGATION TABS ── */}
-                <div style={{
-                    display: "flex",
-                    gap: 0,
-                    marginBottom: 32,
-                    borderBottom: "2px solid #e2e8f0",
-                    animation: "tienda-fadeUp 0.5s ease 0.12s both"
-                }}>
+                <div 
+                    className="tienda-tabs-container scroll-hide"
+                    style={{
+                        display: "flex",
+                        gap: 0,
+                        marginBottom: 32,
+                        borderBottom: "2px solid #e2e8f0",
+                        animation: "tienda-fadeUp 0.5s ease 0.12s both",
+                        position: "relative"
+                    }}
+                >
                     {[
                         { id: "catalogo", label: "Catálogo", icon: <ShoppingBag size={18} /> },
                         { id: "inventario", label: "Mis Compras", icon: <ShoppingBag size={18} /> },
@@ -812,6 +953,7 @@ export default function TiendaPage() {
                     ].map(tab => (
                         <button
                             key={tab.id}
+                            className="tienda-tab-btn"
                             onClick={() => setActiveTab(tab.id as any)}
                             style={{
                                 display: "flex",
@@ -827,7 +969,8 @@ export default function TiendaPage() {
                                 cursor: "pointer",
                                 transition: "all 0.2s ease",
                                 marginBottom: -2,
-                                position: "relative"
+                                position: "relative",
+                                whiteSpace: "nowrap"
                             }}
                         >
                             {tab.icon}
@@ -882,7 +1025,10 @@ export default function TiendaPage() {
                                 />
                             </div>
 
-                            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                            <div 
+                                className="tienda-cat-container scroll-hide"
+                                style={{ display: "flex", gap: 8 }}
+                            >
                                 {(["Todo", ...CATEGORIES] as const).map(cat => (
                                     <button
                                         key={cat}
@@ -904,6 +1050,7 @@ export default function TiendaPage() {
                                                 : "0 2px 8px rgba(0,0,0,0.04)",
                                             border: activeCategory === cat ? "none" : "1.5px solid #e2e8f0",
                                             transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                                            flexShrink: 0
                                         }}
                                     >
                                         {cat}
@@ -1174,7 +1321,7 @@ export default function TiendaPage() {
                         </div>
 
                         {/* Guide to Earning Section */}
-                        <div style={{ background: "white", borderRadius: 36, padding: "48px", border: "1px solid #f1f5f9", boxShadow: "0 10px 60px rgba(15,98,254,0.06)" }}>
+                        <div className="tienda-guide-container" style={{ background: "white", borderRadius: 36, padding: "48px", border: "1px solid #f1f5f9", boxShadow: "0 10px 60px rgba(15,98,254,0.06)" }}>
                             <h3 style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", margin: "0 0 36px", textAlign: "center" }}>Potencia tu ahorro de BIZCOINS</h3>
                             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 24 }}>
                                 {[
@@ -1183,7 +1330,7 @@ export default function TiendaPage() {
                                     { icon: <Target size={26} />, label: "Retos del Foro", xp: "+100-300 BIZCOINS", color: "#f59e0b", desc: "Participa activamente en la comunidad y gana premios mayores." },
                                     { icon: <Trophy size={26} />, label: "Ascenso de Nivel", xp: "Bonos VIP", color: "#7c3aed", desc: "Cada vez que subes de nivel recibes un cofre sorpresa." },
                                 ].map((item, i) => (
-                                    <div key={i} style={{ padding: 32, borderRadius: 28, background: "#f8fafc", border: `1px solid ${item.color}10`, borderBottom: `5px solid ${item.color}`, transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-6px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
+                                    <div key={i} className="tienda-guide-item" style={{ padding: 32, borderRadius: 28, background: "#f8fafc", border: `1px solid ${item.color}10`, borderBottom: `5px solid ${item.color}`, transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-6px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
                                         <div style={{ width: 56, height: 56, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center", color: item.color, marginBottom: 20, boxShadow: "0 8px 16px rgba(0,0,0,0.04)" }}>{item.icon}</div>
                                         <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginBottom: 6 }}>{item.label}</div>
                                         <div style={{ fontSize: 14, color: "#64748b", marginBottom: 16, lineHeight: 1.6 }}>{item.desc}</div>
@@ -1192,11 +1339,51 @@ export default function TiendaPage() {
                                 ))}
                             </div>
                         </div>
+
+                        {/* Recent History Section - Merged from Puntos page */}
+                        <div style={{ marginTop: 48, background: "white", borderRadius: 36, padding: "48px", border: "1px solid #f1f5f9", boxShadow: "0 10px 60px rgba(15,98,254,0.06)" }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
+                                <h3 style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", margin: 0 }}>Historial de BIZCOINS</h3>
+                                <div style={{ fontSize: 13, fontWeight: 600, color: "#64748b", background: "#f1f5f9", padding: "6px 14px", borderRadius: 10 }}>Últimos 30 días</div>
+                            </div>
+                            
+                            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", background: "#f8fafc", borderRadius: 20, border: "1px solid #f1f5f9" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                                        <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "#10b981" }}>
+                                            <Zap size={20} />
+                                        </div>
+                                        <div>
+                                            <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 15 }}>Sesión de hoy completada</div>
+                                            <div style={{ fontSize: 13, color: "#94a3b8" }}>Hoy, 10:24 AM</div>
+                                        </div>
+                                    </div>
+                                    <div style={{ fontWeight: 800, color: "#10b981", fontSize: 16 }}>+50 BIZCOINS</div>
+                                </div>
+
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", background: "#f8fafc", borderRadius: 20, border: "1px solid #f1f5f9" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                                        <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "#10b981" }}>
+                                            <Target size={20} />
+                                        </div>
+                                        <div>
+                                            <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 15 }}>Reto Diario Completado</div>
+                                            <div style={{ fontSize: 13, color: "#94a3b8" }}>Ayer, 06:15 PM</div>
+                                        </div>
+                                    </div>
+                                    <div style={{ fontWeight: 800, color: "#10b981", fontSize: 16 }}>+150 BIZCOINS</div>
+                                </div>
+
+                                <div style={{ textAlign: "center", padding: "32px", border: "2px dashed #f1f5f9", borderRadius: 24, marginTop: 12 }}>
+                                    <p style={{ margin: 0, color: "#94a3b8", fontSize: 14, fontWeight: 500 }}>Estamos trabajando en un historial detallado para todas tus transacciones.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
 
                 {/* ── HOW TO EARN MORE (GLOBAL FOOTER) ── */}
-                <div style={{
+                <div className="tienda-footer-section" style={{
                     background: "white",
                     borderRadius: 36,
                     padding: "clamp(32px, 5vw, 48px)",
@@ -1206,7 +1393,7 @@ export default function TiendaPage() {
                     marginTop: 60,
                     animation: "tienda-fadeUp 0.6s ease 0.2s both"
                 }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, gap: 20, flexWrap: "wrap" }}>
+                    <div className="tienda-footer-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, gap: 20, flexWrap: "wrap" }}>
                         <div>
                             <h2 style={{ fontSize: "clamp(22px, 3vw, 28px)", fontWeight: 800, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.02em" }}>¿Necesitas más BIZCOINS?</h2>
                             <p style={{ fontSize: 16, color: "#64748b", margin: 0 }}>Potencia tu aprendizaje y desbloquea recompensas más rápido.</p>

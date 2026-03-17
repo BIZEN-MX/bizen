@@ -227,7 +227,6 @@ export default function FixedSidebar() {
   const profileActive = isActivePath("/profile")
   const settingsActive = isActivePath("/configuracion")
   const impactoSocialActive = isActivePath("/impacto-social")
-  const puntosActive = isActivePath("/puntos")
   const tiendaActive = isActivePath("/tienda")
   const rankingsActive = isActivePath("/rankings")
 
@@ -360,14 +359,33 @@ export default function FixedSidebar() {
                         padding: 4px 12px;
                         border-radius: 99px;
                         border: 1px solid #E2E8F0;
-                        cursor: default;
+                        cursor: pointer;
                         user-select: none;
+                        transition: all 0.3s ease;
+                        animation: upgrade-pulse 2.5s infinite ease-in-out;
+                      }
+                      .plan-badge-gratuito:hover {
+                        background: #E2E8F0;
+                        border-color: #0F62FE;
+                        color: #0F62FE;
+                        transform: translateY(-1px);
+                        box-shadow: 0 4px 12px rgba(15, 98, 254, 0.15);
                       }
                       .plan-badge-gratuito .plan-dot {
                         width: 4px; height: 4px;
                         border-radius: 50%;
                         background: #94A3B8;
                         flex-shrink: 0;
+                        transition: all 0.3s ease;
+                      }
+                      .plan-badge-gratuito:hover .plan-dot {
+                        background: #0F62FE;
+                        box-shadow: 0 0 6px #0F62FE;
+                      }
+                      @keyframes upgrade-pulse {
+                        0% { box-shadow: 0 0 0 0 rgba(15, 98, 254, 0); }
+                        50% { box-shadow: 0 0 8px 1px rgba(15, 98, 254, 0.1); }
+                        100% { box-shadow: 0 0 0 0 rgba(15, 98, 254, 0); }
                       }
                       .plan-badge-institutional {
                         display: inline-flex;
@@ -403,7 +421,11 @@ export default function FixedSidebar() {
                         Plan Institucional
                       </span>
                     ) : (
-                      <span className="plan-badge-gratuito">
+                      <span 
+                        className="plan-badge-gratuito" 
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => router.push('/payment')}
+                      >
                         <span className="plan-dot" />
                         Plan Gratuito
                       </span>

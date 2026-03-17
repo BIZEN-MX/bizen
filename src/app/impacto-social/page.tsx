@@ -62,7 +62,7 @@ interface SchoolImpact {
     bonusAmountMXN: number
     totalDonatedMXN: number
     projectedBonusMXN: number
-    causeCategory: "Educación" | "Alimentación" | "Medio Ambiente"
+    causeCategory: "Educación" | "Alimentación" | "Medio Ambiente" | "Impacto Social"
     foundation: Foundation
     seasonStart: string
     seasonEnd: string
@@ -115,7 +115,7 @@ const MOCK_SCHOOL_IMPACT: SchoolImpact = {
     bonusAmountMXN: 18750,
     totalDonatedMXN: 45000,
     projectedBonusMXN: 15400,
-    causeCategory: "Educación",
+    causeCategory: "Impacto Social",
     foundation: MOCK_FOUNDATION,
     seasonStart: "2026-01-01",
     seasonEnd: "2026-12-31",
@@ -125,7 +125,7 @@ const MOCK_SCHOOL_IMPACT: SchoolImpact = {
 const MOCK_TARGETS: ImpactTarget[] = [
     {
         id: "t1",
-        label: "Tasa de alumnos activos",
+        label: "Tasa de usuarios activos",
         metricKey: "active_rate",
         currentValue: 62,
         targetValue: 70,
@@ -133,7 +133,6 @@ const MOCK_TARGETS: ImpactTarget[] = [
         status: "near",
         howToHelpCTA: "Invita a un compañero a realizar su reto diario"
     },
-
     {
         id: "t3",
         label: "Lecciones completadas (promedio)",
@@ -189,7 +188,8 @@ const checkActiveStatus = (sessionsLast30d: number, modulesLast30d: number): boo
 export default function ImpactoSocialPage() {
     const { user, loading, dbProfile } = useAuth()
     const router = useRouter()
-    const [activeTab, setActiveTab] = useState<"student" | "school" | "transparency">("school")
+    const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular')
+    const [activeTab, setActiveTab] = useState<"student" | "school" | "transparency">(isInstitutional ? "school" : "student")
 
     // Dynamic states
     const [stats, setStats] = useState<any>(null)
@@ -340,7 +340,7 @@ export default function ImpactoSocialPage() {
 
                     {/* Sub */}
                     <p style={{ animation: "is-fadeup 0.6s 0.2s ease both", fontSize: "clamp(15px, 3vw, 18px)", color: "rgba(255,255,255,0.65)", margin: "0 0 48px", lineHeight: 1.7 }}>
-                        Con cada lección completada en Bizen, tu escuela dona a <strong style={{ color: "#93c5fd" }}>Nuqleo Querétaro</strong>.<br />
+                        Con cada lección completada en Bizen, {isInstitutional ? 'tu escuela' : 'la plataforma'} dona a <strong style={{ color: "#93c5fd" }}>Nuqleo Querétaro</strong>.<br />
                         Únete y mide el impacto real de tu aprendizaje.
                     </p>
 
@@ -525,12 +525,12 @@ export default function ImpactoSocialPage() {
                                         letterSpacing: "0.05em",
                                         boxShadow: "0 4px 12px rgba(15, 98, 254, 0.2)"
                                     }}>
-                                        Causa: {MOCK_SCHOOL_IMPACT.causeCategory}
+                                        Causa: {isInstitutional ? "Educación" : "Impacto Social"}
                                     </span>
                                 </div>
 
                                 <h1 className="impact-entrance impact-delay-2" style={{ fontSize: "clamp(32px, 5vw, 64px)", fontWeight: 500, color: "#fff", margin: "0 0 20px", lineHeight: 1.1, letterSpacing: "-0.03em" }}>
-                                    Nuestro Impacto en <br />
+                                    {isInstitutional ? 'Nuestro Impacto en' : 'Mi Impacto Social con'} <br />
                                     <span style={{ background: "linear-gradient(90deg, #93c5fd, #fff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{MOCK_FOUNDATION.name}</span>
                                 </h1>
 
@@ -636,26 +636,28 @@ export default function ImpactoSocialPage() {
                                     transition: "all 0.2s"
                                 }}
                             >
-                                Mi Impacto
+                                Mi Impacto {isInstitutional ? '' : 'Social'}
                             </button>
                         )}
-                        <button
-                            className="tab-btn"
-                            onClick={() => setActiveTab("school")}
-                            style={{
-                                padding: "12px 0",
-                                borderBottom: activeTab === "school" ? "3px solid #0F62FE" : "3px solid transparent",
-                                color: activeTab === "school" ? "#0F62FE" : "#64748b",
-                                fontWeight: 500,
-                                fontSize: 16,
-                                background: "none",
-                                borderTop: "none", borderLeft: "none", borderRight: "none",
-                                cursor: "pointer",
-                                transition: "all 0.2s"
-                            }}
-                        >
-                            Impacto de mi Escuela
-                        </button>
+                        {isInstitutional && (
+                            <button
+                                className="tab-btn"
+                                onClick={() => setActiveTab("school")}
+                                style={{
+                                    padding: "12px 0",
+                                    borderBottom: activeTab === "school" ? "3px solid #0F62FE" : "3px solid transparent",
+                                    color: activeTab === "school" ? "#0F62FE" : "#64748b",
+                                    fontWeight: 500,
+                                    fontSize: 16,
+                                    background: "none",
+                                    borderTop: "none", borderLeft: "none", borderRight: "none",
+                                    cursor: "pointer",
+                                    transition: "all 0.2s"
+                                }}
+                            >
+                                Impacto de mi Escuela
+                            </button>
+                        )}
                         <button
                             className="tab-btn"
                             onClick={() => setActiveTab("transparency")}
@@ -850,10 +852,10 @@ export default function ImpactoSocialPage() {
                                     </div>
                                     <div>
                                         <div style={{ fontSize: 14, fontWeight: 500, color: "#065f46", marginBottom: 2 }}>
-                                            Eres alumno activo este mes
+                                            Eres {isInstitutional ? 'alumno' : 'usuario'} activo este mes
                                         </div>
                                         <div style={{ fontSize: 13, color: "#047857" }}>
-                                            Has aportado un <strong>+2.4%</strong> a la tasa de alumnos activos de tu escuela. Sigue así para proteger el bono de tu institución.
+                                            Has aportado un <strong>+2.4%</strong> a la tasa de {isInstitutional ? 'alumnos' : 'usuarios'} activos de {isInstitutional ? 'tu escuela' : 'Bizen'}. Sigue así para proteger el bono {isInstitutional ? 'de tu institución' : 'social'}.
                                         </div>
                                     </div>
                                 </div>
@@ -927,7 +929,7 @@ export default function ImpactoSocialPage() {
                                                     Acción prioritaria
                                                 </div>
                                                 <div style={{ fontSize: 16, fontWeight: 500, color: "#fff", lineHeight: 1.3 }}>
-                                                    Estás a 8% de que tu escuela desbloquee el bono del mes
+                                                    Estás a 8% de que {isInstitutional ? 'tu escuela' : 'Bizen'} desbloquee el bono del mes
                                                 </div>
                                             </div>
                                             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -969,7 +971,7 @@ export default function ImpactoSocialPage() {
                                         }}>
                                             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                                                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", flexShrink: 0 }} />
-                                                <span style={{ fontSize: 13, fontWeight: 500, color: "#0f172a" }}>¿Qué es un alumno activo?</span>
+                                                <span style={{ fontSize: 13, fontWeight: 500, color: "#0f172a" }}>¿Qué es un {isInstitutional ? 'alumno' : 'usuario'} activo?</span>
                                             </div>
                                             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                                                 {[
@@ -1130,7 +1132,7 @@ export default function ImpactoSocialPage() {
                             {/* ── SECTION 1: SCHOOL KPI STRIP ─────────────────── */}
                             <div className="school-kpi-grid">
                                 {[
-                                    { icon: <School size={24} color="#0F62FE" />, value: "62%", label: "Alumnos Activos", sub: "meta: 70%", color: "#3b82f6", bg: "#eff6ff" },
+                                    { icon: <Users size={24} color="#0F62FE" />, value: "62%", label: isInstitutional ? "Alumnos Activos" : "Usuarios Activos", sub: "meta: 70%", color: "#3b82f6", bg: "#eff6ff" },
                                     { icon: <CircleDollarSign size={24} color="#0F62FE" />, value: "$45K", label: "Donado (MXN)", sub: "este ciclo", color: "#10b981", bg: "#ecfdf5" },
 
                                     { icon: <Book size={24} color="#0F62FE" />, value: "4.2", label: "Lecc. / Alum.", sub: "meta: 10", color: "#8b5cf6", bg: "#f5f3ff" },
@@ -1515,12 +1517,12 @@ export default function ImpactoSocialPage() {
                                                 },
                                                 {
                                                     q: "¿Cómo se desbloquea el bono?",
-                                                    a: "Cumpliendo 3 metas colectivas simultáneamente: (1) ≥70% de alumnos activos, (2) promedio ≥3 sesiones útiles/mes por alumno, y (3) ≥10 lecciones completas por alumno en el ciclo.",
+                                                    a: "Cumpliendo 3 metas colectivas simultáneamente: (1) ≥70% de {isInstitutional ? 'alumnos' : 'usuarios'} activos, (2) promedio ≥3 sesiones útiles/mes por {isInstitutional ? 'alumno' : 'usuario'}, y (3) ≥10 lecciones completas por {isInstitutional ? 'alumno' : 'usuario'} en el ciclo.",
                                                     icon: <Unlock size={18} color="#0F62FE" />
                                                 },
                                                 {
                                                     q: "¿Cómo se miden las métricas?",
-                                                    a: "Una sesión útil requiere ≥10 minutos activos y al menos 1 acción completada (lección, reto o simulador). Un alumno activo mantiene ≥3 sesiones útiles en los últimos 30 días, o completó ≥1 lección en el mismo período.",
+                                                    a: "Una sesión útil requiere ≥10 minutos activos y al menos 1 acción completada (lección, reto o simulador). Un {isInstitutional ? 'alumno' : 'usuario'} activo mantiene ≥3 sesiones útiles en los últimos 30 días, o completó ≥1 lección en el mismo período.",
                                                     icon: <Ruler size={18} color="#0F62FE" />
                                                 },
                                             ].map((faq, i) => (
@@ -1574,7 +1576,7 @@ export default function ImpactoSocialPage() {
                                         {[
                                             {
                                                 q: "¿Privacidad de datos?",
-                                                a: "Solo usamos métricas agregadas. Nunca publicamos nombres ni datos personales de alumnos. Todo cumple con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.",
+                                                a: "Solo usamos métricas agregadas. Nunca publicamos nombres ni datos personales de {isInstitutional ? 'alumnos' : 'usuarios'}. Todo cumple con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.",
                                                 icon: <Lock size={18} color="#0F62FE" />
                                             },
                                             {

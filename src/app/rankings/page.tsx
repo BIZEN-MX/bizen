@@ -218,7 +218,7 @@ export default function RankingsPage() {
                                 Rankings BIZEN
                             </h1>
                             <p style={{ fontSize: "clamp(13px, 1.5vw, 16px)", color: "#93c5fd", margin: 0, maxWidth: 480 }}>
-                                Los mejores estudiantes y escuelas de la plataforma. ¿Estás en el top?
+                                {isParticular ? "Los mejores usuarios de la plataforma." : "Los mejores estudiantes y escuelas de la plataforma."} ¿Estás en el top?
                             </p>
                         </div>
 
@@ -268,7 +268,7 @@ export default function RankingsPage() {
                             }}
                         >
                             <Users size={16} />
-                            Estudiantes
+                            {isParticular ? "Usuarios" : "Estudiantes"}
                         </button>
                         <button
                             className="rk-tab"
@@ -324,7 +324,7 @@ export default function RankingsPage() {
                             </div>
                             <div>
                                 <div style={{ fontSize: 16, fontWeight: 500, color: "#0f172a" }}>
-                                    {isParticular ? "Top Particulares por XP" : "Top Estudiantes por XP"}
+                                    {isParticular ? "Top Usuarios por XP" : "Top Estudiantes por XP"}
                                 </div>
                                 <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>Del más alto nivel al más bajo</div>
                             </div>
@@ -442,7 +442,7 @@ export default function RankingsPage() {
                             </div>
                             <div>
                                 <div style={{ fontSize: 16, fontWeight: 500, color: "#0f172a" }}>Ranking de Escuelas — XP per Cápita</div>
-                                <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>XP promedio por alumno activo</div>
+                                <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>XP promedio por {isParticular ? "usuario" : "estudiante"} activo</div>
                             </div>
                         </div>
 
@@ -461,7 +461,7 @@ export default function RankingsPage() {
                         >
                             <Star size={13} color="#0F62FE" fill="#0F62FE" />
                             <span style={{ fontSize: 12, fontWeight: 500, color: "#1d4ed8" }}>
-                                XP per cápita = XP total ÷ número de estudiantes
+                                XP per cápita = XP total ÷ número de {isParticular ? "usuarios" : "estudiantes"}
                             </span>
                         </div>
 
@@ -524,7 +524,7 @@ export default function RankingsPage() {
                                                         {school.schoolName}
                                                     </div>
                                                     <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>
-                                                        {school.studentCount} estudiante{school.studentCount !== 1 ? "s" : ""} · {school.totalXp.toLocaleString()} XP total
+                                                        {school.studentCount} {isParticular ? "usuario" : "estudiante"}{school.studentCount !== 1 ? "s" : ""} · {school.totalXp.toLocaleString()} XP total
                                                     </div>
                                                 </div>
 
@@ -534,7 +534,7 @@ export default function RankingsPage() {
                                                         <Medal size={15} color={isTop3 ? "#d97706" : "#0F62FE"} />
                                                         {school.xpPerCapita.toLocaleString()}
                                                     </div>
-                                                    <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>XP / alumno</div>
+                                                    <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>XP / {isParticular ? "usuario" : "estudiante"}</div>
                                                 </div>
                                             </div>
 

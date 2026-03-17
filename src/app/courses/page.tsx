@@ -757,25 +757,7 @@ export default function CoursesPage() {
               />
             </div>
 
-            {/* Custom SVG icon: Shield with arrow */}
-            <div style={{
-              width: 72, height: 72,
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)",
-              border: "2px solid #3b82f6",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              flexShrink: 0
-            }}>
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Shield body */}
-                <path d="M18 4L7 9v8c0 6.5 4.7 12.5 11 14 6.3-1.5 11-7.5 11-14V9L18 4z" fill="#2563eb" opacity="0.15" />
-                <path d="M18 4L7 9v8c0 6.5 4.7 12.5 11 14 6.3-1.5 11-7.5 11-14V9L18 4z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round" fill="none" />
-                {/* Steps icon inside */}
-                <rect x="13" y="20" width="3" height="6" rx="1" fill="#2563eb" />
-                <rect x="17" y="16" width="3" height="10" rx="1" fill="#2563eb" />
-                <rect x="21" y="12" width="3" height="14" rx="1" fill="#2563eb" />
-              </svg>
-            </div>
+
 
             {/* Title */}
             <div style={{ fontSize: 20, fontWeight: 500, color: "#0f172a", lineHeight: 1.25 }}>

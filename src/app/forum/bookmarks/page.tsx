@@ -8,6 +8,7 @@ import { Bookmark, ChevronLeft, ChevronRight, MessageSquare, ThumbsUp, Clock, Ch
 import { ThreadCardSkeleton } from "@/components/forum/SkeletonLoader"
 import { LoadingBar } from "@/components/forum/LoadingBar"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import PageLoader from "@/components/PageLoader"
 
 export const dynamic = "force-dynamic"
 
@@ -82,7 +83,7 @@ export default function BookmarksPage() {
     } catch (e) { console.error(e) } finally { setLoadingData(false) }
   }
 
-  if (loading) return null
+  if (loading || (loadingData && threads.length === 0)) return <PageLoader />
   if (!user) return null
 
   const filtered = threads.filter(t =>

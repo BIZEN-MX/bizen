@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
+import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 
 // ─────────────────────────────────────────────────────────────────
@@ -234,8 +235,8 @@ function XPRing({ pct, level }: { pct: number; level: number }) {
         style={{ transition: "stroke-dasharray 1.4s cubic-bezier(0.34,1.56,0.64,1)" }}
       />
       {/* level number */}
-      <text x="60" y="52" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="10" fontWeight="700" letterSpacing="0.12em">NIVEL</text>
-      <text x="60" y="74" textAnchor="middle" fill="#fff" fontSize="30" fontWeight="800" letterSpacing="-0.03em">{level}</text>
+      <text x="60" y="45" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="9" fontWeight="800" style={{ letterSpacing: "0.2em" }}>NIVEL</text>
+      <text x="60" y="85" textAnchor="middle" fill="#fff" fontSize="34" fontWeight="900" style={{ letterSpacing: "-0.02em", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))" }}>{level}</text>
     </svg>
   )
 }
@@ -318,7 +319,7 @@ export default function DashboardPage() {
         /* ── sidebar offsets ── */
         @media (max-width:767px)              { .di { padding:20px 16px 100px !important; margin-left:0 !important; } }
         @media (min-width:768px) and (max-width:1160px) { .di { margin-left:220px !important; padding:32px 28px 64px !important; } }
-        @media (min-width:1161px)             { .di { margin-left:280px !important; padding:36px 44px 64px !important; } }
+        @media (min-width:1161px)             { .di { margin-left:280px !important; padding:40px 60px 80px !important; max-width: 1600px !important; margin-right: auto !important; } }
 
         /* ── animations ── */
         @keyframes du { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
@@ -351,9 +352,9 @@ export default function DashboardPage() {
         /* stat number */
         .sc-num {
           font-size:48px; font-weight:900; line-height:1;
-          letter-spacing:-0.04em; margin-top:16px; margin-bottom:4px;
+          letter-spacing:-0.01em; margin-top:16px; margin-bottom:4px;
         }
-        .sc-unit { font-size:15px; font-weight:600; color:#94a3b8; margin-left:5px; }
+        .sc-unit { font-size:14px; font-weight:700; color:#94a3b8; margin-left:8px; letter-spacing:0.18em; text-transform:uppercase; }
 
         /* quick link */
         .ql {
@@ -714,56 +715,8 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Reto Diario */}
-          <div className="dc" style={{
-            background:"linear-gradient(145deg,#0d1b4b 0%,#1e0648 50%,#2d0a6b 100%)",
-            borderRadius:24, padding:"28px 24px",
-            boxShadow:"0 12px 40px rgba(109,40,217,.3), inset 0 1px 0 rgba(255,255,255,.07)",
-            position:"relative", overflow:"hidden", cursor:"pointer",
-            animationDelay:".29s",
-          }} onClick={()=>router.push("/reto-diario")}>
-            {/* orbs */}
-            <div style={{position:"absolute",top:"-25%",right:"-12%",width:220,height:220,background:"radial-gradient(circle,rgba(167,139,250,.22) 0%,transparent 70%)",borderRadius:"50%",pointerEvents:"none"}}/>
-            <div style={{position:"absolute",bottom:"-15%",left:"-8%",width:180,height:180,background:"radial-gradient(circle,rgba(244,114,182,.15) 0%,transparent 70%)",borderRadius:"50%",pointerEvents:"none"}}/>
-
-            <div style={{position:"relative",zIndex:1}}>
-              {/* header */}
-              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
-                <div style={{width:42,height:42,borderRadius:13,background:"rgba(255,255,255,.10)",border:"1px solid rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  <IcoTarget size={19} color="#c4b5fd" strokeWidth={2}/>
-                </div>
-                <div>
-                  <div style={{fontSize:15,fontWeight:800,color:"#fff"}}>Reto del Día</div>
-                  <div style={{fontSize:12,color:"#a78bfa",fontWeight:500,marginTop:1}}>Complétalo y gana XP + BIZCOINS</div>
-                </div>
-              </div>
-
-              {/* reward pills */}
-              <div style={{marginBottom:24}}>
-                <div style={{fontSize:10,fontWeight:800,color:"#7c3aed",textTransform:"uppercase",letterSpacing:".10em",marginBottom:10}}>Recompensas</div>
-                <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-                  {[
-                    {icon:<IcoZap size={13} color="#fbbf24"/>, label:"+50 XP", bg:"rgba(251,191,36,.15)",border:"rgba(251,191,36,.3)",color:"#fbbf24"},
-                    {icon:<IcoFlame size={13} color="#fb923c"/>, label:"+1 Racha",bg:"rgba(251,146,60,.15)",border:"rgba(251,146,60,.3)",color:"#fb923c"},
-                    {icon:<IcoCoin size={13} color="#34d399"/>, label:"+25 BC",  bg:"rgba(52,211,153,.15)",border:"rgba(52,211,153,.3)",color:"#34d399"},
-                  ].map(r=>(
-                    <div key={r.label} style={{display:"flex",alignItems:"center",gap:6,padding:"7px 13px",background:r.bg,border:`1px solid ${r.border}`,borderRadius:10}}>
-                      {r.icon}
-                      <span style={{fontSize:12,fontWeight:800,color:r.color}}>{r.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTA */}
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"14px 16px",background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.10)",borderRadius:14}}>
-                <span style={{fontSize:14,fontWeight:800,color:"#fff"}}>Hacer Reto de Hoy</span>
-                <div style={{width:36,height:36,borderRadius:11,background:"rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  <IcoArrowRight size={17} color="#fff"/>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Reto Diario Interactivo */}
+          <DailyChallengeWidget />
         </div>
 
         {/* ══════════════════════════════════════════════════════════

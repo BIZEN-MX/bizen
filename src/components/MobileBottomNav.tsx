@@ -134,13 +134,6 @@ export default function MobileBottomNav() {
         protected: true
       },
       {
-        id: "puntos",
-        label: "Mis Puntos",
-        icon: Star,
-        path: "/puntos",
-        protected: true
-      },
-      {
         id: "rankings",
         label: "Rankings",
         icon: Trophy,

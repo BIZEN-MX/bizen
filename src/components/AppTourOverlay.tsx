@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { useRouter, usePathname } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext"
 import {
   BookIcon,
   FireIcon,
@@ -16,7 +17,7 @@ import {
 
 // ─── Tour Steps ───────────────────────────────────────────────────────────────
 
-export const TOUR_STEPS = [
+const BASE_TOUR_STEPS = [
   {
     path: "/courses",
     label: "Temas y Lecciones",
@@ -54,7 +55,7 @@ export const TOUR_STEPS = [
     path: "/impacto-social",
     label: "Impacto Social",
     title: "Tu aprendizaje genera donaciones",
-    description: "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales en nombre de tu escuela.",
+    description: "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales.",
     icon: LeafIcon,
     color: "#10b981",
     accent: "rgba(16,185,129,0.08)",
@@ -62,36 +63,25 @@ export const TOUR_STEPS = [
     placement: "bottom-left"
   },
   {
-    path: "/puntos",
-    label: "Mis Puntos",
-    title: "Tu progreso financiero",
-    description: "Monitorea tus XP, rachas y el historial de tus ganancias. Cada pequeña acción suma para convertirte en experto.",
-    icon: StarIcon,
-    color: "#eab308",
-    accent: "rgba(234,179,8,0.08)",
-    step: 5,
-    placement: "bottom-right"
-  },
-  {
     path: "/tienda",
-    label: "Bizen Tienda",
-    title: "Canjea tus recompensas",
-    description: "Usa tus monedas Bizens para comprar artículos exclusivos, avatares especiales y beneficios reales.",
+    label: "Tienda y Puntos",
+    title: "Tus recompensas y progreso",
+    description: "Monitorea tus BIZCOINS, nivel y rachas. Canjea tus puntos por artículos exclusivos, avatares y beneficios reales.",
     icon: ShoppingCartIcon,
     color: "#ec4899",
     accent: "rgba(236,72,153,0.08)",
-    step: 6,
+    step: 5,
     placement: "bottom-right"
   },
   {
     path: "/profile",
     label: "Tu Perfil",
     title: "Tu identidad en BIZEN",
-    description: "Tus puntos XP, nivel, rachas y seguidores. Personaliza tu avatar y bio. ¡Muéstrale al mundo tu progreso!",
+    description: "Personaliza tu avatar y bio. Sigue a otros usuarios y muestra al mundo tu crecimiento financiero.",
     icon: TrophyIcon,
     color: "#0F62FE",
     accent: "rgba(15,98,254,0.08)",
-    step: 7,
+    step: 6,
     placement: "bottom-right"
   },
 ]
@@ -109,18 +99,39 @@ interface AppTourOverlayProps {
 export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
   const router = useRouter()
   const pathname = usePathname()
+  const { dbProfile } = useAuth()
   const [stepIndex, setStepIndex] = useState(0)
   const [navigating, setNavigating] = useState(false)
   const [visible, setVisible] = useState(false)
   const [cardVisible, setCardVisible] = useState(false)
 
-  const current = TOUR_STEPS[stepIndex]
+  const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular')
+
+  const tourSteps = useMemo(() => {
+    return BASE_TOUR_STEPS.map(step => {
+      if (step.path === "/forum" && !isInstitutional) {
+        return {
+          ...step,
+          description: "Comparte tus evidencias del reto diario, haz preguntas rápidas y presenta proyectos. La comunidad te retroalimenta en tiempo real."
+        }
+      }
+      if (step.path === "/impacto-social" && isInstitutional) {
+        return {
+          ...step,
+          description: "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales en nombre de tu escuela."
+        }
+      }
+      return step
+    })
+  }, [isInstitutional])
+
+  const current = tourSteps[stepIndex]
 
   // Navigate to first tour page on mount
   useEffect(() => {
     setVisible(true)
-    if (pathname !== TOUR_STEPS[0].path) {
-      router.push(TOUR_STEPS[0].path)
+    if (pathname !== tourSteps[0].path) {
+      router.push(tourSteps[0].path)
     }
     const t = setTimeout(() => setCardVisible(true), 100)
     return () => clearTimeout(t)
@@ -164,7 +175,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
   const goToNext = useCallback(() => {
     if (navigating) return
     const next = stepIndex + 1
-    if (next >= TOUR_STEPS.length) {
+    if (next >= tourSteps.length) {
       setCardVisible(false)
       setTimeout(() => { setVisible(false); onEnd() }, 350)
       return
@@ -173,14 +184,14 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
     setNavigating(true)
     setTimeout(() => {
       setStepIndex(next)
-      router.push(TOUR_STEPS[next].path)
+      router.push(tourSteps[next].path)
     }, 300)
   }, [navigating, stepIndex, router, onEnd])
 
   if (!visible) return null
 
-  const isLast = stepIndex === TOUR_STEPS.length - 1
-  const progressPct = ((stepIndex + 1) / TOUR_STEPS.length) * 100
+  const isLast = stepIndex === tourSteps.length - 1
+  const progressPct = ((stepIndex + 1) / tourSteps.length) * 100
 
   return (
     <>
@@ -410,7 +421,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
               <div className="tc-badge" style={{ color: current.color, background: current.accent, border: `1px solid ${current.color}25` }}>
                 {current.icon && <current.icon size={14} color={current.color} />}
                 <span>{current.label}</span>
-                <span style={{ opacity: 0.55, fontSize: "0.9em" }}>{stepIndex + 1}/{TOUR_STEPS.length}</span>
+                <span style={{ opacity: 0.55, fontSize: "0.9em" }}>{stepIndex + 1}/{tourSteps.length}</span>
               </div>
               <h3 className="tc-title">{current.title}</h3>
             </div>
@@ -423,7 +434,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
           <div className="tc-footer">
             {/* Step dots */}
             <div className="tc-dots">
-              {TOUR_STEPS.map((_, i) => (
+              {tourSteps.map((_, i) => (
                 <div
                   key={i}
                   className="tc-dot"
@@ -445,7 +456,7 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
                     setNavigating(true)
                     setTimeout(() => {
                       setStepIndex(stepIndex - 1)
-                      router.push(TOUR_STEPS[stepIndex - 1].path)
+                      router.push(tourSteps[stepIndex - 1].path)
                     }, 280)
                   }}
                 >

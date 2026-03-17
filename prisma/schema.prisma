@@ -871,6 +871,25 @@ model EvidenceComment {
   @@schema("public")
 }
 
+model FileUpload {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  userName     String?  @map("user_name")
+  userEmail    String?  @map("user_email")
+  originalName String   @map("original_name")
+  filename     String   @unique
+  title        String?
+  notes        String?
+  size         Int
+  type         String
+  path         String
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("file_uploads")
+  @@schema("public")
+}
+
 model Foundation {
   id           String         @id @default(cuid())
   name         String
@@ -991,14 +1010,14 @@ model AuthUser {
   one_time_tokens             one_time_tokens[]
   sessions                    AuthSession[]
   attempts                    Attempt[]
+  credit_sim_profiles         credit_sim_profiles[]
   game_sessions               GameSession[]
   notifications               Notification[]
   players                     Player[]
-  sim_runs                    sim_runs[]
-  achievements                UserAchievement[]
-  simulator_portfolios        simulator_portfolios[]
-  credit_sim_profiles         credit_sim_profiles[]
   readiness_events            readiness_events[]
+  sim_runs                    sim_runs[]
+  simulator_portfolios        simulator_portfolios[]
+  achievements                UserAchievement[]
 
   @@index([instance_id])
   @@index([is_anonymous])
@@ -1505,10 +1524,6 @@ model forum_rate_limits {
   @@schema("public")
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-
-
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model sim_runs {
   id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -1530,81 +1545,81 @@ model sim_runs {
 }
 
 model simulator_portfolios {
-  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id        String               @db.Uuid
-  classroom_id   String?              @db.Uuid
-  currency       String               @default("USD")
-  starting_cash  Decimal              @db.Decimal(12, 2)
-  cash_balance   Decimal              @db.Decimal(12, 2)
-  created_at     DateTime?            @default(now()) @db.Timestamptz(6)
-  users          AuthUser             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  holdings       simulator_holdings[]
-  orders         simulator_orders[]
+  id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id       String               @db.Uuid
+  classroom_id  String?              @db.Uuid
+  currency      String               @default("USD")
+  starting_cash Decimal              @db.Decimal(12, 2)
+  cash_balance  Decimal              @db.Decimal(12, 2)
+  created_at    DateTime?            @default(now()) @db.Timestamptz(6)
+  holdings      simulator_holdings[]
+  orders        simulator_orders[]
+  users         AuthUser             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
 model simulator_holdings {
-  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  portfolio_id   String               @db.Uuid
-  symbol         String
-  quantity       Decimal              @db.Decimal(12, 4)
-  avg_cost       Decimal              @db.Decimal(12, 2)
-  created_at     DateTime?            @default(now()) @db.Timestamptz(6)
-  portfolio      simulator_portfolios @relation(fields: [portfolio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  portfolio_id String               @db.Uuid
+  symbol       String
+  quantity     Decimal              @db.Decimal(12, 4)
+  avg_cost     Decimal              @db.Decimal(12, 2)
+  created_at   DateTime?            @default(now()) @db.Timestamptz(6)
+  portfolio    simulator_portfolios @relation(fields: [portfolio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
 model simulator_orders {
-  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  portfolio_id   String               @db.Uuid
-  symbol         String
-  side           String               // 'buy' | 'sell'
-  order_type     String               // 'market' | 'limit'
-  limit_price    Decimal?             @db.Decimal(12, 2)
-  quantity       Decimal              @db.Decimal(12, 4)
-  status         String               // 'pending' | 'filled' | 'cancelled'
-  placed_at      DateTime?            @default(now()) @db.Timestamptz(6)
-  filled_at      DateTime?            @db.Timestamptz(6)
-  fill_price     Decimal?             @db.Decimal(12, 2)
-  fee            Decimal?             @db.Decimal(12, 2)
-  portfolio      simulator_portfolios @relation(fields: [portfolio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  portfolio_id String               @db.Uuid
+  symbol       String
+  side         String
+  order_type   String
+  limit_price  Decimal?             @db.Decimal(12, 2)
+  quantity     Decimal              @db.Decimal(12, 4)
+  status       String
+  placed_at    DateTime?            @default(now()) @db.Timestamptz(6)
+  filled_at    DateTime?            @db.Timestamptz(6)
+  fill_price   Decimal?             @db.Decimal(12, 2)
+  fee          Decimal?             @db.Decimal(12, 2)
+  portfolio    simulator_portfolios @relation(fields: [portfolio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
 model market_prices_eod {
-  symbol         String
-  date           DateTime             @db.Date
-  open           Decimal              @db.Decimal(12, 4)
-  high           Decimal              @db.Decimal(12, 4)
-  low            Decimal              @db.Decimal(12, 4)
-  close          Decimal              @db.Decimal(12, 4)
-  volume         BigInt?
+  symbol String
+  date   DateTime @db.Date
+  open   Decimal  @db.Decimal(12, 4)
+  high   Decimal  @db.Decimal(12, 4)
+  low    Decimal  @db.Decimal(12, 4)
+  close  Decimal  @db.Decimal(12, 4)
+  volume BigInt?
 
   @@id([symbol, date])
   @@schema("public")
 }
 
 model credit_sim_profiles {
-  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id        String                 @db.Uuid
-  created_at     DateTime?              @default(now()) @db.Timestamptz(6)
-  users          AuthUser               @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  scenarios      credit_sim_scenarios[]
+  id         String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String                 @db.Uuid
+  created_at DateTime?              @default(now()) @db.Timestamptz(6)
+  users      AuthUser               @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  scenarios  credit_sim_scenarios[]
 
   @@schema("public")
 }
 
 model credit_sim_scenarios {
-  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  profile_id     String                 @db.Uuid
-  scenario_type  String                 // 'credit_card' | 'personal_loan' | 'installments'
-  inputs_json    Json
-  created_at     DateTime?              @default(now()) @db.Timestamptz(6)
-  profile        credit_sim_profiles    @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  results        credit_sim_results[]
+  id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  profile_id    String               @db.Uuid
+  scenario_type String
+  inputs_json   Json
+  created_at    DateTime?            @default(now()) @db.Timestamptz(6)
+  results       credit_sim_results[]
+  profile       credit_sim_profiles  @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
@@ -1619,26 +1634,109 @@ model market_symbols {
 }
 
 model credit_sim_results {
-  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  scenario_id    String                 @db.Uuid
-  results_json   Json
-  created_at     DateTime?              @default(now()) @db.Timestamptz(6)
-  scenario       credit_sim_scenarios   @relation(fields: [scenario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scenario_id  String               @db.Uuid
+  results_json Json
+  created_at   DateTime?            @default(now()) @db.Timestamptz(6)
+  scenario     credit_sim_scenarios @relation(fields: [scenario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
 model readiness_events {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id        String    @db.Uuid
-  label          String    // e.g. 'financial_knowledge', 'credit_management', 'investment_acumen', 'budgeting'
-  event_type     String    // e.g. 'diagnostic', 'simulator_challenge', 'good_decision'
-  score_delta    Int       // positive or negative impact points
-  reason         String    // Explainability
-  created_at     DateTime? @default(now()) @db.Timestamptz(6)
-  users          AuthUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String    @db.Uuid
+  label       String
+  event_type  String
+  score_delta Int
+  reason      String
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  users       AuthUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([user_id])
+  @@schema("public")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model lab_mentors {
+  id         String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  user_id    String   @db.Uuid
+  topics     String[] @default([])
+  bio        String?
+  is_active  Boolean? @default(true)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([is_active], map: "idx_lab_mentors_active")
+  @@index([topics], map: "idx_lab_mentors_topics", type: Gin)
+  @@index([user_id], map: "idx_lab_mentors_user")
+  @@schema("public")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model lab_scores {
+  user_id         String   @id @db.Uuid
+  readiness_score Int?     @default(0)
+  notes           String?
+  breakdown       Json?
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model lab_steps {
+  id             String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  track_id       String
+  title          String
+  description    String?
+  order          Int
+  required       Boolean? @default(true)
+  goal           String?
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  estimated_time String?
+
+  @@index([order], map: "idx_lab_steps_order")
+  @@index([track_id], map: "idx_lab_steps_track")
+  @@index([track_id], map: "idx_lab_steps_track_id")
+  @@schema("public")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model lab_tracks {
+  id          String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  key         String   @unique
+  title       String
+  description String?
+  order       Int
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  is_active   Boolean? @default(true)
+  icon        String?
+  color       String?
+
+  @@index([order], map: "idx_lab_tracks_order")
+  @@schema("public")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model mentor_sessions {
+  id           String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  mentor_id    String
+  founder_id   String    @db.Uuid
+  notes        String?
+  status       String?   @default("scheduled")
+  scheduled_at DateTime? @db.Timestamptz(6)
+  completed_at DateTime? @db.Timestamptz(6)
+  created_at   DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([founder_id], map: "idx_mentor_sessions_founder")
+  @@index([mentor_id], map: "idx_mentor_sessions_mentor")
+  @@index([status], map: "idx_mentor_sessions_status")
   @@schema("public")
 }
 

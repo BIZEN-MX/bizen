@@ -29,6 +29,10 @@ export const metadata: Metadata = {
     title: "BIZEN",
     description: "Educación financiera premium para la nueva generación",
   },
+  icons: {
+    icon: "/thumbs up.png",
+    apple: "/thumbs up.png",
+  },
 }
 
 export const viewport = {

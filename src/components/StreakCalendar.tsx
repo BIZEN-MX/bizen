@@ -141,14 +141,17 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
         .cal-cell { transition: transform .12s cubic-bezier(0.34,1.56,0.64,1), box-shadow .12s ease; }
         .cal-cell:hover { transform: scale(1.45) !important; z-index: 10; }
 
+        @media (max-width: 768px) {
+          .cal-stat-pill { min-width: calc(50% - 10px) !important; flex: 1 1 calc(50% - 10px) !important; }
+        }
         @media (max-width: 640px) {
           .cal-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
           .cal-stats-row { gap: 8px !important; }
-          .cal-stat-pill { padding: 10px 12px !important; min-width: 0 !important; }
-          .cal-stat-pill .s-val { font-size: 20px !important; }
+          .cal-stat-pill { padding: 12px !important; }
+          .cal-stat-pill .s-val { font-size: 22px !important; }
           .cal-stat-pill .s-label { font-size: 8px !important; }
-          .cal-chart-row { height: 40px !important; }
-          .cal-heatmap-container { padding-bottom: 8px !important; }
+          .cal-chart-row { height: 44px !important; }
+          .cal-heatmap-container { padding-bottom: 8px !important; margin: 0 -10px !important; padding: 0 10px 12px !important; }
         }
 
         /* Hide tooltip on touch devices if they trigger hover unexpectedly */
@@ -156,17 +159,20 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
           .cal-cell:hover { transform: none !important; }
         }
         @media (max-width: 480px) {
-          .cal-cell-wrapper { width: 11px !important; height: 11px !important; }
+          .cal-container { padding: 16px !important; }
+          .cal-cell-wrapper { width: 10px !important; height: 10px !important; }
           .cal-column { gap: 2px !important; }
           .cal-columns-container { gap: 2px !important; }
           .cal-day-labels { gap: 2px !important; marginRight: 3px !important; }
-          .cal-day-label { height: 11px !important; font-size: 7px !important; }
-          .cal-month-labels { margin-left: 18px !important; }
-          .cal-month-label-wrapper { width: 13px !important; }
+          .cal-day-label { height: 10px !important; font-size: 7px !important; }
+          .cal-month-labels { margin-left: 17px !important; }
+          .cal-month-label-wrapper { width: 12px !important; }
+          .cal-stat-pill { min-width: 100% !important; flex: 1 1 100% !important; }
+          .cal-legend { transform: scale(0.9); transform-origin: right; }
         }
       `}</style>
 
-      <div style={{
+      <div className="cal-container" style={{
         borderRadius: 24,
         background: "linear-gradient(160deg,#0a0f1e 0%,#162042 60%,#1a3070 100%)",
         padding: "clamp(22px,3vw,36px)",
@@ -320,7 +326,7 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
             </div>
 
             {/* Legend */}
-            <div style={{ display:"flex", alignItems:"center", gap:5, marginTop:10, justifyContent:"flex-end" }}>
+            <div className="cal-legend" style={{ display:"flex", alignItems:"center", gap:5, marginTop:10, justifyContent:"flex-end" }}>
               <span style={{ fontSize:9, fontWeight:600, color:"rgba(255,255,255,.30)", letterSpacing:".04em" }}>Menos</span>
               {["rgba(255,255,255,.07)","#c7dff7","#93c5fd","#3b82f6","#2563eb","#1e3a8a"].map((c, i) => (
                 <div key={i} style={{ width:11, height:11, borderRadius:2.5, background:c, flexShrink:0 }} />

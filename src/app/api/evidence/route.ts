@@ -9,11 +9,11 @@ export async function POST(req: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-        const body = await req.json()
-        const { dailyChallengeId, smartGoal, didToday, learned, changeTomorrow } = body
-
-        if (!dailyChallengeId || !smartGoal || !didToday || !learned || !changeTomorrow) {
-            return NextResponse.json({ error: "Todos los campos son requeridos" }, { status: 400 })
+        const { dailyChallengeId, smartGoal, didToday, learned, changeTomorrow, attachments } = body
+        
+        // At least a challenge ID and some content are required
+        if (!dailyChallengeId || (!smartGoal && !didToday && !learned && !attachments)) {
+            return NextResponse.json({ error: "Falta información para publicar" }, { status: 400 })
         }
 
         const profile = await prisma.profile.findUnique({
@@ -36,10 +36,11 @@ export async function POST(req: NextRequest) {
                 dailyChallengeId,
                 authorUserId: user.id,
                 schoolId: profile?.schoolId ?? null,
-                smartGoal: smartGoal.slice(0, 200),
-                didToday: didToday.slice(0, 300),
-                learned: learned.slice(0, 300),
-                changeTomorrow: changeTomorrow.slice(0, 300),
+                smartGoal: smartGoal?.slice(0, 200) || "",
+                didToday: didToday?.slice(0, 300) || "",
+                learned: learned?.slice(0, 300) || "",
+                changeTomorrow: changeTomorrow?.slice(0, 300) || "",
+                attachments: attachments ?? null,
             }
         })
 

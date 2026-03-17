@@ -44,6 +44,7 @@ interface EvidencePost {
   createdAt: string; avatar?: any; inventory?: string[]
   reactions: Array<{ id: string; userId: string; reactionType: string }>
   comments: Array<{ id: string; userId: string; body: string; createdAt: string; authorDisplay?: string }>
+  attachments?: any
 }
 
 interface DailyChallenge {
@@ -200,6 +201,17 @@ function EvidenceCard({
         <div style={{ fontSize: 11, fontWeight: 500, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Mi objetivo SMART</div>
         <p style={{ fontSize: 14, color: "#0f172a", margin: 0, lineHeight: 1.6, fontWeight: 500 }}>{post.smartGoal}</p>
       </div>
+
+      {/* Attachments (Images) */}
+      {post.attachments && Array.isArray(post.attachments) && post.attachments.length > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 10, margin: "12px 0" }}>
+          {post.attachments.map((att: any, idx: number) => (
+            <div key={idx} style={{ borderRadius: 12, overflow: "hidden", border: "1px solid #f1f5f9", aspectRatio: "16/9", background: "#f8fafc" }}>
+              <img src={att.url} alt="Evidencia" style={{ width: "100%", height: "100%", objectFit: "cover", cursor: "pointer" }} onClick={() => window.open(att.url, '_blank')} />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Expandable fields */}
       {expanded && (
@@ -519,7 +531,7 @@ function ForumContent() {
                   Foro de la Comunidad
                 </h1>
                 <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "#64748b", margin: 0, maxWidth: 600, lineHeight: 1.6 }}>
-                  Comparte tus aprendizajes, resuelve dudas y colabora con otros estudiantes en su camino financiero.
+                  Comparte tus aprendizajes, resuelve dudas y colabora con otros usuarios en su camino financiero.
                 </p>
               </div>
               <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>

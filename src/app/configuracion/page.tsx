@@ -296,7 +296,11 @@ function SettingsContent() {
   })
 
   const savePlan = (p: "gratuito" | "estudiante" | "premium") => doSave(async () => {
-    await syncToDB({ role: p === 'premium' ? 'premium' : (p === 'estudiante' ? 'student' : 'particular') })
+    if (p !== "gratuito") {
+      router.push("/payment")
+      return
+    }
+    await syncToDB({ role: 'particular' })
     setPlan(p)
   })
 
@@ -384,7 +388,7 @@ function SettingsContent() {
                 fontSize: 10, color: "rgba(255,255,255,.8)", background: "rgba(255,255,255,.15)",
                 padding: "2px 9px", borderRadius: 20, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.06em"
               }}>
-                {`Plan ${dbProfile?.role || "Estudiante"}`}
+                {`Plan ${dbProfile?.role === 'particular' ? "Particular" : dbProfile?.role === 'institucional' ? "Institucional" : dbProfile?.role === 'premium' ? "Premium" : dbProfile?.role === 'student' ? "Estudiante" : "Usuario"}`}
               </span>
             </div>
           </div>
@@ -666,7 +670,7 @@ function SettingsContent() {
                     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       {([
                         { id: "gratuito", l: "Plan Gratuito", d: "Acceso a todos los cursos básicos", c: T.green, grad: "linear-gradient(135deg,#10b981,#34d399)", icon: "🆓" },
-                        { id: "estudiante", l: "Plan Estudiante", d: "Herramientas adicionales para estudiantes", c: T.blue, grad: `linear-gradient(135deg,${T.blue},#4A9EFF)`, icon: "🎓" },
+                        { id: "estudiante", l: (dbProfile?.role === 'institucional' || dbProfile?.schoolId) ? "Plan Estudiante" : "Plan Educativo", d: (dbProfile?.role === 'institucional' || dbProfile?.schoolId) ? "Herramientas adicionales para estudiantes" : "Herramientas adicionales de aprendizaje", c: T.blue, grad: `linear-gradient(135deg,${T.blue},#4A9EFF)`, icon: "🎓" },
                         { id: "premium", l: "Plan Premium", d: "Acceso completo + certificados + soporte", c: T.amber, grad: "linear-gradient(135deg,#F59E0B,#FBD34D)", icon: "⭐" },
                       ] as any[]).map(({ id, l, d, c, grad, icon }) => {
                         const isSelected = plan === id
