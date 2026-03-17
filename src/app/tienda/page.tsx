@@ -23,13 +23,19 @@ import {
     PartyPopper,
     Trophy,
     Target,
+    QrCode,
+    History,
+    TrendingUp,
 } from "lucide-react"
 import PageLoader from "@/components/PageLoader"
+import StreakWidget from "@/components/StreakWidget"
+import { useSettings } from "@/contexts/SettingsContext"
+import { useTranslation } from "@/lib/translations"
 
 // ─────────────────────────────────────────
 // Catalogue
 // ─────────────────────────────────────────
-const CATEGORIES = ["Avatar", "Ebooks", "Accesorios"] as const
+const CATEGORIES = ["Avatar", "Ebooks", "Herramientas", "Accesorios", "Insignias"] as const
 type Category = (typeof CATEGORIES)[number]
 
 interface Product {
@@ -44,80 +50,162 @@ interface Product {
     bg: string
 }
 
+// ── Rarity visual system ─────────────────────────────────────────────────────
+const RARITY_STYLES: Record<string, { bg: string; text: string; glow: string }> = {
+    "Común":      { bg: "#64748b",                                text: "#fff", glow: "rgba(100,116,139,0.25)" },
+    "Raro":       { bg: "linear-gradient(90deg,#0ea5e9,#38bdf8)", text: "#fff", glow: "rgba(14,165,233,0.35)"  },
+    "Épico":      { bg: "linear-gradient(90deg,#8b5cf6,#a78bfa)", text: "#fff", glow: "rgba(139,92,246,0.4)"   },
+    "Legendario": { bg: "linear-gradient(90deg,#f59e0b,#ef4444)", text: "#fff", glow: "rgba(245,158,11,0.55)"  },
+}
+
+// ── Inline SVG icons ──────────────────────────────────────────────────────────
+const IcoBlueFr   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><circle cx="24" cy="16" r="10" fill="#3b82f6" fillOpacity=".9"/><path d="M4 44c0-11 9-20 20-20s20 9 20 20" fill="#3b82f6" fillOpacity=".7"/><circle cx="24" cy="16" r="10" stroke="#fff" strokeWidth="2" strokeDasharray="4 2"/></svg>
+const IcoGoldFr   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><circle cx="24" cy="14" r="9" fill="#f59e0b"/><path d="M10 44c0-9 6.3-16.5 14-16.5S38 35 38 44" fill="#f59e0b" fillOpacity=".7"/><polygon points="24,4 26,12 34,12 28,17 30,26 24,21 18,26 20,17 14,12 22,12" fill="#fff" fillOpacity=".6"/></svg>
+const IcoGalaxyFr = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><defs><radialGradient id="gal"><stop offset="0%" stopColor="#a78bfa"/><stop offset="100%" stopColor="#2563eb"/></radialGradient></defs><circle cx="24" cy="14" r="11" fill="url(#gal)"/><ellipse cx="24" cy="14" rx="16" ry="6" stroke="#c4b5fd" strokeWidth="1.5" fill="none"/><circle cx="24" cy="14" r="4" fill="#fff" fillOpacity=".6"/></svg>
+const IcoFlameFr  = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><path d="M24 4C18 14 10 18 14 28c2 5 6 8 10 8s8-3 10-8c4-10-4-14-10-24z" fill="#f97316"/><path d="M24 20c-2 4-2 8 0 10 2-2 2-6 0-10z" fill="#fde68a"/></svg>
+const IcoBook1    = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><rect x="8" y="6" width="28" height="36" rx="4" fill="#10b981" fillOpacity=".85"/><path d="M14 14h16M14 20h16M14 26h10" stroke="#fff" strokeWidth="2" strokeLinecap="round"/><rect x="6" y="8" width="4" height="32" rx="2" fill="#059669"/></svg>
+const IcoBook2    = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><rect x="8" y="6" width="28" height="36" rx="4" fill="#ef4444" fillOpacity=".85"/><path d="M24 12v24M14 24h20" stroke="#fde68a" strokeWidth="2.5" strokeLinecap="round"/><rect x="6" y="8" width="4" height="32" rx="2" fill="#dc2626"/></svg>
+const IcoBook3    = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><rect x="8" y="6" width="28" height="36" rx="4" fill="#0ea5e9" fillOpacity=".85"/><circle cx="24" cy="18" r="5" fill="#fff" fillOpacity=".7"/><path d="M14 30h20M14 36h12" stroke="#fff" strokeWidth="2" strokeLinecap="round"/><rect x="6" y="8" width="4" height="32" rx="2" fill="#0284c7"/></svg>
+const IcoBook4    = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><rect x="8" y="6" width="28" height="36" rx="4" fill="#8b5cf6" fillOpacity=".85"/><path d="M20 14l8 8-8 8" stroke="#fde68a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><rect x="6" y="8" width="4" height="32" rx="2" fill="#7c3aed"/></svg>
+const IcoROI      = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><rect x="6" y="6" width="36" height="36" rx="8" fill="#6366f1" fillOpacity=".9"/><path d="M14 34l8-12 6 6 8-14" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="38" cy="14" r="4" fill="#a5f3fc"/></svg>
+const IcoPlan     = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><rect x="6" y="8" width="36" height="34" rx="6" fill="#0f172a" fillOpacity=".85"/><rect x="14" y="4" width="4" height="8" rx="2" fill="#38bdf8"/><rect x="30" y="4" width="4" height="8" rx="2" fill="#38bdf8"/><path d="M6 18h36" stroke="#38bdf8" strokeWidth="2"/><rect x="12" y="24" width="6" height="6" rx="2" fill="#4ade80"/><rect x="22" y="24" width="6" height="6" rx="2" fill="#facc15"/><rect x="32" y="24" width="6" height="6" rx="2" fill="#f87171"/></svg>
+const IcoRisk     = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><path d="M24 6L6 42h36L24 6z" fill="#f97316" fillOpacity=".85"/><path d="M24 20v10M24 34v2" stroke="#fff" strokeWidth="3" strokeLinecap="round"/></svg>
+const IcoShield   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><path d="M24 4L8 12v14c0 10 7 18 16 20 9-2 16-10 16-20V12L24 4z" fill="#0891b2" fillOpacity=".9"/><path d="M17 24l5 5 9-9" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+const IcoDarkMode = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><circle cx="24" cy="24" r="18" fill="#1e1b4b"/><path d="M30 14a14 14 0 1 1-16 16 10 10 0 0 0 16-16z" fill="#a78bfa"/><circle cx="30" cy="12" r="2" fill="#e0e7ff"/></svg>
+const IcoBoost    = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><path d="M24 4l4 12h12l-10 8 4 12-10-8-10 8 4-12L8 16h12z" fill="#f59e0b"/><path d="M24 16l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" fill="#fde68a"/></svg>
+const IcoBadge1   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><circle cx="24" cy="24" r="16" fill="#fb923c" fillOpacity=".85"/><circle cx="24" cy="24" r="10" fill="none" stroke="#fff" strokeWidth="2"/><path d="M19 24l4 4 6-7" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+const IcoBadge2   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><defs><linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ef4444"/></linearGradient></defs><polygon points="24,6 29,18 42,18 32,27 36,40 24,32 12,40 16,27 6,18 19,18" fill="url(#bg2)"/><polygon points="24,14 27,22 35,22 29,27 31,35 24,30 17,35 19,27 13,22 21,22" fill="#fde68a" fillOpacity=".8"/></svg>
+const IcoBadge3   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><defs><linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#0ea5e9"/></linearGradient></defs><polygon points="24,4 28,16 42,16 31,25 35,38 24,30 13,38 17,25 6,16 20,16" fill="url(#bg3)"/><circle cx="24" cy="22" r="6" fill="#fff" fillOpacity=".7"/></svg>
+
 const PRODUCTS: Product[] = [
+    // ── AVATARS ────────────────────────────────────────────────────────────────
     {
-        id: 1,
-        name: "Marco de Embajador",
-        category: "Avatar",
-        price: 200,
-        description: "Muestra tu estatus de embajador con un marco exclusivo en tu perfil del foro.",
-        badge: "Popular",
-        icon: <User size={40} strokeWidth={1.5} />,
-        accent: "#0F62FE",
-        bg: "linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%)",
+        id: 1, name: "Marco de Embajador", category: "Avatar", price: 200,
+        description: "Destaca en el foro con el marco azul oficial. Muestra que eres parte de la comunidad Bizen.",
+        badge: "Común", icon: <IcoBlueFr />, accent: "#3b82f6",
+        bg: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
     },
     {
-        id: 2,
-        name: "Marco Dorado VIP",
-        category: "Avatar",
-        price: 500,
-        description: "El marco más exclusivo de la plataforma. Solo para los mejores.",
-        badge: "Exclusivo",
-        icon: <Star size={40} strokeWidth={1.5} />,
-        accent: "#d97706",
-        bg: "linear-gradient(135deg,#fffbeb 0%,#fde68a 100%)",
+        id: 2, name: "Marco Llamas Pro", category: "Avatar", price: 400,
+        description: "Un marco con llamas vivas que muestran tu intensidad al estudiar. Para los más dedicados.",
+        badge: "Raro", icon: <IcoFlameFr />, accent: "#f97316",
+        bg: "linear-gradient(135deg, #7c2d12 0%, #f97316 100%)",
     },
     {
-        id: 3,
-        name: "Guía de Inversión 2025",
-        category: "Ebooks",
-        price: 350,
-        description: "Todo lo que necesitas para empezar a invertir de forma inteligente y segura.",
-        badge: null,
-        icon: <BookOpen size={40} strokeWidth={1.5} />,
-        accent: "#10b981",
-        bg: "linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%)",
+        id: 3, name: "Marco Dorado VIP", category: "Avatar", price: 600,
+        description: "La elegancia hecha marco. Un acabado dorado premium que solo los mejores estudiantes ostentan.",
+        badge: "Épico", icon: <IcoGoldFr />, accent: "#f59e0b",
+        bg: "linear-gradient(135deg, #451a03 0%, #d97706 100%)",
     },
     {
-        id: 4,
-        name: "Secretos del Cash Flow",
-        category: "Ebooks",
-        price: 450,
-        description: "Aprende a leer estados de resultados y manejar el flujo de efectivo como un pro.",
-        badge: "Nuevo",
-        icon: <Flame size={40} strokeWidth={1.5} />,
-        accent: "#ef4444",
-        bg: "linear-gradient(135deg,#fff1f2 0%,#fecdd3 100%)",
+        id: 4, name: "Marco Galaxy Bizen", category: "Avatar", price: 950,
+        description: "El marco más exclusivo de la plataforma. Galaxias y nebulosas rodean tu perfil. Edición limitada.",
+        badge: "Legendario", icon: <IcoGalaxyFr />, accent: "#a78bfa",
+        bg: "linear-gradient(135deg, #0f172a 0%, #4c1d95 50%, #1d4ed8 100%)",
+    },
+    // ── EBOOKS ─────────────────────────────────────────────────────────────────
+    {
+        id: 5, name: "Guía de Inversión 2025", category: "Ebooks", price: 350,
+        description: "Todo lo que necesitas para empezar a invertir de forma inteligente. Desde CETES hasta ETFs sin jerga.",
+        badge: "Raro", icon: <IcoBook1 />, accent: "#10b981",
+        bg: "linear-gradient(135deg, #064e3b 0%, #10b981 100%)",
     },
     {
-        id: 5,
-        name: "Tema Oscuro Premium",
-        category: "Accesorios",
-        price: 300,
-        description: "Activa el modo oscuro en toda la plataforma y estudia con estilo.",
-        badge: null,
-        icon: <Palette size={40} strokeWidth={1.5} />,
-        accent: "#7c3aed",
-        bg: "linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%)",
+        id: 6, name: "Secretos del Cash Flow", category: "Ebooks", price: 450,
+        description: "Aprende a leer estados de resultados y a manejar el flujo de efectivo como lo hace un CFO.",
+        badge: "Raro", icon: <IcoBook2 />, accent: "#ef4444",
+        bg: "linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%)",
     },
     {
-        id: 6,
-        name: "Escudo Anti-Racha",
-        category: "Accesorios",
-        price: 150,
-        description: "Protege tu racha diaria un día si no puedes completar el reto. ¡Muy práctico!",
-        badge: "Oferta",
-        icon: <Shield size={40} strokeWidth={1.5} />,
-        accent: "#0891b2",
-        bg: "linear-gradient(135deg,#ecfeff 0%,#cffafe 100%)",
+        id: 7, name: "Psicología del Dinero", category: "Ebooks", price: 300,
+        description: "¿Por qué tomamos malas decisiones financieras? Las herramientas mentales para dinero inteligente.",
+        badge: "Común", icon: <IcoBook3 />, accent: "#0ea5e9",
+        bg: "linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 100%)",
+    },
+    {
+        id: 8, name: "El Inversor Inteligente", category: "Ebooks", price: 700,
+        description: "El clásico de Benjamin Graham adaptado al contexto mexicano. Análisis de empresas de la BMV incluido.",
+        badge: "Épico", icon: <IcoBook4 />, accent: "#8b5cf6",
+        bg: "linear-gradient(135deg, #2e1065 0%, #8b5cf6 100%)",
+    },
+    // ── HERRAMIENTAS ───────────────────────────────────────────────────────────
+    {
+        id: 9, name: "Calculadora de ROI", category: "Herramientas", price: 500,
+        description: "Herramienta interactiva para calcular el retorno sobre inversión de cualquier proyecto. Exporta en PDF.",
+        badge: "Raro", icon: <IcoROI />, accent: "#6366f1",
+        bg: "linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%)",
+    },
+    {
+        id: 10, name: "Planeador Financiero", category: "Herramientas", price: 800,
+        description: "Planea tu presupuesto, rastrea gastos y visualiza tu progreso hacia tus metas. Diseñado para estudiantes.",
+        badge: "Épico", icon: <IcoPlan />, accent: "#38bdf8",
+        bg: "linear-gradient(135deg, #082f49 0%, #0369a1 100%)",
+    },
+    {
+        id: 11, name: "Analizador de Riesgo", category: "Herramientas", price: 650,
+        description: "Evalúa el riesgo de cualquier inversión con métricas profesionales: VaR, Sharpe Ratio, Drawdown máximo.",
+        badge: "Raro", icon: <IcoRisk />, accent: "#f97316",
+        bg: "linear-gradient(135deg, #431407 0%, #c2410c 100%)",
+    },
+    // ── ACCESORIOS ─────────────────────────────────────────────────────────────
+    {
+        id: 12, name: "Escudo Anti-Racha", category: "Accesorios", price: 150,
+        description: "Protege tu racha si un día no puedes completar el reto. El escudo se activa automáticamente.",
+        badge: "Común", icon: <IcoShield />, accent: "#0891b2",
+        bg: "linear-gradient(135deg, #083344 0%, #0891b2 100%)",
+    },
+    {
+        id: 13, name: "Tema Oscuro Premium", category: "Accesorios", price: 350,
+        description: "Activa una experiencia nocturna elegante en toda la plataforma. Reduce la fatiga visual y aumenta el enfoque.",
+        badge: "Raro", icon: <IcoDarkMode />, accent: "#a78bfa",
+        bg: "linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%)",
+    },
+    {
+        id: 14, name: "Boost de XP ×2", category: "Accesorios", price: 450,
+        description: "Duplica todos tus puntos XP y BIZCOINS por 48 horas. Úsalo antes de un maratón de estudio.",
+        badge: "Épico", icon: <IcoBoost />, accent: "#f59e0b",
+        bg: "linear-gradient(135deg, #451a03 0%, #b45309 50%, #f59e0b 100%)",
+    },
+    // ── INSIGNIAS ──────────────────────────────────────────────────────────────
+    {
+        id: 15, name: "Insignia Pionero", category: "Insignias", price: 250,
+        description: "Demuestra que fuiste de los primeros en llegar a Bizen. Esta placa hace destacar tu perfil en el foro.",
+        badge: "Común", icon: <IcoBadge1 />, accent: "#fb923c",
+        bg: "linear-gradient(135deg, #431407 0%, #ea580c 100%)",
+    },
+    {
+        id: 16, name: "Maestro Finance", category: "Insignias", price: 800,
+        description: "Para los que dominaron todos los módulos del curso. Una insignia que inspira respeto en la comunidad.",
+        badge: "Épico", icon: <IcoBadge2 />, accent: "#f59e0b",
+        bg: "linear-gradient(135deg, #292524 0%, #78350f 50%, #b45309 100%)",
+    },
+    {
+        id: 17, name: "Millennial Rico", category: "Insignias", price: 1200,
+        description: "La insignia más rara. Este título legendario solo lo han alcanzado menos del 1% de usuarios de Bizen.",
+        badge: "Legendario", icon: <IcoBadge3 />, accent: "#8b5cf6",
+        bg: "linear-gradient(135deg, #0f172a 0%, #4c1d95 40%, #1d4ed8 100%)",
     },
 ]
 
+const GIFT_CARDS = [
+    { id: 101, store: "Amazon", color: "#FF9900", bg: "linear-gradient(135deg, #1a0a00 0%, #4a1a00 100%)", logo: "amazon", points: 5000, value: "$50 MXN", description: "Para cualquier compra en Amazon.com.mx" },
+    { id: 102, store: "Oxxo", color: "#da291c", bg: "linear-gradient(135deg, #1a0000 0%, #5a0000 100%)", logo: "oxxo", points: 3000, value: "$30 MXN", description: "Canjeable en cualquier tienda Oxxo" },
+    { id: 103, store: "Liverpool", color: "#b8005c", bg: "linear-gradient(135deg, #1a0020 0%, #5a0040 100%)", logo: "liverpool", points: 10000, value: "$100 MXN", description: "Para usar en tiendas Liverpool" },
+    { id: 104, store: "Cinépolis", color: "#0057b8", bg: "linear-gradient(135deg, #00102a 0%, #003070 100%)", logo: "cinepolis", points: 4000, value: "$40 MXN", description: "2 boletos de cine en cualquier sede" },
+    { id: 105, store: "Starbucks", color: "#00704A", bg: "linear-gradient(135deg, #001a0a 0%, #004a26 100%)", logo: "starbucks", points: 2500, value: "$25 MXN", description: "Para tu bebida favorita" },
+    { id: 106, store: "Spotify", color: "#1DB954", bg: "linear-gradient(135deg, #001a06 0%, #004a1a 100%)", logo: "spotify", points: 6000, value: "1 mes Premium", description: "Música sin anuncios por 30 días" },
+]
+
 const BADGE_COLORS: Record<string, { bg: string; text: string }> = {
-    Popular: { bg: "#f59e0b", text: "#fff" },
+    "Común":      { bg: "#64748b", text: "#fff" },
+    "Raro":       { bg: "#0ea5e9", text: "#fff" },
+    "Épico":      { bg: "#8b5cf6", text: "#fff" },
+    "Legendario": { bg: "#f59e0b", text: "#fff" },
+    // legacy
+    Popular:   { bg: "#f59e0b", text: "#fff" },
     Exclusivo: { bg: "#7c3aed", text: "#fff" },
-    Nuevo: { bg: "#10b981", text: "#fff" },
-    Oferta: { bg: "#ef4444", text: "#fff" },
+    Nuevo:     { bg: "#10b981", text: "#fff" },
+    Oferta:    { bg: "#ef4444", text: "#fff" },
 }
 
 // ─────────────────────────────────────────
@@ -127,16 +215,24 @@ export default function TiendaPage() {
 
     const [stats, setStats] = useState<any>(null)
     const [loadingStats, setLoadingStats] = useState(true)
-    const [activeTab, setActiveTab] = useState<"catalogo" | "inventario">("catalogo")
+    const [activeTab, setActiveTab] = useState<"catalogo" | "inventario" | "bizcoins">("catalogo")
     const [activeCategory, setActiveCategory] = useState<Category | "Todo">("Todo")
     const [search, setSearch] = useState("")
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [searchFocused, setSearchFocused] = useState(false)
     const [purchaseSuccess, setPurchaseSuccess] = useState(false)
 
+    // For bizcoins tab
+    const { settings } = useSettings()
+    const t_loc = useTranslation(settings.language)
+    const [selectedGCId, setSelectedGCId] = useState<number | null>(null)
+    const [redeemModal, setRedeemModal] = useState(false)
+
     const [inventory, setInventory] = useState<string[]>([])
     const [purchasing, setPurchasing] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [loadingRedeem, setLoadingRedeem] = useState(false)
+    const [redeemSuccess, setRedeemSuccess] = useState(false)
 
     useEffect(() => {
         if (loading) return
@@ -210,7 +306,44 @@ export default function TiendaPage() {
         }
     }
 
+    const handleRedeemGC = async () => {
+        if (!selectedGC || loadingRedeem || userPoints < selectedGC.points) return
+        setLoadingRedeem(true)
+        setError(null)
+        try {
+            const res = await fetch("/api/user/redeem", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ giftCardId: selectedGC.id })
+            })
+            const data = await res.json()
+            if (res.ok) {
+                setRedeemSuccess(true)
+                // celebration
+                const confetti = (await import("canvas-confetti")).default
+                confetti({
+                    particleCount: 150, spread: 70, origin: { y: 0.6 },
+                    colors: ["#0F62FE", "#4A9EFF", "#10b981", "#fbbf24"]
+                })
+                await refreshUser()
+                setTimeout(() => {
+                    setRedeemModal(false)
+                    setRedeemSuccess(false)
+                    setSelectedGCId(null)
+                }, 2500)
+            } else {
+                setError(data.error || "Error al completar el canje")
+            }
+        } catch {
+            setError("Error de conexión")
+        } finally {
+            setLoadingRedeem(false)
+        }
+    }
+
     const bizcoins = stats?.bizcoins ?? (dbProfile as any)?.bizcoins ?? 0
+    const userPoints = bizcoins
+    const selectedGC = GIFT_CARDS.find(c => c.id === selectedGCId)
 
     const filtered = PRODUCTS.filter(p => {
         const matchCat = activeCategory === "Todo" || p.category === activeCategory
@@ -265,23 +398,70 @@ export default function TiendaPage() {
         @keyframes tienda-spin    { to { transform: rotate(360deg); } }
         @keyframes tienda-bounce  { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         @keyframes tienda-wiggle  { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
+        @keyframes tienda-glow    { 0%,100% { filter: drop-shadow(0 0 4px rgba(15,98,254,0.3)); } 50% { filter: drop-shadow(0 0 12px rgba(15,98,254,0.6)); } }
+        @keyframes card-scanline  { 0% { top: -100%; } 100% { top: 200%; } }
 
         /* ── product card ── */
         .tienda-card {
-          background: white;
-          border-radius: 24px;
-          border: 1.5px solid #e2e8f0;
-          box-shadow: 0 8px 32px -8px rgba(15, 98, 254, 0.08);
-          overflow: hidden;
-          transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1);
-          animation: tienda-fadeUp 0.45s ease both;
-          display: flex;
-          flex-direction: column;
+            background: white;
+            border-radius: 32px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: tienda-fadeUp 0.6s ease both;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
         .tienda-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 24px 48px -12px rgba(15, 98, 254, 0.15);
-          border-color: #bfdbfe;
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 30px 60px -12px rgba(15, 98, 254, 0.15);
+            border-color: #bfdbfe;
+        }
+        
+        /* ── gift card items ── */
+        .gift-card-item {
+            cursor: pointer;
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            border: 2px solid transparent;
+            position: relative;
+            background: white;
+        }
+        .gift-card-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15) !important;
+        }
+        .gift-card-item.selected {
+            border-color: #0F62FE;
+            box-shadow: 0 0 0 4px rgba(15,98,254,0.2) !important;
+        }
+        .gift-card-item.locked {
+            filter: grayscale(0.5);
+            opacity: 0.8;
+        }
+        .gift-card-scanline {
+            position: absolute;
+            left: 0; right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, transparent, rgba(255,255,255,0.08), transparent);
+            animation: card-scanline 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .puntos-stat-card { animation: tienda-fadeUp 0.6s cubic-bezier(0.2,0.8,0.2,1) both; }
+        .tienda-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 32px;
+          border: 2px solid transparent;
+          transition: border-color 0.4s ease;
+          pointer-events: none;
+        }
+        .tienda-card:hover::after {
+          border-color: rgba(15, 98, 254, 0.1);
         }
 
         /* ── canjear btn ── */
@@ -471,6 +651,53 @@ export default function TiendaPage() {
                 </div>
             )}
 
+            {/* ── REDEEM CONFIRMATION MODAL ── */}
+            {redeemModal && selectedGC && (
+                <div className="tienda-modal-bg" onClick={e => { if (e.target === e.currentTarget) setRedeemModal(false) }}>
+                    <div className="tienda-modal" style={{ maxWidth: 520, position: "relative" }}>
+                        <button onClick={() => setRedeemModal(false)} style={{ position: "absolute", top: 20, right: 20, background: "#f1f5f9", border: "none", padding: 8, borderRadius: 12, cursor: "pointer", color: "#64748b" }}><X size={20} /></button>
+                        
+                        <div style={{ textAlign: "center", marginBottom: 32 }}>
+                            <div style={{ width: 80, height: 80, borderRadius: 24, background: "rgba(15,98,254,0.1)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", animation: "tienda-bounce 2s infinite ease" }}>
+                                <Gift size={40} color="#0F62FE" />
+                            </div>
+                            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", margin: "0 0 10px", letterSpacing: "-0.02em" }}>¿Canjear tarjeta?</h2>
+                            <p style={{ fontSize: 16, color: "#64748b", margin: 0 }}>Descontaremos {selectedGC.points.toLocaleString()} BIZCOINS de tu saldo actual.</p>
+                        </div>
+
+                        <div style={{ background: selectedGC.bg, borderRadius: 24, padding: "28px", marginBottom: 28, color: "white", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0 15px 35px rgba(0,0,0,0.2)", position: "relative", overflow: "hidden" }}>
+                            <div className="gift-card-scanline" />
+                            <div style={{ position: "relative", zIndex: 1 }}>
+                                <div style={{ fontSize: 18, fontWeight: 700, opacity: 0.9, marginBottom: 4 }}>{selectedGC.store}</div>
+                                <div style={{ fontSize: 28, fontWeight: 800, color: selectedGC.color }}>{selectedGC.value}</div>
+                            </div>
+                            <div style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 16, padding: "12px 18px", textAlign: "right", position: "relative", zIndex: 1 }}>
+                                <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", opacity: 0.8, marginBottom: 2 }}>Costo</div>
+                                <div style={{ fontSize: 18, fontWeight: 800 }}>{selectedGC.points.toLocaleString()}</div>
+                            </div>
+                        </div>
+
+                        {userPoints < selectedGC.points && (
+                            <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 16, padding: "16px", marginBottom: 24, display: "flex", gap: 12, alignItems: "center", color: "#dc2626" }}>
+                                <Lock size={20} />
+                                <span style={{ fontSize: 14, fontWeight: 600 }}>No tienes suficientes BIZCOINS para este canje.</span>
+                            </div>
+                        )}
+
+                        <div style={{ display: "flex", gap: 14 }}>
+                            <button onClick={() => setRedeemModal(false)} disabled={loadingRedeem} style={{ flex: 1, padding: "16px", background: "#f1f5f9", border: "none", borderRadius: 16, fontWeight: 700, cursor: "pointer", fontSize: 15, color: "#64748b" }}>Cancelar</button>
+                            <button
+                                disabled={userPoints < selectedGC.points || loadingRedeem || redeemSuccess}
+                                onClick={handleRedeemGC}
+                                style={{ flex: 2, padding: "16px", background: userPoints >= selectedGC.points && !loadingRedeem ? (redeemSuccess ? "#10b981" : "linear-gradient(135deg, #0F62FE, #4A9EFF)") : "#e2e8f0", color: "white", border: "none", borderRadius: 16, fontWeight: 700, cursor: (userPoints >= selectedGC.points && !loadingRedeem) ? "pointer" : "not-allowed", fontSize: 15, boxShadow: userPoints >= selectedGC.points ? "0 8px 25px rgba(15,98,254,0.3)" : "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+                            >
+                                {loadingRedeem ? "Procesando..." : (redeemSuccess ? <><CheckCircle2 size={18} /> ¡Canje Exitoso!</> : "Confirmar Canje")}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* ── PAGE CONTENT ── */}
             <div
                 className="tienda-inner"
@@ -481,57 +708,57 @@ export default function TiendaPage() {
                     zIndex: 1,
                 }}
             >
-
                 {/* ── HERO HEADER ── */}
                 <div style={{
-                    background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0F62FE 100%)",
-                    borderRadius: 32,
-                    padding: "clamp(32px, 5vw, 64px) clamp(28px, 5vw, 48px)",
-                    marginBottom: 32,
+                    background: "linear-gradient(135deg, #0B1E5E 0%, #1e3a8a 55%, #0F62FE 100%)",
+                    borderRadius: 40,
+                    padding: "clamp(40px, 6vw, 80px) clamp(32px, 5vw, 64px)",
+                    marginBottom: 40,
                     position: "relative",
                     overflow: "hidden",
-                    boxShadow: "0 20px 60px rgba(15,98,254,0.28)",
-                    animation: "tienda-fadeUp 0.5s ease both",
+                    boxShadow: "0 24px 70px rgba(15,98,254,0.3)",
+                    animation: "tienda-fadeUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both",
                 }}>
-                    {/* Orbs */}
-                    <div style={{ position: "absolute", top: "-25%", right: "-5%", width: 360, height: 360, background: "radial-gradient(circle,rgba(96,165,250,0.18) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-                    <div style={{ position: "absolute", bottom: "-20%", left: "8%", width: 260, height: 260, background: "radial-gradient(circle,rgba(167,139,250,0.13) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                    {/* Artistic backgrounds */}
+                    <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 600, height: 600, background: "radial-gradient(circle, rgba(96,165,250,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                    <div style={{ position: "absolute", bottom: "-30%", left: "-5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                    <div style={{ position: "absolute", top: "20%", left: "40%", width: 200, height: 200, background: "rgba(255,255,255,0.03)", filter: "blur(40px)", borderRadius: "50%" }} />
 
-                    <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
-                        <div>
-                            <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
-                                <ShoppingBag size={13} color="#60a5fa" />
-                                <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tienda BIZEN</span>
+                    <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 40 }}>
+                        <div style={{ flex: "1 1 500px" }}>
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.08)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 999, padding: "6px 16px", marginBottom: 20 }}>
+                                <ShoppingBag size={14} color="#60a5fa" />
+                                <span style={{ fontSize: 13, fontWeight: 700, color: "#93C5FD", textTransform: "uppercase", letterSpacing: "0.1em" }}>Marketplace Premium</span>
                             </div>
-                            <h1 style={{ fontSize: "clamp(32px, 6vw, 48px)", fontWeight: 800, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-                                Canjea tus BIZCOINS
+                            <h1 style={{ fontSize: "clamp(36px, 6vw, 56px)", fontWeight: 800, color: "#fff", margin: "0 0 16px", letterSpacing: "-0.04em", lineHeight: 1.05 }}>
+                                Personaliza tu <span style={{ color: "#60A5FA" }}>Experiencia</span>
                             </h1>
-                            <p style={{ fontSize: "clamp(15px, 2vw, 18px)", color: "#93c5fd", fontWeight: 400, margin: 0, maxWidth: 480, lineHeight: 1.5 }}>
-                                Recompensas exclusivas para los mejores estudiantes. ¡Tú te lo mereces!
+                            <p style={{ fontSize: "clamp(16px, 1.8vw, 20px)", color: "rgba(147, 197, 253, 0.8)", fontWeight: 400, margin: 0, maxWidth: 520, lineHeight: 1.6 }}>
+                                Invierte tus BIZCOINS en artículos exclusivos, herramientas y contenido premium para potenciar tu crecimiento.
                             </p>
                         </div>
 
-                        {/* Balance balloon */}
+                        {/* Balance display */}
                         <div style={{
-                            background: "rgba(15, 23, 42, 0.4)",
-                            border: "1px solid rgba(147, 197, 253, 0.3)",
-                            borderRadius: 28,
-                            padding: "32px 42px",
+                            background: "rgba(255, 255, 255, 0.05)",
+                            border: "1px solid rgba(255, 255, 255, 0.15)",
+                            borderRadius: 36,
+                            padding: "40px",
                             textAlign: "center",
-                            backdropFilter: "blur(16px)",
-                            boxShadow: "0 24px 48px rgba(0,0,0,0.2)",
+                            backdropFilter: "blur(20px)",
+                            boxShadow: "0 32px 64px rgba(0,0,0,0.3)",
                             flexShrink: 0,
+                            minWidth: 260,
                         }}>
-                            <div style={{ fontSize: "clamp(40px,8vw,62px)", fontWeight: 500, lineHeight: 1, background: "linear-gradient(135deg,#fff,#93c5fd)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                                {loadingStats ? (
-                                    <div style={{ width: 120, height: 50, background: "rgba(255,255,255,0.1)", borderRadius: 12, animation: "tienda-fadeUp 1.5s infinite" }} />
-                                ) : (
-                                    bizcoins.toLocaleString()
-                                )}
+                            <div style={{ fontSize: 13, fontWeight: 700, color: "#93C5FD", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12, display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
+                                <Zap size={14} color="#FBBF24" fill="#FBBF24" />
+                                Saldo Actual
                             </div>
-                            <div style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4, display: "flex", alignItems: "center", gap: 5, justifyContent: "center" }}>
-                                <Zap size={12} color="#93c5fd" />
-                                BIZCOINS disponibles
+                            <div style={{ fontSize: "clamp(48px,8vw,68px)", fontWeight: 800, lineHeight: 1, color: "white", letterSpacing: "-0.02em" }}>
+                                {loadingStats ? "..." : bizcoins.toLocaleString()}
+                            </div>
+                            <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginTop: 8 }}>
+                                BIZCOINS
                             </div>
                         </div>
                     </div>
@@ -581,6 +808,7 @@ export default function TiendaPage() {
                     {[
                         { id: "catalogo", label: "Catálogo", icon: <ShoppingBag size={18} /> },
                         { id: "inventario", label: "Mis Compras", icon: <ShoppingBag size={18} /> },
+                        { id: "bizcoins", label: "Mis BIZCOINS", icon: <Star size={18} /> },
                     ].map(tab => (
                         <button
                             key={tab.id}
@@ -602,7 +830,7 @@ export default function TiendaPage() {
                                 position: "relative"
                             }}
                         >
-                            {tab.id === "catalogo" ? <Search size={18} /> : <ShoppingBag size={18} />}
+                            {tab.icon}
                             {tab.label}
                             {tab.id === "inventario" && ownedProducts.length > 0 && (
                                 <span style={{
@@ -621,73 +849,74 @@ export default function TiendaPage() {
                     ))}
                 </div>
 
-                {/* ── SEARCH + CATEGORIES ── */}
-                <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", marginBottom: 32, animation: "tienda-fadeUp 0.55s ease 0.15s both" }}>
-                    {/* Search */}
-                    <div style={{ position: "relative", flex: "1 1 220px", minWidth: 180 }}>
-                        <Search style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} size={17} />
-                        <input
-                            className="tienda-search"
-                            type="text"
-                            value={search}
-                            onChange={e => setSearch(e.target.value)}
-                            onFocus={() => setSearchFocused(true)}
-                            onBlur={() => setSearchFocused(false)}
-                            placeholder="Buscar recompensas..."
-                            style={{
-                                width: "100%",
-                                padding: "14px 16px 14px 44px",
-                                borderRadius: 16,
-                                border: `2px solid ${searchFocused ? "#0F62FE" : "transparent"}`,
-                                fontSize: 15,
-                                fontWeight: 500,
-                                color: "#0f172a",
-                                background: "white",
-                                boxShadow: searchFocused
-                                    ? "0 8px 24px rgba(15,98,254,0.15)"
-                                    : "0 4px 12px rgba(0,0,0,0.05)",
-                                transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-                                boxSizing: "border-box",
-                                outline: "none",
-                            }}
-                        />
-                    </div>
+                {/* ── SEARCH + CATEGORIES (Only for Catalogue) ── */}
+                {activeTab === "catalogo" && (
+                    <>
+                        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", marginBottom: 32, animation: "tienda-fadeUp 0.55s ease 0.15s both" }}>
+                            <div style={{ position: "relative", flex: "1 1 220px", minWidth: 180 }}>
+                                <Search style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} size={17} />
+                                <input
+                                    className="tienda-search"
+                                    type="text"
+                                    value={search}
+                                    onChange={e => setSearch(e.target.value)}
+                                    onFocus={() => setSearchFocused(true)}
+                                    onBlur={() => setSearchFocused(false)}
+                                    placeholder="Buscar recompensas..."
+                                    style={{
+                                        width: "100%",
+                                        padding: "14px 16px 14px 44px",
+                                        borderRadius: 16,
+                                        border: `2px solid ${searchFocused ? "#0F62FE" : "transparent"}`,
+                                        fontSize: 15,
+                                        fontWeight: 500,
+                                        color: "#0f172a",
+                                        background: "white",
+                                        boxShadow: searchFocused
+                                            ? "0 8px 24px rgba(15,98,254,0.15)"
+                                            : "0 4px 12px rgba(0,0,0,0.05)",
+                                        transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                                        boxSizing: "border-box",
+                                        outline: "none",
+                                    }}
+                                />
+                            </div>
 
-                    {/* Category pills */}
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        {(["Todo", ...CATEGORIES] as const).map(cat => (
-                            <button
-                                key={cat}
-                                className="tienda-cat"
-                                onClick={() => setActiveCategory(cat as Category | "Todo")}
-                                style={{
-                                    padding: "10px 22px",
-                                    borderRadius: 999,
-                                    fontWeight: 600,
-                                    fontSize: 14,
-                                    cursor: "pointer",
-                                    whiteSpace: "nowrap",
-                                    background: activeCategory === cat
-                                        ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)"
-                                        : "white",
-                                    color: activeCategory === cat ? "white" : "#64748b",
-                                    boxShadow: activeCategory === cat
-                                        ? "0 8px 20px rgba(15, 23, 42, 0.25)"
-                                        : "0 2px 8px rgba(0,0,0,0.04)",
-                                    border: activeCategory === cat ? "none" : "1.5px solid #e2e8f0",
-                                    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                                }}
-                            >
-                                {cat}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                                {(["Todo", ...CATEGORIES] as const).map(cat => (
+                                    <button
+                                        key={cat}
+                                        className="tienda-cat"
+                                        onClick={() => setActiveCategory(cat as Category | "Todo")}
+                                        style={{
+                                            padding: "10px 22px",
+                                            borderRadius: 999,
+                                            fontWeight: 600,
+                                            fontSize: 14,
+                                            cursor: "pointer",
+                                            whiteSpace: "nowrap",
+                                            background: activeCategory === cat
+                                                ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)"
+                                                : "white",
+                                            color: activeCategory === cat ? "white" : "#64748b",
+                                            boxShadow: activeCategory === cat
+                                                ? "0 8px 20px rgba(15, 23, 42, 0.25)"
+                                                : "0 2px 8px rgba(0,0,0,0.04)",
+                                            border: activeCategory === cat ? "none" : "1.5px solid #e2e8f0",
+                                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                                        }}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
 
-                {/* ── COUNT ── */}
-                <div style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500, marginBottom: 20, animation: "tienda-fadeUp 0.5s ease 0.2s both" }}>
-                    {filtered.length} producto{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
-                </div>
+                        <div style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500, marginBottom: 20, animation: "tienda-fadeUp 0.5s ease 0.2s both" }}>
+                            {filtered.length} producto{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
+                        </div>
+                    </>
+                )}
 
                 {/* ── PRODUCT GRID (CATALOGO OR INVENTORY) ── */}
                 {activeTab === "catalogo" ? (
@@ -706,58 +935,66 @@ export default function TiendaPage() {
                                     <div
                                         key={product.id}
                                         className="tienda-card"
-                                        style={{ animationDelay: `${Math.min(idx * 0.06, 0.4)}s` }}
+                                        style={{
+                                            animationDelay: `${Math.min(idx * 0.06, 0.4)}s`,
+                                            boxShadow: product.badge && RARITY_STYLES[product.badge]
+                                                ? `0 4px 20px ${RARITY_STYLES[product.badge].glow}, 0 1px 3px rgba(0,0,0,0.05)`
+                                                : undefined,
+                                        }}
                                     >
-                                        <div style={{ position: "relative", height: 160, background: product.bg, display: "flex", alignItems: "center", justifyContent: "center", color: product.accent }}>
-                                            <div style={{ animation: "tienda-float 3s ease-in-out infinite", animationDelay: `${idx * 0.3}s` }}>
+                                        {/* ── Card hero ── */}
+                                        <div style={{ position: "relative", height: 172, background: product.bg, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                                            {/* Ambient glow orb */}
+                                            <div style={{ position: "absolute", bottom: -30, left: "50%", transform: "translateX(-50%)", width: 120, height: 60, background: `radial-gradient(circle, ${product.accent}60 0%, transparent 70%)`, borderRadius: "50%", filter: "blur(12px)", pointerEvents: "none" }} />
+                                            {/* Shine sweep for Legendario */}
+                                            {product.badge === "Legendario" && (
+                                                <div style={{ position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%", background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)", animation: "tienda-shine 3s ease-in-out infinite", pointerEvents: "none" }} />
+                                            )}
+                                            {/* Icon */}
+                                            <div style={{ animation: "tienda-float 3.5s ease-in-out infinite", animationDelay: `${idx * 0.3}s`, position: "relative", zIndex: 1, filter: "drop-shadow(0 6px 16px rgba(0,0,0,0.3))" }}>
                                                 {product.icon}
                                             </div>
 
+                                            {/* Rarity / Owned badge */}
                                             {isOwned ? (
-                                                <div style={{ position: "absolute", top: 14, right: 14, background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 500, padding: "4px 10px", borderRadius: 999 }}>
-                                                    ADQUIRIDO
+                                                <div style={{ position: "absolute", top: 14, right: 14, background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 999, boxShadow: "0 2px 8px rgba(16,185,129,0.5)", letterSpacing: "0.04em" }}>
+                                                    ✓ ADQUIRIDO
                                                 </div>
-                                            ) : (
-                                                product.badge && badgeStyle && (
-                                                    <div style={{
-                                                        position: "absolute", top: 14, right: 14,
-                                                        background: badgeStyle.bg, color: badgeStyle.text,
-                                                        fontSize: 10, fontWeight: 500, padding: "4px 10px",
-                                                        borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.05em",
-                                                        boxShadow: `0 3px 10px ${badgeStyle.bg}60`,
-                                                    }}>
-                                                        {product.badge}
-                                                    </div>
-                                                )
-                                            )}
-
-                                            {!canAfford && !isOwned && (
+                                            ) : product.badge && RARITY_STYLES[product.badge] ? (
                                                 <div style={{
-                                                    position: "absolute", top: 14, left: 14,
-                                                    background: "rgba(0,0,0,0.55)", color: "#fff",
-                                                    fontSize: 11, fontWeight: 500, padding: "4px 10px",
-                                                    borderRadius: 999, display: "flex", alignItems: "center", gap: 5,
-                                                    backdropFilter: "blur(4px)",
+                                                    position: "absolute", top: 14, right: 14,
+                                                    background: RARITY_STYLES[product.badge].bg,
+                                                    color: RARITY_STYLES[product.badge].text,
+                                                    fontSize: 10, fontWeight: 700, padding: "4px 12px",
+                                                    borderRadius: 999, letterSpacing: "0.06em", textTransform: "uppercase",
+                                                    boxShadow: `0 2px 10px ${RARITY_STYLES[product.badge].glow}`,
                                                 }}>
-                                                    <Lock size={11} />
-                                                    Sin saldo
+                                                    {product.badge}
+                                                </div>
+                                            ) : null}
+
+                                            {/* Insufficient funds lock */}
+                                            {!canAfford && !isOwned && (
+                                                <div style={{ position: "absolute", top: 14, left: 14, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 999, display: "flex", alignItems: "center", gap: 4, backdropFilter: "blur(6px)" }}>
+                                                    <Lock size={10} />Sin saldo
                                                 </div>
                                             )}
                                         </div>
 
-                                        <div style={{ padding: "22px 22px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
+                                        {/* ── Card body ── */}
+                                        <div style={{ padding: "20px 22px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                                                <span style={{ fontSize: 11, fontWeight: 500, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                                <span style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
                                                     {product.category}
                                                 </span>
-                                                <div style={{ display: "flex", alignItems: "center", gap: 5, fontWeight: 500, fontSize: 15, color: isOwned ? "#10b981" : (canAfford ? product.accent : "#94a3b8") }}>
-                                                    {isOwned ? <CheckCircle2 size={13} color="#10b981" /> : <Zap size={13} fill={canAfford ? product.accent : "#94a3b8"} color={canAfford ? product.accent : "#94a3b8"} />}
+                                                <div style={{ display: "flex", alignItems: "center", gap: 4, fontWeight: 700, fontSize: 14, color: isOwned ? "#10b981" : (canAfford ? product.accent : "#94a3b8") }}>
+                                                    {isOwned ? <CheckCircle2 size={13} color="#10b981" /> : <Zap size={13} fill={canAfford ? product.accent : "#cbd5e1"} color={canAfford ? product.accent : "#94a3b8"} />}
                                                     {isOwned ? "Canjeado" : product.price.toLocaleString()}
-                                                    {!isOwned && <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.05em" }}> BIZCOINS</span>}
+                                                    {!isOwned && <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.05em" }}>BC</span>}
                                                 </div>
                                             </div>
 
-                                            <h3 style={{ fontSize: 17, fontWeight: 500, color: "#0f172a", marginBottom: 8, lineHeight: 1.3 }}>
+                                            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", marginBottom: 8, lineHeight: 1.3 }}>
                                                 {product.name}
                                             </h3>
 
@@ -785,8 +1022,8 @@ export default function TiendaPage() {
                             })}
                         </div>
                     )
-                ) : (
-                    /* INVENTARIO TAB */
+                ) : activeTab === "inventario" ? (
+                    /* ── INVENTARIO TAB ── */
                     ownedProducts.length === 0 ? (
                         <div style={{ textAlign: "center", padding: "80px 24px", background: "white", borderRadius: 28, border: "2px dashed #e2e8f0" }}>
                             <div style={{ marginBottom: 20, color: "#cbd5e1" }}><ShoppingBag size={64} style={{ margin: "0 auto" }} /></div>
@@ -796,7 +1033,7 @@ export default function TiendaPage() {
                             </p>
                             <button
                                 onClick={() => setActiveTab("catalogo")}
-                                style={{ padding: "12px 24px", background: "#0F62FE", color: "white", border: "none", borderRadius: 12, fontWeight: 500, cursor: "pointer", }}
+                                style={{ padding: "12px 24px", background: "#0F62FE", color: "white", border: "none", borderRadius: 12, fontWeight: 500, cursor: "pointer" }}
                             >
                                 Explorar catálogo
                             </button>
@@ -823,37 +1060,178 @@ export default function TiendaPage() {
                             ))}
                         </div>
                     )
+                ) : (
+                    /* ── MIS BIZCOINS TAB CONTENT (PREMIUM DASHBOARD) ── */
+                    <div style={{ animation: "tienda-fadeUp 0.6s ease both" }}>
+                        {/* Stats Summary Widgets */}
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24, marginBottom: 48 }}>
+                            {/* Level Card */}
+                            <div className="puntos-stat-card" style={{ background: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", borderRadius: 32, padding: "40px 24px", border: "1.5px solid #fde68a", textAlign: "center", boxShadow: "0 10px 30px rgba(217,119,6,0.08)" }}>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Nivel Actual</div>
+                                <div style={{ fontSize: 64, fontWeight: 900, color: "#b45309", lineHeight: 1 }}>{stats?.level || (dbProfile as any)?.level || 1}</div>
+                                <div style={{ fontSize: 14, fontWeight: 700, color: "#d97706", marginTop: 8 }}>Bizen Explorer</div>
+                            </div>
+
+                            {/* Streak Card */}
+                            <div className="puntos-stat-card" style={{ background: "linear-gradient(135deg, #fffaf5 0%, #fff7ed 100%)", borderRadius: 32, padding: "40px 24px", border: "1.5px solid #ffedd5", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 30px rgba(249,115,22,0.08)" }}>
+                                <StreakWidget
+                                    streak={stats?.currentStreak ?? (dbProfile as any)?.currentStreak ?? 0}
+                                    showCalendar={false}
+                                    iconSize={40}
+                                    fontSize={64}
+                                    badgeStyle={{ background: "transparent", border: "none", boxShadow: "none", padding: "0", gap: "16px" }}
+                                />
+                            </div>
+
+                            {/* XP Progress Card */}
+                            <div className="puntos-stat-card" style={{ background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)", borderRadius: 32, padding: "40px 24px", border: "1.5px solid #bae6fd", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 30px rgba(14,165,233,0.08)" }}>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>PROGRESO NIVEL {(stats?.level || (dbProfile as any)?.level || 1) + 1}</div>
+                                <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 16 }}>
+                                    <span style={{ fontSize: 44, fontWeight: 900, color: "#0c4a6e" }}>{stats?.xpInCurrentLevel || 0}</span>
+                                    <span style={{ fontSize: 16, fontWeight: 700, color: "#38bdf8" }}>/ {stats?.xpNeeded || 100} XP</span>
+                                </div>
+                                <div style={{ width: "85%", height: 10, background: "rgba(255,255,255,0.6)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(14,165,233,0.2)" }}>
+                                    <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 100)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #38bdf8, #0F62FE)", borderRadius: 10, transition: "width 1.5s cubic-bezier(0.34,1.56,0.64,1)" }} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Gift Cards Section */}
+                        <div style={{ marginBottom: 60 }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, flexWrap: "wrap", gap: 16 }}>
+                                <div>
+                                    <h2 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: 800, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.02em" }}>Tarjetas de Regalo</h2>
+                                    <p style={{ fontSize: 16, color: "#64748b", margin: 0 }}>Canjea tus BIZCOINS acumulados por beneficios reales en tiendas populares.</p>
+                                </div>
+                                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#0F62FE12", border: "1.5px solid #0F62FE25", borderRadius: 16, padding: "12px 24px" }}>
+                                    <Star size={20} fill="#0F62FE" color="#0F62FE" />
+                                    <span style={{ fontSize: 18, fontWeight: 800, color: "#0F62FE" }}>{bizcoins.toLocaleString()} BIZCOINS</span>
+                                </div>
+                            </div>
+
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 28 }}>
+                                {GIFT_CARDS.map((card) => {
+                                    const canAfford = userPoints >= card.points
+                                    const isSelected = selectedGCId === card.id
+                                    return (
+                                        <div
+                                            key={card.id}
+                                            className={`gift-card-item ${isSelected ? "selected" : ""} ${!canAfford ? "locked" : ""}`}
+                                            style={{ boxShadow: "0 12px 35px rgba(0,0,0,0.08)" }}
+                                            onClick={() => setSelectedGCId(isSelected ? null : card.id)}
+                                        >
+                                            <div style={{ background: card.bg, padding: "36px 30px", position: "relative", minHeight: 150 }}>
+                                                <div className="gift-card-scanline" />
+                                                <div style={{ position: "absolute", top: 20, right: 20, width: 40, height: 28, background: "rgba(255,255,255,0.12)", borderRadius: 6, border: "1px solid rgba(255,255,255,0.2)" }} />
+                                                <div style={{ fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 6, opacity: 0.9 }}>{card.store}</div>
+                                                <div style={{ fontSize: 38, fontWeight: 900, color: card.color, lineHeight: 1 }}>{card.value}</div>
+                                                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginTop: 12, lineHeight: 1.4 }}>{card.description}</div>
+                                            </div>
+                                            <div style={{ padding: "20px 30px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "white" }}>
+                                                <div>
+                                                    <div style={{ fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.1em" }}>Costo del canje</div>
+                                                    <div style={{ fontSize: 19, fontWeight: 800, color: canAfford ? "#0F62FE" : "#94a3b8", display: "flex", alignItems: "center", gap: 6 }}>
+                                                        <Star size={16} fill={canAfford ? "#0F62FE" : "#94a3b8"} color={canAfford ? "#0F62FE" : "#94a3b8"} />
+                                                        {card.points.toLocaleString()}
+                                                    </div>
+                                                </div>
+                                                <div style={{ width: 48, height: 48, borderRadius: 16, background: isSelected && canAfford ? "#0F62FE" : "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }}>
+                                                    {canAfford ? (isSelected ? <CheckCircle2 size={24} color="white" /> : <ChevronRight size={24} color="#0F62FE" />) : <Lock size={20} color="#94a3b8" />}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+
+                            {/* Main Redeem Button */}
+                            <div style={{ display: "flex", justifyContent: "center", marginTop: 48 }}>
+                                <button
+                                    onClick={() => setRedeemModal(true)}
+                                    disabled={!selectedGCId}
+                                    style={{
+                                        padding: "20px 56px",
+                                        background: selectedGCId ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)" : "#F1F5F9",
+                                        color: selectedGCId ? "white" : "#94a3b8",
+                                        border: "none",
+                                        borderRadius: 20,
+                                        fontWeight: 800,
+                                        fontSize: 18,
+                                        cursor: selectedGCId ? "pointer" : "not-allowed",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 12,
+                                        boxShadow: selectedGCId ? "0 15px 40px rgba(15,98,254,0.3)" : "none",
+                                        transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+                                    }}
+                                    onMouseEnter={e => { if (selectedGCId) e.currentTarget.style.transform = "scale(1.03) translateY(-4px)" }}
+                                    onMouseLeave={e => { if (selectedGCId) e.currentTarget.style.transform = "scale(1) translateY(0)" }}
+                                >
+                                    <Gift size={24} />
+                                    {selectedGCId ? `Canjear Beneficio ${selectedGC?.store}` : "Elige una Recompensa"}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Guide to Earning Section */}
+                        <div style={{ background: "white", borderRadius: 36, padding: "48px", border: "1px solid #f1f5f9", boxShadow: "0 10px 60px rgba(15,98,254,0.06)" }}>
+                            <h3 style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", margin: "0 0 36px", textAlign: "center" }}>Potencia tu ahorro de BIZCOINS</h3>
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 24 }}>
+                                {[
+                                    { icon: <Zap size={26} />, label: "Consistencia Diaria", xp: "+50 BIZCOINS", color: "#0F62FE", desc: "El simple hecho de entrar a Bizen cada día te recompensa." },
+                                    { icon: <BookOpen size={26} />, label: "Maestría de Temas", xp: "+25 BIZCOINS", color: "#10b981", desc: "Gana puntos por cada lección y subtema que completes." },
+                                    { icon: <Target size={26} />, label: "Retos del Foro", xp: "+100-300 BIZCOINS", color: "#f59e0b", desc: "Participa activamente en la comunidad y gana premios mayores." },
+                                    { icon: <Trophy size={26} />, label: "Ascenso de Nivel", xp: "Bonos VIP", color: "#7c3aed", desc: "Cada vez que subes de nivel recibes un cofre sorpresa." },
+                                ].map((item, i) => (
+                                    <div key={i} style={{ padding: 32, borderRadius: 28, background: "#f8fafc", border: `1px solid ${item.color}10`, borderBottom: `5px solid ${item.color}`, transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-6px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
+                                        <div style={{ width: 56, height: 56, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center", color: item.color, marginBottom: 20, boxShadow: "0 8px 16px rgba(0,0,0,0.04)" }}>{item.icon}</div>
+                                        <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginBottom: 6 }}>{item.label}</div>
+                                        <div style={{ fontSize: 14, color: "#64748b", marginBottom: 16, lineHeight: 1.6 }}>{item.desc}</div>
+                                        <div style={{ fontSize: 18, fontWeight: 900, color: item.color }}>{item.xp}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 )}
 
-                {/* ── HOW TO EARN MORE ── */}
-                <div style={{ background: "white", borderRadius: 24, padding: "clamp(24px,4vw,36px)", border: "1px solid #e8f0fe", boxShadow: "0 4px 20px rgba(15,98,254,0.04)", marginTop: 48, animation: "tienda-fadeUp 0.5s ease 0.3s both" }}>
-                    <h2 style={{ fontSize: "clamp(17px,2.5vw,21px)", fontWeight: 500, color: "#0f172a", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 10 }}>
-                        <Sparkles size={20} color="#0F62FE" />
-                        ¿Cómo ganar más BIZCOINS?
-                    </h2>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
+                {/* ── HOW TO EARN MORE (GLOBAL FOOTER) ── */}
+                <div style={{
+                    background: "white",
+                    borderRadius: 36,
+                    padding: "clamp(32px, 5vw, 48px)",
+                    border: "1px solid #f1f5f9",
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.02)",
+                    marginBottom: 40,
+                    marginTop: 60,
+                    animation: "tienda-fadeUp 0.6s ease 0.2s both"
+                }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, gap: 20, flexWrap: "wrap" }}>
+                        <div>
+                            <h2 style={{ fontSize: "clamp(22px, 3vw, 28px)", fontWeight: 800, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.02em" }}>¿Necesitas más BIZCOINS?</h2>
+                            <p style={{ fontSize: 16, color: "#64748b", margin: 0 }}>Potencia tu aprendizaje y desbloquea recompensas más rápido.</p>
+                        </div>
+                        <button style={{ padding: "14px 28px", background: "#f1f5f9", color: "#0f172a", border: "none", borderRadius: 16, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 10, transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"} onMouseLeave={e => e.currentTarget.style.background = "#f1f5f9"}>
+                            Ver Guía de Recompensas <ChevronRight size={18} />
+                        </button>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
                         {[
-                            { label: "Reto Diario", xp: "+50", color: "#0F62FE", desc: "Completa el reto del día", icon: <Zap size={22} /> },
-                            { label: "Lecciones", xp: "+25", color: "#10b981", desc: "Termina una lección del curso", icon: <BookOpen size={22} /> },
-                            { label: "Quizzes", xp: "+30", color: "#f59e0b", desc: "Acierta las preguntas correctas", icon: <Target size={22} /> },
-                            { label: "Racha 7 días", xp: "+100", color: "#7c3aed", desc: "Mantén tu racha una semana", icon: <Flame size={22} /> },
-                        ].map(item => (
-                            <div key={item.label} style={{ background: "#FBFAF5", borderRadius: 14, padding: "18px 16px", border: `1px solid ${item.color}20`, borderLeft: `3px solid ${item.color}`, transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
-                                <div style={{
-                                    width: 40, height: 40, borderRadius: 10, background: `${item.color}15`,
-                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                    color: item.color, marginBottom: 12
-                                }}>
-                                    {item.icon}
+                            { icon: <Flame size={20} />, title: "Mantén tu Racha", desc: "Gana bonos exponenciales por cada día consecutivo que inicies sesión.", color: "#F59E0B" },
+                            { icon: <Target size={20} />, title: "Completa Desafíos", desc: "Participa en los retos especiales del foro y gana hasta 500 BIZCOINS.", color: "#10B981" },
+                            { icon: <Sparkles size={20} />, title: "Sube de Nivel", desc: "Cada nuevo nivel te otorga un cofre de recompensas con BIZCOINS gratis.", color: "#8B5CF6" }
+                        ].map((way, i) => (
+                            <div key={i} style={{ padding: "24px", borderRadius: 24, background: "#f8fafc", border: "1px solid #f1f5f9", display: "flex", gap: 16 }}>
+                                <div style={{ width: 48, height: 48, borderRadius: 14, background: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 8px 16px rgba(0,0,0,0.03)", color: way.color }}>{way.icon}</div>
+                                <div>
+                                    <div style={{ fontWeight: 700, fontSize: 16, color: "#0f172a", marginBottom: 4 }}>{way.title}</div>
+                                    <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.5 }}>{way.desc}</div>
                                 </div>
-                                <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a", marginBottom: 4 }}>{item.label}</div>
-                                <div style={{ fontSize: 12, color: "#64748b", marginBottom: 10, lineHeight: 1.5 }}>{item.desc}</div>
-                                <div style={{ fontSize: 16, fontWeight: 500, color: item.color }}>{item.xp} BIZCOINS</div>
                             </div>
                         ))}
                     </div>
                 </div>
-
             </div>
         </div>
     )

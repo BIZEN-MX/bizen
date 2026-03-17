@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext"
 import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
 import { getStepsForLesson } from "@/data/lessons/registry"
 import { FooterNav } from "@/components/FooterNav"
+import { useLessonProgress } from "@/hooks/useLessonProgress"
+import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 import PageLoader from "@/components/PageLoader"
 
 /**
@@ -30,6 +32,57 @@ function InteractiveLessonContent() {
 
   const [dbLesson, setDbLesson] = useState<any>(null)
   const [loadingLesson, setLoadingLesson] = useState(true)
+  const { completedLessons } = useLessonProgress()
+
+  // ── Access & Locking Check ────────────────────────────────────────────────
+  const topicNum = parseInt(topicIdStr?.replace('tema-', '') || '1')
+  const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
+  const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
+  const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular')
+  const hasPremiumAccess = hasActiveStripe || hasActiveLicense || isInstitutional
+
+  // Check if topic is locked by sequence
+  const nextTopicId = React.useMemo(() => {
+    for (let i = 0; i < SUBTEMAS_BY_COURSE.length; i++) {
+        const tId = i + 1;
+        const topicLessons = SUBTEMAS_BY_COURSE[i].flatMap((s: any) => s.lessons);
+        const allDone = topicLessons.every((l: any) => completedLessons.includes(l.slug));
+        if (!allDone) return tId;
+    }
+    return 1;
+  }, [completedLessons]);
+
+  const isTopicLocked = topicNum > nextTopicId;
+
+  // Check if lesson is locked by sequence or paywall
+  const allLessonsInTopic = React.useMemo(() => {
+    return SUBTEMAS_BY_COURSE[topicNum - 1]?.flatMap(s => s.lessons.map(l => l.slug)) || []
+  }, [topicNum])
+  
+  const currentLessonIdx = allLessonsInTopic.indexOf(lessonIdStr)
+  const isFirstLessonOfTopic = currentLessonIdx <= 0
+  const previousLessonSlug = !isFirstLessonOfTopic ? allLessonsInTopic[currentLessonIdx - 1] : null
+  const isSequenceLocked = !isFirstLessonOfTopic && previousLessonSlug && !completedLessons.includes(previousLessonSlug)
+
+  const isPremiumLesson = topicNum > 1 || (currentLessonIdx + 1) > 3
+  const isPaywalled = isPremiumLesson && !hasPremiumAccess
+
+  const isLocked = isTopicLocked || isPaywalled || isSequenceLocked
+
+  useEffect(() => {
+    if (!loading && !loadingLesson && isLocked) {
+      if (isPaywalled) {
+        router.push('/payment')
+      } else {
+        router.push(`/courses/${topicIdStr}`)
+      }
+    }
+  }, [loading, loadingLesson, isLocked, isPaywalled, router, topicIdStr])
+
+  // Don't show content if locked
+  if (loading || loadingLesson || isLocked) {
+    return <PageLoader />
+  }
 
   useEffect(() => {
     async function fetchLessonData() {

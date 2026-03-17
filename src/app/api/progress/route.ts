@@ -4,6 +4,7 @@ import { createSupabaseServerMicrocred } from '@/lib/supabase/server-microcred'
 import { cookies } from 'next/headers'
 import { awardXp } from '@/lib/rewards'
 import { createSupabaseServer } from '@/lib/supabase/server'
+import { checkAndAwardAchievements } from '@/lib/achievements'
 
 // GET /api/progress - Get user's progress (optionally by lessonId or courseId)
 export async function GET(request: NextRequest) {
@@ -156,11 +157,30 @@ export async function POST(request: NextRequest) {
 
     // Award XP if completed (100%) and newly created or updated to 100% just now
     let rewards = null
+    let newAchievements: string[] = []
     if (percent === 100 && completedAt) {
       rewards = await awardXp(user.id, 50) // 50 XP per completed lesson
+
+      // -- achievement check --
+      try {
+        const profile = await prisma.profile.findUnique({
+          where: { userId: user.id },
+          select: { currentStreak: true, level: true, bizcoins: true, postsCreated: true }
+        })
+        const lessonCount = await prisma.progress.count({
+          where: { userId: user.id, percent: 100 }
+        })
+        newAchievements = await checkAndAwardAchievements(user.id, {
+          lessonsCompleted: lessonCount,
+          currentStreak:    profile?.currentStreak ?? 0,
+          level:            profile?.level         ?? 1,
+          bizcoins:         profile?.bizcoins      ?? 0,
+          postsCreated:     profile?.postsCreated  ?? 0,
+        })
+      } catch {/* silent */}
     }
 
-    return NextResponse.json({ ...progress, rewards })
+    return NextResponse.json({ ...progress, rewards, newAchievements })
   } catch (error) {
     console.error('Error upserting progress:', error)
     return NextResponse.json(

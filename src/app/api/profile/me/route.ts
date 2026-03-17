@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 import { calculateLevel } from "@/lib/xp"
+import { isInstitutionalEmail } from "@/lib/emailValidation"
 
 export async function GET() {
   try {
@@ -33,12 +34,15 @@ export async function GET() {
 
     if (!userProfileRaw && !dbFetchError) {
       console.log(`[api/profile/me] Profile missing for user ${user.id}, creating default...`)
+      const isEduEmail = isInstitutionalEmail(user.email || '');
+      const fallbackRole = isEduEmail ? 'institutional' : 'particular';
+      
       try {
         userProfileRaw = await prisma.profile.create({
           data: {
             userId: user.id,
             fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
-            role: 'particular',
+            role: fallbackRole,
             xp: 0,
             bizcoins: 0,
             level: 1

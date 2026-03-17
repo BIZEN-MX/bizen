@@ -10,7 +10,7 @@ import { LoadingBar } from "@/components/forum/LoadingBar"
 import StreakWidget from "@/components/StreakWidget"
 import {
   Target, MessageCircle, Briefcase, CheckCircle, AlertCircle,
-  ChevronDown, ChevronUp,
+  ChevronDown, ChevronUp, ChevronRight,
   Send, ExternalLink, X, BookOpen
 } from "lucide-react"
 import { RocketIcon, LeafIcon, NoteIcon, ThumbsUpIcon, IdeaIcon, WarningIcon, ZapIcon } from "@/components/CustomIcons"
@@ -61,24 +61,24 @@ const REACTIONS = [
 ]
 
 // ── Topic colour palette ──────────────────────────────────────────────────────
-const TOPIC_COLORS: Record<string, { accent: string; light: string; shadow: string }> = {
-  "ahorro": { accent: "#10b981", light: "#ecfdf5", shadow: "rgba(16,185,129,0.15)" },
-  "presupuesto": { accent: "#2563eb", light: "#eff6ff", shadow: "rgba(37,99,235,0.15)" },
-  "deuda": { accent: "#ef4444", light: "#fef2f2", shadow: "rgba(239,68,68,0.15)" },
-  "inversion": { accent: "#d97706", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)" },
-  "inversion-basica": { accent: "#d97706", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)" },
-  "emprendimiento": { accent: "#7c3aed", light: "#f5f3ff", shadow: "rgba(124,58,237,0.15)" },
-  "proyectos": { accent: "#4f46e5", light: "#eef2ff", shadow: "rgba(79,70,229,0.15)" },
-  "negocios": { accent: "#0284c7", light: "#f0f9ff", shadow: "rgba(2,132,199,0.15)" },
-  "finanzas": { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" },
-  "reto-del-dia": { accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.15)" },
-  "preguntas": { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" },
+const TOPIC_COLORS: Record<string, { accent: string; light: string; shadow: string; gradient: string }> = {
+  "ahorro": { accent: "#10b981", light: "#ecfdf5", shadow: "rgba(16,185,129,0.15)", gradient: "linear-gradient(135deg, #10b981, #059669)" },
+  "presupuesto": { accent: "#3B82F6", light: "#eff6ff", shadow: "rgba(59,130,246,0.15)", gradient: "linear-gradient(135deg, #3B82F6, #2563EB)" },
+  "deuda": { accent: "#EF4444", light: "#fef2f2", shadow: "rgba(239,68,68,0.15)", gradient: "linear-gradient(135deg, #EF4444, #DC2626)" },
+  "inversion": { accent: "#F59E0B", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)", gradient: "linear-gradient(135deg, #F59E0B, #D97706)" },
+  "inversion-basica": { accent: "#F59E0B", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)", gradient: "linear-gradient(135deg, #F59E0B, #D97706)" },
+  "emprendimiento": { accent: "#8B5CF6", light: "#f5f3ff", shadow: "rgba(139,92,246,0.15)", gradient: "linear-gradient(135deg, #8B5CF6, #7C3AED)" },
+  "proyectos": { accent: "#6366F1", light: "#eef2ff", shadow: "rgba(99,102,241,0.15)", gradient: "linear-gradient(135deg, #6366F1, #4F46E5)" },
+  "negocios": { accent: "#0EA5E9", light: "#f0f9ff", shadow: "rgba(14,165,233,0.15)", gradient: "linear-gradient(135deg, #0EA5E9, #0284C7)" },
+  "finanzas": { accent: "#1E293B", light: "#f8fafc", shadow: "rgba(30,41,59,0.15)", gradient: "linear-gradient(135deg, #334155, #1E293B)" },
+  "reto-del-dia": { accent: "#F59E0B", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)", gradient: "linear-gradient(135deg, #F59E0B, #D97706)" },
+  "preguntas": { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)", gradient: "linear-gradient(135deg, #0F62FE, #2563EB)" },
 }
-const DEFAULT_TOPIC = { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" }
+const DEFAULT_TOPIC = { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)", gradient: "linear-gradient(135deg, #0F62FE, #2563EB)" }
 
 function getTopicColors(slug: string) {
   if (TOPIC_COLORS[slug]) return TOPIC_COLORS[slug]
-  const key = Object.keys(TOPIC_COLORS).find(k => slug?.startsWith(k) || k?.startsWith(slug))
+  const key = Object.keys(TOPIC_COLORS).find(k => slug?.toLowerCase().includes(k.toLowerCase()))
   return key ? TOPIC_COLORS[key] : DEFAULT_TOPIC
 }
 
@@ -147,10 +147,11 @@ function EvidenceCard({
 
   return (
     <div style={{
-      background: "white", borderRadius: 16, padding: "20px 22px",
-      border: `1.5px solid ${post.status === "validated" ? "rgba(16,185,129,0.3)" : "rgba(15, 23, 42, 0.1)"}`,
-      boxShadow: post.status === "validated" ? "0 4px 16px rgba(16,185,129,0.1)" : "0 2px 8px rgba(0,0,0,0.04)",
-      marginBottom: 12
+      background: "white", borderRadius: 24, padding: "clamp(16px, 3vw, 24px)",
+      border: `1px solid ${post.status === "validated" ? "rgba(16,185,129,0.2)" : "rgba(0,0,0,0.05)"}`,
+      boxShadow: post.status === "validated" ? "0 12px 24px rgba(16,185,129,0.06)" : "0 4px 12px rgba(0,0,0,0.02)",
+      marginBottom: 16,
+      transition: "all 0.3s ease",
     }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14, gap: 12 }}>
@@ -475,9 +476,27 @@ function ForumContent() {
           align-items: center;
           gap: 7px;
         }
-        .forum-tab-btn.active { background: linear-gradient(135deg, #0f172a, #1e3a8a); color: white; box-shadow: 0 4px 12px rgba(15,23,42,0.3); }
+        .forum-tab-btn.active { 
+          background: linear-gradient(135deg, #0f172a, #1e3a8a); 
+          color: white; 
+          box-shadow: 0 8px 16px rgba(15,23,42,0.25); 
+          transform: translateY(-1px);
+        }
         .forum-tab-btn.inactive { background: white; color: #64748b; border: 1.5px solid #e2e8f0; }
-        .forum-tab-btn.inactive:hover { border-color: #1e3a8a; color: #1e3a8a; }
+        .forum-tab-btn.inactive:hover { background: #f8fafc; border-color: #cbd5e1; color: #1e293b; }
+
+        .forum-card-premium {
+          background: white;
+          border-radius: 24px;
+          border: 1px solid #f1f5f9;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+          transition: all 0.3s ease;
+        }
+        .forum-card-premium:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(15,98,254,0.08);
+          border-color: #dbeafe;
+        }
       `}</style>
 
       <div className="forum-outer" style={{ position: "relative", flex: 1, background: "#FBFAF5", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
@@ -490,20 +509,20 @@ function ForumContent() {
 
                 <h1 style={{
                   margin: 0,
-                  fontSize: "clamp(26px, 5vw, 40px)",
-                  fontWeight: 500,
-                  lineHeight: 1.25,
-                  paddingBottom: "12px",
-                  letterSpacing: "-0.025em",
-                  background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  maxWidth: "700px"
+                  fontSize: "clamp(26px, 4.5vw, 44px)",
+                  fontWeight: 600,
+                  lineHeight: 1.1,
+                  paddingBottom: "8px",
+                  letterSpacing: "-0.04em",
+                  color: "#0B1E5E",
                 }}>
-                  Comparte, aprende y conecta con tu grupo
+                  Foro de la Comunidad
                 </h1>
+                <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "#64748b", margin: 0, maxWidth: 600, lineHeight: 1.6 }}>
+                  Comparte tus aprendizajes, resuelve dudas y colabora con otros estudiantes en su camino financiero.
+                </p>
               </div>
-              <div style={{ display: "flex", gap: 14, alignItems: "flex-start", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
                 <StreakWidget streak={streak} showCalendar activeDays={weeklyActiveDays} />
               </div>
             </div>
@@ -553,38 +572,51 @@ function ForumContent() {
                 {/* Today's challenge banner */}
                 {todayChallenge && (
                   <div style={{
-                    background: "linear-gradient(135deg, #0f172a, #1e1b4b)",
-                    borderRadius: 28, padding: "24px 32px", marginBottom: 24,
-                    display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16,
-                    border: "1px solid rgba(255,255,255,0.06)", boxShadow: "0 16px 40px rgba(0,0,0,0.25)"
+                    background: "linear-gradient(165deg, #0f172a 0%, #1e3a8a 100%)",
+                    borderRadius: 32, padding: "clamp(24px, 4vw, 40px)", marginBottom: 32,
+                    display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 24,
+                    position: "relative", overflow: "hidden",
+                    border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 24px 48px -12px rgba(15,98,254,0.4)"
                   }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 11, fontWeight: 500, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Reto de hoy</div>
-                      <h2 style={{ fontSize: "clamp(16px, 2vw, 20px)", fontWeight: 500, color: "white", margin: "0 0 6px" }}>{todayChallenge.title}</h2>
-                      <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.5, maxWidth: 500 }}>{todayChallenge.description.slice(0, 120)}...</p>
+                    {/* Decorative elements */}
+                    <div style={{ position: "absolute", top: "-20%", right: "-10%", width: 300, height: 300, background: "radial-gradient(circle, rgba(96,165,250,0.15) 0%, transparent 70%)", borderRadius: "50%" }} />
+                    <div style={{ position: "absolute", bottom: "-10%", left: "5%", width: 200, height: 200, background: "radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)", borderRadius: "50%" }} />
+                    
+                    <div style={{ flex: 1, position: "relative", zIndex: 1 }}>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", borderRadius: 99, padding: "4px 12px", marginBottom: 16 }}>
+                        <Target size={12} color="#fbbf24" fill="#fbbf24" />
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "#fbbf24", textTransform: "uppercase", letterSpacing: "0.05em" }}>Reto de hoy</span>
+                      </div>
+                      <h2 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 600, color: "white", margin: "0 0 10px", letterSpacing: "-0.02em" }}>{todayChallenge.title}</h2>
+                      <p style={{ fontSize: "clamp(14px, 1.2vw, 15px)", color: "rgba(255,255,255,0.7)", margin: 0, lineHeight: 1.6, maxWidth: 540 }}>{todayChallenge.description}</p>
                     </div>
                     <Link href="/reto-diario" style={{
-                      display: "flex", alignItems: "center", gap: 7, padding: "11px 20px",
+                      position: "relative", zIndex: 1,
+                      display: "flex", alignItems: "center", gap: 10, padding: "14px 28px",
                       background: "white", color: "#0f172a",
-                      borderRadius: 12, fontWeight: 500, fontSize: 13, textDecoration: "none",
-                      boxShadow: "0 4px 14px rgba(0,0,0,0.2)", whiteSpace: "nowrap"
-                    }}>
-                      <Target size={15} /> Hacer el reto
+                      borderRadius: 16, fontWeight: 600, fontSize: 15, textDecoration: "none",
+                      boxShadow: "0 12px 24px rgba(0,0,0,0.2)", transition: "all 0.2s",
+                    }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 16px 32px rgba(0,0,0,0.25)" }} 
+                       onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 12px 24px rgba(0,0,0,0.2)" }}>
+                      Participar ahora <ChevronRight size={18} />
                     </Link>
                   </div>
                 )}
 
                 {/* Teacher summary */}
                 {isTeacher && (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 20 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 32 }}>
                     {[
-                      { label: "Evidencias hoy", value: evidencePosts.length, color: "#0F62FE" },
-                      { label: "Validadas", value: validatedToday, color: "#10b981" },
-                      { label: "Pendientes", value: pendingToday, color: "#f59e0b" },
-                    ].map(({ label, value, color }) => (
-                      <div key={label} style={{ background: "white", borderRadius: 14, padding: "16px 20px", border: "1.5px solid #f1f5f9", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-                        <div style={{ fontSize: 28, fontWeight: 500, color }}>{value}</div>
-                        <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>{label}</div>
+                      { label: "Evidencias hoy", value: evidencePosts.length, color: "#0F62FE", bg: "rgba(15,98,254,0.05)", icon: <NoteIcon size={24} color="#0F62FE" /> },
+                      { label: "Validadas", value: validatedToday, color: "#10b981", bg: "rgba(16,185,129,0.05)", icon: <CheckCircle size={24} color="#10b981" /> },
+                      { label: "Pendientes", value: pendingToday, color: "#F59E0B", bg: "rgba(245,158,11,0.05)", icon: <AlertCircle size={24} color="#F59E0B" /> },
+                    ].map(({ label, value, color, bg, icon }) => (
+                      <div key={label} style={{ background: "white", borderRadius: 24, padding: "24px", border: "1px solid #f1f5f9", boxShadow: "0 4px 12px rgba(0,0,0,0.02)", display: "flex", alignItems: "center", gap: 16 }}>
+                        <div style={{ width: 48, height: 48, borderRadius: 16, background: bg, display: "flex", alignItems: "center", justifyContent: "center" }}>{icon}</div>
+                        <div>
+                          <div style={{ fontSize: 24, fontWeight: 700, color, lineHeight: 1 }}>{value}</div>
+                          <div style={{ fontSize: 13, color: "#64748b", fontWeight: 500, marginTop: 4 }}>{label}</div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -713,28 +745,16 @@ function ForumContent() {
                       const tc = getTopicColors(thread.topic?.slug || "")
                       const accentBorder = thread.isPinned ? "#f59e0b" : tc.accent
                       return (
-                        <Link key={thread.id} href={`/forum/thread/${thread.id}`} style={{
+                        <Link key={thread.id} href={`/forum/thread/${thread.id}`} className="forum-card-premium" style={{
                           padding: "clamp(16px, 3vw, 24px) clamp(16px, 3vw, 24px) clamp(16px, 3vw, 24px) 0",
-                          background: "#fff", borderRadius: 24,
-                          border: "1px solid rgba(0,0,0,0.04)",
-                          borderLeft: `4px solid ${accentBorder}`,
-                          boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1), 0 4px 12px rgba(0,0,0,0.03)", textDecoration: "none",
-                          display: "block", transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                          borderLeft: `5px solid ${accentBorder}`,
+                          textDecoration: "none",
+                          display: "block",
                           overflow: "hidden",
                           animation: `fadeInUp 0.4s ease ${i * 0.04}s both`,
-                          position: "relative"
-                        }}
-                          onMouseEnter={e => {
-                            e.currentTarget.style.transform = "translateY(-4px)"
-                            e.currentTarget.style.boxShadow = `0 24px 48px -12px ${tc.shadow}, 0 8px 16px rgba(0,0,0,0.04)`
-                            e.currentTarget.style.borderColor = tc.accent
-                          }}
-                          onMouseLeave={e => {
-                            e.currentTarget.style.transform = "translateY(0)"
-                            e.currentTarget.style.boxShadow = "0 16px 32px -8px rgba(15,98,254,0.1), 0 4px 12px rgba(0,0,0,0.03)"
-                            e.currentTarget.style.borderColor = "rgba(0,0,0,0.04)"
-                          }}
-                        >
+                          position: "relative",
+                          marginBottom: 12
+                        }}>
                           <div style={{ display: "flex", alignItems: "stretch", width: "100%" }}>
                             <div style={{ width: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderRight: "1px solid #f1f5f9", flexShrink: 0 }}>
                               <div style={{ fontSize: 16, fontWeight: 500, color: "#1e3a8a" }}>{thread.score}</div>

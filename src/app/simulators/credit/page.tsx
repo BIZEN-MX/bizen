@@ -64,8 +64,8 @@ function ScoreGauge({ score }: { score: number }) {
           return <circle key={i} cx={cx} cy={cy} r="4" fill="white" stroke={b.col} strokeWidth="2" />
         })}
         {/* Score value */}
-        <text x="100" y="88" textAnchor="middle" fontSize="34" fontWeight="700" fill={color} fontFamily="-apple-system,sans-serif" style={{ transition: 'fill 0.4s' }}>{score}</text>
-        <text x="100" y="108" textAnchor="middle" fontSize="11" fontWeight="700" fill={color} fontFamily="-apple-system,sans-serif"
+        <text x="100" y="88" textAnchor="middle" fontSize="38" fontWeight="700" fill={color} fontFamily="-apple-system,sans-serif" style={{ transition: 'fill 0.4s' }}>{score}</text>
+        <text x="100" y="108" textAnchor="middle" fontSize="13" fontWeight="700" fill={color} fontFamily="-apple-system,sans-serif"
           style={{ transition: 'fill 0.4s', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{text}</text>
       </svg>
       {/* Color band legend */}
@@ -91,22 +91,52 @@ function Slider({ label, value, onChange, min, max, step = 1, prefix = '', suffi
 }) {
   const pct = ((value - min) / (max - min)) * 100
   return (
-    <div style={{ marginBottom: 20 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-        <span style={{ fontSize: 11, fontWeight: 500, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
-        <span style={{ fontSize: 16, fontWeight: 600, color, background: `${color}12`, padding: '1px 10px', borderRadius: 7 }}>{prefix}{value.toLocaleString('es-MX')}{suffix}</span>
+    <div style={{ marginBottom: 20, userSelect: 'none' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
+        <span style={{ fontSize: 18, fontWeight: 700, color, background: `${color}12`, padding: '2px 12px', borderRadius: 8 }}>{prefix}{value.toLocaleString('es-MX')}{suffix}</span>
       </div>
-      <div style={{ position: 'relative', height: 6, borderRadius: 99, background: '#e2e8f0' }}>
-        <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${pct}%`, background: `linear-gradient(90deg,${color}88,${color})`, borderRadius: 99, transition: 'width 0.15s' }} />
-        <input type="range" min={min} max={max} step={step} value={value} onChange={e => onChange(Number(e.target.value))}
-          style={{ position: 'absolute', inset: '-6px 0', width: '100%', height: 18, opacity: 0, cursor: 'pointer', margin: 0 }} />
-        <div style={{ position: 'absolute', top: '50%', left: `${pct}%`, transform: 'translate(-50%,-50%)', width: 18, height: 18, borderRadius: '50%', background: color, border: '3px solid white', boxShadow: `0 2px 8px ${color}60`, transition: 'left 0.15s', pointerEvents: 'none' }} />
+      <div style={{ position: 'relative', height: 8, borderRadius: 99, background: '#e2e8f0' }}>
+        <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${pct}%`, background: `linear-gradient(90deg,${color}88,${color})`, borderRadius: 99 }} />
+        <input 
+          type="range" 
+          min={min} 
+          max={max} 
+          step={step} 
+          value={value} 
+          onChange={e => onChange(Number(e.target.value))}
+          style={{ 
+            position: 'absolute', 
+            inset: '-12px 0', 
+            width: '100%', 
+            height: 32, 
+            opacity: 0, 
+            cursor: 'pointer', 
+            margin: 0,
+            zIndex: 10,
+            touchAction: 'none' // Important for touch devices
+          }} 
+        />
+        <div style={{ 
+          position: 'absolute', 
+          top: '50%', 
+          left: `${pct}%`, 
+          transform: 'translate(-50%,-50%)', 
+          width: 22, 
+          height: 22, 
+          borderRadius: '50%', 
+          background: color, 
+          border: '3.5px solid white', 
+          boxShadow: `0 3px 12px ${color}50`, 
+          pointerEvents: 'none',
+          zIndex: 5
+        }} />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
-        <span style={{ fontSize: 10, color: '#94a3b8' }}>{prefix}{min}{suffix}</span>
-        <span style={{ fontSize: 10, color: '#94a3b8' }}>{prefix}{max}{suffix}</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
+        <span style={{ fontSize: 12, color: '#94a3b8' }}>{prefix}{min}{suffix}</span>
+        <span style={{ fontSize: 12, color: '#94a3b8' }}>{prefix}{max}{suffix}</span>
       </div>
-      {hint && <p style={{ fontSize: 11, color: '#94a3b8', margin: '4px 0 0' }}>{hint}</p>}
+      {hint && <p style={{ fontSize: 13, color: '#94a3b8', margin: '6px 0 0', lineHeight: 1.5 }}>{hint}</p>}
     </div>
   )
 }
@@ -114,19 +144,19 @@ function Slider({ label, value, onChange, min, max, step = 1, prefix = '', suffi
 // ── Factor Bar ─────────────────────────────────────────────────────────────
 function FactorBar({ label, pct, weight, color, icon: Icon, tip }: { label: string; pct: number; weight: string; color: string; icon: any; tip: string }) {
   return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Icon size={13} color={color} />
-          <span style={{ fontSize: 12, fontWeight: 500, color: '#334155' }}>{label}</span>
-          <span style={{ fontSize: 10, color: '#94a3b8' }}>({weight})</span>
+    <div style={{ marginBottom: 18 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Icon size={14} color={color} />
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#334155' }}>{label}</span>
+          <span style={{ fontSize: 12, color: '#94a3b8' }}>({weight})</span>
         </div>
-        <span style={{ fontSize: 12, fontWeight: 500, color }}>{Math.round(pct)}%</span>
+        <span style={{ fontSize: 14, fontWeight: 700, color }}>{Math.round(pct)}%</span>
       </div>
-      <div style={{ height: 6, borderRadius: 99, background: '#f1f5f9' }}>
+      <div style={{ height: 8, borderRadius: 99, background: '#f1f5f9' }}>
         <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 99, transition: 'width 0.5s ease' }} />
       </div>
-      <p style={{ fontSize: 10, color: '#94a3b8', margin: '3px 0 0' }}>{tip}</p>
+      <p style={{ fontSize: 12, color: '#94a3b8', margin: '6px 0 0', lineHeight: 1.5 }}>{tip}</p>
     </div>
   )
 }
@@ -136,26 +166,26 @@ function MetricCard({ label, value, sub, bg, border, tc, large }: { label: strin
   const [hov, setHov] = useState(false)
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: bg, border: `1.5px solid ${border}`, borderRadius: 18, padding: '16px 18px', flex: '1 1 130px', transform: hov ? 'translateY(-2px)' : 'none', boxShadow: hov ? `0 6px 20px ${border}60` : '0 1px 4px rgba(0,0,0,0.04)', transition: 'all 0.2s' }}>
-      <p style={{ fontSize: 10, fontWeight: 500, color: tc, textTransform: 'uppercase', letterSpacing: '0.07em', margin: '0 0 5px', opacity: 0.7 }}>{label}</p>
-      <p style={{ fontSize: large ? 26 : 20, fontWeight: 600, color: tc, margin: '0 0 2px', letterSpacing: '-0.02em' }}>{value}</p>
-      {sub && <p style={{ fontSize: 11, color: tc, margin: 0, opacity: 0.6 }}>{sub}</p>}
+      style={{ background: bg, border: `1.5px solid ${border}`, borderRadius: 20, padding: '20px 22px', flex: '1 1 150px', transform: hov ? 'translateY(-3px)' : 'none', boxShadow: hov ? `0 8px 24px ${border}60` : '0 1px 4px rgba(0,0,0,0.04)', transition: 'all 0.2s' }}>
+      <p style={{ fontSize: 12, fontWeight: 600, color: tc, textTransform: 'uppercase', letterSpacing: '0.07em', margin: '0 0 6px', opacity: 0.8 }}>{label}</p>
+      <p style={{ fontSize: large ? 32 : 26, fontWeight: 700, color: tc, margin: '0 0 2px', letterSpacing: '-0.02em' }}>{value}</p>
+      {sub && <p style={{ fontSize: 13, color: tc, margin: 0, opacity: 0.7 }}>{sub}</p>}
     </div>
   )
 }
 
 // ── Insight Box ────────────────────────────────────────────────────────────
 function InsightBox({ color, children }: { color: string; children: React.ReactNode }) {
-  return <div style={{ background: `${color}0d`, border: `1px solid ${color}25`, borderRadius: 14, padding: '13px 15px', marginTop: 12, fontSize: 13, color: '#334155', lineHeight: 1.7 }}>{children}</div>
+  return <div style={{ background: `${color}0d`, border: `1px solid ${color}25`, borderRadius: 16, padding: '16px 20px', marginTop: 14, fontSize: 15, color: '#334155', lineHeight: 1.7 }}>{children}</div>
 }
 
 // ── Dark Panel ─────────────────────────────────────────────────────────────
 function DarkPanel({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
-    <div style={{ background: 'linear-gradient(135deg,#0f172a,#1e293b)', borderRadius: 18, padding: '18px 22px', color: 'white', marginBottom: 18 }}>
-      <p style={{ fontSize: 11, fontWeight: 500, color: '#64748b', margin: '0 0 5px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</p>
-      <p style={{ fontSize: 28, fontWeight: 600, margin: '0 0 4px', letterSpacing: '-0.02em' }}>{value}</p>
-      <p style={{ fontSize: 13, color: '#94a3b8', margin: 0 }}>{sub}</p>
+    <div style={{ background: 'linear-gradient(135deg,#0f172a,#1e293b)', borderRadius: 20, padding: '22px 28px', color: 'white', marginBottom: 20 }}>
+      <p style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8', margin: '0 0 6px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</p>
+      <p style={{ fontSize: 32, fontWeight: 700, margin: '0 0 6px', letterSpacing: '-0.02em' }}>{value}</p>
+      <p style={{ fontSize: 15, color: '#94a3b8', margin: 0 }}>{sub}</p>
     </div>
   )
 }
@@ -170,16 +200,16 @@ function MythVsReality() {
     { m: 'Consultar mi propio score baja mi puntaje.', r: 'Falso. Las consultas personales (Soft Inquiries) no afectan tu score. Solo las consultas de bancos para darte crédito (Hard Inquiries) lo afectan.' },
   ]
   return (
-    <div style={{ background: 'white', borderRadius: 20, border: '1px solid #e2e8f0', padding: '24px', marginBottom: 28 }}>
-      <p style={{ fontSize: 12, fontWeight: 500, color: '#0B71FE', margin: '0 0 16px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Mito vs. Realidad</p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ background: 'white', borderRadius: 24, border: '1px solid #e2e8f0', padding: '28px', marginBottom: 32 }}>
+      <p style={{ fontSize: 14, fontWeight: 700, color: '#0B71FE', margin: '0 0 18px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Mito vs. Realidad</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {myths.map((item, i) => (
-          <button key={i} onClick={() => setActive(i)} style={{ textAlign: 'left', background: active === i ? '#eff6ff' : 'transparent', border: active === i ? '1.5px solid #0B71FE' : '1.5px solid #f1f5f9', borderRadius: 14, padding: '16px', cursor: 'pointer', transition: 'all 0.2s' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: active === i ? 8 : 0 }}>
-              <div style={{ width: 24, height: 24, borderRadius: '50%', background: active === i ? '#0B71FE' : '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, color: active === i ? 'white' : '#94a3b8' }}>{i + 1}</div>
-              <span style={{ fontSize: 14, color: active === i ? '#1e293b' : '#64748b', fontWeight: 500 }}>{item.m}</span>
+          <button key={i} onClick={() => setActive(i)} style={{ textAlign: 'left', background: active === i ? '#eff6ff' : 'transparent', border: active === i ? '2px solid #0B71FE' : '1.5px solid #f1f5f9', borderRadius: 16, padding: '18px', cursor: 'pointer', transition: 'all 0.2s' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: active === i ? 10 : 0 }}>
+              <div style={{ width: 28, height: 28, borderRadius: '50%', background: active === i ? '#0B71FE' : '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: active === i ? 'white' : '#94a3b8' }}>{i + 1}</div>
+              <span style={{ fontSize: 16, color: active === i ? '#1e293b' : '#64748b', fontWeight: 600 }}>{item.m}</span>
             </div>
-            {active === i && <p style={{ fontSize: 13, color: '#475569', margin: '0 0 0 34px', lineHeight: 1.6, borderLeft: '2px solid #0B71FE', paddingLeft: 12 }}>{item.r}</p>}
+            {active === i && <p style={{ fontSize: 15, color: '#475569', margin: '0 0 0 40px', lineHeight: 1.7, borderLeft: '3px solid #0B71FE', paddingLeft: 14 }}>{item.r}</p>}
           </button>
         ))}
       </div>
@@ -198,23 +228,23 @@ function QuickTrivia() {
 
   const isCorrect = selected === questions[step].c
   return (
-    <div style={{ background: 'linear-gradient(135deg,#0B71FE,#1e40af)', borderRadius: 20, padding: '24px', color: 'white' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Trivia Rápida</p>
-        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>{step + 1} de {questions.length}</p>
+    <div style={{ background: 'linear-gradient(135deg,#0B71FE,#1e40af)', borderRadius: 24, padding: '28px', color: 'white' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+        <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Trivia Rápida</p>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{step + 1} de {questions.length}</p>
       </div>
-      <p style={{ fontSize: 16, marginBottom: 20, lineHeight: 1.5 }}>{questions[step].q}</p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <p style={{ fontSize: 18, fontWeight: 600, marginBottom: 24, lineHeight: 1.5 }}>{questions[step].q}</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {questions[step].a.map((opt, i) => (
-          <button key={i} onClick={() => setSelected(i)} style={{ padding: '14px', borderRadius: 12, border: 'none', background: selected === i ? (i === questions[step].c ? '#10b981' : '#ef4444') : 'rgba(255,255,255,0.12)', color: 'white', cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s', fontSize: 14 }}>
+          <button key={i} onClick={() => setSelected(i)} style={{ padding: '16px', borderRadius: 14, border: 'none', background: selected === i ? (i === questions[step].c ? '#10b981' : '#ef4444') : 'rgba(255,255,255,0.15)', color: 'white', cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s', fontSize: 16, fontWeight: 500 }}>
             {opt}
           </button>
         ))}
       </div>
       {selected !== null && (
-        <div style={{ marginTop: 20, animation: 'fadeUp 0.3s ease' }}>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginBottom: 14 }}>{isCorrect ? '¡Correcto! Vas por buen camino.' : 'No exactamente. El historial de pagos es el factor más pesado.'}</p>
-          <button onClick={() => { setStep((step + 1) % questions.length); setSelected(null); }} style={{ background: 'white', color: '#0B71FE', border: 'none', borderRadius: 10, padding: '8px 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Siguiente pregunta</button>
+        <div style={{ marginTop: 24, animation: 'fadeUp 0.3s ease' }}>
+          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.9)', marginBottom: 18, lineHeight: 1.6 }}>{isCorrect ? '¡Correcto! Vas por buen camino.' : 'No exactamente. El historial de pagos es el factor más importante.'}</p>
+          <button onClick={() => { setStep((step + 1) % questions.length); setSelected(null); }} style={{ background: 'white', color: '#0B71FE', border: 'none', borderRadius: 12, padding: '10px 20px', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>Siguiente pregunta</button>
         </div>
       )}
     </div>
@@ -230,9 +260,9 @@ function Accordion({ title, children, icon: Icon, color }: { title: string; chil
           <div style={{ width: 34, height: 34, borderRadius: 10, background: `${color}12`, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${color}20` }}>
             <Icon size={16} color={color} />
           </div>
-          <span style={{ fontSize: 14, fontWeight: 500, color: '#1e293b' }}>{title}</span>
+          <span style={{ fontSize: 16, fontWeight: 600, color: '#1e293b' }}>{title}</span>
         </div>
-        {open ? <ChevronUp size={16} color="#94a3b8" /> : <ChevronDown size={16} color="#94a3b8" />}
+        {open ? <ChevronUp size={18} color="#94a3b8" /> : <ChevronDown size={18} color="#94a3b8" />}
       </button>
       {open && <div style={{ padding: '4px 20px 18px', background: `${color}04`, fontSize: 13, color: '#475569', lineHeight: 1.75 }}>{children}</div>}
     </div>
@@ -269,10 +299,10 @@ function TermTooltip({ term, definition }: { term: string; definition: string })
 
 // ── Onboarding Tour ───────────────────────────────────────────────────────
 const TOUR_STEPS = [
-  { title: '¡Bienvenido al Simulador de Crédito!', body: 'Aquí aprenderás cómo funciona el crédito en México. Todo es educativo — sin dinero real involucrado.', emoji: '👋' },
-  { title: 'Explora las 5 herramientas', body: 'Cada pestaña es un simulador diferente. Empieza por BIZEN Score para entender tu perfil crediticio y qué lo afecta.', emoji: '🗂️' },
-  { title: 'Ajusta tus hábitos financieros', body: 'Mueve los sliders y observa cómo tus decisiones cotidianas cambian tu score en tiempo real. ¡Intenta llegar a Excelente!', emoji: '🎛️' },
-  { title: 'Ve el impacto al instante', body: 'El marcador reacciona a cada ajuste. Intenta llevar tu score a 750 o más. Cuando termines, guarda tu simulación.', emoji: '🎯' },
+  { title: '¡Bienvenido al Simulador de Crédito!', body: 'Aquí aprenderás cómo funciona el crédito en México. Todo es educativo — sin dinero real involucrado.', icon: Shield },
+  { title: 'Explora las 5 herramientas', body: 'Cada pestaña es un simulador diferente. Empieza por BIZEN Score para entender tu perfil crediticio y qué lo afecta.', icon: Layers },
+  { title: 'Ajusta tus hábitos financieros', body: 'Mueve los sliders y observa cómo tus decisiones cotidianas cambian tu score en tiempo real. ¡Intenta llegar a Excelente!', icon: Activity },
+  { title: 'Ve el impacto al instante', body: 'El marcador reacciona a cada ajuste. Intenta llevar tu score a 750 o más. Cuando termines, guarda tu simulación.', icon: Target },
 ]
 
 function OnboardingTour({ onDone }: { onDone: () => void }) {
@@ -297,17 +327,19 @@ function OnboardingTour({ onDone }: { onDone: () => void }) {
             <div key={i} style={{ height: 4, flex: 1, borderRadius: 99, background: i <= step ? '#0B71FE' : '#e2e8f0', transition: 'background 0.35s' }} />
           ))}
         </div>
-        <div style={{ fontSize: 38, marginBottom: 12, lineHeight: 1 }}>{cur.emoji}</div>
+        <div style={{ width: 56, height: 56, borderRadius: 16, background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+          <cur.icon size={32} color="#0B71FE" />
+        </div>
         <p style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 10px', letterSpacing: '-0.02em' }}>{cur.title}</p>
         <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.7, margin: '0 0 24px' }}>{cur.body}</p>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <button onClick={finish} style={{ background: 'none', border: 'none', fontSize: 13, color: '#94a3b8', cursor: 'pointer', padding: '8px 0', fontFamily: 'inherit' }}>Saltar tour</button>
           <div style={{ display: 'flex', gap: 10 }}>
             {step > 0 && (
-              <button onClick={() => setStep(step - 1)} style={{ background: '#f1f5f9', border: 'none', borderRadius: 10, padding: '10px 18px', fontSize: 13, fontWeight: 600, color: '#64748b', cursor: 'pointer', fontFamily: 'inherit' }}>← Anterior</button>
+              <button onClick={() => setStep(step - 1)} style={{ background: '#f1f5f9', border: 'none', borderRadius: 10, padding: '10px 18px', fontSize: 13, fontWeight: 600, color: '#64748b', cursor: 'pointer', fontFamily: 'inherit' }}>Anterior</button>
             )}
             <button onClick={isLast ? finish : () => setStep(step + 1)} style={{ background: 'linear-gradient(135deg,#0B71FE,#1e40af)', border: 'none', borderRadius: 10, padding: '10px 22px', fontSize: 13, fontWeight: 700, color: 'white', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(11,113,254,0.35)' }}>
-              {isLast ? '¡Empezar! 🚀' : 'Siguiente →'}
+              {isLast ? '¡Empezar!' : 'Siguiente'}
             </button>
           </div>
         </div>
@@ -318,9 +350,9 @@ function OnboardingTour({ onDone }: { onDone: () => void }) {
 
 // ── Scenario Presets ──────────────────────────────────────────────────────
 const SCENARIOS = [
-  { emoji: '🎓', label: 'Estudiante Típico', color: '#8b5cf6', values: { onTime: 60, util: 70, yrHist: 0, mixCount: 1, inquiries: 2 } },
-  { emoji: '📈', label: 'En Construcción', color: '#3b82f6', values: { onTime: 85, util: 35, yrHist: 2, mixCount: 2, inquiries: 1 } },
-  { emoji: '🏆', label: 'Perfil Ideal', color: '#0d9488', values: { onTime: 100, util: 10, yrHist: 7, mixCount: 3, inquiries: 0 } },
+  { icon: BookOpen, label: 'Estudiante Típico', color: '#8b5cf6', values: { onTime: 60, util: 70, yrHist: 0, mixCount: 1, inquiries: 2 } },
+  { icon: TrendingUp, label: 'En Construcción', color: '#3b82f6', values: { onTime: 85, util: 35, yrHist: 2, mixCount: 2, inquiries: 1 } },
+  { icon: Award, label: 'Perfil Ideal', color: '#0d9488', values: { onTime: 100, util: 10, yrHist: 7, mixCount: 3, inquiries: 0 } },
 ]
 
 const TOOLTIP_STYLE = { background: 'rgba(15,23,42,0.92)', border: 'none', borderRadius: 12, color: 'white', fontSize: 12, fontWeight: 600 }
@@ -521,8 +553,8 @@ function CreditSimulatorContent() {
               </button>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(28px,5.5vw,60px)', fontWeight: 700, margin: '0 0 14px', background: 'linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.04em', lineHeight: 1.15 }}>BIZEN Score</h1>
-            <p style={{ fontSize: 'clamp(15px,2vw,18px)', color: '#64748b', margin: 0, lineHeight: 1.6, maxWidth: 650 }}>Aprende cómo funciona el <TermTooltip term="Buró de Crédito" definition="Base de datos que registra todos tus créditos y pagos. Estar en Buró es normal — lo que importa es tu historial." />, construye un buen historial y entiende el costo real de las deudas — todo en un solo lugar.</p>
+            <h1 style={{ fontSize: 'clamp(32px,6.5vw,72px)', fontWeight: 800, margin: '0 0 16px', background: 'linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.04em', lineHeight: 1.1 }}>BIZEN Score</h1>
+            <p style={{ fontSize: 'clamp(16px,2.2vw,20px)', color: '#64748b', margin: 0, lineHeight: 1.7, maxWidth: 800 }}>Aprende cómo funciona el <TermTooltip term="Buró de Crédito" definition="Base de datos que registra todos tus créditos y pagos. Estar en Buró es normal — lo que importa es tu historial." />, construye un buen historial y entiende el costo real de las deudas — todo de forma sencilla y visual.</p>
           </div>
 
           {/* Disclaimer */}
@@ -530,8 +562,8 @@ function CreditSimulatorContent() {
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(217,119,6,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <AlertTriangle size={18} color="#d97706" />
             </div>
-            <p style={{ fontSize: 14, color: '#92400e', margin: 0, lineHeight: 1.65 }}>
-              <span style={{ color: '#d97706', fontWeight: 500 }}>Propósito educativo:</span> Los resultados son estimaciones con fines de aprendizaje. Las fórmulas del Buró de Crédito reales son propietarias y pueden variar.
+            <p style={{ fontSize: 16, color: '#92400e', margin: 0, lineHeight: 1.65 }}>
+              <span style={{ color: '#d97706', fontWeight: 600 }}>Propósito educativo:</span> Los resultados son estimaciones para que aprendas jugando. Las fórmulas reales son secretas de los bancos, pero aquí verás cómo funcionan en la vida real.
             </p>
           </div>
 
@@ -555,9 +587,9 @@ function CreditSimulatorContent() {
               const visited = visitedTabs.has(t.id)
               return (
                 <button key={t.id} onClick={() => handleTabChange(t.id)} className={active ? '' : 'credit-tab-btn'}
-                  style={{ border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, fontWeight: 600, fontSize: 13, borderRadius: 14, padding: '10px 16px', whiteSpace: 'nowrap', fontFamily: 'inherit', background: active ? `linear-gradient(135deg,${t.color},${t.color}cc)` : visited ? `${t.color}12` : '#F1F5F9', color: active ? 'white' : visited ? t.color : '#64748b', boxShadow: active ? `0 4px 14px ${t.color}45` : 'none', transition: 'all 0.2s', position: 'relative' }}>
-                  <span style={{ width: 18, height: 18, borderRadius: '50%', background: active ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.06)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{idx + 1}</span>
-                  <Icon size={13} />{t.label}
+                  style={{ border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700, fontSize: 14, borderRadius: 16, padding: '12px 20px', whiteSpace: 'nowrap', fontFamily: 'inherit', background: active ? `linear-gradient(135deg,${t.color},${t.color}cc)` : visited ? `${t.color}12` : '#F1F5F9', color: active ? 'white' : visited ? t.color : '#64748b', boxShadow: active ? `0 6px 18px ${t.color}45` : 'none', transition: 'all 0.2s', position: 'relative' }}>
+                  <span style={{ width: 22, height: 22, borderRadius: '50%', background: active ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.06)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, flexShrink: 0 }}>{idx + 1}</span>
+                  <Icon size={14} />{t.label}
                   {visited && !active && <span style={{ width: 5, height: 5, borderRadius: '50%', background: t.color, position: 'absolute', top: 6, right: 6 }} />}
                 </button>
               )
@@ -597,7 +629,9 @@ function CreditSimulatorContent() {
                       {SCENARIOS.map(s => (
                         <button key={s.label} className="scenario-card" onClick={() => applyScenario(s.values)}
                           style={{ flex: '1 1 120px', background: `${s.color}0d`, border: `1.5px solid ${s.color}28`, borderRadius: 14, padding: '12px 10px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', textAlign: 'center' }}>
-                          <div style={{ fontSize: 22, marginBottom: 4 }}>{s.emoji}</div>
+                          <div style={{ width: 32, height: 32, borderRadius: '50%', background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 6px' }}>
+                            <s.icon size={16} color={s.color} />
+                          </div>
                           <p style={{ fontSize: 12, fontWeight: 700, color: s.color, margin: 0, lineHeight: 1.3 }}>{s.label}</p>
                         </button>
                       ))}
@@ -663,7 +697,7 @@ function CreditSimulatorContent() {
                     </button>
                     {expandExplain.cc && (
                       <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 14, padding: '14px 16px', fontSize: 13, color: '#0c4a6e', lineHeight: 1.7, marginBottom: 14 }}>
-                        💡 Significa que tu deuda de <strong>{fmt(ccBal)}</strong> te costará <strong>{fmt(ccRes.totalInterestPaid)}</strong> en intereses si mantienes un pago de {fmt(ccPay)}/mes. Eso es <strong>{(ccRes.totalPaid / Math.max(ccBal, 1)).toFixed(1)}x</strong> el valor original. Subir tu pago mensual es la forma más rápida de ahorrar.
+                        Significa que tu deuda de <strong>{fmt(ccBal)}</strong> te costará <strong>{fmt(ccRes.totalInterestPaid)}</strong> en intereses si mantienes un pago de {fmt(ccPay)}/mes. Eso es <strong>{(ccRes.totalPaid / Math.max(ccBal, 1)).toFixed(1)}x</strong> el valor original. Subir tu pago mensual es la forma más rápida de ahorrar.
                       </div>
                     )}
                     <p style={{ fontSize: 11, fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Curva de deuda: tu pago vs. mínimo</p>
@@ -716,7 +750,7 @@ function CreditSimulatorContent() {
                     </button>
                     {expandExplain.loan && (
                       <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 14, padding: '14px 16px', fontSize: 13, color: '#1e3a5f', lineHeight: 1.7, marginBottom: 14 }}>
-                        💡 Por un préstamo de <strong>{fmt(lP)}</strong> a <strong>{lT} meses</strong>, pagarás <strong>{fmt(loanRes.monthlyPayment)}</strong> cada mes. Al final habrás devuelto <strong>{fmt(loanRes.totalPaid)}</strong> — es decir, <strong>{fmt(loanRes.totalInterestPaid)}</strong> más de lo que pediste solo en intereses. Reducir el plazo baja ese número.
+                        Por un préstamo de <strong>{fmt(lP)}</strong> a <strong>{lT} meses</strong>, pagarás <strong>{fmt(loanRes.monthlyPayment)}</strong> cada mes. Al final habrás devuelto <strong>{fmt(loanRes.totalPaid)}</strong> — es decir, <strong>{fmt(loanRes.totalInterestPaid)}</strong> más de lo que pediste solo en intereses. Reducir el plazo baja ese número.
                       </div>
                     )}
                     <p style={{ fontSize: 11, fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Amortización: capital vs. interés</p>
@@ -802,8 +836,8 @@ function CreditSimulatorContent() {
                           <div style={{ width: 48, height: 48, borderRadius: 16, background: `${c.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1.5px solid ${c.color}22`, marginBottom: 14, boxShadow: `0 0 20px ${c.color}18` }}>
                             <c.icon size={22} color={c.color} />
                           </div>
-                          <p style={{ fontWeight: 500, fontSize: 15, color: '#1e293b', margin: '0 0 8px', letterSpacing: '-0.01em' }}>{c.title}</p>
-                          <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.7, margin: 0 }}>{c.desc}</p>
+                          <p style={{ fontWeight: 600, fontSize: 18, color: '#1e293b', margin: '0 0 10px', letterSpacing: '-0.01em' }}>{c.title}</p>
+                          <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, margin: 0 }}>{c.desc}</p>
                         </div>
                       ))}
                     </div>
@@ -878,8 +912,8 @@ function CreditSimulatorContent() {
                     <div style={{ width: 44, height: 44, borderRadius: 14, background: `${tip.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${tip.color}25`, marginBottom: 14, boxShadow: `0 0 20px ${tip.color}18` }}>
                       <Icon size={20} color={tip.color} />
                     </div>
-                    <p style={{ fontWeight: 500, fontSize: 14, color: '#1e293b', margin: '0 0 6px', letterSpacing: '-0.01em' }}>{tip.title}</p>
-                    <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.65, margin: 0 }}>{tip.text}</p>
+                    <p style={{ fontWeight: 600, fontSize: 16, color: '#1e293b', margin: '0 0 8px', letterSpacing: '-0.01em' }}>{tip.title}</p>
+                    <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.7, margin: 0 }}>{tip.text}</p>
                   </div>
                 )
               })}

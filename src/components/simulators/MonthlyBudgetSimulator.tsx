@@ -31,7 +31,9 @@ import {
   CreditCard,
   PiggyBank,
   Loader2,
+  Send,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
 import { SaveRunButton } from './SaveRunButton';
@@ -287,7 +289,7 @@ function MetricCard({
         background: c.iconBg,
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
       }}>
-        {React.cloneElement(icon as React.ReactElement, { size: 20, color: c.iconColor, strokeWidth: 2 })}
+        {(React.cloneElement(icon as any, { size: 20, color: c.iconColor, strokeWidth: 2 }) as any)}
       </div>
       <div>
         <div style={{ fontSize: 11, fontWeight: 700, color: c.label, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{label}</div>
@@ -301,6 +303,8 @@ function MetricCard({
 export function MonthlyBudgetSimulator() {
   const [result, setResult] = React.useState<MonthlyBudgetOutput | null>(null);
   const [loadingRun, setLoadingRun] = React.useState(false);
+  const [aiAnalysis, setAiAnalysis] = React.useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = React.useState(false);
   const searchParams = useSearchParams();
   const runId = searchParams.get('runId');
 
@@ -355,6 +359,32 @@ export function MonthlyBudgetSimulator() {
     setValue('variableExpenses', p.variableExpenses);
     setValue('savingsGoal', p.savingsGoal);
     setValue('mode', p.mode);
+  }
+
+  async function handleAskBilly() {
+    if (!result) return;
+    setIsAnalyzing(true);
+    try {
+      const response = await fetch('/api/ai/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          simulatorName: 'Presupuesto Mensual 50/30/20',
+          data: {
+            inputs: watch(),
+            outputs: result
+          }
+        })
+      });
+      const data = await response.json();
+      if (data.analysis) {
+        setAiAnalysis(data.analysis);
+      }
+    } catch (error) {
+      console.error('Error analyzing budget:', error);
+    } finally {
+      setIsAnalyzing(false);
+    }
   }
 
   React.useEffect(() => {
@@ -707,10 +737,85 @@ export function MonthlyBudgetSimulator() {
                 </div>
               )}
 
+              {/* Billy AI Analysis */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: 24,
+                padding: '24px 32px',
+                border: '1px solid rgba(255, 255, 255, 0.8)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 20,
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{
+                      width: 54, height: 54, borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #dbeafe, #eff6ff)',
+                      border: '2px solid #3b82f6',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      overflow: 'hidden'
+                    }}>
+                      <Image src="/billy_chatbot.png" alt="Billy" width={48} height={48} style={{ objectPosition: 'top' }} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Análisis de Billy</div>
+                      <div style={{ fontSize: 13, color: '#64748b' }}>IA Mentor Financiero</div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleAskBilly}
+                    disabled={isAnalyzing}
+                    style={{
+                      background: '#2563eb',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 12,
+                      padding: '10px 20px',
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      opacity: isAnalyzing ? 0.7 : 1,
+                      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.2)'
+                    }}
+                  >
+                    {isAnalyzing ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                    {aiAnalysis ? 'Actualizar Análisis' : 'Analizar mi Presupuesto'}
+                  </button>
+                </div>
+
+                {aiAnalysis ? (
+                  <div style={{
+                    fontSize: 15,
+                    color: '#1e293b',
+                    lineHeight: 1.6,
+                    fontWeight: 500,
+                    whiteSpace: 'pre-wrap',
+                    background: '#f8fafc',
+                    padding: '20px',
+                    borderRadius: 16,
+                    border: '1px solid #e2e8f0'
+                  }}>
+                    {aiAnalysis}
+                  </div>
+                ) : (
+                  <p style={{ fontSize: 14, color: '#94a3b8', fontStyle: 'italic', textAlign: 'center', margin: '10px 0' }}>
+                    Dale clic al botón para que Billy analice tu presupuesto y te de consejos de ahorro.
+                  </p>
+                )}
+              </div>
+
               <SaveRunButton
                 simulatorSlug="monthly-budget"
                 inputs={watch()}
-                outputs={result}
+                outputs={result || {}}
               />
             </>
           ) : (

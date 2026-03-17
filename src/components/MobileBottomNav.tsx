@@ -56,7 +56,6 @@ export default function MobileBottomNav() {
     router.push(path)
   }
 
-  // Main navigation items (always visible). Business Lab hidden for now — uncomment to show again.
   // Main navigation items (always visible). 
   const navItems = isStudentOrGuest ? [
     {

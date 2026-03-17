@@ -471,7 +471,7 @@ export default function CombinedSimulatorsPage() {
                           </span>
                         </div>
                         <h3 style={{ fontSize: 19, fontWeight: 600, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
-                          Simulador de Mercado (Beta)
+                          BIZEN Market
                         </h3>
                         <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7, flex: 1, marginBottom: 24 }}>
                           Aprende a invertir en la bolsa de valores real con precios al día. Compra acciones y ETFs sin usar dinero real.

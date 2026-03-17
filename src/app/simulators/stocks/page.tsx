@@ -119,7 +119,7 @@ function StockSimulatorContent() {
                 Simulador Educativo — Sin dinero real
               </div>
             </div>
-            <h1 style={{ fontSize: 'clamp(26px,4.5vw,46px)', fontWeight: 600, margin: '0 0 10px', color: '#0B1E5E', letterSpacing: '-0.03em', lineHeight: 1.1 }}>Simulador de Mercado</h1>
+            <h1 style={{ fontSize: 'clamp(26px,4.5vw,46px)', fontWeight: 600, margin: '0 0 10px', color: '#0B1E5E', letterSpacing: '-0.03em', lineHeight: 1.1 }}>BIZEN Market</h1>
             <p style={{ fontSize: 15, color: '#64748b', margin: 0, lineHeight: 1.6, maxWidth: 580 }}>Aprende a invertir en acciones y ETFs reales usando dinero virtual. Las órdenes se ejecutan al precio de cierre del día.</p>
           </div>
 

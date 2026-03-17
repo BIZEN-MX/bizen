@@ -6,6 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { isInstitutionalEmail } from "@/lib/emailValidation"
 
 const brandName = "BIZEN"
 const supportEmail = "soporte@bizen.mx"
@@ -66,8 +67,7 @@ function BIZENSignupContent() {
       if (error) throw error
       setMessage("¡Cuenta creada con éxito! Redirigiendo...")
 
-      const emailLower = email.toLowerCase()
-      const isInstitutional = emailLower.endsWith('.edu') || emailLower.includes('.edu.')
+      const isInstitutional = isInstitutionalEmail(email)
 
       setTimeout(() => {
         router.push(isInstitutional ? "/diagnostic" : "/courses")

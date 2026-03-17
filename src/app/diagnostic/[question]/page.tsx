@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import * as React from "react"
 import { diagnosticQuiz, type QuizOption, type QuizQuestion } from "@/components/diagnostic/quizData"
+import { isInstitutionalEmail } from "@/lib/emailValidation"
 import { ExamIntro, type UserInfo } from "@/components/diagnostic/ExamIntro"
 import {
   LessonScreen,
@@ -151,10 +152,7 @@ export default function DiagnosticQuestionPage() {
       return
     }
 
-    const emailLower = tempUserInfo.email.toLowerCase()
-    const domain = emailLower.split('@')[1] || ""
-    const isInstitutional = domain.endsWith('.edu') || domain.includes('.edu.')
-
+    const isInstitutional = isInstitutionalEmail(tempUserInfo.email);
     if (!isInstitutional) {
       setUserInfoError("Solo se permiten correos institucionales (.edu) para realizar este examen.")
       return

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Providers } from "@/components/Providers"
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
+import { AchievementToastProvider } from "@/components/AchievementToast"
 // Production Build Trigger - Wed Feb 18 14:50:00 CST 2026
 import "./globals.css"
 
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </AppLayout>
           </ClientLayoutWrapper>
+          <AchievementToastProvider />
         </Providers>
       </body>
     </html>

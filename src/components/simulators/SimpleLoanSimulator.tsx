@@ -23,6 +23,8 @@ import {
   CheckCircle2,
   Clock,
   Wallet,
+  Sparkles,
+  RefreshCw,
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
@@ -85,7 +87,7 @@ function MetricCard({ label, value, sub, variant = 'default', icon, large }: {
   return (
     <div style={{ background: c.bg, border: `1.5px solid ${c.border}`, borderRadius: 18, padding: large ? '20px 22px' : '18px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
       <div style={{ width: large ? 52 : 44, height: large ? 52 : 44, borderRadius: large ? 16 : 14, background: c.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        {React.cloneElement(icon as React.ReactElement, { size: large ? 24 : 20, color: c.iconColor, strokeWidth: 2 })}
+        {React.cloneElement(icon as React.ReactElement, { size: large ? 24 : 20, color: c.iconColor, strokeWidth: 2 } as any)}
       </div>
       <div>
         <div style={{ fontSize: 11, fontWeight: 700, color: c.lbl, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{label}</div>
@@ -100,6 +102,8 @@ function MetricCard({ label, value, sub, variant = 'default', icon, large }: {
 export function SimpleLoanSimulator() {
   const [result, setResult] = React.useState<SimpleLoanOutput | null>(null);
   const [loadingRun, setLoadingRun] = React.useState(false);
+  const [aiAnalysis, setAiAnalysis] = React.useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = React.useState(false);
   const searchParams = useSearchParams();
   const runId = searchParams.get('runId');
 
@@ -123,7 +127,35 @@ export function SimpleLoanSimulator() {
     fetchRun();
   }, [runId, reset]);
 
-  function onSubmit(data: SimpleLoanInput) { setResult(calculateSimpleLoan(data as any)); }
+  function onSubmit(data: SimpleLoanInput) { 
+    setResult(calculateSimpleLoan(data as any)); 
+    setAiAnalysis(null); // Clear analysis when data changes
+  }
+  
+  async function handleAnalyze() {
+    if (!result) return;
+    setIsAnalyzing(true);
+    setAiAnalysis(null);
+    try {
+      const resp = await fetch('/api/ai/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          simulatorName: 'Crédito Simple / Microcrédito',
+          inputs: watch(),
+          outputs: result
+        })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.analysis) {
+        setAiAnalysis(data.analysis);
+      }
+    } catch (err) {
+      console.error('AI Analysis failed:', err);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }
   function loadPreset() {
     const p = PRESET_VALUES.simpleLoan;
     Object.entries(p).forEach(([k, v]) => setValue(k as any, v));
@@ -204,6 +236,43 @@ export function SimpleLoanSimulator() {
                 <MetricCard label="Intereses Totales" value={currencyMXN(result.totalInterest)} sub="Solo intereses" variant="warning" icon={<TrendingDown />} />
                 <MetricCard label="Costo Total" value={currencyMXN(result.totalCost)} sub="Capital + intereses + comisiones" variant="danger" icon={<Receipt />} />
                 <MetricCard label="Plazo" value={`${watch('termMonths')} meses`} sub="Duración del crédito" variant="default" icon={<Clock />} />
+              </div>
+
+              {/* Billy AI Insight */}
+              <div style={{ background: 'linear-gradient(135deg, #0B71FE08, #7c3aed08)', border: `1.5px solid ${BLUE}22`, borderRadius: 18, padding: '18px 20px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: `linear-gradient(135deg, ${BLUE}, ${PURPLE})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Sparkles size={14} color="white" />
+                    </div>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: NAVY }}>Análisis de Billy AI</span>
+                  </div>
+                  {!aiAnalysis && !isAnalyzing && (
+                    <button onClick={handleAnalyze} style={{ border: 'none', background: 'transparent', color: BLUE, fontSize: 11, fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}>
+                      Generar Análisis
+                    </button>
+                  )}
+                  {aiAnalysis && (
+                    <button onClick={handleAnalyze} style={{ border: 'none', background: 'transparent', color: MUTED, fontSize: 11, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <RefreshCw size={10} /> Recalcular
+                    </button>
+                  )}
+                </div>
+
+                {isAnalyzing ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 0' }}>
+                    <Loader2 size={16} className="animate-spin" color={BLUE} />
+                    <span style={{ fontSize: 13, color: MUTED }}>Analizando tu préstamo...</span>
+                  </div>
+                ) : aiAnalysis ? (
+                  <p style={{ fontSize: 13, color: NAVY, margin: 0, lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+                    {aiAnalysis}
+                  </p>
+                ) : (
+                  <p style={{ fontSize: 13, color: MUTED, margin: 0, lineHeight: 1.6 }}>
+                    ¿Quieres saber si este préstamo te conviene? Billy puede analizar estos números por ti.
+                  </p>
+                )}
               </div>
 
               {/* CAT insight */}

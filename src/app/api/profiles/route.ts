@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { createSupabaseServer } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
+import { isInstitutionalEmail } from '@/lib/emailValidation'
 
 // GET /api/profiles - Get current user profile
 export async function GET(request: NextRequest) {
@@ -31,12 +32,16 @@ export async function GET(request: NextRequest) {
       profile = await prisma.profile.findUnique({ where: { userId: user.id } }).catch(() => null);
     }
 
+    const isEduEmail = isInstitutionalEmail(user.email || '');
+
     if (!profile) {
       console.warn(`[api/profiles] Profile missing for user ${user.id}, creating default...`)
+      const fallbackRole = isEduEmail ? 'institutional' : 'particular';
+      
       const fallbackProfile = {
         userId: user.id,
         fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
-        role: 'particular',
+        role: fallbackRole,
         xp: 0,
         bizcoins: 0,
         level: 1,
@@ -51,7 +56,7 @@ export async function GET(request: NextRequest) {
           data: {
             userId: user.id,
             fullName: fallbackProfile.fullName,
-            role: 'particular',
+            role: fallbackRole,
             xp: 0,
             bizcoins: 0,
             level: 1
@@ -60,6 +65,18 @@ export async function GET(request: NextRequest) {
       } catch (createErr: any) {
         console.error('[api/profiles] Failed to insert default profile. Serving ephemeral profile.', createErr.message)
         profile = fallbackProfile; // Use ephemeral profile so we don't throw 404
+      }
+    }
+
+    // Force 'particular' role if email is not institutional
+    if (!isEduEmail && profile.role !== 'particular') {
+      try {
+        profile = await prisma.profile.update({
+          where: { userId: user.id },
+          data: { role: 'particular', schoolId: null }
+        });
+      } catch (updateErr: any) {
+        console.error('[api/profiles] Failed to downgrade non-institutional profile:', updateErr.message);
       }
     }
 
@@ -117,8 +134,7 @@ export async function GET(request: NextRequest) {
     // If user has school with active license, or active Stripe subscription, set/renew paywall bypass cookie
     const hasActiveLicense = (profile as any)?.school?.licenses?.length && (profile as any).school.licenses.length > 0;
     const hasActiveStripe = profileData.subscriptionStatus === 'active';
-    const isInstitutional = !!profileData.schoolId || (profileData.role && profileData.role !== 'particular');
-    const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isInstitutional;
+    const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isEduEmail;
 
     const response = NextResponse.json(profileData);
 
@@ -171,12 +187,22 @@ export async function PATCH(request: NextRequest) {
     // Special case: prevent overwriting special access via update if we ever add UI for it
     const isSpecialUser = user.email === 'diegopenita31@gmail.com';
 
-    const profile = await prisma.profile.update({
+    // Fetch current profile to check role/schoolId
+    const existingProfile = await prisma.profile.findUnique({ where: { userId: user.id } });
+    if (!existingProfile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    }
+
+    const isEduEmail = isInstitutionalEmail(user.email || '');
+
+    const updatedProfile = await prisma.profile.update({
       where: { userId: user.id },
       data: {
         ...(fullName && { fullName }),
-        ...(role && { role }),
-        ...(schoolId !== undefined && { schoolId }),
+        ...((role || schoolId) && {
+          role: isEduEmail ? (role || existingProfile.role) : 'particular',
+          schoolId: isEduEmail ? (schoolId !== undefined ? schoolId : existingProfile.schoolId) : null
+        }),
         ...(avatar !== undefined && { avatar }),
         ...(username !== undefined && { username }),
         ...(bio !== undefined && { bio }),
@@ -184,12 +210,9 @@ export async function PATCH(request: NextRequest) {
         ...(settings !== undefined && { settings }),
         ...(birthDate !== undefined && { birthDate: birthDate ? new Date(birthDate) : null })
       },
-      include: {
-        school: true
-      }
     })
 
-    return NextResponse.json(profile)
+    return NextResponse.json(updatedProfile)
   } catch (error) {
     console.error('Error updating profile:', error)
     return NextResponse.json(

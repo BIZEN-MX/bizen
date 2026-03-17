@@ -222,11 +222,15 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         /* ── Avatar grid ── */
         .ob-avatar-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: clamp(8px, 2vw, 14px);
+          grid-template-columns: repeat(5, 1fr);
+          gap: clamp(8px, 2vw, 12px);
+          margin-bottom: clamp(20px, 5vw, 28px);
         }
-        @media (max-width: 400px) {
-          .ob-avatar-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        @media (max-width: 440px) {
+          .ob-avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        }
+        @media (max-width: 360px) {
+          .ob-avatar-grid { grid-template-columns: repeat(3, 1fr); }
         }
         .ob-avatar-btn {
           aspect-ratio: 1;
@@ -619,13 +623,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                 ))}
                             </div>
 
-                            {/* Avatar Grid - 5 per category */}
-                            <div style={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(5, 1fr)",
-                                gap: "clamp(8px,2vw,12px)",
-                                marginBottom: "clamp(20px,5vw,28px)"
-                            }}>
+                            {/* Avatar Grid - Responsive columns */}
+                            <div className="ob-avatar-grid">
                                 {AVATAR_OPTIONS
                                     .filter(av => AVATAR_CATEGORIES[avatarCategory].ids.includes(av.id))
                                     .map((av) => {
@@ -648,7 +647,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                                         boxShadow: isSelected ? "0 0 0 4px rgba(15,98,254,0.2)" : "none",
                                                     }}
                                                 >
-                                                    <AvatarDisplay avatar={av} size={48} />
+                                                    <AvatarDisplay avatar={av} size={60} />
                                                 </button>
                                                 <span style={{
                                                     fontSize: "clamp(8px,2vw,10px)",

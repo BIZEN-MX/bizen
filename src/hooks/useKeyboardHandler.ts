@@ -51,6 +51,10 @@ export function useKeyboardHandler(options: KeyboardHandlerOptions = {}) {
               activeElement.tagName === 'TEXTAREA' ||
               activeElement.tagName === 'SELECT'
             )) {
+              // Skip range inputs
+              if (activeElement.tagName === 'INPUT' && (activeElement as HTMLInputElement).type === 'range') {
+                return;
+              }
               activeInputRef.current = activeElement
               
               // Scroll to input with offset
@@ -87,6 +91,10 @@ export function useKeyboardHandler(options: KeyboardHandlerOptions = {}) {
     const handleInputFocus = (e: FocusEvent) => {
       const target = e.target as HTMLElement
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+        // Skip range inputs
+        if (target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'range') {
+          return;
+        }
         activeInputRef.current = target
         
         // Small delay to let keyboard appear

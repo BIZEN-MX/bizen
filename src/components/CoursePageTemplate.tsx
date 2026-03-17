@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
 import { StarIcon } from "@/components/icons/StarIcon"
@@ -43,6 +44,8 @@ import {
     Layout,
     Flag,
     Lock,
+    Sparkles,
+    Send,
     LucideIcon
 } from "lucide-react"
 
@@ -172,6 +175,12 @@ export default function CoursePageTemplate({
     const { completedLessons, lessonStars } = useLessonProgress()
     const [lessonModal, setLessonModal] = useState<{ lesson: GenericLesson; unitTitle: string } | null>(null)
     const [sequenceWarning, setSequenceWarning] = useState<string | null>(null)
+    
+    // AI Chat State
+    const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([])
+    const [chatInput, setChatInput] = useState("")
+    const [isThinking, setIsThinking] = useState(false)
+    const [showChat, setShowChat] = useState(false)
 
     // Access check
     const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
@@ -264,6 +273,39 @@ export default function CoursePageTemplate({
     const IconComp = topic.icon
     const prevTopic = !isNaN(topicNum) ? ALL_TOPICS.find((t) => t.id === topicNum - 1) : null
     const nextTopic = !isNaN(topicNum) ? ALL_TOPICS.find((t) => t.id === topicNum + 1) : null
+
+    async function handleAskBilly() {
+        if (!chatInput.trim() || isThinking) return;
+        
+        const userMsg = chatInput.trim();
+        setChatInput("");
+        setChatMessages(prev => [...prev, { role: 'user', content: userMsg }]);
+        setIsThinking(true);
+        
+        try {
+            const resp = await fetch('/api/free-chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userMsg,
+                    currentPath: `/learn/tema-${topicNum}`, // Simulate context
+                    userName: dbProfile?.fullName || "Estudiante",
+                    xp: dbProfile?.xp || 0
+                })
+            });
+            const data = await resp.json();
+            if (resp.ok && data.response) {
+                setChatMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+            } else {
+                setChatMessages(prev => [...prev, { role: 'assistant', content: "¡Ups! Mis circuitos se recalentaron. ¿Podrías intentar de nuevo? 😅" }]);
+            }
+        } catch (err) {
+            console.error("Billy Chat error:", err);
+            setChatMessages(prev => [...prev, { role: 'assistant', content: "No pude conectarme con mis servidores. Revisa tu internet, porfa." }]);
+        } finally {
+            setIsThinking(false);
+        }
+    }
 
     return (
         <div style={{ position: "relative", width: "100%", maxWidth: "100%", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>
@@ -401,6 +443,89 @@ export default function CoursePageTemplate({
                         </div>
                     </div>
 
+                    {/* ── ASK BILLY SECTION ────────────────────────────────────────── */}
+                    <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto 32px", boxSizing: "border-box" }}>
+                        <div style={{ 
+                            background: "rgba(255, 255, 255, 0.7)", 
+                            backdropFilter: "blur(20px)", 
+                            borderRadius: 24, 
+                            padding: "20px 24px", 
+                            border: "1px solid rgba(255, 255, 255, 0.8)",
+                            boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 16
+                        }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #dbeafe, #eff6ff)", border: "2px solid #3b82f6", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                                        <Image src="/billy_chatbot.png" alt="Billy" width={40} height={40} />
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.05em" }}>¿Tienes dudas sobre "{topic.title}"?</div>
+                                        <div style={{ fontSize: 13, color: "#64748b" }}>Pregúntale a Billy sobre este tema.</div>
+                                    </div>
+                                </div>
+                                {!showChat && (
+                                    <button 
+                                        onClick={() => setShowChat(true)}
+                                        style={{ background: "#2563eb", color: "white", border: "none", borderRadius: 12, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+                                    >
+                                        <Sparkles size={14} /> Empezar Chat
+                                    </button>
+                                )}
+                            </div>
+
+                            {showChat && (
+                                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                                    <div style={{ maxHeight: 300, overflowY: "auto", display: "flex", flexDirection: "column", gap: 12, padding: "10px 4px" }}>
+                                        {chatMessages.length === 0 && (
+                                            <p style={{ fontSize: 14, color: "#94a3b8", textAlign: "center", margin: "20px 0" }}>Pregunta lo que quieras sobre {topic.title}...</p>
+                                        )}
+                                        {chatMessages.map((msg, i) => (
+                                            <div key={i} style={{ 
+                                                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                                                background: msg.role === 'user' ? '#2563eb' : '#f1f5f9',
+                                                color: msg.role === 'user' ? 'white' : '#1e293b',
+                                                padding: "10px 16px",
+                                                borderRadius: msg.role === 'user' ? "18px 18px 2px 18px" : "18px 18px 18px 2px",
+                                                fontSize: 14,
+                                                maxWidth: "85%",
+                                                lineHeight: 1.5
+                                            }}>
+                                                {msg.content}
+                                            </div>
+                                        ))}
+                                        {isThinking && (
+                                            <div style={{ alignSelf: 'flex-start', background: '#f1f5f9', padding: "10px 16px", borderRadius: "18px 18px 18px 2px", display: "flex", gap: 4 }}>
+                                                <div className="dot-pulse-mini" style={{ width: 4, height: 4, borderRadius: "50%", background: "#94a3b8" }} />
+                                                <div className="dot-pulse-mini" style={{ width: 4, height: 4, borderRadius: "50%", background: "#94a3b8", animationDelay: "0.2s" }} />
+                                                <div className="dot-pulse-mini" style={{ width: 4, height: 4, borderRadius: "50%", background: "#94a3b8", animationDelay: "0.4s" }} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div style={{ display: "flex", gap: 8 }}>
+                                        <input 
+                                            type="text" 
+                                            value={chatInput}
+                                            onChange={(e) => setChatInput(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleAskBilly()}
+                                            placeholder="Escribe tu duda aquí..."
+                                            style={{ flex: 1, background: "white", border: "1.5px solid #e2e8f0", borderRadius: 12, padding: "10px 16px", fontSize: 14, outline: "none" }}
+                                        />
+                                        <button 
+                                            onClick={handleAskBilly}
+                                            disabled={!chatInput.trim() || isThinking}
+                                            style={{ background: "#2563eb", color: "white", border: "none", borderRadius: 12, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", opacity: (!chatInput.trim() || isThinking) ? 0.6 : 1 }}
+                                        >
+                                            <Send size={18} />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     {/* ── SUBTEMAS ──────────────────────────────────────────────────── */}
                     <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px, 5vw, 44px)", paddingBottom: 40, boxSizing: "border-box" }}>
                         {subtemas.map((sub, subIdx) => {
@@ -460,7 +585,7 @@ export default function CoursePageTemplate({
                                             const stars = isDone ? (lessonStars[lesson.slug] ?? 0) : 0
                                             const isLastLesson = lessonIdx === sub.lessons.length - 1
                                             const absoluteLessonNumber = lessonOffset + lessonIdx + 1
-                                            const isPremiumLesson = (typeof topicId === 'number' && topicId > 1) || absoluteLessonNumber > 3;
+                                            const isPremiumLesson = currentTopicNum > 1 || absoluteLessonNumber > 3;
                                             const isPaywalled = isPremiumLesson && !hasPremiumAccess;
 
                                             // BIZEN Sequential Unlocking logic:
@@ -528,13 +653,14 @@ export default function CoursePageTemplate({
                                                                 : (isDone ? "3px solid rgba(15, 98, 254, 0.6)" : "2.5px solid rgba(255, 255, 255, 0.7)"),
                                                             boxSizing: "border-box",
                                                             scrollSnapAlign: "start",
-                                                            cursor: "pointer",
+                                                            cursor: isLocked && !isPaywalled ? "not-allowed" : "pointer",
                                                             boxShadow: isLocked ? "none" : "0 10px 30px rgba(0,0,0,0.03), inset 0 0 0 1px rgba(255,255,255,0.6)",
                                                             gap: "clamp(8px, 2vw, 12px)",
                                                             transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                                             position: "relative",
                                                             overflow: "hidden",
-                                                            opacity: isLocked ? 0.75 : 1
+                                                            opacity: isLocked ? 0.75 : 1,
+                                                            pointerEvents: (isLocked && !isPaywalled) ? "none" : "auto"
                                                         }}
                                                     >
                                                         {isLocked && (
@@ -565,7 +691,9 @@ export default function CoursePageTemplate({
 
                                                         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
                                                             {isLocked ? (
-                                                                <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>Premium</div>
+                                                                <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>
+                                                                    {isPaywalled ? "Premium" : "Bloqueado"}
+                                                                </div>
                                                             ) : (
                                                                 <div style={{ display: "flex", gap: 3 }} role="img" aria-label={isDone ? `${stars} de 3 estrellas` : "Sin completar"}>
                                                                     {[1, 2, 3].map((i) => (
@@ -787,6 +915,16 @@ export default function CoursePageTemplate({
                     >
                         {/* Top gradient bar */}
                         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa)" }} />
+
+                        {/* Mascot Image */}
+                        <div style={{ width: 120, height: 120, position: 'relative', marginBottom: -10 }}>
+                          <Image 
+                            src="/image copy 3.png" 
+                            alt="Billy" 
+                            fill 
+                            style={{ objectFit: 'contain' }}
+                          />
+                        </div>
 
                         {/* Custom SVG icon: Lock */}
                         <div style={{

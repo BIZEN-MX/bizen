@@ -20,6 +20,19 @@ export function canAccessBIZEN(email: string): boolean {
   return isValidEmail(email);
 }
 
+/**
+ * Check if an email belongs to an educational institution
+ */
+export function isInstitutionalEmail(email: string): boolean {
+  if (!email) return false;
+  const emailLower = email.toLowerCase();
+  // Check if it has .edu or .edu.mx (which includes .edu)
+  // We check the domain part for better accuracy
+  const domain = emailLower.split('@')[1];
+  if (!domain) return false;
+  return domain.includes('.edu') || domain.includes('.edu.mx');
+}
+
 // Legacy functions kept for backward compatibility (deprecated)
 // These can be removed if not used elsewhere
 

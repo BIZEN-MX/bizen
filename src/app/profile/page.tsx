@@ -9,6 +9,7 @@ import PageLoader from "@/components/PageLoader"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { AVATAR_OPTIONS, AVATAR_CATEGORIES, getDefaultAvatar } from "@/lib/avatarOptions"
 import Link from "next/link"
+import { StreakCalendar } from "@/components/StreakCalendar"
 import {
   Flame, Zap, Shield, Award, UserPlus, Users,
   Search, Mail, ChevronRight, X as CloseIcon, Camera, Star,
@@ -82,7 +83,46 @@ interface UserStats {
 }
 
 
-const ACHIEVEMENTS: any[] = []
+interface AchievementDef {
+  id: string; title: string; description: string;
+  icon: string; category: string; threshold: number;
+  xpReward: number; rarity: string;
+  unlocked: boolean; unlockedAt: string | null
+}
+
+// Icon renderer — handles both new and legacy icon keys
+function AchievementIconSm({ icon, size = 22, color = "currentColor" }: { icon: string; size?: number; color?: string }) {
+  const p = { width: size, height: size, style: {} }
+  switch (icon) {
+    case "flame":
+    case "fire":
+      return <svg {...p} viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 8 6 8 10C8 12 9.5 13.5 11 14C10 12.5 10.5 11 12 10C12 12 14 13.5 14 15.5C14 17.5 13 19 11.5 20C15 19.5 17 17 17 14C17 11 15 9 14 8C14.5 10 13.5 11.5 12 12C12 12 10 10 12 2Z" fill={color} fillOpacity="0.9"/></svg>
+    case "book":
+    case "seedling":
+      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    case "award": return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+    case "trophy": return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="8 21 12 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M7 4H17a4 4 0 0 1 4 4v3a8 8 0 0 1-8 8 8 8 0 0 1-8-8V8a4 4 0 0 1 4-4Z"/><path d="M3 7v3M21 7v3"/></svg>
+    case "star": return <svg {...p} viewBox="0 0 24 24" fill={color} fillOpacity="0.9"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    case "zap":  return <svg {...p} viewBox="0 0 24 24" fill={color} fillOpacity="0.9"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    case "coin": return <svg {...p} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill={color} fillOpacity="0.2" stroke={color} strokeWidth="1.5"/><path d="M12 7v10M9.5 9.5h3.75a1.75 1.75 0 0 1 0 3.5H10.5a1.75 1.75 0 0 0 0 3.5H14" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>
+    case "users":
+    case "message-circle":
+      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    case "crown":
+      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h20M4 20 6 9l6 5 6-5 2 11"/><circle cx="12" cy="5" r="2"/></svg>
+    case "shopping-cart":
+      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    default:
+      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+  }
+}
+
+const RARITY_CFG: Record<string, { grad: string; color: string; label: string }> = {
+  común:      { grad: "linear-gradient(135deg,#374151,#1f2937)", color: "#9ca3af", label: "Común" },
+  raro:       { grad: "linear-gradient(135deg,#1e3a8a,#1d4ed8)", color: "#60a5fa", label: "Raro" },
+  épico:      { grad: "linear-gradient(135deg,#5b21b6,#7c3aed)", color: "#c4b5fd", label: "Épico" },
+  legendario: { grad: "linear-gradient(135deg,#92400e,#d97706)", color: "#fbbf24", label: "Legendario" },
+}
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, dbProfile } = useAuth()
@@ -109,6 +149,9 @@ export default function ProfilePage() {
   const [loadingFollowers, setLoadingFollowers] = useState(false)
   const [loadingFollowing, setLoadingFollowing] = useState(false)
   const [rightTab, setRightTab] = useState<"following" | "followers">("following")
+  const [achievements, setAchievements] = useState<AchievementDef[]>([])
+  const [loadingAchievements, setLoadingAchievements] = useState(true)
+
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -132,6 +175,7 @@ export default function ProfilePage() {
     fetch(`/api/user/stats?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(d => { if (d) setUserStats(d) }).finally(() => setLoadingStats(false))
     fetch(`/api/profile/stats?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(d => { if (d) setProfileStats(d) })
     fetch("/api/schools").then(r => r.ok ? r.json() : null).then(d => { if (d) setSchools(d) })
+    fetch(`/api/achievements`).then(r => r.ok ? r.json() : []).then(d => { setAchievements(Array.isArray(d) ? d : []) }).catch(() => {}).finally(() => setLoadingAchievements(false))
   }, [user, loading, router])
 
   const fetchFollowersList = async () => {
@@ -248,17 +292,11 @@ export default function ProfilePage() {
   const xpForNext = userStats?.xpNeeded || 100
   const xpPct = Math.min((xpInLevel / xpForNext) * 100, 100)
 
-  const getAchievementProgress = (a: typeof ACHIEVEMENTS[0]) => {
-    if (a.unit === "streak") return Math.min(streak, a.maxVal)
-    if (a.unit === "xp") return Math.min(totalXp, a.maxVal)
-    return 0
-  }
-
   const getLeagueTitle = (lvl: number) => {
     if (lvl >= 20) return "Leyenda"
     if (lvl >= 15) return "Maestro"
     if (lvl >= 10) return "Experto"
-    if (lvl >= 5) return "Avanzado"
+    if (lvl >= 5)  return "Avanzado"
     return "Explorer"
   }
 
@@ -266,7 +304,7 @@ export default function ProfilePage() {
     { icon: <Flame size={22} color="#0F62FE" />, value: streak, label: "Racha diaria" },
     { icon: <Zap size={22} color="#0F62FE" />, value: totalXp, label: "Total XP" },
     { icon: <Shield size={22} color="#0F62FE" />, value: getLeagueTitle(level), label: "Liga actual" },
-    { icon: <Award size={22} color="#0F62FE" />, value: ACHIEVEMENTS.filter(a => getAchievementProgress(a) >= a.maxVal).length, label: "Top completados" },
+    { icon: <Award size={22} color="#0F62FE" />, value: achievements.filter(a => a.unlocked).length, label: "Logros" },
   ]
 
   const Card = ({ style, className, children }: any) => (
@@ -340,6 +378,42 @@ export default function ProfilePage() {
 
         @keyframes tienda-bounce  { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         @keyframes tienda-wiggle  { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
+
+        /* Avatar Picker Responsive Grid */
+        .avatar-picker-grid {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: clamp(8px, 1.5vw, 14px);
+          margin-bottom: 20px;
+        }
+        @media (max-width: 480px) {
+          .avatar-picker-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        }
+        @media (max-width: 360px) {
+          .avatar-picker-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .avatar-picker-btn {
+          width: 100% !important;
+          aspect-ratio: 1;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          padding: 0; outline: none; overflow: hidden;
+          transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+          background: #f8fafc;
+          border: 3px solid transparent;
+        }
+        .avatar-picker-btn.selected {
+          border-color: #0F62FE;
+          background: #eff6ff;
+          transform: scale(1.08);
+          box-shadow: 0 0 0 4px rgba(15,98,254,0.2);
+        }
+        .avatar-picker-btn:hover:not(:disabled) {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
         `
       }} />
 
@@ -600,59 +674,96 @@ export default function ProfilePage() {
               </div>
             ) : null}
 
+            {/* ── STREAK CALENDAR (above Logros) ── */}
+            <StreakCalendar currentStreak={streak} />
 
-            {/* Achievements - Hidden until real ones exist */}
-            {ACHIEVEMENTS.length > 0 && (
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.01em" }}>
-                    Logros
-                  </h2>
-                  <Link href="/puntos" style={{ fontSize: 13, fontWeight: 500, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                    VER TODOS
-                  </Link>
+            {/* ────────────────────────────────────────────────────────────
+                LOGROS (ACHIEVEMENTS)
+            ──────────────────────────────────────────────────────────── */}
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.01em", display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 10, background: "linear-gradient(135deg,#fef3c7,#fde68a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <AchievementIconSm icon="trophy" size={16} color="#d97706"/>
+                  </div>
+                  Logros
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#10b981", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 999, padding: "2px 10px" }}>
+                    {achievements.filter(a => a.unlocked).length}/{achievements.length}
+                  </span>
+                </h2>
+              </div>
+
+              {loadingAchievements ? (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 12 }}>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="skeleton-pulse" style={{ height: 140, borderRadius: 20, background: "#f1f5f9" }} />
+                  ))}
                 </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {ACHIEVEMENTS.map(a => {
-                    const cur = getAchievementProgress(a)
-                    const pct = Math.min((cur / a.maxVal) * 100, 100)
-                    const done = cur >= a.maxVal
+              ) : achievements.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "32px 0", color: "#94a3b8", fontSize: 14 }}>
+                  Completa el SQL de configuración para activar los logros.
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 12 }}>
+                  {achievements.map(a => {
+                    const cfg = RARITY_CFG[a.rarity] ?? RARITY_CFG["común"]
                     return (
-                      <Card key={a.id} style={{ padding: "18px 20px", display: "flex", alignItems: "center", gap: 16 }}>
-                        {/* Badge */}
+                      <div
+                        key={a.id}
+                        className="prof-card-hover"
+                        style={{
+                          borderRadius: 20,
+                          overflow: "hidden",
+                          background: a.unlocked ? cfg.grad : "#f8fafc",
+                          border: a.unlocked ? "none" : "1.5px solid #e2e8f0",
+                          padding: "20px 16px",
+                          display: "flex", flexDirection: "column", alignItems: "center",
+                          textAlign: "center", gap: 10,
+                          boxShadow: a.unlocked ? `0 8px 24px ${cfg.color}30` : "none",
+                          position: "relative",
+                        }}
+                        title={a.description}
+                      >
+                        {/* icon box */}
                         <div style={{
-                          width: 60, height: 60, borderRadius: 14, flexShrink: 0,
-                          background: done ? a.color : "#f1f5f9",
-                          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                          gap: 2, position: "relative"
+                          width: 54, height: 54, borderRadius: 16,
+                          background: a.unlocked ? "rgba(255,255,255,0.15)" : "#e2e8f0",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          border: a.unlocked ? "1px solid rgba(255,255,255,0.20)" : "none",
                         }}>
-                          <span style={{ fontSize: 22 }}>{a.icon}</span>
-                          <span style={{ fontSize: 9, fontWeight: 500, color: done ? "white" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                            {done ? "✓" : "NIV 1"}
-                          </span>
+                          <AchievementIconSm
+                            icon={a.icon}
+                            size={26}
+                            color={a.unlocked ? "#fff" : "#94a3b8"}
+                          />
                         </div>
 
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                            <span style={{ fontSize: 15, fontWeight: 500, color: "#0f172a" }}>{a.title}</span>
-                            <span style={{ fontSize: 13, fontWeight: 500, color: "#64748b" }}>{cur}/{a.maxVal}</span>
-                          </div>
-                          <div style={{ width: "100%", height: 10, background: "#f1f5f9", borderRadius: 999, overflow: "hidden", marginBottom: 6 }}>
-                            <div style={{
-                              width: `${pct}%`, height: "100%",
-                              background: done ? a.color : "#0F62FE",
-                              borderRadius: 999, transition: "width 1s ease"
-                            }} />
-                          </div>
-                          <div style={{ fontSize: 12, color: "#64748b" }}>{a.desc}</div>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 800, color: a.unlocked ? "#fff" : "#0f172a", lineHeight: 1.2, marginBottom: 4 }}>{a.title}</div>
+                          <div style={{ fontSize: 10, fontWeight: 700, color: a.unlocked ? cfg.color : "#94a3b8", textTransform: "uppercase", letterSpacing: ".08em" }}>{cfg.label}</div>
                         </div>
-                      </Card>
+
+                        {a.unlocked && a.xpReward > 0 && (
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "3px 10px" }}>
+                            <AchievementIconSm icon="zap" size={11} color="#fbbf24"/>
+                            <span style={{ fontSize: 11, fontWeight: 800, color: "#fbbf24" }}>+{a.xpReward} XP</span>
+                          </div>
+                        )}
+
+                        {!a.unlocked && (
+                          <div style={{ position: "absolute", top: 10, right: 10 }}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="3" y="11" width="18" height="11" rx="2"/>
+                              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                          </div>
+                        )}
+                      </div>
                     )
                   })}
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           {/* ══ RIGHT COLUMN ══ */}
@@ -963,8 +1074,8 @@ export default function ProfilePage() {
                 ))}
               </div>
 
-              {/* Avatar Grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, marginBottom: 16 }}>
+              {/* Avatar Grid - Responsive */}
+              <div className="avatar-picker-grid">
                 {AVATAR_OPTIONS
                   .filter(av => AVATAR_CATEGORIES[avatarPickerTab].ids.includes(av.id))
                   .map(av => {
@@ -974,21 +1085,11 @@ export default function ProfilePage() {
                         <button
                           onClick={() => updateAvatar(av)}
                           disabled={savingAvatar}
-                          style={{
-                            width: 72, height: 72, borderRadius: "50%",
-                            border: `3px solid ${isSelected ? "#0F62FE" : "transparent"}`,
-                            background: isSelected ? "#eff6ff" : "#f8fafc",
-                            cursor: savingAvatar ? "not-allowed" : "pointer",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            padding: 0, outline: "none", overflow: "hidden",
-                            transition: "all 0.22s cubic-bezier(0.34,1.56,0.64,1)",
-                            transform: isSelected ? "scale(1.08)" : "scale(1)",
-                            boxShadow: isSelected ? "0 0 0 4px rgba(15,98,254,0.2)" : "0 2px 8px rgba(0,0,0,0.06)",
-                          }}
+                          className={`avatar-picker-btn ${isSelected ? 'selected' : ''}`}
                         >
-                          <AvatarDisplay avatar={av} size={60} />
+                          <AvatarDisplay avatar={av} size={80} />
                         </button>
-                        <span style={{ fontSize: 10, fontWeight: isSelected ? 700 : 500, color: isSelected ? "#0F62FE" : "#94a3b8", textAlign: "center" }}>
+                        <span style={{ fontSize: "clamp(9px, 2vw, 10px)", fontWeight: isSelected ? 700 : 500, color: isSelected ? "#0F62FE" : "#94a3b8", textAlign: "center", lineHeight: 1.2 }}>
                           {av.label}
                         </span>
                       </div>

@@ -41,49 +41,49 @@ interface SimulatorRun {
 
 const simulatorConfig: Record<string, { name: string; icon: any; color: string; bg: string }> = {
   'monthly-budget': { 
-    name: 'Presupuesto Mensual 50/30/20', 
+    name: 'BIZEN Plan (Presupuesto)', 
     icon: Wallet, 
     color: '#059669', 
     bg: '#f0fdf4' 
   },
   'savings-goal': { 
-    name: 'Meta de Ahorro e Interés Compuesto', 
+    name: 'BIZEN Saver (Ahorro)', 
     icon: Target, 
     color: '#0B71FE', 
     bg: '#eff6ff' 
   },
   'credit-card-payoff': { 
-    name: 'Liquidación de Tarjeta de Crédito', 
+    name: 'BIZEN Card (Liquidación)', 
     icon: CreditCard, 
     color: '#7c3aed', 
     bg: '#f5f3ff' 
   },
   'simple-loan': { 
-    name: 'Calculadora de Préstamo Personal', 
+    name: 'BIZEN Loan (Préstamo)', 
     icon: Calculator, 
     color: '#ea580c', 
     bg: '#fff7ed' 
   },
   'investment-comparison': { 
-    name: 'Comparativa de Inversión', 
+    name: 'BIZEN Invest (Inversión)', 
     icon: TrendingUp, 
     color: '#0891b2', 
     bg: '#ecfeff' 
   },
   'inflation-calculator': { 
-    name: 'Calculadora de Inflación', 
+    name: 'BIZEN Power (Inflación)', 
     icon: Clock, 
     color: '#64748b', 
     bg: '#f8fafc' 
   },
   'credit': { 
-    name: 'BIZEN Score y Crédito', 
+    name: 'BIZEN Score', 
     icon: CreditCard, 
     color: '#6366f1', 
     bg: '#f0f4ff' 
   },
   'stocks': { 
-    name: 'Simulador de Mercados', 
+    name: 'BIZEN Market', 
     icon: TrendingUp, 
     color: '#10b981', 
     bg: '#f0fdf4' 

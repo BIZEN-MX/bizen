@@ -142,7 +142,7 @@ CREATE TRIGGER update_sim_runs_updated_at
 INSERT INTO public.simulators (slug, name, description, category, icon, sort_order, is_active) VALUES
 (
     'monthly-budget',
-    'Presupuesto Mensual 50/30/20',
+    'BIZEN Plan (Presupuesto)',
     'Organiza tus ingresos en necesidades, deseos y ahorro usando la regla 50/30/20 o un modo personalizado.',
     'budgeting',
     '💰',
@@ -151,7 +151,7 @@ INSERT INTO public.simulators (slug, name, description, category, icon, sort_ord
 ),
 (
     'savings-goal',
-    'Meta de Ahorro e Interés Compuesto',
+    'BIZEN Saver (Ahorro)',
     'Calcula cuánto crecerán tus ahorros con aportaciones mensuales y rendimientos, o cuánto tiempo te tomará alcanzar una meta.',
     'savings',
     '🎯',
@@ -160,7 +160,7 @@ INSERT INTO public.simulators (slug, name, description, category, icon, sort_ord
 ),
 (
     'credit-card-payoff',
-    'Liquidación de Tarjeta de Crédito',
+    'BIZEN Card (Liquidación)',
     'Compara cuánto tardarás y pagarás si haces pagos mínimos vs. pagos fijos mayores.',
     'credit',
     '💳',
@@ -169,7 +169,7 @@ INSERT INTO public.simulators (slug, name, description, category, icon, sort_ord
 ),
 (
     'simple-loan',
-    'Préstamo Simple / Microcrédito',
+    'BIZEN Loan (Préstamo)',
     'Calcula tu pago mensual, tabla de amortización y CAT aproximado para un préstamo con comisiones.',
     'credit',
     '🏦',
@@ -178,7 +178,7 @@ INSERT INTO public.simulators (slug, name, description, category, icon, sort_ord
 ),
 (
     'investment-comparison',
-    'Comparación de Inversiones',
+    'BIZEN Invest (Inversión)',
     'Compara tres opciones de inversión (ahorro tradicional, CETES, fondo) y ve cuál da mejores resultados.',
     'investment',
     '📈',
@@ -187,7 +187,7 @@ INSERT INTO public.simulators (slug, name, description, category, icon, sort_ord
 ),
 (
     'inflation-calculator',
-    'Inflación y Poder Adquisitivo',
+    'BIZEN Power (Inflación)',
     'Descubre cuánto costará un producto en el futuro y cuánto necesitas ganar para mantener tu poder de compra.',
     'inflation',
     '📊',

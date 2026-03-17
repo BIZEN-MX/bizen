@@ -218,6 +218,7 @@ export default function FixedSidebar() {
 
   const showNavLabels = !isCompactSidebar
   const stackAlignment = isCompactSidebar ? "center" : "stretch"
+  const dashboardActive = isActivePath("/dashboard")
   const coursesActive = isActivePath("/courses")
   const retoDiarioActive = isActivePath("/reto-diario")
   const simuladorActive = isActivePath("/simulador")
@@ -484,6 +485,58 @@ export default function FixedSidebar() {
             <div style={{ display: "flex", flexDirection: "column", gap: 26, alignItems: stackAlignment }}>
               {isStudentOrGuest && (
                 <>
+                  {/* ── INICIO / Dashboard ── */}
+                  <button
+                    onClick={() => navigateTo("/dashboard")}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "14px 16px",
+                      background: isCompactSidebar ? "transparent" : (dashboardActive ? "rgba(11,113,254,0.1)" : "transparent"),
+                      border: "none",
+                      borderRadius: 10,
+                      cursor: "pointer",
+                      transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)",
+                      fontSize: 14,
+                      fontWeight: dashboardActive ? 700 : 500,
+                      textAlign: "left",
+                      color: dashboardActive ? "#0B71FE" : "#64748B",
+                      ...compactButtonOverrides(dashboardActive),
+                      position: "relative",
+                      overflow: "hidden",
+                      boxShadow: dashboardActive ? "0 4px 12px rgba(11,113,254,0.12)" : "none"
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isCompactSidebar) {
+                        e.currentTarget.style.background = dashboardActive ? "rgba(11,113,254,0.15)" : "#F1F5F9"
+                        e.currentTarget.style.color = "#0B71FE"
+                        e.currentTarget.style.transform = "translateY(-1px)"
+                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.05)"
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isCompactSidebar) {
+                        e.currentTarget.style.background = dashboardActive ? "rgba(11,113,254,0.1)" : "transparent"
+                        e.currentTarget.style.color = dashboardActive ? "#0B71FE" : "#64748B"
+                        e.currentTarget.style.transform = "translateY(0)"
+                        e.currentTarget.style.boxShadow = dashboardActive ? "0 4px 12px rgba(11,113,254,0.12)" : "none"
+                      }
+                    }}
+                  >
+                    {dashboardActive && (
+                      <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0", boxShadow: "0 0 8px rgba(11,113,254,0.5)" }} />
+                    )}
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={dashboardActive ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    </svg>
+                    <span className="nav-item-label">Inicio</span>
+                  </button>
+
+                  {/* ── APRENDE FINANZAS ── */}
                   <button
                     data-tour-id="/courses"
                     onClick={() => navigateTo("/courses")}
@@ -648,7 +701,7 @@ export default function FixedSidebar() {
                       }} />
                     )}
                     <Gamepad2 size={iconSize} strokeWidth={simuladorActive ? 2.5 : 2} />
-                    <span className="nav-item-label">Simulador</span>
+                    <span className="nav-item-label">Simuladores</span>
                   </button>
 
 

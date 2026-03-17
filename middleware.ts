@@ -56,7 +56,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Protected routes check
-  const studentProtected = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum', '/reto-diario', '/courses', '/cash-flow', '/simuladores', '/business-lab', '/leaderboard', '/ranking', '/cuenta', '/configuracion', '/profile']
+  const studentProtected = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum', '/reto-diario', '/courses', '/cash-flow', '/simuladores', '/leaderboard', '/ranking', '/cuenta', '/configuracion', '/profile']
   const isStudentProtected = studentProtected.some(route => pathname.startsWith(route))
 
   if (isStudentProtected && !session) {
@@ -73,7 +73,7 @@ export async function middleware(request: NextRequest) {
   // We only block if the user has NO session OR they are logged in but clearly flagged as no-access.
   // HOWEVER: If they just logged in, they might not have the 'bizen_has_access' cookie yet.
   // We allow the request if session exists, and let the Profiles API (client-side) handle the paywall cookie sync.
-  const paidRoutes = ['/courses', '/cash-flow', '/learn', '/simuladores', '/business-lab', '/dashboard', '/forum', '/leaderboard', '/ranking', '/progress', '/reto-diario', '/cuenta', '/configuracion', '/profile']
+  const paidRoutes = ['/courses', '/cash-flow', '/learn', '/simuladores', '/dashboard', '/forum', '/leaderboard', '/ranking', '/progress', '/reto-diario', '/cuenta', '/configuracion', '/profile']
   const isPaidPath = paidRoutes.some(route => pathname.startsWith(route))
   const isExempt = ['/payment', '/payment/success', '/payment/cancel'].some(route => pathname.startsWith(route))
 

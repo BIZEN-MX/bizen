@@ -440,22 +440,30 @@ export default function CoursesPage() {
                         const IconComp = topic.icon
                         const showArrow = i === 0 && displayPair.length > 1
 
-                        const isPremiumTopic = topic.displayOrder > 1; // Basic sequential logic for premium
+                        const isPremiumTopic = topic.displayOrder > 1; 
                         const isPaywalled = isPremiumTopic && !hasPremiumAccess;
-                        const isSequenceLocked = false; // logic for sequence locking can be added later
+                        
+                        // Topic sequence locking: lock if this topic's order is greater than the next recommended topic
+                        const nextTopicIdx = dbTopics.findIndex(t => t.id === nextTopicId);
+                        const currentTopicIdx = dbTopics.findIndex(t => t.id === topic.id);
+                        const isSequenceLocked = nextTopicIdx !== -1 && currentTopicIdx > nextTopicIdx;
+                        
                         const isLocked = isPaywalled || isSequenceLocked;
 
                         return (
                           <React.Fragment key={topic.id}>
                             <div
                               onClick={() => {
-                                if (!dbProfile && user) return; // Prevent action until profile is loaded
+                                if (!dbProfile && user) return; 
                                 if (isLocked) {
-                                  if (hasPremiumAccess) {
-                                    if (isSequenceLocked) setTopicWarning(true);
+                                  if (isSequenceLocked) {
+                                    setTopicWarning(true);
                                     return;
                                   }
-                                  router.push('/payment');
+                                  if (isPaywalled) {
+                                    router.push('/payment');
+                                    return;
+                                  }
                                 } else {
                                   router.push(`/courses/${topic.id}`);
                                 }
@@ -464,7 +472,7 @@ export default function CoursesPage() {
                               style={{
                                 flex: "0 1 550px",
                                 minHeight: 180,
-                                cursor: isLocked && !isPaywalled ? "default" : "pointer",
+                                cursor: isLocked && !isPaywalled ? "not-allowed" : "pointer",
                                 border: isLocked ? "1.5px solid rgba(148, 163, 184, 0.12)" : "1.5px solid rgba(255, 255, 255, 0.6)",
                                 borderRadius: "32px",
                                 background: isLocked ? "rgba(241, 245, 249, 0.8)" : "rgba(255, 255, 255, 0.75)",
@@ -477,7 +485,8 @@ export default function CoursesPage() {
                                 flexDirection: "column",
                                 minWidth: 0,
                                 opacity: isLocked ? 0.6 : 1,
-                                position: "relative"
+                                position: "relative",
+                                pointerEvents: (isLocked && !isPaywalled) ? "none" : "auto"
                               }}
                             >
 
@@ -737,6 +746,16 @@ export default function CoursesPage() {
           >
             {/* Top gradient bar */}
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa)" }} />
+
+            {/* Mascot Image */}
+            <div style={{ width: 120, height: 120, position: 'relative', marginBottom: -10 }}>
+              <Image 
+                src="/image copy 3.png" 
+                alt="Billy" 
+                fill 
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
 
             {/* Custom SVG icon: Shield with arrow */}
             <div style={{
