@@ -33,7 +33,7 @@ export default function MobileFooterNav() {
   const isStudentOrGuest = !isAdminOrTeacher
 
   const isOnLessonPage = pathname?.includes('/learn/')
-  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/puntos', '/impacto-social', '/teacher/dashboard', '/teacher/courses']
+  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/impacto-social', '/teacher/dashboard', '/teacher/courses']
 
   const navigateTo = (path: string) => {
     if (!user && protectedRoutes.some(route => path.startsWith(route))) {
@@ -399,65 +399,33 @@ export default function MobileFooterNav() {
                 <span>Configuración</span>
               </button>
 
-              {isStudentOrGuest && (
-                <button
-                  onClick={() => {
-                    setShowProfilePanel(false)
-                    navigateTo("/puntos")
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
-                    padding: "14px 18px",
-                    background: pathname === "/puntos" ? "rgba(15, 98, 254, 0.08)" : "transparent",
-                    border: "none",
-                    borderRadius: "16px",
-                    cursor: "pointer",
-                    fontSize: 16,
-                    fontWeight: 600,
-                    color: pathname === "/puntos" ? "#0F62FE" : "#1e293b",
-                    width: "100%",
-                    textAlign: "left",
-                    transition: "all 0.2s ease"
-                  }}
-                >
-                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Star size={20} color="#0F62FE" />
-                  </div>
-                  <span>Mis Puntos</span>
-                </button>
-              )}
-
-              {isStudentOrGuest && (
-                <button
-                  onClick={() => {
-                    setShowProfilePanel(false)
-                    navigateTo("/rankings")
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
-                    padding: "14px 18px",
-                    background: pathname === "/rankings" ? "rgba(15, 98, 254, 0.08)" : "transparent",
-                    border: "none",
-                    borderRadius: "16px",
-                    cursor: "pointer",
-                    fontSize: 16,
-                    fontWeight: 600,
-                    color: pathname === "/rankings" ? "#0F62FE" : "#1e293b",
-                    width: "100%",
-                    textAlign: "left",
-                    transition: "all 0.2s ease"
-                  }}
-                >
-                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Trophy size={20} color="#0F62FE" strokeWidth={2.5} />
-                  </div>
-                  <span>Rankings</span>
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  setShowProfilePanel(false)
+                  navigateTo("/rankings")
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  padding: "14px 18px",
+                  background: pathname === "/rankings" ? "rgba(15, 98, 254, 0.08)" : "transparent",
+                  border: "none",
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: pathname === "/rankings" ? "#0F62FE" : "#1e293b",
+                  width: "100%",
+                  textAlign: "left",
+                  transition: "all 0.2s ease"
+                }}
+              >
+                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Trophy size={20} color="#0F62FE" strokeWidth={2.5} />
+                </div>
+                <span>Rankings</span>
+              </button>
 
               <button
                 onClick={() => {

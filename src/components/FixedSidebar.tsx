@@ -157,7 +157,7 @@ export default function FixedSidebar() {
   const isOnLessonPage = pathname?.includes('/learn/')
 
   // Protected routes that require authentication
-  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/puntos', '/tienda', '/impacto-social']
+  const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/impacto-social']
 
   const navigateTo = (path: string) => {
     // Check if route requires auth and user is not authenticated
@@ -1022,44 +1022,6 @@ export default function FixedSidebar() {
                                 <Medal size={20} strokeWidth={rankingsActive ? 2.5 : 2} />
                                 <span className="nav-item-label">Rankings</span>
                               </button>
-
-                              <button
-                                data-tour-id="/puntos"
-                                onClick={() => navigateTo("/puntos")}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 12,
-                                  padding: "10px 12px",
-                                  background: isCompactSidebar ? "transparent" : (puntosActive ? "#eff6ff" : "transparent"),
-                                  border: "none",
-                                  borderRadius: 8,
-                                  cursor: "pointer",
-                                  transition: "all 0.2s ease",
-                                  fontSize: 13,
-                                  fontWeight: puntosActive ? 700 : 600,
-                                  textAlign: "left",
-                                  color: puntosActive ? "#0B71FE" : "#4b5563",
-                                  ...compactButtonOverrides(puntosActive)
-                                }}
-                                onMouseEnter={(e) => {
-                                  if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = "#f8fafc"
-                                    e.currentTarget.style.color = "#0B71FE"
-                                  }
-                                }}
-                                onMouseLeave={(e) => {
-                                  if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = puntosActive ? "#eff6ff" : "transparent"
-                                    e.currentTarget.style.color = puntosActive ? "#0B71FE" : "#4b5563"
-                                  }
-                                }}
-                              >
-                                <Star size={20} strokeWidth={puntosActive ? 2.5 : 2} />
-                                <span className="nav-item-label">Mis BIZCOINS</span>
-                              </button>
-
-
 
                               <button
                                 data-tour-id="/tienda"

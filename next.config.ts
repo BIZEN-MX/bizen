@@ -16,6 +16,15 @@ const nextConfig: NextConfig = {
     // Current status: 294+ uses of 'any' type need to be replaced
     ignoreBuildErrors: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/puntos',
+        destination: '/tienda',
+        permanent: true,
+      },
+    ]
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
