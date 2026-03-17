@@ -140,6 +140,30 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
         @keyframes cal-pop { from { opacity:0; transform:scale(0.7) } to { opacity:1; transform:scale(1) } }
         .cal-cell { transition: transform .12s cubic-bezier(0.34,1.56,0.64,1), box-shadow .12s ease; }
         .cal-cell:hover { transform: scale(1.45) !important; z-index: 10; }
+
+        @media (max-width: 640px) {
+          .cal-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+          .cal-stats-row { gap: 8px !important; }
+          .cal-stat-pill { padding: 10px 12px !important; min-width: 0 !important; }
+          .cal-stat-pill .s-val { font-size: 20px !important; }
+          .cal-stat-pill .s-label { font-size: 8px !important; }
+          .cal-chart-row { height: 40px !important; }
+          .cal-heatmap-container { padding-bottom: 8px !important; }
+        }
+
+        /* Hide tooltip on touch devices if they trigger hover unexpectedly */
+        @media (hover: none) {
+          .cal-cell:hover { transform: none !important; }
+        }
+        @media (max-width: 480px) {
+          .cal-cell-wrapper { width: 11px !important; height: 11px !important; }
+          .cal-column { gap: 2px !important; }
+          .cal-columns-container { gap: 2px !important; }
+          .cal-day-labels { gap: 2px !important; marginRight: 3px !important; }
+          .cal-day-label { height: 11px !important; font-size: 7px !important; }
+          .cal-month-labels { margin-left: 18px !important; }
+          .cal-month-label-wrapper { width: 13px !important; }
+        }
       `}</style>
 
       <div style={{
@@ -158,7 +182,7 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
         <div style={{ position:"absolute", bottom:"-40%", left:"-10%",  width:350, height:350, background:"radial-gradient(circle, rgba(139,92,246,.08) 0%, transparent 60%)", borderRadius:"50%", pointerEvents:"none" }} />
 
         {/* ── HEADER ── */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:22, position:"relative" }}>
+        <div className="cal-header" style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:22, position:"relative" }}>
           <div style={{ display:"flex", alignItems:"center", gap:12 }}>
             <div style={{ width:40, height:40, borderRadius:13, background:"rgba(255,255,255,.10)", border:"1px solid rgba(255,255,255,.15)", display:"flex", alignItems:"center", justifyContent:"center" }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -190,19 +214,19 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
         </div>
 
         {/* ── STAT PILLS ── */}
-        <div style={{ display:"flex", gap:10, flexWrap:"wrap", marginBottom:24 }}>
+        <div className="cal-stats-row" style={{ display:"flex", gap:10, flexWrap:"wrap", marginBottom:24 }}>
           {[
             { label:"Racha actual",  value:`${currentStreak}d`, sub: currentStreak > 0 ? "¡Sigue así!" : "Empieza hoy",    accent:"#f97316", bg:"rgba(249,115,22,.12)", border:"rgba(249,115,22,.25)" },
             { label:"Racha máxima",  value:`${longestStreak}d`, sub:"Tu récord personal",                                    accent:"#60a5fa", bg:"rgba(96,165,250,.10)", border:"rgba(96,165,250,.22)" },
             { label:"Días activos",  value:`${totalActive}`,    sub:`de los últimos 365`,                                    accent:"#34d399", bg:"rgba(52,211,153,.10)", border:"rgba(52,211,153,.22)" },
           ].map(s => (
-            <div key={s.label} style={{
+            <div key={s.label} className="cal-stat-pill" style={{
               flex:"1 1 0", minWidth:100,
               padding:"12px 16px", borderRadius:16,
               background:s.bg, border:`1.5px solid ${s.border}`,
             }}>
-              <div style={{ fontSize:9, fontWeight:700, color:"rgba(255,255,255,.45)", textTransform:"uppercase", letterSpacing:".10em", marginBottom:4 }}>{s.label}</div>
-              <div style={{ fontSize:26, fontWeight:900, color:s.accent, lineHeight:1, letterSpacing:"-0.04em", marginBottom:3 }}>{s.value}</div>
+              <div className="s-label" style={{ fontSize:9, fontWeight:700, color:"rgba(255,255,255,.45)", textTransform:"uppercase", letterSpacing:".10em", marginBottom:4 }}>{s.label}</div>
+              <div className="s-val" style={{ fontSize:26, fontWeight:900, color:s.accent, lineHeight:1, letterSpacing:"-0.04em", marginBottom:3 }}>{s.value}</div>
               <div style={{ fontSize:10, color:"rgba(255,255,255,.40)", fontWeight:500 }}>{s.sub}</div>
             </div>
           ))}
@@ -211,7 +235,7 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
         {/* ── LAST 7 DAYS BAR CHART ── */}
         <div style={{ marginBottom:22 }}>
           <div style={{ fontSize:10, fontWeight:700, color:"rgba(255,255,255,.35)", textTransform:"uppercase", letterSpacing:".10em", marginBottom:10 }}>Esta semana</div>
-          <div style={{ display:"flex", gap:6, alignItems:"flex-end", height:52 }}>
+          <div className="cal-chart-row" style={{ display:"flex", gap:6, alignItems:"flex-end", height:52 }}>
             {weekBars.map(b => {
               const pct = maxBar > 0 ? b.count / maxBar : 0
               const isToday = b.iso === todayStr
@@ -240,14 +264,14 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
         </div>
 
         {/* ── HEATMAP ── */}
-        <div ref={scrollRef} style={{ overflowX:"auto", overflowY:"visible", paddingBottom:4 }}>
+        <div className="cal-heatmap-container" ref={scrollRef} style={{ overflowX:"auto", overflowY:"visible", paddingBottom:4 }}>
           <div style={{ display:"inline-block", userSelect:"none" }}>
             {/* Month labels */}
-            <div style={{ display:"flex", marginBottom:5, marginLeft:22 }}>
+            <div className="cal-month-labels" style={{ display:"flex", marginBottom:5, marginLeft:22 }}>
               {weeks.map((_, wi) => {
                 const marker = monthMarkers.find(m => m.weekIdx === wi)
                 return (
-                  <div key={wi} style={{ width:17, flexShrink:0 }}>
+                  <div key={wi} className="cal-month-label-wrapper" style={{ width:17, flexShrink:0 }}>
                     {marker && <span style={{ fontSize:9, fontWeight:800, color:"rgba(255,255,255,.40)", textTransform:"uppercase", letterSpacing:".06em", whiteSpace:"nowrap" }}>{marker.label}</span>}
                   </div>
                 )
@@ -256,24 +280,24 @@ export function StreakCalendar({ currentStreak }: { currentStreak: number }) {
 
             <div style={{ display:"flex", gap:0 }}>
               {/* Day-of-week labels */}
-              <div style={{ display:"flex", flexDirection:"column", gap:3, marginRight:5 }}>
+              <div className="cal-day-labels" style={{ display:"flex", flexDirection:"column", gap:3, marginRight:5 }}>
                 {DAY_LABELS.map((l, i) => (
-                  <div key={i} style={{ height:13, fontSize:8, fontWeight:700, color:"rgba(255,255,255,.25)", display:"flex", alignItems:"center", textTransform:"uppercase", letterSpacing:".04em" }}>{i % 2 === 0 ? l : ""}</div>
+                  <div key={i} className="cal-day-label" style={{ height:13, fontSize:8, fontWeight:700, color:"rgba(255,255,255,.25)", display:"flex", alignItems:"center", textTransform:"uppercase", letterSpacing:".04em" }}>{i % 2 === 0 ? l : ""}</div>
                 ))}
               </div>
 
               {/* Week columns */}
-              <div style={{ display:"flex", gap:3 }}>
+              <div className="cal-columns-container" style={{ display:"flex", gap:3 }}>
                 {weeks.map((week, wi) => (
-                  <div key={wi} style={{ display:"flex", flexDirection:"column", gap:3 }}>
+                  <div key={wi} className="cal-column" style={{ display:"flex", flexDirection:"column", gap:3 }}>
                     {week.map((date, di) => {
-                      if (!date) return <div key={di} style={{ width:13, height:13, flexShrink:0 }} />
+                      if (!date) return <div key={di} className="cal-cell-wrapper" style={{ width:13, height:13, flexShrink:0 }} />
                       const count   = activity[date] ?? 0
                       const isToday = date === todayStr
                       return (
                         <div
                           key={di}
-                          className="cal-cell"
+                          className="cal-cell cal-cell-wrapper"
                           style={{
                             width:13, height:13, flexShrink:0,
                             borderRadius:3,
