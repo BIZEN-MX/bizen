@@ -36,6 +36,13 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const [saving, setSaving] = useState(false)
     const [exiting, setExiting] = useState(false)
     const [avatarCategory, setAvatarCategory] = useState(0) // index into AVATAR_CATEGORIES
+    const [screenSize, setScreenSize] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+
+    useEffect(() => {
+        const handleResize = () => setScreenSize(window.innerWidth)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
 
     useEffect(() => {
         fetch("/api/schools")
@@ -227,10 +234,10 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           margin-bottom: clamp(20px, 5vw, 28px);
         }
         @media (max-width: 440px) {
-          .ob-avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+          .ob-avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
         }
         @media (max-width: 360px) {
-          .ob-avatar-grid { grid-template-columns: repeat(3, 1fr); }
+          .ob-avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
         }
         .ob-avatar-btn {
           aspect-ratio: 1;
@@ -647,7 +654,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                                         boxShadow: isSelected ? "0 0 0 4px rgba(15,98,254,0.2)" : "none",
                                                     }}
                                                 >
-                                                    <AvatarDisplay avatar={av} size={60} />
+                                                    <AvatarDisplay avatar={av} size={screenSize < 400 ? 50 : 60} />
                                                 </button>
                                                 <span style={{
                                                     fontSize: "clamp(8px,2vw,10px)",

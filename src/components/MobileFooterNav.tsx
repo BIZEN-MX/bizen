@@ -422,8 +422,8 @@ export default function MobileFooterNav() {
                     transition: "all 0.2s ease"
                   }}
                 >
-                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(255, 176, 32, 0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Star size={20} color="#F59E0B" fill="#F59E0B" />
+                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Star size={20} color="#0F62FE" />
                   </div>
                   <span>Mis Puntos</span>
                 </button>
@@ -452,8 +452,8 @@ export default function MobileFooterNav() {
                     transition: "all 0.2s ease"
                   }}
                 >
-                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(16, 185, 129, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Trophy size={20} color="#10B981" strokeWidth={2.5} />
+                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Trophy size={20} color="#0F62FE" strokeWidth={2.5} />
                   </div>
                   <span>Rankings</span>
                 </button>
@@ -481,8 +481,8 @@ export default function MobileFooterNav() {
                   transition: "all 0.2s ease"
                 }}
               >
-                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(239, 68, 68, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Heart size={20} color="#EF4444" fill="#EF4444" />
+                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Heart size={20} color="#0F62FE" strokeWidth={2.5} />
                 </div>
                 <span>Mi Impacto Social</span>
               </button>

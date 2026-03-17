@@ -151,6 +151,13 @@ export default function ProfilePage() {
   const [rightTab, setRightTab] = useState<"following" | "followers">("following")
   const [achievements, setAchievements] = useState<AchievementDef[]>([])
   const [loadingAchievements, setLoadingAchievements] = useState(true)
+  const [screenSize, setScreenSize] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+
+  useEffect(() => {
+    const handleResize = () => setScreenSize(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
 
   useEffect(() => { setMounted(true) }, [])
@@ -390,7 +397,7 @@ export default function ProfilePage() {
           .avatar-picker-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
         }
         @media (max-width: 360px) {
-          .avatar-picker-grid { grid-template-columns: repeat(3, 1fr); }
+          .avatar-picker-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
         }
 
         .avatar-picker-btn {
@@ -1087,7 +1094,7 @@ export default function ProfilePage() {
                           disabled={savingAvatar}
                           className={`avatar-picker-btn ${isSelected ? 'selected' : ''}`}
                         >
-                          <AvatarDisplay avatar={av} size={80} />
+                          <AvatarDisplay avatar={av} size={screenSize < 400 ? 50 : 64} />
                         </button>
                         <span style={{ fontSize: "clamp(9px, 2vw, 10px)", fontWeight: isSelected ? 700 : 500, color: isSelected ? "#0F62FE" : "#94a3b8", textAlign: "center", lineHeight: 1.2 }}>
                           {av.label}
