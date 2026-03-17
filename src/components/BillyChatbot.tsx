@@ -84,14 +84,14 @@ export default function BillyChatbot() {
 
   // Auto-scroll
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
   }, [messages, isLoading])
 
   // Focus input when opened
   useEffect(() => {
     if (isOpen) {
       setHasUnread(false)
-      setTimeout(() => inputRef.current?.focus(), 300)
+      setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 300)
     }
   }, [isOpen])
 

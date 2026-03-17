@@ -60,6 +60,10 @@ export function useKeyboardHandler(options: KeyboardHandlerOptions = {}) {
               // Scroll to input with offset
               setTimeout(() => {
                 if (activeElement) {
+                  // IGNORE FIXED ELEMENTS
+                  const style = window.getComputedStyle(activeElement);
+                  if (style.position === 'fixed') return;
+
                   const rect = activeElement.getBoundingClientRect()
                   const scrollTop = window.pageYOffset || document.documentElement.scrollTop
                   const targetY = scrollTop + rect.top - offset
@@ -100,6 +104,11 @@ export function useKeyboardHandler(options: KeyboardHandlerOptions = {}) {
         // Small delay to let keyboard appear
         setTimeout(() => {
           if (scrollToInput && target) {
+            // IGNORE FIXED ELEMENTS (like Billy Chatbot) - they manage their own positioning
+            // and window.scrollTo causes unwanted jumps in our fixed-shell layout.
+            const style = window.getComputedStyle(target);
+            if (style.position === 'fixed') return;
+
             const rect = target.getBoundingClientRect()
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop
             const targetY = scrollTop + rect.top - offset
