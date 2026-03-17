@@ -423,7 +423,7 @@ export default function DashboardPage() {
       <div style={{position:"fixed",top:"50%",left:"30%",width:400,height:400,background:"radial-gradient(circle,rgba(16,185,129,.05) 0%,transparent 70%)",borderRadius:"50%",filter:"blur(80px)",pointerEvents:"none",zIndex:0}}/>
 
       {/* ── content wrapper ── */}
-      <div className="di" style={{position:"relative",zIndex:1,boxSizing:"border-box",maxWidth:"1280px"}}>
+      <div className="di" style={{position:"relative",zIndex:1,boxSizing:"border-box",maxWidth:"none"}}>
 
         {/* ══════════════════════════════════════════════════════════
             HERO
