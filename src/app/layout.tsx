@@ -23,11 +23,20 @@ export const metadata: Metadata = {
     siteName: "BIZEN",
     type: "website",
     locale: "es_MX",
+    images: [
+      {
+        url: "/og-bizen.png",
+        width: 1200,
+        height: 630,
+        alt: "BIZEN - Educación Financiera",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "BIZEN",
     description: "Educación financiera premium para la nueva generación",
+    images: ["/og-bizen.png"],
   },
   icons: {
     icon: "/thumbs up.png",
