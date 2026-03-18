@@ -12,11 +12,10 @@ export const lessonDineroYAutoestimaSteps: LessonStep[] = [
     // SLIDE 1 — FLASHCARD (Intro Theory)
     {
         id: "dya-slide-1",
-        stepType: "info",
-        title: "El dinero y yo",
-        body: "A veces el dinero parece decir algo sobre nosotros.\n\nAlgunas personas sienten que tener más dinero las hace “valer más”. O que tener menos dinero las hace “valer menos”.\n\nEsa idea afecta la autoestima y las decisiones.",
-        isAssessment: false,
-        continueLabel: "Continuar",
+        stepType: "billy_talks",
+        mood: "thinking",
+        body: "A veces el dinero parece decir algo sobre nosotros. ¿Sientes que tener más dinero te hace “valer más”?\n\nEsa idea afecta tu autoestima y tus decisiones. ¡Vamos a separar tu valor personal de tu cuenta bancaria!",
+        continueLabel: "¡Empecemos!",
         fullScreen: true,
     },
 
@@ -41,10 +40,10 @@ export const lessonDineroYAutoestimaSteps: LessonStep[] = [
     {
         id: "dya-slide-3",
         stepType: "info",
-        title: "Valor vs. Dinero",
-        body: "El dinero puede influir en tu comodidad, en tus opciones o en tus oportunidades.\n\nPero eso **NO** define tu valor como persona.\n\nValor personal y situación financiera no son lo mismo.",
-        isAssessment: false,
-        continueLabel: "Continuar",
+        title: "Tu valor real",
+        description: "Dinero vs Identidad",
+        body: "El dinero influye en tu comodidad y opciones, pero **NO** define quién eres.\n\nValor personal y situación financiera son cosas totalmente distintas. ¡Nunca lo olvides!",
+        continueLabel: "Entendido",
         fullScreen: true,
     },
 
@@ -63,16 +62,16 @@ export const lessonDineroYAutoestimaSteps: LessonStep[] = [
     // SLIDE 5 — Guided Classification (graded)
     {
         id: "dya-slide-5",
-        stepType: "mcq",
-        title: "Identificando la mezcla",
+        stepType: "blitz_challenge",
+        title: "Reto Relámpago",
         description: "Una persona dice: “Si no puedo comprar lo mismo que mis amigos, entonces soy menos”.",
-        question: "¿Qué está mezclando esa persona?",
+        question: "¿Qué mezcla aquí?",
         options: [
-            { id: "opt-presupuesto", label: "Presupuesto con ahorro", isCorrect: false },
-            { id: "opt-valor", label: "Valor personal con dinero", isCorrect: true, explanation: "Está usando el dinero como medida de su valor personal, y eso distorsiona su autoestima." },
+            { id: "opt-valor", label: "Valor personal con dinero", isCorrect: true, explanation: "Mezcla su valor como persona con su capacidad de gasto." },
             { id: "opt-metas", label: "Metas con disciplina", isCorrect: false },
-            { id: "opt-ingreso", label: "Ingreso con inversión", isCorrect: false },
+            { id: "opt-presupuesto", label: "Presupuesto con ahorro", isCorrect: false },
         ],
+        timeLimit: 20,
         isAssessment: true,
         continueLabel: "Continuar",
         fullScreen: true,
@@ -81,10 +80,9 @@ export const lessonDineroYAutoestimaSteps: LessonStep[] = [
     // SLIDE 6 — FLASHCARD (Example Theory)
     {
         id: "dya-slide-6",
-        stepType: "info",
-        title: "Mismo valor, distintos recursos",
-        body: "Dos estudiantes pueden tener recursos distintos\ny seguir teniendo el mismo valor como personas.\n\nComparar dinero con valor personal crea presión innecesaria.",
-        isAssessment: false,
+        stepType: "billy_talks",
+        mood: "happy",
+        body: "Comparar dinero con valor personal crea presión innecesaria.\n\nDos personas con recursos distintos siguen valiendo exactamente lo mismo. ¡La billetera no es el termómetro del alma!",
         continueLabel: "Continuar",
         fullScreen: true,
     },
@@ -139,9 +137,9 @@ export const lessonDineroYAutoestimaSteps: LessonStep[] = [
     {
         id: "dya-slide-9",
         stepType: "info",
-        title: "La trampa de la medida",
-        body: "Cuando el dinero se convierte en “medida de valor”, aparecen comparaciones, vergüenza o presión.\n\nSeparar dinero de autoestima ayuda a decidir mejor.",
-        isAssessment: false,
+        title: "Percepción social",
+        description: "Límites y autoestima",
+        body: "Cuando el dinero es tu “medida”, aparece la vergüenza o la presión social.\n\n¡Separar estos conceptos te ayuda a decidir con la cabeza fría!",
         continueLabel: "Continuar",
         fullScreen: true,
     },
@@ -168,10 +166,9 @@ export const lessonDineroYAutoestimaSteps: LessonStep[] = [
     // SLIDE 11 — FLASHCARD (Key Idea)
     {
         id: "dya-slide-11",
-        stepType: "info",
-        title: "Tú no eres tu saldo",
-        body: "El dinero puede decir algo sobre una situación. No dice quién eres.\n\nTu saldo cambia. Tu valor personal no debería depender de eso.",
-        isAssessment: false,
+        stepType: "billy_talks",
+        mood: "happy",
+        body: "Idea clave: **Tú no eres tu saldo**.\n\nTu saldo puede subir o bajar como una montaña rusa, ¡pero tu valor personal se queda arriba!",
         continueLabel: "Continuar",
         fullScreen: true,
     },
@@ -196,18 +193,34 @@ export const lessonDineroYAutoestimaSteps: LessonStep[] = [
     // SLIDE 13 — Error Diagnosis (graded)
     {
         id: "dya-slide-13",
-        stepType: "mcq",
-        title: "El pensamiento de Leo",
+        stepType: "blitz_challenge",
+        title: "Reto Relámpago",
         description: "Leo piensa: “Si no puedo comprarlo hoy, significa que voy mal en la vida”.",
-        question: "¿Cuál es el error principal en ese pensamiento?",
+        question: "¿Cuál es el error principal?",
         options: [
-            { id: "opt-limite-v-valor", label: "Confunde un límite temporal con su valor personal", isCorrect: true, explanation: "No poder comprar algo hoy no define quién eres ni tu valor como persona." },
-            { id: "opt-largo-plazo", label: "Está haciendo una planeación a largo plazo", isCorrect: false },
-            { id: "opt-inversion", label: "Está analizando una inversión", isCorrect: false },
-            { id: "opt-prioridades", label: "Está considerando prioridades", isCorrect: false },
+            { id: "opt-limite-v-valor", label: "Confundir límite con valor", isCorrect: true, explanation: "No poder comprar algo hoy no define quién eres." },
+            { id: "opt-prioridades", label: "Ajustar prioridades", isCorrect: false },
+        ],
+        timeLimit: 20,
+        isAssessment: true,
+        continueLabel: "¡Lo tengo!",
+        fullScreen: true,
+    },
+    {
+        id: "dya-slide-13-mindset",
+        stepType: "mindset_translator",
+        question: "¿Cómo lo dirías mejor?",
+        beliefs: [
+            {
+                id: "belief-valia",
+                original: "Si mi tarjeta es rechazada, me siento menos que los demás.",
+                healthyOptions: [
+                    { id: "hv-1", label: "Mi valor no depende de una transacción fallida; es solo un tema técnico o de presupuesto", isCorrect: true },
+                    { id: "hv-2", label: "Tengo que trabajar más para que nunca me vuelva a pasar", isCorrect: false },
+                ]
+            }
         ],
         isAssessment: true,
-        continueLabel: "Continuar",
         fullScreen: true,
     },
 

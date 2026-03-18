@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { SummaryStepFields } from "@/types/lessonTypes"
 import { motion, AnimatePresence } from "framer-motion"
+import { Target, Star, Zap, Flame, Trophy } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel } from "@/lib/xp"
 import { AnimatedStar } from "@/components/icons/StarIcon"
@@ -16,6 +17,8 @@ interface SummaryStepProps {
     continueLabel?: string
     imageUrl?: string
     starsEarned?: 0 | 1 | 2 | 3
+    accuracy?: number
+    totalTime?: number
   }
   onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => void
 }
@@ -227,16 +230,21 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
               marginTop: 12,
               background: "linear-gradient(135deg, #FFB800, #FF6B6B)",
               borderRadius: 99,
-              padding: "6px 16px",
+              padding: "8px 16px",
               textAlign: "center",
               fontSize: 13,
-              fontWeight: 500,
+              fontWeight: 800,
               color: "#fff",
               letterSpacing: "0.04em",
               boxShadow: "0 4px 16px rgba(255,184,0,0.4)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8
             }}
           >
-            🎉 ¡Subiste al nivel {newLevel}!
+            <Trophy size={16} fill="white" strokeWidth={2.5} />
+            ¡Subiste al nivel {newLevel}!
           </motion.div>
         )}
       </AnimatePresence>
@@ -291,11 +299,14 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
     }
   }, [actionTrigger, phase, onAnswered])
 
-  const starMessages: Record<0 | 1 | 2 | 3, string> = {
-    3: "¡Excelente trabajo! 🎯",
-    2: "¡Muy bien! Casi perfecto ⭐",
-    1: "¡Buen esfuerzo! Sigue practicando 💪",
-    0: "Sigue intentándolo, ¡tú puedes! 🔥",
+  const accuracy = (step as any).accuracy ?? 100
+  const totalTime = (step as any).totalTime ?? 0
+
+  const starMessages: Record<0 | 1 | 2 | 3, React.ReactNode> = {
+    3: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Excelente trabajo! <Target size={20} color="#BFDBFE" /></div>,
+    2: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Muy bien! Casi perfecto <Star size={20} color="#BFDBFE" fill="#BFDBFE" /></div>,
+    1: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Buen esfuerzo! Sigue practicando <Zap size={20} color="#BFDBFE" fill="#BFDBFE" /></div>,
+    0: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>Sigue intentándolo, ¡tú puedes! <Flame size={20} color="#BFDBFE" fill="#BFDBFE" /></div>,
   }
 
   return (
@@ -468,39 +479,63 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
               Tu progreso actual
             </h2>
 
-            {/* 🏆 XP Reward block */}
-            {xpEarned > 0 ? (
-              <div style={{ width: "100%", padding: "0 16px", boxSizing: "border-box" }}>
-                <XPBar
-                  initialXP={xpSnapshot ?? dbProfile?.xp ?? 0}
-                  xpEarned={xpEarned}
-                  delay={200}
-                />
-              </div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                style={{
-                  background: "rgba(15,23,42,0.4)",
-                  borderRadius: 20,
-                  padding: "24px",
-                  textAlign: "center",
-                  border: "2px dashed rgba(147,197,253,0.2)",
-                  width: "100%",
-                  backdropFilter: "blur(12px)",
-                }}
-              >
-                <div style={{ fontSize: 32, marginBottom: 8, filter: "grayscale(0.5)" }}>😅</div>
-                <p style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "#94a3b8" }}>
-                  Sin XP esta vez — ¡intenta no cometer errores!
-                </p>
-              </motion.div>
-            )}
+            {/* XP Statistics Dashboard */}
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 24, padding: "0 16px" }}>
+              <XPBar
+                initialXP={xpSnapshot ?? dbProfile?.xp ?? 0}
+                xpEarned={xpEarned}
+                delay={200}
+              />
 
-            <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", textAlign: "center", padding: "0 20px" }}>
-              Cada lección completada te acerca más a tu libertad financiera.
-            </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                {/* Accuracy Card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2 }}
+                  style={{
+                    background: "rgba(15, 23, 42, 0.6)",
+                    borderRadius: 24,
+                    padding: "20px",
+                    border: "1px solid rgba(147, 197, 253, 0.1)",
+                    textAlign: "center",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+                  }}
+                >
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Precisión</div>
+                  <div style={{ fontSize: 32, fontWeight: 900, color: accuracy >= 80 ? "#10b981" : "#f59e0b" }}>{accuracy}%</div>
+                </motion.div>
+
+                {/* Time Card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.4 }}
+                  style={{
+                    background: "rgba(15, 23, 42, 0.6)",
+                    borderRadius: 24,
+                    padding: "20px",
+                    border: "1px solid rgba(147, 197, 253, 0.1)",
+                    textAlign: "center",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+                  }}
+                >
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Tiempo</div>
+                  <div style={{ fontSize: 24, fontWeight: 900, color: "#fff", height: 38, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    {Math.floor(totalTime / 60)}:{(totalTime % 60).toString().padStart(2, '0')}
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.0 }}
+              style={{ fontSize: 15, color: "#64748b", textAlign: "center", maxWidth: 280, lineHeight: 1.5 }}
+            >
+              Cada paso te acerca más a tu libertad financiera.
+            </motion.p>
           </motion.div>
         )}
       </AnimatePresence>

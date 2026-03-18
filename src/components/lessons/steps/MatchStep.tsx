@@ -6,6 +6,7 @@ import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
 import { motion, AnimatePresence } from "framer-motion"
 import { Hand, ArrowRight, Star, Zap, Target, Sparkles, Brain, Heart, Shield, Award } from "lucide-react"
+import { StepScenarioCard } from "../StepScenarioCard"
 
 interface MatchStepProps {
   step: MatchStepFields & { id: string; title?: string; description?: string }
@@ -311,13 +312,13 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
   return (
     <div style={{
       width: "100%",
-      maxWidth: 720,
+      maxWidth: 640,
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
       gap: 24
     }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <ExerciseInstruction type="match" />
         <h3 style={{
           fontSize: "clamp(20px, 3vw, 26px)",
@@ -328,6 +329,8 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         }}>
           {step.question || "Une las parejas correspondientes"}
         </h3>
+
+        {step.description && <StepScenarioCard text={step.description} />}
       </div>
 
       {/* Status hint */}

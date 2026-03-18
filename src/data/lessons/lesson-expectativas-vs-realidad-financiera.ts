@@ -17,11 +17,10 @@ export const lessonExpectativasVsRealidadFinancieraSteps: LessonStep[] = [
   // SLIDE 1 — Theory Flashcard (Image 1 RIGHT)
   {
     id: "evr-intro",
-    stepType: "info",
-    title: "",
-    body: "Todos tenemos expectativas sobre el dinero.\nPero pocas veces analizamos si son realistas.",
-    isAssessment: false,
-    continueLabel: "Empezar",
+    stepType: "billy_talks",
+    mood: "thinking",
+    body: "¡Hola! Billy por aquí. Todos tenemos expectativas sobre el dinero, pero pocas veces analizamos si son realistas.\n\n¿Crees que el éxito llega de la noche a la mañana? ¡Vamos a ver la realidad!",
+    continueLabel: "¡Empezar!",
     fullScreen: true,
   },
 
@@ -52,9 +51,11 @@ export const lessonExpectativasVsRealidadFinancieraSteps: LessonStep[] = [
   {
     id: "evr-teoria-1",
     stepType: "info",
-    title: "",
-    body: "Las redes sociales muestran resultados.\nCasi nunca muestran procesos.",
-    isAssessment: false,
+    title: "El filtro de la realidad",
+    description: "Expectativas vs Proceso",
+    body: "Las redes sociales muestran resultados brillantes, ¡pero casi nunca muestran el proceso difícil detrás!\n\nNo te compares con la versión editada de los demás. ¡Tú tienes tu propio ritmo!",
+    imageUrl: IMG + "/image-2.png",
+    imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,
   },
@@ -77,34 +78,43 @@ export const lessonExpectativasVsRealidadFinancieraSteps: LessonStep[] = [
   // SLIDE 5 — Scenario Decision (no image)
   {
     id: "evr-scenario",
-    stepType: "mcq",
-    question:
-      "Ves a alguien de tu edad viajando constantemente\ny piensas: \"Voy atrasado\".\n\n¿Qué está ocurriendo?",
+    stepType: "blitz_challenge",
+    title: "Reto Relámpago",
+    description: "Ves a alguien de tu edad viajando constantemente y te frustras por no tener lo mismo.",
+    question: "¿Qué está ocurriendo?",
     options: [
+      { id: "opt-comparacion", label: "Comparación irreal", isCorrect: true, explanation: "Comparar procesos invisibles genera frustración." },
+      { id: "opt-suerte", label: "Falta de suerte", isCorrect: false },
+    ],
+    timeLimit: 20,
+    isAssessment: true,
+    continueLabel: "¡Avanzar!",
+    fullScreen: true,
+  },
+  {
+    id: "evr-mindset",
+    stepType: "mindset_translator",
+    question: "¿Cómo reenfocarías este pensamiento?",
+    beliefs: [
       {
-        id: "opt-comparacion",
-        label: "Comparación irreal",
-        isCorrect: true,
-        explanation:
-          "Comparar procesos invisibles genera frustración innecesaria.",
-      },
-      { id: "opt-planeacion", label: "Planeación financiera", isCorrect: false },
-      { id: "opt-disciplina", label: "Disciplina financiera", isCorrect: false },
-      { id: "opt-educacion", label: "Educación financiera", isCorrect: false },
+        id: "belief-fomo",
+        original: "Si no tengo lo que ellos tienen a mi edad, soy un fracaso.",
+        healthyOptions: [
+          { id: "hf-1", label: "Cada quien tiene sus tiempos y recursos; mi progreso actual es valioso por sí mismo", isCorrect: true },
+          { id: "hf-2", label: "Debo esforzarme el doble para alcanzarlos lo antes posible", isCorrect: false },
+        ]
+      }
     ],
     isAssessment: true,
-    recordIncorrect: true,
-    continueLabel: "Continuar",
     fullScreen: true,
   },
 
   // SLIDE 6 — Theory Flashcard (Image 3 RIGHT)
   {
     id: "evr-teoria-2",
-    stepType: "info",
-    title: "",
-    body: "Expectativa alta + realidad lenta = frustración.\n\nCuando no entendemos el proceso,\nabandonamos demasiado pronto.",
-    isAssessment: false,
+    stepType: "billy_talks",
+    mood: "thinking",
+    body: "Expectativa alta + realidad lenta = ¡Frustración!\n\nCuando no entendemos el proceso real, abandonamos demasiado pronto. ¡Sé paciente con tu crecimiento!",
     continueLabel: "Continuar",
     fullScreen: true,
   },
@@ -130,43 +140,39 @@ export const lessonExpectativasVsRealidadFinancieraSteps: LessonStep[] = [
   {
     id: "evr-teoria-3",
     stepType: "info",
-    title: "",
-    body: "El problema no es tener expectativas.\nEl problema es no entender el proceso.",
-    isAssessment: false,
+    title: "Enfocando el esfuerzo",
+    description: "Construyendo la montaña",
+    body: "El problema no es tener expectativas grandes. El problema es no entender el proceso para llegar allá.\n\n¡Los pasos pequeños son los que construyen la montaña!",
+    imageUrl: IMG + "/image-4.png",
+    imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,
   },
 
   // SLIDE 9 — Multiple Choice (no image)
   {
-    id: "evr-mcq-2",
-    stepType: "mcq",
-    question: "¿Qué es más saludable financieramente?",
+    id: "evr-blitz",
+    stepType: "blitz_challenge",
+    title: "Reto Relámpago",
+    description: "Buscas mejorar tu situación.",
+    question: "¿Qué es más saludable?",
     options: [
-      { id: "opt-inmediatos", label: "Buscar resultados inmediatos", isCorrect: false },
-      { id: "opt-compararme", label: "Compararme constantemente", isCorrect: false },
-      {
-        id: "opt-gradual",
-        label: "Entender que el crecimiento es gradual",
-        isCorrect: true,
-        explanation: "El crecimiento sostenible toma tiempo.",
-      },
-      { id: "opt-suerte", label: "Esperar suerte", isCorrect: false },
+      { id: "opt-gradual", label: "Entender que el crecimiento es gradual", isCorrect: true, explanation: "El crecimiento sostenible siempre toma tiempo y constancia." },
+      { id: "opt-inmediatos", label: "Resultados inmediatos", isCorrect: false },
     ],
+    timeLimit: 20,
     isAssessment: true,
-    recordIncorrect: true,
-    continueLabel: "Continuar",
+    continueLabel: "Avanzar",
     fullScreen: true,
   },
 
   // SLIDE 10 — Closure Reflection Flashcard (Image 5 RIGHT)
   {
     id: "evr-teoria-4",
-    stepType: "info",
-    title: "",
-    body: "Cuando ajustas tus expectativas,\npuedes sostener el proceso.",
-    isAssessment: false,
-    continueLabel: "Continuar",
+    stepType: "billy_talks",
+    mood: "happy",
+    body: "Cuando ajustas tus expectativas a la realidad, puedes sostener el proceso sin rendirte.\n\n¡Estás listo para el éxito real, no el de filtros!",
+    continueLabel: "¡Genial!",
     fullScreen: true,
   },
 

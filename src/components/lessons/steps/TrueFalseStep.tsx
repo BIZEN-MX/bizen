@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from "react"
 import { TrueFalseStepFields } from "@/types/lessonTypes"
+import { motion } from "framer-motion"
 import { sharedStyles } from "../sharedStyles"
 import { CONTENT_MAX_WIDTH, CONTENT_GAP } from "../layoutConstants"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
 import { Check, X, CheckCircle2, XCircle } from "lucide-react"
+import { StepScenarioCard } from "../StepScenarioCard"
 
 interface TrueFalseStepProps {
   step: TrueFalseStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; continueLabel?: string; imageUrl?: string; imageAlign?: "left" | "right" }
@@ -102,7 +104,7 @@ export function TrueFalseStep({
   return (
     <div style={{
       width: "100%",
-      maxWidth: 600,
+      maxWidth: 520,
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
@@ -116,9 +118,11 @@ export function TrueFalseStep({
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-                  }}>
+        }}>
           {step.statement}
         </h3>
+
+        {step.description && <StepScenarioCard text={step.description} />}
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(8px, 2vw, 16px)', width: '100%' }}>

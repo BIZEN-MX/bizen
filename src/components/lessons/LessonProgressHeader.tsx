@@ -1,6 +1,6 @@
 "use client"
 
-import { X } from "lucide-react"
+import { X, Volume2, VolumeX } from "lucide-react"
 import { motion } from "framer-motion"
 import { StarIcon } from "@/components/icons/StarIcon"
 
@@ -14,6 +14,9 @@ export interface LessonProgressHeaderProps {
   hideStreak?: boolean
   hideStars?: boolean
   onExit?: () => void
+  onToggleAudio?: () => void
+  isAudioPlaying?: boolean
+  isAudioLoading?: boolean
 }
 
 export function LessonProgressHeader({
@@ -24,6 +27,9 @@ export function LessonProgressHeader({
   hideStreak = false,
   hideStars = false,
   onExit,
+  onToggleAudio,
+  isAudioPlaying = false,
+  isAudioLoading = false,
 }: LessonProgressHeaderProps) {
   const progress = totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0
 
@@ -61,6 +67,43 @@ export function LessonProgressHeader({
           <X style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
         </button>
       )}
+
+      {/* Audio Button */}
+      {onToggleAudio && (
+        <button
+          onClick={onToggleAudio}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 4,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: isAudioPlaying ? "#2563eb" : "#94a3b8",
+            transition: "color 0.2s ease",
+            flexShrink: 0,
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = isAudioPlaying ? "#1d4ed8" : "#475569")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = isAudioPlaying ? "#2563eb" : "#94a3b8")}
+          aria-label={isAudioLoading ? "Cargando audio" : isAudioPlaying ? "Pausar audio" : "Reproducir audio"}
+          disabled={isAudioLoading}
+        >
+          {isAudioLoading ? (
+            <motion.div
+              animate={{ opacity: [1, 0.5, 1] }}
+              transition={{ repeat: Infinity, duration: 1 }}
+            >
+              <Volume2 style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
+            </motion.div>
+          ) : isAudioPlaying ? (
+             <Volume2 style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
+          ) : (
+             <VolumeX style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
+          )}
+        </button>
+      )}
+
       {/* Progress bar — slim, Duolingo-inspired */}
       <div
         style={{

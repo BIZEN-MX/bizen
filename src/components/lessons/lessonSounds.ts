@@ -3,18 +3,28 @@
  * Provides correct/incorrect feedback sounds
  */
 
+let globalAudioContext: AudioContext | null = null
+
+const getAudioContext = () => {
+  if (typeof window === 'undefined') return null
+  
+  if (!globalAudioContext) {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
+    globalAudioContext = new AudioContextClass()
+  }
+  
+  if (globalAudioContext?.state === 'suspended') {
+    globalAudioContext.resume()
+  }
+  
+  return globalAudioContext
+}
+
 export const playCorrectSound = () => {
-  if (typeof window === 'undefined') return
+  const audioContext = getAudioContext()
+  if (!audioContext) return
 
   try {
-    // Resume audio context if suspended (required for user interaction)
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
-    const audioContext = new AudioContextClass()
-
-    if (audioContext.state === 'suspended') {
-      audioContext.resume()
-    }
-
     // Play a pleasant ascending chord for correct answers
     const playTone = (frequency: number, startTime: number, duration: number, volume: number = 0.2) => {
       const oscillator = audioContext.createOscillator()
@@ -43,17 +53,10 @@ export const playCorrectSound = () => {
 }
 
 export const playIncorrectSound = () => {
-  if (typeof window === 'undefined') return
+  const audioContext = getAudioContext()
+  if (!audioContext) return
 
   try {
-    // Resume audio context if suspended (required for user interaction)
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
-    const audioContext = new AudioContextClass()
-
-    if (audioContext.state === 'suspended') {
-      audioContext.resume()
-    }
-
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
 
@@ -76,16 +79,10 @@ export const playIncorrectSound = () => {
 }
 
 export const playFlipSound = () => {
-  if (typeof window === 'undefined') return
+  const audioContext = getAudioContext()
+  if (!audioContext) return
 
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
-    const audioContext = new AudioContextClass()
-
-    if (audioContext.state === 'suspended') {
-      audioContext.resume()
-    }
-
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
 
@@ -106,4 +103,3 @@ export const playFlipSound = () => {
     console.log('Could not play flip sound:', error)
   }
 }
-

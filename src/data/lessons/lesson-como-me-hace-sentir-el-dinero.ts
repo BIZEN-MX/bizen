@@ -1,30 +1,29 @@
 import type { LessonStep } from "@/types/lessonTypes"
 
 /**
- * Lesson 2: Cómo me hace sentir el dinero
+ * Lesson: Cómo me hace sentir el dinero
  * Theme: Mi relación con el dinero
  * Lesson ID: como-me-hace-sentir-el-dinero
- * Difficulty: Introductory–Intermediate
- * Slides: 15
+ * Level: Introductory–Intermediate
+ * Rule: No images. Text-only content.
  */
 
 export const lessonComoMeHaceSentirElDineroSteps: LessonStep[] = [
-  // SLIDE 1 — FLASHCARD (Intro Theory)
+  // SLIDE 1 — FLASHCARD (Teoría)
   {
     id: "cms-slide-1",
-    stepType: "info",
-    title: "Cómo me hace sentir el dinero",
-    body: "El dinero no solo se piensa.\nTambién se siente.\n\nA veces sentimos tranquilidad.\nA veces presión.\nA veces emoción.\nA veces miedo.\n\nEntender eso mejora cómo decidimos.",
-    isAssessment: false,
-    continueLabel: "Continuar",
+    stepType: "billy_talks",
+    mood: "happy",
+    body: "¡Hola! Billy por aquí. ¿Sabías que el cerebro financiero a veces se apaga cuando el corazón late rápido?\n\nEl dinero no solo se piensa, también se siente. El problema aparece cuando una emoción fuerte toma el control y decides sin analizar.",
+    continueLabel: "¡Vamos!",
     fullScreen: true,
   },
 
-  // SLIDE 2 — Diagnostic Emotion Baseline (non-graded)
+  // SLIDE 2 — Diagnóstico (No calificado)
   {
     id: "cms-slide-2",
     stepType: "mcq",
-    question: "Cuando tienes que pagar algo importante, ¿qué siente primero?",
+    question: "Cuando tienes que pagar algo importante, ¿qué sientes primero?",
     options: [
       { id: "opt-presion", label: "Presión", isCorrect: true },
       { id: "opt-tranquilidad", label: "Tranquilidad", isCorrect: true },
@@ -35,205 +34,206 @@ export const lessonComoMeHaceSentirElDineroSteps: LessonStep[] = [
     recordIncorrect: false,
     continueLabel: "Continuar",
     fullScreen: true,
+    description: "Guardando tu perfil emocional...",
   },
 
-  // SLIDE 3 — FLASHCARD (Theory)
+  // SLIDE 3 — Flashcard (Teoría con criterio)
   {
     id: "cms-slide-3",
     stepType: "info",
-    title: "Emociones y Dinero",
-    body: "Sentir emociones con el dinero es normal.\n\nEl problema no es sentir. El problema aparece cuando decides sin reconocer lo que estás sintiendo.\n\nEmoción no siempre significa mala decisión, pero emoción intensa sí puede nublar el análisis.",
-    isAssessment: false,
-    continueLabel: "Continuar",
+    title: "Señales de alerta",
+    description: "Dominio emocional",
+    body: "Una emoción domina una decisión cuando aparecen señales como:\n\n• **Urgencia**: \"Lo quiero ya\".\n• **Justificación rápida**: \"Me lo merezco\".\n• **Evitar consecuencias**: \"Luego veo\".\n• **Impulso físico**: Estrés.\n\n¡Si sientes que queman las manos por pagar, es una alerta emocional!",
+    continueLabel: "Entendido",
     fullScreen: true,
   },
 
-  // SLIDE 4 — Guided Classification (graded)
+  // SLIDE 4 — Ejercicio (Calificado) -> Blitz Challenge (1/2)
   {
     id: "cms-slide-4",
-    stepType: "mcq",
-    title: "Análisis de Caso",
-    description: "Sofía ahorró durante semanas. Ve una oferta de algo que quería mucho y siente muchas ganas de comprarlo de inmediato.",
-    question: "¿Cuál emoción está influyendo MÁS en ese momento?",
+    stepType: "blitz_challenge",
+    title: "Reto Relámpago",
+    description: "Sofía ve una oferta limitada. Piensa: \"Si no lo compro hoy, pierdo la oportunidad\" y siente urgencia.",
+    question: "¿Qué emoción domina según las señales?",
     options: [
-      { id: "opt-paciencia", label: "Paciencia", isCorrect: false },
-      { id: "opt-emocion", label: "Emoción", isCorrect: true, explanation: "La urgencia por comprar “ya” suele aparecer cuando la emoción está alta." },
       { id: "opt-tranquilidad", label: "Tranquilidad", isCorrect: false },
-      { id: "opt-organizacion", label: "Organización", isCorrect: false },
+      { id: "opt-emocion", label: "Emoción", isCorrect: true, explanation: "La urgencia y el 'lo quiero ya' son señales de emoción dominando." },
+      { id: "opt-paciencia", label: "Paciencia", isCorrect: false },
+      { id: "opt-indiferencia", label: "Indiferencia", isCorrect: false },
     ],
+    timeLimit: 20,
     isAssessment: true,
     continueLabel: "Continuar",
     fullScreen: true,
   },
 
-  // SLIDE 5 — True / False (graded)
+  // SLIDE 5 — Ejercicio (Calificado) Verdadero o Falso
   {
     id: "cms-slide-5",
     stepType: "true_false",
-    statement: "Si una compra me hace sentir bien en el momento, eso prueba que fue una buena decisión financiera.",
-    correctValue: false,
-    explanation: "Sentirse bien en el momento no garantiza una buena decisión. Una decisión puede sentirse bien hoy y complicarte después.",
+    statement: "Reconocer lo que siento antes de comprar puede ayudarme a decidir mejor.",
+    correctValue: true,
+    explanation: "Nombrar la emoción reduce impulsos y mejora la claridad de la decisión.",
     isAssessment: true,
     continueLabel: "Continuar",
     fullScreen: true,
   },
 
-  // SLIDE 6 — FLASHCARD (Theory)
+  // SLIDE 6 — Flashcard (Teoría aplicada)
   {
     id: "cms-slide-6",
-    stepType: "info",
-    title: "La pausa necesaria",
-    body: "Una emoción puede darte información, pero no debería decidir por ti.\n\nPrimero reconoces lo que sientes. Después evalúas si la decisión tiene sentido.",
-    isAssessment: false,
+    stepType: "billy_talks",
+    mood: "mascot",
+    body: "La emoción no es enemiga, es información. Pero no debería decidir por ti.\n\n**Regla simple**: cuando haya urgencia, estrés o impulso, ¡haz una pausa! El aire que apaga el fuego de la compra.",
     continueLabel: "Continuar",
     fullScreen: true,
   },
 
-  // SLIDE 7 — Scenario Decision (graded)
+  // SLIDE 7 — Ejercicio (Calificado) -> Impulse Meter (Psychology)
   {
     id: "cms-slide-7",
-    stepType: "mcq",
-    title: "El caso de Diego",
-    description: "Diego está molesto por una discusión. Entra a una tienda online y empieza a llenar el carrito con cosas que no tenía planeadas.",
-    question: "¿Cuál sería la acción MÁS inteligente antes de comprar?",
-    options: [
-      { id: "opt-comprar-rapido", label: "Comprar rápido para sentirse mejor", isCorrect: false },
-      { id: "opt-esperar", label: "Esperar un momento y revisar si realmente lo necesita", isCorrect: true, explanation: "Hacer una pausa ayuda a separar emoción y decisión." },
-      { id: "opt-ya-agregue", label: "Comprar porque ya agregó productos al carrito", isCorrect: false },
-      { id: "opt-ignorar", label: "Ignorar cómo se siente y seguir navegando", isCorrect: false },
-    ],
+    stepType: "impulse_meter",
+    item: {
+      name: "Carrito lleno (Cosas no planeadas)",
+      price: "$2,450",
+    },
+    description: "Diego está molesto por su día en el trabajo y quiere comprar todo para 'sentirse mejor'. Está a un clic de pagar.",
+    instructions: "Ayúdalo a hacer la pausa necesaria para que la emoción baje y la lógica regrese.",
+    holdTime: 5,
     isAssessment: true,
-    continueLabel: "Continuar",
+    continueLabel: "Pausa lograda",
     fullScreen: true,
   },
 
-  // SLIDE 8 — Match Situations to Emotion (graded)
+  // SLIDE 8 — Ejercicio (Calificado) Matching
   {
     id: "cms-slide-8",
     stepType: "match",
-    question: "Relaciona cada situación con la emoción MÁS probable.",
+    question: "Relaciona situación con la emoción más probable",
     leftItems: [
-      { id: "sit-deuda", label: "Recibir una deuda inesperada" },
-      { id: "sit-meta", label: "Guardar dinero para una meta importante" },
-      { id: "sit-saldo", label: "Ver que tu saldo está más bajo de lo que pensabas" },
-      { id: "sit-comprar", label: "Comprar algo que querías desde hace tiempo" },
+      { id: "sit-saldo", label: "Ves que tu saldo es menor de lo que pensabas" },
+      { id: "sit-meta", label: "Guardas dinero para una meta importante" },
+      { id: "sit-cobro", label: "Te llega un cobro inesperado" },
+      { id: "sit-deseo", label: "Compras algo que querías hace tiempo" },
     ],
     rightItems: [
-      { id: "int-estres", label: "Estrés" },
-      { id: "int-tranquilidad", label: "Tranquilidad" },
       { id: "int-ansiedad", label: "Ansiedad" },
+      { id: "int-tranquilidad", label: "Tranquilidad" },
+      { id: "int-estres", label: "Estrés" },
       { id: "int-emocion", label: "Emoción" },
     ],
     correctPairs: [
-      { leftId: "sit-deuda", rightId: "int-estres" },
-      { leftId: "sit-meta", rightId: "int-tranquilidad" },
       { leftId: "sit-saldo", rightId: "int-ansiedad" },
-      { leftId: "sit-comprar", rightId: "int-emocion" },
+      { leftId: "sit-meta", rightId: "int-tranquilidad" },
+      { leftId: "sit-cobro", rightId: "int-estres" },
+      { leftId: "sit-deseo", rightId: "int-emocion" },
     ],
     isAssessment: true,
     continueLabel: "Continuar",
     fullScreen: true,
   },
 
-  // SLIDE 9 — FLASHCARD (Theory)
+  // SLIDE 9 — Flashcard (Teoría)
   {
     id: "cms-slide-9",
     stepType: "info",
-    title: "Recuperar el control",
-    body: "Cuando reconoces una emoción, recuperas control.\n\nCuando la ignoras, la emoción puede convertirse en impulso.",
-    isAssessment: false,
-    continueLabel: "Continuar",
+    title: "Tipos de compra",
+    description: "Planeación vs Impulso",
+    body: "Recuerda los dos tipos de compra:\n\n• **Planeada**: Sabes por qué y para qué.\n• **Impulsiva**: Nace de una emoción fuerte.\n\n¡La planeación es el mapa que te salva del bosque!",
+    continueLabel: "Entendido",
     fullScreen: true,
   },
 
-  // SLIDE 10 — Multiple Select (graded)
+  // SLIDE 10 — Ejercicio (Calificado) -> Mindset Translator (Psychology)
   {
-    id: "cms-slide-10",
-    stepType: "multi_select",
-    title: "Señales de alerta",
-    description: "Una emoción fuerte puede influir en una compra incluso si la persona “cree” que está decidiendo con lógica. Selecciona todas las correctas.",
-    question: "¿Cuáles de estas señales pueden indicar que una emoción está influyendo en una compra?",
-    options: [
-      { id: "opt-rapido", label: "Querer decidir rápido", isCorrect: true },
-      { id: "opt-justificar", label: "Justificar la compra después", isCorrect: true },
-      { id: "opt-ignorar-plan", label: "Ignorar si estaba planeada", isCorrect: true },
-      { id: "opt-impulso", label: "Sentir impulso inmediato", isCorrect: true },
+    id: "qed-mindset-2",
+    stepType: "mindset_translator",
+    question: "Detectando justificaciones vacías",
+    beliefs: [
+      {
+        id: "belief-mariana",
+        original: "Estoy estresada. Me merezco comprar esto aunque no me alcance.",
+        healthyOptions: [
+          { id: "hm-1", label: "Mi estrés es real, pero gastar lo que no tengo solo me traerá más estrés mañana.", isCorrect: true },
+          { id: "hm-2", label: "Si trabajo duro, el dinero no debería ser una preocupación hoy.", isCorrect: false },
+          { id: "hm-3", label: "Un pequeño gusto no afecta mi futuro si me hace feliz ahora.", isCorrect: false },
+        ]
+      }
     ],
     isAssessment: true,
-    continueLabel: "Continuar",
+    continueLabel: "Mente clara",
     fullScreen: true,
-    // Feedback: Cuando la emoción sube, suelen aparecer varias señales al mismo tiempo.
   },
 
-  // SLIDE 11 — FLASHCARD (Key Idea)
+  // SLIDE 11 — Ejercicio (Calificado) Multi select -> Blitz Challenge (2/2)
   {
     id: "cms-slide-11",
-    stepType: "info",
-    title: "La meta real",
-    body: "La meta no es “no sentir”.\n\nLa meta es:\nsentir, reconocer\ny decidir mejor.",
-    isAssessment: false,
-    continueLabel: "Continuar",
+    stepType: "blitz_challenge",
+    title: "Reto Relámpago",
+    description: "Cuando una emoción domina, aparecen varias señales a la vez.",
+    question: "¿Cuáles indican una compra impulsiva?",
+    options: [
+      { id: "opt-rapido", label: "Querer decidir rápido", isCorrect: true },
+      { id: "opt-ignorar", label: "Ignorar si estaba planeado", isCorrect: true },
+      { id: "opt-justificar", label: "Justificar después de pagar", isCorrect: true },
+      { id: "opt-impulso", label: "Sentir impulso inmediato", isCorrect: true },
+    ],
+    timeLimit: 20,
+    isAssessment: true,
+    continueLabel: "¡Excelente!",
     fullScreen: true,
   },
 
-  // SLIDE 12 — Order by Logic (graded)
+  // SLIDE 12 — Flashcard (Teoría método 4 pasos)
   {
     id: "cms-slide-12",
-    stepType: "order",
-    question: "Ordena una forma más inteligente de decidir cuando una emoción es fuerte.",
-    items: [
-      { id: "step-4", label: "Decidir", correctOrder: 4 },
-      { id: "step-2", label: "Hacer una pausa", correctOrder: 2 },
-      { id: "step-3", label: "Evaluar si lo necesito", correctOrder: 3 },
-      { id: "step-1", label: "Nombrar lo que siento", correctOrder: 1 },
-    ],
-    isAssessment: true,
-    continueLabel: "Continuar",
+    stepType: "billy_talks",
+    mood: "mascot",
+    body: "¡Anótalo! Estos 4 pasos son como el cinturón de seguridad de tus ahorros:\n\n1. **Nombrar** lo que siento.\n2. **Pausar** 30 segundos.\n3. **Evaluar** si lo necesito.\n4. **Decidir** con calma.",
+    continueLabel: "¡Memorizado!",
     fullScreen: true,
-    // Feedback: Primero reconoces la emoción. Luego recuperas claridad para decidir.
   },
 
-  // SLIDE 13 — Error Diagnosis (graded)
+  // SLIDE 13 — Ejercicio (Calificado) Ordenar
   {
     id: "cms-slide-13",
-    stepType: "mcq",
-    title: "El pensamiento de Mariana",
-    description: "Mariana piensa: “Estoy estresada. Me merezco comprar esto, aunque no me alcance”.",
-    question: "¿Cuál es el principal problema en ese pensamiento?",
-    options: [
-      { id: "opt-lista", label: "Está haciendo una lista de prioridades", isCorrect: false },
-      { id: "opt-mezcla", label: "Está mezclando emoción con justificación financiera", isCorrect: true, explanation: "La emoción explica cómo te sientes, pero no convierte una mala decisión en buena." },
-      { id: "opt-comparar", label: "Está comparando precios antes de decidir", isCorrect: false },
-      { id: "opt-consecuencias", label: "Está analizando consecuencias a largo plazo", isCorrect: false },
+    stepType: "order",
+    question: "Ordena el método de 4 pasos de Billy",
+    items: [
+      { id: "step-nombrar", label: "Nombrar lo que siento", correctOrder: 1 },
+      { id: "step-pausar", label: "Pausar", correctOrder: 2 },
+      { id: "step-evaluar", label: "Evaluar si lo necesito", correctOrder: 3 },
+      { id: "step-decidir", label: "Decidir", correctOrder: 4 },
     ],
     isAssessment: true,
-    continueLabel: "Continuar",
+    continueLabel: "¡Listo!",
     fullScreen: true,
   },
 
-  // SLIDE 14 — Diagnostic Reflection (non-graded)
+  // SLIDE 14 — Diagnóstico (No calificado)
   {
     id: "cms-slide-14",
     stepType: "mcq",
     question: "¿Qué emoción aparece con más frecuencia cuando piensas en dinero?",
     options: [
-      { id: "opt-motivacion", label: "Motivación", isCorrect: true },
-      { id: "opt-preocupacion", label: "Preocupación", isCorrect: true },
-      { id: "opt-tranquilidad", label: "Tranquilidad", isCorrect: true },
       { id: "opt-presion", label: "Presión", isCorrect: true },
+      { id: "opt-motivacion", label: "Motivación", isCorrect: true },
+      { id: "opt-tranquilidad", label: "Tranquilidad", isCorrect: true },
+      { id: "opt-preocupacion", label: "Preocupación", isCorrect: true },
     ],
     isAssessment: false,
     recordIncorrect: false,
-    continueLabel: "Continuar",
+    continueLabel: "Finalizar lección",
     fullScreen: true,
+    description: "Actualizando tu perfil emocional...",
   },
 
-  // SLIDE 15 — Progress Feedback
+  // SLIDE 15 — Cierre (Progreso)
   {
     id: "cms-slide-15",
     stepType: "summary",
     title: "¡Lección completada!",
-    body: "Ahora entiendes mejor cómo tus emociones pueden influir en tus decisiones con dinero.",
+    body: "Ahora puedes detectar cuándo una emoción está dominando una decisión con dinero. ¡Sigue así!",
     isAssessment: false,
     continueLabel: "Siguiente lección",
     fullScreen: true,

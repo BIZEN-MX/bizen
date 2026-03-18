@@ -3,7 +3,9 @@
 import React, { useReducer, useEffect, useCallback, useRef, useState } from "react"
 import { LessonStep } from "@/types/lessonTypes"
 import { lessonReducer, LessonState } from "./lessonReducer"
-import { LessonScreen, StickyFooterButton, StickyFooter, LessonExitModal } from "./index"
+import { LessonScreen } from "./LessonScreen"
+import { StickyFooterButton, StickyFooter } from "./StickyFooter"
+import { LessonExitModal } from "./LessonExitModal"
 import { LessonProgressHeader } from "./LessonProgressHeader"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X, CONTENT_PADDING_Y } from "./layoutConstants"
 import {
@@ -16,7 +18,14 @@ import {
   FillBlanksStep,
   ImageChoiceStep,
   SummaryStep,
+  MiniSimStep,
+  BillyTalksStep,
+  BlitzChallengeStep,
+  ImpulseMeterStep,
+  MindsetTranslatorStep,
+  InfluenceDetectiveStep,
 } from "./steps"
+import { SwipeSorterStep } from "./steps/SwipeSorterStep"
 import { haptic } from "@/utils/hapticFeedback"
 import { playFlipSound } from "./lessonSounds"
 import { SmartText } from "./SmartText"
@@ -30,6 +39,28 @@ interface LessonEngineProps {
   /** Called when progress changes (progress bar = currentStep/totalSteps; stars = by mistakes). */
   onProgressChange?: (progress: { currentStep: number; totalSteps: number; streak: number; stars: 0 | 1 | 2 | 3 }) => void
   isRepeat?: boolean
+}
+
+/**
+ * Extracts readable text from a LessonStep for Text-to-Speech playback.
+ */
+function getTTSContent(step: any): string {
+  if (!step) return ""
+  const parts: string[] = []
+
+  // ONLY return content if there is an AI Insight or Clue.
+  // This makes the voice exclusive to Billy's messages.
+  if (step.aiInsight) {
+    parts.push(step.aiInsight)
+  } else if (step.clue) {
+    parts.push(`¡Pista! ${step.clue}`)
+  } else if (step.stepType === "billy_talks" && step.body) {
+    parts.push(step.body)
+  }
+
+  // clean out markdown symbols
+  const text = parts.join(". ")
+  return text.replace(/[*_#`]/g, "")
 }
 
 /**
@@ -55,6 +86,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
+
+  const [startTime] = useState(() => Date.now())
 
   // Initialize on mount
   useEffect(() => {
@@ -115,12 +148,125 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const currentStep = state.allSteps[state.currentStepIndex]
   const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
   const isSummaryStep = currentStep?.stepType === "summary"
-  const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice"].includes(currentStep?.stepType || "")
+  const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice", "blitz_challenge"].includes(currentStep?.stepType || "")
 
-  // Find the last InfoStep seen before the current step
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false)
+  const [isAudioLoading, setIsAudioLoading] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const stopAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
+    setIsAudioPlaying(false)
+    setIsAudioLoading(false)
+  }, [])
+
+  const playFallbackSpeech = useCallback((text: string) => {
+    console.warn("[TTS] Using browser fallback speech (Google TTS API failed)")
+    if (typeof window === "undefined" || !window.speechSynthesis) return
+
+    const utterance = new SpeechSynthesisUtterance(text)
+    const voices = window.speechSynthesis.getVoices()
+    const mxVoice = voices.find(v => v.lang === "es-MX" || v.lang === "es-US")
+    const esVoice = voices.find(v => v.lang.startsWith("es"))
+    
+    if (mxVoice) utterance.voice = mxVoice
+    else if (esVoice) utterance.voice = esVoice
+    else utterance.lang = "es-MX"
+
+    utterance.rate = 0.9   // Slow and clear
+    utterance.pitch = 1.0  // Natural pitch
+
+    utterance.onstart = () => {
+      setIsAudioPlaying(true)
+      setIsAudioLoading(false)
+    }
+    utterance.onend = () => setIsAudioPlaying(false)
+    utterance.onerror = () => {
+      setIsAudioPlaying(false)
+      setIsAudioLoading(false)
+    }
+
+    window.speechSynthesis.speak(utterance)
+  }, [])
+
+  const playAudio = useCallback(async () => {
+    if (!currentStep) return
+    if (typeof window === "undefined") return
+
+    stopAudio()
+
+    const content = getTTSContent(currentStep)
+    if (!content) return
+
+    try {
+      setIsAudioLoading(true)
+      const response = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: content }),
+      })
+
+      if (!response.ok) {
+        const errBody = await response.text().catch(() => "unknown")
+        console.error(`[TTS] Google API returned ${response.status}:`, errBody)
+        throw new Error(`TTS API error: ${response.status}`)
+      }
+
+      console.log("[TTS] Using Google Cloud TTS (es-US-Studio-B)")
+      const audioBlob = await response.blob()
+      const audioUrl = URL.createObjectURL(audioBlob)
+
+      const audio = new Audio(audioUrl)
+      audioRef.current = audio
+
+      audio.onplay = () => {
+        setIsAudioPlaying(true)
+        setIsAudioLoading(false)
+      }
+
+      audio.onended = () => {
+        setIsAudioPlaying(false)
+        URL.revokeObjectURL(audioUrl)
+      }
+
+      audio.onerror = () => {
+        console.error("Audio playback error")
+        setIsAudioPlaying(false)
+        setIsAudioLoading(false)
+        URL.revokeObjectURL(audioUrl)
+      }
+
+      audio.play()
+    } catch (error) {
+      console.warn("TTS API failed, falling back to browser speech:", error)
+      playFallbackSpeech(content)
+    }
+  }, [currentStep, stopAudio, playFallbackSpeech])
+
+  const toggleAudio = useCallback(() => {
+    if (isAudioPlaying) {
+      stopAudio()
+    } else {
+      playAudio()
+    }
+  }, [isAudioPlaying, playAudio, stopAudio])
+
+  // Stop audio on unmount or step change
+  useEffect(() => {
+    return () => stopAudio()
+  }, [currentStep?.id, stopAudio])
+
+  // Find the last theoretical step seen before the current step
   const lastInfoStep = React.useMemo(() => {
     for (let i = state.currentStepIndex - 1; i >= 0; i--) {
-      if (state.allSteps[i]?.stepType === "info") return state.allSteps[i]
+      const step = state.allSteps[i]
+      if (step?.stepType === "info" || step?.stepType === "billy_talks") return step
     }
     return null
   }, [state.currentStepIndex, state.allSteps])
@@ -270,6 +416,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const stepProps = {
     step: currentStep as any,
     onAnswered: onStepAnswered,
+    onPlayAudio: playAudio,
     actionTrigger: state.actionTrigger,
     isContinueEnabled: state.isContinueEnabled,
   }
@@ -292,8 +439,40 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         return <FillBlanksStep {...stepProps} />
       case "image_choice":
         return <ImageChoiceStep {...stepProps} />
-      case "summary":
-        return <SummaryStep {...stepProps} step={{ ...stepProps.step, starsEarned: stars, isRepeat }} />
+      case "summary": {
+        const assessmentSteps = state.originalSteps.filter(s => s.isAssessment)
+        const accuracy = assessmentSteps.length > 0 
+          ? Math.max(0, Math.round(((assessmentSteps.length - state.totalMistakes) / assessmentSteps.length) * 100))
+          : 100
+        const totalTime = Math.floor((Date.now() - startTime) / 1000)
+
+        return (
+          <SummaryStep 
+            {...stepProps} 
+            step={{ 
+              ...stepProps.step, 
+              starsEarned: stars, 
+              isRepeat,
+              accuracy,
+              totalTime
+            }} 
+          />
+        )
+      }
+      case "mini_sim":
+        return <MiniSimStep {...stepProps} />
+      case "billy_talks":
+        return <BillyTalksStep {...stepProps} />
+      case "blitz_challenge":
+        return <BlitzChallengeStep {...stepProps} />
+      case "impulse_meter":
+        return <ImpulseMeterStep {...stepProps} />
+      case "mindset_translator":
+        return <MindsetTranslatorStep {...stepProps} />
+      case "influence_detective":
+        return <InfluenceDetectiveStep {...stepProps} />
+      case "swipe_sorter":
+        return <SwipeSorterStep {...(stepProps as any)} />
       default:
         return <div>Unknown step type: {currentStep.stepType}</div>
     }
@@ -325,17 +504,24 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   const renderFooter = (isFixed: boolean = true) => {
     const isTrueFalse = currentStep.stepType === "true_false"
+    const isBlitz = currentStep.stepType === "blitz_challenge"
+    const blitzCorrect = isBlitz && isCorrect
 
     // Specifically hide explanation (feedbackBody) for true_false per request
-    const feedbackBody = (!isTrueFalse && hasFeedback)
+    // For blitz, show special message if correct
+    const feedbackBody = (!isTrueFalse && !isBlitz && hasFeedback)
       ? (currentStep as any).options?.find((o: any) => o.id === currentAnswer?.answerData?.selectedOptionId)?.explanation
+      : (blitzCorrect ? "Respondiste correctamente a tiempo." : undefined)
+
+    const feedbackTitle = hasFeedback
+      ? (blitzCorrect ? "¡Buen trabajo relámpago!" : (isCorrect ? "¡Muy bien hecho!" : "¡Sigue intentando!"))
       : undefined
 
     return (
       <StickyFooter
         fixed={isFixed}
         feedbackColor={hasFeedback ? (isCorrect ? "correct" : "incorrect") : null}
-        feedbackTitle={hasFeedback ? (isCorrect ? "¡Muy bien hecho!" : "¡Sigue intentando!") : undefined}
+        feedbackTitle={feedbackTitle}
         feedbackBody={feedbackBody}
         isDark={isSummaryStep}
       >
@@ -384,6 +570,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 streak={streak}
                 stars={stars}
                 onExit={handleAttemptExit}
+                onToggleAudio={getTTSContent(currentStep) ? toggleAudio : undefined}
+                isAudioPlaying={isAudioPlaying}
+                isAudioLoading={isAudioLoading}
               />
             </div>
           </div>
@@ -488,36 +677,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 <path d="M9 15H13" stroke="white" strokeWidth="2" strokeLinecap="round" />
                 <path d="M6 2V22" stroke="white" strokeWidth="2" opacity="0.4" />
               </svg>
-              <span>Repasar nota</span>
+              <span>Repasar flashcard</span>
             </button>
 
-            {!isMobileScreen && (
-              <motion.div
-                className="recall-mascot-wrap"
-                initial={{ opacity: 0, scale: 0.8, y: 15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
-                style={{
-                  marginTop: 4,
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                  pointerEvents: "none"
-                }}
-              >
-                <img
-                  src="/thumbs up.png"
-                  alt="Mascot"
-                  style={{
-                    width: "clamp(100px, 18vw, 220px)",
-                    height: "auto",
-                    maxHeight: "25vh",
-                    objectFit: "contain",
-                    filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.1))",
-                  }}
-                />
-              </motion.div>
-            )}
           </div>
         )}
 

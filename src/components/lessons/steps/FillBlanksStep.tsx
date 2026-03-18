@@ -5,6 +5,7 @@ import { FillBlanksStepFields } from "@/types/lessonTypes"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
 import { motion, AnimatePresence } from "framer-motion"
+import { StepScenarioCard } from "../StepScenarioCard"
 
 interface FillBlanksStepProps {
   step: FillBlanksStepFields & { id: string; title?: string; description?: string }
@@ -101,13 +102,13 @@ export function FillBlanksStep({
   return (
     <div style={{
       width: "100%",
-      maxWidth: 600,
+      maxWidth: 520,
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
       gap: 32
     }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <ExerciseInstruction type="fill_blanks" />
         <h3 style={{
           fontSize: "clamp(20px, 3.5vw, 26px)",
@@ -118,6 +119,8 @@ export function FillBlanksStep({
         }}>
           {step.question || "Completa los espacios en blanco"}
         </h3>
+
+        {step.description && <StepScenarioCard text={step.description} />}
       </div>
 
       {/* Sentence Area */}

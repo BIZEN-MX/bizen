@@ -5,6 +5,7 @@ import { lessonDineroYAutoestimaSteps } from "./lesson-dinero-y-autoestima"
 import { lessonMisPrimerasCreenciasSobreElDineroSteps } from "./lesson-mis-primeras-creencias-sobre-el-dinero"
 import { lessonExpectativasVsRealidadFinancieraSteps } from "./lesson-expectativas-vs-realidad-financiera"
 import { lessonPacienciaFinancieraYMentalidadALargoPlazoSteps } from "./lesson-paciencia-financiera-y-mentalidad-a-largo-plazo"
+import { lessonResponsabilidadPersonalConElDineroSteps } from "./lesson-responsabilidad-personal-con-el-dinero"
 
 /**
  * Maps lesson ID to steps. Add entries when you add lesson content.
@@ -17,6 +18,7 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "mis-primeras-creencias-sobre-el-dinero": lessonMisPrimerasCreenciasSobreElDineroSteps,
   "expectativas-vs-realidad-financiera": lessonExpectativasVsRealidadFinancieraSteps,
   "paciencia-financiera-y-mentalidad-a-largo-plazo": lessonPacienciaFinancieraYMentalidadALargoPlazoSteps,
+  "responsabilidad-personal-con-el-dinero": lessonResponsabilidadPersonalConElDineroSteps,
 }
 
 /** Get steps for a lesson ID. Returns empty array if none. */

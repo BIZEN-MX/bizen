@@ -5,6 +5,7 @@ import { MultiSelectStepFields } from "@/types/lessonTypes"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
 import { motion } from "framer-motion"
+import { StepScenarioCard } from "../StepScenarioCard"
 
 interface MultiSelectStepProps {
   step: MultiSelectStepFields & { id: string; title?: string; description?: string }
@@ -72,8 +73,15 @@ export function MultiSelectStep({
   }, [actionTrigger])
 
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "clamp(16px, 4vw, 28px)" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <div style={{ 
+      width: "100%", 
+      maxWidth: 520, 
+      margin: "0 auto", 
+      display: "flex", 
+      flexDirection: "column", 
+      gap: "clamp(16px, 4vw, 28px)" 
+    }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <ExerciseInstruction type="multi_select" />
         <h3 style={{
           fontSize: "clamp(20px, 3vw, 26px)",
@@ -81,9 +89,11 @@ export function MultiSelectStep({
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-                  }}>
+        }}>
           {step.question}
         </h3>
+        
+        {step.description && <StepScenarioCard text={step.description} />}
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "clamp(8px, 1.5vw, 12px)" }}>
@@ -130,10 +140,10 @@ export function MultiSelectStep({
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "clamp(8px, 2vw, 16px)",
+                gap: "clamp(6px, 1.5vw, 12px)",
                 width: "100%",
-                padding: "clamp(8px, 2.5vw, 16px) clamp(10px, 3vw, 20px)",
-                borderRadius: 16,
+                padding: "clamp(4px, 1.2vw, 8px) clamp(10px, 2.5vw, 16px)",
+                borderRadius: 14,
                 background,
                 border: `2px solid ${borderColor}`,
                 boxShadow,
@@ -147,21 +157,21 @@ export function MultiSelectStep({
               onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
             >
               <div style={{
-                width: 24,
-                height: 24,
-                borderRadius: 6,
+                width: 20,
+                height: 20,
+                borderRadius: 4,
                 border: `2px solid ${isSelected ? '#0F62FE' : '#E5E7EB'}`,
                 background: isSelected ? '#0F62FE' : 'transparent',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: 'white',
-                fontSize: 14,
+                fontSize: 12,
                 flexShrink: 0
               }}>
                 {isSelected && "✓"}
               </div>
-              <span style={{ flex: 1, fontSize: "clamp(14px, 3.5vw, 18px)", fontWeight: 500, }}>{option.label}</span>
+              <span style={{ flex: 1, fontSize: "clamp(13px, 3vw, 16px)", fontWeight: 500, }}>{option.label}</span>
               {showFeedback && isSelected && (
                 <span style={{ fontSize: 20, }}>{isCorrect ? "✓" : "✗"}</span>
               )}

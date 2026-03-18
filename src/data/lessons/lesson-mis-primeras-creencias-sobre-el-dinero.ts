@@ -17,11 +17,10 @@ export const lessonMisPrimerasCreenciasSobreElDineroSteps: LessonStep[] = [
   // SLIDE 1 — Theory Flashcard (Image 1 RIGHT)
   {
     id: "mpc-intro",
-    stepType: "info",
-    title: "",
-    body: "Las primeras ideas que tienes sobre el dinero\nno las inventaste tú.",
-    isAssessment: false,
-    continueLabel: "Empezar",
+    stepType: "billy_talks",
+    mood: "thinking",
+    body: "¡Hola! Soy Billy. ¿Sabías que las primeras ideas que tienes sobre el dinero no las inventaste tú?\n\nSe nos pegan desde niños sin darnos cuenta. ¡Vamos a descubrir cuáles son las tuyas!",
+    continueLabel: "¡Empecemos!",
     fullScreen: true,
   },
 
@@ -29,16 +28,28 @@ export const lessonMisPrimerasCreenciasSobreElDineroSteps: LessonStep[] = [
   {
     id: "mpc-reflection",
     stepType: "mcq",
-    question: "¿Recuerdas alguna frase sobre el dinero que escuchabas en casa?",
+    question: "¿Qué frase escuchabas más en casa?",
     options: [
       { id: "opt-cuesta", label: "El dinero cuesta mucho", isCorrect: true },
       { id: "opt-ricos", label: "Los ricos son malos", isCorrect: true },
       { id: "opt-no-alcanza", label: "El dinero no alcanza", isCorrect: true },
-      { id: "opt-no-recuerdo", label: "No recuerdo", isCorrect: true },
+      { id: "opt-no-recuerdo", label: "No recuerdo nada claro", isCorrect: true },
     ],
     isAssessment: false,
     recordIncorrect: false,
     continueLabel: "Continuar",
+    fullScreen: true,
+  },
+  {
+    id: "mpc-detective",
+    stepType: "influence_detective",
+    scenario: "Escuchas a alguien decir: 'El dinero cambia a la gente para mal'. De pronto sientes desconfianza hacia los que tienen mucho.",
+    options: [
+      { id: "det-1", label: "Creencia heredada (Familia/Entorno)", emotion: "Social", isCorrect: true },
+      { id: "det-2", label: "Análisis financiero real", emotion: "Finance", isCorrect: false },
+      { id: "det-3", label: "Experiencia propia directa", emotion: "Inspiration", isCorrect: false },
+    ],
+    isAssessment: true,
     fullScreen: true,
   },
 
@@ -46,9 +57,11 @@ export const lessonMisPrimerasCreenciasSobreElDineroSteps: LessonStep[] = [
   {
     id: "mpc-teoria-1",
     stepType: "info",
-    title: "",
-    body: "Muchas creencias sobre el dinero\nse aprenden sin que nos demos cuenta.",
-    isAssessment: false,
+    title: "El sistema operativo",
+    description: "Aprendizaje automático",
+    body: "Muchas creencias se aprenden en automático. Son como el sistema operativo de tu mente financiera.\n\n¡Pero a veces ese sistema necesita una actualización!",
+    imageUrl: IMG + "/image-2.png", // Following original pattern
+    imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,
   },
@@ -86,10 +99,9 @@ export const lessonMisPrimerasCreenciasSobreElDineroSteps: LessonStep[] = [
   // SLIDE 6 — Theory Flashcard (Image 3 RIGHT)
   {
     id: "mpc-teoria-2",
-    stepType: "info",
-    title: "",
-    body: "Si escuchas \"el dinero es malo\" muchas veces,\ntu mente puede empezar a creerlo.",
-    isAssessment: false,
+    stepType: "billy_talks",
+    mood: "thinking",
+    body: "Si escuchas 'el dinero es malo' mil veces, tu mente lo guarda como una verdad absoluta.\n\n¡Eso puede hacer que autosabotees tus propios ahorros después!",
     continueLabel: "Continuar",
     fullScreen: true,
   },
@@ -97,23 +109,18 @@ export const lessonMisPrimerasCreenciasSobreElDineroSteps: LessonStep[] = [
   // SLIDE 7 — Scenario Decision (no image)
   {
     id: "mpc-scenario",
-    stepType: "mcq",
-    question:
-      "Quieres ahorrar, pero escuchas en tu cabeza:\n\"No sirve de nada\".\n\n¿Qué es eso?",
+    stepType: "blitz_challenge",
+    title: "Reto Relámpago",
+    description: "Quieres ahorrar, pero una voz interna dice: '¡Disfruta ahora, mañana quién sabe!'",
+    question: "¿Qué es ese pensamiento?",
     options: [
-      { id: "opt-emocion", label: "Una emoción", isCorrect: false },
-      {
-        id: "opt-creencia",
-        label: "Una creencia",
-        isCorrect: true,
-        explanation: "Correcto. Es una idea aprendida, no un hecho.",
-      },
-      { id: "opt-hecho", label: "Un hecho", isCorrect: false },
-      { id: "opt-regla", label: "Una regla", isCorrect: false },
+      { id: "opt-emocion", label: "Emoción temporal", isCorrect: false },
+      { id: "opt-creencia", label: "Creencia limitante", isCorrect: true, explanation: "Es una idea que te frena, no una realidad inevitable." },
+      { id: "opt-hecho", label: "Un hecho real", isCorrect: false },
     ],
+    timeLimit: 20,
     isAssessment: true,
-    recordIncorrect: true,
-    continueLabel: "Continuar",
+    continueLabel: "¡Rápido!",
     fullScreen: true,
   },
 
@@ -121,43 +128,40 @@ export const lessonMisPrimerasCreenciasSobreElDineroSteps: LessonStep[] = [
   {
     id: "mpc-teoria-3",
     stepType: "info",
-    title: "",
-    body: "Las creencias no son hechos.\nSon ideas que podemos cuestionar.",
-    isAssessment: false,
+    title: "Creencia vs Realidad",
+    description: "Cuestionando ideas",
+    body: "Las creencias **NO** son hechos. Son solo ideas que aceptamos.\n\n¡Y lo mejor es que puedes cuestionarlas y elegir unas nuevas!",
+    imageUrl: IMG + "/image-4.png",
+    imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,
   },
 
   // SLIDE 9 — Multiple Choice
   {
-    id: "mpc-mcq",
-    stepType: "mcq",
-    question: "¿Qué es lo más sano hacer con una creencia limitante?",
+    id: "mpc-blitz",
+    stepType: "blitz_challenge",
+    title: "Reto Relámpago",
+    description: "Detectas una idea que te frena a ahorrar.",
+    question: "¿Qué es lo más sano hacer?",
     options: [
-      { id: "opt-ignorar", label: "Ignorarla", isCorrect: false },
+      { id: "opt-cuestionar", label: "Cuestionar si es verdad", isCorrect: true, explanation: "Cuestionar rompe el poder de la creencia limitante." },
+      { id: "opt-ignorar", label: "Ignorarla y ya", isCorrect: false },
       { id: "opt-defender", label: "Defenderla", isCorrect: false },
-      {
-        id: "opt-cuestionar",
-        label: "Cuestionarla",
-        isCorrect: true,
-        explanation: "Cuestionar una creencia es el primer paso para cambiarla.",
-      },
-      { id: "opt-repetir", label: "Repetirla", isCorrect: false },
     ],
+    timeLimit: 20,
     isAssessment: true,
-    recordIncorrect: true,
-    continueLabel: "Continuar",
+    continueLabel: "Avanzar",
     fullScreen: true,
   },
 
   // SLIDE 10 — Theory Flashcard (Image 5 RIGHT)
   {
     id: "mpc-teoria-4",
-    stepType: "info",
-    title: "",
-    body: "Entender tus creencias\nes el primer paso para transformarlas.",
-    isAssessment: false,
-    continueLabel: "Continuar",
+    stepType: "billy_talks",
+    mood: "happy",
+    body: "Entender tus creencias es el primer paso para transformarlas.\n\n¡Felicidades! Acabas de dar el paso más difícil hacia tu libertad financiera.",
+    continueLabel: "¡Genial!",
     fullScreen: true,
   },
 

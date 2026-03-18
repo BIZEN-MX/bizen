@@ -6,6 +6,7 @@ import { OrderStepFields } from "@/types/lessonTypes"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
 import { Hand, MoveVertical, CheckCircle2, XCircle, ListOrdered, AlignJustify, Star, Zap, Target, Sparkles, Heart } from "lucide-react"
+import { StepScenarioCard } from "../StepScenarioCard"
 
 interface OrderStepProps {
   step: OrderStepFields & { id: string; title?: string; description?: string }
@@ -89,13 +90,13 @@ export function OrderStep({
   return (
     <div style={{
       width: "100%",
-      maxWidth: 600,
+      maxWidth: 520,
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
       gap: 24
     }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <ExerciseInstruction type="order" />
         <h3 style={{
           fontSize: "clamp(20px, 3.5vw, 28px)",
@@ -103,9 +104,11 @@ export function OrderStep({
           color: "#111827",
           margin: 0,
           lineHeight: 1.3,
-                  }}>
+        }}>
           {step.question || "Pon los elementos en el orden correcto"}
         </h3>
+
+        {step.description && <StepScenarioCard text={step.description} />}
       </div>
 
       {/* Status hint - Explanatory UI */}

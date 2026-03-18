@@ -18,7 +18,14 @@ export type StepType =
   | "fill_blanks"
   | "image_choice"
   | "summary"
-  | "review";
+  | "review"
+  | "mini_sim"
+  | "billy_talks"
+  | "blitz_challenge"
+  | "impulse_meter"
+  | "mindset_translator"
+  | "influence_detective"
+  | "swipe_sorter";
 
 // ============================================================================
 // Option Types (used by multiple step types)
@@ -129,11 +136,92 @@ export interface SummaryStepFields {
   body: string;
   /** Optional image URL for lesson-completed slide; defaults to /Lección completada.png */
   imageUrl?: string;
+  accuracy?: number;
+  totalTime?: number;
 }
 
 export interface ReviewStepFields {
   stepType: "review";
   reviewSourceStepId: string; // References the step being reviewed
+}
+
+export interface MiniSimStepFields {
+  stepType: "mini_sim";
+  title: string;
+  body?: string;
+  /** Type of simulation: compound interest, inflation, budgeting, etc. */
+  simType: "compound_interest" | "inflation" | "budget_slider";
+  /** Goal value the user must reach to pass the step (e.g. save 10k) */
+  targetValue?: number;
+  /** Initial values for the simulation sliders */
+  initialValues?: Record<string, number>;
+}
+
+export interface BillyTalksStepFields {
+  stepType: "billy_talks";
+  body: string;
+  mood?: "happy" | "worried" | "thinking" | "celebrating" | "crying" | "mascot";
+}
+
+export interface BlitzChallengeStepFields {
+  stepType: "blitz_challenge";
+  question: string;
+  options: Option[];
+  /** Time limit in seconds, default 15 */
+  timeLimit?: number;
+  /** Name of the 'ghost' opponent (e.g., Billy, Juan) */
+  ghostName?: string;
+  /** Opponent's score or time taken */
+  ghostScore?: string;
+}
+
+export interface ImpulseMeterStepFields {
+  stepType: "impulse_meter";
+  item: {
+    name: string;
+    price: string;
+    imageUrl?: string;
+  };
+  instructions: string;
+  holdTime?: number; // How many seconds to hold, default 3
+}
+
+export interface MindsetTranslatorStepFields {
+  stepType: "mindset_translator";
+  question: string;
+  beliefs: Array<{
+    id: string;
+    original: string; // The limiting belief
+    healthyOptions: Option[]; // The options to translate it to
+  }>;
+}
+
+export interface InfluenceDetectiveStepFields {
+  stepType: "influence_detective";
+  scenario: string;
+  scenarioImage?: string;
+  options: Array<{
+    id: string;
+    label: string;
+    emotion: string; // e.g., "Comparison", "Inspiration", "Fear"
+    isCorrect: boolean;
+  }>;
+}
+
+export interface SwipeSorterItem {
+  id: string;
+  label: string;
+  sublabel?: string;
+  amount?: string;
+  correctBucket: "left" | "right";
+}
+
+export interface SwipeSorterStepFields {
+  stepType: "swipe_sorter";
+  question?: string;
+  leftBucket: { label: string; color: string };
+  rightBucket: { label: string; color: string };
+  items: SwipeSorterItem[];
 }
 
 // ============================================================================
@@ -154,6 +242,12 @@ export interface BaseLessonStep {
   imageUrl?: string;
   /** When imageUrl is set: place image LEFT or RIGHT of the activity. Default "right". */
   imageAlign?: "left" | "right";
+  /** Optional AI-generated insight or clue for the voice narration */
+  aiInsight?: string;
+  /** Optional clue for the user if they get stuck */
+  clue?: string;
+  /** Optional explanation of the correct answer shown after completion */
+  explanation?: string;
 }
 
 // ============================================================================
@@ -170,7 +264,14 @@ export type LessonStep =
   | (BaseLessonStep & FillBlanksStepFields)
   | (BaseLessonStep & ImageChoiceStepFields)
   | (BaseLessonStep & SummaryStepFields)
-  | (BaseLessonStep & ReviewStepFields);
+  | (BaseLessonStep & ReviewStepFields)
+  | (BaseLessonStep & MiniSimStepFields)
+  | (BaseLessonStep & BillyTalksStepFields)
+  | (BaseLessonStep & BlitzChallengeStepFields)
+  | (BaseLessonStep & ImpulseMeterStepFields)
+  | (BaseLessonStep & MindsetTranslatorStepFields)
+  | (BaseLessonStep & InfluenceDetectiveStepFields)
+  | (BaseLessonStep & SwipeSorterStepFields);
 
 // ============================================================================
 // Example LessonStep Objects
@@ -223,174 +324,4 @@ export const exampleLessonSteps: LessonStep[] = [
     isAssessment: true,
     recordIncorrect: true,
   },
-
-  // Multi-select step
-  {
-    id: "step-3",
-    stepType: "multi_select",
-    question: "Which of the following are types of business ownership? (Select all that apply)",
-    options: [
-      {
-        id: "opt-1",
-        label: "Sole Proprietorship",
-        isCorrect: true,
-      },
-      {
-        id: "opt-2",
-        label: "Partnership",
-        isCorrect: true,
-      },
-      {
-        id: "opt-3",
-        label: "Corporation",
-        isCorrect: true,
-      },
-      {
-        id: "opt-4",
-        label: "Hobby",
-        isCorrect: false,
-      },
-    ],
-    isAssessment: true,
-    recordIncorrect: true,
-  },
-
-  // True/False step
-  {
-    id: "step-4",
-    stepType: "true_false",
-    statement: "All businesses require a physical location to operate.",
-    correctValue: false,
-    explanation: "Many businesses operate online or remotely without a physical location.",
-    isAssessment: true,
-    recordIncorrect: true,
-  },
-
-  // Order step
-  {
-    id: "step-5",
-    stepType: "order",
-    question: "Arrange the steps of starting a business in the correct order:",
-    items: [
-      {
-        id: "item-1",
-        label: "Create a business plan",
-        correctOrder: 1,
-      },
-      {
-        id: "item-2",
-        label: "Register your business",
-        correctOrder: 2,
-      },
-      {
-        id: "item-3",
-        label: "Obtain necessary licenses",
-        correctOrder: 3,
-      },
-      {
-        id: "item-4",
-        label: "Launch your business",
-        correctOrder: 4,
-      },
-    ],
-    isAssessment: true,
-    recordIncorrect: true,
-  },
-
-  // Match step
-  {
-    id: "step-6",
-    stepType: "match",
-    question: "Match each business term with its definition:",
-    leftItems: [
-      { id: "left-1", label: "Revenue" },
-      { id: "left-2", label: "Profit" },
-      { id: "left-3", label: "Expenses" },
-    ],
-    rightItems: [
-      { id: "right-1", label: "Money earned from sales" },
-      { id: "right-2", label: "Revenue minus expenses" },
-      { id: "right-3", label: "Costs of running a business" },
-    ],
-    correctPairs: [
-      { leftId: "left-1", rightId: "right-1" },
-      { leftId: "left-2", rightId: "right-2" },
-      { leftId: "left-3", rightId: "right-3" },
-    ],
-    isAssessment: true,
-    recordIncorrect: true,
-  },
-
-  // Fill blanks step
-  {
-    id: "step-7",
-    stepType: "fill_blanks",
-    question: "Complete the sentence:",
-    textParts: [
-      { type: "text", content: "A " },
-      { type: "blank", id: "blank-1", correctOptionId: "opt-2" },
-      { type: "text", content: " is a person who starts and runs a business, taking on financial risks in the hope of " },
-      { type: "blank", id: "blank-2", correctOptionId: "opt-4" },
-      { type: "text", content: "." },
-    ],
-    options: [
-      { id: "opt-1", label: "employee", isCorrect: false },
-      { id: "opt-2", label: "entrepreneur", isCorrect: true },
-      { id: "opt-3", label: "customer", isCorrect: false },
-      { id: "opt-4", label: "profit", isCorrect: true },
-      { id: "opt-5", label: "loss", isCorrect: false },
-    ],
-    isAssessment: true,
-    recordIncorrect: true,
-  },
-
-  // Image choice step
-  {
-    id: "step-8",
-    stepType: "image_choice",
-    question: "Which chart best represents exponential growth?",
-    correctImageId: "img-2", // Exponential Growth
-    imageOptions: [
-      {
-        id: "img-1",
-        label: "Linear Growth",
-        imageAlt: "A linear growth chart",
-        imageId: "linear-chart",
-      },
-      {
-        id: "img-2",
-        label: "Exponential Growth",
-        imageAlt: "An exponential growth chart",
-        imageId: "exponential-chart",
-      },
-      {
-        id: "img-3",
-        label: "Declining Growth",
-        imageAlt: "A declining growth chart",
-        imageId: "declining-chart",
-      },
-    ],
-    isAssessment: true,
-    recordIncorrect: true,
-  },
-
-  // Summary step
-  {
-    id: "step-9",
-    stepType: "summary",
-    title: "Lesson Complete!",
-    body: "You've learned about basic business concepts including ownership types, financial terms, and the steps to start a business.",
-    isAssessment: false,
-  },
-
-  // Review step (references step-2)
-  {
-    id: "step-10",
-    stepType: "review",
-    reviewSourceStepId: "step-2",
-    description: "Review: What is the primary goal of a business?",
-    isAssessment: true,
-    recordIncorrect: true,
-  },
 ];
-

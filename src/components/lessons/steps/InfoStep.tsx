@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
+import { ArrowRight, Mic } from "lucide-react"
 import { InfoStepFields } from "@/types/lessonTypes"
 import { playFlipSound } from "../lessonSounds"
 import { motion, AnimatePresence } from "framer-motion"
 import { SmartText } from "../SmartText"
+import { haptic } from "@/utils/hapticFeedback"
 
 interface InfoStepProps {
   step: InfoStepFields & {
@@ -15,6 +17,7 @@ interface InfoStepProps {
     fullScreen?: boolean
     continueLabel?: string
     imageAlign?: "left" | "right"
+    aiInsight?: string
   }
   onAnswered: (result: {
     isCompleted: boolean
@@ -22,6 +25,7 @@ interface InfoStepProps {
     answerData?: any
     canAction?: boolean
   }) => void
+  onPlayAudio?: () => void
   actionTrigger?: number
   isContinueEnabled?: boolean
 }
@@ -29,6 +33,7 @@ interface InfoStepProps {
 export function InfoStep({
   step,
   onAnswered,
+  onPlayAudio,
   actionTrigger = 0,
   isContinueEnabled = false,
 }: InfoStepProps) {
@@ -118,12 +123,9 @@ export function InfoStep({
               style={{
                 width: "clamp(100px, 18vw, 140px)",
                 height: "clamp(100px, 18vw, 140px)",
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0 8px 24px rgba(15,98,254,0.14)",
               }}
             >
               <div style={{ position: "relative", width: "70%", height: "70%" }}>
@@ -154,8 +156,12 @@ export function InfoStep({
                   color: "#FFFFFF",
                   fontWeight: 500,
                   letterSpacing: "0.03em",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6
                 }}>
-                  ¡Toca para ver la nota! →
+                  ¡Toca para ver la nota!
+                  <ArrowRight size={14} strokeWidth={3} />
                 </p>
               </motion.div>
               <p style={{
@@ -188,7 +194,7 @@ export function InfoStep({
                 "0 10px 28px rgba(15,98,254,0.12)",
                 "0 32px 64px rgba(15,98,254,0.10)",
               ].join(", "),
-              overflow: "visible",
+              overflow: "hidden",
               position: "relative",
             }}
           >
@@ -238,6 +244,66 @@ export function InfoStep({
                 alignItems: hasImage ? "flex-start" : "center",
                 minWidth: 0,
               }}>
+                {/* Billy Speaker Indicator */}
+                {step.aiInsight && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      onPlayAudio?.()
+                      haptic.light()
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      marginBottom: -8,
+                      padding: "6px 14px",
+                      background: "rgba(15, 98, 254, 0.08)",
+                      borderRadius: "14px 14px 14px 4px",
+                      borderLeft: "4px solid #0F62FE",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 12px rgba(15,98,254,0.1)",
+                      position: "relative",
+                      overflow: "visible"
+                    }}
+                  >
+                    {/* Pulsing play indicator */}
+                    <motion.div 
+                      animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      style={{
+                        position: "absolute",
+                        right: -4,
+                        top: -4,
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        background: "#0F62FE"
+                      }}
+                    />
+
+                    <div style={{ position: "relative", width: 24, height: 24 }}>
+                      <Image src="/thumbs up.png" alt="Billy" fill style={{ objectFit: "contain" }} />
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <span style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE", lineHeight: 1 }}>Billy dice:</span>
+                        <span style={{ 
+                          fontSize: 10, 
+                          fontWeight: 500, 
+                          color: "#2563EB", 
+                          opacity: 0.8,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4
+                        }}>
+                          Toca para audio
+                          <Mic size={10} strokeWidth={3} />
+                        </span>
+                    </div>
+                  </motion.div>
+                )}
 
                 {/* Category pill (description field) */}
                 {step.description && (

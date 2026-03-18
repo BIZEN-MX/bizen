@@ -6,6 +6,7 @@ import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
 import { motion, AnimatePresence } from "framer-motion"
 import { CheckCircle2, XCircle } from "lucide-react"
+import { StepScenarioCard } from "../StepScenarioCard"
 
 interface MCQStepProps {
   step: McqStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; reviewSourceStepId?: string; imageUrl?: string; imageAlign?: "left" | "right" }
@@ -65,7 +66,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
   return (
     <div style={{
       width: "100%",
-      maxWidth: 600,
+      maxWidth: 520,
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
@@ -74,7 +75,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
       {/* Question header */}
       <div style={{
         width: "100%",
-        maxWidth: 600,
+        maxWidth: 520,
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
@@ -90,20 +91,22 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
             color: "#111827",
             margin: 0,
             lineHeight: 1.3,
-                      }}
+          }}
         >
           {step.question}
         </motion.h3>
+
+        {step.description && <StepScenarioCard text={step.description} />}
       </div>
 
       {/* Options */}
       <div style={{
         width: "100%",
-        maxWidth: 600,
+        maxWidth: 520,
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "clamp(10px, 4vw, 24px)"
+        gap: "clamp(8px, 1.5vw, 16px)"
       }}>
         {step.options.map((option, index) => {
           const isSelected = selectedOptionId === option.id
@@ -162,10 +165,10 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "clamp(8px, 2vw, 16px)",
+                gap: "clamp(6px, 1.5vw, 12px)",
                 width: "100%",
-                padding: "clamp(8px, 2.5vw, 16px) clamp(10px, 3vw, 20px)",
-                borderRadius: 16,
+                padding: "clamp(5px, 1.5vw, 10px) clamp(10px, 3vw, 18px)",
+                borderRadius: 14,
                 background,
                 border: `2px solid ${borderColor}`,
                 boxShadow,
@@ -205,18 +208,18 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
             >
               {/* Letter label */}
               <div style={{
-                width: "clamp(28px, 10vw, 36px)",
-                height: "clamp(28px, 10vw, 36px)",
-                borderRadius: 10,
+                width: "clamp(24px, 8vw, 30px)",
+                height: "clamp(24px, 8vw, 30px)",
+                borderRadius: 8,
                 background: labelBg,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: 500,
                 color: labelColor,
                 flexShrink: 0,
-                                border: `1.5px solid ${borderColor}`,
+                border: `1.5px solid ${borderColor}`,
                 transition: "all 0.2s ease",
               }}>
                 {['A', 'B', 'C', 'D', 'E', 'F'][index]}
@@ -225,9 +228,9 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
               {/* Option text */}
               <span style={{
                 flex: 1,
-                fontSize: "clamp(14px, 3.5vw, 18px)",
+                fontSize: "clamp(13px, 3vw, 16px)",
                 fontWeight: 500,
-                                lineHeight: 1.3,
+                lineHeight: 1.3,
               }}>
                 {option.label}
               </span>
