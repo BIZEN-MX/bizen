@@ -277,33 +277,20 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
 
                 if (block.kind === "subheader") {
                     return (
-                        <div
+                        <h4
                             key={bi}
                             style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: 6,
-                                padding: "4px 14px",
-                                background: BLUE_LIGHT,
-                                border: `1.5px solid ${BLUE_BORDER}`,
-                                borderRadius: 999,
-                                width: "fit-content",
-                                marginLeft: align === "center" ? "auto" : undefined,
-                                marginRight: align === "center" ? "auto" : undefined,
+                                fontSize: "12px",
+                                fontWeight: 800,
+                                color: BLUE,
+                                letterSpacing: "0.06em",
+                                textTransform: "uppercase",
+                                margin: "4px 0 0",
+                                textAlign: align,
                             }}
                         >
-                            <span
-                                style={{
-                                    fontSize: "12px",
-                                    fontWeight: 500,
-                                    color: BLUE,
-                                    letterSpacing: "0.05em",
-                                    textTransform: "uppercase",
-                                }}
-                            >
-                                {block.text}
-                            </span>
-                        </div>
+                            {block.text}
+                        </h4>
                     )
                 }
 
