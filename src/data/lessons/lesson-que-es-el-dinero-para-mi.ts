@@ -216,7 +216,8 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
   {
     id: "qed-slide-11-swipe",
     stepType: "swipe_sorter",
-    question: "Desliza cada gasto a su categoría",
+    question: "Clasificación inteligente",
+    description: "Desliza la tarjeta a la IZQUIERDA si crees que es una Necesidad, o a la DERECHA si es un Deseo.",
     leftBucket: { label: "Necesidad", color: "#2563eb" },
     rightBucket: { label: "Deseo", color: "#f59e0b" },
     items: [

@@ -30,6 +30,11 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
   const rightOpacity = useTransform(x, [20, 120], [0, 1])
   const cardScale = useTransform(x, [-200, 0, 200], [0.97, 1, 0.97])
 
+  // Reset x to 0 when index changes to avoid the next card starting off-center
+  React.useEffect(() => {
+    x.set(0)
+  }, [currentIndex, x])
+
   const currentItem: SwipeSorterItem | undefined = step.items[currentIndex]
   const totalItems = step.items.length
 
@@ -126,8 +131,8 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
           {results.map((r, i) => {
             const item = step.items.find(it => it.id === r.id)
             if (!item) return null
-            const bucketLabel = r.bucket === "left" ? step.leftBucket.label : step.rightBucket.label
-            const correctBucketLabel = item.correctBucket === "left" ? step.leftBucket.label : step.rightBucket.label
+            const bucketLabel = r.bucket === "left" ? step.leftBucket?.label || "A" : step.rightBucket?.label || "B"
+            const correctBucketLabel = item.correctBucket === "left" ? step.leftBucket?.label || "A" : step.rightBucket?.label || "B"
 
             return (
               <motion.div
@@ -196,6 +201,11 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
         </p>
       )}
 
+      {/* Instructions */}
+      {step.description && (
+        <StepScenarioCard text={step.description} variant="context" />
+      )}
+
       {/* Progress bar */}
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -236,22 +246,13 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
       </div>
 
       {/* Card Stack */}
-      <div style={{ position: "relative", height: 200, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {/* Ghost card behind */}
-        {currentIndex + 1 < totalItems && (
-          <div style={{
-            position: "absolute", width: "88%", height: 160,
-            borderRadius: 24, background: "#f3f4f6",
-            border: "2px solid #e5e7eb", top: 18, zIndex: 0,
-          }} />
-        )}
-        {currentIndex + 2 < totalItems && (
-          <div style={{
-            position: "absolute", width: "80%", height: 160,
-            borderRadius: 24, background: "#f9fafb",
-            border: "2px solid #e5e7eb", top: 30, zIndex: -1,
-          }} />
-        )}
+      <div style={{ position: "relative", height: 210, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {/* Simple shadow behind to indicate stack without cluttering */}
+        <div style={{
+          position: "absolute", width: "95%", height: 180,
+          borderRadius: 24, background: "#f8fafc",
+          border: "2px solid #f1f5f9", top: 10, zIndex: 0,
+        }} />
 
         {/* Feedback badge — anchored to the RIGHT of the stack, never covers the card */}
         <AnimatePresence>

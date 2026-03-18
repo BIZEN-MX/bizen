@@ -196,7 +196,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     else if (esVoice) utterance.voice = esVoice
     else utterance.lang = "es-MX"
 
-    utterance.rate = 0.9   // Slow and clear
+    utterance.rate = 1.1   // Sped up per user request
     utterance.pitch = 1.0  // Natural pitch
 
     utterance.onstart = () => {
@@ -415,20 +415,11 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   // Stabilize the onAnswered callback to prevent infinite render loops in steps
   const onStepAnswered = useCallback((res: any) => {
-    if (currentStep) {
-      handleAnswered(currentStep.id, res)
-    }
+    if (!currentStep) return
+    handleAnswered(currentStep.id, res)
   }, [currentStep?.id, handleAnswered])
 
-  if (!currentStep) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FBFAF5]">
-        <div className="text-center">
-          <p className="text-3xl md:text-4xl font-bold text-slate-900">¡Lección completada!</p>
-        </div>
-      </div>
-    )
-  }
+  if (!currentStep) return null
 
   const stepProps = {
     step: currentStep as any,
