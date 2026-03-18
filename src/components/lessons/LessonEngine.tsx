@@ -945,7 +945,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
           @media (max-width: 640px) {
             .lesson-step-transition {
-              padding: clamp(4px, 2vw, 8px) 16px 100px !important;
+              padding: clamp(4px, 2vw, 8px) 16px 82px !important;
             }
             .recall-widget-container {
               bottom: 82px !important;

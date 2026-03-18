@@ -332,7 +332,7 @@ export function InfoStep({
                     transition={{ delay: 0.12 }}
                     style={{
                       margin: 0,
-                      fontSize: "clamp(22px, 4vw, 30px)",
+                      fontSize: "clamp(20px, 4vw, 30px)",
                       fontWeight: 500,
                       letterSpacing: "-0.03em",
                       lineHeight: 1.18,
@@ -437,33 +437,16 @@ function FlashcardImage({ url, title }: { url: string; title?: string }) {
         }}
       />
       <style>{`
-        @media (max-width: 768px) {
-          .flashcard-content-layout {
-            flex-direction: column !important;
-            padding: clamp(16px, 6vw, 32px) clamp(12px, 4vw, 24px) !important;
-            gap: clamp(16px, 4vw, 24px) !important;
-            align-items: center !important;
-          }
-          .revealed-flashcard-container {
-            border-radius: 20px !important;
-          }
-          .flashcard-image-outer {
-             max-width: clamp(160px, 50vw, 300px) !important;
-          }
-          .flashcard-image-img {
-             max-height: clamp(120px, 22vh, 180px) !important;
-          }
-        }
         @media (max-width: 480px) {
           .flashcard-content-layout {
-            padding: 14px 10px !important;
-            gap: 12px !important;
+            padding: 10px 8px !important;
+            gap: 8px !important;
           }
           .flashcard-image-outer {
-             max-width: 120px !important;
+             max-width: 100px !important;
           }
           .flashcard-image-img {
-             max-height: 100px !important;
+             max-height: 85px !important;
           }
           .revealed-flashcard-container {
             border-radius: 16px !important;

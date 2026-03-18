@@ -101,15 +101,17 @@ export function BillyTalksStep({
              animate={{ scale: 1, y: 0 }}
              whileTap={{ scale: 0.95 }}
              onClick={() => {
+                const { initAudioContext } = require("../lessonSounds")
+                initAudioContext()
                 onPlayAudio?.()
                 haptic.light()
              }}
              transition={{ type: "spring", stiffness: 120, damping: 15 }}
              style={{
-                width: 200,
-                height: 200,
+                width: "clamp(120px, 25vw, 200px)",
+                height: "clamp(120px, 25vw, 200px)",
                 position: "relative",
-                marginBottom: 24,
+                marginBottom: "clamp(12px, 3vw, 24px)",
                 cursor: "pointer"
              }}
           >
@@ -170,7 +172,7 @@ export function BillyTalksStep({
                  background: "#ffffff",
                  border: "2px solid #e2e8f0",
                  borderRadius: 24,
-                 padding: "24px 32px",
+                 padding: "clamp(14px, 4vw, 24px) clamp(16px, 5vw, 32px)",
                  position: "relative",
                  boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                  width: "100%"

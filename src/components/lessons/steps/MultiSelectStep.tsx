@@ -79,7 +79,8 @@ export function MultiSelectStep({
       margin: "0 auto", 
       display: "flex", 
       flexDirection: "column", 
-      gap: "clamp(16px, 4vw, 28px)" 
+      gap: "clamp(10px, 4vw, 24px)"
+ 
     }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <ExerciseInstruction type="multi_select" />
@@ -96,7 +97,7 @@ export function MultiSelectStep({
         {step.description && <StepScenarioCard text={step.description} />}
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(8px, 1.5vw, 12px)" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(6px, 1.5vw, 12px)" }}>
         {step.options.map((option, index) => {
           const isSelected = selectedOptionIds.includes(option.id)
           const isCorrect = option.isCorrect

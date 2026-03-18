@@ -70,7 +70,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
-      gap: "clamp(16px, 4vw, 28px)"
+      gap: "clamp(10px, 4vw, 28px)"
     }}>
       {/* Question header */}
       <div style={{
@@ -79,7 +79,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "clamp(12px, 3vw, 24px)"
+        gap: "clamp(8px, 3vw, 24px)"
       }}>
         <ExerciseInstruction type="mcq" />
         <motion.h3
@@ -106,7 +106,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "clamp(8px, 1.5vw, 16px)"
+        gap: "clamp(6px, 1.5vw, 16px)"
       }}>
         {step.options.map((option, index) => {
           const isSelected = selectedOptionId === option.id

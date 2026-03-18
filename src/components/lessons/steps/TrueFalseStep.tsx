@@ -108,9 +108,9 @@ export function TrueFalseStep({
       margin: "0 auto",
       display: "flex",
       flexDirection: "column",
-      gap: "clamp(12px, 3vw, 32px)"
+      gap: "clamp(10px, 4vw, 28px)"
     }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(4px, 1.5vw, 10px)" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(6px, 1.5vw, 12px)" }}>
         <ExerciseInstruction type="true_false" />
         <h3 style={{
           fontSize: "clamp(20px, 3.5vw, 28px)",
