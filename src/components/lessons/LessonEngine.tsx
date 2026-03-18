@@ -24,6 +24,7 @@ import {
   ImpulseMeterStep,
   MindsetTranslatorStep,
   InfluenceDetectiveStep,
+  NarrativeCheckStep,
 } from "./steps"
 import { SwipeSorterStep } from "./steps/SwipeSorterStep"
 import { haptic } from "@/utils/hapticFeedback"
@@ -84,6 +85,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const [showRecallOverlay, setShowRecallOverlay] = useState(false)
   const hasShownRecallHint = useRef(false)
 
+  // ── Billy Empático (Feature 2) ───────────────────────────────────────────
+  const [showBillyEmpathy, setShowBillyEmpathy] = useState(false)
+  const billyEmpathyShownAt = useRef<number>(-1) // mistake count when last shown
+
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
 
@@ -107,6 +112,18 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       }
     }
   }, [state.currentStepIndex, state.originalSteps.length, state.hasBuiltReviewSteps, state.incorrectSteps.length])
+
+  // ── Billy Empático: show after 3rd mistake (Feature 2) ───────────────────
+  useEffect(() => {
+    if (
+      state.totalMistakes >= 3 &&
+      state.totalMistakes !== billyEmpathyShownAt.current
+    ) {
+      billyEmpathyShownAt.current = state.totalMistakes
+      setShowBillyEmpathy(true)
+      setTimeout(() => setShowBillyEmpathy(false), 4000)
+    }
+  }, [state.totalMistakes])
 
   const handleAnswered = useCallback(
     (stepId: string, result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => {
@@ -473,6 +490,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         return <InfluenceDetectiveStep {...stepProps} />
       case "swipe_sorter":
         return <SwipeSorterStep {...(stepProps as any)} />
+      case "narrative_check":
+        return <NarrativeCheckStep {...(stepProps as any)} />
       default:
         return <div>Unknown step type: {currentStep.stepType}</div>
     }
@@ -618,8 +637,59 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           </div>
         </div>
 
+        {/* ── Billy Empático Overlay (Feature 2) ─────────────────────────── */}
+        <AnimatePresence>
+          {showBillyEmpathy && (
+            <motion.div
+              initial={{ opacity: 0, y: 80 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 80 }}
+              transition={{ type: "spring", stiffness: 260, damping: 24 }}
+              style={{
+                position: "fixed",
+                bottom: 90,
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 9000,
+                background: "linear-gradient(135deg, #1e3a8a, #2563eb)",
+                borderRadius: 20,
+                padding: "14px 20px",
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                boxShadow: "0 12px 40px rgba(37,99,235,0.45)",
+                maxWidth: 370,
+                width: "calc(100% - 48px)",
+              }}
+            >
+              <img
+                src="/billy_chatbot.png"
+                alt="Billy"
+                style={{ width: 48, height: 48, objectFit: "contain", flexShrink: 0 }}
+              />
+              <div>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "#93c5fd", letterSpacing: "0.04em" }}>
+                  BILLY DICE
+                </p>
+                <p style={{ margin: "2px 0 0", fontSize: 14, fontWeight: 600, color: "white", lineHeight: 1.4 }}>
+                  {(currentStep as any)?.aiInsight ||
+                    "¡Tranquilo! Cada error que cometes es un concepto que se graba mejor. ¡Tú puedes!"}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowBillyEmpathy(false)}
+                style={{
+                  background: "none", border: "none", color: "rgba(255,255,255,0.6)",
+                  cursor: "pointer", fontSize: 18, flexShrink: 0, padding: 4,
+                }}
+              >✕</button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Floating Recall Button */}
         {showRecallButton && (
+
           <div className="recall-widget-container" style={{
             position: "fixed",
             bottom: "clamp(75px, 12vh, 88px)",

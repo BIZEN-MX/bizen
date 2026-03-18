@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { lessonRegistry } from '@/data/lessons/registry'
 
 // GET /api/lessons/[id] - Get lesson by ID
 export async function GET(
@@ -9,48 +10,40 @@ export async function GET(
   try {
     const { id } = await params
 
-    const lesson = await prisma.lesson.findUnique({
-      where: { id },
-      include: {
-        units: { // Correct relation name from schema
-          include: {
-            course: {
-              select: {
-                id: true,
-                title: true
-              }
-            }
-          }
-        },
-        quizzes: {
-          include: {
-            questions: {
-              include: {
-                options: true
-              },
-              orderBy: {
-                order: 'asc'
-              }
-            }
-          }
-        },
-        steps: {
-          orderBy: {
-            order: 'asc'
-          }
-        },
-        resources: true
-      }
-    })
+    // 1. Check if we have static content first (Dev-friendly / fallback)
+    const staticSteps = lessonRegistry[id]
+    
+    // 2. Try fetching metadata from DB (title, description, etc.)
+    let lesson: any = null
+    try {
+      lesson = await prisma.lesson.findUnique({
+        where: { id },
+        include: { steps: true }
+      })
+    } catch (dbErr) {
+      console.warn(`[api/lessons] DB Fetch failed for ${id}, using static fallback if available.`, dbErr)
+    }
 
-    if (!lesson) {
+    // 3. Fallback logic: Combine DB metadata with static steps if DB steps are missing
+    if (!lesson && !staticSteps) {
       return NextResponse.json(
         { error: 'Lesson not found' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(lesson)
+    // Prepare response
+    const responseData = {
+      ...(lesson || { id, title: id.split('-').join(' ').toUpperCase(), description: "Lección interactiva" }),
+      steps: staticSteps?.length ? staticSteps : (lesson?.steps || [])
+    }
+
+    // Final check for steps
+    if (!responseData.steps?.length) {
+      console.warn(`[api/lessons] Lesson found but has no steps: ${id}`)
+    }
+
+    return NextResponse.json(responseData)
   } catch (error) {
     console.error('Error fetching lesson:', error)
     return NextResponse.json(

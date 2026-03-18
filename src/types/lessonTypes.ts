@@ -25,7 +25,8 @@ export type StepType =
   | "impulse_meter"
   | "mindset_translator"
   | "influence_detective"
-  | "swipe_sorter";
+  | "swipe_sorter"
+  | "narrative_check";
 
 // ============================================================================
 // Option Types (used by multiple step types)
@@ -224,6 +225,14 @@ export interface SwipeSorterStepFields {
   items: SwipeSorterItem[];
 }
 
+export interface NarrativeCheckStepFields {
+  stepType: "narrative_check";
+  question: string;
+  promptPlaceholder?: string;
+  minChars?: number;
+  billyResponse?: string;
+}
+
 // ============================================================================
 // Base LessonStep Interface (Common Fields)
 // ============================================================================
@@ -271,7 +280,8 @@ export type LessonStep =
   | (BaseLessonStep & ImpulseMeterStepFields)
   | (BaseLessonStep & MindsetTranslatorStepFields)
   | (BaseLessonStep & InfluenceDetectiveStepFields)
-  | (BaseLessonStep & SwipeSorterStepFields);
+  | (BaseLessonStep & SwipeSorterStepFields)
+  | (BaseLessonStep & NarrativeCheckStepFields);
 
 // ============================================================================
 // Example LessonStep Objects

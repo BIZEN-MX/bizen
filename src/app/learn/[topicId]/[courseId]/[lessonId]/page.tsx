@@ -40,12 +40,17 @@ export default function LessonPage() {
                 }
                 const data = await res.json()
 
-                // Map DB steps to Engine format
-                const formattedSteps = (data.steps || []).map((step: any) => ({
-                    ...step,
-                    stepType: step.type, // Map 'type' from DB to 'stepType' for Engine
-                    ...(typeof step.data === 'string' ? JSON.parse(step.data) : step.data) // Spread JSONB data
-                }))
+                // Map DB/Static steps to Engine format
+                const formattedSteps = (data.steps || []).map((step: any) => {
+                    const mainType = step.stepType || step.type; // Fallback to DB 'type' if stepType missing
+                    const extraData = typeof step.data === 'string' ? JSON.parse(step.data) : (step.data || {});
+                    
+                    return {
+                        ...step,
+                        ...extraData,
+                        stepType: mainType, // Standardize as stepType for the Engine
+                    }
+                })
 
                 setLessonData({ ...data, steps: formattedSteps })
                 setProgress(prev => ({ ...prev, totalSteps: formattedSteps.length || 1 }))

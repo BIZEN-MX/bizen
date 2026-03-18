@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+        const body = await req.json()
         const { dailyChallengeId, smartGoal, didToday, learned, changeTomorrow, attachments } = body
         
         // At least a challenge ID and some content are required

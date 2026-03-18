@@ -181,6 +181,8 @@ model Lesson {
   course      Course?    @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "lessons_unit_id_fkey")
   progress    Progress[]
   quizzes     Quiz[]
+  steps       LessonStep[]
+  resources   LessonResource[]
 
   @@index([sectionId], map: "idx_lessons_section")
   @@map("lessons")
@@ -190,6 +192,7 @@ model Lesson {
 model LessonStep {
   id        String   @id @default(cuid())
   lessonId  String   @map("lesson_id")
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   order     Int
   type      String
   title     String?
@@ -206,6 +209,7 @@ model LessonStep {
 model LessonResource {
   id        String   @id @default(cuid())
   lessonId  String   @map("lesson_id")
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   title     String
   url       String
   fileType  String   @map("file_type")
@@ -1346,7 +1350,9 @@ model Achievement {
   description      String
   icon             String
   category         String?           @default("general")
+  threshold        Int?              @default(1)
   xpReward         Int?              @default(100) @map("xp_reward")
+  rarity           String?           @default("common")
   createdAt        DateTime?         @default(now()) @map("created_at") @db.Timestamptz(6)
   userAchievements UserAchievement[]
 

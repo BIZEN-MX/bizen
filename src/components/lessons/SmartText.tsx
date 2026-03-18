@@ -1,12 +1,13 @@
 "use client"
 
-import React from "react"
+import React, { useState, useRef } from "react"
 
 /**
  * SmartText — Intelligent Content Renderer for BIZEN Flashcards
  *
  * Parses and renders lesson body text with:
  *  - **bold** → highlighted keyword chips with blue underline glow
+ *  - [[word|definition]] → interactive glossary term with tooltip
  *  - •  bullets → styled icon-bullet list
  *  - Lines starting with # → section sub-header
  *  - Numbers like $1,000 or 8% → monospace financial highlights
@@ -25,17 +26,22 @@ interface SmartTextProps {
     align?: "left" | "center"
 }
 
-type Segment = { type: "bold" | "money" | "quote" | "plain"; content: string }
+type Segment =
+  | { type: "bold" | "money" | "quote" | "plain"; content: string }
+  | { type: "glossary"; word: string; definition: string }
 
-/** Parses inline tokens: **bold**, $money/%, "quoted", plain text */
+/** Parses inline tokens: **bold**, [[word|def]], $money/%, "quoted", plain text */
 function parseInlineSegments(line: string): Segment[] {
     const segments: Segment[] = []
-    // Token regex: **bold**, $number, number%, "quoted", rest
-    const tokenRe = /\*\*([^*]+)\*\*|\$[\d,]+(?:\.\d+)?|\d+(?:\.\d+)?%|"([^"]+)"|([^$\d"*]+|\*(?!\*))+/g
+    // Token regex: [[word|def]], **bold**, $number, number%, "quoted", rest
+    const tokenRe = /\[\[([^\]|]+)\|([^\]]+)\]\]|\*\*([^*]+)\*\*|\$[\d,]+(?:\.\d+)?|\d+(?:\.\d+)?%|"([^"]+)"|([^$\d"*\[]+|\[(?!\[)|\*(?!\*))+/g
     let m: RegExpExecArray | null
     while ((m = tokenRe.exec(line)) !== null) {
         const full = m[0]
-        if (/^\*\*/.test(full)) {
+        // [[word|definition]]
+        if (full.startsWith("[[")) {
+            segments.push({ type: "glossary", word: m[1], definition: m[2] })
+        } else if (/^\*\*/.test(full)) {
             segments.push({ type: "bold", content: full.slice(2, -2) })
         } else if (/^(\$[\d,]+|\d+(\.\d+)?%)/.test(full)) {
             segments.push({ type: "money", content: full })
@@ -48,10 +54,94 @@ function parseInlineSegments(line: string): Segment[] {
     return segments.length ? segments : [{ type: "plain", content: line }]
 }
 
+/** Interactive glossary term — shows tooltip on hover/tap */
+function GlossaryTerm({ word, definition }: { word: string; definition: string }) {
+    const [open, setOpen] = useState(false)
+    const ref = useRef<HTMLSpanElement>(null)
+
+    const toggle = (e: React.MouseEvent | React.TouchEvent) => {
+        e.stopPropagation()
+        setOpen(v => !v)
+    }
+
+    // Close on outside click
+    React.useEffect(() => {
+        if (!open) return
+        const close = () => setOpen(false)
+        document.addEventListener("click", close)
+        return () => document.removeEventListener("click", close)
+    }, [open])
+
+    return (
+        <span ref={ref} style={{ position: "relative", display: "inline" }}>
+            <span
+                onClick={toggle}
+                onTouchEnd={toggle}
+                style={{
+                    fontWeight: 700,
+                    color: BLUE,
+                    borderBottom: `2px dashed ${BLUE}`,
+                    cursor: "pointer",
+                    paddingBottom: 1,
+                    display: "inline",
+                }}
+            >
+                {word}
+                <span style={{ fontSize: "0.7em", verticalAlign: "super", marginLeft: 1, opacity: 0.7 }}>?</span>
+            </span>
+
+            {open && (
+                <span
+                    style={{
+                        position: "absolute",
+                        bottom: "calc(100% + 10px)",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        zIndex: 100,
+                        background: "#1e293b",
+                        color: "#f8fafc",
+                        borderRadius: 12,
+                        padding: "10px 14px",
+                        fontSize: 13,
+                        fontWeight: 500,
+                        lineHeight: 1.5,
+                        width: "max-content",
+                        maxWidth: 240,
+                        boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
+                        display: "block",
+                        textAlign: "left",
+                        whiteSpace: "normal",
+                        pointerEvents: "none",
+                    }}
+                >
+                    {/* Arrow */}
+                    <span style={{
+                        position: "absolute",
+                        bottom: -6,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: 0, height: 0,
+                        borderLeft: "6px solid transparent",
+                        borderRight: "6px solid transparent",
+                        borderTop: "6px solid #1e293b",
+                    }} />
+                    <span style={{ color: BLUE_BORDER, fontWeight: 800, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", display: "block", marginBottom: 4 }}>
+                        📖 Glosario
+                    </span>
+                    {definition}
+                </span>
+            )}
+        </span>
+    )
+}
+
 function InlineSegments({ segments }: { segments: Segment[] }) {
     return (
         <>
             {segments.map((seg, i) => {
+                if (seg.type === "glossary") {
+                    return <GlossaryTerm key={i} word={seg.word} definition={seg.definition} />
+                }
                 if (seg.type === "bold") {
                     return (
                         <span
@@ -64,7 +154,7 @@ function InlineSegments({ segments }: { segments: Segment[] }) {
                                 padding: "1px 6px",
                                 display: "inline",
                                 borderBottom: `2.5px solid ${BLUE_BORDER}`,
-                                                            }}
+                            }}
                         >
                             {seg.content}
                         </span>
@@ -81,7 +171,7 @@ function InlineSegments({ segments }: { segments: Segment[] }) {
                                 borderRadius: "6px",
                                 padding: "1px 7px",
                                 display: "inline",
-                                                                letterSpacing: "-0.01em",
+                                letterSpacing: "-0.01em",
                                 fontSize: "0.93em",
                             }}
                         >
@@ -97,13 +187,13 @@ function InlineSegments({ segments }: { segments: Segment[] }) {
                                 color: "#7C3AED",
                                 fontStyle: "italic",
                                 fontWeight: 500,
-                                                            }}
+                            }}
                         >
                             "{seg.content}"
                         </em>
                     )
                 }
-                return <React.Fragment key={i}>{seg.content}</React.Fragment>
+                return <React.Fragment key={i}>{(seg as any).content}</React.Fragment>
             })}
         </>
     )
@@ -209,7 +299,7 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
                                     color: BLUE,
                                     letterSpacing: "0.05em",
                                     textTransform: "uppercase",
-                                                                    }}
+                                }}
                             >
                                 {block.text}
                             </span>
@@ -269,7 +359,7 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
                                                 color: "#334155",
                                                 fontWeight: 500,
                                                 lineHeight: 1.55,
-                                                                                            }}
+                                            }}
                                         >
                                             <InlineSegments segments={segments} />
                                         </span>
@@ -293,7 +383,7 @@ export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align =
                                 color: "#334155",
                                 lineHeight: 1.65,
                                 fontWeight: 500,
-                                                                whiteSpace: "pre-wrap",
+                                whiteSpace: "pre-wrap",
                             }}
                         >
                             <InlineSegments segments={segments} />

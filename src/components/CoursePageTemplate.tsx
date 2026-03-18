@@ -46,6 +46,8 @@ import {
     Lock,
     Sparkles,
     Send,
+    MessageCircle,
+    X,
     LucideIcon
 } from "lucide-react"
 
@@ -200,6 +202,7 @@ export default function CoursePageTemplate({
         const body = document.body
         html.style.background = "#ffffff"
         body.style.background = "#ffffff"
+
         return () => {
             html.style.background = ""
             body.style.background = ""
@@ -442,6 +445,7 @@ export default function CoursePageTemplate({
                             </div>
                         </div>
                     </div>
+
 
                     {/* ── ASK BILLY SECTION ────────────────────────────────────────── */}
                     <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto 32px", boxSizing: "border-box" }}>

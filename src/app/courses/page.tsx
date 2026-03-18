@@ -42,7 +42,8 @@ import {
   Clock,
   Zap,
   Layout,
-  GraduationCap
+  GraduationCap,
+  Sparkles
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import PageLoader from "@/components/PageLoader"
@@ -396,10 +397,63 @@ export default function CoursesPage() {
             </div>
           </div>
 
-          {/* Billy Insights Card */}
-          <BillyInsights insight={insight} />
-
-
+          {/* ── BILLY INSIGHT SECTION ────────────────────────────────────────── */}
+          {insight && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              style={{ 
+                width: "100%", 
+                maxWidth: 1188, 
+                margin: "0 auto 32px", 
+                boxSizing: "border-box",
+              }}
+            >
+              <div style={{ 
+                background: "rgba(255, 255, 255, 0.7)", 
+                backdropFilter: "blur(20px)", 
+                borderRadius: 24, 
+                padding: "20px 24px", 
+                border: "1px solid rgba(255, 255, 255, 0.8)",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
+                display: "flex",
+                alignItems: "center",
+                gap: 16
+              }}>
+                <div style={{ 
+                  width: 52, 
+                  height: 52, 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center", 
+                  flexShrink: 0,
+                  position: "relative"
+                }}>
+                  <Image 
+                    src="/billy_chatbot.png" 
+                    alt="Billy" 
+                    width={52} 
+                    height={52} 
+                    style={{ 
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.08))"
+                    }} 
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ 
+                    fontSize: "clamp(13px, 1.6vw, 15px)", 
+                    color: "#1e293b", 
+                    lineHeight: 1.5,
+                    fontWeight: 500
+                  }}>
+                    &quot;{insight.replace(/\*/g, '')}&quot;
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* Topics Path — 2-per-row snake/zigzag layout */}
           <section
@@ -801,53 +855,4 @@ export default function CoursesPage() {
   )
 }
 
-// --- Sub-components ---
 
-function BillyInsights({ insight }: { insight: string | null }) {
-  if (!insight) return null
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      style={{
-        width: "100%", maxWidth: 1188, margin: "0 auto 40px",
-        background: "rgba(255, 255, 255, 0.7)",
-        backdropFilter: "blur(16px)",
-        borderRadius: 24,
-        padding: "24px 32px",
-        border: "1px solid rgba(255, 255, 255, 0.8)",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
-        display: "flex",
-        alignItems: "center",
-        gap: 24,
-        position: "relative",
-        overflow: "hidden"
-      }}
-    >
-      <div style={{
-        width: 60, height: 60, borderRadius: "50%",
-        background: "linear-gradient(135deg, #dbeafe, #eff6ff)",
-        border: "2px solid #3b82f6",
-        flexShrink: 0,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        overflow: "hidden"
-      }}>
-        <Image src="/billy_chatbot.png" alt="Billy" width={54} height={54} style={{ objectPosition: "top" }} />
-      </div>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Insight de Billy</div>
-        <p style={{ fontSize: 16, color: "#1e293b", fontWeight: 500, lineHeight: 1.5, margin: 0 }}>
-          {insight}
-        </p>
-      </div>
-      {/* Decorative pulse */}
-      <div style={{
-        position: "absolute", right: 10, top: 10,
-        width: 8, height: 8, borderRadius: "50%",
-        background: "#3b82f6", opacity: 0.6,
-        boxShadow: "0 0 10px #3b82f6"
-      }} />
-    </motion.div>
-  )
-}
