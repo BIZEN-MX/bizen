@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { ArrowRight, Mic } from "lucide-react"
 import { InfoStepFields } from "@/types/lessonTypes"
-import { playFlipSound } from "../lessonSounds"
+import { playFlipSound, initAudioContext } from "../lessonSounds"
 import { motion, AnimatePresence } from "framer-motion"
 import { SmartText } from "../SmartText"
 import { haptic } from "@/utils/hapticFeedback"
@@ -51,6 +51,7 @@ export function InfoStep({
 
   const handleReveal = () => {
     if (!isRevealed) {
+      initAudioContext() // Unlock audio context
       playFlipSound()
       setIsRevealed(true)
       onAnswered({ isCompleted: true })
@@ -108,7 +109,6 @@ export function InfoStep({
             }}
             whileTap={{ scale: 0.98 }}
           >
-            {/* Subtle animated background gradient */}
             <div style={{
               position: "absolute",
               inset: 0,
@@ -116,7 +116,6 @@ export function InfoStep({
               pointerEvents: "none",
             }} />
 
-            {/* Billy mascot */}
             <motion.div
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
@@ -133,7 +132,6 @@ export function InfoStep({
               </div>
             </motion.div>
 
-            {/* Tap hint */}
             <div style={{
               display: "flex",
               flexDirection: "column",
@@ -198,7 +196,6 @@ export function InfoStep({
               position: "relative",
             }}
           >
-            {/* Top accent bar with shimmer */}
             <div style={{
               height: 6,
               background: "linear-gradient(90deg, #1e40af 0%, #2563eb 35%, #3b82f6 65%, #60a5fa 100%)",
@@ -219,7 +216,6 @@ export function InfoStep({
               />
             </div>
 
-            {/* Content layout */}
             <div className="flashcard-content-layout" style={{
               display: "flex",
               flexDirection: hasImage ? "row" : "column",
@@ -229,12 +225,10 @@ export function InfoStep({
               padding: hasImage ? "clamp(20px, 4vw, 44px) clamp(16px, 5vw, 48px)" : "44px 40px",
             }}>
 
-              {/* Image — LEFT side if imageLeft */}
               {hasImage && imageLeft && (
                 <FlashcardImage url={step.imageUrl!} title={step.title} />
               )}
 
-              {/* Text column */}
               <div style={{
                 flex: "1 1 300px",
                 display: "flex",
@@ -244,13 +238,13 @@ export function InfoStep({
                 alignItems: hasImage ? "flex-start" : "center",
                 minWidth: 0,
               }}>
-                {/* Billy Speaker Indicator */}
                 {step.aiInsight && (
                   <motion.div
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
+                      initAudioContext() // Sync unlock
                       onPlayAudio?.()
                       haptic.light()
                     }}
@@ -269,7 +263,6 @@ export function InfoStep({
                       overflow: "visible"
                     }}
                   >
-                    {/* Pulsing play indicator */}
                     <motion.div 
                       animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -305,7 +298,6 @@ export function InfoStep({
                   </motion.div>
                 )}
 
-                {/* Category pill (description field) */}
                 {step.description && (
                   <motion.div
                     initial={{ opacity: 0, y: -6 }}
@@ -333,7 +325,6 @@ export function InfoStep({
                   </motion.div>
                 )}
 
-                {/* Title */}
                 {step.title && (
                   <motion.h2
                     initial={{ opacity: 0, y: 8 }}
@@ -345,7 +336,6 @@ export function InfoStep({
                       fontWeight: 500,
                       letterSpacing: "-0.03em",
                       lineHeight: 1.18,
-                      // Gradient title text
                       background: "linear-gradient(135deg, #0f172a 0%, #1e40af 55%, #3b82f6 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -356,7 +346,6 @@ export function InfoStep({
                   </motion.h2>
                 )}
 
-                {/* Divider below title */}
                 {step.title && (
                   <motion.div
                     initial={{ scaleX: 0 }}
@@ -374,7 +363,6 @@ export function InfoStep({
                   />
                 )}
 
-                {/* Smart Body Text */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -387,46 +375,13 @@ export function InfoStep({
                     align={hasImage ? "left" : "left"}
                   />
                 </motion.div>
-
-                {/* "Nota de clase" footer tag */}
-                <motion.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 7,
-                    padding: "5px 12px",
-                    background: "#EFF6FF",
-                    borderRadius: 8,
-                    border: "1.5px solid #BFDBFE",
-                    alignSelf: "flex-start",
-                  }}
-                >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                  </svg>
-                  <span style={{
-                    fontSize: 11,
-                    fontWeight: 500,
-                    color: "#2563EB",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                  }}>
-                    Nota de clase
-                  </span>
-                </motion.div>
               </div>
 
-              {/* Image — RIGHT side (default) */}
               {hasImage && !imageLeft && (
                 <FlashcardImage url={step.imageUrl!} title={step.title} />
               )}
             </div>
 
-            {/* Subtle bottom gradient vignette */}
             <div style={{
               position: "absolute",
               bottom: 0,
@@ -460,7 +415,6 @@ function FlashcardImage({ url, title }: { url: string; title?: string }) {
         alignItems: "center",
       }}
     >
-      {/* Radial glow behind image */}
       <div style={{
         position: "absolute",
         inset: "-20%",

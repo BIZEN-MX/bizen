@@ -28,7 +28,7 @@ import {
 } from "./steps"
 import { SwipeSorterStep } from "./steps/SwipeSorterStep"
 import { haptic } from "@/utils/hapticFeedback"
-import { playFlipSound } from "./lessonSounds"
+import { playCorrectSound, playIncorrectSound, playFlipSound, initAudioContext } from "./lessonSounds"
 import { SmartText } from "./SmartText"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -196,7 +196,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     else if (esVoice) utterance.voice = esVoice
     else utterance.lang = "es-MX"
 
-    utterance.rate = 1.1   // Sped up per user request
+    utterance.rate = 1.25   // Even faster per user request for mobile snappy feel
     utterance.pitch = 1.0  // Natural pitch
 
     utterance.onstart = () => {
@@ -213,6 +213,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   }, [])
 
   const playAudio = useCallback(async () => {
+    initAudioContext() // Unlock context
     if (!currentStep) return
     if (typeof window === "undefined") return
 
@@ -220,6 +221,14 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
     const content = getTTSContent(currentStep)
     if (!content) return
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || navigator.maxTouchPoints > 0
+
+    if (isMobile) {
+      console.log("[TTS] Mobile detected - using sync browser fallback to avoid gesture block")
+      playFallbackSpeech(content)
+      return
+    }
 
     try {
       setIsAudioLoading(true)
@@ -229,13 +238,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         body: JSON.stringify({ text: content }),
       })
 
-      if (!response.ok) {
-        const errBody = await response.text().catch(() => "unknown")
-        console.error(`[TTS] Google API returned ${response.status}:`, errBody)
-        throw new Error(`TTS API error: ${response.status}`)
-      }
+      if (!response.ok) throw new Error(`TTS API error: ${response.status}`)
 
-      console.log("[TTS] Using Google Cloud TTS (es-US-Studio-B)")
       const audioBlob = await response.blob()
       const audioUrl = URL.createObjectURL(audioBlob)
 
@@ -252,14 +256,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         URL.revokeObjectURL(audioUrl)
       }
 
-      audio.onerror = () => {
-        console.error("Audio playback error")
-        setIsAudioPlaying(false)
-        setIsAudioLoading(false)
-        URL.revokeObjectURL(audioUrl)
-      }
-
-      audio.play()
+      audio.play().catch(err => {
+        console.warn("Audio.play() blocked on mobile, falling back:", err)
+        playFallbackSpeech(content)
+      })
     } catch (error) {
       console.warn("TTS API failed, falling back to browser speech:", error)
       playFallbackSpeech(content)
@@ -345,6 +345,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   }, [isSummaryStep, stars])
 
   const handleContinue = useCallback(() => {
+    initAudioContext() // Sync unlock context on click
     if (!currentStep) return
 
     // Final completion - exit immediately since completion was triggered on mount
@@ -832,13 +833,13 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               {/* Content */}
               <div style={{ padding: "32px 32px 40px" }}>
 
-                {/* Pill header — SVG icon instead of emoji */}
+                {/* Key Concept Label */}
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "#eff6ff", border: "1.5px solid #BFDBFE", padding: "5px 14px", borderRadius: 999, marginBottom: 24 }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                   </svg>
-                  <span style={{ fontSize: 11, fontWeight: 500, color: "#2563eb", letterSpacing: "0.06em", textTransform: "uppercase" as const, }}>Nota de clase</span>
+                  <span style={{ fontSize: 11, fontWeight: 500, color: "#2563eb", letterSpacing: "0.06em", textTransform: "uppercase" as const, }}>Concepto Clave</span>
                 </div>
 
                 {(lastInfoStep as any).title && (

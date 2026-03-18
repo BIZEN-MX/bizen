@@ -13,11 +13,18 @@ const getAudioContext = () => {
     globalAudioContext = new AudioContextClass()
   }
   
-  if (globalAudioContext?.state === 'suspended') {
-    globalAudioContext.resume()
-  }
-  
   return globalAudioContext
+}
+
+/**
+ * Call this on a user gesture (onClick) to "unlock" audio on mobile browsers.
+ */
+export const initAudioContext = () => {
+  if (typeof window === 'undefined') return
+  const audioContext = getAudioContext()
+  if (audioContext?.state === 'suspended') {
+    audioContext.resume()
+  }
 }
 
 export const playCorrectSound = () => {
@@ -25,6 +32,9 @@ export const playCorrectSound = () => {
   if (!audioContext) return
 
   try {
+    // Resume context if needed
+    if (audioContext.state === 'suspended') audioContext.resume()
+
     // Play a pleasant ascending chord for correct answers
     const playTone = (frequency: number, startTime: number, duration: number, volume: number = 0.2) => {
       const oscillator = audioContext.createOscillator()
@@ -57,6 +67,8 @@ export const playIncorrectSound = () => {
   if (!audioContext) return
 
   try {
+    if (audioContext.state === 'suspended') audioContext.resume()
+
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
 
@@ -83,6 +95,8 @@ export const playFlipSound = () => {
   if (!audioContext) return
 
   try {
+    if (audioContext.state === 'suspended') audioContext.resume()
+
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
 
