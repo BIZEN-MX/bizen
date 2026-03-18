@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useState, useRef } from "react"
+import { haptic } from "@/utils/hapticFeedback"
+import { initAudioContext } from "./lessonSounds"
 
 /**
  * SmartText — Intelligent Content Renderer for BIZEN Flashcards
@@ -59,24 +61,28 @@ function GlossaryTerm({ word, definition }: { word: string; definition: string }
     const [open, setOpen] = useState(false)
     const ref = useRef<HTMLSpanElement>(null)
 
-    const toggle = (e: React.MouseEvent | React.TouchEvent) => {
-        e.stopPropagation()
-        setOpen(v => !v)
-    }
 
     // Close on outside click
     React.useEffect(() => {
         if (!open) return
         const close = () => setOpen(false)
         document.addEventListener("click", close)
-        return () => document.removeEventListener("click", close)
+        document.addEventListener("touchstart", close)
+        return () => {
+            document.removeEventListener("click", close)
+            document.removeEventListener("touchstart", close)
+        }
     }, [open])
 
     return (
         <span ref={ref} style={{ position: "relative", display: "inline" }}>
             <span
-                onClick={toggle}
-                onTouchEnd={toggle}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    initAudioContext() // Unlock audio just in case
+                    haptic.light()
+                    setOpen(v => !v)
+                }}
                 style={{
                     fontWeight: 700,
                     color: BLUE,
