@@ -721,6 +721,7 @@ export default function DashboardPage() {
               { Icon:IcoStore,   label:"Tienda Bizen",       sub:`${bizcoins.toLocaleString()} BIZCOINS`,        href:"/tienda",   color:"#d97706", bg:"#fef3c7", delay:".41s" },
               { Icon:IcoUsers,   label:"Foro",               sub:"Comunidad activa",          href:"/forum",    color:"#10b981", bg:"#d1fae5", delay:".45s" },
               { Icon:IcoTrophy,  label:"Rankings",           sub:"Tu posición global",        href:"/rankings", color:"#ef4444", bg:"#fee2e2", delay:".49s" },
+              { Icon:IcoZap,     label: (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') ? "Lanzar Live Quiz" : "Bizen Live", sub:"Quizzes en tiempo real", href:(dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') ? "/live/host" : "/live/join", color:"#fbbf24", bg:"#fef3c7", delay:".51s" },
               { Icon:IcoUser,    label:"Mi Perfil",          sub:"Insignias y logros",        href:"/profile",  color:"#0891b2", bg:"#cffafe", delay:".53s" },
             ] as const).map(({Icon,label,sub,href,color,bg,delay})=>(
               <div key={href} className="ql dc" style={{animationDelay:delay}} onClick={()=>router.push(href)}>
