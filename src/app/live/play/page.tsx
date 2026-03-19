@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { createClient } from "@/lib/supabase/client"
@@ -34,7 +34,7 @@ const ANSWER_COLORS = [
   { bg: "linear-gradient(135deg, #D97706, #F5A623)", shadow: "rgba(245,166,35,0.5)" },
 ]
 
-export default function PlayPage() {
+function PlayPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("session")
@@ -597,4 +597,19 @@ export default function PlayPage() {
   }
 
   return null
+}
+
+export default function PlayPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "#060c1d" }}>
+        <div style={{ textAlign: "center", color: "white" }}>
+          <div style={{ fontSize: 40, marginBottom: 16 }}>⚡</div>
+          <p style={{ color: "rgba(255,255,255,0.5)" }}>Cargando interfaz...</p>
+        </div>
+      </div>
+    }>
+      <PlayPageContent />
+    </Suspense>
+  )
 }
