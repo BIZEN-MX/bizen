@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     }
 
     const isEduEmail = isInstitutionalEmail(user.email || '');
-    const isSpecialAdmin = user.email === 'diegopenita31@gmail.com';
+    const isSpecialAdmin = user.email?.toLowerCase() === 'diegopenita31@gmail.com';
 
     if (!profile) {
       console.warn(`[api/profiles] Profile missing for user ${user.id}, creating default...`)
@@ -196,7 +196,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const isEduEmail = isInstitutionalEmail(user.email || '');
-    const isSpecialAdmin = user.email === 'diegopenita31@gmail.com';
+    const isSpecialAdmin = user.email?.toLowerCase() === 'diegopenita31@gmail.com';
 
     const updatedProfile = await prisma.profile.update({
       where: { userId: user.id },
