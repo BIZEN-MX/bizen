@@ -4045,6 +4045,95 @@ const landingCSS = `
           transition: transform 60ms ease, background 180ms ease;
         }
         .btn.primary { background: var(--c-primary); color: white; }
+
+        @media (max-width: 768px) {
+          /* General card spacing reduction - prevents cards from being disproportionately large */
+          .somos-stat-card, 
+          .step-card, 
+          .testimonial-premium-card, 
+          .conoce-skill-card, 
+          .curiosidad-card,
+          .glass-card-premium {
+            padding: clamp(16px, 5vw, 24px) !important;
+            border-radius: 20px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+
+          /* Reduce vertical height of section headers */
+          .section {
+            padding: clamp(40px, 8vw, 64px) 0 !important;
+          }
+
+          /* Profile premium card optimization */
+          .glass-card-premium {
+            padding: 24px 16px 32px !important;
+            border-radius: 24px !important;
+            animation: none !important; /* Stop floating on mobile to reduce visual noise */
+          }
+          .perfiles-tabs-row {
+            margin-bottom: 24px !important;
+            gap: 6px !important;
+            padding: 4px !important;
+            max-width: 100% !important;
+          }
+          .profile-tab-button {
+            padding: 8px 12px !important;
+            font-size: 14px !important;
+          }
+          
+          /* Testimonials: switch to 1-column layout and center everything */
+          .testimonial-premium-card {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            gap: 16px !important;
+          }
+          .testimonial-premium-card > div:first-child {
+            width: 80px !important;
+            height: 80px !important;
+            margin: 0 auto !important;
+            flex-shrink: 0 !important;
+          }
+
+          /* Stat cards specific */
+          .somos-stat-card div:first-child {
+            font-size: 32px !important;
+            margin-bottom: 4px !important;
+          }
+          .somos-stat-card {
+             animation: none !important;
+          }
+
+          /* Ensure grids stack correctly and have tighter gaps */
+          .somos-stats-grid, 
+          .conoce-skills-grid, 
+          .curiosidad-cards-grid, 
+          .how-it-works-steps {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+
+          /* Specific fix for skill cards text */
+          .conoce-skill-card h4 {
+            font-size: 16px !important;
+          }
+          .conoce-skill-card p {
+            font-size: 13px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+           /* Further optimizations for very small screens */
+           .section-head h2 {
+             font-size: 24px !important;
+           }
+           .somos-stat-card, .conoce-skill-card, .curiosidad-card {
+             padding: 16px !important;
+           }
+        }
 `;
 
 function LandingContent({

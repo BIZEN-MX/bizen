@@ -432,6 +432,44 @@ export default function ProfilePage() {
   if (loading || !mounted || loadingStats) return <PageLoader />
   if (!user) return null
 
+  // Achievements section helper to avoid duplication while reordering for mobile
+  const renderAchievementsSection = () => (
+    <div style={{ marginTop: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.01em", display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 10, background: "linear-gradient(135deg,#fef3c7,#fde68a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <AchievementIconSm icon="trophy" size={16} color="#d97706" />
+          </div>
+          Logros
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#10b981", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 999, padding: "2px 10px" }}>
+            {achievements.filter(a => a.unlocked).length}/{achievements.length}
+          </span>
+        </h2>
+      </div>
+
+      {loadingAchievements ? (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="skeleton-pulse" style={{ height: 140, borderRadius: 20, background: "#f1f5f9" }} />
+          ))}
+        </div>
+      ) : achievements.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "32px 0", color: "#94a3b8", fontSize: 14 }}>
+          Completa el SQL de configuración para activar los logros.
+        </div>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
+          {achievements.map(a => {
+            const cfg = RARITY_CFG[a.rarity] ?? RARITY_CFG["común"]
+            return (
+              <AchievementCard key={a.id} a={a} cfg={cfg} />
+            )
+          })}
+        </div>
+      )}
+    </div>
+  );
+
   const displayName = formData.fullName || user.email?.split("@")[0] || "Usuario"
   const nickname = formData.username ? formData.username.replace("@", "") : user.email?.split("@")[0] || ""
   const joinDate = profileStats?.joinDate
@@ -524,20 +562,34 @@ export default function ProfilePage() {
           display: block;
         }
 
-        @media (max-width: 767px) {
-          .prof-outer { padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
-          .prof-two-col { flex-direction: column !important; align-items: stretch !important; padding: 20px 16px !important; gap: 24px !important; }
+        @media (max-width: 1024px) {
+          .prof-outer { 
+            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; 
+            width: 100% !important;
+            margin-left: 0 !important;
+          }
+          .prof-two-col { 
+            flex-direction: column !important; 
+            align-items: stretch !important; 
+            padding: 140px 16px 20px !important; 
+            gap: 20px !important; 
+          }
           .prof-left-col { width: 100% !important; display: flex !important; flex-direction: column !important; align-items: stretch !important; }
           .prof-right-col { width: 100% !important; }
           
           /* Mobile specific spacing and sizes */
           .mobile-banner { height: 160px !important; }
-          .mobile-avatar-container { width: 140px !important; height: 140px !important; margin-top: -60px !important; }
+          .mobile-avatar-container { 
+            width: 144px !important; 
+            height: 144px !important; 
+            margin-top: -72px !important; 
+            margin-bottom: 8px !important;
+          }
           .mobile-stat-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
           .mobile-stat-card { padding: 14px 12px !important; }
           .mobile-stat-value { font-size: 22px !important; }
         }
-        @media (min-width: 768px) and (max-width: 1160px) {
+        @media (min-width: 1025px) and (max-width: 1160px) {
           .prof-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
         }
         @media (min-width: 1161px) {
@@ -626,11 +678,14 @@ export default function ProfilePage() {
 
         {/* Banner Section */}
         <div className="mobile-banner" style={{
-          height: 220, width: "calc(100% - 32px)",
-          margin: "16px",
+          height: screenSize < 1024 ? 160 : 220, 
           borderRadius: "32px",
           background: "linear-gradient(135deg, #0a0f1e 0%, #1e3a8a 60%, #1d4ed8 100%)",
-          position: "absolute", top: 0, left: 0, zIndex: 0,
+          position: "absolute", 
+          top: 16, 
+          left: 16, 
+          right: 16, 
+          zIndex: 0,
           boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.25)",
           overflow: "hidden"
         }}>
@@ -684,7 +739,7 @@ export default function ProfilePage() {
                 <div style={{ position: "relative", zIndex: 1 }}>
                   <AvatarDisplay
                     avatar={user.user_metadata?.avatar || { type: "character", id: "robot", character: "robot" }}
-                    size={screenSize < 768 ? 100 : 155}
+                    size={screenSize < 1024 ? 100 : 155}
                     frame={
                       (userStats?.inventory?.includes("2") || dbProfile?.inventory?.includes("2")) ? "vip" :
                         (userStats?.inventory?.includes("1") || dbProfile?.inventory?.includes("1")) ? "ambassador" : null
@@ -694,8 +749,8 @@ export default function ProfilePage() {
 
                 {/* Camera icon button */}
                 <div style={{
-                  position: "absolute", bottom: screenSize < 768 ? "5%" : 12, right: screenSize < 768 ? "5%" : 12,
-                  width: screenSize < 768 ? 32 : 42, height: screenSize < 768 ? 32 : 42, borderRadius: "50%",
+                  position: "absolute", bottom: screenSize < 1024 ? "5%" : 12, right: screenSize < 1024 ? "5%" : 12,
+                  width: screenSize < 1024 ? 32 : 42, height: screenSize < 1024 ? 32 : 42, borderRadius: "50%",
                   background: "#0F62FE",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   boxShadow: "0 8px 16px rgba(15,98,254,0.4)",
@@ -703,13 +758,13 @@ export default function ProfilePage() {
                   zIndex: 2,
                   transition: "transform 0.2s"
                 }}>
-                  <Camera size={screenSize < 768 ? 14 : 20} color="white" />
+                  <Camera size={screenSize < 1024 ? 14 : 20} color="white" />
                 </div>
               </div>
             </div>
 
             {/* Identity */}
-            <div style={{ textAlign: "center" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", width: "100%" }}>
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 background: "rgba(15,98,254,0.06)", border: "1px solid rgba(15,98,254,0.12)",
@@ -733,25 +788,29 @@ export default function ProfilePage() {
               )}
 
               {/* Following / Followers */}
-              <div style={{ display: "inline-flex", gap: "clamp(16px, 6vw, 40px)", marginBottom: 16, justifyContent: "center", width: "100%" }}>
+              <div style={{ display: "flex", gap: "clamp(24px, 12vw, 64px)", marginBottom: 16, justifyContent: "center", width: "100%", position: "relative" }}>
                 <button
                   onClick={() => { setRightTab("following"); fetchFollowingList() }}
                   style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}
                 >
-                  <CustomFollowingIcon active={rightTab === "following"} />
+                  <CustomFollowingIcon active={true} />
                   <div style={{ textAlign: "center" }}>
                     <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{profileStats?.followingCount ?? 0}</div>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: rightTab === "following" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.03em" }}>Siguiendo</div>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.03em" }}>Siguiendo</div>
                   </div>
                 </button>
+                
+                {/* Vertical Divider */}
+                <div style={{ width: 1, height: 40, background: "#e2e8f0", alignSelf: "center", opacity: 0.6 }} />
+
                 <button
                   onClick={() => { setRightTab("followers"); fetchFollowersList() }}
                   style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}
                 >
-                  <CustomFollowersIcon active={rightTab === "followers"} />
+                  <CustomFollowersIcon active={true} />
                   <div style={{ textAlign: "center" }}>
                     <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{profileStats?.followersCount ?? 0}</div>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: rightTab === "followers" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.03em" }}>Seguidores</div>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.03em" }}>Seguidores</div>
                   </div>
                 </button>
               </div>
@@ -762,7 +821,7 @@ export default function ProfilePage() {
             {/* Level Progress - Adding Life */}
             <div className="prof-card-hover" style={{
               background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
-              padding: screenSize < 768 ? "16px 20px" : "24px 28px", borderRadius: 24,
+              padding: screenSize < 1024 ? "16px 20px" : "24px 28px", borderRadius: 24,
               border: "1px solid rgba(15,98,254,0.12)",
               boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1)"
             }}>
@@ -873,43 +932,8 @@ export default function ProfilePage() {
 
 
 
-            {/* ────────────────────────────────────────────────────────────
-                LOGROS (ACHIEVEMENTS)
-            ──────────────────────────────────────────────────────────── */}
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.01em", display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 30, height: 30, borderRadius: 10, background: "linear-gradient(135deg,#fef3c7,#fde68a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <AchievementIconSm icon="trophy" size={16} color="#d97706"/>
-                  </div>
-                  Logros
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#10b981", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 999, padding: "2px 10px" }}>
-                    {achievements.filter(a => a.unlocked).length}/{achievements.length}
-                  </span>
-                </h2>
-              </div>
-
-              {loadingAchievements ? (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="skeleton-pulse" style={{ height: 140, borderRadius: 20, background: "#f1f5f9" }} />
-                  ))}
-                </div>
-              ) : achievements.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "32px 0", color: "#94a3b8", fontSize: 14 }}>
-                  Completa el SQL de configuración para activar los logros.
-                </div>
-              ) : (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
-                  {achievements.map(a => {
-                    const cfg = RARITY_CFG[a.rarity] ?? RARITY_CFG["común"]
-                    return (
-                      <AchievementCard key={a.id} a={a} cfg={cfg} />
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+            {/* Achievements - Render here ONLY on Desktop */}
+            {screenSize >= 1024 && renderAchievementsSection()}
           </div>
 
           {/* ══ RIGHT COLUMN ══ */}
@@ -1169,6 +1193,8 @@ export default function ProfilePage() {
               )
             })()}
 
+            {/* Achievements - Render here ONLY on Mobile/Tablet */}
+            {screenSize < 1024 && renderAchievementsSection()}
           </div>
         </div>
       </div >

@@ -22,7 +22,8 @@ import {
   LogIn,
   LogOut,
   BarChart2,
-  Trophy
+  Trophy,
+  Zap
 } from "lucide-react"
 
 export default function MobileBottomNav() {
@@ -79,6 +80,13 @@ export default function MobileBottomNav() {
       icon: Gamepad2,
       path: '/cash-flow',
       protected: false
+    },
+    {
+      id: 'live',
+      label: 'Bizen Live',
+      icon: Zap,
+      path: '/live/join',
+      protected: false
     }
   ] : [
     {
@@ -93,6 +101,13 @@ export default function MobileBottomNav() {
       label: "Cursos de la escuela",
       icon: MapIcon,
       path: "/teacher/courses",
+      protected: true
+    },
+    {
+      id: "teacher-live",
+      label: "Lanzar Live",
+      icon: Zap,
+      path: "/live/host",
       protected: true
     }
   ]

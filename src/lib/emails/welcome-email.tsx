@@ -250,7 +250,8 @@ export const sendBizenWelcomeEmail = async (
   name: string,
   dashboardUrl: string
 ) => {
-  const { resend } = await import('@/lib/resend');
+  const { getResend } = await import('@/lib/resend');
+  const resend = await getResend();
   
   return await resend.emails.send({
     from: 'BIZEN <onboarding@resend.dev>', // Change to your verified domain like: 'BIZEN <bienvenida@bizen.site>'

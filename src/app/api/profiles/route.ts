@@ -33,10 +33,11 @@ export async function GET(request: NextRequest) {
     }
 
     const isEduEmail = isInstitutionalEmail(user.email || '');
+    const isSpecialAdmin = user.email === 'diegopenita31@gmail.com';
 
     if (!profile) {
       console.warn(`[api/profiles] Profile missing for user ${user.id}, creating default...`)
-      const fallbackRole = isEduEmail ? 'institutional' : 'particular';
+      const fallbackRole = isSpecialAdmin ? 'school_admin' : (isEduEmail ? 'institutional' : 'particular');
       
       const fallbackProfile = {
         userId: user.id,
@@ -47,8 +48,8 @@ export async function GET(request: NextRequest) {
         level: 1,
         currentStreak: 0,
         subscriptionStatus: 'none',
-        inventory: [],
-        school: null
+        settings: {},
+        school: 'sch_1'
       };
 
       try {
@@ -59,7 +60,8 @@ export async function GET(request: NextRequest) {
             role: fallbackRole,
             xp: 0,
             bizcoins: 0,
-            level: 1
+            level: 1,
+            schoolId: isSpecialAdmin ? 'sch_1' : null
           }
         })
       } catch (createErr: any) {
@@ -68,8 +70,8 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Force 'particular' role if email is not institutional
-    if (!isEduEmail && profile.role !== 'particular') {
+    // Force 'particular' role if email is not institutional, UNLESS it is the special admin
+    if (!isEduEmail && !isSpecialAdmin && profile.role !== 'particular') {
       try {
         profile = await prisma.profile.update({
           where: { userId: user.id },
@@ -194,14 +196,15 @@ export async function PATCH(request: NextRequest) {
     }
 
     const isEduEmail = isInstitutionalEmail(user.email || '');
+    const isSpecialAdmin = user.email === 'diegopenita31@gmail.com';
 
     const updatedProfile = await prisma.profile.update({
       where: { userId: user.id },
       data: {
         ...(fullName && { fullName }),
         ...((role || schoolId) && {
-          role: isEduEmail ? (role || existingProfile.role) : 'particular',
-          schoolId: isEduEmail ? (schoolId !== undefined ? schoolId : existingProfile.schoolId) : null
+          role: (isEduEmail || isSpecialAdmin) ? (role || existingProfile.role) : 'particular',
+          schoolId: (isEduEmail || isSpecialAdmin) ? (schoolId !== undefined ? schoolId : existingProfile.schoolId) : null
         }),
         ...(avatar !== undefined && { avatar }),
         ...(username !== undefined && { username }),
