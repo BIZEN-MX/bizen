@@ -446,6 +446,7 @@ function ForumContent() {
     ? [...evidencePosts].sort((a, b) => (b.status === "validated" ? 1 : 0) - (a.status === "validated" ? 1 : 0))
     : evidencePosts
 
+  const isAdminOrTeacher = ["teacher", "school_admin"].includes(userRole)
   const isTeacher = ["teacher", "school_admin", "admin", "moderator"].includes(userRole)
   const validatedToday = evidencePosts.filter(p => p.status === "validated").length
   const pendingToday = evidencePosts.filter(p => p.status === "submitted").length
@@ -574,14 +575,16 @@ function ForumContent() {
                 }} className="forum-nav-extra-btn">
                   <BookOpen size={15} /> Guardados
                 </Link>
-                <Link href="/forum/new" style={{
-                  display: "flex", alignItems: "center", gap: 7,
-                  padding: "10px 20px", background: "linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb)", color: "white",
-                  borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 13,
-                  boxShadow: "0 4px 12px rgba(15,23,42,0.3)", transition: "all 0.2s"
-                }}>
-                  <span>+</span> Crear Tema
-                </Link>
+                {!isAdminOrTeacher && (
+                  <Link href="/forum/new" style={{
+                    display: "flex", alignItems: "center", gap: 7,
+                    padding: "10px 20px", background: "linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb)", color: "white",
+                    borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 13,
+                    boxShadow: "0 4px 12px rgba(15,23,42,0.3)", transition: "all 0.2s"
+                  }}>
+                    <span>+</span> Crear Tema
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -611,16 +614,18 @@ function ForumContent() {
                       <h2 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 600, color: "white", margin: "0 0 10px", letterSpacing: "-0.02em" }}>{todayChallenge.title}</h2>
                       <p style={{ fontSize: "clamp(14px, 1.2vw, 15px)", color: "rgba(255,255,255,0.7)", margin: 0, lineHeight: 1.6, maxWidth: 540 }}>{todayChallenge.description}</p>
                     </div>
-                    <Link href="/mision-del-dia" style={{
-                      position: "relative", zIndex: 1,
-                      display: "flex", alignItems: "center", gap: 10, padding: "14px 28px",
-                      background: "white", color: "#0f172a",
-                      borderRadius: 16, fontWeight: 600, fontSize: 15, textDecoration: "none",
-                      boxShadow: "0 12px 24px rgba(0,0,0,0.2)", transition: "all 0.2s",
-                    }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 16px 32px rgba(0,0,0,0.25)" }} 
-                       onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 12px 24px rgba(0,0,0,0.2)" }}>
-                      Participar ahora <ChevronRight size={18} />
-                    </Link>
+                    {!isAdminOrTeacher && (
+                      <Link href="/mision-del-dia" style={{
+                        position: "relative", zIndex: 1,
+                        display: "flex", alignItems: "center", gap: 10, padding: "14px 28px",
+                        background: "white", color: "#0f172a",
+                        borderRadius: 16, fontWeight: 600, fontSize: 15, textDecoration: "none",
+                        boxShadow: "0 12px 24px rgba(0,0,0,0.2)", transition: "all 0.2s",
+                      }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 16px 32px rgba(0,0,0,0.25)" }} 
+                         onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 12px 24px rgba(0,0,0,0.2)" }}>
+                        Participar ahora <ChevronRight size={18} />
+                      </Link>
+                    )}
                   </div>
                 )}
 
@@ -687,9 +692,16 @@ function ForumContent() {
                     <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
                       Completa el reto de hoy y comparte tu aprendizaje con tu grupo.
                     </p>
-                    <Link href="/mision-del-dia" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "white", color: "#0f172a", borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 14, boxShadow: "0 4px 14px rgba(0,0,0,0.15)" }}>
-                      <Target size={16} /> Hacer el reto de hoy
-                    </Link>
+                    {!isAdminOrTeacher && (
+                      <Link href="/mision-del-dia" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "white", color: "#0f172a", borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 14, boxShadow: "0 4px 14px rgba(0,0,0,0.15)" }}>
+                        <Target size={16} /> Hacer el reto de hoy
+                      </Link>
+                    )}
+                    {isAdminOrTeacher && (
+                      <p style={{ color: "#94a3b8", fontSize: 13, fontWeight: 500, marginTop: 16 }}>
+                        Esperando a que los alumnos publiquen sus evidencias para validar.
+                      </p>
+                    )}
                   </div>
                 ) : (
                   sortedPosts.map(post => (

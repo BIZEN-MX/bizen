@@ -20,8 +20,17 @@ export async function POST(req: NextRequest) {
 
         const profile = await prisma.profile.findUnique({
             where: { userId: user.id },
-            select: { schoolId: true }
+            select: { schoolId: true, role: true }
         })
+
+        if (!profile) return NextResponse.json({ error: "Perfil no encontrado" }, { status: 404 })
+
+        // BLOCK STAFF FROM POSTING EVIDENCE
+        if (profile.role === 'school_admin' || profile.role === 'teacher') {
+            return NextResponse.json({ 
+                error: "Los administradores y maestros no pueden publicar evidencias, solo validar las de los alumnos." 
+            }, { status: 403 })
+        }
 
         const challenge = await prisma.dailyChallenge.findUnique({ where: { id: dailyChallengeId } })
         if (!challenge) return NextResponse.json({ error: "Reto no encontrado" }, { status: 404 })

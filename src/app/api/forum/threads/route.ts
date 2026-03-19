@@ -268,6 +268,13 @@ export async function POST(request: NextRequest) {
       console.log(`✅ Auto-created profile for user ${user.id}`)
     }
 
+    // BLOCK STAFF FROM CREATING THREADS
+    if ((profile as any).role === 'school_admin' || (profile as any).role === 'teacher') {
+      return NextResponse.json({ 
+        error: "Los administradores y maestros no pueden crear nuevos temas en el foro, solo interactuar con temas existentes." 
+      }, { status: 403 })
+    }
+
     // Check rate limit
     const rateLimit = await checkRateLimit(user.id, 'create_thread', 5, 60)
     if (!rateLimit.allowed) {
