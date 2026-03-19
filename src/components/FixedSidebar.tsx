@@ -1414,6 +1414,9 @@ export default function FixedSidebar() {
                   }}>
                     {user.user_metadata?.full_name || user.email?.split('@')[0]}
                   </div>
+                  <div style={{ fontSize: 10, color: '#94a3b8', marginBottom: 2, opacity: 0.7 }}>
+                    DEBUG: {dbProfile?.role || 'loading...'}
+                  </div>
                   <div style={{
                     fontSize: 12,
                     fontWeight: 500,
