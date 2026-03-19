@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { awardXp } from "@/lib/rewards"
+import { checkAndAwardAchievements } from "@/lib/achievements"
 
 export async function POST(req: NextRequest) {
     try {
@@ -46,6 +47,17 @@ export async function POST(req: NextRequest) {
         })
 
         const rewards = await awardXp(user.id, 50)
+
+        // Count completed retos for this user
+        const retosCompleted = await prisma.evidencePost.count({ where: { authorUserId: user.id } }).catch(() => 0)
+        const profile2 = await prisma.profile.findUnique({ where: { userId: user.id }, select: { currentStreak: true, level: true, bizcoins: true } }).catch(() => null)
+        checkAndAwardAchievements(user.id, {
+            retosCompleted,
+            currentStreak: profile2?.currentStreak ?? 0,
+            level:         profile2?.level         ?? 1,
+            bizcoins:      profile2?.bizcoins      ?? 0,
+        }).catch(() => {})
+
         return NextResponse.json({ ...post, rewards }, { status: 201 })
     } catch (err) {
         console.error("POST /api/evidence:", err)

@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { prisma } from "@/lib/prisma"
 import { calculateLevel } from "@/lib/xp"
+import { checkAndAwardAchievements } from "@/lib/achievements"
 
 /**
  * POST /api/lesson/complete
@@ -141,6 +142,35 @@ export async function POST(req: NextRequest) {
             }
         }
 
+        // Check & award achievements after XP is granted
+        let newAchievements: string[] = []
+        try {
+            const [profile, lessonCount, courseCount] = await Promise.all([
+                prisma.profile.findUnique({
+                    where: { userId },
+                    select: { currentStreak: true, level: true, bizcoins: true, postsCreated: true }
+                }),
+                prisma.progress.count({ where: { userId, percent: 100 } }),
+                // Count distinct completed courses (all lessons in unit completed)
+                prisma.progress.count({ where: { userId, percent: 100 } }).catch(() => 0)
+            ])
+
+            // Count inventory items for store achievements
+            const inventoryCount = await prisma.userInventoryItem.count({ where: { userId } }).catch(() => 0)
+
+            newAchievements = await checkAndAwardAchievements(userId, {
+                lessonsCompleted:  lessonCount,
+                coursesCompleted:  isFirstCompletion ? 1 : 0, // will be re-checked on context
+                currentStreak:     profile?.currentStreak ?? 0,
+                level:             profile?.level         ?? 1,
+                bizcoins:          profile?.bizcoins      ?? 0,
+                postsCreated:      profile?.postsCreated  ?? 0,
+                itemsOwned:        inventoryCount,
+            })
+        } catch (achErr) {
+            console.warn("[lesson/complete] Achievement check failed:", achErr)
+        }
+
         return NextResponse.json({
             success: true,
             starsEarned,
@@ -148,6 +178,7 @@ export async function POST(req: NextRequest) {
             newLevel: rewardResult?.newLevel ?? null,
             bizcoinsAwarded: rewardResult?.bizcoinsAwarded ?? 0,
             isFirstCompletion,
+            newAchievements,
         })
     } catch (error) {
         console.error("[lesson/complete] Error:", error)

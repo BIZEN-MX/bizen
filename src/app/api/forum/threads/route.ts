@@ -3,6 +3,7 @@ import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 import { filterContent } from "@/lib/forum/contentFilter"
 import { checkRateLimit } from "@/lib/forum/rateLimiter"
+import { checkAndAwardAchievements } from "@/lib/achievements"
 
 // GET list threads
 export async function GET(request: NextRequest) {
@@ -344,10 +345,15 @@ export async function POST(request: NextRequest) {
       })
 
       // Update profile stats
-      await prisma.profile.update({
+      const updatedProfile = await prisma.profile.update({
         where: { userId: user.id },
         data: { postsCreated: { increment: 1 } }
       })
+
+      // Check achievements (best-effort, never crash response)
+      checkAndAwardAchievements(user.id, {
+        postsCreated: updatedProfile.postsCreated ?? 1,
+      }).catch(() => {})
 
       return NextResponse.json(thread, { status: 201 })
 
@@ -391,10 +397,15 @@ export async function POST(request: NextRequest) {
         }
       })
 
-      await prisma.profile.update({
+      const updatedProfile2 = await prisma.profile.update({
         where: { userId: user.id },
         data: { postsCreated: { increment: 1 } }
       })
+
+      // Check achievements (best-effort)
+      checkAndAwardAchievements(user.id, {
+        postsCreated: updatedProfile2.postsCreated ?? 1,
+      }).catch(() => {})
 
       return NextResponse.json(thread, { status: 201 })
     }

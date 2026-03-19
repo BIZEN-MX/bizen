@@ -124,7 +124,155 @@ const RARITY_CFG: Record<string, { grad: string; color: string; label: string }>
   legendario: { grad: "linear-gradient(135deg,#92400e,#d97706)", color: "#fbbf24", label: "Legendario" },
 }
 
+function AchievementCard({ a, cfg }: { a: AchievementDef; cfg: { grad: string; color: string; label: string } }) {
+  const [flipped, setFlipped] = React.useState(false)
+  const ref = React.useRef<HTMLDivElement>(null)
+
+  // Close on outside tap (mobile)
+  React.useEffect(() => {
+    if (!flipped) return
+    const close = (e: MouseEvent | TouchEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setFlipped(false)
+    }
+    document.addEventListener("mousedown", close)
+    document.addEventListener("touchstart", close)
+    return () => {
+      document.removeEventListener("mousedown", close)
+      document.removeEventListener("touchstart", close)
+    }
+  }, [flipped])
+
+  const unlockedDate = a.unlockedAt
+    ? new Date(a.unlockedAt).toLocaleDateString("es-MX", { day: "numeric", month: "short", year: "numeric" })
+    : null
+
+  // Subtle card-flip sound using Web Audio API (no external files)
+  const playFlipSound = () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.07), ctx.sampleRate)
+      const data = buf.getChannelData(0)
+      for (let i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3.5) * 0.7
+      }
+      const src = ctx.createBufferSource()
+      src.buffer = buf
+      const gain = ctx.createGain()
+      gain.gain.setValueAtTime(0.22, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07)
+      src.connect(gain)
+      gain.connect(ctx.destination)
+      src.start()
+    } catch { /* silently ignore if AudioContext is blocked */ }
+  }
+
+  const handleFlip = () => {
+    playFlipSound()
+    setFlipped(v => !v)
+  }
+
+  return (
+    <div ref={ref} onClick={handleFlip} style={{ perspective: "900px", cursor: "pointer", userSelect: "none" }}>
+      <div style={{
+        position: "relative",
+        width: "100%",
+        paddingBottom: "135%",
+        transformStyle: "preserve-3d",
+        transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+        transition: "transform 0.52s cubic-bezier(0.4, 0.2, 0.2, 1)",
+      }}>
+
+        {/* ─── FRONT ──────────────────────────────────── */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+          borderRadius: 24,
+          background: a.unlocked ? cfg.grad : "#f8fafc",
+          border: a.unlocked ? "none" : "1.5px solid #e2e8f0",
+          boxShadow: a.unlocked ? `0 8px 28px ${cfg.color}40` : "0 2px 8px rgba(0,0,0,0.06)",
+          display: "flex", flexDirection: "column", alignItems: "center",
+          justifyContent: "center", textAlign: "center",
+          gap: 14, padding: "24px 16px", overflow: "hidden",
+        }}>
+          {!a.unlocked && (
+            <div style={{ position: "absolute", top: 12, right: 12 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+          )}
+          <div style={{
+            width: 68, height: 68, borderRadius: 20,
+            background: a.unlocked ? "rgba(255,255,255,0.18)" : "#e2e8f0",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            border: a.unlocked ? "1px solid rgba(255,255,255,0.25)" : "none",
+            boxShadow: a.unlocked ? "0 4px 16px rgba(0,0,0,0.15)" : "none",
+          }}>
+            <AchievementIconSm icon={a.icon} size={32} color={a.unlocked ? "#fff" : "#94a3b8"} />
+          </div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: a.unlocked ? "#fff" : "#0f172a", lineHeight: 1.2, marginBottom: 5 }}>{a.title}</div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: a.unlocked ? cfg.color : "#94a3b8", textTransform: "uppercase", letterSpacing: ".08em" }}>{cfg.label}</div>
+          </div>
+          {a.unlocked && a.xpReward > 0 && (
+            <div style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.14)", borderRadius: 999, padding: "4px 12px" }}>
+              <AchievementIconSm icon="zap" size={12} color="#fbbf24" />
+              <span style={{ fontSize: 12, fontWeight: 800, color: "#fbbf24" }}>+{a.xpReward} XP</span>
+            </div>
+          )}
+          <div style={{ fontSize: 9, fontWeight: 600, color: a.unlocked ? "rgba(255,255,255,0.38)" : "#cbd5e1", textTransform: "uppercase", letterSpacing: "0.07em", marginTop: 2 }}>
+            Toca para ver
+          </div>
+        </div>
+
+        {/* ─── BACK ───────────────────────────────────── */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+          transform: "rotateY(180deg)",
+          borderRadius: 24,
+          background: a.unlocked ? cfg.grad : "linear-gradient(135deg, #1e293b, #0f172a)",
+          boxShadow: a.unlocked ? `0 8px 28px ${cfg.color}50` : "0 8px 28px rgba(0,0,0,0.3)",
+          display: "flex", flexDirection: "column", alignItems: "center",
+          justifyContent: "center", textAlign: "center",
+          gap: 12, padding: "24px 16px", overflow: "hidden",
+        }}>
+          <div style={{
+            fontSize: 9, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase",
+            color: a.unlocked ? cfg.color : "#60a5fa",
+            padding: "4px 14px",
+            background: a.unlocked ? "rgba(255,255,255,0.12)" : "rgba(96,165,250,0.15)",
+            borderRadius: 999,
+          }}>
+            {a.unlocked ? "Desbloqueado" : "Como conseguirlo"}
+          </div>
+          <div style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.6, color: a.unlocked ? "rgba(255,255,255,0.92)" : "#e2e8f0" }}>
+            {a.description || "Sigue usando BIZEN para desbloquear este logro."}
+          </div>
+          {unlockedDate && (
+            <div style={{
+              fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.45)",
+              borderTop: "1px solid rgba(255,255,255,0.1)",
+              paddingTop: 10, marginTop: 2, width: "100%", textAlign: "center",
+            }}>
+              Obtenido el {unlockedDate}
+            </div>
+          )}
+          <div style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.28)", textTransform: "uppercase", letterSpacing: "0.07em", marginTop: 2 }}>
+            Toca para volver
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
 export default function ProfilePage() {
+
   const { user, loading, refreshUser, dbProfile } = useAuth()
   const { startTour } = useOnboarding()
   const router = useRouter()
@@ -337,8 +485,45 @@ export default function ProfilePage() {
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         @keyframes blobRotate { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
         @keyframes skeleton-pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        @keyframes tooltipFadeIn { from { opacity:0; transform:translateY(6px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
 
         .skeleton-pulse { animation: skeleton-pulse 1.5s infinite ease-in-out; }
+
+        .achievement-card { position: relative; cursor: pointer; }
+        .achievement-tooltip {
+          display: none;
+          position: absolute;
+          bottom: calc(100% + 10px);
+          left: 50%;
+          transform: translateX(-50%);
+          background: #1e293b;
+          color: #f8fafc;
+          border-radius: 14px;
+          padding: 12px 14px;
+          width: 200px;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1.5;
+          box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+          z-index: 200;
+          text-align: left;
+          pointer-events: none;
+          animation: tooltipFadeIn 0.18s ease;
+          white-space: normal;
+        }
+        .achievement-tooltip::after {
+          content: '';
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          border: 6px solid transparent;
+          border-top-color: #1e293b;
+        }
+        .achievement-card:hover .achievement-tooltip,
+        .achievement-card.tooltip-open .achievement-tooltip {
+          display: block;
+        }
 
         @media (max-width: 767px) {
           .prof-outer { padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
@@ -701,7 +886,7 @@ export default function ProfilePage() {
               </div>
 
               {loadingAchievements ? (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
                   {Array.from({ length: 6 }).map((_, i) => (
                     <div key={i} className="skeleton-pulse" style={{ height: 140, borderRadius: 20, background: "#f1f5f9" }} />
                   ))}
@@ -711,61 +896,11 @@ export default function ProfilePage() {
                   Completa el SQL de configuración para activar los logros.
                 </div>
               ) : (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
                   {achievements.map(a => {
                     const cfg = RARITY_CFG[a.rarity] ?? RARITY_CFG["común"]
                     return (
-                      <div
-                        key={a.id}
-                        className="prof-card-hover"
-                        style={{
-                          borderRadius: 20,
-                          overflow: "hidden",
-                          background: a.unlocked ? cfg.grad : "#f8fafc",
-                          border: a.unlocked ? "none" : "1.5px solid #e2e8f0",
-                          padding: "20px 16px",
-                          display: "flex", flexDirection: "column", alignItems: "center",
-                          textAlign: "center", gap: 10,
-                          boxShadow: a.unlocked ? `0 8px 24px ${cfg.color}30` : "none",
-                          position: "relative",
-                        }}
-                        title={a.description}
-                      >
-                        {/* icon box */}
-                        <div style={{
-                          width: 54, height: 54, borderRadius: 16,
-                          background: a.unlocked ? "rgba(255,255,255,0.15)" : "#e2e8f0",
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          border: a.unlocked ? "1px solid rgba(255,255,255,0.20)" : "none",
-                        }}>
-                          <AchievementIconSm
-                            icon={a.icon}
-                            size={26}
-                            color={a.unlocked ? "#fff" : "#94a3b8"}
-                          />
-                        </div>
-
-                        <div>
-                          <div style={{ fontSize: 13, fontWeight: 800, color: a.unlocked ? "#fff" : "#0f172a", lineHeight: 1.2, marginBottom: 4 }}>{a.title}</div>
-                          <div style={{ fontSize: 10, fontWeight: 700, color: a.unlocked ? cfg.color : "#94a3b8", textTransform: "uppercase", letterSpacing: ".08em" }}>{cfg.label}</div>
-                        </div>
-
-                        {a.unlocked && a.xpReward > 0 && (
-                          <div style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.12)", borderRadius: 999, padding: "3px 10px" }}>
-                            <AchievementIconSm icon="zap" size={11} color="#fbbf24"/>
-                            <span style={{ fontSize: 11, fontWeight: 800, color: "#fbbf24" }}>+{a.xpReward} XP</span>
-                          </div>
-                        )}
-
-                        {!a.unlocked && (
-                          <div style={{ position: "absolute", top: 10, right: 10 }}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <rect x="3" y="11" width="18" height="11" rx="2"/>
-                              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                            </svg>
-                          </div>
-                        )}
-                      </div>
+                      <AchievementCard key={a.id} a={a} cfg={cfg} />
                     )
                   })}
                 </div>

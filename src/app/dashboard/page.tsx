@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
+import { Flame } from "lucide-react"
 
 // ─────────────────────────────────────────────────────────────────
 // CUSTOM SVG ICON COMPONENTS
@@ -27,12 +28,6 @@ const IcoWave = ({ size = 40, color = "#fff" }) => (
   </svg>
 )
 
-const IcoFlame = ({ size = 24, color = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <path d="M12 2C12 2 8 6 8 10C8 12 9.5 13.5 11 14C10 12.5 10.5 11 12 10C12 12 14 13.5 14 15.5C14 17.5 13 19 11.5 20C15 19.5 17 17 17 14C17 11 15 9 14 8C14.5 10 13.5 11.5 12 12C12 12 10 10 12 2Z" fill={color} fillOpacity="0.9"/>
-    <circle cx="12" cy="18.5" r="2.5" fill={color} fillOpacity="0.4"/>
-  </svg>
-)
 
 const IcoBook = ({ size = 24, color = "currentColor", strokeWidth = 1.8 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
@@ -314,7 +309,7 @@ export default function DashboardPage() {
   const lessonPct = Math.min(100, Math.round((lessons / 150) * 100))
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0f4f8", width: "100%", boxSizing: "border-box" }}>
+    <div style={{ minHeight: "100vh", background: "#FBFAF5", width: "100%", boxSizing: "border-box", fontFamily: '"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif' }}>
       <style>{`
         /* ── sidebar offsets ── */
         @media (max-width:767px)              { .di { padding:20px 16px 100px !important; margin-left:0 !important; } }
@@ -330,42 +325,42 @@ export default function DashboardPage() {
 
         .dc { animation: du .48s cubic-bezier(.2,.8,.2,1) both; }
 
-        /* stat card */
+        /* stat card — screenshot style: colored bg, centered content, no heavy border */
         .sc {
-          background:#fff; border-radius:24px; padding:26px 24px;
-          border:1.5px solid rgba(0,0,0,0.055);
-          box-shadow:0 2px 14px rgba(0,0,0,0.045);
+          border-radius:20px; padding:28px 24px 24px;
           flex:1; min-width:0;
-          transition: box-shadow .22s ease, transform .22s ease;
+          font-family:"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+          transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1);
           cursor:default; position:relative; overflow:hidden;
         }
-        .sc:hover { box-shadow:0 14px 40px rgba(0,0,0,0.10); transform:translateY(-4px); }
+        .sc:hover { transform:translateY(-4px); box-shadow:0 20px 40px -10px rgba(15,98,254,0.14); }
 
         /* stat label */
         .sc-label {
-          font-size:11px; font-weight:800; color:#94a3b8;
+          font-size:10px; font-weight:700;
           text-transform:uppercase; letter-spacing:.12em;
-          line-height:1.4; margin-bottom:3px;
+          line-height:1.4; margin-bottom:0;
         }
-        .sc-sublabel { font-size:12px; font-weight:600; line-height:1.4; margin-top:1px; }
 
         /* stat number */
         .sc-num {
-          font-size:48px; font-weight:900; line-height:1;
-          letter-spacing:-0.01em; margin-top:16px; margin-bottom:4px;
+          font-size:52px; font-weight:800; line-height:1;
+          letter-spacing:-0.03em;
         }
-        .sc-unit { font-size:14px; font-weight:700; color:#94a3b8; margin-left:8px; letter-spacing:0.18em; text-transform:uppercase; }
+        .sc-unit { font-size:13px; font-weight:600; letter-spacing:0.04em; margin-left:4px; }
 
         /* quick link */
         .ql {
-          background:#fff; border-radius:20px; padding:18px 16px;
-          border:1.5px solid rgba(0,0,0,0.05);
-          box-shadow:0 2px 10px rgba(0,0,0,0.04);
+          background: linear-gradient(145deg,#FFFFFF 0%,#F8FAFC 100%);
+          border-radius:20px; padding:18px 16px;
+          border:1px solid rgba(15,98,254,0.10);
+          box-shadow:0 8px 20px -6px rgba(15,98,254,0.08);
           display:flex; align-items:center; gap:14px; cursor:pointer;
-          transition:all .2s ease;
+          font-family:"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+          transition:all .3s cubic-bezier(.4,0,.2,1);
         }
-        .ql:hover { box-shadow:0 12px 32px rgba(0,0,0,0.10); transform:translateY(-4px); border-color:rgba(15,98,254,0.18); }
-        .ql-label { font-size:14px; font-weight:800; color:#0f172a; line-height:1.3; }
+        .ql:hover { box-shadow:0 16px 36px -8px rgba(15,98,254,0.18); transform:translateY(-4px); border-color:rgba(15,98,254,0.25); }
+        .ql-label { font-size:14px; font-weight:700; color:#0f172a; line-height:1.3; }
         .ql-sub   { font-size:12px; color:#94a3b8; font-weight:500; margin-top:3px;
                     overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
@@ -471,7 +466,7 @@ export default function DashboardPage() {
               {/* mini stats row inside hero */}
               <div className="hero-stats-pills" style={{display:"flex",gap:10,flexWrap:"wrap"}}>
                 {[
-                  { icon:<IcoFlame size={14} color="#fb923c"/>, label:`${streak} días`, sub:"Racha", bg:"rgba(251,146,60,.15)", border:"rgba(251,146,60,.25)" },
+                  { icon:<Flame size={14} style={{color:"#fb923c"}}/>, label:`${streak} días`, sub:"Racha", bg:"rgba(251,146,60,.15)", border:"rgba(251,146,60,.25)" },
                   { icon:<IcoZap size={14} color="#fbbf24"/>,   label:`${(stats?.xpInCurrentLevel??0).toLocaleString()} XP`, sub:"Nivel Actual", bg:"rgba(251,191,36,.12)", border:"rgba(251,191,36,.25)" },
                   { icon:<IcoCoin size={14} color="#34d399"/>,  label:`${bizcoins.toLocaleString()} BC`, sub:"Bizcoins", bg:"rgba(52,211,153,.12)", border:"rgba(52,211,153,.25)" },
                 ].map(m => (
@@ -503,82 +498,59 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ══════════════════════════════════════════════════════════
-            STAT CARDS ROW
-        ══════════════════════════════════════════════════════════ */}
-        <div className="stats-row" style={{display:"flex",gap:16,marginBottom:24}}>
+        {/* STAT CARDS */}
+        <div className="stats-row" style={{display:"flex",gap:14,marginBottom:24,alignItems:"stretch"}}>
 
-          {/* Streak */}
-          <div className="sc dc" style={{animationDelay:".07s"}}>
-            <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:streak>0?"linear-gradient(90deg,#fb923c,#f97316)":"#e2e8f0",borderRadius:"24px 24px 0 0"}}/>
-            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
-              <div style={{width:46,height:46,borderRadius:15,background:streak>0?"linear-gradient(135deg,#fed7aa,#fb923c)":"#f1f5f9",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:streak>0?"0 6px 16px rgba(251,146,60,.35)":"none"}}>
-                <IcoFlame size={24} color={streak>0?"#fff":"#94a3b8"}/>
-              </div>
-              <div>
-                <div className="sc-label">Racha Diaria</div>
-                <div className="sc-sublabel" style={{color:streak>0?"#ea580c":"#94a3b8"}}>
-                  {streak===0 ? "Sin racha activa" : streak>=7?"Racha legendaria":"¡No la rompas!"}
-                </div>
-              </div>
+          {/* CARD 1 — Racha */}
+          <div className="sc dc" style={{
+            animationDelay:".07s",
+            background: streak > 0 ? "linear-gradient(145deg,#fffbeb,#fef3c7)" : "linear-gradient(145deg,#f8fafc,#f1f5f9)",
+            border: streak > 0 ? "1px solid #fde68a" : "1px solid #e2e8f0",
+            display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+            textAlign:"center", minHeight:160,
+          }}>
+            <div className="sc-label" style={{color: streak > 0 ? "#b45309" : "#94a3b8", marginBottom:18}}>Racha Diaria</div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              <Flame size={34} style={{color: streak > 0 ? "#d97706" : "#94a3b8"}}/>
+              <div className="sc-num" style={{color: streak > 0 ? "#92400e" : "#cbd5e1"}}>{streak}</div>
             </div>
-            <div className="sc-num" style={{color:streak>0?"#ea580c":"#cbd5e1"}}>
-              {streak}<span className="sc-unit">días</span>
-            </div>
-            {streak>0 && (
-              <div style={{display:"flex",gap:5,marginTop:12}}>
-                {Array.from({length:Math.min(streak,7)}).map((_,i)=>(
-                  <div key={i} style={{width:7,height:7,borderRadius:"50%",background:`hsl(${25+i*4},90%,${55+i*3}%)`}}/>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Lessons */}
-          <div className="sc dc" style={{animationDelay:".12s"}}>
-            <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:"linear-gradient(90deg,#10b981,#6ee7b7)",borderRadius:"24px 24px 0 0"}}/>
-            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
-              <div style={{width:46,height:46,borderRadius:15,background:"linear-gradient(135deg,#d1fae5,#6ee7b7)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 6px 16px rgba(16,185,129,.25)"}}>
-                <IcoBook size={22} color="#059669"/>
-              </div>
-              <div>
-                <div className="sc-label">Lecciones</div>
-                <div className="sc-sublabel" style={{color:"#059669"}}>{lessonPct}% del camino</div>
-              </div>
-            </div>
-            <div className="sc-num" style={{color:"#059669"}}>
-              {lessons}<span className="sc-unit">completadas</span>
-            </div>
-            {/* mini progress */}
-            <div style={{width:"100%",height:5,background:"#f1f5f9",borderRadius:4,overflow:"hidden",marginTop:14}}>
-              <div style={{width:`${lessonPct}%`,height:"100%",background:"linear-gradient(90deg,#10b981,#6ee7b7)",borderRadius:4,transition:"width 1.4s ease"}}/>
-            </div>
-            <div style={{display:"flex",justifyContent:"space-between",marginTop:7}}>
-              <span style={{fontSize:11,color:"#94a3b8",fontWeight:500}}>0</span>
-              <span style={{fontSize:11,color:"#94a3b8",fontWeight:500}}>150 lecciones</span>
+            <div style={{marginTop:10,fontSize:13,fontWeight:600,color: streak > 0 ? "#d97706" : "#94a3b8"}}>
+              {streak === 0 ? "Sin racha activa" : streak >= 7 ? "Racha legendaria" : "¡No la rompas!"}
             </div>
           </div>
 
-          {/* BIZCOINS */}
-          <div className="sc dc" style={{animationDelay:".17s",cursor:"pointer"}} onClick={()=>router.push("/tienda")}>
-            <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:"linear-gradient(90deg,#f59e0b,#fbbf24)",borderRadius:"24px 24px 0 0"}}/>
-            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
-              <div style={{width:46,height:46,borderRadius:15,background:"linear-gradient(135deg,#fef3c7,#fde68a)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 6px 16px rgba(245,158,11,.30)"}}>
-                <IcoZap size={22} color="#d97706"/>
-              </div>
-              <div>
-                <div className="sc-label">Bizcoins</div>
-                <div className="sc-sublabel" style={{color:"#d97706",display:"flex",alignItems:"center",gap:5}}>
-                  <IcoStore size={11} color="#d97706" strokeWidth={2}/> Ver tienda
-                </div>
-              </div>
+          {/* CARD 2 — Lecciones */}
+          <div className="sc dc" style={{
+            animationDelay:".12s",
+            background:"#fff", border:"1px solid #e9eef8",
+            display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+            textAlign:"center", minHeight:160,
+          }}>
+            <div className="sc-label" style={{color:"#94a3b8", marginBottom:18}}>Lecciones completadas</div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:16}}>
+              <IcoBook size={32} color="#0F62FE"/>
+              <div className="sc-num" style={{color:"#0F62FE"}}>{lessons}</div>
             </div>
-            <div className="sc-num" style={{color:"#d97706"}}>
-              {bizcoins.toLocaleString()}
+            <div style={{width:"100%",height:5,background:"#e0e9ff",borderRadius:10,overflow:"hidden"}}>
+              <div style={{width:`${lessonPct}%`,height:"100%",background:"linear-gradient(90deg,#93c5fd,#0F62FE)",borderRadius:10,transition:"width 1.4s cubic-bezier(.34,1.56,.64,1)"}}/>
             </div>
-            <div style={{display:"flex",alignItems:"center",gap:7,marginTop:14,padding:"9px 12px",background:"#fefce8",borderRadius:10,border:"1px solid #fde68a"}}>
-              <IcoStar size={13} color="#f59e0b"/>
-              <span style={{fontSize:12,fontWeight:600,color:"#92400e",lineHeight:1.4}}>Gana más completando retos</span>
+          </div>
+
+          {/* CARD 3 — Bizcoins */}
+          <div className="sc dc" style={{
+            animationDelay:".17s", cursor:"pointer",
+            background:"linear-gradient(145deg,#eff6ff,#dbeafe)", border:"1px solid #bfdbfe",
+            display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+            textAlign:"center", minHeight:160,
+          }} onClick={()=>router.push("/tienda")}>
+            <div className="sc-label" style={{color:"#1d4ed8", marginBottom:18}}>Bizcoins</div>
+            <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:6,marginBottom:10}}>
+              <div className="sc-num" style={{color:"#1e40af"}}>{bizcoins.toLocaleString()}</div>
+              <div style={{fontSize:15,fontWeight:600,color:"#3b82f6"}}>BC</div>
+            </div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,fontSize:12,fontWeight:600,color:"#3b82f6"}}>
+              <IcoStore size={12} color="#3b82f6" strokeWidth={2}/>
+              Ver tienda
             </div>
           </div>
         </div>
@@ -708,7 +680,7 @@ export default function DashboardPage() {
 
             {/* streak row */}
             <div style={{marginTop:20,padding:"12px 14px",background:"#f8fafc",borderRadius:12,display:"flex",alignItems:"center",gap:8}}>
-              <IcoFlame size={16} color="#f97316"/>
+              <Flame size={16} style={{color:"#f97316"}}/>
               <span style={{fontSize:12,fontWeight:600,color:"#475569"}}>
                 {streak>0 ? `Racha activa de ${streak} días` : "Completa el reto de hoy para iniciar tu racha"}
               </span>
@@ -733,7 +705,7 @@ export default function DashboardPage() {
           <div className="quick-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:12}}>
             {([
               { Icon:IcoBook,    label:"Aprende Finanzas",  sub:"30 temas completos",       href:"/courses",    color:"#3b82f6", bg:"#dbeafe", delay:".33s" },
-              { Icon:IcoGamepad, label:"Simuladores",        sub:"Practica con escenarios",  href:"/simulators", color:"#8b5cf6", bg:"#ede9fe", delay:".37s" },
+              { Icon:IcoGamepad, label:"Simuladores",        sub:"Practica con escenarios",  href:"/cash-flow", color:"#8b5cf6", bg:"#ede9fe", delay:".37s" },
               { Icon:IcoStore,   label:"Tienda Bizen",       sub:`${bizcoins.toLocaleString()} BIZCOINS`,        href:"/tienda",   color:"#d97706", bg:"#fef3c7", delay:".41s" },
               { Icon:IcoUsers,   label:"Foro",               sub:"Comunidad activa",          href:"/forum",    color:"#10b981", bg:"#d1fae5", delay:".45s" },
               { Icon:IcoTrophy,  label:"Rankings",           sub:"Tu posición global",        href:"/rankings", color:"#ef4444", bg:"#fee2e2", delay:".49s" },

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { logToFile } from "@/lib/debugLogger"
+import { checkAndAwardAchievements } from "@/lib/achievements"
 
 export async function POST(request: NextRequest) {
     try {
@@ -91,6 +92,15 @@ export async function POST(request: NextRequest) {
                 bizcoins: result.bizcoins,
                 message: `Has comprado ${name} exitosamente`
             })
+
+            // Check store / coins achievements (best-effort, after response is sent conceptually)
+            prisma.userInventoryItem.count({ where: { userId: user.id } })
+              .then(inventoryCount =>
+                checkAndAwardAchievements(user.id, {
+                  itemsOwned: inventoryCount,
+                  bizcoins:   result.bizcoins ?? 0,
+                })
+              ).catch(() => {})
         } catch (error: any) {
             logToFile(`TRANSACTION ERROR: ${error.message || "Unknown error"}`)
             console.error("[PURCHASE TRANSACTION] Error:", error)

@@ -221,7 +221,7 @@ export default function FixedSidebar() {
   const dashboardActive = isActivePath("/dashboard")
   const coursesActive = isActivePath("/courses")
   const retoDiarioActive = isActivePath("/reto-diario")
-  const simuladorActive = isActivePath("/simulador")
+  const simuladorActive = isActivePath("/cash-flow")
   const forumActive = isActivePath("/forum")
 
   const profileActive = isActivePath("/profile")
@@ -440,7 +440,7 @@ export default function FixedSidebar() {
           {mounted && !loading && !user && (
             <div style={{ marginBottom: 24 }}>
               <button
-                onClick={() => window.open("/signup", "_blank")}
+                onClick={() => router.push("/signup")}
                 style={{
                   width: "100%",
                   padding: "14px 20px",
@@ -508,8 +508,9 @@ export default function FixedSidebar() {
               {isStudentOrGuest && (
                 <>
                   {/* ── INICIO / Dashboard ── */}
-                  <button
-                    onClick={() => navigateTo("/dashboard")}
+                  {mounted && user && (
+                    <button
+                      onClick={() => navigateTo("/dashboard")}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -557,6 +558,7 @@ export default function FixedSidebar() {
                     </svg>
                     <span className="nav-item-label">Inicio</span>
                   </button>
+                  )}
 
                   {/* ── APRENDE FINANZAS ── */}
                   <button

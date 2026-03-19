@@ -390,10 +390,6 @@ export default function BillyChatbot() {
               }}
             >
               <div style={{
-                width: 52, height: 52, borderRadius: "50%",
-                background: "rgba(255,255,255,0.2)",
-                border: "2px solid rgba(255,255,255,0.4)",
-                overflow: "hidden",
                 flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 pointerEvents: "none",
@@ -449,12 +445,8 @@ export default function BillyChatbot() {
                   style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "30px 10px" }}
                 >
                   <div style={{
-                    width: 90, height: 90, borderRadius: "50%",
-                    background: "white",
-                    border: "4px solid #dbeafe",
-                    overflow: "hidden", marginBottom: 20,
+                    marginBottom: 20,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    boxShadow: "0 12px 30px rgba(37,99,235,0.15)"
                   }}>
                     <Image src="/billy_chatbot.png" alt="Billy" width={84} height={84}
                       style={{ objectFit: "cover", objectPosition: "center top", transform: "scale(1.1)" }} />
@@ -490,11 +482,8 @@ export default function BillyChatbot() {
                   {msg.role === "assistant" && (
                     <div style={{ display: "flex", alignItems: "flex-end", gap: 10, width: "100%" }}>
                       <div style={{
-                        width: 32, height: 32, borderRadius: "50%",
-                        background: "white", border: "1.5px solid #dbeafe",
-                        overflow: "hidden", flexShrink: 0,
+                        flexShrink: 0,
                         display: "flex", alignItems: "center", justifyContent: "center",
-                        boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
                       }}>
                         <Image src="/billy_chatbot.png" alt="Billy" width={28} height={28}
                           style={{ objectFit: "cover", objectPosition: "center top", transform: "scale(1.2)" }} />
@@ -558,9 +547,7 @@ export default function BillyChatbot() {
               {isLoading && (
                 <div style={{ display: "flex", alignItems: "flex-end", gap: 10 }}>
                   <div style={{
-                    width: 32, height: 32, borderRadius: "50%",
-                    background: "white", border: "1.5px solid #dbeafe",
-                    overflow: "hidden", flexShrink: 0,
+                    flexShrink: 0,
                     display: "flex", alignItems: "center", justifyContent: "center"
                   }}>
                     <Image src="/billy_chatbot.png" alt="Billy" width={28} height={28}

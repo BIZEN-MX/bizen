@@ -462,7 +462,7 @@ export default function CoursePageTemplate({
                         }}>
                             <div className="billy-chat-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                 <div className="billy-chat-info" style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                                    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #dbeafe, #eff6ff)", border: "2px solid #3b82f6", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                                         <Image src="/billy_chatbot.png" alt="Billy" width={40} height={40} />
                                     </div>
                                     <div style={{ minWidth: 0 }}>

@@ -55,7 +55,7 @@ export function FooterNav({
                 <CheckIcon />
               </div>
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 min-w-0">
-                <h2 className="text-lg font-bold text-slate-900 truncate">Great job!</h2>
+                <h2 className="text-lg font-bold text-slate-900 truncate">¡Muy bien!</h2>
                 {onReport && (
                   <button
                     type="button"

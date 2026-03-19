@@ -754,11 +754,7 @@ export function MonthlyBudgetSimulator() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div style={{
-                      width: 54, height: 54, borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #dbeafe, #eff6ff)',
-                      border: '2px solid #3b82f6',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      overflow: 'hidden'
                     }}>
                       <Image src="/billy_chatbot.png" alt="Billy" width={48} height={48} style={{ objectPosition: 'top' }} />
                     </div>

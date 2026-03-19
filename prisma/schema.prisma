@@ -98,6 +98,8 @@ model Profile {
   forumVotes           ForumVote[]         @relation("ForumVotes")
   progress             Progress[]
   inventory            UserInventoryItem[] @relation("ProfileInventory")
+  following            UserFollow[]        @relation("Following")
+  followers            UserFollow[]        @relation("Followers")
 
   @@index([schoolId], map: "idx_profiles_school")
   @@index([username], map: "idx_profiles_username")
@@ -572,6 +574,9 @@ model UserFollow {
   followerId  String    @map("follower_id")
   followingId String    @map("following_id")
   createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  follower  Profile @relation("Following", fields: [followerId], references: [userId], onDelete: Cascade)
+  following Profile @relation("Followers", fields: [followingId], references: [userId], onDelete: Cascade)
 
   @@id([followerId, followingId])
   @@map("user_follows")

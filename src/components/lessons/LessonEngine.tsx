@@ -84,6 +84,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const [isExitModalOpen, setIsExitModalOpen] = useState(false)
   const [showRecallOverlay, setShowRecallOverlay] = useState(false)
   const hasShownRecallHint = useRef(false)
+  const [showBlitzSplash, setShowBlitzSplash] = useState(false)
+  const blitzSplashShownFor = useRef<string | null>(null)
 
   // ── Billy Empático (Feature 2) ───────────────────────────────────────────
   const [showBillyEmpathy, setShowBillyEmpathy] = useState(false)
@@ -166,6 +168,17 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
   const isSummaryStep = currentStep?.stepType === "summary"
   const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice", "blitz_challenge"].includes(currentStep?.stepType || "")
+
+  // Blitz Splash: fullscreen warning when entering a blitz_challenge step
+  useEffect(() => {
+    if (!currentStep) return
+    if (currentStep.stepType === "blitz_challenge" && blitzSplashShownFor.current !== currentStep.id) {
+      blitzSplashShownFor.current = currentStep.id
+      setShowBlitzSplash(true)
+      const t = setTimeout(() => setShowBlitzSplash(false), 2600)
+      return () => clearTimeout(t)
+    }
+  }, [currentStep?.id, currentStep?.stepType])
 
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [isAudioLoading, setIsAudioLoading] = useState(false)
@@ -557,6 +570,87 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     )
   }
 
+  // ── Blitz Splash Overlay ─────────────────────────────────────────────────
+  const BlitzSplashOverlay = () => (
+    <AnimatePresence>
+      {showBlitzSplash && (
+        <motion.div
+          key="blitz-splash"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.4 } }}
+          transition={{ duration: 0.25 }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            background: "linear-gradient(135deg, #0f0c29, #1a0533, #09130f)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 28,
+            overflow: "hidden",
+          }}
+        >
+          {/* Background pulse rings */}
+          <motion.div
+            animate={{ scale: [1, 2.5], opacity: [0.18, 0] }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: "easeOut" }}
+            style={{ position: "absolute", width: 280, height: 280, borderRadius: "50%", border: "2px solid #fbbf24", pointerEvents: "none" }}
+          />
+          <motion.div
+            animate={{ scale: [1, 2.8], opacity: [0.12, 0] }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: "easeOut", delay: 0.3 }}
+            style={{ position: "absolute", width: 280, height: 280, borderRadius: "50%", border: "2px solid #f59e0b", pointerEvents: "none" }}
+          />
+
+          {/* Lightning bolt icon */}
+          <motion.div
+            animate={{ scale: [1, 1.18, 1], rotate: [-4, 4, -4] }}
+            transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              width: 90, height: 90, borderRadius: 28,
+              background: "linear-gradient(135deg, #f59e0b, #fbbf24)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 0 60px #fbbf2480, 0 0 120px #f59e0b40",
+            }}
+          >
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="#1a0533">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+          </motion.div>
+
+          {/* Title */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.15, duration: 0.4 }}
+            style={{ textAlign: "center", padding: "0 32px" }}
+          >
+            <div style={{ fontSize: "clamp(28px, 6vw, 40px)", fontWeight: 900, color: "#fbbf24", letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.1 }}>
+              Pregunta Relámpago
+            </div>
+            <div style={{ fontSize: "clamp(14px, 3vw, 18px)", fontWeight: 600, color: "rgba(255,255,255,0.85)", marginTop: 12, lineHeight: 1.4 }}>
+              ¡Contesta lo más rápido que puedas!
+            </div>
+            <div style={{ fontSize: "clamp(12px, 2.5vw, 15px)", fontWeight: 500, color: "rgba(255,255,255,0.5)", marginTop: 8 }}>
+              Tienes tiempo limitado — ¡el reloj ya corre!
+            </div>
+          </motion.div>
+
+          {/* Countdown bar */}
+          <motion.div
+            initial={{ width: "60%" }}
+            animate={{ width: 0 }}
+            transition={{ duration: 2.5, ease: "linear" }}
+            style={{ height: 4, background: "#fbbf24", borderRadius: 999, boxShadow: "0 0 12px #fbbf24" }}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
   if (shouldPassFullScreenProps) {
     return (
       <div
@@ -597,6 +691,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             onExit?.()
           }}
         />
+
+        {/* Blitz fullscreen splash */}
+        <BlitzSplashOverlay />
 
         {/* Content Area - Scrollable */}
         <div

@@ -9,7 +9,7 @@ export interface LessonProgressHeaderProps {
   totalSteps: number
   /** Consecutive correct quiz answers from the start (until first mistake). */
   streak: number
-  /** 0–3 stars based on mistakes: 0 mistakes = 3, 1 = 2, 2 = 1, 3+ = 0. */
+  /** Estrellas basadas en errores: 0-2 = 3 estrellas, 3-5 = 2 estrellas, 6+ = 1 estrella */
   stars: 0 | 1 | 2 | 3
   hideStreak?: boolean
   hideStars?: boolean

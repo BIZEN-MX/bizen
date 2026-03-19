@@ -18,8 +18,9 @@ import {
   User,
   Settings,
   UserPlus,
-  MoreHorizontal,
+  ChevronUp,
   LogIn,
+  LogOut,
   BarChart2,
   Trophy
 } from "lucide-react"
@@ -419,7 +420,7 @@ export default function MobileBottomNav() {
                 transform: showMoreMenu ? "rotate(180deg)" : "rotate(0deg)",
                 transition: "all 0.2s ease"
               }}>
-                <MoreHorizontal size={24} strokeWidth={showMoreMenu ? 2.5 : 2} />
+                <ChevronUp size={24} strokeWidth={showMoreMenu ? 2.5 : 2} />
               </span>
               <span style={{
                 fontSize: 9,
@@ -545,7 +546,7 @@ export default function MobileBottomNav() {
                   justifyContent: "center",
                   color: "#DC2626",
                 }}>
-                  <LogIn size={20} strokeWidth={2} />
+                  <LogOut size={20} strokeWidth={2} />
                 </span>
                 <span>Cerrar sesión</span>
               </button>
@@ -646,7 +647,7 @@ export default function MobileBottomNav() {
               <button
                 onClick={() => {
                   setShowAuthDialog(false)
-                  window.open("/signup", "_blank")
+                  router.push("/signup")
                 }}
                 style={{
                   padding: "16px 24px",
@@ -675,7 +676,7 @@ export default function MobileBottomNav() {
               <button
                 onClick={() => {
                   setShowAuthDialog(false)
-                  window.open("/login", "_blank")
+                  router.push("/login")
                 }}
                 style={{
                   padding: "16px 24px",
