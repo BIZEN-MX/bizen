@@ -93,27 +93,33 @@ export async function GET(request: Request) {
     let redirectUrl = (isInstitutional && !onboardingComplete)
       ? `${origin}/diagnostic?verified=true&t=${Date.now()}`
       : `${origin}/courses?verified=true&t=${Date.now()}`;
+
+    // Handle role-based redirect
     try {
-      const profile = await prisma.profile.findUnique({
+      const dbProfile = await prisma.profile.findUnique({
         where: { userId: data.user!.id }
       });
 
-      if (profile?.schoolId) {
+      if (dbProfile?.role === 'school_admin' || dbProfile?.role === 'teacher') {
+        redirectUrl = `${origin}/teacher/dashboard?verified=true&t=${Date.now()}`;
+      }
+
+      // Restore license bypass logic
+      if (dbProfile?.schoolId) {
         const schoolWithLicense = await prisma.school.findUnique({
-          where: { id: profile.schoolId },
-          include: {
-            licenses: {
-              where: {
-                status: 'active',
-                endDate: { gt: new Date() }
-              },
-              take: 1
+            where: { id: dbProfile.schoolId },
+            include: {
+              licenses: {
+                where: {
+                  status: 'active',
+                  endDate: { gt: new Date() }
+                },
+                take: 1
+              }
             }
-          }
         });
 
-        const hasActiveLicense = schoolWithLicense?.licenses?.length && schoolWithLicense.licenses.length > 0;
-        if (hasActiveLicense) {
+        if (schoolWithLicense?.licenses?.length && schoolWithLicense.licenses.length > 0) {
           cookieStore.set('bizen_has_access', '1', {
             path: '/',
             maxAge: 60 * 60 * 24 * 365,
@@ -124,7 +130,7 @@ export async function GET(request: Request) {
         }
       }
     } catch (e) {
-      console.warn('Auth callback: could not check school license:', e);
+      console.warn('Auth callback: could not fetch profile/license for redirect:', e);
     }
 
     return NextResponse.redirect(redirectUrl);

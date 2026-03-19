@@ -1053,7 +1053,7 @@ export default function ProfilePage() {
                         <Shield size={18} color="#93c5fd" />
                       </div>
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", letterSpacing: "0.05em", textTransform: "uppercase" }}>Plan Admin</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", letterSpacing: "0.05em", textTransform: "uppercase" }}>Administrador</div>
                         <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", marginTop: 2 }}>Acceso administrativo completo</div>
                       </div>
                     </div>

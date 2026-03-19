@@ -1440,7 +1440,7 @@ export default function FixedSidebar() {
                         letterSpacing: "0.05em"
                       }}>
                         <ShieldIcon size={12} fill="#fff" />
-                        PLAN ADMIN
+                        ADMINISTRADOR
                       </div>
                     ) : (
                       <>
