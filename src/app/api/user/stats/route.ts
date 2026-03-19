@@ -33,13 +33,16 @@ export async function GET() {
           createdAt: true,
           currentStreak: true,
           lastActive: true,
-          schoolId: true
+          schoolId: true,
+          role: true
         }
       })
     } catch (e: any) {
       console.warn("API User Stats Warning - DB profile fetch failed, using fallback:", e.message);
       // Do not throw, leaving profile = null
     }
+
+    const isAdminOrTeacher = profile?.role === 'school_admin' || profile?.role === 'teacher';
 
     if (!profile) {
       // Instead of 404, return default empty stats so the client doesn't crash.
@@ -100,8 +103,8 @@ export async function GET() {
     const xpRemaining = xpForNextLevel(currentXp);
     const currentStreakCount = calculateCurrentStreak(profile.lastActive, profile.currentStreak || 0);
 
-    // Sync level/streak if needed
-    if (currentLevel !== profile.level || currentStreakCount !== (profile.currentStreak || 0)) {
+    // Sync level/streak if needed (SKIP FOR ADMINS)
+    if (!isAdminOrTeacher && (currentLevel !== profile.level || currentStreakCount !== (profile.currentStreak || 0))) {
       prisma.profile.update({
         where: { userId: user.id },
         data: { level: currentLevel, currentStreak: currentStreakCount }

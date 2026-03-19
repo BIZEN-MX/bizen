@@ -1414,9 +1414,6 @@ export default function FixedSidebar() {
                   }}>
                     {user.user_metadata?.full_name || user.email?.split('@')[0]}
                   </div>
-                  <div style={{ fontSize: 10, color: '#94a3b8', marginBottom: 2, opacity: 0.7 }}>
-                    DEBUG: {dbProfile?.role || 'loading...'}
-                  </div>
                   <div style={{
                     fontSize: 12,
                     fontWeight: 500,
@@ -1428,22 +1425,43 @@ export default function FixedSidebar() {
                     gap: 8,
                     flexWrap: "wrap"
                   }}>
-                    <div style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 4,
-                      background: "#E0F2FE",
-                      padding: "4px 10px",
-                      borderRadius: 10,
-                      border: "1.5px solid #BAE6FD",
-                      color: "#0369A1",
-                      fontSize: 13,
-                      fontWeight: 500
-                    }}>
-                      <Star size={12} fill="#0369A1" />
-                      {((dbProfile as any)?.bizcoins || 0).toLocaleString()}
-                    </div>
-                    <span style={{ fontSize: 13, fontWeight: 500 }}>MI PERFIL</span>
+                    {isAdminOrTeacher ? (
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        background: "linear-gradient(135deg, #0a0f1e, #1e3a8a)",
+                        padding: "4px 10px",
+                        borderRadius: 10,
+                        border: "1.5px solid rgba(255,255,255,0.1)",
+                        color: "#fff",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        letterSpacing: "0.05em"
+                      }}>
+                        <ShieldIcon size={12} fill="#fff" />
+                        PLAN ADMIN
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                          background: "#E0F2FE",
+                          padding: "4px 10px",
+                          borderRadius: 10,
+                          border: "1.5px solid #BAE6FD",
+                          color: "#0369A1",
+                          fontSize: 13,
+                          fontWeight: 500
+                        }}>
+                          <Star size={12} fill="#0369A1" />
+                          {((dbProfile as any)?.bizcoins || 0).toLocaleString()}
+                        </div>
+                        <span style={{ fontSize: 13, fontWeight: 500 }}>MI PERFIL</span>
+                      </>
+                    )}
                   </div>
                 </div>
               )}

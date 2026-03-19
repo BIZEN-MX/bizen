@@ -32,14 +32,25 @@ export async function POST(request: NextRequest) {
     // Get current profile
     const profile = await prisma.profile.findUnique({
       where: { userId: user.id },
-      select: { xp: true, level: true }
+      select: { xp: true, level: true, role: true }
     })
-
+    
     if (!profile) {
       return NextResponse.json(
         { error: "Profile not found" },
         { status: 404 }
       )
+    }
+
+    // Skip for admins/teachers
+    if (profile.role === 'school_admin' || profile.role === 'teacher') {
+       return NextResponse.json({
+         success: true,
+         message: "XP not tracked for staff",
+         xpAwarded: 0,
+         totalXp: profile.xp,
+         level: profile.level
+       })
     }
 
     // Calculate new XP and level

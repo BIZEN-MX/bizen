@@ -34,9 +34,6 @@ export async function GET(request: NextRequest) {
 
     const isEduEmail = isInstitutionalEmail(user.email || '');
     const isSpecialAdmin = user.email?.toLowerCase() === 'diegopenita31@gmail.com';
-    const logMsg = `[PROFILE_DEBUG] ${new Date().toISOString()} - User: ${user.email}, isSpecialAdmin: ${isSpecialAdmin}\n`;
-    const fs = require('fs');
-    fs.appendFileSync('/tmp/profile_debug.log', logMsg);
 
     if (!profile) {
       console.warn(`[api/profiles] Profile missing for user ${user.id}, creating default...`)

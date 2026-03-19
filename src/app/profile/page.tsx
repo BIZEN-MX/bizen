@@ -432,6 +432,8 @@ export default function ProfilePage() {
   if (loading || !mounted || loadingStats) return <PageLoader />
   if (!user) return null
 
+  const isAdminOrTeacher = dbProfile?.role === 'school_admin' || dbProfile?.role === 'teacher'
+
   // Achievements section helper to avoid duplication while reordering for mobile
   const renderAchievementsSection = () => (
     <div style={{ marginTop: 24 }}>
@@ -493,11 +495,11 @@ export default function ProfilePage() {
   }
 
   const statCards = [
-    { icon: <Flame size={22} color="#0F62FE" />, value: streak, label: "Racha diaria" },
-    { icon: <Zap size={22} color="#0F62FE" />, value: totalXp, label: "Total XP" },
-    { icon: <Shield size={22} color="#0F62FE" />, value: getLeagueTitle(level), label: "Liga actual" },
-    { icon: <Award size={22} color="#0F62FE" />, value: achievements.filter(a => a.unlocked).length, label: "Logros" },
-  ]
+    { icon: <Flame size={22} color="#0F62FE" />, value: streak, label: "Racha diaria", hide: isAdminOrTeacher },
+    { icon: <Zap size={22} color="#0F62FE" />, value: totalXp, label: "Total XP", hide: isAdminOrTeacher },
+    { icon: <Shield size={22} color="#0F62FE" />, value: getLeagueTitle(level), label: "Liga actual", hide: isAdminOrTeacher },
+    { icon: <Award size={22} color="#0F62FE" />, value: achievements.filter(a => a.unlocked).length, label: "Logros", hide: isAdminOrTeacher },
+  ].filter(c => !c.hide)
 
   const Card = ({ style, className, children }: any) => (
     <div className={className} style={{
@@ -818,33 +820,35 @@ export default function ProfilePage() {
               <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #e2e8f0, transparent)", marginBottom: 16 }} />
             </div>
 
-            {/* Level Progress - Adding Life */}
-            <div className="prof-card-hover" style={{
-              background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
-              padding: screenSize < 1024 ? "16px 20px" : "24px 28px", borderRadius: 24,
-              border: "1px solid rgba(15,98,254,0.12)",
-              boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1)"
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 500, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
-                  <Zap size={16} color="#0F62FE" />
-                  Tu Progreso
-                </h3>
-                <span style={{ fontSize: 12, fontWeight: 500, color: "#0F62FE", background: "rgba(15,98,254,0.07)", padding: "3px 10px", borderRadius: 999 }}>{xpPct.toFixed(0)}%</span>
+            {/* Level Progress - Adding Life (SKIP FOR ADMINS) */}
+            {!isAdminOrTeacher && (
+              <div className="prof-card-hover" style={{
+                background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
+                padding: screenSize < 1024 ? "16px 20px" : "24px 28px", borderRadius: 24,
+                border: "1px solid rgba(15,98,254,0.12)",
+                boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1)"
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                  <h3 style={{ margin: 0, fontSize: 15, fontWeight: 500, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
+                    <Zap size={16} color="#0F62FE" />
+                    Tu Progreso
+                  </h3>
+                  <span style={{ fontSize: 12, fontWeight: 500, color: "#0F62FE", background: "rgba(15,98,254,0.07)", padding: "3px 10px", borderRadius: 999 }}>{xpPct.toFixed(0)}%</span>
+                </div>
+                <div style={{ width: "100%", height: 10, background: "#e9f0ff", borderRadius: 10, overflow: "hidden", position: "relative" }}>
+                  <div style={{
+                    width: `${xpPct}%`, height: "100%",
+                    background: "linear-gradient(90deg, #60a5fa, #0F62FE)",
+                    borderRadius: 10, transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  }} />
+                  <div className="progress-shimmer" style={{ position: "absolute", inset: 0, width: `${xpPct}%`, borderRadius: 10 }} />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 12, fontWeight: 500, color: "#94a3b8" }}>
+                  <span>{xpInLevel.toLocaleString()} XP</span>
+                  <span>Nivel {level + 1} →</span>
+                </div>
               </div>
-              <div style={{ width: "100%", height: 10, background: "#e9f0ff", borderRadius: 10, overflow: "hidden", position: "relative" }}>
-                <div style={{
-                  width: `${xpPct}%`, height: "100%",
-                  background: "linear-gradient(90deg, #60a5fa, #0F62FE)",
-                  borderRadius: 10, transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                }} />
-                <div className="progress-shimmer" style={{ position: "absolute", inset: 0, width: `${xpPct}%`, borderRadius: 10 }} />
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 12, fontWeight: 500, color: "#94a3b8" }}>
-                <span>{xpInLevel.toLocaleString()} XP</span>
-                <span>Nivel {level + 1} →</span>
-              </div>
-            </div>
+            )}
 
             {/* Statistics */}
             <div>
@@ -932,8 +936,8 @@ export default function ProfilePage() {
 
 
 
-            {/* Achievements - Render here ONLY on Desktop */}
-            {screenSize >= 1024 && renderAchievementsSection()}
+            {/* Achievements - Render here ONLY on Desktop (SKIP FOR ADMINS) */}
+            {screenSize >= 1024 && !isAdminOrTeacher && renderAchievementsSection()}
           </div>
 
           {/* ══ RIGHT COLUMN ══ */}
@@ -1031,6 +1035,31 @@ export default function ProfilePage() {
               const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
               const isPremium = hasActiveStripe || hasActiveLicense
               const isParticular = dbProfile?.role === 'particular' || !dbProfile?.role
+              const isAdminOrTeacher = dbProfile?.role === 'school_admin' || dbProfile?.role === 'teacher'
+
+              if (isAdminOrTeacher) {
+                return (
+                  <div style={{
+                    background: "linear-gradient(145deg, #0a0f1e 0%, #1e3a8a 70%, #1d4ed8 100%)",
+                    borderRadius: 24,
+                    padding: "24px",
+                    position: "relative",
+                    overflow: "hidden",
+                    boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.3)",
+                  }}>
+                    <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)", pointerEvents: "none" }} />
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Shield size={18} color="#93c5fd" />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", letterSpacing: "0.05em", textTransform: "uppercase" }}>Plan Admin</div>
+                        <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", marginTop: 2 }}>Acceso administrativo completo</div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
 
               if (isPremium) {
                 return (
