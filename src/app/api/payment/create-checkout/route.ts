@@ -1,21 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import path from 'path'
-import dotenv from 'dotenv'
-
-// Load .env.local manually to ensure it's available for this route
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
-
-function getStripeClient() {
-  const secretKey = process.env.STRIPE_SECRET_KEY
-  if (!secretKey) {
-    throw new Error('STRIPE_SECRET_KEY is not set')
-  }
-  return new Stripe(secretKey, {
-    apiVersion: '2025-01-27.acacia' as any,
-    typescript: true,
-  })
-}
 
 export async function POST(request: NextRequest) {
   try {

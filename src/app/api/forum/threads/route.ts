@@ -10,14 +10,22 @@ export async function GET(request: NextRequest) {
   try {
     console.log("📡 GET /api/forum/threads called")
     const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data: { session }, error: authError } = await supabase.auth.getSession()
+    const user = session?.user
 
-    if (authError || !user) {
-      console.error("❌ Auth error:", authError)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    let userId: string | undefined
+    let isParticular = false
+    let profileRole: string | undefined
+
+    if (user) {
+      userId = user.id
+      console.log("✅ User authenticated:", userId)
+      const profile = await prisma.profile.findUnique({ where: { userId: userId }, select: { role: true } })
+      profileRole = profile?.role
+      isParticular = profileRole === 'particular'
+    } else {
+      console.log("⚠️ No user session found. Showing only approved threads.")
     }
-
-    console.log("✅ User authenticated:", user.id)
 
     const { searchParams } = new URL(request.url)
     const sort = searchParams.get("sort") || "new"
@@ -25,23 +33,28 @@ export async function GET(request: NextRequest) {
 
     console.log("📊 Query params:", { sort, topicSlug })
 
-    const profile = await prisma.profile.findUnique({ where: { userId: user.id }, select: { role: true } })
-    const isParticular = profile?.role === 'particular'
-
     let orderBy: any = { createdAt: 'desc' }
     if (sort === 'top') orderBy = { score: 'desc' }
     if (sort === 'unanswered') orderBy = { commentCount: 'asc' }
 
     const where: any = {
-      OR: [
-        { moderationStatus: 'approved' },
-        { moderationStatus: 'pending', authorId: user.id } // Show user's own pending threads
-      ],
       isHidden: false,
-      author: {
+    }
+
+    if (userId) {
+      // Authenticated: show approved + own pending threads, with role-based filtering
+      where.OR = [
+        { moderationStatus: 'approved' },
+        { moderationStatus: 'pending', authorId: userId }
+      ]
+      where.author = {
         role: isParticular ? 'particular' : { not: 'particular' }
       }
+    } else {
+      // Unauthenticated: only approved threads, no role filter
+      where.moderationStatus = 'approved'
     }
+
 
     if (topicSlug && topicSlug !== 'all') {
       console.log("🔍 Finding topic:", topicSlug)
