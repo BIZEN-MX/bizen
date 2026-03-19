@@ -4162,7 +4162,7 @@ function LandingContent({
         <>
           {/* Somos BIZEN - 4 blue cards */}
 
-          {/* 4 Perfiles Educativos — Premium Dark mode */}
+          {/* ── FEATURES SECTION: BIZEN Live, La Fragua, El Mercado ── */}
           <section
             id="perfiles"
             className="section perfiles-section reveal-element"
@@ -4174,11 +4174,10 @@ function LandingContent({
               marginTop: "-20px",
             }}
           >
-            {/* Internal dark container for the actual perfiles content to match the premium theme */}
+            {/* Features container */}
             <div
               style={{
-                background:
-                  "linear-gradient(170deg, #040f26 0%, #06184d 50%, #040f26 100%)",
+                background: "linear-gradient(170deg, #040f26 0%, #06184d 50%, #040f26 100%)",
                 margin: "clamp(0px, 4vw, 60px) clamp(16px, 4vw, 40px)",
                 borderRadius: "48px",
                 padding: "clamp(64px, 10vw, 110px) clamp(24px, 5vw, 60px)",
@@ -4187,587 +4186,208 @@ function LandingContent({
                 boxShadow: "0 24px 80px rgba(0, 0, 0, 0.25)",
               }}
             >
-              {/* Grid pattern */}
-              <div
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  backgroundImage:
-                    "linear-gradient(rgba(25,131,253,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(25,131,253,0.04) 1px, transparent 1px)",
-                  backgroundSize: "44px 44px",
-                  pointerEvents: "none",
-                }}
-              />
+              {/* Grid pattern bg */}
+              <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: "48px", backgroundImage: "linear-gradient(rgba(25,131,253,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(25,131,253,0.04) 1px, transparent 1px)", backgroundSize: "44px 44px", pointerEvents: "none" }} />
 
-              <div
-                className="container"
-                style={{
-                  maxWidth: "1200px",
-                  margin: "0 auto",
-                  position: "relative",
-                  zIndex: 1,
-                }}
-              >
-                {/* Header */}
-                <div
-                  style={{
-                    textAlign: "center",
-                    marginBottom: "clamp(48px, 6vw, 72px)",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "inline-block",
-                      background: "rgba(96, 165, 250, 0.15)",
-                      color: "#60a5fa",
-                      borderRadius: "999px",
-                      padding: "6px 20px",
-                      fontSize: "12px",
-                      fontWeight: 600,
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                      marginBottom: "20px",
-                      border: "1px solid rgba(96, 165, 250, 0.2)",
-                    }}
-                  >
-                    Comunidad educativa
+              <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+
+                {/* Section header */}
+                <div style={{ textAlign: "center", marginBottom: "clamp(56px, 8vw, 88px)" }}>
+                  <span style={{ display: "inline-block", background: "rgba(96,165,250,0.15)", color: "#60a5fa", borderRadius: "999px", padding: "6px 20px", fontSize: "12px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "20px", border: "1px solid rgba(96,165,250,0.2)" }}>
+                    Lo que ya puedes hacer
                   </span>
-                  <h2
-                    style={{
-                      textAlign: "center",
-                      fontSize: "clamp(34px, 5vw, 60px)",
-                      fontWeight: 700,
-                      color: "#FFFFFF",
-                      lineHeight: 1.1,
-                      marginBottom: "clamp(16px, 2vw, 24px)",
-                      letterSpacing: "-0.03em",
-                    }}
-                  >
-                    1 solución,{" "}
-                    <span
-                      style={{
-                        background: "linear-gradient(90deg, #60a5fa, #1983FD)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                      }}
-                    >
-                      3 perfiles educativos
+                  <h2 style={{ textAlign: "center", fontSize: "clamp(34px, 5vw, 60px)", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.1, marginBottom: "clamp(16px, 2vw, 24px)", letterSpacing: "-0.03em" }}>
+                    Una plataforma,{" "}
+                    <span style={{ background: "linear-gradient(90deg, #60a5fa, #1983FD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                      múltiples experiencias
                     </span>
                     .
                   </h2>
-                  <p
-                    style={{
-                      margin: "0 auto",
-                      maxWidth: "520px",
-                      fontSize: "clamp(16px, 1.3vw, 19px)",
-                      color: "#FFFFFF",
-                      fontWeight: 400,
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    Un diseño inteligente que adapta toda la experiencia a quién
-                    eres.
+                  <p style={{ margin: "0 auto", maxWidth: "520px", fontSize: "clamp(16px, 1.3vw, 19px)", color: "rgba(255,255,255,0.7)", fontWeight: 400, lineHeight: 1.7 }}>
+                    Cada módulo de BIZEN está diseñado para que aprender finanzas sea tan adictivo como un juego.
                   </p>
                 </div>
 
-                {/* Content Card - dark premium frost */}
-                <div
-                  className="glass-card-premium"
-                  style={{
-                    animation: "premium-float 8s ease-in-out infinite",
-
-                    background: "rgba(255, 255, 255, 0.03)",
-                    backdropFilter: "blur(32px)",
-                    WebkitBackdropFilter: "blur(32px)",
-                    borderRadius: "36px",
-                    padding:
-                      "clamp(32px, 4vw, 48px) clamp(28px, 4vw, 56px) clamp(40px, 5vw, 64px)",
-                    boxShadow:
-                      "0 24px 64px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)",
-                    border: "1px solid rgba(255, 255, 255, 0.08)",
-                    position: "relative",
-                    zIndex: 1,
-                  }}
-                >
-                  {/* Tabs */}
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: "10px",
-                      marginBottom: "clamp(36px, 5vw, 52px)",
-                      flexWrap: "wrap",
-                      background: "rgba(255, 255, 255, 0.04)",
-                      borderRadius: "20px",
-                      padding: "6px",
-                      border: "1px solid rgba(255, 255, 255, 0.1)",
-                      maxWidth: "480px",
-                      margin: "0 auto clamp(36px, 5vw, 52px)",
-                    }}
-                    className="perfiles-tabs-row"
-                  >
-                    {[
-                      { id: "docentes" as const, label: "Docentes" },
-                      { id: "estudiantes" as const, label: "Estudiantes" },
-                      { id: "padres" as const, label: "Padres" },
-                    ].map((profile) => (
-                      <button
-                        key={profile.id}
-                        onClick={() => setActiveProfile(profile.id)}
-                        style={{
-                          flex: 1,
-                          padding: "12px 20px",
-                          fontSize: "clamp(14px, 1rem, 16px)",
-                          fontWeight: 500,
-                          border: "none",
-                          borderRadius: "14px",
-                          cursor: "pointer",
-                          transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-                          background:
-                            activeProfile === profile.id
-                              ? "#0056E7"
-                              : "transparent",
-                          color:
-                            activeProfile === profile.id
-                              ? "#ffffff"
-                              : "rgba(255, 255, 255, 0.7)",
-                          boxShadow:
-                            activeProfile === profile.id
-                              ? "0 6px 20px rgba(0, 86, 231, 0.25)"
-                              : "none",
-                        }}
-                        className="profile-tab-button"
-                      >
-                        {profile.label}
-                      </button>
-                    ))}
+                {/* ── Feature 1: BIZEN Live ── */}
+                <div className="feature-split-row" style={{ display: "flex", alignItems: "center", gap: "clamp(32px, 5vw, 72px)", marginBottom: "clamp(64px, 10vw, 100px)", flexWrap: "wrap" }}>
+                  {/* Text */}
+                  <div style={{ flex: "1 1 320px", minWidth: 0 }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(251,191,36,0.12)", color: "#fbbf24", borderRadius: "999px", padding: "5px 16px", fontSize: "12px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px", border: "1px solid rgba(251,191,36,0.2)" }}>
+                      ⚡ BIZEN Live
+                    </span>
+                    <h3 style={{ fontSize: "clamp(26px, 3.5vw, 42px)", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: "16px" }}>
+                      Quizzes en vivo,<br />estilo Kahoot
+                    </h3>
+                    <p style={{ fontSize: "clamp(15px, 1.1vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "28px" }}>
+                      El docente lanza una sesión, los alumnos entran con un PIN y compiten en tiempo real respondiendo preguntas de finanzas. Rankings en vivo, conteo de puntos y adrenalina garantizada.
+                    </p>
+                    <ul style={{ listStyle: "none", padding: 0, margin: "0 0 32px", display: "flex", flexDirection: "column", gap: 12 }}>
+                      {["Sesiones en tiempo real con Supabase Realtime", "Rankings y podio al finalizar", "Docente controla el ritmo desde /live/host"].map((item) => (
+                        <li key={item} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                          <span style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#fbbf24,#f59e0b)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </span>
+                          <span style={{ fontSize: 15, color: "rgba(255,255,255,0.8)" }}>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <a href="/login" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 28px", background: "linear-gradient(135deg,#fbbf24,#f59e0b)", color: "#000", fontWeight: 700, borderRadius: "999px", textDecoration: "none", fontSize: 15, boxShadow: "0 8px 24px rgba(251,191,36,0.35)", transition: "all 0.3s" }}>
+                      Entrar a BIZEN Live →
+                    </a>
                   </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      textAlign: "center",
-                      maxWidth: "900px",
-                      margin: "0 auto",
-                    }}
-                    className="perfiles-content-grid"
-                  >
-                    {/* Left: Text Content - slide animation on tab change */}
-                    <div
-                      className="perfiles-content-left"
-                      style={{ overflow: "hidden", position: "relative", width: "100%" }}
-                    >
-                      <div
-                        key={activeProfile}
-                        className="perfiles-slide-in"
-                        style={{ overflow: "visible" }}
-                      >
-                        <div style={{ marginBottom: "clamp(16px, 3vw, 24px)" }}>
-                          <span
-                            style={{
-                              display: "inline-block",
-                              background:
-                                "linear-gradient(135deg, #0056E7, #1983FD)",
-                              color: "#fff",
-                              borderRadius: "12px",
-                              padding: "6px 16px",
-                              fontSize: "13px",
-                              fontWeight: 500,
-                              letterSpacing: "0.05em",
-                              textTransform: "uppercase",
-                              marginBottom: "14px",
-                            }}
-                          >
-                            {activeProfile === "docentes" && "Para docentes"}
-                            {activeProfile === "estudiantes" &&
-                              "Para estudiantes"}
-                            {activeProfile === "padres" && "Para padres"}
-                          </span>
-                          <h3
-                            style={{
-                              fontSize: "clamp(28px, 3.5vw, 44px)",
-                              fontWeight: 700,
-                              color: "#FFFFFF",
-                              marginBottom: 0,
-                              letterSpacing: "-0.02em",
-                              lineHeight: 1.15,
-                            }}
-                          >
-                            {activeProfile === "docentes" &&
-                              "Enseña más con menos esfuerzo"}
-                            {activeProfile === "estudiantes" &&
-                              "Aprende haciendo, no memorizando"}
-                            {activeProfile === "padres" &&
-                              "Acompaña su camino financiero"}
-                          </h3>
+                  {/* Visual mock card */}
+                  <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                    <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(251,191,36,0.2)", borderRadius: "28px", padding: "clamp(24px,4vw,40px)", backdropFilter: "blur(16px)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: "#fbbf24" }}>BIZEN LIVE — EN PROGRESO</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444" }} />
+                          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>LIVE</span>
                         </div>
-
-                        <p
-                          style={{
-                            fontSize: "clamp(16px, 1.15rem, 19px)",
-                            lineHeight: 1.65,
-                            color: "#FFFFFF",
-                            marginBottom: "clamp(24px, 4vw, 32px)",
-                          }}
-                        >
-                          {activeProfile === "docentes" &&
-                            "Herramientas prácticas para enseñar finanzas con contenido listo para usar, seguimiento en tiempo real y recursos descargables."}
-                          {activeProfile === "estudiantes" &&
-                            "Aprende finanzas de forma divertida con cursos interactivos, simuladores reales y recompensas por tu progreso."}
-                          {activeProfile === "padres" &&
-                            "Acompaña el aprendizaje financiero de tus hijos con acceso a su progreso, recursos compartidos y actividades familiares."}
-                        </p>
-
-                        {/* Bullet Points */}
-                        <ul
-                          style={{
-                            listStyle: "none",
-                            margin: "0 auto clamp(28px, 4vw, 36px)",
-                            padding: 0,
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "16px",
-                            maxWidth: "600px",
-                            textAlign: "left",
-                          }}
-                        >
-                          {activeProfile === "docentes" && (
-                            <>
-                              {[
-                                {
-                                  text: (
-                                    <>
-                                      Contenido listo para usar con{" "}
-                                      <strong>lecciones interactivas</strong>.
-                                    </>
-                                  ),
-                                },
-                                {
-                                  text: (
-                                    <>
-                                      Seguimiento en{" "}
-                                      <strong>tiempo real</strong> del progreso
-                                      de tus estudiantes.
-                                    </>
-                                  ),
-                                },
-                                {
-                                  text: (
-                                    <>
-                                      Recursos <strong>descargables</strong> y
-                                      materiales de apoyo.
-                                    </>
-                                  ),
-                                },
-                              ].map((item, i) => (
-                                <li
-                                  key={i}
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: "14px",
-                                  }}
-                                >
-                                  <span
-                                    style={{
-                                      width: "26px",
-                                      height: "26px",
-                                      background:
-                                        "linear-gradient(135deg, #0056E7, #1983FD)",
-                                      borderRadius: "8px",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      color: "#fff",
-                                      fontWeight: 500,
-                                      fontSize: "13px",
-                                      flexShrink: 0,
-                                      boxShadow:
-                                        "0 4px 10px rgba(0, 86, 231, 0.3)",
-                                    }}
-                                  >
-                                    <CheckIcon size={14} color="white" />
-                                  </span>
-                                  <span
-                                    style={{
-                                      fontSize: "clamp(15px, 1.05rem, 17px)",
-                                      lineHeight: 1.6,
-                                      color: "rgba(255, 255, 255, 0.85)",
-                                    }}
-                                  >
-                                    {item.text}
-                                  </span>
-                                </li>
-                              ))}
-                            </>
-                          )}
-                          {activeProfile === "estudiantes" && (
-                            <>
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                  gap: "12px",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    background: "#0056E7",
-                                    borderRadius: "50%",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                    flexShrink: 0,
-                                  }}
-                                >
-                                  <CheckIcon size={14} color="white" />
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "clamp(15px, 1.05rem, 17px)",
-                                    lineHeight: 1.5,
-                                    color: "rgba(255,255,255,0.85)",
-                                  }}
-                                >
-                                  Aprende con <strong>gamificación</strong> y
-                                  recompensas.
-                                </span>
-                              </li>
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                  gap: "12px",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    background: "#0056E7",
-                                    borderRadius: "50%",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                    flexShrink: 0,
-                                  }}
-                                >
-                                  <CheckIcon size={14} color="white" />
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "clamp(15px, 1.05rem, 17px)",
-                                    lineHeight: 1.5,
-                                    color: "rgba(255,255,255,0.85)",
-                                  }}
-                                >
-                                  Practica con{" "}
-                                  <strong>simuladores reales</strong> sin
-                                  riesgo.
-                                </span>
-                              </li>
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                  gap: "12px",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    background: "#0056E7",
-                                    borderRadius: "50%",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                    flexShrink: 0,
-                                  }}
-                                >
-                                  <CheckIcon size={14} color="white" />
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "clamp(15px, 1.05rem, 17px)",
-                                    lineHeight: 1.5,
-                                    color: "rgba(255,255,255,0.85)",
-                                  }}
-                                >
-                                  Rastrea tu <strong>progreso</strong> y gana
-                                  certificaciones.
-                                </span>
-                              </li>
-                            </>
-                          )}
-                          {activeProfile === "padres" && (
-                            <>
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                  gap: "12px",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    background: "#0056E7",
-                                    borderRadius: "50%",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                    flexShrink: 0,
-                                  }}
-                                >
-                                  <CheckIcon size={14} color="white" />
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "clamp(15px, 1.05rem, 17px)",
-                                    lineHeight: 1.5,
-                                    color: "rgba(255,255,255,0.85)",
-                                  }}
-                                >
-                                  Visualiza el <strong>progreso</strong> de tus
-                                  hijos en tiempo real.
-                                </span>
-                              </li>
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                  gap: "12px",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    background: "#0056E7",
-                                    borderRadius: "50%",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                    flexShrink: 0,
-                                  }}
-                                >
-                                  <CheckIcon size={14} color="white" />
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "clamp(15px, 1.05rem, 17px)",
-                                    lineHeight: 1.5,
-                                    color: "rgba(255,255,255,0.85)",
-                                  }}
-                                >
-                                  Accede a <strong>recursos compartidos</strong>{" "}
-                                  y actividades familiares.
-                                </span>
-                              </li>
-                              <li
-                                style={{
-                                  display: "flex",
-                                  alignItems: "flex-start",
-                                  gap: "12px",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    background: "#0056E7",
-                                    borderRadius: "50%",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                    flexShrink: 0,
-                                  }}
-                                >
-                                  ✓
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "clamp(15px, 1.05rem, 17px)",
-                                    lineHeight: 1.5,
-                                    color: "rgba(255,255,255,0.85)",
-                                  }}
-                                >
-                                  Fomenta la{" "}
-                                  <strong>educación financiera</strong> desde
-                                  casa.
-                                </span>
-                              </li>
-                            </>
-                          )}
-                        </ul>
-
-                        {/* CTA Button - opens demo modal */}
-                        <a
-                          href="https://calendly.com/diego-bizen"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            padding:
-                              "clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 32px)",
-                            fontSize: "clamp(14px, 2vw, 18px)",
-                            fontWeight: 600,
-                            background:
-                              "linear-gradient(135deg, #0056E7, #1983FD)",
-                            color: "#ffffff",
-                            border: "none",
-                            borderRadius: 9999,
-                            cursor: "pointer",
-                            transition: "all 0.3s ease",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "clamp(6px, 1.5vw, 10px)",
-                            boxShadow: "0 8px 24px rgba(0, 86, 231, 0.45)",
-                            minHeight: 44,
-                            textDecoration: "none",
-                          }}
-                          className="quiero-demo-button landing-hero-cta-primary"
-                        >
-                          Quiero una demo
-                          <span
-                            className="quiero-demo-arrow"
-                            style={{ fontSize: "clamp(16px, 4vw, 20px)" }}
-                            aria-hidden
-                          >
-                            →
-                          </span>
-                        </a>
+                      </div>
+                      <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 20px", marginBottom: 16, border: "1px solid rgba(255,255,255,0.08)" }}>
+                        <p style={{ color: "#fff", fontWeight: 600, fontSize: 14, margin: "0 0 12px" }}>¿Qué es el interés compuesto?</p>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                          {[
+                            { label: "A. Interés sobre el capital", color: "#10b981", bg: "rgba(16,185,129,0.15)" },
+                            { label: "B. Interés sobre interés", color: "#3b82f6", bg: "rgba(59,130,246,0.15)" },
+                            { label: "C. Un tipo de deuda", color: "#f59e0b", bg: "rgba(245,158,11,0.15)" },
+                            { label: "D. Un banco suizo", color: "#ef4444", bg: "rgba(239,68,68,0.15)" },
+                          ].map((opt) => (
+                            <div key={opt.label} style={{ background: opt.bg, border: `1px solid ${opt.color}33`, borderRadius: 10, padding: "8px 12px", fontSize: 12, color: opt.color, fontWeight: 500 }}>{opt.label}</div>
+                          ))}
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div style={{ display: "flex" }}>
+                          {["🧑", "👩", "🧒", "👨"].map((e, i) => (
+                            <div key={i} style={{ width: 28, height: 28, borderRadius: "50%", background: `hsl(${i*60},70%,50%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, marginLeft: i > 0 ? -8 : 0, border: "2px solid #040f26" }}>{e}</div>
+                          ))}
+                        </div>
+                        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>24 jugadores</span>
+                        <div style={{ background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 8, padding: "4px 12px", fontSize: 13, fontWeight: 700, color: "#fbbf24" }}>:08</div>
                       </div>
                     </div>
-
-
                   </div>
                 </div>
+
+                {/* ── Feature 2: La Fragua ── */}
+                <div className="feature-split-row" style={{ display: "flex", alignItems: "center", gap: "clamp(32px, 5vw, 72px)", marginBottom: "clamp(64px, 10vw, 100px)", flexWrap: "wrap-reverse" }}>
+                  {/* Visual mock card */}
+                  <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                    <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "28px", padding: "clamp(24px,4vw,40px)", backdropFilter: "blur(16px)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#10b981,#059669)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔥</div>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: "#10b981" }}>Misión del día</div>
+                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Racha: 7 días 🔥</div>
+                        </div>
+                        <div style={{ marginLeft: "auto", background: "rgba(16,185,129,0.15)", borderRadius: 8, padding: "4px 10px", fontSize: 12, color: "#10b981", fontWeight: 600 }}>+50 BZ</div>
+                      </div>
+                      {[
+                        { label: "Lección: Presupuesto familiar", done: true },
+                        { label: "Quiz: Ahorro inteligente", done: true },
+                        { label: "Reto: Calcula tu fondo de emergencia", done: false },
+                      ].map((step, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: step.done ? "rgba(16,185,129,0.08)" : "rgba(255,255,255,0.03)", borderRadius: 12, marginBottom: 8, border: `1px solid ${step.done ? "rgba(16,185,129,0.2)" : "rgba(255,255,255,0.06)"}` }}>
+                          <div style={{ width: 20, height: 20, borderRadius: "50%", background: step.done ? "#10b981" : "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            {step.done ? <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> : <div style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />}
+                          </div>
+                          <span style={{ fontSize: 13, color: step.done ? "rgba(255,255,255,0.7)" : "#fff", textDecoration: step.done ? "line-through" : "none" }}>{step.label}</span>
+                        </div>
+                      ))}
+                      <div style={{ marginTop: 16, background: "rgba(255,255,255,0.04)", borderRadius: 6, overflow: "hidden" }}>
+                        <div style={{ height: 6, width: "66%", background: "linear-gradient(90deg,#10b981,#059669)", borderRadius: 6 }} />
+                      </div>
+                      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", textAlign: "right", margin: "6px 0 0" }}>2 / 3 completadas</p>
+                    </div>
+                  </div>
+                  {/* Text */}
+                  <div style={{ flex: "1 1 320px", minWidth: 0 }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(16,185,129,0.12)", color: "#10b981", borderRadius: "999px", padding: "5px 16px", fontSize: "12px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px", border: "1px solid rgba(16,185,129,0.2)" }}>
+                      🔥 La Fragua
+                    </span>
+                    <h3 style={{ fontSize: "clamp(26px, 3.5vw, 42px)", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: "16px" }}>
+                      Misiones diarias<br />que forjan hábitos
+                    </h3>
+                    <p style={{ fontSize: "clamp(15px, 1.1vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "28px" }}>
+                      Cada día hay una nueva misión financiera esperándote. Completa lecciones, responde quizzes y resuelve retos para ganar Bizcoins y mantener tu racha viva.
+                    </p>
+                    <ul style={{ listStyle: "none", padding: 0, margin: "0 0 32px", display: "flex", flexDirection: "column", gap: 12 }}>
+                      {["Nueva misión cada 24 horas", "Rachas y logros desbloqueables", "Billy IA como guía en cada lección"].map((item) => (
+                        <li key={item} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                          <span style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#10b981,#059669)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </span>
+                          <span style={{ fontSize: 15, color: "rgba(255,255,255,0.8)" }}>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <a href="/login" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 28px", background: "linear-gradient(135deg,#10b981,#059669)", color: "#fff", fontWeight: 700, borderRadius: "999px", textDecoration: "none", fontSize: 15, boxShadow: "0 8px 24px rgba(16,185,129,0.35)", transition: "all 0.3s" }}>
+                      Ver misión de hoy →
+                    </a>
+                  </div>
+                </div>
+
+                {/* ── Feature 3: El Mercado ── */}
+                <div className="feature-split-row" style={{ display: "flex", alignItems: "center", gap: "clamp(32px, 5vw, 72px)", flexWrap: "wrap" }}>
+                  {/* Text */}
+                  <div style={{ flex: "1 1 320px", minWidth: 0 }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(139,92,246,0.12)", color: "#a78bfa", borderRadius: "999px", padding: "5px 16px", fontSize: "12px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px", border: "1px solid rgba(139,92,246,0.2)" }}>
+                      🏪 El Mercado
+                    </span>
+                    <h3 style={{ fontSize: "clamp(26px, 3.5vw, 42px)", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: "16px" }}>
+                      Gana Bizcoins,<br />personaliza tu perfil
+                    </h3>
+                    <p style={{ fontSize: "clamp(15px, 1.1vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "28px" }}>
+                      Cada lección completada, cada quiz ganado y cada misión diaria te da Bizcoins. Úsalos para comprar avatares únicos, marcos de perfil exclusivos y más en la Tienda BIZEN.
+                    </p>
+                    <ul style={{ listStyle: "none", padding: 0, margin: "0 0 32px", display: "flex", flexDirection: "column", gap: 12 }}>
+                      {["Bizcoins ganados por cada logro", "Avatares, marcos y artículos de colección", "Rankings y reputación en la comunidad"].map((item) => (
+                        <li key={item} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                          <span style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#8b5cf6,#7c3aed)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </span>
+                          <span style={{ fontSize: 15, color: "rgba(255,255,255,0.8)" }}>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <a href="/login" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 28px", background: "linear-gradient(135deg,#8b5cf6,#7c3aed)", color: "#fff", fontWeight: 700, borderRadius: "999px", textDecoration: "none", fontSize: 15, boxShadow: "0 8px 24px rgba(139,92,246,0.35)", transition: "all 0.3s" }}>
+                      Abrir la Tienda BIZEN →
+                    </a>
+                  </div>
+                  {/* Visual mock card */}
+                  <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                    <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "28px", padding: "clamp(24px,4vw,40px)", backdropFilter: "blur(16px)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "#a78bfa" }}>Tu saldo</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(139,92,246,0.15)", borderRadius: 8, padding: "6px 12px" }}>
+                          <span style={{ fontSize: 16 }}>🪙</span>
+                          <span style={{ fontSize: 16, fontWeight: 800, color: "#a78bfa" }}>1,250</span>
+                          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>BZ</span>
+                        </div>
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                        {[
+                          { name: "Avatar Robot", icon: "🤖", price: 300, color: "#3b82f6" },
+                          { name: "Marco VIP", icon: "👑", price: 800, color: "#fbbf24" },
+                          { name: "Avatar Ninja", icon: "🥷", price: 400, color: "#10b981" },
+                          { name: "Insignia 🔥", icon: "🏅", price: 200, color: "#ef4444" },
+                        ].map((item) => (
+                          <div key={item.name} style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${item.color}33`, borderRadius: 14, padding: "12px", textAlign: "center" }}>
+                            <div style={{ fontSize: 28, marginBottom: 6 }}>{item.icon}</div>
+                            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", fontWeight: 500, marginBottom: 6 }}>{item.name}</div>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                              <span style={{ fontSize: 11 }}>🪙</span>
+                              <span style={{ fontSize: 12, fontWeight: 700, color: item.color }}>{item.price}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </section>
