@@ -471,7 +471,10 @@ function ForumContent() {
       <style>{`
         @media (max-width: 767px) {
           .forum-outer { position: relative !important; z-index: 1 !important; overflow-x: hidden !important; background: #f8fafc !important; min-height: 100vh !important; }
-          .forum-container { padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important; }
+          .forum-container { padding-top: 14px !important; padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important; }
+          .forum-container main { padding: 16px !important; }
+          .forum-container h1 { font-size: 28px !important; margin-bottom: 6px !important; }
+          .forum-container p { font-size: 13px !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .forum-container { width: calc(100% - 220px) !important; max-width: calc(100% - 220px) !important; margin-left: 220px !important; padding: clamp(24px, 3vw, 40px) !important; }

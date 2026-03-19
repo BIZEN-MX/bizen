@@ -8,6 +8,7 @@ import { StickyFooterButton, StickyFooter } from "./StickyFooter"
 import { LessonExitModal } from "./LessonExitModal"
 import { LessonProgressHeader } from "./LessonProgressHeader"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X, CONTENT_PADDING_Y } from "./layoutConstants"
+import { Zap } from "lucide-react"
 import {
   InfoStep,
   MCQStep,
@@ -59,8 +60,17 @@ function getTTSContent(step: any): string {
     parts.push(step.body)
   }
 
-  // clean out markdown symbols
-  const text = parts.join(". ")
+  // clean out glossary definitions: [[term|definition]] -> term
+  // Also handle simple [[term]] -> term
+  let text = parts.join(". ")
+  
+  // 1. Handle [[word|definition]] -> word
+  text = text.replace(/\[\[(.*?)\|(.*?)\]\]/g, "$1")
+  
+  // 2. Handle [[word]] -> word
+  text = text.replace(/\[\[(.*?)\]\]/g, "$1")
+  
+  // 3. Clean out markdown symbols
   return text.replace(/[*_#`]/g, "")
 }
 
@@ -86,6 +96,12 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const hasShownRecallHint = useRef(false)
   const [showBlitzSplash, setShowBlitzSplash] = useState(false)
   const blitzSplashShownFor = useRef<string | null>(null)
+
+  // ── Billy Insight Splash ─────────────────────────────────────────────────
+  const [showBillyInsightSplash, setShowBillyInsightSplash] = useState(false)
+  const [billyInsightText, setBillyInsightText] = useState("")
+  const [billyInsightDuration, setBillyInsightDuration] = useState(8000)
+  const billyInsightShownFor = useRef<string | null>(null)
 
   // ── Billy Empático (Feature 2) ───────────────────────────────────────────
   const [showBillyEmpathy, setShowBillyEmpathy] = useState(false)
@@ -176,6 +192,27 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       blitzSplashShownFor.current = currentStep.id
       setShowBlitzSplash(true)
       const t = setTimeout(() => setShowBlitzSplash(false), 2600)
+      return () => clearTimeout(t)
+    }
+  }, [currentStep?.id, currentStep?.stepType])
+
+  // Billy Insight Splash: show fullscreen when entering a step with aiInsight
+  // Per user request, don't show it before a Blitz Challenge to avoid overlay fatigue
+  useEffect(() => {
+    if (!currentStep) return
+    const insight = (currentStep as any).aiInsight
+    if (insight && currentStep.stepType !== "blitz_challenge" && billyInsightShownFor.current !== currentStep.id) {
+      billyInsightShownFor.current = currentStep.id
+      setBillyInsightText(insight)
+
+      // Calculate dynamic duration: min 8s, max 10s. Reading speed approx 3.5 words/sec.
+      const wordCount = insight.split(/\s+/).length
+      const calculatedDuration = Math.max(8000, Math.min(10000, 2000 + (wordCount / 3.5) * 1000))
+      
+      setBillyInsightDuration(calculatedDuration)
+      setShowBillyInsightSplash(true)
+      
+      const t = setTimeout(() => setShowBillyInsightSplash(false), calculatedDuration)
       return () => clearTimeout(t)
     }
   }, [currentStep?.id, currentStep?.stepType])
@@ -361,18 +398,19 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     initAudioContext() // Sync unlock context on click
     if (!currentStep) return
 
-    // Final completion - exit immediately since completion was triggered on mount
-    if (isLastStep && isSummaryStep) {
-      onExit?.()
+    // For Summary Step, handle its two phases (celebration -> xp)
+    if (isSummaryStep) {
+      if (!state.isContinueEnabled) {
+        haptic.light()
+        dispatch({ type: "TRIGGER_ACTION" })
+      } else {
+        onExit?.()
+      }
       return
     }
 
-    const currentAnswer = state.answersByStepId[currentStep.id]
-    const isCorrect = currentAnswer?.isCorrect === true
-
     // If step is not completed, trigger the action (Reveal or Check)
-    // removed !isLastStep check to prevent getting stuck on the final assessment
-    if (!state.isContinueEnabled && !isSummaryStep) {
+    if (!state.isContinueEnabled) {
       if (state.isActionEnabled) {
         haptic.light()
         dispatch({ type: "TRIGGER_ACTION" })
@@ -651,6 +689,114 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     </AnimatePresence>
   )
 
+  // ── Billy Insight Splash Overlay ─────────────────────────────────────────
+  const BillyInsightSplashOverlay = () => (
+    <AnimatePresence>
+      {showBillyInsightSplash && (
+        <motion.div
+          key="billy-insight-splash"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.5 } }}
+          transition={{ duration: 0.3 }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9998,
+            background: "linear-gradient(135deg, #0a1628 0%, #0f2044 40%, #1a3a6e 80%, #0a1628 100%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 24,
+            overflow: "hidden",
+            padding: "32px",
+          }}
+        >
+          {/* Ambient glow orbs */}
+          <motion.div
+            animate={{ scale: [1, 1.6], opacity: [0.12, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+            style={{ position: "absolute", width: 360, height: 360, borderRadius: "50%", background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)", pointerEvents: "none" }}
+          />
+          <motion.div
+            animate={{ scale: [1, 1.8], opacity: [0.08, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
+            style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, #60a5fa 0%, transparent 70%)", pointerEvents: "none" }}
+          />
+
+          {/* Billy avatar */}
+          <motion.div
+            initial={{ scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 22, delay: 0.1 }}
+            style={{
+              width: 100, height: 100, borderRadius: "50%",
+              background: "linear-gradient(135deg, #1e3a8a, #2563eb)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 0 48px rgba(59,130,246,0.6), 0 0 96px rgba(37,99,235,0.3)",
+              border: "3px solid rgba(147,197,253,0.4)",
+              overflow: "hidden",
+              flexShrink: 0,
+            }}
+          >
+            <img
+              src="/billy_chatbot.png"
+              alt="Billy"
+              style={{ width: 80, height: 80, objectFit: "contain" }}
+            />
+          </motion.div>
+
+          {/* Label */}
+          <motion.div
+            initial={{ y: 12, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.25, duration: 0.4 }}
+            style={{
+              fontSize: "clamp(11px, 2vw, 13px)",
+              fontWeight: 800,
+              color: "#93c5fd",
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+            }}
+          >
+            BILLY DICE
+          </motion.div>
+
+          {/* Insight text */}
+          <motion.div
+            initial={{ y: 16, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.35, duration: 0.45 }}
+            style={{
+              fontSize: "clamp(18px, 4vw, 26px)",
+              fontWeight: 700,
+              color: "#ffffff",
+              textAlign: "center",
+              lineHeight: 1.45,
+              maxWidth: 480,
+              textShadow: "0 2px 24px rgba(59,130,246,0.3)",
+            }}
+          >
+            {billyInsightText}
+          </motion.div>
+
+          {/* Progress bar */}
+          <motion.div
+            style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 3, background: "rgba(255,255,255,0.06)" }}
+          >
+            <motion.div
+              initial={{ width: "100%" }}
+              animate={{ width: 0 }}
+              transition={{ duration: billyInsightDuration / 1000, ease: "linear" }}
+              style={{ height: "100%", background: "linear-gradient(90deg, #3b82f6, #60a5fa)", boxShadow: "0 0 8px #3b82f6" }}
+            />
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
   if (shouldPassFullScreenProps) {
     return (
       <div
@@ -694,6 +840,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
         {/* Blitz fullscreen splash */}
         <BlitzSplashOverlay />
+
+        {/* Billy Insight fullscreen splash */}
+        <BillyInsightSplashOverlay />
 
         {/* Content Area - Scrollable */}
         <div

@@ -405,14 +405,14 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                   />
                 ))}
               </div>
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.3 }}
                 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#BFDBFE" }}
               >
                 {starMessages[stars]}
-              </motion.p>
+              </motion.div>
             </motion.div>
 
             {/* Body text */}
@@ -528,14 +528,14 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
               </div>
             </div>
 
-            <motion.p
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 2.0 }}
               style={{ fontSize: 15, color: "#64748b", textAlign: "center", maxWidth: 280, lineHeight: 1.5 }}
             >
               Cada paso te acerca más a tu libertad financiera.
-            </motion.p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

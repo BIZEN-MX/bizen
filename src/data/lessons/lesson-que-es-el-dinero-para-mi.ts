@@ -8,7 +8,7 @@ import type { LessonStep } from "@/types/lessonTypes"
  * Rule: No images. Text-only content.
  *
  * AI Features:
- * - Feature 1: Glossary terms via [[word|definition]]
+ * - Feature 1: Glossary terms via word
  * - Feature 2: aiInsight fields for Billy Empático (shows on 3rd mistake)
  * - Feature 3: Adaptive Mexican scenarios in exercises
  * - Feature 4: narrative_check step before summary
@@ -20,7 +20,7 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
     id: "qed-slide-1",
     stepType: "billy_talks",
     mood: "happy",
-    body: "¡Hola! Soy Billy. Antes de hablar de presupuestos o ahorros, hablemos de lo que **en verdad** guía tus compras: tus [[emociones|Reacciones internas (como miedo, alegría o inseguridad) que impulsan casi todas tus decisiones de dinero]].\n\n¿Sabías que el dinero significa algo distinto para cada persona? Lo que tú piensas de él hoy, decide tu futuro mañana.",
+    body: "¡Hola! Soy Billy. Antes de hablar de presupuestos o ahorros, hablemos de lo que **en verdad** guía tus compras: tus emociones.\n\n¿Sabías que el dinero significa algo distinto para cada persona? Lo que tú piensas de él hoy, decide tu futuro mañana.",
     continueLabel: "¡Descubrámoslo!",
     fullScreen: true,
   },
@@ -49,7 +49,7 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
     stepType: "info",
     title: "El radar del significado",
     description: "Nadie ve el dinero igual",
-    body: "El dinero no es solo papel o números en una app. Es un [[lente emocional|La forma en que tus sentimientos filtran cómo ves y tomas decisiones sobre el dinero]]:\n\n• **Seguridad**: Sientes que el dinero es tu escudo.\n• **Estatus**: Lo usas como señal de éxito o validación.\n• **Presión**: Lo ves como un [[problema constante|Cuando el dinero genera angustia, evitas pensar en él o planear con él]].\n• **Herramienta**: Lo ves como energía para lograr metas.\n\n¡Entender tu lente evita que el dinero te controle!",
+    body: "El dinero no es solo papel o números en una app. Es un lente emocional:\n\n• **Seguridad**: Sientes que el dinero es tu escudo.\n• **Estatus**: Lo usas como señal de éxito o validación.\n• **Presión**: Lo ves como un problema constante.\n• **Herramienta**: Lo ves como energía para lograr metas.\n\n¡Entender tu lente evita que el dinero te controle!",
     continueLabel: "Entendido",
     fullScreen: true,
     aiInsight: "¿Cuál de estos lentes se parece más a ti? Identificarlo es el primer paso para cambiar cómo manejas tu dinero.",
@@ -84,7 +84,7 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
     question: "¿Qué 'lente' está usando Carlos en esta decisión?",
     options: [
       { id: "opt-seguridad", label: "Seguridad", isCorrect: false },
-      { id: "opt-estatus", label: "Estatus", isCorrect: true, explanation: "Busca [[validación social|La necesidad de ser aceptado o admirado por otros, a través de lo que tienes o muestras]] a través del gasto." },
+      { id: "opt-estatus", label: "Estatus", isCorrect: true, explanation: "Busca validación social a través del gasto." },
       { id: "opt-herramienta", label: "Herramienta", isCorrect: false },
       { id: "opt-presion", label: "Presión", isCorrect: false },
     ],
@@ -102,7 +102,7 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
       name: "Hot Sale: iPhone último modelo",
       price: "$22,999",
     },
-    description: "Es la 1am. Ves la oferta en tu celular y dice: '¡Solo quedan 3 en stock!'. El [[FOMO|Fear Of Missing Out: el miedo a perderte algo que crees que todos tienen]] te está dominando. El corazón te late rápido.",
+    description: "Es la 1am. Ves la oferta en tu celular y dice: '¡Solo quedan 3 en stock!'. El FOMO te está dominando. El corazón te late rápido.",
     instructions: "Respira y mantén 4 segundos antes de que ese dinero vuele.",
     holdTime: 4,
     isAssessment: true,
@@ -125,7 +125,7 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
     stepType: "true_false",
     statement: "Tu percepción y emociones afectan tus gastos mucho más que el saldo real en tu cuenta.",
     correctValue: true,
-    explanation: "La [[psicología del dinero|El estudio de cómo nuestras emociones, creencias y hábitos mentales moldean las decisiones financieras]] demuestra que nuestras emociones son el motor principal de la mayoría de los gastos.",
+    explanation: "La psicología del dinero demuestra que nuestras emociones son el motor principal de la mayoría de los gastos.",
     isAssessment: true,
     continueLabel: "Continuar",
     fullScreen: true,
@@ -167,7 +167,7 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
     stepType: "info",
     title: "Patrones invisibles",
     description: "Cómo nos relacionamos",
-    body: "Detectar tus [[patrones financieros|Los comportamientos repetidos con el dinero que hacemos casi en automático, sin cuestionarlos]] te da superpoderes:\n\n• **Si el dinero es 'Presión'**: Evitas ver tu cuenta por miedo. No puedes planear porque prefieres ignorar.\n• **Si el dinero es 'Herramienta'**: El ahorro ya no se siente como un castigo, sino como una compra de tu futuro yo.\n\n¡Si dejas de adivinar, empiezas a ganar!",
+    body: "Detectar tus patrones financieros te da superpoderes:\n\n• **Si el dinero es 'Presión'**: Evitas ver tu cuenta por miedo. No puedes planear porque prefieres ignorar.\n• **Si el dinero es 'Herramienta'**: El ahorro ya no se siente como un castigo, sino como una compra de tu futuro yo.\n\n¡Si dejas de adivinar, empiezas a ganar!",
     continueLabel: "Continuar",
     fullScreen: true,
     aiInsight: "Pregúntate: ¿en cuál de estos patrones me reconozco más? Con esa respuesta honesta, ya tienes el 50% ganado.",
@@ -181,7 +181,7 @@ export const lessonQueEsElDineroParaMiSteps: LessonStep[] = [
     description: "Mario recibe su quincena, piensa 'me lo merezco' y esa noche se gasta $800 en una salida sin planearlo.",
     question: "¿Qué dominó la decisión de Mario?",
     options: [
-      { id: "opt-emocion", label: "La emoción del momento", isCorrect: true, explanation: "La [[gratificación inmediata|Preferir una recompensa pequeña ahora sobre una mayor en el futuro]] venció a la razón." },
+      { id: "opt-emocion", label: "La emoción del momento", isCorrect: true, explanation: "La gratificación inmediata venció a la razón." },
       { id: "opt-planeacion", label: "La lógica fría", isCorrect: false },
       { id: "opt-precios", label: "Ahorro consciente", isCorrect: false },
       { id: "opt-metas", label: "Metas de ahorro", isCorrect: false },

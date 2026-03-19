@@ -155,7 +155,7 @@ export default function DailyChallengeWidget() {
                 : "0 12px 40px rgba(109,40,217,0.3)",
             position: "relative", overflow: "hidden",
             transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-            marginBottom: 24
+            marginBottom: 12
         }}>
             {/* Orbs */}
             {!completed && (

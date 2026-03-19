@@ -383,27 +383,39 @@ export default function DashboardPage() {
 
         /* ── mobile overrides ── */
         @media (max-width:640px) {
-          /* stack stat cards vertically */
-          .stats-row { flex-direction:column !important; gap:14px !important; }
-          .sc { padding:20px 18px !important; }
-          .sc-num { font-size:40px !important; margin-top:12px !important; }
+          /* reduce general container padding */
+          .di { padding: 12px 14px 120px !important; }
 
-          /* hero: hide XP ring on very small screens, compress stats pills */
+          /* STAT CARDS: side by side logic or smaller height */
+          .stats-row { 
+            display: grid !important; 
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+          }
+          /* Card 1 & 2 side by side, Card 3 full width */
+          .stats-row > div:nth-child(3) { grid-column: span 2; min-height: 100px !important; }
+          .sc { padding: 16px 14px !important; min-height: 110px !important; }
+          .sc-num { font-size: 32px !important; margin-top: 8px !important; }
+          .sc-label { font-size: 9px !important; margin-bottom: 8px !important; }
+
+          /* hero: more compact */
           .hero-xp-ring { display:none !important; }
-          .hero-stats-pills { gap:8px !important; }
-          .hero-stats-pills > div { padding:7px 10px !important; gap:6px !important; }
+          .hero-stats-pills { gap:6px !important; }
+          .hero-stats-pills > div { padding:6px 9px !important; gap:5px !important; }
 
-          /* continue card: stack icon+title and button vertically */
-          .continue-inner { flex-direction:column !important; align-items:flex-start !important; }
-          .cb { width:100% !important; justify-content:center !important; padding:13px 20px !important; }
+          /* continue card: tighter padding */
+          .continue-inner { flex-direction:column !important; align-items:flex-start !important; gap: 12px !important; }
+          .cb { width:100% !important; justify-content:center !important; padding:12px 16px !important; font-size: 14px !important; }
+          
+          /* activity section: smaller dots */
+          .dd { width: 28px !important; height: 28px !important; }
+          .dual-grid { gap: 12px !important; }
 
-          /* activity+reto: stack vertically */
-          .dual-grid { grid-template-columns:1fr !important; }
-
-          /* quick links: 2 cols on mobile */
-          .quick-grid { grid-template-columns:1fr 1fr !important; gap:10px !important; }
-          .ql { padding:14px 12px !important; gap:10px !important; flex-direction:column !important; align-items:flex-start !important; }
-          .ql > div:last-child { display:none !important; } /* hide arrow on mobile */
+          /* quick links: already 2 cols, but make them shorter */
+          .quick-grid { grid-template-columns: 1fr 1fr !important; gap:8px !important; }
+          .ql { padding:12px 10px !important; gap:8px !important; }
+          .ql-label { font-size: 13px !important; }
+          .ql-sub { font-size: 11px !important; }
         }
 
         @media (max-width:380px) {

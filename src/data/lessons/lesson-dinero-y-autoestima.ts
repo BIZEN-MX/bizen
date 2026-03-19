@@ -1,254 +1,240 @@
 import type { LessonStep } from "@/types/lessonTypes"
 
 /**
- * Lesson 3: Lo que creo que el dinero dice de mí
- * Theme: Mi relación con el dinero
- * Lesson ID: dinero-y-autoestima
- * Difficulty: Introductory–Intermediate
+ * Lección 3: Lo que creo que el dinero dice de mí
+ * Tema: Mi relación con el dinero
+ * Nivel: Introductorio–Intermedio
  * Slides: 15
+ * Regla: Sin imágenes. Solo texto.
  */
 
 export const lessonDineroYAutoestimaSteps: LessonStep[] = [
-    // SLIDE 1 — FLASHCARD (Intro Theory)
-    {
-        id: "dya-slide-1",
-        stepType: "billy_talks",
-        mood: "thinking",
-        body: "A veces el dinero parece decir algo sobre nosotros. ¿Sientes que tener más dinero te hace “valer más”?\n\nEsa idea afecta tu autoestima y tus decisiones. ¡Vamos a separar tu valor personal de tu cuenta bancaria!",
-        continueLabel: "¡Empecemos!",
-        fullScreen: true,
-    },
+  // Slide 1 — Flashcard (Teoría)
+  {
+    id: "cms-l3-s1",
+    stepType: "billy_talks",
+    mood: "thinking",
+    body: "A veces el dinero parece decir algo sobre nosotros. \"Si tengo más valgo más\" o \"si tengo menos valgo menos\".\n\nEsa idea es peligrosa porque mezcla tu situación económica con tu valor personal. ¡Vamos a desarmar esa etiqueta!",
+    continueLabel: "¡Empecemos!",
+    fullScreen: true,
+  },
 
-    // SLIDE 2 — Diagnostic Reflection (non-graded)
-    {
-        id: "dya-slide-2",
-        stepType: "mcq",
-        question: "¿Cuando piensas en dinero, sientes que puede cambiar cómo te perciben los demás?",
-        options: [
-            { id: "opt-mucho", label: "Sí, mucho", isCorrect: true },
-            { id: "opt-aveces", label: "A veces", isCorrect: true },
-            { id: "opt-casi-no", label: "Casi no", isCorrect: true },
-            { id: "opt-no-seguro", label: "No estoy seguro/a", isCorrect: true },
-        ],
-        isAssessment: false,
-        recordIncorrect: false,
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 2 — Diagnóstico (No calificado)
+  {
+    id: "cms-l3-s2",
+    stepType: "mcq",
+    question: "¿Qué tan seguido te comparas por dinero o cosas materiales?",
+    options: [
+      { id: "s2-nunca", label: "Casi nunca", isCorrect: true },
+      { id: "s2-aveces", label: "A veces", isCorrect: true },
+      { id: "s2-seguido", label: "Seguido", isCorrect: true },
+      { id: "s2-nose", label: "No estoy seguro", isCorrect: true },
+    ],
+    isAssessment: false,
+    recordIncorrect: false,
+    continueLabel: "Continuar",
+    fullScreen: true,
+    description: "No hay respuestas correctas, solo estamos conociendo tu punto de partida.",
+  },
 
-    // SLIDE 3 — FLASHCARD (Theory)
-    {
-        id: "dya-slide-3",
-        stepType: "info",
-        title: "Tu valor real",
-        description: "Dinero vs Identidad",
-        body: "El dinero influye en tu comodidad y opciones, pero **NO** define quién eres.\n\nValor personal y situación financiera son cosas totalmente distintas. ¡Nunca lo olvides!",
-        continueLabel: "Entendido",
-        fullScreen: true,
-    },
+  // Slide 3 — Flashcard (Teoría con criterio)
+  {
+    id: "cms-l3-s3",
+    stepType: "info",
+    title: "Señales de mezcla",
+    description: "Dinero vs Autoestima",
+    body: "Estás mezclando dinero con autoestima cuando aparecen señales como:\n\n• Sentirte menos por no poder pagar algo.\n• Sentirte más por comprar algo caro.\n• Creer que tu valor cambia según tu saldo.\n• Gastar para sentirte aceptado.\n\nEsto no es debilidad, ¡es presión social!",
+    aiInsight: "¡Recuerda que tu valor es constante, el saldo es variable!",
+    continueLabel: "Entendido",
+    fullScreen: true,
+  },
 
-    // SLIDE 4 — Guided True / False (graded)
-    {
-        id: "dya-slide-4",
-        stepType: "true_false",
-        statement: "Tener más dinero significa automáticamente que una persona vale más que otra.",
-        correctValue: false,
-        explanation: "El dinero puede cambiar condiciones de vida, pero no define el valor humano de una persona.",
-        isAssessment: true,
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 4 — Ejercicio (Calificado) Verdadero o Falso
+  {
+    id: "cms-l3-s4",
+    stepType: "true_false",
+    statement: "Mi valor como persona no depende de cuánto dinero tengo.",
+    correctValue: true,
+    explanation: "El dinero cambia condiciones, pero no tu valor personal.",
+    isAssessment: true,
+    continueLabel: "Siguiente",
+    fullScreen: true,
+  },
 
-    // SLIDE 5 — Guided Classification (graded)
-    {
-        id: "dya-slide-5",
-        stepType: "blitz_challenge",
-        title: "Reto Relámpago",
-        description: "Una persona dice: “Si no puedo comprar lo mismo que mis amigos, entonces soy menos”.",
-        question: "¿Qué mezcla aquí?",
-        options: [
-            { id: "opt-valor", label: "Valor personal con dinero", isCorrect: true, explanation: "Mezcla su valor como persona con su capacidad de gasto." },
-            { id: "opt-metas", label: "Metas con disciplina", isCorrect: false },
-            { id: "opt-presupuesto", label: "Presupuesto con ahorro", isCorrect: false },
-        ],
-        timeLimit: 20,
-        isAssessment: true,
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 5 — Ejercicio (Calificado) -> Blitz Challenge (1/2)
+  {
+    id: "cms-l3-s5",
+    stepType: "blitz_challenge",
+    title: "Reto Relámpago",
+    description: "Alex piensa: \"No puedo comprar lo mismo que mis amigos, entonces soy menos\".",
+    question: "¿Qué está mezclando Alex?",
+    options: [
+      { id: "s5-valor", label: "Valor personal con dinero", isCorrect: true, explanation: "Está ligando su autoestima a su capacidad de gasto." },
+      { id: "s5-ahorro", label: "Ahorro con inversión", isCorrect: false },
+      { id: "s5-meta", label: "Meta con presupuesto", isCorrect: false },
+      { id: "s5-ingreso", label: "Ingreso con deuda", isCorrect: false },
+    ],
+    timeLimit: 15,
+    isAssessment: true,
+    continueLabel: "Continuar",
+    fullScreen: true,
+  },
 
-    // SLIDE 6 — FLASHCARD (Example Theory)
-    {
-        id: "dya-slide-6",
-        stepType: "billy_talks",
-        mood: "happy",
-        body: "Comparar dinero con valor personal crea presión innecesaria.\n\nDos personas con recursos distintos siguen valiendo exactamente lo mismo. ¡La billetera no es el termómetro del alma!",
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 6 — Flashcard (Teoría aplicada)
+  {
+    id: "cms-l3-s6",
+    stepType: "billy_talks",
+    mood: "happy",
+    body: "Dos personas pueden tener recursos distintos y seguir teniendo el mismo valor.\n\nCuando el dinero se vuelve etiqueta, aparecen vergüenza, presión, comparación y... ¡malas decisiones!",
+    continueLabel: "Anotado",
+    fullScreen: true,
+  },
 
-    // SLIDE 7 — Match Concepts (graded)
-    {
-        id: "dya-slide-7",
-        stepType: "match",
-        question: "Relaciona cada frase con la idea que representa.",
-        leftItems: [
-            { id: "frase-1", label: "“No tengo dinero, entonces no valgo”" },
-            { id: "frase-2", label: "“Tener dinero me ayuda, pero no me define”" },
-            { id: "frase-3", label: "“Si compro esto, me verán mejor”" },
-            { id: "frase-4", label: "“No puedo pagar eso ahora, pero sigo teniendo valor”" },
-        ],
-        rightItems: [
-            { id: "idea-1", label: "Confusión entre valor personal y dinero" },
-            { id: "idea-2", label: "Autoestima separada del dinero" },
-            { id: "idea-3", label: "Dinero como estatus" },
-            { id: "idea-4", label: "Límite financiero con autoestima sana" },
-        ],
-        correctPairs: [
-            { leftId: "frase-1", rightId: "idea-1" },
-            { leftId: "frase-2", rightId: "idea-2" },
-            { leftId: "frase-3", rightId: "idea-3" },
-            { leftId: "frase-4", rightId: "idea-4" },
-        ],
-        isAssessment: true,
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 7 — Ejercicio (Calificado) Matching
+  {
+    id: "cms-l3-s7",
+    stepType: "match",
+    question: "Relaciona cada frase con lo que realmente expresa",
+    description: "Elige la opción más lógica según el contexto.",
+    leftItems: [
+      { id: "l1", label: "Si compro esto me verán mejor" },
+      { id: "l2", label: "No tengo dinero entonces no valgo" },
+      { id: "l3", label: "No puedo pagarlo hoy pero sigo teniendo valor" },
+      { id: "l4", label: "El dinero me ayuda pero no me define" },
+    ],
+    rightItems: [
+      { id: "r1", label: "Dinero como estatus" },
+      { id: "r2", label: "Confusión valor-dinero" },
+      { id: "r3", label: "Límite con autoestima sana" },
+      { id: "r4", label: "Autoestima separada" },
+    ],
+    correctPairs: [
+      { leftId: "l1", rightId: "r1" },
+      { leftId: "l2", rightId: "r2" },
+      { leftId: "l3", rightId: "r3" },
+      { leftId: "l4", rightId: "r4" },
+    ],
+    isAssessment: true,
+    continueLabel: "Continuar",
+    fullScreen: true,
+  },
 
-    // SLIDE 8 — Scenario Decision (graded)
-    {
-        id: "dya-slide-8",
-        stepType: "mcq",
-        title: "El caso de Daniela",
-        description: "A Daniela la invitan a un plan caro. No le alcanza, pero piensa en ir de todos modos para no sentirse “menos”.",
-        question: "¿Cuál sería la decisión MÁS sana en este caso?",
-        options: [
-            { id: "opt-gastar", label: "Gastar aunque no pueda, para no sentirse menos", isCorrect: false },
-            { id: "opt-rechazar-menos", label: "Rechazar el plan y pensar que no vale lo mismo que los demás", isCorrect: false },
-            { id: "opt-limite", label: "Reconocer su límite y buscar una alternativa sin ligar su valor al dinero", isCorrect: true, explanation: "Poner límites financieros sin afectar tu autoestima es una señal de madurez financiera." },
-            { id: "opt-endeudarse", label: "Endeudarse para “mantener su imagen”", isCorrect: false },
-        ],
-        isAssessment: true,
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 8 — Ejercicio (Calificado) Escenario decisión sana
+  {
+    id: "cms-l3-s8",
+    stepType: "mcq",
+    question: "Daniela es invitada a un plan caro. No le alcanza y le da pena decir que no por miedo a verse \"menos\". ¿Cuál sería la decisión más sana?",
+    options: [
+      { id: "s8-endeudarse", label: "Endeudarse para no sentirse menos", isCorrect: false },
+      { id: "s8-ir", label: "Ir aunque no le alcance y luego ver cómo paga", isCorrect: false },
+      { id: "s8-no", label: "Decir que no con tranquilidad y proponer un plan barato", isCorrect: true, explanation: "Poner límites financieros sin ligar tu valor al dinero es madurez financiera." },
+      { id: "s8-gastar", label: "Gastar su ahorro para una meta importante", isCorrect: false },
+    ],
+    isAssessment: true,
+    continueLabel: "Siguiente",
+    fullScreen: true,
+  },
 
-    // SLIDE 9 — FLASHCARD (Theory)
-    {
-        id: "dya-slide-9",
-        stepType: "info",
-        title: "Percepción social",
-        description: "Límites y autoestima",
-        body: "Cuando el dinero es tu “medida”, aparece la vergüenza o la presión social.\n\n¡Separar estos conceptos te ayuda a decidir con la cabeza fría!",
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 9 — Flashcard (Teoría)
+  {
+    id: "cms-l3-s9",
+    stepType: "info",
+    title: "Beneficios de separar",
+    description: "Finanzas Conscientes",
+    body: "Cuando separas dinero de autoestima, pasa esto:\n\n• Te comparas menos.\n• Tomas decisiones más frías e inteligentes.\n• No compras para probar algo a los demás.\n• Proteges tus metas reales.",
+    aiInsight: "¡Tu cerebro financiero funciona mejor cuando tu ego no está en juego!",
+    continueLabel: "Entendido",
+    fullScreen: true,
+  },
 
-    // SLIDE 10 — Multiple Select (graded)
-    {
-        id: "dya-slide-10",
-        stepType: "multi_select",
-        title: "Señales de alerta",
-        description: "Una persona está mezclando autoestima con dinero cuando interpreta el dinero como una “prueba” de su valor. Selecciona todas las correctas.",
-        question: "¿Cuáles de estas señales pueden mostrar esa mezcla?",
-        options: [
-            { id: "opt-inferior", label: "Sentirse inferior por no poder comprar algo", isCorrect: true },
-            { id: "opt-importante", label: "Buscar compras para sentirse más importante", isCorrect: true },
-            { id: "opt-comparar", label: "Compararse todo el tiempo por lo que otros tienen", isCorrect: true },
-            { id: "opt-cambia", label: "Pensar que su valor cambia según su saldo", isCorrect: true },
-        ],
-        isAssessment: true,
-        continueLabel: "Continuar",
-        fullScreen: true,
-        // Feedback: Cuando el dinero se usa para medir valor personal, suelen aparecer varias de estas señales al mismo tiempo.
-    },
+  // Slide 10 — Ejercicio (Calificado) Multi select
+  {
+    id: "cms-l3-s10",
+    stepType: "multi_select",
+    question: "¿Cuáles señales muestran que alguien mide su valor con dinero?",
+    description: "Selecciona todas las correctas.",
+    options: [
+      { id: "s10-inferior", label: "Sentirse inferior por no poder comprar algo", isCorrect: true },
+      { id: "s10-importante", label: "Comprar para sentirse importante", isCorrect: true },
+      { id: "s10-comparar", label: "Compararse todo el tiempo con otros", isCorrect: true },
+      { id: "s10-saldo", label: "Pensar que su valor cambia según su saldo", isCorrect: true },
+    ],
+    isAssessment: true,
+    continueLabel: "Continuar",
+    fullScreen: true,
+  },
 
-    // SLIDE 11 — FLASHCARD (Key Idea)
-    {
-        id: "dya-slide-11",
-        stepType: "billy_talks",
-        mood: "happy",
-        body: "Idea clave: **Tú no eres tu saldo**.\n\nTu saldo puede subir o bajar como una montaña rusa, ¡pero tu valor personal se queda arriba!",
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 11 — Flashcard (Key idea)
+  {
+    id: "cms-l3-s11",
+    stepType: "billy_talks",
+    mood: "mascot",
+    body: "El dinero puede decir algo sobre una situación financiera actual. ¡Pero no dice quién eres!\n\nTu saldo puede cambiar, pero tu valor personal no debería depender de eso jamás.",
+    continueLabel: "Anotado",
+    fullScreen: true,
+  },
 
-    // SLIDE 12 — Order by Logic (graded)
-    {
-        id: "dya-slide-12",
-        stepType: "order",
-        question: "Ordena una forma más sana de responder cuando te comparas por dinero.",
-        items: [
-            { id: "step-4", label: "Decidir una acción realista (ajustar, ahorrar o esperar)", correctOrder: 4 },
-            { id: "step-2", label: "Identificar lo que siento", correctOrder: 2 },
-            { id: "step-3", label: "Recordar que mi valor no depende del dinero", correctOrder: 3 },
-            { id: "step-1", label: "Compararme con alguien", correctOrder: 1 },
-        ],
-        isAssessment: true,
-        continueLabel: "Continuar",
-        fullScreen: true,
-        // Feedback: Primero reconoces lo que pasó, luego corriges la idea y finalmente decides mejor.
-    },
+  // Slide 12 — Ejercicio (Calificado) Ordenar proceso saludable
+  {
+    id: "cms-l3-s12",
+    stepType: "order",
+    question: "Ordena una forma sana de responder cuando te comparas por dinero",
+    items: [
+      { id: "o-comparar", label: "Compararme con alguien", correctOrder: 1 },
+      { id: "o-sentir", label: "Identificar lo que siento", correctOrder: 2 },
+      { id: "o-valor", label: "Recordar que mi valor no depende del dinero", correctOrder: 3 },
+      { id: "o-accion", label: "Decidir una acción realista", correctOrder: 4 },
+    ],
+    isAssessment: true,
+    continueLabel: "¡Listo!",
+    fullScreen: true,
+  },
 
-    // SLIDE 13 — Error Diagnosis (graded)
-    {
-        id: "dya-slide-13",
-        stepType: "blitz_challenge",
-        title: "Reto Relámpago",
-        description: "Leo piensa: “Si no puedo comprarlo hoy, significa que voy mal en la vida”.",
-        question: "¿Cuál es el error principal?",
-        options: [
-            { id: "opt-limite-v-valor", label: "Confundir límite con valor", isCorrect: true, explanation: "No poder comprar algo hoy no define quién eres." },
-            { id: "opt-prioridades", label: "Ajustar prioridades", isCorrect: false },
-        ],
-        timeLimit: 20,
-        isAssessment: true,
-        continueLabel: "¡Lo tengo!",
-        fullScreen: true,
-    },
-    {
-        id: "dya-slide-13-mindset",
-        stepType: "mindset_translator",
-        question: "¿Cómo lo dirías mejor?",
-        beliefs: [
-            {
-                id: "belief-valia",
-                original: "Si mi tarjeta es rechazada, me siento menos que los demás.",
-                healthyOptions: [
-                    { id: "hv-1", label: "Mi valor no depende de una transacción fallida; es solo un tema técnico o de presupuesto", isCorrect: true },
-                    { id: "hv-2", label: "Tengo que trabajar más para que nunca me vuelva a pasar", isCorrect: false },
-                ]
-            }
-        ],
-        isAssessment: true,
-        fullScreen: true,
-    },
+  // Slide 13 — Ejercicio (Calificado) -> Blitz Challenge (2/2)
+  {
+    id: "cms-l3-s13",
+    stepType: "blitz_challenge",
+    title: "Reto Relámpago",
+    description: "Leo piensa: \"Si no puedo comprarlo hoy, voy mal en la vida\".",
+    question: "¿Cuál es el error principal?",
+    options: [
+      { id: "s13-error", label: "Confunde un límite temporal con su valor personal", isCorrect: true, explanation: "No poder hoy no define tu valor ni tu éxito futuro." },
+      { id: "s13-planeacion", label: "Está haciendo planeación a largo plazo", isCorrect: false },
+      { id: "s13-inversion", label: "Está analizando una inversión", isCorrect: false },
+      { id: "s13-precios", label: "Está comparando precios", isCorrect: false },
+    ],
+    timeLimit: 15,
+    isAssessment: true,
+    continueLabel: "¡Entendido!",
+    fullScreen: true,
+  },
 
-    // SLIDE 14 — Diagnostic Reflection (non-graded)
-    {
-        id: "dya-slide-14",
-        stepType: "mcq",
-        question: "Hoy, el dinero en tu mente se parece más a:",
-        options: [
-            { id: "opt-herramienta", label: "Una herramienta", isCorrect: true },
-            { id: "opt-presion", label: "Una presión social", isCorrect: true },
-            { id: "opt-medida", label: "Una medida de valor", isCorrect: true },
-            { id: "opt-oportunidad", label: "Una oportunidad", isCorrect: true },
-        ],
-        isAssessment: false,
-        recordIncorrect: false,
-        continueLabel: "Continuar",
-        fullScreen: true,
-    },
+  // Slide 14 — Diagnóstico (No calificado)
+  {
+    id: "cms-l3-s14",
+    stepType: "mcq",
+    question: "Hoy, ¿el dinero en tu mente se parece más a?",
+    options: [
+      { id: "s14-herramienta", label: "Una herramienta", isCorrect: true },
+      { id: "s14-presion", label: "Una presión social", isCorrect: true },
+      { id: "s14-medida", label: "Una medida de valor", isCorrect: true },
+      { id: "s14-portunidad", label: "Una oportunidad", isCorrect: true },
+    ],
+    isAssessment: false,
+    recordIncorrect: false,
+    continueLabel: "Finalizar lección",
+    fullScreen: true,
+    description: "Estamos registrando tu evolución mental.",
+  },
 
-    // SLIDE 15 — Progress Feedback
-    {
-        id: "dya-slide-15",
-        stepType: "summary",
-        title: "¡Lección completada!",
-        body: "Ahora entiendes una idea clave: el dinero puede influir en tu vida, pero no define tu valor como persona.",
-        isAssessment: false,
-        continueLabel: "Siguiente lección",
-        fullScreen: true,
-    },
+  // Slide 15 — Cierre (Progreso)
+  {
+    id: "cms-l3-s15",
+    stepType: "summary",
+    title: "¡Lección completada!",
+    body: "Ahora entiendes una idea clave: el dinero influye en tu vida pero no define tu valor. ¡Sigue así!",
+    isAssessment: false,
+    continueLabel: "Siguiente lección",
+    fullScreen: true,
+  },
 ]

@@ -526,9 +526,16 @@ export default function ProfilePage() {
 
         @media (max-width: 767px) {
           .prof-outer { padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
-          .prof-two-col { flex-direction: column !important; align-items: center !important; }
-          .prof-left-col { width: 100% !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
+          .prof-two-col { flex-direction: column !important; align-items: stretch !important; padding: 20px 16px !important; gap: 24px !important; }
+          .prof-left-col { width: 100% !important; display: flex !important; flex-direction: column !important; align-items: stretch !important; }
           .prof-right-col { width: 100% !important; }
+          
+          /* Mobile specific spacing and sizes */
+          .mobile-banner { height: 160px !important; }
+          .mobile-avatar-container { width: 140px !important; height: 140px !important; margin-top: -60px !important; }
+          .mobile-stat-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+          .mobile-stat-card { padding: 14px 12px !important; }
+          .mobile-stat-value { font-size: 22px !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .prof-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
@@ -618,7 +625,7 @@ export default function ProfilePage() {
         <div className="blob" style={{ bottom: "-100px", left: "-100px", animationDelay: "-10s" }} />
 
         {/* Banner Section */}
-        <div style={{
+        <div className="mobile-banner" style={{
           height: 220, width: "calc(100% - 32px)",
           margin: "16px",
           borderRadius: "32px",
@@ -656,7 +663,7 @@ export default function ProfilePage() {
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
               <div
                 onClick={() => setIsPickerOpen(true)}
-                className="prof-card-hover"
+                className="prof-card-hover mobile-avatar-container"
                 style={{
                   width: 190, height: 190,
                   background: "white",
@@ -677,7 +684,7 @@ export default function ProfilePage() {
                 <div style={{ position: "relative", zIndex: 1 }}>
                   <AvatarDisplay
                     avatar={user.user_metadata?.avatar || { type: "character", id: "robot", character: "robot" }}
-                    size={155}
+                    size={screenSize < 768 ? 100 : 155}
                     frame={
                       (userStats?.inventory?.includes("2") || dbProfile?.inventory?.includes("2")) ? "vip" :
                         (userStats?.inventory?.includes("1") || dbProfile?.inventory?.includes("1")) ? "ambassador" : null
@@ -687,16 +694,16 @@ export default function ProfilePage() {
 
                 {/* Camera icon button */}
                 <div style={{
-                  position: "absolute", bottom: 12, right: 12,
-                  width: 42, height: 42, borderRadius: "50%",
+                  position: "absolute", bottom: screenSize < 768 ? "5%" : 12, right: screenSize < 768 ? "5%" : 12,
+                  width: screenSize < 768 ? 32 : 42, height: screenSize < 768 ? 32 : 42, borderRadius: "50%",
                   background: "#0F62FE",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   boxShadow: "0 8px 16px rgba(15,98,254,0.4)",
-                  border: "3px solid white",
+                  border: "2px solid white",
                   zIndex: 2,
                   transition: "transform 0.2s"
                 }}>
-                  <Camera size={20} color="white" />
+                  <Camera size={screenSize < 768 ? 14 : 20} color="white" />
                 </div>
               </div>
             </div>
@@ -726,36 +733,36 @@ export default function ProfilePage() {
               )}
 
               {/* Following / Followers */}
-              <div style={{ display: "inline-flex", gap: 32, marginBottom: 24, justifyContent: "center" }}>
+              <div style={{ display: "inline-flex", gap: "clamp(16px, 6vw, 40px)", marginBottom: 16, justifyContent: "center", width: "100%" }}>
                 <button
                   onClick={() => { setRightTab("following"); fetchFollowingList() }}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}
                 >
                   <CustomFollowingIcon active={rightTab === "following"} />
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 18, fontWeight: 500, color: "#0f172a" }}>{profileStats?.followingCount ?? 0}</div>
-                    <div style={{ fontSize: 11, fontWeight: 500, color: rightTab === "following" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Siguiendo</div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{profileStats?.followingCount ?? 0}</div>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: rightTab === "following" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.03em" }}>Siguiendo</div>
                   </div>
                 </button>
                 <button
                   onClick={() => { setRightTab("followers"); fetchFollowersList() }}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}
                 >
                   <CustomFollowersIcon active={rightTab === "followers"} />
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 18, fontWeight: 500, color: "#0f172a" }}>{profileStats?.followersCount ?? 0}</div>
-                    <div style={{ fontSize: 11, fontWeight: 500, color: rightTab === "followers" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Seguidores</div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{profileStats?.followersCount ?? 0}</div>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: rightTab === "followers" ? "#0F62FE" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.03em" }}>Seguidores</div>
                   </div>
                 </button>
               </div>
 
-              <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #e2e8f0, transparent)", marginBottom: 24 }} />
+              <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #e2e8f0, transparent)", marginBottom: 16 }} />
             </div>
 
             {/* Level Progress - Adding Life */}
             <div className="prof-card-hover" style={{
               background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
-              padding: "24px 28px", borderRadius: 24,
+              padding: screenSize < 768 ? "16px 20px" : "24px 28px", borderRadius: 24,
               border: "1px solid rgba(15,98,254,0.12)",
               boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1)"
             }}>
@@ -785,19 +792,17 @@ export default function ProfilePage() {
               <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.02em" }}>
                 Estadísticas
               </h2>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <div className="mobile-stat-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 {statCards.map(({ icon, value, label }, i) => (
                   <div
                     key={label}
-                    className="prof-card-hover"
+                    className="prof-card-hover mobile-stat-card"
                     style={{
                       padding: "20px",
                       display: "flex",
                       flexDirection: "column",
                       gap: 10,
-                      background: i % 2 === 0
-                        ? "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)"
-                        : "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
+                      background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
                       border: "1px solid rgba(15,98,254,0.12)",
                       borderRadius: 24,
                       boxShadow: "0 12px 24px -6px rgba(15,98,254,0.08)",
@@ -805,13 +810,14 @@ export default function ProfilePage() {
                     }}
                   >
                     <div style={{
-                      width: 40, height: 40, borderRadius: 12,
+                      width: 36, height: 36, borderRadius: 10,
                       background: "rgba(15,98,254,0.08)",
-                      display: "flex", alignItems: "center", justifyContent: "center"
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      flexShrink: 0
                     }}>{icon}</div>
                     <div>
-                      <div style={{ fontSize: 28, fontWeight: 800, color: "#0F172A", lineHeight: 1, letterSpacing: "-0.02em" }}>{value}</div>
-                      <div style={{ fontSize: 11, color: "#64748B", fontWeight: 700, marginTop: 6, textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
+                      <div className="mobile-stat-value" style={{ fontSize: 28, fontWeight: 800, color: "#0F172A", lineHeight: 1, letterSpacing: "-0.02em" }}>{value}</div>
+                      <div style={{ fontSize: 10, color: "#64748B", fontWeight: 700, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</div>
                     </div>
                   </div>
                 ))}

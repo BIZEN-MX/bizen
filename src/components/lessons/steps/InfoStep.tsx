@@ -238,65 +238,7 @@ export function InfoStep({
                 alignItems: hasImage ? "flex-start" : "center",
                 minWidth: 0,
               }}>
-                {step.aiInsight && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      initAudioContext() // Sync unlock
-                      onPlayAudio?.()
-                      haptic.light()
-                    }}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      marginBottom: -8,
-                      padding: "6px 14px",
-                      background: "rgba(15, 98, 254, 0.08)",
-                      borderRadius: "14px 14px 14px 4px",
-                      borderLeft: "4px solid #0F62FE",
-                      cursor: "pointer",
-                      boxShadow: "0 4px 12px rgba(15,98,254,0.1)",
-                      position: "relative",
-                      overflow: "visible"
-                    }}
-                  >
-                    <motion.div 
-                      animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      style={{
-                        position: "absolute",
-                        right: -4,
-                        top: -4,
-                        width: 10,
-                        height: 10,
-                        borderRadius: "50%",
-                        background: "#0F62FE"
-                      }}
-                    />
 
-                    <div style={{ position: "relative", width: 24, height: 24 }}>
-                      <Image src="/thumbs up.png" alt="Billy" fill style={{ objectFit: "contain" }} />
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <span style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE", lineHeight: 1 }}>Billy dice:</span>
-                        <span style={{ 
-                          fontSize: 10, 
-                          fontWeight: 500, 
-                          color: "#2563EB", 
-                          opacity: 0.8,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 4
-                        }}>
-                          Toca para audio
-                          <Mic size={10} strokeWidth={3} />
-                        </span>
-                    </div>
-                  </motion.div>
-                )}
 
                 {step.description && (
                   <motion.div

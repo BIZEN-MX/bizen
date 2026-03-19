@@ -384,21 +384,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
             overflow: "visible",
           }}
         >
-          <defs>
-            {connectors.map((c, i) => (
-              <marker
-                key={`arrow-${i}`}
-                id={`arrow-${i}`}
-                markerWidth="8"
-                markerHeight="8"
-                refX="6"
-                refY="3"
-                orient="auto"
-              >
-                <path d="M0,0 L0,6 L8,3 z" fill={c.color} />
-              </marker>
-            ))}
-          </defs>
+          {/* No markers (arrows) per user request, only lines */}
           {connectors.map((c, i) => {
             const midX = (c.x1 + c.x2) / 2
             return (
@@ -412,7 +398,6 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
                 strokeWidth={3}
                 strokeDasharray="0"
                 fill="none"
-                markerEnd={`url(#arrow-${i})`}
                 style={{ filter: `drop-shadow(0 0 4px ${c.color}80)` }}
               />
             )

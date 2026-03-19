@@ -275,6 +275,7 @@ export default function CoursesPage() {
 
 
       <div
+        className="courses-main-content"
         style={{
           flex: 1,
           paddingTop: "clamp(8px, 1.5vw, 16px)",
@@ -284,12 +285,12 @@ export default function CoursesPage() {
           background: "transparent",
           position: "relative",
           display: "flex",
-          justifyContent: "flex-start",
+          justifyContent: "center", // Changed from flex-start to center for better mobile alignment
           alignItems: "flex-start",
           marginBottom: 0,
           boxSizing: "border-box",
           width: "100%"
-        }} className="courses-main-content">
+        }}>
         {/* Same width as course bars (800px) - progress at top, then course list */}
         <section style={{
           width: "100%",
@@ -317,7 +318,9 @@ export default function CoursesPage() {
               position: "relative",
               overflow: "hidden",
               boxShadow: "0 20px 60px rgba(15, 98, 254, 0.25)",
-              boxSizing: "border-box"
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column"
             }}
           >
             {/* Glowing orbs inside hero */}
@@ -753,8 +756,51 @@ export default function CoursesPage() {
           .courses-main-content {
             padding-left: 16px !important;
             padding-right: 16px !important;
-            padding-top: 20px !important;
+            padding-top: 14px !important; // Slightly reduced
             padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+          }
+          .courses-hero {
+            padding: 24px 20px !important; // More compact
+            margin-bottom: 24px !important;
+          }
+          .courses-hero h1 {
+            font-size: 26px !important;
+            margin-bottom: 8px !important;
+          }
+          .courses-hero p {
+            font-size: 14px !important;
+            margin-bottom: 20px !important;
+          }
+          .courses-hero > div:first-of-type {
+            flex-direction: column !important;
+            gap: 24px !important;
+          }
+          .courses-hero > div:first-of-type > div:first-child {
+            flex: initial !important;
+            width: 100% !important;
+          }
+          .courses-hero > div:first-of-type > div:last-child {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            width: 100% !important;
+            min-width: unset !important;
+          }
+          .courses-hero > div:first-of-type > div:last-child > div {
+            padding: 14px !important;
+            border-radius: 16px !important;
+          }
+          .courses-hero > div:first-of-type > div:last-child > div div[style*="fontSize: 28"] {
+            font-size: 22px !important;
+          }
+          
+          .topic-row-container {
+            gap: 16px !important;
+          }
+          .course-card-wrapper {
+            border-radius: 24px !important;
+          }
+          .course-card-content {
+            padding: 24px 20px !important;
           }
         }
         

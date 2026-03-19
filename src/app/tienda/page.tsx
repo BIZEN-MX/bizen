@@ -410,119 +410,120 @@ export default function TiendaPage() {
             .tienda-tabs-container {
                 overflow-x: auto;
                 padding-bottom: 2px;
-                margin-bottom: 16px !important;
+                margin-bottom: 12px !important;
+                gap: 8px !important;
             }
             .tienda-tab-btn {
                 padding: 10px 14px !important;
-                font-size: 12px !important;
+                font-size: 13px !important;
                 flex-shrink: 0;
             }
             .tienda-cat-container {
                 overflow-x: auto;
                 padding: 4px 0;
-                margin-top: 10px;
+                margin-top: 8px;
                 gap: 6px !important;
             }
             .tienda-cat {
-                padding: 6px 14px !important;
+                padding: 6px 12px !important;
                 font-size: 11px !important;
             }
             .tienda-card {
-                border-radius: 18px !important;
+                border-radius: 20px !important;
             }
             .tienda-card > div:first-child {
-                height: 110px !important;
+                height: 100px !important;
             }
             .tienda-card > div:nth-child(2) {
-                padding: 12px 14px !important;
+                padding: 14px 12px !important;
             }
             .tienda-card h3 {
-                font-size: 12px !important;
+                font-size: 13px !important;
                 margin-bottom: 2px !important;
             }
             .tienda-card p {
                 font-size: 10px !important;
-                margin-bottom: 8px !important;
+                margin-bottom: 6px !important;
                 line-height: 1.3 !important;
             }
             .canjear-btn {
-                padding: 7px 10px !important;
-                font-size: 10px !important;
-                border-radius: 8px !important;
+                padding: 8px 10px !important;
+                font-size: 11px !important;
+                border-radius: 10px !important;
             }
             .puntos-stat-card {
                 padding: 16px 12px !important;
                 border-radius: 16px !important;
             }
             .puntos-stat-card div:nth-child(2) {
-                font-size: 28px !important;
+                font-size: 24px !important;
             }
             .tienda-inner {
-                padding: 12px !important;
+                padding: 12px 14px !important;
             }
             .tienda-hero {
-                padding: 32px 24px !important;
+                padding: 24px 20px !important;
                 border-radius: 24px !important;
                 margin-bottom: 20px !important;
+                min-height: auto !important;
             }
             .tienda-hero h1 {
-                font-size: 28px !important;
+                font-size: 26px !important;
+                margin-bottom: 6px !important;
             }
             .tienda-hero p {
                 font-size: 13px !important;
+                margin-bottom: 0 !important;
+            }
+            .tienda-hero > div {
+              flex-direction: column !important;
+              gap: 16px !important;
+              align-items: flex-start !important;
             }
             .tienda-promo {
-                padding: 16px 20px !important;
-                border-radius: 16px !important;
-                margin-bottom: 24px !important;
+                padding: 14px 18px !important;
+                border-radius: 14px !important;
+                margin-bottom: 20px !important;
             }
             .tienda-promo span {
-                font-size: 12px !important;
-            }
-            /* Stats widgets reduction */
-            .puntos-stat-card {
-                padding: 24px 16px !important;
-                gap: 12px !important;
+                font-size: 11px !important;
             }
             .gift-card-item div:first-child {
-                padding: 24px 20px !important;
-                min-height: 120px !important;
+                padding: 20px 16px !important;
+                min-height: 100px !important;
             }
             .gift-card-item div:nth-child(2) {
-                padding: 14px 20px !important;
+                padding: 12px 16px !important;
             }
             .tienda-modal {
-                padding: 24px !important;
-                border-radius: 24px !important;
-            }
-            /* Guide and Footers Section */
-            .tienda-guide-container {
-                padding: 24px !important;
-                border-radius: 24px !important;
-            }
-            .tienda-guide-container h3 {
-                font-size: 20px !important;
-                margin-bottom: 24px !important;
-            }
-            .tienda-guide-item {
                 padding: 20px !important;
                 border-radius: 20px !important;
             }
+            /* Guide and Footers Section */
+            .tienda-guide-container {
+                padding: 20px !important;
+                border-radius: 24px !important;
+            }
+            .tienda-guide-container h3 {
+                font-size: 19px !important;
+                margin-bottom: 20px !important;
+            }
+            .tienda-guide-item {
+                padding: 18px !important;
+                border-radius: 20px !important;
+            }
             .tienda-guide-item div:first-child {
-                width: 44px !important;
-                height: 44px !important;
-                margin-bottom: 12px !important;
+                width: 40px !important;
+                height: 40px !important;
+                margin-bottom: 10px !important;
             }
             .tienda-guide-item div:nth-child(2) {
-                font-size: 15px !important;
-            }
-            .tienda-guide-item div:nth-child(3) {
-                font-size: 12px !important;
+                font-size: 14px !important;
             }
             .tienda-footer-section {
-                padding: 24px !important;
+                padding: 20px !important;
                 border-radius: 24px !important;
-                margin-top: 32px !important;
+                margin-top: 28px !important;
             }
             .tienda-footer-header h2 {
                 font-size: 18px !important;
