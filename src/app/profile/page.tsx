@@ -850,42 +850,44 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Statistics */}
-            <div>
-              <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.02em" }}>
-                Estadísticas
-              </h2>
-              <div className="mobile-stat-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                {statCards.map(({ icon, value, label }, i) => (
-                  <div
-                    key={label}
-                    className="prof-card-hover mobile-stat-card"
-                    style={{
-                      padding: "20px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 10,
-                      background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
-                      border: "1px solid rgba(15,98,254,0.12)",
-                      borderRadius: 24,
-                      boxShadow: "0 12px 24px -6px rgba(15,98,254,0.08)",
-                      boxSizing: "border-box"
-                    }}
-                  >
-                    <div style={{
-                      width: 36, height: 36, borderRadius: 10,
-                      background: "rgba(15,98,254,0.08)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      flexShrink: 0
-                    }}>{icon}</div>
-                    <div>
-                      <div className="mobile-stat-value" style={{ fontSize: 28, fontWeight: 800, color: "#0F172A", lineHeight: 1, letterSpacing: "-0.02em" }}>{value}</div>
-                      <div style={{ fontSize: 10, color: "#64748B", fontWeight: 700, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</div>
+            {/* Statistics - SKIP FOR ADMINS */}
+            {!isAdminOrTeacher && statCards.length > 0 && (
+              <div>
+                <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.02em" }}>
+                  Estadísticas
+                </h2>
+                <div className="mobile-stat-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                  {statCards.map(({ icon, value, label }, i) => (
+                    <div
+                      key={label}
+                      className="prof-card-hover mobile-stat-card"
+                      style={{
+                        padding: "20px",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                        background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
+                        border: "1px solid rgba(15,98,254,0.12)",
+                        borderRadius: 24,
+                        boxShadow: "0 12px 24px -6px rgba(15,98,254,0.08)",
+                        boxSizing: "border-box"
+                      }}
+                    >
+                      <div style={{
+                        width: 36, height: 36, borderRadius: 10,
+                        background: "rgba(15,98,254,0.08)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0
+                      }}>{icon}</div>
+                      <div>
+                        <div className="mobile-stat-value" style={{ fontSize: 28, fontWeight: 800, color: "#0F172A", lineHeight: 1, letterSpacing: "-0.02em" }}>{value}</div>
+                        <div style={{ fontSize: 10, color: "#64748B", fontWeight: 700, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Inventory / Purchases Section */}
             {(userStats?.inventory?.length || dbProfile?.inventory?.length) ? (
