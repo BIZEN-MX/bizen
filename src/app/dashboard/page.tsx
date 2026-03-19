@@ -403,7 +403,7 @@ export default function DashboardPage() {
           /* quick links: 2 cols on mobile */
           .quick-grid { grid-template-columns:1fr 1fr !important; gap:10px !important; }
           .ql { padding:14px 12px !important; gap:10px !important; flex-direction:column !important; align-items:flex-start !important; }
-          .ql > div:last-child { display:none !important; } /* hide arrow on mobile *)
+          .ql > div:last-child { display:none !important; } /* hide arrow on mobile */
         }
 
         @media (max-width:380px) {
@@ -704,7 +704,7 @@ export default function DashboardPage() {
 
           <div className="quick-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:12}}>
             {([
-              { Icon:IcoBook,    label:"Aprende Finanzas",  sub:"30 temas completos",       href:"/courses",    color:"#3b82f6", bg:"#dbeafe", delay:".33s" },
+              { Icon:IcoBook,    label:"Aprende Finanzas",  sub:"30 temas en total",       href:"/courses",    color:"#3b82f6", bg:"#dbeafe", delay:".33s" },
               { Icon:IcoGamepad, label:"Simuladores",        sub:"Practica con escenarios",  href:"/cash-flow", color:"#8b5cf6", bg:"#ede9fe", delay:".37s" },
               { Icon:IcoStore,   label:"Tienda Bizen",       sub:`${bizcoins.toLocaleString()} BIZCOINS`,        href:"/tienda",   color:"#d97706", bg:"#fef3c7", delay:".41s" },
               { Icon:IcoUsers,   label:"Foro",               sub:"Comunidad activa",          href:"/forum",    color:"#10b981", bg:"#d1fae5", delay:".45s" },

@@ -125,6 +125,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const existingProgress = await prisma.progress.findUnique({
+      where: {
+        userId_lessonId: {
+          userId: user.id,
+          lessonId
+        }
+      }
+    })
+
     const progress = await prisma.progress.upsert({
       where: {
         userId_lessonId: {
@@ -155,10 +164,13 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Award XP if completed (100%) and newly created or updated to 100% just now
+    // Award XP only if newly completed to 100% (prevent infinite XP exploit)
     let rewards = null
     let newAchievements: string[] = []
-    if (percent === 100 && completedAt) {
+    
+    const isNewlyCompleted = percent === 100 && (!existingProgress || existingProgress.percent < 100)
+    
+    if (isNewlyCompleted && completedAt) {
       rewards = await awardXp(user.id, 50) // 50 XP per completed lesson
 
       // -- achievement check --

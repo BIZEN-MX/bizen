@@ -1,6 +1,6 @@
 /**
  * Shared responsive styles for lesson components
- * BIZEN design system: primary green, secondary indigo, error red, warm & clear
+ * BIZEN design system: primary blue, secondary indigo, error red, warm & clear
  */
 
 export const sharedStyles = {

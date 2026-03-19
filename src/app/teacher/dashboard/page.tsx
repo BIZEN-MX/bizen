@@ -23,6 +23,7 @@ interface Student {
     joinedAt: string
     coursesEnrolled: string[]
     completedLessonsCount: number
+    averageProgress?: number // calculated correctly by the backend
 }
 
 interface DashboardData {
@@ -219,10 +220,10 @@ export default function AdminDashboardPage() {
                                         <td style={{ padding: "16px 24px" }}>
                                             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                                 <div style={{ flex: 1, height: 6, background: "#f1f5f9", borderRadius: 3, overflow: "hidden" }}>
-                                                    {/* Mock logic for progress bar width */}
-                                                    <div style={{ width: `${Math.min(100, (student.completedLessonsCount / 10) * 100)}%`, height: "100%", background: "#10b981", borderRadius: 3 }} />
+                                                    {/* Real logic for progress bar width */}
+                                                    <div style={{ width: `${student.averageProgress ?? 0}%`, height: "100%", background: "#10b981", borderRadius: 3 }} />
                                                 </div>
-                                                <span style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", width: 24 }}>{student.completedLessonsCount}</span>
+                                                <span style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", width: 24, paddingLeft: 6 }}>{student.averageProgress ?? 0}%</span>
                                             </div>
                                         </td>
                                         <td style={{ padding: "16px 24px", textAlign: "right" }}>

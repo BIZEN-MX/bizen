@@ -1,6 +1,6 @@
 "use client"
 
-import { X, Volume2, VolumeX } from "lucide-react"
+import { X, Volume2, VolumeX, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
 import { StarIcon } from "@/components/icons/StarIcon"
 
@@ -91,10 +91,10 @@ export function LessonProgressHeader({
         >
           {isAudioLoading ? (
             <motion.div
-              animate={{ opacity: [1, 0.5, 1] }}
-              transition={{ repeat: Infinity, duration: 1 }}
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
             >
-              <Volume2 style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
+              <Loader2 style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
             </motion.div>
           ) : isAudioPlaying ? (
              <Volume2 style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />

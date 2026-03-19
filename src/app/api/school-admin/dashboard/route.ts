@@ -3,6 +3,8 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
     try {
         const cookieStore = await cookies()
@@ -36,8 +38,7 @@ export async function GET(request: Request) {
 
         // Fetch the user's profile to get their role and schoolId
         const userProfile = await prisma.profile.findUnique({
-            where: { userId },
-            include: { school: true }
+            where: { userId }
         })
 
         if (!userProfile) {
@@ -55,6 +56,12 @@ export async function GET(request: Request) {
         }
 
         const schoolId = userProfile.schoolId
+        
+        let schoolName = "Institución"
+        const schoolRecord = await prisma.school.findUnique({ where: { id: schoolId } })
+        if (schoolRecord) {
+            schoolName = schoolRecord.name
+        }
 
         // --- MULTI-TENANT QUERIES ---
         // All queries from this point MUST filter by schoolId
@@ -83,7 +90,7 @@ export async function GET(request: Request) {
                     select: { id: true, percent: true, completedAt: true }
                 },
                 enrollments: {
-                    include: { course: { select: { title: true } } }
+                    select: { topic: { select: { title: true } } }
                 }
             },
             orderBy: { fullName: 'asc' }
@@ -92,9 +99,14 @@ export async function GET(request: Request) {
         // 3. Calculate some aggregate KPIs (e.g., active students = have completed progress recently, or just average progress)
         let totalCompletedLessons = 0
 
-        const students = roster.map(student => {
+        const students = (roster as any[]).map(student => {
             const completedLessons = student.progress.filter(p => p.percent === 100).length;
             totalCompletedLessons += completedLessons;
+            
+            const totalPercent = student.progress.reduce((acc, curr) => acc + (curr.percent || 0), 0);
+            const avgProgressRaw = student.progress.length > 0 ? (totalPercent / student.progress.length) : 0;
+            // Cap at 100% just in case
+            const averageProgress = Math.min(100, Math.round(avgProgressRaw));
 
             return {
                 id: student.userId,
@@ -102,15 +114,16 @@ export async function GET(request: Request) {
                 level: student.level,
                 xp: student.xp,
                 joinedAt: student.createdAt,
-                coursesEnrolled: student.enrollments.map(e => e.course.title),
-                completedLessonsCount: completedLessons
+                coursesEnrolled: student.enrollments.map(e => e.topic?.title || "Curso"),
+                completedLessonsCount: completedLessons,
+                averageProgress
             }
         })
 
         const avgModulesCompleted = totalStudentsCount > 0 ? (totalCompletedLessons / totalStudentsCount).toFixed(1) : 0
 
         return NextResponse.json({
-            school: userProfile.school?.name,
+            school: schoolName,
             kpis: {
                 totalStudents: totalStudentsCount,
                 avgModulesCompleted: Number(avgModulesCompleted),

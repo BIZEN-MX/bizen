@@ -9,7 +9,6 @@ import PageLoader from "@/components/PageLoader"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { AVATAR_OPTIONS, AVATAR_CATEGORIES, getDefaultAvatar } from "@/lib/avatarOptions"
 import Link from "next/link"
-import { StreakCalendar } from "@/components/StreakCalendar"
 import {
   Flame, Zap, Shield, Award, UserPlus, Users,
   Search, Mail, ChevronRight, X as CloseIcon, Camera, Star,
@@ -866,8 +865,7 @@ export default function ProfilePage() {
               </div>
             ) : null}
 
-            {/* ── STREAK CALENDAR (above Logros) ── */}
-            <StreakCalendar currentStreak={streak} />
+
 
             {/* ────────────────────────────────────────────────────────────
                 LOGROS (ACHIEVEMENTS)

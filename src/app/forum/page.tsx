@@ -103,6 +103,7 @@ function EvidenceCard({
   const [sendingComment, setSendingComment] = useState(false)
   const [localComments, setLocalComments] = useState(post.comments)
   const [localReactions, setLocalReactions] = useState(post.reactions)
+  const [isValidating, setIsValidating] = useState(false)
 
   const myReaction = localReactions.find(r => r.userId === currentUserId)
 
@@ -187,10 +188,15 @@ function EvidenceCard({
           </span>
           {isTeacher && post.status !== "validated" && (
             <button
-              onClick={() => onValidate(post.id)}
-              style={{ fontSize: 11, fontWeight: 500, padding: "3px 10px", borderRadius: 8, background: "#ecfdf5", color: "#065f46", border: "1px solid rgba(16,185,129,0.4)", cursor: "pointer", }}
+              onClick={async () => {
+                setIsValidating(true)
+                await onValidate(post.id)
+                setIsValidating(false)
+              }}
+              disabled={isValidating}
+              style={{ fontSize: 11, fontWeight: 500, padding: "3px 10px", borderRadius: 8, background: "#ecfdf5", color: "#065f46", border: "1px solid rgba(16,185,129,0.4)", cursor: isValidating ? "wait" : "pointer", opacity: isValidating ? 0.7 : 1 }}
             >
-              Validar
+              {isValidating ? "Validando..." : "Validar"}
             </button>
           )}
         </div>
