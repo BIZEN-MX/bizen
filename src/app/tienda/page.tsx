@@ -1367,7 +1367,7 @@ export default function TiendaPage() {
                                             <Target size={20} />
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 15 }}>Reto Diario Completado</div>
+                                            <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 15 }}>Misión del día Completado</div>
                                             <div style={{ fontSize: 13, color: "#94a3b8" }}>Ayer, 06:15 PM</div>
                                         </div>
                                     </div>

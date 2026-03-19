@@ -36,7 +36,7 @@ const TOPIC_COLORS: Record<string, { accent: string; light: string; shadow: stri
   "emprendimiento": { accent: "#7c3aed", light: "#f5f3ff", shadow: "rgba(124,58,237,0.15)" },
   "proyectos": { accent: "#4f46e5", light: "#eef2ff", shadow: "rgba(79,70,229,0.15)" },
   "negocios": { accent: "#0284c7", light: "#f0f9ff", shadow: "rgba(2,132,199,0.15)" },
-  "reto-del-dia": { accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.15)" },
+  "mision-del-dia": { accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.15)" },
   "preguntas": { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" },
 }
 const DEFAULT_TC = { accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.15)" }

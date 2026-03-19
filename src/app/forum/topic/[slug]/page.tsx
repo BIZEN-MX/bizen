@@ -53,7 +53,7 @@ const TOPIC_COLORS: Record<string, { gradient: string; accent: string; light: st
   "proyectos": { gradient: "linear-gradient(135deg, #7c3aed, #4f46e5)", accent: "#4f46e5", light: "#eef2ff", shadow: "rgba(124,58,237,0.18)" },
   "negocios": { gradient: "linear-gradient(135deg, #0ea5e9, #0284c7)", accent: "#0284c7", light: "#f0f9ff", shadow: "rgba(14,165,233,0.18)" },
   "finanzas": { gradient: "linear-gradient(135deg, #0f172a, #1e3a8a)", accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.18)" },
-  "reto-del-dia": { gradient: "linear-gradient(135deg, #0f172a, #1e1b4b)", accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.18)" },
+  "mision-del-dia": { gradient: "linear-gradient(135deg, #0f172a, #1e1b4b)", accent: "#fbbf24", light: "#fffbeb", shadow: "rgba(251,191,36,0.18)" },
   "preguntas": { gradient: "linear-gradient(135deg, #0f172a, #1e3a8a)", accent: "#1e3a8a", light: "#eff6ff", shadow: "rgba(30,58,138,0.18)" },
 }
 

@@ -51,7 +51,7 @@ interface DailyChallenge {
   id: string; title: string; description: string; challengeType: string
 }
 
-type Tab = 'reto-del-dia' | 'preguntas' | 'proyectos'
+type Tab = 'mision-del-dia' | 'preguntas' | 'proyectos'
 
 // ── Reaction config ─────────────────────────────────────────────────────────
 const REACTIONS = [
@@ -72,7 +72,7 @@ const TOPIC_COLORS: Record<string, { accent: string; light: string; shadow: stri
   "proyectos": { accent: "#6366F1", light: "#eef2ff", shadow: "rgba(99,102,241,0.15)", gradient: "linear-gradient(135deg, #6366F1, #4F46E5)" },
   "negocios": { accent: "#0EA5E9", light: "#f0f9ff", shadow: "rgba(14,165,233,0.15)", gradient: "linear-gradient(135deg, #0EA5E9, #0284C7)" },
   "finanzas": { accent: "#1E293B", light: "#f8fafc", shadow: "rgba(30,41,59,0.15)", gradient: "linear-gradient(135deg, #334155, #1E293B)" },
-  "reto-del-dia": { accent: "#F59E0B", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)", gradient: "linear-gradient(135deg, #F59E0B, #D97706)" },
+  "mision-del-dia": { accent: "#F59E0B", light: "#fffbeb", shadow: "rgba(245,158,11,0.15)", gradient: "linear-gradient(135deg, #F59E0B, #D97706)" },
   "preguntas": { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)", gradient: "linear-gradient(135deg, #0F62FE, #2563EB)" },
 }
 const DEFAULT_TOPIC = { accent: "#0F62FE", light: "#eff6ff", shadow: "rgba(15,98,254,0.15)", gradient: "linear-gradient(135deg, #0F62FE, #2563EB)" }
@@ -313,10 +313,10 @@ function ForumContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const initialTab = (searchParams.get("tab") as Tab) || "reto-del-dia"
+  const initialTab = (searchParams.get("tab") as Tab) || "mision-del-dia"
   const [activeTab, setActiveTab] = useState<Tab>(initialTab)
 
-  // Reto del día state
+  // Misión del día state
   const [todayChallenge, setTodayChallenge] = useState<DailyChallenge | null>(null)
   const [evidencePosts, setEvidencePosts] = useState<EvidencePost[]>([])
   const [loadingEvidence, setLoadingEvidence] = useState(true)
@@ -345,7 +345,7 @@ function ForumContent() {
     if (loading || !user) return
     fetchUserRole()
     fetchUserStats()
-    if (activeTab === "reto-del-dia") {
+    if (activeTab === "mision-del-dia") {
       fetchTodayChallenge()
     } else {
       fetchForumData()
@@ -459,8 +459,8 @@ function ForumContent() {
   }
 
   const showFullLoader = loading || (user && !dbProfile) ||
-    (activeTab === "reto-del-dia" && loadingEvidence && evidencePosts.length === 0) ||
-    (activeTab !== "reto-del-dia" && loadingData && threads.length === 0)
+    (activeTab === "mision-del-dia" && loadingEvidence && evidencePosts.length === 0) ||
+    (activeTab !== "mision-del-dia" && loadingData && threads.length === 0)
 
   if (showFullLoader) return <PageLoader />
   if (!user) return null
@@ -548,8 +548,8 @@ function ForumContent() {
             {/* ── Tab Selector Row ── */}
             <div style={{ display: "flex", gap: 10, marginBottom: 32, overflowX: "auto", paddingBottom: 6, flexWrap: "nowrap", alignItems: "center" }}>
               <div style={{ display: "flex", gap: 8 }}>
-                <button className={`forum-tab-btn ${activeTab === "reto-del-dia" ? "active" : "inactive"}`} onClick={() => setActiveTab("reto-del-dia")}>
-                  <Target size={15} /> Reto del día
+                <button className={`forum-tab-btn ${activeTab === "mision-del-dia" ? "active" : "inactive"}`} onClick={() => setActiveTab("mision-del-dia")}>
+                  <Target size={15} /> Misión del día
                 </button>
                 <button className={`forum-tab-btn ${activeTab === "preguntas" ? "active" : "inactive"}`} onClick={() => setActiveTab("preguntas")}>
                   <MessageCircle size={15} /> Preguntas rápidas
@@ -585,7 +585,7 @@ function ForumContent() {
             {/* ════════════════════════════════════════════
                 TAB 1 — RETO DEL DÍA
             ════════════════════════════════════════════ */}
-            {activeTab === "reto-del-dia" && (
+            {activeTab === "mision-del-dia" && (
               <div>
                 {/* Today's challenge banner */}
                 {todayChallenge && (
@@ -608,7 +608,7 @@ function ForumContent() {
                       <h2 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 600, color: "white", margin: "0 0 10px", letterSpacing: "-0.02em" }}>{todayChallenge.title}</h2>
                       <p style={{ fontSize: "clamp(14px, 1.2vw, 15px)", color: "rgba(255,255,255,0.7)", margin: 0, lineHeight: 1.6, maxWidth: 540 }}>{todayChallenge.description}</p>
                     </div>
-                    <Link href="/reto-diario" style={{
+                    <Link href="/mision-del-dia" style={{
                       position: "relative", zIndex: 1,
                       display: "flex", alignItems: "center", gap: 10, padding: "14px 28px",
                       background: "white", color: "#0f172a",
@@ -684,7 +684,7 @@ function ForumContent() {
                     <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
                       Completa el reto de hoy y comparte tu aprendizaje con tu grupo.
                     </p>
-                    <Link href="/reto-diario" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "white", color: "#0f172a", borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 14, boxShadow: "0 4px 14px rgba(0,0,0,0.15)" }}>
+                    <Link href="/mision-del-dia" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "white", color: "#0f172a", borderRadius: 12, fontWeight: 500, textDecoration: "none", fontSize: 14, boxShadow: "0 4px 14px rgba(0,0,0,0.15)" }}>
                       <Target size={16} /> Hacer el reto de hoy
                     </Link>
                   </div>

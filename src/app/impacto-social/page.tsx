@@ -944,7 +944,7 @@ export default function ImpactoSocialPage() {
                                                 </button>
                                                 <button
                                                     className="cta-action-btn"
-                                                    onClick={() => router.push("/reto-diario")}
+                                                    onClick={() => router.push("/mision-del-dia")}
                                                 >
                                                     <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
                                                         <Zap size={16} /> Haz el reto de hoy

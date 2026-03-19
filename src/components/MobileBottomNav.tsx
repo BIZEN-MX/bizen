@@ -67,10 +67,10 @@ export default function MobileBottomNav() {
       protected: false
     },
     {
-      id: 'reto-diario',
-      label: 'Reto diario',
+      id: 'mision-del-dia',
+      label: 'Misión del día',
       icon: Target,
-      path: '/reto-diario',
+      path: '/mision-del-dia',
       protected: false
     },
     {

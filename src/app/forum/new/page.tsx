@@ -39,7 +39,7 @@ const TOPIC_ACCENT: Record<string, string> = {
   "emprendimiento": "#7c3aed",
   "proyectos": "#4f46e5",
   "negocios": "#0284c7",
-  "reto-del-dia": "#fbbf24",
+  "mision-del-dia": "#fbbf24",
   "preguntas": "#1e3a8a",
 }
 function topicColor(slug: string) {
@@ -450,7 +450,7 @@ export default function NewThreadPage() {
               <div style={{ fontSize: 12, fontWeight: 500, color: "#0f172a", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 14 }}>Ver antes de publicar</div>
               {[
                 { label: "Explorar temas", href: "/forum", icon: <FileText size={14} /> },
-                { label: "Reto del día", href: "/forum/topic/reto-del-dia", icon: <Zap size={14} /> },
+                { label: "Misión del día", href: "/forum/topic/mision-del-dia", icon: <Zap size={14} /> },
               ].map((link, i) => (
                 <Link key={i} href={link.href} style={{ textDecoration: "none" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, background: "#FBFAF5", marginBottom: i === 0 ? 8 : 0, transition: "all 0.2s", cursor: "pointer" }}

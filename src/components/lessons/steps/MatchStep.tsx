@@ -20,9 +20,9 @@ const PAIR_COLORS = [
   { bg: "#EFF6FF", border: "#3B82F6", text: "#1D4ED8", shadow: "#93C5FD", line: "#3B82F6", Icon: Star },
   { bg: "#FAF5FF", border: "#8B5CF6", text: "#6D28D9", shadow: "#C4B5FD", line: "#8B5CF6", Icon: Zap },
   { bg: "#FFF7ED", border: "#F97316", text: "#C2410C", shadow: "#FED7AA", line: "#F97316", Icon: Target },
-  { bg: "#ECFDF5", border: "#10B981", text: "#065F46", shadow: "#A7F3D0", line: "#10B981", Icon: Sparkles },
+  { bg: "#F0F9FF", border: "#0EA5E9", text: "#0369A1", shadow: "#BAE6FD", line: "#0EA5E9", Icon: Sparkles }, // Cyan instead of Green
   { bg: "#FFF1F2", border: "#F43F5E", text: "#BE123C", shadow: "#FCA5A5", line: "#F43F5E", Icon: Heart },
-  { bg: "#F0FDFA", border: "#0D9488", text: "#0F766E", shadow: "#99F6E4", line: "#0D9488", Icon: Brain },
+  { bg: "#F8FAFC", border: "#64748B", text: "#334155", shadow: "#CBD5E1", line: "#64748B", Icon: Brain }, // Slate instead of Teal
   { bg: "#FEFCE8", border: "#CA8A04", text: "#A16207", shadow: "#FEF08A", line: "#CA8A04", Icon: Shield },
   { bg: "#FDF4FF", border: "#A21CAF", text: "#86198F", shadow: "#F5D0FE", line: "#A21CAF", Icon: Award },
 ]
@@ -71,7 +71,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         y1: leftRect.top + leftRect.height / 2 - container.top,
         x2: rightRect.left - container.left,
         y2: rightRect.top + rightRect.height / 2 - container.top,
-        color: showFeedback ? (isCorrect ? "#10B981" : "#EF4444") : color,
+        color: showFeedback ? (isCorrect ? "#3B82F6" : "#EF4444") : color,
         pairIndex,
         isCorrect,
       }
@@ -156,11 +156,11 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         minHeight: DEFAULT_ITEM_HEIGHT,
         height: "auto",
         borderRadius: 16,
-        background: isCorrect ? "#ECFDF5" : "#FEF2F2",
-        border: `2px solid ${isCorrect ? "#10B981" : "#EF4444"}`,
-        boxShadow: `0 3px 0 0 ${isCorrect ? "#A7F3D0" : "#FCA5A5"}`,
+        background: isCorrect ? "#EFF6FF" : "#FEF2F2",
+        border: `2px solid ${isCorrect ? "#3B82F6" : "#EF4444"}`,
+        boxShadow: `0 3px 0 0 ${isCorrect ? "#93C5FD" : "#FCA5A5"}`,
         cursor: "default",
-        color: isCorrect ? "#065F46" : "#DC2626",
+        color: isCorrect ? "#1D4ED8" : "#DC2626",
         fontWeight: 500,
         fontSize: "clamp(12px, 3.2vw, 15px)",
         display: "flex",
@@ -246,11 +246,11 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         minHeight: DEFAULT_ITEM_HEIGHT,
         height: "auto",
         borderRadius: 16,
-        background: isCorrect ? "#ECFDF5" : "#FEF2F2",
-        border: `2px solid ${isCorrect ? "#10B981" : "#EF4444"}`,
-        boxShadow: `0 3px 0 0 ${isCorrect ? "#A7F3D0" : "#FCA5A5"}`,
+        background: isCorrect ? "#EFF6FF" : "#FEF2F2",
+        border: `2px solid ${isCorrect ? "#3B82F6" : "#EF4444"}`,
+        boxShadow: `0 3px 0 0 ${isCorrect ? "#93C5FD" : "#FCA5A5"}`,
         cursor: "default",
-        color: isCorrect ? "#065F46" : "#DC2626",
+        color: isCorrect ? "#1D4ED8" : "#DC2626",
         fontWeight: 500,
         fontSize: "clamp(12px, 3.2vw, 15px)",
         display: "flex",
@@ -290,11 +290,11 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
       minHeight: DEFAULT_ITEM_HEIGHT,
       height: "auto",
       borderRadius: 16,
-      background: isHighlighted ? "#F0FDF4" : "#FFFFFF",
-      border: `2px solid ${isHighlighted ? "#10B981" : "#E5E7EB"}`,
-      boxShadow: `0 3px 0 0 ${isHighlighted ? "#A7F3D0" : "#E5E7EB"}`,
+      background: isHighlighted ? "#F5F3FF" : "#FFFFFF",
+      border: `2px solid ${isHighlighted ? "#8B5CF6" : "#E5E7EB"}`,
+      boxShadow: `0 3px 0 0 ${isHighlighted ? "#C4B5FD" : "#E5E7EB"}`,
       cursor: canClick ? "pointer" : "default",
-      color: isHighlighted ? "#065F46" : "#374151",
+      color: isHighlighted ? "#6D28D9" : "#374151",
       fontWeight: 500,
       fontSize: 15,
       display: "flex",
@@ -492,7 +492,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
                       height: 24,
                       borderRadius: 8,
                       background: showFeedback
-                        ? (step.correctPairs.some(p => p.rightId === item.id && matches.find(m => m.rightId === item.id)?.leftId === p.leftId) ? "#10B98120" : "#EF444420")
+                        ? (step.correctPairs.some(p => p.rightId === item.id && matches.find(m => m.rightId === item.id)?.leftId === p.leftId) ? "#3B82F620" : "#EF444420")
                         : `${matchColors.border}15`,
                       display: "flex",
                       alignItems: "center",
@@ -503,7 +503,7 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
                       <matchColors.Icon
                         size={14}
                         color={showFeedback
-                          ? (step.correctPairs.some(p => p.rightId === item.id && matches.find(m => m.rightId === item.id)?.leftId === p.leftId) ? "#059669" : "#DC2626")
+                          ? (step.correctPairs.some(p => p.rightId === item.id && matches.find(m => m.rightId === item.id)?.leftId === p.leftId) ? "#2563EB" : "#DC2626")
                           : matchColors.border
                         }
                         strokeWidth={3}

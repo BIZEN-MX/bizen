@@ -687,7 +687,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Reto Diario Interactivo */}
+          {/* Misión del día Interactivo */}
           <DailyChallengeWidget />
         </div>
 

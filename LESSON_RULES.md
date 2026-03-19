@@ -25,3 +25,7 @@ Para asegurar una experiencia de aprendizaje consistente y emocionante, todas la
 - **Feedback visual**: El ícono de correcto/incorrecto se muestra a un costado de las tarjetas, nunca encima de ellas para no obstruir el contenido.
 - **Pantalla de resultados**: Al terminar, se listan todos los gastos/ítems con su clasificación correcta vs. la elegida, con colores azul (correcto) y rojo (incorrecto).
 
+## 🧩 Ejercicios de Relación (MatchStep)
+- **Colores de Interacción**: No utilizar el color **Verde** (`#10B981`, `#ECFDF5`) para las parejas de conceptos ni para el resaltado de selección. Esto evita confusión con el estado global de "Correcto".
+- **Feedback de Acierto**: Para indicar que una pareja es correcta tras la validación, utilizar el color **Azul** (`#3B82F6`) y variantes claras.
+- **Paleta de Parejas**: Utilizar colores vibrantes como Cyan, Púrpura, Naranja, Rosa y Slate, evitando siempre el verde y el verde-azulado (teal).

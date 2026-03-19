@@ -220,7 +220,7 @@ export default function FixedSidebar() {
   const stackAlignment = isCompactSidebar ? "center" : "stretch"
   const dashboardActive = isActivePath("/dashboard")
   const coursesActive = isActivePath("/courses")
-  const retoDiarioActive = isActivePath("/reto-diario")
+  const retoDiarioActive = isActivePath("/mision-del-dia")
   const simuladorActive = isActivePath("/cash-flow")
   const forumActive = isActivePath("/forum")
 
@@ -617,8 +617,8 @@ export default function FixedSidebar() {
                   </button>
 
                   <button
-                    data-tour-id="/reto-diario"
-                    onClick={() => navigateTo("/reto-diario")}
+                    data-tour-id="/mision-del-dia"
+                    onClick={() => navigateTo("/mision-del-dia")}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -668,7 +668,7 @@ export default function FixedSidebar() {
                       }} />
                     )}
                     <Target size={iconSize} strokeWidth={retoDiarioActive ? 2.5 : 2} />
-                    <span className="nav-item-label">Reto diario</span>
+                    <span className="nav-item-label">Misión del día</span>
                   </button>
 
 
