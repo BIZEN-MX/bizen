@@ -417,15 +417,79 @@ export default function ImpactoSocialPage() {
                         max-width: 100% !important;
                         margin-left: 0 !important;
                         margin-right: 0 !important;
+                        padding: 0 !important;
+                    }
+                    .impacto-tabs-container {
                         padding: 0 16px !important;
                     }
                     .tab-nav {
                         gap: 20px !important;
                         padding: 0 16px !important;
+                        margin-top: 24px !important;
+                        margin-bottom: 24px !important;
                     }
                     .tab-btn {
                         font-size: 14px !important;
                         padding: 10px 0 !important;
+                    }
+                    
+                    /* Shrink hero circle on small mobile */
+                    .hero-circle-container {
+                        width: 240px !important;
+                        height: 240px !important;
+                    }
+                    .hero-circle-svg {
+                        width: 220px !important;
+                        height: 220px !important;
+                    }
+                    .hero-circle-text {
+                        font-size: 40px !important;
+                    }
+                    
+                    /* Compact cards on mobile */
+                    .impact-equivalence-card {
+                        padding: 16px !important;
+                        border-radius: 16px !important;
+                    }
+                    .impact-equivalence-card div:nth-child(2) {
+                        font-size: 32px !important;
+                    }
+                    
+                    .transp-hero-layout {
+                        gap: 16px !important;
+                    }
+                    
+                    .school-kpi-card {
+                        padding: 16px !important;
+                        border-radius: 14px !important;
+                    }
+                    .school-kpi-card div:nth-child(2) {
+                        font-size: 32px !important;
+                    }
+                    
+                    .target-card {
+                        padding: 16px !important;
+                        border-radius: 16px !important;
+                    }
+                    
+                    .report-card {
+                        padding: 12px 16px !important;
+                        border-radius: 14px !important;
+                    }
+                    
+                    .faq-item summary {
+                        padding: 14px 16px !important;
+                        font-size: 14px !important;
+                    }
+                    
+                    .faq-body {
+                        padding: 12px 16px !important;
+                        font-size: 13px !important;
+                    }
+                    
+                    .impact-equivalence-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 10px !important;
                     }
                 }
                 /* Desktop/Tablet - account for left sidebar */
@@ -509,7 +573,7 @@ export default function ImpactoSocialPage() {
                     borderRadius: "0"
                 }}>
                     {/* Expand to 1600px */}
-                    <div style={{ width: "100%", maxWidth: "1600px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 64px)", boxSizing: "border-box", position: "relative", zIndex: 1 }}>
+                    <div style={{ width: "100%", maxWidth: "1600px", margin: "0 auto", padding: "0 clamp(16px, 5vw, 64px)", boxSizing: "border-box", position: "relative", zIndex: 1 }}>
 
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
                             <div style={{ flex: "1 1 500px" }}>
@@ -558,9 +622,9 @@ export default function ImpactoSocialPage() {
                             </div>
 
                             {/* Two-layer progress circle or bar placeholder */}
-                            <div className="impact-entrance impact-delay-3" style={{ flex: "0 0 auto", display: "flex", justifyContent: "center" }}>
+                            <div className="impact-entrance impact-delay-3 hero-circle-container" style={{ flex: "0 0 auto", display: "flex", justifyContent: "center" }}>
                                 <div style={{
-                                    width: 380, height: 380,
+                                    width: "100%", height: "100%",
                                     background: "rgba(255,255,255,0.04)",
                                     borderRadius: "50%",
                                     boxShadow: "0 0 100px rgba(15,98,254,0.35), inset 0 0 60px rgba(15,98,254,0.1)",
@@ -568,7 +632,7 @@ export default function ImpactoSocialPage() {
                                     position: "relative",
                                     border: "1px solid rgba(255,255,255,0.08)"
                                 }}>
-                                    <svg width="340" height="340" viewBox="0 0 220 220" style={{ position: "absolute" }}>
+                                    <svg width="340" height="340" viewBox="0 0 220 220" className="hero-circle-svg" style={{ position: "absolute" }}>
                                         <circle cx="110" cy="110" r="100" stroke="rgba(255,255,255,0.06)" strokeWidth="16" fill="transparent" />
                                         <circle
                                             cx="110" cy="110" r="100"
@@ -585,7 +649,7 @@ export default function ImpactoSocialPage() {
                                         />
                                     </svg>
                                     <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-                                        <div style={{ fontSize: 64, fontWeight: 500, color: "#fff", marginBottom: 4, letterSpacing: "-0.04em" }}>62%</div>
+                                        <div className="hero-circle-text" style={{ fontSize: 64, fontWeight: 500, color: "#fff", marginBottom: 4, letterSpacing: "-0.04em" }}>62%</div>
                                         <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.15em" }}>Meta de impacto</div>
                                     </div>
                                 </div>
@@ -603,7 +667,7 @@ export default function ImpactoSocialPage() {
                     width: "100%",
                     maxWidth: "1600px",
                     margin: "0 auto",
-                    padding: "0 clamp(24px, 6vw, 64px)",
+                    padding: "0 clamp(16px, 5vw, 64px)",
                     boxSizing: "border-box"
                 }}>
                     <div className="tab-nav" style={{
@@ -691,8 +755,8 @@ export default function ImpactoSocialPage() {
                                 }
                                 .student-stat-card {
                                     background: #fff;
-                                    border-radius: 24px;
-                                    padding: clamp(24px, 3vw, 32px);
+                                    border-radius: 20px;
+                                    padding: 20px;
                                     border: 1px solid rgba(0,0,0,0.04);
                                     box-shadow: 0 16px 32px -8px rgba(15,98,254,0.1), 0 4px 12px rgba(0,0,0,0.03);
                                     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -700,6 +764,17 @@ export default function ImpactoSocialPage() {
                                     position: relative;
                                     overflow: hidden;
                                 }
+                                
+                                @media (max-width: 640px) {
+                                    .student-stat-card {
+                                        padding: 16px;
+                                        border-radius: 16px;
+                                    }
+                                    .student-stat-card div:nth-child(2) {
+                                        font-size: 40px !important;
+                                    }
+                                }
+                                
                                 .student-stat-card::before {
                                     content: '';
                                     position: absolute;
@@ -760,7 +835,8 @@ export default function ImpactoSocialPage() {
                                 }
                                 @media (max-width: 480px) {
                                     .student-grid {
-                                        grid-template-columns: 1fr;
+                                        grid-template-columns: repeat(2, 1fr);
+                                        gap: 12px;
                                     }
                                 }
                                 .student-main-layout {
@@ -869,14 +945,14 @@ export default function ImpactoSocialPage() {
                                     <h3 style={{ margin: 0, fontSize: 16, fontWeight: 500, color: "#0f172a" }}>Tu aporte en el mundo real</h3>
                                     <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>estimado acumulado</span>
                                 </div>
-                                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14 }}>
+                                <div className="impact-equivalence-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(185px, 1fr))", gap: 14 }}>
                                     {[
                                         { icon: <ShoppingBasket size={28} color="#0F62FE" />, value: equivalenceFood, label: "Canastas alimentarias", desc: "financiadas virtualmente", barColor: "#0F62FE", barPct: 90, bg: "#eff6ff" },
                                         { icon: <BookOpen size={28} color="#3b82f6" />, value: equivalenceBooks, label: "Libros de texto", desc: "para estudiantes", barColor: "#3b82f6", barPct: 65, bg: "#eff6ff" },
                                         { icon: <TreeDeciduous size={28} color="#60a5fa" />, value: equivalenceTrees, label: "Árboles plantados", desc: "meta virtual", barColor: "#60a5fa", barPct: 45, bg: "#eff6ff" },
                                         { icon: <Clock size={28} color="#93c5fd" />, value: `${equivalenceTutoring} h`, label: "De tutoría", desc: "equivalente en tiempo", barColor: "#93c5fd", barPct: 30, bg: "#eff6ff" },
                                     ].map((eq, i) => (
-                                        <div key={i} style={{
+                                        <div key={i} className="impact-equivalence-card" style={{
                                             background: "#fff", border: "1px solid rgba(0,0,0,0.04)",
                                             borderRadius: 24, padding: "24px",
                                             textAlign: "center",
