@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { BarChart2, FileText, CheckCircle2, XCircle, Loader2 } from "lucide-react"
 
 type ModuleBreakdown = {
   moduleId: number
@@ -82,10 +83,12 @@ export default function OverallResultsAdmin() {
         justifyContent: "center",
         background: "#f8fafc" 
       }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 24, marginBottom: 12 }}>⏳</div>
-          <div>Cargando resultados generales...</div>
+      <div style={{ textAlign: "center", color: "#64748b" }}>
+        <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>
+          <Loader2 size={40} className="animate-spin" />
         </div>
+        <div>Cargando resultados generales...</div>
+      </div>
       </div>
     )
   }
@@ -100,26 +103,35 @@ export default function OverallResultsAdmin() {
         background: "#f8fafc" 
       }}>
         <div style={{ textAlign: "center", color: "#dc2626" }}>
-          <div style={{ fontSize: 24, marginBottom: 12 }}>❌</div>
-          <div>Error: {error}</div>
+      <div style={{ textAlign: "center", color: "#dc2626" }}>
+        <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>
+          <XCircle size={40} />
+        </div>
+        <div>Error: {error}</div>
+      </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div style={{ 
+    <div className="admin-page-root" style={{ 
       minHeight: "100vh", 
       background: "#f8fafc",
-      padding: "40px 20px"
+      fontFamily: 'inherit'
     }}>
-      <div style={{ maxWidth: 1600, margin: "0 auto" }}>
+      <style>{`
+        .admin-page-root { padding-left: 280px !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
+      `}</style>
+      <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1600, margin: "0 auto", boxSizing: "border-box" }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 500 }}>
-                📊 Resultados Generales - Todos los Módulos
+              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 500, display: "flex", alignItems: "center", gap: 12 }}>
+                <BarChart2 size={32} color="#0F62FE" /> Resultados Generales - Todos los Módulos
               </h1>
               <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
                 Vista general del desempeño de todos los estudiantes
@@ -193,7 +205,9 @@ export default function OverallResultsAdmin() {
         {/* Results Table */}
         {results.length === 0 ? (
           <div style={{ textAlign: "center", padding: 60, background: "#fff", borderRadius: 12 }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
+            <div style={{ marginBottom: 16, display: "flex", justifyContent: "center", color: "#64748b" }}>
+              <FileText size={48} />
+            </div>
             <div style={{ fontSize: 18, color: "#64748b" }}>No hay resultados disponibles</div>
           </div>
         ) : (
@@ -301,8 +315,8 @@ export default function OverallResultsAdmin() {
                             </div>
                           )}
                           {module.totalQuestions === 0 && module.completed && (
-                            <div style={{ fontSize: 12, color: "#16a34a" }}>
-                              ✅ Completado
+                            <div style={{ fontSize: 12, color: "#16a34a", display: "flex", alignItems: "center", gap: 4 }}>
+                              <CheckCircle2 size={14} /> Completado
                             </div>
                           )}
                           {module.totalQuestions === 0 && !module.completed && (

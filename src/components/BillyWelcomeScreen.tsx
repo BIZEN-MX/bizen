@@ -24,7 +24,7 @@ export default function BillyWelcomeScreen({
   userName,
   isReturningUser = false,
   redirectTo,
-  autoCloseAfter = 5000,
+  autoCloseAfter = 7000,
   titleMessage,
   description,
 }: BillyWelcomeScreenProps) {

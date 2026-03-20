@@ -20,7 +20,7 @@ interface BillyCelebrationProps {
 export default function BillyCelebration({
   message = "¡Bien hecho, Dragón!",
   onClose,
-  autoCloseAfter = 3000,
+  autoCloseAfter = 7000,
   accentColor = "#10B981", // Default green
   showCloseButton = true,
   playSound = false,

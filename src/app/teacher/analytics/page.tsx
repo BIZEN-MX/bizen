@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Card from "../../../components/ui/card"
 import PageLoader from "@/components/PageLoader"
+import { BarChart2, BookOpen, CheckCircle2, Clock } from "lucide-react"
 
 interface AnalyticsData {
   totalStudents: number
@@ -131,23 +132,29 @@ export default function TeacherAnalyticsPage() {
   if (!user || !analytics) return null
 
   return (
-    <main style={{
-      maxWidth: 1200,
-      margin: "0 auto",
-      padding: "clamp(20px, 4vw, 40px)",
+    <div className="admin-page-root" style={{ 
+      minHeight: "100vh", 
+      background: "#f8fafc",
+      fontFamily: 'inherit'
     }}>
+      <style>{`
+        .admin-page-root { padding-left: 280px !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
+      `}</style>
+      <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1200, margin: "0 auto", boxSizing: "border-box" }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{
           margin: 0,
           fontSize: "clamp(28px, 6vw, 36px)",
           fontWeight: 500,
-          background: "linear-gradient(135deg, #0F62FE 0%, #10B981 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text"
+          color: "#0F62FE",
+          display: "flex",
+          alignItems: "center",
+          gap: 12
         }}>
-          📊 Análisis y Desempeño
+          <BarChart2 size={36} /> Análisis y Desempeño
         </h1>
         <p style={{ margin: "8px 0 0", color: "#666", fontSize: "clamp(14px, 3vw, 16px)" }}>
           Monitorea el progreso de tus estudiantes
@@ -181,8 +188,8 @@ export default function TeacherAnalyticsPage() {
 
       {/* Course Performance */}
       <Card style={{ marginBottom: 32, padding: "28px 24px" }}>
-        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500 }}>
-          📚 Desempeño por Curso
+        <h2 style={{ margin: "0 0 20px", fontSize: 22, fontWeight: 500, display: "flex", alignItems: "center", gap: 10 }}>
+          <BookOpen size={24} color="#0F62FE" /> Desempeño por Curso
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           {analytics.courseStats.map(course => (
@@ -240,8 +247,8 @@ export default function TeacherAnalyticsPage() {
       }}>
         {/* Recent Quiz Results */}
         <Card style={{ padding: "28px 24px" }}>
-          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 500 }}>
-            ✅ Resultados Recientes de Quizzes
+          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 500, display: "flex", alignItems: "center", gap: 10 }}>
+            <CheckCircle2 size={24} color="#10B981" /> Resultados Recientes de Quizzes
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {analytics.recentQuizzes.map(quiz => (
@@ -289,8 +296,8 @@ export default function TeacherAnalyticsPage() {
 
         {/* Pending Grading */}
         <Card style={{ padding: "28px 24px" }}>
-          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 500 }}>
-            ⏳ Pendientes de Calificar ({analytics.pendingGrading.length})
+          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 500, display: "flex", alignItems: "center", gap: 10 }}>
+            <Clock size={24} color="#F59E0B" /> Pendientes de Calificar ({analytics.pendingGrading.length})
           </h2>
           {analytics.pendingGrading.length > 0 ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -335,7 +342,9 @@ export default function TeacherAnalyticsPage() {
             </div>
           ) : (
             <div style={{ textAlign: "center", padding: "40px 20px", color: "#666" }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>✓</div>
+              <div style={{ marginBottom: 12, display: "flex", justifyContent: "center", color: "#10B981" }}>
+                <CheckCircle2 size={48} />
+              </div>
               <p style={{ margin: 0, fontSize: 14 }}>
                 No hay asignaciones pendientes
               </p>
@@ -343,7 +352,8 @@ export default function TeacherAnalyticsPage() {
           )}
         </Card>
       </div>
-    </main>
+      </div>
+    </div>
   )
 }
 

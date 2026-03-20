@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { BarChart2, Trash2, XCircle, Loader2, CheckCircle2 } from "lucide-react"
 
 type QuizResult = {
   id: number
@@ -93,14 +94,14 @@ export default function QuizResultsAdmin() {
       const data = await response.json()
 
       if (response.ok) {
-        alert(`✅ Datos de ${userEmail} eliminados correctamente`)
+        alert(`Datos de ${userEmail} eliminados correctamente`)
         // Refresh the results
         fetchResults()
       } else {
-        alert(`❌ Error: ${data.error}`)
+        alert(`Error: ${data.error}`)
       }
     } catch (err) {
-      alert(`❌ Error al eliminar: ${err}`)
+      alert(`Error al eliminar: ${err}`)
     } finally {
       setDeletingUserId(null)
     }
@@ -116,8 +117,12 @@ export default function QuizResultsAdmin() {
         background: "#f8fafc" 
       }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 24, marginBottom: 12 }}>⏳</div>
-          <div>Cargando resultados...</div>
+      <div style={{ textAlign: "center", color: "#64748b" }}>
+        <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>
+          <Loader2 size={40} className="animate-spin" />
+        </div>
+        <div>Cargando resultados...</div>
+      </div>
         </div>
       </div>
     )
@@ -133,26 +138,35 @@ export default function QuizResultsAdmin() {
         background: "#f8fafc" 
       }}>
         <div style={{ textAlign: "center", color: "#dc2626" }}>
-          <div style={{ fontSize: 24, marginBottom: 12 }}>❌</div>
-          <div>Error: {error}</div>
+      <div style={{ textAlign: "center", color: "#dc2626" }}>
+        <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>
+          <XCircle size={40} />
+        </div>
+        <div>Error: {error}</div>
+      </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div style={{ 
+    <div className="admin-page-root" style={{ 
       minHeight: "100vh", 
       background: "#f8fafc",
-      padding: "40px 20px"
+      fontFamily: 'inherit'
     }}>
-      <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+      <style>{`
+        .admin-page-root { padding-left: 280px !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
+      `}</style>
+      <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1400, margin: "0 auto", boxSizing: "border-box" }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 500 }}>
-                📊 Resultados del Quiz Diagnóstico
+              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 500, display: "flex", alignItems: "center", gap: 12 }}>
+                <BarChart2 size={32} color="#0F62FE" /> Resultados del Quiz Diagnóstico
               </h1>
               <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
                 Total de estudiantes: {results.length}
@@ -337,6 +351,10 @@ export default function QuizResultsAdmin() {
                               cursor: deletingUserId === result.userId ? "not-allowed" : "pointer",
                               transition: "background 0.2s",
                               opacity: deletingUserId === result.userId ? 0.6 : 1,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              margin: "0 auto"
                             }}
                             onMouseEnter={(e) => {
                               if (deletingUserId !== result.userId) {
@@ -349,7 +367,8 @@ export default function QuizResultsAdmin() {
                               }
                             }}
                           >
-                            {deletingUserId === result.userId ? "Eliminando..." : "🗑️ Eliminar"}
+                            <Trash2 size={14} />
+                            {deletingUserId === result.userId ? "Eliminando..." : "Eliminar"}
                           </button>
                         </td>
                       </tr>
@@ -375,8 +394,8 @@ export default function QuizResultsAdmin() {
                                             borderLeft: `4px solid ${answer.isCorrect ? "#16a34a" : "#dc2626"}`
                                           }}
                                         >
-                                          <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
-                                            Pregunta {answer.qid} - {answer.isCorrect ? "✓ Correcta" : "✗ Incorrecta"}
+                                          <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                                            Pregunta {answer.qid} - {answer.isCorrect ? "Correcta" : "Incorrecta"}
                                           </div>
                                         </div>
                                       ))}

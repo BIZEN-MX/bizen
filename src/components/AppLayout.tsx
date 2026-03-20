@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { UnauthScreen } from "@/components/UnauthScreen";
 import PageLoader from "@/components/PageLoader";
+import GlobalDailyMissionButton from "@/components/GlobalDailyMissionButton";
 
 // Pages that are publicly accessible (no auth required)
 const PUBLIC_PATHS = [
@@ -48,6 +49,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="app-shell">
+      <GlobalDailyMissionButton />
       <div className="app-scroll">
         <main className="app-main">
           {children}

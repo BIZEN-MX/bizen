@@ -8,7 +8,7 @@ import { StickyFooterButton, StickyFooter } from "./StickyFooter"
 import { LessonExitModal } from "./LessonExitModal"
 import { LessonProgressHeader } from "./LessonProgressHeader"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X, CONTENT_PADDING_Y } from "./layoutConstants"
-import { Zap } from "lucide-react"
+import { Zap, Book, ChevronRight, X } from "lucide-react"
 import {
   InfoStep,
   MCQStep,
@@ -32,6 +32,7 @@ import { haptic } from "@/utils/hapticFeedback"
 import { playCorrectSound, playIncorrectSound, playFlipSound, initAudioContext } from "./lessonSounds"
 import { SmartText } from "./SmartText"
 import { motion, AnimatePresence } from "framer-motion"
+import { GlossaryProvider } from "@/contexts/GlossaryContext"
 
 interface LessonEngineProps {
   lessonSteps: LessonStep[]
@@ -100,8 +101,43 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   // ── Billy Insight Splash ─────────────────────────────────────────────────
   const [showBillyInsightSplash, setShowBillyInsightSplash] = useState(false)
   const [billyInsightText, setBillyInsightText] = useState("")
-  const [billyInsightDuration, setBillyInsightDuration] = useState(8000)
+  const [billyInsightDuration, setBillyInsightDuration] = useState(7000)
   const billyInsightShownFor = useRef<string | null>(null)
+  
+  // ── Lesson Glossary ──────────────────────────────────────────────────────
+  const [isGlossaryOpen, setIsGlossaryOpen] = useState(false)
+  const [lessonGlossary, setLessonGlossary] = useState<{ word: string, definition: string }[]>([])
+
+  // Collect terms from all steps on mount/init
+  useEffect(() => {
+    if (!lessonSteps.length) return
+    const termsMap: Record<string, string> = {}
+    
+    lessonSteps.forEach(step => {
+      // 1. Extract from titles of info steps
+      if (step.stepType === 'info' && step.title && step.title.length < 40) {
+        // If it's a short title, it's likely a concept
+        // We can use the description or body as a snippet of definition
+        const bodySnippet = (step.body || "").split('\n')[0].replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, "$1").slice(0, 100)
+        if (bodySnippet) termsMap[step.title] = bodySnippet
+      }
+
+      // 2. Extract [[word|definition]] from body/clue/insight
+      const sources = [step.body, (step as any).aiInsight, (step as any).clue, (step as any).description]
+      const re = /\[\[([^\]|]+)\|([^\]]+)\]\]/g
+      
+      sources.forEach(src => {
+        if (!src) return
+        let match
+        while ((match = re.exec(src)) !== null) {
+          termsMap[match[1]] = match[2]
+        }
+      })
+    })
+
+    const termsArray = Object.entries(termsMap).map(([word, definition]) => ({ word, definition }))
+    setLessonGlossary(termsArray.sort((a,b) => a.word.localeCompare(b.word)))
+  }, [lessonSteps])
 
   // ── Billy Empático (Feature 2) ───────────────────────────────────────────
   const [showBillyEmpathy, setShowBillyEmpathy] = useState(false)
@@ -206,8 +242,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       setBillyInsightText(insight)
 
       // Calculate dynamic duration: min 8s, max 10s. Reading speed approx 3.5 words/sec.
-      const wordCount = insight.split(/\s+/).length
-      const calculatedDuration = Math.max(8000, Math.min(10000, 2000 + (wordCount / 3.5) * 1000))
+      const calculatedDuration = 7000
       
       setBillyInsightDuration(calculatedDuration)
       setShowBillyInsightSplash(true)
@@ -799,7 +834,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   if (shouldPassFullScreenProps) {
     return (
-      <div
+      <GlossaryProvider terms={lessonGlossary}>
+        <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -824,6 +860,11 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 onToggleAudio={getTTSContent(currentStep) ? toggleAudio : undefined}
                 isAudioPlaying={isAudioPlaying}
                 isAudioLoading={isAudioLoading}
+                hasGlossary={lessonGlossary.length > 0}
+                onOpenGlossary={() => {
+                  haptic.light()
+                  setIsGlossaryOpen(true)
+                }}
               />
             </div>
           </div>
@@ -1213,11 +1254,162 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
         {renderFooter(true)}
       </div>
-    )
-  }
+
+      {/* ── Lesson Glossary Overlay ── */}
+      <AnimatePresence>
+        {isGlossaryOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 1100,
+              background: "rgba(15, 23, 42, 0.4)",
+              backdropFilter: "blur(4px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 16,
+            }}
+            onClick={() => setIsGlossaryOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 30, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: "100%",
+                maxWidth: 500,
+                maxHeight: "85vh",
+                background: "#FFFFFF",
+                borderRadius: 28,
+                boxShadow: "0 25px 60px -12px rgba(0,0,0,0.25)",
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                border: "1px solid rgba(15, 98, 254, 0.1)",
+              }}
+            >
+              {/* Header */}
+              <div style={{
+                padding: "24px 28px",
+                borderBottom: "1px solid #F1F5F9",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                background: "linear-gradient(to bottom, #FFFFFF, #F8FAFC)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{ 
+                    padding: 10, 
+                    background: "rgba(15, 98, 254, 0.08)", 
+                    borderRadius: 14, 
+                    color: "#0F62FE",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 2px 8px rgba(15, 98, 254, 0.1)",
+                  }}>
+                    <Book size={22} strokeWidth={2.5} />
+                  </div>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: 19, fontWeight: 800, color: "#1E293B", letterSpacing: "-0.01em" }}>Glosario de la Lección</h3>
+                    <p style={{ margin: "2px 0 0", fontSize: 12, color: "#64748B", fontWeight: 500 }}>{lessonGlossary.length} términos encontrados</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setIsGlossaryOpen(false)}
+                  style={{ 
+                    border: "none", 
+                    background: "#F1F5F9", 
+                    padding: 8, 
+                    borderRadius: "50%", 
+                    cursor: "pointer", 
+                    color: "#64748B",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "#E2E8F0")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "#F1F5F9")}
+                >
+                  <X size={20} strokeWidth={2.5} />
+                </button>
+              </div>
+
+              {/* List */}
+              <div style={{ 
+                flex: 1, 
+                overflowY: "auto", 
+                padding: "16px 28px 32px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 16,
+              }}>
+                {lessonGlossary.map((term, i) => (
+                  <motion.div
+                    key={term.word}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    style={{
+                      padding: "18px 20px",
+                      background: "#F8FAFC",
+                      borderRadius: 20,
+                      border: "1px solid #F1F5F9",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                       <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#0F62FE" }} />
+                       <div style={{ fontWeight: 800, color: "#0F62FE", fontSize: 16, letterSpacing: "-0.01em" }}>
+                        {term.word}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, fontWeight: 500 }}>
+                      {term.definition}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Footer */}
+              <div style={{ padding: "24px 28px", background: "#FFFFFF", borderTop: "1px solid #F1F5F9" }}>
+                <button
+                  onClick={() => setIsGlossaryOpen(false)}
+                  style={{
+                    width: "100%",
+                    padding: "16px",
+                    background: "linear-gradient(135deg, #0F62FE 0%, #3B82F6 100%)",
+                    color: "white",
+                    borderRadius: 16,
+                    border: "none",
+                    fontWeight: 700,
+                    fontSize: 15,
+                    cursor: "pointer",
+                    boxShadow: "0 10px 20px -5px rgba(15, 98, 254, 0.4)",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+                >
+                  Continuar Aprendiendo
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <BlitzSplashOverlay />
+      <BillyInsightSplashOverlay />
+      </GlossaryProvider>
+  )
+}
 
   return (
-    <LessonScreen
+    <GlossaryProvider terms={lessonGlossary}>
+      <LessonScreen
       currentStep={state.currentStepIndex + 1}
       totalSteps={state.allSteps.length}
       streak={streak}
@@ -1227,5 +1419,6 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     >
       {renderStep()}
     </LessonScreen>
+    </GlossaryProvider>
   )
 }

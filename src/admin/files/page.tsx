@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { Folder, Info, User, Mail, AlertCircle, FileText, Download, Trash2 } from 'lucide-react';
 
 interface FileUpload {
   id: string;
@@ -109,11 +110,21 @@ export default function AdminFilesPage() {
     );
   }
 
-        return (
-        <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+  return (
+    <div className="admin-page-root" style={{ 
+      minHeight: "100vh", 
+      background: "#f8fafc",
+      fontFamily: 'inherit'
+    }}>
+      <style>{`
+        .admin-page-root { padding-left: 280px !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
+      `}</style>
+      <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1200, margin: "0 auto", boxSizing: "border-box" }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-            <h1 style={{ margin: 0, color: '#0F62FE' }}>
-              📁 Archivos Subidos - Módulo 6
+            <h1 style={{ margin: 0, color: '#0F62FE', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Folder size={32} /> Archivos Subidos - Módulo 6
             </h1>
             <button
               onClick={() => window.location.href = '/modules/menu'}
@@ -148,7 +159,7 @@ export default function AdminFilesPage() {
       {files.some(f => f.userName === 'Usuario Migrado' || f.userId === 'unknown') && (
         <div style={{ marginBottom: '20px', padding: '15px', background: '#fef3c7', borderRadius: '8px', border: '1px solid #f59e0b' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '18px' }}>ℹ️</span>
+            <Info size={18} color="#92400e" />
             <strong style={{ color: '#92400e' }}>Archivos antiguos detectados</strong>
           </div>
           <p style={{ margin: 0, fontSize: '14px', color: '#78350f' }}>
@@ -182,7 +193,7 @@ export default function AdminFilesPage() {
                   </h3>
                   <div style={{ margin: '5px 0', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <span style={{ fontSize: '12px', color: '#666' }}>👤</span>
+                                              <User size={14} color="#666" />
                       <span style={{ 
                         fontSize: '14px', 
                         color: file.userName === 'Usuario Migrado' ? '#999' : '#333', 
@@ -193,7 +204,7 @@ export default function AdminFilesPage() {
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <span style={{ fontSize: '12px', color: '#666' }}>📧</span>
+                                              <Mail size={14} color="#666" />
                       <span style={{ 
                         fontSize: '14px', 
                         color: file.userEmail === 'migrado@sistema.com' ? '#999' : '#666',
@@ -211,7 +222,7 @@ export default function AdminFilesPage() {
                         borderRadius: '4px',
                         fontWeight: 500
                       }}>
-                        ⚠️ Archivo antiguo
+                        <AlertCircle size={11} style={{ marginRight: 4 }} /> Archivo antiguo
                       </span>
                     )}
                   </div>
@@ -242,8 +253,10 @@ export default function AdminFilesPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    display: 'inline-block',
-                    padding: '8px 16px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 16px',
                     background: '#0F62FE',
                     color: 'white',
                     textDecoration: 'none',
@@ -261,15 +274,17 @@ export default function AdminFilesPage() {
                     e.currentTarget.style.transform = 'translateY(0)'
                   }}
                 >
-                  📄 Ver Archivo
+                  <FileText size={16} /> Ver Archivo
                 </a>
                 
                 <a
                   href={file.path}
                   download={file.originalName}
                   style={{
-                    display: 'inline-block',
-                    padding: '8px 16px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 16px',
                     background: '#10B981',
                     color: 'white',
                     textDecoration: 'none',
@@ -287,14 +302,16 @@ export default function AdminFilesPage() {
                     e.currentTarget.style.transform = 'translateY(0)'
                   }}
                 >
-                  💾 Descargar
+                  <Download size={16} /> Descargar
                 </a>
                 
                 <button
                   onClick={() => deleteFile(file.id, file.originalName)}
                   style={{
-                    display: 'inline-block',
-                    padding: '8px 16px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 16px',
                     background: '#EF4444',
                     color: 'white',
                     border: 'none',
@@ -313,13 +330,14 @@ export default function AdminFilesPage() {
                     e.currentTarget.style.transform = 'translateY(0)'
                   }}
                 >
-                  🗑️ Eliminar
+                  <Trash2 size={16} /> Eliminar
                 </button>
               </div>
             </div>
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

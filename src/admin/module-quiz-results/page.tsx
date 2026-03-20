@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { BarChart2, Trash2, XCircle, Loader2, CheckCircle2, BookOpen, FileText } from "lucide-react"
 import Link from "next/link"
 
 type QuizAnswer = {
@@ -110,14 +111,14 @@ export default function ModuleQuizResultsAdmin() {
       const data = await response.json()
 
       if (response.ok) {
-        alert(`✅ Datos de ${userEmail} eliminados correctamente`)
+        alert(`Datos de ${userEmail} eliminados correctamente`)
         // Refresh the results
         fetchResults()
       } else {
-        alert(`❌ Error: ${data.error}`)
+        alert(`Error: ${data.error}`)
       }
     } catch (err) {
-      alert(`❌ Error al eliminar: ${err}`)
+      alert(`Error al eliminar: ${err}`)
     } finally {
       setDeletingUserId(null)
     }
@@ -149,8 +150,12 @@ export default function ModuleQuizResultsAdmin() {
         background: "#f8fafc" 
       }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 24, marginBottom: 12 }}>⏳</div>
-          <div>Cargando resultados...</div>
+      <div style={{ textAlign: "center", color: "#64748b" }}>
+        <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>
+          <Loader2 size={40} className="animate-spin" />
+        </div>
+        <div>Cargando resultados...</div>
+      </div>
         </div>
       </div>
     )
@@ -166,26 +171,35 @@ export default function ModuleQuizResultsAdmin() {
         background: "#f8fafc" 
       }}>
         <div style={{ textAlign: "center", color: "#dc2626" }}>
-          <div style={{ fontSize: 24, marginBottom: 12 }}>❌</div>
-          <div>Error: {error}</div>
+      <div style={{ textAlign: "center", color: "#dc2626" }}>
+        <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>
+          <XCircle size={40} />
+        </div>
+        <div>Error: {error}</div>
+      </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div style={{ 
+    <div className="admin-page-root" style={{ 
       minHeight: "100vh", 
       background: "#f8fafc",
-      padding: "40px 20px"
+      fontFamily: 'inherit'
     }}>
-      <div style={{ maxWidth: 1600, margin: "0 auto" }}>
+      <style>{`
+        .admin-page-root { padding-left: 280px !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
+      `}</style>
+      <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1600, margin: "0 auto", boxSizing: "border-box" }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 12 }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 500 }}>
-                📚 Resultados de Quizzes por Módulo
+              <h1 style={{ margin: 0, fontSize: 32, fontWeight: 500, display: "flex", alignItems: "center", gap: 12 }}>
+                <BookOpen size={32} color="#0F62FE" /> Resultados de Quizzes por Módulo
               </h1>
               <p style={{ margin: "8px 0 0 0", fontSize: 16, color: "#64748b" }}>
                 Total de intentos: {filteredResults.length} {filterModule !== "all" || filterSection !== "all" || filterUser !== "all" ? `(filtrados de ${results.length})` : ""}
@@ -208,7 +222,7 @@ export default function ModuleQuizResultsAdmin() {
                 onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
                 onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
               >
-                📊 Quiz Diagnóstico
+                <BarChart2 size={18} style={{ marginRight: 8, display: "inline-block" }} /> Quiz Diagnóstico
               </Link>
               <button
                 onClick={() => router.push("/modules/menu")}
@@ -476,7 +490,7 @@ export default function ModuleQuizResultsAdmin() {
                             onMouseEnter={(e) => e.currentTarget.style.background = "#e2e8f0"}
                             onMouseLeave={(e) => e.currentTarget.style.background = "#f1f5f9"}
                           >
-                            {expandedRow === result.id ? "Ocultar ▲" : "Ver ▼"}
+                            {expandedRow === result.id ? "Ocultar" : "Ver"}
                           </button>
                         </td>
                         <td style={{ padding: "16px", textAlign: "center" }}>
@@ -494,6 +508,9 @@ export default function ModuleQuizResultsAdmin() {
                               cursor: deletingUserId === result.userId ? "not-allowed" : "pointer",
                               transition: "background 0.2s",
                               opacity: deletingUserId === result.userId ? 0.6 : 1,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center"
                             }}
                             onMouseEnter={(e) => {
                               if (deletingUserId !== result.userId) {
@@ -506,7 +523,7 @@ export default function ModuleQuizResultsAdmin() {
                               }
                             }}
                           >
-                            {deletingUserId === result.userId ? "Eliminando..." : "🗑️"}
+                            {deletingUserId === result.userId ? "..." : <Trash2 size={14} />}
                           </button>
                         </td>
                       </tr>
@@ -528,8 +545,8 @@ export default function ModuleQuizResultsAdmin() {
                                       borderLeft: `4px solid ${answer.isCorrect ? "#16a34a" : "#dc2626"}`
                                     }}
                                   >
-                                    <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
-                                      Pregunta {answer.questionIndex + 1} - {answer.isCorrect ? "✓ Correcta" : "✗ Incorrecta"}
+                                    <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                                      Pregunta {answer.questionIndex + 1} - {answer.isCorrect ? "Correcta" : "Incorrecta"}
                                     </div>
                                     <div style={{ fontSize: 13, color: "#64748b", marginBottom: 6 }}>
                                       {answer.questionText}

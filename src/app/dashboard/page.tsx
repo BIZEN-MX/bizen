@@ -242,6 +242,7 @@ function XPRing({ pct, level }: { pct: number; level: number }) {
 export default function DashboardPage() {
   const { user, loading, dbProfile } = useAuth()
   const router = useRouter()
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
 
   const [stats,            setStats]            = useState<Stats | null>(null)
   const [topics,           setTopics]           = useState<Topic[]>([])
@@ -279,6 +280,13 @@ export default function DashboardPage() {
   useEffect(() => {
     if (loading) return
     if (!user)   { router.replace("/login"); return }
+
+    // Redirigir administradores y profesores
+    if (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher") {
+      router.replace("/teacher/dashboard")
+      return
+    }
+
     const go = async () => {
       setLoadingData(true)
       try {
@@ -436,136 +444,165 @@ export default function DashboardPage() {
         {/* ══════════════════════════════════════════════════════════
             HERO
         ══════════════════════════════════════════════════════════ */}
+        {/* HERO */}
         <div className="dc" style={{
-          background:"linear-gradient(135deg,#0a0f2e 0%,#0d2a6b 45%,#1a56db 100%)",
-          borderRadius:32, padding:"clamp(36px,5vw,56px) clamp(32px,5vw,52px)",
-          marginBottom:24, position:"relative", overflow:"hidden",
-          boxShadow:"0 24px 64px rgba(13,42,107,.35), inset 0 1px 0 rgba(255,255,255,.08)",
-          animationDelay:"0s",
+          background: isAdminOrTeacher ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0F62FE 100%)" : "linear-gradient(135deg,#0a0f2e 0%,#0d2a6b 45%,#1a56db 100%)",
+          borderRadius: 32, padding: "clamp(36px,5vw,56px) clamp(32px,5vw,52px)",
+          marginBottom: 24, position: "relative", overflow: "hidden",
+          boxShadow: "0 24px 64px rgba(13,42,107,.35), inset 0 1px 0 rgba(255,255,255,.08)",
+          animationDelay: "0s",
         }}>
           {/* mesh-style orbs inside hero */}
-          <div style={{position:"absolute",top:"-40%",right:"-8%",width:360,height:360,background:"radial-gradient(circle,rgba(96,165,250,.22) 0%,transparent 70%)",borderRadius:"50%",pointerEvents:"none"}}/>
-          <div style={{position:"absolute",bottom:"-30%",left:"5%",width:300,height:300,background:"radial-gradient(circle,rgba(167,139,250,.18) 0%,transparent 70%)",borderRadius:"50%",pointerEvents:"none"}}/>
-          <div style={{position:"absolute",top:"20%",left:"40%",width:240,height:240,background:"radial-gradient(circle,rgba(244,114,182,.12) 0%,transparent 70%)",borderRadius:"50%",pointerEvents:"none"}}/>
+          <div style={{ position: "absolute", top: "-40%", right: "-8%", width: 360, height: 360, background: "radial-gradient(circle,rgba(96,165,250,.22) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "-30%", left: "5%", width: 300, height: 300, background: "radial-gradient(circle,rgba(167,139,250,.18) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
 
-          <div style={{position:"relative",zIndex:1,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:28}}>
+          <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 28 }}>
             {/* left */}
-            <div style={{flex:"1 1 300px"}}>
+            <div style={{ flex: "1 1 300px" }}>
               {/* badge */}
-              <div style={{display:"inline-flex",alignItems:"center",gap:7,background:"rgba(255,255,255,.10)",border:"1px solid rgba(255,255,255,.15)",borderRadius:999,padding:"5px 14px",marginBottom:18}}>
-                <IcoShield size={12} color="#93c5fd" strokeWidth={2.5}/>
-                <span style={{fontSize:11,fontWeight:700,color:"#93c5fd",letterSpacing:".07em",textTransform:"uppercase"}}>Tu espacio personal</span>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 999, padding: "5px 14px", marginBottom: 18 }}>
+                <IcoShield size={12} color="#93c5fd" strokeWidth={2.5} />
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", letterSpacing: ".07em", textTransform: "uppercase" }}>
+                  {isAdminOrTeacher ? "Panel de Gestión" : "Tu espacio personal"}
+                </span>
               </div>
 
               {/* greeting */}
-              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:10}}>
-                <div style={{width:52,height:52,borderRadius:16,background:"rgba(255,255,255,.10)",border:"1px solid rgba(255,255,255,.15)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                  <IcoWave size={30} color="#fff"/>
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 10 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 16, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <IcoWave size={30} color="#fff" />
                 </div>
-                <h1 style={{fontSize:"clamp(26px,4.5vw,44px)",fontWeight:800,color:"#fff",margin:0,lineHeight:1.1,letterSpacing:"-0.025em"}}>
-                  {getGreeting()}, <span style={{background:"linear-gradient(90deg,#93c5fd,#c4b5fd)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>{firstName}</span>
+                <h1 style={{ fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, color: "#fff", margin: 0, lineHeight: 1.1, letterSpacing: "-0.025em" }}>
+                  {getGreeting()}, <span style={{ background: "linear-gradient(90deg,#93c5fd,#c4b5fd)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{firstName}</span>
                 </h1>
               </div>
 
-              <p style={{fontSize:"clamp(13px,1.8vw,16px)",color:"rgba(255,255,255,.55)",margin:"0 0 28px",lineHeight:1.65}}>
-                {streak >= 7
-                  ? `Llevas ${streak} días de racha. Eres imparable.`
-                  : streak >= 1
-                    ? `Llevas ${streak} día${streak>1?"s":""} de racha. ¡Sigue así!`
-                    : "Completa el reto de hoy y comienza tu racha."}
+              <p style={{ fontSize: "clamp(13px,1.8vw,16px)", color: "rgba(255,255,255,.55)", margin: "0 0 28px", lineHeight: 1.65 }}>
+                {isAdminOrTeacher 
+                  ? "Gestiona tu institución, supervisa el progreso de tus alumnos y configura tus cursos desde aquí."
+                  : (streak >= 7
+                      ? `Llevas ${streak} días de racha. Eres imparable.`
+                      : streak >= 1
+                        ? `Llevas ${streak} día${streak > 1 ? "s" : ""} de racha. ¡Sigue así!`
+                        : "Completa el reto de hoy y comienza tu racha.")
+                }
               </p>
 
-              {/* mini stats row inside hero */}
-              <div className="hero-stats-pills" style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-                {[
-                  { icon:<Flame size={14} style={{color:"#fb923c"}}/>, label:`${streak} días`, sub:"Racha", bg:"rgba(251,146,60,.15)", border:"rgba(251,146,60,.25)" },
-                  { icon:<IcoZap size={14} color="#fbbf24"/>,   label:`${(stats?.xpInCurrentLevel??0).toLocaleString()} XP`, sub:"Nivel Actual", bg:"rgba(251,191,36,.12)", border:"rgba(251,191,36,.25)" },
-                  { icon:<IcoCoin size={14} color="#34d399"/>,  label:`${bizcoins.toLocaleString()} BC`, sub:"Bizcoins", bg:"rgba(52,211,153,.12)", border:"rgba(52,211,153,.25)" },
-                ].map(m => (
-                  <div key={m.sub} style={{display:"flex",alignItems:"center",gap:9,background:m.bg,border:`1px solid ${m.border}`,borderRadius:12,padding:"9px 14px"}}>
-                    {m.icon}
-                    <div>
-                      <div style={{fontSize:13,fontWeight:800,color:"#fff",lineHeight:1.2}}>{m.label}</div>
-                      <div style={{fontSize:10,fontWeight:600,color:"rgba(255,255,255,.5)",textTransform:"uppercase",letterSpacing:".08em",marginTop:2}}>{m.sub}</div>
+              {isAdminOrTeacher && (
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <button onClick={() => router.push("/admin/escuela")} style={{
+                    padding: "12px 24px", background: "#fff", borderRadius: 12,
+                    color: "#0f172a", fontWeight: 700, border: "none", cursor: "pointer",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)", transition: "all 0.2s"
+                  }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
+                    Panel Escolar
+                  </button>
+                  <button onClick={() => router.push("/admin/cursos")} style={{
+                    padding: "12px 24px", background: "rgba(255,255,255,0.1)", borderRadius: 12,
+                    color: "#fff", fontWeight: 700, border: "1px solid rgba(255,255,255,0.3)", cursor: "pointer",
+                    transition: "all 0.2s"
+                  }} onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"} onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}>
+                    Gestionar Cursos
+                  </button>
+                </div>
+              )}
+
+              {!isAdminOrTeacher && (
+                <div className="hero-stats-pills" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  {[
+                    { icon: <Flame size={14} style={{ color: "#fb923c" }} />, label: `${streak} días`, sub: "Racha", bg: "rgba(251,146,60,.15)", border: "rgba(251,146,60,.25)" },
+                    { icon: <IcoZap size={14} color="#fbbf24" />, label: `${(stats?.xpInCurrentLevel ?? 0).toLocaleString()} XP`, sub: "Nivel Actual", bg: "rgba(251,191,36,.12)", border: "rgba(251,191,36,.25)" },
+                    { icon: <IcoCoin size={14} color="#34d399" />, label: `${bizcoins.toLocaleString()} BC`, sub: "Bizcoins", bg: "rgba(52,211,153,.12)", border: "rgba(52,211,153,.25)" },
+                  ].map(m => (
+                    <div key={m.sub} style={{ display: "flex", alignItems: "center", gap: 9, background: m.bg, border: `1px solid ${m.border}`, borderRadius: 12, padding: "9px 14px" }}>
+                      {m.icon}
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{m.label}</div>
+                        <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".08em", marginTop: 2 }}>{m.sub}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* right: XP ring */}
-            <div className="hero-xp-ring" style={{flex:"0 0 auto",display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
-              <div style={{animation:"fl 4s ease-in-out infinite"}}>
-                <XPRing pct={xpPct} level={level}/>
-              </div>
-              <div style={{textAlign:"center"}}>
-                <div style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.45)",textTransform:"uppercase",letterSpacing:".08em",lineHeight:1.5}}>
-                  {xpPct}% hacia nivel {level+1}
+            {/* right: XP ring (Student ONLY) */}
+            {!isAdminOrTeacher && (
+              <div className="hero-xp-ring" style={{ flex: "0 0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                <div style={{ animation: "fl 4s ease-in-out infinite" }}>
+                  <XPRing pct={xpPct} level={level} />
                 </div>
-                <div style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,.30)",marginTop:3}}>
-                  {stats?.xpToNextLevel??0} XP restantes
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.45)", textTransform: "uppercase", letterSpacing: ".08em", lineHeight: 1.5 }}>
+                    {xpPct}% hacia nivel {level + 1}
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.30)", marginTop: 3 }}>
+                    {stats?.xpToNextLevel ?? 0} XP restantes
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* STAT CARDS */}
-        <div className="stats-row" style={{display:"flex",gap:14,marginBottom:24,alignItems:"stretch"}}>
+        {/* STAT CARDS (Student ONLY) */}
+        {!isAdminOrTeacher && (
+        <div className="stats-row" style={{ display: "flex", gap: 14, marginBottom: 24, alignItems: "stretch" }}>
 
           {/* CARD 1 — Racha */}
           <div className="sc dc" style={{
-            animationDelay:".07s",
+            animationDelay: ".07s",
             background: streak > 0 ? "linear-gradient(145deg,#fffbeb,#fef3c7)" : "linear-gradient(145deg,#f8fafc,#f1f5f9)",
             border: streak > 0 ? "1px solid #fde68a" : "1px solid #e2e8f0",
-            display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-            textAlign:"center", minHeight:160,
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            textAlign: "center", minHeight: 160,
           }}>
-            <div className="sc-label" style={{color: streak > 0 ? "#b45309" : "#94a3b8", marginBottom:18}}>Racha Diaria</div>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-              <Flame size={34} style={{color: streak > 0 ? "#d97706" : "#94a3b8"}}/>
-              <div className="sc-num" style={{color: streak > 0 ? "#92400e" : "#cbd5e1"}}>{streak}</div>
+            <div className="sc-label" style={{ color: streak > 0 ? "#b45309" : "#94a3b8", marginBottom: 18 }}>Racha Diaria</div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+              <Flame size={34} style={{ color: streak > 0 ? "#d97706" : "#94a3b8" }} />
+              <div className="sc-num" style={{ color: streak > 0 ? "#92400e" : "#cbd5e1" }}>{streak}</div>
             </div>
-            <div style={{marginTop:10,fontSize:13,fontWeight:600,color: streak > 0 ? "#d97706" : "#94a3b8"}}>
+            <div style={{ marginTop: 10, fontSize: 13, fontWeight: 600, color: streak > 0 ? "#d97706" : "#94a3b8" }}>
               {streak === 0 ? "Sin racha activa" : streak >= 7 ? "Racha legendaria" : "¡No la rompas!"}
             </div>
           </div>
 
           {/* CARD 2 — Lecciones */}
           <div className="sc dc" style={{
-            animationDelay:".12s",
-            background:"#fff", border:"1px solid #e9eef8",
-            display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-            textAlign:"center", minHeight:160,
+            animationDelay: ".12s",
+            background: "#fff", border: "1px solid #e9eef8",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            textAlign: "center", minHeight: 160,
           }}>
-            <div className="sc-label" style={{color:"#94a3b8", marginBottom:18}}>Lecciones completadas</div>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:16}}>
-              <IcoBook size={32} color="#0F62FE"/>
-              <div className="sc-num" style={{color:"#0F62FE"}}>{lessons}</div>
+            <div className="sc-label" style={{ color: "#94a3b8", marginBottom: 18 }}>Lecciones completadas</div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 16 }}>
+              <IcoBook size={32} color="#0F62FE" />
+              <div className="sc-num" style={{ color: "#0F62FE" }}>{lessons}</div>
             </div>
-            <div style={{width:"100%",height:5,background:"#e0e9ff",borderRadius:10,overflow:"hidden"}}>
-              <div style={{width:`${lessonPct}%`,height:"100%",background:"linear-gradient(90deg,#93c5fd,#0F62FE)",borderRadius:10,transition:"width 1.4s cubic-bezier(.34,1.56,.64,1)"}}/>
+            <div style={{ width: "100%", height: 5, background: "#e0e9ff", borderRadius: 10, overflow: "hidden" }}>
+              <div style={{ width: `${lessonPct}%`, height: "100%", background: "linear-gradient(90deg,#93c5fd,#0F62FE)", borderRadius: 10, transition: "width 1.4s cubic-bezier(.34,1.56,.64,1)" }} />
             </div>
           </div>
 
           {/* CARD 3 — Bizcoins */}
           <div className="sc dc" style={{
-            animationDelay:".17s", cursor:"pointer",
-            background:"linear-gradient(145deg,#eff6ff,#dbeafe)", border:"1px solid #bfdbfe",
-            display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-            textAlign:"center", minHeight:160,
-          }} onClick={()=>router.push("/tienda")}>
-            <div className="sc-label" style={{color:"#1d4ed8", marginBottom:18}}>Bizcoins</div>
-            <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:6,marginBottom:10}}>
-              <div className="sc-num" style={{color:"#1e40af"}}>{bizcoins.toLocaleString()}</div>
-              <div style={{fontSize:15,fontWeight:600,color:"#3b82f6"}}>BC</div>
+            animationDelay: ".17s", cursor: "pointer",
+            background: "linear-gradient(145deg,#eff6ff,#dbeafe)", border: "1px solid #bfdbfe",
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            textAlign: "center", minHeight: 160,
+          }} onClick={() => router.push("/tienda")}>
+            <div className="sc-label" style={{ color: "#1d4ed8", marginBottom: 18 }}>Bizcoins</div>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6, marginBottom: 10 }}>
+              <div className="sc-num" style={{ color: "#1e40af" }}>{bizcoins.toLocaleString()}</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "#3b82f6" }}>BC</div>
             </div>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,fontSize:12,fontWeight:600,color:"#3b82f6"}}>
-              <IcoStore size={12} color="#3b82f6" strokeWidth={2}/>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 12, fontWeight: 600, color: "#3b82f6" }}>
+              <IcoStore size={12} color="#3b82f6" strokeWidth={2} />
               Ver tienda
             </div>
           </div>
         </div>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
             CONTINUE LEARNING

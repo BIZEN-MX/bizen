@@ -27,23 +27,29 @@ export default function MarkCompletePage() {
       const data = await response.json()
 
       if (response.ok) {
-        setResult(`✅ Success! Section ${sectionId} of Module ${moduleId} marked as complete. Found ${data.quizCount} completed quizzes.`)
+        setResult(`Success! Section ${sectionId} of Module ${moduleId} marked as complete. Found ${data.quizCount} completed quizzes.`)
       } else {
-        setResult(`❌ Error: ${data.error}`)
+        setResult(`Error: ${data.error}`)
       }
     } catch (error) {
-      setResult(`❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      setResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "#FFFFFF",
-      padding: 40,
-          }}>
+    <div className="admin-page-root" style={{ 
+      minHeight: "100vh", 
+      background: "#f8fafc",
+      fontFamily: 'inherit'
+    }}>
+      <style>{`
+        .admin-page-root { padding-left: 280px !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
+      `}</style>
+      <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1200, margin: "0 auto", boxSizing: "border-box" }}>
       <div style={{
         maxWidth: 600,
         margin: "0 auto",
@@ -121,8 +127,8 @@ export default function MarkCompletePage() {
             marginTop: 20,
             padding: 16,
             borderRadius: 8,
-            background: result.startsWith("✅") ? "#d4edda" : "#f8d7da",
-            color: result.startsWith("✅") ? "#155724" : "#721c24",
+            background: result.startsWith("Success") ? "#d4edda" : "#f8d7da",
+            color: result.startsWith("Success") ? "#155724" : "#721c24",
             fontSize: 14,
           }}>
             {result}
@@ -145,6 +151,7 @@ export default function MarkCompletePage() {
           >
             ← Back to Module 1 Sections
           </button>
+        </div>
         </div>
       </div>
     </div>

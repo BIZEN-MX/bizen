@@ -297,7 +297,7 @@ export default function FixedSidebar() {
           >
             <span style={{
               fontSize: 30,
-              fontWeight: 500,
+              fontWeight: 400,
               color: "#1e293b",
               letterSpacing: "-1px",
               lineHeight: 1,
@@ -331,7 +331,7 @@ export default function FixedSidebar() {
                         background: linear-gradient(135deg, rgba(15, 98, 254, 0.1) 0%, rgba(15, 98, 254, 0.05) 100%);
                         color: #0F62FE;
                         font-size: 10px;
-                        font-weight: 700;
+                        font-weight: 400;
                         letter-spacing: 0.05em;
                         text-transform: uppercase;
                         padding: 4px 12px;
@@ -355,7 +355,7 @@ export default function FixedSidebar() {
                         background: #F1F5F9;
                         color: #64748B;
                         font-size: 10px;
-                        font-weight: 700;
+                        font-weight: 400;
                         letter-spacing: 0.05em;
                         text-transform: uppercase;
                         padding: 4px 12px;
@@ -396,7 +396,7 @@ export default function FixedSidebar() {
                         background: linear-gradient(135deg, rgba(15, 98, 254, 0.08) 0%, rgba(15, 98, 254, 0.03) 100%);
                         color: #0F62FE;
                         font-size: 10px;
-                        font-weight: 700;
+                        font-weight: 400;
                         letter-spacing: 0.05em;
                         text-transform: uppercase;
                         padding: 4px 12px;
@@ -452,7 +452,7 @@ export default function FixedSidebar() {
                   cursor: "pointer",
                   transition: "all 0.3s ease",
                   fontSize: 15,
-                  fontWeight: 500,
+                  fontWeight: 400,
                   color: "white",
                   boxShadow: "0 4px 20px rgba(11, 113, 254, 0.5), 0 0 30px rgba(11, 113, 254, 0.3)",
                   display: "flex",
@@ -507,47 +507,47 @@ export default function FixedSidebar() {
           {/* Quick Actions */}
           {mounted && (
             <div style={{ marginBottom: 24, flex: "1 1 auto" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 26, alignItems: stackAlignment }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: stackAlignment }}>
                 {/* ── INICIO / Dashboard ── */}
                 {user && (
                     <button
-                        onClick={() => navigateTo("/dashboard")}
+                        onClick={() => navigateTo(isAdminOrTeacher ? "/teacher/dashboard" : "/dashboard")}
                         style={{
                             display: "flex",
                             alignItems: "center",
                             gap: 12,
-                            padding: "14px 16px",
-                            background: isCompactSidebar ? "transparent" : (pathname === "/dashboard" ? "rgba(11, 113, 254, 0.12)" : "transparent"),
+                            padding: "12px 14px",
+                            background: isCompactSidebar ? "transparent" : ((pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) ? "rgba(11, 113, 254, 0.12)" : "transparent"),
                             border: "none",
                             borderRadius: 10,
                             cursor: "pointer",
                             transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                             fontSize: 14,
-                            fontWeight: pathname === "/dashboard" ? 700 : 500,
+                            fontWeight: (pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) ? 500 : 400,
                             textAlign: "left",
-                            color: pathname === "/dashboard" ? "#0B71FE" : "#64748B",
-                            ...compactButtonOverrides(pathname === "/dashboard"),
+                            color: (pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) ? "#0B71FE" : "#64748B",
+                            ...compactButtonOverrides(pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")),
                             position: "relative",
                             overflow: "hidden",
-                            boxShadow: pathname === "/dashboard" ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
+                            boxShadow: (pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                         }}
                         onMouseEnter={(e) => {
                             if (!isCompactSidebar) {
-                                e.currentTarget.style.background = pathname === "/dashboard" ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
+                                e.currentTarget.style.background = (pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
                                 e.currentTarget.style.color = "#0B71FE"
                             }
                         }}
                         onMouseLeave={(e) => {
                             if (!isCompactSidebar) {
-                                e.currentTarget.style.background = pathname === "/dashboard" ? "rgba(11, 113, 254, 0.12)" : "transparent"
-                                e.currentTarget.style.color = pathname === "/dashboard" ? "#0B71FE" : "#64748B"
+                                e.currentTarget.style.background = (pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) ? "rgba(11, 113, 254, 0.12)" : "transparent"
+                                e.currentTarget.style.color = (pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) ? "#0B71FE" : "#64748B"
                             }
                         }}
                     >
-                        {pathname === "/dashboard" && (
+                        { (pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) && (
                             <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
                         )}
-                        <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={pathname === "/dashboard" ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                        <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={(pathname === "/dashboard" || (isAdminOrTeacher && pathname === "/teacher/dashboard")) ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                             <rect x="3" y="3" width="7" height="7" rx="1.5" />
                             <rect x="14" y="3" width="7" height="7" rx="1.5" />
                             <rect x="14" y="14" width="7" height="7" rx="1.5" />
@@ -565,14 +565,14 @@ export default function FixedSidebar() {
                             display: "flex",
                             alignItems: "center",
                             gap: 12,
-                            padding: "14px 16px",
+                            padding: "12px 14px",
                             background: isCompactSidebar ? "transparent" : (pathname.startsWith("/courses") ? "rgba(11, 113, 254, 0.12)" : "transparent"),
                             border: "none",
                             borderRadius: 10,
                             cursor: "pointer",
                             transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                             fontSize: 14,
-                            fontWeight: pathname.startsWith("/courses") ? 700 : 500,
+                            fontWeight: pathname.startsWith("/courses") ? 500 : 400,
                             textAlign: "left",
                             color: pathname.startsWith("/courses") ? "#0B71FE" : "#64748B",
                             ...compactButtonOverrides(pathname.startsWith("/courses")),
@@ -601,6 +601,8 @@ export default function FixedSidebar() {
                     </button>
                 )}
 
+
+
                 {/* ── SIMULADORES ── */}
                 {isStudentOrGuest && (
                     <button
@@ -609,14 +611,14 @@ export default function FixedSidebar() {
                             display: "flex",
                             alignItems: "center",
                             gap: 12,
-                            padding: "14px 16px",
+                            padding: "12px 14px",
                             background: isCompactSidebar ? "transparent" : (pathname.startsWith("/cash-flow") ? "rgba(11, 113, 254, 0.12)" : "transparent"),
                             border: "none",
                             borderRadius: 10,
                             cursor: "pointer",
                             transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                             fontSize: 14,
-                            fontWeight: pathname.startsWith("/cash-flow") ? 700 : 500,
+                            fontWeight: pathname.startsWith("/cash-flow") ? 500 : 400,
                             textAlign: "left",
                             color: pathname.startsWith("/cash-flow") ? "#0B71FE" : "#64748B",
                             ...compactButtonOverrides(pathname.startsWith("/cash-flow")),
@@ -666,7 +668,7 @@ export default function FixedSidebar() {
                             cursor: "pointer",
                             transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                             fontSize: 14,
-                            fontWeight: (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? 700 : 500,
+                            fontWeight: (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? 400 : 400,
                             textAlign: "left",
                             color: (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? "#0B71FE" : "#64748B",
                             ...compactButtonOverrides(pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")),
@@ -710,7 +712,7 @@ export default function FixedSidebar() {
                             cursor: "pointer",
                             transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                             fontSize: 14,
-                            fontWeight: tiendaActive ? 700 : 500,
+                            fontWeight: tiendaActive ? 400 : 400,
                             textAlign: "left",
                             color: tiendaActive ? "#d97706" : "#64748B",
                             ...compactButtonOverrides(tiendaActive),
@@ -747,14 +749,14 @@ export default function FixedSidebar() {
                             display: "flex",
                             alignItems: "center",
                             gap: 12,
-                            padding: "14px 16px",
+                            padding: "12px 14px",
                             background: isCompactSidebar ? "transparent" : (liveActive ? "rgba(251, 191, 36, 0.12)" : "transparent"),
                             border: "none",
                             borderRadius: 10,
                             cursor: "pointer",
                             transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                             fontSize: 14,
-                            fontWeight: liveActive ? 700 : 500,
+                            fontWeight: liveActive ? 500 : 400,
                             textAlign: "left",
                             color: liveActive ? "#fbbf24" : "#64748B",
                             ...compactButtonOverrides(liveActive),
@@ -785,23 +787,23 @@ export default function FixedSidebar() {
 
                 {/* ── FUNCIONES DE ADMINISTRADOR / MAESTRO ── */}
                 {isAdminOrTeacher && (
-                    <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                         <button
                             onClick={() => navigateTo("/teacher/dashboard")}
                             style={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 12,
-                                padding: "12px",
+                                padding: "12px 14px",
                                 background: isCompactSidebar ? "transparent" : (pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"),
                                 border: "none",
                                 borderRadius: 10,
                                 cursor: "pointer",
                                 transition: "all 0.2s ease",
                                 fontSize: 14,
-                                fontWeight: pathname === "/teacher/dashboard" ? 700 : 600,
+                                fontWeight: pathname === "/teacher/dashboard" ? 500 : 400,
                                 textAlign: "left",
-                                color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563",
+                                color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#64748B",
                                 ...compactButtonOverrides(pathname === "/teacher/dashboard")
                             }}
                             onMouseEnter={(e) => {
@@ -813,47 +815,12 @@ export default function FixedSidebar() {
                             onMouseLeave={(e) => {
                                 if (!isCompactSidebar) {
                                     e.currentTarget.style.background = pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"
-                                    e.currentTarget.style.color = pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563"
+                                    e.currentTarget.style.color = pathname === "/teacher/dashboard" ? "#0B71FE" : "#64748B"
                                 }
                             }}
                         >
                             <BarChart2 size={iconSize} strokeWidth={pathname === "/teacher/dashboard" ? 2.5 : 2} />
                             <span className="nav-item-label">Panel escolar</span>
-                        </button>
-
-                        <button
-                            onClick={() => navigateTo("/teacher/courses")}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 12,
-                                padding: "12px",
-                                background: isCompactSidebar ? "transparent" : (pathname === "/teacher/courses" ? "#eff6ff" : "transparent"),
-                                border: "none",
-                                borderRadius: 10,
-                                cursor: "pointer",
-                                transition: "all 0.2s ease",
-                                fontSize: 14,
-                                fontWeight: pathname === "/teacher/courses" ? 700 : 600,
-                                textAlign: "left",
-                                color: pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563",
-                                ...compactButtonOverrides(pathname === "/teacher/courses")
-                            }}
-                            onMouseEnter={(e) => {
-                                if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = "#f8fafc"
-                                    e.currentTarget.style.color = "#0B71FE"
-                                }
-                            }}
-                            onMouseLeave={(e) => {
-                                if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = pathname === "/teacher/courses" ? "#eff6ff" : "transparent"
-                                    e.currentTarget.style.color = pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563"
-                                }
-                            }}
-                        >
-                            <MapIcon size={iconSize} strokeWidth={pathname === "/teacher/courses" ? 2.5 : 2} />
-                            <span className="nav-item-label">Cursos escuela</span>
                         </button>
                     </div>
                 )}
@@ -866,17 +833,16 @@ export default function FixedSidebar() {
                             display: "flex",
                             alignItems: "center",
                             gap: 12,
-                            padding: "14px 16px",
+                            padding: "12px 14px",
                             background: isCompactSidebar ? "transparent" : (settingsActive ? "rgba(11, 113, 254, 0.12)" : "transparent"),
                             border: "none",
                             borderRadius: 10,
                             cursor: "pointer",
                             transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                             fontSize: 14,
-                            fontWeight: settingsActive ? 700 : 500,
+                            fontWeight: settingsActive ? 500 : 400,
                             textAlign: "left",
                             color: settingsActive ? "#0B71FE" : "#64748B",
-                            marginTop: "auto",
                             ...compactButtonOverrides(settingsActive),
                             position: "relative",
                             overflow: "hidden",
@@ -967,7 +933,7 @@ export default function FixedSidebar() {
                 <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                   <div style={{
                     fontSize: 18,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     color: "#0f172a",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
@@ -978,7 +944,7 @@ export default function FixedSidebar() {
                   </div>
                   <div style={{
                     fontSize: 12,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     color: "#0F62FE",
                     textTransform: "uppercase",
                     letterSpacing: "0.02em",
@@ -998,7 +964,7 @@ export default function FixedSidebar() {
                         border: "1.5px solid rgba(255,255,255,0.1)",
                         color: "#fff",
                         fontSize: 11,
-                        fontWeight: 700,
+                        fontWeight: 400,
                         letterSpacing: "0.05em"
                       }}>
                         <ShieldIcon size={12} fill="#fff" />
@@ -1016,12 +982,12 @@ export default function FixedSidebar() {
                           border: "1.5px solid #BAE6FD",
                           color: "#0369A1",
                           fontSize: 13,
-                          fontWeight: 500
+                          fontWeight: 400
                         }}>
                           <Star size={12} fill="#0369A1" />
                           {((dbProfile as any)?.bizcoins || 0).toLocaleString()}
                         </div>
-                        <span style={{ fontSize: 13, fontWeight: 500 }}>MI PERFIL</span>
+                        <span style={{ fontSize: 13, fontWeight: 400 }}>MI PERFIL</span>
                       </>
                     )}
                   </div>
@@ -1084,7 +1050,7 @@ export default function FixedSidebar() {
                     border: "none",
                     borderRadius: 12,
                     fontSize: 15,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     cursor: "pointer",
                     transition: "transform 0.2s ease",
                     boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
@@ -1104,7 +1070,7 @@ export default function FixedSidebar() {
                     border: "1px solid rgba(220, 38, 38, 0.3)",
                     borderRadius: 12,
                     fontSize: 15,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                   }}
@@ -1177,7 +1143,7 @@ export default function FixedSidebar() {
 
               <div style={{
                 fontSize: 26,
-                fontWeight: 500,
+                fontWeight: 400,
                 marginBottom: 16,
                 textAlign: "center",
                 background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
@@ -1215,7 +1181,7 @@ export default function FixedSidebar() {
                     border: "none",
                     borderRadius: 12,
                     fontSize: 16,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                     boxShadow: "0 4px 15px rgba(11, 113, 254, 0.4)",
@@ -1244,7 +1210,7 @@ export default function FixedSidebar() {
                     border: "2px solid #0B71FE",
                     borderRadius: 12,
                     fontSize: 16,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                   }}
@@ -1268,7 +1234,7 @@ export default function FixedSidebar() {
                     color: "#6B7280",
                     border: "none",
                     fontSize: 14,
-                    fontWeight: 500,
+                    fontWeight: 400,
                     cursor: "pointer",
                     transition: "color 0.2s ease",
                   }}
@@ -1289,13 +1255,11 @@ export default function FixedSidebar() {
         [data-fixed-sidebar] {
           background: #FBFAF5 !important;
         }
+        
         [data-fixed-sidebar] .nav-item-label,
         [data-fixed-sidebar] button span,
         [data-fixed-sidebar] button {
-          text-transform: uppercase !important;
-          letter-spacing: 0.5px;
-          font-weight: 500 !important;
-          color: #4b5563 !important;
+          letter-spacing: 0.1px;
         }
         
         /* Ensure Lucide SVG icons in nav buttons render correctly (size, no collapse, inherit color) */

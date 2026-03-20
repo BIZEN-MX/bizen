@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Trophy, FileText, Download, Mail, User, XCircle, Shield } from 'lucide-react';
 
 interface FinalTestResult {
   id: string;
@@ -99,19 +100,32 @@ export default function FinalTestResultsPage() {
           border: '1px solid #FECACA', 
           borderRadius: '8px',
           color: '#DC2626',
-          margin: '20px 0'
+          margin: '20px 0',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
         }}>
-          ❌ {error}
+          <XCircle size={20} /> {error}
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="admin-page-root" style={{ 
+      minHeight: "100vh", 
+      background: "#f8fafc",
+      fontFamily: 'inherit'
+    }}>
+      <style>{`
+        .admin-page-root { padding-left: 280px !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
+      `}</style>
+      <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1200, margin: "0 auto", boxSizing: "border-box" }}>
       <div style={{ marginBottom: '30px' }}>
-        <h1 style={{ marginBottom: '10px', color: '#0F62FE' }}>
-          🏆 Resultados del Examen Final
+        <h1 style={{ marginBottom: '10px', color: '#0F62FE', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Trophy size={32} /> Resultados del Examen Final
         </h1>
         <p style={{ color: '#666', fontSize: '16px' }}>
           Resultados de todos los estudiantes que completaron el examen final
@@ -136,7 +150,9 @@ export default function FinalTestResultsPage() {
 
       {results.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          <div style={{ fontSize: '48px', marginBottom: '20px' }}>📝</div>
+          <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
+            <FileText size={48} />
+          </div>
           <h3>No hay resultados aún</h3>
           <p>Los resultados aparecerán aquí cuando los estudiantes completen el examen final.</p>
         </div>
@@ -178,13 +194,13 @@ export default function FinalTestResultsPage() {
                     </h3>
                     <div style={{ margin: '8px 0', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '14px', color: '#666' }}>📧</span>
+                        <Mail size={14} color="#666" />
                         <span style={{ fontSize: '14px', color: '#666' }}>
                           {result.user_email || 'sin-email@ejemplo.com'}
                         </span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '14px', color: '#666' }}>🆔</span>
+                        <User size={14} color="#666" />
                         <span style={{ fontSize: '12px', color: '#999', }}>
                           {result.user_id.substring(0, 8)}...
                         </span>
@@ -273,43 +289,46 @@ export default function FinalTestResultsPage() {
 
                 {/* Actions */}
                 <div style={{ marginTop: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  <button
-                    onClick={() => {
-                      const answersText = JSON.stringify(result.answers, null, 2);
-                      const blob = new Blob([answersText], { type: 'application/json' });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `respuestas_${result.student_name || 'anonimo'}_${result.id}.json`;
-                      a.click();
-                      URL.revokeObjectURL(url);
-                    }}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#10B981',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#059669';
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = '#10B981';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    📄 Ver Respuestas
-                  </button>
+                    <button
+                      onClick={() => {
+                        const answersText = JSON.stringify(result.answers, null, 2);
+                        const blob = new Blob([answersText], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `respuestas_${result.student_name || 'anonimo'}_${result.id}.json`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                      }}
+                      style={{
+                        padding: '8px 16px',
+                        background: '#10B981',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#059669';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#10B981';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      <FileText size={16} /> Ver Respuestas
+                    </button>
                   
-                  <button
-                    onClick={() => {
-                      const summary = `
+                    <button
+                      onClick={() => {
+                        const summary = `
 RESUMEN DEL EXAMEN FINAL
 ========================
 Estudiante: ${result.student_name || 'Anónimo'}
@@ -319,43 +338,47 @@ Puntaje: ${result.score}/${result.total_questions} (${result.score_percentage}%)
 Calificación: ${getScoreLabel(result.score_percentage)}
 ${result.evaluator_notes ? `Notas: ${result.evaluator_notes}` : ''}
                       `.trim();
-                      
-                      const blob = new Blob([summary], { type: 'text/plain' });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `resumen_${result.student_name || 'anonimo'}_${result.id}.txt`;
-                      a.click();
-                      URL.revokeObjectURL(url);
-                    }}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#0F62FE',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#0842A0';
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = '#0F62FE';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    📊 Descargar Resumen
-                  </button>
+                        
+                        const blob = new Blob([summary], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `resumen_${result.student_name || 'anonimo'}_${result.id}.txt`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                      }}
+                      style={{
+                        padding: '8px 16px',
+                        background: '#0F62FE',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#0842A0';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#0F62FE';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      <Download size={16} /> Descargar Resumen
+                    </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

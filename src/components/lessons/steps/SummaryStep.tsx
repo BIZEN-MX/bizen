@@ -385,7 +385,7 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                 textShadow: "0 0 32px rgba(147, 197, 253, 0.3)",
               }}
             >
-              {step.title || "¡Lección completada!"}
+              {step.title || `¡Bien hecho, ${dbProfile?.firstName || dbProfile?.fullName || "Dragón"}!`}
             </motion.h2>
 
             {/* ⭐ Stars row */}

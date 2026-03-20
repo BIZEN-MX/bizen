@@ -18,13 +18,13 @@ const T = {
   text: "#0F172A",
   textMid: "#334155",
   textMuted: "#64748B",
-  border: "#E8EDF2",
+  border: "rgba(15,98,254,0.12)",
   surface: "#ffffff",
   green: "#10B981",
   amber: "#F59E0B",
   font: "'SF Pro Display','SF Pro Text','Inter',sans-serif",
-  shadow: "0 2px 16px rgba(15,23,42,0.06)",
-  shadowMd: "0 8px 32px rgba(15,23,42,0.10)",
+  shadow: "0 12px 32px -8px rgba(15,98,254,0.08)",
+  shadowMd: "0 24px 48px -12px rgba(15,98,254,0.14)",
 }
 
 function Avatar({ av, size = 36 }: { av: any; size?: number }) {
@@ -134,12 +134,12 @@ export default function ComunidadHubPage() {
     <div style={{ minHeight: "100vh", background: T.bg, fontFamily: T.font, boxSizing: "border-box" }}>
       <style>{`
         @media (max-width:767px) {
-          .com-wrap { margin-left: 0 !important; padding: 0 12px 100px !important; }
-          .com-hero { border-radius: 0 !important; margin: 0 0 20px !important; }
-          .com-hero-pad { padding: 28px 20px 40px !important; }
-          .com-hero-stats { flex-direction: column !important; gap: 10px !important; }
-          .com-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
-          .com-top-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+          .com-wrap { margin-left: 0 !important; padding: 0 16px 100px !important; }
+          .com-hero { border-radius: 0 !important; margin: 0 !important; }
+          .com-hero-pad { padding: 48px 24px 48px !important; }
+          .com-hero-stats { grid-template-columns: 1fr 1fr !important; display: grid !important; gap: 10px !important; }
+          .com-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .com-top-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
         }
         @media (min-width:768px) and (max-width:1160px) {
           .com-wrap { margin-left: 220px !important; }
@@ -147,81 +147,110 @@ export default function ComunidadHubPage() {
         @media (min-width:1161px) {
           .com-wrap { margin-left: 280px !important; }
         }
-        @keyframes fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes float { 0%, 100% { transform: translate(0,0) rotate(0) } 33% { transform: translate(10px, -20px) rotate(2deg) } 66% { transform: translate(-10px, 15px) rotate(-1deg) } }
         @keyframes shimmer { from { background-position:-200% 0 } to { background-position:200% 0 } }
         .skel { background: linear-gradient(90deg,#f1f5f9 25%,#e8ecf0 50%,#f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 10px; }
-        .rank-row { transition: all 0.2s; }
-        .rank-row:hover { background: ${T.blueLight} !important; }
+        .rank-row { transition: all 0.2s cubic-bezier(0.4,0,0.2,1); border-radius: 12px; margin: 2px 8px; }
+        .rank-row:hover { background: ${T.blue}08 !important; transform: scale(1.01); }
       `}</style>
 
       {/* ── HERO BANNER ─────────────────────────────────────────────────────── */}
       <div className="com-hero" style={{
-        background: "linear-gradient(135deg, #0a0e1a 0%, #0F172A 40%, #1d4ed8 100%)",
-        margin: "0 0 0 0", position: "relative", overflow: "hidden",
+        background: "linear-gradient(135deg, #0a0f1e 0%, #1e3a8a 60%, #1d4ed8 100%)",
+        margin: "12px 12px 0", borderRadius: 32, position: "relative", overflow: "hidden",
+        boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.25)",
       }}>
-        {/* BG Orbs */}
-        <div style={{ position: "absolute", top: "-30%", right: "-8%", width: 380, height: 380, background: "radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "-20%", left: "15%", width: 280, height: 280, background: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", inset: 0, opacity: 0.06, backgroundImage: "radial-gradient(rgba(255,255,255,.5) 1px,transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
+        {/* BG Orbs & Mesh */}
+        <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 500, height: 500, background: "radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", animation: "float 20s infinite linear" }} />
+        <div style={{ position: "absolute", bottom: "-30%", left: "-5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", animation: "float 15s infinite linear reverse" }} />
+        <div style={{ 
+          position: "absolute", inset: 0, opacity: 0.1, 
+          backgroundImage: "radial-gradient(rgba(255,255,255,.5) 1.5px,transparent 1.5px)", 
+          backgroundSize: "32px 32px", pointerEvents: "none" 
+        }} />
+        <div style={{
+          position: "absolute", inset: 0, opacity: 0.08, pointerEvents: "none", mixBlendMode: "overlay",
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }} />
 
-        <div className="com-wrap com-hero-pad" style={{ padding: "48px 40px 56px", position: "relative", zIndex: 1, boxSizing: "border-box" }}>
+        <div className="com-wrap com-hero-pad" style={{ padding: "64px 48px 80px", position: "relative", zIndex: 1, boxSizing: "border-box" }}>
           {/* Breadcrumb */}
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 20 }}>
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>BIZEN</span>
-            <ChevronRight size={12} color="rgba(255,255,255,0.3)" />
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", fontWeight: 600 }}>Comunidad</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24, opacity: 0.8 }}>
+            <span style={{ fontSize: 13, color: "#fff", fontWeight: 500, opacity: 0.5 }}>Plataforma</span>
+            <ChevronRight size={14} color="rgba(255,255,255,0.3)" />
+            <span style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>Comunidad Global</span>
           </div>
 
           {/* Title row */}
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 20, marginBottom: 32 }}>
-            <div>
-              <h1 style={{ margin: "0 0 10px", fontSize: "clamp(28px,5vw,44px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-                Comunidad BIZEN
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 40, marginBottom: 48 }}>
+            <div style={{ flex: "1 1 500px" }}>
+              <div style={{ 
+                display: "inline-flex", alignItems: "center", gap: 8, 
+                background: "rgba(255,255,255,0.12)", backdropFilter: "blur(12px)",
+                padding: "6px 14px", borderRadius: 99, marginBottom: 20,
+                border: "1px solid rgba(255,255,255,0.2)"
+              }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ADE80", boxShadow: "0 0 12px #4ADE80" }} />
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#fff", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  Comunidad en Vivo
+                </span>
+              </div>
+              <h1 style={{ margin: "0 0 16px", fontSize: "clamp(32px, 6vw, 56px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1.05 }}>
+                Aprender es mejor <br />
+                <span style={{ color: "rgba(255,255,255,0.4)" }}>en compañía.</span>
               </h1>
-              <p style={{ margin: 0, fontSize: "clamp(13px,1.5vw,16px)", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, maxWidth: 520 }}>
-                Conéctate con estudiantes, escala en el ranking y descubre cómo tu aprendizaje transforma el mundo.
+              <p style={{ margin: 0, fontSize: "clamp(15px, 1.8vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.6, maxWidth: 580, fontWeight: 500 }}>
+                Únete a miles de estudiantes que, como tú, están transformando su futuro financiero mientras generan un impacto positivo real.
               </p>
             </div>
 
-            {/* Quick-jump pill buttons */}
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignSelf: "flex-end" }}>
-              {[
-                { label: "Foro", path: "/forum", color: "#60A5FA" },
-                { label: "Rankings", path: "/rankings", color: "#FBBF24" },
-                { label: "Impacto", path: "/impacto-social", color: "#34D399" },
-              ].map(({ label, path, color }) => (
+            {/* Premium action group */}
+            <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+               {[
+                { label: "Ir al Foro", path: "/forum", color: "#60A5FA", icon: <MessageSquare size={18} /> },
+                { label: "Ver Ranking", path: "/rankings", color: "#FBBF24", icon: <Trophy size={18} /> },
+              ].map(({ label, path, color, icon }) => (
                 <button key={label} onClick={() => router.push(path)} style={{
-                  padding: "8px 18px", background: "rgba(255,255,255,0.08)",
-                  border: `1px solid ${color}50`, borderRadius: 999, cursor: "pointer",
-                  color, fontSize: 13, fontWeight: 600, fontFamily: T.font,
-                  transition: "all 0.2s", backdropFilter: "blur(6px)"
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "14px 24px", background: "#fff",
+                  boxShadow: "0 20px 40px -10px rgba(0,0,0,0.2)",
+                  borderRadius: 16, cursor: "pointer",
+                  color: "#0F172A", fontSize: 14, fontWeight: 700, fontFamily: T.font,
+                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)", border: "none"
                 }}
-                  onMouseEnter={e => { e.currentTarget.style.background = `${color}22`; e.currentTarget.style.borderColor = color }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.borderColor = `${color}50` }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 25px 50px -12px rgba(0,0,0,0.3)" }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 20px 40px -10px rgba(0,0,0,0.2)" }}
                 >
+                  <div style={{ color }}>{icon}</div>
                   {label}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Hero Stats bar */}
-          <div className="com-hero-stats" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          {/* Hero Stats bar - Enhanced Glassmorphism */}
+          <div className="com-hero-stats" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "flex-start" }}>
             {[
-              { icon: <Users size={16} />, label: "Estudiantes activos", value: statsLoading ? "..." : communityStats.members || "—", color: "#60A5FA" },
-              { icon: <MessageSquare size={16} />, label: "Conversaciones", value: "Foro vivo", color: "#A78BFA" },
-              { icon: <Leaf size={16} />, label: "Árboles plantados", value: "Impacto real", color: "#34D399" },
-              { icon: <Trophy size={16} />, label: "Top estudiantes", value: topPlayers.length ? `${topPlayers.length} en ranking` : "...", color: "#FBBF24" },
+              { icon: <Users size={20} />, label: "Total Miembros", value: statsLoading ? "..." : (communityStats.members || 0).toLocaleString(), color: "#60A5FA" },
+              { icon: <Flame size={20} />, label: "Actividad Hoy", value: "Alta", color: "#F87171" },
+              { icon: <Leaf size={20} />, label: "Ecosistema BIZEN", value: "Sostenible", color: "#4ADE80" },
+              { icon: <Zap size={20} />, label: "XP Generada", value: "+1.2M", color: "#FBBF24" },
             ].map(({ icon, label, value, color }) => (
               <div key={label} style={{
-                display: "flex", alignItems: "center", gap: 10,
-                background: "rgba(255,255,255,0.07)", border: `1px solid ${color}30`,
-                borderRadius: 14, padding: "10px 16px", backdropFilter: "blur(6px)",
+                display: "flex", alignItems: "center", gap: 14,
+                background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: 20, padding: "14px 20px", backdropFilter: "blur(24px)",
+                minWidth: 180
               }}>
-                <div style={{ color, flexShrink: 0 }}>{icon}</div>
+                <div style={{ 
+                  color, flexShrink: 0, width: 40, height: 40, borderRadius: 12, 
+                  background: "rgba(255,255,255,0.08)", display: "flex", 
+                  alignItems: "center", justifyContent: "center" 
+                }}>{icon}</div>
                 <div>
-                  <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1 }}>{value}</div>
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 500, marginTop: 1, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</div>
+                  <div style={{ fontSize: 17, fontWeight: 800, color: "#fff", lineHeight: 1 }}>{value}</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
                 </div>
               </div>
             ))}

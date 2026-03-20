@@ -42,12 +42,16 @@ export default function GlobalDailyMissionButton() {
     }, [user, pathname]); // Re-check when route changes as they might have just completed it
 
     if (loading || !user || !challenge || challenge.isCompleted) {
-        return null; // Don't show if completed or no user
+        return null;
     }
 
+    // Check if the user is an admin or teacher
+    const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher";
+    const isAdminPath = pathname.startsWith("/admin") || pathname === "/configuracion/admin";
+
     // Hide on the dashboard if they are already there since the widget is there
-    // Hide on the dashboard if they are already there since the widget is there
-    if (pathname === "/dashboard") {
+    // Also hide for admins/teachers or on admin paths
+    if (pathname === "/dashboard" || isAdminPath || isAdminOrTeacher) {
         return null;
     }
     

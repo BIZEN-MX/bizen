@@ -250,8 +250,6 @@ export default function HostPage() {
     return (
       <div style={{ minHeight: "100dvh", background: "linear-gradient(160deg, #060c1d 0%, #0a1628 60%, #050b18 100%)", padding: "0", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-          * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; }
           @keyframes float { 0%,100% { transform: translateY(0px) } 50% { transform: translateY(-8px) } }
           @keyframes fadeUp { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: translateY(0) } }
           @keyframes shimmer { 0% { background-position: -200% 0 } 100% { background-position: 200% 0 } }
@@ -272,9 +270,9 @@ export default function HostPage() {
         <div style={{ textAlign: "center", padding: "48px 24px 40px", animation: "fadeUp 0.35s ease" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.2)", borderRadius: 99, padding: "6px 16px", marginBottom: 24 }}>
             <IconBolt size={16} color="#fbbf24" />
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#fbbf24", letterSpacing: "0.1em", textTransform: "uppercase" }}>BIZEN Live</span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: "#fbbf24", letterSpacing: "0.1em", textTransform: "uppercase" }}>BIZEN Live</span>
           </div>
-          <h1 style={{ margin: 0, fontSize: "clamp(28px, 5vw, 48px)", fontWeight: 900, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+          <h1 style={{ margin: 0, fontSize: "clamp(28px, 5vw, 48px)", fontWeight: 500, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
             Elige tu Quiz
           </h1>
           <p style={{ margin: "14px auto 0", maxWidth: 480, fontSize: 16, color: "rgba(255,255,255,0.45)", lineHeight: 1.6 }}>
@@ -302,10 +300,10 @@ export default function HostPage() {
                   <div style={{ marginBottom: 14, animation: isHovered ? "float 2s ease-in-out infinite" : "none", display: "inline-block" }}>
                     <QuizIcon icon={quiz.icon} size={44} />
                   </div>
-                  <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>
+                  <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>
                     {quiz.category}
                   </span>
-                  <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "white", lineHeight: 1.2 }}>{quiz.title}</h2>
+                  <h2 style={{ margin: 0, fontSize: 20, fontWeight: 500, color: "white", lineHeight: 1.2 }}>{quiz.title}</h2>
                 </div>
 
                 {/* Body */}
@@ -320,23 +318,23 @@ export default function HostPage() {
                     ].map(m => (
                       <div key={m.label} style={{ background: "rgba(255,255,255,0.05)", borderRadius: 12, padding: "10px 14px" }}>
                         <div style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", marginBottom: 3, display: "flex", alignItems: "center", gap: 5 }}>{m.icon} {m.label}</div>
-                        <div style={{ fontSize: 16, fontWeight: 700, color: "white" }}>{m.value}</div>
+                        <div style={{ fontSize: 16, fontWeight: 500, color: "white" }}>{m.value}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Difficulty */}
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>Dificultad</span>
+                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontWeight: 400, letterSpacing: "0.05em", textTransform: "uppercase" }}>Dificultad</span>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <div style={{ display: "flex", gap: 5 }}>{diffDots(quiz.difficulty)}</div>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: diffColor(quiz.difficulty) }}>{diffLabel(quiz.difficulty)}</span>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: diffColor(quiz.difficulty) }}>{diffLabel(quiz.difficulty)}</span>
                     </div>
                   </div>
 
                   <button
                     className="launch-btn"
-                    style={{ width: "100%", padding: "13px", background: quiz.gradient, border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: `0 6px 20px ${quiz.glow}`, letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+                    style={{ width: "100%", padding: "13px", background: quiz.gradient, border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: `0 6px 20px ${quiz.glow}`, letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
                     onClick={e => { e.stopPropagation(); handleSelectQuiz(quiz) }}
                   >
                     <IconBolt size={16} color="white" /> Usar este Quiz
@@ -357,14 +355,14 @@ export default function HostPage() {
             <div style={{ background: "linear-gradient(135deg, #3730a3 0%, #6366f1 100%)", padding: "28px 28px 24px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -20, right: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
               <div style={{ marginBottom: 14, display: "inline-block" }}><IconEdit size={44} color="white" /></div>
-              <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>Personalizado</span>
-              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "white", lineHeight: 1.2 }}>Crear Quiz Propio</h2>
+              <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>Personalizado</span>
+              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 500, color: "white", lineHeight: 1.2 }}>Crear Quiz Propio</h2>
             </div>
             <div style={{ background: "rgba(10,20,40,0.95)", padding: "20px 24px 24px" }}>
               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.55, margin: "0 0 20px" }}>Crea tus propias preguntas de opción múltiple con el tema y contenido que necesites.</p>
               <button
                 className="launch-btn"
-                style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 20px rgba(99,102,241,0.4)", letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+                style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: "0 6px 20px rgba(99,102,241,0.4)", letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
                 onClick={e => { e.stopPropagation(); setHostStatus("create") }}
               >
                 <IconPlus size={16} color="white" /> Crear nuevo
@@ -391,7 +389,7 @@ export default function HostPage() {
               {selectedQuiz && <QuizIcon icon={selectedQuiz.icon} size={52} />}
             </div>
             <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "0.15em", color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><IconBolt size={12} color="rgba(255,255,255,0.35)" /> BIZEN Live</div>
-            <h1 style={{ fontSize: 28, fontWeight: 900, color: "white", margin: 0 }}>Configurar sesión</h1>
+            <h1 style={{ fontSize: 28, fontWeight: 500, color: "white", margin: 0 }}>Configurar sesión</h1>
             <p style={{ color: "rgba(255,255,255,0.4)", marginTop: 8, fontSize: 15 }}>Revisa las preguntas y lanza el quiz en vivo</p>
           </div>
 
@@ -415,7 +413,7 @@ export default function HostPage() {
 
           {error && <p style={{ color: "#f87171", fontSize: 14, textAlign: "center", marginBottom: 16 }}>{error}</p>}
 
-          <button onClick={handleCreateSession} disabled={creating} style={{ width: "100%", padding: "18px", background: creating ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 18, color: "white", fontSize: 16, fontWeight: 700, cursor: creating ? "not-allowed" : "pointer", boxShadow: "0 8px 24px rgba(0,86,231,0.4)" }}>
+          <button onClick={handleCreateSession} disabled={creating} style={{ width: "100%", padding: "18px", background: creating ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 18, color: "white", fontSize: 16, fontWeight: 500, cursor: creating ? "not-allowed" : "pointer", boxShadow: "0 8px 24px rgba(0,86,231,0.4)" }}>
             {creating ? "Creando sesión..." : <><IconBolt size={16} color="white" /> Iniciar sesión en vivo</>}
           </button>
         </div>
@@ -429,7 +427,7 @@ export default function HostPage() {
       <div style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #08112a 0%, #0a1632 100%)", padding: "48px 40px", display: "flex", flexDirection: "column", alignItems: "center", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
         <div style={{ width: "100%", maxWidth: 1600, textAlign: "center" }}>
           <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Comparte el PIN con tus alumnos</p>
-          <div style={{ fontSize: 80, fontWeight: 900, color: "white", letterSpacing: "0.15em", textShadow: "0 0 60px rgba(15,98,254,0.5)", marginBottom: 8 }}>{sessionPin}</div>
+          <div style={{ fontSize: 80, fontWeight: 500, color: "white", letterSpacing: "0.15em", textShadow: "0 0 60px rgba(15,98,254,0.5)", marginBottom: 8 }}>{sessionPin}</div>
           <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 14, marginBottom: 40 }}>Accede desde <strong style={{ color: "rgba(255,255,255,0.6)" }}>bizen.mx/live/join</strong></p>
           <div style={{ marginBottom: 12, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>Jugadores conectados: <strong style={{ color: "#3B82F6", fontSize: 20 }}>{active.length}</strong></div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginBottom: 40, minHeight: 80 }}>
@@ -554,7 +552,7 @@ export default function HostPage() {
   if (hostStatus === "finished") {
     return (
       <div style={{ minHeight: "100dvh", background: "#060c1d", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 40, textAlign: "center", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
-        <h1 style={{ color: "white", fontSize: 36, fontWeight: 900, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}><IconFlag size={32} color="#10b981" /> ¡Quiz terminado!</h1>
+        <h1 style={{ color: "white", fontSize: 36, fontWeight: 500, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}><IconFlag size={32} color="#10b981" /> ¡Quiz terminado!</h1>
         <p style={{ color: "rgba(255,255,255,0.4)", marginBottom: 40 }}>Resultados finales — {sessionTitle}</p>
         <div style={{ width: "100%", maxWidth: 480, marginBottom: 40 }}>
           {participants.slice(0, 5).map((p, i) => (

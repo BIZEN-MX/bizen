@@ -3,6 +3,8 @@
 import React, { useState, useRef } from "react"
 import { haptic } from "@/utils/hapticFeedback"
 import { initAudioContext } from "./lessonSounds"
+import { useGlossary } from "@/contexts/GlossaryContext"
+import { Book } from "lucide-react"
 
 /**
  * SmartText — Intelligent Content Renderer for BIZEN Flashcards
@@ -89,11 +91,14 @@ function GlossaryTerm({ word, definition }: { word: string; definition: string }
                     borderBottom: `2px dashed ${BLUE}`,
                     cursor: "pointer",
                     paddingBottom: 1,
-                    display: "inline",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 4
                 }}
             >
+                <Book size={12} strokeWidth={2.5} style={{ opacity: 0.8, marginTop: 1 }} />
                 {word}
-                <span style={{ fontSize: "0.7em", verticalAlign: "super", marginLeft: 1, opacity: 0.7 }}>?</span>
+                <span style={{ fontSize: "0.75em", verticalAlign: "middle", marginLeft: -2, opacity: 0.8, color: BLUE }}>*</span>
             </span>
 
             {open && (
@@ -142,9 +147,54 @@ function GlossaryTerm({ word, definition }: { word: string; definition: string }
 }
 
 function InlineSegments({ segments }: { segments: Segment[] }) {
+    const glossaryTerms = useGlossary()
+
+    // Second pass: find glossary terms in "plain" segments that weren't caught in first pass
+    const finalSegments = React.useMemo(() => {
+        if (!glossaryTerms.length) return segments;
+
+        const results: Segment[] = [];
+        segments.forEach(seg => {
+            if (seg.type !== "plain" || seg.content.length < 3) {
+                results.push(seg);
+                return;
+            }
+
+            // Create regex for all glossary terms
+            // Sort by length descending to match longest terms first
+            const sortedTerms = [...glossaryTerms].sort((a, b) => b.word.length - a.word.length);
+            const escapedTerms = sortedTerms.map(t => t.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+            const termRe = new RegExp(`\\b(${escapedTerms})\\b`, 'gi');
+
+            const content = seg.content;
+            let lastIdx = 0;
+            let match;
+            
+            while ((match = termRe.exec(content)) !== null) {
+                // Text before match
+                if (match.index > lastIdx) {
+                    results.push({ type: "plain", content: content.slice(lastIdx, match.index) });
+                }
+                
+                // The match itself
+                const matchedWord = match[0];
+                const termDef = glossaryTerms.find(t => t.word.toLowerCase() === matchedWord.toLowerCase())?.definition || "";
+                results.push({ type: "glossary", word: matchedWord, definition: termDef });
+                
+                lastIdx = termRe.lastIndex;
+            }
+
+            // Text after last match
+            if (lastIdx < content.length) {
+                results.push({ type: "plain", content: content.slice(lastIdx) });
+            }
+        });
+        return results;
+    }, [segments, glossaryTerms]);
+
     return (
         <>
-            {segments.map((seg, i) => {
+            {finalSegments.map((seg, i) => {
                 if (seg.type === "glossary") {
                     return <GlossaryTerm key={i} word={seg.word} definition={seg.definition} />
                 }
@@ -199,7 +249,7 @@ function InlineSegments({ segments }: { segments: Segment[] }) {
                         </em>
                     )
                 }
-                return <React.Fragment key={i}>{(seg as any).content}</React.Fragment>
+                return <React.Fragment key={i}>{seg.content}</React.Fragment>
             })}
         </>
     )

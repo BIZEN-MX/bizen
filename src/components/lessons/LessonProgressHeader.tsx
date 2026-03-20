@@ -1,6 +1,6 @@
 "use client"
 
-import { X, Volume2, VolumeX, Loader2 } from "lucide-react"
+import { X, Volume2, VolumeX, Loader2, Book } from "lucide-react"
 import { motion } from "framer-motion"
 import { StarIcon } from "@/components/icons/StarIcon"
 
@@ -15,8 +15,10 @@ export interface LessonProgressHeaderProps {
   hideStars?: boolean
   onExit?: () => void
   onToggleAudio?: () => void
+  onOpenGlossary?: () => void
   isAudioPlaying?: boolean
   isAudioLoading?: boolean
+  hasGlossary?: boolean
 }
 
 export function LessonProgressHeader({
@@ -28,8 +30,10 @@ export function LessonProgressHeader({
   hideStars = false,
   onExit,
   onToggleAudio,
+  onOpenGlossary,
   isAudioPlaying = false,
   isAudioLoading = false,
+  hasGlossary = false,
 }: LessonProgressHeaderProps) {
   const progress = totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0
 
@@ -101,6 +105,30 @@ export function LessonProgressHeader({
           ) : (
              <VolumeX style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
           )}
+        </button>
+      )}
+
+      {/* Glossary Button */}
+      {hasGlossary && onOpenGlossary && (
+        <button
+          onClick={onOpenGlossary}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 4,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#94a3b8",
+            transition: "all 0.2s ease",
+            flexShrink: 0,
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#2563eb")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
+          aria-label="Ver glosario de la lección"
+        >
+          <Book style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
         </button>
       )}
 

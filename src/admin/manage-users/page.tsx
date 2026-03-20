@@ -74,14 +74,14 @@ export default function ManageUsersPage() {
       const data = await response.json();
 
       if (data.success) {
-        alert(`✅ Datos del usuario eliminados correctamente!\n\nRegistros eliminados:\n${JSON.stringify(data.deletedRecords, null, 2)}`);
+        alert(`Datos del usuario eliminados correctamente!\n\nRegistros eliminados:\n${JSON.stringify(data.deletedRecords, null, 2)}`);
         fetchUsers(); // Refresh list
       } else {
-        alert(`❌ Error: ${data.error}`);
+        alert(`Error: ${data.error}`);
       }
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert("❌ Error al eliminar usuario");
+      alert("Error al eliminar usuario");
     } finally {
       setDeleting(null);
     }
@@ -105,13 +105,21 @@ export default function ManageUsersPage() {
   }
 
   return (
-    <div style={{ padding: 40, maxWidth: 1400, margin: "0 auto", }}>
+    <div className="admin-page-root" style={{ 
+      minHeight: "100vh", 
+      background: "#f8fafc",
+      fontFamily: 'inherit'
+    }}>
       <style>{`
+        .admin-page-root { padding-left: 280px !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse-subtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .admin-card { animation: fadeIn 0.4s ease-out both; }
         .icon-bounce:hover { animation: pulse-subtle 0.6s ease-in-out infinite; }
       `}</style>
+      <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1400, margin: "0 auto", boxSizing: "border-box" }}>
 
       <div style={{ marginBottom: 30 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
@@ -275,6 +283,7 @@ export default function ManageUsersPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
