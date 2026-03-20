@@ -27,6 +27,22 @@ export async function awardXp(userId: string, amount: number): Promise<RewardsRe
         throw new Error(`Profile not found for userId: ${userId}`)
     }
 
+    // Role-based restriction: Only students and particulares can earn XP/Bizcoins
+    const nonEarningRoles = ['admin', 'school_admin', 'teacher'];
+    if (nonEarningRoles.includes(profile.role)) {
+        return {
+            xpAwarded: 0,
+            newTotalXp: profile.xp,
+            bizcoinsAwarded: 0,
+            newTotalBizcoins: (profile as any).bizcoins || 0,
+            oldLevel: profile.level,
+            newLevel: profile.level,
+            leveledUp: false,
+            streakUpdated: false,
+            currentStreak: profile.currentStreak || 0
+        }
+    }
+
     // Calculate new XP and Level
     const newTotalXp = profile.xp + amount
     const bizcoinsAwarded = amount // Default 1:1 ratio

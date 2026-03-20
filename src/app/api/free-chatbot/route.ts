@@ -121,6 +121,13 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
           })
 
           if (profile) {
+            // Only students and particulares can earn XP
+            const nonEarningRoles = ['admin', 'school_admin', 'teacher'];
+            if (nonEarningRoles.includes(profile.role)) {
+              console.log(`[Billy:Gamification] Skipping reward for non-earning role: ${profile.role}`);
+              return;
+            }
+
             const settings = (profile.settings as any) || {}
             const today = new Date().toDateString()
             const lastBillyDate = settings.lastBillyDate

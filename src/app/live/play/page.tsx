@@ -4,6 +4,8 @@ import { useState, useEffect, useRef, useCallback, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { createClient } from "@/lib/supabase/client"
+import { IconBolt, IconCheck, IconX, IconFire, IconTrophy, IconMedal1, IconMedal2, IconMedal3, IconGamepad, IconXP, IconStar, IconFlag } from "@/components/live/LiveIcons"
+import { AvatarSvg } from "@/components/live/LiveAvatars"
 
 type GameStatus = "loading" | "lobby" | "in_question" | "showing_results" | "leaderboard" | "finished"
 
@@ -43,7 +45,19 @@ function PlayPageContent() {
   // Player state (from sessionStorage)
   const [participantId, setParticipantId] = useState<string | null>(null)
   const [nickname, setNickname] = useState("Jugador")
-  const [emoji, setEmoji] = useState("🦊")
+  const [emoji, setEmoji] = useState("fox")
+
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect Mobile for offset
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 767)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  const sidebarOffset = isMobile ? 0 : 280
 
   // Session state (from Supabase Realtime)
   const [gameStatus, setGameStatus] = useState<GameStatus>("loading")
@@ -61,6 +75,18 @@ function PlayPageContent() {
   const [myScore, setMyScore] = useState(0)
   const [myStreak, setMyStreak] = useState(0)
   const [myRank, setMyRank] = useState<number | null>(null)
+  // XP
+  const [xpEarned, setXpEarned] = useState(0)
+  const [xpGranted, setXpGranted] = useState(false)
+
+  // Grant XP when quiz finishes (must be at top level, not inside if block)
+  useEffect(() => {
+    if (gameStatus !== "finished" || xpGranted || !participantId || myScore === 0) return
+    setXpGranted(true)
+    const xp = Math.min(500, Math.max(50, Math.floor(myScore / 10)))
+    setXpEarned(xp)
+    supabase.rpc("increment_user_xp", { user_xp: xp })
+  }, [gameStatus])
 
   // Timer
   const [timeLeft, setTimeLeft] = useState(20)
@@ -300,9 +326,9 @@ function PlayPageContent() {
 
   if (gameStatus === "loading") {
     return (
-      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "#060c1d" }}>
+      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "#060c1d", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
         <div style={{ textAlign: "center", color: "white" }}>
-          <div style={{ fontSize: 40, marginBottom: 16 }}>⚡</div>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}><IconBolt size={40} color="#fbbf24" /></div>
           <p style={{ color: "rgba(255,255,255,0.5)" }}>Conectando...</p>
         </div>
       </div>
@@ -313,7 +339,7 @@ function PlayPageContent() {
   if (gameStatus === "lobby") {
     const activePlayers = participants.filter(p => !p.is_host && p.is_active)
     return (
-      <div style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #08112a 0%, #0a1632 100%)", display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 24px 32px" }}>
+      <div style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #08112a 0%, #0a1632 100%)", display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 24px 32px", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
         <div style={{ textAlign: "center", marginBottom: 32, width: "100%", maxWidth: 400 }}>
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>PIN del quiz</p>
           <div style={{ fontSize: 52, fontWeight: 900, color: "white", letterSpacing: "0.12em", textShadow: "0 0 40px rgba(15,98,254,0.5)" }}>
@@ -337,9 +363,9 @@ function PlayPageContent() {
                 width: 56, height: 56, borderRadius: 16,
                 background: p.id === participantId ? "rgba(15,98,254,0.2)" : "rgba(255,255,255,0.06)",
                 border: `2px solid ${p.id === participantId ? "rgba(15,98,254,0.5)" : "rgba(255,255,255,0.1)"}`,
-                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26
+                display: "flex", alignItems: "center", justifyContent: "center"
               }}>
-                {p.avatar?.emoji || "🎮"}
+                <AvatarSvg id={p.avatar?.emoji || "fox"} size={32} />
               </div>
               <span style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", maxWidth: 60, textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {p.id === participantId ? "Tú" : p.nickname}
@@ -349,7 +375,7 @@ function PlayPageContent() {
         </div>
 
         <div style={{ textAlign: "center", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 20, width: "100%", maxWidth: 360 }}>
-          <div style={{ color: "white", fontWeight: 700, fontSize: 16, marginBottom: 4 }}>💰 {sessionTitle}</div>
+          <div style={{ color: "white", fontWeight: 700, fontSize: 16, marginBottom: 4, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><IconStar size={16} color="#fbbf24" /> {sessionTitle}</div>
           <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>{totalQuestions} preguntas</div>
         </div>
         <style>{`@keyframes pulse-dot { 0%,100% {opacity:1;transform:scale(1)} 50% {opacity:0.5;transform:scale(0.8)} }`}</style>
@@ -360,7 +386,7 @@ function PlayPageContent() {
   // ── IN QUESTION ──
   if (gameStatus === "in_question" && currentQuestion) {
     return (
-      <div style={{ minHeight: "100dvh", background: "#060c1d", display: "flex", flexDirection: "column" }}>
+      <div style={{ minHeight: "100dvh", background: "#060c1d", display: "flex", flexDirection: "column", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
         {/* Top bar */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "linear-gradient(180deg, rgba(15,98,254,0.1) 0%, transparent 100%)" }}>
           <div style={{ background: "rgba(255,255,255,0.08)", padding: "8px 14px", borderRadius: 99 }}>
@@ -371,7 +397,7 @@ function PlayPageContent() {
             {questionIndex + 1}/{totalQuestions}
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: 6, background: myStreak >= 3 ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.06)", border: `1px solid ${myStreak >= 3 ? "rgba(239,68,68,0.3)" : "transparent"}`, padding: "8px 14px", borderRadius: 99 }}>
-            <span>🔥</span>
+            <IconFire size={14} color={myStreak >= 3 ? "#f87171" : "rgba(255,255,255,0.4)"} />
             <span style={{ color: myStreak >= 3 ? "#f87171" : "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 700 }}>×{myStreak}</span>
           </div>
         </div>
@@ -397,6 +423,11 @@ function PlayPageContent() {
 
         {/* Question */}
         <div style={{ margin: "0 20px 20px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "16px 20px", textAlign: "center" }}>
+          {currentQuestion.image_url && (
+            <div style={{ width: "100%", height: 160, borderRadius: 12, overflow: "hidden", marginBottom: 12, background: "rgba(0,0,0,0.2)" }}>
+              <img src={currentQuestion.image_url} alt="Pregunta" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            </div>
+          )}
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
             Pregunta {questionIndex + 1}
           </p>
@@ -444,7 +475,7 @@ function PlayPageContent() {
                 }}
               >
                 <span style={{ fontSize: 24, color: "white", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))" }}>
-                  {showCorrect ? "✅" : showWrong ? "❌" : shape}
+                  {showCorrect ? <IconCheck size={24} /> : showWrong ? <IconX size={24} /> : shape}
                 </span>
                 <span style={{ color: "white", fontSize: 13, fontWeight: 700, textAlign: "center", lineHeight: 1.3, textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>
                   {opt.text}
@@ -469,8 +500,8 @@ function PlayPageContent() {
                 textAlign: "center",
               }}
             >
-              <p style={{ fontWeight: 800, fontSize: 18, color: answerResult?.isCorrect ? "#34d399" : "#f87171", margin: 0 }}>
-                {!selectedOptionId ? "⏱ Tiempo agotado" : answerResult?.isCorrect ? `✅ ¡Correcto! +${answerResult.scoreEarned} pts` : "❌ Incorrecto"}
+              <p style={{ fontWeight: 800, fontSize: 18, color: answerResult?.isCorrect ? "#34d399" : "#f87171", margin: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                {!selectedOptionId ? <><IconFire size={18} color="#f87171" /> Tiempo agotado</> : answerResult?.isCorrect ? <><IconCheck size={22} /> ¡Correcto! +{answerResult.scoreEarned} pts</> : <><IconX size={22} /> Incorrecto</>}
               </p>
               <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginTop: 4 }}>
                 Esperando al host para continuar...
@@ -486,12 +517,12 @@ function PlayPageContent() {
   if (gameStatus === "leaderboard" || gameStatus === "showing_results") {
     const me = leaderboard.find((_, i) => participants.find(p => p.id === participantId && participants.filter(x => !x.is_host).sort((a, b) => b.total_score - a.total_score)[i]?.id === p.id))
     return (
-      <div style={{ minHeight: "100dvh", background: "#060c1d", overflowY: "auto" }}>
+      <div style={{ minHeight: "100dvh", background: "#060c1d", overflowY: "auto", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
         {/* Result hero */}
         {answerResult && (
           <div style={{ padding: "40px 24px 24px", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", background: `linear-gradient(180deg, ${answerResult.isCorrect ? "rgba(16,185,129,0.12)" : "rgba(239,68,68,0.08)"} 0%, transparent 100%)` }}>
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500 }} style={{ fontSize: 60, marginBottom: 12 }}>
-              {answerResult.isCorrect ? "✅" : "❌"}
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500 }} style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+              {answerResult.isCorrect ? <IconCheck size={60} color="#34d399" /> : <IconX size={60} color="#f87171" />}
             </motion.div>
             <h2 style={{ color: answerResult.isCorrect ? "#34d399" : "#f87171", fontSize: 28, fontWeight: 900, margin: "0 0 12px" }}>
               {answerResult.isCorrect ? "¡Correcto!" : "Incorrecto"}
@@ -499,7 +530,7 @@ function PlayPageContent() {
             {answerResult.isCorrect && (
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", padding: "10px 24px", borderRadius: 99 }}>
                 <span style={{ color: "#10b981", fontSize: 22, fontWeight: 800 }}>+{answerResult.scoreEarned}</span>
-                <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>pts {answerResult.newStreak >= 3 ? `· 🔥 Racha ×${answerResult.newStreak}` : ""}</span>
+                <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>pts {answerResult.newStreak >= 3 ? <><IconFire size={13} color="#f87171" /> Racha ×{answerResult.newStreak}</> : ""}</span>
               </div>
             )}
           </div>
@@ -510,7 +541,7 @@ function PlayPageContent() {
           {[
             { label: "Total", value: myScore.toLocaleString(), color: "#fbbf24" },
             { label: "Posición", value: myRank ? `${myRank}°` : "—", color: "white" },
-            { label: "Racha", value: `🔥×${myStreak}`, color: "#10b981" },
+            { label: "Racha", value: <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}><IconFire size={14} color="#10b981" />×{myStreak}</span>, color: "#10b981" },
           ].map(s => (
             <div key={s.label} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "16px 12px", textAlign: "center" }}>
               <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{s.label}</p>
@@ -538,10 +569,12 @@ function PlayPageContent() {
                   border: isMe ? "1px solid rgba(15,98,254,0.25)" : "1px solid transparent",
                 }}
               >
-                <div style={{ width: 28, height: 28, borderRadius: 8, background: i < 3 ? `rgba(${i === 0 ? "251,191,36" : i === 1 ? "156,163,175" : "180,83,9"},0.15)` : "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, color: i < 3 ? rankColors[i] : "rgba(255,255,255,0.4)", flexShrink: 0 }}>
-                  {entry.rank}
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: i < 3 ? `rgba(${i === 0 ? "251,191,36" : i === 1 ? "156,163,175" : "180,83,9"},0.15)` : "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  {i === 0 ? <IconMedal1 size={22} /> : i === 1 ? <IconMedal2 size={22} /> : i === 2 ? <IconMedal3 size={22} /> : <span style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.4)" }}>{entry.rank}</span>}
                 </div>
-                <span style={{ fontSize: 22 }}>{entry.avatar?.emoji || "🎮"}</span>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <AvatarSvg id={entry.avatar?.emoji || "fox"} size={22} />
+                </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ color: "white", fontSize: 14, fontWeight: 600, margin: 0 }}>{entry.nickname}</p>
                   {isMe && <span style={{ color: "#3B82F6", fontSize: 10, fontWeight: 500 }}>← Tú</span>}
@@ -559,27 +592,35 @@ function PlayPageContent() {
     )
   }
 
-  // ── FINISHED ──
   if (gameStatus === "finished") {
     return (
-      <div style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #060c1d 0%, #0a1428 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 24px", textAlign: "center" }}>
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400 }} style={{ fontSize: 80, marginBottom: 24 }}>
-          🏆
+      <div style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #060c1d 0%, #0a1428 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 24px", textAlign: "center", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400 }} style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+          <IconTrophy size={80} color="#fbbf24" />
         </motion.div>
         <h1 style={{ color: "white", fontSize: 32, fontWeight: 900, marginBottom: 8 }}>¡Quiz terminado!</h1>
         <p style={{ color: "#fbbf24", fontSize: 22, fontWeight: 800, marginBottom: 4 }}>
           Posición final: {myRank ? `${myRank}°` : "—"}
         </p>
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 16, marginBottom: 40 }}>
+        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 16, marginBottom: xpEarned > 0 ? 16 : 40 }}>
           Puntaje total: {myScore.toLocaleString()} pts
         </p>
+        {xpEarned > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(167,139,250,0.12)", border: "1px solid rgba(167,139,250,0.3)", borderRadius: 99, padding: "12px 24px", marginBottom: 40 }}>
+            <IconXP size={20} color="#a78bfa" />
+            <span style={{ color: "#a78bfa", fontWeight: 800, fontSize: 18 }}>+{xpEarned} XP ganados</span>
+          </motion.div>
+        )}
 
         {/* Final leaderboard */}
         <div style={{ width: "100%", maxWidth: 360 }}>
           {leaderboard.slice(0, 5).map((entry, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 14, marginBottom: 8, background: myRank === entry.rank ? "rgba(15,98,254,0.15)" : "rgba(255,255,255,0.04)", border: myRank === entry.rank ? "1px solid rgba(15,98,254,0.3)" : "1px solid rgba(255,255,255,0.06)" }}>
-              <span style={{ fontSize: 20 }}>{["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][i]}</span>
-              <span style={{ fontSize: 20 }}>{entry.avatar?.emoji || "🎮"}</span>
+              <div style={{ display: "flex" }}>{i === 0 ? <IconMedal1 size={28} /> : i === 1 ? <IconMedal2 size={28} /> : i === 2 ? <IconMedal3 size={28} /> : <span style={{ fontSize: 16, fontWeight: 800, color: "rgba(255,255,255,0.3)", width: 28, textAlign: "center" }}>{i+1}</span>}</div>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <AvatarSvg id={entry.avatar?.emoji || "fox"} size={22} />
+              </div>
               <span style={{ flex: 1, color: "white", fontWeight: 600 }}>{entry.nickname}</span>
               <span style={{ color: "#fbbf24", fontWeight: 800 }}>{entry.score.toLocaleString()}</span>
             </div>
@@ -604,7 +645,9 @@ export default function PlayPage() {
     <Suspense fallback={
       <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "#060c1d" }}>
         <div style={{ textAlign: "center", color: "white" }}>
-          <div style={{ fontSize: 40, marginBottom: 16 }}>⚡</div>
+          <div style={{ fontSize: 40, marginBottom: 16, display: "flex", justifyContent: "center" }}>
+            <IconBolt size={40} color="#fbbf24" />
+          </div>
           <p style={{ color: "rgba(255,255,255,0.5)" }}>Cargando interfaz...</p>
         </div>
       </div>

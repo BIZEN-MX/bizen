@@ -23,7 +23,8 @@ import {
   LogOut,
   BarChart2,
   Trophy,
-  Zap
+  Zap,
+  LayoutGrid
 } from "lucide-react"
 
 export default function MobileBottomNav() {
@@ -61,24 +62,24 @@ export default function MobileBottomNav() {
   // Main navigation items (always visible). 
   const navItems = isStudentOrGuest ? [
     {
+      id: "inicio",
+      label: "Inicio",
+      icon: LayoutGrid,
+      path: "/dashboard",
+      protected: true
+    },
+    {
       id: "courses",
-      label: t.nav.exploreCourses,
+      label: "Cursos",
       icon: MapIcon,
       path: "/courses",
       protected: false
     },
     {
-      id: 'mision-del-dia',
-      label: 'Misión del día',
-      icon: Target,
-      path: '/mision-del-dia',
-      protected: false
-    },
-    {
-      id: 'simulador',
-      label: 'Simulador',
-      icon: Gamepad2,
-      path: '/cash-flow',
+      id: "comunidad",
+      label: "Comunidad",
+      icon: MessageSquare,
+      path: "/comunidad",
       protected: false
     },
     {
@@ -113,15 +114,7 @@ export default function MobileBottomNav() {
   ]
 
   // Additional navigation items for authenticated users
-  const additionalNavItems = user && isStudentOrGuest ? [
-    {
-      id: 'forum',
-      label: 'Foro',
-      icon: MessageSquare,
-      path: '/forum',
-      protected: true
-    }
-  ] : []
+  const additionalNavItems = [] as any[]
 
   // Account button (only for unauthenticated users)
   const accountItem = !user ? {
@@ -143,18 +136,11 @@ export default function MobileBottomNav() {
     },
     ...(isStudentOrGuest ? [
       {
-        id: "impacto-social",
-        label: t.nav.impactoSocial,
-        icon: Heart,
-        path: "/impacto-social",
-        protected: true
-      },
-      {
-        id: "rankings",
-        label: "Rankings",
-        icon: Trophy,
-        path: "/rankings",
-        protected: true
+        id: 'simulador',
+        label: 'Simuladores',
+        icon: Gamepad2,
+        path: '/cash-flow',
+        protected: false
       },
       {
         id: 'tienda',

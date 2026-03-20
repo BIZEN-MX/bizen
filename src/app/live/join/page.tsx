@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
-
-const EMOJIS = ["🦊", "🐯", "🐼", "🦁", "🐺", "🦝", "🦉", "🐸", "🐻", "🦅", "🐬", "🦋"]
+import { IconBolt, IconGamepad } from "@/components/live/LiveIcons"
+import { AVATARS, AvatarSvg } from "@/components/live/LiveAvatars"
 
 // Floating particle component
 function Particle({ x, y, size, delay, duration, color }: { x: string; y: string; size: number; delay: number; duration: number; color: string }) {
@@ -54,7 +54,7 @@ export default function JoinPage() {
 
   const [pin, setPin] = useState(["", "", "", "", "", ""])
   const [nickname, setNickname] = useState("")
-  const [selectedEmoji, setSelectedEmoji] = useState("🦊")
+  const [selectedEmoji, setSelectedEmoji] = useState("fox")
   const [step, setStep] = useState<"pin" | "profile">("pin")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -67,7 +67,7 @@ export default function JoinPage() {
       setNickname(dbProfile.nickname || dbProfile.full_name.split(" ")[0])
     }
     if (user) {
-      setSelectedEmoji(EMOJIS[Math.floor(Math.random() * EMOJIS.length)])
+      setSelectedEmoji(AVATARS[Math.floor(Math.random() * AVATARS.length)].id)
     }
   }, [dbProfile, user])
 
@@ -269,11 +269,7 @@ export default function JoinPage() {
           >
             {/* Badge */}
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.25)", borderRadius: 99, padding: "6px 16px", marginBottom: 20 }}>
-              <motion.span
-                animate={{ rotate: [0, 15, -15, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
-                style={{ display: "inline-block" }}
-              >⚡</motion.span>
+              <motion.span animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }} style={{ display: "inline-flex" }}><IconBolt size={16} color="#fbbf24" /></motion.span>
               <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.12em", color: "#fbbf24", textTransform: "uppercase" }}>BIZEN Live</span>
             </div>
 
@@ -411,40 +407,22 @@ export default function JoinPage() {
                 exit={{ opacity: 0, x: -28 }}
                 transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               >
-                {/* Big emoji display */}
-                <motion.div
-                  style={{ textAlign: "center", marginBottom: 16 }}
-                  key={selectedEmoji}
-                  animate={{ scale: [1.3, 1], rotate: [10, 0] }}
-                  transition={{ duration: 0.3, ease: "backOut" }}
-                >
-                  <span style={{ fontSize: 72, lineHeight: 1, filter: "drop-shadow(0 6px 20px rgba(0,0,0,0.5))" }}>
-                    {selectedEmoji}
-                  </span>
+                {/* SVG Avatar selector */}
+                <motion.div style={{ textAlign: "center", marginBottom: 16 }} key={selectedEmoji} animate={{ scale: [1.3, 1], rotate: [10, 0] }} transition={{ duration: 0.3, ease: "backOut" }}>
+                  <div style={{ margin: "0 auto" }}>
+                    <AvatarSvg id={selectedEmoji} size={80} />
+                  </div>
                 </motion.div>
 
-                {/* Emoji grid */}
+                {/* Avatar grid */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 24 }}>
-                  {EMOJIS.map((e, i) => (
-                    <motion.button
-                      key={e}
-                      className="emoji-btn"
-                      onClick={() => setSelectedEmoji(e)}
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.03, duration: 0.25, ease: "backOut" }}
-                      whileTap={{ scale: 0.85 }}
-                      style={{
-                        width: 46, height: 46, fontSize: 22,
-                        background: e === selectedEmoji ? "rgba(251,191,36,0.15)" : "rgba(255,255,255,0.05)",
-                        border: `2px solid ${e === selectedEmoji ? "rgba(251,191,36,0.6)" : "rgba(255,255,255,0.07)"}`,
-                        borderRadius: 12,
-                        cursor: "pointer",
-                        transform: e === selectedEmoji ? "scale(1.18)" : "scale(1)",
-                        boxShadow: e === selectedEmoji ? "0 0 16px rgba(251,191,36,0.3)" : "none",
-                      }}
+                  {AVATARS.map((av, i) => (
+                    <motion.button key={av.id} className="emoji-btn" onClick={() => setSelectedEmoji(av.id)}
+                      initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.03, duration: 0.25, ease: "backOut" }} whileTap={{ scale: 0.85 }}
+                      style={{ width: 46, height: 46, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", background: av.id === selectedEmoji ? `${av.color}30` : "rgba(255,255,255,0.05)", border: `2px solid ${av.id === selectedEmoji ? av.color : "rgba(255,255,255,0.07)"}`, cursor: "pointer", color: av.color, transform: av.id === selectedEmoji ? "scale(1.18)" : "scale(1)", boxShadow: av.id === selectedEmoji ? `0 0 16px ${av.color}50` : "none" }}
                     >
-                      {e}
+                      <AvatarSvg id={av.id} size={24} />
                     </motion.button>
                   ))}
                 </div>
@@ -509,14 +487,10 @@ export default function JoinPage() {
                 >
                   {loading ? (
                     <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-                      <motion.span
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                        style={{ display: "inline-block" }}
-                      >⚡</motion.span>
+                      <motion.span animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} style={{ display: "inline-flex" }}><IconBolt size={16} color="white" /></motion.span>
                       Uniéndome...
                     </span>
-                  ) : "¡Entrar al quiz! 🎮"}
+                  ) : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><IconGamepad size={18} color="white" /> ¡Entrar al quiz!</span>}
                 </motion.button>
 
                 <button

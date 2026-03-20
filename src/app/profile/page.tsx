@@ -12,7 +12,7 @@ import Link from "next/link"
 import {
   Flame, Zap, Shield, Award, UserPlus, Users,
   Search, Mail, ChevronRight, X as CloseIcon, Camera, Star,
-  Trophy, BookOpen, Compass, Share2, Heart, Settings
+  Trophy, BookOpen, Compass, Share2, Heart, Settings, Instagram
 } from "lucide-react"
 
 // --- CUSTOM ILLUSTRATIONS ---
@@ -788,6 +788,40 @@ export default function ProfilePage() {
                   Se unió en {joinDate}
                 </p>
               )}
+
+              {/* Instagram link */}
+              <a
+                  href="https://www.instagram.com/bizen.mx?igsh=ZmJmYmdxZHg1Z2E3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "8px 16px",
+                      background: "rgba(225, 48, 108, 0.08)",
+                      border: "1px solid rgba(225, 48, 108, 0.2)",
+                      borderRadius: 999,
+                      cursor: "pointer",
+                      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "#E1306C",
+                      textDecoration: "none",
+                      marginBottom: 20
+                  }}
+                  onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "rgba(225, 48, 108, 0.15)";
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(225, 48, 108, 0.08)";
+                      e.currentTarget.style.transform = "translateY(0)";
+                  }}
+              >
+                  <Instagram size={15} />
+                  <span>Síguenos en Instagram</span>
+              </a>
 
               {/* Following / Followers */}
               <div style={{ display: "flex", gap: "clamp(24px, 12vw, 64px)", marginBottom: 16, justifyContent: "center", width: "100%", position: "relative" }}>

@@ -508,839 +508,403 @@ export default function FixedSidebar() {
           {mounted && (
             <div style={{ marginBottom: 24, flex: "1 1 auto" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 26, alignItems: stackAlignment }}>
-                {isStudentOrGuest && (
-                  <>
-                    {/* ── INICIO / Dashboard ── */}
-                    {user && (
-                      <button
+                {/* ── INICIO / Dashboard ── */}
+                {user && (
+                    <button
                         onClick={() => navigateTo("/dashboard")}
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                          padding: "14px 16px",
-                          background: isCompactSidebar ? "transparent" : (dashboardActive ? "rgba(11,113,254,0.1)" : "transparent"),
-                          border: "none",
-                          borderRadius: 10,
-                          cursor: "pointer",
-                          transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)",
-                          fontSize: 14,
-                          fontWeight: dashboardActive ? 700 : 500,
-                          textAlign: "left",
-                          color: dashboardActive ? "#0B71FE" : "#64748B",
-                          ...compactButtonOverrides(dashboardActive),
-                          position: "relative",
-                          overflow: "hidden",
-                          boxShadow: dashboardActive ? "0 4px 12px rgba(11,113,254,0.12)" : "none"
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "14px 16px",
+                            background: isCompactSidebar ? "transparent" : (pathname === "/dashboard" ? "rgba(11, 113, 254, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 14,
+                            fontWeight: pathname === "/dashboard" ? 700 : 500,
+                            textAlign: "left",
+                            color: pathname === "/dashboard" ? "#0B71FE" : "#64748B",
+                            ...compactButtonOverrides(pathname === "/dashboard"),
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: pathname === "/dashboard" ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                         }}
                         onMouseEnter={(e) => {
-                          if (!isCompactSidebar) {
-                            e.currentTarget.style.background = dashboardActive ? "rgba(11,113,254,0.15)" : "#F1F5F9"
-                            e.currentTarget.style.color = "#0B71FE"
-                            e.currentTarget.style.transform = "translateY(-1px)"
-                            e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.05)"
-                          }
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = pathname === "/dashboard" ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
+                                e.currentTarget.style.color = "#0B71FE"
+                            }
                         }}
                         onMouseLeave={(e) => {
-                          if (!isCompactSidebar) {
-                            e.currentTarget.style.background = dashboardActive ? "rgba(11,113,254,0.1)" : "transparent"
-                            e.currentTarget.style.color = dashboardActive ? "#0B71FE" : "#64748B"
-                            e.currentTarget.style.transform = "translateY(0)"
-                            e.currentTarget.style.boxShadow = dashboardActive ? "0 4px 12px rgba(11,113,254,0.12)" : "none"
-                          }
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = pathname === "/dashboard" ? "rgba(11, 113, 254, 0.12)" : "transparent"
+                                e.currentTarget.style.color = pathname === "/dashboard" ? "#0B71FE" : "#64748B"
+                            }
                         }}
-                      >
-                        {dashboardActive && (
-                          <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0", boxShadow: "0 0 8px rgba(11,113,254,0.5)" }} />
+                    >
+                        {pathname === "/dashboard" && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
                         )}
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={dashboardActive ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                          <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                          <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={pathname === "/dashboard" ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                            <rect x="3" y="14" width="7" height="7" rx="1.5" />
                         </svg>
                         <span className="nav-item-label">Inicio</span>
-                      </button>
-                    )}
-
-                    {/* ── APRENDE FINANZAS ── */}
-                    <button
-                      data-tour-id="/courses"
-                      onClick={() => navigateTo("/courses")}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "14px 16px",
-                        background: isCompactSidebar ? "transparent" : (coursesActive ? "rgba(11, 113, 254, 0.1)" : "transparent"),
-                        border: "none",
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        fontSize: 14,
-                        fontWeight: coursesActive ? 700 : 500,
-                        textAlign: "left",
-                        color: coursesActive ? "#0B71FE" : "#64748B",
-                        ...compactButtonOverrides(coursesActive),
-                        position: "relative",
-                        overflow: "hidden",
-                        boxShadow: coursesActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = coursesActive ? "rgba(11, 113, 254, 0.15)" : "#F1F5F9"
-                          e.currentTarget.style.color = "#0B71FE"
-                          e.currentTarget.style.transform = "translateY(-1px)"
-                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = coursesActive ? "rgba(11, 113, 254, 0.1)" : "transparent"
-                          e.currentTarget.style.color = coursesActive ? "#0B71FE" : "#64748B"
-                          e.currentTarget.style.transform = "translateY(0)"
-                          e.currentTarget.style.boxShadow = coursesActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                        }
-                      }}
-                    >
-                      {coursesActive && (
-                        <div style={{
-                          position: "absolute",
-                          left: 0,
-                          top: "15%",
-                          height: "70%",
-                          width: "4px",
-                          backgroundColor: "#0B71FE",
-                          borderRadius: "0 4px 4px 0",
-                          boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                        }} />
-                      )}
-                      <MapIcon size={iconSize} strokeWidth={coursesActive ? 2.5 : 2} />
-                      <span className="nav-item-label">{t.nav.exploreCourses}</span>
                     </button>
-
-                    <button
-                      data-tour-id="/mision-del-dia"
-                      onClick={() => navigateTo("/mision-del-dia")}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "14px 16px",
-                        background: isCompactSidebar ? "transparent" : (retoDiarioActive ? "rgba(11, 113, 254, 0.1)" : "transparent"),
-                        border: "none",
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        fontSize: 14,
-                        fontWeight: retoDiarioActive ? 700 : 500,
-                        textAlign: "left",
-                        color: retoDiarioActive ? "#0B71FE" : "#64748B",
-                        ...compactButtonOverrides(retoDiarioActive),
-                        position: "relative",
-                        overflow: "hidden",
-                        boxShadow: retoDiarioActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = retoDiarioActive ? "rgba(11, 113, 254, 0.15)" : "#F1F5F9"
-                          e.currentTarget.style.color = "#0B71FE"
-                          e.currentTarget.style.transform = "translateY(-1px)"
-                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = retoDiarioActive ? "rgba(11, 113, 254, 0.1)" : "transparent"
-                          e.currentTarget.style.color = retoDiarioActive ? "#0B71FE" : "#64748B"
-                          e.currentTarget.style.transform = "translateY(0)"
-                          e.currentTarget.style.boxShadow = retoDiarioActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                        }
-                      }}
-                    >
-                      {retoDiarioActive && (
-                        <div style={{
-                          position: "absolute",
-                          left: 0,
-                          top: "15%",
-                          height: "70%",
-                          width: "4px",
-                          backgroundColor: "#0B71FE",
-                          borderRadius: "0 4px 4px 0",
-                          boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                        }} />
-                      )}
-                      <Target size={iconSize} strokeWidth={retoDiarioActive ? 2.5 : 2} />
-                      <span className="nav-item-label">Misión del día</span>
-                    </button>
-
-
-
-                    <button
-                      data-tour-id="/simulador"
-                      onClick={() => navigateTo("/cash-flow")}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "14px 16px",
-                        background: isCompactSidebar ? "transparent" : (simuladorActive ? "rgba(11, 113, 254, 0.1)" : "transparent"),
-                        border: "none",
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        fontSize: 14,
-                        fontWeight: simuladorActive ? 700 : 500,
-                        textAlign: "left",
-                        color: simuladorActive ? "#0B71FE" : "#64748B",
-                        ...compactButtonOverrides(simuladorActive),
-                        position: "relative",
-                        overflow: "hidden",
-                        boxShadow: simuladorActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = simuladorActive ? "rgba(11, 113, 254, 0.15)" : "#F1F5F9"
-                          e.currentTarget.style.color = "#0B71FE"
-                          e.currentTarget.style.transform = "translateY(-1px)"
-                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = simuladorActive ? "rgba(11, 113, 254, 0.1)" : "transparent"
-                          e.currentTarget.style.color = simuladorActive ? "#0B71FE" : "#64748B"
-                          e.currentTarget.style.transform = "translateY(0)"
-                          e.currentTarget.style.boxShadow = simuladorActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                        }
-                      }}
-                    >
-                      {simuladorActive && (
-                        <div style={{
-                          position: "absolute",
-                          left: 0,
-                          top: "15%",
-                          height: "70%",
-                          width: "4px",
-                          backgroundColor: "#0B71FE",
-                          borderRadius: "0 4px 4px 0",
-                          boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                        }} />
-                      )}
-                      <Gamepad2 size={iconSize} strokeWidth={simuladorActive ? 2.5 : 2} />
-                      <span className="nav-item-label">Simuladores</span>
-                    </button>
-
-
-
-                    <button
-                      data-tour-id="/impacto-social"
-                      onClick={() => navigateTo("/impacto-social")}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "14px 16px",
-                        background: isCompactSidebar ? "transparent" : (impactoSocialActive ? "rgba(11, 113, 254, 0.12)" : "transparent"),
-                        border: "none",
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        fontSize: 14,
-                        fontWeight: impactoSocialActive ? 700 : 500,
-                        textAlign: "left",
-                        color: impactoSocialActive ? "#0B71FE" : "#64748B",
-                        ...compactButtonOverrides(impactoSocialActive),
-                        position: "relative",
-                        overflow: "hidden",
-                        boxShadow: impactoSocialActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = impactoSocialActive ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
-                          e.currentTarget.style.color = "#0B71FE"
-                          e.currentTarget.style.transform = "translateY(-1px)"
-                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = impactoSocialActive ? "rgba(11, 113, 254, 0.12)" : "transparent"
-                          e.currentTarget.style.color = impactoSocialActive ? "#0B71FE" : "#64748B"
-                          e.currentTarget.style.transform = "translateY(0)"
-                          e.currentTarget.style.boxShadow = impactoSocialActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                        }
-                      }}
-                    >
-                      {impactoSocialActive && (
-                        <div style={{
-                          position: "absolute",
-                          left: 0,
-                          top: "15%",
-                          height: "70%",
-                          width: "4px",
-                          backgroundColor: "#0B71FE",
-                          borderRadius: "0 4px 4px 0",
-                          boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                        }} />
-                      )}
-                      <Heart size={iconSize} strokeWidth={impactoSocialActive ? 2.5 : 2} />
-                      <span className="nav-item-label">{t.nav.impactoSocial}</span>
-                    </button>
-
-                    <button
-                      onClick={() => navigateTo(isAdminOrTeacher ? "/live/host" : "/live/join")}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "14px 16px",
-                        background: isCompactSidebar ? "transparent" : (liveActive ? "rgba(251, 191, 36, 0.12)" : "transparent"),
-                        border: "none",
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                        fontSize: 14,
-                        fontWeight: liveActive ? 700 : 500,
-                        textAlign: "left",
-                        color: liveActive ? "#fbbf24" : "#64748B",
-                        ...compactButtonOverrides(liveActive),
-                        position: "relative",
-                        overflow: "hidden",
-                        boxShadow: liveActive ? "0 4px 12px rgba(251, 191, 36, 0.12)" : "none"
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = liveActive ? "rgba(251, 191, 36, 0.18)" : "#F1F5F9"
-                          e.currentTarget.style.color = "#fbbf24"
-                          e.currentTarget.style.transform = "translateY(-1px)"
-                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = liveActive ? "rgba(251, 191, 36, 0.12)" : "transparent"
-                          e.currentTarget.style.color = liveActive ? "#fbbf24" : "#64748B"
-                          e.currentTarget.style.transform = "translateY(0)"
-                          e.currentTarget.style.boxShadow = liveActive ? "0 4px 12px rgba(251, 191, 36, 0.12)" : "none"
-                        }
-                      }}
-                    >
-                      {liveActive && (
-                        <div style={{
-                          position: "absolute",
-                          left: 0,
-                          top: "15%",
-                          height: "70%",
-                          width: "4px",
-                          backgroundColor: "#fbbf24",
-                          borderRadius: "0 4px 4px 0",
-                          boxShadow: "0 0 8px rgba(251, 191, 36, 0.5)"
-                        }} />
-                      )}
-                      <Zap size={iconSize} strokeWidth={liveActive ? 2.5 : 2} fill={liveActive ? "#fbbf24" : "none"} />
-                      <span className="nav-item-label">{isAdminOrTeacher ? "Lanzar Live Quiz" : "Bizen Live"}</span>
-                    </button>
-                  </>
                 )}
 
-                {isAdminOrTeacher && (
-                  <button
-                    onClick={() => navigateTo("/live/host")}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      padding: "14px 16px",
-                      background: isCompactSidebar ? "transparent" : (liveActive ? "rgba(251, 191, 36, 0.12)" : "transparent"),
-                      border: "none",
-                      borderRadius: 10,
-                      cursor: "pointer",
-                      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                      fontSize: 14,
-                      fontWeight: liveActive ? 700 : 500,
-                      textAlign: "left",
-                      color: liveActive ? "#fbbf24" : "#64748B",
-                      ...compactButtonOverrides(liveActive),
-                      position: "relative",
-                      overflow: "hidden",
-                      boxShadow: liveActive ? "0 4px 12px rgba(251, 191, 36, 0.12)" : "none"
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isCompactSidebar) {
-                        e.currentTarget.style.background = liveActive ? "rgba(251, 191, 36, 0.18)" : "#F1F5F9"
-                        e.currentTarget.style.color = "#fbbf24"
-                        e.currentTarget.style.transform = "translateY(-1px)"
-                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)"
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isCompactSidebar) {
-                        e.currentTarget.style.background = liveActive ? "rgba(251, 191, 36, 0.12)" : "transparent"
-                        e.currentTarget.style.color = liveActive ? "#fbbf24" : "#64748B"
-                        e.currentTarget.style.transform = "translateY(0)"
-                        e.currentTarget.style.boxShadow = liveActive ? "0 4px 12px rgba(251, 191, 36, 0.12)" : "none"
-                      }
-                    }}
-                  >
-                    {liveActive && (
-                      <div style={{
-                        position: "absolute",
-                        left: 0,
-                        top: "15%",
-                        height: "70%",
-                        width: "4px",
-                        backgroundColor: "#fbbf24",
-                        borderRadius: "0 4px 4px 0",
-                        boxShadow: "0 0 8px rgba(251, 191, 36, 0.5)"
-                      }} />
-                    )}
-                    <Zap size={iconSize} strokeWidth={liveActive ? 2.5 : 2} fill={liveActive ? "#fbbf24" : "none"} />
-                    <span className="nav-item-label">Lanzar Live Quiz</span>
-                  </button>
-                )}
-
-                {user && (
-                  <>
+                {/* ── APRENDE FINANZAS (Cursos) ── */}
+                {isStudentOrGuest && (
                     <button
-                      data-tour-id="/forum"
-                      onClick={() => navigateTo("/forum")}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "14px 16px",
-                        background: isCompactSidebar ? "transparent" : (forumActive ? "rgba(11, 113, 254, 0.12)" : "transparent"),
-                        border: "none",
-                        borderRadius: 10,
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                        fontSize: 14,
-                        fontWeight: forumActive ? 700 : 600,
-                        textAlign: "left",
-                        color: forumActive ? "#0B71FE" : "#4b5563",
-                        ...compactButtonOverrides(forumActive),
-                        position: "relative",
-                        overflow: "hidden",
-                        boxShadow: forumActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = forumActive ? "rgba(11, 113, 254, 0.18)" : "#f8fafc"
-                          e.currentTarget.style.color = "#0B71FE"
-                          e.currentTarget.style.transform = "translateX(-4px)"
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isCompactSidebar) {
-                          e.currentTarget.style.background = forumActive ? "rgba(11, 113, 254, 0.12)" : "transparent"
-                          e.currentTarget.style.color = forumActive ? "#0B71FE" : "#4b5563"
-                          e.currentTarget.style.transform = "translateX(0)"
-                        }
-                      }}
-                    >
-                      {forumActive && (
-                        <div style={{
-                          position: "absolute",
-                          left: 0,
-                          top: "15%",
-                          height: "70%",
-                          width: "4px",
-                          backgroundColor: "#0B71FE",
-                          borderRadius: "0 4px 4px 0",
-                          boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                        }} />
-                      )}
-                      <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
-                      <span className="nav-item-label">Foro</span>
-                    </button>
-
-
-                    {/* Panel Escolar for teachers/admins - TOP LEVEL for visibility */}
-                    {isAdminOrTeacher && (
-                      <>
-                        <button
-                          onClick={() => navigateTo("/teacher/dashboard")}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            padding: "12px",
-                            background: isCompactSidebar ? "transparent" : (pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"),
-                            border: "none",
-                            borderRadius: 10,
-                            cursor: "pointer",
-                            transition: "all 0.2s ease",
-                            fontSize: 14,
-                            fontWeight: pathname === "/teacher/dashboard" ? 700 : 600,
-                            textAlign: "left",
-                            color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563",
-                            ...compactButtonOverrides(pathname === "/teacher/dashboard")
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isCompactSidebar) {
-                              e.currentTarget.style.background = "#f8fafc"
-                              e.currentTarget.style.color = "#0B71FE"
-                              e.currentTarget.style.transform = "translateX(-4px)"
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isCompactSidebar) {
-                              e.currentTarget.style.background = pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"
-                              e.currentTarget.style.color = pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563"
-                              e.currentTarget.style.transform = "translateX(0)"
-                            }
-                          }}
-                        >
-                          <BarChart2 size={iconSize} strokeWidth={pathname === "/teacher/dashboard" ? 2.5 : 2} />
-                          <span className="nav-item-label">Panel escolar</span>
-                        </button>
-
-                        <button
-                          onClick={() => navigateTo("/teacher/courses")}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            padding: "12px",
-                            background: isCompactSidebar ? "transparent" : (pathname === "/teacher/courses" ? "#eff6ff" : "transparent"),
-                            border: "none",
-                            borderRadius: 10,
-                            cursor: "pointer",
-                            transition: "all 0.2s ease",
-                            fontSize: 14,
-                            fontWeight: pathname === "/teacher/courses" ? 700 : 600,
-                            textAlign: "left",
-                            color: pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563",
-                            ...compactButtonOverrides(pathname === "/teacher/courses")
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isCompactSidebar) {
-                              e.currentTarget.style.background = "#f8fafc"
-                              e.currentTarget.style.color = "#0B71FE"
-                              e.currentTarget.style.transform = "translateX(-4px)"
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isCompactSidebar) {
-                              e.currentTarget.style.background = pathname === "/teacher/courses" ? "#eff6ff" : "transparent"
-                              e.currentTarget.style.color = pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563"
-                              e.currentTarget.style.transform = "translateX(0)"
-                            }
-                          }}
-                        >
-                          <MapIcon size={iconSize} strokeWidth={pathname === "/teacher/courses" ? 2.5 : 2} />
-                          <span className="nav-item-label">Cursos de la escuela</span>
-                        </button>
-                      </>
-                    )}
-                  </>
-                )}
-
-                {/* Más: below Foro; flyout to the right; desktop = hover, mobile/compact = click */}
-                {user && (
-                  <div
-                    ref={masTriggerRef}
-                    style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", gap: 10, alignItems: stackAlignment }}
-                    onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
-                    onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
-                  >
-                      <button
-                        type="button"
-                        onClick={() => isCompactSidebar && setIsMasOpen((o) => !o)}
+                        onClick={() => navigateTo("/courses")}
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                          padding: "14px 16px",
-                          background: isCompactSidebar ? "transparent" : (isMasOpen ? "#eff6ff" : "transparent"),
-                          border: "none",
-                          borderRadius: 10,
-                          cursor: "pointer",
-                          transition: "all 0.2s ease",
-                          fontSize: 14,
-                          fontWeight: 500,
-                          textAlign: "left",
-                          color: isMasOpen ? "#0B71FE" : "#4b5563",
-                          width: "100%",
-                          minHeight: 0,
-                          justifyContent: "flex-start",
-                          ...compactButtonOverrides(isMasOpen)
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "14px 16px",
+                            background: isCompactSidebar ? "transparent" : (pathname.startsWith("/courses") ? "rgba(11, 113, 254, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 14,
+                            fontWeight: pathname.startsWith("/courses") ? 700 : 500,
+                            textAlign: "left",
+                            color: pathname.startsWith("/courses") ? "#0B71FE" : "#64748B",
+                            ...compactButtonOverrides(pathname.startsWith("/courses")),
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: pathname.startsWith("/courses") ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
                         }}
                         onMouseEnter={(e) => {
-                          if (!isCompactSidebar) {
-                            e.currentTarget.style.background = "#f8fafc"
-                            e.currentTarget.style.color = "#0B71FE"
-                            e.currentTarget.style.transform = "translateX(-4px)"
-                          }
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = pathname.startsWith("/courses") ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
+                                e.currentTarget.style.color = "#0B71FE"
+                            }
                         }}
                         onMouseLeave={(e) => {
-                          if (!isCompactSidebar) {
-                            e.currentTarget.style.background = isMasOpen ? "#eff6ff" : "transparent"
-                            e.currentTarget.style.color = isMasOpen ? "#0B71FE" : "#4b5563"
-                            e.currentTarget.style.transform = "translateX(0)"
-                          }
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = pathname.startsWith("/courses") ? "rgba(11, 113, 254, 0.12)" : "transparent"
+                                e.currentTarget.style.color = pathname.startsWith("/courses") ? "#0B71FE" : "#64748B"
+                            }
                         }}
-                      >
-                        <MoreHorizontal size={iconSize} />
-                        <span className="nav-item-label">Más</span>
-                        {isCompactSidebar && <span style={{ marginLeft: "auto", display: "flex", alignItems: "center", opacity: 0.9 }}>
-                          {isMasOpen ? <ChevronDown size={14} /> : <ChevronRightIcon size={14} />}
-                        </span>}
-                      </button>
+                    >
+                        {pathname.startsWith("/courses") && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
+                        )}
+                        <MapIcon size={iconSize} strokeWidth={pathname.startsWith("/courses") ? 2.5 : 2} />
+                        <span className="nav-item-label">Cursos y Lecciones</span>
+                    </button>
+                )}
 
-                      {isMasOpen && typeof document !== "undefined" && createPortal(
-                        <div
-                          className="mas-flyout-panel"
-                          style={{
-                            position: "fixed",
-                            top: masFlyoutPosition.top,
-                            left: masFlyoutPosition.left,
-                            minWidth: 200,
+                {/* ── SIMULADORES ── */}
+                {isStudentOrGuest && (
+                    <button
+                        onClick={() => navigateTo("/cash-flow")}
+                        style={{
                             display: "flex",
-                            flexDirection: "column",
-                            gap: 10,
-                            padding: "12px",
-                            background: "#FBFAF5",
-                            border: "2px solid #0F62FE",
-                            borderRadius: 12,
-                            boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                            zIndex: 10002,
-                          }}
-                          onMouseEnter={!isCompactSidebar ? showMasPanel : undefined}
-                          onMouseLeave={!isCompactSidebar ? hideMasPanel : undefined}
-                        >
-
-                          {isStudentOrGuest && (
-                            <>
-                              <button
-                                onClick={() => { hideMasPanel(); navigateTo("/rankings") }}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 12,
-                                  padding: "10px 12px",
-                                  background: rankingsActive ? "rgba(11, 113, 254, 0.15)" : "transparent",
-                                  border: "none",
-                                  borderRadius: 8,
-                                  cursor: "pointer",
-                                  transition: "all 0.2s ease",
-                                  fontSize: 13,
-                                  fontWeight: rankingsActive ? 750 : 600,
-                                  textAlign: "left",
-                                  color: rankingsActive ? "#0B71FE" : "#4b5563",
-                                  width: "100%",
-                                  boxSizing: "border-box",
-                                  position: "relative",
-                                  overflow: "hidden"
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.background = rankingsActive ? "rgba(11, 113, 254, 0.22)" : "#f8fafc"
-                                  e.currentTarget.style.color = "#0B71FE"
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = rankingsActive ? "rgba(11, 113, 254, 0.15)" : "transparent"
-                                  e.currentTarget.style.color = rankingsActive ? "#0B71FE" : "#4b5563"
-                                }}
-                              >
-                                {rankingsActive && (
-                                  <div style={{
-                                    position: "absolute",
-                                    left: 0,
-                                    top: "20%",
-                                    height: "60%",
-                                    width: "4px",
-                                    backgroundColor: "#0B71FE",
-                                    borderRadius: "0 4px 4px 0",
-                                    boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                                  }} />
-                                )}
-                                <Medal size={20} strokeWidth={rankingsActive ? 2.5 : 2} />
-                                <span className="nav-item-label">Rankings</span>
-                              </button>
-
-                              <button
-                                data-tour-id="/tienda"
-                                onClick={() => navigateTo("/tienda")}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 12,
-                                  padding: "10px 12px",
-                                  background: isCompactSidebar ? "transparent" : (tiendaActive ? "rgba(11, 113, 254, 0.15)" : "transparent"),
-                                  border: "none",
-                                  borderRadius: 8,
-                                  cursor: "pointer",
-                                  transition: "all 0.2s ease",
-                                  fontSize: 13,
-                                  fontWeight: tiendaActive ? 750 : 600,
-                                  textAlign: "left",
-                                  color: tiendaActive ? "#0B71FE" : "#4b5563",
-                                  ...compactButtonOverrides(tiendaActive),
-                                  position: "relative",
-                                  overflow: "hidden"
-                                }}
-                                onMouseEnter={(e) => {
-                                  if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = tiendaActive ? "rgba(11, 113, 254, 0.22)" : "#f8fafc"
-                                    e.currentTarget.style.color = "#0B71FE"
-                                  }
-                                }}
-                                onMouseLeave={(e) => {
-                                  if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = tiendaActive ? "rgba(11, 113, 254, 0.15)" : "transparent"
-                                    e.currentTarget.style.color = tiendaActive ? "#0B71FE" : "#4b5563"
-                                  }
-                                }}
-                              >
-                                {tiendaActive && (
-                                  <div style={{
-                                    position: "absolute",
-                                    left: 0,
-                                    top: "20%",
-                                    height: "60%",
-                                    width: "4px",
-                                    backgroundColor: "#0B71FE",
-                                    borderRadius: "0 4px 4px 0",
-                                    boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                                  }} />
-                                )}
-                                <ShoppingBag size={20} strokeWidth={tiendaActive ? 2.5 : 2} />
-                                <span className="nav-item-label">Tienda</span>
-                              </button>
-                            </>
-                          )}
-
-
-                          <button
-                            onClick={() => navigateTo("/configuracion")}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                              padding: "10px 12px",
-                              background: isCompactSidebar ? "transparent" : (settingsActive ? "rgba(11, 113, 254, 0.15)" : "transparent"),
-                              border: "none",
-                              borderRadius: 8,
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              fontSize: 13,
-                              fontWeight: settingsActive ? 750 : 600,
-                              textAlign: "left",
-                              color: settingsActive ? "#0B71FE" : "#4b5563",
-                              width: "100%",
-                              boxSizing: "border-box",
-                              ...compactButtonOverrides(settingsActive),
-                              position: "relative",
-                              overflow: "hidden"
-                            }}
-                            onMouseEnter={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = settingsActive ? "rgba(11, 113, 254, 0.22)" : "#f8fafc"
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "14px 16px",
+                            background: isCompactSidebar ? "transparent" : (pathname.startsWith("/cash-flow") ? "rgba(11, 113, 254, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 14,
+                            fontWeight: pathname.startsWith("/cash-flow") ? 700 : 500,
+                            textAlign: "left",
+                            color: pathname.startsWith("/cash-flow") ? "#0B71FE" : "#64748B",
+                            ...compactButtonOverrides(pathname.startsWith("/cash-flow")),
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: pathname.startsWith("/cash-flow") ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = pathname.startsWith("/cash-flow") ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
                                 e.currentTarget.style.color = "#0B71FE"
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (!isCompactSidebar) {
-                                e.currentTarget.style.background = settingsActive ? "rgba(11, 113, 254, 0.15)" : "transparent"
-                                e.currentTarget.style.color = settingsActive ? "#0B71FE" : "#4b5563"
-                              }
-                            }}
-                          >
-                            {settingsActive && (
-                              <div style={{
-                                position: "absolute",
-                                left: 0,
-                                top: "20%",
-                                height: "60%",
-                                width: "4px",
-                                backgroundColor: "#0B71FE",
-                                borderRadius: "0 4px 4px 0",
-                                boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                              }} />
-                            )}
-                            <Settings size={20} strokeWidth={settingsActive ? 2.5 : 2} />
-                            <span className="nav-item-label">Configuración</span>
-                          </button>
-                          <a
-                            href="https://www.instagram.com/bizen.mx?igsh=ZmJmYmdxZHg1Z2E3"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = pathname.startsWith("/cash-flow") ? "rgba(11, 113, 254, 0.12)" : "transparent"
+                                e.currentTarget.style.color = pathname.startsWith("/cash-flow") ? "#0B71FE" : "#64748B"
+                            }
+                        }}
+                    >
+                        {pathname.startsWith("/cash-flow") && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
+                        )}
+                        <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={pathname.startsWith("/cash-flow") ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                            <line x1="6" y1="12" x2="10" y2="12"/>
+                            <line x1="8" y1="10" x2="8" y2="14"/>
+                            <line x1="15" y1="13" x2="15.01" y2="13"/>
+                            <line x1="18" y1="11" x2="18.01" y2="11"/>
+                            <rect x="2" y="6" width="20" height="12" rx="6"/>
+                        </svg>
+                        <span className="nav-item-label">Simuladores</span>
+                    </button>
+                )}
+
+                {/* ── COMUNIDAD ── */}
+                {isStudentOrGuest && (
+                    <button
+                        onClick={() => navigateTo("/comunidad")}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "14px 16px",
+                            background: isCompactSidebar ? "transparent" : (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social") ? "rgba(11, 113, 254, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 14,
+                            fontWeight: (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? 700 : 500,
+                            textAlign: "left",
+                            color: (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? "#0B71FE" : "#64748B",
+                            ...compactButtonOverrides(pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")),
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
+                                e.currentTarget.style.color = "#0B71FE"
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? "rgba(11, 113, 254, 0.12)" : "transparent"
+                                e.currentTarget.style.color = (pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? "#0B71FE" : "#64748B"
+                            }
+                        }}
+                    >
+                        {(pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
+                        )}
+                        <MessageSquare size={iconSize} strokeWidth={(pathname.startsWith("/comunidad") || pathname.startsWith("/forum") || pathname.startsWith("/rankings") || pathname.startsWith("/impacto-social")) ? 2.5 : 2} />
+                        <span className="nav-item-label">Comunidad</span>
+                    </button>
+                )}
+
+                {/* ── TIENDA ── */}
+                {isStudentOrGuest && (
+                    <button
+                        onClick={() => navigateTo("/tienda")}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "14px 16px",
+                            background: isCompactSidebar ? "transparent" : (tiendaActive ? "rgba(245, 158, 11, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 14,
+                            fontWeight: tiendaActive ? 700 : 500,
+                            textAlign: "left",
+                            color: tiendaActive ? "#d97706" : "#64748B",
+                            ...compactButtonOverrides(tiendaActive),
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: tiendaActive ? "0 4px 12px rgba(245, 158, 11, 0.12)" : "none"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = tiendaActive ? "rgba(245, 158, 11, 0.18)" : "#F1F5F9"
+                                e.currentTarget.style.color = "#d97706"
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = tiendaActive ? "rgba(245, 158, 11, 0.12)" : "transparent"
+                                e.currentTarget.style.color = tiendaActive ? "#d97706" : "#64748B"
+                            }
+                        }}
+                    >
+                        {tiendaActive && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#d97706", borderRadius: "0 4px 4px 0" }} />
+                        )}
+                        <ShoppingBag size={iconSize} strokeWidth={tiendaActive ? 2.5 : 2} />
+                        <span className="nav-item-label">Tienda</span>
+                    </button>
+                )}
+
+                {/* ── BIZEN LIVE ── */}
+                {user && (
+                    <button
+                        onClick={() => navigateTo(isAdminOrTeacher ? "/live/host" : "/live/join")}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "14px 16px",
+                            background: isCompactSidebar ? "transparent" : (liveActive ? "rgba(251, 191, 36, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 14,
+                            fontWeight: liveActive ? 700 : 500,
+                            textAlign: "left",
+                            color: liveActive ? "#fbbf24" : "#64748B",
+                            ...compactButtonOverrides(liveActive),
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: liveActive ? "0 4px 12px rgba(251, 191, 36, 0.12)" : "none"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = liveActive ? "rgba(251, 191, 36, 0.18)" : "#F1F5F9"
+                                e.currentTarget.style.color = "#fbbf24"
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = liveActive ? "rgba(251, 191, 36, 0.12)" : "transparent"
+                                e.currentTarget.style.color = liveActive ? "#fbbf24" : "#64748B"
+                            }
+                        }}
+                    >
+                        {liveActive && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#fbbf24", borderRadius: "0 4px 4px 0" }} />
+                        )}
+                        <Zap size={iconSize} strokeWidth={liveActive ? 2.5 : 2} fill={liveActive ? "#fbbf24" : "none"} />
+                        <span className="nav-item-label">{isAdminOrTeacher ? "Lanzar Live Quiz" : "Bizen Live"}</span>
+                    </button>
+                )}
+
+                {/* ── FUNCIONES DE ADMINISTRADOR / MAESTRO ── */}
+                {isAdminOrTeacher && (
+                    <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+                        <button
+                            onClick={() => navigateTo("/teacher/dashboard")}
                             style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                              padding: "10px 12px",
-                              background: "transparent",
-                              border: "none",
-                              borderRadius: 8,
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              fontSize: 13,
-                              fontWeight: 500,
-                              textAlign: "left",
-                              color: "#4b5563",
-                              textDecoration: "none",
-                              width: "100%",
-                              boxSizing: "border-box"
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 12,
+                                padding: "12px",
+                                background: isCompactSidebar ? "transparent" : (pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"),
+                                border: "none",
+                                borderRadius: 10,
+                                cursor: "pointer",
+                                transition: "all 0.2s ease",
+                                fontSize: 14,
+                                fontWeight: pathname === "/teacher/dashboard" ? 700 : 600,
+                                textAlign: "left",
+                                color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563",
+                                ...compactButtonOverrides(pathname === "/teacher/dashboard")
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.background = "#f8fafc"
-                              e.currentTarget.style.color = "#0B71FE"
+                                if (!isCompactSidebar) {
+                                    e.currentTarget.style.background = "#f8fafc"
+                                    e.currentTarget.style.color = "#0B71FE"
+                                }
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.background = "transparent"
-                              e.currentTarget.style.color = "#4b5563"
+                                if (!isCompactSidebar) {
+                                    e.currentTarget.style.background = pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"
+                                    e.currentTarget.style.color = pathname === "/teacher/dashboard" ? "#0B71FE" : "#4b5563"
+                                }
                             }}
-                          >
-                            <Share2 size={20} strokeWidth={2} />
-                            <span className="nav-item-label">Síguenos</span>
-                          </a>
-                          <button
-                            onClick={async () => {
-                              try {
-                                hideMasPanel();
-                                await signOut();
-                                router.push("/");
-                              } catch (error) {
-                                console.error("Error signing out:", error);
-                              }
-                            }}
+                        >
+                            <BarChart2 size={iconSize} strokeWidth={pathname === "/teacher/dashboard" ? 2.5 : 2} />
+                            <span className="nav-item-label">Panel escolar</span>
+                        </button>
+
+                        <button
+                            onClick={() => navigateTo("/teacher/courses")}
                             style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                              padding: "10px 12px",
-                              background: "transparent",
-                              border: "none",
-                              borderRadius: 8,
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              fontSize: 13,
-                              fontWeight: 500,
-                              textAlign: "left",
-                              color: "#DC2626",
-                              width: "100%",
-                              boxSizing: "border-box"
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 12,
+                                padding: "12px",
+                                background: isCompactSidebar ? "transparent" : (pathname === "/teacher/courses" ? "#eff6ff" : "transparent"),
+                                border: "none",
+                                borderRadius: 10,
+                                cursor: "pointer",
+                                transition: "all 0.2s ease",
+                                fontSize: 14,
+                                fontWeight: pathname === "/teacher/courses" ? 700 : 600,
+                                textAlign: "left",
+                                color: pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563",
+                                ...compactButtonOverrides(pathname === "/teacher/courses")
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.background = "rgba(220, 38, 38, 0.1)"
+                                if (!isCompactSidebar) {
+                                    e.currentTarget.style.background = "#f8fafc"
+                                    e.currentTarget.style.color = "#0B71FE"
+                                }
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.background = "transparent"
+                                if (!isCompactSidebar) {
+                                    e.currentTarget.style.background = pathname === "/teacher/courses" ? "#eff6ff" : "transparent"
+                                    e.currentTarget.style.color = pathname === "/teacher/courses" ? "#0B71FE" : "#4b5563"
+                                }
                             }}
-                          >
-                            <LogIn size={20} color="#DC2626" strokeWidth={2} />
-                            <span className="nav-item-label">Cerrar sesión</span>
-                          </button>
-                        </div>,
-                        document.body
-                      )}
+                        >
+                            <MapIcon size={iconSize} strokeWidth={pathname === "/teacher/courses" ? 2.5 : 2} />
+                            <span className="nav-item-label">Cursos escuela</span>
+                        </button>
                     </div>
-                  )}
-                </div>
+                )}
+
+                {/* ── CONFIGURACIÓN ── */}
+                {user && (
+                    <button
+                        onClick={() => navigateTo("/configuracion")}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "14px 16px",
+                            background: isCompactSidebar ? "transparent" : (settingsActive ? "rgba(11, 113, 254, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 14,
+                            fontWeight: settingsActive ? 700 : 500,
+                            textAlign: "left",
+                            color: settingsActive ? "#0B71FE" : "#64748B",
+                            marginTop: "auto",
+                            ...compactButtonOverrides(settingsActive),
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: settingsActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = settingsActive ? "rgba(11, 113, 254, 0.18)" : "#F1F5F9"
+                                e.currentTarget.style.color = "#0B71FE"
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = settingsActive ? "rgba(11, 113, 254, 0.12)" : "transparent"
+                                e.currentTarget.style.color = settingsActive ? "#0B71FE" : "#64748B"
+                            }
+                        }}
+                    >
+                        {settingsActive && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
+                        )}
+                        <Settings size={iconSize} strokeWidth={settingsActive ? 2.5 : 2} />
+                        <span className="nav-item-label">Configuración</span>
+                    </button>
+                )}
               </div>
-            )}
+            </div>
+          )}
 
           {/* User Profile Footer */}
           {mounted && user && (

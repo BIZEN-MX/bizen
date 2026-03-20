@@ -10,7 +10,7 @@ import {
   Check, X, AlertTriangle, RotateCcw, ChevronRight,
   Eye, Award, Lock, LogOut, Save, Globe, Volume2,
   Zap, Moon, Sun, Contrast, Keyboard, FileText,
-  Phone, Calendar, School
+  Phone, Calendar, School, Instagram
 } from "lucide-react"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 
@@ -437,17 +437,28 @@ function SettingsContent() {
               )
             })}
 
-            <div style={{ borderTop: `1px solid ${T.border}`, marginTop: 10, paddingTop: 10 }}>
+            <div style={{ borderTop: `1px solid ${T.border}`, marginTop: 10, paddingTop: 10, display: "flex", flexDirection: "column", gap: 8 }}>
+              <a href="https://www.instagram.com/bizen.mx?igsh=ZmJmYmdxZHg1Z2E3" target="_blank" rel="noopener noreferrer" style={{
+                width: "100%", padding: "9px 12px",
+                background: "transparent", border: "1.5px solid transparent",
+                borderRadius: T.radiusSm, cursor: "pointer", fontSize: 13, fontWeight: 500,
+                color: T.textMid, fontFamily: T.font, textDecoration: "none",
+                display: "flex", alignItems: "center", gap: 10, transition: "all .18s"
+              }}
+               onMouseEnter={e => { e.currentTarget.style.background = T.surfaceAlt; e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = '#E1306C' }}
+               onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "transparent"; e.currentTarget.style.color = T.textMid }}>
+                <Instagram size={16} /> Síguenos en Instagram
+              </a>
               <button onClick={() => setShowResetConfirm(true)} style={{
                 width: "100%", padding: "9px 12px",
                 background: "transparent", border: `1.5px solid ${T.border}`,
-                borderRadius: T.radiusSm, cursor: "pointer", fontSize: 12, fontWeight: 500,
+                borderRadius: T.radiusSm, cursor: "pointer", fontSize: 13, fontWeight: 500,
                 color: T.red, fontFamily: T.font,
-                display: "flex", alignItems: "center", gap: 8, transition: "all .18s"
+                display: "flex", alignItems: "center", gap: 10, transition: "all .18s"
               }}
                 onMouseEnter={e => { e.currentTarget.style.background = T.redLight; e.currentTarget.style.borderColor = "#FCA5A5" }}
                 onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = T.border }}>
-                <RotateCcw size={12} /> Restaurar defaults
+                <RotateCcw size={16} /> Restaurar defaults
               </button>
             </div>
           </div>
