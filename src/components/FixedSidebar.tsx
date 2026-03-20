@@ -902,60 +902,58 @@ export default function FixedSidebar() {
 
                 {user && (
                   <>
-                    {isStudentOrGuest && (
-                      <button
-                        data-tour-id="/forum"
-                        onClick={() => navigateTo("/forum")}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                          padding: "14px 16px",
-                          background: isCompactSidebar ? "transparent" : (forumActive ? "rgba(11, 113, 254, 0.12)" : "transparent"),
-                          border: "none",
-                          borderRadius: 10,
-                          cursor: "pointer",
-                          transition: "all 0.2s ease",
-                          fontSize: 14,
-                          fontWeight: forumActive ? 700 : 600,
-                          textAlign: "left",
-                          color: forumActive ? "#0B71FE" : "#4b5563",
-                          ...compactButtonOverrides(forumActive),
-                          position: "relative",
-                          overflow: "hidden",
-                          boxShadow: forumActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isCompactSidebar) {
-                            e.currentTarget.style.background = forumActive ? "rgba(11, 113, 254, 0.18)" : "#f8fafc"
-                            e.currentTarget.style.color = "#0B71FE"
-                            e.currentTarget.style.transform = "translateX(-4px)"
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isCompactSidebar) {
-                            e.currentTarget.style.background = forumActive ? "rgba(11, 113, 254, 0.12)" : "transparent"
-                            e.currentTarget.style.color = forumActive ? "#0B71FE" : "#4b5563"
-                            e.currentTarget.style.transform = "translateX(0)"
-                          }
-                        }}
-                      >
-                        {forumActive && (
-                          <div style={{
-                            position: "absolute",
-                            left: 0,
-                            top: "15%",
-                            height: "70%",
-                            width: "4px",
-                            backgroundColor: "#0B71FE",
-                            borderRadius: "0 4px 4px 0",
-                            boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
-                          }} />
-                        )}
-                        <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
-                        <span className="nav-item-label">Foro</span>
-                      </button>
-                    )}
+                    <button
+                      data-tour-id="/forum"
+                      onClick={() => navigateTo("/forum")}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "14px 16px",
+                        background: isCompactSidebar ? "transparent" : (forumActive ? "rgba(11, 113, 254, 0.12)" : "transparent"),
+                        border: "none",
+                        borderRadius: 10,
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        fontSize: 14,
+                        fontWeight: forumActive ? 700 : 600,
+                        textAlign: "left",
+                        color: forumActive ? "#0B71FE" : "#4b5563",
+                        ...compactButtonOverrides(forumActive),
+                        position: "relative",
+                        overflow: "hidden",
+                        boxShadow: forumActive ? "0 4px 12px rgba(11, 113, 254, 0.12)" : "none"
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isCompactSidebar) {
+                          e.currentTarget.style.background = forumActive ? "rgba(11, 113, 254, 0.18)" : "#f8fafc"
+                          e.currentTarget.style.color = "#0B71FE"
+                          e.currentTarget.style.transform = "translateX(-4px)"
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isCompactSidebar) {
+                          e.currentTarget.style.background = forumActive ? "rgba(11, 113, 254, 0.12)" : "transparent"
+                          e.currentTarget.style.color = forumActive ? "#0B71FE" : "#4b5563"
+                          e.currentTarget.style.transform = "translateX(0)"
+                        }
+                      }}
+                    >
+                      {forumActive && (
+                        <div style={{
+                          position: "absolute",
+                          left: 0,
+                          top: "15%",
+                          height: "70%",
+                          width: "4px",
+                          backgroundColor: "#0B71FE",
+                          borderRadius: "0 4px 4px 0",
+                          boxShadow: "0 0 8px rgba(11, 113, 254, 0.5)"
+                        }} />
+                      )}
+                      <MessageSquare size={iconSize} strokeWidth={forumActive ? 2.5 : 2} />
+                      <span className="nav-item-label">Foro</span>
+                    </button>
 
 
                     {/* Panel Escolar for teachers/admins - TOP LEVEL for visibility */}
