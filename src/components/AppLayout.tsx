@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { UnauthScreen } from "@/components/UnauthScreen";
 import PageLoader from "@/components/PageLoader";
-import GlobalDailyMissionButton from "@/components/GlobalDailyMissionButton";
 
 // Pages that are publicly accessible (no auth required)
 const PUBLIC_PATHS = [
@@ -37,7 +36,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   // On protected routes, don't render children while auth is loading.
-  // This prevents individual pages from firing router.push('/login') before we know the user.
   if (isProtected && loading) {
     return <PageLoader />;
   }
@@ -49,7 +47,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="app-shell">
-      <GlobalDailyMissionButton />
       <div className="app-scroll">
         <main className="app-main">
           {children}
@@ -58,4 +55,3 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-

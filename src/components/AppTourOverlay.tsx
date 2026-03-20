@@ -30,17 +30,6 @@ const BASE_TOUR_STEPS = [
     placement: "bottom-left"
   },
   {
-    path: "/mision-del-dia",
-    label: "Misión del día",
-    title: "Construye el hábito financiero",
-    description: "Cada día recibes un reto nuevo de 5 minutos. Al completarlo, publicas tu evidencia en el Foro y acumulas rachas.",
-    icon: FireIcon,
-    color: "#f97316",
-    accent: "rgba(249,115,22,0.08)",
-    step: 2,
-    placement: "bottom-left"
-  },
-  {
     path: "/forum",
     label: "Foro",
     title: "Aprende con tu comunidad",

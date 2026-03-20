@@ -77,10 +77,10 @@ export default function MobileFooterNav() {
       active: isActivePath("/courses")
     },
     {
-      path: "/mision-del-dia",
-      label: "Misión",
-      icon: Target,
-      active: isActivePath("/mision-del-dia")
+      path: "/rankings",
+      label: "Rankings",
+      icon: Trophy,
+      active: isActivePath("/rankings")
     },
     {
       path: "/cash-flow",

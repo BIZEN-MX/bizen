@@ -630,19 +630,6 @@ export default function MisionDiaPage() {
                     <p className="rd-card-desc">{challenge?.description ?? "Cargando la misión de hoy..."}</p>
                   )}
 
-                  {/* CTA */}
-                  {submitted ? (
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 20px", background: "rgba(16,185,129,0.2)", border: "1px solid rgba(16,185,129,0.4)", borderRadius: 14, color: "#6ee7b7" }}>
-                      <CheckCircle size={20} />
-                      <span style={{ fontWeight: 600, fontSize: 15 }}>¡Evidencia publicada! Tu grupo ya puede verla en el Foro.</span>
-                    </div>
-                  ) : (
-                    <button className="rd-complete-btn" onClick={() => setPhase("wrap")}>
-                      <CheckCircle size={18} strokeWidth={2.5} />
-                      Completé la misión
-                      <ChevronRight size={16} />
-                    </button>
-                  )}
                 </div>
               </div>
 

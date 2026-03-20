@@ -21,7 +21,6 @@ function isPublicPath(p: string | null) {
 }
 
 import BillyChatbot from './BillyChatbot';
-import GlobalDailyMissionButton from './GlobalDailyMissionButton';
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   // const [isNavigating, setIsNavigating] = useState(false);
@@ -169,9 +168,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page, hidden when unauth */}
       {!hideAppNavigation && isMobile && !isLessonInteractivePage && !isUnauthProtected && <MobileFooterNav />}
 
-      {!isUnauthProtected && <GlobalLogo />}
-      {/* Show GlobalDailyMissionButton only when app chrome is visible */}
-      {!hideAppNavigation && !isUnauthProtected && <GlobalDailyMissionButton />}
+      {!hideAppNavigation && !isUnauthProtected && <GlobalLogo />}
       {children}
       {!hideAppNavigation && user && <BillyChatbot />}
     </>
