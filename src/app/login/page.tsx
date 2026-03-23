@@ -72,7 +72,7 @@ function BIZENLoginContent() {
         console.error("Failed to fetch profile on login", err)
       }
 
-      router.replace("/courses")
+      router.replace("/dashboard")
     } catch (err: unknown) {
       setMessage(translateAuthError(err instanceof Error ? err.message : "Error al iniciar sesión"))
     } finally {

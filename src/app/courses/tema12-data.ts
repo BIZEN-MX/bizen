@@ -1,6 +1,7 @@
 export interface Tema12Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema12Subtema {
@@ -8,59 +9,37 @@ export interface Tema12Subtema {
   lessons: Tema12Lesson[]
 }
 
+export const TEMA12_TITLE = "Crédito y tarjetas"
+
 export const TEMA12_SUBTEMAS: Tema12Subtema[] = [
   {
-    title: "Emociones al invertir",
+    title: "Fundamentos del crédito",
     lessons: [
-      { title: "Emociones y dinero invertido", slug: "emociones-y-dinero-invertido" },
-      { title: "Miedo a perder", slug: "miedo-a-perder" },
-      { title: "Euforia y exceso de confianza", slug: "euforia-y-exceso-de-confianza" },
-      { title: "Estrés al ver pérdidas", slug: "estres-al-ver-perdidas" },
-    ],
+      { title: "¿Qué es crédito y cuándo sí conviene?", slug: "que-es-credito-y-cuando-si-conviene", level: "Básico" },
+      { title: "Crédito bueno vs malo (con ejemplos reales)", slug: "credito-bueno-vs-malo-con-ejemplos-reales", level: "Básico" },
+      { title: "¿Qué significa “capacidad de pago”?", slug: "que-significa-capacidad-de-pago", level: "Intermedio" },
+      { title: "Costo real del crédito (idea sin fórmula)", slug: "costo-real-del-credito-idea-sin-formula", level: "Intermedio" },
+      { title: "Señales de que NO debes pedir crédito", slug: "senales-de-que-no-debes-pedir-credito", level: "Avanzado" },
+    ]
   },
   {
-    title: "Sesgos mentales",
+    title: "Tarjetas de crédito",
     lessons: [
-      { title: "¿Qué son los sesgos mentales?", slug: "que-son-los-sesgos-mentales" },
-      { title: "Sesgo de confirmación", slug: "sesgo-de-confirmacion" },
-      { title: "Sesgo de aversión a la pérdida", slug: "sesgo-de-aversion-a-la-perdida" },
-      { title: "Seguir a la multitud", slug: "seguir-a-la-multitud" },
-      { title: "Reconocer mis sesgos", slug: "reconocer-mis-sesgos" },
-    ],
+      { title: "¿Cómo funciona una tarjeta (ciclo de pago)?", slug: "como-funciona-una-tarjeta-ciclo-de-pago", level: "Básico" },
+      { title: "Fecha de corte vs fecha límite (sin confundirse)", slug: "fecha-de-corte-vs-fecha-limite-sin-confundirse", level: "Básico" },
+      { title: "Pago mínimo vs pago para no generar intereses", slug: "pago-minimo-vs-pago-para-no-generar-intereses", level: "Intermedio" },
+      { title: "Anualidad, comisiones y cargos comunes", slug: "anualidad-comisiones-y-cargos-comunes", level: "Intermedio" },
+      { title: "Regla de oro: cómo usar tarjeta sin caer en deuda", slug: "regla-de-oro-como-usar-tarjeta-sin-caer-en-deuda", level: "Avanzado" },
+    ]
   },
   {
-    title: "Comportamientos comunes",
+    title: "Uso responsable",
     lessons: [
-      { title: "Comprar caro y vender barato", slug: "comprar-caro-y-vender-barato" },
-      { title: "Reaccionar a noticias", slug: "reaccionar-a-noticias" },
-      { title: "Sobreoperar", slug: "sobreoperar" },
-      { title: "Falta de paciencia", slug: "falta-de-paciencia" },
-    ],
-  },
-  {
-    title: "Manejar pérdidas",
-    lessons: [
-      { title: "Aceptar pérdidas", slug: "aceptar-perdidas" },
-      { title: "Diferencia entre pérdida temporal y real", slug: "diferencia-entre-perdida-temporal-y-real" },
-      { title: "Aprender de una mala inversión", slug: "aprender-de-una-mala-inversion" },
-      { title: "Controlar emociones en crisis", slug: "controlar-emociones-en-crisis" },
-    ],
-  },
-  {
-    title: "Construir disciplina",
-    lessons: [
-      { title: "Disciplina al invertir", slug: "disciplina-al-invertir" },
-      { title: "Seguir un plan", slug: "seguir-un-plan" },
-      { title: "Constancia a largo plazo", slug: "constancia-a-largo-plazo" },
-      { title: "Evitar decisiones impulsivas", slug: "evitar-decisiones-impulsivas" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "La mente como herramienta de inversión", slug: "la-mente-como-herramienta-de-inversion" },
-      { title: "Prepararme para construir patrimonio", slug: "prepararme-para-construir-patrimonio" },
-      { title: "Checkpoint: Mi psicología como inversionista", slug: "checkpoint-mi-psicologia-como-inversionista" },
-    ],
+      { title: "Límites personales: cuánto sí gastar con tarjeta", slug: "limites-personales-cuanto-si-gastar-con-tarjeta", level: "Básico" },
+      { title: "Tarjeta para construir historial (estrategia segura)", slug: "tarjeta-para-construir-historial-estrategia-segura", level: "Básico" },
+      { title: "Errores típicos (meses sin intereses mal usados)", slug: "errores-tipicos-meses-sin-intereses-mal-usados", level: "Intermedio" },
+      { title: "¿Qué hacer si ya te estás atorando?", slug: "que-hacer-si-ya-te-estas-atorando", level: "Intermedio" },
+      { title: "Mini caso: tarjeta bien usada vs mal usada", slug: "mini-caso-tarjeta-bien-usada-vs-mal-usada", level: "Avanzado" },
+    ]
   },
 ]

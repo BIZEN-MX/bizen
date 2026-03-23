@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from '@/lib/supabase/client-microcred'
-import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop } from "lucide-react"
+import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop, Sparkles, Brain } from "lucide-react"
 import StreakWidget from "@/components/StreakWidget"
 import PageLoader from "@/components/PageLoader"
 
@@ -447,7 +447,113 @@ export default function CombinedSimulatorsPage() {
                   </div>
                 ) : (
                   <div className="simuladores-grid">
+                    {/* ── AI TOOLS SECTION ── */}
+                    {/* Section label */}
+                    <div style={{ gridColumn: "1 / -1", paddingBottom: 4 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 999, padding: "5px 14px", fontSize: 11, fontWeight: 700, color: "#8b5cf6", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                          <Sparkles size={11} /> Herramientas con IA
+                        </div>
+                        <div style={{ flex: 1, height: 1, background: "rgba(139,92,246,0.12)" }} />
+                      </div>
+                    </div>
+
+                    {/* AI Budget Planner Card */}
+                    <Link href="/tools/budget" style={{ textDecoration: "none" }}>
+                      <div className="sim-card" style={{
+                        background: "white",
+                        borderRadius: 20,
+                        padding: 24,
+                        border: "1px solid #f1f5f9",
+                        display: "flex",
+                        flexDirection: "column",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
+                        height: "100%",
+                        boxSizing: "border-box",
+                        position: "relative",
+                        overflow: "hidden"
+                      }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
+                          <div style={{ width: 52, height: 52, borderRadius: 16, background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.25)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(99,102,241,0.2)" }}>
+                            <BarChart2 size={24} color="#6366f1" />
+                          </div>
+                          <span style={{ fontSize: 10, fontWeight: 700, padding: "5px 12px", background: "rgba(139,92,246,0.12)", color: "#8b5cf6", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: "1px solid rgba(139,92,246,0.2)", display: "flex", alignItems: "center", gap: 4 }}>
+                            <Sparkles size={9} /> IA
+                          </span>
+                        </div>
+                        <h3 style={{ fontSize: 19, fontWeight: 600, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+                          Planificador de Presupuesto
+                        </h3>
+                        <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7, flex: 1, marginBottom: 24 }}>
+                          Organiza tus ingresos y gastos en tiempo real. Billy analiza tu presupuesto con IA y te dice exactamente qué mejorar.
+                        </p>
+                        <button style={{
+                          width: "100%", padding: "14px",
+                          background: "linear-gradient(135deg, #6366f1ee, #6366f199)",
+                          color: "white", border: "1px solid rgba(99,102,241,0.4)",
+                          borderRadius: 14, fontSize: 14, fontWeight: 600, cursor: "pointer",
+                          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                          boxShadow: "0 4px 20px rgba(99,102,241,0.25)", letterSpacing: "0.01em"
+                        }}>
+                          Abrir Herramienta <ChevronRight size={16} />
+                        </button>
+                      </div>
+                    </Link>
+
+                    {/* AI Vision Board Card */}
+                    <Link href="/tools/vision" style={{ textDecoration: "none" }}>
+                      <div className="sim-card" style={{
+                        background: "white",
+                        borderRadius: 20,
+                        padding: 24,
+                        border: "1px solid #f1f5f9",
+                        display: "flex",
+                        flexDirection: "column",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
+                        height: "100%",
+                        boxSizing: "border-box",
+                        position: "relative",
+                        overflow: "hidden"
+                      }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
+                          <div style={{ width: 52, height: 52, borderRadius: 16, background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.25)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(139,92,246,0.2)" }}>
+                            <Brain size={24} color="#8b5cf6" />
+                          </div>
+                          <span style={{ fontSize: 10, fontWeight: 700, padding: "5px 12px", background: "rgba(139,92,246,0.12)", color: "#8b5cf6", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", border: "1px solid rgba(139,92,246,0.2)", display: "flex", alignItems: "center", gap: 4 }}>
+                            <Sparkles size={9} /> IA
+                          </span>
+                        </div>
+                        <h3 style={{ fontSize: 19, fontWeight: 600, color: "#1e293b", marginBottom: 10, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+                          Board de Visión Financiera
+                        </h3>
+                        <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7, flex: 1, marginBottom: 24 }}>
+                          Escribe tus metas financieras y la IA las transforma en un plan estructurado con roadmap de 30-60-90 días.
+                        </p>
+                        <button style={{
+                          width: "100%", padding: "14px",
+                          background: "linear-gradient(135deg, #8b5cf6ee, #8b5cf699)",
+                          color: "white", border: "1px solid rgba(139,92,246,0.4)",
+                          borderRadius: 14, fontSize: 14, fontWeight: 600, cursor: "pointer",
+                          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                          boxShadow: "0 4px 20px rgba(139,92,246,0.25)", letterSpacing: "0.01em"
+                        }}>
+                          Abrir Herramienta <ChevronRight size={16} />
+                        </button>
+                      </div>
+                    </Link>
+
+                    {/* Separator before classic simulators */}
+                    <div style={{ gridColumn: "1 / -1", paddingBottom: 4, paddingTop: 8 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(11,113,254,0.08)", border: "1px solid rgba(11,113,254,0.18)", borderRadius: 999, padding: "5px 14px", fontSize: 11, fontWeight: 700, color: "#0B71FE", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                          Simuladores Educativos
+                        </div>
+                        <div style={{ flex: 1, height: 1, background: "rgba(11,113,254,0.1)" }} />
+                      </div>
+                    </div>
+
                     {/* Simulador Bolsa (Beta) */}
+
                     <Link href="/simulators/stocks" style={{ textDecoration: "none" }}>
                       <div className="sim-card" style={{
                         background: "white",

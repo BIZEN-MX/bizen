@@ -1,6 +1,7 @@
 export interface Tema5Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema5Subtema {
@@ -8,62 +9,37 @@ export interface Tema5Subtema {
   lessons: Tema5Lesson[]
 }
 
+export const TEMA5_TITLE = "Flujo de dinero"
+
 export const TEMA5_SUBTEMAS: Tema5Subtema[] = [
   {
-    title: "Entender el ahorro",
+    title: "Entradas",
     lessons: [
-      { title: "¿Qué es ahorrar?", slug: "que-es-ahorrar" },
-      { title: "¿Para qué sirve el ahorro?", slug: "para-que-sirve-el-ahorro" },
-      { title: "Mitos sobre el ahorro", slug: "mitos-sobre-el-ahorro" },
-      { title: "¿Por qué cuesta ahorrar?", slug: "por-que-cuesta-ahorrar" },
-      { title: "Cambiar la forma de ver el ahorro", slug: "cambiar-la-forma-de-ver-el-ahorro" },
-    ],
+      { title: "¿De dónde entra mi dinero hoy?", slug: "de-donde-entra-mi-dinero-hoy", level: "Básico" },
+      { title: "Ingresos fijos vs variables", slug: "ingresos-fijos-vs-variables", level: "Básico" },
+      { title: "Ingresos irregulares (cómo manejarlos)", slug: "ingresos-irregulares-como-manejarlos", level: "Intermedio" },
+      { title: "Aumentar ingresos sin “trabajar más”", slug: "aumentar-ingresos-sin-trabajar-mas", level: "Intermedio" },
+      { title: "Detectar mi fuente principal de riesgo", slug: "detectar-mi-fuente-principal-de-riesgo", level: "Avanzado" },
+    ]
   },
   {
-    title: "Tipos de ahorro",
+    title: "Salidas",
     lessons: [
-      { title: "Ahorro a corto plazo", slug: "ahorro-a-corto-plazo" },
-      { title: "Ahorro a mediano plazo", slug: "ahorro-a-mediano-plazo" },
-      { title: "Ahorro a largo plazo", slug: "ahorro-a-largo-plazo" },
-      { title: "Ahorro con objetivos", slug: "ahorro-con-objetivos" },
-      { title: "Priorizar objetivos de ahorro", slug: "priorizar-objetivos-de-ahorro" },
-    ],
+      { title: "Acondo se va mi dinero", slug: "acondo-se-va-mi-dinero", level: "Básico" },
+      { title: "Fugas de dinero (las 3 típicas)", slug: "fugas-de-dinero-las-3-tipicas", level: "Básico" },
+      { title: "Gastar más de lo que entra (señales)", slug: "gastar-mas-de-lo-que-entra-senales", level: "Intermedio" },
+      { title: "Ajuste rápido de salidas (plan 7 días)", slug: "ajuste-rapido-de-salidas-plan-7-dias", level: "Intermedio" },
+      { title: "Caso: recuperar control del mes", slug: "caso-recuperar-control-del-mes", level: "Avanzado" },
+    ]
   },
   {
-    title: "Fondo de emergencia",
+    title: "Balance",
     lessons: [
-      { title: "¿Qué es un fondo de emergencia?", slug: "que-es-un-fondo-de-emergencia" },
-      { title: "¿Para qué sirve un fondo de emergencia?", slug: "para-que-sirve-un-fondo-de-emergencia" },
-      { title: "¿Cuánto debería tener?", slug: "cuanto-deberia-tener" },
-      { title: "¿Cómo construirlo poco a poco?", slug: "como-construirlo-poco-a-poco" },
-      { title: "Errores comunes con el fondo de emergencia", slug: "errores-comunes-con-el-fondo-de-emergencia" },
-    ],
-  },
-  {
-    title: "¿Cómo ahorrar en la vida real?",
-    lessons: [
-      { title: "Separar ahorro y gasto", slug: "separar-ahorro-y-gasto" },
-      { title: "Ahorrar cuando gano poco", slug: "ahorrar-cuando-gano-poco" },
-      { title: "Ahorrar con ingresos variables", slug: "ahorrar-con-ingresos-variables" },
-      { title: "Evitar sabotear mi ahorro", slug: "evitar-sabotear-mi-ahorro" },
-      { title: "Automatizar el ahorro", slug: "automatizar-el-ahorro" },
-    ],
-  },
-  {
-    title: "Ahorro y emociones",
-    lessons: [
-      { title: "Ahorro y ansiedad", slug: "ahorro-y-ansiedad" },
-      { title: "Culpa por no ahorrar", slug: "culpa-por-no-ahorrar" },
-      { title: "Compararme con otros al ahorrar", slug: "compararme-con-otros-al-ahorrar" },
-      { title: "Mantener constancia en el ahorro", slug: "mantener-constancia-en-el-ahorro" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "El ahorro como decisión personal", slug: "el-ahorro-como-decision-personal" },
-      { title: "Prepararme para la deuda y la inversión", slug: "prepararme-para-la-deuda-y-la-inversion" },
-      { title: "Checkpoint: Mi sistema de ahorro", slug: "checkpoint-mi-sistema-de-ahorro" },
-    ],
+      { title: "Balance simple (entra/sale)", slug: "balance-simple-entrasale", level: "Básico" },
+      { title: "¿Qué pasa si siempre quedo en 0?", slug: "que-pasa-si-siempre-quedo-en-0", level: "Básico" },
+      { title: "¿Cómo crear margen?", slug: "como-crear-margen", level: "Intermedio" },
+      { title: "Margen como hábito (no accidente)", slug: "margen-como-habito-no-accidente", level: "Intermedio" },
+      { title: "Semana de balance: seguimiento real", slug: "semana-de-balance-seguimiento-real", level: "Avanzado" },
+    ]
   },
 ]

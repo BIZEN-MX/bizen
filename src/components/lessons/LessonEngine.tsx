@@ -47,15 +47,15 @@ interface LessonEngineProps {
 /**
  * Extracts readable text from a LessonStep for Text-to-Speech playback.
  */
-function getTTSContent(step: any): string {
+function getTTSContent(step: any, skipInsight: boolean = false): string {
   if (!step) return ""
   const parts: string[] = []
 
   // ONLY return content if there is an AI Insight or Clue.
   // This makes the voice exclusive to Billy's messages.
-  if (step.aiInsight) {
+  if (step.aiInsight && !skipInsight) {
     parts.push(step.aiInsight)
-  } else if (step.clue) {
+  } else if (step.clue && !skipInsight) {
     parts.push(`¡Pista! ${step.clue}`)
   } else if (step.stepType === "billy_talks" && step.body) {
     parts.push(step.body)
@@ -103,6 +103,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const [billyInsightText, setBillyInsightText] = useState("")
   const [billyInsightDuration, setBillyInsightDuration] = useState(7000)
   const billyInsightShownFor = useRef<string | null>(null)
+  const billyInsightsCount = useRef(0)
   
   // ── Lesson Glossary ──────────────────────────────────────────────────────
   const [isGlossaryOpen, setIsGlossaryOpen] = useState(false)
@@ -234,11 +235,16 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   // Billy Insight Splash: show fullscreen when entering a step with aiInsight
   // Per user request, don't show it before a Blitz Challenge to avoid overlay fatigue
+  // Maximum 3 Billy Insights per lesson
   useEffect(() => {
     if (!currentStep) return
     const insight = (currentStep as any).aiInsight
     if (insight && currentStep.stepType !== "blitz_challenge" && billyInsightShownFor.current !== currentStep.id) {
+      // Check for limit
+      if (billyInsightsCount.current >= 3) return
+
       billyInsightShownFor.current = currentStep.id
+      billyInsightsCount.current += 1
       setBillyInsightText(insight)
 
       // Calculate dynamic duration: min 8s, max 10s. Reading speed approx 3.5 words/sec.
@@ -304,7 +310,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
     stopAudio()
 
-    const content = getTTSContent(currentStep)
+    const skipInsightStatus = !!currentStep && (currentStep as any).aiInsight && billyInsightsCount.current >= 3 && billyInsightShownFor.current !== currentStep.id
+    const content = getTTSContent(currentStep, skipInsightStatus)
     if (!content) return
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || navigator.maxTouchPoints > 0
@@ -857,7 +864,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 streak={streak}
                 stars={stars}
                 onExit={handleAttemptExit}
-                onToggleAudio={getTTSContent(currentStep) ? toggleAudio : undefined}
+                onToggleAudio={getTTSContent(currentStep, (currentStep as any)?.aiInsight && billyInsightsCount.current >= 3 && billyInsightShownFor.current !== currentStep?.id) ? toggleAudio : undefined}
                 isAudioPlaying={isAudioPlaying}
                 isAudioLoading={isAudioLoading}
                 hasGlossary={lessonGlossary.length > 0}
@@ -951,7 +958,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                   BILLY DICE
                 </p>
                 <p style={{ margin: "2px 0 0", fontSize: 14, fontWeight: 600, color: "white", lineHeight: 1.4 }}>
-                  {(currentStep as any)?.aiInsight ||
+                  {((currentStep as any)?.aiInsight && (billyInsightsCount.current < 3 || billyInsightShownFor.current === currentStep?.id)) ? (currentStep as any).aiInsight :
                     "¡Tranquilo! Cada error que cometes es un concepto que se graba mejor. ¡Tú puedes!"}
                 </p>
               </div>

@@ -21,17 +21,23 @@ export async function getGeminiResponse(prompt: string, systemContext?: string) 
   }
 
   const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash-lite"
-  });
+  const model = genAI.getGenerativeModel(
+    { model: "gemini-2.5-flash-lite" },
+    { apiVersion: "v1beta" }
+  );
 
   const fullPrompt = systemContext 
     ? `SISTEMA: ${BILLY_PERSONALITY}\n${systemContext}\n\nMENSAJE: ${prompt}`
     : `SISTEMA: ${BILLY_PERSONALITY}\n\nMENSAJE: ${prompt}`;
 
-  const result = await model.generateContent(fullPrompt);
-  const response = await result.response;
-  return response.text().trim();
+  try {
+    const result = await model.generateContent(fullPrompt);
+    const response = await result.response;
+    return response.text().trim();
+  } catch (error) {
+    console.error("Gemini SDK error details:", error);
+    throw error;
+  }
 }
 
 /**

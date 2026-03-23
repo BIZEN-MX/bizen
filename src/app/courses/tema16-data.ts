@@ -1,6 +1,7 @@
 export interface Tema16Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema16Subtema {
@@ -8,59 +9,37 @@ export interface Tema16Subtema {
   lessons: Tema16Lesson[]
 }
 
+export const TEMA16_TITLE = "Protección financiera (seguros)"
+
 export const TEMA16_SUBTEMAS: Tema16Subtema[] = [
   {
-    title: "¿Qué es emprender?",
+    title: "Riesgo",
     lessons: [
-      { title: "¿Qué es emprender?", slug: "que-es-emprender" },
-      { title: "Diferencia entre empleado, autoempleado y emprendedor", slug: "diferencia-entre-empleado-autoempleado-y-emprendedor" },
-      { title: "¿Por qué la gente emprende?", slug: "por-que-la-gente-emprende" },
-      { title: "Mitos sobre emprender", slug: "mitos-sobre-emprender" },
-      { title: "Cambiar la forma de ver el emprendimiento", slug: "cambiar-la-forma-de-ver-el-emprendimiento" },
-    ],
+      { title: "¿Qué es riesgo financiero (con ejemplos)?", slug: "que-es-riesgo-financiero-con-ejemplos", level: "Básico" },
+      { title: "Riesgos típicos en jóvenes (salud, robo, accidente)", slug: "riesgos-tipicos-en-jovenes-salud-robo-accidente", level: "Básico" },
+      { title: "Probabilidad vs impacto (lo importante)", slug: "probabilidad-vs-impacto-lo-importante", level: "Intermedio" },
+      { title: "¿Qué riesgos se previenen con hábitos?", slug: "que-riesgos-se-previenen-con-habitos", level: "Intermedio" },
+      { title: "Checklist de riesgos personales básico", slug: "checklist-de-riesgos-personales-basico", level: "Avanzado" },
+    ]
   },
   {
-    title: "Forma de pensar del emprendedor",
+    title: "Seguros",
     lessons: [
-      { title: "Pensar en soluciones", slug: "pensar-en-soluciones" },
-      { title: "Ver problemas como oportunidades", slug: "ver-problemas-como-oportunidades" },
-      { title: "Tolerar la incertidumbre", slug: "tolerar-la-incertidumbre" },
-      { title: "Aprender del error", slug: "aprender-del-error" },
-    ],
+      { title: "¿Qué es un seguro y cómo funciona?", slug: "que-es-un-seguro-y-como-funciona", level: "Básico" },
+      { title: "Deducible, prima, cobertura (simple)", slug: "deducible-prima-cobertura-simple", level: "Básico" },
+      { title: "Seguro útil vs seguro innecesario (criterios)", slug: "seguro-util-vs-seguro-innecesario-criterios", level: "Intermedio" },
+      { title: "Errores comunes al contratar", slug: "errores-comunes-al-contratar", level: "Intermedio" },
+      { title: "Caso: elegir una cobertura básica correcta", slug: "caso-elegir-una-cobertura-basica-correcta", level: "Avanzado" },
+    ]
   },
   {
-    title: "Responsabilidad y riesgo",
+    title: "Prevención + colchón",
     lessons: [
-      { title: "Tomar riesgos calculados", slug: "tomar-riesgos-calculados" },
-      { title: "Responsabilidad total del resultado", slug: "responsabilidad-total-del-resultado" },
-      { title: "Diferencia entre riesgo y imprudencia", slug: "diferencia-entre-riesgo-y-imprudencia" },
-      { title: "Aceptar la posibilidad de fracaso", slug: "aceptar-la-posibilidad-de-fracaso" },
-    ],
-  },
-  {
-    title: "Hábitos del emprendedor",
-    lessons: [
-      { title: "Disciplina diaria", slug: "disciplina-diaria" },
-      { title: "Priorizar lo importante", slug: "priorizar-lo-importante" },
-      { title: "Gestión del tiempo", slug: "gestion-del-tiempo" },
-      { title: "Constancia a largo plazo", slug: "constancia-a-largo-plazo" },
-    ],
-  },
-  {
-    title: "Emprender en la vida real",
-    lessons: [
-      { title: "Emprender sin dinero", slug: "emprender-sin-dinero" },
-      { title: "Emprender mientras estudio o trabajo", slug: "emprender-mientras-estudio-o-trabajo" },
-      { title: "Errores comunes al emprender", slug: "errores-comunes-al-emprender" },
-      { title: "Saber cuándo no emprender", slug: "saber-cuando-no-emprender" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Pensar como emprendedor", slug: "pensar-como-emprendedor" },
-      { title: "Prepararme para crear un negocio", slug: "prepararme-para-crear-un-negocio" },
-      { title: "Checkpoint: Mi mentalidad emprendedora", slug: "checkpoint-mi-mentalidad-emprendedora" },
-    ],
+      { title: "Fondo de emergencia vs seguro (diferencia)", slug: "fondo-de-emergencia-vs-seguro-diferencia", level: "Básico" },
+      { title: "¿Qué conviene primero según tu situación?", slug: "que-conviene-primero-segun-tu-situacion", level: "Básico" },
+      { title: "Evitar gastos catastróficos (reglas)", slug: "evitar-gastos-catastroficos-reglas", level: "Intermedio" },
+      { title: "Plan básico de protección personal", slug: "plan-basico-de-proteccion-personal", level: "Intermedio" },
+      { title: "Caso: imprevisto y qué herramienta usar", slug: "caso-imprevisto-y-que-herramienta-usar", level: "Avanzado" },
+    ]
   },
 ]

@@ -70,7 +70,7 @@ function BIZENSignupContent() {
       const isInstitutional = isInstitutionalEmail(email)
 
       setTimeout(() => {
-        router.push(isInstitutional ? "/diagnostic" : "/courses")
+        router.push(isInstitutional ? "/diagnostic" : "/dashboard")
       }, 2000)
     } catch (err: unknown) {
       setMessage(translateAuthError(err instanceof Error ? err.message : "Error al crear cuenta"))

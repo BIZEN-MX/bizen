@@ -62,3 +62,6 @@ export async function createSupabaseServer(): Promise<SupabaseClient<Database>> 
     throw error
   }
 }
+
+// Backward compatibility alias
+export const createClient = createSupabaseServer;

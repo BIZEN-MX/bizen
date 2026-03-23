@@ -1,6 +1,7 @@
 export interface Tema23Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema23Subtema {
@@ -8,45 +9,37 @@ export interface Tema23Subtema {
   lessons: Tema23Lesson[]
 }
 
+export const TEMA23_TITLE = "Ingresos pasivos"
+
 export const TEMA23_SUBTEMAS: Tema23Subtema[] = [
   {
-    title: "Entender la contabilidad",
+    title: "Realidad (sin humo)",
     lessons: [
-      { title: "¿Qué es la contabilidad?", slug: "que-es-la-contabilidad" },
-      { title: "¿Para qué sirve la contabilidad?", slug: "para-que-sirve-la-contabilidad" },
-      { title: "Mitos sobre la contabilidad", slug: "mitos-sobre-la-contabilidad" },
-      { title: "Contabilidad para tomar decisiones", slug: "contabilidad-para-tomar-decisiones" },
-    ],
+      { title: "¿Qué sí es ingreso pasivo?", slug: "que-si-es-ingreso-pasivo", level: "Básico" },
+      { title: "¿Qué NO es ingreso pasivo (mitos)?", slug: "que-no-es-ingreso-pasivo-mitos", level: "Básico" },
+      { title: "“Pasivo” casi siempre requiere trabajo antes", slug: "pasivo-casi-siempre-requiere-trabajo-antes", level: "Intermedio" },
+      { title: "Tiempo, capital y riesgo en ingresos pasivos", slug: "tiempo-capital-y-riesgo-en-ingresos-pasivos", level: "Intermedio" },
+      { title: "Señales de estafa del “pasivo rápido”", slug: "senales-de-estafa-del-pasivo-rapido", level: "Avanzado" },
+    ]
   },
   {
-    title: "Estados financieros",
+    title: "Bases",
     lessons: [
-      { title: "¿Qué es un estado de resultados?", slug: "que-es-un-estado-de-resultados" },
-      { title: "¿Qué es un balance general?", slug: "que-es-un-balance-general" },
-      { title: "Ingresos, gastos y utilidad", slug: "ingresos-gastos-y-utilidad" },
-    ],
+      { title: "Primero activo, luego ingreso pasivo", slug: "primero-activo-luego-ingreso-pasivo", level: "Básico" },
+      { title: "Capital: de dónde sale en la vida real", slug: "capital-de-donde-sale-en-la-vida-real", level: "Básico" },
+      { title: "Reglas para no caer en promesas falsas", slug: "reglas-para-no-caer-en-promesas-falsas", level: "Intermedio" },
+      { title: "Pasivo pequeño vs pasivo grande", slug: "pasivo-pequeno-vs-pasivo-grande", level: "Intermedio" },
+      { title: "Caso: evaluar una propuesta “pasiva”", slug: "caso-evaluar-una-propuesta-pasiva", level: "Avanzado" },
+    ]
   },
   {
-    title: "Leer números",
+    title: "Ejemplos realistas",
     lessons: [
-      { title: "Interpretar resultados del negocio", slug: "interpretar-resultados-del-negocio" },
-      { title: "Detectar problemas en los números", slug: "detectar-problemas-en-los-numeros" },
-      { title: "Errores comunes al leer estados", slug: "errores-comunes-al-leer-estados" },
-    ],
-  },
-  {
-    title: "Contabilidad en la vida real",
-    lessons: [
-      { title: "Ordenar las finanzas del negocio", slug: "ordenar-las-finanzas-del-negocio" },
-      { title: "Separar finanzas personales y del negocio", slug: "separar-finanzas-personales-y-del-negocio" },
-      { title: "Errores contables comunes", slug: "errores-contables-comunes" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Usar la contabilidad como herramienta", slug: "usar-la-contabilidad-como-herramienta" },
-      { title: "Checkpoint: Entender mis números", slug: "checkpoint-entender-mis-numeros" },
-    ],
+      { title: "Ejemplos simples (bajo riesgo)", slug: "ejemplos-simples-bajo-riesgo", level: "Básico" },
+      { title: "Ejemplos moderados (más riesgo)", slug: "ejemplos-moderados-mas-riesgo", level: "Básico" },
+      { title: "Ejemplos digitales (con trabajo previo)", slug: "ejemplos-digitales-con-trabajo-previo", level: "Intermedio" },
+      { title: "Errores comunes al intentar pasivos", slug: "errores-comunes-al-intentar-pasivos", level: "Intermedio" },
+      { title: "Checkpoint: distinguir pasivo real vs mito", slug: "checkpoint-distinguir-pasivo-real-vs-mito", level: "Avanzado" },
+    ]
   },
 ]

@@ -137,7 +137,7 @@ export default function DiagnosticQuestionPage() {
       }
 
       setTimeout(() => {
-        router.push("/courses")
+        router.push("/dashboard")
       }, 4000)
     }
   }, [quizIncomplete, router, userInfo, userAnswers])

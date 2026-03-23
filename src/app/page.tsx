@@ -20,6 +20,16 @@ import {
 import { CheckIcon, CrossIcon } from "@/components/CustomIcons";
 import * as React from "react";
 import Hero3DScene from "@/components/landing/Hero3DScene";
+import { PremiumButton } from "@/components/ui/PremiumButton";
+
+// Centralized navigation data
+const NAV_LINKS = [
+  { label: "Inicio", href: "/" },
+  { label: "Somos BIZEN", href: "#sobre-bizen" },
+  { label: "Perfil educativo", href: "#perfiles" },
+  { label: "Impacto social", href: "#impacto" },
+  { label: "Blog", href: "#problema" },
+];
 
 // Force dynamic rendering to avoid prerendering issues
 export const dynamic = "force-dynamic";
@@ -39,7 +49,7 @@ const modalInputStyle = {
 };
 
 export default function WelcomePage() {
-  const { user, loading } = useAuth();
+  const { user, dbProfile, loading } = useAuth();
   const router = useRouter();
   const [isMouthOpen, setIsMouthOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -52,8 +62,10 @@ export default function WelcomePage() {
   const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [navScrolled, setNavScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
     };
@@ -138,6 +150,19 @@ export default function WelcomePage() {
     return () => clearInterval(mouthInterval);
   }, []);
 
+  // Redirect home to dashboard if user is already logged in
+  useEffect(() => {
+    if (!loading && user) {
+      if (dbProfile) {
+        if (dbProfile.role === 'teacher' || dbProfile.role === 'school_admin') {
+          router.replace('/teacher/dashboard');
+          return;
+        }
+      }
+      router.replace('/dashboard');
+    }
+  }, [user, loading, dbProfile, router]);
+
   // Reveal-on-scroll: add .revealed when .reveal-element enters viewport
   useEffect(() => {
     if (typeof window === "undefined" || !window.IntersectionObserver) return;
@@ -162,6 +187,8 @@ export default function WelcomePage() {
     overflow: "visible",
     position: "relative" as const,
   };
+
+  if (!mounted) return <div style={{ minHeight: '100vh', background: '#010a1c' }} />;
 
   return (
     <div
@@ -230,7 +257,7 @@ export default function WelcomePage() {
               style={{
                 fontSize: "clamp(18px, 2vw, 22px)",
                 fontWeight: 700,
-                color: navScrolled ? "#0056E7" : "#FFFFFF",
+                color: navScrolled ? "var(--primary)" : "#FFFFFF",
                 letterSpacing: "0.01em",
                 transition: "color 0.3s ease",
                 textShadow: navScrolled
@@ -309,92 +336,31 @@ export default function WelcomePage() {
               gap: "4px",
               backdropFilter: "blur(16px)",
               WebkitBackdropFilter: "blur(16px)",
-              borderRadius: "9999px",
+              borderRadius: "var(--radius-full)",
               padding: "6px 8px",
               transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
               flexShrink: 0,
             }}
           >
-            <Link
-              href="/"
-              className="header-nav-link landing-header-nav-link"
-              style={{
-                fontSize: "clamp(13px, 1.3vw, 15px)",
-                fontWeight: 500,
-                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-                padding: "8px 12px",
-                borderRadius: "9999px",
-                transition: "color 0.3s ease",
-              }}
-            >
-              Inicio
-            </Link>
-            <Link
-              href="#sobre-bizen"
-              className="header-nav-link landing-header-nav-link"
-              style={{
-                fontSize: "clamp(13px, 1.3vw, 15px)",
-                fontWeight: 500,
-                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-                padding: "8px 12px",
-                borderRadius: "9999px",
-                transition: "color 0.3s ease",
-              }}
-            >
-              Somos BIZEN
-            </Link>
-            <Link
-              href="#perfiles"
-              className="header-nav-link landing-header-nav-link"
-              style={{
-                fontSize: "clamp(13px, 1.3vw, 15px)",
-                fontWeight: 500,
-                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-                padding: "8px 12px",
-                borderRadius: "9999px",
-                transition: "color 0.3s ease",
-              }}
-            >
-              Perfil educativo
-            </Link>
-            <Link
-              href="#impacto"
-              className="header-nav-link landing-header-nav-link"
-              style={{
-                fontSize: "clamp(13px, 1.3vw, 15px)",
-                fontWeight: 500,
-                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-                padding: "8px 12px",
-                borderRadius: "9999px",
-                transition: "color 0.3s ease",
-              }}
-            >
-              Impacto social
-            </Link>
-            <Link
-              href="#problema"
-              className="header-nav-link landing-header-nav-link"
-              style={{
-                fontSize: "clamp(13px, 1.3vw, 15px)",
-                fontWeight: 500,
-                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.9)",
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-                padding: "8px 12px",
-                borderRadius: "9999px",
-                transition: "color 0.3s ease",
-              }}
-            >
-              Blog
-            </Link>
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="header-nav-link landing-header-nav-link"
+                style={{
+                  fontSize: "clamp(13px, 1.3vw, 15px)",
+                  fontWeight: 500,
+                  color: navScrolled ? "var(--primary)" : "rgba(255,255,255,0.9)",
+                  textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  padding: "8px 12px",
+                  borderRadius: "var(--radius-full)",
+                  transition: "color 0.3s ease",
+                }}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
           {/* Header Actions */}
@@ -440,36 +406,17 @@ export default function WelcomePage() {
             <div
               className={`auth-dropdown-wrapper ${authDropdownOpen ? "is-open" : ""}`}
             >
-              <button
-                className="premium-button landing-header-actions-main landing-hero-cta-primary"
+              <PremiumButton
                 onClick={(e) => {
                   e.stopPropagation();
                   setAuthDropdownOpen(!authDropdownOpen);
                 }}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "10px 24px",
-                  fontSize: "clamp(13px, 1.3vw, 15px)",
-                  fontWeight: 600,
-                  borderRadius: "9999px",
-                  background:
-                    "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
-                  backgroundSize: "200% auto",
-                  color: "#fff",
-                  border: "none",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                  boxShadow: navScrolled
-                    ? "0 2px 10px rgba(0, 86, 231, 0.25)"
-                    : "0 4px 20px rgba(0, 86, 231, 0.45), 0 0 0 1px rgba(255,255,255,0.15) inset",
-                  transition: "all 0.3s ease",
-                }}
+                variant="primary"
+                size="md"
+                className={navScrolled ? "" : "shadow-blue-md"}
               >
                 Comenzar ahora
-              </button>
+              </PremiumButton>
               <div
                 className="auth-dropdown-content"
                 style={{
@@ -852,25 +799,25 @@ export default function WelcomePage() {
                 100% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
               }
               .floating-card-glass {
-                background: rgba(255, 255, 255, 0.04);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                border-radius: 20px;
-                padding: 16px 20px;
+                background: var(--glass-bg);
+                backdrop-filter: blur(var(--glass-blur));
+                -webkit-backdrop-filter: blur(var(--glass-blur));
+                border: 1px solid var(--glass-border);
+                border-radius: var(--radius-md);
+                padding: 12px 20px;
                 display: flex;
                 align-items: center;
                 white-space: nowrap;
                 gap: 12px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-                transition: all 0.3s ease;
+                box-shadow: var(--shadow-md);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 animation: float-hero-card 4s ease-in-out infinite;
                 z-index: 2;
                 pointer-events: none;
               }
               .floating-card-glass:hover {
-                background: rgba(255, 255, 255, 0.06);
-                border-color: rgba(64, 150, 255, 0.3);
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(255, 255, 255, 0.2);
               }
               @media (max-width: 1024px) {
                 .floating-card-glass { display: none; }
@@ -1028,7 +975,7 @@ export default function WelcomePage() {
                 style={{
                   width: "100%",
                   height: "auto",
-                  filter: "drop-shadow(20px 0 30px rgba(44, 123, 239, 0.15))",
+                  filter: "saturate(1.1) brightness(1.05) drop-shadow(20px 0 30px rgba(44, 123, 239, 0.25))",
                 }}
               />
             </div>
@@ -1091,7 +1038,7 @@ export default function WelcomePage() {
                 textAlign: "center",
                 width: "100%",
                 maxWidth: "min(90%, 1100px)",
-                margin: "clamp(32px, 5vw, 64px) auto 0",
+                margin: "clamp(64px, 8vw, 120px) auto 0",
                 padding: "0 clamp(20px, 4vw, 40px)",
                 boxSizing: "border-box",
                 opacity: isVisible ? 1 : 0,
@@ -1106,7 +1053,7 @@ export default function WelcomePage() {
                   fontWeight: 800,
                   margin: "0 0 clamp(40px, 6vw, 72px) 0",
                   lineHeight: 1.08,
-                  letterSpacing: "-0.04em",
+                  letterSpacing: "var(--tracking-tight)",
                   wordWrap: "break-word",
                   overflowWrap: "break-word",
                   textShadow: "0 2px 40px rgba(0,0,0,0.3)",
@@ -1117,7 +1064,7 @@ export default function WelcomePage() {
                   <span
                     style={{
                       background:
-                        "linear-gradient(90deg, #60a5fa, #1983FD, #4A9EFF)",
+                        "linear-gradient(90deg, #60a5fa, var(--primary), #4A9EFF)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
@@ -1289,87 +1236,34 @@ export default function WelcomePage() {
                 </div>
               </div>
 
-              {/* Hero inline CTAs */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "clamp(10px, 2vw, 16px)",
-                  marginTop: "clamp(28px, 5vw, 48px)",
+                  gap: "clamp(12px, 2vw, 20px)",
+                  marginTop: "clamp(32px, 6vw, 56px)",
                   flexWrap: "wrap",
                 }}
               >
-                <a
-                  href="/signup"
-                  className="landing-hero-cta-primary"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "clamp(14px, 2vw, 18px) clamp(28px, 4vw, 48px)",
-                    fontSize: "clamp(14px, 1.4vw, 17px)",
-                    fontWeight: 600,
-                    borderRadius: "9999px",
-                    background:
-                      "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
-                    backgroundSize: "200% auto",
-                    color: "#fff",
-                    textDecoration: "none",
-                    boxShadow:
-                      "0 4px 24px rgba(15, 98, 254, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
-                    transition: "all 0.3s ease",
-                    letterSpacing: "0.01em",
-                  }}
+                <PremiumButton
+                  onClick={() => router.push("/signup")}
+                  variant="primary"
+                  size="lg"
+                  className="group"
                 >
                   Comenzar gratis
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </a>
-                <a
-                  href="https://calendly.com/diego-bizen"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "clamp(13px, 2vw, 17px) clamp(24px, 3.5vw, 40px)",
-                    fontSize: "clamp(14px, 1.4vw, 17px)",
-                    fontWeight: 500,
-                    borderRadius: "9999px",
-                    background: "rgba(255, 255, 255, 0.06)",
-                    border: "1.5px solid rgba(255, 255, 255, 0.2)",
-                    color: "rgba(255, 255, 255, 0.88)",
-                    textDecoration: "none",
-                    backdropFilter: "blur(10px)",
-                    transition: "all 0.3s ease",
-                    letterSpacing: "0.01em",
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.12)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.4)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background =
-                      "rgba(255, 255, 255, 0.06)";
-                    e.currentTarget.style.borderColor =
-                      "rgba(255, 255, 255, 0.2)";
-                  }}
+                  <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                </PremiumButton>
+
+                <PremiumButton
+                  onClick={() => window.open("https://calendly.com/diego-bizen", "_blank")}
+                  variant="secondary"
+                  size="lg"
                 >
-                  <Calendar size={16} />
+                  <Calendar className="mr-2" size={20} />
                   Agendar demo
-                </a>
+                </PremiumButton>
               </div>
             </div>
 
@@ -1427,10 +1321,10 @@ export default function WelcomePage() {
                           <Image
                             src={logo.src}
                             alt={logo.alt}
-                            width={isGoogle ? 80 : 120}
-                            height={isGoogle ? 40 : 60}
+                            width={isGoogle ? 140 : 160}
+                            height={isGoogle ? 40 : 50}
                             style={{
-                              height: "100%",
+                              height: isGoogle ? "32px" : "48px",
                               width: "auto",
                               objectFit: "contain",
                               filter: "brightness(0) invert(1)",
@@ -1498,19 +1392,19 @@ export default function WelcomePage() {
               <h2
                 style={{
                   textAlign: "center",
-                  fontSize: "clamp(40px, 6vw, 76px)",
-                  fontWeight: 500,
+                  fontSize: "clamp(32px, 5vw, 64px)",
+                  fontWeight: 700,
                   color: "#ffffff",
-                  letterSpacing: "-0.03em",
-                  lineHeight: 1.05,
-                  marginBottom: "clamp(24px, 3vw, 36px)",
+                  letterSpacing: "var(--tracking-tight)",
+                  lineHeight: 1.1,
+                  marginBottom: "clamp(24px, 3vw, 40px)",
                 }}
               >
                 SOMOS{" "}
                 <span
                   style={{
                     background:
-                      "linear-gradient(90deg, #60a5fa, #1983FD, #015CF8)",
+                      "linear-gradient(90deg, #60a5fa, var(--primary), #4A9EFF)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -1564,16 +1458,15 @@ export default function WelcomePage() {
               >
                 {/* Stat 1 */}
                 <div
-                  className="somos-stat-card"
+                  className="somos-stat-card reveal-element"
                   style={{
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: "24px",
-                    padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
+                    background: "var(--glass-bg)",
+                    border: "1px solid var(--glass-border)",
+                    borderRadius: "var(--radius-xl)",
+                    padding: "clamp(28px, 4vw, 48px) clamp(20px, 3vw, 40px)",
                     textAlign: "center",
-                    backdropFilter: "blur(10px)",
+                    backdropFilter: "blur(var(--glass-blur))",
                     position: "relative",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
                   }}
                 >
                   <div
@@ -1619,16 +1512,15 @@ export default function WelcomePage() {
 
                 {/* Stat 2 */}
                 <div
-                  className="somos-stat-card"
+                  className="somos-stat-card reveal-element"
                   style={{
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: "24px",
-                    padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
+                    background: "var(--glass-bg)",
+                    border: "1px solid var(--glass-border)",
+                    borderRadius: "var(--radius-xl)",
+                    padding: "clamp(28px, 4vw, 48px) clamp(20px, 3vw, 40px)",
                     textAlign: "center",
-                    backdropFilter: "blur(10px)",
+                    backdropFilter: "blur(var(--glass-blur))",
                     position: "relative",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
                   }}
                 >
                   <div
@@ -1675,30 +1567,25 @@ export default function WelcomePage() {
 
                 {/* Stat 3 */}
                 <div
-                  className="somos-stat-card"
+                  className="somos-stat-card reveal-element"
                   style={{
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: "24px",
-                    padding: "clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)",
+                    background: "var(--glass-bg)",
+                    border: "1px solid var(--glass-border)",
+                    borderRadius: "var(--radius-xl)",
+                    padding: "clamp(28px, 4vw, 48px) clamp(20px, 3vw, 40px)",
                     textAlign: "center",
-                    backdropFilter: "blur(10px)",
+                    backdropFilter: "blur(var(--glass-blur))",
                     position: "relative",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
                   }}
                 >
                   <div
                     style={{
-                      fontSize: "clamp(36px, 5vw, 56px)",
-                      fontWeight: 800,
-                      letterSpacing: "-0.04em",
+                      fontSize: "clamp(36px, 5vw, 64px)",
+                      fontWeight: 700,
+                      letterSpacing: "var(--tracking-tight)",
                       lineHeight: 1,
-                      marginBottom: "10px",
-                      background:
-                        "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
+                      marginBottom: "12px",
+                      color: "#fff",
                     }}
                   >
                     $25K
@@ -1732,13 +1619,14 @@ export default function WelcomePage() {
               {/* Manifesto bar */}
               <div
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "20px",
+                  background: "var(--glass-bg)",
+                  border: "1px solid var(--glass-border)",
+                  borderRadius: "var(--radius-lg)",
                   padding: "clamp(20px, 3vw, 28px) clamp(24px, 4vw, 48px)",
                   textAlign: "center",
                   marginBottom: "clamp(40px, 5vw, 64px)",
-                  backdropFilter: "blur(8px)",
+                  backdropFilter: "blur(var(--glass-blur))",
+                  boxShadow: "var(--shadow-sm)",
                 }}
               >
                 <p
@@ -1805,6 +1693,8 @@ export default function WelcomePage() {
                       style={{
                         height: "52px",
                         width: "auto",
+                        maxHeight: "100%",
+                        maxWidth: "100%",
                         objectFit: "contain",
                         filter: "brightness(0) invert(1)",
                         opacity: 0.85,
@@ -1825,11 +1715,13 @@ export default function WelcomePage() {
                     <Image
                       src="/logos/logo-queretaro.png"
                       alt="Querétaro"
-                      width={140}
-                      height={52}
+                      width={160}
+                      height={60}
                       style={{
                         height: "52px",
                         width: "auto",
+                        maxHeight: "100%",
+                        maxWidth: "100%",
                         objectFit: "contain",
                         filter: "brightness(0) invert(1)",
                         opacity: 0.85,
@@ -1850,11 +1742,13 @@ export default function WelcomePage() {
                     <Image
                       src="/logos/logo-google.png"
                       alt="Google for Startups"
-                      width={140}
-                      height={38}
+                      width={160}
+                      height={44}
                       style={{
-                        height: "38px",
+                        height: "52px",
                         width: "auto",
+                        maxHeight: "100%",
+                        maxWidth: "100%",
                         objectFit: "contain",
                         filter: "brightness(0) invert(1)",
                         opacity: 0.85,

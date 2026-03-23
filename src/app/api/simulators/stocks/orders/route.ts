@@ -58,9 +58,25 @@ export async function POST(req: Request) {
         order_type, // 'market' | 'limit'
         quantity,
         limit_price: limit_price || null,
-        status: 'pending' // pending until market closes
+        status: 'pending' // pending until filled
       }
     });
+
+    // ⚡️ INSTANT EXECUTION for Market Orders ⚡️
+    // If it's a market order, we try to fill it immediately using the latest EOD price.
+    if (order_type === 'market') {
+      try {
+        const res = await fetch(`${new URL(req.url).origin}/api/simulators/stocks/execute`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (res.ok) {
+           console.log(`✅ Auto-executed market order ${order.id}`);
+        }
+      } catch (err) {
+        console.error("Auto-execution failed:", err);
+      }
+    }
 
     return NextResponse.json({ order });
   } catch (error: any) {

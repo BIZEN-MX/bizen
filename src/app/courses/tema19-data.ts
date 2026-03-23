@@ -1,6 +1,7 @@
 export interface Tema19Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema19Subtema {
@@ -8,58 +9,37 @@ export interface Tema19Subtema {
   lessons: Tema19Lesson[]
 }
 
+export const TEMA19_TITLE = "Educación financiera digital"
+
 export const TEMA19_SUBTEMAS: Tema19Subtema[] = [
   {
-    title: "¿Qué es un modelo de negocio?",
+    title: "Herramientas",
     lessons: [
-      { title: "¿Qué es un modelo de negocio?", slug: "que-es-un-modelo-de-negocio" },
-      { title: "¿Por qué un negocio necesita modelo?", slug: "por-que-un-negocio-necesita-modelo" },
-      { title: "Producto vs negocio", slug: "producto-vs-negocio" },
-      { title: "Mitos sobre modelos de negocio", slug: "mitos-sobre-modelos-de-negocio" },
-    ],
+      { title: "Apps para registrar gastos (qué deben tener)", slug: "apps-para-registrar-gastos-que-deben-tener", level: "Básico" },
+      { title: "Apps para metas y ahorro (cómo usarlas)", slug: "apps-para-metas-y-ahorro-como-usarlas", level: "Básico" },
+      { title: "Alertas bancarias (qué activar)", slug: "alertas-bancarias-que-activar", level: "Intermedio" },
+      { title: "Control de suscripciones (herramientas)", slug: "control-de-suscripciones-herramientas", level: "Intermedio" },
+      { title: "Armar tu “stack” financiero digital básico", slug: "armar-tu-stack-financiero-digital-basico", level: "Avanzado" },
+    ]
   },
   {
-    title: "Componentes del modelo",
+    title: "Banca digital",
     lessons: [
-      { title: "Propuesta de valor", slug: "propuesta-de-valor" },
-      { title: "Cliente objetivo", slug: "cliente-objetivo" },
-      { title: "Canales de venta", slug: "canales-de-venta" },
-      { title: "Fuentes de ingreso", slug: "fuentes-de-ingreso" },
-      { title: "Estructura de costos", slug: "estructura-de-costos" },
-    ],
+      { title: "Transferencias, límites y horarios (vida real)", slug: "transferencias-limites-y-horarios-vida-real", level: "Básico" },
+      { title: "Comisiones digitales comunes (cuidado)", slug: "comisiones-digitales-comunes-cuidado", level: "Básico" },
+      { title: "Tarjetas digitales/virtuales (qué son)", slug: "tarjetas-digitalesvirtuales-que-son", level: "Intermedio" },
+      { title: "¿Cómo evitar errores en banca móvil?", slug: "como-evitar-errores-en-banca-movil", level: "Intermedio" },
+      { title: "Caso: configurar banca digital de forma segura", slug: "caso-configurar-banca-digital-de-forma-segura", level: "Avanzado" },
+    ]
   },
   {
-    title: "Tipos de modelos de negocio",
+    title: "Hábitos digitales",
     lessons: [
-      { title: "Venta de productos", slug: "venta-de-productos" },
-      { title: "Venta de servicios", slug: "venta-de-servicios" },
-      { title: "Suscripciones", slug: "suscripciones" },
-      { title: "Plataformas y marketplaces", slug: "plataformas-y-marketplaces" },
-      { title: "Modelos digitales", slug: "modelos-digitales" },
-    ],
-  },
-  {
-    title: "Modelo en la vida real",
-    lessons: [
-      { title: "Modelos simples que funcionan", slug: "modelos-simples-que-funcionan" },
-      { title: "Errores comunes en modelos de negocio", slug: "errores-comunes-en-modelos-de-negocio" },
-      { title: "Ajustar el modelo con el tiempo", slug: "ajustar-el-modelo-con-el-tiempo" },
-    ],
-  },
-  {
-    title: "Viabilidad del modelo",
-    lessons: [
-      { title: "Saber si el modelo es viable", slug: "saber-si-el-modelo-es-viable" },
-      { title: "Relación entre ingresos y costos", slug: "relacion-entre-ingresos-y-costos" },
-      { title: "Pensar en escalabilidad", slug: "pensar-en-escalabilidad" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Entender cómo gana dinero mi negocio", slug: "entender-como-gana-dinero-mi-negocio" },
-      { title: "Prepararme para las finanzas del negocio", slug: "prepararme-para-las-finanzas-del-negocio" },
-      { title: "Checkpoint: Mi modelo de negocio", slug: "checkpoint-mi-modelo-de-negocio" },
-    ],
+      { title: "Rutina semanal (10 min) en apps", slug: "rutina-semanal-10-min-en-apps", level: "Básico" },
+      { title: "Rutina mensual (20 min) en apps", slug: "rutina-mensual-20-min-en-apps", level: "Básico" },
+      { title: "Orden digital de recibos/tickets", slug: "orden-digital-de-recibostickets", level: "Intermedio" },
+      { title: "Evitar compras impulsivas online (reglas)", slug: "evitar-compras-impulsivas-online-reglas", level: "Intermedio" },
+      { title: "Mini reto: semana con control digital", slug: "mini-reto-semana-con-control-digital", level: "Avanzado" },
+    ]
   },
 ]

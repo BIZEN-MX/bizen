@@ -1,6 +1,7 @@
 export interface Tema26Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema26Subtema {
@@ -8,45 +9,37 @@ export interface Tema26Subtema {
   lessons: Tema26Lesson[]
 }
 
+export const TEMA26_TITLE = "Diversificación"
+
 export const TEMA26_SUBTEMAS: Tema26Subtema[] = [
   {
-    title: "Dinero y forma de vivir",
+    title: "Concepto",
     lessons: [
-      { title: "¿Qué es el estilo de vida?", slug: "que-es-el-estilo-de-vida" },
-      { title: "Relación entre dinero y estilo de vida", slug: "relacion-entre-dinero-y-estilo-de-vida" },
-      { title: "Estilo de vida consciente vs automático", slug: "estilo-de-vida-consciente-vs-automatico" },
-    ],
+      { title: "¿Qué es diversificar y por qué funciona?", slug: "que-es-diversificar-y-por-que-funciona", level: "Básico" },
+      { title: "No poner todo en uno (casos reales)", slug: "no-poner-todo-en-uno-casos-reales", level: "Básico" },
+      { title: "Diversificar no es comprar “de todo”", slug: "diversificar-no-es-comprar-de-todo", level: "Intermedio" },
+      { title: "Correlación simple (sin tecnicismos)", slug: "correlacion-simple-sin-tecnicismos", level: "Intermedio" },
+      { title: "Mini práctica: detectar mala diversificación", slug: "mini-practica-detectar-mala-diversificacion", level: "Avanzado" },
+    ]
   },
   {
-    title: "Decisiones de consumo",
+    title: "¿Cómo diversificar?",
     lessons: [
-      { title: "Consumir por necesidad", slug: "consumir-por-necesidad" },
-      { title: "Consumir por deseo", slug: "consumir-por-deseo" },
-      { title: "Estilo de vida y gastos", slug: "estilo-de-vida-y-gastos" },
-      { title: "Evitar el sobreconsumo", slug: "evitar-el-sobreconsumo" },
-    ],
+      { title: "Diversificar por instrumento", slug: "diversificar-por-instrumento", level: "Básico" },
+      { title: "Diversificar por sector/tema (idea simple)", slug: "diversificar-por-sectortema-idea-simple", level: "Básico" },
+      { title: "Diversificar por tiempo (entradas escalonadas)", slug: "diversificar-por-tiempo-entradas-escalonadas", level: "Intermedio" },
+      { title: "Diversificar por objetivo (corto vs largo)", slug: "diversificar-por-objetivo-corto-vs-largo", level: "Intermedio" },
+      { title: "Caso: mejorar una cartera mal diversificada", slug: "caso-mejorar-una-cartera-mal-diversificada", level: "Avanzado" },
+    ]
   },
   {
-    title: "Ajustar mi estilo de vida",
+    title: "Errores comunes",
     lessons: [
-      { title: "Vivir por debajo de mis posibilidades", slug: "vivir-por-debajo-de-mis-posibilidades" },
-      { title: "Subir ingresos sin subir gastos", slug: "subir-ingresos-sin-subir-gastos" },
-      { title: "Elegir en qué sí gastar", slug: "elegir-en-que-si-gastar" },
-    ],
-  },
-  {
-    title: "Estilo de vida y bienestar",
-    lessons: [
-      { title: "Dinero y tranquilidad mental", slug: "dinero-y-tranquilidad-mental" },
-      { title: "Menos estrés financiero", slug: "menos-estres-financiero" },
-      { title: "Calidad de vida vs apariencia", slug: "calidad-de-vida-vs-apariencia" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Diseñar mi estilo de vida", slug: "disenar-mi-estilo-de-vida" },
-      { title: "Checkpoint: Mi estilo de vida financiero", slug: "checkpoint-mi-estilo-de-vida-financiero" },
-    ],
+      { title: "“Tengo muchas cosas” ≠ diversificado", slug: "tengo-muchas-cosas-diversificado", level: "Básico" },
+      { title: "Diversificar sin entender qué compras", slug: "diversificar-sin-entender-que-compras", level: "Básico" },
+      { title: "Cambiar cartera cada semana (error)", slug: "cambiar-cartera-cada-semana-error", level: "Intermedio" },
+      { title: "Sobrediversificación (también pasa)", slug: "sobrediversificacion-tambien-pasa", level: "Intermedio" },
+      { title: "Checkpoint: reglas simples para diversificar", slug: "checkpoint-reglas-simples-para-diversificar", level: "Avanzado" },
+    ]
   },
 ]

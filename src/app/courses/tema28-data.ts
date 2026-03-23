@@ -1,6 +1,7 @@
 export interface Tema28Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema28Subtema {
@@ -8,40 +9,37 @@ export interface Tema28Subtema {
   lessons: Tema28Lesson[]
 }
 
+export const TEMA28_TITLE = "Estrategia financiera personal"
+
 export const TEMA28_SUBTEMAS: Tema28Subtema[] = [
   {
-    title: "Entender la crisis",
+    title: "Diseño",
     lessons: [
-      { title: "¿Qué es una crisis financiera personal?", slug: "que-es-una-crisis-financiera-personal" },
-      { title: "Crisis esperadas e inesperadas", slug: "crisis-esperadas-e-inesperadas" },
-    ],
+      { title: "Mis prioridades reales (orden)", slug: "mis-prioridades-reales-orden", level: "Básico" },
+      { title: "Mis reglas de gasto (claras)", slug: "mis-reglas-de-gasto-claras", level: "Básico" },
+      { title: "Mis reglas de ahorro (mínimos)", slug: "mis-reglas-de-ahorro-minimos", level: "Intermedio" },
+      { title: "Mis reglas de deuda (límites)", slug: "mis-reglas-de-deuda-limites", level: "Intermedio" },
+      { title: "Checkpoint: mi manual de dinero v1", slug: "checkpoint-mi-manual-de-dinero-v1", level: "Avanzado" },
+    ]
   },
   {
-    title: "Reaccionar ante la crisis",
+    title: "Plan 12 meses",
     lessons: [
-      { title: "¿Qué hacer cuando falta dinero?", slug: "que-hacer-cuando-falta-dinero" },
-      { title: "Priorizar en momentos difíciles", slug: "priorizar-en-momentos-dificiles" },
-    ],
+      { title: "Plan anual simple (metas)", slug: "plan-anual-simple-metas", level: "Básico" },
+      { title: "Escenarios: si gano más", slug: "escenarios-si-gano-mas", level: "Básico" },
+      { title: "Escenarios: si gano menos", slug: "escenarios-si-gano-menos", level: "Intermedio" },
+      { title: "Ajustes trimestrales (sin drama)", slug: "ajustes-trimestrales-sin-drama", level: "Intermedio" },
+      { title: "Caso: corregir un plan que falló", slug: "caso-corregir-un-plan-que-fallo", level: "Avanzado" },
+    ]
   },
   {
-    title: "Manejar pérdidas",
+    title: "Seguimiento",
     lessons: [
-      { title: "Pérdida de ingresos", slug: "perdida-de-ingresos" },
-      { title: "Endeudarse en crisis", slug: "endeudarse-en-crisis" },
-    ],
-  },
-  {
-    title: "Recuperarse",
-    lessons: [
-      { title: "Reconstruir finanzas después de una crisis", slug: "reconstruir-finanzas-despues-de-una-crisis" },
-      { title: "Aprender de la crisis", slug: "aprender-de-la-crisis" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Fortalecerme después de una crisis", slug: "fortalecerme-despues-de-una-crisis" },
-      { title: "Checkpoint: Mi plan ante crisis", slug: "checkpoint-mi-plan-ante-crisis" },
-    ],
+      { title: "Métricas personales (3 indicadores)", slug: "metricas-personales-3-indicadores", level: "Básico" },
+      { title: "Revisión mensual (20 min)", slug: "revision-mensual-20-min", level: "Básico" },
+      { title: "Revisión trimestral (1 hora)", slug: "revision-trimestral-1-hora", level: "Intermedio" },
+      { title: "Automatizar decisiones (menos estrés)", slug: "automatizar-decisiones-menos-estres", level: "Intermedio" },
+      { title: "Checkpoint: mi sistema de seguimiento", slug: "checkpoint-mi-sistema-de-seguimiento", level: "Avanzado" },
+    ]
   },
 ]

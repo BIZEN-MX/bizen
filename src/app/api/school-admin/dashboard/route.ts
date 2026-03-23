@@ -98,6 +98,106 @@ export async function GET(request: Request) {
 
         // 3. Calculate some aggregate KPIs (e.g., active students = have completed progress recently, or just average progress)
         let totalCompletedLessons = 0
+        const studentIds = roster.map(r => r.userId)
+        
+        // --- ADVANCED METRICS AGGREGATION ---
+
+        // A. Quiz Efficiency (Attempts per quiz)
+        const allAttempts = await prisma.attempt.findMany({
+            where: { userId: { in: studentIds as any } },
+            select: { userId: true, quizId: true }
+        })
+        const quizPairs = new Set(allAttempts.map(a => `${a.userId}-${a.quizId}`)).size
+        const avgAttemptsPerQuiz = quizPairs > 0 ? (allAttempts.length / quizPairs).toFixed(2) : "1.00"
+
+        // B. Stock Performance
+        const portfolios = await prisma.simulator_portfolios.findMany({
+            where: { user_id: { in: studentIds as any } },
+            include: { holdings: true }
+        })
+        
+        // Get latest prices for all symbols held by these students
+        const allSymbols = Array.from(new Set(portfolios.flatMap(p => p.holdings.map(h => h.symbol))))
+        const latestPrices = await prisma.market_prices_eod.findMany({
+            where: { symbol: { in: allSymbols } },
+            orderBy: { date: 'desc' },
+            distinct: ['symbol']
+        })
+        const priceMap = new Map(latestPrices.map(p => [p.symbol, Number(p.close)]))
+
+        let totalInstitutionalValue = 0
+        portfolios.forEach(p => {
+            let holdingsValue = 0
+            p.holdings.forEach(h => {
+                const price = priceMap.get(h.symbol) || Number(h.avg_cost)
+                holdingsValue += Number(h.quantity) * price
+            })
+            totalInstitutionalValue += (Number(p.cash_balance) + holdingsValue)
+        })
+        const startingCapital = portfolios.length * 10000
+        const institutionalROI = startingCapital > 0 
+            ? ((totalInstitutionalValue - startingCapital) / startingCapital * 100).toFixed(2) 
+            : "0.00"
+
+        // C. Retention Risk & Community Leaders
+        let studentsAtRisk = 0
+        const threeDaysAgo = new Date(); threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
+        
+        const communityLeaders = roster
+            .map(r => ({
+                name: r.fullName,
+                reputation: r.level * 100 + (r.xp / 10), // Proxy if detailed forum stats aren't direct
+                xp: r.xp
+            }))
+            .sort((a, b) => b.reputation - a.reputation)
+            .slice(0, 5)
+
+        // D. Diagnostic Insights (Focused)
+        // Link DiagnosticResult via email (requires fetching emails from Auth)
+        const diagnosticStats = {
+            avgScore: 0,
+            participation: 0,
+            strengths: [] as string[],
+            weaknesses: [] as string[]
+        }
+
+        const diagResults = await prisma.diagnosticResult.findMany({
+            where: { institution: { contains: schoolName, mode: 'insensitive' } }
+        })
+
+        if (diagResults.length > 0) {
+            diagnosticStats.participation = diagResults.length
+            diagnosticStats.avgScore = Math.round(diagResults.reduce((acc, curr) => acc + curr.score, 0) / diagResults.length)
+            
+            // Real topic analysis based on quiz labels
+            const labelsMap: Record<string, string> = {
+                "diag-1": "Educación", "diag-2": "Ahorro", "diag-3": "Mentalidad",
+                "diag-4": "Objetivos", "diag-5": "Deuda", "diag-6": "Entorno",
+                "diag-7": "Crédito", "diag-8": "Aprendizaje", "diag-9": "Gastos",
+                "diag-10": "Gestión"
+            }
+            
+            const categoryScores: Record<string, number[]> = {}
+            diagResults.forEach(res => {
+                const answers = res.answers as any
+                Object.keys(answers).forEach(qId => {
+                    const label = labelsMap[qId] || qId
+                    if (!categoryScores[label]) categoryScores[label] = []
+                    // 'A' is the ideal answer in diagnosticQuiz data
+                    categoryScores[label].push(answers[qId] === 'A' ? 100 : 0)
+                })
+            })
+
+            const sortedCategories = Object.entries(categoryScores)
+                .map(([name, scores]) => ({
+                    name,
+                    avg: scores.reduce((a, b) => a + b, 0) / scores.length
+                }))
+                .sort((a, b) => b.avg - a.avg)
+
+            diagnosticStats.strengths = sortedCategories.slice(0, 2).map(c => c.name)
+            diagnosticStats.weaknesses = sortedCategories.slice(-2).reverse().map(c => c.name)
+        }
 
         const students = (roster as any[]).map(student => {
             const completedLessons = student.progress.filter(p => p.percent === 100).length;
@@ -105,8 +205,14 @@ export async function GET(request: Request) {
             
             const totalPercent = student.progress.reduce((acc, curr) => acc + (curr.percent || 0), 0);
             const avgProgressRaw = student.progress.length > 0 ? (totalPercent / student.progress.length) : 0;
-            // Cap at 100% just in case
             const averageProgress = Math.min(100, Math.round(avgProgressRaw));
+
+            // Risk check
+            const lastActive = student.progress.length > 0 
+                ? new Date(Math.max(...student.progress.map(p => new Date(p.updatedAt).getTime())))
+                : new Date(student.createdAt)
+            
+            if (lastActive < threeDaysAgo) studentsAtRisk++
 
             return {
                 id: student.userId,
@@ -116,7 +222,8 @@ export async function GET(request: Request) {
                 joinedAt: student.createdAt,
                 coursesEnrolled: student.enrollments.map(e => e.topic?.title || "Curso"),
                 completedLessonsCount: completedLessons,
-                averageProgress
+                averageProgress,
+                lastActive
             }
         })
 
@@ -127,9 +234,14 @@ export async function GET(request: Request) {
             kpis: {
                 totalStudents: totalStudentsCount,
                 avgModulesCompleted: Number(avgModulesCompleted),
-                totalCompletedLessons: totalCompletedLessons
+                totalCompletedLessons: totalCompletedLessons,
+                avgAttemptsPerQuiz: Number(avgAttemptsPerQuiz),
+                institutionalROI: Number(institutionalROI),
+                studentsAtRisk,
+                diagnosticStats
             },
-            students: students
+            students: students,
+            communityLeaders
         })
 
     } catch (error) {

@@ -1,6 +1,7 @@
 export interface Tema21Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema21Subtema {
@@ -8,44 +9,37 @@ export interface Tema21Subtema {
   lessons: Tema21Lesson[]
 }
 
+export const TEMA21_TITLE = "Activos vs pasivos"
+
 export const TEMA21_SUBTEMAS: Tema21Subtema[] = [
   {
-    title: "¿Qué es el flujo de efectivo?",
+    title: "Concepto",
     lessons: [
-      { title: "¿Qué es el flujo de efectivo?", slug: "que-es-el-flujo-de-efectivo" },
-      { title: "¿Por qué es vital para un negocio?", slug: "por-que-es-vital-para-un-negocio" },
-      { title: "Utilidad vs flujo", slug: "utilidad-vs-flujo" },
-    ],
+      { title: "¿Qué es un activo (simple y medible)?", slug: "que-es-un-activo-simple-y-medible", level: "Básico" },
+      { title: "¿Qué es un pasivo (simple y medible)?", slug: "que-es-un-pasivo-simple-y-medible", level: "Básico" },
+      { title: "¿Cómo distinguirlos en 10 segundos?", slug: "como-distinguirlos-en-10-segundos", level: "Intermedio" },
+      { title: "Activos/pasivos en tu vida diaria (prepa)", slug: "activospasivos-en-tu-vida-diaria-prepa", level: "Intermedio" },
+      { title: "Mini práctica: clasificar 10 ejemplos", slug: "mini-practica-clasificar-10-ejemplos", level: "Avanzado" },
+    ]
   },
   {
-    title: "Entradas y salidas de dinero",
+    title: "Vida real",
     lessons: [
-      { title: "Entradas de efectivo", slug: "entradas-de-efectivo" },
-      { title: "Salidas de efectivo", slug: "salidas-de-efectivo" },
-      { title: "Momentos de cobro y pago", slug: "momentos-de-cobro-y-pago" },
-    ],
+      { title: "Ejemplos típicos de jóvenes (lo que confunde)", slug: "ejemplos-tipicos-de-jovenes-lo-que-confunde", level: "Básico" },
+      { title: "“Esto parece activo pero no lo es” (casos)", slug: "esto-parece-activo-pero-no-lo-es-casos", level: "Básico" },
+      { title: "El costo total de un pasivo (más allá del precio)", slug: "el-costo-total-de-un-pasivo-mas-alla-del-precio", level: "Intermedio" },
+      { title: "Activo que requiere mantenimiento (realidad)", slug: "activo-que-requiere-mantenimiento-realidad", level: "Intermedio" },
+      { title: "Caso: elegir entre 2 decisiones (activo vs pasivo)", slug: "caso-elegir-entre-2-decisiones-activo-vs-pasivo", level: "Avanzado" },
+    ]
   },
   {
-    title: "Problemas de flujo",
+    title: "Decisiones",
     lessons: [
-      { title: "Negocio rentable sin dinero", slug: "negocio-rentable-sin-dinero" },
-      { title: "Falta de liquidez", slug: "falta-de-liquidez" },
-      { title: "Errores comunes de flujo", slug: "errores-comunes-de-flujo" },
-    ],
-  },
-  {
-    title: "Manejar el flujo",
-    lessons: [
-      { title: "Mejorar cobros", slug: "mejorar-cobros" },
-      { title: "Controlar pagos", slug: "controlar-pagos" },
-      { title: "Crear colchón de efectivo", slug: "crear-colchon-de-efectivo" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Pensar en efectivo primero", slug: "pensar-en-efectivo-primero" },
-      { title: "Checkpoint: Mi flujo de efectivo", slug: "checkpoint-mi-flujo-de-efectivo" },
-    ],
+      { title: "Reglas para comprar sin destruir tu patrimonio", slug: "reglas-para-comprar-sin-destruir-tu-patrimonio", level: "Básico" },
+      { title: "Convertir gasto en inversión (cuando sí se puede)", slug: "convertir-gasto-en-inversion-cuando-si-se-puede", level: "Básico" },
+      { title: "Priorizar activos antes de lujos (sin moralina)", slug: "priorizar-activos-antes-de-lujos-sin-moralina", level: "Intermedio" },
+      { title: "Errores comunes al “querer verse bien”", slug: "errores-comunes-al-querer-verse-bien", level: "Intermedio" },
+      { title: "Checkpoint: mis reglas personales activos/pasivos", slug: "checkpoint-mis-reglas-personales-activospasivos", level: "Avanzado" },
+    ]
   },
 ]

@@ -1,6 +1,7 @@
 export interface Tema15Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema15Subtema {
@@ -8,60 +9,37 @@ export interface Tema15Subtema {
   lessons: Tema15Lesson[]
 }
 
+export const TEMA15_TITLE = "Intereses"
+
 export const TEMA15_SUBTEMAS: Tema15Subtema[] = [
   {
-    title: "¿Qué es decidir bien con dinero?",
+    title: "Conceptos base",
     lessons: [
-      { title: "¿Qué es una decisión financiera?", slug: "que-es-una-decision-financiera" },
-      { title: "Decidir vs reaccionar", slug: "decidir-vs-reaccionar" },
-      { title: "¿Por qué decidir con dinero es difícil?", slug: "por-que-decidir-con-dinero-es-dificil" },
-      { title: "Responsabilidad en las decisiones", slug: "responsabilidad-en-las-decisiones" },
-    ],
+      { title: "¿Qué es interés (en 1 minuto)?", slug: "que-es-interes-en-1-minuto", level: "Básico" },
+      { title: "Interés simple vs compuesto (con ejemplo)", slug: "interes-simple-vs-compuesto-con-ejemplo", level: "Básico" },
+      { title: "Interés a tu favor vs en tu contra", slug: "interes-a-tu-favor-vs-en-tu-contra", level: "Intermedio" },
+      { title: "¿Por qué el tiempo es el factor más fuerte?", slug: "por-que-el-tiempo-es-el-factor-mas-fuerte", level: "Intermedio" },
+      { title: "Mini práctica: identificar si algo “cobra interés”", slug: "mini-practica-identificar-si-algo-cobra-interes", level: "Avanzado" },
+    ]
   },
   {
-    title: "Proceso de decisión",
+    title: "Costo real",
     lessons: [
-      { title: "Pensar antes de decidir", slug: "pensar-antes-de-decidir" },
-      { title: "Información vs impulso", slug: "informacion-vs-impulso" },
-      { title: "Evaluar opciones", slug: "evaluar-opciones" },
-      { title: "Pensar en consecuencias", slug: "pensar-en-consecuencias" },
-      { title: "Decisiones de corto vs largo plazo", slug: "decisiones-de-corto-vs-largo-plazo" },
-    ],
+      { title: "CAT explicado con ejemplo real", slug: "cat-explicado-con-ejemplo-real", level: "Básico" },
+      { title: "Pago mínimo: por qué es trampa", slug: "pago-minimo-por-que-es-trampa", level: "Básico" },
+      { title: "Intereses moratorios (pagar tarde sale caro)", slug: "intereses-moratorios-pagar-tarde-sale-caro", level: "Intermedio" },
+      { title: "¿Cuándo conviene adelantar pagos?", slug: "cuando-conviene-adelantar-pagos", level: "Intermedio" },
+      { title: "Comparar 2 créditos: cuál es más caro y por qué", slug: "comparar-2-creditos-cual-es-mas-caro-y-por-que", level: "Avanzado" },
+    ]
   },
   {
-    title: "Decisiones comunes en la vida real",
+    title: "Decisiones con intereses",
     lessons: [
-      { title: "Decidir gastar", slug: "decidir-gastar" },
-      { title: "Decidir ahorrar", slug: "decidir-ahorrar" },
-      { title: "Decidir endeudarme", slug: "decidir-endeudarme" },
-      { title: "Decidir invertir", slug: "decidir-invertir" },
-      { title: "Decidir no hacer nada", slug: "decidir-no-hacer-nada" },
-    ],
-  },
-  {
-    title: "Errores al decidir",
-    lessons: [
-      { title: "Decidir por presión social", slug: "decidir-por-presion-social" },
-      { title: "Decidir por miedo", slug: "decidir-por-miedo" },
-      { title: "Decidir por emoción", slug: "decidir-por-emocion" },
-      { title: "Cambiar de decisión constantemente", slug: "cambiar-de-decision-constantemente" },
-    ],
-  },
-  {
-    title: "Construir criterio financiero",
-    lessons: [
-      { title: "Desarrollar criterio propio", slug: "desarrollar-criterio-propio" },
-      { title: "Aprender a decir no", slug: "aprender-a-decir-no" },
-      { title: "Tomar decisiones alineadas a mis objetivos", slug: "tomar-decisiones-alineadas-a-mis-objetivos" },
-      { title: "Ser consistente en mis decisiones", slug: "ser-consistente-en-mis-decisiones" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Decidir con intención", slug: "decidir-con-intencion" },
-      { title: "Prepararme para la mentalidad emprendedora", slug: "prepararme-para-la-mentalidad-emprendedora" },
-      { title: "Checkpoint: Mis decisiones financieras", slug: "checkpoint-mis-decisiones-financieras" },
-    ],
+      { title: "Meses sin intereses: cuándo conviene y cuándo no", slug: "meses-sin-intereses-cuando-conviene-y-cuando-no", level: "Básico" },
+      { title: "Interés en tarjetas: cómo evitarlo siempre", slug: "interes-en-tarjetas-como-evitarlo-siempre", level: "Básico" },
+      { title: "Interés en deudas: estrategia para reducirlo", slug: "interes-en-deudas-estrategia-para-reducirlo", level: "Intermedio" },
+      { title: "Interés compuesto en ahorro/inversión (idea)", slug: "interes-compuesto-en-ahorroinversion-idea", level: "Intermedio" },
+      { title: "Caso: decisión inteligente con intereses", slug: "caso-decision-inteligente-con-intereses", level: "Avanzado" },
+    ]
   },
 ]

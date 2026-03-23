@@ -1,6 +1,7 @@
 export interface Tema30Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema30Subtema {
@@ -8,40 +9,37 @@ export interface Tema30Subtema {
   lessons: Tema30Lesson[]
 }
 
+export const TEMA30_TITLE = "Emprendimiento financiero"
+
 export const TEMA30_SUBTEMAS: Tema30Subtema[] = [
   {
-    title: "Pensar en el futuro",
+    title: "Números del negocio",
     lessons: [
-      { title: "Pensar a largo plazo", slug: "pensar-a-largo-plazo" },
-      { title: "Visualizar mi futuro financiero", slug: "visualizar-mi-futuro-financiero" },
-    ],
+      { title: "Ingresos, costos y utilidad (negocio)", slug: "ingresos-costos-y-utilidad-negocio", level: "Básico" },
+      { title: "Costos fijos vs variables (negocio)", slug: "costos-fijos-vs-variables-negocio", level: "Básico" },
+      { title: "Margen: por qué importa", slug: "margen-por-que-importa", level: "Intermedio" },
+      { title: "Flujo de efectivo del negocio (oxígeno)", slug: "flujo-de-efectivo-del-negocio-oxigeno", level: "Intermedio" },
+      { title: "Caso: negocio con ventas pero sin dinero", slug: "caso-negocio-con-ventas-pero-sin-dinero", level: "Avanzado" },
+    ]
   },
   {
-    title: "Objetivos de vida",
+    title: "Precio",
     lessons: [
-      { title: "Definir objetivos financieros", slug: "definir-objetivos-financieros" },
-      { title: "Alinear dinero y metas personales", slug: "alinear-dinero-y-metas-personales" },
-    ],
+      { title: "Precio vs valor (sin pena cobrar)", slug: "precio-vs-valor-sin-pena-cobrar", level: "Básico" },
+      { title: "¿Cómo poner precio (3 métodos simples)?", slug: "como-poner-precio-3-metodos-simples", level: "Básico" },
+      { title: "Errores al cobrar barato", slug: "errores-al-cobrar-barato", level: "Intermedio" },
+      { title: "Subir precio sin perder clientes (idea)", slug: "subir-precio-sin-perder-clientes-idea", level: "Intermedio" },
+      { title: "Caso: ajustar precio para ser rentable", slug: "caso-ajustar-precio-para-ser-rentable", level: "Avanzado" },
+    ]
   },
   {
-    title: "Plan personal",
+    title: "Crecer",
     lessons: [
-      { title: "Crear un plan financiero personal", slug: "crear-un-plan-financiero-personal" },
-      { title: "Ajustar el plan con el tiempo", slug: "ajustar-el-plan-con-el-tiempo" },
-    ],
-  },
-  {
-    title: "Compromiso personal",
-    lessons: [
-      { title: "Comprometerme con mi plan", slug: "comprometerme-con-mi-plan" },
-      { title: "Revisar y mejorar constantemente", slug: "revisar-y-mejorar-constantemente" },
-    ],
-  },
-  {
-    title: "Cierre final",
-    lessons: [
-      { title: "Tomar control de mi vida financiera", slug: "tomar-control-de-mi-vida-financiera" },
-      { title: "Checkpoint final: Mi plan de vida financiera", slug: "checkpoint-final-mi-plan-de-vida-financiera" },
-    ],
+      { title: "Reinvertir vs sacar ganancias (decisión clave)", slug: "reinvertir-vs-sacar-ganancias-decision-clave", level: "Básico" },
+      { title: "Separar finanzas personales y del negocio", slug: "separar-finanzas-personales-y-del-negocio", level: "Básico" },
+      { title: "Escalar sin morir de flujo", slug: "escalar-sin-morir-de-flujo", level: "Intermedio" },
+      { title: "Indicadores básicos (ventas, margen, flujo)", slug: "indicadores-basicos-ventas-margen-flujo", level: "Intermedio" },
+      { title: "Checkpoint: plan financiero de mi negocio", slug: "checkpoint-plan-financiero-de-mi-negocio", level: "Avanzado" },
+    ]
   },
 ]

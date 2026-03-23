@@ -1,6 +1,7 @@
 export interface Tema9Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema9Subtema {
@@ -8,59 +9,37 @@ export interface Tema9Subtema {
   lessons: Tema9Lesson[]
 }
 
+export const TEMA9_TITLE = "Metas financieras"
+
 export const TEMA9_SUBTEMAS: Tema9Subtema[] = [
   {
-    title: "Entender la inflación",
+    title: "Metas claras",
     lessons: [
-      { title: "¿Qué es la inflación?", slug: "que-es-la-inflacion" },
-      { title: "¿Por qué existe la inflación?", slug: "por-que-existe-la-inflacion" },
-      { title: "Inflación en la vida diaria", slug: "inflacion-en-la-vida-diaria" },
-      { title: "Mitos sobre la inflación", slug: "mitos-sobre-la-inflacion" },
-      { title: "Cambiar la forma de ver la inflación", slug: "cambiar-la-forma-de-ver-la-inflacion" },
-    ],
+      { title: "Meta específica y medible", slug: "meta-especifica-y-medible", level: "Básico" },
+      { title: "Tiempo y monto diario/semanal", slug: "tiempo-y-monto-diariosemanal", level: "Básico" },
+      { title: "Meta realista vs fantasía", slug: "meta-realista-vs-fantasia", level: "Intermedio" },
+      { title: "Romper una meta en pasos", slug: "romper-una-meta-en-pasos", level: "Intermedio" },
+      { title: "Caso: meta 7 días / 30 días", slug: "caso-meta-7-dias-30-dias", level: "Avanzado" },
+    ]
   },
   {
-    title: "¿Cómo afecta mi dinero?",
+    title: "Prioridades",
     lessons: [
-      { title: "¿Qué es el poder adquisitivo?", slug: "que-es-el-poder-adquisitivo" },
-      { title: "¿Por qué el dinero pierde valor?", slug: "por-que-el-dinero-pierde-valor" },
-      { title: "Aumentos de precios con el tiempo", slug: "aumentos-de-precios-con-el-tiempo" },
-      { title: "Inflación y ahorro", slug: "inflacion-y-ahorro" },
-      { title: "Inflación y deudas", slug: "inflacion-y-deudas" },
-    ],
+      { title: "Elegir metas sin saturarme", slug: "elegir-metas-sin-saturarme", level: "Básico" },
+      { title: "Meta vs antojos (decisión)", slug: "meta-vs-antojos-decision", level: "Básico" },
+      { title: "1 meta principal + 1 secundaria", slug: "1-meta-principal-1-secundaria", level: "Intermedio" },
+      { title: "Cambiar prioridades sin abandonar", slug: "cambiar-prioridades-sin-abandonar", level: "Intermedio" },
+      { title: "Caso: dos metas en conflicto", slug: "caso-dos-metas-en-conflicto", level: "Avanzado" },
+    ]
   },
   {
-    title: "Inflación y decisiones personales",
+    title: "Seguimiento",
     lessons: [
-      { title: "Ajustar gastos en inflación", slug: "ajustar-gastos-en-inflacion" },
-      { title: "Ajustar ingresos en inflación", slug: "ajustar-ingresos-en-inflacion" },
-      { title: "Errores comunes en épocas inflacionarias", slug: "errores-comunes-en-epocas-inflacionarias" },
-      { title: "Protegerme de la inflación", slug: "protegerme-de-la-inflacion" },
-    ],
-  },
-  {
-    title: "Inflación y economía",
-    lessons: [
-      { title: "Inflación moderada vs alta", slug: "inflacion-moderada-vs-alta" },
-      { title: "Inflación y crecimiento económico", slug: "inflacion-y-crecimiento-economico" },
-      { title: "¿Qué pasa en crisis inflacionarias?", slug: "que-pasa-en-crisis-inflacionarias" },
-      { title: "Ejemplos históricos de inflación", slug: "ejemplos-historicos-de-inflacion" },
-    ],
-  },
-  {
-    title: "Prepararme para la inflación",
-    lessons: [
-      { title: "Pensar a largo plazo", slug: "pensar-a-largo-plazo" },
-      { title: "Tomar decisiones con visión futura", slug: "tomar-decisiones-con-vision-futura" },
-      { title: "Prepararme para invertir", slug: "prepararme-para-invertir" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Entender la inflación sin miedo", slug: "entender-la-inflacion-sin-miedo" },
-      { title: "Usar la inflación en mi planeación financiera", slug: "usar-la-inflacion-en-mi-planeacion-financiera" },
-      { title: "Checkpoint: Mi dinero frente a la inflación", slug: "checkpoint-mi-dinero-frente-a-la-inflacion" },
-    ],
+      { title: "Medir avance simple", slug: "medir-avance-simple", level: "Básico" },
+      { title: "Ajustar si voy atrasado", slug: "ajustar-si-voy-atrasado", level: "Básico" },
+      { title: "Evitar abandonar a mitad", slug: "evitar-abandonar-a-mitad", level: "Intermedio" },
+      { title: "Recompensas sanas por avance", slug: "recompensas-sanas-por-avance", level: "Intermedio" },
+      { title: "Cierre de meta y siguiente meta", slug: "cierre-de-meta-y-siguiente-meta", level: "Avanzado" },
+    ]
   },
 ]

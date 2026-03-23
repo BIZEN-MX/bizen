@@ -12,19 +12,21 @@ import { AvatarDisplay } from "@/components/AvatarDisplay"
 
 // ── Design token (mirrors configuracion / dashboard palette) ──────────────────
 const T = {
-  bg: "#FBFAF5",
+  bg: "#F4F6F9",
   blue: "#0F62FE",
   blueLight: "#EFF6FF",
   text: "#0F172A",
-  textMid: "#334155",
-  textMuted: "#64748B",
-  border: "rgba(15,98,254,0.12)",
+  textMid: "#475569",
+  textMuted: "#94A3B8",
+  border: "#E2E8F0",
   surface: "#ffffff",
   green: "#10B981",
+  greenLight: "#F0FDF4",
   amber: "#F59E0B",
-  font: "'SF Pro Display','SF Pro Text','Inter',sans-serif",
-  shadow: "0 12px 32px -8px rgba(15,98,254,0.08)",
-  shadowMd: "0 24px 48px -12px rgba(15,98,254,0.14)",
+  amberLight: "#FFFBEB",
+  font: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif',
+  radius: 20,
+  shadow: "0 1px 4px rgba(15,23,42,0.06), 0 4px 16px rgba(15,23,42,0.04)",
 }
 
 function Avatar({ av, size = 36 }: { av: any; size?: number }) {
@@ -32,7 +34,7 @@ function Avatar({ av, size = 36 }: { av: any; size?: number }) {
     return <AvatarDisplay avatar={av || { type: "character", id: "robot" }} size={size} frame={null} />
   } catch {
     return (
-      <div style={{ width: size, height: size, borderRadius: "50%", background: "linear-gradient(135deg,#6366F1,#0F62FE)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: size * 0.4, fontWeight: 700 }}>?</div>
+      <div style={{ width: size, height: size, borderRadius: "50%", background: T.blue, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: size * 0.4, fontWeight: 500 }}>?</div>
     )
   }
 }
@@ -51,28 +53,22 @@ function HubCard({
       onMouseLeave={() => setHovered(false)}
       style={{
         background: T.surface,
-        borderRadius: 24,
-        border: `1.5px solid ${hovered ? accentColor + "44" : T.border}`,
-        boxShadow: hovered ? `0 20px 48px -10px ${accentColor}28` : T.shadow,
-        padding: "28px 28px 24px",
+        borderRadius: T.radius,
+        border: `1px solid ${hovered ? accentColor : T.border}`,
+        boxShadow: hovered ? `0 12px 32px -8px ${accentColor}15` : T.shadow,
+        padding: "24px",
         cursor: "pointer",
         display: "flex",
         flexDirection: "column",
         gap: 0,
-        transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
-        transform: hovered ? "translateY(-5px)" : "translateY(0)",
+        transition: "all 0.2s ease-out",
+        transform: hovered ? "translateY(-4px)" : "translateY(0)",
         position: "relative",
         overflow: "hidden",
         animationFillMode: "both",
-        animation: `fadeUp 0.45s ease ${delay} both`,
+        animation: `fadeUp 0.4s ease ${delay} both`,
       }}
     >
-      {/* subtle corner accent */}
-      <div style={{
-        position: "absolute", top: 0, right: 0, width: 100, height: 100,
-        background: `radial-gradient(circle at top right, ${accentColor}14, transparent 70%)`,
-        borderRadius: "0 24px 0 0", pointerEvents: "none"
-      }} />
       {children}
     </div>
   )
@@ -82,12 +78,12 @@ function StatPill({ icon, label, value, color }: { icon: React.ReactNode; label:
   return (
     <div style={{
       display: "flex", alignItems: "center", gap: 10,
-      background: `${color}12`, border: `1.5px solid ${color}28`,
-      borderRadius: 14, padding: "10px 16px",
+      background: `${color}08`, border: `1px solid ${color}20`,
+      borderRadius: 12, padding: "10px 16px",
     }}>
       <div style={{ color, flexShrink: 0 }}>{icon}</div>
       <div>
-        <div style={{ fontSize: 18, fontWeight: 800, color: T.text, lineHeight: 1 }}>{value}</div>
+        <div style={{ fontSize: 18, fontWeight: 500, color: T.text, lineHeight: 1 }}>{value}</div>
         <div style={{ fontSize: 11, color: T.textMuted, fontWeight: 500, marginTop: 1 }}>{label}</div>
       </div>
     </div>
@@ -100,7 +96,13 @@ export default function ComunidadHubPage() {
   const router = useRouter()
 
   const [topPlayers, setTopPlayers] = useState<any[]>([])
-  const [communityStats, setCommunityStats] = useState({ members: 0, posts: 0, trees: 0 })
+  const [communityStats, setCommunityStats] = useState({ 
+    members: 0, 
+    activeToday: 0, 
+    xpGenerated: "...", 
+    ecoStatus: "...", 
+    activityLabel: "..." 
+  })
   const [statsLoading, setStatsLoading] = useState(true)
 
   useEffect(() => {
@@ -111,17 +113,26 @@ export default function ComunidadHubPage() {
     if (!user) return
     const load = async () => {
       try {
-        const [rankRes] = await Promise.all([
+        const [rankRes, statRes] = await Promise.all([
           fetch("/api/rankings"),
+          fetch("/api/community/stats")
         ])
+        
         if (rankRes.ok) {
           const d = await rankRes.json()
           const students = d.students || d || []
           setTopPlayers(Array.isArray(students) ? students.slice(0, 5) : [])
-          setCommunityStats(prev => ({ ...prev, members: students.length || 0 }))
         }
-      } catch { /* silent */ }
-      finally { setStatsLoading(false) }
+        
+        if (statRes.ok) {
+          const s = await statRes.json()
+          setCommunityStats(s)
+        }
+      } catch (err) {
+        console.error("Error loading community hub:", err)
+      } finally {
+        setStatsLoading(false)
+      }
     }
     load()
   }, [user])
@@ -157,9 +168,8 @@ export default function ComunidadHubPage() {
 
       {/* ── HERO BANNER ─────────────────────────────────────────────────────── */}
       <div className="com-hero" style={{
-        background: "linear-gradient(135deg, #0a0f1e 0%, #1e3a8a 60%, #1d4ed8 100%)",
-        margin: "12px 12px 0", borderRadius: 32, position: "relative", overflow: "hidden",
-        boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.25)",
+        background: "#0a0f1e",
+        margin: "16px 16px 0", borderRadius: 24, position: "relative", overflow: "hidden",
       }}>
         {/* BG Orbs & Mesh */}
         <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 500, height: 500, background: "radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", animation: "float 20s infinite linear" }} />
@@ -187,20 +197,20 @@ export default function ComunidadHubPage() {
             <div style={{ flex: "1 1 500px" }}>
               <div style={{ 
                 display: "inline-flex", alignItems: "center", gap: 8, 
-                background: "rgba(255,255,255,0.12)", backdropFilter: "blur(12px)",
+                background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)",
                 padding: "6px 14px", borderRadius: 99, marginBottom: 20,
-                border: "1px solid rgba(255,255,255,0.2)"
+                border: "1px solid rgba(255,255,255,0.15)"
               }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ADE80", boxShadow: "0 0 12px #4ADE80" }} />
-                <span style={{ fontSize: 12, fontWeight: 700, color: "#fff", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ADE80" }} />
+                <span style={{ fontSize: 11, fontWeight: 500, color: "#fff", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                   Comunidad en Vivo
                 </span>
               </div>
-              <h1 style={{ margin: "0 0 16px", fontSize: "clamp(32px, 6vw, 56px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1.05 }}>
+              <h1 style={{ margin: "0 0 16px", fontSize: "clamp(28px, 5vw, 48px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
                 Aprender es mejor <br />
                 <span style={{ color: "rgba(255,255,255,0.4)" }}>en compañía.</span>
               </h1>
-              <p style={{ margin: 0, fontSize: "clamp(15px, 1.8vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.6, maxWidth: 580, fontWeight: 500 }}>
+              <p style={{ margin: 0, fontSize: "clamp(14px, 1.6vw, 17px)", color: "rgba(255,255,255,0.65)", lineHeight: 1.6, maxWidth: 540, fontWeight: 400 }}>
                 Únete a miles de estudiantes que, como tú, están transformando su futuro financiero mientras generan un impacto positivo real.
               </p>
             </div>
@@ -233,24 +243,24 @@ export default function ComunidadHubPage() {
           <div className="com-hero-stats" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "flex-start" }}>
             {[
               { icon: <Users size={20} />, label: "Total Miembros", value: statsLoading ? "..." : (communityStats.members || 0).toLocaleString(), color: "#60A5FA" },
-              { icon: <Flame size={20} />, label: "Actividad Hoy", value: "Alta", color: "#F87171" },
-              { icon: <Leaf size={20} />, label: "Ecosistema BIZEN", value: "Sostenible", color: "#4ADE80" },
-              { icon: <Zap size={20} />, label: "XP Generada", value: "+1.2M", color: "#FBBF24" },
+              { icon: <Flame size={20} />, label: "Actividad Hoy", value: statsLoading ? "..." : communityStats.activityLabel, color: "#F87171" },
+              { icon: <Leaf size={20} />, label: "Ecosistema BIZEN", value: statsLoading ? "..." : communityStats.ecoStatus, color: "#4ADE80" },
+              { icon: <Zap size={20} />, label: "XP Generada", value: statsLoading ? "..." : communityStats.xpGenerated, color: "#FBBF24" },
             ].map(({ icon, label, value, color }) => (
               <div key={label} style={{
                 display: "flex", alignItems: "center", gap: 14,
-                background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)",
-                borderRadius: 20, padding: "14px 20px", backdropFilter: "blur(24px)",
+                background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: 16, padding: "14px 20px", backdropFilter: "blur(24px)",
                 minWidth: 180
               }}>
                 <div style={{ 
-                  color, flexShrink: 0, width: 40, height: 40, borderRadius: 12, 
+                  color, flexShrink: 0, width: 40, height: 40, borderRadius: 10, 
                   background: "rgba(255,255,255,0.08)", display: "flex", 
                   alignItems: "center", justifyContent: "center" 
                 }}>{icon}</div>
                 <div>
-                  <div style={{ fontSize: 17, fontWeight: 800, color: "#fff", lineHeight: 1 }}>{value}</div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
+                  <div style={{ fontSize: 16, fontWeight: 500, color: "#fff", lineHeight: 1 }}>{value}</div>
+                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 500, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
                 </div>
               </div>
             ))}
@@ -264,10 +274,10 @@ export default function ComunidadHubPage() {
         {/* ── Section: Hub Cards ─────────────────────────────────────────── */}
         <div style={{ padding: "32px 0 0" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg,#0F172A,#0F62FE)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: T.blue, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <TrendingUp size={16} color="#fff" />
             </div>
-            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: T.text, letterSpacing: "-0.02em" }}>Explora la comunidad</h2>
+            <h2 style={{ margin: 0, fontSize: 16, fontWeight: 500, color: T.text, letterSpacing: "-0.02em" }}>Explora la comunidad</h2>
           </div>
 
           <div className="com-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20, marginBottom: 32 }}>
@@ -275,19 +285,19 @@ export default function ComunidadHubPage() {
             {/* Foro */}
             <HubCard onClick={() => router.push("/forum")} accentColor="#0F62FE" delay="0s">
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 52, height: 52, borderRadius: 16, background: "linear-gradient(135deg,#DBEAFE,#BFDBFE)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 16px rgba(59,130,246,0.2)", flexShrink: 0 }}>
-                  <MessageSquare size={26} color="#0F62FE" strokeWidth={2} />
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: T.blueLight, border: `1px solid ${T.blue}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <MessageSquare size={24} color="#0F62FE" strokeWidth={2} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Comunidad</div>
-                  <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: T.text, letterSpacing: "-0.02em" }}>Foro Estudiantil</h3>
+                  <div style={{ fontSize: 10, fontWeight: 500, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Comunidad</div>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: T.text, letterSpacing: "-0.02em" }}>Foro Estudiantil</h3>
                 </div>
               </div>
               <p style={{ margin: "0 0 24px", color: T.textMuted, fontSize: 14, lineHeight: 1.65 }}>
                 Haz preguntas, comparte tus logros y aprende de la experiencia colectiva de toda la comunidad BIZEN.
               </p>
               <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", background: "#EFF6FF", color: "#0F62FE", borderRadius: 12, fontWeight: 700, fontSize: 14, border: "1.5px solid #BFDBFE" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: T.blueLight, color: "#0F62FE", borderRadius: 10, fontWeight: 500, fontSize: 14, border: `1px solid ${T.blue}30` }}>
                   Explorar el Foro <ArrowRight size={15} />
                 </div>
               </div>
@@ -296,19 +306,19 @@ export default function ComunidadHubPage() {
             {/* Rankings */}
             <HubCard onClick={() => router.push("/rankings")} accentColor="#D97706" delay="0.08s">
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 52, height: 52, borderRadius: 16, background: "linear-gradient(135deg,#FEF3C7,#FDE68A)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 16px rgba(245,158,11,0.2)", flexShrink: 0 }}>
-                  <Trophy size={26} color="#D97706" strokeWidth={2} />
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: T.amberLight, border: `1px solid ${T.amber}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Trophy size={24} color="#D97706" strokeWidth={2} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#D97706", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Competencia</div>
-                  <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: T.text, letterSpacing: "-0.02em" }}>Rankings Globales</h3>
+                  <div style={{ fontSize: 10, fontWeight: 500, color: "#D97706", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Competencia</div>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: T.text, letterSpacing: "-0.02em" }}>Rankings Globales</h3>
                 </div>
               </div>
               <p style={{ margin: "0 0 24px", color: T.textMuted, fontSize: 14, lineHeight: 1.65 }}>
                 Compara tu XP y racha con estudiantes de todo el mundo. ¿Tienes lo que se necesita para el Top 10?
               </p>
               <div style={{ marginTop: "auto" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", background: "#FFFBEB", color: "#D97706", borderRadius: 12, fontWeight: 700, fontSize: 14, border: "1.5px solid #FDE68A" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: T.amberLight, color: "#D97706", borderRadius: 10, fontWeight: 500, fontSize: 14, border: `1px solid ${T.amber}30` }}>
                   Ver Clasificación <ArrowRight size={15} />
                 </div>
               </div>
@@ -317,19 +327,19 @@ export default function ComunidadHubPage() {
             {/* Impacto Social */}
             <HubCard onClick={() => router.push("/impacto-social")} accentColor="#059669" delay="0.16s">
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 52, height: 52, borderRadius: 16, background: "linear-gradient(135deg,#D1FAE5,#A7F3D0)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 16px rgba(16,185,129,0.2)", flexShrink: 0 }}>
-                  <Heart size={26} color="#059669" strokeWidth={2} />
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: T.greenLight, border: `1px solid ${T.green}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Heart size={24} color="#059669" strokeWidth={2} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#059669", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Propósito</div>
-                  <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: T.text, letterSpacing: "-0.02em" }}>Impacto Social</h3>
+                  <div style={{ fontSize: 10, fontWeight: 500, color: "#059669", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Propósito</div>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: T.text, letterSpacing: "-0.02em" }}>Impacto Social</h3>
                 </div>
               </div>
               <p style={{ margin: "0 0 24px", color: T.textMuted, fontSize: 14, lineHeight: 1.65 }}>
                 Descubre cómo cada lección completada y tu progreso se convierte en ayuda real y árboles plantados.
               </p>
               <div style={{ marginTop: "auto" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", background: "#F0FDF4", color: "#059669", borderRadius: 12, fontWeight: 700, fontSize: 14, border: "1.5px solid #A7F3D0" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: T.greenLight, color: "#059669", borderRadius: 10, fontWeight: 500, fontSize: 14, border: `1px solid ${T.green}30` }}>
                   Ver Impacto <ArrowRight size={15} />
                 </div>
               </div>
@@ -343,14 +353,14 @@ export default function ComunidadHubPage() {
               {/* Leaderboard preview */}
               <div style={{ background: T.surface, borderRadius: 24, border: `1.5px solid ${T.border}`, boxShadow: T.shadow, overflow: "hidden", animation: "fadeUp 0.45s ease 0.24s both" }}>
                 {/* Header */}
-                <div style={{ padding: "20px 24px 16px", borderBottom: `1.5px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ padding: "16px 20px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg,#92400E,#D97706)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, background: T.amber, display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <Medal size={16} color="#fff" />
                     </div>
-                    <span style={{ fontWeight: 700, fontSize: 16, color: T.text }}>Top Estudiantes</span>
+                    <span style={{ fontWeight: 500, fontSize: 15, color: T.text }}>Top Estudiantes</span>
                   </div>
-                  <button onClick={() => router.push("/rankings")} style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", color: T.blue, fontSize: 13, fontWeight: 600, fontFamily: T.font }}>
+                  <button onClick={() => router.push("/rankings")} style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", color: T.blue, fontSize: 12, fontWeight: 500, fontFamily: T.font }}>
                     Ver todos <ChevronRight size={14} />
                   </button>
                 </div>
@@ -383,7 +393,7 @@ export default function ComunidadHubPage() {
                         background: isMe ? "#EFF6FF" : "transparent",
                         borderLeft: isMe ? `3px solid ${T.blue}` : "3px solid transparent",
                       }}>
-                        <div style={{ width: 24, textAlign: "center", fontSize: idx < 3 ? 18 : 13, fontWeight: 700, color: idx < 3 ? "#D97706" : T.textMuted }}>
+                        <div style={{ width: 24, textAlign: "center", fontSize: idx < 3 ? 18 : 12, fontWeight: 500, color: idx < 3 ? "#D97706" : T.textMuted }}>
                           {idx < 3 ? medals[idx] : `#${idx + 1}`}
                         </div>
                         <div style={{ width: 36, height: 36, borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -392,13 +402,13 @@ export default function ComunidadHubPage() {
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontWeight: 600, fontSize: 14, color: isMe ? T.blue : T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {p.fullName || p.nickname || "Estudiante"}
-                            {isMe && <span style={{ fontSize: 10, marginLeft: 6, background: T.blue, color: "#fff", borderRadius: 6, padding: "1px 6px" }}>Tú</span>}
+                            {isMe && <span style={{ fontSize: 9, marginLeft: 6, background: T.blue, color: "#fff", borderRadius: 4, padding: "1px 5px", textTransform: "uppercase" }}>Tú</span>}
                           </div>
-                          <div style={{ fontSize: 11, color: T.textMuted, marginTop: 1 }}>Nivel {p.level || 1}</div>
+                          <div style={{ fontSize: 10, color: T.textMuted, marginTop: 1 }}>Nivel {p.level || 1}</div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "4px 10px" }}>
-                          <Zap size={12} color="#D97706" fill="#D97706" />
-                          <span style={{ fontSize: 12, fontWeight: 700, color: "#D97706" }}>{(p.xp || 0).toLocaleString()}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, background: T.amberLight, border: `1px solid ${T.amber}20`, borderRadius: 8, padding: "4px 10px" }}>
+                          <Zap size={11} color="#D97706" fill="#D97706" />
+                          <span style={{ fontSize: 12, fontWeight: 500, color: "#D97706" }}>{(p.xp || 0).toLocaleString()}</span>
                         </div>
                       </div>
                     )
@@ -411,34 +421,34 @@ export default function ComunidadHubPage() {
 
                 {/* Join the forum CTA */}
                 <div style={{
-                  background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)",
-                  borderRadius: 24, padding: "28px 28px 24px",
+                  background: "#0a0f1e",
+                  borderRadius: T.radius, padding: "24px",
                   position: "relative", overflow: "hidden",
-                  animation: "fadeUp 0.45s ease 0.30s both",
+                  animation: "fadeUp 0.4s ease 0.3s both",
                   flex: 1, display: "flex", flexDirection: "column",
                 }}>
                   <div style={{ position: "absolute", top: "-20%", right: "-10%", width: 150, height: 150, background: "radial-gradient(circle,rgba(99,102,241,.25),transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
                   <div style={{ position: "absolute", bottom: "-10%", left: "5%", width: 100, height: 100, background: "radial-gradient(circle,rgba(59,130,246,.2),transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
 
                   <div style={{ position: "relative", zIndex: 1 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-                      <Users size={22} color="#60A5FA" />
+                    <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                      <Users size={20} color="#60A5FA" />
                     </div>
-                    <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
+                    <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, color: "#fff", letterSpacing: "-0.02em" }}>
                       Únete a la conversación
                     </h3>
-                    <p style={{ margin: "0 0 20px", fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 1.6 }}>
+                    <p style={{ margin: "0 0 20px", fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
                       Cientos de estudiantes comparten dudas, logros y consejos financieros cada día.
                     </p>
                     <button onClick={() => router.push("/forum")} style={{
                       display: "inline-flex", alignItems: "center", gap: 8,
-                      padding: "12px 22px", background: T.blue, border: "none",
-                      borderRadius: 12, cursor: "pointer", color: "#fff",
-                      fontSize: 14, fontWeight: 700, fontFamily: T.font,
-                      boxShadow: "0 6px 20px rgba(15,98,254,0.4)", transition: "all 0.2s"
+                      padding: "10px 20px", background: T.blue, border: "none",
+                      borderRadius: 10, cursor: "pointer", color: "#fff",
+                      fontSize: 14, fontWeight: 500, fontFamily: T.font,
+                      transition: "all 0.2s"
                     }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(15,98,254,0.5)" }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(15,98,254,0.4)" }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.background = "#0A50D4" }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = T.blue }}
                     >
                       Ir al Foro <ArrowRight size={16} />
                     </button>
@@ -447,31 +457,31 @@ export default function ComunidadHubPage() {
 
                 {/* Streak / motivational CTA */}
                 <div style={{
-                  background: "linear-gradient(135deg,#064E3B,#065F46)",
-                  borderRadius: 24, padding: "22px 24px",
+                  background: "#064E3B",
+                  borderRadius: T.radius, padding: "20px",
                   position: "relative", overflow: "hidden",
-                  animation: "fadeUp 0.45s ease 0.38s both",
+                  animation: "fadeUp 0.4s ease 0.35s both",
                 }}>
                   <div style={{ position: "absolute", top: "-30%", right: "-5%", width: 120, height: 120, background: "radial-gradient(circle,rgba(52,211,153,.25),transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
                   <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 16 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                      <Leaf size={22} color="#34D399" />
+                    <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Leaf size={20} color="#34D399" />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 800, fontSize: 15, color: "#fff", marginBottom: 4 }}>Tu progreso = Impacto real</div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
+                      <div style={{ fontWeight: 500, fontSize: 14, color: "#fff", marginBottom: 2 }}>Tu progreso = Impacto real</div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
                         Cada lección que completas contribuye a causas sociales.
                       </div>
                     </div>
                     <button onClick={() => router.push("/impacto-social")} style={{
                       display: "flex", alignItems: "center", gap: 6,
-                      padding: "9px 18px", background: "rgba(52,211,153,0.2)",
-                      border: "1px solid rgba(52,211,153,0.35)", borderRadius: 10,
-                      cursor: "pointer", color: "#34D399", fontSize: 13, fontWeight: 700,
+                      padding: "8px 16px", background: "rgba(52,211,153,0.1)",
+                      border: "1px solid rgba(52,211,153,0.2)", borderRadius: 8,
+                      cursor: "pointer", color: "#34D399", fontSize: 12, fontWeight: 500,
                       fontFamily: T.font, flexShrink: 0, transition: "all 0.2s", whiteSpace: "nowrap"
                     }}
-                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(52,211,153,0.3)" }}
-                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(52,211,153,0.2)" }}
+                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(52,211,153,0.2)" }}
+                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(52,211,153,0.1)" }}
                     >
                       Ver Impacto <ArrowRight size={14} />
                     </button>

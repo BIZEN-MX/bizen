@@ -68,7 +68,7 @@ interface Course {
 }
 
 // Approximate total lessons across 30 topics (for progress bar cap)
-const APPROX_TOTAL_LESSONS = 150
+const APPROX_TOTAL_LESSONS = 450
 
 export default function CoursesPage() {
   const { user, dbProfile, loading } = useAuth()
@@ -347,8 +347,8 @@ export default function CoursesPage() {
                 <div style={{ width: "100%", maxWidth: 600 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 10 }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      <span style={{ fontSize: 13, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso de Cursos</span>
-                      <span style={{ fontSize: 12, fontWeight: 500, color: "#60a5fa" }}>{Math.max(1, Math.floor(completedCount / 4))} de 150 cursos completados</span>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso de Lecciones</span>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: "#60a5fa" }}>{completedCount} de 450 lecciones completadas</span>
                     </div>
                     <span style={{ fontSize: 32, fontWeight: 500, color: "#fff", lineHeight: 1 }}>{progressPct}%</span>
                   </div>
@@ -554,9 +554,6 @@ export default function CoursesPage() {
                                       {isSequenceLocked ? 'Completar anterior' : 'Bloqueado'}
                                     </span>
                                   ) : topic.category}
-                                </div>
-                                <div className="course-card-icon-container" style={{ width: 68, height: 68, borderRadius: 20, flexShrink: 0, background: isLocked ? '#f1f5f9' : `${topic.catColor}14`, display: "flex", alignItems: "center", justifyContent: "center", color: isLocked ? '#64748b' : topic.catColor }}>
-                                  <IconComp size={36} strokeWidth={2} />
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", marginBottom: 6, letterSpacing: "0.08em", textTransform: "uppercase" }}>{topic.id.toString().replace('tema-', '').padStart(2, "0")}</div>

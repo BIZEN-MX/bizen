@@ -92,7 +92,7 @@ export async function GET(request: Request) {
 
     let redirectUrl = (isInstitutional && !onboardingComplete)
       ? `${origin}/diagnostic?verified=true&t=${Date.now()}`
-      : `${origin}/courses?verified=true&t=${Date.now()}`;
+      : `${origin}/dashboard?verified=true&t=${Date.now()}`;
 
     // Handle role-based redirect
     try {

@@ -1,6 +1,7 @@
 export interface Tema25Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema25Subtema {
@@ -8,44 +9,37 @@ export interface Tema25Subtema {
   lessons: Tema25Lesson[]
 }
 
+export const TEMA25_TITLE = "Riesgo financiero"
+
 export const TEMA25_SUBTEMAS: Tema25Subtema[] = [
   {
-    title: "¿Qué es escalar?",
+    title: "Tipos de riesgo",
     lessons: [
-      { title: "¿Qué significa escalar?", slug: "que-significa-escalar" },
-      { title: "Crecer vs escalar", slug: "crecer-vs-escalar" },
-      { title: "¿Cuándo es buen momento para escalar?", slug: "cuando-es-buen-momento-para-escalar" },
-    ],
+      { title: "Riesgo de mercado (concepto simple)", slug: "riesgo-de-mercado-concepto-simple", level: "Básico" },
+      { title: "Riesgo personal (deuda, ingresos, emergencias)", slug: "riesgo-personal-deuda-ingresos-emergencias", level: "Básico" },
+      { title: "Riesgo de liquidez (no poder sacar dinero)", slug: "riesgo-de-liquidez-no-poder-sacar-dinero", level: "Intermedio" },
+      { title: "Riesgo de estafa (seguridad)", slug: "riesgo-de-estafa-seguridad", level: "Intermedio" },
+      { title: "Mini práctica: identificar riesgos en escenarios", slug: "mini-practica-identificar-riesgos-en-escenarios", level: "Avanzado" },
+    ]
   },
   {
-    title: "Prepararse para crecer",
+    title: "Perfil y tolerancia",
     lessons: [
-      { title: "Ordenar procesos", slug: "ordenar-procesos" },
-      { title: "Medir resultados", slug: "medir-resultados" },
-      { title: "Construir bases sólidas", slug: "construir-bases-solidas" },
-    ],
+      { title: "Perfil conservador/moderado/agresivo", slug: "perfil-conservadormoderadoagresivo", level: "Básico" },
+      { title: "¿Qué pasa cuando tu perfil no coincide con tu inversión?", slug: "que-pasa-cuando-tu-perfil-no-coincide-con-tu-inversion", level: "Básico" },
+      { title: "Riesgo vs recompensa (sin fórmula)", slug: "riesgo-vs-recompensa-sin-formula", level: "Intermedio" },
+      { title: "Pérdidas: cómo se ven y cómo se manejan", slug: "perdidas-como-se-ven-y-como-se-manejan", level: "Intermedio" },
+      { title: "Caso: elegir inversión según perfil", slug: "caso-elegir-inversion-segun-perfil", level: "Avanzado" },
+    ]
   },
   {
-    title: "Escalar con control",
+    title: "Control del riesgo",
     lessons: [
-      { title: "Contratar personas", slug: "contratar-personas" },
-      { title: "Delegar responsabilidades", slug: "delegar-responsabilidades" },
-      { title: "Mantener calidad", slug: "mantener-calidad" },
-    ],
-  },
-  {
-    title: "Riesgos al escalar",
-    lessons: [
-      { title: "Crecer demasiado rápido", slug: "crecer-demasiado-rapido" },
-      { title: "Perder control del negocio", slug: "perder-control-del-negocio" },
-      { title: "Errores comunes al escalar", slug: "errores-comunes-al-escalar" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Pensar a largo plazo", slug: "pensar-a-largo-plazo" },
-      { title: "Checkpoint: Mi visión de crecimiento", slug: "checkpoint-mi-vision-de-crecimiento" },
-    ],
+      { title: "Riesgos que sí controlas (hábitos)", slug: "riesgos-que-si-controlas-habitos", level: "Básico" },
+      { title: "Diversificación como control (idea)", slug: "diversificacion-como-control-idea", level: "Básico" },
+      { title: "Evitar decisiones impulsivas (regla)", slug: "evitar-decisiones-impulsivas-regla", level: "Intermedio" },
+      { title: "No apostar todo a una sola jugada", slug: "no-apostar-todo-a-una-sola-jugada", level: "Intermedio" },
+      { title: "Checkpoint: mi regla personal de riesgo", slug: "checkpoint-mi-regla-personal-de-riesgo", level: "Avanzado" },
+    ]
   },
 ]

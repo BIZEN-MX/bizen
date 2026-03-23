@@ -78,6 +78,13 @@ function StockSimulatorContent() {
   }
 
   const cash = portfolio ? Number(portfolio.cash_balance) : 0
+  const holdingsValue = portfolio?.holdings?.reduce((sum: number, h: any) => {
+    const marketPrice = marketData.find(m => m.symbol === h.symbol)?.price ?? h.avg_cost
+    return sum + (Number(h.quantity) * Number(marketPrice))
+  }, 0) || 0
+  const totalValue = cash + holdingsValue
+  const startingCash = portfolio ? Number(portfolio.starting_cash) : 10000
+  const returns = startingCash > 0 ? ((totalValue - startingCash) / startingCash) * 100 : 0
   const tabs = [
     { id: 'portfolio', label: 'Mi Portafolio', icon: BarChart2 },
     { id: 'market', label: 'Mercado + Orden', icon: TrendingUp },
@@ -133,8 +140,8 @@ function StockSimulatorContent() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 'clamp(10px, 2vw, 14px)', marginBottom: 32 }}>
             {[
               { label: 'Efectivo', value: `$${cash.toLocaleString('es-MX',{minimumFractionDigits:2})}`, sub: 'USD Virtuales', bg: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', tc: '#065f46' },
-              { label: 'Valor Total', value: `$${cash.toLocaleString('es-MX',{minimumFractionDigits:2})}`, sub: 'portafolio estimado', bg: 'linear-gradient(135deg,#dbeafe,#bfdbfe)', tc: '#1e3a8a' },
-              { label: 'Rendimiento', value: '0.00%', sub: 'desde el inicio', bg: 'linear-gradient(135deg,#ede9fe,#ddd6fe)', tc: '#4c1d95' },
+              { label: 'Valor Total', value: `$${totalValue.toLocaleString('es-MX',{minimumFractionDigits:2})}`, sub: 'portafolio estimado', bg: 'linear-gradient(135deg,#dbeafe,#bfdbfe)', tc: '#1e3a8a' },
+              { label: 'Rendimiento', value: `${returns.toFixed(2)}%`, sub: 'desde el inicio', bg: 'linear-gradient(135deg,#ede9fe,#ddd6fe)', tc: '#4c1d95' },
               { label: 'Posiciones', value: String(portfolio?.holdings?.length ?? 0), sub: 'activos', bg: 'linear-gradient(135deg,#fef3c7,#fde68a)', tc: '#78350f' },
             ].map((s, i) => (
               <div key={i} style={{ background: s.bg, borderRadius: 20, padding: '20px', border: '1.5px solid rgba(0,0,0,0.03)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>

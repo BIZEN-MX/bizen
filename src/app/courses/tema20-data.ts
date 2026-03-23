@@ -1,6 +1,7 @@
 export interface Tema20Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema20Subtema {
@@ -8,46 +9,37 @@ export interface Tema20Subtema {
   lessons: Tema20Lesson[]
 }
 
+export const TEMA20_TITLE = "Inflación"
+
 export const TEMA20_SUBTEMAS: Tema20Subtema[] = [
   {
-    title: "Entender el dinero del negocio",
+    title: "Concepto",
     lessons: [
-      { title: "¿Qué son los ingresos de un negocio?", slug: "que-son-los-ingresos-de-un-negocio" },
-      { title: "¿Qué son los costos?", slug: "que-son-los-costos" },
-      { title: "¿Qué es la utilidad?", slug: "que-es-la-utilidad" },
-      { title: "Ingresos no son ganancias", slug: "ingresos-no-son-ganancias" },
-    ],
+      { title: "¿Qué es inflación (sin tecnicismos)?", slug: "que-es-inflacion-sin-tecnicismos", level: "Básico" },
+      { title: "¿Por qué suben precios (causas simples)?", slug: "por-que-suben-precios-causas-simples", level: "Básico" },
+      { title: "Inflación vs “que todo está caro”", slug: "inflacion-vs-que-todo-esta-caro", level: "Intermedio" },
+      { title: "Diferencia entre inflación baja y alta", slug: "diferencia-entre-inflacion-baja-y-alta", level: "Intermedio" },
+      { title: "Caso: precios hoy vs hace 2 años", slug: "caso-precios-hoy-vs-hace-2-anos", level: "Avanzado" },
+    ]
   },
   {
-    title: "Tipos de costos",
+    title: "Impacto personal",
     lessons: [
-      { title: "Costos fijos", slug: "costos-fijos" },
-      { title: "Costos variables", slug: "costos-variables" },
-      { title: "Costos directos", slug: "costos-directos" },
-      { title: "Costos indirectos", slug: "costos-indirectos" },
-    ],
+      { title: "¿Cómo afecta tu ahorro?", slug: "como-afecta-tu-ahorro", level: "Básico" },
+      { title: "¿Cómo afecta tu salario o mesada?", slug: "como-afecta-tu-salario-o-mesada", level: "Básico" },
+      { title: "Errores comunes en inflación (compras impulsivas)", slug: "errores-comunes-en-inflacion-compras-impulsivas", level: "Intermedio" },
+      { title: "Ajustar presupuesto en inflación", slug: "ajustar-presupuesto-en-inflacion", level: "Intermedio" },
+      { title: "Mini simulación: inflación y poder de compra", slug: "mini-simulacion-inflacion-y-poder-de-compra", level: "Avanzado" },
+    ]
   },
   {
-    title: "Calcular utilidad",
+    title: "Estrategia",
     lessons: [
-      { title: "¿Cómo calcular la utilidad?", slug: "como-calcular-la-utilidad" },
-      { title: "Margen de utilidad", slug: "margen-de-utilidad" },
-      { title: "Errores comunes al calcular", slug: "errores-comunes-al-calcular" },
-    ],
-  },
-  {
-    title: "Decisiones con números",
-    lessons: [
-      { title: "Subir o bajar precios", slug: "subir-o-bajar-precios" },
-      { title: "Reducir costos sin afectar valor", slug: "reducir-costos-sin-afectar-valor" },
-      { title: "Aumentar utilidad", slug: "aumentar-utilidad" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Pensar en términos de utilidad", slug: "pensar-en-terminos-de-utilidad" },
-      { title: "Checkpoint: Entender el dinero del negocio", slug: "checkpoint-entender-el-dinero-del-negocio" },
-    ],
+      { title: "Protegerte sin pánico (reglas)", slug: "protegerte-sin-panico-reglas", level: "Básico" },
+      { title: "¿Qué decisiones ayudan (ahorro, gasto, ingresos)?", slug: "que-decisiones-ayudan-ahorro-gasto-ingresos", level: "Básico" },
+      { title: "Inflación y deuda (qué conviene)", slug: "inflacion-y-deuda-que-conviene", level: "Intermedio" },
+      { title: "Inflación e inversión (idea base)", slug: "inflacion-e-inversion-idea-base", level: "Intermedio" },
+      { title: "Plan simple para “épocas caras”", slug: "plan-simple-para-epocas-caras", level: "Avanzado" },
+    ]
   },
 ]

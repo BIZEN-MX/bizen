@@ -1,6 +1,7 @@
 export interface Tema22Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema22Subtema {
@@ -8,44 +9,37 @@ export interface Tema22Subtema {
   lessons: Tema22Lesson[]
 }
 
+export const TEMA22_TITLE = "Ingresos y generación de dinero"
+
 export const TEMA22_SUBTEMAS: Tema22Subtema[] = [
   {
-    title: "Entender el precio",
+    title: "Fundamentos",
     lessons: [
-      { title: "¿Qué es el precio?", slug: "que-es-el-precio" },
-      { title: "Precio vs valor", slug: "precio-vs-valor" },
-      { title: "¿Por qué cobrar bien es importante?", slug: "por-que-cobrar-bien-es-importante" },
-    ],
+      { title: "¿Cómo se genera ingreso en el mundo real?", slug: "como-se-genera-ingreso-en-el-mundo-real", level: "Básico" },
+      { title: "Ingreso activo vs variable (ejemplos reales)", slug: "ingreso-activo-vs-variable-ejemplos-reales", level: "Básico" },
+      { title: "Habilidades que pagan (cómo elegir)", slug: "habilidades-que-pagan-como-elegir", level: "Intermedio" },
+      { title: "Tiempo vs dinero (tradeoffs)", slug: "tiempo-vs-dinero-tradeoffs", level: "Intermedio" },
+      { title: "Mini plan: cómo subir ingreso con habilidad", slug: "mini-plan-como-subir-ingreso-con-habilidad", level: "Avanzado" },
+    ]
   },
   {
-    title: "¿Cómo definir precios?",
+    title: "Valor y negociación",
     lessons: [
-      { title: "Costear correctamente", slug: "costear-correctamente" },
-      { title: "Precio basado en costos", slug: "precio-basado-en-costos" },
-      { title: "Precio basado en mercado", slug: "precio-basado-en-mercado" },
-    ],
+      { title: "¿Qué es “valor” en el mercado (simple)?", slug: "que-es-valor-en-el-mercado-simple", level: "Básico" },
+      { title: "¿Cómo fijar un precio a tu trabajo (básico)?", slug: "como-fijar-un-precio-a-tu-trabajo-basico", level: "Básico" },
+      { title: "¿Cómo pedir mejor pago sin pena (pasos)?", slug: "como-pedir-mejor-pago-sin-pena-pasos", level: "Intermedio" },
+      { title: "Errores al negociar (y cómo evitarlos)", slug: "errores-al-negociar-y-como-evitarlos", level: "Intermedio" },
+      { title: "Caso: negociar un pago por un servicio", slug: "caso-negociar-un-pago-por-un-servicio", level: "Avanzado" },
+    ]
   },
   {
-    title: "Psicología del precio",
+    title: "Crecimiento",
     lessons: [
-      { title: "Precio psicológico", slug: "precio-psicologico" },
-      { title: "Miedo a cobrar", slug: "miedo-a-cobrar" },
-      { title: "Subir precios", slug: "subir-precios" },
-    ],
-  },
-  {
-    title: "Ajustar precios",
-    lessons: [
-      { title: "¿Cuándo subir precios?", slug: "cuando-subir-precios" },
-      { title: "¿Cuándo bajar precios?", slug: "cuando-bajar-precios" },
-      { title: "Errores comunes al poner precios", slug: "errores-comunes-al-poner-precios" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Cobrar con seguridad", slug: "cobrar-con-seguridad" },
-      { title: "Checkpoint: Mis precios y valor", slug: "checkpoint-mis-precios-y-valor" },
-    ],
+      { title: "Escalar ingresos con habilidades (no solo trabajar más)", slug: "escalar-ingresos-con-habilidades-no-solo-trabajar-mas", level: "Básico" },
+      { title: "Sistemas: repetir, no improvisar", slug: "sistemas-repetir-no-improvisar", level: "Básico" },
+      { title: "Diferenciar esfuerzo de estrategia", slug: "diferenciar-esfuerzo-de-estrategia", level: "Intermedio" },
+      { title: "Construir reputación (y por qué paga)", slug: "construir-reputacion-y-por-que-paga", level: "Intermedio" },
+      { title: "Checkpoint: mi plan de crecimiento de ingresos", slug: "checkpoint-mi-plan-de-crecimiento-de-ingresos", level: "Avanzado" },
+    ]
   },
 ]

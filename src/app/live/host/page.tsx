@@ -104,7 +104,8 @@ const QUIZ_CATALOG = [
 interface Participant {
   id: string; nickname: string; avatar: { emoji?: string }; total_score: number; current_streak: number; is_active: boolean
 }
-type HostGameStatus = "catalog" | "setup" | "lobby" | "in_question" | "showing_results" | "finished" | "create"
+type HostGameStatus = "catalog" | "templates" | "setup" | "lobby" | "in_question" | "showing_results" | "finished" | "create"
+interface QuizTemplate { id: string; title: string; description?: string; category: string; difficulty: number; question_count: number; times_used: number; is_public: boolean; created_at: string }
 
 function QuizIcon({ icon, size = 48 }: { icon: string; size?: number }) {
   const props = { size, color: "white" }
@@ -134,6 +135,13 @@ export default function HostPage() {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState("")
   const [isMobile, setIsMobile] = useState(false)
+  // ── Templates state ────────────────────────────────────────────────────────
+  const [templates, setTemplates] = useState<QuizTemplate[]>([])
+  const [templatesLoading, setTemplatesLoading] = useState(false)
+  const [saveModalOpen, setSaveModalOpen] = useState(false)
+  const [saveTitle, setSaveTitle] = useState("")
+  const [saveSaving, setSaveSaving] = useState(false)
+  const [saveDone, setSaveDone] = useState(false)
 
   // Detect Mobile for offset
   useEffect(() => {
@@ -149,6 +157,58 @@ export default function HostPage() {
   const currentQ = questions[currentQIndex]
 
   useEffect(() => { if (!authLoading && !user) router.replace("/login") }, [authLoading, user, router])
+
+  const loadTemplates = useCallback(async () => {
+    setTemplatesLoading(true)
+    try {
+      const res = await fetch("/api/live/templates")
+      if (res.ok) {
+        const data = await res.json()
+        setTemplates(Array.isArray(data) ? data : [])
+      }
+    } catch { /* silent */ } finally { setTemplatesLoading(false) }
+  }, [])
+
+  useEffect(() => { if (user) loadTemplates() }, [user, loadTemplates])
+
+  const handleSaveTemplate = async () => {
+    if (!saveTitle.trim() || questions.length === 0) return
+    setSaveSaving(true)
+    try {
+      const res = await fetch("/api/live/templates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: saveTitle, questions, category: "Custom", difficulty: 1 })
+      })
+      if (res.ok) {
+        setSaveDone(true)
+        await loadTemplates()
+        setTimeout(() => { setSaveModalOpen(false); setSaveDone(false); setSaveTitle("") }, 1400)
+      }
+    } catch { /* silent */ } finally { setSaveSaving(false) }
+  }
+
+  const handleLoadTemplate = async (tpl: QuizTemplate) => {
+    // Fetch full template with questions
+    const res = await fetch(`/api/live/templates?id=${tpl.id}`)
+    let qs = []
+    if (res.ok) {
+      const full = await res.json()
+      qs = full.questions || []
+    }
+    if (!qs.length) return
+    // Increment usage counter
+    fetch("/api/live/templates", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: tpl.id, increment_used: true }) })
+    setQuestions(qs)
+    setSessionTitle(tpl.title)
+    setSelectedQuiz(null)
+    setHostStatus("setup")
+  }
+
+  const handleDeleteTemplate = async (id: string) => {
+    await fetch(`/api/live/templates?id=${id}`, { method: "DELETE" })
+    setTemplates(prev => prev.filter(t => t.id !== id))
+  }
 
   useEffect(() => {
     if (!sessionId || hostStatus !== "in_question") return
@@ -240,8 +300,9 @@ export default function HostPage() {
   const timerPercent = currentQ ? (timeLeft / currentQ.time_limit) * 100 : 0
 
   // ── CATALOG ──────────────────────────────────────────────────────────────────
-  if (hostStatus === "catalog") {
-    const diffLabel = (d: number) => d === 1 ? "B\u00e1sico" : d === 2 ? "Intermedio" : "Avanzado"
+  if (hostStatus === "catalog" || hostStatus === "templates") {
+    const activeTab = hostStatus
+    const diffLabel = (d: number) => d === 1 ? "Básico" : d === 2 ? "Intermedio" : "Avanzado"
     const diffColor = (d: number) => d === 1 ? "#10b981" : d === 2 ? "#0F62FE" : "#f59e0b"
     const diffDots = (d: number, max = 3) => Array.from({ length: max }).map((_, i) => (
       <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: i < d ? diffColor(d) : "rgba(255,255,255,0.15)", boxShadow: i < d ? `0 0 6px ${diffColor(d)}` : "none" }} />
@@ -257,9 +318,11 @@ export default function HostPage() {
           .quiz-card:hover { transform: translateY(-6px) scale(1.015); }
           .launch-btn { transition: all 0.2s ease; }
           .launch-btn:hover { transform: scale(1.04); filter: brightness(1.1); }
+          .tpl-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+          .tpl-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.4) !important; }
         `}</style>
 
-        {/* Back nav */}
+        {/* Top nav */}
         <div style={{ padding: "20px 32px 0", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => router.push("/teacher/dashboard")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "8px 16px", color: "rgba(255,255,255,0.5)", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
             ← Volver al panel
@@ -267,109 +330,157 @@ export default function HostPage() {
         </div>
 
         {/* Hero */}
-        <div style={{ textAlign: "center", padding: "48px 24px 40px", animation: "fadeUp 0.35s ease" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.2)", borderRadius: 99, padding: "6px 16px", marginBottom: 24 }}>
+        <div style={{ textAlign: "center", padding: "40px 24px 28px", animation: "fadeUp 0.35s ease" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.2)", borderRadius: 99, padding: "6px 16px", marginBottom: 20 }}>
             <IconBolt size={16} color="#fbbf24" />
             <span style={{ fontSize: 12, fontWeight: 500, color: "#fbbf24", letterSpacing: "0.1em", textTransform: "uppercase" }}>BIZEN Live</span>
           </div>
-          <h1 style={{ margin: 0, fontSize: "clamp(28px, 5vw, 48px)", fontWeight: 500, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-            Elige tu Quiz
-          </h1>
-          <p style={{ margin: "14px auto 0", maxWidth: 480, fontSize: 16, color: "rgba(255,255,255,0.45)", lineHeight: 1.6 }}>
-            Selecciona uno de nuestros quizzes curados o crea uno propio para tu grupo.
-          </p>
+          <h1 style={{ margin: 0, fontSize: "clamp(26px, 4vw, 44px)", fontWeight: 500, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1 }}>Elige tu Quiz</h1>
+          <p style={{ margin: "12px auto 0", maxWidth: 460, fontSize: 15, color: "rgba(255,255,255,0.40)", lineHeight: 1.6 }}>Quizzes curados, plantillas guardadas o crea uno propio.</p>
         </div>
 
-        {/* Cards grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24, padding: "0 40px 60px", maxWidth: 1800, margin: "0 auto" }}>
-          {QUIZ_CATALOG.map((quiz, idx) => {
-            const isHovered = hoveredQuiz === quiz.id
-            return (
-              <div
-                key={quiz.id}
-                className="quiz-card"
-                style={{ animationDelay: `${idx * 0.08}s`, borderRadius: 24, overflow: "hidden", boxShadow: isHovered ? `0 24px 48px ${quiz.glow}` : "0 8px 24px rgba(0,0,0,0.3)", border: `1.5px solid ${isHovered ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)"}` }}
-                onMouseEnter={() => setHoveredQuiz(quiz.id)}
-                onMouseLeave={() => setHoveredQuiz(null)}
-                onClick={() => handleSelectQuiz(quiz)}
-              >
-                {/* Banner */}
-                <div style={{ background: quiz.gradient, padding: "28px 28px 24px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ position: "absolute", top: -20, right: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
-                  <div style={{ position: "absolute", bottom: -30, left: "30%", width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,0.06)" }} />
-                  <div style={{ marginBottom: 14, animation: isHovered ? "float 2s ease-in-out infinite" : "none", display: "inline-block" }}>
-                    <QuizIcon icon={quiz.icon} size={44} />
-                  </div>
-                  <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>
-                    {quiz.category}
-                  </span>
-                  <h2 style={{ margin: 0, fontSize: 20, fontWeight: 500, color: "white", lineHeight: 1.2 }}>{quiz.title}</h2>
-                </div>
+        {/* Tab Strip */}
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, padding: "0 24px 32px" }}>
+          {([
+            { key: "catalog", label: "Catálogo BIZEN", icon: <IconBolt size={14} color={activeTab === "catalog" ? "#fbbf24" : "rgba(255,255,255,0.4)"} /> },
+            { key: "templates", label: `Mis Plantillas${templates.length ? ` (${templates.length})` : ""}`, icon: <IconEdit size={14} color={activeTab === "templates" ? "#818cf8" : "rgba(255,255,255,0.4)"} /> },
+          ] as const).map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setHostStatus(tab.key)}
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 20px", borderRadius: 99, background: activeTab === tab.key ? (tab.key === "catalog" ? "rgba(251,191,36,0.1)" : "rgba(99,102,241,0.12)") : "rgba(255,255,255,0.05)", border: `1.5px solid ${activeTab === tab.key ? (tab.key === "catalog" ? "rgba(251,191,36,0.3)" : "rgba(99,102,241,0.35)") : "rgba(255,255,255,0.08)"}`, color: activeTab === tab.key ? "white" : "rgba(255,255,255,0.4)", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}
+            >
+              {tab.icon}{tab.label}
+            </button>
+          ))}
+        </div>
 
-                {/* Body */}
-                <div style={{ background: "rgba(10,20,40,0.95)", padding: "20px 24px 24px" }}>
-                  <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.55, margin: "0 0 20px" }}>{quiz.description}</p>
-
-                  {/* Meta row */}
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
-                    {[
-                      { label: "Preguntas", value: quiz.questionCount, icon: <IconQuestion size={13} color="rgba(255,255,255,0.35)" /> },
-                      { label: "Tiempo est.", value: `~${quiz.estimatedMinutes} min`, icon: <IconClock size={13} color="rgba(255,255,255,0.35)" /> },
-                    ].map(m => (
-                      <div key={m.label} style={{ background: "rgba(255,255,255,0.05)", borderRadius: 12, padding: "10px 14px" }}>
-                        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", marginBottom: 3, display: "flex", alignItems: "center", gap: 5 }}>{m.icon} {m.label}</div>
-                        <div style={{ fontSize: 16, fontWeight: 500, color: "white" }}>{m.value}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Difficulty */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontWeight: 400, letterSpacing: "0.05em", textTransform: "uppercase" }}>Dificultad</span>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ display: "flex", gap: 5 }}>{diffDots(quiz.difficulty)}</div>
-                      <span style={{ fontSize: 12, fontWeight: 500, color: diffColor(quiz.difficulty) }}>{diffLabel(quiz.difficulty)}</span>
+        {/* ── CATALOG TAB ── */}
+        {activeTab === "catalog" && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24, padding: "0 40px 60px", maxWidth: 1800, margin: "0 auto" }}>
+            {QUIZ_CATALOG.map((quiz, idx) => {
+              const isHovered = hoveredQuiz === quiz.id
+              return (
+                <div
+                  key={quiz.id}
+                  className="quiz-card"
+                  style={{ animationDelay: `${idx * 0.08}s`, borderRadius: 24, overflow: "hidden", boxShadow: isHovered ? `0 24px 48px ${quiz.glow}` : "0 8px 24px rgba(0,0,0,0.3)", border: `1.5px solid ${isHovered ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)"}` }}
+                  onMouseEnter={() => setHoveredQuiz(quiz.id)}
+                  onMouseLeave={() => setHoveredQuiz(null)}
+                  onClick={() => handleSelectQuiz(quiz)}
+                >
+                  <div style={{ background: quiz.gradient, padding: "28px 28px 24px", position: "relative", overflow: "hidden" }}>
+                    <div style={{ position: "absolute", top: -20, right: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
+                    <div style={{ position: "absolute", bottom: -30, left: "30%", width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,0.06)" }} />
+                    <div style={{ marginBottom: 14, animation: isHovered ? "float 2s ease-in-out infinite" : "none", display: "inline-block" }}>
+                      <QuizIcon icon={quiz.icon} size={44} />
                     </div>
+                    <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>{quiz.category}</span>
+                    <h2 style={{ margin: 0, fontSize: 20, fontWeight: 500, color: "white", lineHeight: 1.2 }}>{quiz.title}</h2>
                   </div>
-
-                  <button
-                    className="launch-btn"
-                    style={{ width: "100%", padding: "13px", background: quiz.gradient, border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: `0 6px 20px ${quiz.glow}`, letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
-                    onClick={e => { e.stopPropagation(); handleSelectQuiz(quiz) }}
-                  >
-                    <IconBolt size={16} color="white" /> Usar este Quiz
-                  </button>
+                  <div style={{ background: "rgba(10,20,40,0.95)", padding: "20px 24px 24px" }}>
+                    <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.55, margin: "0 0 20px" }}>{quiz.description}</p>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+                      {[
+                        { label: "Preguntas", value: quiz.questionCount, icon: <IconQuestion size={13} color="rgba(255,255,255,0.35)" /> },
+                        { label: "Tiempo est.", value: `~${quiz.estimatedMinutes} min`, icon: <IconClock size={13} color="rgba(255,255,255,0.35)" /> },
+                      ].map(m => (
+                        <div key={m.label} style={{ background: "rgba(255,255,255,0.05)", borderRadius: 12, padding: "10px 14px" }}>
+                          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", marginBottom: 3, display: "flex", alignItems: "center", gap: 5 }}>{m.icon} {m.label}</div>
+                          <div style={{ fontSize: 16, fontWeight: 500, color: "white" }}>{m.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontWeight: 400, letterSpacing: "0.05em", textTransform: "uppercase" }}>Dificultad</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <div style={{ display: "flex", gap: 5 }}>{diffDots(quiz.difficulty)}</div>
+                        <span style={{ fontSize: 12, fontWeight: 500, color: diffColor(quiz.difficulty) }}>{diffLabel(quiz.difficulty)}</span>
+                      </div>
+                    </div>
+                    <button className="launch-btn" style={{ width: "100%", padding: "13px", background: quiz.gradient, border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: `0 6px 20px ${quiz.glow}`, letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }} onClick={e => { e.stopPropagation(); handleSelectQuiz(quiz) }}>
+                      <IconBolt size={16} color="white" /> Usar este Quiz
+                    </button>
+                  </div>
                 </div>
+              )
+            })}
+            {/* CREATE FROM SCRATCH CARD */}
+            <div className="quiz-card" style={{ animationDelay: `${QUIZ_CATALOG.length * 0.08}s`, borderRadius: 24, overflow: "hidden", boxShadow: hoveredQuiz === "__create__" ? "0 24px 48px rgba(99,102,241,0.4)" : "0 8px 24px rgba(0,0,0,0.3)", border: `1.5px solid ${hoveredQuiz === "__create__" ? "rgba(99,102,241,0.5)" : "rgba(255,255,255,0.08)"}` }} onMouseEnter={() => setHoveredQuiz("__create__")} onMouseLeave={() => setHoveredQuiz(null)} onClick={() => setHostStatus("create")}>
+              <div style={{ background: "linear-gradient(135deg, #3730a3 0%, #6366f1 100%)", padding: "28px 28px 24px", position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: -20, right: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
+                <div style={{ marginBottom: 14, display: "inline-block" }}><IconEdit size={44} color="white" /></div>
+                <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>Personalizado</span>
+                <h2 style={{ margin: 0, fontSize: 20, fontWeight: 500, color: "white", lineHeight: 1.2 }}>Crear Quiz Propio</h2>
               </div>
-            )
-          })}
-
-          {/* CREATE FROM SCRATCH CARD */}
-          <div
-            className="quiz-card"
-            style={{ animationDelay: `${QUIZ_CATALOG.length * 0.08}s`, borderRadius: 24, overflow: "hidden", boxShadow: hoveredQuiz === "__create__" ? "0 24px 48px rgba(99,102,241,0.4)" : "0 8px 24px rgba(0,0,0,0.3)", border: `1.5px solid ${hoveredQuiz === "__create__" ? "rgba(99,102,241,0.5)" : "rgba(255,255,255,0.08)"}` }}
-            onMouseEnter={() => setHoveredQuiz("__create__")}
-            onMouseLeave={() => setHoveredQuiz(null)}
-            onClick={() => setHostStatus("create")}
-          >
-            <div style={{ background: "linear-gradient(135deg, #3730a3 0%, #6366f1 100%)", padding: "28px 28px 24px", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: -20, right: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
-              <div style={{ marginBottom: 14, display: "inline-block" }}><IconEdit size={44} color="white" /></div>
-              <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>Personalizado</span>
-              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 500, color: "white", lineHeight: 1.2 }}>Crear Quiz Propio</h2>
-            </div>
-            <div style={{ background: "rgba(10,20,40,0.95)", padding: "20px 24px 24px" }}>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.55, margin: "0 0 20px" }}>Crea tus propias preguntas de opción múltiple con el tema y contenido que necesites.</p>
-              <button
-                className="launch-btn"
-                style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: "0 6px 20px rgba(99,102,241,0.4)", letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
-                onClick={e => { e.stopPropagation(); setHostStatus("create") }}
-              >
-                <IconPlus size={16} color="white" /> Crear nuevo
-              </button>
+              <div style={{ background: "rgba(10,20,40,0.95)", padding: "20px 24px 24px" }}>
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.55, margin: "0 0 20px" }}>Crea tus propias preguntas de opción múltiple con el tema y contenido que necesites.</p>
+                <button className="launch-btn" style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: "0 6px 20px rgba(99,102,241,0.4)", letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }} onClick={e => { e.stopPropagation(); setHostStatus("create") }}>
+                  <IconPlus size={16} color="white" /> Crear nuevo
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* ── TEMPLATES TAB ── */}
+        {activeTab === "templates" && (
+          <div style={{ padding: "0 40px 60px", maxWidth: 1400, margin: "0 auto" }}>
+            {templatesLoading ? (
+              <div style={{ textAlign: "center", padding: "80px 0", color: "rgba(255,255,255,0.3)", fontSize: 15 }}>Cargando plantillas...</div>
+            ) : templates.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "80px 24px" }}>
+                <div style={{ width: 72, height: 72, borderRadius: 20, background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+                  <IconEdit size={32} color="#6366f1" />
+                </div>
+                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, margin: "0 0 8px" }}>Aún no tienes plantillas guardadas</p>
+                <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 14, margin: 0 }}>Al terminar un quiz personalizado podrás guardarlo aquí para reutilizarlo.</p>
+              </div>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
+                {templates.map((tpl, idx) => (
+                  <div key={tpl.id} className="tpl-card" style={{ animationDelay: `${idx * 0.06}s`, borderRadius: 20, background: "rgba(255,255,255,0.04)", border: "1.5px solid rgba(99,102,241,0.2)", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.25)" }}>
+                    {/* Header band */}
+                    <div style={{ background: "linear-gradient(135deg, rgba(55,48,163,0.6), rgba(99,102,241,0.4))", padding: "18px 20px 14px", borderBottom: "1px solid rgba(99,102,241,0.15)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "white", lineHeight: 1.3 }}>{tpl.title}</h3>
+                        <button onClick={() => handleDeleteTemplate(tpl.id)} style={{ flexShrink: 0, background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 8, padding: "4px 8px", cursor: "pointer", display: "flex", color: "#f87171", fontSize: 11 }}>
+                          <IconTrash size={13} color="#f87171" />
+                        </button>
+                      </div>
+                      <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+                        <span style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)", padding: "2px 10px", borderRadius: 99, fontSize: 11 }}>{tpl.category}</span>
+                        {tpl.is_public && <span style={{ background: "rgba(16,185,129,0.15)", color: "#34d399", padding: "2px 10px", borderRadius: 99, fontSize: 11 }}>Público</span>}
+                      </div>
+                    </div>
+                    {/* Body */}
+                    <div style={{ padding: "14px 20px 18px" }}>
+                      <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: 22, fontWeight: 700, color: "white" }}>{tpl.question_count}</div>
+                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", display: "flex", alignItems: "center", gap: 3 }}><IconQuestion size={10} color="rgba(255,255,255,0.35)" /> preguntas</div>
+                        </div>
+                        <div style={{ width: 1, background: "rgba(255,255,255,0.08)" }} />
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: 22, fontWeight: 700, color: "white" }}>{tpl.times_used}</div>
+                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", display: "flex", alignItems: "center", gap: 3 }}><IconRocket size={10} color="rgba(255,255,255,0.35)" /> usos</div>
+                        </div>
+                        <div style={{ width: 1, background: "rgba(255,255,255,0.08)" }} />
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: 22, fontWeight: 700, color: diffColor(tpl.difficulty) }}>{diffLabel(tpl.difficulty).slice(0,3)}</div>
+                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>nivel</div>
+                        </div>
+                      </div>
+                      <button onClick={() => handleLoadTemplate(tpl)} style={{ width: "100%", padding: "11px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 12, color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", boxShadow: "0 4px 16px rgba(99,102,241,0.35)", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, transition: "all 0.2s" }}>
+                        <IconRocket size={14} color="white" /> Usar plantilla
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     )
   }
@@ -566,8 +677,44 @@ export default function HostPage() {
         </div>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
           <button onClick={() => setHostStatus("catalog")} style={{ padding: "14px 28px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer" }}>Nuevo quiz</button>
+          <button onClick={() => { setSaveTitle(sessionTitle); setSaveModalOpen(true) }} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer", boxShadow: "0 6px 20px rgba(99,102,241,0.35)", display: "flex", alignItems: "center", gap: 8 }}>
+            <IconEdit size={15} color="white" /> Guardar como plantilla
+          </button>
           <button onClick={() => router.push("/teacher/dashboard")} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 14, color: "white", fontWeight: 700, cursor: "pointer", boxShadow: "0 6px 20px rgba(0,86,231,0.35)" }}>Ir al panel →</button>
         </div>
+        {/* Save Template Modal */}
+        {saveModalOpen && (
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 24 }} onClick={() => setSaveModalOpen(false)}>
+            <div style={{ background: "#0d1b36", border: "1.5px solid rgba(99,102,241,0.3)", borderRadius: 24, padding: "32px 28px", width: "100%", maxWidth: 420, boxShadow: "0 24px 64px rgba(0,0,0,0.6)" }} onClick={e => e.stopPropagation()}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(99,102,241,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}><IconEdit size={20} color="#818cf8" /></div>
+                <div>
+                  <h3 style={{ margin: 0, color: "white", fontSize: 18, fontWeight: 600 }}>Guardar plantilla</h3>
+                  <p style={{ margin: 0, color: "rgba(255,255,255,0.4)", fontSize: 13 }}>{questions.length} preguntas</p>
+                </div>
+              </div>
+              <label style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: 8 }}>Nombre de la plantilla</label>
+              <input
+                value={saveTitle}
+                onChange={e => setSaveTitle(e.target.value)}
+                placeholder="Ej. Quiz Semana 3 — Inversiones"
+                style={{ width: "100%", padding: "13px 16px", background: "rgba(255,255,255,0.06)", border: "1.5px solid rgba(255,255,255,0.12)", borderRadius: 12, color: "white", fontSize: 15, outline: "none", boxSizing: "border-box", marginBottom: 20 }}
+              />
+              {saveDone ? (
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "14px", borderRadius: 14, background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.3)", color: "#34d399", fontWeight: 600 }}>
+                  <IconCheck size={18} /> ¡Plantilla guardada!
+                </div>
+              ) : (
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button onClick={() => setSaveModalOpen(false)} style={{ flex: 1, padding: "13px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "rgba(255,255,255,0.5)", cursor: "pointer", fontWeight: 600 }}>Cancelar</button>
+                  <button onClick={handleSaveTemplate} disabled={!saveTitle.trim() || saveSaving} style={{ flex: 2, padding: "13px", background: saveTitle.trim() ? "linear-gradient(135deg, #3730a3, #6366f1)" : "rgba(255,255,255,0.08)", border: "none", borderRadius: 12, color: "white", cursor: saveTitle.trim() ? "pointer" : "not-allowed", fontWeight: 700, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: saveTitle.trim() ? "0 4px 16px rgba(99,102,241,0.35)" : "none" }}>
+                    {saveSaving ? "Guardando..." : <><IconEdit size={14} color="white" /> Guardar</>}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     )
   }

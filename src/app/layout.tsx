@@ -1,11 +1,18 @@
 // src/app/layout.tsx
 import type { Metadata } from "next"
+import { Geist } from "next/font/google"
 import { Providers } from "@/components/Providers"
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
 import { AchievementToastProvider } from "@/components/AchievementToast"
-// Production Build Trigger - Wed Feb 18 14:50:00 CST 2026
 import "./globals.css"
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+})
 
 export const metadata: Metadata = {
   title: "BIZEN",
@@ -54,7 +61,7 @@ export const viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" className={geist.variable}>
       <head />
       <body>
         <Providers>

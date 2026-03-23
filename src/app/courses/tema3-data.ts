@@ -1,6 +1,7 @@
 export interface Tema3Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema3Subtema {
@@ -8,64 +9,37 @@ export interface Tema3Subtema {
   lessons: Tema3Lesson[]
 }
 
+export const TEMA3_TITLE = "Psicología del consumo"
+
 export const TEMA3_SUBTEMAS: Tema3Subtema[] = [
   {
-    title: "Entender mis ingresos",
+    title: "Triggers",
     lessons: [
-      { title: "¿Qué es un ingreso?", slug: "que-es-un-ingreso" },
-      { title: "Ingresos activos", slug: "ingresos-activos" },
-      { title: "Ingresos pasivos", slug: "ingresos-pasivos" },
-      { title: "Ingresos fijos e ingresos variables", slug: "ingresos-fijos-e-ingresos-variables" },
-      { title: "¿Por qué no todos los ingresos son iguales?", slug: "por-que-no-todos-los-ingresos-son-iguales" },
-    ],
+      { title: "¿Qué es un trigger de compra?", slug: "que-es-un-trigger-de-compra", level: "Básico" },
+      { title: "Publicidad: cómo te manipula", slug: "publicidad-como-te-manipula", level: "Básico" },
+      { title: "Redes: comparación y presión", slug: "redes-comparacion-y-presion", level: "Intermedio" },
+      { title: "Compras por aburrimiento vs necesidad", slug: "compras-por-aburrimiento-vs-necesidad", level: "Intermedio" },
+      { title: "Detectar mis triggers (casos)", slug: "detectar-mis-triggers-casos", level: "Avanzado" },
+    ]
   },
   {
-    title: "Mis fuentes de ingreso",
+    title: "Compras impulsivas",
     lessons: [
-      { title: "¿De dónde viene mi dinero hoy?", slug: "de-donde-viene-mi-dinero-hoy" },
-      { title: "Trabajo, becas y apoyos", slug: "trabajo-becas-y-apoyos" },
-      { title: "Ingresos ocasionales", slug: "ingresos-ocasionales" },
-      { title: "Tener más de una fuente de ingreso", slug: "tener-mas-de-una-fuente-de-ingreso" },
-      { title: "Riesgos de depender de una sola fuente", slug: "riesgos-de-depender-de-una-sola-fuente" },
-    ],
+      { title: "Señales de compra impulsiva", slug: "senales-de-compra-impulsiva", level: "Básico" },
+      { title: "Antes de pagar: checklist de decisión", slug: "antes-de-pagar-checklist-de-decision", level: "Básico" },
+      { title: "Micro-hábitos para evitar impulsos", slug: "micro-habitos-para-evitar-impulsos", level: "Intermedio" },
+      { title: "Post-compra: culpa y aprendizaje", slug: "post-compra-culpa-y-aprendizaje", level: "Intermedio" },
+      { title: "Caso: “gasto por emoción” paso a paso", slug: "caso-gasto-por-emocion-paso-a-paso", level: "Avanzado" },
+    ]
   },
   {
-    title: "Entender mis gastos",
+    title: "Estatus",
     lessons: [
-      { title: "¿Qué es un gasto?", slug: "que-es-un-gasto" },
-      { title: "Gastos fijos", slug: "gastos-fijos" },
-      { title: "Gastos variables", slug: "gastos-variables" },
-      { title: "Gastos hormiga", slug: "gastos-hormiga" },
-      { title: "Gastos invisibles", slug: "gastos-invisibles" },
-    ],
-  },
-  {
-    title: "¿Cómo gasto mi dinero?",
-    lessons: [
-      { title: "¿En qué se va mi dinero?", slug: "en-que-se-va-mi-dinero" },
-      { title: "Gastar por necesidad vs por deseo", slug: "gastar-por-necesidad-vs-por-deseo" },
-      { title: "Compras impulsivas", slug: "compras-impulsivas" },
-      { title: "Influencia de la publicidad y redes", slug: "influencia-de-la-publicidad-y-redes" },
-      { title: "Patrones de gasto personales", slug: "patrones-de-gasto-personales" },
-    ],
-  },
-  {
-    title: "Balance personal",
-    lessons: [
-      { title: "¿Qué es un balance entre ingresos y gastos?", slug: "que-es-un-balance-entre-ingresos-y-gastos" },
-      { title: "¿Qué pasa cuando gasto más de lo que gano?", slug: "que-pasa-cuando-gasto-mas-de-lo-que-gano" },
-      { title: "¿Qué pasa cuando gasto menos de lo que gano?", slug: "que-pasa-cuando-gasto-menos-de-lo-que-gano" },
-      { title: "Identificar fugas de dinero", slug: "identificar-fugas-de-dinero" },
-      { title: "Tomar control del flujo personal", slug: "tomar-control-del-flujo-personal" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Ver mi dinero con claridad", slug: "ver-mi-dinero-con-claridad" },
-      { title: "Dejar de adivinar y empezar a medir", slug: "dejar-de-adivinar-y-empezar-a-medir" },
-      { title: "Prepararme para el presupuesto", slug: "prepararme-para-el-presupuesto" },
-      { title: "Checkpoint: Mi flujo de dinero", slug: "checkpoint-mi-flujo-de-dinero" },
-    ],
+      { title: "Comprar por estatus vs por valor", slug: "comprar-por-estatus-vs-por-valor", level: "Básico" },
+      { title: "“Apariencia de riqueza” vs riqueza real", slug: "apariencia-de-riqueza-vs-riqueza-real", level: "Básico" },
+      { title: "Presión social en decisiones (escenarios)", slug: "presion-social-en-decisiones-escenarios", level: "Intermedio" },
+      { title: "¿Cómo decir que no sin sentirte menos?", slug: "como-decir-que-no-sin-sentirte-menos", level: "Intermedio" },
+      { title: "Regla personal anti-estatus", slug: "regla-personal-anti-estatus", level: "Avanzado" },
+    ]
   },
 ]

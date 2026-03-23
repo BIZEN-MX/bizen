@@ -1,6 +1,7 @@
 export interface Tema29Lesson {
   title: string
   slug: string
+  level: "Básico" | "Intermedio" | "Avanzado"
 }
 
 export interface Tema29Subtema {
@@ -8,40 +9,37 @@ export interface Tema29Subtema {
   lessons: Tema29Lesson[]
 }
 
+export const TEMA29_TITLE = "Libertad financiera"
+
 export const TEMA29_SUBTEMAS: Tema29Subtema[] = [
   {
-    title: "Dinero y emociones",
+    title: "Definición real",
     lessons: [
-      { title: "Estrés financiero", slug: "estres-financiero" },
-      { title: "Ansiedad por dinero", slug: "ansiedad-por-dinero" },
-    ],
+      { title: "¿Qué es libertad financiera (realista)?", slug: "que-es-libertad-financiera-realista", level: "Básico" },
+      { title: "¿Qué NO es (lujo, fama, “dinero infinito”)?", slug: "que-no-es-lujo-fama-dinero-infinito", level: "Básico" },
+      { title: "Libertad vs apariencia de libertad", slug: "libertad-vs-apariencia-de-libertad", level: "Intermedio" },
+      { title: "Libertad como margen y opciones", slug: "libertad-como-margen-y-opciones", level: "Intermedio" },
+      { title: "Mini práctica: identificar libertad real en escenarios", slug: "mini-practica-identificar-libertad-real-en-escenarios", level: "Avanzado" },
+    ]
   },
   {
-    title: "Impacto del dinero en mi vida",
+    title: "Camino",
     lessons: [
-      { title: "Dinero y salud mental", slug: "dinero-y-salud-mental" },
-      { title: "Dinero y relaciones personales", slug: "dinero-y-relaciones-personales" },
-    ],
+      { title: "Control → crecimiento → patrimonio (ruta)", slug: "control-crecimiento-patrimonio-ruta", level: "Básico" },
+      { title: "Errores que retrasan libertad (deuda, impulsos)", slug: "errores-que-retrasan-libertad-deuda-impulsos", level: "Básico" },
+      { title: "Aumentar margen sin aumentar estrés", slug: "aumentar-margen-sin-aumentar-estres", level: "Intermedio" },
+      { title: "Reglas para sostener el camino", slug: "reglas-para-sostener-el-camino", level: "Intermedio" },
+      { title: "Caso: plan realista hacia libertad", slug: "caso-plan-realista-hacia-libertad", level: "Avanzado" },
+    ]
   },
   {
-    title: "Manejar el estrés financiero",
+    title: "Medición",
     lessons: [
-      { title: "Orden financiero y calma", slug: "orden-financiero-y-calma" },
-      { title: "Tomar control reduce el estrés", slug: "tomar-control-reduce-el-estres" },
-    ],
-  },
-  {
-    title: "Bienestar integral",
-    lessons: [
-      { title: "Equilibrio entre dinero y vida", slug: "equilibrio-entre-dinero-y-vida" },
-      { title: "Priorizar bienestar sobre estatus", slug: "priorizar-bienestar-sobre-estatus" },
-    ],
-  },
-  {
-    title: "Reflexión y cierre",
-    lessons: [
-      { title: "Cuidar mi bienestar financiero", slug: "cuidar-mi-bienestar-financiero" },
-      { title: "Checkpoint: Mi relación entre dinero y bienestar", slug: "checkpoint-mi-relacion-entre-dinero-y-bienestar" },
-    ],
+      { title: "Métrica simple de avance (sin complicar)", slug: "metrica-simple-de-avance-sin-complicar", level: "Básico" },
+      { title: "Tiempo: cuánto te falta (estimación)", slug: "tiempo-cuanto-te-falta-estimacion", level: "Básico" },
+      { title: "Ajustar estrategia sin abandonar", slug: "ajustar-estrategia-sin-abandonar", level: "Intermedio" },
+      { title: "Mantener hábitos cuando ya te va bien", slug: "mantener-habitos-cuando-ya-te-va-bien", level: "Intermedio" },
+      { title: "Checkpoint: mi indicador de libertad", slug: "checkpoint-mi-indicador-de-libertad", level: "Avanzado" },
+    ]
   },
 ]
