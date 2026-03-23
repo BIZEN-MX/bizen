@@ -406,17 +406,36 @@ export default function WelcomePage() {
             <div
               className={`auth-dropdown-wrapper ${authDropdownOpen ? "is-open" : ""}`}
             >
-              <PremiumButton
+              <button
+                className="premium-button landing-header-actions-main landing-hero-cta-primary"
                 onClick={(e) => {
                   e.stopPropagation();
                   setAuthDropdownOpen(!authDropdownOpen);
                 }}
-                variant="primary"
-                size="md"
-                className={navScrolled ? "" : "shadow-blue-md"}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "10px 24px",
+                  fontSize: "clamp(13px, 1.3vw, 15px)",
+                  fontWeight: 600,
+                  borderRadius: "9999px",
+                  background:
+                    "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
+                  backgroundSize: "200% auto",
+                  color: "#fff",
+                  border: "none",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  boxShadow: navScrolled
+                    ? "0 2px 10px rgba(0, 86, 231, 0.25)"
+                    : "0 4px 20px rgba(0, 86, 231, 0.45), 0 0 0 1px rgba(255,255,255,0.15) inset",
+                  transition: "all 0.3s ease",
+                }}
               >
                 Comenzar ahora
-              </PremiumButton>
+              </button>
               <div
                 className="auth-dropdown-content"
                 style={{
@@ -1246,24 +1265,73 @@ export default function WelcomePage() {
                   flexWrap: "wrap",
                 }}
               >
-                <PremiumButton
-                  onClick={() => router.push("/signup")}
-                  variant="primary"
-                  size="lg"
-                  className="group"
+                <a
+                  href="/signup"
+                  className="landing-hero-cta-primary"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "clamp(14px, 2vw, 18px) clamp(28px, 4vw, 48px)",
+                    fontSize: "clamp(14px, 1.4vw, 17px)",
+                    fontWeight: 600,
+                    borderRadius: "9999px",
+                    background:
+                      "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
+                    backgroundSize: "200% auto",
+                    color: "#fff",
+                    textDecoration: "none",
+                    boxShadow:
+                      "0 4px 24px rgba(15, 98, 254, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
+                    transition: "all 0.3s ease",
+                    letterSpacing: "0.01em",
+                  }}
                 >
                   Comenzar gratis
-                  <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-                </PremiumButton>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </a>
 
-                <PremiumButton
-                  onClick={() => window.open("https://calendly.com/diego-bizen", "_blank")}
-                  variant="secondary"
-                  size="lg"
+                <a
+                  href="https://calendly.com/diego-bizen"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "clamp(13px, 2vw, 17px) clamp(24px, 3.5vw, 40px)",
+                    fontSize: "clamp(14px, 1.4vw, 17px)",
+                    fontWeight: 500,
+                    borderRadius: "9999px",
+                    background: "rgba(255, 255, 255, 0.06)",
+                    border: "1.5px solid rgba(255, 255, 255, 0.2)",
+                    color: "rgba(255, 255, 255, 0.88)",
+                    textDecoration: "none",
+                    backdropFilter: "blur(10px)",
+                    transition: "all 0.3s ease",
+                    letterSpacing: "0.01em",
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.12)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+                  }}
                 >
-                  <Calendar className="mr-2" size={20} />
+                  <Calendar size={18} />
                   Agendar demo
-                </PremiumButton>
+                </a>
               </div>
             </div>
 
