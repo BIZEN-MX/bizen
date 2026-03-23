@@ -289,15 +289,9 @@ export default function AdminDashboardPage() {
                 }
 
                 .kpi-card { animation: fadeSlideUp 0.45s ease both; cursor: default; }
-                .kpi-card:hover { transform: translateY(-5px) !important; }
-
-                .student-row:hover { background: #f0f7ff !important; }
-                .student-row:hover .row-btn { opacity: 1 !important; }
-                .row-btn { opacity: 0; transition: opacity 0.2s ease; }
-
+                .student-row { transition: background 0.15s; }
+                .row-btn { opacity: 1; transition: opacity 0.2s ease; }
                 .sort-th { cursor: pointer; user-select: none; }
-                .sort-th:hover { color: #0f172a !important; }
-
                 .risk-banner { animation: glowPulse 2s ease infinite; }
                 .search-inp:focus { border-color: #0F62FE !important; box-shadow: 0 0 0 3px rgba(15,98,254,0.12) !important; outline: none; }
             `}</style>
@@ -330,9 +324,7 @@ export default function AdminDashboardPage() {
 
                     <div style={{ position: 'relative', zIndex: 1, display: 'flex', gap: 10 }}>
                         <button onClick={() => exportCSV(data.students)}
-                            style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 16px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, color: 'rgba(255,255,255,0.7)', fontSize: 13, cursor: 'pointer', transition: 'all 0.2s' }}
-                            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.14)')}
-                            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}>
+                            style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 16px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, color: 'rgba(255,255,255,0.7)', fontSize: 13, cursor: 'pointer', transition: 'all 0.2s' }}>
                             <Download size={14} /> Exportar CSV
                         </button>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10 }}>
