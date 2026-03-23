@@ -736,6 +736,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          <DailyChallengeWidget />
         </div>
 
         {/* ══════════════════════════════════════════════════════════
