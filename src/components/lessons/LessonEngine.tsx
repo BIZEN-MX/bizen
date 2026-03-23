@@ -108,36 +108,63 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   // ── Lesson Glossary ──────────────────────────────────────────────────────
   const [isGlossaryOpen, setIsGlossaryOpen] = useState(false)
   const [lessonGlossary, setLessonGlossary] = useState<{ word: string, definition: string }[]>([])
+  const [interactiveTermsByOrder, setInteractiveTermsByOrder] = useState<Map<number, { word: string, definition: string }[]>>(new Map())
 
-  // Collect terms from all steps on mount/init
+  // Collect terms and calculate FIRST OCCURRENCES per step (Feature: highlight once)
   useEffect(() => {
     if (!lessonSteps.length) return
-    const termsMap: Record<string, string> = {}
+    const allTermsMap: Record<string, string> = {}
     
-    lessonSteps.forEach(step => {
-      // 1. Extract from titles of info steps
-      if (step.stepType === 'info' && step.title && step.title.length < 40) {
-        // If it's a short title, it's likely a concept
-        // We can use the description or body as a snippet of definition
-        const bodySnippet = (step.body || "").split('\n')[0].replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, "$1").slice(0, 100)
-        if (bodySnippet) termsMap[step.title] = bodySnippet
+    // 1. Gather ALL available definitions first (from glossary data)
+    lessonSteps.forEach(s => {
+      const step = s as any
+      if (step.data && step.data.glossary && Array.isArray(step.data.glossary)) {
+        step.data.glossary.forEach((term: { word: string; definition: string }) => {
+          if (term.word && term.definition) allTermsMap[term.word] = term.definition
+        })
       }
-
-      // 2. Extract [[word|definition]] from body/clue/insight
-      const sources = [step.body, (step as any).aiInsight, (step as any).clue, (step as any).description]
-      const re = /\[\[([^\]|]+)\|([^\]]+)\]\]/g
-      
-      sources.forEach(src => {
-        if (!src) return
-        let match
-        while ((match = re.exec(src)) !== null) {
-          termsMap[match[1]] = match[2]
+      if (step.stepType === 'info' && step.title && step.title.length < 40) {
+        if (!allTermsMap[step.title]) {
+           const bodySnippet = (step.body || "").split('\n')[0].replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, "$1").slice(0, 80)
+           if (bodySnippet) allTermsMap[step.title] = bodySnippet
         }
-      })
+      }
     })
 
-    const termsArray = Object.entries(termsMap).map(([word, definition]) => ({ word, definition }))
-    setLessonGlossary(termsArray.sort((a,b) => a.word.localeCompare(b.word)))
+    const finalGlossary = Object.entries(allTermsMap).map(([word, definition]) => ({ word, definition }))
+    setLessonGlossary(finalGlossary.sort((a,b) => a.word.localeCompare(b.word)))
+
+    // 2. Determine which terms appear for the FIRST time in which step
+    const seenWords = new Set<string>()
+    const map = new Map<number, { word: string, definition: string }[]>()
+    
+    const sortedSteps = [...lessonSteps].sort((a,b) => (a as any).order - (b as any).order)
+    
+    sortedSteps.forEach(s => {
+      const step = s as any
+      const stepWords: { word: string; definition: string }[] = []
+      
+      const fullText = (step.title + " " + step.body + " " + (step.aiInsight || "") + " " + (step.clue || "")).toLowerCase()
+      
+      finalGlossary.forEach(term => {
+        if (seenWords.has(term.word.toLowerCase())) return
+        
+        // Use a simple word boundary check
+        const escaped = term.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const re = new RegExp(`\\b${escaped}\\b`, 'i')
+        
+        if (re.test(fullText)) {
+          stepWords.push(term)
+          seenWords.add(term.word.toLowerCase())
+        }
+      })
+      
+      if (stepWords.length > 0) {
+        map.set(step.order, stepWords)
+      }
+    })
+
+    setInteractiveTermsByOrder(map)
   }, [lessonSteps])
 
   // ── Billy Empático (Feature 2) ───────────────────────────────────────────
@@ -523,32 +550,43 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     isContinueEnabled: state.isContinueEnabled,
   }
 
+  const currentStepInteractiveTerms = interactiveTermsByOrder.get((currentStep as any).order) || []
+
   const renderStep = () => {
+    let content;
     switch (currentStep.stepType) {
       case "info":
-        return <InfoStep {...stepProps} />
+        content = <InfoStep {...stepProps} />
+        break;
       case "mcq":
-        return <MCQStep {...stepProps} />
+        content = <MCQStep {...stepProps} />
+        break;
       case "multi_select":
-        return <MultiSelectStep {...stepProps} />
+        content = <MultiSelectStep {...stepProps} />
+        break;
       case "true_false":
-        return <TrueFalseStep {...stepProps} />
+        content = <TrueFalseStep {...stepProps} />
+        break;
       case "order":
-        return <OrderStep {...stepProps} />
+        content = <OrderStep {...stepProps} />
+        break;
       case "match":
-        return <MatchStep {...stepProps} />
+        content = <MatchStep {...stepProps} />
+        break;
       case "fill_blanks":
-        return <FillBlanksStep {...stepProps} />
+        content = <FillBlanksStep {...stepProps} />
+        break;
       case "image_choice":
-        return <ImageChoiceStep {...stepProps} />
+        content = <ImageChoiceStep {...stepProps} />
+        break;
       case "summary": {
-        const assessmentSteps = state.originalSteps.filter(s => s.isAssessment)
+        const assessmentSteps = state.originalSteps.filter(s => (s as any).isAssessment)
         const accuracy = assessmentSteps.length > 0 
           ? Math.max(0, Math.round(((assessmentSteps.length - state.totalMistakes) / assessmentSteps.length) * 100))
           : 100
         const totalTime = Math.floor((Date.now() - startTime) / 1000)
 
-        return (
+        content = (
           <SummaryStep 
             {...stepProps} 
             step={{ 
@@ -560,26 +598,41 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             }} 
           />
         )
+        break;
       }
       case "mini_sim":
-        return <MiniSimStep {...stepProps} />
+        content = <MiniSimStep {...stepProps} />
+        break;
       case "billy_talks":
-        return <BillyTalksStep {...stepProps} />
+        content = <BillyTalksStep {...stepProps} />
+        break;
       case "blitz_challenge":
-        return <BlitzChallengeStep {...stepProps} />
+        content = <BlitzChallengeStep {...stepProps} />
+        break;
       case "impulse_meter":
-        return <ImpulseMeterStep {...stepProps} />
+        content = <ImpulseMeterStep {...stepProps} />
+        break;
       case "mindset_translator":
-        return <MindsetTranslatorStep {...stepProps} />
+        content = <MindsetTranslatorStep {...stepProps} />
+        break;
       case "influence_detective":
-        return <InfluenceDetectiveStep {...stepProps} />
+        content = <InfluenceDetectiveStep {...stepProps} />
+        break;
       case "swipe_sorter":
-        return <SwipeSorterStep {...(stepProps as any)} />
+        content = <SwipeSorterStep {...(stepProps as any)} />
+        break;
       case "narrative_check":
-        return <NarrativeCheckStep {...(stepProps as any)} />
+        content = <NarrativeCheckStep {...(stepProps as any)} />
+        break;
       default:
-        return <div>Unknown step type: {currentStep.stepType}</div>
+        content = <div>Unknown step type: {currentStep.stepType}</div>
     }
+
+    return (
+      <GlossaryProvider terms={currentStepInteractiveTerms}>
+        {content}
+      </GlossaryProvider>
+    )
   }
 
   const shouldPassFullScreenProps = true // Always use full screen layout for all steps to ensure consistent footer/header behavior
@@ -741,6 +794,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.5 } }}
           transition={{ duration: 0.3 }}
+          onClick={() => setShowBillyInsightSplash(false)}
           style={{
             position: "fixed",
             inset: 0,
@@ -753,6 +807,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
             gap: 24,
             overflow: "hidden",
             padding: "32px",
+            cursor: "pointer",
           }}
         >
           {/* Ambient glow orbs */}

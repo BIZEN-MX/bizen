@@ -34,7 +34,7 @@ export async function GET(
 
     // Prepare response
     const responseData = {
-      ...(lesson || { id, title: id.split('-').join(' ').toUpperCase(), description: "Lección interactiva" }),
+      ...(lesson || { id, title: id.split('-').join(' ').toUpperCase(), description: "Lección interactive" }),
       steps: staticSteps?.length ? staticSteps : (lesson?.steps || [])
     }
 

@@ -1,10 +1,12 @@
 "use client"
 
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
+import { createPortal } from "react-dom"
 import { haptic } from "@/utils/hapticFeedback"
-import { initAudioContext } from "./lessonSounds"
+import { initAudioContext, playFlipSound } from "./lessonSounds"
 import { useGlossary } from "@/contexts/GlossaryContext"
-import { Book } from "lucide-react"
+import { Book, X } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 /**
  * SmartText — Intelligent Content Renderer for BIZEN Flashcards
@@ -62,10 +64,32 @@ function parseInlineSegments(line: string): Segment[] {
 function GlossaryTerm({ word, definition }: { word: string; definition: string }) {
     const [open, setOpen] = useState(false)
     const ref = useRef<HTMLSpanElement>(null)
+    const [coords, setCoords] = useState({ top: 0, left: 0 })
 
+    const updateCoords = () => {
+        if (ref.current) {
+            const rect = ref.current.getBoundingClientRect()
+            setCoords({
+                top: rect.top,
+                left: rect.left + rect.width / 2
+            })
+        }
+    }
+
+    useEffect(() => {
+        if (open) {
+            updateCoords()
+            window.addEventListener("scroll", updateCoords)
+            window.addEventListener("resize", updateCoords)
+        }
+        return () => {
+            window.removeEventListener("scroll", updateCoords)
+            window.removeEventListener("resize", updateCoords)
+        }
+    }, [open])
 
     // Close on outside click
-    React.useEffect(() => {
+    useEffect(() => {
         if (!open) return
         const close = () => setOpen(false)
         document.addEventListener("click", close)
@@ -81,66 +105,100 @@ function GlossaryTerm({ word, definition }: { word: string; definition: string }
             <span
                 onClick={(e) => {
                     e.stopPropagation()
-                    initAudioContext() // Unlock audio just in case
+                    initAudioContext() 
+                    playFlipSound()
                     haptic.light()
+                    updateCoords()
                     setOpen(v => !v)
                 }}
                 style={{
                     fontWeight: 700,
                     color: BLUE,
-                    borderBottom: `2px dashed ${BLUE}`,
+                    borderBottom: `2.5px solid ${BLUE}40`,
                     cursor: "pointer",
                     paddingBottom: 1,
                     display: "inline-flex",
                     alignItems: "center",
-                    gap: 4
+                    gap: 5,
+                    transition: "all 0.2s ease"
                 }}
             >
-                <Book size={12} strokeWidth={2.5} style={{ opacity: 0.8, marginTop: 1 }} />
+                <Book size={13} strokeWidth={2.5} style={{ opacity: 0.8 }} />
                 {word}
-                <span style={{ fontSize: "0.75em", verticalAlign: "middle", marginLeft: -2, opacity: 0.8, color: BLUE }}>*</span>
             </span>
 
-            {open && (
-                <span
-                    style={{
-                        position: "absolute",
-                        bottom: "calc(100% + 10px)",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        zIndex: 100,
-                        background: "#1e293b",
-                        color: "#f8fafc",
-                        borderRadius: 12,
-                        padding: "10px 14px",
-                        fontSize: 13,
-                        fontWeight: 500,
-                        lineHeight: 1.5,
-                        width: "max-content",
-                        maxWidth: 240,
-                        boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
-                        display: "block",
-                        textAlign: "left",
-                        whiteSpace: "normal",
-                        pointerEvents: "none",
-                    }}
-                >
-                    {/* Arrow */}
-                    <span style={{
-                        position: "absolute",
-                        bottom: -6,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        width: 0, height: 0,
-                        borderLeft: "6px solid transparent",
-                        borderRight: "6px solid transparent",
-                        borderTop: "6px solid #1e293b",
-                    }} />
-                    <span style={{ color: BLUE_BORDER, fontWeight: 800, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", display: "block", marginBottom: 4 }}>
-                        📖 Glosario
-                    </span>
-                    {definition}
-                </span>
+            {open && typeof document !== "undefined" && createPortal(
+                <AnimatePresence>
+                    {open && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                            transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                            style={{
+                                position: "fixed",
+                                top: coords.top - 12,
+                                left: coords.left,
+                                transform: "translate(-50%, -100%)",
+                                zIndex: 100000,
+                                background: "rgba(10, 20, 40, 0.96)",
+                                backdropFilter: "blur(16px)",
+                                color: "#f8fafc",
+                                borderRadius: 24,
+                                padding: "24px",
+                                fontSize: "15px",
+                                fontWeight: 500,
+                                lineHeight: 1.6,
+                                width: "max-content",
+                                minWidth: 260,
+                                maxWidth: 340,
+                                border: "1px solid rgba(255,255,255,0.12)",
+                                boxShadow: "0 30px 60px -12px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)",
+                                pointerEvents: "auto",
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Header */}
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                    <div style={{ background: "rgba(59,130,246,0.15)", borderRadius: 8, padding: 6, display: "flex" }}>
+                                        <Book size={14} color="#60a5fa" />
+                                    </div>
+                                    <span style={{ color: "#94a3b8", fontWeight: 800, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em" }}>
+                                        Glosario BIZEN
+                                    </span>
+                                </div>
+                                <X 
+                                    size={18} 
+                                    style={{ opacity: 0.4, cursor: "pointer", padding: 4 }} 
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        setOpen(false)
+                                    }} 
+                                />
+                            </div>
+
+                            {/* Content */}
+                            <div>
+                                <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.01em" }}>{word}</h3>
+                                <p style={{ margin: 0, color: "#cbd5e1", fontSize: 15, lineHeight: 1.55 }}>{definition}</p>
+                            </div>
+
+                            {/* Arrow */}
+                            <div style={{
+                                position: "absolute",
+                                bottom: -10,
+                                left: "50%",
+                                marginLeft: -10,
+                                width: 0, height: 0,
+                                borderLeft: "10px solid transparent",
+                                borderRight: "10px solid transparent",
+                                borderTop: "10px solid rgba(10, 20, 40, 0.96)",
+                            }} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>,
+                document.body
             )}
         </span>
     )
