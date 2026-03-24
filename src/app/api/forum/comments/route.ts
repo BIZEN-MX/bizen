@@ -3,6 +3,7 @@ import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 import { filterContent } from "@/lib/forum/contentFilter"
 import { checkRateLimit } from "@/lib/forum/rateLimiter"
+import { touchDailyStreak } from "@/lib/rewards"
 
 export async function POST(request: NextRequest) {
   try {
@@ -149,6 +150,9 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`✅ Created comment on thread ${threadId} by user ${user.id}`)
+
+    // Touch daily streak — commenting in the forum counts as active today
+    touchDailyStreak(user.id).catch(() => {})
 
     return NextResponse.json(comment, { status: 201 })
   } catch (error) {

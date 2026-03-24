@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import { touchDailyStreak } from "@/lib/rewards"
 
 async function createSupabase() {
   const cookieStore = await cookies()
@@ -108,6 +109,12 @@ export async function POST(request: NextRequest) {
         current_streak: newStreak,
       })
       .eq("id", participant_id)
+
+    // Touch daily streak in the BIZEN profile (fire-and-forget)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user?.id) {
+      touchDailyStreak(user.id).catch(() => {/* silent */})
+    }
 
     return NextResponse.json({
       is_correct: isCorrect,

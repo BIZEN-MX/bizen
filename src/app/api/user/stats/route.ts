@@ -111,7 +111,7 @@ export async function GET() {
       }).catch(e => console.warn("Sync update failed:", e.message));
     }
 
-    // Weekly activity
+    // Weekly activity — collect ALL meaningful activity types
     const now = new Date();
     const dayOfWeek = now.getDay()
     const sunday = new Date(now)
@@ -121,24 +121,39 @@ export async function GET() {
     saturday.setDate(sunday.getDate() + 6)
     saturday.setHours(23, 59, 59, 999)
 
-    const [weeklyEvidence, weeklyProgress] = await Promise.all([
+    const weekRange = { gte: sunday, lte: saturday }
+
+    const [weeklyEvidence, weeklyProgress, weeklyForumPosts, weeklyForumComments] = await Promise.all([
+      // 1. Daily Mission submissions
       prisma.evidencePost.findMany({
-        where: { authorUserId: user.id, createdAt: { gte: sunday, lte: saturday } },
+        where: { authorUserId: user.id, createdAt: weekRange },
         select: { createdAt: true }
       }).catch(() => []),
+      // 2. Lesson completions
       prisma.progress.findMany({
-        where: { userId: user.id, completedAt: { gte: sunday, lte: saturday } },
+        where: { userId: user.id, completedAt: weekRange },
         select: { completedAt: true }
-      }).catch(() => [])
+      }).catch(() => []),
+      // 3. Forum thread creation
+      prisma.forumThread.findMany({
+        where: { authorId: user.id, createdAt: weekRange },
+        select: { createdAt: true }
+      }).catch(() => []),
+      // 4. Forum comments
+      prisma.forumComment.findMany({
+        where: { authorId: user.id, createdAt: weekRange },
+        select: { createdAt: true }
+      }).catch(() => []),
     ]);
 
     const activeDatesSet = new Set<string>()
-    for (const e of (weeklyEvidence as any[])) {
-      if (e.createdAt) activeDatesSet.add(new Date(e.createdAt).toISOString().split("T")[0])
+    const addDate = (d: Date | null | undefined) => {
+      if (d) activeDatesSet.add(new Date(d).toISOString().split("T")[0])
     }
-    for (const p of (weeklyProgress as any[])) {
-      if (p.completedAt) activeDatesSet.add(new Date(p.completedAt).toISOString().split("T")[0])
-    }
+    weeklyEvidence.forEach((e: any) => addDate(e.createdAt))
+    weeklyProgress.forEach((p: any) => addDate(p.completedAt))
+    weeklyForumPosts.forEach((p: any) => addDate(p.createdAt))
+    weeklyForumComments.forEach((c: any) => addDate(c.createdAt))
 
     return NextResponse.json({
       xp: currentXp,

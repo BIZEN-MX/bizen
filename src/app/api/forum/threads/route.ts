@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { filterContent } from "@/lib/forum/contentFilter"
 import { checkRateLimit } from "@/lib/forum/rateLimiter"
 import { checkAndAwardAchievements } from "@/lib/achievements"
+import { touchDailyStreak } from "@/lib/rewards"
 
 // GET list threads
 export async function GET(request: NextRequest) {
@@ -375,6 +376,9 @@ export async function POST(request: NextRequest) {
         postsCreated: updatedProfile.postsCreated ?? 1,
       }).catch(() => {})
 
+      // Touch daily streak — posting in the forum counts as active today
+      touchDailyStreak(user.id).catch(() => {})
+
       return NextResponse.json(thread, { status: 201 })
 
     } catch (aiError) {
@@ -426,6 +430,9 @@ export async function POST(request: NextRequest) {
       checkAndAwardAchievements(user.id, {
         postsCreated: updatedProfile2.postsCreated ?? 1,
       }).catch(() => {})
+
+      // Touch daily streak (fallback path)
+      touchDailyStreak(user.id).catch(() => {})
 
       return NextResponse.json(thread, { status: 201 })
     }

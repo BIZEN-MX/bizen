@@ -13,6 +13,7 @@ import {
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
+import { touchStreak } from "@/lib/streakClient"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -568,6 +569,8 @@ export default function VisionCanvasPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.details || data.error)
       setAiResult(data.result)
+      // Using Vision Canvas AI counts as active today
+      touchStreak("vision_canvas")
     } catch (err: any) {
       setAiError(err.message || "Error al conectar con la IA")
     } finally {

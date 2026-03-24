@@ -6,6 +6,7 @@ import { createPortal } from "react-dom"
 import { motion, AnimatePresence, useDragControls } from "framer-motion"
 import Image from "next/image"
 import { useAuth } from "@/contexts/AuthContext"
+import { touchStreak } from "@/lib/streakClient"
 
 interface Message {
   role: "user" | "assistant"
@@ -131,6 +132,9 @@ export default function BillyChatbot() {
       }
 
       setMessages((p) => [...p, { role: "assistant", content: response, timestamp: new Date(), suggestions }])
+
+      // Chatting with Billy counts as daily activity
+      touchStreak("billy_chatbot")
 
       if (!isOpen) setHasUnread(true)
     } catch {

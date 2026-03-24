@@ -85,11 +85,14 @@ export default function DailyChallengeWidget() {
                 const data = await res.json()
                 setUploadedUrl(data.url)
             } else {
-                console.error("Upload failed")
+                const errorData = await res.json()
+                console.error("Upload failed:", errorData)
+                alert(`Error al subir imagen: ${errorData.error || 'Intenta con una imagen más pequeña.'}`)
                 setImagePreview(null)
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("Upload error:", err)
+            alert(`Error de conexión al subir: ${err.message}`)
             setImagePreview(null)
         } finally {
             setUploading(false)
@@ -127,9 +130,13 @@ export default function DailyChallengeWidget() {
                     origin: { y: 0.6 },
                     colors: ["#3b82f6", "#8b5cf6", "#10b981"]
                 })
+            } else {
+                const errorData = await res.json()
+                alert(`Error: ${errorData.error || 'No se pudo completar la misión.'}`)
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("Reto: Error submitting:", err)
+            alert(`No se pudo enviar la misión: ${err.message || 'Error desconocido'}`)
         } finally {
             setSubmitting(false)
         }

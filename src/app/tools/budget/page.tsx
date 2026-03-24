@@ -5,11 +5,16 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
   ArrowLeft, Plus, Trash2, Sparkles, TrendingUp, TrendingDown, 
-  FileSpreadsheet, Calculator, Download, Save, Loader2 
+  FileSpreadsheet, Calculator, Download, Save, Loader2, ChevronRight, Check
 } from "lucide-react"
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
 import * as XLSX from 'xlsx'
 import { useAuth } from "@/contexts/AuthContext"
+import { touchStreak } from "@/lib/streakClient"
+import { cn } from "@/lib/utils"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { PremiumButton } from "@/components/ui/PremiumButton"
+import { Badge } from "@/components/ui/badge"
 
 // --- Types ---
 type LineItem = { id: string; label: string; amount: number; category?: string }
@@ -42,31 +47,18 @@ function SpreadsheetCell({
   isIncome?: boolean
 }) {
   return (
-    <div style={{
-      padding: "9px 14px",
-      borderBottom: "1px solid rgba(15, 98, 254, 0.06)",
-      borderRight: "1px solid rgba(15, 98, 254, 0.06)",
-      background: "transparent",
-      display: "flex",
-      alignItems: "center",
-      minHeight: 42,
-    }}>
+    <div className="px-4 py-3 border-r border-slate-100 flex items-center min-h-[48px]">
       <input
         type={type}
         value={value === 0 && type === "number" ? "" : value}
         onChange={e => onChange?.(type === "number" ? parseFloat(e.target.value) || 0 : e.target.value)}
         placeholder={placeholder}
-        style={{
-          width: "100%",
-          border: "none",
-          outline: "none",
-          fontSize: 15,
-          fontWeight: bold ? 700 : 500,
-          color: bold ? (isIncome ? "#059669" : "#dc2626") : "#1e293b",
-          textAlign: align,
-          background: "transparent",
-          fontFamily: "inherit"
-        }}
+        className={cn(
+          "w-full bg-transparent border-none outline-none text-[15px] transition-all",
+          bold ? "font-bold" : "font-medium text-slate-600",
+          isIncome && bold ? "text-emerald-600" : (!isIncome && bold ? "text-rose-600" : ""),
+          align === "right" ? "text-right" : (align === "center" ? "text-center" : "text-left")
+        )}
       />
     </div>
   )
@@ -89,22 +81,10 @@ function SpreadsheetRow({
     <motion.div 
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, x: -16 }}
-      style={{ 
-        display: "grid", 
-        gridTemplateColumns: "40px 1fr 130px 40px", 
-        alignItems: "stretch",
-        transition: "background 0.15s"
-      }}
-      className="budget-row"
+      exit={{ opacity: 0, x: -10 }}
+      className="grid grid-cols-[48px_1fr_140px_48px] group hover:bg-slate-50/80 transition-colors border-b border-slate-100/60"
     >
-      <div style={{ 
-        display: "flex", alignItems: "center", justifyContent: "center", 
-        borderBottom: "1px solid rgba(15, 98, 254, 0.06)",
-        borderRight: "1px solid rgba(15, 98, 254, 0.06)",
-        fontSize: 13, color: "#94a3b8", fontWeight: 700,
-        background: "rgba(248, 250, 252, 0.6)"
-      }}>
+      <div className="flex items-center justify-center text-[12px] font-bold text-slate-300 border-r border-slate-100 bg-slate-50/30">
         {index + 1}
       </div>
       <SpreadsheetCell 
@@ -122,18 +102,9 @@ function SpreadsheetRow({
       />
       <button
         onClick={() => onDelete(item.id)}
-        style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          background: "transparent",
-          borderBottom: "1px solid rgba(15, 98, 254, 0.06)",
-          borderLeft: "none",
-          cursor: "pointer", color: "#cbd5e1",
-          transition: "color 0.15s, background 0.15s"
-        }}
-        onMouseEnter={e => { e.currentTarget.style.color = "#ef4444"; e.currentTarget.style.background = "rgba(239,68,68,0.05)" }}
-        onMouseLeave={e => { e.currentTarget.style.color = "#cbd5e1"; e.currentTarget.style.background = "transparent" }}
+        className="flex items-center justify-center text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-all opacity-0 group-hover:opacity-100"
       >
-        <Trash2 size={13} />
+        <Trash2 size={14} />
       </button>
     </motion.div>
   )
@@ -255,6 +226,8 @@ export default function AdvancedBudgetPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.details || data.error)
       setAiAnalysis(data.analysis)
+      // Using Budget AI counts as daily activity
+      touchStreak("budget_ai")
       setTimeout(() => analysisRef.current?.scrollIntoView({ behavior: "smooth" }), 100)
     } catch (err: any) {
       setAiAnalysis(`Error: ${err.message || "Billy está fuera de línea."}`)
@@ -292,316 +265,105 @@ export default function AdvancedBudgetPage() {
     }
   }
 
-  const pieData = expenses.filter(e => e.amount > 0).map((e, index) => ({
-    name: e.label || "Sin nombre",
-    value: e.amount,
-    color: COLORS[index % COLORS.length]
-  }))
+  const pieData = [
+    ...expenses.filter(e => e.amount > 0).map((e, index) => ({
+      name: e.label || "Sin nombre",
+      value: e.amount,
+      color: COLORS[index % COLORS.length]
+    })),
+    ...(balance > 0 ? [{ name: "Ahorro/Inversión", value: balance, color: "#10b981" }] : [])
+  ]
 
   const balancePositive = balance >= 0
 
   return (
-    <>
-      <style>{`
-        /* ── Layout ─────────────────────────────────────── */
-        .budget-shell {
-          min-height: 100vh;
-          background: #FBFAF5;
-          font-family: var(--font-family, 'Inter', ui-sans-serif, system-ui, sans-serif);
-          display: flex;
-          flex-direction: column;
-        }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .budget-shell { margin-left: 220px !important; width: calc(100% - 220px) !important; }
-        }
-        @media (min-width: 1161px) {
-          .budget-shell { margin-left: 280px !important; width: calc(100% - 280px) !important; }
-        }
-
-        /* ── Header ─────────────────────────────────────── */
-        .budget-header {
-          background: rgba(255,255,255,0.92);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(15, 98, 254, 0.08);
-          padding: 14px 28px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          position: sticky;
-          top: 0;
-          z-index: 50;
-          box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-        }
-
-        /* ── Body Grid ───────────────────────────────────── */
-        .budget-body {
-          flex: 1;
-          padding: 28px 28px 40px;
-          max-width: 1400px;
-          margin: 0 auto;
-          width: 100%;
-          box-sizing: border-box;
-          display: grid;
-          grid-template-columns: 1fr 360px;
-          gap: 24px;
-        }
-        @media (max-width: 1100px) {
-          .budget-body { grid-template-columns: 1fr; }
-        }
-
-        /* ── Cards ───────────────────────────────────────── */
-        .budget-card {
-          background: white;
-          border-radius: 14px;
-          border: 1px solid rgba(15, 98, 254, 0.08);
-          overflow: hidden;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.04);
-          transition: box-shadow 0.2s ease;
-        }
-        .budget-card:hover {
-          box-shadow: 0 4px 18px rgba(15, 98, 254, 0.08), 0 1px 4px rgba(0,0,0,0.04);
-        }
-
-        /* ── Table header row ─────────────────────────────── */
-        .table-col-header {
-          background: rgba(248, 250, 252, 0.8);
-          border-bottom: 1px solid rgba(15, 98, 254, 0.08);
-          padding: 7px 14px;
-          font-size: 11px;
-          font-weight: 700;
-          color: #94a3b8;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-        }
-
-        /* ── Table row hover ─────────────────────────────── */
-        .budget-row:hover > div,
-        .budget-row:hover > button {
-          background: rgba(15, 98, 254, 0.025) !important;
-        }
-
-        /* ── Buttons ─────────────────────────────────────── */
-        .btn-ghost {
-          display: flex; align-items: center; gap: 7px;
-          padding: 10px 18px; border-radius: 9px;
-          background: white;
-          border: 1px solid rgba(15, 98, 254, 0.12);
-          color: #64748b; font-size: 14px; font-weight: 500;
-          cursor: pointer; transition: all 0.18s ease;
-          font-family: inherit;
-        }
-        .btn-ghost:hover {
-          border-color: rgba(15, 98, 254, 0.3);
-          color: #0F62FE;
-          background: rgba(15, 98, 254, 0.04);
-          box-shadow: 0 2px 8px rgba(15, 98, 254, 0.08);
-        }
-
-        .btn-secondary {
-          display: flex; align-items: center; gap: 7px;
-          padding: 10px 18px; border-radius: 9px;
-          background: rgba(15, 98, 254, 0.07);
-          border: 1px solid rgba(15, 98, 254, 0.15);
-          color: #0F62FE; font-size: 14.5px; font-weight: 700;
-          cursor: pointer; transition: all 0.18s ease;
-          font-family: inherit;
-        }
-        .btn-secondary:hover {
-          background: rgba(15, 98, 254, 0.12);
-          box-shadow: 0 2px 10px rgba(15, 98, 254, 0.15);
-        }
-        .btn-secondary:disabled {
-          opacity: 0.55; cursor: not-allowed;
-        }
-
-        .btn-primary {
-          display: flex; align-items: center; gap: 7px;
-          padding: 10px 20px; border-radius: 9px;
-          background: linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%);
-          border: none;
-          color: white; font-size: 14.5px; font-weight: 700;
-          cursor: pointer; transition: all 0.18s ease;
-          font-family: inherit;
-          box-shadow: 0 4px 14px rgba(15, 98, 254, 0.28);
-        }
-        .btn-primary:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(15, 98, 254, 0.38);
-        }
-        .btn-primary:disabled {
-          opacity: 0.55; cursor: not-allowed; transform: none;
-        }
-
-        /* ── Add row button ──────────────────────────────── */
-        .btn-add-row {
-          width: 100%; padding: 11px;
-          background: transparent; border: none;
-          border-top: 1px solid rgba(15, 98, 254, 0.07);
-          color: #0F62FE; font-size: 12.5px; font-weight: 600;
-          display: flex; align-items: center; justify-content: center; gap: 7px;
-          cursor: pointer; transition: background 0.15s;
-          font-family: inherit;
-        }
-        .btn-add-row:hover { background: rgba(15, 98, 254, 0.04); }
-
-        /* ── AI panel ────────────────────────────────────── */
-        .ai-panel {
-          background: linear-gradient(135deg, #0a0f1e 0%, #0d1b40 60%, #091230 100%);
-          border-radius: 16px;
-          padding: 24px;
-          color: white;
-          box-shadow: 0 16px 40px rgba(15, 98, 254, 0.15), 0 0 0 1px rgba(15, 98, 254, 0.2);
-          border: 1px solid rgba(15, 98, 254, 0.25);
-          position: relative;
-          overflow: hidden;
-        }
-        .ai-panel::before {
-          content: '';
-          position: absolute;
-          top: -60px; right: -60px;
-          width: 180px; height: 180px;
-          background: radial-gradient(circle, rgba(15, 98, 254, 0.25), transparent 70%);
-          border-radius: 50%;
-          pointer-events: none;
-        }
-
-        /* ── Stat card ───────────────────────────────────── */
-        .stat-badge {
-          border-radius: 12px;
-          padding: 16px 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        /* ── AI skeleton shimmer ─────────────────────────── */
-        @keyframes ai-shimmer {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.8; }
-        }
-        .ai-skeleton { animation: ai-shimmer 1.4s ease-in-out infinite; }
-
-        /* ── Progress bar ─────────────────────────────────── */
-        .progress-track {
-          height: 5px;
-          background: rgba(15, 98, 254, 0.08);
-          border-radius: 99px;
-          overflow: hidden;
-        }
-        .progress-fill {
-          height: 100%;
-          border-radius: 99px;
-          transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-      `}</style>
-
-      <div className="budget-shell">
-
-        {/* ── Header ──────────────────────────────────────── */}
-        <header className="budget-header">
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+    <div className="min-h-screen bg-[#FBFAF5] flex flex-col font-sans">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
+        <div className="max-w-[1440px] mx-auto px-6 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-5">
             <Link 
               href="/cash-flow" 
-              style={{ 
-                color: "#94a3b8", display: "flex", alignItems: "center",
-                padding: "6px 8px", borderRadius: 8, transition: "all 0.15s",
-                border: "1px solid transparent"
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#0F62FE"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(15,98,254,0.15)"; (e.currentTarget as HTMLElement).style.background = "rgba(15,98,254,0.05)" }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "#94a3b8"; (e.currentTarget as HTMLElement).style.borderColor = "transparent"; (e.currentTarget as HTMLElement).style.background = "transparent" }}
+              className="p-2.5 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 text-slate-400 hover:text-primary transition-all duration-200"
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft size={20} />
             </Link>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ 
-                width: 38, height: 38, borderRadius: 10, 
-                background: "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 4px 12px rgba(15,98,254,0.25)"
-              }}>
-                <FileSpreadsheet size={19} color="white" />
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-[#1983FD] flex items-center justify-center shadow-lg shadow-primary/20">
+                <FileSpreadsheet size={22} className="text-white" />
               </div>
               <div>
-                <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0F62FE", margin: 0, letterSpacing: "-0.03em" }}>
+                <h1 className="text-[22px] font-bold text-slate-900 tracking-tight leading-none mb-1">
                   Smart Budget Pro
                 </h1>
-                <span style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Toma el control de tu futuro</span>
+                <p className="text-[13px] text-slate-500 font-medium tracking-tight">Toma el control de tu futuro financiero</p>
               </div>
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <button className="btn-ghost" onClick={exportToExcel}>
-              <Download size={14} /> Exportar Excel
-            </button>
-            <button 
-              className="btn-ghost" 
+          <div className="flex items-center gap-3">
+            <PremiumButton variant="minimal" onClick={exportToExcel} className="hidden sm:flex" size="md">
+              <Download size={16} /> <span>Exportar</span>
+            </PremiumButton>
+            
+            <PremiumButton 
+              variant="outline" 
               onClick={saveBudget}
               disabled={saveLoading}
-              style={{
-                borderColor: saveSuccess ? "#10b981" : "rgba(15, 98, 254, 0.12)",
-                color: saveSuccess ? "#10b981" : "#64748b",
-                background: saveSuccess ? "#f0fdf4" : "white"
-              }}
+              className={cn(saveSuccess && "border-emerald-200 bg-emerald-50 text-emerald-600")}
+              size="md"
             >
-              {saveLoading ? <Loader2 size={14} className="spin" /> : <Save size={14} />}
-              {saveSuccess ? "¡Guardado!" : (saveLoading ? "Guardando..." : "Guardar")}
-            </button>
-            <button 
-              className="btn-secondary"
+              {saveLoading ? <Loader2 size={16} className="animate-spin" /> : (saveSuccess ? <Check size={16} /> : <Save size={16} />)}
+              <span>{saveSuccess ? "¡Guardado!" : "Guardar"}</span>
+            </PremiumButton>
+
+            <PremiumButton 
+              variant="secondary"
               onClick={() => runAi("analyze")}
               disabled={aiLoading}
+              className="bg-primary/5 border-primary/10 text-primary hover:bg-primary/10"
+              size="md"
             >
-              <Sparkles size={14} /> 
-              {aiLoading && aiAction === "analyze" ? "Billy pensando..." : "Preguntar a Billy"}
-            </button>
-            <button 
-              className="btn-primary"
+              <Sparkles size={16} /> 
+              <span>{aiLoading && aiAction === "analyze" ? "Billy pensando..." : "Analizar con IA"}</span>
+            </PremiumButton>
+
+            <PremiumButton 
+              variant="primary"
               onClick={() => runAi("forecast")}
               disabled={aiLoading}
+              size="md"
             >
-              <TrendingUp size={14} /> Billy Forecast
-            </button>
+              <TrendingUp size={16} /> <span>Billy Forecast</span>
+            </PremiumButton>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {/* ── Body ─────────────────────────────────────────── */}
-        <div className="budget-body">
-
-          {/* Left column — spreadsheets + AI */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-
-            {/* Income table */}
-            <div className="budget-card">
-              <div style={{ 
-                padding: "14px 18px", 
-                borderBottom: "1px solid rgba(15, 98, 254, 0.07)", 
-                display: "flex", alignItems: "center", justifyContent: "space-between"
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 7, background: "rgba(16, 185, 129, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <TrendingUp size={15} color="#059669" />
-                  </div>
-                  <span style={{ fontWeight: 800, fontSize: 16, color: "#0F62FE", letterSpacing: "-0.01em" }}>
-                    Ingresos Mensuales
-                  </span>
+      <main className="max-w-[1440px] mx-auto w-full px-6 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8">
+        <div className="flex flex-col gap-8">
+          {/* Income table */}
+          <Card className="shadow-premium overflow-visible">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100/60 pb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                  <TrendingUp size={18} />
                 </div>
-                <span style={{ fontSize: 16, fontWeight: 800, color: "#059669" }}>
-                  ${totalIncome.toLocaleString()}
-                </span>
+                <CardTitle className="text-primary font-bold">Ingresos Mensuales</CardTitle>
+              </div>
+              <div className="text-[19px] font-extrabold text-emerald-600 tracking-tight">
+                ${totalIncome.toLocaleString()}
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="grid grid-cols-[48px_1fr_140px_48px] border-b border-slate-100/60 bg-slate-50/40">
+                <div className="py-2 text-center text-[11px] font-bold text-slate-400 uppercase tracking-wider">#</div>
+                <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-left">Concepto</div>
+                <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Monto ($)</div>
+                <div className="py-2" />
               </div>
 
-              {/* Column headers */}
-              <div style={{ display: "grid", gridTemplateColumns: "40px 1fr 130px 40px" }}>
-                <div className="table-col-header" style={{ textAlign: "center", fontSize: 13 }}>#</div>
-                <div className="table-col-header" style={{ fontSize: 13 }}>Fuente / Concepto</div>
-                <div className="table-col-header" style={{ textAlign: "right", fontSize: 13 }}>Cantidad ($)</div>
-                <div className="table-col-header" />
-              </div>
-
-              <AnimatePresence>
+              <AnimatePresence initial={false}>
                 {income.map((item, idx) => (
                   <SpreadsheetRow 
                     key={item.id} item={item} type="income" 
@@ -612,41 +374,36 @@ export default function AdvancedBudgetPage() {
               </AnimatePresence>
 
               <button 
-                className="btn-add-row"
+                className="w-full py-4 flex items-center justify-center gap-2 text-[13px] font-bold text-slate-400 hover:text-primary hover:bg-slate-50 transition-all border-t border-slate-100/60"
                 onClick={() => setIncome([...income, { id: uid(), label: "", amount: 0 }])}
               >
-                <Plus size={13} /> Añadir Ingreso
+                <Plus size={16} /> Añadir Ingreso
               </button>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Expenses table */}
-            <div className="budget-card">
-              <div style={{ 
-                padding: "14px 18px", 
-                borderBottom: "1px solid rgba(15, 98, 254, 0.07)", 
-                display: "flex", alignItems: "center", justifyContent: "space-between"
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 7, background: "rgba(239, 68, 68, 0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <TrendingDown size={15} color="#dc2626" />
-                  </div>
-                  <span style={{ fontWeight: 800, fontSize: 16, color: "#0F62FE", letterSpacing: "-0.01em" }}>
-                    Gastos Mensuales
-                  </span>
+          {/* Expenses table */}
+          <Card className="shadow-premium overflow-visible">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100/60 pb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600">
+                  <TrendingDown size={18} />
                 </div>
-                <span style={{ fontSize: 16, fontWeight: 800, color: "#dc2626" }}>
-                  ${totalExpenses.toLocaleString()}
-                </span>
+                <CardTitle className="text-primary font-bold">Gastos Mensuales</CardTitle>
+              </div>
+              <div className="text-[19px] font-extrabold text-rose-600 tracking-tight">
+                ${totalExpenses.toLocaleString()}
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="grid grid-cols-[48px_1fr_140px_48px] border-b border-slate-100/60 bg-slate-50/40">
+                <div className="py-2 text-center text-[11px] font-bold text-slate-400 uppercase tracking-wider">#</div>
+                <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-left">Detalle</div>
+                <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Monto ($)</div>
+                <div className="py-2" />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "40px 1fr 130px 40px" }}>
-                <div className="table-col-header" style={{ textAlign: "center" }}>#</div>
-                <div className="table-col-header">Categoría / Detalle</div>
-                <div className="table-col-header" style={{ textAlign: "right" }}>Monto ($)</div>
-                <div className="table-col-header" />
-              </div>
-
-              <AnimatePresence>
+              <AnimatePresence initial={false}>
                 {expenses.map((item, idx) => (
                   <SpreadsheetRow 
                     key={item.id} item={item} type="expense" 
@@ -657,228 +414,146 @@ export default function AdvancedBudgetPage() {
               </AnimatePresence>
 
               <button 
-                className="btn-add-row"
+                className="w-full py-4 flex items-center justify-center gap-2 text-[13px] font-bold text-slate-400 hover:text-primary hover:bg-slate-50 transition-all border-t border-slate-100/60"
                 onClick={() => setExpenses([...expenses, { id: uid(), label: "", amount: 0 }])}
               >
-                <Plus size={13} /> Añadir Gasto
+                <Plus size={16} /> Añadir Gasto
               </button>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* AI Analysis Panel */}
-            <div ref={analysisRef}>
-              <AnimatePresence>
-                {(aiAnalysis || aiLoading) && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 16 }} 
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    className="ai-panel"
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18, position: "relative", zIndex: 1 }}>
-                      <div style={{ 
-                        width: 40, height: 40, borderRadius: 11, 
-                        background: "rgba(15, 98, 254, 0.2)", 
-                        border: "1px solid rgba(15, 98, 254, 0.35)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        flexShrink: 0
-                      }}>
-                        <Sparkles size={19} color="#60a5fa" />
-                      </div>
-                      <div>
-                        <h3 style={{ fontSize: 15, fontWeight: 700, margin: 0, color: "white" }}>
-                          {aiAction === "forecast" ? "Billy's Forecast" : "Análisis de Billy"}
-                        </h3>
-                        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", letterSpacing: "0.03em" }}>
-                          Powered by Gemini · BIZEN AI
-                        </span>
-                      </div>
+          {/* AI Panel */}
+          <AnimatePresence>
+            {(aiAnalysis || aiLoading) && (
+              <motion.div 
+                ref={analysisRef}
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                className="relative overflow-hidden p-8 rounded-[var(--radius-xl)] bg-slate-900 border border-slate-800 shadow-2xl"
+              >
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+                <div className="relative z-10 flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/20 border border-primary/30 flex items-center justify-center">
+                    <Sparkles size={22} className="text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-[17px] font-bold text-white mb-0.5">
+                      {aiAction === "forecast" ? "Billy's Forecast" : "Análisis de Billy IA"}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="bg-primary/10 border-primary/20 text-blue-400 py-0 h-5 px-1.5 text-[10px]">GEMINI PRO</Badge>
+                      <span className="text-[11px] text-slate-400 font-medium tracking-wide uppercase">BIZEN Intelligence</span>
                     </div>
-
-                    <div style={{ position: "relative", zIndex: 1 }}>
-                      {aiLoading ? (
-                        <div className="ai-skeleton" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                          {[100, 80, 95, 60].map((w, i) => (
-                            <div key={i} style={{ height: 14, background: "rgba(255,255,255,0.12)", borderRadius: 6, width: `${w}%` }} />
-                          ))}
-                        </div>
-                      ) : (
-                        <p style={{ fontSize: 14.5, lineHeight: 1.75, margin: 0, color: "rgba(255,255,255,0.88)" }}>
-                          {aiAnalysis}
-                        </p>
-                      )}
+                  </div>
+                </div>
+                <div className="relative z-10">
+                  {aiLoading ? (
+                    <div className="flex flex-col gap-3.5 animate-pulse">
+                      <div className="h-4 bg-white/10 rounded-full w-full" />
+                      <div className="h-4 bg-white/10 rounded-full w-[92%]" />
+                      <div className="h-4 bg-white/10 rounded-full w-[96%]" />
+                      <div className="h-4 bg-white/10 rounded-full w-[60%]" />
                     </div>
-
-                    {!aiLoading && aiAnalysis && (
-                      <div style={{ marginTop: 20, position: "relative", zIndex: 1 }}>
-                        <button 
-                          onClick={() => setAiAnalysis("")}
-                          style={{ 
-                            padding: "7px 16px", 
-                            background: "rgba(255,255,255,0.1)", 
-                            border: "1px solid rgba(255,255,255,0.15)", 
-                            borderRadius: 8, color: "rgba(255,255,255,0.8)", 
-                            fontSize: 12.5, cursor: "pointer",
-                            fontFamily: "inherit",
-                            transition: "all 0.15s"
-                          }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.18)")}
-                          onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.10)")}
-                        >
-                          Entendido ✓
-                        </button>
-                      </div>
-                    )}
-                  </motion.div>
+                  ) : (
+                    <p className="text-[15px] leading-relaxed text-slate-300 font-medium">
+                      {aiAnalysis}
+                    </p>
+                  )}
+                </div>
+                {!aiLoading && aiAnalysis && (
+                  <div className="mt-8 pt-6 border-t border-white/5">
+                    <button 
+                      onClick={() => setAiAnalysis("")}
+                      className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/5 text-[13px] font-bold transition-all"
+                    >
+                      Entendido ✓
+                    </button>
+                  </div>
                 )}
-              </AnimatePresence>
-            </div>
-          </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
-          {/* Right sidebar */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-
-            {/* Summary card */}
-            <div className="budget-card" style={{ padding: 22 }}>
-              <h3 style={{ 
-                fontSize: 11, fontWeight: 700, color: "#94a3b8", 
-                textTransform: "uppercase", letterSpacing: "0.07em",
-                margin: "0 0 18px"
-              }}>
-                Resumen del mes
-              </h3>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                {/* Income bar */}
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 7 }}>
-                    <span style={{ fontSize: 12.5, color: "#64748b", fontWeight: 500 }}>Ingresos</span>
-                    <span style={{ fontSize: 13.5, fontWeight: 700, color: "#059669" }}>
-                      ${totalIncome.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="progress-track">
-                    <div className="progress-fill" style={{ background: "linear-gradient(90deg, #059669, #34d399)", width: "100%" }} />
-                  </div>
+        <aside className="flex flex-col gap-8">
+          <Card className="shadow-premium">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Resumen Mensual</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-6">
+              <div>
+                <div className="flex justify-between items-end mb-2.5">
+                  <span className="text-[13px] text-slate-500 font-semibold">Ingresos</span>
+                  <span className="text-[15px] font-bold text-emerald-600">${totalIncome.toLocaleString()}</span>
                 </div>
-
-                {/* Expenses bar */}
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 7 }}>
-                    <span style={{ fontSize: 12.5, color: "#64748b", fontWeight: 500 }}>Gastos</span>
-                    <span style={{ fontSize: 13.5, fontWeight: 700, color: "#dc2626" }}>
-                      ${totalExpenses.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="progress-track">
-                    <div className="progress-fill" style={{ 
-                      background: "linear-gradient(90deg, #dc2626, #f87171)",
-                      width: `${Math.min(100, totalIncome > 0 ? (totalExpenses / totalIncome) * 100 : 0)}%`
-                    }} />
-                  </div>
-                </div>
-
-                {/* Net balance */}
-                <div style={{ 
-                  marginTop: 6, padding: "16px 18px", borderRadius: 12, 
-                  background: balancePositive ? "rgba(16, 185, 129, 0.06)" : "rgba(239, 68, 68, 0.06)",
-                  border: `1px solid ${balancePositive ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)"}`,
-                }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, color: balancePositive ? "#059669" : "#dc2626", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                    Neto Mensual
-                  </div>
-                  <div style={{ fontSize: 26, fontWeight: 800, color: balancePositive ? "#047857" : "#b91c1c", letterSpacing: "-0.03em" }}>
-                    {balancePositive ? "+" : ""}{balance.toLocaleString()} MXN
-                  </div>
+                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: "100%" }} />
                 </div>
               </div>
-            </div>
+              <div>
+                <div className="flex justify-between items-end mb-2.5">
+                  <span className="text-[13px] text-slate-500 font-semibold">Gastos</span>
+                  <span className="text-[15px] font-bold text-rose-600">${totalExpenses.toLocaleString()}</span>
+                </div>
+                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-rose-500 rounded-full" style={{ width: `${Math.min(100, totalIncome > 0 ? (totalExpenses / totalIncome) * 100 : 0)}%` }} />
+                </div>
+              </div>
+              <div className={cn(
+                "mt-2 p-5 rounded-2xl border transition-all duration-300",
+                balancePositive ? "bg-emerald-50/50 border-emerald-100" : "bg-rose-50/50 border-rose-100"
+              )}>
+                <div className={cn("text-[10px] font-bold uppercase tracking-wider mb-1", balancePositive ? "text-emerald-600" : "text-rose-600")}>Balance Neto</div>
+                <div className={cn("text-[26px] font-black tracking-tighter", balancePositive ? "text-emerald-700" : "text-rose-700")}>
+                  {balancePositive ? "+" : ""}{balance.toLocaleString()} <span className="text-[14px] font-bold opacity-50">MXN</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Donut chart */}
-            <div className="budget-card" style={{ padding: 22 }}>
-              <h3 style={{ 
-                fontSize: 11, fontWeight: 700, color: "#94a3b8",
-                textTransform: "uppercase", letterSpacing: "0.07em",
-                margin: "0 0 16px"
-              }}>
-                Distribución de Gastos
-              </h3>
-              <div style={{ height: 190 }}>
+          <Card className="shadow-premium">
+            <CardHeader className="pb-0">
+              <CardTitle className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Distribución</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[200px] relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <RechartsPie>
-                    <Pie 
-                      data={pieData} cx="50%" cy="50%" 
-                      innerRadius={56} outerRadius={78} 
-                      paddingAngle={4} dataKey="value"
-                      strokeWidth={0}
-                    >
+                    <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" strokeWidth={0}>
                       {pieData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
                     </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        borderRadius: 10, border: "1px solid rgba(15,98,254,0.12)", 
-                        boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-                        fontFamily: "inherit", fontSize: 12
-                      }} 
-                    />
+                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "var(--shadow-lg)" }} />
                   </RechartsPie>
                 </ResponsiveContainer>
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", marginTop: 10 }}>
-                {pieData.slice(0, 5).map((d, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: d.color, flexShrink: 0 }} />
-                    <span style={{ fontSize: 11.5, color: "#64748b" }}>{d.name.slice(0, 12)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Savings tip card */}
-            <div style={{ 
-              padding: "18px 20px", 
-              background: "white",
-              borderRadius: 14, 
-              border: "1px solid rgba(15, 98, 254, 0.10)",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.03)"
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 10 }}>
-                <div style={{ width: 28, height: 28, borderRadius: 7, background: "rgba(15, 98, 254, 0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Calculator size={14} color="#0F62FE" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span className="text-[18px] font-black text-slate-800">${totalExpenses.toLocaleString()}</span>
                 </div>
-                <span style={{ fontSize: 12.5, fontWeight: 700, color: "#0F62FE" }}>
-                  Tasa de Ahorro
-                </span>
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Savings ring */}
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12 }}>
-                <div style={{ position: "relative", width: 56, height: 56, flexShrink: 0 }}>
-                  <svg viewBox="0 0 56 56" width="56" height="56">
-                    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(15,98,254,0.1)" strokeWidth="5" />
-                    <circle 
-                      cx="28" cy="28" r="22" fill="none"
-                      stroke={savingsRate >= 20 ? "#0F62FE" : "#f59e0b"}
-                      strokeWidth="5"
-                      strokeLinecap="round"
-                      strokeDasharray={`${Math.min(100, Math.max(0, savingsRate)) / 100 * 138.2} 138.2`}
-                      transform="rotate(-90 28 28)"
-                    />
-                  </svg>
-                  <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: 12, fontWeight: 800, color: "#1e293b" }}>{savingsRate.toFixed(0)}%</span>
-                  </div>
+          <Card className="bg-primary text-white border-none shadow-blue-lg">
+            <CardContent className="pt-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center border border-white/20">
+                  <Calculator size={18} className="text-white" />
                 </div>
-                <p style={{ fontSize: 12.5, color: "#64748b", lineHeight: 1.55, margin: 0 }}>
+                <span className="text-[15px] font-bold">Tasa de Ahorro</span>
+              </div>
+              <div className="flex items-center gap-5">
+                <div className="text-[32px] font-black">{savingsRate.toFixed(0)}%</div>
+                <p className="text-[12px] leading-relaxed font-medium opacity-90">
                   {savingsRate >= 20 
-                    ? <><strong style={{ color: "#059669" }}>¡Excelente!</strong> Estás por encima del 20% recomendado para asegurar tu futuro financiero.</>
-                    : <><strong style={{ color: "#d97706" }}>Sigue mejorando.</strong> Intenta llegar al 20% de ahorro mensual para proteger tu futuro.</>
+                    ? "Excelente gestión. Estás cumpliendo la regla del 20%."
+                    : "Intenta reducir gastos hormiga para alcanzar el 20%."
                   }
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+            </CardContent>
+          </Card>
+        </aside>
+      </main>
+    </div>
   )
 }

@@ -13,6 +13,77 @@ export interface RewardsResult {
     currentStreak: number
 }
 
+export interface StreakTouchResult {
+    streakUpdated: boolean
+    currentStreak: number
+    isFirstTouchToday: boolean
+}
+
+/**
+ * Touches the daily streak for a user without awarding XP.
+ * Call this from any action that should count as "active today":
+ * - Participating in BIZEN Live
+ * - Posting in the Forum
+ * - Using AI tools (Budget AI, Vision Canvas)
+ * - Any other meaningful engagement action
+ */
+export async function touchDailyStreak(userId: string): Promise<StreakTouchResult> {
+    const profile = await prisma.profile.findUnique({
+        where: { userId },
+        select: { currentStreak: true, longestStreak: true, lastActive: true, role: true }
+    })
+
+    if (!profile) return { streakUpdated: false, currentStreak: 0, isFirstTouchToday: false }
+
+    // Non-earning roles still get streak tracking for engagement purposes
+    const now = new Date()
+    const today = getMexicoMidnight(now)
+
+    let newStreak = profile.currentStreak || 0
+    let newLongestStreak = profile.longestStreak || 0
+    let streakUpdated = false
+    let isFirstTouchToday = false
+
+    if (profile.lastActive) {
+        const lastActiveDay = getMexicoMidnight(new Date(profile.lastActive))
+        const diffTime = today.getTime() - lastActiveDay.getTime()
+        const diffDays = Math.floor(diffTime / 86400000)
+
+        if (diffDays === 0) {
+            // Already active today — touch lastActive but don't change streak count
+            isFirstTouchToday = false
+        } else if (diffDays === 1) {
+            // Active yesterday → increment streak
+            newStreak += 1
+            streakUpdated = true
+            isFirstTouchToday = true
+        } else {
+            // Streak broken → reset to 1
+            newStreak = 1
+            streakUpdated = true
+            isFirstTouchToday = true
+        }
+    } else {
+        // First ever activity
+        newStreak = 1
+        streakUpdated = true
+        isFirstTouchToday = true
+    }
+
+    if (newStreak > newLongestStreak) newLongestStreak = newStreak
+
+    await prisma.profile.update({
+        where: { userId },
+        data: {
+            currentStreak: newStreak,
+            longestStreak: newLongestStreak,
+            lastActive: now,
+        } as any
+    })
+
+    return { streakUpdated, currentStreak: newStreak, isFirstTouchToday }
+}
+
 /**
  * Awards XP and Bizcoins to a user and updates their daily streak if applicable.
  * @param userId - the ID of the user receiving the reward
@@ -110,3 +181,4 @@ export async function awardXp(userId: string, amount: number): Promise<RewardsRe
         currentStreak: newStreak
     }
 }
+

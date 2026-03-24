@@ -63,6 +63,8 @@ export default function WelcomePage() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [navScrolled, setNavScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [activePersona, setActivePersona] = useState<"instituciones" | "estudiantes">("instituciones");
+
 
   useEffect(() => {
     setMounted(true);
@@ -165,20 +167,28 @@ export default function WelcomePage() {
 
   // Reveal-on-scroll: add .revealed when .reveal-element enters viewport
   useEffect(() => {
-    if (typeof window === "undefined" || !window.IntersectionObserver) return;
-    const els = document.querySelectorAll(".reveal-element");
-    if (!els.length) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("revealed");
-        });
-      },
-      { rootMargin: "0px 0px -60px 0px", threshold: 0.1 },
-    );
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+    if (!mounted || typeof window === "undefined" || !window.IntersectionObserver) return;
+    
+    // Give a small delay to ensure all elements are rendered
+    const timer = setTimeout(() => {
+      const els = document.querySelectorAll(".reveal-element");
+      if (!els.length) return;
+      
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add("revealed");
+          });
+        },
+        { rootMargin: "0px 0px -60px 0px", threshold: 0.1 },
+      );
+      
+      els.forEach((el) => observer.observe(el));
+      return () => observer.disconnect();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [mounted]);
 
   const gradientStyle = {
     background:
@@ -347,9 +357,10 @@ export default function WelcomePage() {
                 key={link.href}
                 href={link.href}
                 className="header-nav-link landing-header-nav-link"
+                onClick={() => { if (link.persona) setActivePersona(link.persona); }}
                 style={{
                   fontSize: "clamp(13px, 1.3vw, 15px)",
-                  fontWeight: 500,
+                  fontWeight: link.persona ? 600 : 500,
                   color: navScrolled ? "var(--primary)" : "rgba(255,255,255,0.9)",
                   textDecoration: "none",
                   whiteSpace: "nowrap",
@@ -361,6 +372,7 @@ export default function WelcomePage() {
                 {link.label}
               </Link>
             ))}
+
           </nav>
 
           {/* Header Actions */}
@@ -1131,12 +1143,84 @@ export default function WelcomePage() {
                       padding: 0 16px;
                     }
                   }
+                  /* ── Persona Switcher ── */
+                  .persona-switcher {
+                    display: inline-flex;
+                    align-items: center;
+                    background: rgba(255,255,255,0.06);
+                    border: 1px solid rgba(255,255,255,0.15);
+                    border-radius: 9999px;
+                    padding: 5px;
+                    gap: 4px;
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    margin-bottom: clamp(24px, 4vw, 40px);
+                  }
+                  .persona-btn {
+                    padding: 10px 22px;
+                    border-radius: 9999px;
+                    font-size: clamp(13px, 1.2vw, 15px);
+                    font-weight: 600;
+                    cursor: pointer;
+                    border: none;
+                    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+                    letter-spacing: 0.02em;
+                    white-space: nowrap;
+                  }
+                  .persona-btn.active {
+                    background: #0056E7;
+                    color: #fff;
+                    box-shadow: 0 4px 16px rgba(0,86,231,0.4);
+                  }
+                  .persona-btn.inactive {
+                    background: transparent;
+                    color: rgba(255,255,255,0.65);
+                  }
+                  .persona-btn.inactive:hover {
+                    color: rgba(255,255,255,0.9);
+                    background: rgba(255,255,255,0.08);
+                  }
+                  @keyframes border-shimmer {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                  }
+                  @media (max-width: 640px) {
+                    .hero-tagline-border-wrap { border-radius: 14px !important; }
+                  }
+                  @media (max-width: 450px) {
+                    .hero-tagline-border-wrap { 
+                      transform: translateX(12%); 
+                      margin-left: auto !important;
+                      margin-right: 0 !important;
+                    }
+                  }
                 `,
                   }}
                 />
+
+                {/* ── Persona Switcher Pill ── */}
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "clamp(32px, 6vw, 64px)", marginBottom: 0 }}>
+                  <div className="persona-switcher">
+                    <button
+                      className={`persona-btn ${activePersona === "instituciones" ? "active" : "inactive"}`}
+                      onClick={() => setActivePersona("instituciones")}
+                    >
+                      Para Instituciones
+                    </button>
+                    <button
+                      className={`persona-btn ${activePersona === "estudiantes" ? "active" : "inactive"}`}
+                      onClick={() => setActivePersona("estudiantes")}
+                    >
+                      Para Estudiantes
+                    </button>
+                  </div>
+                </div>
+
+                {/* ── Persona-aware tagline ── */}
                 <div
                   style={{
-                    marginTop: "clamp(48px, 8vw, 100px)",
+                    marginTop: "clamp(20px, 3vw, 32px)",
                     marginBottom: "clamp(24px, 4vw, 48px)",
                     display: "flex",
                     justifyContent: "center",
@@ -1152,11 +1236,14 @@ export default function WelcomePage() {
                       padding: "2px",
                       borderRadius: "18px",
                       backgroundImage:
-                        "linear-gradient(135deg, #0056E7, #1983FD, #93c5fd, #0056E7)",
+                        activePersona === "instituciones"
+                          ? "linear-gradient(135deg, #0056E7, #1983FD, #93c5fd, #0056E7)"
+                          : "linear-gradient(135deg, #7c3aed, #a78bfa, #60a5fa, #7c3aed)",
                       backgroundSize: "300% 300%",
                       animation: "border-shimmer 6s ease infinite",
                       width: "100%",
                       maxWidth: "clamp(240px, 50vw, 750px)",
+                      transition: "background-image 0.4s ease",
                     }}
                   >
                     <div
@@ -1180,159 +1267,219 @@ export default function WelcomePage() {
                           height: "3px",
                           borderRadius: "99px",
                           background:
-                            "linear-gradient(90deg, #60a5fa, #1983FD)",
+                            activePersona === "instituciones"
+                              ? "linear-gradient(90deg, #60a5fa, #1983FD)"
+                              : "linear-gradient(90deg, #a78bfa, #60a5fa)",
                           margin: "0 auto 12px",
+                          transition: "background 0.4s ease",
                         }}
                       />
 
-                      {/* Main text */}
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize: "clamp(14px, 1.6vw, 22px)",
-                          lineHeight: 1.5,
-                          fontWeight: 400,
-                          color: "rgba(255, 255, 255, 0.92)",
-                          letterSpacing: "0.01em",
-                          wordWrap: "break-word",
-                        }}
-                      >
-                        La plataforma educativa que combina{" "}
-                        <span
+                      {/* Persona-specific text */}
+                      {activePersona === "instituciones" ? (
+                        <p
                           style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "5px",
-                            background:
-                              "linear-gradient(90deg, #1983FD, #60a5fa)",
-                            color: "#fff",
-                            borderRadius: "6px",
-                            padding: "2px 10px 2px 8px",
-                            fontWeight: 600,
-                            fontSize: "0.95em",
-                            letterSpacing: "0.02em",
-                            whiteSpace: "nowrap",
-                            boxShadow: "0 2px 12px rgba(25, 131, 253, 0.35)",
+                            margin: 0,
+                            fontSize: "clamp(14px, 1.6vw, 22px)",
+                            lineHeight: 1.5,
+                            fontWeight: 400,
+                            color: "rgba(255, 255, 255, 0.92)",
+                            letterSpacing: "0.01em",
+                            wordWrap: "break-word",
                           }}
                         >
-                          gamificación e IA
-                        </span>{" "}
-                        para enseñar finanzas personales a jóvenes de
-                        preparatoria y universidad de forma{" "}
-                        <em
+                          Implementa educación financiera en tu institución con{" "}
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "5px",
+                              background: "linear-gradient(90deg, #1983FD, #60a5fa)",
+                              color: "#fff",
+                              borderRadius: "6px",
+                              padding: "2px 10px 2px 8px",
+                              fontWeight: 600,
+                              fontSize: "0.95em",
+                              letterSpacing: "0.02em",
+                              whiteSpace: "nowrap",
+                              boxShadow: "0 2px 12px rgba(25, 131, 253, 0.35)",
+                            }}
+                          >
+                            dashboard de impacto
+                          </span>{" "}
+                          para directivos, reportes automáticos y contenido{" "}
+                          <em
+                            style={{
+                              fontStyle: "normal",
+                              fontWeight: 600,
+                              color: "#93c5fd",
+                            }}
+                          >
+                            alineado al contexto mexicano.
+                          </em>
+                        </p>
+                      ) : (
+                        <p
                           style={{
-                            fontStyle: "normal",
-                            fontWeight: 600,
-                            color: "#93c5fd",
+                            margin: 0,
+                            fontSize: "clamp(14px, 1.6vw, 22px)",
+                            lineHeight: 1.5,
+                            fontWeight: 400,
+                            color: "rgba(255, 255, 255, 0.92)",
+                            letterSpacing: "0.01em",
+                            wordWrap: "break-word",
                           }}
                         >
-                          práctica, clara y relevante.
-                        </em>
-                      </p>
+                          Aprende a dominar tu dinero con{" "}
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "5px",
+                              background: "linear-gradient(90deg, #7c3aed, #a78bfa)",
+                              color: "#fff",
+                              borderRadius: "6px",
+                              padding: "2px 10px 2px 8px",
+                              fontWeight: 600,
+                              fontSize: "0.95em",
+                              letterSpacing: "0.02em",
+                              whiteSpace: "nowrap",
+                              boxShadow: "0 2px 12px rgba(124, 58, 237, 0.35)",
+                            }}
+                          >
+                            gamificación e IA
+                          </span>{" "}
+                          de forma práctica, divertida y en{" "}
+                          <em
+                            style={{
+                              fontStyle: "normal",
+                              fontWeight: 600,
+                              color: "#c4b5fd",
+                            }}
+                          >
+                            minutos al día.
+                          </em>
+                        </p>
+                      )}
                     </div>
                   </div>
-                  <style
-                    dangerouslySetInnerHTML={{
-                      __html: `
-                    @keyframes border-shimmer {
-                      0% { background-position: 0% 50%; }
-                      50% { background-position: 100% 50%; }
-                      100% { background-position: 0% 50%; }
-                    }
-                    @media (max-width: 640px) {
-                      .hero-tagline-border-wrap { border-radius: 14px !important; }
-                    }
-                    @media (max-width: 450px) {
-                      .hero-tagline-border-wrap { 
-                        transform: translateX(12%); 
-                        margin-left: auto !important;
-                        margin-right: 0 !important;
-                      }
-                    }
-                  `,
-                    }}
-                  />
                 </div>
               </div>
 
+              {/* Persona-aware CTAs */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "clamp(12px, 2vw, 20px)",
-                  marginTop: "clamp(32px, 6vw, 56px)",
+                  marginTop: "clamp(8px, 2vw, 16px)",
                   flexWrap: "wrap",
                 }}
               >
-                <a
-                  href="/signup"
-                  className="landing-hero-cta-primary"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "clamp(14px, 2vw, 18px) clamp(28px, 4vw, 48px)",
-                    fontSize: "clamp(14px, 1.4vw, 17px)",
-                    fontWeight: 600,
-                    borderRadius: "9999px",
-                    background:
-                      "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
-                    backgroundSize: "200% auto",
-                    color: "#fff",
-                    textDecoration: "none",
-                    boxShadow:
-                      "0 4px 24px rgba(15, 98, 254, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
-                    transition: "all 0.3s ease",
-                    letterSpacing: "0.01em",
-                  }}
-                >
-                  Comenzar gratis
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </a>
-
-                <a
-                  href="https://calendly.com/diego-bizen"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "clamp(13px, 2vw, 17px) clamp(24px, 3.5vw, 40px)",
-                    fontSize: "clamp(14px, 1.4vw, 17px)",
-                    fontWeight: 500,
-                    borderRadius: "9999px",
-                    background: "rgba(255, 255, 255, 0.06)",
-                    border: "1.5px solid rgba(255, 255, 255, 0.2)",
-                    color: "rgba(255, 255, 255, 0.88)",
-                    textDecoration: "none",
-                    backdropFilter: "blur(10px)",
-                    transition: "all 0.3s ease",
-                    letterSpacing: "0.01em",
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.12)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-                  }}
-                >
-                  <Calendar size={18} />
-                  Agendar demo
-                </a>
+                {activePersona === "instituciones" ? (
+                  <>
+                    <a
+                      href="https://calendly.com/diego-bizen"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="landing-hero-cta-primary"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: "clamp(14px, 2vw, 18px) clamp(28px, 4vw, 48px)",
+                        fontSize: "clamp(14px, 1.4vw, 17px)",
+                        fontWeight: 600,
+                        borderRadius: "9999px",
+                        background: "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
+                        backgroundSize: "200% auto",
+                        color: "#fff",
+                        textDecoration: "none",
+                        boxShadow: "0 4px 24px rgba(15, 98, 254, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
+                        transition: "all 0.3s ease",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      <Calendar size={16} />
+                      Agendar demo institucional
+                    </a>
+                    <a
+                      href="#sobre-bizen"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: "clamp(13px, 2vw, 17px) clamp(24px, 3.5vw, 40px)",
+                        fontSize: "clamp(14px, 1.4vw, 17px)",
+                        fontWeight: 500,
+                        borderRadius: "9999px",
+                        background: "rgba(255, 255, 255, 0.06)",
+                        border: "1.5px solid rgba(255, 255, 255, 0.2)",
+                        color: "rgba(255, 255, 255, 0.88)",
+                        textDecoration: "none",
+                        backdropFilter: "blur(10px)",
+                        transition: "all 0.3s ease",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      Ver impacto
+                      <ChevronRight size={16} />
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <a
+                      href="/signup"
+                      className="landing-hero-cta-primary"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: "clamp(14px, 2vw, 18px) clamp(28px, 4vw, 48px)",
+                        fontSize: "clamp(14px, 1.4vw, 17px)",
+                        fontWeight: 600,
+                        borderRadius: "9999px",
+                        background: "linear-gradient(110deg, #7c3aed 0%, #a78bfa 50%, #7c3aed 100%)",
+                        backgroundSize: "200% auto",
+                        color: "#fff",
+                        textDecoration: "none",
+                        boxShadow: "0 4px 24px rgba(124, 58, 237, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
+                        transition: "all 0.3s ease",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      Comenzar gratis
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                    <a
+                      href="#perfiles"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: "clamp(13px, 2vw, 17px) clamp(24px, 3.5vw, 40px)",
+                        fontSize: "clamp(14px, 1.4vw, 17px)",
+                        fontWeight: 500,
+                        borderRadius: "9999px",
+                        background: "rgba(255, 255, 255, 0.06)",
+                        border: "1.5px solid rgba(255, 255, 255, 0.2)",
+                        color: "rgba(255, 255, 255, 0.88)",
+                        textDecoration: "none",
+                        backdropFilter: "blur(10px)",
+                        transition: "all 0.3s ease",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      <Play size={14} />
+                      Ver funciones
+                    </a>
+                  </>
+                )}
               </div>
+
             </div>
 
             <div
@@ -1406,6 +1553,40 @@ export default function WelcomePage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* ── Instituciones anchor + section label ── */}
+          <div id="instituciones" style={{ scrollMarginTop: "80px" }} />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "clamp(32px, 5vw, 60px) clamp(24px, 6vw, 80px) 0",
+              maxWidth: "1200px",
+              margin: "0 auto",
+              boxSizing: "border-box",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(0, 86, 231, 0.1)",
+                border: "1px solid rgba(0, 86, 231, 0.25)",
+                borderRadius: "9999px",
+                padding: "6px 16px",
+                fontSize: "clamp(12px, 1.1vw, 14px)",
+                fontWeight: 600,
+                color: "#1983FD",
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}
+            >
+              Para Instituciones
+            </span>
+            <div style={{ flex: 1, height: "1px", background: "rgba(0, 86, 231, 0.15)" }} />
           </div>
 
           {/* SOMOS BIZEN Section */}
@@ -4122,7 +4303,39 @@ function LandingContent({
       <style>{landingCSS}</style>
       {(sectionRange === "all" || sectionRange === "gradient") && (
         <>
-          {/* Somos BIZEN - 4 blue cards */}
+          {/* ── Estudiantes anchor + section label ── */}
+          <div id="estudiantes" style={{ scrollMarginTop: "80px" }} />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              padding: "clamp(32px, 5vw, 60px) clamp(24px, 6vw, 80px) 0",
+              maxWidth: "1200px",
+              margin: "0 auto",
+              boxSizing: "border-box",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(124, 58, 237, 0.1)",
+                border: "1px solid rgba(124, 58, 237, 0.25)",
+                borderRadius: "9999px",
+                padding: "6px 16px",
+                fontSize: "clamp(12px, 1.1vw, 14px)",
+                fontWeight: 600,
+                color: "#a78bfa",
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}
+            >
+              Para Estudiantes
+            </span>
+            <div style={{ flex: 1, height: "1px", background: "rgba(124, 58, 237, 0.15)" }} />
+          </div>
 
           {/* ── FEATURES SECTION: BIZEN Live, La Fragua, El Mercado ── */}
           <section
