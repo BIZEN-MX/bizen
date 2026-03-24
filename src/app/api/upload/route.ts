@@ -1,7 +1,4 @@
 import { NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import { existsSync } from 'fs'
-import path from 'path'
 import { createSupabaseServer } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 
@@ -35,45 +32,49 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Debes iniciar sesión para subir fotos de tus evidencias.' }, { status: 401 })
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
-    try {
-      if (!existsSync(uploadsDir)) {
-        await mkdir(uploadsDir, { recursive: true })
-      }
-    } catch (fsError: any) {
-      console.error('[Upload:FS] Failed to create uploads dir:', fsError.message)
-      return NextResponse.json({ error: 'Error del servidor (Sistema de archivos).' }, { status: 500 })
-    }
-
+    // --- NEW: Upload to Supabase Storage ---
     // Generate unique filename
     const timestamp = Date.now()
     const originalName = file.name
-    const ext = path.extname(originalName).toLowerCase()
+    const ext = (originalName.split('.').pop() || 'png').toLowerCase()
     
     // Validate extension
-    const allowed = ['.png', '.jpg', '.jpeg', '.webp']
+    const allowed = ['png', 'jpg', 'jpeg', 'webp']
     if (!allowed.includes(ext)) {
        return NextResponse.json({ error: 'Formato de imagen no permitido (Usa PNG, JPG o WEBP).' }, { status: 400 })
     }
 
-    const baseName = path.basename(originalName, ext).replace(/[^a-z0-9]/gi, '_').toLowerCase().slice(0, 30)
-    const fileName = `${baseName}_${timestamp}${ext}`
-    const filePath = path.join(uploadsDir, fileName)
+    const baseName = originalName.split('.')[0].replace(/[^a-z0-9]/gi, '_').toLowerCase().slice(0, 30)
+    const fileName = `${baseName}_${timestamp}.${ext}`
+    const storagePath = `evidences/${user.id}/${fileName}`
 
-    // Convert File to Buffer
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Save file
-    try {
-      console.log(`[Upload] Saving to: ${filePath} (${buffer.length} bytes)`);
-      await writeFile(filePath, buffer)
-      console.log('[Upload] File written successfuly');
-    } catch (saveError: any) {
-      console.error('[Upload:Save] Failed to write file:', saveError.message)
-      return NextResponse.json({ error: 'No se pudo guardar la imagen en el servidor.', details: saveError.message }, { status: 500 })
+    console.log(`[Upload] Uploading to Supabase Storage: ${storagePath} (${buffer.length} bytes)`);
+    
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('evidences') // Bucket name
+      .upload(storagePath, buffer, {
+        contentType: file.type,
+        upsert: true
+      })
+
+    if (uploadError) {
+      console.error('[Upload:Storage] Error:', uploadError)
+      return NextResponse.json({ 
+        error: 'No se pudo guardar la imagen en el almacenamiento en la nube.', 
+        details: uploadError.message,
+        hint: 'Asegúrate de que el bucket "evidences" exista en Supabase y sea público.'
+      }, { status: 500 })
     }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('evidences')
+      .getPublicUrl(storagePath)
+
+    console.log('[Upload] Storage upload successful:', publicUrl);
 
     // Save metadata to database
     try {
@@ -88,7 +89,7 @@ export async function POST(request: Request) {
           notes: notes || null,
           size: file.size,
           type: file.type,
-          path: `/uploads/${fileName}`
+          path: publicUrl
         }
       })
     } catch (prismaError: any) {
@@ -102,7 +103,7 @@ export async function POST(request: Request) {
       success: true,
       message: 'File uploaded successfully',
       fileName: fileName,
-      url: `/uploads/${fileName}`,
+      url: publicUrl,
     }, { status: 200 })
 
   } catch (error: any) {
