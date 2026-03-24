@@ -3,111 +3,174 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-import {
-  BookIcon,
-  FireIcon,
-  MessageSquareIcon,
-  LeafIcon,
-  StarIcon,
-  ShoppingCartIcon,
-  TrophyIcon,
-  ChevronRightIcon,
-  RocketIcon
-} from "@/components/CustomIcons"
 
-// ─── Tour Steps ───────────────────────────────────────────────────────────────
+// ─── Tour Step Definitions ────────────────────────────────────────────────────
 
-const BASE_TOUR_STEPS = [
+interface TourStep {
+  path: string
+  label: string
+  emoji: string
+  title: string
+  description: string
+  color: string
+  colorLight: string
+  colorDark: string
+  tip?: string
+  placement: "bottom-left" | "bottom-right" | "center"
+}
+
+const BASE_TOUR_STEPS: TourStep[] = [
   {
     path: "/courses",
-    label: "Temas y Lecciones",
+    label: "Lecciones",
+    emoji: "📚",
     title: "Tu camino de aprendizaje",
-    description: "Aquí encontrarás 30 temas de educación financiera diseñados paso a paso. Cada tema tiene lecciones interactivas, simuladores y quizzes.",
-    icon: BookIcon,
+    description: "Explora 30 temas de educación financiera diseñados paso a paso: presupuesto, inversión, deuda, emprendimiento y más. Cada tema tiene lecciones interactivas, quizzes y simuladores.",
+    tip: "Completa lecciones para ganar XP y subir de nivel.",
     color: "#0F62FE",
-    accent: "rgba(15,98,254,0.08)",
-    step: 1,
-    placement: "bottom-left"
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
+    placement: "bottom-left",
+  },
+  {
+    path: "/dashboard",
+    label: "Dashboard",
+    emoji: "🏠",
+    title: "Tu centro de control",
+    description: "El dashboard es tu punto de partida. Mira tu racha diaria, las misiones del día, tu progreso en XP y accede rápidamente a lo que necesitas.",
+    tip: "Completa la misión diaria para mantener tu racha activa.",
+    color: "#7c3aed",
+    colorLight: "rgba(124,58,237,0.1)",
+    colorDark: "#5b21b6",
+    placement: "bottom-left",
+  },
+  {
+    path: "/tools/budget",
+    label: "Smart Budget",
+    emoji: "💰",
+    title: "Presupuesto inteligente con IA",
+    description: "Registra ingresos y gastos, analiza tu flujo de dinero y pregúntale a Billy, tu asesor financiero con IA. También puede predecir tu flujo futuro con el modo 'Forecast'.",
+    tip: "Usa 'Ask Billy' para obtener consejos personalizados sobre tu presupuesto.",
+    color: "#059669",
+    colorLight: "rgba(5,150,105,0.1)",
+    colorDark: "#047857",
+    placement: "bottom-left",
+  },
+  {
+    path: "/tools/vision",
+    label: "Vision Board",
+    emoji: "🎯",
+    title: "Tablero de metas financieras",
+    description: "Visualiza tus metas de ahorro e inversión con el Vision Board. Define objetivos, ponles fecha y monitorea tu avance hacia la libertad financiera.",
+    tip: "Tener metas claras triplica la probabilidad de alcanzarlas.",
+    color: "#dc2626",
+    colorLight: "rgba(220,38,38,0.1)",
+    colorDark: "#b91c1c",
+    placement: "bottom-left",
   },
   {
     path: "/forum",
-    label: "Foro",
+    label: "Foro & Comunidad",
+    emoji: "💬",
     title: "Aprende con tu comunidad",
-    description: "Comparte tus evidencias del reto diario, haz preguntas rápidas y presenta proyectos. Tu grupo te retroalimenta en tiempo real.",
-    icon: MessageSquareIcon,
+    description: "Comparte tus avances, haz preguntas financieras y aprende de otros. El foro es un espacio donde la comunidad BIZEN crece junta. Publica evidencias de tus retos diarios y recibe retroalimentación.",
+    tip: "Participar en el foro te da puntos extra de XP.",
     color: "#8b5cf6",
-    accent: "rgba(139,92,246,0.08)",
-    step: 3,
-    placement: "bottom-left"
+    colorLight: "rgba(139,92,246,0.1)",
+    colorDark: "#7c3aed",
+    placement: "bottom-left",
   },
   {
     path: "/impacto-social",
     label: "Impacto Social",
+    emoji: "🌱",
     title: "Tu aprendizaje genera donaciones",
-    description: "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales.",
-    icon: LeafIcon,
+    description: "Cada lección que completas y cada reto que logras hace que BIZEN done a causas sociales. Tu educación financiera tiene un impacto real en el mundo.",
+    tip: "Mira cuánto ha donado la comunidad BIZEN en total.",
     color: "#10b981",
-    accent: "rgba(16,185,129,0.08)",
-    step: 4,
-    placement: "bottom-left"
+    colorLight: "rgba(16,185,129,0.1)",
+    colorDark: "#059669",
+    placement: "bottom-left",
   },
   {
     path: "/tienda",
-    label: "Tienda y Puntos",
-    title: "Tus recompensas y progreso",
-    description: "Monitorea tus BIZCOINS, nivel y rachas. Canjea tus puntos por artículos exclusivos, avatares y beneficios reales.",
-    icon: ShoppingCartIcon,
-    color: "#ec4899",
-    accent: "rgba(236,72,153,0.08)",
-    step: 5,
-    placement: "bottom-right"
+    label: "Tienda & Recompensas",
+    emoji: "🏅",
+    title: "Tus BIZCOINS y recompensas",
+    description: "Gana BIZCOINS por completar lecciones, retos y participar en la comunidad. Canjéalos por recompensas exclusivas, avatares premium y beneficios reales.",
+    tip: "Mantén una racha de 7 días para multiplicar tus BIZCOINS.",
+    color: "#f59e0b",
+    colorLight: "rgba(245,158,11,0.1)",
+    colorDark: "#d97706",
+    placement: "bottom-right",
+  },
+  {
+    path: "/leaderboard",
+    label: "Rankings",
+    emoji: "🏆",
+    title: "Compite y destaca",
+    description: "Mira dónde estás en el ranking semanal y mensual. Compite con tu clase, tu escuela o con toda la comunidad BIZEN. ¿Puedes llegar al TOP 10?",
+    tip: "Los rankings se actualizan cada semana. ¡El domingo es el gran reset!",
+    color: "#ef4444",
+    colorLight: "rgba(239,68,68,0.1)",
+    colorDark: "#dc2626",
+    placement: "bottom-right",
   },
   {
     path: "/profile",
     label: "Tu Perfil",
+    emoji: "✨",
     title: "Tu identidad en BIZEN",
-    description: "Personaliza tu avatar y bio. Sigue a otros usuarios y muestra al mundo tu crecimiento financiero.",
-    icon: TrophyIcon,
+    description: "Personaliza tu avatar, edita tu bio y muestra tus logros al mundo. Aquí también puedes ver a quién sigues, quién te sigue y tus certificaciones obtenidas.",
+    tip: "Un perfil completo genera más conexiones con la comunidad.",
     color: "#0F62FE",
-    accent: "rgba(15,98,254,0.08)",
-    step: 6,
-    placement: "bottom-right"
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
+    placement: "bottom-right",
   },
 ]
 
+// Paths for "skip" overlay (no dimming)
 const PLACEMENTS: Record<string, React.CSSProperties> = {
   "center": { bottom: "clamp(16px, 3vw, 32px)", left: "50%", transform: "translateX(-50%)" },
-  "bottom-left": { bottom: "clamp(16px, 3vw, 32px)", left: "clamp(16px, 3vw, 40px)" },
-  "bottom-right": { bottom: "clamp(16px, 3vw, 32px)", right: "clamp(16px, 3vw, 40px)" },
+  "bottom-left": { bottom: "clamp(76px, 10vw, 32px)", left: "clamp(16px, 3vw, 40px)" },
+  "bottom-right": { bottom: "clamp(76px, 10vw, 32px)", right: "clamp(16px, 3vw, 40px)" },
 }
 
 interface AppTourOverlayProps {
   onEnd: () => void
+  discoveryMode?: boolean
 }
 
-export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
+export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTourOverlayProps) {
   const router = useRouter()
   const pathname = usePathname()
   const { dbProfile } = useAuth()
-  const [stepIndex, setStepIndex] = useState(0)
+
+  // Find the step corresponding to the current path for discovery mode
+  const initialStepIndex = useMemo(() => {
+    if (!discoveryMode) return 0
+    const idx = BASE_TOUR_STEPS.findIndex(s => s.path === pathname)
+    return idx !== -1 ? idx : 0
+  }, [discoveryMode, pathname])
+
+  const [stepIndex, setStepIndex] = useState(initialStepIndex)
   const [navigating, setNavigating] = useState(false)
   const [visible, setVisible] = useState(false)
   const [cardVisible, setCardVisible] = useState(false)
+  const [closing, setClosing] = useState(false)
+  const [showBillyHighlight, setShowBillyHighlight] = useState(false)
 
   const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular')
 
-  const tourSteps = useMemo(() => {
-    return BASE_TOUR_STEPS.map(step => {
+  const tourSteps = useMemo<TourStep[]>(() => {
+    return BASE_TOUR_STEPS.filter(step => {
+      return true
+    }).map(step => {
       if (step.path === "/forum" && !isInstitutional) {
         return {
           ...step,
-          description: "Comparte tus evidencias del reto diario, haz preguntas rápidas y presenta proyectos. La comunidad te retroalimenta en tiempo real."
-        }
-      }
-      if (step.path === "/impacto-social" && isInstitutional) {
-        return {
-          ...step,
-          description: "Cada vez que completas lecciones y retos, BIZEN dona a causas sociales en nombre de tu escuela."
+          description: "Comparte tus avances, haz preguntas financieras y aprende de otros. El foro es un espacio colaborativo donde toda la comunidad BIZEN crece junta. Publica evidencias de tus retos y recibe retroalimentación en tiempo real.",
         }
       }
       return step
@@ -115,367 +178,487 @@ export default function AppTourOverlay({ onEnd }: AppTourOverlayProps) {
   }, [isInstitutional])
 
   const current = tourSteps[stepIndex]
+  const isLast = stepIndex === tourSteps.length - 1
+  const progressPct = ((stepIndex + 1) / tourSteps.length) * 100
 
-  // Navigate to first tour page on mount
+  // Navigate to first step on mount
   useEffect(() => {
     setVisible(true)
-    if (pathname !== tourSteps[0].path) {
+    if (!discoveryMode && pathname !== tourSteps[0].path) {
       router.push(tourSteps[0].path)
     }
-    const t = setTimeout(() => setCardVisible(true), 100)
-    return () => clearTimeout(t)
+    const t = setTimeout(() => setCardVisible(true), 120)
+
+    // Show Billy highlight after a few seconds if not already interacting
+    const billyTimer = setTimeout(() => {
+      setShowBillyHighlight(true)
+    }, 4000)
+
+    return () => {
+      clearTimeout(t)
+      clearTimeout(billyTimer)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Highlight sidebar item
+  // Highlight sidebar item for current step
   useEffect(() => {
     if (!visible || !current) return
     const allItems = document.querySelectorAll('[data-tour-id]')
     allItems.forEach(el => {
       (el as HTMLElement).style.boxShadow = ""
-        ; (el as HTMLElement).style.transform = ""
-        ; (el as HTMLElement).style.zIndex = ""
+      ;(el as HTMLElement).style.transform = ""
+      ;(el as HTMLElement).style.zIndex = ""
     })
     const target = document.querySelector(`[data-tour-id="${current.path}"]`) as HTMLElement
     if (target) {
-      target.style.boxShadow = `0 0 0 3px ${current.color}60, 0 8px 24px ${current.color}40`
-      target.style.transform = "scale(1.05) translateX(4px)"
+      target.style.boxShadow = `0 0 0 3px ${current.color}70, 0 8px 24px ${current.color}40`
+      target.style.transform = "scale(1.06) translateX(3px)"
       target.style.zIndex = "100002"
       target.scrollIntoView({ behavior: "smooth", block: "center" })
     }
     return () => {
       allItems.forEach(el => {
         (el as HTMLElement).style.boxShadow = ""
-          ; (el as HTMLElement).style.transform = ""
-          ; (el as HTMLElement).style.zIndex = ""
+        ;(el as HTMLElement).style.transform = ""
+        ;(el as HTMLElement).style.zIndex = ""
       })
     }
   }, [visible, current, pathname])
 
-  // Animate card back in when path matches
+  // Re-show card when path matches
   useEffect(() => {
-    if (pathname === current.path) {
+    if (pathname === current?.path) {
       setNavigating(false)
-      const t = setTimeout(() => setCardVisible(true), 150)
+      const t = setTimeout(() => setCardVisible(true), 180)
       return () => clearTimeout(t)
     }
-  }, [pathname, current.path])
+  }, [pathname, current?.path])
+
+  const endTour = useCallback(() => {
+    setClosing(true)
+    setCardVisible(false)
+    setTimeout(() => { setVisible(false); onEnd() }, 400)
+  }, [onEnd])
 
   const goToNext = useCallback(() => {
     if (navigating) return
-    const next = stepIndex + 1
-    if (next >= tourSteps.length) {
-      setCardVisible(false)
-      setTimeout(() => { setVisible(false); onEnd() }, 350)
-      return
-    }
+    // In discovery mode, "Next" just closes the current page onboarding
+    if (discoveryMode || isLast) { endTour(); return }
+    
     setCardVisible(false)
     setNavigating(true)
     setTimeout(() => {
+      const next = stepIndex + 1
       setStepIndex(next)
       router.push(tourSteps[next].path)
-    }, 300)
-  }, [navigating, stepIndex, router, onEnd])
+    }, 320)
+  }, [navigating, isLast, discoveryMode, stepIndex, router, tourSteps, endTour])
+
+  const goToPrev = useCallback(() => {
+    if (navigating || stepIndex === 0 || discoveryMode) return
+    setCardVisible(false)
+    setNavigating(true)
+    setTimeout(() => {
+      const prev = stepIndex - 1
+      setStepIndex(prev)
+      router.push(tourSteps[prev].path)
+    }, 320)
+  }, [navigating, stepIndex, discoveryMode, router, tourSteps])
 
   if (!visible) return null
-
-  const isLast = stepIndex === tourSteps.length - 1
-  const progressPct = ((stepIndex + 1) / tourSteps.length) * 100
 
   return (
     <>
       <style>{`
-        @keyframes tour-in {
-          from { opacity: 0; transform: translateY(28px) scale(0.96); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes tour-out {
-          from { opacity: 1; transform: translateY(0) scale(1); }
-          to   { opacity: 0; transform: translateY(20px) scale(0.96); }
-        }
-        @keyframes tour-bob {
-          0%,100% { transform: translateY(0) rotate(-3deg); }
-          50%     { transform: translateY(-8px) rotate(3deg); }
-        }
-        @keyframes tour-breathe {
-          0%, 100% { transform: scale(1); box-shadow: 0 4px 14px var(--tc-a); }
-          50%      { transform: scale(1.04); box-shadow: 0 10px 28px var(--tc-b); }
-        }
-        @keyframes tour-shimmer {
-          0%   { background-position: -200% center; }
-          100% { background-position:  200% center; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        @keyframes tc-in      { from { opacity:0; transform:translateY(32px) scale(0.95) } to { opacity:1; transform:translateY(0) scale(1) } }
+        @keyframes tc-out     { from { opacity:1; transform:translateY(0) scale(1) } to { opacity:0; transform:translateY(24px) scale(0.96) } }
+        @keyframes tc-float   { 0%,100% { transform:translateY(0) rotate(-1deg) } 50% { transform:translateY(-9px) rotate(1.5deg) } }
+        @keyframes tc-shimmer { 0% { background-position:-200% center } 100% { background-position:200% center } }
+        @keyframes tc-breathe { 0%,100% { box-shadow: 0 6px 20px var(--c-shadow-a) } 50% { box-shadow: 0 12px 36px var(--c-shadow-b), 0 0 32px var(--c-glow) } }
+        @keyframes tc-spin    { to { transform: rotate(360deg) } }
+        @keyframes tc-dot-pop { from { transform:scale(0.5); opacity:0 } to { transform:scale(1); opacity:1 } }
+        @keyframes tc-tip-in  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes tc-ring    { 0% { opacity:0.6; transform:scale(0.92) } 100% { opacity:0; transform:scale(1.55) } }
+        
+        @keyframes tc-billy-point {
+          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,99,235,0.7); }
+          70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37,99,235,0); }
+          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,99,235,0); }
         }
 
-        /* ── Card ── */
-        .tc {
-          position: fixed;
-          z-index: 100001;
+        /* ── Backdrop (non-blocking, just a faint tint) ── */
+        .tc-backdrop {
+          position: fixed; inset: 0; z-index: 100000;
+          pointer-events: none;
+          background: rgba(2,8,23,0.35);
+          backdrop-filter: blur(1px);
+          animation: tc-in 0.4s ease both;
+        }
+        .tc-backdrop.hiding { animation: tc-out 0.35s ease forwards; }
+
+        /* ── Skip pill floated top-right ── */
+        .tc-skip {
+          position: fixed; top: clamp(12px,3vw,20px); right: clamp(12px,3vw,20px);
+          z-index: 100003;
+          background: rgba(255,255,255,0.1);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,0.18);
+          border-radius: 999px; padding: 7px 18px;
+          font-size: clamp(11.5px,2.8vw,13px); font-weight: 600;
+          color: rgba(255,255,255,0.8); cursor: pointer;
+          font-family: 'Inter', sans-serif;
+          transition: all 0.2s; letter-spacing: 0.01em;
+        }
+        .tc-skip:hover { background: rgba(255,255,255,0.16); color: #fff; }
+
+        /* ── Main card ── */
+        .tc-card {
+          position: fixed; z-index: 100001;
           background: #ffffff;
           border-radius: clamp(18px, 3vw, 26px);
+          overflow: hidden; line-height: 1.5;
+          width: calc(100vw - clamp(20px,6vw,80px));
+          max-width: clamp(280px, 94vw, 520px);
           box-shadow:
             0 4px 6px rgba(0,0,0,0.04),
-            0 16px 48px rgba(0,0,0,0.18),
-            0 0 0 1px rgba(0,0,0,0.05);
-          overflow: hidden;
-          line-height: 1.5;
-          width: calc(100vw - clamp(20px, 6vw, 80px));
-          max-width: clamp(280px, 94vw, 520px);
-          word-wrap: break-word;
-          overflow-wrap: break-word;
+            0 20px 56px rgba(0,0,0,0.22),
+            0 0 0 1px rgba(0,0,0,0.055);
+          font-family: 'Inter', sans-serif;
+          word-wrap: break-word; overflow-wrap: break-word;
+          transition: bottom 0.3s ease;
         }
-        .tc.enter { animation: tour-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-        .tc.exit  { animation: tour-out 0.3s ease forwards; }
+        .tc-card.shown { animation: tc-in 0.44s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .tc-card.hiding { animation: tc-out 0.32s ease forwards; }
 
-        /* ── Progress bar at top ── */
-        .tc-progress {
-          height: 4px;
-          background: #f1f5f9;
-        }
-        .tc-progress-fill {
-          height: 100%;
-          background: linear-gradient(90deg, var(--tc-color) 0%, var(--tc-color-light) 100%);
+        /* ── Top accent bar ── */
+        .tc-accent-bar {
+          height: 5px;
+          background: linear-gradient(90deg, var(--tc-color) 0%, var(--tc-color-light,#93c5fd) 100%);
           background-size: 200% auto;
-          transition: width 0.55s cubic-bezier(0.34,1.56,0.64,1);
+          animation: tc-shimmer 2.8s linear infinite;
+          position: relative; overflow: hidden;
         }
 
-        /* ── Backdrop ── */
-        .tc-backdrop {
-          position: fixed; inset: 0;
-          z-index: 100000;
-          pointer-events: auto;
-          background: transparent;
-        }
-
-        /* ── Inner layout ── */
-        .tc-body {
-          padding: clamp(16px, 3.5vw, 28px) clamp(18px, 4vw, 32px);
-        }
-
-        /* ── Header row ── */
+        /* ── Header ── */
         .tc-header {
-          display: flex;
-          align-items: flex-start;
-          gap: clamp(10px, 2.5vw, 18px);
-          margin-bottom: clamp(10px, 2.5vw, 16px);
+          display: flex; align-items: flex-start; gap: clamp(10px,2.5vw,16px);
+          padding: clamp(14px,3.5vw,24px) clamp(16px,4vw,28px) 0;
         }
 
         /* ── Mascot ── */
-        .tc-mascot {
-          width: clamp(48px, 10vw, 68px);
-          height: clamp(48px, 10vw, 68px);
+        .tc-mascot-wrap {
           flex-shrink: 0;
-          animation: tour-bob 3.2s ease infinite;
-          filter: drop-shadow(0 4px 8px rgba(15,98,254,0.2));
+          width: clamp(46px,10vw,64px); height: clamp(46px,10vw,64px);
+          animation: tc-float 3.8s ease-in-out infinite;
+          filter: drop-shadow(0 4px 10px rgba(15,98,254,0.25));
         }
+        .tc-mascot-wrap img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* ── Badge ── */
+        /* ── Badge row ── */
         .tc-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: clamp(10px, 2vw, 12px);
-          font-weight: 500;
-          padding: 4px 12px;
-          border-radius: 999px;
-          letter-spacing: 0.04em;
-          margin-bottom: 6px;
+          display: inline-flex; align-items: center; gap: 7px;
+          padding: 4px 12px; border-radius: 999px;
+          font-size: clamp(10px,2vw,12px); font-weight: 700;
+          letter-spacing: 0.05em; margin-bottom: 5px;
         }
 
         /* ── Title ── */
         .tc-title {
-          margin: 0 0 2px;
-          font-size: clamp(15px, 3.5vw, 20px);
-          font-weight: 500;
-          color: #0f172a;
-          line-height: 1.25;
+          margin: 0; font-size: clamp(15px,3.5vw,20px); font-weight: 800;
+          color: #0f172a; line-height: 1.2; letter-spacing: -0.025em;
         }
+
+        /* ── Body ── */
+        .tc-body { padding: 0 clamp(16px,4vw,28px) clamp(16px,4vw,24px); }
 
         /* ── Description ── */
         .tc-desc {
-          margin: 0 0 clamp(14px, 3.5vw, 22px);
-          font-size: clamp(12px, 2.8vw, 14px);
-          color: #475569;
-          line-height: 1.65;
+          margin: clamp(10px,2.5vw,14px) 0 0;
+          font-size: clamp(12px,2.8vw,14px); color: #475569; line-height: 1.68;
         }
 
-        /* ── Footer row ── */
+        /* ── Tip box ── */
+        .tc-tip {
+          margin-top: clamp(10px,2.5vw,14px);
+          padding: 10px 14px; border-radius: 12px;
+          background: var(--tc-accent, rgba(15,98,254,0.06));
+          border-left: 3px solid var(--tc-color, #0F62FE);
+          display: flex; align-items: flex-start; gap: 8px;
+          animation: tc-tip-in 0.4s ease 0.2s both;
+        }
+        .tc-tip-emoji { font-size: 14px; line-height: 1.5; flex-shrink: 0; }
+        .tc-tip-text { font-size: clamp(11px,2.6vw,12.5px); color: #475569; font-weight: 500; line-height: 1.6; }
+
+        /* ── Billy Call-to-Action ── */
+        .tc-billy-cta {
+          margin-top: 16px;
+          padding: 12px;
+          border-radius: 16px;
+          background: linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(37,99,235,0.1) 100%);
+          border: 1px dashed rgba(37,99,235,0.3);
+          display: flex; align-items: center; gap: 12px;
+        }
+        .tc-billy-minipic {
+           width: 32px; height: 32px; flex-shrink: 0;
+           animation: tc-billy-point 2s infinite;
+           background: #2563eb;
+           border-radius: 50%;
+           display: flex; align-items: center; justifyContent: center;
+           padding: 4px;
+        }
+
+        /* ── Footer ── */
         .tc-footer {
-          display: flex;
-          align-items: center;
-          gap: 12px;
+          display: flex; align-items: center; gap: 10px;
+          padding: clamp(12px,3vw,18px) clamp(16px,4vw,28px) clamp(14px,3.5vw,22px);
+          border-top: 1px solid #f1f5f9;
         }
 
-        /* ── Dots ── */
-        .tc-dots {
-          display: flex;
-          gap: 5px;
-          align-items: center;
-          flex: 1;
-        }
+        /* ── Progress / step dots ── */
+        .tc-dots { display: flex; gap: 5px; align-items: center; flex: 1; }
         .tc-dot {
-          height: 5px;
-          border-radius: 3px;
-          transition: all 0.36s cubic-bezier(0.34,1.56,0.64,1);
+          height: 5px; border-radius: 3px;
+          transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
         }
 
         /* ── Buttons ── */
-        .tc-actions { display: flex; gap: 8px; }
+        .tc-actions { display: flex; gap: 7px; }
         .tc-btn {
-          border-radius: 11px;
-          font-weight: 500;
-          font-size: clamp(12px, 2.8vw, 14px);
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
+          border-radius: 12px; font-family: 'Inter', sans-serif;
+          font-size: clamp(12px,2.8vw,14px); font-weight: 700;
+          cursor: pointer; transition: all 0.2s;
           white-space: nowrap;
-          display: flex; align-items: center; justify-content: center;
+          display: flex; align-items: center; justify-content: center; gap: 5px;
         }
         .tc-btn-prev {
-          padding: clamp(9px, 2vw, 12px) clamp(14px, 3vw, 20px);
-          border: 1.5px solid #e5e7eb;
-          background: white; color: #6b7280;
+          padding: clamp(9px,2vw,12px) clamp(14px,3vw,18px);
+          border: 2px solid #e5e7eb; background: white; color: #6b7280;
         }
-        .tc-btn-prev:hover { border-color: #d1d5db; background: #f9fafb; }
+        .tc-btn-prev:hover { border-color: #cbd5e1; background: #f9fafb; color: #374151; }
         .tc-btn-next {
-          padding: clamp(9px, 2vw, 12px) clamp(18px, 4vw, 28px);
-          border: none; color: white;
-          animation: tour-breathe 2.6s ease-in-out infinite;
+          padding: clamp(9px,2vw,12px) clamp(16px,3.5vw,24px);
+          border: none; color: white; position: relative; overflow: hidden;
+          --c-shadow-a: rgba(15,98,254,0.3);
+          --c-shadow-b: rgba(15,98,254,0.55);
+          --c-glow: rgba(15,98,254,0.25);
+          animation: tc-breathe 2.8s ease-in-out infinite;
         }
-        .tc-btn-next:hover:not(:disabled) { filter: brightness(1.08); animation-play-state: paused; }
-        .tc-btn-next:disabled { opacity: 0.7; cursor: not-allowed; animation: none; }
+        .tc-btn-next::before {
+          content: ''; position:absolute; inset:0;
+          background: linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.15) 50%,transparent 70%);
+          background-size: 200%; animation: tc-shimmer 2.5s linear infinite;
+        }
+        .tc-btn-next:hover:not(:disabled) { filter: brightness(1.1); animation-play-state: paused; transform: translateY(-1px); }
+        .tc-btn-next:disabled { opacity: 0.65; cursor: not-allowed; animation: none; }
 
-        /* ─── MOBILE ──────────────────────────────────────────────────────── */
+        /* ── Progress bar (thin top inside footer) ── */
+        .tc-progress-wrap { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #f1f5f9; }
+        .tc-progress-fill {
+          height: 100%; background: var(--tc-color, #0F62FE);
+          transition: width 0.55s cubic-bezier(0.34,1.56,0.64,1);
+        }
+
+        /* ── Step count badge (top of card) ── */
+        .tc-step-count {
+          position: absolute; top: 16px; right: 16px;
+          background: rgba(15,98,254,0.08); border-radius: 999px;
+          padding: 3px 10px; font-size: 11px; font-weight: 700;
+          color: #0F62FE; font-family: 'Inter', sans-serif;
+        }
+
+        /* ── Billy Highlight Arrow ── */
+        .billy-highlight {
+          position: fixed;
+          bottom: 100px;
+          right: 32px;
+          z-index: 100003;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          pointer-events: none;
+        }
+        .billy-highlight-text {
+          background: #2563eb;
+          color: white;
+          padding: 8px 16px;
+          border-radius: 12px;
+          font-weight: 700;
+          font-size: 13px;
+          box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+          animation: tc-in 0.5s ease both;
+        }
+
+        /* ────────── MOBILE ────────── */
         @media (max-width: 767px) {
-          .tc {
-            /* On mobile: stick to bottom above the mobile nav bar */
-            left: 12px !important;
-            right: 12px !important;
-            bottom: calc(68px + env(safe-area-inset-bottom)) !important;
-            transform: none !important;
-            width: calc(100% - 24px) !important;
-            max-width: 100% !important;
-            border-radius: 20px !important;
+          .tc-card {
+            left: 10px !important; right: 10px !important;
+            bottom: calc(74px + env(safe-area-inset-bottom)) !important;
+            transform: none !important; width: calc(100% - 20px) !important;
+            max-width: 100% !important; border-radius: 20px !important;
           }
-          .tc-header {
-            flex-direction: row;
-            align-items: center;
-          }
-          .tc-mascot {
-            width: 48px;
-            height: 48px;
-          }
+          .tc-skip { top: 12px; right: 12px; }
+          .tc-mascot-wrap { width: 44px; height: 44px; }
           .tc-title { font-size: 15px; }
-          .tc-desc  { font-size: 12px; line-height: 1.55; margin-bottom: 14px; }
-          .tc-footer { gap: 8px; }
+          .tc-desc  { font-size: 12.5px; line-height: 1.6; }
+          .tc-tip   { padding: 9px 12px; }
+          .tc-footer { padding: 10px 16px 14px; gap: 8px; }
           .tc-btn   { font-size: 13px; }
           .tc-btn-prev { padding: 9px 14px; }
           .tc-btn-next { padding: 9px 18px; }
+          .billy-highlight { bottom: 160px; right: 20px; }
         }
-
         @media (max-width: 400px) {
-          .tc-body { padding: 14px 16px; }
-          .tc-mascot { width: 40px; height: 40px; }
+          .tc-header { padding: 12px 14px 0; gap: 9px; }
+          .tc-body { padding: 0 14px 14px; }
+          .tc-mascot-wrap { width: 38px; height: 38px; }
           .tc-badge { font-size: 9px; padding: 3px 9px; }
           .tc-title { font-size: 14px; }
         }
       `}</style>
 
-      {/* Blocking backdrop */}
-      <div className="tc-backdrop" />
+      {/* Dimming backdrop */}
+      <div className={`tc-backdrop${closing ? " hiding" : ""}`} />
 
+      {/* Skip pill */}
+      {!discoveryMode && (
+        <button className="tc-skip" onClick={endTour}>
+          Saltar tour ✕
+        </button>
+      )}
+
+      {/* Billy Highlight for Discovery */}
+      {discoveryMode && showBillyHighlight && (
+        <div className="billy-highlight">
+          <div className="billy-highlight-text">¡Pregúntame lo que quieras! 🤖</div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ animation: 'billyBounce 1.5s infinite'}}>
+            <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="#2563eb" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+      )}
+
+      {/* Tour card */}
       <div
-        className={`tc ${cardVisible ? "enter" : "exit"}`}
+        className={`tc-card ${cardVisible ? "shown" : "hiding"}`}
         style={{
-          ...PLACEMENTS[(current as any).placement || "center"],
+          ...PLACEMENTS[current.placement],
           "--tc-color": current.color,
-          "--tc-color-light": current.color + "99",
-          "--tc-a": current.color + "40",
-          "--tc-b": current.color + "70",
+          "--tc-color-light": current.colorLight.replace('0.1', '0.6'),
+          "--tc-accent": current.colorLight,
         } as React.CSSProperties}
       >
-        {/* Progress stripe */}
-        <div className="tc-progress">
-          <div className="tc-progress-fill" style={{ width: `${progressPct}%` }} />
+        {/* Thin top accent */}
+        <div className="tc-accent-bar" style={{ "--tc-color": current.color, "--tc-color-light": current.colorLight.replace('0.1', '0.6') } as React.CSSProperties} />
+
+        {/* Thin top progress */}
+        <div className="tc-progress-wrap">
+          <div className="tc-progress-fill" style={{ width: `${progressPct}%`, background: current.color }} />
         </div>
 
-        <div className="tc-body">
-          {/* Header: mascot + badge + title */}
-          <div className="tc-header">
-            <div className="tc-mascot">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/image copy 5.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-            </div>
+        {/* Step count chip (only in tour mode) */}
+        {!discoveryMode && (
+          <div className="tc-step-count" style={{ color: current.color, background: current.colorLight }}>
+            {stepIndex + 1} / {tourSteps.length}
+          </div>
+        )}
 
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="tc-badge" style={{ color: current.color, background: current.accent, border: `1px solid ${current.color}25` }}>
-                {current.icon && <current.icon size={14} color={current.color} />}
-                <span>{current.label}</span>
-                <span style={{ opacity: 0.55, fontSize: "0.9em" }}>{stepIndex + 1}/{tourSteps.length}</span>
-              </div>
-              <h3 className="tc-title">{current.title}</h3>
-            </div>
+        {/* Header */}
+        <div className="tc-header">
+          {/* Mascot */}
+          <div className="tc-mascot-wrap">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/image copy 5.png" alt="Billy" />
           </div>
 
-          {/* Description */}
+          <div style={{ flex: 1, minWidth: 0, paddingTop: 2, paddingRight: discoveryMode ? 0 : 48 }}>
+            {/* Badge */}
+            <div className="tc-badge" style={{ color: current.color, background: current.colorLight, border: `1.5px solid ${current.colorLight.replace('0.1)', '0.3)')}` }}>
+              <span style={{ fontSize: 13 }}>{current.emoji}</span>
+              <span>{current.label}</span>
+            </div>
+            <h3 className="tc-title">{current.title}</h3>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="tc-body">
           <p className="tc-desc">{current.description}</p>
 
-          {/* Footer: dots + navigation */}
-          <div className="tc-footer">
-            {/* Step dots */}
-            <div className="tc-dots">
-              {tourSteps.map((_, i) => (
-                <div
-                  key={i}
-                  className="tc-dot"
-                  style={{
-                    background: i === stepIndex ? current.color : i < stepIndex ? "#cbd5e1" : "#e9edf2",
-                    width: i === stepIndex ? 20 : 5,
-                  }}
-                />
-              ))}
+          {current.tip && (
+            <div className="tc-tip">
+              <span className="tc-tip-emoji">💡</span>
+              <span className="tc-tip-text">{current.tip}</span>
             </div>
+          )}
 
-            {/* Buttons */}
-            <div className="tc-actions">
-              {stepIndex > 0 && (
-                <button
-                  className="tc-btn tc-btn-prev"
-                  onClick={() => {
-                    setCardVisible(false)
-                    setNavigating(true)
-                    setTimeout(() => {
-                      setStepIndex(stepIndex - 1)
-                      router.push(tourSteps[stepIndex - 1].path)
-                    }, 280)
-                  }}
-                >
-                  Anterior
-                </button>
-              )}
-              <button
-                className="tc-btn tc-btn-next"
-                onClick={goToNext}
-                disabled={navigating}
+          {discoveryMode && (
+             <div className="tc-billy-cta">
+                <div className="tc-billy-minipic">
+                   <img src="/billy_chatbot.png" alt="Billy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <div style={{ fontSize: 12.5, color: '#1e3a8a', fontWeight: 600 }}>
+                   ¿Tienes dudas? ¡Billy está aquí para ayudarte!
+                </div>
+             </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="tc-footer">
+          {/* Dots (only in tour mode) */}
+          <div className="tc-dots">
+            {!discoveryMode && tourSteps.map((_, i) => (
+              <div
+                key={i}
+                className="tc-dot"
                 style={{
-                  background: `linear-gradient(135deg, ${current.color}, ${current.color}cc)`,
-                  boxShadow: `0 4px 14px ${current.color}40`,
-                  opacity: navigating ? 0.7 : 1,
-                  cursor: navigating ? "not-allowed" : "pointer"
+                  background: i === stepIndex
+                    ? current.color
+                    : i < stepIndex ? "#cbd5e1" : "#e9edf2",
+                  width: i === stepIndex ? 22 : 5,
                 }}
+              />
+            ))}
+          </div>
+
+          {/* Buttons */}
+          <div className="tc-actions" style={{ width: discoveryMode ? '100%' : 'auto' }}>
+            {stepIndex > 0 && !discoveryMode && (
+              <button
+                className="tc-btn tc-btn-prev"
+                onClick={goToPrev}
+                disabled={navigating}
               >
-                {navigating ? "..." : isLast ? (
-                  <>
-                    ¡Comenzar!
-                    <RocketIcon size={16} color="white" style={{ marginLeft: 6 }} />
-                  </>
-                ) : (
-                  <>
-                    Siguiente
-                    <ChevronRightIcon size={16} color="white" style={{ marginLeft: 2 }} />
-                  </>
-                )}
+                ← Anterior
               </button>
-            </div>
+            )}
+            <button
+              className="tc-btn tc-btn-next"
+              onClick={goToNext}
+              disabled={navigating}
+              style={{
+                width: discoveryMode ? '100%' : 'auto',
+                background: navigating
+                  ? "#94a3b8"
+                  : `linear-gradient(135deg, ${current.colorDark} 0%, ${current.color} 100%)`,
+                "--c-shadow-a": `${current.color}40`,
+                "--c-shadow-b": `${current.color}65`,
+                "--c-glow": `${current.color}30`,
+              } as React.CSSProperties}
+            >
+              {navigating ? (
+                <span style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "white", borderRadius: "50%", animation: "tc-spin 0.7s linear infinite", display: "inline-block" }} />
+              ) : discoveryMode ? (
+                <>¡Entendido! ✨</>
+              ) : isLast ? (
+                <>¡Empezar! 🚀</>
+              ) : (
+                <>Siguiente →</>
+              )}
+            </button>
           </div>
         </div>
       </div>

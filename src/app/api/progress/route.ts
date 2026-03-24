@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
         include: {
           lesson: {
             include: {
-              unit: {
+              section: {
                 include: {
                   course: true
                 }
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
         where: {
           userId: user.id,
           lesson: {
-            unit: {
+            section: {
               courseId
             }
           }
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
         include: {
           lesson: {
             include: {
-              unit: true
+              section: true
             }
           }
         }
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
         include: {
           lesson: {
             include: {
-              unit: {
+              section: {
                 include: {
                   course: true
                 }
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
       include: {
         lesson: {
           include: {
-            unit: {
+            section: {
               include: {
                 course: true
               }

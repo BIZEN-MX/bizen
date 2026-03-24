@@ -16,7 +16,7 @@
  * Both flows are portal-rendered at the root so they work on every page.
  */
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react"
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react"
 import { usePathname } from "next/navigation"
 import dynamic from "next/dynamic"
 import { useAuth } from "@/contexts/AuthContext"
@@ -40,10 +40,13 @@ const SKIP_PATHS = [
 interface OnboardingContextType {
     /** Start (or restart) the app navigation tour */
     startTour: () => void
+    /** Mark a specific page as seen */
+    markPageAsSeen: (path: string) => void
 }
 
 const OnboardingContext = createContext<OnboardingContextType>({
     startTour: () => { },
+    markPageAsSeen: () => { },
 })
 
 export function useOnboarding() {
@@ -55,17 +58,36 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     const pathname = usePathname()
 
     const [showSetup, setShowSetup] = useState(false) // profile setup modal
-    const [showTour, setShowTour] = useState(false) // navigation tour overlay
+    const [showTour, setShowTour] = useState(false) // page discovery tour
+    const [seenPaths, setSeenPaths] = useState<string[]>([])
+
+    // Load seen paths from localStorage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem("bizen_seen_onboarding_paths")
+        if (saved) {
+            try {
+                setSeenPaths(JSON.parse(saved))
+            } catch (e) {
+                console.error("Error parsing seen paths", e)
+            }
+        }
+    }, [])
+
+    const markPageAsSeen = useCallback((path: string) => {
+        setSeenPaths(prev => {
+            if (prev.includes(path)) return prev
+            const next = [...prev, path]
+            localStorage.setItem("bizen_seen_onboarding_paths", JSON.stringify(next))
+            return next
+        })
+    }, [])
 
     // Determine whether to show profile setup on first login
     useEffect(() => {
-        if (loading) return
-        if (!user) return
-        if (!pathname) return
+        if (loading || !user || !pathname) return
 
         // Skip on excluded paths
         if (SKIP_PATHS.some(p => pathname === p || pathname.startsWith(p + "/"))) return
-        // Skip on diagnostic pages
         if (pathname.startsWith("/diagnostic")) return
 
         const isComplete = user.user_metadata?.onboarding_complete === true
@@ -73,33 +95,52 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
             const timer = setTimeout(() => setShowSetup(true), 700)
             return () => clearTimeout(timer)
         }
-        // Only re-run when user or pathname change, not on showTour toggle
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user, loading, pathname])
+    }, [user, loading, pathname, showTour])
 
-    // Called when the profile setup modal finishes
+    // Discovery mode: trigger tour if we land on a "tourable" page for the first time
+    useEffect(() => {
+        if (loading || !user || !pathname || showSetup || showTour) return
+        
+        // Don't trigger if profile onboarding isn't done yet
+        if (user.user_metadata?.onboarding_complete !== true) return
+
+        // Skip excludes
+        if (SKIP_PATHS.some(p => pathname === p || pathname.startsWith(p + "/"))) return
+
+        // Check if this path should have an onboarding
+        const tourablePaths = ["/courses", "/dashboard", "/tools/budget", "/tools/vision", "/forum", "/impacto-social", "/tienda", "/leaderboard", "/profile"]
+        
+        if (tourablePaths.includes(pathname) && !seenPaths.includes(pathname)) {
+            // Wait a bit for page to settle
+            const timer = setTimeout(() => {
+                setShowTour(true)
+            }, 1200)
+            return () => clearTimeout(timer)
+        }
+    }, [pathname, seenPaths, loading, user, showSetup, showTour])
+
     const handleSetupComplete = useCallback(() => {
         setShowSetup(false)
-        // Small gap so the modal fully exits before tour slides in
-        setTimeout(() => setShowTour(true), 400)
-    }, [])
+        // Mark the current page as seen so we don't immediately show the discovery overlay on the same page they just landed on
+        if (pathname) markPageAsSeen(pathname)
+        // User is now free to explore! Discovery mode will trigger as they visit other pages.
+    }, [pathname, markPageAsSeen])
 
-    // Called when the tour finishes/skips
     const handleTourEnd = useCallback(() => {
         setShowTour(false)
-    }, [])
+        if (pathname) markPageAsSeen(pathname)
+    }, [pathname, markPageAsSeen])
 
-    // Public API — trigger tour from anywhere (e.g. profile page button)
     const startTour = useCallback(() => {
         setShowSetup(false)
         setShowTour(true)
     }, [])
 
     return (
-        <OnboardingContext.Provider value={{ startTour }}>
+        <OnboardingContext.Provider value={{ startTour, markPageAsSeen }}>
             {children}
             {showSetup && <OnboardingModal onComplete={handleSetupComplete} />}
-            {showTour && <AppTourOverlay onEnd={handleTourEnd} />}
+            {showTour && <AppTourOverlay onEnd={handleTourEnd} discoveryMode={true} />}
         </OnboardingContext.Provider>
     )
 }

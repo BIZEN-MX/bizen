@@ -1026,6 +1026,8 @@ model AuthUser {
   readiness_events            readiness_events[]
   sim_runs                    sim_runs[]
   simulator_portfolios        simulator_portfolios[]
+  user_budgets                UserBudget[]           @relation("UserBudgets")
+  vision_canvases             VisionCanvas[]         @relation("VisionCanvases")
   achievements                UserAchievement[]
 
   @@index([instance_id])
@@ -1819,4 +1821,32 @@ enum one_time_token_type {
   phone_change_token
 
   @@schema("auth")
+}
+
+model UserBudget {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id") @db.Uuid
+  name      String
+  data      Json
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user      AuthUser @relation("UserBudgets", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_budgets")
+  @@schema("public")
+}
+
+model VisionCanvas {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id") @db.Uuid
+  name      String
+  cards     Json
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user      AuthUser @relation("VisionCanvases", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("vision_canvases")
+  @@schema("public")
 }
