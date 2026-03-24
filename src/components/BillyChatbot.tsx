@@ -132,15 +132,6 @@ export default function BillyChatbot() {
 
       setMessages((p) => [...p, { role: "assistant", content: response, timestamp: new Date(), suggestions }])
 
-      // Show XP reward if earned
-      if (data.xpReward > 0) {
-        setMessages((p) => [...p, {
-          role: "assistant",
-          content: `🌟 **${data.rewardMessage}**`,
-          timestamp: new Date()
-        }])
-      }
-
       if (!isOpen) setHasUnread(true)
     } catch {
       setMessages((p) => [...p, { role: "assistant", content: "¡Ups! Parece que perdí la conexión. ¿Intentamos de nuevo?", timestamp: new Date() }])

@@ -1,4 +1,4 @@
-import { LessonStep } from "@/types/lessonTypes"
+import { LessonStep, StepType } from "@/types/lessonTypes"
 
 export interface AnswerResult {
   stepId: string
@@ -64,14 +64,17 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
       let newIncorrectSteps = state.incorrectSteps
       let newTotalMistakes = state.totalMistakes
 
+      const assessmentTypes: StepType[] = ["mcq", "multi_select", "true_false", "order", "match", "fill_blanks", "image_choice", "blitz_challenge", "mindset_translator", "influence_detective", "swipe_sorter", "impulse_meter", "mindset_translator", "influence_detective", "swipe_sorter", "narrative_check", "swipe_sorter"]
+      const isActuallyAssessment = step?.isAssessment ?? (step?.stepType ? assessmentTypes.includes(step.stepType) : false)
+
       if (isReviewStep && isCorrect && sourceStepId) {
         newIncorrectSteps = state.incorrectSteps.filter((id) => id !== sourceStepId)
-      } else if (!isReviewStep && step?.isAssessment && !isCorrect) {
-        // Record mistake if this step wasn't already marked incorrect (avoid double counting retries if allowed)
-        if (!state.incorrectSteps.includes(stepId) && (step.recordIncorrect ?? true)) {
+      } else if (!isReviewStep && isActuallyAssessment && !isCorrect) {
+        // Record mistake if this step wasn't already marked incorrect
+        if (!state.incorrectSteps.includes(stepId) && (step?.recordIncorrect ?? true)) {
           newTotalMistakes = state.totalMistakes + 1
         }
-        if (step.recordIncorrect ?? true) {
+        if (step?.recordIncorrect ?? true) {
           newIncorrectSteps = [...new Set([...state.incorrectSteps, stepId])]
         }
       }

@@ -89,15 +89,20 @@ export function ImpulseMeterStep({ step, onAnswered, actionTrigger, isContinueEn
         overflow: "hidden",
         border: "4px solid #e2e8f0"
       }}>
-         {/* Temperature Fill */}
+         {/* Temperature Fill (Traffic Light Logic) */}
          <motion.div 
             style={{
                 position: "absolute",
                 bottom: 0,
                 width: "100%",
-                background: "linear-gradient(to top, #ef4444, #f87171)",
+                background: progress < 40 
+                    ? "linear-gradient(to top, #ef4444, #f87171)" 
+                    : progress < 75 
+                        ? "linear-gradient(to top, #f59e0b, #fbbf24)"
+                        : "linear-gradient(to top, #10b981, #34d399)",
                 height: `${progress}%`,
-                zIndex: 1
+                zIndex: 1,
+                transition: "background 0.3s ease"
             }}
          />
          

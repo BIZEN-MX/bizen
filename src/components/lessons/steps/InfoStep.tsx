@@ -6,7 +6,7 @@ import { ArrowRight, Mic } from "lucide-react"
 import { InfoStepFields } from "@/types/lessonTypes"
 import { playFlipSound, initAudioContext } from "../lessonSounds"
 import { motion, AnimatePresence } from "framer-motion"
-import { SmartText } from "../SmartText"
+import { SmartText, InlineSegments, parseInlineSegments } from "../SmartText"
 import { haptic } from "@/utils/hapticFeedback"
 
 interface InfoStepProps {
@@ -284,7 +284,7 @@ export function InfoStep({
                       backgroundClip: "text",
                     }}
                   >
-                    {step.title}
+                    <InlineSegments segments={parseInlineSegments(step.title)} />
                   </motion.h2>
                 )}
 

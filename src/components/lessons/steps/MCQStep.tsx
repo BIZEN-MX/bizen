@@ -7,6 +7,7 @@ import { ExerciseInstruction } from "./ExerciseInstruction"
 import { motion, AnimatePresence } from "framer-motion"
 import { CheckCircle2, XCircle } from "lucide-react"
 import { StepScenarioCard } from "../StepScenarioCard"
+import { InlineSegments, parseInlineSegments } from "../SmartText"
 
 interface MCQStepProps {
   step: McqStepFields & { id: string; title?: string; description?: string; fullScreen?: boolean; reviewSourceStepId?: string; imageUrl?: string; imageAlign?: "left" | "right" }
@@ -93,7 +94,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
             lineHeight: 1.3,
           }}
         >
-          {step.question}
+          <InlineSegments segments={parseInlineSegments(step.question)} />
         </motion.h3>
 
         {step.description && <StepScenarioCard text={step.description} />}

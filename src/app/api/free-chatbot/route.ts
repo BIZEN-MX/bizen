@@ -67,9 +67,9 @@ export async function POST(request: NextRequest) {
 ESTÁS HABLANDO CON: ${userName}. Dirígete a esta persona por su nombre de forma natural pero NO LO SALUDES EN CADA MENSAJE, ve directo al grano.${userStats}${contextDescription}
 
 PERSONALIDAD:
-- Eres relajado, entusiasta y muy "tech-savvy". 
-- Eres Gen-Z/Gen-Alpha de México: usa MUY NATURALMENTE slang actual de jóvenes (ej. "neta", "lit", "wey", "vibes", "tipo", "de una", "súper", "red flag"). 
-- EVITA POR COMPLETO el slang de generaciones pasadas (como "lana", "feria", "chamba", "papeleo", "chido").
+- Eres relajado, profesional, entusiasta y educado.
+- Tienes un tono moderno y amigable pero SIN usar modismos excesivos, jerga informal o palabras altisonantes.
+- ESTÁ ESTRICTAMENTE PROHIBIDO usar palabras como "wey", "neta", o cualquier tipo de lenguaje vulgar o excesivamente informal.
 - NO USES EMOJIS: Tienes prohibido usar emojis en tus respuestas. Mantén el texto limpio.
 
 REGLAS DE INTERACCIÓN Y FORMATO:
@@ -101,70 +101,9 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
     dailyAIRequests++
     console.log(`[Billy:Gemini] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
 
-    // Gamified AI Tutoring: Reward XP for educational interactions
-    let xpReward = 0
-    let rewardMessage = ""
-
-    try {
-      const supabase = await (await import("@/lib/supabase/server")).createSupabaseServer()
-      const { data: { user } } = await (supabase as any).auth.getUser()
-      const { prisma } = await import("@/lib/prisma")
-
-      if (user) {
-        const { detectEducationalIntent } = await import("@/lib/ai/tutoring")
-        const isEducational = await detectEducationalIntent(message)
-
-        if (isEducational) {
-          const profile = await prisma.profile.findUnique({
-            where: { userId: user.id },
-            select: { xp: true, settings: true }
-          })
-
-          if (profile) {
-            // Only students and particulares can earn XP
-            const nonEarningRoles = ['admin', 'school_admin', 'teacher'];
-            if (nonEarningRoles.includes(profile.role)) {
-              console.log(`[Billy:Gamification] Skipping reward for non-earning role: ${profile.role}`);
-              return;
-            }
-
-            const settings = (profile.settings as any) || {}
-            const today = new Date().toDateString()
-            const lastBillyDate = settings.lastBillyDate
-            let billyXpToday = lastBillyDate === today ? (settings.billyXpToday || 0) : 0
-
-            if (billyXpToday < 25) { // Daily limit of 25 XP from Billy
-              xpReward = 5
-              billyXpToday += xpReward
-
-              await prisma.profile.update({
-                where: { userId: user.id },
-                data: {
-                  xp: { increment: xpReward },
-                  settings: {
-                    ...settings,
-                    lastBillyDate: today,
-                    billyXpToday
-                  }
-                }
-              })
-              rewardMessage = `¡Ganaste +${xpReward} XP por aprender con Billy!`
-              console.log(`[Billy:Gamification] Rewarded ${xpReward} XP to user ${user.id}`)
-            } else {
-              console.log(`[Billy:Gamification] Daily limit reached for user ${user.id}`)
-            }
-          }
-        }
-      }
-    } catch (gamificationError) {
-      console.error("⚠️ Gamification reward failed:", gamificationError)
-    }
-
     return NextResponse.json({
       response: responseText,
-      source: "google:gemini-2.5-flash-lite",
-      xpReward,
-      rewardMessage
+      source: "google:gemini-2.5-flash-lite"
     })
 
   } catch (error: any) {

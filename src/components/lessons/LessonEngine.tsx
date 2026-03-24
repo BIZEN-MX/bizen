@@ -8,7 +8,7 @@ import { StickyFooterButton, StickyFooter } from "./StickyFooter"
 import { LessonExitModal } from "./LessonExitModal"
 import { LessonProgressHeader } from "./LessonProgressHeader"
 import { CONTENT_MAX_WIDTH, CONTENT_PADDING_X, CONTENT_PADDING_Y } from "./layoutConstants"
-import { Zap, Book, ChevronRight, X } from "lucide-react"
+import { Zap, Book, ChevronRight, X, AlertCircle } from "lucide-react"
 import {
   InfoStep,
   MCQStep,
@@ -97,6 +97,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const hasShownRecallHint = useRef(false)
   const [showBlitzSplash, setShowBlitzSplash] = useState(false)
   const blitzSplashShownFor = useRef<string | null>(null)
+  
+  const [showMissionStartSplash, setShowMissionStartSplash] = useState(!isRepeat)
+  const [showStreakSplash, setShowStreakSplash] = useState(false)
+  const hasShownStreakSplash = useRef(false)
 
   // ── Billy Insight Splash ─────────────────────────────────────────────────
   const [showBillyInsightSplash, setShowBillyInsightSplash] = useState(false)
@@ -107,6 +111,14 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   
   // ── Lesson Glossary ──────────────────────────────────────────────────────
   const [isGlossaryOpen, setIsGlossaryOpen] = useState(false)
+  const [showReviewSplash, setShowReviewSplash] = useState(false)
+  
+  // Trigger Review Splash when review steps are built
+  useEffect(() => {
+    if (state.hasBuiltReviewSteps && state.currentStepIndex === state.originalSteps.length - (state.originalSteps.some(s => s.stepType === 'summary') ? 1 : 0)) {
+        setShowReviewSplash(true)
+    }
+  }, [state.hasBuiltReviewSteps])
   const [lessonGlossary, setLessonGlossary] = useState<{ word: string, definition: string }[]>([])
   const [interactiveTermsByOrder, setInteractiveTermsByOrder] = useState<Map<number, { word: string, definition: string }[]>>(new Map())
 
@@ -147,15 +159,12 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       const fullText = (step.title + " " + step.body + " " + (step.aiInsight || "") + " " + (step.clue || "")).toLowerCase()
       
       finalGlossary.forEach(term => {
-        if (seenWords.has(term.word.toLowerCase())) return
-        
         // Use a simple word boundary check
         const escaped = term.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         const re = new RegExp(`\\b${escaped}\\b`, 'i')
         
         if (re.test(fullText)) {
           stepWords.push(term)
-          seenWords.add(term.word.toLowerCase())
         }
       })
       
@@ -434,14 +443,31 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     .filter((s) => s.stepType === "mcq" && (s as { isAssessment?: boolean }).isAssessment)
     .map((s) => s.id)
   let streak = 0
+  let currentCorrectChain = 0
   for (const stepId of originalQuizStepIds) {
     const result = state.answersByStepId[stepId]
-    if (result?.isCorrect) streak++
-    else break
+    if (result?.isCorrect) {
+        streak++
+        currentCorrectChain++
+    } else if (result) {
+        currentCorrectChain = 0
+        break
+    } else {
+        break
+    }
   }
+
+  // Trigger Streak Splash
+  useEffect(() => {
+    if (streak >= 5 && !hasShownStreakSplash.current) {
+        hasShownStreakSplash.current = true
+        setShowStreakSplash(true)
+    }
+  }, [streak])
+
   const mistakeCount = state.totalMistakes
   const stars: 0 | 1 | 2 | 3 =
-    mistakeCount <= 2 ? 3 : mistakeCount <= 5 ? 2 : 1
+    mistakeCount === 0 ? 3 : mistakeCount <= 2 ? 2 : 1
 
   useEffect(() => {
     onProgressChange?.({
@@ -580,7 +606,11 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         content = <ImageChoiceStep {...stepProps} />
         break;
       case "summary": {
-        const assessmentSteps = state.originalSteps.filter(s => (s as any).isAssessment)
+        const assessmentTypes = ["mcq", "multi_select", "true_false", "order", "match", "fill_blanks", "image_choice", "blitz_challenge", "mindset_translator", "influence_detective", "swipe_sorter", "impulse_meter", "mindset_translator", "influence_detective", "swipe_sorter", "narrative_check", "swipe_sorter"]
+        const assessmentSteps = state.originalSteps.filter(s => {
+          const step = s as any
+          return step.isAssessment ?? assessmentTypes.includes(step.stepType)
+        })
         const accuracy = assessmentSteps.length > 0 
           ? Math.max(0, Math.round(((assessmentSteps.length - state.totalMistakes) / assessmentSteps.length) * 100))
           : 100
@@ -889,6 +919,301 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               style={{ height: "100%", background: "linear-gradient(90deg, #3b82f6, #60a5fa)", boxShadow: "0 0 8px #3b82f6" }}
             />
           </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
+  // ── Review Zone Splash Overlay ─────────────────────────────────────────
+  const ReviewSplashOverlay = () => (
+    <AnimatePresence>
+      {showReviewSplash && (
+        <motion.div
+          key="review-splash"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.5 } }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 11000,
+            background: "rgba(10, 20, 40, 0.96)",
+            backdropFilter: "blur(16px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+          }}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0, rotate: -3 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15 }}
+            style={{
+              textAlign: "center",
+              maxWidth: 420,
+              width: "100%"
+            }}
+          >
+            <div style={{ position: "relative", width: 140, height: 140, margin: "0 auto 32px" }}>
+              <motion.div
+                animate={{ scale: [1, 1.05, 1], rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                style={{ position: "relative", width: "100%", height: "100%" }}
+              >
+                <img src="/billy_chatbot.png" alt="Billy Thinking" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+              </motion.div>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.3, type: "spring" }}
+                style={{
+                  position: "absolute",
+                  top: -10,
+                  right: -10,
+                  background: "#EF4444",
+                  color: "white",
+                  width: 44,
+                  height: 44,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 4px 12px rgba(239, 68, 68, 0.4)",
+                  border: "3px solid white"
+                }}
+              >
+                <AlertCircle size={24} strokeWidth={3} />
+              </motion.div>
+            </div>
+
+            <h2 style={{ fontSize: 32, fontWeight: 800, color: "#fff", marginBottom: 12, letterSpacing: "-0.02em" }}>
+              Zona de Repaso
+            </h2>
+            <p style={{ fontSize: 18, color: "rgba(255,255,255,0.75)", lineHeight: 1.6, marginBottom: 40, fontWeight: 500 }}>
+              ¡Momento de maestría! Vamos a perfeccionar esos conceptos antes de terminar la misión.
+            </p>
+
+            <button
+              onClick={() => {
+                initAudioContext()
+                playFlipSound()
+                haptic.medium()
+                setShowReviewSplash(false)
+              }}
+              style={{
+                width: "100%",
+                padding: "20px",
+                background: "linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)",
+                color: "white",
+                borderRadius: 20,
+                border: "none",
+                fontWeight: 800,
+                fontSize: 18,
+                cursor: "pointer",
+                boxShadow: "0 10px 25px -5px rgba(239, 68, 68, 0.5)",
+                transition: "transform 0.2s ease"
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            >
+              ¡ESTOY LISTO!
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
+  // ── Mission Start Splash Overlay ───────────────────────────────────────
+  const MissionStartSplashOverlay = () => (
+    <AnimatePresence>
+      {showMissionStartSplash && (
+        <motion.div
+          key="mission-start-splash"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.1, transition: { duration: 0.5 } }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 12000,
+            background: "linear-gradient(135deg, #0F62FE 0%, #1E40AF 100%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+            overflow: "hidden"
+          }}
+        >
+            <div style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)`,
+                backgroundSize: '32px 32px',
+                zIndex: 0
+            }} />
+            
+            <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 120, damping: 20 }}
+                style={{
+                    textAlign: "center",
+                    maxWidth: 460,
+                    width: "100%",
+                    position: "relative",
+                    zIndex: 1
+                }}
+            >
+                <motion.div
+                    animate={{ y: [0, -12, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ width: 180, height: 180, margin: "0 auto 24px" }}
+                >
+                    <img src="/thumbs up.png" alt="Billy Start" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                </motion.div>
+
+                <h1 style={{ 
+                    fontSize: "clamp(32px, 6vw, 44px)", 
+                    fontWeight: 900, 
+                    color: "#fff", 
+                    marginBottom: 16, 
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1
+                }}>
+                    ¡INICIO DE MISIÓN!
+                </h1>
+                
+                <p style={{ 
+                    fontSize: 18, 
+                    color: "rgba(255,255,255,0.85)", 
+                    marginBottom: 40,
+                    fontWeight: 500
+                }}>
+                    Billy te guiará en este camino.<br/>¿Estamos listos para aprender?
+                </p>
+
+                <button
+                    onClick={() => {
+                        initAudioContext()
+                        playFlipSound()
+                        haptic.success()
+                        setShowMissionStartSplash(false)
+                    }}
+                    style={{
+                        padding: "20px 48px",
+                        background: "#fff",
+                        color: "#0F62FE",
+                        borderRadius: 20,
+                        border: "none",
+                        fontWeight: 800,
+                        fontSize: 18,
+                        cursor: "pointer",
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+                        transition: "all 0.2s ease",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 12
+                    }}
+                >
+                    ¡VAMOS POR ELLO!
+                    <ChevronRight size={24} strokeWidth={3} />
+                </button>
+            </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
+  // ── Streak Milestone Splash Overlay ──────────────────────────────────
+  const StreakMilestoneSplashOverlay = () => (
+    <AnimatePresence>
+      {showStreakSplash && (
+        <motion.div
+            key="streak-splash"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.3 } }}
+            style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 13000,
+                background: "rgba(10, 20, 40, 0.96)",
+                backdropFilter: "blur(12px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 24,
+            }}
+        >
+            <motion.div
+                initial={{ scale: 0.5, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                transition={{ type: "spring", stiffness: 150, damping: 20 }}
+                style={{ textAlign: "center", maxWidth: 400, width: "100%" }}
+            >
+                <div style={{ position: "relative", marginBottom: 32, display: "flex", justifyContent: "center" }}>
+                    <motion.div
+                        animate={{ scale: [1, 1.4, 1], opacity: [0.4, 0.7, 0.4] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        style={{
+                            position: "absolute",
+                            width: 140,
+                            height: 140,
+                            background: "radial-gradient(circle, #F59E0B 0%, transparent 70%)",
+                            zIndex: 0
+                        }}
+                    />
+                    <motion.div
+                        animate={{ rotate: [0, 8, -8, 0] }}
+                        transition={{ duration: 0.6, repeat: 3 }}
+                        style={{ position: "relative", zIndex: 1 }}
+                    >
+                        <Zap size={90} fill="#FFD700" color="#FFD700" style={{ filter: "drop-shadow(0 0 20px #FFD700)" }} />
+                    </motion.div>
+                </div>
+
+                <div style={{
+                    fontSize: 52,
+                    fontWeight: 900,
+                    color: "#fbbf24",
+                    lineHeight: 1,
+                    letterSpacing: "-0.04em",
+                    textTransform: "uppercase"
+                }}>
+                    {streak} en racha
+                </div>
+
+                <h2 style={{ fontSize: 24, fontWeight: 800, color: "#fff", marginTop: 12, marginBottom: 8 }}>
+                    ¡ESTÁS IMPARABLE!
+                </h2>
+                <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", marginBottom: 36, fontWeight: 500 }}>
+                    Nada te detiene hoy. Sigue así para una puntuación perfecta.
+                </p>
+
+                <button
+                    onClick={() => {
+                        playFlipSound()
+                        haptic.medium()
+                        setShowStreakSplash(false)
+                    }}
+                    style={{
+                        width: "100%",
+                        padding: "18px",
+                        background: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)",
+                        color: "#451a03",
+                        borderRadius: 16,
+                        border: "none",
+                        fontWeight: 800,
+                        fontSize: 16,
+                        cursor: "pointer",
+                        boxShadow: "0 10px 20px -5px rgba(245,158,11,0.4)"
+                    }}
+                >
+                    ¡CONTINUAR!
+                </button>
+            </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -1465,6 +1790,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       </AnimatePresence>
       <BlitzSplashOverlay />
       <BillyInsightSplashOverlay />
+      <ReviewSplashOverlay />
+      <MissionStartSplashOverlay />
+      <StreakMilestoneSplashOverlay />
       </GlossaryProvider>
   )
 }

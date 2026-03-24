@@ -3,6 +3,7 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { BookOpen, Lightbulb, User, AlertCircle } from "lucide-react"
+import { InlineSegments, parseInlineSegments } from "./SmartText"
 
 interface StepScenarioCardProps {
   text: string
@@ -122,7 +123,7 @@ export function StepScenarioCard({ text, variant = "case" }: StepScenarioCardPro
         margin: 0,
         position: "relative",
       }}>
-        {text}
+        <InlineSegments segments={parseInlineSegments(text)} />
       </p>
     </motion.div>
   )

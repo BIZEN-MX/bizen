@@ -32,12 +32,12 @@ interface SmartTextProps {
     align?: "left" | "center"
 }
 
-type Segment =
+export type Segment =
   | { type: "bold" | "money" | "quote" | "plain"; content: string }
   | { type: "glossary"; word: string; definition: string }
 
 /** Parses inline tokens: **bold**, [[word|def]], $money/%, "quoted", plain text */
-function parseInlineSegments(line: string): Segment[] {
+export function parseInlineSegments(line: string): Segment[] {
     const segments: Segment[] = []
     // Token regex: [[word|def]], **bold**, $number, number%, "quoted", rest
     const tokenRe = /\[\[([^\]|]+)\|([^\]]+)\]\]|\*\*([^*]+)\*\*|\$[\d,]+(?:\.\d+)?|\d+(?:\.\d+)?%|"([^"]+)"|([^$\d"*\[]+|\[(?!\[)|\*(?!\*))+/g
@@ -137,7 +137,7 @@ function GlossaryTerm({ word, definition }: { word: string; definition: string }
                             transition={{ type: "spring", stiffness: 450, damping: 30 }}
                             style={{
                                 position: "fixed",
-                                top: coords.top - 12,
+                                top: coords.top - 6,
                                 left: coords.left,
                                 transform: "translate(-50%, -100%)",
                                 zIndex: 100000,
@@ -187,7 +187,7 @@ function GlossaryTerm({ word, definition }: { word: string; definition: string }
                             {/* Arrow */}
                             <div style={{
                                 position: "absolute",
-                                bottom: -10,
+                                bottom: -6,
                                 left: "50%",
                                 marginLeft: -10,
                                 width: 0, height: 0,
@@ -204,7 +204,7 @@ function GlossaryTerm({ word, definition }: { word: string; definition: string }
     )
 }
 
-function InlineSegments({ segments }: { segments: Segment[] }) {
+export function InlineSegments({ segments }: { segments: Segment[] }) {
     const glossaryTerms = useGlossary()
 
     // Second pass: find glossary terms in "plain" segments that weren't caught in first pass
