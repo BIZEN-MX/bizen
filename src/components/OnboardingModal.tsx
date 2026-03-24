@@ -596,8 +596,12 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                             <p className="ob-hero-sub">
                                 En 2 minutos configuramos tu perfil y te mostramos todo lo que puedes hacer aquí.
                             </p>
-                            <p className="ob-hero-hint">
-                                <strong>Billy</strong>, tu mentor de finanzas, te guiará en cada paso.
+                            <p className="ob-hero-hint" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                                <strong>Billy AI Mentor</strong> te guiará en cada paso.
+                                <span style={{ animation: "ob-float 1.5s infinite" }}>🤖</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ animation: 'ob-twinkle 1s infinite'}}>
+                                    <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="#93c5fd" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
                             </p>
 
                             {/* Feature pills */}

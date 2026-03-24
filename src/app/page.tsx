@@ -16,6 +16,7 @@ import {
   User,
   Check,
   X,
+  MessageSquare,
 } from "lucide-react";
 import { CheckIcon, CrossIcon } from "@/components/CustomIcons";
 import * as React from "react";
@@ -23,7 +24,7 @@ import Hero3DScene from "@/components/landing/Hero3DScene";
 import { PremiumButton } from "@/components/ui/PremiumButton";
 
 // Centralized navigation data
-const NAV_LINKS = [
+const NAV_LINKS: { label: string; href: string; persona?: "instituciones" | "estudiantes" }[] = [
   { label: "Inicio", href: "/" },
   { label: "Somos BIZEN", href: "#sobre-bizen" },
   { label: "Perfil educativo", href: "#perfiles" },
@@ -876,16 +877,22 @@ export default function WelcomePage() {
                   boxShadow: "0 0 10px #4096ff",
                 }}
               />
-              <span
-                style={{
-                  color: "#fff",
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  letterSpacing: "0.02em",
-                }}
-              >
-                Billy IA Integrado
-              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <MessageSquare
+                  size={14}
+                  style={{ color: "rgba(255, 255, 255, 0.7)" }}
+                />
+                <span
+                  style={{
+                    color: "#fff",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  Billy: tu Mentor de IA
+                </span>
+              </div>
             </div>
 
             {/* Card 2: Gamificado */}
@@ -1330,7 +1337,7 @@ export default function WelcomePage() {
                             wordWrap: "break-word",
                           }}
                         >
-                          Aprende a dominar tu dinero con{" "}
+                          Domina tu futuro financiero con{" "}
                           <span
                             style={{
                               display: "inline-flex",
@@ -1347,7 +1354,7 @@ export default function WelcomePage() {
                               boxShadow: "0 2px 12px rgba(124, 58, 237, 0.35)",
                             }}
                           >
-                            gamificación e IA
+                            Billy: tu coach de IA
                           </span>{" "}
                           de forma práctica, divertida y en{" "}
                           <em
@@ -4489,7 +4496,7 @@ function LandingContent({
                       Cada día hay una nueva misión financiera esperándote. Completa lecciones, responde quizzes y resuelve retos para ganar Bizcoins y mantener tu racha viva.
                     </p>
                     <ul style={{ listStyle: "none", padding: 0, margin: "0 0 32px", display: "flex", flexDirection: "column", gap: 12 }}>
-                      {["Nueva misión cada 24 horas", "Rachas y logros desbloqueables", "Billy IA como guía en cada lección"].map((item) => (
+                      {["Nueva misión cada 24 horas", "Rachas y logros desbloqueables", "Billy: tu mentor de IA experto"].map((item) => (
                         <li key={item} style={{ display: "flex", alignItems: "center", gap: 12 }}>
                           <span style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#10b981,#059669)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                             <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>

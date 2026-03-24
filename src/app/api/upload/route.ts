@@ -7,7 +7,9 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: Request) {
   try {
+    console.log('[Upload] Starting POST request...');
     const formData = await request.formData()
+    console.log('[Upload] FormData parsed');
     const file = formData.get('file') as File | null
     const userName = formData.get('userName') as string | null
     const userEmail = formData.get('userEmail') as string | null
@@ -15,7 +17,13 @@ export async function POST(request: Request) {
     const notes = formData.get('notes') as string | null
 
     if (!file) {
+      console.warn('[Upload] Missing file in FormData');
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    }
+
+    if (!(file instanceof Blob)) {
+      console.warn('[Upload] Received item is not a File/Blob:', typeof file);
+      return NextResponse.json({ error: 'Invalid file data' }, { status: 400 })
     }
 
     // Get current user
@@ -59,10 +67,12 @@ export async function POST(request: Request) {
 
     // Save file
     try {
+      console.log(`[Upload] Saving to: ${filePath} (${buffer.length} bytes)`);
       await writeFile(filePath, buffer)
+      console.log('[Upload] File written successfuly');
     } catch (saveError: any) {
       console.error('[Upload:Save] Failed to write file:', saveError.message)
-      return NextResponse.json({ error: 'No se pudo guardar la imagen en el servidor.' }, { status: 500 })
+      return NextResponse.json({ error: 'No se pudo guardar la imagen en el servidor.', details: saveError.message }, { status: 500 })
     }
 
     // Save metadata to database

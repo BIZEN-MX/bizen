@@ -192,7 +192,7 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
     // Show Billy highlight after a few seconds if not already interacting
     const billyTimer = setTimeout(() => {
       setShowBillyHighlight(true)
-    }, 4000)
+    }, 2000)
 
     return () => {
       clearTimeout(t)
@@ -287,6 +287,11 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,99,235,0.7); }
           70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37,99,235,0); }
           100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+        }
+        
+        @keyframes billyBounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
         }
 
         /* ── Backdrop (non-blocking, just a faint tint) ── */
@@ -530,11 +535,17 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
         </button>
       )}
 
-      {/* Billy Highlight for Discovery */}
-      {discoveryMode && showBillyHighlight && (
+      {/* Billy Highlight */}
+      {(discoveryMode || isLast || stepIndex === 0) && showBillyHighlight && (
         <div className="billy-highlight">
-          <div className="billy-highlight-text">¡Pregúntame lo que quieras! 🤖</div>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ animation: 'billyBounce 1.5s infinite'}}>
+          <div className="billy-highlight-text" style={{ 
+            background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)',
+            border: '2px solid rgba(255,255,255,0.2)',
+            transform: 'rotate(-2deg)'
+          }}>
+            ¡Pregúntame lo que quieras! 🤖
+          </div>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style={{ animation: 'billyBounce 1s infinite'}}>
             <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="#2563eb" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>

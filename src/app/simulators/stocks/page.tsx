@@ -30,6 +30,7 @@ function StockSimulatorContent() {
   const [orderMsg, setOrderMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
   const [marketData, setMarketData] = useState<any[]>([])
   const [dataFetched, setDataFetched] = useState(false)
+  const orderFormRef = React.useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!loading && user) {
@@ -222,31 +223,60 @@ function StockSimulatorContent() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: 'clamp(10px, 2vw, 14px)', marginBottom: 32 }}>
                   {marketData.length === 0 && <p style={{ color: '#64748b' }}>Cargando datos del mercado...</p>}
-                  {marketData.map(s => (
-                    <div key={s.symbol} className="sim-stock-row" onClick={() => setOrderForm(f => ({ ...f, symbol: s.symbol }))}>
-                      <div>
-                        <p style={{ fontWeight: 600, fontSize: 16, color: '#0B1E5E', margin: '0 0 2px' }}>{s.symbol}</p>
-                        <p style={{ fontSize: 12, color: '#64748b', margin: '0 0 5px', maxWidth: 180, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</p>
-                        <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 8px', background: '#e2e8f0', color: '#475569', borderRadius: 99, textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>{s.sector}</span>
-                      </div>
-                      <div style={{ textAlign: 'right' as const }}>
-                        <p style={{ fontWeight: 600, fontSize: 18, color: '#0B1E5E', margin: '0 0 4px' }}>${s.price.toFixed(2)}</p>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end' }}>
-                          {s.change >= 0 ? <ArrowUpRight size={14} color="#10b981" /> : <ArrowDownRight size={14} color="#ef4444" />}
-                          <span style={{ fontSize: 13, fontWeight: 500, color: s.change >= 0 ? '#10b981' : '#ef4444' }}>{s.change >= 0 ? '+' : ''}{s.change}%</span>
+                  {marketData.map(s => {
+                    const isSelected = orderForm.symbol === s.symbol;
+                    return (
+                      <div 
+                        key={s.symbol} 
+                        className="sim-stock-row" 
+                        onClick={() => {
+                          setOrderForm(f => ({ ...f, symbol: s.symbol }));
+                          setTimeout(() => {
+                            orderFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }, 50);
+                        }}
+                        style={{
+                          borderColor: isSelected ? '#10b981' : '#e2e8f0',
+                          background: isSelected ? '#f0fdf4' : '#f8fafc',
+                          boxShadow: isSelected ? '0 0 0 3px rgba(16,185,129,0.1)' : 'none',
+                          transform: isSelected ? 'scale(1.02)' : 'none',
+                          zIndex: isSelected ? 1 : 0
+                        }}
+                      >
+                        <div>
+                          <p style={{ fontWeight: 600, fontSize: 16, color: '#0B1E5E', margin: '0 0 2px' }}>{s.symbol}</p>
+                          <p style={{ fontSize: 12, color: '#64748b', margin: '0 0 5px', maxWidth: 180, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</p>
+                          <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 8px', background: isSelected ? '#dcfce7' : '#e2e8f0', color: isSelected ? '#166534' : '#475569', borderRadius: 99, textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>{s.sector}</span>
+                        </div>
+                        <div style={{ textAlign: 'right' as const }}>
+                          <p style={{ fontWeight: 600, fontSize: 18, color: '#0B1E5E', margin: '0 0 4px' }}>${s.price.toFixed(2)}</p>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end' }}>
+                            {s.change >= 0 ? <ArrowUpRight size={14} color="#10b981" /> : <ArrowDownRight size={14} color="#ef4444" />}
+                            <span style={{ fontSize: 13, fontWeight: 500, color: s.change >= 0 ? '#10b981' : '#ef4444' }}>{s.change >= 0 ? '+' : ''}{s.change}%</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Quick Order */}
-                <div style={{ background: 'linear-gradient(135deg,#0f172a,#1e293b)', borderRadius: 24, padding: 'clamp(20px, 4vw, 32px)', color: 'white' }}>
+                <div ref={orderFormRef} style={{ background: 'linear-gradient(135deg,#0f172a,#1e293b)', borderRadius: 24, padding: 'clamp(20px, 4vw, 32px)', color: 'white', border: '2px solid rgba(16,185,129,0.2)', transition: 'all 0.3s' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 26 }}>
                     <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Zap size={18} color="#10b981" />
                     </div>
                     <h3 style={{ fontWeight: 500, fontSize: 18, margin: 0, color: 'white' }}>Colocar Orden</h3>
+                    {orderForm.symbol && (() => {
+                      const selectedStock = marketData.find(s => s.symbol === orderForm.symbol);
+                      if (!selectedStock) return null;
+                      return (
+                        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.05)', padding: '6px 14px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>{selectedStock.name}</span>
+                          <span style={{ fontSize: 18, fontWeight: 700, color: '#10b981' }}>${selectedStock.price.toFixed(2)}</span>
+                        </div>
+                      )
+                    })()}
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 20, marginBottom: 28 }}>
