@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Flame } from "lucide-react"
+import { Flame, Shield, Target } from "lucide-react"
 
 // ─────────────────────────────────────────────────────────────────
 // CUSTOM SVG ICON COMPONENTS
@@ -247,6 +247,7 @@ export default function DashboardPage() {
   const [stats,            setStats]            = useState<Stats | null>(null)
   const [topics,           setTopics]           = useState<Topic[]>([])
   const [completedLessons, setCompletedLessons] = useState<string[]>([])
+  const [dnaResult,        setDnaResult]        = useState<any>(null)
   const [loadingData,      setLoadingData]      = useState(true)
 
   const firstName = useMemo(() => {
@@ -290,10 +291,11 @@ export default function DashboardPage() {
     const go = async () => {
       setLoadingData(true)
       try {
-        const [sR, tR, pR] = await Promise.all([
+        const [sR, tR, pR, dR] = await Promise.all([
           fetch("/api/user/stats"),
           fetch("/api/topics"),
           fetch("/api/progress"),
+          fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(user.email || "")}`)
         ])
         if (sR.ok) setStats(await sR.json())
         if (tR.ok) setTopics(await tR.json())
@@ -302,6 +304,10 @@ export default function DashboardPage() {
           setCompletedLessons(
             (pd.progress ?? pd ?? []).map((p: any) => p.lessonId || p.slug || "").filter(Boolean)
           )
+        }
+        if (dR.ok) {
+          const dd = await dR.json()
+          if (dd.exists) setDnaResult(dd.result)
         }
       } catch {/* silent */} finally { setLoadingData(false) }
     }
@@ -315,6 +321,15 @@ export default function DashboardPage() {
   const lessons  = stats?.lessonsCompleted ?? 0
   const level    = stats?.level           ?? 1
   const lessonPct = Math.min(100, Math.round((lessons / 150) * 100))
+
+  const profileColors: Record<string, { bg: string, text: string, icon: string, border: string, path: string }> = {
+    "Gastador Digital": { bg: "#fff1f2", text: "#991b1b", icon: "#ef4444", border: "#fecaca", path: "Control de Gastos y Crédito" },
+    "Ahorrador Estancado": { bg: "#ecfdf5", text: "#065f46", icon: "#10b981", border: "#a7f3d0", path: "Inversión y Crecimiento" },
+    "Explorador Arriesgado": { bg: "#fff7ed", text: "#9a3412", icon: "#f97316", border: "#ffedd5", path: "Bases Sólidas y Seguridad" },
+    "Maestro BIZEN": { bg: "#f0fdf4", text: "#166534", icon: "#22c55e", border: "#bbf7d0", path: "Estrategias Avanzadas" },
+  }
+
+  const dnaInfo = dnaResult?.dnaProfile ? profileColors[dnaResult.dnaProfile] : null
 
   return (
     <div style={{ minHeight: "100vh", background: "#FBFAF5", width: "100%", boxSizing: "border-box", fontFamily: '"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif' }}>
@@ -543,6 +558,62 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* DNA PROFILE SECTION */}
+        <div className="dc" style={{ animationDelay: ".05s", marginBottom: 24 }}>
+          {dnaResult ? (
+            <div style={{
+              background: dnaInfo?.bg || "white",
+              border: `1.5px solid ${dnaInfo?.border || "#e2e8f0"}`,
+              borderRadius: 24, padding: "20px 24px",
+              display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.03)"
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                <div style={{ width: 56, height: 56, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 4px 12px ${dnaInfo?.icon}20` }}>
+                  <Shield size={28} color={dnaInfo?.icon} strokeWidth={2.2} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: dnaInfo?.text, textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 4 }}>Tu Perfil Financiero</div>
+                  <div style={{ fontSize: 24, fontWeight: 800, color: dnaInfo?.text }}>{dnaResult.dnaProfile}</div>
+                </div>
+              </div>
+              <div style={{ flex: 1, height: 1.5, background: `${dnaInfo?.border}40`, margin: "0 10px", minWidth: 20 }} className="hidden sm:block" />
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ textAlign: "right" as const }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: dnaInfo?.text, textTransform: "uppercase", opacity: 0.6 }}>Ruta Recomendada</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: dnaInfo?.text }}>{dnaInfo?.path}</div>
+                </div>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: `1px solid ${dnaInfo?.border}` }} onClick={() => router.push("/courses")}>
+                  <IcoArrowRight size={18} color={dnaInfo?.text} />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div style={{
+              background: "linear-gradient(135deg, #fffbeb, #fef3c7)",
+              border: "1.5px dashed #fde68a",
+              borderRadius: 24, padding: "24px 32px",
+              display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Target size={28} color="#d97706" />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#92400e", margin: 0 }}>Descubre tu ADN Financiero</h3>
+                  <p style={{ fontSize: 13, color: "#b45309", margin: 0 }}>Completa el diagnóstico para recibir una ruta personalizada.</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => router.push("/diagnostic/1")}
+                style={{ padding: "10px 24px", background: "#d97706", color: "white", borderRadius: 12, border: "none", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(217,119,6,0.25)" }}
+              >
+                Comenzar <IcoArrowRight size={16} />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* STAT CARDS (Student ONLY) */}

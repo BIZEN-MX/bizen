@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { createClient } from "@/lib/supabase/client"
 import { IconBolt, IconCheck, IconX, IconFire, IconTrophy, IconMedal1, IconMedal2, IconMedal3, IconGamepad, IconXP, IconStar, IconFlag } from "@/components/live/LiveIcons"
 import { AvatarSvg } from "@/components/live/LiveAvatars"
+import { Volume2, VolumeX } from "lucide-react"
+import { useLiveAudio } from "@/hooks/useLiveAudio"
 
 type GameStatus = "loading" | "lobby" | "in_question" | "showing_results" | "leaderboard" | "finished"
 
@@ -78,6 +80,17 @@ function PlayPageContent() {
   // XP
   const [xpEarned, setXpEarned] = useState(0)
   const [xpGranted, setXpGranted] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
+
+  // 🔊 Audio Feedback
+  const { playFeedback } = useLiveAudio(gameStatus, false && !isMuted)
+
+  // Play sound when result is received
+  useEffect(() => {
+    if (answerResult && !isMuted) {
+      playFeedback(answerResult.isCorrect)
+    }
+  }, [answerResult, isMuted])
 
   // Grant XP when quiz finishes (must be at top level, not inside if block)
   useEffect(() => {
@@ -400,6 +413,17 @@ function PlayPageContent() {
             <IconFire size={14} color={myStreak >= 3 ? "#f87171" : "rgba(255,255,255,0.4)"} />
             <span style={{ color: myStreak >= 3 ? "#f87171" : "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 700 }}>×{myStreak}</span>
           </div>
+          
+          <button 
+            onClick={() => setIsMuted(!isMuted)} 
+            style={{ 
+              background: "rgba(255,255,255,0.06)", border: "none", 
+              borderRadius: "50%", padding: "10px", color: "rgba(255,255,255,0.4)", 
+              cursor: "pointer", display: "flex" 
+            }}
+          >
+            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+          </button>
         </div>
 
         {/* Circular timer */}

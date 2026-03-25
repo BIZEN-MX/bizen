@@ -36,8 +36,8 @@ import { GlossaryProvider } from "@/contexts/GlossaryContext"
 
 interface LessonEngineProps {
   lessonSteps: LessonStep[]
-  /** Called when lesson is completed; receives stars earned (0–3, based on mistakes). */
-  onComplete?: (stars?: number) => void
+  /** Called when lesson is completed; receives stars earned and all answers collected. */
+  onComplete?: (stars: number, answers: Record<string, { isCorrect: boolean, answerData?: any }>) => void
   onExit?: () => void
   /** Called when progress changes (progress bar = currentStep/totalSteps; stars = by mistakes). */
   onProgressChange?: (progress: { currentStep: number; totalSteps: number; streak: number; stars: 0 | 1 | 2 | 3 }) => void
@@ -485,9 +485,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   useEffect(() => {
     if (isSummaryStep) {
-      onCompleteRef.current?.(stars)
+      onCompleteRef.current?.(stars, state.answersByStepId)
     }
-  }, [isSummaryStep, stars])
+  }, [isSummaryStep, stars, state.answersByStepId])
 
   const handleContinue = useCallback(() => {
     initAudioContext() // Sync unlock context on click

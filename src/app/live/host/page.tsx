@@ -10,7 +10,8 @@ import {
   IconClock, IconQuestion, IconMedal1, IconMedal2, IconMedal3,
   IconMoney, IconChart, IconCard, IconBriefcase, IconPlus, IconTrash, IconXP, IconGamepad, IconEdit
 } from "@/components/live/LiveIcons"
-import { Medal } from "lucide-react"
+import { Medal, Volume2, VolumeX } from "lucide-react"
+import { useLiveAudio } from "@/hooks/useLiveAudio"
 
 // ── BIZEN OFFICIAL QUIZ CATALOG ──────────────────────────────────────────────
 const QUIZ_CATALOG = [
@@ -142,6 +143,11 @@ export default function HostPage() {
   const [saveTitle, setSaveTitle] = useState("")
   const [saveSaving, setSaveSaving] = useState(false)
   const [saveDone, setSaveDone] = useState(false)
+
+  const [isMuted, setIsMuted] = useState(false)
+
+  // 🔊 Audio Management
+  const { playFeedback: _unused } = useLiveAudio(hostStatus, true && !isMuted)
 
   // Detect Mobile for offset
   useEffect(() => {
@@ -326,6 +332,18 @@ export default function HostPage() {
         <div style={{ padding: "20px 32px 0", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => router.push("/teacher/dashboard")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "8px 16px", color: "rgba(255,255,255,0.5)", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
             ← Volver al panel
+          </button>
+          
+          <button 
+            onClick={() => setIsMuted(!isMuted)} 
+            style={{ 
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", 
+              borderRadius: 10, padding: "8px 12px", color: "rgba(255,255,255,0.5)", 
+              fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 
+            }}
+          >
+            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+            {isMuted ? "Sonido desactivado" : "Sonido activado"}
           </button>
         </div>
 

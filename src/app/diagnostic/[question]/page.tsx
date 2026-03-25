@@ -54,6 +54,8 @@ export default function DiagnosticQuestionPage() {
   const [userAnswers, setUserAnswers] = React.useState<Record<string, QuizOption["value"] | undefined>>({})
   const [quizSubmitted, setQuizSubmitted] = React.useState(false)
   const [showSuccess, setShowSuccess] = React.useState(false)
+  const [analysisPhase, setAnalysisPhase] = React.useState(0) // 0=scanning, 1=found, 2=redirect
+  const [countdown, setCountdown] = React.useState(5)
   const [userInfo, setUserInfo] = React.useState<UserInfo | undefined>(undefined)
   const [tempUserInfo, setTempUserInfo] = React.useState<UserInfo>({ email: "", fullName: "", institution: "" })
   const [userInfoError, setUserInfoError] = React.useState("")
@@ -120,6 +122,7 @@ export default function DiagnosticQuestionPage() {
     if (!quizIncomplete && userInfo) {
       setQuizSubmitted(true)
       setShowSuccess(true)
+      setAnalysisPhase(0)
 
       try {
         await fetch("/api/diagnostic-quiz", {
@@ -136,9 +139,23 @@ export default function DiagnosticQuestionPage() {
         console.error("Failed to save diagnostic results:", error)
       }
 
+      // Phase 1: scanning animation (2.5s)
+      setTimeout(() => setAnalysisPhase(1), 2500)
+
+      // Phase 2: countdown to dashboard
       setTimeout(() => {
-        router.push("/dashboard")
-      }, 4000)
+        setAnalysisPhase(2)
+        let c = 5
+        setCountdown(c)
+        const interval = setInterval(() => {
+          c--
+          setCountdown(c)
+          if (c <= 0) {
+            clearInterval(interval)
+            router.push("/dashboard")
+          }
+        }, 1000)
+      }, 4500)
     }
   }, [quizIncomplete, router, userInfo, userAnswers])
 
@@ -242,26 +259,192 @@ export default function DiagnosticQuestionPage() {
         {showSuccess ? (
           <motion.div
             key="success"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="diagnostic-success-card"
+            transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
             style={{
+              position: "relative",
               textAlign: "center",
-              padding: "clamp(24px, 5vw, 40px)",
-              background: "#FFFFFF",
-              borderRadius: "32px",
-              border: "2px solid #E5E7EB",
-              boxShadow: "0 12px 40px rgba(0,0,0,0.06)",
               maxWidth: "560px",
-              margin: "60px auto",
+              margin: "40px auto",
               width: "100%",
-              boxSizing: "border-box"
+              boxSizing: "border-box" as const,
+              overflow: "hidden",
+              borderRadius: "32px",
             }}
           >
-            <div style={{ fontSize: "clamp(48px, 10vw, 64px)", marginBottom: "20px" }}>🎉</div>
-            <h2 style={{ fontSize: "clamp(22px, 5vw, 28px)", fontWeight: 500, color: "#111827", marginBottom: "16px", letterSpacing: "-0.02em" }}>¡Excelente trabajo!</h2>
-            <p style={{ fontSize: "clamp(15px, 2vw, 17px)", color: "#6B7280", lineHeight: 1.6, }}>Tu examen diagnóstico ha sido enviado con éxito. Valoramos mucho tu participación.</p>
-            <div style={{ marginTop: "32px", fontSize: "14px", color: "#9CA3AF", fontWeight: 500, }}>Redirigiendo de vuelta a BIZEN...</div>
+            <style>{`
+              @keyframes orb1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,-20px) scale(1.15)} }
+              @keyframes orb2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-25px,15px) scale(1.1)} }
+              @keyframes scanLine { 0%{top:0%;opacity:1} 100%{top:100%;opacity:0} }
+              @keyframes pulse-ring { 0%{transform:scale(0.8);opacity:1} 100%{transform:scale(2.2);opacity:0} }
+              @keyframes float-particle { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(-120px) rotate(720deg);opacity:0} }
+              @keyframes shimmer-text { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+              @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+            `}</style>
+
+            {/* Magical dark background card */}
+            <div style={{
+              background: "linear-gradient(145deg, #060c1f 0%, #0d1a3a 50%, #0a1628 100%)",
+              borderRadius: "32px",
+              padding: "clamp(40px, 6vw, 60px) clamp(28px, 5vw, 48px)",
+              border: "1px solid rgba(99,102,241,0.25)",
+              boxShadow: "0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+              position: "relative",
+              overflow: "hidden",
+            }}>
+              {/* BG Orbs */}
+              <div style={{ position:"absolute",top:"-30%",left:"-20%",width:300,height:300,borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,0.35) 0%,transparent 70%)",animation:"orb1 6s ease-in-out infinite",pointerEvents:"none" }} />
+              <div style={{ position:"absolute",bottom:"-20%",right:"-15%",width:280,height:280,borderRadius:"50%",background:"radial-gradient(circle,rgba(167,139,250,0.28) 0%,transparent 70%)",animation:"orb2 8s ease-in-out infinite",pointerEvents:"none" }} />
+
+              {/* Scan line (only on phase 0) */}
+              {analysisPhase === 0 && (
+                <div style={{ position:"absolute",left:0,right:0,height:2,background:"linear-gradient(90deg,transparent,rgba(99,102,241,0.8),rgba(167,139,250,0.9),transparent)",animation:"scanLine 2.2s linear infinite",zIndex:5,pointerEvents:"none" }} />
+              )}
+
+              {/* Floating particles (phase 1+) */}
+              {analysisPhase >= 1 && [0,1,2,3,4,5].map(i => (
+                <div key={i} style={{
+                  position:"absolute",
+                  left:`${15+i*14}%`,
+                  bottom:"10%",
+                  width:6,height:6,
+                  borderRadius:"50%",
+                  background: i%2===0 ? "#818cf8" : "#c4b5fd",
+                  animation:`float-particle ${1.2+i*0.3}s ease-out ${i*0.15}s forwards`,
+                  pointerEvents:"none"
+                }} />
+              ))}
+
+              <div style={{ position: "relative", zIndex: 2 }}>
+                {/* Phase 0: Scanning */}
+                {analysisPhase === 0 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+                    <div style={{ marginBottom: 28 }}>
+                      {/* DNA helix icon */}
+                      <div style={{ position:"relative", width:100, height:100, margin:"0 auto" }}>
+                        <div style={{ position:"absolute",inset:0,borderRadius:"50%",border:"2px solid rgba(99,102,241,0.3)",animation:"pulse-ring 1.5s ease-out infinite" }} />
+                        <div style={{ position:"absolute",inset:8,borderRadius:"50%",border:"2px solid rgba(99,102,241,0.5)",animation:"pulse-ring 1.5s ease-out 0.4s infinite" }} />
+                        <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center" }}>
+                          <div style={{ width:60,height:60,borderRadius:"50%",background:"linear-gradient(135deg,#4f46e5,#7c3aed)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 0 30px rgba(99,102,241,0.6)" }}>
+                            <span style={{ fontSize:28 }}>🧬</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ fontSize:11,fontWeight:800,color:"rgba(167,139,250,0.7)",letterSpacing:".2em",textTransform:"uppercase",marginBottom:12 }}>
+                      Billy está analizando...
+                    </div>
+                    <div style={{ fontSize:"clamp(22px,4vw,30px)",fontWeight:800,color:"#fff",letterSpacing:"-0.02em",lineHeight:1.2 }}>
+                      Calculando tu
+                    </div>
+                    <div style={
+                      {
+                        fontSize:"clamp(26px,5vw,38px)",fontWeight:900,
+                        background:"linear-gradient(90deg,#818cf8,#c4b5fd,#e879f9,#818cf8)",
+                        backgroundSize:"200% auto",
+                        WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
+                        animation:"shimmer-text 2s linear infinite",
+                        letterSpacing:"-0.03em",
+                      }
+                    }>ADN Financiero</div>
+
+                    {/* Fake progress bar */}
+                    <div style={{ marginTop:28,height:5,background:"rgba(255,255,255,0.08)",borderRadius:99,overflow:"hidden" }}>
+                      <motion.div
+                        initial={{ width:"0%" }}
+                        animate={{ width:"100%" }}
+                        transition={{ duration:2.3, ease:"easeInOut" }}
+                        style={{ height:"100%",background:"linear-gradient(90deg,#4f46e5,#7c3aed,#c4b5fd)",borderRadius:99 }}
+                      />
+                    </div>
+                    <div style={{ marginTop:10,fontSize:12,color:"rgba(255,255,255,0.3)",fontWeight:500 }}>Procesando respuestas...</div>
+                  </motion.div>
+                )}
+
+                {/* Phase 1+: Result teaser */}
+                {analysisPhase >= 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+                  >
+                    {/* Big checkmark */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type:"spring", stiffness:260, damping:18, delay:0.1 }}
+                      style={{ width:90,height:90,borderRadius:"50%",background:"linear-gradient(135deg,#4f46e5,#7c3aed)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 24px",boxShadow:"0 0 60px rgba(99,102,241,0.5)" }}
+                    >
+                      <span style={{ fontSize: 40 }}>🔮</span>
+                    </motion.div>
+
+                    <div style={{ fontSize:11,fontWeight:800,color:"rgba(167,139,250,0.8)",letterSpacing:".2em",textTransform:"uppercase",marginBottom:10 }}>
+                      Análisis completo
+                    </div>
+
+                    <h2 style={{ fontSize:"clamp(26px,5vw,36px)",fontWeight:900,color:"#fff",margin:"0 0 16px",letterSpacing:"-0.03em",lineHeight:1.15 }}>
+                      Billy encontró
+                      <br/>
+                      <span style={{ background:"linear-gradient(90deg,#818cf8,#c4b5fd,#e879f9)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent" }}>
+                        tu ADN Financiero
+                      </span>
+                    </h2>
+
+                    <p style={{ fontSize:"clamp(14px,2vw,16px)",color:"rgba(255,255,255,0.5)",lineHeight:1.7,margin:"0 0 28px",maxWidth:380,marginLeft:"auto",marginRight:"auto" }}>
+                      Tu perfil está listo. Descúbrelo en tu Dashboard, junto con la ruta de aprendizaje que Billy ha preparado <em>solo para ti</em>.
+                    </p>
+
+                    {/* Mystery profile tease */}
+                    <div style={{
+                      background:"rgba(255,255,255,0.04)",
+                      border:"1px solid rgba(99,102,241,0.3)",
+                      borderRadius:20,
+                      padding:"18px 24px",
+                      marginBottom:28,
+                      display:"flex",
+                      alignItems:"center",
+                      justifyContent:"center",
+                      gap:16
+                    }}>
+                      <div style={{ fontSize:32 }}>🧬</div>
+                      <div style={{ textAlign:"left" as const }}>
+                        <div style={{ fontSize:11,fontWeight:700,color:"rgba(167,139,250,0.6)",textTransform:"uppercase",letterSpacing:".1em" }}>Tu Perfil DNA</div>
+                        <div style={{ fontSize:18,fontWeight:800,color:"rgba(255,255,255,0.2)",letterSpacing:2,filter:"blur(5px)" }}>??? ????????</div>
+                      </div>
+                    </div>
+
+                    {analysisPhase === 2 && (
+                      <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ duration:0.4 }}>
+                        <button
+                          onClick={() => router.push("/dashboard")}
+                          style={{
+                            padding:"14px 36px",
+                            background:"linear-gradient(135deg,#4f46e5,#7c3aed)",
+                            color:"white",
+                            border:"none",
+                            borderRadius:"14px",
+                            fontSize:"clamp(14px,2vw,16px)",
+                            fontWeight:700,
+                            cursor:"pointer",
+                            boxShadow:"0 8px 32px rgba(79,70,229,0.45)",
+                            width:"100%",
+                            display:"flex",
+                            alignItems:"center",
+                            justifyContent:"center",
+                            gap:8,
+                            fontFamily:"inherit"
+                          }}
+                        >
+                          Ver mi ADN → <span style={{ opacity:0.7 }}>({countdown})</span>
+                        </button>
+                        <div style={{ marginTop:12, fontSize:13,color:"rgba(255,255,255,0.25)",fontWeight:500 }}>Redirigiendo automáticamente...</div>
+                      </motion.div>
+                    )}
+                  </motion.div>
+                )}
+              </div>
+            </div>
           </motion.div>
         ) : !userInfo ? (
           <motion.div

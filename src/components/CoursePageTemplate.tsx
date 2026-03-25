@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
 import { StarIcon } from "@/components/icons/StarIcon"
@@ -50,6 +51,8 @@ import {
     X,
     LucideIcon
 } from "lucide-react"
+import { getFlashcardsForSubtema } from "@/data/flashcardData"
+import FlashcardActivity from "@/components/lessons/FlashcardActivity"
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -183,6 +186,7 @@ export default function CoursePageTemplate({
     const [chatInput, setChatInput] = useState("")
     const [isThinking, setIsThinking] = useState(false)
     const [showChat, setShowChat] = useState(false)
+    const [flashcardSet, setFlashcardSet] = useState<any[] | null>(null)
 
     // Access check
     const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
@@ -758,6 +762,70 @@ export default function CoursePageTemplate({
                                                 </React.Fragment>
                                             )
                                         })}
+
+                                        {/* Flashcard Review Card */}
+                                        {(() => {
+                                            const subtemaFlashcards = getFlashcardsForSubtema(`tema-${topicNum}`, subIdx)
+                                            if (subtemaFlashcards.length === 0) return null
+
+                                            const subCompleted = sub.lessons.filter((l) => completedLessons.includes(l.slug)).length
+                                            const subTotal = sub.lessons.length
+                                            const isSubtemaDone = subCompleted === subTotal
+
+                                            return (
+                                                <div
+                                                    onClick={() => setFlashcardSet(subtemaFlashcards)}
+                                                    className="cpt-lesson-card flashcard-review-card"
+                                                    style={{
+                                                        width: "clamp(180px, 65vw, 320px)",
+                                                        minWidth: "initial",
+                                                        flexShrink: 0,
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        padding: "clamp(12px, 3.5vw, 32px) clamp(10px, 3vw, 28px)",
+                                                        background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+                                                        borderRadius: 24,
+                                                        border: "2.5px solid #2563eb",
+                                                        boxSizing: "border-box",
+                                                        scrollSnapAlign: "start",
+                                                        cursor: "pointer",
+                                                        boxShadow: "0 20px 40px rgba(15,98,254,0.15)",
+                                                        gap: "clamp(8px, 2vw, 12px)",
+                                                        transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                                                        position: "relative",
+                                                        overflow: "hidden",
+                                                        color: "white"
+                                                    }}
+                                                >
+                                                    <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%)", borderRadius: "50%" }} />
+                                                    
+                                                    <div style={{
+                                                        width: "clamp(34px, 10vw, 44px)", height: "clamp(34px, 10vw, 44px)", borderRadius: 14,
+                                                        background: "rgba(255,255,255,0.1)",
+                                                        border: "1.8px solid rgba(255,255,255,0.2)",
+                                                        color: "#fff",
+                                                        fontSize: "clamp(16px, 4vw, 19px)", fontWeight: 500, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                                                    }}>
+                                                        <Zap size={20} fill="#fff" />
+                                                    </div>
+
+                                                    <div style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 700, color: "#fff", lineHeight: 1.35 }}>
+                                                        REPASO: Tarjetas de Conceptos
+                                                    </div>
+                                                    
+                                                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: 0, lineHeight: 1.4 }}>
+                                                        {isSubtemaDone ? "¡Listo para repasar! Domina los conceptos clave de este curso." : "Disponible al terminar las lecciones de este curso."}
+                                                    </p>
+
+                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto" }}>
+                                                        <div style={{ fontSize: 11, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                                            {subtemaFlashcards.length} TARJETAS
+                                                        </div>
+                                                        <ChevronRight size={18} color="#93c5fd" />
+                                                    </div>
+                                                </div>
+                                            )
+                                        })()}
                                     </div>
                                 </div>
                             )
@@ -1117,6 +1185,14 @@ export default function CoursePageTemplate({
                   animation: cpt-btn-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.28s both;
                 }
             `}</style>
+            <AnimatePresence>
+                {flashcardSet && (
+                    <FlashcardActivity 
+                        cards={flashcardSet} 
+                        onClose={() => setFlashcardSet(null)} 
+                    />
+                )}
+            </AnimatePresence>
         </div>
     )
 }

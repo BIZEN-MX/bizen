@@ -168,7 +168,7 @@ export default function ComunidadHubPage() {
 
       {/* ── HERO BANNER ─────────────────────────────────────────────────────── */}
       <div className="com-hero" style={{
-        background: "#0a0f1e",
+        background: "#0B1E5E",
         margin: "16px 16px 0", borderRadius: 24, position: "relative", overflow: "hidden",
       }}>
         {/* BG Orbs & Mesh */}
@@ -384,7 +384,6 @@ export default function ComunidadHubPage() {
                       No hay datos de ranking aún.
                     </div>
                   ) : topPlayers.map((p: any, idx: number) => {
-                    const medals = ["🥇", "🥈", "🥉"]
                     const isMe = p.userId === user?.id
                     return (
                       <div key={p.userId} className="rank-row" style={{
@@ -393,8 +392,8 @@ export default function ComunidadHubPage() {
                         background: isMe ? "#EFF6FF" : "transparent",
                         borderLeft: isMe ? `3px solid ${T.blue}` : "3px solid transparent",
                       }}>
-                        <div style={{ width: 24, textAlign: "center", fontSize: idx < 3 ? 18 : 12, fontWeight: 500, color: idx < 3 ? "#D97706" : T.textMuted }}>
-                          {idx < 3 ? medals[idx] : `#${idx + 1}`}
+                        <div style={{ width: 24, textAlign: "center", display: 'flex', justifyContent: 'center' }}>
+                          {idx < 3 ? <Medal size={18} color={idx === 0 ? "#FBBF24" : idx === 1 ? "#94A3B8" : "#B45309"} /> : <span style={{ fontSize: 12, fontWeight: 500, color: T.textMuted }}>#{idx + 1}</span>}
                         </div>
                         <div style={{ width: 36, height: 36, borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>
                           <Avatar av={p.avatar} size={36} />
@@ -421,7 +420,7 @@ export default function ComunidadHubPage() {
 
                 {/* Join the forum CTA */}
                 <div style={{
-                  background: "#0a0f1e",
+                  background: "#0B1E5E",
                   borderRadius: T.radius, padding: "24px",
                   position: "relative", overflow: "hidden",
                   animation: "fadeUp 0.4s ease 0.3s both",

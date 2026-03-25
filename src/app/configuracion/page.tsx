@@ -9,7 +9,7 @@ import {
   Settings, User, Bell, Shield, Tv,
   Check, X, AlertTriangle, RotateCcw, ChevronRight,
   Eye, Award, Lock, LogOut, Save, Globe,
-  Zap, Contrast, FileText,
+  Zap, Contrast, FileText, Sparkles, Medal,
   Phone, Calendar, School, Instagram, ChevronDown
 } from "lucide-react"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
@@ -23,6 +23,7 @@ const C = {
   surfaceAlt:  "#F8FAFC",
   border:      "#E2E8F0",
   blue:        "#0F62FE",
+  spatial:     "#0B1E5E",
   blueAlpha:   "rgba(15,98,254,0.08)",
   blueMid:     "#BFDBFE",
   text:        "#0F172A",
@@ -33,10 +34,10 @@ const C = {
   red:         "#EF4444",
   redAlpha:    "rgba(239,68,68,0.08)",
   amber:       "#F59E0B",
-  font:        '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  font:        'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
   r:           "16px",
   rSm:         "10px",
-  rLg:         "20px",
+  rLg:         "24px",
   shadow:      "0 1px 4px rgba(15,23,42,0.06), 0 4px 16px rgba(15,23,42,0.04)",
 }
 
@@ -251,7 +252,13 @@ function SettingsContent() {
   }, [user, dbProfile])
 
   useEffect(() => {
-    fetch("/api/schools").then(r => r.ok && r.json().then(setSchools)).catch(() => {})
+    fetch("/api/schools")
+      .then(r => {
+        if (r.ok) return r.json()
+        throw new Error("Failed to fetch schools")
+      })
+      .then(setSchools)
+      .catch(() => {})
   }, [])
 
   useEffect(() => { if (typeof window !== "undefined" && !user) router.push("/login") }, [user, router])
@@ -360,21 +367,26 @@ function SettingsContent() {
 
         {/* ── Hero ── */}
         <div className="cfg-hero" style={{
-          background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0F62FE 100%)",
+          background: C.spatial,
           padding: "clamp(32px,5vw,52px) clamp(24px,5vw,48px) clamp(60px,8vw,80px)",
           position: "relative", overflow: "hidden",
         }}>
-          {/* Orbs */}
-          <div style={{ position:"absolute", top:-80, right:-80, width:300, height:300, borderRadius:"50%", background:"rgba(255,255,255,.04)", pointerEvents:"none" }} />
-          <div style={{ position:"absolute", bottom:-60, left:"25%", width:220, height:220, borderRadius:"50%", background:"rgba(255,255,255,.03)", pointerEvents:"none" }} />
+          {/* Orbs & Mesh */}
+          <div style={{ position:"absolute", top:"-50%", right:"-10%", width: 500, height: 500, background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+          <div style={{ position:"absolute", bottom:"-30%", left:"-5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+          <div style={{ 
+            position: "absolute", inset: 0, opacity: 0.05, 
+            backgroundImage: "radial-gradient(rgba(255,255,255,.5) 1.5px,transparent 1.5px)", 
+            backgroundSize: "32px 32px", pointerEvents: "none" 
+          }} />
 
           <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:16 }}>
             <div>
-              <h1 style={{ margin:"0 0 4px", fontSize:"clamp(22px,4vw,32px)", fontWeight:500, color:"#fff", letterSpacing:"-0.025em" }}>
+              <h1 style={{ margin:"0 0 8px", fontSize:"clamp(22px,4vw,32px)", fontWeight:600, color:"#fff", letterSpacing:"-0.03em" }}>
                 Configuración
               </h1>
-              <p style={{ margin:0, fontSize:13, color:"rgba(255,255,255,.55)", fontWeight:400 }}>
-                Gestiona tu perfil, privacidad y preferencias
+              <p style={{ margin:0, fontSize:13, color:"rgba(255,255,255,.6)", fontWeight:400 }}>
+                Gestiona tu perfil, privacidad y preferencias personales
               </p>
             </div>
 
@@ -382,19 +394,19 @@ function SettingsContent() {
             <div style={{
               display:"inline-flex", alignItems:"center", gap:10,
               background:"rgba(255,255,255,.08)", backdropFilter:"blur(12px)",
-              border:"1px solid rgba(255,255,255,.15)", borderRadius:40, padding:"8px 14px"
+              border:"1px solid rgba(255,255,255,.15)", borderRadius:40, padding:"8px 16px"
             }}>
               <div style={{
-                width:30, height:30, borderRadius:"50%", background:"rgba(255,255,255,.15)",
-                border:"1px solid rgba(255,255,255,.2)",
+                width:32, height:32, borderRadius:"50%", background: C.blue,
                 display:"flex", alignItems:"center", justifyContent:"center",
-                fontSize:13, fontWeight:500, color:"#fff", flexShrink:0
+                fontSize:13, fontWeight:600, color:"#fff", flexShrink:0,
+                boxShadow: "0 0 16px rgba(15,98,254,0.4)"
               }}>
                 {(user.email || "?")[0].toUpperCase()}
               </div>
               <div>
-                <div style={{ fontSize:12, fontWeight:500, color:"#fff", lineHeight:1.3 }}>{user.email}</div>
-                <div style={{ fontSize:11, color:"rgba(255,255,255,.5)", lineHeight:1.3 }}>{roleLabel()}</div>
+                <div style={{ fontSize:12, fontWeight:600, color:"#fff", lineHeight:1.3 }}>{user.email}</div>
+                <div style={{ fontSize:10, color:"rgba(255,255,255,.5)", textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight:1.3 }}>{roleLabel()}</div>
               </div>
             </div>
           </div>
@@ -630,6 +642,21 @@ function SettingsContent() {
                 </SectionCard>
 
                 <SaveBtn onClick={saveProfile} loading={saving} label="Actualizar perfil" />
+
+                <div style={{
+                  marginTop: 24, padding: "16px 20px", background: C.blueAlpha,
+                  borderRadius: C.rSm, display: "flex", gap: 14, alignItems: "center"
+                }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: C.surface, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1px solid ${C.blue}20` }}>
+                    <Sparkles size={18} color={C.blue} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: C.blue }}>Consejo de Billy</div>
+                    <div style={{ fontSize: 12, color: C.textMid, marginTop: 1 }}>
+                      Tener un nombre de usuario único te ayuda a destacar en los rankings globales. ¡Elige uno que te represente!
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 

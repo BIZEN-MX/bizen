@@ -170,7 +170,7 @@ function InteractiveLessonContent() {
   }, [])
 
   const hasCompletedRef = useRef(false)
-  const handleComplete = useCallback(async (stars?: number) => {
+  const handleComplete = useCallback(async (stars: number, answers: Record<string, any>) => {
     if (hasCompletedRef.current) return
     hasCompletedRef.current = true
 
@@ -183,7 +183,7 @@ function InteractiveLessonContent() {
       fetch("/api/lesson/complete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned: xpToBeAwarded }),
+        body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned: xpToBeAwarded, answers }),
         keepalive: true,
       }).then(res => {
         if (res.ok) refreshUser()

@@ -473,7 +473,7 @@ export default function CoursesPage() {
             aria-label="Temas"
           >
             {(() => {
-              const topics = dbTopics.map((dt, idx) => ({
+              const allTopics = dbTopics.map((dt, idx) => ({
                 id: dt.id,
                 title: dt.title,
                 icon: ICON_MAP[dt.icon || "BookOpen"] || BookOpen,
@@ -483,35 +483,73 @@ export default function CoursesPage() {
                 displayOrder: idx + 1
               }))
 
-              const pairs: typeof topics[] = []
-              for (let i = 0; i < topics.length; i += 2) pairs.push(topics.slice(i, i + 2))
+              const coreTopics = allTopics.slice(0, 5);
+              const advancedTopics = allTopics.slice(5);
 
-              return pairs.map((pair, pairIdx) => {
-                const isRTL = pairIdx % 2 === 1
-                const isLastPair = pairIdx === pairs.length - 1
-                const displayPair = pair
+              const renderSection = (topics: typeof allTopics, title: string, subtitle: string, startIndex: number) => {
+                const totalTopics = topics.length;
+
                 return (
-                  <React.Fragment key={pairIdx}>
-                    <div className={`topics-row-container ${isRTL ? "rtl-row" : ""}`} style={{ display: "flex", flexDirection: isRTL ? "row-reverse" : "row", alignItems: "stretch", width: "100%", gap: 0, justifyContent: "center", position: "relative" }}>
-                      {displayPair.map((topic, i) => {
-                        const IconComp = topic.icon
-                        const showArrow = i === 0 && displayPair.length > 1
+                  <div key={title} style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "stretch", marginBottom: 60 }}>
+                    <div style={{ textAlign: "center" as const, marginBottom: 40, padding: "0 20px" }}>
+                      <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center" }}>
+                        <h2 className="phase-title-shimmer" style={{ 
+                          fontSize: "clamp(24px, 5vw, 32px)", 
+                          fontWeight: 900, 
+                          color: "#1e3a8a", 
+                          margin: 0,
+                          background: "linear-gradient(90deg, #1e3a8a 0%, #3b82f6 50%, #1e3a8a 100%)",
+                          backgroundSize: "200% auto",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          letterSpacing: "-0.03em"
+                        }}>{title}</h2>
+                        <div style={{ width: 60, height: 4, background: "linear-gradient(90deg, #3b82f6, #60a5fa)", borderRadius: 2, marginTop: 12, marginBottom: 12, boxShadow: "0 2px 10px rgba(59, 130, 246, 0.3)" }} />
+                        <p style={{ fontSize: "clamp(13px, 1.8vw, 15px)", color: "#64748b", margin: 0, fontWeight: 500, letterSpacing: "0.02em" }}>{subtitle}</p>
+                      </div>
+                    </div>
 
-                        const isPremiumTopic = topic.displayOrder > 1; 
+                    <div style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(2, 1fr)",
+                      gap: "40px 60px",
+                      width: "100%",
+                      maxWidth: "1100px",
+                      margin: "0 auto",
+                      position: "relative",
+                      padding: "0 20px"
+                    }}>
+                      {topics.map((topic, idx) => {
+                        const globalIdx = startIndex + idx;
+                        const rowIdx = Math.floor(idx / 2);
+                        const isEvenRow = rowIdx % 2 === 0;
+                        const isLastInRow = idx % 2 === 1;
+                        const isLastTopic = idx === topics.length - 1;
+                        const isOrphan = isLastTopic && idx % 2 === 0;
+
+                        // Determine visual position in grid
+                        let gridColumn = (idx % 2) + 1;
+                        if (!isEvenRow) {
+                          gridColumn = idx % 2 === 0 ? 2 : 1; 
+                        }
+
+                        // If it's an orphan, center it across both columns
+                        const gridColValue = isOrphan ? "1 / span 2" : gridColumn.toString();
+
+                        const isPremiumTopic = topic.displayOrder > 1;
                         const isPaywalled = isPremiumTopic && !hasPremiumAccess;
-                        
-                        // Topic sequence locking: lock if this topic's order is greater than the next recommended topic
                         const nextTopicIdx = dbTopics.findIndex(t => t.id === nextTopicId);
                         const currentTopicIdx = dbTopics.findIndex(t => t.id === topic.id);
                         const isSequenceLocked = nextTopicIdx !== -1 && currentTopicIdx > nextTopicIdx;
-                        
                         const isLocked = isPaywalled || isSequenceLocked;
 
                         return (
                           <React.Fragment key={topic.id}>
-                            <div
+                            <motion.div
+                              whileHover={{ y: -5, scale: 1.01 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 17 }}
                               onClick={() => {
-                                if (!dbProfile && user) return; 
+                                if (!dbProfile && user) return;
                                 if (isLocked) {
                                   if (isSequenceLocked) {
                                     setTopicWarning(true);
@@ -525,162 +563,155 @@ export default function CoursesPage() {
                                   router.push(`/courses/${topic.id}`);
                                 }
                               }}
-                              className={`course-card-wrapper course-card-hover ${topic.id === nextTopicId ? "next-topic-glow" : ""}`}
                               style={{
-                                flex: "0 1 550px",
+                                gridColumn: gridColValue,
+                                justifySelf: isOrphan ? "center" : "stretch",
+                                width: isOrphan ? "100%" : "auto",
+                                maxWidth: isOrphan ? "550px" : "100%",
+                                gridRow: rowIdx + 1,
                                 minHeight: 180,
                                 cursor: isLocked && !isPaywalled ? "not-allowed" : "pointer",
-                                border: isLocked ? "1.5px solid rgba(148, 163, 184, 0.12)" : "1.5px solid rgba(255, 255, 255, 0.6)",
-                                borderRadius: "32px",
-                                background: isLocked ? "rgba(241, 245, 249, 0.8)" : "rgba(255, 255, 255, 0.75)",
-                                backdropFilter: "blur(14px)",
-                                WebkitBackdropFilter: "blur(14px)",
-                                boxShadow: isLocked ? "none" : "0 12px 40px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255,255,255,0.7)",
-                                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                                border: isLocked ? "1.5px solid rgba(148, 163, 184, 0.1)" : "1.5px solid rgba(15, 98, 254, 0.1)",
+                                borderRadius: "24px",
+                                background: isLocked ? "rgba(241, 245, 249, 0.6)" : "#fff",
+                                boxShadow: isLocked ? "none" : "0 10px 30px rgba(0, 0, 0, 0.03)",
+                                transition: "all 0.3s ease",
                                 overflow: "hidden",
                                 display: "flex",
                                 flexDirection: "column",
-                                minWidth: 0,
-                                opacity: isLocked ? 0.6 : 1,
                                 position: "relative",
-                                pointerEvents: (isLocked && !isPaywalled) ? "none" : "auto"
+                                opacity: isLocked ? 0.8 : 1,
+                                cursor: isLocked ? "pointer" : "pointer",
+                                pointerEvents: "auto",
+                                zIndex: 2
                               }}
+                              className={topic.id === nextTopicId ? "next-topic-glow" : ""}
                             >
-
-                              <div className="course-card-content" style={{ padding: "44px 32px", position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24 }}>
-                                <div style={{ position: "absolute", top: 20, right: 24, fontSize: 11, fontWeight: 500, color: isLocked ? '#64748b' : topic.catColor, background: isLocked ? '#f1f5f9' : `${topic.catColor}16`, border: `1px solid ${isLocked ? '#cbd5e1' : `${topic.catColor}30`}`, padding: "4px 12px", borderRadius: 999, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
-                                  {isLocked ? (
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                                      {isSequenceLocked ? 'Completar anterior' : 'Bloqueado'}
-                                    </span>
-                                  ) : topic.category}
-                                </div>
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", marginBottom: 6, letterSpacing: "0.08em", textTransform: "uppercase" }}>{topic.id.toString().replace('tema-', '').padStart(2, "0")}</div>
-                                  <div style={{ fontSize: 20, fontWeight: 800, color: "#0F172A", lineHeight: 1.15, letterSpacing: "-0.02em" }}>{topic.title}</div>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, fontSize: 13, fontWeight: 500, color: isLocked ? "#64748b" : "#3b82f6" }}>
-                                    <BookOpen size={16} /><span>{topic.lessons} cursos</span>
+                              <div style={{ padding: "32px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                                    TEMA {topic.displayOrder.toString().padStart(2, "0")}
+                                  </div>
+                                  <div style={{ 
+                                    fontSize: 10, 
+                                    fontWeight: 600, 
+                                    color: isLocked ? '#64748b' : topic.catColor, 
+                                    background: isLocked ? '#f1f5f9' : `${topic.catColor}12`, 
+                                    padding: "4px 10px", 
+                                    borderRadius: 999, 
+                                    textTransform: "uppercase" 
+                                  }}>
+                                    {isPaywalled ? 'Premium' : topic.category}
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            {showArrow && (() => {
-                              const destTopic = displayPair[i + 1];
-                              const isDestLocked = (destTopic.displayOrder > 1 && !hasPremiumAccess) || (destTopic.displayOrder > nextTopicId);
-                              const arrowColor = isDestLocked ? "#94a3b8" : "#2563eb";
-                              const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
-
-                              return (
-                                <div className="topic-horizontal-arrow" style={{ display: "flex", flexDirection: "row", alignItems: "center", flexShrink: 0, padding: "0 8px", alignSelf: "center" }}>
-                                  {isRTL ? (
-                                    <svg width="72" height="28" viewBox="0 0 72 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <defs>
-                                        <linearGradient id={`hArrowL-${pairIdx}`} x1="72" y1="14" x2="0" y2="14" gradientUnits="userSpaceOnUse">
-                                          <stop stopColor={isDestLocked ? "#f1f5f9" : "#dbeafe"} />
-                                          <stop offset="0.5" stopColor={strokeColor} />
-                                          <stop offset="1" stopColor={isDestLocked ? "#64748b" : "#1e3a8a"} />
-                                        </linearGradient>
-                                        <filter id={`glowL-${pairIdx}`} x="-20%" y="-150%" width="140%" height="400%">
-                                          <feGaussianBlur stdDeviation="2" result="blur" />
-                                          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                                        </filter>
-                                      </defs>
-                                      <line x1="68" y1="14" x2="22" y2="14" stroke={strokeColor} strokeWidth="4" strokeLinecap="round" opacity="0.2" filter={`url(#glowL-${pairIdx})`} />
-                                      <line x1="68" y1="14" x2="22" y2="14" stroke={`url(#hArrowL-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 3" />
-                                      <path d="M24 7L8 14L24 21" stroke={arrowColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                                      <circle cx="8" cy="14" r="3" fill={isDestLocked ? "#64748b" : "#1e3a8a"} />
-                                    </svg>
-                                  ) : (
-                                    <svg width="72" height="28" viewBox="0 0 72 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <defs>
-                                        <linearGradient id={`hArrowR-${pairIdx}`} x1="0" y1="14" x2="72" y2="14" gradientUnits="userSpaceOnUse">
-                                          <stop stopColor={isDestLocked ? "#f1f5f9" : "#dbeafe"} />
-                                          <stop offset="0.5" stopColor={strokeColor} />
-                                          <stop offset="1" stopColor={isDestLocked ? "#64748b" : "#1e3a8a"} />
-                                        </linearGradient>
-                                        <filter id={`glowR-${pairIdx}`} x="-20%" y="-150%" width="140%" height="400%">
-                                          <feGaussianBlur stdDeviation="2" result="blur" />
-                                          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                                        </filter>
-                                      </defs>
-                                      <line x1="4" y1="14" x2="50" y2="14" stroke={strokeColor} strokeWidth="4" strokeLinecap="round" opacity="0.2" filter={`url(#glowR-${pairIdx})`} />
-                                      <line x1="4" y1="14" x2="50" y2="14" stroke={`url(#hArrowR-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 3" />
-                                      <path d="M48 7L64 14L48 21" stroke={arrowColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                                      <circle cx="64" cy="14" r="3" fill={isDestLocked ? "#64748b" : "#1e3a8a"} />
-                                    </svg>
-                                  )}
+                                
+                                <h3 style={{ fontSize: 20, fontWeight: 700, color: "#1e293b", margin: 0, lineHeight: 1.3 }}>{topic.title}</h3>
+                                
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 24, fontSize: 13, color: "#64748b" }}>
+                                  <BookOpen size={16} color={isLocked ? "#94a3b8" : "#3b82f6"} />
+                                  <span>{topic.lessons} cursos disponibles</span>
                                 </div>
-                              );
-                            })()
-                            }
+                              </div>
+                              {isLocked && (
+                                <div style={{ position: "absolute", bottom: 12, right: 12 }}>
+                                  {isPaywalled ? <Sparkles size={16} color="#f59e0b" /> : <Zap size={16} color="#94a3b8" opacity={0.5} />}
+                                </div>
+                              )}
+                            </motion.div>
+
+                            {/* Connection Arrow Logic */}
+                            {!isLastTopic && (() => {
+                              const nextTopic = topics[idx + 1];
+                              const isTurnRow = (idx + 1) % 2 === 0; // Turn row every 2 topics
+                              const isDestLocked = (nextTopic.displayOrder > 1 && !hasPremiumAccess) || (nextTopicIdx !== -1 && (currentTopicIdx + 1) > nextTopicIdx);
+                              const arrowColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
+                              const isRightToLeft = !isEvenRow;
+
+                              if ((idx + 1) % 2 !== 0) {
+                                // Horizontal arrow between columns
+                                return (
+                                  <div style={{
+                                    position: "absolute",
+                                    top: `calc(${rowIdx * 220}px + 90px)`, // Rough center of card
+                                    left: "50%",
+                                    transform: "translateX(-50%)",
+                                    width: 60,
+                                    height: 20,
+                                    zIndex: 1,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                  }}>
+                                    <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+                                      {isRightToLeft ? (
+                                        <path d="M15 5L5 10L15 15M35 10H7" stroke={arrowColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                      ) : (
+                                        <path d="M25 5L35 10L25 15M5 10H33" stroke={arrowColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                      )}
+                                    </svg>
+                                  </div>
+                                );
+                              } else {
+                                // Vertical arrow between rows
+                                // If row 0, arrow is on Right (idx 1 down to 2)
+                                // If row 1, arrow is on Left (idx 3 down to 4)
+                                const isArrowOnRight = isEvenRow; 
+                                
+                                // Special case: if next topic is an orphan, center the arrow
+                                const isNextOrphan = (idx + 1) === topics.length - 1 && (idx + 1) % 2 === 0;
+
+                                return (
+                                  <div style={{
+                                    position: "absolute",
+                                    top: `calc(${rowIdx * 220}px + 180px)`,
+                                    left: isNextOrphan ? "50%" : (isArrowOnRight ? "calc(75% + 10px)" : "calc(25% - 10px)"),
+                                    transform: "translateX(-50%)",
+                                    height: 40,
+                                    width: 20,
+                                    zIndex: 1
+                                  }}>
+                                    <svg width="20" height="40" viewBox="0 0 20 40" fill="none">
+                                      <path d="M5 25L10 35L15 25M10 5V33" stroke={arrowColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                  </div>
+                                );
+                              }
+                            })()}
                           </React.Fragment>
                         )
-                      })
-                      }
+                      })}
                     </div>
-                    {!isLastPair && (() => {
-                      const nextPair = pairs[pairIdx + 1];
-                      const destTopic = nextPair[0];
-                      const isDestLocked = (destTopic.displayOrder > 1 && !hasPremiumAccess) || (destTopic.displayOrder > nextTopicId);
-                      const arrowColor = isDestLocked ? "#94a3b8" : "#1e3a8a";
-                      const strokeColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
-
-                      return (
-                        <div className="topic-vertical-arrow-container" style={{ display: "flex", width: "100%", justifyContent: "center", position: "relative" }}>
-                          <div style={{
-                            width: 1188,
-                            display: "flex",
-                            justifyContent: isRTL ? "flex-start" : "flex-end",
-                            paddingLeft: isRTL ? 275 : 0,
-                            paddingRight: isRTL ? 0 : 275,
-                            position: "relative"
-                          }}>
-                            <div style={{ marginLeft: isRTL ? -14 : 0, marginRight: isRTL ? 0 : -14, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                              <svg width="28" height="72" viewBox="0 0 28 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                  <linearGradient id={`vArrow-${pairIdx}`} x1="14" y1="0" x2="14" y2="72" gradientUnits="userSpaceOnUse">
-                                    <stop stopColor={isDestLocked ? "#f1f5f9" : "#dbeafe"} />
-                                    <stop offset="0.6" stopColor={strokeColor} />
-                                    <stop offset="1" stopColor={isDestLocked ? "#64748b" : "#1e3a8a"} />
-                                  </linearGradient>
-                                  <filter id={`vGlow-${pairIdx}`} x="-150%" y="-20%" width="400%" height="140%">
-                                    <feGaussianBlur stdDeviation="2" result="blur" />
-                                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                                  </filter>
-                                </defs>
-                                <line x1="14" y1="4" x2="14" y2="52" stroke={strokeColor} strokeWidth="5" strokeLinecap="round" opacity="0.15" filter={`url(#vGlow-${pairIdx})`} />
-                                <line x1="14" y1="4" x2="14" y2="52" stroke={`url(#vArrow-${pairIdx})`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 3" />
-                                <path d="M7 50L14 66L21 50" stroke={arrowColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                                <circle cx="14" cy="4" r="3" fill={isDestLocked ? "#f1f5f9" : "#dbeafe"} />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </React.Fragment>
+                  </div>
                 )
-              })
+              }
+
+              return [
+                renderSection(coreTopics, "Fase 1: Cimientos (Tronco Común)", "Los 5 pilares fundamentales para dominar el dinero.", 0),
+                <div key="separator" style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: 60, marginTop: -40 }}>
+                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                      <div style={{ width: 2, height: 40, background: "linear-gradient(to bottom, #3b82f6, transparent)" }} />
+                      <Sparkles size={24} color="#3b82f6" opacity={0.5} />
+                      <div style={{ width: 2, height: 40, background: "linear-gradient(to top, #6366f1, transparent)" }} />
+                   </div>
+                </div>,
+                renderSection(advancedTopics, "Fase 2: Especialización DNA", "Rutas personalizadas basadas en tu perfil analítico y metas personales.", 5)
+              ]
             })()}
           </section>
         </section>
       </div >
 
       <style>{`
-        /* Topics row: 2-per-row on desktop, 1-per-row on mobile */
+        /* Responsive Grid: Stack on mobile */
         @media (max-width: 900px) {
-          .topics-row-container {
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 40px !important;
-            margin-bottom: 40px !important;
+          .courses-page-active div[style*="gridTemplateColumns"] {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
           }
-          .course-card-wrapper {
-            flex: 1 1 100% !important;
-            width: 100% !important;
-            max-width: 550px !important;
-          }
-          .topic-horizontal-arrow, .topic-vertical-arrow-container {
+          
+          /* Hide connection arrows on mobile stack */
+          .courses-page-active svg[width="40"],
+          .courses-page-active svg[width="20"] {
             display: none !important;
           }
         }
@@ -747,6 +778,14 @@ export default function CoursesPage() {
         }
         .next-topic-glow {
           animation: topic-glow-pulse 4s ease-in-out infinite !important;
+        }
+
+        .phase-title-shimmer {
+          animation: titleShimmer 3s linear infinite;
+        }
+
+        @keyframes titleShimmer {
+          to { background-position: 200% center; }
         }
 
         @media (max-width: 767px) {

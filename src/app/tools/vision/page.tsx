@@ -447,7 +447,10 @@ export default function VisionCanvasPage() {
   };
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button === 1 || e.altKey) {
+    // Pan with Left Click (0) on background, Middle Click (1), or Alt+Click
+    const isBackground = e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('canvas-stage')
+    
+    if (e.button === 1 || e.altKey || (e.button === 0 && isBackground)) {
       setIsPanning(true)
       panStart.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y }
       e.preventDefault()
@@ -640,6 +643,10 @@ export default function VisionCanvasPage() {
           flex: 1;
           position: relative;
           overflow: hidden;
+          cursor: grab;
+        }
+        .canvas-area:active {
+          cursor: grabbing;
         }
 
         /* ── Header ── */
@@ -917,7 +924,6 @@ export default function VisionCanvasPage() {
         <div className="vision-main-content">
           
           <div ref={canvasRef} className="canvas-area canvas-bg"
-            style={{ cursor: isPanning ? "grabbing" : "default" }}
             onMouseDown={handleMouseDown} onWheel={handleWheel}
           >
             <div className="canvas-stage" style={{ transform: `translate(${pan.x}px,${pan.y}px) scale(${scale})`, transformOrigin: "0 0" }}>
@@ -1070,7 +1076,7 @@ export default function VisionCanvasPage() {
         <div style={{ position: "fixed", bottom: 16, left: "50%", transform: "translateX(-50%)", padding: "8px 16px", background: "rgba(255,255,255,0.85)", backdropFilter: "blur(10px)", border: "1px solid rgba(15,98,254,0.12)", borderRadius: 10, display: "flex", alignItems: "center", gap: 8, zIndex: 5, boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}>
            <Move size={12} color="#0F62FE" />
            <span style={{ fontSize: 11, fontWeight: 700, color: "#1e293b", letterSpacing: "0.02em" }}>
-             Scroll = Zoom · Alt+Arrastrar = Mover Canvas
+             Scroll = Zoom · Clic y arrastrar fondo = Mover Canvas
            </span>
         </div>
       </div>

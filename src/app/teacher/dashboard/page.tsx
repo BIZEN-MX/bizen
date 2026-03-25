@@ -7,8 +7,9 @@ import {
     Users, BookOpen, TrendingUp, Zap, Search,
     ChevronRight, Award, BarChart2, Activity,
     Shield, AlertTriangle, Download, ChevronUp, ChevronDown,
-    Brain, Star, Target, ArrowUpRight, X, Briefcase, Calendar, MessageCircle, Wallet
+    Brain, Star, Target, ArrowUpRight, X, Briefcase, Calendar, MessageCircle, Wallet, FileText
 } from 'lucide-react'
+import { generateImpactReport } from '@/utils/reportGenerator'
 
 // ─── Types ────────────────────────────────────────────────────────
 interface Student {
@@ -78,6 +79,8 @@ interface DashboardData {
         institutionalROI: number
         studentsAtRisk: number
         diagnosticStats: DiagnosticStats
+        currentQuizAvg: number
+        nationalAvg: number
     }
     students: Student[]
     communityLeaders: Leader[]
@@ -323,6 +326,10 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div style={{ position: 'relative', zIndex: 1, display: 'flex', gap: 10 }}>
+                        <button onClick={() => generateImpactReport(data)}
+                            style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 16px', background: '#0F62FE', border: 'none', borderRadius: 10, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(15, 98, 254, 0.3)' }}>
+                            <FileText size={14} /> Reporte Ejecutivo
+                        </button>
                         <button onClick={() => exportCSV(data.students)}
                             style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 16px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, color: 'rgba(255,255,255,0.7)', fontSize: 13, cursor: 'pointer', transition: 'all 0.2s' }}>
                             <Download size={14} /> Exportar CSV

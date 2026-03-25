@@ -9,37 +9,37 @@ export interface Tema2Subtema {
   lessons: Tema2Lesson[]
 }
 
-export const TEMA2_TITLE = "Mentalidad financiera (sesgos y decisiones)"
+export const TEMA2_TITLE = "Ingeniería del ingreso"
 
 export const TEMA2_SUBTEMAS: Tema2Subtema[] = [
   {
-    title: "Sesgos comunes",
+    title: "La naturaleza del dinero",
     lessons: [
-      { title: "¿Qué es un sesgo y por qué te afecta?", slug: "que-es-un-sesgo-y-por-que-te-afecta", level: "Básico" },
-      { title: "Sesgo de comparación (redes)", slug: "sesgo-de-comparacion-redes", level: "Básico" },
-      { title: "Sesgo de confirmación (solo veo lo que quiero)", slug: "sesgo-de-confirmacion-solo-veo-lo-que-quiero", level: "Intermedio" },
-      { title: "Aversión a la pérdida (miedo a perder)", slug: "aversion-a-la-perdida-miedo-a-perder", level: "Intermedio" },
-      { title: "¿Cómo detectar mis sesgos en compras reales?", slug: "como-detectar-mis-sesgos-en-compras-reales", level: "Avanzado" },
+      { title: "¿Por qué el mercado paga lo que paga?", slug: "por-que-el-mercado-paga-lo-que-paga", level: "Básico" },
+      { title: "Ingreso Activo vs Pasivo: La Realidad", slug: "ingreso-activo-vs-pasivo-la-realidad", level: "Básico" },
+      { title: "El Triángulo del Valor (Habilidad, Escala, Rareza)", slug: "el-triangulo-del-valor", level: "Intermedio" },
+      { title: "Ingreso de Portafolio: Dinero que genera dinero", slug: "ingreso-de-portafolio-dinero-que-genera-dinero", level: "Intermedio" },
+      { title: "Evaluación: ¿Cómo se ve tu flujo de entrada hoje?", slug: "evaluacion-flujo-de-entrada-hoy", level: "Avanzado" },
     ]
   },
   {
-    title: "Impulsos",
+    title: "El Capital de tus Habilidades",
     lessons: [
-      { title: "Impulso vs plan (diferencia real)", slug: "impulso-vs-plan-diferencia-real", level: "Básico" },
-      { title: "Gatillos: estrés, aburrimiento, presión", slug: "gatillos-estres-aburrimiento-presion", level: "Básico" },
-      { title: "“Me lo merezco” como trampa mental", slug: "me-lo-merezco-como-trampa-mental", level: "Intermedio" },
-      { title: "Frenos rápidos (reglas de 10 min / 24h)", slug: "frenos-rapidos-reglas-de-10-min-24h", level: "Intermedio" },
-      { title: "Caso: compra impulsiva y consecuencia", slug: "caso-compra-impulsiva-y-consecuencia", level: "Avanzado" },
+      { title: "Habilidades de Alto Valor (High-Income Skills)", slug: "habilidades-de-alto-valor", level: "Básico" },
+      { title: "Escalabilidad: ¿Tu tiempo tiene techo?", slug: "escalabilidad-tu-tiempo-tiene-techo", level: "Básico" },
+      { title: "Invertir en ti: El ROI de tu educación", slug: "roi-de-tu-educacion", level: "Intermedio" },
+      { title: "Soft Skills: El multiplicador invisible de ingresos", slug: "soft-skills-multiplicador-ingresos", level: "Intermedio" },
+      { title: "Diseño de Carrera: De Operativo a Estratégico", slug: "diseno-de-carrera-operativo-a-estrategico", level: "Avanzado" },
     ]
   },
   {
-    title: "Largo plazo",
+    title: "Optimización de la Riqueza",
     lessons: [
-      { title: "Paciencia financiera aplicada", slug: "paciencia-financiera-aplicada", level: "Básico" },
-      { title: "Proceso real vs resultados rápidos", slug: "proceso-real-vs-resultados-rapidos", level: "Básico" },
-      { title: "Interés compuesto como idea (sin instrumentos aún)", slug: "interes-compuesto-como-idea-sin-instrumentos-aun", level: "Intermedio" },
-      { title: "Consistencia: hábitos > motivación", slug: "consistencia-habitos-motivacion", level: "Intermedio" },
-      { title: "Plan mental de 30 días (largo plazo corto)", slug: "plan-mental-de-30-dias-largo-plazo-corto", level: "Avanzado" },
+      { title: "Capital Intelectual vs Capital Financiero", slug: "capital-intelectual-vs-financiero", level: "Básico" },
+      { title: "El costo de no saber: Impuesto a la ignorancia", slug: "impuesto-a-la-ignorancia", level: "Básico" },
+      { title: "Apancalamiento: Hacer más con menos", slug: "apalancamiento-hacer-mas-con-menos", level: "Intermedio" },
+      { title: "Ingresos Recurrentes: Tu ejército de centavos", slug: "ingresos-recurrentes-tu-ejercito", level: "Intermedio" },
+      { title: "Plan de Acción: Duplicar tu valor de mercado", slug: "plan-accion-duplicar-valor-mercado", level: "Avanzado" },
     ]
   },
 ]

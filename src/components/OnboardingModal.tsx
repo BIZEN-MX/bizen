@@ -6,6 +6,10 @@ import { AVATAR_OPTIONS, AVATAR_CATEGORIES } from "@/lib/avatarOptions"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/AuthContext"
 import { SchoolIcon, CakeIcon, PartyIcon, RocketIcon, ChevronRightIcon } from "@/components/CustomIcons"
+import { 
+  BookOpen, Bot, Award, Banknote, Trophy, 
+  Globe, ChevronRight, User, Cake, Star, Sparkles, Lightbulb
+} from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -232,9 +236,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           position: relative; overflow: hidden; text-align: center;
           background:
             radial-gradient(ellipse 90% 60% at 50% -10%, rgba(37,99,235,0.7) 0%, transparent 65%),
-            radial-gradient(ellipse 60% 80% at 15% 110%, rgba(99,40,220,0.4) 0%, transparent 65%),
+            radial-gradient(ellipse 60% 80% at 15% 110%, rgba(11,113,254,0.4) 0%, transparent 65%),
             radial-gradient(ellipse 80% 60% at 90% 80%, rgba(15,98,254,0.25) 0%, transparent 70%),
-            linear-gradient(175deg, #020817 0%, #050d2d 45%, #030a1e 100%);
+            linear-gradient(175deg, #0B1E5E 0%, #0B1E5E 45%, #030a1e 100%);
           padding: clamp(36px, 8vw, 64px) clamp(24px, 6vw, 44px) clamp(32px, 7vw, 52px);
           animation: ob-fade-in 0.6s ease both;
         }
@@ -432,7 +436,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           cursor: pointer; transition: all 0.22s ease; font-family: inherit;
         }
         .ob-cat-tab.active {
-          background: linear-gradient(135deg, #0F62FE, #6366f1);
+          background: linear-gradient(135deg, #0F62FE, #3b82f6);
           color: white; box-shadow: 0 4px 14px rgba(15,98,254,0.35);
         }
         .ob-cat-tab.inactive { background: #f1f5f9; color: #64748b; }
@@ -473,7 +477,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         }
         .ob-username-av {
           width: clamp(46px, 12vw, 58px); height: clamp(46px, 12vw, 58px);
-          border-radius: 50%; background: linear-gradient(135deg, #0F62FE, #10b981);
+          border-radius: 50%; background: linear-gradient(135deg, #0F62FE, #2563eb);
           flex-shrink: 0; overflow: hidden;
           display: flex; align-items: center; justify-content: center;
           box-shadow: 0 4px 16px rgba(15,98,254,0.3);
@@ -575,12 +579,17 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                 } as React.CSSProperties} />
                             ))}
 
-                            {/* Mascot with glow */}
+                            {/* Brand Icon with glow */}
                             <div style={{ position: "relative", display: "inline-block", marginBottom: "clamp(24px,6vw,36px)" }}>
                                 <div className="ob-hero-glow" />
                                 <div className="ob-hero-ring" />
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src="/image copy 5.png" alt="Billy, mascota BIZEN" className="ob-hero-mascot" style={{ margin: 0 }} />
+                                <div style={{ 
+                                    width: 80, height: 80, borderRadius: 24, background: '#0F62FE',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    boxShadow: '0 8px 32px rgba(15,98,254,0.3)', position: 'relative', zIndex: 1
+                                }}>
+                                    <Sparkles size={40} color="white" />
+                                </div>
                             </div>
 
                             {/* Badge */}
@@ -591,14 +600,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                             {/* Heading */}
                             <h1 className="ob-hero-h1">
-                                Hola, <em>{profileName}</em> 👋
+                                Hola, <em>{profileName}</em>
                             </h1>
                             <p className="ob-hero-sub">
                                 En 2 minutos configuramos tu perfil y te mostramos todo lo que puedes hacer aquí.
                             </p>
                             <p className="ob-hero-hint" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                                <strong>Billy AI Mentor</strong> te guiará en cada paso.
-                                <span style={{ animation: "ob-float 1.5s infinite" }}>🤖</span>
+                                <strong>IA Mentor</strong> lista para asistirte.
+                                <Bot size={18} color="#93c5fd" />
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ animation: 'ob-twinkle 1s infinite'}}>
                                     <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="#93c5fd" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
@@ -607,15 +616,15 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                             {/* Feature pills */}
                             <div className="ob-features">
                                 {[
-                                    { icon: "📚", label: "30 temas" },
-                                    { icon: "🤖", label: "IA con Billy" },
-                                    { icon: "🏅", label: "Retos diarios" },
-                                    { icon: "💰", label: "Simuladores" },
-                                    { icon: "🏆", label: "Rankings" },
-                                    { icon: "🌱", label: "Impacto social" },
+                                    { icon: BookOpen, label: "30 temas" },
+                                    { icon: Bot, label: "Mentoria IA" },
+                                    { icon: Award, label: "Retos diarios" },
+                                    { icon: Banknote, label: "Simuladores" },
+                                    { icon: Trophy, label: "Rankings" },
+                                    { icon: Globe, label: "Impacto social" },
                                 ].map(f => (
                                     <div key={f.label} className="ob-feature-pill">
-                                        <span className="ob-feature-pill-icon">{f.icon}</span>
+                                        <f.icon size={13} style={{ color: '#0F62FE' }} />
                                         {f.label}
                                     </div>
                                 ))}
@@ -852,8 +861,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                             </div>
 
                             <div className="ob-step-heading-wrap">
-                                <div className="ob-step-icon-circle" style={{ background: "#FFF1F2" }}>
-                                    <CakeIcon size={36} color="#F43F5E" />
+                                <div className="ob-step-icon-circle" style={{ background: "#eff6ff" }}>
+                                    <Cake size={36} color="#0F62FE" />
                                 </div>
                                 <h2 className="ob-step-h2">¿Cuándo es tu cumpleaños?</h2>
                                 <p className="ob-step-h2-sub">Nos ayuda a personalizar tu experiencia</p>
@@ -875,9 +884,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                     const age = calcAge(birthDate)
                                     return age !== null && age >= 0 && age <= 120 ? (
                                         <div className="ob-age-reveal">
-                                            <PartyIcon size={22} color="#1e40af" />
+                                            <Star size={22} color="#1e40af" />
                                             <div>
-                                                <div style={{ fontSize: "clamp(12.5px,3vw,14px)", fontWeight: 700, color: "#1e40af" }}>¡Tienes {age} años! 🎉</div>
+                                                <div style={{ fontSize: "clamp(12.5px,3vw,14px)", fontWeight: 700, color: "#1e40af" }}>¡Tienes {age} años!</div>
                                                 <div style={{ fontSize: "clamp(10.5px,2.5vw,12px)", color: "#3b82f6" }}>Bienvenido a BIZEN</div>
                                             </div>
                                         </div>

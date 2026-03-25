@@ -7,7 +7,7 @@ import {
   AlertTriangle, RefreshCw, Shield, CheckCircle, Target,
   BookOpen, Activity, Award, Percent, History, Layers,
   BadgeCheck, FileText, Star, Wallet, Clock, BarChart3,
-  ArrowRight, HelpCircle, TrendingUp, ChevronDown, ChevronUp, ArrowLeft
+  ArrowRight, HelpCircle, TrendingUp, ChevronDown, ChevronUp, ArrowLeft, Rocket
 } from 'lucide-react'
 import { simulateCreditCard, simulatePersonalLoan, simulateInstallments } from '@/lib/creditSimulator'
 import { ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
@@ -405,6 +405,22 @@ function CreditSimulatorContent() {
   const score = useMemo(() => calcScore(onTime, util, yrHist, mixCount, inquiries), [onTime, util, yrHist, mixCount, inquiries])
   const { text: scoreText, color: scoreColor } = scoreLabel(score)
 
+  const scoreHistory = useMemo(() => {
+    const history = []
+    // Realistic-ish projection: high payments and low util build score slowly.
+    // Defaults: if onTime > 95 and util < 30, +3-5 pts/mo.
+    // If onTime < 80 or util > 70, -5-10 pts/mo.
+    const monthlyChange = (onTime > 95 ? 4 : onTime < 85 ? -6 : 1) + (util < 30 ? 2 : util > 60 ? -4 : 0)
+    
+    for (let i = 0; i <= 6; i++) {
+       history.push({
+         mes: i === 0 ? 'Hoy' : `+${i}m`,
+         valor: Math.min(850, Math.max(300, score + (monthlyChange * i)))
+       })
+    }
+    return history
+  }, [score, onTime, util])
+
   // Load saved run if runId exists
   useEffect(() => {
     async function fetchRun() {
@@ -658,13 +674,34 @@ function CreditSimulatorContent() {
                     <FactorBar label="Mezcla de Crédito" pct={mixPct} weight="10%" color="#8b5cf6" icon={Layers} tip="Tener crédito revolvente y a plazo ayuda a tu perfil." />
                     <FactorBar label="Nuevas Solicitudes" pct={inqPct} weight="10%" color="#ef4444" icon={FileText} tip={inquiries > 3 ? 'Evita solicitar muchos créditos en poco tiempo.' : 'Bien. Poco impacto por solicitudes recientes.'} />
 
-                    {/* Personalized advice */}
-                    <div style={{ background: 'linear-gradient(135deg,#0B71FE,#1e40af)', borderRadius: 16, padding: '18px 20px', color: 'white', marginTop: 20 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                        <Target size={16} color="rgba(255,255,255,0.8)" />
-                        <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.7)', margin: 0, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Tu mayor oportunidad de mejora</p>
+                    {/* Predictive Timeline */}
+                    <div style={{ marginTop: 24, padding: '20px', background: '#f8fafc', borderRadius: 20, border: '1px solid #e2e8f0' }}>
+                      <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', margin: '0 0 4px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <TrendingUp size={16} color="#0B71FE" /> Pronóstico a 6 meses
+                      </h3>
+                      <p style={{ fontSize: 12, color: '#64748b', margin: '0 0 16px' }}>Si mantienes estos hábitos, así evolucionará tu score.</p>
+                      <div style={{ height: 120 }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={scoreHistory} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                            <defs>
+                              <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#0B71FE" stopOpacity={0.2}/><stop offset="95%" stopColor="#0B71FE" stopOpacity={0}/></linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                            <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
+                            <YAxis domain={[300, 850]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
+                            <Tooltip contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                            <Area type="monotone" dataKey="valor" stroke="#0B71FE" strokeWidth={3} fillOpacity={1} fill="url(#scoreGrad)" />
+                          </AreaChart>
+                        </ResponsiveContainer>
                       </div>
-                      <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)', margin: 0, lineHeight: 1.65 }}>{weakest.msg}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16, padding: '10px 14px', background: 'white', borderRadius: 12, border: '1px solid #e2e8f0' }}>
+                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <Rocket size={16} color="#0B71FE" />
+                        </div>
+                        <p style={{ fontSize: 12, color: '#334155', margin: 0, lineHeight: 1.5 }}>
+                          <strong>Meta:</strong> Alcanzar <strong>750 puntos</strong> te daría acceso a las mejores tasas de interés en México.
+                        </p>
+                      </div>
                     </div>
 
                     <SaveRunButton 

@@ -3,13 +3,18 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
+import { 
+  BookOpen, Home, Wallet, Target, MessageSquare, 
+  Globe, ShoppingBag, Trophy, User, Sparkles,
+  ChevronRight, ChevronLeft, X, Lightbulb
+} from "lucide-react"
 
 // ─── Tour Step Definitions ────────────────────────────────────────────────────
 
 interface TourStep {
   path: string
   label: string
-  emoji: string
+  icon: any
   title: string
   description: string
   color: string
@@ -23,7 +28,7 @@ const BASE_TOUR_STEPS: TourStep[] = [
   {
     path: "/courses",
     label: "Lecciones",
-    emoji: "📚",
+    icon: BookOpen,
     title: "Tu camino de aprendizaje",
     description: "Explora 30 temas de educación financiera diseñados paso a paso: presupuesto, inversión, deuda, emprendimiento y más. Cada tema tiene lecciones interactivas, quizzes y simuladores.",
     tip: "Completa lecciones para ganar XP y subir de nivel.",
@@ -35,91 +40,91 @@ const BASE_TOUR_STEPS: TourStep[] = [
   {
     path: "/dashboard",
     label: "Dashboard",
-    emoji: "🏠",
+    icon: Home,
     title: "Tu centro de control",
     description: "El dashboard es tu punto de partida. Mira tu racha diaria, las misiones del día, tu progreso en XP y accede rápidamente a lo que necesitas.",
     tip: "Completa la misión diaria para mantener tu racha activa.",
-    color: "#7c3aed",
-    colorLight: "rgba(124,58,237,0.1)",
-    colorDark: "#5b21b6",
+    color: "#0F62FE",
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
     placement: "bottom-left",
   },
   {
     path: "/tools/budget",
     label: "Smart Budget",
-    emoji: "💰",
+    icon: Wallet,
     title: "Presupuesto inteligente con IA",
-    description: "Registra ingresos y gastos, analiza tu flujo de dinero y pregúntale a Billy, tu asesor financiero con IA. También puede predecir tu flujo futuro con el modo 'Forecast'.",
-    tip: "Usa 'Ask Billy' para obtener consejos personalizados sobre tu presupuesto.",
-    color: "#059669",
-    colorLight: "rgba(5,150,105,0.1)",
-    colorDark: "#047857",
+    description: "Registra ingresos y gastos, analiza tu flujo de dinero y obtén consejos de tu asesor financiero con IA. También puedes predecir tu flujo futuro con el modo 'Forecast'.",
+    tip: "Usa el chat de IA para obtener consejos personalizados sobre tu presupuesto.",
+    color: "#0F62FE",
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
     placement: "bottom-left",
   },
   {
     path: "/tools/vision",
     label: "Vision Board",
-    emoji: "🎯",
+    icon: Target,
     title: "Tablero de metas financieras",
     description: "Visualiza tus metas de ahorro e inversión con el Vision Board. Define objetivos, ponles fecha y monitorea tu avance hacia la libertad financiera.",
     tip: "Tener metas claras triplica la probabilidad de alcanzarlas.",
-    color: "#dc2626",
-    colorLight: "rgba(220,38,38,0.1)",
-    colorDark: "#b91c1c",
+    color: "#0F62FE",
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
     placement: "bottom-left",
   },
   {
     path: "/forum",
     label: "Foro & Comunidad",
-    emoji: "💬",
+    icon: MessageSquare,
     title: "Aprende con tu comunidad",
     description: "Comparte tus avances, haz preguntas financieras y aprende de otros. El foro es un espacio donde la comunidad BIZEN crece junta. Publica evidencias de tus retos diarios y recibe retroalimentación.",
     tip: "Participar en el foro te da puntos extra de XP.",
-    color: "#8b5cf6",
-    colorLight: "rgba(139,92,246,0.1)",
-    colorDark: "#7c3aed",
+    color: "#0F62FE",
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
     placement: "bottom-left",
   },
   {
     path: "/impacto-social",
     label: "Impacto Social",
-    emoji: "🌱",
+    icon: Globe,
     title: "Tu aprendizaje genera donaciones",
     description: "Cada lección que completas y cada reto que logras hace que BIZEN done a causas sociales. Tu educación financiera tiene un impacto real en el mundo.",
     tip: "Mira cuánto ha donado la comunidad BIZEN en total.",
-    color: "#10b981",
-    colorLight: "rgba(16,185,129,0.1)",
-    colorDark: "#059669",
+    color: "#0F62FE",
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
     placement: "bottom-left",
   },
   {
     path: "/tienda",
     label: "Tienda & Recompensas",
-    emoji: "🏅",
+    icon: ShoppingBag,
     title: "Tus BIZCOINS y recompensas",
     description: "Gana BIZCOINS por completar lecciones, retos y participar en la comunidad. Canjéalos por recompensas exclusivas, avatares premium y beneficios reales.",
     tip: "Mantén una racha de 7 días para multiplicar tus BIZCOINS.",
-    color: "#f59e0b",
-    colorLight: "rgba(245,158,11,0.1)",
-    colorDark: "#d97706",
+    color: "#0F62FE",
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
     placement: "bottom-right",
   },
   {
     path: "/leaderboard",
     label: "Rankings",
-    emoji: "🏆",
+    icon: Trophy,
     title: "Compite y destaca",
     description: "Mira dónde estás en el ranking semanal y mensual. Compite con tu clase, tu escuela o con toda la comunidad BIZEN. ¿Puedes llegar al TOP 10?",
     tip: "Los rankings se actualizan cada semana. ¡El domingo es el gran reset!",
-    color: "#ef4444",
-    colorLight: "rgba(239,68,68,0.1)",
-    colorDark: "#dc2626",
+    color: "#0F62FE",
+    colorLight: "rgba(15,98,254,0.1)",
+    colorDark: "#0040c8",
     placement: "bottom-right",
   },
   {
     path: "/profile",
     label: "Tu Perfil",
-    emoji: "✨",
+    icon: User,
     title: "Tu identidad en BIZEN",
     description: "Personaliza tu avatar, edita tu bio y muestra tus logros al mundo. Aquí también puedes ver a quién sigues, quién te sigue y tus certificaciones obtenidas.",
     tip: "Un perfil completo genera más conexiones con la comunidad.",
@@ -159,7 +164,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
   const [visible, setVisible] = useState(false)
   const [cardVisible, setCardVisible] = useState(false)
   const [closing, setClosing] = useState(false)
-  const [showBillyHighlight, setShowBillyHighlight] = useState(false)
 
   const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular')
 
@@ -189,14 +193,8 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
     }
     const t = setTimeout(() => setCardVisible(true), 120)
 
-    // Show Billy highlight after a few seconds if not already interacting
-    const billyTimer = setTimeout(() => {
-      setShowBillyHighlight(true)
-    }, 2000)
-
     return () => {
       clearTimeout(t)
-      clearTimeout(billyTimer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -282,17 +280,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
         @keyframes tc-dot-pop { from { transform:scale(0.5); opacity:0 } to { transform:scale(1); opacity:1 } }
         @keyframes tc-tip-in  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
         @keyframes tc-ring    { 0% { opacity:0.6; transform:scale(0.92) } 100% { opacity:0; transform:scale(1.55) } }
-        
-        @keyframes tc-billy-point {
-          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,99,235,0.7); }
-          70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37,99,235,0); }
-          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,99,235,0); }
-        }
-        
-        @keyframes billyBounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
 
         /* ── Backdrop (non-blocking, just a faint tint) ── */
         .tc-backdrop {
@@ -353,15 +340,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           padding: clamp(14px,3.5vw,24px) clamp(16px,4vw,28px) 0;
         }
 
-        /* ── Mascot ── */
-        .tc-mascot-wrap {
-          flex-shrink: 0;
-          width: clamp(46px,10vw,64px); height: clamp(46px,10vw,64px);
-          animation: tc-float 3.8s ease-in-out infinite;
-          filter: drop-shadow(0 4px 10px rgba(15,98,254,0.25));
-        }
-        .tc-mascot-wrap img { width: 100%; height: 100%; object-fit: contain; }
-
         /* ── Badge row ── */
         .tc-badge {
           display: inline-flex; align-items: center; gap: 7px;
@@ -396,24 +374,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
         }
         .tc-tip-emoji { font-size: 14px; line-height: 1.5; flex-shrink: 0; }
         .tc-tip-text { font-size: clamp(11px,2.6vw,12.5px); color: #475569; font-weight: 500; line-height: 1.6; }
-
-        /* ── Billy Call-to-Action ── */
-        .tc-billy-cta {
-          margin-top: 16px;
-          padding: 12px;
-          border-radius: 16px;
-          background: linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(37,99,235,0.1) 100%);
-          border: 1px dashed rgba(37,99,235,0.3);
-          display: flex; align-items: center; gap: 12px;
-        }
-        .tc-billy-minipic {
-           width: 32px; height: 32px; flex-shrink: 0;
-           animation: tc-billy-point 2s infinite;
-           background: #2563eb;
-           border-radius: 50%;
-           display: flex; align-items: center; justifyContent: center;
-           padding: 4px;
-        }
 
         /* ── Footer ── */
         .tc-footer {
@@ -474,24 +434,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           color: #0F62FE; font-family: 'Inter', sans-serif;
         }
 
-        /* ── Billy Highlight Arrow ── */
-        .billy-highlight {
-          position: fixed;
-          bottom: 100px;
-          right: 32px;
-          z-index: 100003;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 12px;
-          pointer-events: none;
-        }
-        .billy-highlight-text {
-          background: #2563eb;
-          color: white;
-          padding: 8px 16px;
-          border-radius: 12px;
-          font-weight: 700;
           font-size: 13px;
           box-shadow: 0 8px 20px rgba(37,99,235,0.4);
           animation: tc-in 0.5s ease both;
@@ -514,7 +456,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           .tc-btn   { font-size: 13px; }
           .tc-btn-prev { padding: 9px 14px; }
           .tc-btn-next { padding: 9px 18px; }
-          .billy-highlight { bottom: 160px; right: 20px; }
         }
         @media (max-width: 400px) {
           .tc-header { padding: 12px 14px 0; gap: 9px; }
@@ -533,22 +474,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
         <button className="tc-skip" onClick={endTour}>
           Saltar tour ✕
         </button>
-      )}
-
-      {/* Billy Highlight */}
-      {(discoveryMode || isLast || stepIndex === 0) && showBillyHighlight && (
-        <div className="billy-highlight">
-          <div className="billy-highlight-text" style={{ 
-            background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)',
-            border: '2px solid rgba(255,255,255,0.2)',
-            transform: 'rotate(-2deg)'
-          }}>
-            ¡Pregúntame lo que quieras! 🤖
-          </div>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style={{ animation: 'billyBounce 1s infinite'}}>
-            <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="#2563eb" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
       )}
 
       {/* Tour card */}
@@ -578,16 +503,10 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
 
         {/* Header */}
         <div className="tc-header">
-          {/* Mascot */}
-          <div className="tc-mascot-wrap">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/image copy 5.png" alt="Billy" />
-          </div>
-
           <div style={{ flex: 1, minWidth: 0, paddingTop: 2, paddingRight: discoveryMode ? 0 : 48 }}>
             {/* Badge */}
             <div className="tc-badge" style={{ color: current.color, background: current.colorLight, border: `1.5px solid ${current.colorLight.replace('0.1)', '0.3)')}` }}>
-              <span style={{ fontSize: 13 }}>{current.emoji}</span>
+              <current.icon size={13} style={{ marginRight: 4 }} />
               <span>{current.label}</span>
             </div>
             <h3 className="tc-title">{current.title}</h3>
@@ -596,24 +515,13 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
 
         {/* Body */}
         <div className="tc-body">
-          <p className="tc-desc">{current.description}</p>
+          <p className="tc-desc" style={{ marginTop: 0 }}>{current.description}</p>
 
           {current.tip && (
             <div className="tc-tip">
-              <span className="tc-tip-emoji">💡</span>
+              <Lightbulb size={12} style={{ marginRight: 6, flexShrink: 0 }} />
               <span className="tc-tip-text">{current.tip}</span>
             </div>
-          )}
-
-          {discoveryMode && (
-             <div className="tc-billy-cta">
-                <div className="tc-billy-minipic">
-                   <img src="/billy_chatbot.png" alt="Billy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </div>
-                <div style={{ fontSize: 12.5, color: '#1e3a8a', fontWeight: 600 }}>
-                   ¿Tienes dudas? ¡Billy está aquí para ayudarte!
-                </div>
-             </div>
           )}
         </div>
 

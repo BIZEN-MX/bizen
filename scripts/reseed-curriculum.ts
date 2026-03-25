@@ -38,36 +38,36 @@ const curriculum = [
     ]
   },
   {
-    "topic": "2) Mentalidad financiera (sesgos y decisiones)",
+    "topic": "2) Ingeniería del Ingreso",
     "subthemes": [
       {
-        "title": "Subtema A: Sesgos comunes",
+        "title": "Naturaleza del Dinero y el Valor",
         "lessons": [
-          "Qué es un sesgo y por qué te afecta",
-          "Sesgo de comparación (redes)",
-          "Sesgo de confirmación (solo veo lo que quiero)",
-          "Aversión a la pérdida (miedo a perder)",
-          "Cómo detectar mis sesgos en compras reales"
+          "¿Por qué el mercado paga lo que paga?",
+          "Ingreso Activo vs Pasivo: La Realidad",
+          "El Triángulo del Valor (Habilidad, Escala, Rareza)",
+          "Ingreso de Portafolio: Dinero que genera dinero",
+          "Evaluación: ¿Cómo se ve tu flujo de entrada hoy?"
         ]
       },
       {
-        "title": "Subtema B: Impulsos",
+        "title": "El Capital de tus Habilidades",
         "lessons": [
-          "Impulso vs plan (diferencia real)",
-          "Gatillos: estrés, aburrimiento, presión",
-          "“Me lo merezco” como trampa mental",
-          "Frenos rápidos (reglas de 10 min / 24h)",
-          "Caso: compra impulsiva y consecuencia"
+          "Habilidades de Alto Valor (High-Income Skills)",
+          "Escalabilidad: ¿Tu tiempo tiene techo?",
+          "Invertir en ti: El ROI de tu educación",
+          "Soft Skills: El multiplicador invisible de ingresos",
+          "Diseño de Carrera: De Operativo a Estratégico"
         ]
       },
       {
-        "title": "Subtema C: Largo plazo",
+        "title": "Optimización de la Riqueza",
         "lessons": [
-          "Paciencia financiera aplicada",
-          "Proceso real vs resultados rápidos",
-          "Interés compuesto como idea (sin instrumentos aún)",
-          "Consistencia: hábitos > motivación",
-          "Plan mental de 30 días (largo plazo corto)"
+          "Capital Intelectual vs Capital Financiero",
+          "El costo de no saber: Impuesto a la ignorancia",
+          "Apalancamiento: Hacer más con menos",
+          "Ingresos Recurrentes: Tu ejército de centavos",
+          "Plan de Acción: Duplicar tu valor de mercado"
         ]
       }
     ]

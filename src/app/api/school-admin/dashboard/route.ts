@@ -87,7 +87,7 @@ export async function GET(request: Request) {
                 xp: true,
                 createdAt: true,
                 progress: {
-                    select: { id: true, percent: true, completedAt: true }
+                    select: { id: true, percent: true, updatedAt: true }
                 },
                 enrollments: {
                     select: { topic: { select: { title: true } } }
@@ -102,13 +102,17 @@ export async function GET(request: Request) {
         
         // --- ADVANCED METRICS AGGREGATION ---
 
-        // A. Quiz Efficiency (Attempts per quiz)
+        // A. Quiz Efficiency & Performance
         const allAttempts = await prisma.attempt.findMany({
             where: { userId: { in: studentIds as any } },
-            select: { userId: true, quizId: true }
+            select: { userId: true, quizId: true, score: true }
         })
         const quizPairs = new Set(allAttempts.map(a => `${a.userId}-${a.quizId}`)).size
         const avgAttemptsPerQuiz = quizPairs > 0 ? (allAttempts.length / quizPairs).toFixed(2) : "1.00"
+        
+        const currentQuizAvg = allAttempts.length > 0
+            ? Math.round(allAttempts.reduce((acc, curr) => acc + curr.score, 0) / allAttempts.length)
+            : 0
 
         // B. Stock Performance
         const portfolios = await prisma.simulator_portfolios.findMany({
@@ -153,7 +157,6 @@ export async function GET(request: Request) {
             .slice(0, 5)
 
         // D. Diagnostic Insights (Focused)
-        // Link DiagnosticResult via email (requires fetching emails from Auth)
         const diagnosticStats = {
             avgScore: 0,
             participation: 0,
@@ -169,7 +172,6 @@ export async function GET(request: Request) {
             diagnosticStats.participation = diagResults.length
             diagnosticStats.avgScore = Math.round(diagResults.reduce((acc, curr) => acc + curr.score, 0) / diagResults.length)
             
-            // Real topic analysis based on quiz labels
             const labelsMap: Record<string, string> = {
                 "diag-1": "Educación", "diag-2": "Ahorro", "diag-3": "Mentalidad",
                 "diag-4": "Objetivos", "diag-5": "Deuda", "diag-6": "Entorno",
@@ -183,7 +185,6 @@ export async function GET(request: Request) {
                 Object.keys(answers).forEach(qId => {
                     const label = labelsMap[qId] || qId
                     if (!categoryScores[label]) categoryScores[label] = []
-                    // 'A' is the ideal answer in diagnosticQuiz data
                     categoryScores[label].push(answers[qId] === 'A' ? 100 : 0)
                 })
             })
@@ -195,11 +196,11 @@ export async function GET(request: Request) {
                 }))
                 .sort((a, b) => b.avg - a.avg)
 
-            diagnosticStats.strengths = sortedCategories.slice(0, 2).map(c => c.name)
+            diagnosticStats.strengths = sortedCategories.slice(0, 3).map(c => c.name) // Request asked for Top 3
             diagnosticStats.weaknesses = sortedCategories.slice(-2).reverse().map(c => c.name)
         }
 
-        const students = (roster as any[]).map(student => {
+        const students = roster.map(student => {
             const completedLessons = student.progress.filter(p => p.percent === 100).length;
             totalCompletedLessons += completedLessons;
             
@@ -207,7 +208,6 @@ export async function GET(request: Request) {
             const avgProgressRaw = student.progress.length > 0 ? (totalPercent / student.progress.length) : 0;
             const averageProgress = Math.min(100, Math.round(avgProgressRaw));
 
-            // Risk check
             const lastActive = student.progress.length > 0 
                 ? new Date(Math.max(...student.progress.map(p => new Date(p.updatedAt).getTime())))
                 : new Date(student.createdAt)
@@ -228,6 +228,7 @@ export async function GET(request: Request) {
         })
 
         const avgModulesCompleted = totalStudentsCount > 0 ? (totalCompletedLessons / totalStudentsCount).toFixed(1) : 0
+        const nationalAvg = 48
 
         return NextResponse.json({
             school: schoolName,
@@ -238,7 +239,9 @@ export async function GET(request: Request) {
                 avgAttemptsPerQuiz: Number(avgAttemptsPerQuiz),
                 institutionalROI: Number(institutionalROI),
                 studentsAtRisk,
-                diagnosticStats
+                diagnosticStats,
+                currentQuizAvg,
+                nationalAvg
             },
             students: students,
             communityLeaders

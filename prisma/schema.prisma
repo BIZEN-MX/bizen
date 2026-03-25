@@ -98,8 +98,6 @@ model Profile {
   forumVotes           ForumVote[]         @relation("ForumVotes")
   progress             Progress[]
   inventory            UserInventoryItem[] @relation("ProfileInventory")
-  following            UserFollow[]        @relation("Following")
-  followers            UserFollow[]        @relation("Followers")
 
   @@index([schoolId], map: "idx_profiles_school")
   @@index([username], map: "idx_profiles_username")
@@ -183,8 +181,6 @@ model Lesson {
   course      Course?    @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "lessons_unit_id_fkey")
   progress    Progress[]
   quizzes     Quiz[]
-  steps       LessonStep[]
-  resources   LessonResource[]
 
   @@index([sectionId], map: "idx_lessons_section")
   @@map("lessons")
@@ -194,7 +190,6 @@ model Lesson {
 model LessonStep {
   id        String   @id @default(cuid())
   lessonId  String   @map("lesson_id")
-  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   order     Int
   type      String
   title     String?
@@ -211,7 +206,6 @@ model LessonStep {
 model LessonResource {
   id        String   @id @default(cuid())
   lessonId  String   @map("lesson_id")
-  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   title     String
   url       String
   fileType  String   @map("file_type")
@@ -309,10 +303,26 @@ model Progress {
   starsEarned Int?      @default(0) @map("stars_earned")
   lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   user        Profile   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  responses   StepResponse[]
 
   @@unique([userId, lessonId])
   @@index([userId, completedAt], map: "idx_progress_user_completed")
   @@map("progress")
+  @@schema("public")
+}
+
+model StepResponse {
+  id         String   @id @default(cuid())
+  progressId String   @map("progress_id")
+  stepId     String   @map("step_id")
+  answer     Json     // Stores whatever they picked/typed
+  isCorrect  Boolean? @map("is_correct")
+  createdAt  DateTime @default(now()) @map("created_at")
+  
+  progress   Progress @relation(fields: [progressId], references: [id], onDelete: Cascade)
+
+  @@index([progressId])
+  @@map("step_responses")
   @@schema("public")
 }
 
@@ -575,9 +585,6 @@ model UserFollow {
   followingId String    @map("following_id")
   createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  follower  Profile @relation("Following", fields: [followerId], references: [userId], onDelete: Cascade)
-  following Profile @relation("Followers", fields: [followingId], references: [userId], onDelete: Cascade)
-
   @@id([followerId, followingId])
   @@map("user_follows")
   @@schema("public")
@@ -800,9 +807,11 @@ model DiagnosticResult {
   email       String
   fullName    String   @map("full_name")
   institution String
-  answers     Json
-  score       Int      @default(0)
-  createdAt   DateTime @default(now()) @map("created_at")
+  answers        Json
+  score          Int      @default(0)
+  dnaProfile     String?  @map("dna_profile")
+  categoryScores Json?    @map("category_scores")
+  createdAt      DateTime @default(now()) @map("created_at")
 
   @@map("diagnostic_results")
   @@schema("public")
@@ -1018,6 +1027,8 @@ model AuthUser {
   oauth_consents              oauth_consents[]
   one_time_tokens             one_time_tokens[]
   sessions                    AuthSession[]
+  webauthn_challenges         webauthn_challenges[]
+  webauthn_credentials        webauthn_credentials[]
   attempts                    Attempt[]
   credit_sim_profiles         credit_sim_profiles[]
   game_sessions               GameSession[]
@@ -1026,8 +1037,6 @@ model AuthUser {
   readiness_events            readiness_events[]
   sim_runs                    sim_runs[]
   simulator_portfolios        simulator_portfolios[]
-  user_budgets                UserBudget[]           @relation("UserBudgets")
-  vision_canvases             VisionCanvas[]         @relation("VisionCanvases")
   achievements                UserAchievement[]
 
   @@index([instance_id])
@@ -1357,10 +1366,10 @@ model Achievement {
   description      String
   icon             String
   category         String?           @default("general")
-  threshold        Int?              @default(1)
   xpReward         Int?              @default(100) @map("xp_reward")
-  rarity           String?           @default("common")
   createdAt        DateTime?         @default(now()) @map("created_at") @db.Timestamptz(6)
+  threshold        Int?              @default(1)
+  rarity           String?           @default("common")
   userAchievements UserAchievement[]
 
   @@map("achievements")
@@ -1753,6 +1762,164 @@ model mentor_sessions {
   @@schema("public")
 }
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model webauthn_challenges {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String?   @db.Uuid
+  challenge_type String
+  session_data   Json
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  expires_at     DateTime  @db.Timestamptz(6)
+  users          AuthUser? @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([expires_at])
+  @@index([user_id])
+  @@schema("auth")
+}
+
+model webauthn_credentials {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id          String    @db.Uuid
+  credential_id    Bytes     @unique
+  public_key       Bytes
+  attestation_type String    @default("")
+  aaguid           String?   @db.Uuid
+  sign_count       BigInt    @default(0)
+  transports       Json      @default("[]")
+  backup_eligible  Boolean   @default(false)
+  backed_up        Boolean   @default(false)
+  friendly_name    String    @default("")
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+  last_used_at     DateTime? @db.Timestamptz(6)
+  users            AuthUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id])
+  @@schema("auth")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model live_answers {
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id         String            @db.Uuid
+  question_id        String            @db.Uuid
+  participant_id     String            @db.Uuid
+  selected_option_id String?
+  is_correct         Boolean?
+  answer_time_ms     Int?
+  score_earned       Int?              @default(0)
+  streak_at_answer   Int?              @default(0)
+  answered_at        DateTime?         @default(now()) @db.Timestamptz(6)
+  live_participants  live_participants @relation(fields: [participant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  live_questions     live_questions    @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  live_sessions      live_sessions     @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([question_id, participant_id], map: "idx_live_answers_unique")
+  @@index([participant_id], map: "idx_live_answers_participant")
+  @@index([question_id], map: "idx_live_answers_question")
+  @@index([session_id], map: "idx_live_answers_session")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model live_leaderboard_snapshots {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id     String        @db.Uuid
+  question_index Int
+  snapshot       Json
+  created_at     DateTime?     @default(now()) @db.Timestamptz(6)
+  live_sessions  live_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([session_id, question_index], map: "idx_live_snapshots_session")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model live_participants {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id     String         @db.Uuid
+  user_id        String?
+  nickname       String
+  avatar         Json?
+  total_score    Int?           @default(0)
+  current_streak Int?           @default(0)
+  rank           Int?
+  is_host        Boolean?       @default(false)
+  joined_at      DateTime?      @default(now()) @db.Timestamptz(6)
+  left_at        DateTime?      @db.Timestamptz(6)
+  is_active      Boolean?       @default(true)
+  live_answers   live_answers[]
+  live_sessions  live_sessions  @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([session_id], map: "idx_live_participants_session")
+  @@index([user_id], map: "idx_live_participants_user")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model live_questions {
+  id                    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id            String         @db.Uuid
+  order_index           Int
+  question_text         String
+  question_type         String         @default("mcq") @db.VarChar(20)
+  time_limit            Int?           @default(20)
+  points_base           Int?           @default(1000)
+  options               Json           @default("[]")
+  image_url             String?
+  source_lesson_step_id String?
+  created_at            DateTime?      @default(now()) @db.Timestamptz(6)
+  live_answers          live_answers[]
+  live_sessions         live_sessions  @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([session_id, order_index], map: "idx_live_questions_session")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model live_quiz_templates {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  owner_id       String
+  title          String
+  description    String?
+  category       String?   @default("Custom")
+  difficulty     Int?      @default(1)
+  question_count Int?      @default(dbgenerated("jsonb_array_length(questions)"))
+  questions      Json      @default("[]")
+  times_used     Int?      @default(0)
+  is_public      Boolean?  @default(false)
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([owner_id], map: "idx_live_quiz_templates_owner")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model live_sessions {
+  id                         String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  host_id                    String
+  pin                        String                       @unique @db.VarChar(6)
+  title                      String                       @default("Quiz en vivo")
+  status                     String                       @default("lobby") @db.VarChar(20)
+  current_question_index     Int?                         @default(0)
+  question_started_at        DateTime?                    @db.Timestamptz(6)
+  time_limit_seconds         Int?                         @default(20)
+  created_at                 DateTime?                    @default(now()) @db.Timestamptz(6)
+  started_at                 DateTime?                    @db.Timestamptz(6)
+  finished_at                DateTime?                    @db.Timestamptz(6)
+  settings                   Json?                        @default("{}")
+  live_answers               live_answers[]
+  live_leaderboard_snapshots live_leaderboard_snapshots[]
+  live_participants          live_participants[]
+  live_questions             live_questions[]
+
+  @@index([host_id], map: "idx_live_sessions_host")
+  @@index([pin], map: "idx_live_sessions_pin")
+  @@index([status], map: "idx_live_sessions_status")
+  @@schema("public")
+}
+
 enum aal_level {
   aal1
   aal2
@@ -1821,32 +1988,4 @@ enum one_time_token_type {
   phone_change_token
 
   @@schema("auth")
-}
-
-model UserBudget {
-  id        String   @id @default(cuid())
-  userId    String   @map("user_id") @db.Uuid
-  name      String
-  data      Json
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
-  user      AuthUser @relation("UserBudgets", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("user_budgets")
-  @@schema("public")
-}
-
-model VisionCanvas {
-  id        String   @id @default(cuid())
-  userId    String   @map("user_id") @db.Uuid
-  name      String
-  cards     Json
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
-  user      AuthUser @relation("VisionCanvases", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("vision_canvases")
-  @@schema("public")
 }

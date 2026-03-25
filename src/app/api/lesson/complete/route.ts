@@ -47,10 +47,11 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json()
-        const { lessonId, starsEarned, xpEarned } = body as {
+        const { lessonId, starsEarned, xpEarned, answers } = body as {
             lessonId: string
             starsEarned: 0 | 1 | 2 | 3
             xpEarned: number
+            answers?: Record<string, { isCorrect: boolean, answerData?: any }>
         }
 
         if (!lessonId || starsEarned === undefined || xpEarned === undefined) {
@@ -100,7 +101,7 @@ export async function POST(req: NextRequest) {
         console.log(`[lesson/complete] User ${userId} completed ${lessonId}. Stars: ${starsEarned} (prev: ${prevStars}). Awarding: ${xpToAward} XP.`)
 
         // Upsert progress row
-        await prisma.progress.upsert({
+        const progressRecord = await prisma.progress.upsert({
             where: { userId_lessonId: { userId, lessonId } },
             create: {
                 userId,
@@ -116,6 +117,34 @@ export async function POST(req: NextRequest) {
                 starsEarned: starsImproved ? starsEarned : prevStars,
             },
         })
+
+        // Save individual step responses for profiling
+        if (answers && Object.keys(answers).length > 0) {
+            try {
+                // Delete previous answers to this lesson if repeating
+                await prisma.stepResponse.deleteMany({
+                    where: { progressId: progressRecord.id }
+                })
+
+                const responseEntries = Object.entries(answers).map(([stepId, res]) => ({
+                    progressId: progressRecord.id,
+                    stepId,
+                    answer: (res.answerData || {}) as any,
+                    isCorrect: res.isCorrect
+                }))
+
+                await prisma.stepResponse.createMany({
+                    data: responseEntries
+                })
+
+                // 🔥 Trigger DNA Profile Refinement (Placeholder for logic)
+                // if (lessonId.includes('behavioral') || lessonId.includes('sesgo')) {
+                //    await refineDnaProfile(userId, answers)
+                // }
+            } catch (err) {
+                console.error("[lesson/complete] Failed to save step responses:", err)
+            }
+        }
 
         // Award XP to profile using centralized reward utility
         let rewardResult = null
