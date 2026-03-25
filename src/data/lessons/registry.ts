@@ -16,10 +16,29 @@ import { lessonElRegistroDeGuerraPorQueTrackearTodoSteps } from "./lesson-el-reg
 import { lessonMicroHabitosDeAhorroAutomatizadoSteps } from "./lesson-micro-habitos-de-ahorro-automatizado"
 import { lessonElRitualDelDomingoRevisionSemanalSteps } from "./lesson-el-ritual-del-domingo-revision-semanal"
 import { lessonTuPrimerEstadoDeResultadosPersonalSteps } from "./lesson-tu-primer-estado-de-resultados-personal"
-import { lessonQueEsElDineroParaMiSteps } from "./lesson-que-es-el-dinero-para-mi"
-import { lessonComoMeHaceSentirElDineroSteps } from "./lesson-como-me-hace-sentir-el-dinero"
-import { lessonMisPrimerasCreenciasSobreElDineroSteps } from "./lesson-mis-primeras-creencias-sobre-el-dinero"
-import { lessonExpectativasVsRealidadFinancieraSteps } from "./lesson-expectativas-vs-realidad-financiera"
+import {
+  lessonQueEsElDineroParaMiSteps,
+  lessonQueEsperoDelDineroSteps,
+  lessonDineroComoSeguridadVsLibertadSteps,
+  lessonDineroComoPresionVsOportunidadSteps,
+  lessonIdentificarMiDefinicionPersonalDelDineroSteps
+} from "./tema1-percepcion"
+
+import {
+  lessonComoMeHaceSentirElDineroSteps,
+  lessonSenalesDeEmocionDominandoUnaDecisionSteps,
+  lessonPausaFinancieraSteps,
+  lessonCulpaYAnsiedadFinancieraSteps,
+  lessonEmocionVsDecisionCasosRealesSteps
+} from "./tema1-emocion"
+
+import {
+  lessonMisPrimerasCreenciasSobreElDineroSteps,
+  lessonExpectativasVsRealidadFinancieraSteps,
+  lessonFrasesHeredadasQueMeLimitanSteps,
+  lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
+  lessonReescribirCreenciasEnReglasUtilesSteps
+} from "./tema1-creencias"
 
 // Tema 2: Ingeniería del Ingreso
 import { 
@@ -96,9 +115,20 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
 
   // Tema 1: Relación con el dinero (Nuevos Slugs)
   "que-es-el-dinero-para-mi": lessonQueEsElDineroParaMiSteps,
+  "que-espero-del-dinero": lessonQueEsperoDelDineroSteps,
+  "dinero-como-seguridad-vs-libertad": lessonDineroComoSeguridadVsLibertadSteps,
+  "dinero-como-presion-vs-oportunidad": lessonDineroComoPresionVsOportunidadSteps,
+  "identificar-mi-definicion-personal-del-dinero": lessonIdentificarMiDefinicionPersonalDelDineroSteps,
   "como-me-hace-sentir-el-dinero": lessonComoMeHaceSentirElDineroSteps,
+  "senales-de-emocion-dominando-una-decision": lessonSenalesDeEmocionDominandoUnaDecisionSteps,
+  "pausa-financiera-reglas-anti-impulso": lessonPausaFinancieraSteps,
+  "culpa-y-ansiedad-financiera-como-se-forman": lessonCulpaYAnsiedadFinancieraSteps,
+  "emocion-vs-decision-casos-reales": lessonEmocionVsDecisionCasosRealesSteps,
   "mis-primeras-creencias-sobre-el-dinero": lessonMisPrimerasCreenciasSobreElDineroSteps,
   "expectativas-vs-realidad-financiera": lessonExpectativasVsRealidadFinancieraSteps,
+  "frases-heredadas-que-me-limitan": lessonFrasesHeredadasQueMeLimitanSteps,
+  "como-cuestionar-una-creencia-con-evidencia": lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
+  "reescribir-creencias-en-reglas-utiles": lessonReescribirCreenciasEnReglasUtilesSteps,
 
   // Tema 2
   "por-que-el-mercado-paga-lo-que-paga": lessonPorQueElMercadoPagaLoQuePagaSteps,
