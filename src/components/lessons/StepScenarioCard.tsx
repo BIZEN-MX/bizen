@@ -45,15 +45,15 @@ const VARIANTS = {
     shadow: "0 8px 32px rgba(67,56,202,0.3)",
   },
   warning: {
-    bg: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 60%, #ef4444 100%)",
-    border: "rgba(252,165,165,0.3)",
-    textColor: "#fff",
-    labelColor: "rgba(255,255,255,0.7)",
-    labelText: "Alerta",
-    iconBg: "rgba(255,255,255,0.15)",
+    bg: "linear-gradient(135deg, #450a0a 0%, #7f1d1d 60%, #991b1b 100%)",
+    border: "rgba(248,113,113,0.4)",
+    textColor: "#ffffff",
+    labelColor: "#ffffff",
+    labelText: "Alerta importante",
+    iconBg: "rgba(255,255,255,0.2)",
     iconColor: "#fff",
     Icon: AlertCircle,
-    shadow: "0 8px 32px rgba(185,28,28,0.3)",
+    shadow: "0 12px 40px rgba(127,29,29,0.4)",
   },
 }
 

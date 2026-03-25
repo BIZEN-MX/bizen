@@ -1,127 +1,14 @@
 import type { LessonStep } from "@/types/lessonTypes"
 
-/**
- * Lesson: ¿Qué es el dinero? (Deuda vs. Energía)
- * Theme: El Tablero del Juego (Mentalidad)
- * Lesson ID: que-es-el-dinero-deuda-vs-energia
- * Difficulty: Introductory / Technical
- */
-
 export const lessonQueEsElDineroDeudaVsEnergiaSteps: LessonStep[] = [
-  // SLIDE 1 — Billy the Coach Intro
-  {
-    id: "qed-slide-1",
-    stepType: "billy_talks",
-    mood: "happy",
-    body: "¡Bienvenido al nivel pro! Soy Billy. Olvida lo que crees saber. El dinero no es papel, es un **sistema de transferencia de energía y tiempo**.\n\nHoy vamos a analizar las reglas que los bancos y el sistema usan para que tú trabajes para el dinero, y cómo empezar a darle la vuelta.",
-    continueLabel: "Vamos a la realidad",
-    fullScreen: true,
-  },
-
-  // SLIDE 2 — Concepto Técnico (Info)
-  {
-    id: "qed-slide-2",
-    stepType: "info",
-    title: "El Dinero como Deuda",
-    description: "¿De dónde viene el dinero realmente?",
-    body: "En el sistema moderno, casi todo el dinero se crea a través de **deuda**. \n\nCuando pides un crédito, el banco 'crea' ese dinero de la nada, pero tú tienes que devolverlo con tu **tiempo futuro**. Si no entiendes esto, estarás comprando cosas con trozos de tu vida que aún no has vivido.",
-    continueLabel: "Analizar impacto",
-    fullScreen: true,
-  },
-
-  // SLIDE 3 — Ejercicio Analítico (MCQ)
-  {
-    id: "qed-slide-3",
-    stepType: "mcq",
-    title: "El Costo del Préstamo",
-    description: "Carlos quiere un iPhone de $20,000. No tiene el dinero, así que lo saca a pagos chiquitos. Al final, después de 2 años, habrá pagado $35,000.",
-    question: "Si Carlos gana $100 por hora, ¿cuántas horas EXTRAS de su vida tuvo que trabajar solo para pagar los INTERESES (el costo extra)?",
-    options: [
-      { id: "opt-1", label: "200 horas", isCorrect: false },
-      { id: "opt-2", label: "150 horas", isCorrect: true, explanation: "$35,000 total - $20,000 capital = $15,000 intereses. $15,000 / $100 = 150 horas de vida." },
-      { id: "opt-3", label: "350 horas", isCorrect: false },
-      { id: "opt-4", label: "No le costó nada, fueron pagos chiquitos", isCorrect: false },
-    ],
-    isAssessment: true,
-    continueLabel: "Continuar",
-    fullScreen: true,
-    aiInsight: "Billy dice: 150 horas son casi un mes completo de trabajo regalado al banco solo por no saber esperar.",
-  },
-
-  // SLIDE 4 — Dinero como Energía (Info)
-  {
-    id: "qed-slide-4",
-    stepType: "info",
-    title: "Dinero como Energía Acumulada",
-    description: "Tu superpoder",
-    body: "Cuando ahorras o inviertes, estás 'congelando' tu esfuerzo pasado para usarlo en el futuro sin tener que volver a trabajar por él.\n\n• **Ahorro al 0%**: Tu energía se evapora (por la inflación).\n• **Inversión**: Tu energía se multiplica sola.\n• **Deuda de consumo**: Estás quemando energía que aún no generas.",
-    continueLabel: "Entendido",
-    fullScreen: true,
-  },
-
-  // SLIDE 5 — Blitz Challenge (Rápido)
-  {
-    id: "qed-slide-5",
-    stepType: "blitz_challenge",
-    title: "Reto Relámpago",
-    description: "Ves una oferta que dice 'Compre hoy y pague en 2026'.",
-    question: "Desde la perspectiva de 'Dinero como Deuda', ¿qué te están pidiendo realmente?",
-    options: [
-      { id: "opt-1", label: "Un regalo del banco", isCorrect: false },
-      { id: "opt-2", label: "Hipotecar tu libertad futura", isCorrect: true, explanation: "Te están amarrando a tener que trabajar en el futuro para pagar algo que consumiste hoy." },
-      { id: "opt-3", label: "Una oportunidad de inversión", isCorrect: false },
-    ],
-    timeLimit: 15,
-    isAssessment: true,
-    continueLabel: "Comprobar",
-    fullScreen: true,
-  },
-
-  // SLIDE 6 — Impulse Meter (Situacional)
-  {
-    id: "qed-slide-6",
-    stepType: "impulse_meter",
-    item: {
-      name: "Suscripción 'Pro' que no usas",
-      price: "$299/mes",
-    },
-    description: "Te das cuenta que llevas 6 meses pagando una app que nunca abres. Suma $1,794 tirados. Tu impulso es decir 'Luego la cancelo'.",
-    instructions: "Mantén presionado para romper el hábito y cancelarla emocionalmente ahora.",
-    holdTime: 3,
-    isAssessment: true,
-    fullScreen: true,
-  },
-
-  // SLIDE 7 — True or False (Sistémico)
-  {
-    id: "qed-slide-7",
-    stepType: "true_false",
-    statement: "Si el banco me ofrece un crédito más alto, significa que mis finanzas están sanas y puedo gastar más.",
-    correctValue: false,
-    explanation: "El banco ofrece crédito basado en cuánto te pueden cobrar, no en qué es mejor para tu riqueza personal.",
-    isAssessment: true,
-    continueLabel: "Avanzar",
-    fullScreen: true,
-  },
-
-  // SLIDE 8 — Resumen Billy
-  {
-    id: "qed-slide-8",
-    stepType: "billy_talks",
-    mood: "thinking",
-    body: "Para ganar este juego, hay que dejar de pensar en 'pesos' y empezar a pensar en 'unidades de libertad'.\n\nSi cada compra la mides en cuántas horas de tu vida te costó, dejarás de caer en las trampas del consumo rápido.",
-    continueLabel: "Siguiente Lección",
-    fullScreen: true,
-  },
-
-  // SLIDE 9 — Summary
-  {
-    id: "qed-slide-9",
-    stepType: "summary",
-    title: "Lección Completada",
-    body: "Has entendido la diferencia entre trabajar por dinero y que el dinero trabaje por ti. En la siguiente lección calcularemos exactamente cuánto vale CADA MINUTO de tu tiempo.",
-    isAssessment: false,
-    continueLabel: "Continuar",
-    fullScreen: true,
-  },
+  { id: "core-1-1", stepType: "billy_talks", body: "Muchos ven el dinero como billetes. Un Ingeniero del Dinero lo ve como **Energía Almacenada**.", fullScreen: true },
+  { id: "core-1-2", stepType: "info", title: "Energía vs Deuda", body: "Cuando trabajas, guardas tu energía vital en un formato llamado dinero. Cuando te endeudas, estás gastando energía que aún no has producido.", fullScreen: true },
+  { id: "core-1-3", stepType: "mcq", question: "Si pides un préstamo para un televisor, ¿qué estás comprometiendo?", options: [{id:"o1", label:"Solo unos pesos al mes", isCorrect:false}, {id:"o2", label:"Tu libertad y energía de los próximos 12 meses", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "core-1-4", stepType: "swipe_sorter", question: "¿Es Energía o es Deuda?", leftBucket: {label:"Deuda (Esclavitud)", color:"#ef4444"}, rightBucket: {label:"Energía (Libertad)", color:"#10b981"}, items: [{id:"i1", label:"Préstamo personal", correctBucket:"left"}, {id:"i2", label:"Ahorro acumulado", correctBucket:"right"}, {id:"i3", label:"Interés por pagar", correctBucket:"left"}, {id:"i4", label:"Plusvalía de activo", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "core-1-5", stepType: "order", question: "Secuencia de creación de riqueza", items: [{id:"p1", label:"Producción de energía (Trabajo)", correctOrder:1}, {id:"p2", label:"Almacenamiento (Ahorro)", correctOrder:2}, {id:"p3", label:"Multiplicación (Inversión)", correctOrder:3}], isAssessment: true, fullScreen: true },
+  { id: "core-1-6", stepType: "true_false", statement: "El dinero impreso por el gobierno mantiene su valor de energía para siempre.", correctValue: false, explanation: "La inflación drena la energía de tu dinero cada año. Por eso hay que invertir.", isAssessment:true, fullScreen: true },
+  { id: "core-1-7", stepType: "match", question: "Relaciona", leftItems: [{id:"l1", label:"Inflación"}, {id:"l2", label:"Deflación"}], rightItems: [{id:"r1", label:"Fuga de energía"}, {id:"r2", label:"Ganancia de valor"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+  { id: "core-1-8", stepType: "blitz_challenge", question: "¿Cuál es el mejor recipiente para tu energía?", options: [{id:"o1", label:"Debajo del colchón", isCorrect:false}, {id:"o2", label:"Activos que superen la inflación", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "core-1-9", stepType: "narrative_check", question: "¿Cuánta de tu 'energía' hoy está atrapada pagando deudas del pasado?", promptPlaceholder: "Aproximadamente un ...%", minChars: 10, billyResponse: "Nuestra misión es liberar el 100% de esa energía.", fullScreen: true },
+  { id: "core-1-10", stepType: "summary", title: "Misión: Energía", body: "Has entendido la base de la física financiera. ¡Sigue adelante!", fullScreen: true },
 ]

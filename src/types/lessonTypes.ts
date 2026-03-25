@@ -255,8 +255,11 @@ export interface BaseLessonStep {
   aiInsight?: string;
   /** Optional clue for the user if they get stuck */
   clue?: string;
-  /** Optional explanation of the correct answer shown after completion */
-  explanation?: string;
+  /** Optional metadata for specific engine features like glossary terms */
+  data?: {
+    glossary?: Array<{ word: string; definition: string }>;
+    [key: string]: any;
+  };
 }
 
 // ============================================================================

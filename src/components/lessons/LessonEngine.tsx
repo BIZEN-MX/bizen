@@ -187,8 +187,18 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   // Initialize on mount
   useEffect(() => {
-    dispatch({ type: "INIT", steps: lessonSteps })
+    console.log("[LessonEngine] Initializing with steps:", lessonSteps?.length);
+    if (lessonSteps && lessonSteps.length > 0) {
+      dispatch({ type: "INIT", steps: lessonSteps })
+    } else {
+      console.warn("[LessonEngine] Received empty lessonSteps array");
+    }
   }, [lessonSteps])
+
+  // Track phase changes
+  useEffect(() => {
+    console.log("[LessonEngine] Current Step Index:", state.currentStepIndex, "All Steps:", state.allSteps?.length);
+  }, [state.currentStepIndex, state.allSteps])
 
 
   // After last original step: build review steps for wrong answers, or go to summary if all correct
@@ -256,7 +266,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const currentStep = state.allSteps[state.currentStepIndex]
   const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
   const isSummaryStep = currentStep?.stepType === "summary"
-  const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice", "blitz_challenge"].includes(currentStep?.stepType || "")
+  const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice", "blitz_challenge", "swipe_sorter", "influence_detective", "impulse_meter", "narrative_check"].includes(currentStep?.stepType || "")
 
   // Blitz Splash: fullscreen warning when entering a blitz_challenge step
   useEffect(() => {
@@ -655,7 +665,13 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         content = <NarrativeCheckStep {...(stepProps as any)} />
         break;
       default:
-        content = <div>Unknown step type: {currentStep.stepType}</div>
+        console.warn("[LessonEngine] Unknown step type:", currentStep?.stepType);
+        content = (
+          <div style={{ padding: 40, textAlign: "center", color: "#64748b" }}>
+            <p style={{ fontSize: 18, fontWeight: 500 }}>Ups, no pudimos cargar este paso.</p>
+            <p style={{ fontSize: 14 }}>Tipo: {(currentStep as any)?.stepType || "indefinido"}</p>
+          </div>
+        )
     }
 
     return (

@@ -1321,25 +1321,6 @@ export default function TiendaPage() {
                             </div>
                         </div>
 
-                        {/* Guide to Earning Section */}
-                        <div className="tienda-guide-container" style={{ background: "white", borderRadius: 36, padding: "48px", border: "1px solid #f1f5f9", boxShadow: "0 10px 60px rgba(15,98,254,0.06)" }}>
-                            <h3 style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", margin: "0 0 36px", textAlign: "center" }}>Potencia tu ahorro de BIZCOINS</h3>
-                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 24 }}>
-                                {[
-                                    { icon: <Zap size={26} />, label: "Consistencia Diaria", xp: "+50 BIZCOINS", color: "#0F62FE", desc: "El simple hecho de entrar a Bizen cada día te recompensa." },
-                                    { icon: <BookOpen size={26} />, label: "Maestría de Temas", xp: "+25 BIZCOINS", color: "#10b981", desc: "Gana puntos por cada lección y subtema que completes." },
-                                    { icon: <Target size={26} />, label: "Retos del Foro", xp: "+100-300 BIZCOINS", color: "#f59e0b", desc: "Participa activamente en la comunidad y gana premios mayores." },
-                                    { icon: <Trophy size={26} />, label: "Ascenso de Nivel", xp: "Bonos VIP", color: "#7c3aed", desc: "Cada vez que subes de nivel recibes un cofre sorpresa." },
-                                ].map((item, i) => (
-                                    <div key={i} className="tienda-guide-item" style={{ padding: 32, borderRadius: 28, background: "#f8fafc", border: `1px solid ${item.color}10`, borderBottom: `5px solid ${item.color}`, transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-6px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
-                                        <div style={{ width: 56, height: 56, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center", color: item.color, marginBottom: 20, boxShadow: "0 8px 16px rgba(0,0,0,0.04)" }}>{item.icon}</div>
-                                        <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginBottom: 6 }}>{item.label}</div>
-                                        <div style={{ fontSize: 14, color: "#64748b", marginBottom: 16, lineHeight: 1.6 }}>{item.desc}</div>
-                                        <div style={{ fontSize: 18, fontWeight: 900, color: item.color }}>{item.xp}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
 
                         {/* Recent History Section - Merged from Puntos page */}
                         <div style={{ marginTop: 48, background: "white", borderRadius: 36, padding: "48px", border: "1px solid #f1f5f9", boxShadow: "0 10px 60px rgba(15,98,254,0.06)" }}>
@@ -1383,43 +1364,6 @@ export default function TiendaPage() {
                     </div>
                 )}
 
-                {/* ── HOW TO EARN MORE (GLOBAL FOOTER) ── */}
-                <div className="tienda-footer-section" style={{
-                    background: "white",
-                    borderRadius: 36,
-                    padding: "clamp(32px, 5vw, 48px)",
-                    border: "1px solid #f1f5f9",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.02)",
-                    marginBottom: 40,
-                    marginTop: 60,
-                    animation: "tienda-fadeUp 0.6s ease 0.2s both"
-                }}>
-                    <div className="tienda-footer-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, gap: 20, flexWrap: "wrap" }}>
-                        <div>
-                            <h2 style={{ fontSize: "clamp(22px, 3vw, 28px)", fontWeight: 800, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.02em" }}>¿Necesitas más BIZCOINS?</h2>
-                            <p style={{ fontSize: 16, color: "#64748b", margin: 0 }}>Potencia tu aprendizaje y desbloquea recompensas más rápido.</p>
-                        </div>
-                        <button style={{ padding: "14px 28px", background: "#f1f5f9", color: "#0f172a", border: "none", borderRadius: 16, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 10, transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"} onMouseLeave={e => e.currentTarget.style.background = "#f1f5f9"}>
-                            Ver Guía de Recompensas <ChevronRight size={18} />
-                        </button>
-                    </div>
-
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-                        {[
-                            { icon: <Flame size={20} />, title: "Mantén tu Racha", desc: "Gana bonos exponenciales por cada día consecutivo que inicies sesión.", color: "#F59E0B" },
-                            { icon: <Target size={20} />, title: "Completa Desafíos", desc: "Participa en los retos especiales del foro y gana hasta 500 BIZCOINS.", color: "#10B981" },
-                            { icon: <Sparkles size={20} />, title: "Sube de Nivel", desc: "Cada nuevo nivel te otorga un cofre de recompensas con BIZCOINS gratis.", color: "#8B5CF6" }
-                        ].map((way, i) => (
-                            <div key={i} style={{ padding: "24px", borderRadius: 24, background: "#f8fafc", border: "1px solid #f1f5f9", display: "flex", gap: 16 }}>
-                                <div style={{ width: 48, height: 48, borderRadius: 14, background: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 8px 16px rgba(0,0,0,0.03)", color: way.color }}>{way.icon}</div>
-                                <div>
-                                    <div style={{ fontWeight: 700, fontSize: 16, color: "#0f172a", marginBottom: 4 }}>{way.title}</div>
-                                    <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.5 }}>{way.desc}</div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
             </div>
         </div>
     )

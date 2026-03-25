@@ -1,21 +1,6 @@
 import type { LessonStep } from "@/types/lessonTypes"
 
-import { lessonQueEsElDineroDeudaVsEnergiaSteps } from "./lesson-que-es-el-dinero-deuda-vs-energia"
-import { lessonElValorDeTuTiempoCalculoRealSteps } from "./lesson-el-valor-de-tu-tiempo-calculo-real"
-import { lessonCostoDeOportunidadElegirEsRenunciarSteps } from "./lesson-costo-de-oportunidad-elegir-es-renunciar"
-import { lessonTuNumeroDeLibertadInicialSteps } from "./lesson-tu-numero-de-libertad-inicial"
-import { lessonLasRulesDelSistemaFinancieroSteps } from "./lesson-las-reglas-del-sistema-financiero"
-
-import { lessonSesgoDeComparacionElCostoDeQuedarBienSteps } from "./lesson-sesgo-de-comparacion-el-costo-de-quedar-bien"
-import { lessonSesgoDeConfirmacionEnElConsumoSteps } from "./lesson-sesgo-de-confirmacion-en-el-consumo"
-import { lessonAversionALaPerdidaVsMiedoACrecerSteps } from "./lesson-aversion-a-la-perdida-vs-miedo-a-crecer"
-import { lessonElEfectoDunningKrugerEnTusFinanzasSteps } from "./lesson-el-efecto-dunning-kruger-en-tus-finanzas"
-import { lessonCasoRealPlacerDeHoyVsLibertadDeMananaSteps } from "./lesson-caso-real-placer-de-hoy-vs-libertad-de-manana"
-import { lessonLaPausaDeLas24HorasMecanicaSteps } from "./lesson-la-pausa-de-las-24-horas-mecanica"
-import { lessonElRegistroDeGuerraPorQueTrackearTodoSteps } from "./lesson-el-registro-de-guerra-por-que-trackear-todo"
-import { lessonMicroHabitosDeAhorroAutomatizadoSteps } from "./lesson-micro-habitos-de-ahorro-automatizado"
-import { lessonElRitualDelDomingoRevisionSemanalSteps } from "./lesson-el-ritual-del-domingo-revision-semanal"
-import { lessonTuPrimerEstadoDeResultadosPersonalSteps } from "./lesson-tu-primer-estado-de-resultados-personal"
+// Tema 1: El Tablero del Juego (Mentalidad)
 import {
   lessonQueEsElDineroParaMiSteps,
   lessonQueEsperoDelDineroSteps,
@@ -37,7 +22,7 @@ import {
   lessonExpectativasVsRealidadFinancieraSteps,
   lessonFrasesHeredadasQueMeLimitanSteps,
   lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
-  lessonReescribirCreenciasEnReglasUtilesSteps
+  lessonMiNuevoManualDeReglasFinancierasSteps
 } from "./tema1-creencias"
 
 // Tema 2: Ingeniería del Ingreso
@@ -46,7 +31,7 @@ import {
   lessonIngresoActivoVsPasivoLaRealidadSteps,
   lessonElTrianguloDelValorSteps,
   lessonIngresoDePortafolioDineroQueGeneraDineroSteps,
-  lessonEvaluacionFlujoDeEntradaHoySteps 
+  lessonEvaluacionComoSeVeTuFlujoDeEntradaHoySteps 
 } from "./tema2-naturaleza-dinero"
 
 import {
@@ -65,7 +50,7 @@ import {
   lessonPlanAccionDuplicarValorMercadoSteps
 } from "./tema2-optimizacion-riqueza"
 
-// Tema 3: Psicología del consumo
+// Tema 3: Psicología del Consumo
 import {
   lessonQueEsUnTriggerDeCompraSteps,
   lessonPublicidadComoTeManipulaSteps,
@@ -82,7 +67,6 @@ import {
   lessonCasoGastoPorEmocionPasoAPasoSteps
 } from "./tema3-compras-impulsivas"
 
-// Refresh build cache
 import {
   lessonComprarPorEstatusVsPorValorSteps,
   lessonAparienciaDeRiquezaVsRiquezaRealSteps,
@@ -93,71 +77,61 @@ import {
 
 
 /**
- * Maps lesson ID to steps. Add entries when you add lesson content.
- * Lesson ID should match the slug used in course tema data.
+ * Maps lesson ID to steps.
+ * Lesson ID must match the slug used in course data files.
  */
 export const lessonRegistry: Record<string, LessonStep[]> = {
-  "que-es-el-dinero-deuda-vs-energia": lessonQueEsElDineroDeudaVsEnergiaSteps,
-  "el-valor-de-tu-tiempo-calculo-real": lessonElValorDeTuTiempoCalculoRealSteps,
-  "costo-de-oportunidad-elegir-es-renunciar": lessonCostoDeOportunidadElegirEsRenunciarSteps,
-  "tu-numero-de-libertad-inicial": lessonTuNumeroDeLibertadInicialSteps,
-  "las-reglas-del-sistema-financiero": lessonLasRulesDelSistemaFinancieroSteps,
-  "sesgo-de-comparacion-el-costo-de-quedar-bien": lessonSesgoDeComparacionElCostoDeQuedarBienSteps,
-  "sesgo-de-confirmacion-en-el-consumo": lessonSesgoDeConfirmacionEnElConsumoSteps,
-  "aversion-a-la-perdida-vs-miedo-a-crecer": lessonAversionALaPerdidaVsMiedoACrecerSteps,
-  "el-efecto-dunning-kruger-en-tus-finanzas": lessonElEfectoDunningKrugerEnTusFinanzasSteps,
-  "caso-real-placer-de-hoy-vs-libertad-de-manana": lessonCasoRealPlacerDeHoyVsLibertadDeMananaSteps,
-  "la-pausa-de-las-24-horas-mecanica": lessonLaPausaDeLas24HorasMecanicaSteps,
-  "el-registro-de-guerra-por-que-trackear-todo": lessonElRegistroDeGuerraPorQueTrackearTodoSteps,
-  "micro-habitos-de-ahorro-automatizado": lessonMicroHabitosDeAhorroAutomatizadoSteps,
-  "el-ritual-del-domingo-revision-semanal": lessonElRitualDelDomingoRevisionSemanalSteps,
-  "tu-primer-estado-de-resultados-personal": lessonTuPrimerEstadoDeResultadosPersonalSteps,
-
-  // Tema 1: Relación con el dinero (Nuevos Slugs)
+  // --- TEMA 1 ---
   "que-es-el-dinero-para-mi": lessonQueEsElDineroParaMiSteps,
   "que-espero-del-dinero": lessonQueEsperoDelDineroSteps,
   "dinero-como-seguridad-vs-libertad": lessonDineroComoSeguridadVsLibertadSteps,
   "dinero-como-presion-vs-oportunidad": lessonDineroComoPresionVsOportunidadSteps,
   "identificar-mi-definicion-personal-del-dinero": lessonIdentificarMiDefinicionPersonalDelDineroSteps,
+  
   "como-me-hace-sentir-el-dinero": lessonComoMeHaceSentirElDineroSteps,
   "senales-de-emocion-dominando-una-decision": lessonSenalesDeEmocionDominandoUnaDecisionSteps,
   "pausa-financiera-reglas-anti-impulso": lessonPausaFinancieraSteps,
   "culpa-y-ansiedad-financiera-como-se-forman": lessonCulpaYAnsiedadFinancieraSteps,
   "emocion-vs-decision-casos-reales": lessonEmocionVsDecisionCasosRealesSteps,
+  
   "mis-primeras-creencias-sobre-el-dinero": lessonMisPrimerasCreenciasSobreElDineroSteps,
   "expectativas-vs-realidad-financiera": lessonExpectativasVsRealidadFinancieraSteps,
   "frases-heredadas-que-me-limitan": lessonFrasesHeredadasQueMeLimitanSteps,
   "como-cuestionar-una-creencia-con-evidencia": lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
-  "reescribir-creencias-en-reglas-utiles": lessonReescribirCreenciasEnReglasUtilesSteps,
+  "mi-nuevo-manual-de-reglas-financieras": lessonMiNuevoManualDeReglasFinancierasSteps,
 
-  // Tema 2
+  // --- TEMA 2 ---
   "por-que-el-mercado-paga-lo-que-paga": lessonPorQueElMercadoPagaLoQuePagaSteps,
   "ingreso-activo-vs-pasivo-la-realidad": lessonIngresoActivoVsPasivoLaRealidadSteps,
   "el-triangulo-del-valor-habilidad-escala-rareza": lessonElTrianguloDelValorSteps,
   "ingreso-de-portafolio-dinero-que-genera-dinero": lessonIngresoDePortafolioDineroQueGeneraDineroSteps,
-  "evaluacion-como-se-ve-tu-flujo-de-entrada-hoy": lessonEvaluacionFlujoDeEntradaHoySteps,
+  "evaluacion-como-se-ve-tu-flujo-de-entrada-hoy": lessonEvaluacionComoSeVeTuFlujoDeEntradaHoySteps,
+
   "habilidades-de-alto-valor-high-income-skills": lessonHabilidadesDeAltoValorSteps,
   "escalabilidad-tu-tiempo-tiene-techo": lessonEscalabilidadTuTiempoTieneTechoSteps,
   "invertir-en-ti-el-roi-de-tu-educacion": lessonRoiDeTuEducacionSteps,
   "soft-skills-el-multiplicador-invisible-de-ingresos": lessonSoftSkillsMultiplicadorIngresosSteps,
   "diseno-de-carrera-de-operativo-a-estrategico": lessonDisenoDeCarreraOperativoAEstrategicoSteps,
+
   "capital-intelectual-vs-capital-financiero": lessonCapitalIntelectualVsFinancieroSteps,
   "el-costo-de-no-saber-impuesto-a-la-ignorancia": lessonImpuestoALaIgnoranciaSteps,
   "apalancamiento-hacer-mas-con-menos": lessonApalancamientoHacerMasConMenosSteps,
   "ingresos-recurrentes-tu-ejercito-de-centavos": lessonIngresosRecurrentesTuEjercitoSteps,
   "plan-de-accion-duplicar-tu-valor-de-mercado": lessonPlanAccionDuplicarValorMercadoSteps,
 
-  // Tema 3
+  // --- TEMA 3 ---
   "que-es-un-trigger-de-compra": lessonQueEsUnTriggerDeCompraSteps,
   "publicidad-como-te-manipula": lessonPublicidadComoTeManipulaSteps,
   "redes-comparacion-y-presion": lessonRedesComparacionYPresionSteps,
   "compras-por-aburrimiento-vs-necesidad": lessonComprasPorAburrimientoVsNecesidadSteps,
   "detectar-mis-triggers-casos": lessonDetectarMisTriggersCasosSteps,
+
   "senales-de-compra-impulsiva": lessonSenalesDeCompraImpulsivaSteps,
   "antes-de-pagar-checklist-de-decision": lessonAntesDePagarChecklistDeDecisionSteps,
   "micro-habitos-para-evitar-impulsos": lessonMicroHabitosParaEvitarImpulsosSteps,
   "post-compra-culpa-y-aprendizaje": lessonPostCompraCulpaYAprendizajeSteps,
   "caso-gasto-por-emocion-paso-a-paso": lessonCasoGastoPorEmocionPasoAPasoSteps,
+
   "comprar-por-estatus-vs-por-valor": lessonComprarPorEstatusVsPorValorSteps,
   "apariencia-de-riqueza-vs-riqueza-real": lessonAparienciaDeRiquezaVsRiquezaRealSteps,
   "presion-social-en-decisiones-escenarios": lessonPresionSocialEnDecisionesEscenariosSteps,

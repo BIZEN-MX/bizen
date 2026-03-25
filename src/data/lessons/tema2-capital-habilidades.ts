@@ -1,255 +1,142 @@
 import type { LessonStep } from "@/types/lessonTypes"
 
 /**
- * Lesson: Habilidades de Alto Valor (High-Income Skills)
- * Theme: El Capital de tus Habilidades
+ * Subtema 2B: Capital de Habilidades
+ * 
+ * Lessons are now expanded to 15 slides each following the UPDATED BIZEN Blueprint (2 Blitz, 2+ AI Insights).
  */
+
+// ==============================================================================
+// LECCIÓN 1: Habilidades de Alto Valor (HVA) - 15 SLIDES
+// ==============================================================================
 export const lessonHabilidadesDeAltoValorSteps: LessonStep[] = [
-  {
-    id: "hiv-1",
-    stepType: "billy_talks",
-    mood: "celebrating",
-    body: "No todas las horas valen lo mismo. Un experto en ventas industriales puede ganar lo que un cocinero junior gana en un año.\n\nEso se llama **Habilidad de Alto Valor** (HAV).",
-    fullScreen: true,
+  { id: "cap-1-1", stepType: "billy_talks", body: "Tus manos y tu mente son tus primeras máquinas de dinero. Pero no todas las habilidades valen lo mismo. Vamos a buscar tus HVA.", fullScreen: true,
+    data: { glossary: [{ word: "HVA (High Value Skill)", definition: "Habilidad técnica o social por la que el mercado paga un premium debido a su rareza e impacto." }, { word: "Afectación de Bottom-Line", definition: "Habilidad que impacta directamente en las ganancias o ahorros de una empresa." }] }
   },
-  {
-    id: "hiv-2",
-    stepType: "match",
-    question: "Conecta la Habilidad con su potencial de ingreso",
-    leftItems: [
-        { id: "l1", label: "Experto en Ciberseguridad" },
-        { id: "l2", label: "Limpieza básica" },
-        { id: "l3", label: "Ventas B2B" },
-    ],
-    rightItems: [
-        { id: "r1", label: "Muy Alto (Rareza extrema)" },
-        { id: "r2", label: "Bajo (Alta oferta)" },
-        { id: "r3", label: "Alto (Generación directa)" },
-    ],
-    correctPairs: [
-        { leftId: "l1", rightId: "r1" },
-        { leftId: "l2", rightId: "r2" },
-        { leftId: "l3", rightId: "r3" },
-    ],
-    isAssessment: true,
-    fullScreen: true,
+  { id: "cap-1-2", stepType: "info", title: "La Regla del Mercado", body: "Si lo que haces se puede aprender en 15 minutos, el mercado te pagará el mínimo. Si toma 5 años y es crítico, tienes una **[[HVA|Habilidad que el mercado valora por su impacto directo en resultados]]**.", fullScreen: true,
+    aiInsight: "Las HVA suelen pagar entre 3 y 10 veces más que las habilidades operativas básicas."
   },
-  {
-    id: "hiv-3",
-    stepType: "mindset_translator",
-    question: "Traduce este pensamiento limitante:",
-    beliefs: [
-        {
-            id: "b1",
-            original: "Un curso de $5,000 es carísimo. Mejor me compro un par de tenis.",
-            healthyOptions: [
-                { id: "h1", label: "Un curso de $5,000 que me enseñe una habilidad de $50,000 es la mejor compra de mi vida.", isCorrect: true },
-                { id: "h2", label: "Los tenis me durarán más que el conocimiento.", isCorrect: false },
-            ]
-        }
-    ],
-    isAssessment: true,
-    fullScreen: true,
+  { id: "cap-1-3", stepType: "impulse_meter", instructions: "Mantén pulsado y detecta tu HVA actual. Siente el poder de tu propia herramienta.", item: { name: "Detector HVA", price: "Talento", imageUrl: "/billy-breathing.png" }, holdTime: 5, fullScreen: true },
+  { id: "cap-1-4", stepType: "mcq", question: "¿Qué habilidad es más probable que sea de Alto Valor hoy?", options: [{id:"o1", label:"Saber usar Word", isCorrect:false}, {id:"o2", label:"Cerrar tratos de venta complejos", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "cap-1-5", stepType: "swipe_sorter", question: "¿Es una HVA o una Habilidad Operativa?", leftBucket: {label:"Operativa (Bajo)", color:"#94a3b8"}, rightBucket: {label:"HVA (Alto)", color:"#6366f1"}, items: [{id:"i1", label:"Atender el teléfono", correctBucket:"left"}, {id:"i2", label:"Estrategia de Ciberseguridad", correctBucket:"right"}, {id:"i3", label:"Limpieza de oficina", correctBucket:"left"}, {id:"i4", label:"Arquitectura de Software", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "cap-1-6", stepType: "info", title: "Identificando Impacto", body: "Cualquier cosa que ayude a una empresa a GANAR más o AHORRAR más es una HVA. ¿En qué lado estás tú?", fullScreen: true },
+  { id: "cap-1-7", stepType: "true_false", statement: "Las HVA son solo para genios de la tecnología.", correctValue: false, explanation: "Ventas, negociación, liderazgo y oratoria son HVA humanas que cualquier puede desarrollar con disciplina.", isAssessment:true, fullScreen: true },
+  { id: "cap-1-8", stepType: "order", question: "Evolución hacia la HVA", items: [{id:"p1", label: "Aprender lo básico (Ejecución)", correctOrder: 1}, {id: "p2", label: "Especializarse en un nicho crítico", correctOrder: 2}, {id: "p3", label: "Aplicar la habilidad a grandes volúmenes", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "cap-1-9", stepType: "blitz_challenge", question: "¿Qué define a una HVA?", options: [{id:"o1", label:"El esfuerzo físico", isCorrect:false}, {id:"o2", label:"Su impacto en el sistema", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-1-10", stepType: "blitz_challenge", question: "¿Un cocinero normal es HVA?", options: [{id:"o1", label:"A menudo es operativo", isCorrect:true}, {id:"o2", label:"Sí, siempre", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-1-11", stepType: "match", question: "Relaciona Nicho", leftItems: [{id:"l1", label:"Ventas"}, {id:"l2", label:"Legal"}, {id:"l3", label:"Técnico"}], rightItems: [{id:"r1", label:"Atraer flujo de dinero"}, {id:"r2", label:"Evitar fugas de dinero"}, {id:"r3", label:"Construir motores de dinero"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "cap-1-12", stepType: "mindset_translator", question: "Refactoriza tu valor móvil", beliefs: [{id: "b1", original: "No sé hacer nada especial.", healthyOptions: [{id: "h1", label: "Mi meta es dedicar 1,000 horas a desarrollar una HVA que el mercado respete", isCorrect: true}, {id: "h2", label: "Mejor busco otro empleo similar", isCorrect: false}]}] },
+  { id: "cap-1-13", stepType: "narrative_check", question: "¿Cuál va a ser tu HVA definitiva?", promptPlaceholder: "Me volveré un experto en ...", minChars: 10, billyResponse: "Enfócate. Una sola HVA bien dominada te hará libre.", fullScreen: true },
+  { id: "cap-1-14", stepType: "info", title: "Alerta importante", body: "No serás libre si sigues haciendo lo que cualquiera puede aprender en una tarde. Incómodamente, debes ser difícil de reemplazar.", fullScreen: true,
+    aiInsight: "La IA está automatizando primero las habilidades operativas; las HVA estratégicas son tu seguro de vida."
   },
-  {
-    id: "hiv-4",
-    stepType: "true_false",
-    statement: "Una HAV es cualquier cosa en la que seas bueno, aunque nadie esté dispuesto a pagar por ello.",
-    correctValue: false,
-    explanation: "Si el mercado no lo necesita, no es una habilidad de alto valor, es un hobby muy caro.",
-    isAssessment: true,
-    fullScreen: true,
-  },
-  {
-    id: "hiv-5",
-    stepType: "summary",
-    title: "Tu Inventario",
-    body: "Hoy sabes que para subir tu ingreso neto, necesitas subir tu valor neto. Es hora de elegir qué habilidad vas a dominar.",
-    fullScreen: true,
-  },
+  { id: "cap-1-15", stepType: "summary", title: "Capital Detectado", body: "Sabes qué buscar. Siguiente: Escalabilidad.", fullScreen: true },
 ]
 
-/**
- * Lesson: Escalabilidad: ¿Tu tiempo tiene techo?
- */
+// ==============================================================================
+// LECCIÓN 2: Escalabilidad (Tu tiempo tiene techo) - 15 SLIDES
+// ==============================================================================
 export const lessonEscalabilidadTuTiempoTieneTechoSteps: LessonStep[] = [
-  {
-    id: "esc-1",
-    stepType: "billy_talks",
-    mood: "thinking",
-    body: "Imagina que eres el mejor masajista del mundo. Solo puedes dar 8 masajes al día. Tu ingreso tiene un **TECHO**.\n\nPara ser rico, necesitas ESCALA.",
-    fullScreen: true,
+  { id: "cap-2-1", stepType: "billy_talks", body: "Si solo ganas dinero cuando ESTÁS PRESENTE, tienes un problema de ingeniería. Vamos a buscar la ESCALABILIDAD.", fullScreen: true,
+    data: { glossary: [{ word: "Escalabilidad", definition: "Propiedad de un sistema para manejar un crecimiento continuo de trabajo sin fallos de rendimiento o costos lineales." }, { word: "Desacoplo", definition: "Separar el tiempo invertido del resultado obtenido." }] }
   },
-  {
-    id: "esc-2",
-    stepType: "order",
-    question: "Ordena estos perfiles de MENOR a MAYOR escalabilidad de ingresos:",
-    items: [
-      { id: "e1", label: "Contador trabajando por hora (Solo 24h/día)", correctOrder: 1 },
-      { id: "e2", label: "Dueño de Despacho (Tiene empleados)", correctOrder: 2 },
-      { id: "e3", label: "Desarrollador de App (Vende millones de copias)", correctOrder: 3 },
-    ],
-    isAssessment: true,
-    fullScreen: true,
-    aiInsight: "Billy dice: Si no encuentras la forma de ganar dinero mientras duermes, trabajarás hasta que te mueras.",
+  { id: "cap-2-2", stepType: "info", title: "El límite de 24 horas", body: "Incluso el mejor médico tiene 24 horas. Si opera manos a manos, está acoplado. Si diseña un curso de cirugía, está **[[Escalado|Impactar a miles de personas simultáneamente sin presencia física]]**.", fullScreen: true,
+    aiInsight: "Un producto digital no tiene costo marginal de reproducción; eso es escalabilidad pura."
   },
-  {
-    id: "esc-3",
-    stepType: "mcq",
-    question: "Si hoy te dieran un aumento del 20%, ¿seguirías teniendo un techo en tus ingresos dentro de un año?",
-    options: [
-      { id: "o1", label: "No, con un aumento soy libre", isCorrect: false },
-      { id: "o2", label: "Sí, porque sigo vendiendo mi tiempo, aunque sea a mejor precio", isCorrect: true, explanation: "Un sueldo mejor es un techo más alto, pero sigue habiendo un techo." },
-    ],
-    isAssessment: true,
-    fullScreen: true,
+  { id: "cap-2-3", stepType: "impulse_meter", instructions: "Mantén pulsado para 'estirar' tu tiempo. Visualiza el impacto masivo.", item: { name: "Elástico Temporal", price: "Escala", imageUrl: "/billy-breathing.png" }, holdTime: 6, fullScreen: true },
+  { id: "cap-2-4", stepType: "mcq", question: "¿Qué negocio es más ESCALABLE?", options: [{id:"o1", label:"Un restaurante de lujo (Local)", isCorrect:false}, {id:"o2", label:"Una APP de recetas (Global)", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "cap-2-5", stepType: "swipe_sorter", question: "¿Es una Actividad Acoplada o Escalada?", leftBucket: {label:"Acoplada (Lenta)", color:"#ef4444"}, rightBucket: {label:"Escalada (Veloz)", color:"#10b981"}, items: [{id:"i1", label:"Sesión de terapia 1 a 1", correctBucket:"left"}, {id:"i2", label:"Webinar grabado", correctBucket:"right"}, {id:"i3", label:"Clase en salón físico", correctBucket:"left"}, {id:"i4", label:"Ebook de finanzas", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "cap-2-6", stepType: "info", title: "Efecto de Red", body: "La escala no solo es vender más, es que cada nuevo usuario haga el sistema más fuerte. Eso es verdadera ingeniería de redes.", fullScreen: true },
+  { id: "cap-2-7", stepType: "true_false", statement: "Todo trabajo de alta responsabilidad es escalable por naturaleza.", correctValue: false, explanation: "Un CEO puede tener mucha responsabilidad pero su tiempo sigue siendo finito. La escalabilidad es un DISEÑO.", isAssessment:true, fullScreen: true },
+  { id: "cap-2-8", stepType: "order", question: "Cómo escalar una habilidad", items: [{id:"p1", label: "Dominio técnico de la HVA", correctOrder: 1}, {id: "p2", label: "Empaquetado (Software/Video/Libro)", correctOrder: 2}, {id: "p3", label: "Distribución masiva", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "cap-2-9", stepType: "blitz_challenge", question: "¿Qué factor mata el acoplamiento?", options: [{id:"o1", label:"El Código y el Contenido", isCorrect:true}, {id:"o2", label:"El Esfuerzo Físico", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-2-10", stepType: "blitz_challenge", question: "¿Un buen sueldo es escalable?", options: [{id:"o1", label:"Casi nunca (Techo de tiempo)", isCorrect:true}, {id:"o2", label:"Sí, ilimitadamente", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-2-11", stepType: "match", question: "Relaciona Perfil con Modelo", leftItems: [{id:"l1", label:"Maestro"}, {id:"l2", label:"Plataforma Virtual"}], rightItems: [{id:"r1", label:"Vende 1 hora por vez"}, {id:"r2", label:"Vende 1 hora a un millón"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+  { id: "cap-2-12", stepType: "mindset_translator", question: "Refactoriza tu tiempo", beliefs: [{id: "b1", original: "Tengo que estar cansado para sentir que gané dinero.", healthyOptions: [{id: "h1", label: "Mis sistemas deben generar valor mientras yo me recupero", isCorrect: true}, {id: "h2", label: "El agotamiento es mi trofeo", isCorrect: false}]}] },
+  { id: "cap-2-13", stepType: "narrative_check", question: "¿Qué parte de tu trabajo de hoy podrías grabar o automatizar para no repetirlo nunca más?", promptPlaceholder: "Grabaría mi ...", minChars: 10, billyResponse: "Hazlo. Esa pequeña acción es la semilla de tu escala.", fullScreen: true },
+  { id: "cap-2-14", stepType: "info", title: "Alerta importante", body: "Si no aprendes a escalar, estarás siempre a un mes de distancia de la quiebra personal. La escala es tu paracaídas de libertad.", fullScreen: true,
+    aiInsight: "Aprender a delegar o automatizar es la meta última de todo profesional BIZEN."
   },
-  {
-    id: "esc-4",
-    stepType: "summary",
-    title: "La Trampa del Sueldo",
-    body: "Moverse de 'Tiempo por Dinero' a 'Valor x Escala' es el cambio más difícil pero más rentable que harás.",
-    fullScreen: true,
-  },
+  { id: "cap-2-15", stepType: "summary", title: "Escala Diseñada", body: "Ya sabes cómo romper el techo. Siguiente: ROI Educativo.", fullScreen: true },
 ]
 
-/**
- * Lesson: Invertir en ti: El ROI de tu educación
- */
+// ==============================================================================
+// LECCIÓN 3: ROI de tu educación (Inversión en uno mismo) - 15 SLIDES
+// ==============================================================================
 export const lessonRoiDeTuEducacionSteps: LessonStep[] = [
-  {
-    id: "roi-1",
-    stepType: "billy_talks",
-    mood: "celebrating",
-    body: "¿Sabes cuál es la mejor inversión del mundo? No es Cetes, ni Bitcoin. Es lo que tienes entre las orejas.\n\nROI = (Ganancia Extra / Inversión en Educación) x 100.",
-    fullScreen: true,
+  { id: "cap-3-1", stepType: "billy_talks", body: "No toda educación es igual. Ver una serie no es educarse. Aprender una técnica de ventas que te dé $1,000 extra al mes es una inversión masiva.", fullScreen: true,
+    data: { glossary: [{ word: "ROI (Return On Investment)", definition: "Relación entre el beneficio obtenido y la inversión realizada." }, { word: "Costo de Oportunidad Educativo", definition: "Tiempo gastado en educación inútil que pudiste usar en algo valioso." }] }
   },
-  {
-    id: "roi-2",
-    stepType: "fill_blanks",
-    question: "Calcula el ROI educativo:",
-    textParts: [
-        { type: "text", content: "Si inviertes $2,000 en un curso y gracias a eso ganas $2,000 extras CADA MES por un año ($24,000), tu ROI anual es del" },
-        { type: "blank", id: "b1", correctOptionId: "opt-1100" },
-        { type: "text", content: "por ciento." },
-    ],
-    options: [
-        { id: "opt-1100", label: "1100", isCorrect: true },
-        { id: "opt-100", label: "100", isCorrect: false },
-    ],
-    isAssessment: true,
-    fullScreen: true,
-    aiInsight: "Billy dice: Ningún banco te dará un ROI del 1,100%. Tu cerebro sí.",
+  { id: "cap-3-2", stepType: "info", title: "El Activo más Rentable", body: "En el S&P 500 ganas el 10% anual. En TÍ mismo, aprendiendo una HVA, puedes ganar un 300% de aumento de sueldo en un año. ¿Dónde pones el dinero?", fullScreen: true,
+    aiInsight: "La educación técnica especializada es el único activo que no te pueden quitar, ni siquiera en una crisis."
   },
-  {
-    id: "roi-3",
-    stepType: "true_false",
-    statement: "Comprar libros es un gasto porque es dinero que ya no tienes en efectivo.",
-    correctValue: false,
-    explanation: "Es una transferencia de activos: de efectivo a capital intelectual.",
-    isAssessment: true,
-    fullScreen: true,
+  { id: "cap-3-3", stepType: "mcq", question: "Inviertes $500 en un curso y eso te genera $100 extra al mes FIJOS. ¿Cual es tu ROI anual?", options: [{id:"o1", label: "20% (Lento)", isCorrect: false}, {id:"o2", label: "240% (Ingeniería pura)", isCorrect: true}], isAssessment: true, fullScreen: true },
+  { id: "cap-3-4", stepType: "swipe_sorter", question: "¿Es Entretenimiento o Inversión en HVA?", leftBucket: {label:"Entretenimiento (Gasto)", color:"#ef4444"}, rightBucket: {label:"Inversión (ROI)", color:"#10b981"}, items: [{id:"i1", label:"Suscripción a Netflix", correctBucket:"left"}, {id:"i2", label:"Taller de Oratoria", correctBucket:"right"}, {id:"i3", label:"Video de gatitos", correctBucket:"left"}, {id:"i4", label:"Certificación en Cloud", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "cap-3-5", stepType: "info", title: "La Trampa del Título Sin Valor", body: "Tener un diploma no garantiza nada si el mercado no necesita ese cartón. Busca utilidad, no estatus académico.", fullScreen: true },
+  { id: "cap-3-6", stepType: "true_false", statement: "Ir a la universidad es hoy la única vía de éxito financiero asegurado.", correctValue: false, explanation: "Es UNA vía, pero hoy el conocimiento libre y especializado tiene un ROI más rápido en muchos nichos.", isAssessment:true, fullScreen: true },
+  { id: "cap-3-7", stepType: "order", question: "Evaluación de una Inversión Educativa", items: [{id:"p1", label: "Verificar demanda de la habilidad", correctOrder: 1}, {id: "p2", label: "Calidad de quien enseña (Resultados)", correctOrder: 2}, {id: "p3", label: "Ejecución inmediata de lo aprendido", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "cap-3-8", stepType: "blitz_challenge", question: "¿Qué educación tiene más ROI?", options: [{id:"o1", label:"La teórica general", isCorrect:false}, {id:"o2", label:"La técnica directa invocable", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-3-9", stepType: "blitz_challenge", question: "¿El costo de un curso es?", options: [{id:"o1", label:"Un Gasto", isCorrect:false}, {id:"o2", label: "Capital de Trabajo", isCorrect: true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-3-10", stepType: "match", question: "Relaciona el Tiempo", leftItems: [{id:"l1", label:"1 hora de Red Social"}, {id:"l2", label:"1 hora de Estudio HVA"}], rightItems: [{id:"r1", label:"Dopamina gratis, bolsillo vacío"}, {id:"r2", label:"Incomodidad hoy, riqueza mañana"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+  { id: "cap-3-11", stepType: "mindset_translator", question: "Refactoriza tu billetera", beliefs: [{id: "b1", original: "No tengo dinero para cursos.", healthyOptions: [{id: "h1", label: "No tengo dinero porque no he invertido en las habilidades que lo generan", isCorrect: true}, {id: "h2", label: "Ahorrar en educación me hará rico", isCorrect: false}]}] },
+  { id: "cap-3-12", stepType: "impulse_meter", instructions: "Mantén pulsado y comprométete a estudiar 1 hora de HVA hoy. Respira poder intelectual.", item: { name: "Motor Cerebral", price: "Fuerza", imageUrl: "/billy-breathing.png" }, holdTime: 5, fullScreen: true },
+  { id: "cap-3-13", stepType: "narrative_check", question: "¿Qué HVA te daría el mayor retorno si la aprendieras hoy mismo?", promptPlaceholder: "Me cambiaría la vida saber ...", minChars: 15, billyResponse: "Búscala ahora. El tiempo corre.", fullScreen: true },
+  { id: "cap-3-14", stepType: "info", title: "Alerta importante", body: "Si dejas de estudiar, te vuelves irrelevante. En el mundo de la IA, el 'Aprender a Aprender' es tu mayor HVA.", fullScreen: true,
+    aiInsight: "La formación continua es el mantenimiento obligatorio de tu motor financiero."
   },
-  {
-    id: "roi-4",
-    stepType: "summary",
-    title: "Tu propio Banco",
-    body: "Tu educación es el único activo que nadie te puede embargar y que nunca se deprecia.",
-    fullScreen: true,
-  },
+  { id: "cap-3-15", stepType: "summary", title: "Inversión Sellada", body: "Has visto el ROI. Siguiente: Soft Skills.", fullScreen: true },
 ]
 
-/**
- * Lesson: Soft Skills: El multiplicador invisible de ingresos
- */
+// ==============================================================================
+// LECCIÓN 4: Soft Skills como multiplicador (La cara humana) - 15 SLIDES
+// ==============================================================================
 export const lessonSoftSkillsMultiplicadorIngresosSteps: LessonStep[] = [
-  {
-    id: "soft-1",
-    stepType: "billy_talks",
-    mood: "worried",
-    body: "Conozco programadores brillantes que ganan poco porque no saben hablar en una junta. \n\nLas **Soft Skills** (habilidades blandas) multiplican tus ingresos.",
-    fullScreen: true,
+  { id: "cap-4-1", stepType: "billy_talks", body: "Puedes ser el mejor programador o doctor, pero si no sabes hablar, negociar o liderar, tienes un multiplicador de x0.1.", fullScreen: true,
+    data: { glossary: [{ word: "Soft Skills", definition: "Habilidades interpersonales y de comunicación que determinan cómo interactúas en un entorno profesional." }, { word: "Multiplicador de Valor", definition: "Habilidad que potencia los resultados de todas las demás habilidades técnicas." }] }
   },
-  {
-    id: "soft-2",
-    stepType: "match",
-    question: "Conecta la Soft Skill con cómo te hace ganar dinero:",
-    leftItems: [
-        { id: "l1", label: "Comunicación Asertiva" },
-        { id: "l2", label: "Liderazgo" },
-        { id: "l3", label: "Gestión del tiempo" },
-    ],
-    rightItems: [
-        { id: "r1", label: "Mejores aumentos y cierres" },
-        { id: "r2", label: "Cargos de mayor responsabilidad" },
-        { id: "r3", label: "Mayor productividad personal" },
-    ],
-    correctPairs: [
-        { leftId: "l1", rightId: "r1" },
-        { leftId: "l2", rightId: "r2" },
-        { leftId: "l3", rightId: "r3" },
-    ],
-    isAssessment: true,
-    fullScreen: true,
+  { id: "cap-4-2", stepType: "info", title: "El Factor Negociación", body: "Ganar $5,000 extra al año no solo es trabajar más; es saber PEDIRLO en una reunión de 15 minutos. Esa es una habilidad de ingeniería social.", fullScreen: true,
+    aiInsight: "Las personas con altas habilidades de comunicación ganan, en promedio, un 20% más que sus pares técnicos iguales."
   },
-  {
-    id: "soft-3",
-    stepType: "influence_detective",
-    scenario: "Tu jefe siempre le asigna los mejores proyectos a Lucía, aunque tú eres técnicamente mejor.",
-    options: [
-      { id: "i1", label: "Es favoritismo injusto", emotion: "Frustración", isCorrect: false },
-      { id: "i2", label: "Lucía sabe vender el valor de su trabajo y tú no", emotion: "Realidad", isCorrect: true },
-      { id: "i3", label: "Necesitas otro curso técnico", emotion: "Escape", isCorrect: false },
-    ],
-    isAssessment: true,
-    fullScreen: true,
+  { id: "cap-4-3", stepType: "mcq", question: "Tienes una HVA técnica brillante pero odias hablar en público. ¿Cuál es tu limitante técnico?", options: [{id:"o1", label: "Mi Falta de Escala (No puedo influir a muchos)", isCorrect: true}, {id:"o2", label: "Falta de inteligencia", isCorrect: false}], isAssessment: true, fullScreen: true },
+  { id: "cap-4-4", stepType: "swipe_sorter", question: "¿Es una Soft Skill o una Hard Skill?", leftBucket: {label:"Soft (Humana)", color:"#ef4444"}, rightBucket: {label:"Hard (Técnica)", color:"#3b82f6"}, items: [{id:"i1", label:"Resolución de Conflictos", correctBucket:"left"}, {id:"i2", label:"Análisis SQL", correctBucket:"right"}, {id:"i3", label:"Empatía Estratégica", correctBucket:"left"}, {id:"i4", label:"Configuración de Redes", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "cap-4-5", stepType: "info", title: "Liderazgo: Escala a través de otros", body: "Cuando lideras, tus manos ya no son 2; son 20, 200 o 2,000. El liderazgo es el mayor sistema de amplificación del mundo.", fullScreen: true },
+  { id: "cap-4-6", stepType: "true_false", statement: "Las Soft Skills son innatas, no se pueden aprender si naciste tímido.", correctValue: false, explanation: "La comunicación es un protocolo. Como cualquier código, se puede aprender, depurar y mejorar.", isAssessment:true, fullScreen: true },
+  { id: "cap-4-7", stepType: "order", question: "Pasos de una Negociación BIZEN", items: [{id:"p1", label: "Escucha Activa (Detectar necesidades)", correctOrder: 1}, {id: "p2", label: "Anclaje de Valor (Mostrar impacto)", correctOrder: 2}, {id: "p3", label: "Cierre de Beneficio Mutuo", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "cap-4-8", stepType: "blitz_challenge", question: "¿Qué soft skill es necesaria para vender?", options: [{id:"o1", label:"La Persuación Ética", isCorrect:true}, {id:"o2", label:"Saber matemáticas", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-4-9", stepType: "blitz_challenge", question: "¿Sirve ser brillante si nadie te conoce?", options: [{id:"o1", label:"Invisible = Valor 0", isCorrect:true}, {id:"o2", label:"Sí, la calidad se nota sola", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-4-10", stepType: "match", question: "Relaciona Skill con Resultado", leftItems: [{id:"l1", label:"Negociación"}, {id:"l2", label:"Liderazgo"}], rightItems: [{id:"r1", label:"Mejor margen propio"}, {id:"r2", label:"Multiplicación por otros"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+  { id: "cap-4-11", stepType: "mindset_translator", question: "Refactoriza tu silencio", beliefs: [{id: "b1", original: "Pena me da pedir un aumento.", healthyOptions: [{id: "h1", label: "Presentaré los datos de mi impacto positivo para recalibrar mi precio", isCorrect: true}, {id: "h2", label: "Esperaré a que me noten", isCorrect: false}]}] },
+  { id: "cap-4-12", stepType: "impulse_meter", instructions: "Mantén pulsado para activar tu confianza social. Respira carisma técnico.", item: { name: "Voz de Mando", price: "0.00", imageUrl: "/billy-breathing.png" }, holdTime: 5, fullScreen: true },
+  { id: "cap-4-13", stepType: "narrative_check", question: "¿Cuál es la conversación incómoda que sabes que necesitas tener para ganar más?", promptPlaceholder: "Tengo que hablar con ... sobre ...", minChars: 15, billyResponse: "Hazlo. Detrás de la incomodidad está tu libertad.", fullScreen: true },
+  { id: "cap-4-14", stepType: "info", title: "Alerta de Ingeniería", body: "Las máquinas harán lo técnico. Lo humano (negociar, empatizar, liderar) será lo único que la IA no pueda devaluar.", fullScreen: true,
+    aiInsight: "Las habilidades sociales son el último refugio de la ventaja competitiva humana."
   },
-  {
-    id: "soft-4",
-    stepType: "summary",
-    title: "El Combo Ganador",
-    body: "Habilidad Técnica + Soft Skills = Ingresos Exponenciales.",
-    fullScreen: true,
-  },
+  { id: "cap-4-15", stepType: "summary", title: "Multiplicador Activo", body: "Has visto el poder social. Siguiente: Operativo a Estratégico.", fullScreen: true },
 ]
 
-/**
- * Lesson: Diseño de Carrera: De Operativo a Estratégico
- */
+// ==============================================================================
+// LECCIÓN 5: Diseño de carrera (Operativo a Estratégico) - 15 SLIDES
+// ==============================================================================
 export const lessonDisenoDeCarreraOperativoAEstrategicoSteps: LessonStep[] = [
-  {
-    id: "car-1",
-    stepType: "billy_talks",
-    mood: "thinking",
-    body: "Hacer las cosas bien se llama Operación. Decidir qué cosas deben hacerse se llama Estrategia.\n\nLos administradores siempre ganan más que los operadores. Es hora de moverte de bando.",
-    fullScreen: true,
+  { id: "cap-5-1", stepType: "billy_talks", body: "Toda carrera tiene tres fases: Ejecutor (Tus manos), Manager (Tus ojos) y Estratega (Tu visión). ¿En qué piso estás hoy?", fullScreen: true,
+    data: { glossary: [{ word: "Fase Estratégica", definition: "Etapa profesional donde el valor se genera por la toma de decisiones y la visión, no por la ejecución física." }, { word: "Costo de Estancamiento", definition: "Pérdida de ingresos por permanecer en la fase operativa más tiempo del necesario." }] }
   },
-  {
-    id: "car-2",
-    stepType: "order",
-    question: "Ordena los roles por nivel de RESPONSABILIDAD (y de sueldo potencial):",
-    items: [
-      { id: "r1", label: "Ejecutor de tareas", correctOrder: 1 },
-      { id: "r2", label: "Supervisor de grupo", correctOrder: 2 },
-      { id: "r3", label: "Director Nacional de Estrategia", correctOrder: 3 },
-    ],
-    isAssessment: true,
-    fullScreen: true,
+  { id: "cap-5-2", stepType: "info", title: "El Ascensor del Ingreso", body: "Un ejecutor gana x1. Un estratega gana x100. Debes diseñar tu salida de la 'operación' para entrar en la 'decisión'.", fullScreen: true,
+    aiInsight: "La brecha salarial se dispara cuando pasas de 'cómo hacer algo' a 'qué es lo que hay que hacer'."
   },
-  {
-    id: "car-3",
-    stepType: "narrative_check",
-    question: "¿Qué paso vas a dar en los próximos 6 meses para subir de nivel operativo a estratégico en tu trabajo actual?",
-    promptPlaceholder: "Delegaré mis tareas de ... para enfocarme en ...",
-    minChars: 25,
-    billyResponse: "¡Eso es ver el bosque, no solo los árboles! Vamos por ese ascenso.",
-    fullScreen: true,
+  { id: "cap-5-3", stepType: "impulse_meter", instructions: "Mantén pulsado y suelta el teclado. Imagina liderar la visión completa. Respira altura.", item: { name: "Visión de Halcón", price: "Libre", imageUrl: "/billy-breathing.png" }, holdTime: 6, fullScreen: true },
+  { id: "cap-5-4", stepType: "mcq", question: "¿Qué actividad es propia de la FASE ESTRATÉGICA?", options: [{id:"o1", label:"Responder correos rápido", isCorrect:false}, {id:"o2", label:"Decidir entrar en un nuevo mercado con datos", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "cap-5-5", stepType: "swipe_sorter", question: "¿Es una Tarea Operativa o Estratégica?", leftBucket: {label:"Operativa (Hacer)", color:"#94a3b8"}, rightBucket: {label:"Estratégica (Pensar)", color:"#6366f1"}, items: [{id:"i1", label:"Llenar hojas de cálculo", correctBucket:"left"}, {id:"i2", label:"Diseñar modelo de negocio", correctBucket:"right"}, {id:"i3", label:"Arreglar el código buggear", correctBucket:"left"}, {id:"i4", label:"Elegir a los socios del año", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "cap-5-6", stepType: "info", title: "Delegar o Morir", body: "Para subir al piso estratégico, debes soltar las tareas operativas. Si sigues haciendo café, no puedes diseñar la cafetería.", fullScreen: true },
+  { id: "cap-5-7", stepType: "true_false", statement: "Un gran ejecutor será automáticamente un gran estratega cuando lo promuevan.", correctValue: false, explanation: "Son habilidades distintas (o incluso opuestas). Requieren entrenamiento diferente.", isAssessment:true, fullScreen: true },
+  { id: "cap-5-8", stepType: "order", question: "Evolución de Carrera BIZEN", items: [{id:"p1", label: "Ejecutor Brillante (Consistencia)", correctOrder: 1}, {id: "p2", label: "Optimizador de Procesos (Manager)", correctOrder: 2}, {id: "p3", label: "Arquitecto de Valor (Estratega)", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "cap-5-9", stepType: "blitz_challenge", question: "¿Cuál es el riesgo de quedarse en el piso de Ejecución?", options: [{id:"o1", label:"La Automatización", isCorrect:true}, {id:"o2", label:"El Aburrimiento", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-5-10", stepType: "blitz_challenge", question: "¿Qué necesita un estratega?", options: [{id:"o1", label:"Mucho café", isCorrect:false}, {id:"o2", label:"Capacidad de Síntesis y Visión", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "cap-5-11", stepType: "match", question: "Relaciona Nivel", leftItems: [{id:"l1", label:"Nivel Bajo"}, {id:"l2", label:"Nivel Alto"}], rightItems: [{id:"r1", label:"Uso de fuerza/tiempo"}, {id:"r2", label:"Uso de sistemas/capital"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+  { id: "cap-5-12", stepType: "mindset_translator", question: "Refactoriza tu puesto", beliefs: [{id: "b1", original: "Solo yo puedo hacer esto bien.", healthyOptions: [{id: "h1", label: "Entrenaré a otros o crearé un sistema para que esto ocurra sin mí", isCorrect: true}, {id: "h2", label: "Soy indispensable y eso me hace rico", isCorrect: false}]}] },
+  { id: "cap-5-13", stepType: "narrative_check", question: "¿Qué porcentaje de tu día pasas 'HACIENDO' vs 'PENSANDO'?", promptPlaceholder: "Paso un ... % haciendo.", minChars: 10, billyResponse: "Aumenta el tiempo de pensamiento técnico. Ahí está el dinero.", fullScreen: true },
+  { id: "cap-5-14", stepType: "info", title: "Alerta importante", body: "Felicidades. Has completado el bloque de Capital de Habilidades. Tu cerebro está oficialmente actualizado.", fullScreen: true,
+    aiInsight: "El diseño de carrera es una meta-habilidad que orquestará todas tus demás fuentes de ingreso."
   },
-  {
-    id: "car-4",
-    stepType: "summary",
-    title: "Diseñador de Riqueza",
-    body: "Terminaste el segundo bloque. Ya no ves un sueldo, ves una infraestructura de habilidades que puedes mejorar a voluntad.\n\nSiguiente bloque: **Optimización de la Riqueza**.",
-    fullScreen: true,
-  },
+  { id: "cap-5-15", stepType: "summary", title: "Subtema Concluido", body: "Has dominado el Capital de Habilidades. Siguiente bloque: Optimización de Riqueza.", fullScreen: true },
 ]

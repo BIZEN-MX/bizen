@@ -1,150 +1,142 @@
-import { LessonStep } from "@/types/lessonTypes";
+import type { LessonStep } from "@/types/lessonTypes"
 
-// 1. ¿Qué es un trigger de compra?
+/**
+ * Tema 3: Triggers de Compra (Subtema A)
+ * 
+ * Expanded to 15 slides per lesson following the UPDATED BIZEN Blueprint (2 Blitz, 2+ AI Insights).
+ */
+
+// ==============================================================================
+// LECCIÓN 1: ¿Qué es un Trigger de compra? - 15 SLIDES
+// ==============================================================================
 export const lessonQueEsUnTriggerDeCompraSteps: LessonStep[] = [
-  {
-    id: "t3-l1-s1",
-    stepType: "billy_talks",
-    title: "El Control de tu Cerebro",
-    body: "Bienvenido al Tema 3. Aquí entenderemos por qué a veces compramos cosas sin saber realmente por qué. Un 'trigger' o gatillo es un estímulo externo que dispara un impulso automático.",
-    mood: "thinking",
+  { id: "tri-1-1", stepType: "billy_talks", mood: "thinking", body: "Un trigger o 'disparador' es el chip mental que activa tu compra sin que tu razón lo note. No es racional, es reactivo e instintivo.", fullScreen: true,
+    data: { glossary: [{ word: "Trigger de Compra", definition: "Estímulo interno o externo que desencadena el deseo impulsivo de adquirir algo." }, { word: "Respuesta Límbica", definition: "Reacción del cerebro emocional que prioriza el placer inmediato." }] }
   },
-  {
-    id: "t3-l1-s2",
-    stepType: "match",
-    title: "Tipos de Gatillos",
-    question: "Asocia el estímulo con el tipo de gatillo que representa:",
-    leftItems: [
-      { id: "e1", label: "Olor a pan recién horneado" },
-      { id: "e2", label: "Notificación de 'Últimas 2 piezas'" },
-      { id: "e3", label: "Ver a un influencer con un reloj" },
-    ],
-    rightItems: [
-      { id: "g1", label: "Gatillo Sensorial" },
-      { id: "g2", label: "Gatillo de Escasez" },
-      { id: "g3", label: "Gatillo de Estatus" },
-    ],
-    correctPairs: [
-      { leftId: "e1", rightId: "g1" },
-      { leftId: "e2", rightId: "g2" },
-      { leftId: "e3", rightId: "g3" }
-    ],
+  { id: "tri-1-2", stepType: "info", title: "Disparadores Externos", body: "Un olor, una música, un color rojo de oferta... Tu entorno está lleno de ganchos diseñados por expertos para jalar tu cartera.", fullScreen: true,
+    aiInsight: "El 70% de las compras en centros comerciales no estaban planeadas al entrar."
   },
-  {
-    id: "t3-l1-s3",
-    stepType: "order",
-    title: "La Anatomía de un Impulso",
-    question: "Ordena los pasos desde que aparece el estímulo hasta que ocurre la compra:",
-    items: [
-      { id: "p1", label: "Estímulo Externo (Trigger)", correctOrder: 1 },
-      { id: "p2", label: "Respuesta Emocional (Dopamina)", correctOrder: 2 },
-      { id: "p3", label: "Racionalización ('Me lo merezco')", correctOrder: 3 },
-      { id: "p4", label: "Acción de Pago", correctOrder: 4 },
-    ],
-  }
-];
+  { id: "tri-1-3", stepType: "mcq", question: "Ves a alguien que te cae mal con algo nuevo y caro. Sientes envidia. ¿Qué tipo de trigger es?", options: [{id:"o1", label:"Trigger Externo (Entorno)", isCorrect:false}, {id:"o2", label:"Trigger Interno (Emocional)", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "tri-1-4", stepType: "swipe_sorter", question: "¿Es un Disparador Externo o Interno?", leftBucket: {label:"Externo (Mundo)", color:"#ef4444"}, rightBucket: {label:"Interno (Mente)", color:"#10b981"}, items: [{id:"s1", label:"Anuncio en Instagram", correctBucket:"left"}, {id:"s2", label:"Miedo al futuro", correctBucket:"right"}, {id:"s3", label:"Aburrimiento", correctBucket:"right"}, {id:"s4", label:"Cartelera de cine", correctBucket:"left"}], isAssessment: true, fullScreen: true },
+  { id: "tri-1-5", stepType: "info", title: "El Circuito del Deseo", body: "El trigger activa la DOPAMINA mucho antes de que compres. Disfrutas la IMAGEN de tener el objeto más que el objeto mismo.", fullScreen: true },
+  { id: "tri-1-6", stepType: "true_false", statement: "Es posible eliminar todos los triggers de compra de tu vida mediante fuerza de voluntad.", correctValue: false, explanation: "Vivimos en una sociedad de consumo; el truco no es eliminarlos, es aprender a IGNORARLOS.", isAssessment: true, fullScreen: true },
+  { id: "tri-1-7", stepType: "order", question: "Secuencia de un Trigger", items: [{id:"p1", label: "Exposición al estímulo (Visual/Auditivo)", correctOrder: 1}, {id: "p2", label: "Respuesta límbica (Anticipación)", correctOrder: 2}, {id: "p3", label: "Justificación lógica (Después del deseo)", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "tri-1-8", stepType: "match", question: "Relaciona Trigger con su Fuerza", leftItems: [{id:"l1", label:"Escasez"}, {id:"l2", label:"Autoridad"}, {id:"l3", label:"Social"}], rightItems: [{id:"r1", label:"'¡Solo hoy!'"}, {id:"r2", label:"'Recomendado por expertos'"}, {id:"r3", label:"'Todos lo tienen'"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "tri-1-9", stepType: "blitz_challenge", question: "¿Qué neurotransmisor se activa con un trigger?", options: [{id:"o1", label:"Serotonina", isCorrect:false}, {id:"o2", label:"Dopamina", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-1-10", stepType: "blitz_challenge", question: "¿Cual es el mejor antídoto contra un trigger vivo?", options: [{id:"o1", label:"Ignorarlo", isCorrect:false}, {id:"o2", label: "Consciencia y Pausa", isCorrect: true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-1-11", stepType: "mindset_translator", question: "Neutraliza el gancho", beliefs: [{id: "b1", original: "Lo necesito porque está en rebaja.", healthyOptions: [{id: "h1", label: "Si no lo necesito, cualquier precio es caro (Costo Cero)", isCorrect: true}, {id: "h2", label: "Ahorraré si compro diez", isCorrect: false}]}] },
+  { id: "tri-1-12", stepType: "impulse_meter", instructions: "Mantén pulsado para 'identificar' un trigger en tu mente. Respira y obsérvalo sin actuar.", item: { name: "Escáner de Triggers", price: "0.00", imageUrl: "/billy-breathing.png" }, holdTime: 5, fullScreen: true },
+  { id: "tri-1-13", stepType: "narrative_check", question: "¿Qué objeto te jala más el ojo cuando vas a un centro comercial y te hace 'picar'?", promptPlaceholder: "Me jalan los ...", minChars: 15, billyResponse: "Detectarlo es la mitad de la batalla. Ahora lo verás distinto.", fullScreen: true },
+  { id: "tri-1-14", stepType: "info", title: "Alerta importante", body: "Los centros comerciales están diseñados como laberintos de triggers. No vayas a 'ver', ve con una lista o no vayas.", fullScreen: true,
+    aiInsight: "Las tiendas ponen los artículos básicos al fondo para que recorras todos los triggers posibles en el camino."
+  },
+  { id: "tri-1-15", stepType: "summary", title: "Trigger Detectado", body: "Has aprendido a ver los hilos. Siguiente: La ciencia de la dopamina y el consumo.", fullScreen: true },
+]
 
-// 2. Publicidad: cómo te manipula
+// ==============================================================================
+// LECCIÓN 2: Dopamina y consumo (La ciencia del deseo) - 15 SLIDES
+// ==============================================================================
 export const lessonPublicidadComoTeManipulaSteps: LessonStep[] = [
-  {
-    id: "t3-l2-s1",
-    stepType: "influence_detective",
-    title: "Detective de Influencia",
-    scenario: "Ves un anuncio con un actor vestido de médico recomendando una crema cara que 'rejuvenece 10 años'.",
-    options: [
-      { id: "o1", label: "Autoridad (La bata blanca)", emotion: "Autoridad", isCorrect: true },
-      { id: "o2", label: "Escasez", emotion: "Miedo", isCorrect: false },
-      { id: "o3", label: "Prueba Social", emotion: "Pertenencia", isCorrect: false },
-    ],
-    explanation: "¡Exacto! El cerebro baja la guardia ante símbolos de autoridad y expertos aparentes.",
+  { id: "tri-2-1", stepType: "billy_talks", body: "La publicidad no vende productos, vende DOPAMINA. Te vende la versión mejorada de tí mismo que 'serías' si compraras eso.", fullScreen: true,
+    data: { glossary: [{ word: "Dopamina", definition: "Neurotransmisor del placer anticipatorio y la búsqueda de recompensa." }, { word: "Publicidad Aspiracional", definition: "Técnica que asocia un producto con un estatus o estilo de vida superior." }] }
   },
-  {
-    id: "t3-l2-s2",
-    stepType: "mcq",
-    title: "El Ancla de Precio",
-    question: "Un producto marca $1,000 originalmente, pero tiene un tachón y dice $399. ¿Cómo se llama esta táctica?",
-    options: [
-      { id: "a1", label: "Anclaje de Precio", isCorrect: true, explanation: "Tu cerebro usa el primer número como referencia para que el segundo parezca un 'regalo'." },
-      { id: "a2", label: "Efecto Halo", isCorrect: false },
-    ],
-  }
-];
+  { id: "tri-2-2", stepType: "info", title: "Asociación Neuronal", body: "Si ves a gente feliz tomando un refresco en la playa, tu cerebro graba: Refresco = Felicidad + Verano.", fullScreen: true,
+    aiInsight: "Tu cerebro no distingue entre una imagen de publicidad y una realidad futura si la emoción es fuerte."
+  },
+  { id: "tri-2-3", stepType: "mcq", question: "¿Qué busca un anuncio que muestra a un experto con traje de doctor recomendando un lujo?", options: [{id:"o1", label:"Dar datos técnicos reales", isCorrect:false}, {id:"o2", label:"Generar Confianza y Autoridad inmediata", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "tri-2-4", stepType: "swipe_sorter", question: "¿Qué técnica publicitaria hay detrás?", leftBucket: {label:"Miedo/Escasez", color:"#ef4444"}, rightBucket: {label:"Pertenencia/Aspiración", color:"#10b981"}, items: [{id:"s1", label:"'No te quedes fuera del grupo'", correctBucket:"right"}, {id:"s2", label:"'¡Solo hoy 50% de descuento!'", correctBucket:"left"}, {id:"s3", label:"'Siéntete como un rey'", correctBucket:"right"}, {id:"s4", label:"'Tu familia está en riesgo'", correctBucket:"left"}], isAssessment: true, fullScreen: true },
+  { id: "tri-2-5", stepType: "info", title: "El Placer de la Anticipación", body: "Sientes más placer AL COMPRAR (clic) que AL RECIBIR el objeto. La dopamina cae en cuanto tienes el objeto en tus manos.", fullScreen: true },
+  { id: "tri-2-6", stepType: "true_false", statement: "Los comerciales de perfumes realmente intentan venderte el olor del producto.", correctValue: false, explanation: "Venden seducción, estatus y poder; el olor es solo el vehículo para la narrativa.", isAssessment: true, fullScreen: true },
+  { id: "tri-2-7", stepType: "order", question: "El Ciclo de la Adicción al Consumo", items: [{id:"p1", label: "Sentir insatisfacción o aburrimiento", correctOrder: 1}, {id: "p2", label: "Ver anuncio aspiracional", correctOrder: 2}, {id: "p3", label: "Compra rápida (Pico de dopamina)", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "tri-2-8", stepType: "match", question: "Relaciona Técnica con Objetivo", leftItems: [{id:"l1", label:"Prueba Social"}, {id:"l2", label:"Personalización"}, {id:"l3", label:"Nostalgia"}], rightItems: [{id:"r1", label:"'5,000 personas lo aman'"}, {id:"r2", label:"'Sugerencias para TÍ'"}, {id:"r3", label:"'Como en casa de mamá'"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "tri-2-9", stepType: "blitz_challenge", question: "¿Qué técnica usa el '¡Solo por hoy!'?", options: [{id:"o1", label:"Autoridad", isCorrect:false}, {id:"o2", label:"Escasez", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-2-10", stepType: "blitz_challenge", question: "¿Quién es el responsable de que un anuncio funcione?", options: [{id:"o1", label:"El modelo", isCorrect:false}, {id:"o2", label:"Tu propia carencia interna", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-2-11", stepType: "mindset_translator", question: "Resiste el gancho", beliefs: [{id: "b1", original: "Esa crema me hará ver más joven y exitoso.", healthyOptions: [{id: "h1", label: "Mi valor es independiente de los productos que uso", isCorrect: true}, {id: "h2", label: "Comprar esto me dará felicidad eterna", isCorrect: false}]}] },
+  { id: "tri-2-12", stepType: "impulse_meter", instructions: "Mantén pulsado y visualiza el anuncio desvaneciéndose. Respira y siente tu integridad física.", item: { name: "Filtro de Verdad", price: "Libre", imageUrl: "/billy-breathing.png" }, holdTime: 5, fullScreen: true },
+  { id: "tri-2-13", stepType: "narrative_check", question: "¿Qué anuncio de TV o redes recuerdas más hoy?", promptPlaceholder: "Recuerdo el de ...", minChars: 10, billyResponse: "Si lo recuerdas, el publicista ganó esa ronda. La próxima será tuya.", fullScreen: true },
+  { id: "tri-2-14", stepType: "info", title: "Alerta importante", body: "Los anunciantes estudian neurociencia. No es una pelea justa; necesitas tu propia ingeniería de defensa.", fullScreen: true,
+    aiInsight: "Las grandes tecnológicas usan algoritmos para predecir cuándo eres más vulnerable emocionalmente y lanzarte el anuncio en ese momento."
+  },
+  { id: "tri-2-15", stepType: "summary", title: "Dopamina Desarmada", body: "Ya sabes por qué sientes urgencia. Siguiente: Redes Sociales y la comparación social.", fullScreen: true },
+]
 
-// 3. Redes: comparación y presión
+// ==============================================================================
+// LECCIÓN 3: Redes Sociales y comparación social - 15 SLIDES
+// ==============================================================================
 export const lessonRedesComparacionYPresionSteps: LessonStep[] = [
-  {
-    id: "t3-l3-s1",
-    stepType: "billy_talks",
-    title: "La Vitrina Infinita",
-    body: "Las redes sociales no son solo para conectar; son centros comerciales disfrazados de álbumes de fotos. Cada post es una comparación silenciosa.",
-    mood: "worried",
+  { id: "tri-3-1", stepType: "billy_talks", body: "Instagram no es la vida real; es una galería de los mejores momentos de los demás diseñada para que tú te sientas insuficiente.", fullScreen: true,
+    data: { glossary: [{ word: "FOMO (Fear Of Missing Out)", definition: "Miedo a perderse un evento o experiencia social que otros están disfrutando." }, { word: "Comparación Ascendente", definition: "Compararse con personas que parecen tener más estatus o recursos, causando infelicidad." }] }
   },
-  {
-    id: "t3-l3-s2",
-    stepType: "swipe_sorter",
-    title: "Filtro de Realidad",
-    question: "¿Esto es una necesidad real o una presión de estilo de vida?",
-    leftBucket: { label: "Necesidad Real", color: "#3b82f6" },
-    rightBucket: { label: "Presión Social", color: "#ef4444" },
-    items: [
-      { id: "i1", label: "Zapatillas nuevas porque las viejas tienen huecos", correctBucket: "left" },
-      { id: "i2", label: "El mismo café de $10 que todos postean", correctBucket: "right" },
-      { id: "i3", label: "Un viaje al mismo destino que tu ex para mostrar felicidad", correctBucket: "right" },
-    ],
-  }
-];
+  { id: "tri-3-2", stepType: "info", title: "La Trampa del Algoritmo", body: "El algoritmo te muestra lo que NO tienes para que sientas envidia y compres.", fullScreen: true,
+    aiInsight: "Ver fotos de gente 'mejor' que nosotros dispara las mismas áreas del cerebro que el dolor físico."
+  },
+  { id: "tri-3-3", stepType: "mcq", question: "¿Qué efecto tiene en tí ver las vacaciones de lujo de tus conocidos?", options: [{id:"o1", label:"Inspiración profunda (Raro)", isCorrect:false}, {id:"o2", label:"Ansiedad por mi falta de estatus (FOMO)", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "tri-3-4", stepType: "swipe_sorter", question: "¿Redes: Generan Valor o Generan Gasto?", leftBucket: {label:"Generan Gasto (Miedo)", color:"#ef4444"}, rightBucket: {label:"Generan Valor (Paz)", color:"#10b981"}, items: [{id:"s1", label:"Seguir a influencers de lujo", correctBucket:"left"}, {id:"s2", label:"Taller de finanzas en vivo", correctBucket:"right"}, {id:"s3", label:"Scroll de compras nocturno", correctBucket:"left"}, {id:"s4", label:"Podcast de inversión estratégica", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "tri-3-5", stepType: "info", title: "El Marketing de Urgencia Falsa", body: "En redes abundan los 'Lanzamientos únicos' y 'Solo por 24 horas'.", fullScreen: true },
+  { id: "tri-3-6", stepType: "true_false", statement: "Tener las notificaciones de redes apagadas te ayuda a ahorrar dinero indirectamente.", correctValue: true, explanation: "Eliminas los micro-triggers visuales constantes.", isAssessment: true, fullScreen: true },
+  { id: "tri-3-7", stepType: "order", question: "Ciclo del FOMO en redes", items: [{id:"p1", label: "Ver post de éxito ajeno", correctOrder: 1}, {id: "p2", label: "Sentir carencia material inmediata", correctOrder: 2}, {id: "p3", label: "Gastar en algo similar para 'equilibrar'", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "tri-3-8", stepType: "match", question: "Relaciona Concepto con Solución", leftItems: [{id:"l1", label:"Deseo por ver lo nuevo"}, {id:"l2", label:"Envida visual"}, {id:"l3", label:"Presión de grupo"}], rightItems: [{id:"r1", label:"Silenciar cuentas tóxicas"}, {id:"r2", label:"Practicar gratitud técnica"}, {id:"r3", label:"Definir mi propia meta de éxito"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "tri-3-9", stepType: "blitz_challenge", question: "¿Qué significa FOMO?", options: [{id:"o1", label:"Fear Of My Options", isCorrect:false}, {id:"o2", label:"Fear Of Missing Out", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-3-10", stepType: "blitz_challenge", question: "¿Qué es más importante para tu cuenta?", options: [{id:"o1", label:"Parecer exitoso", isCorrect:false}, {id:"o2", label:"Ser libre de la opinión ajena", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-3-11", stepType: "mindset_translator", question: "Refactoriza tu Feed", beliefs: [{id: "b1", original: "Tengo que ir a esa fiesta/lugar para ser alguien.", healthyOptions: [{id: "h1", label: "Yo decido dónde gasto mi energía según mi plan maestro", isCorrect: true}, {id: "h2", label: "Mi valor depende de mis fotos publicadas", isCorrect: false}]}] },
+  { id: "tri-3-12", stepType: "impulse_meter", instructions: "Mantén pulsado y visualiza tu vida libre de la opinión ajena. Respira autonomía.", item: { name: "Escudo de Autonomía", price: "Paz", imageUrl: "/billy-breathing.png" }, holdTime: 6, fullScreen: true },
+  { id: "tri-3-13", stepType: "narrative_check", question: "¿Qué cuenta de redes sociales vas a silenciar hoy porque te hace sentir 'pobre'?", promptPlaceholder: "Silenciaré a ...", minChars: 10, billyResponse: "Hazlo. Es una inversión masiva en tu salud mental y financiera.", fullScreen: true },
+  { id: "tri-3-14", stepType: "info", title: "Alerta importante", body: "Los influencers viven de que tú consumas. Ellos cobran por tu clic. No seas el producto de su negocio.", fullScreen: true,
+    aiInsight: "El scroll infinito está diseñado con la misma psicología que las máquinas tragamonedas de Las Vegas."
+  },
+  { id: "tri-3-15", stepType: "summary", title: "Redes Controladas", body: "Has dominado el mundo digital. Siguiente: El efecto anclaje en tus decisiones.", fullScreen: true },
+]
 
-// 4. Compras por aburrimiento vs necesidad
+// ==============================================================================
+// LECCIÓN 4: El efecto anclaje en tus decisiones - 15 SLIDES
+// ==============================================================================
 export const lessonComprasPorAburrimientoVsNecesidadSteps: LessonStep[] = [
-  {
-    id: "t3-l4-s1",
-    stepType: "mcq",
-    title: "La Trampa del Ocio",
-    question: "Estás en el sofá, aburrido, y entras a una app de compras 'solo para ver'. ¿Qué sustancia busca tu cerebro?",
-    options: [
-      { id: "s1", label: "Dopamina", isCorrect: true, explanation: "Exacto. La novedad genera dopamina. La compra rápida es el 'hielo' más fácil para el aburrimiento." },
-      { id: "s2", label: "Adrenalina", isCorrect: false },
-    ],
+  { id: "tri-4-1", stepType: "billy_talks", body: "Muchas compras ocurren solo porque tu cerebro se quedó 'pegado' a un número que no es real. Bienvenidos al Anclaje.", fullScreen: true,
+    data: { glossary: [{ word: "Efecto Anclaje", definition: "Sesgo cognitivo que ocurre cuando la primera información que recibimos domina nuestro juicio posterior." }, { word: "Precio de Referencia", definition: "Primer precio visto que usamos para decidir si algo es caro o barato." }] }
   },
-  {
-    id: "t3-l4-s2",
-    stepType: "fill_blanks",
-    title: "La Regla de los 10 Minutos",
-    question: "Completa la estrategia anti-aburrimiento:",
-    textParts: [
-      { type: "text", content: "Para evitar compras por aburrimiento, aplica la regla de los " },
-      { type: "blank", id: "b1", correctOptionId: "opt-10" },
-      { type: "text", content: " minutos. Si después de ese tiempo el " },
-      { type: "blank", id: "b2", correctOptionId: "opt-imp" },
-      { type: "text", content: " desaparece, era solo un gatillo emocional." }
-    ],
-    options: [
-      { id: "opt-10", label: "10", isCorrect: true },
-      { id: "opt-imp", label: "impulso", isCorrect: true },
-      { id: "opt-60", label: "60", isCorrect: false },
-      { id: "opt-gas", label: "gasto", isCorrect: false },
-    ],
-  }
-];
+  { id: "tri-4-2", stepType: "info", title: "La Trampa del 'Antes $599'", body: "Cuando ves un precio tachado, tu cerebro 'se ancla' al precio alto.", fullScreen: true,
+    aiInsight: "Incluso números irrelevantes (como el final de tu seguro social) pueden anclar tu percepción de cuánto deberías pagar por algo."
+  },
+  { id: "tri-4-3", stepType: "mcq", question: "Ves una televisión de $2,000 'rebajada' a $1,200. ¿Qué acaba de pasar?", options: [{id:"o1", label:"Gané $800", isCorrect:false}, {id:"o2", label:"Gasté $1,200 en un objeto anclado", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "tri-4-4", stepType: "swipe_sorter", question: "¿Es una Oferta Real o un Anclaje Psicológico?", leftBucket: {label:"Anclaje (Truco)", color:"#ef4444"}, rightBucket: {label:"Valor Real (Dato)", color:"#10b981"}, items: [{id:"s1", label:"'Precio original: $10,000'", correctBucket:"left"}, {id:"s2", label:"Costo marginal de producción", correctBucket:"right"}, {id:"s3", label:"'Liquidación de última hora'", correctBucket:"left"}, {id:"s4", label:"Precio promedio de mercado", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "tri-4-5", stepType: "info", title: "El Señuelo (The Decoy)", body: "A veces las marcas ponen una opción absurdamente cara solo para que la opción 'media' te parezca barata.", fullScreen: true },
+  { id: "tri-4-6", stepType: "true_false", statement: "Un descuento del 50% significa que estoy ahorrando la mitad de mi dinero.", correctValue: false, explanation: "Solo ahorras si lo IBAS a comprar de todos modos.", isAssessment: true, fullScreen: true },
+  { id: "tri-4-7", stepType: "order", question: "Cómo evitar el Anclaje", items: [{id:"p1", label: "Ignorar el precio 'tachado'", correctOrder: 1}, {id: "p2", label: "Comparar precios en 3 sitios distintos", correctOrder: 2}, {id: "p3", label: "Decidir según mi presupuesto base", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "tri-4-8", stepType: "match", question: "Relaciona Engaño con Realidad", leftItems: [{id:"l1", label:"Ganga"}, {id:"l2", label:"Oferta"}, {id:"l3", label:"Exclusivo"}], rightItems: [{id:"r1", label:"Deshacerse de inventario"}, {id:"r2", label:"Bajar barrera psicológica"}, {id:"r3", label:"Aumentar margen percibido"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "tri-4-9", stepType: "blitz_challenge", question: "¿Cómo se llama el sesgo de quedarse pegado a un número?", options: [{id:"o1", label:"Anclaje", isCorrect:true}, {id:"o2", label:"Gravitación", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-4-10", stepType: "blitz_challenge", question: "¿Qué precio es el único que importa?", options: [{id:"o1", label:"El descuento", isCorrect:false}, {id:"o2", label:"El precio final neto", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-4-11", stepType: "mindset_translator", question: "Corta los hilos", beliefs: [{id: "b1", original: "No puedo dejar pasar este 3x2.", healthyOptions: [{id: "h1", label: "No compraré 3 de algo que no necesito hoy", isCorrect: true}, {id: "h2", label: "El ahorro en volumen me hará rico", isCorrect: false}]}] },
+  { id: "tri-4-12", stepType: "impulse_meter", instructions: "Mantén pulsado y borra el precio 'falso' de tu mente. Respira objetividad pura.", item: { name: "Borrador de Anclas", price: "Dato", imageUrl: "/billy-breathing.png" }, holdTime: 5, fullScreen: true },
+  { id: "tri-4-13", stepType: "narrative_check", question: "¿Cuál ha sido la 'oferta' que más te dolió haber comprado luego?", promptPlaceholder: "Me arrepiento de comprar ...", minChars: 15, billyResponse: "Casi todos hemos caído en el ancla. Hoy ya tienes el radar encendido.", fullScreen: true },
+  { id: "tri-4-14", stepType: "info", title: "Alerta importante", body: "Las promociones no existen para ayudarte, existen para acelerar el ciclo de venta del negocio.", fullScreen: true,
+    aiInsight: "El 'Precio Sugerido' es casi siempre un ancla ficticia inflada para que sientas que ganas al recibir un descuento."
+  },
+  { id: "tri-4-15", stepType: "summary", title: "Anclaje Neutralizado", body: "Has visto el truco de magia. Siguiente: Cómo desactivar un trigger en vivo.", fullScreen: true },
+]
 
-// 5. Detectar mis triggers (casos)
+// ==============================================================================
+// LECCIÓN 5: Cómo desactivar un trigger en vivo - 15 SLIDES
+// ==============================================================================
 export const lessonDetectarMisTriggersCasosSteps: LessonStep[] = [
-  {
-    id: "t3-l5-s1",
-    stepType: "mcq", // Replaced narrative_check with mcq for better validation in this version
-    title: "Auto-Diagnóstico",
-    question: "Reflexiona sobre tu última compra innecesaria. ¿Qué ocurrió justo antes?",
-    options: [
-      { id: "c1", label: "Estaba triste o estresado.", isCorrect: true, explanation: "Gatillo Emocional." },
-      { id: "c2", label: "Recibí un cupón de 'Sólo hoy'.", isCorrect: true, explanation: "Gatillo de Oportunidad." },
-      { id: "c3", label: "Vi a alguien más que lo tenía.", isCorrect: true, explanation: "Gatillo de Comparación." },
-    ],
+  { id: "tri-5-1", stepType: "billy_talks", body: "Terminemos este bloque con un examen final. Vamos a practicar la desactivación de bombas de consumo en tiempo real.", fullScreen: true,
+    data: { glossary: [{ word: "Pausa de Seguridad", definition: "Técnica de detenerse físicamente 48 horas antes de una compra mayor." }, { word: "Checklist de Desactivación", definition: "Pasos mentales para validar si una compra es necesaria." }] }
   },
-  {
-    id: "t3-l5-s2",
-    stepType: "billy_talks",
-    title: "Tu Escudo Mental",
-    body: "Identificar el gatillo es el 50% de la batalla. En la siguiente unidad veremos cómo armar sistemas para que esos gatillos no disparen tu cartera automáticamente.",
-    mood: "celebrating",
-  }
-];
+  { id: "tri-5-2", stepType: "influence_detective", scenario: "Es Cyber Monday. Recibes un correo de tu marca favorita con '40% DE DESCUENTO SOLO HOY'. ¿Qué haces?", options: [{id:"o1", label:"Lo abro para ver qué hay", emotion:"Tentación", isCorrect:false}, {id:"o2", label:"Borro el correo; es un trigger de escasez", emotion:"Lógica", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "tri-5-3", stepType: "info", title: "Tu Mapa de Riesgo", body: "Cada persona tiene triggers distintos. ¿Cuál es tu criptonita financiera?", fullScreen: true,
+    aiInsight: "Las personas que duermen menos de 7 horas son un 30% más propensas a caer en triggers de compra impulsiva."
+  },
+  { id: "tri-5-4", stepType: "swipe_sorter", question: "¿Cuál es tu zona de mayor riesgo operativo?", leftBucket: {label:"Zona de Riesgo (Caigo)", color:"#ef4444"}, rightBucket: {label:"Zona de Control (Paz)", color:"#10b981"}, items: [{id:"s1", label:"Gadgets tecnológicos", correctBucket:"left"}, {id:"s2", label:"Ropa de temporada", correctBucket:"left"}, {id:"s3", label:"Libros de inversión", correctBucket:"right"}, {id:"s4", label:"Cursos de mi carrera", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "tri-5-5", stepType: "info", title: "La Táctica de las 48 Horas", body: "Si el trigger es fuerte, dile: 'Mañana te compro'. 24-48 horas después, el 90% de los deseos desaparecen.", fullScreen: true },
+  { id: "tri-5-6", stepType: "true_false", statement: "Si un trigger es muy potente, lo mejor es luchar contra él con pura fuerza de voluntad.", correctValue: false, explanation: "La fuerza de voluntad se agota.", isAssessment: true, fullScreen: true },
+  { id: "tri-5-7", stepType: "order", question: "Pasos para desactivar un Trigger en vivo", items: [{id:"p1", label: "Reconocer la sensación física (Taquicardia)", correctOrder: 1}, {id: "p2", label: "Beber agua / Respirar", correctOrder: 2}, {id: "p3", label: "Cerrar la pestaña o alejarse", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "tri-5-8", stepType: "match", question: "Relaciona Refuerzo con Antídoto", leftItems: [{id:"l1", label:"Envidia"}, {id:"l2", label:"Cansancio"}, {id:"l3", label:"Aburrimiento"}], rightItems: [{id:"r1", label:"Apagar pantallas"}, {id:"r2", label:"Dormir"}, {id:"r3", label:"Actividad gratuita (Parque)"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "tri-5-9", stepType: "blitz_challenge", question: "¿Qué regla de tiempo mata el impulso?", options: [{id:"o1", label:"30 minutos", isCorrect:false}, {id:"o2", label:"48 horas", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-5-10", stepType: "blitz_challenge", question: "¿Cuál es tu arma principal ahora?", options: [{id:"o1", label:"Pagar a plazos", isCorrect:false}, {id:"o2", label:"Autonomía y Control de entorno", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "tri-5-11", stepType: "mindset_translator", question: "Promesa Final", beliefs: [{id: "b1", original: "No puedo controlar mis ganas de comprar.", healthyOptions: [{id: "h1", label: "Soy el arquitecto de mi entorno y decido sobre mis impulsos", isCorrect: true}, {id: "h2", label: "Soy un animal controlado por anuncios", isCorrect: false}]}] },
+  { id: "tri-5-12", stepType: "impulse_meter", instructions: "Mantén pulsado para sellar tu capacidad de desactivación. Respira libertad pura.", item: { name: "Desactivador 3000", price: "0.00", imageUrl: "/billy-breathing.png" }, holdTime: 6, fullScreen: true },
+  { id: "tri-5-13", stepType: "narrative_check", question: "¿Cuál será tu primera acción cuando sientas el próximo trigger de compra?", promptPlaceholder: "Voy a ... para no comprar.", minChars: 15, billyResponse: "¡Excelente! Ya no eres una presa, eres un Ingeniero.", fullScreen: true },
+  { id: "tri-5-14", stepType: "info", title: "Alerta importante", body: "No te confíes. El sistema siempre querrá que vuelvas a gastar.", fullScreen: true,
+    aiInsight: "La consciencia del trigger reduce su potencia emocional en un 50% de inmediato."
+  },
+  { id: "tri-5-15", stepType: "summary", title: "Bloque Terminado", body: "Has terminado el bloque de Triggers de Compra. ¡Felicidades! Siguiente: Compras Impulsivas.", fullScreen: true },
+]

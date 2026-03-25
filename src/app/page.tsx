@@ -433,7 +433,7 @@ export default function WelcomePage() {
                   fontSize: "clamp(13px, 1.3vw, 15px)",
                   fontWeight: 600,
                   borderRadius: "9999px",
-                  background:
+                  backgroundImage:
                     "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
                   backgroundSize: "200% auto",
                   color: "#fff",
@@ -1399,7 +1399,7 @@ export default function WelcomePage() {
                         fontSize: "clamp(14px, 1.4vw, 17px)",
                         fontWeight: 600,
                         borderRadius: "9999px",
-                        background: "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
+                        backgroundImage: "linear-gradient(110deg, #0056E7 0%, #1983FD 50%, #0056E7 100%)",
                         backgroundSize: "200% auto",
                         color: "#fff",
                         textDecoration: "none",
@@ -1447,7 +1447,7 @@ export default function WelcomePage() {
                         fontSize: "clamp(14px, 1.4vw, 17px)",
                         fontWeight: 600,
                         borderRadius: "9999px",
-                        background: "linear-gradient(110deg, #7c3aed 0%, #a78bfa 50%, #7c3aed 100%)",
+                        backgroundImage: "linear-gradient(110deg, #7c3aed 0%, #a78bfa 50%, #7c3aed 100%)",
                         backgroundSize: "200% auto",
                         color: "#fff",
                         textDecoration: "none",

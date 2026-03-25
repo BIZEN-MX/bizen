@@ -15,31 +15,31 @@ export const TEMA1_SUBTEMAS: Tema1Subtema[] = [
   {
     title: "Percepción Analítica",
     lessons: [
-      { title: "¿Qué es el dinero? (Deuda vs. Energía)", slug: "que-es-el-dinero-deuda-vs-energia", level: "Básico" },
-      { title: "El valor de tu tiempo (Cálculo real)", slug: "el-valor-de-tu-tiempo-calculo-real", level: "Básico" },
-      { title: "Costo de Oportunidad: Elegir es renunciar", slug: "costo-de-oportunidad-elegir-es-renunciar", level: "Intermedio" },
-      { title: "Tu 'Número de Libertad' Inicial", slug: "tu-numero-de-libertad-inicial", level: "Intermedio" },
-      { title: "Las reglas del Sistema Financiero", slug: "las-reglas-del-sistema-financiero", level: "Avanzado" },
+      { title: "¿Qué es el dinero para mí?", slug: "que-es-el-dinero-para-mi", level: "Básico" },
+      { title: "¿Qué espero del dinero?", slug: "que-espero-del-dinero", level: "Básico" },
+      { title: "Dinero como seguridad vs libertad", slug: "dinero-como-seguridad-vs-libertad", level: "Intermedio" },
+      { title: "Dinero como presión vs oportunidad", slug: "dinero-como-presion-vs-oportunidad", level: "Intermedio" },
+      { title: "Identificar mi definición personal del dinero", slug: "identificar-mi-definicion-personal-del-dinero", level: "Avanzado" },
     ]
   },
   {
     title: "Sesgos y Decisiones",
     lessons: [
-      { title: "Sesgo de Comparación: El costo de 'quedar bien'", slug: "sesgo-de-comparacion-el-costo-de-quedar-bien", level: "Básico" },
-      { title: "Sesgo de Confirmación en el consumo", slug: "sesgo-de-confirmacion-en-el-consumo", level: "Básico" },
-      { title: "Aversión a la pérdida vs. Miedo a crecer", slug: "aversion-a-la-perdida-vs-miedo-a-crecer", level: "Intermedio" },
-      { title: "El Efecto Dunning-Kruger en tus finanzas", slug: "el-efecto-dunning-kruger-en-tus-finanzas", level: "Intermedio" },
-      { title: "Caso Real: Placer de hoy vs. Libertad de mañana", slug: "caso-real-placer-de-hoy-vs-libertad-de-manana", level: "Avanzado" },
+      { title: "¿Cómo me hace sentir el dinero?", slug: "como-me-hace-sentir-el-dinero", level: "Básico" },
+      { title: "Señales de emoción dominando una decisión", slug: "senales-de-emocion-dominando-una-decision", level: "Básico" },
+      { title: "Pausa financiera (reglas anti-impulso)", slug: "pausa-financiera-reglas-anti-impulso", level: "Intermedio" },
+      { title: "Culpa y ansiedad financiera (cómo se forman)", slug: "culpa-y-ansiedad-financiera-como-se-forman", level: "Intermedio" },
+      { title: "Emoción vs decisión (casos reales)", slug: "emocion-vs-decision-casos-reales", level: "Avanzado" },
     ]
   },
   {
     title: "Rutinas de Control",
     lessons: [
-      { title: "La Pausa de las 24 Horas (Mecánica)", slug: "la-pausa-de-las-24-horas-mecanica", level: "Básico" },
-      { title: "El Registro de Guerra: Por qué trackear todo", slug: "el-registro-de-guerra-por-que-trackear-todo", level: "Básico" },
-      { title: "Micro-hábitos de ahorro automatizado", slug: "micro-habitos-de-ahorro-automatizado", level: "Intermedio" },
-      { title: "El Ritual del Domingo (Revisión semanal)", slug: "el-ritual-del-domingo-revision-semanal", level: "Intermedio" },
-      { title: "Tu primer Estado de Resultados Personal", slug: "tu-primer-estado-de-resultados-personal", level: "Avanzado" },
+      { title: "Mis primeras creencias sobre el dinero", slug: "mis-primeras-creencias-sobre-el-dinero", level: "Básico" },
+      { title: "Expectativas vs realidad financiera", slug: "expectativas-vs-realidad-financiera", level: "Básico" },
+      { title: "Frases heredadas que me limitan", slug: "frases-heredadas-que-me-limitan", level: "Intermedio" },
+      { title: "Cómo cuestionar una creencia con evidencia", slug: "como-cuestionar-una-creencia-con-evidencia", level: "Intermedio" },
+      { title: "Mi nuevo manual de reglas financieras", slug: "mi-nuevo-manual-de-reglas-financieras", level: "Avanzado" },
     ]
   },
 ]

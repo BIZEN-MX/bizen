@@ -76,9 +76,7 @@ export const AnimatedStar = ({ delay = 0, filled = true, size = 32 }: AnimatedSt
             transition={{
                 delay,
                 duration: 0.6,
-                type: "spring",
-                stiffness: 260,
-                damping: 20
+                ease: "easeOut"
             }}
         >
             <StarIcon size={size} filled={filled} />

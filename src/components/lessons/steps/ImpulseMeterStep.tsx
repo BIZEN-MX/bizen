@@ -30,12 +30,7 @@ export function ImpulseMeterStep({ step, onAnswered, actionTrigger, isContinueEn
       interval = setInterval(() => {
         setProgress(prev => {
           const next = prev + (TICK / HOLD_TIME) * 100
-          if (next >= 100) {
-            clearInterval(interval)
-            handleFinish()
-            return 100
-          }
-          return next
+          return next >= 100 ? 100 : next
         })
       }, TICK)
     } else if (!isSuccess) {
@@ -43,7 +38,13 @@ export function ImpulseMeterStep({ step, onAnswered, actionTrigger, isContinueEn
     }
 
     return () => clearInterval(interval)
-  }, [isPressing, isSuccess])
+  }, [isPressing, isSuccess, HOLD_TIME])
+
+  useEffect(() => {
+    if (progress >= 100 && !isSuccess) {
+      handleFinish()
+    }
+  }, [progress, isSuccess])
 
   const handleFinish = () => {
     setIsSuccess(true)
