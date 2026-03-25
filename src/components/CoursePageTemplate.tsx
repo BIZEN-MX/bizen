@@ -581,8 +581,9 @@ export default function CoursePageTemplate({
                                             gap: 16,
                                             overflowX: "auto",
                                             overflowY: "hidden",
-                                            paddingBottom: 10,
-                                            paddingTop: 4,
+                                            paddingBottom: "clamp(40px, 8vw, 60px)",
+                                            paddingTop: "clamp(20px, 4vw, 30px)",
+                                            marginTop: "-20px",
                                             scrollSnapType: "x mandatory",
                                             WebkitOverflowScrolling: "touch",
                                             scrollbarWidth: "none"
@@ -1119,12 +1120,13 @@ export default function CoursePageTemplate({
 
                 @keyframes active-lesson-pulse {
                   0%, 100% { 
-                    box-shadow: 0 8px 24px rgba(15,98,254,0.1); 
-                    border-color: rgba(15, 98, 254, 0.25);
+                    box-shadow: 0 4px 12px rgba(15,98,254,0.08), 0 0 0 1px rgba(15,98,254,0.1); 
+                    border-color: rgba(15, 98, 254, 0.2);
                   }
                   50% { 
-                    box-shadow: 0 14px 40px rgba(15,98,254,0.22), 0 0 0 1px rgba(15,98,254,0.3); 
+                    box-shadow: 0 0 40px rgba(15,98,254,0.25), 0 0 0 2.5px rgba(15,98,254,0.2); 
                     border-color: rgba(15, 98, 254, 0.5);
+                    transform: translateY(-2px) scale(1.01);
                   }
                 }
                 .next-lesson-to-complete {

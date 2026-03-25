@@ -558,7 +558,7 @@ export default function FixedSidebar() {
                 )}
 
                 {/* ── APRENDE FINANZAS (Cursos) ── */}
-                {isStudentOrGuest && (
+                {user && isStudentOrGuest && (
                     <button
                         onClick={() => navigateTo("/courses")}
                         style={{
@@ -604,7 +604,7 @@ export default function FixedSidebar() {
 
 
                 {/* ── SIMULADORES ── */}
-                {isStudentOrGuest && (
+                {user && isStudentOrGuest && (
                     <button
                         onClick={() => navigateTo("/cash-flow")}
                         style={{
@@ -654,7 +654,7 @@ export default function FixedSidebar() {
                 )}
 
                 {/* ── COMUNIDAD ── */}
-                {isStudentOrGuest && (
+                {user && isStudentOrGuest && (
                     <button
                         onClick={() => navigateTo("/comunidad")}
                         style={{
@@ -698,7 +698,7 @@ export default function FixedSidebar() {
                 )}
 
                 {/* ── TIENDA ── */}
-                {isStudentOrGuest && (
+                {user && isStudentOrGuest && (
                     <button
                         onClick={() => navigateTo("/tienda")}
                         style={{
