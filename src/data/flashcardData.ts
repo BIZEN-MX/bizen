@@ -72,6 +72,68 @@ export const FLASHCARD_DATA: FlashcardSet[] = [
         definition: "Preferir el placer pequeño de hoy (compras) sobre la libertad grande de mañana (inversión)." 
       },
     ]
+  },
+  {
+    topicId: "tema-01",
+    subtemaIndex: 2, // Subtema C: Creencias
+    cards: [
+      { 
+        id: "t1s3-c1", 
+        concept: "Efecto Anclaje", 
+        definition: "Quedarse con la primera cifra que escuchamos (ej. precio original alto) para juzgar si algo es barato o caro." 
+      },
+      { 
+        id: "t1s3-c2", 
+        concept: "Contabilidad Mental", 
+        definition: "Tratar el dinero de forma diferente según de dónde venga (ej. gastar más rápido un regalo que el sueldo)." 
+      },
+      { 
+        id: "t1s3-c3", 
+        concept: "Miedo a la Escasez", 
+        definition: "La creencia de que nunca habrá suficiente dinero, lo que genera ansiedad o acumulación excesiva." 
+      },
+      { 
+        id: "t1s3-c4", 
+        concept: "Mentalidad de Abundancia", 
+        definition: "Creer que el dinero es un recurso que se puede generar con valor, no algo limitado para unos pocos." 
+      },
+      { 
+        id: "t1s3-c5", 
+        concept: "Costo Hundido", 
+        definition: "Seguir gastando dinero en algo malo solo porque 'ya le metí mucho dinero', en lugar de cortar la pérdida." 
+      },
+    ]
+  },
+  {
+    topicId: "tema-02",
+    subtemaIndex: 0, // Subtema A: El mercado
+    cards: [
+      { 
+        id: "t2s1-c1", 
+        concept: "Mercado", 
+        definition: "Lugar físico o virtual donde se intercambian bienes o servicios por dinero entre compradores y vendedores." 
+      },
+      { 
+        id: "t2s1-c2", 
+        concept: "Oferta y Demanda", 
+        definition: "Ley que determina el precio de las cosas: si hay poco y muchos lo quieren, el precio sube." 
+      },
+      { 
+        id: "t2s1-c3", 
+        concept: "Ingreso Activo", 
+        definition: "Dinero que recibes a cambio de tu tiempo y esfuerzo directo (trabajo tradicional)." 
+      },
+      { 
+        id: "t2s1-c4", 
+        concept: "Ingreso Pasivo", 
+        definition: "Dinero que fluye hacia ti sin que tengas que estar presente o trabajando activamente en ese momento." 
+      },
+      { 
+        id: "t2s1-c5", 
+        concept: "Interés Compuesto", 
+        definition: "Cuando los intereses de tu dinero generan sus propios intereses, creando un crecimiento exponencial." 
+      },
+    ]
   }
 ];
 

@@ -15,6 +15,8 @@ import {
   BookOpen
 } from "lucide-react"
 import { Flashcard } from "@/data/flashcardData"
+import { playCorrectSound, playIncorrectSound, playFlipSound } from "./lessonSounds"
+import { haptic } from "@/utils/hapticFeedback"
 
 interface FlashcardActivityProps {
   cards: Flashcard[]
@@ -28,6 +30,10 @@ export default function FlashcardActivity({ cards, onClose, title = "Repaso de C
   const [mode, setMode] = useState<Mode>("review")
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
+  const [examResults, setExamResults] = useState<{
+    correctCount: number
+    mistakes: string[] 
+  }>({ correctCount: 0, mistakes: [] })
   const [examState, setExamState] = useState<{
     score: number
     answers: Record<string, boolean>
@@ -64,6 +70,12 @@ export default function FlashcardActivity({ cards, onClose, title = "Repaso de C
     }
   }
 
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped)
+    playFlipSound()
+    haptic.light()
+  }
+
   const handlePrev = () => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1)
@@ -73,6 +85,17 @@ export default function FlashcardActivity({ cards, onClose, title = "Repaso de C
 
   const handleAnswer = (definition: string) => {
     const isCorrect = definition === currentCard.definition
+    
+    if (isCorrect) {
+      playCorrectSound()
+      haptic.success()
+      setExamResults(prev => ({ ...prev, correctCount: prev.correctCount + 1 }))
+    } else {
+      playIncorrectSound()
+      haptic.error()
+      setExamResults(prev => ({ ...prev, mistakes: [...prev.mistakes, currentCard.concept] }))
+    }
+
     setExamState(prev => ({
       ...prev,
       score: isCorrect ? prev.score + 1 : prev.score,
@@ -160,14 +183,14 @@ export default function FlashcardActivity({ cards, onClose, title = "Repaso de C
               style={{ width: "100%", perspective: 1000 }}
             >
               <div 
-                onClick={() => setIsFlipped(!isFlipped)}
+                onClick={handleFlip}
                 style={{ 
                   width: "100%", 
-                  height: 380, 
+                  height: "clamp(300px, 45vh, 400px)", 
                   position: "relative", 
                   transformStyle: "preserve-3d",
                   transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
-                  transform: isFlipped ? "rotateY(180) rotateY(180deg)" : "rotateY(0deg)",
+                  transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
                   cursor: "pointer"
                 }}
               >
