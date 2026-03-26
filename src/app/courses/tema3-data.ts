@@ -42,4 +42,10 @@ export const TEMA3_SUBTEMAS: Tema3Subtema[] = [
       { title: "Regla personal anti-estatus", slug: "regla-personal-anti-estatus", level: "Avanzado" },
     ]
   },
+  {
+    title: "Evaluación Final",
+    lessons: [
+      { title: "Certificación de Consumo (Evaluación de Bloque)", slug: "evaluacion-bloque-3", level: "Avanzado" },
+    ]
+  },
 ]

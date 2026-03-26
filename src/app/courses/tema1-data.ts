@@ -42,4 +42,10 @@ export const TEMA1_SUBTEMAS: Tema1Subtema[] = [
       { title: "Mi nuevo manual de reglas financieras", slug: "mi-nuevo-manual-de-reglas-financieras", level: "Avanzado" },
     ]
   },
+  {
+    title: "Evaluación Final",
+    lessons: [
+      { title: "Certificación de Mentalidad (Evaluación de Bloque)", slug: "evaluacion-bloque-1", level: "Avanzado" },
+    ]
+  },
 ]

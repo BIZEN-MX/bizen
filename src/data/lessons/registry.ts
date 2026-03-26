@@ -60,6 +60,13 @@ import {
 } from "./tema3-triggers-compra"
 
 import {
+  lessonEvaluacionBloque1Steps,
+  lessonEvaluacionBloque2Steps,
+  lessonEvaluacionBloque3Steps
+} from "./evaluaciones"
+
+
+import {
   lessonSenalesDeCompraImpulsivaSteps,
   lessonAntesDePagarChecklistDeDecisionSteps,
   lessonMicroHabitosParaEvitarImpulsosSteps,
@@ -74,6 +81,30 @@ import {
   lessonNoEstatusSteps,
   lessonReglaPersonalAntiEstatusSteps
 } from "./tema3-estatus-presion"
+
+import {
+  lessonGastosFijosVsVariablesSteps,
+  lessonNecesidadVsDeseoSteps,
+  lessonGastosDiscrecionalesLoQueSiEligesSteps,
+  lessonCostoRealGastoExtrasSteps,
+  lessonClasificarMisGastosEjercicioCompletoSteps
+} from "./tema4-clasificacion"
+
+import {
+  lessonQueSonYPorQueImportanSteps,
+  lessonDetectar3GastosHormigaPersonalesSteps,
+  lessonRecorteInteligenteSinSufrirSteps,
+  lessonSustitucionesBaratoSaludableUtilSteps,
+  lessonRetoSemanaSinGastoHormigaSteps
+} from "./tema4-gastos-hormiga"
+
+import {
+  lessonComisionesYFugasBancariasSteps,
+  lessonMembresiasYSuscripcionesOlvidadasSteps,
+  lessonElCostoDelInteresDeudaMalaSteps,
+  lessonDescuentosQueSalenCarosSteps,
+  lessonAuditoria360DeMisSalidasSteps
+} from "./tema4-gastos-invisibles"
 
 
 /**
@@ -137,7 +168,32 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "presion-social-en-decisiones-escenarios": lessonPresionSocialEnDecisionesEscenariosSteps,
   "como-decir-que-no-sin-sentirte-menos": lessonNoEstatusSteps,
   "regla-personal-anti-estatus": lessonReglaPersonalAntiEstatusSteps,
+
+  // --- TEMA 4 ---
+  "gastos-fijos-vs-variables": lessonGastosFijosVsVariablesSteps,
+  "necesidad-vs-deseo": lessonNecesidadVsDeseoSteps,
+  "gastos-discrecionales-lo-que-si-eliges": lessonGastosDiscrecionalesLoQueSiEligesSteps,
+  "costo-real-gasto-extras": lessonCostoRealGastoExtrasSteps,
+  "clasificar-mis-gastos-ejercicio-completo": lessonClasificarMisGastosEjercicioCompletoSteps,
+
+  "que-son-y-por-que-importan": lessonQueSonYPorQueImportanSteps,
+  "detectar-3-gastos-hormiga-personales": lessonDetectar3GastosHormigaPersonalesSteps,
+  "recorte-inteligente-sin-sufrir": lessonRecorteInteligenteSinSufrirSteps,
+  "sustituciones-barato-saludable-util": lessonSustitucionesBaratoSaludableUtilSteps,
+  "reto-semana-sin-gasto-hormiga": lessonRetoSemanaSinGastoHormigaSteps,
+
+  "comisiones-y-fugas-bancarias": lessonComisionesYFugasBancariasSteps,
+  "membresias-y-suscripciones-olvidadas": lessonMembresiasYSuscripcionesOlvidadasSteps,
+  "el-costo-del-interes-deuda-mala": lessonElCostoDelInteresDeudaMalaSteps,
+  "descuentos-que-salen-caros": lessonDescuentosQueSalenCarosSteps,
+  "auditoria-360-de-mis-salidas": lessonAuditoria360DeMisSalidasSteps,
+
+  // --- EVALUACIONES DE BLOQUE ---
+  "evaluacion-bloque-1": lessonEvaluacionBloque1Steps,
+  "evaluacion-bloque-2": lessonEvaluacionBloque2Steps,
+  "evaluacion-bloque-3": lessonEvaluacionBloque3Steps,
 }
+
 
 /** Get steps for a lesson ID. Returns empty array if none. */
 export function getStepsForLesson(lessonId: string | undefined): LessonStep[] {

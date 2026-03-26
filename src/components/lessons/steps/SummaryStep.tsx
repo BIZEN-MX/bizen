@@ -7,6 +7,8 @@ import { Target, Star, Zap, Flame, Trophy } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel } from "@/lib/xp"
 import { AnimatedStar } from "@/components/icons/StarIcon"
+import { generateBizenCertificate } from "@/utils/certificateGenerator"
+import { Download, RefreshCcw, ShieldAlert, Award } from "lucide-react"
 
 interface SummaryStepProps {
   step: SummaryStepFields & {
@@ -19,8 +21,10 @@ interface SummaryStepProps {
     starsEarned?: 0 | 1 | 2 | 3
     accuracy?: number
     totalTime?: number
+    isExam?: boolean
   }
   onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => void
+  onRestart?: () => void
 }
 
 const XP_PER_STAR = 5
@@ -253,10 +257,15 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
 }
 
 // --- Main SummaryStep ---
-export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStepProps & { actionTrigger?: number }) {
+export function SummaryStep({ step, onAnswered, onRestart, actionTrigger = 0 }: SummaryStepProps & { actionTrigger?: number }) {
   const { dbProfile, user } = useAuth()
   const stars: 0 | 1 | 2 | 3 = (step as any).starsEarned ?? 3
+  const isExam = (step as any).isExam ?? false
+  const accuracy = (step as any).accuracy ?? 100
+  const isPassed = !isExam || accuracy >= 50
+
   const [phase, setPhase] = useState<'celebration' | 'xp'>('celebration')
+  const [isGeneratingCert, setIsGeneratingCert] = useState(false)
 
   // Snapshot XP on mount
   const [xpSnapshot, setXpSnapshot] = useState<number | null>(null)
@@ -291,16 +300,39 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Handle phase transition when lesson engine triggers action
   useEffect(() => {
     if (actionTrigger > 0 && phase === 'celebration') {
+      if (!isPassed) {
+        onRestart?.()
+        return
+      }
       setPhase('xp')
       onAnswered({ isCompleted: true }) // Now it's completed, footer says "Finalizar"
     }
-  }, [actionTrigger, phase, onAnswered])
+  }, [actionTrigger, phase, onAnswered, isPassed, onRestart])
 
-  const accuracy = (step as any).accuracy ?? 100
   const totalTime = (step as any).totalTime ?? 0
+
+  const handleDownloadCertificate = async () => {
+    setIsGeneratingCert(true)
+    try {
+      await generateBizenCertificate({
+        studentName: dbProfile?.firstName ? `${dbProfile.firstName} ${dbProfile.lastName || ""}` : (user?.email?.split('@')[0] || "Estudiante BIZEN"),
+        topicTitle: step.title || "Certificación BIZEN",
+        accuracy: accuracy,
+        date: new Date().toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }),
+        lessonsCompleted: [
+          "Mentalidad Analítica",
+          "Ingeniería de Ingresos",
+          "Optimización de Capital",
+          "Psicología de Consumo",
+          "Protocolo Anti-Impulso"
+        ]
+      })
+    } finally {
+      setIsGeneratingCert(false)
+    }
+  }
 
   const starMessages: Record<0 | 1 | 2 | 3, React.ReactNode> = {
     3: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Excelente trabajo! <Target size={20} color="#BFDBFE" /></div>,
@@ -388,7 +420,7 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
               {step.title || `¡Bien hecho, ${dbProfile?.firstName || dbProfile?.fullName || "Dragón"}!`}
             </motion.h2>
 
-            {/* ⭐ Stars row */}
+            {/* Statistics row */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -423,16 +455,58 @@ export function SummaryStep({ step, onAnswered, actionTrigger = 0 }: SummaryStep
                 transition={{ delay: 1.5 }}
                 style={{
                   fontSize: "clamp(15px, 2vw, 18px)",
-                  color: "#93c5fd",
+                  color: isPassed ? "#93c5fd" : "#fca5a5",
                   lineHeight: 1.6,
                   fontWeight: 400,
                   maxWidth: 440,
                   padding: "0 16px",
                 }}
               >
-                {step.body.split("\n\n").map((line, i) => (
-                  <p key={i} style={{ margin: "0 0 8px" }}>{line}</p>
-                ))}
+                {!isPassed ? (
+                  <div style={{ background: "rgba(239, 68, 68, 0.1)", padding: 20, borderRadius: 20, border: "1.5px solid rgba(239, 68, 68, 0.2)" }}>
+                    <ShieldAlert size={40} color="#ef4444" style={{ marginBottom: 16 }} />
+                    <p style={{ margin: 0, fontWeight: 700, fontSize: 20, color: "#ef4444" }}>No has alcanzado el 50%</p>
+                    <p style={{ opacity: 0.8, fontSize: 14, marginTop: 8 }}>Para certificarte en este bloque necesitas dominar el contenido. ¡Vuelve a intentarlo!</p>
+                  </div>
+                ) : (
+                  <>
+                    {step.body.split("\n\n").map((line, i) => (
+                      <p key={i} style={{ margin: "0 0 8px" }}>{line}</p>
+                    ))}
+                    
+                    {isExam && isPassed && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleDownloadCertificate}
+                        disabled={isGeneratingCert}
+                        style={{
+                          marginTop: 24,
+                          background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                          color: "white",
+                          border: "none",
+                          padding: "12px 24px",
+                          borderRadius: 16,
+                          fontSize: 15,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          boxShadow: "0 8px 24px rgba(16, 185, 129, 0.4)",
+                          margin: "24px auto 0"
+                        }}
+                      >
+                        {isGeneratingCert ? (
+                          <RefreshCcw size={18} className="animate-spin" />
+                        ) : (
+                          <Download size={18} />
+                        )}
+                        DESCARGAR CERTIFICADO PROFESIONAL
+                      </motion.button>
+                    )}
+                  </>
+                )}
               </motion.div>
             )}
           </motion.div>

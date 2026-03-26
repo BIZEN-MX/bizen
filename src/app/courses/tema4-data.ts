@@ -35,11 +35,11 @@ export const TEMA4_SUBTEMAS: Tema4Subtema[] = [
   {
     title: "Gastos invisibles",
     lessons: [
-      { title: "Suscripciones y “cobros fantasma”", slug: "suscripciones-y-cobros-fantasma", level: "Básico" },
-      { title: "Comisiones bancarias comunes", slug: "comisiones-bancarias-comunes", level: "Básico" },
-      { title: "Envíos, propinas, recargos", slug: "envios-propinas-recargos", level: "Intermedio" },
-      { title: "Costos por pagar tarde", slug: "costos-por-pagar-tarde", level: "Intermedio" },
-      { title: "Limpieza: cancelar y optimizar", slug: "limpieza-cancelar-y-optimizar", level: "Avanzado" },
+      { title: "Comisiones y fugas bancarias", slug: "comisiones-y-fugas-bancarias", level: "Básico" },
+      { title: "Membresías y suscripciones olvidadas", slug: "membresias-y-suscripciones-olvidadas", level: "Básico" },
+      { title: "El costo del interés (deuda mala)", slug: "el-costo-del-interes-deuda-mala", level: "Intermedio" },
+      { title: "Descuentos que salen caros", slug: "descuentos-que-salen-caros", level: "Intermedio" },
+      { title: "Auditoría 360 de mis salidas", slug: "auditoria-360-de-mis-salidas", level: "Avanzado" },
     ]
   },
 ]

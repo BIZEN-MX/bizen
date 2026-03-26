@@ -34,6 +34,12 @@ const curriculum = [
           "Cómo cuestionar una creencia con evidencia",
           "Reescribir creencias en reglas útiles"
         ]
+      },
+      {
+        "title": "Evaluación Final",
+        "lessons": [
+          "Evaluación de Bloque 1"
+        ]
       }
     ]
   },
@@ -69,6 +75,12 @@ const curriculum = [
           "Ingresos Recurrentes: Tu ejército de centavos",
           "Plan de Acción: Duplicar tu valor de mercado"
         ]
+      },
+      {
+        "title": "Evaluación Final",
+        "lessons": [
+          "Evaluación de Bloque 2"
+        ]
       }
     ]
   },
@@ -103,6 +115,12 @@ const curriculum = [
           "Presión social en decisiones (escenarios)",
           "Cómo decir que no sin sentirte menos",
           "Regla personal anti-estatus"
+        ]
+      },
+      {
+        "title": "Evaluación Final",
+        "lessons": [
+          "Evaluación de Bloque 3"
         ]
       }
     ]

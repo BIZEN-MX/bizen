@@ -33,6 +33,7 @@ export type LessonAction =
   | { type: "SET_ACTION_ENABLED"; enabled: boolean }
   | { type: "TRIGGER_ACTION" }
   | { type: "RESET_STEP"; stepId: string }
+  | { type: "RESTART_LESSON" }
 
 export function lessonReducer(state: LessonState, action: LessonAction): LessonState {
   switch (action.type) {
@@ -268,6 +269,26 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         isContinueEnabled: false,
         isActionEnabled: false,
         actionTrigger: state.actionTrigger + 1, // Trigger a reset in the component
+      }
+    }
+
+    case "RESTART_LESSON": {
+      const firstStep = state.originalSteps[0]
+      const firstStepAutoComplete =
+        (firstStep?.stepType === "info" && !firstStep?.fullScreen) || firstStep?.stepType === "summary"
+      const firstStepIsInfoFullScreen = firstStep?.stepType === "info" && firstStep?.fullScreen
+      
+      return {
+        ...state,
+        allSteps: state.originalSteps,
+        currentStepIndex: 0,
+        answersByStepId: {},
+        incorrectSteps: [],
+        totalMistakes: 0,
+        hasBuiltReviewSteps: false,
+        isContinueEnabled: !!firstStepAutoComplete,
+        isActionEnabled: !!firstStepIsInfoFullScreen,
+        actionTrigger: state.actionTrigger + 1,
       }
     }
 

@@ -626,6 +626,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           : 100
         const totalTime = Math.floor((Date.now() - startTime) / 1000)
 
+        const isExam = currentStep.id.startsWith("eval-")
         content = (
           <SummaryStep 
             {...stepProps} 
@@ -634,8 +635,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               starsEarned: stars, 
               isRepeat,
               accuracy,
-              totalTime
+              totalTime,
+              isExam
             }} 
+            onRestart={() => dispatch({ type: "RESTART_LESSON" })}
           />
         )
         break;
@@ -693,7 +696,14 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       return isLastStep ? "Intentar de nuevo" : "Siguiente"
     }
     if (isSummaryStep) {
-      return state.isContinueEnabled ? "Finalizar" : "Continuar"
+      const accuracy = (stepProps.step as any).accuracy ?? 100
+      const isExam = currentStep.id.startsWith("eval-")
+      const isFailed = isExam && accuracy < 50
+      
+      if (!state.isContinueEnabled) {
+        return isFailed ? "Repetir Examen" : "Continuar"
+      }
+      return "Finalizar"
     }
     if (isLastStep && isCorrect) return "Finalizar"
     if (!state.isContinueEnabled) {

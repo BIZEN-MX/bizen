@@ -42,4 +42,10 @@ export const TEMA2_SUBTEMAS: Tema2Subtema[] = [
       { title: "Plan de Acción: Duplicar tu valor de mercado", slug: "plan-de-accion-duplicar-tu-valor-de-mercado", level: "Avanzado" },
     ]
   },
+  {
+    title: "Evaluación Final",
+    lessons: [
+      { title: "Certificación de Ingresos (Evaluación de Bloque)", slug: "evaluacion-bloque-2", level: "Avanzado" },
+    ]
+  },
 ]
