@@ -75,6 +75,10 @@ export default function DiagnosticQuestionPage() {
     if (stored) {
       setUserAnswers(stored.userAnswers)
       setQuizSubmitted(stored.quizSubmitted)
+      if (stored.quizSubmitted) {
+        setShowSuccess(true)
+        setAnalysisPhase(2)
+      }
       if (stored.userInfo) {
         setTempUserInfo(stored.userInfo)
         setUserInfo(stored.userInfo)
