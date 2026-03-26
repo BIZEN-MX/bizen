@@ -46,13 +46,28 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     return <UnauthScreen />;
   }
 
+  const hasSidebar = !isLanding && !isPublicPath(pathname) && !pathname.startsWith("/diagnostic") && !pathname.startsWith("/learn");
+  // We include tools in pages that should have a sidebar-like layout or at least the gutter
+  const showGutter = hasSidebar || pathname.startsWith("/tools");
+
   return (
     <div className="app-shell">
       <div className="app-scroll">
-        <main className="app-main">
-          {children}
-        </main>
+        <div style={{ display: "flex", width: "100%", minHeight: "100%" }}>
+          {/* Desktop Sidebar Gutter (invisible spacer) */}
+          {showGutter && (
+            <div className="hidden md:block w-[280px] flex-shrink-0" aria-hidden="true" />
+          )}
+          
+          <main className="app-main flex-1 flex flex-col items-center">
+            {/* Inner wrapper to ensure content is centered in the usable space */}
+            <div className="w-full flex-1 flex flex-col">
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );
 }
+

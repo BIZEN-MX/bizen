@@ -340,7 +340,6 @@ a {
     flex-direction: column;
     overflow: hidden;
     background-color: var(--bg-main);
-    transition: left 0.3s ease, width 0.3s ease;
 }
 
 .app-scroll {
@@ -361,20 +360,5 @@ a {
     width: 100%;
     min-height: 100%;
     position: relative;
-}
-
-/* Tablet & Desktop: Offset the entire shell so the usable space is centered */
-@media (min-width: 768px) {
-    body:not([data-no-sidebar="true"]):not([data-landing-page="true"]) .app-shell {
-        left: 280px;
-        width: calc(100% - 280px);
-    }
-}
-
-/* On mobile, shell remains full width */
-@media (max-width: 767px) {
-    .app-shell {
-        left: 0;
-        width: 100%;
-    }
+    transition: padding 0.3s ease;
 }
