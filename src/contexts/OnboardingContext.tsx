@@ -60,10 +60,17 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     const [showSetup, setShowSetup] = useState(false) // profile setup modal
     const [showTour, setShowTour] = useState(false) // page discovery tour
     const [seenPaths, setSeenPaths] = useState<string[]>([])
+    const [allSeen, setAllSeen] = useState(false)
 
-    // Load seen paths from localStorage on mount
+    // Load seen paths and global flag from localStorage on mount
     useEffect(() => {
         const saved = localStorage.getItem("bizen_seen_onboarding_paths")
+        const globalSeen = localStorage.getItem("bizen_onboarding_all_seen") === "true"
+        
+        if (globalSeen) {
+            setAllSeen(true)
+        }
+
         if (saved) {
             try {
                 setSeenPaths(JSON.parse(saved))
@@ -71,6 +78,11 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
                 console.error("Error parsing seen paths", e)
             }
         }
+    }, [])
+
+    const markAllAsSeen = useCallback(() => {
+        setAllSeen(true)
+        localStorage.setItem("bizen_onboarding_all_seen", "true")
     }, [])
 
     const markPageAsSeen = useCallback((path: string) => {
@@ -99,7 +111,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
 
     // Discovery mode: trigger tour if we land on a "tourable" page for the first time
     useEffect(() => {
-        if (loading || !user || !pathname || showSetup || showTour) return
+        if (loading || !user || !pathname || showSetup || showTour || allSeen) return
         
         // Don't trigger if profile onboarding isn't done yet
         if (user.user_metadata?.onboarding_complete !== true) return
@@ -128,8 +140,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
 
     const handleTourEnd = useCallback(() => {
         setShowTour(false)
+        markAllAsSeen()
         if (pathname) markPageAsSeen(pathname)
-    }, [pathname, markPageAsSeen])
+    }, [pathname, markPageAsSeen, markAllAsSeen])
 
     const startTour = useCallback(() => {
         setShowSetup(false)

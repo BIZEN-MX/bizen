@@ -22,8 +22,7 @@ export async function getGeminiResponse(prompt: string, systemContext?: string) 
 
   const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
   const model = genAI.getGenerativeModel(
-    { model: "gemini-1.5-flash" },
-    { apiVersion: "v1beta" }
+    { model: "gemini-1.5-flash" }
   );
 
   const fullPrompt = systemContext 

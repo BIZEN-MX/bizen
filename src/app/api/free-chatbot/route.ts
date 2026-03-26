@@ -88,7 +88,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
     const geminiModel = genAI.getGenerativeModel({
       model: "gemini-1.5-flash"
-    }, { apiVersion: "v1beta" })
+    })
 
     // Build the final prompt by including the system/personality instructions
     const fullPromptForAI = `SISTEMA: ${systemPrompt}\n\nMENSAJE DEL USUARIO: ${message}`
