@@ -191,11 +191,11 @@ function weekDays() {
 
 const DAY_LABELS  = ["L", "M", "M", "J", "V", "S", "D"]
 const TOPIC_COLORS: Record<string, string> = {
-  Fundamentos:"#3b82f6", Presupuesto:"#0ea5e9", Ahorro:"#10b981",
-  Deuda:"#f59e0b", Impuestos:"#6366f1", Economía:"#8b5cf6",
-  Inversión:"#2563eb", Patrimonio:"#10b981", Errores:"#f59e0b",
-  Mentalidad:"#eab308", Emprender:"#ef4444", Negocios:"#6366f1",
-  Bienestar:"#ec4899", Resiliencia:"#dc2626", Futuro:"#0ea5e9",
+  Fundamentos: "#0F62FE", Presupuesto: "#0ea5e9", Ahorro: "#10b981",
+  Deuda: "#4f46e5", Impuestos: "#6366f1", Economía: "#8b5cf6",
+  Inversión: "#2563eb", Patrimonio: "#059669", Errores: "#7c3aed",
+  Mentalidad: "#0891b2", Emprender: "#3b82f6", Negocios: "#6366f1",
+  Bienestar: "#ec4899", Resiliencia: "#1d4ed8", Futuro: "#0ea5e9",
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -325,7 +325,7 @@ export default function DashboardPage() {
   const profileColors: Record<string, { bg: string, text: string, icon: string, border: string, path: string }> = {
     "Gastador Digital": { bg: "#fff1f2", text: "#991b1b", icon: "#ef4444", border: "#fecaca", path: "Control de Gastos y Crédito" },
     "Ahorrador Estancado": { bg: "#ecfdf5", text: "#065f46", icon: "#10b981", border: "#a7f3d0", path: "Inversión y Crecimiento" },
-    "Explorador Arriesgado": { bg: "#fff7ed", text: "#9a3412", icon: "#f97316", border: "#ffedd5", path: "Bases Sólidas y Seguridad" },
+    "Explorador Arriesgado": { bg: "#ecfeff", text: "#0891b2", icon: "#06b6d4", border: "#cffafe", path: "Bases Sólidas y Seguridad" },
     "Maestro BIZEN": { bg: "#f0fdf4", text: "#166534", icon: "#22c55e", border: "#bbf7d0", path: "Estrategias Avanzadas" },
   }
 
@@ -525,8 +525,8 @@ export default function DashboardPage() {
               {!isAdminOrTeacher && (
                 <div className="hero-stats-pills" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   {[
-                    { icon: <Flame size={14} style={{ color: "#fb923c" }} />, label: `${streak} días`, sub: "Racha", bg: "rgba(251,146,60,.15)", border: "rgba(251,146,60,.25)" },
-                    { icon: <IcoZap size={14} color="#fbbf24" />, label: `${(stats?.xpInCurrentLevel ?? 0).toLocaleString()} XP`, sub: "Nivel Actual", bg: "rgba(251,191,36,.12)", border: "rgba(251,191,36,.25)" },
+                    { icon: <Flame size={14} style={{ color: "#60a5fa" }} />, label: `${streak} días`, sub: "Racha", bg: "rgba(96,165,250,.15)", border: "rgba(96,165,250,.25)" },
+                    { icon: <IcoZap size={14} color="#a78bfa" />, label: `${(stats?.xpInCurrentLevel ?? 0).toLocaleString()} XP`, sub: "Nivel Actual", bg: "rgba(167,139,250,.12)", border: "rgba(167,139,250,.25)" },
                     { icon: <IcoCoin size={14} color="#34d399" />, label: `${bizcoins.toLocaleString()} BC`, sub: "Bizcoins", bg: "rgba(52,211,153,.12)", border: "rgba(52,211,153,.25)" },
                   ].map(m => (
                     <div key={m.sub} style={{ display: "flex", alignItems: "center", gap: 9, background: m.bg, border: `1px solid ${m.border}`, borderRadius: 12, padding: "9px 14px" }}>
@@ -592,23 +592,23 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div style={{
-              background: "linear-gradient(135deg, #fffbeb, #fef3c7)",
-              border: "1.5px dashed #fde68a",
+              background: "linear-gradient(135deg, #f0f9ff, #e0f2fe)",
+              border: "1.5px dashed #bae6fd",
               borderRadius: 24, padding: "24px 32px",
               display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Target size={28} color="#d97706" />
+                  <Target size={28} color="#0F62FE" />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#92400e", margin: 0 }}>Descubre tu ADN Financiero</h3>
-                  <p style={{ fontSize: 13, color: "#b45309", margin: 0 }}>Completa el diagnóstico para recibir una ruta personalizada.</p>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#001d6c", margin: 0 }}>Descubre tu ADN Financiero</h3>
+                  <p style={{ fontSize: 13, color: "#1d4ed8", margin: 0 }}>Completa el diagnóstico para recibir una ruta personalizada.</p>
                 </div>
               </div>
               <button 
                 onClick={() => router.push("/diagnostic/1")}
-                style={{ padding: "10px 24px", background: "#d97706", color: "white", borderRadius: 12, border: "none", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(217,119,6,0.25)" }}
+                style={{ padding: "10px 24px", background: "#0F62FE", color: "white", borderRadius: 12, border: "none", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(15,98,254,0.25)" }}
               >
                 Comenzar <IcoArrowRight size={16} />
               </button>
@@ -623,17 +623,17 @@ export default function DashboardPage() {
           {/* CARD 1 — Racha */}
           <div className="sc dc" style={{
             animationDelay: ".07s",
-            background: streak > 0 ? "linear-gradient(145deg,#fffbeb,#fef3c7)" : "linear-gradient(145deg,#f8fafc,#f1f5f9)",
-            border: streak > 0 ? "1px solid #fde68a" : "1px solid #e2e8f0",
+            background: streak > 0 ? "linear-gradient(145deg,#f0f9ff,#e0f2fe)" : "linear-gradient(145deg,#f8fafc,#f1f5f9)",
+            border: streak > 0 ? "1px solid #bae6fd" : "1px solid #e2e8f0",
             display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
             textAlign: "center", minHeight: 160,
           }}>
-            <div className="sc-label" style={{ color: streak > 0 ? "#b45309" : "#94a3b8", marginBottom: 18 }}>Racha Diaria</div>
+            <div className="sc-label" style={{ color: streak > 0 ? "#1d4ed8" : "#94a3b8", marginBottom: 18 }}>Racha Diaria</div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-              <Flame size={34} style={{ color: streak > 0 ? "#d97706" : "#94a3b8" }} />
-              <div className="sc-num" style={{ color: streak > 0 ? "#92400e" : "#cbd5e1" }}>{streak}</div>
+              <Flame size={34} style={{ color: streak > 0 ? "#0F62FE" : "#94a3b8" }} />
+              <div className="sc-num" style={{ color: streak > 0 ? "#001d6c" : "#cbd5e1" }}>{streak}</div>
             </div>
-            <div style={{ marginTop: 10, fontSize: 13, fontWeight: 600, color: streak > 0 ? "#d97706" : "#94a3b8" }}>
+            <div style={{ marginTop: 10, fontSize: 13, fontWeight: 600, color: streak > 0 ? "#0F62FE" : "#94a3b8" }}>
               {streak === 0 ? "Sin racha activa" : streak >= 7 ? "Racha legendaria" : "¡No la rompas!"}
             </div>
           </div>
