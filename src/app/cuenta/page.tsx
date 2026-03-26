@@ -23,7 +23,6 @@ export default function CuentaPage() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
   const [phoneNumber, setPhoneNumber] = useState("")
-  const [selectedPlan, setSelectedPlan] = useState<"gratuito" | "estudiante" | "premium">("gratuito")
 
   useEffect(() => {
     if (!loading && !user) {
@@ -31,7 +30,6 @@ export default function CuentaPage() {
     } else if (user) {
       // Load phone number and plan from user metadata
       setPhoneNumber(user.user_metadata?.phone || "")
-      setSelectedPlan(user.user_metadata?.plan || "gratuito")
     }
   }, [user, loading, router])
 
@@ -115,37 +113,6 @@ export default function CuentaPage() {
     }
   }
 
-  const handlePlanUpdate = async (plan: "gratuito" | "estudiante" | "premium") => {
-    if (plan !== "gratuito") {
-      router.push("/payment")
-      return
-    }
-    
-    setSaving(true)
-    setSaveError(null)
-    setSaveSuccess(null)
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          plan: plan
-        }
-      })
-
-      if (error) throw error
-
-      setSelectedPlan(plan)
-      setSaveSuccess("Plan actualizado exitosamente")
-
-      // Clear success message after 3 seconds
-      setTimeout(() => setSaveSuccess(null), 3000)
-    } catch (error: any) {
-      console.error("Error updating plan:", error)
-      setSaveError(error.message || "Error al actualizar plan")
-    } finally {
-      setSaving(false)
-    }
-  }
 
   if (loading) {
     return <PageLoader />
@@ -559,197 +526,6 @@ export default function CuentaPage() {
               </div>
             </div>
 
-            {/* Subscription Status */}
-            <div>
-              <label style={{
-                display: "block",
-                fontSize: 14,
-                fontWeight: 500,
-                color: "#374151",
-                marginBottom: 12
-              }}>
-                Plan de Suscripción
-              </label>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {/* Gratuito Plan */}
-                <div
-                  onClick={() => handlePlanUpdate("gratuito")}
-                  style={{
-                    padding: "16px 20px",
-                    background: selectedPlan === "gratuito"
-                      ? "linear-gradient(135deg, #10B981 0%, #059669 100%)"
-                      : "rgba(16, 185, 129, 0.1)",
-                    borderRadius: 12,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    boxShadow: selectedPlan === "gratuito" ? "0 4px 12px rgba(16, 185, 129, 0.3)" : "none",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    border: selectedPlan === "gratuito" ? "2px solid #10B981" : "2px solid rgba(16, 185, 129, 0.3)"
-                  }}
-                  onMouseEnter={(e) => {
-                    if (selectedPlan !== "gratuito") {
-                      e.currentTarget.style.background = "rgba(16, 185, 129, 0.2)"
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selectedPlan !== "gratuito") {
-                      e.currentTarget.style.background = "rgba(16, 185, 129, 0.1)"
-                    }
-                  }}
-                >
-                  <div>
-                    <div style={{
-                      fontSize: 16,
-                      color: selectedPlan === "gratuito" ? "#fff" : "#059669",
-                      fontWeight: 500,
-                      marginBottom: 2
-                    }}>
-                      Plan Gratuito
-                    </div>
-                    <div style={{
-                      fontSize: 12,
-                      color: selectedPlan === "gratuito" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                      fontWeight: 500
-                    }}>
-                      Acceso ilimitado a todos los cursos
-                    </div>
-                  </div>
-                  {selectedPlan === "gratuito" && (
-                    <div style={{
-                      padding: "6px 12px",
-                      background: "rgba(255, 255, 255, 0.2)",
-                      borderRadius: 8,
-                      fontSize: 12,
-                      fontWeight: 500,
-                      color: "#fff"
-                    }}>
-                      ACTIVO
-                    </div>
-                  )}
-                </div>
-
-                {/* Estudiante Plan */}
-                <div
-                  onClick={() => handlePlanUpdate("estudiante")}
-                  style={{
-                    padding: "16px 20px",
-                    background: selectedPlan === "estudiante"
-                      ? "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)"
-                      : "rgba(59, 130, 246, 0.1)",
-                    borderRadius: 12,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    boxShadow: selectedPlan === "estudiante" ? "0 4px 12px rgba(59, 130, 246, 0.3)" : "none",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    border: selectedPlan === "estudiante" ? "2px solid #3B82F6" : "2px solid rgba(59, 130, 246, 0.3)"
-                  }}
-                  onMouseEnter={(e) => {
-                    if (selectedPlan !== "estudiante") {
-                      e.currentTarget.style.background = "rgba(59, 130, 246, 0.2)"
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selectedPlan !== "estudiante") {
-                      e.currentTarget.style.background = "rgba(59, 130, 246, 0.1)"
-                    }
-                  }}
-                >
-                  <div>
-                    <div style={{
-                      fontSize: 16,
-                      color: selectedPlan === "estudiante" ? "#fff" : "#2563EB",
-                      fontWeight: 500,
-                      marginBottom: 2
-                    }}>
-                      Plan Estudiante
-                    </div>
-                    <div style={{
-                      fontSize: 12,
-                      color: selectedPlan === "estudiante" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                      fontWeight: 500
-                    }}>
-                      Funciones adicionales para estudiantes
-                    </div>
-                  </div>
-                  {selectedPlan === "estudiante" && (
-                    <div style={{
-                      padding: "6px 12px",
-                      background: "rgba(255, 255, 255, 0.2)",
-                      borderRadius: 8,
-                      fontSize: 12,
-                      fontWeight: 500,
-                      color: "#fff"
-                    }}>
-                      ACTIVO
-                    </div>
-                  )}
-                </div>
-
-                {/* Premium Plan */}
-                <div
-                  onClick={() => handlePlanUpdate("premium")}
-                  style={{
-                    padding: "16px 20px",
-                    background: selectedPlan === "premium"
-                      ? "linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)"
-                      : "rgba(251, 191, 36, 0.1)",
-                    borderRadius: 12,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    boxShadow: selectedPlan === "premium" ? "0 4px 12px rgba(251, 191, 36, 0.3)" : "none",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    border: selectedPlan === "premium" ? "2px solid #FBBF24" : "2px solid rgba(251, 191, 36, 0.3)"
-                  }}
-                  onMouseEnter={(e) => {
-                    if (selectedPlan !== "premium") {
-                      e.currentTarget.style.background = "rgba(251, 191, 36, 0.2)"
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selectedPlan !== "premium") {
-                      e.currentTarget.style.background = "rgba(251, 191, 36, 0.1)"
-                    }
-                  }}
-                >
-                  <div>
-                    <div style={{
-                      fontSize: 16,
-                      color: selectedPlan === "premium" ? "#fff" : "#F59E0B",
-                      fontWeight: 500,
-                      marginBottom: 2
-                    }}>
-                      Plan Premium
-                    </div>
-                    <div style={{
-                      fontSize: 12,
-                      color: selectedPlan === "premium" ? "rgba(255, 255, 255, 0.8)" : "#6B7280",
-                      fontWeight: 500
-                    }}>
-                      Acceso completo + certificados + soporte prioritario
-                    </div>
-                  </div>
-                  {selectedPlan === "premium" && (
-                    <div style={{
-                      padding: "6px 12px",
-                      background: "rgba(255, 255, 255, 0.2)",
-                      borderRadius: 8,
-                      fontSize: 12,
-                      fontWeight: 500,
-                      color: "#fff"
-                    }}>
-                      ACTIVO
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
 
             {/* Account Creation Date */}
             <div>

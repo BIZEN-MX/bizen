@@ -87,7 +87,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
     const { GoogleGenerativeAI } = await import("@google/generative-ai")
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
     const geminiModel = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-lite"
+      model: "gemini-1.5-flash"
     }, { apiVersion: "v1beta" })
 
     // Build the final prompt by including the system/personality instructions
@@ -103,7 +103,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
 
     return NextResponse.json({
       response: responseText,
-      source: "google:gemini-2.5-flash-lite"
+      source: "google:gemini-1.5-flash"
     })
 
   } catch (error: any) {

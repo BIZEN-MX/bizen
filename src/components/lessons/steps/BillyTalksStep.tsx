@@ -6,6 +6,7 @@ import { Mic } from "lucide-react"
 import { SmartText } from "../SmartText"
 import { haptic } from "@/utils/hapticFeedback"
 import { playFlipSound } from "../lessonSounds"
+import { Billy, BillyMood } from "../../Billy"
 
 // Use a simplified version of step type here to avoid circular dependencies
 // In actual project, this should be defined in lessonTypes.ts
@@ -37,19 +38,21 @@ export function BillyTalksStep({
 }: BillyTalksStepProps) {
   const [isRevealed, setIsRevealed] = useState(isContinueEnabled)
 
-  // Map mood to available images
-  const getMascotImage = (mood: string = "mascot") => {
+  const [isTalking, setIsTalking] = useState(false)
+
+  // Map mood to BillyMood type
+  const getMappedMood = (mood: string = "mascot"): BillyMood => {
     switch (mood) {
-      case "happy": return "/thumbs up.png" // using existing
-      case "worried": return "/billy_loading.png" // using existing
-      case "crying": return "/billy_llorando.png" // using existing
-      case "thinking": return "/billy_chatbot.png" // using existing
-      case "celebrating": return "/thumbs up.png" // using existing
-      default: return "/thumbs up.png"
+      case "happy": return "happy"
+      case "worried": return "worried"
+      case "crying": return "crying"
+      case "thinking": return "thinking"
+      case "celebrating": return "celebrating"
+      default: return "mascot"
     }
   }
 
-  const mascotSrc = getMascotImage(step.mood)
+  const mood = getMappedMood(step.mood)
 
   useEffect(() => {
     if (isContinueEnabled) {
@@ -96,72 +99,60 @@ export function BillyTalksStep({
     >
         <div style={{ maxWidth: 640, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
           
-          <motion.div
-             initial={{ scale: 0.8, y: 20 }}
-             animate={{ scale: 1, y: 0 }}
-             whileTap={{ scale: 0.95 }}
-             onClick={() => {
-                const { initAudioContext } = require("../lessonSounds")
-                initAudioContext()
-                onPlayAudio?.()
-                haptic.light()
-             }}
-             transition={{ type: "spring", stiffness: 120, damping: 15 }}
-             style={{
-                width: "clamp(120px, 25vw, 200px)",
-                height: "clamp(120px, 25vw, 200px)",
-                position: "relative",
-                marginBottom: "clamp(12px, 3vw, 24px)",
-                cursor: "pointer"
-             }}
-          >
-             {/* Mascot glow */}
-             <div style={{
-                position: "absolute",
-                inset: "-20%",
-                background: step.mood === 'crying' || step.mood === 'worried' 
-                    ? "radial-gradient(circle, rgba(148,163,184,0.15) 0%, transparent 70%)"
-                    : "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)",
-                zIndex: 0,
-                pointerEvents: "none",
-             }} />
-             
-             {/* Touch Hint */}
-             <div style={{
-                position: "absolute",
-                top: -30,
-                left: "50%",
-                transform: "translateX(-50%)",
-                background: "#0F62FE",
-                color: "white",
-                padding: "4px 12px",
-                borderRadius: 8,
-                fontSize: 11,
-                fontWeight: 800,
-                whiteSpace: "nowrap",
-                boxShadow: "0 4px 12px rgba(15,98,254,0.2)",
-                pointerEvents: "none",
-                display: "flex",
-                alignItems: "center",
-                gap: 6
-             }}>
-                TÓCAME PARA ESCUCHAR
-                <Mic size={14} color="white" strokeWidth={3} />
-             </div>
+<div 
+  style={{
+     width: "clamp(120px, 25vw, 200px)",
+     height: "clamp(120px, 25vw, 200px)",
+     position: "relative",
+     marginBottom: "clamp(12px, 3vw, 24px)",
+     cursor: "pointer"
+  }}
+>
+   {/* Touch Hint */}
+   <motion.div 
+      initial={{ y: 0 }}
+      animate={{ y: [-5, 0, -5] }}
+      transition={{ duration: 2, repeat: Infinity }}
+      style={{
+          position: "absolute",
+          top: -30,
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "#10b981", // Change to green for contrast
+          color: "white",
+          padding: "4px 12px",
+          borderRadius: 8,
+          fontSize: 11,
+          fontWeight: 800,
+          whiteSpace: "nowrap",
+          boxShadow: "0 4px 12px rgba(16,185,129,0.2)",
+          pointerEvents: "none",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          zIndex: 50
+      }}
+   >
+      TÓCAME PARA ESCUCHAR
+      <Mic size={14} color="white" strokeWidth={3} />
+   </motion.div>
 
-             <img 
-               src={mascotSrc} 
-               alt="Billy" 
-               style={{
-                   width: "100%",
-                   height: "100%",
-                   objectFit: "contain",
-                   position: "relative",
-                   zIndex: 1,
-                   filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.1))"
-               }} 
-             />
-          </motion.div>
+   <Billy 
+     mood={mood} 
+     isTalking={isTalking}
+     size="100%"
+     onClick={() => {
+        const { initAudioContext } = require("../lessonSounds")
+        initAudioContext()
+        onPlayAudio?.()
+        haptic.light()
+        
+        // Simular que habla durante 3 segundos o hasta que termine el audio si hubiera callback
+        setIsTalking(true)
+        setTimeout(() => setIsTalking(false), 3000)
+     }}
+   />
+</div>
 
           {/* Speech Bubble */}
           <motion.div

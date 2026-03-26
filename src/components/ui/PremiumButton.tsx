@@ -44,7 +44,7 @@ export const PremiumButton = React.forwardRef<HTMLButtonElement, PremiumButtonPr
       primary: "bg-gradient-to-br from-[#0F62FE] via-[#1983FD] to-[#0D4FE0] text-white shadow-[0_4px_16px_rgba(15,98,254,0.3)] hover:shadow-[0_8px_24px_rgba(15,98,254,0.45)] border border-white/20",
       secondary: "bg-white/5 backdrop-blur-xl text-white border border-white/10 hover:bg-white/10 hover:border-white/20 shadow-lg",
       outline: "bg-transparent text-[#0F62FE] border border-[#0F62FE]/30 hover:bg-[#0F62FE]/5 hover:border-[#0F62FE]/60",
-      minimal: "bg-transparent text-slate-400 hover:text-slate-200 hover:bg-white/10",
+      minimal: "bg-transparent text-slate-500 hover:text-[#0F62FE] hover:bg-[#0F62FE]/5",
     };
 
     const sizes = {

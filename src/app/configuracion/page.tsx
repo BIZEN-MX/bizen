@@ -225,8 +225,6 @@ function SettingsContent() {
   const [schoolId, setSchoolId]             = useState("")
   const [schools, setSchools]               = useState<{ id: string; name: string }[]>([])
   const [phone, setPhone]                   = useState("")
-  const [plan, setPlan]                     = useState<"gratuito"|"estudiante"|"premium">("gratuito")
-
   const inputBase: React.CSSProperties = {
     width: "100%", padding: "11px 14px", fontSize: 14, fontFamily: C.font,
     border: `1.5px solid ${C.border}`, borderRadius: C.rSm,
@@ -239,7 +237,6 @@ function SettingsContent() {
   useEffect(() => {
     if (user && dbProfile) {
       setPhone(dbProfile.phone || user.user_metadata?.phone || "")
-      setPlan(dbProfile.subscriptionStatus === "premium" ? "premium" : (dbProfile.role === "institucional" ? "estudiante" : "gratuito"))
       setFullName(dbProfile.fullName || user.user_metadata?.full_name || "")
       setUsername(dbProfile.username || user.user_metadata?.username || "")
       setBio(dbProfile.bio || user.user_metadata?.bio || "")
@@ -307,11 +304,6 @@ function SettingsContent() {
     await supabase!.auth.updateUser({ data: { phone } })
   })
 
-  const savePlan = (p: "gratuito"|"estudiante"|"premium") => doSave(async () => {
-    if (p !== "gratuito") { router.push("/payment"); return }
-    await syncToDB({ role: "particular" })
-    setPlan(p)
-  })
 
   const saveGlobalSettings = () => doSave(async () => { await syncToDB({ settings }) })
 
@@ -750,71 +742,6 @@ function SettingsContent() {
                   </div>
                 </SectionCard>
 
-                {/* Plan */}
-                <SectionCard title="Plan de suscripción" icon={<Award size={15} color="white" />}>
-                  <div style={{ paddingTop:14, paddingBottom:14 }}>
-                    {(!dbProfile?.role || ["particular","student","premium"].includes(dbProfile.role)) ? (
-                      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                        {([
-                          { id:"gratuito",   label:"Plan Gratuito",   desc:"Acceso a todos los cursos básicos",          color:C.green,  IconElem:<Check size={15} color="white" /> },
-                          { id:"estudiante", label:"Plan Estudiante", desc:"Herramientas de aprendizaje avanzadas",       color:C.blue,   IconElem:<Award size={15} color="white" /> },
-                          { id:"premium",    label:"Plan Premium",    desc:"Acceso completo, certificados y soporte",     color:C.amber,  IconElem:<Zap size={15} color="white" /> },
-                        ] as any[]).map(({ id, label, desc, color, IconElem }) => {
-                          const active = plan === id
-                          return (
-                            <div
-                              key={id}
-                              onClick={() => savePlan(id)}
-                              style={{
-                                display:"flex", alignItems:"center", justifyContent:"space-between",
-                                padding:"14px 16px", borderRadius:12, cursor:"pointer",
-                                border:`1.5px solid ${active ? color : C.border}`,
-                                background: active ? `${color}08` : C.surfaceAlt,
-                                transition:"all .15s"
-                              }}
-                            >
-                              <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                                <div style={{
-                                  width:34, height:34, borderRadius:9,
-                                  background: active ? color : C.border,
-                                  display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0
-                                }}>
-                                  {IconElem}
-                                </div>
-                                <div>
-                                  <div style={{ fontSize:14, fontWeight:500, color: active ? color : C.text }}>{label}</div>
-                                  <div style={{ fontSize:12, color:C.textMuted }}>{desc}</div>
-                                </div>
-                              </div>
-                              {active && (
-                                <span style={{
-                                  fontSize:10, fontWeight:500, color,
-                                  background:`${color}12`, border:`1px solid ${color}40`,
-                                  padding:"3px 10px", borderRadius:20, textTransform:"uppercase", letterSpacing:"0.05em"
-                                }}>
-                                  Activo
-                                </span>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-                    ) : (
-                      <div style={{
-                        display:"flex", alignItems:"center", gap:12, padding:"14px 16px",
-                        borderRadius:12, background:C.blue, border:"none"
-                      }}>
-                        <div style={{ width:34, height:34, borderRadius:9, background:"rgba(255,255,255,.15)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                          <School size={17} color="white" />
-                        </div>
-                        <div>
-                          <div style={{ fontSize:14, fontWeight:500, color:"#fff" }}>Plan Institucional</div>
-                          <div style={{ fontSize:12, color:"rgba(255,255,255,.65)" }}>Gestionado por tu escuela o institución</div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </SectionCard>
 
                 {/* Account meta + Signout */}
                 <SectionCard title="Sesión y cuenta" icon={<LogOut size={15} color="white" />}>

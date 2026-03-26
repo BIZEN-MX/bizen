@@ -23,8 +23,8 @@ const uid = () => Math.random().toString(36).slice(2, 9)
 
 // Platform brand palette colours for pie chart
 const COLORS = [
-  "#0F62FE", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6",
-  "#ec4899", "#14b8a6", "#f97316", "#84cc16", "#3b82f6"
+  "#0F62FE", "#3b82f6", "#60a5fa", "#93c5fd", "#10b981", 
+  "#34d399", "#8b5cf6", "#a78bfa", "#f472b6", "#fb7185"
 ]
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -282,7 +282,7 @@ export default function AdvancedBudgetPage() {
         <div className="max-w-[1440px] mx-auto px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-5">
             <Link 
-              href="/cash-flow" 
+              href="/dashboard" 
               className="p-2.5 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 text-slate-400 hover:text-primary transition-all duration-200"
             >
               <ArrowLeft size={20} />
