@@ -17,6 +17,7 @@ const PUBLIC_PATHS = [
   "/payment",
   "/auth/",
   "/impacto-social", // has its own unauthenticated landing
+  "/tools", // financial tools and simulators
 ]
 
 function isPublicPath(pathname: string | null) {

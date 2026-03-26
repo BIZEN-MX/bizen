@@ -1,8 +1,7 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import Image from "next/image"
+import React, { useState, useEffect, useRef } from "react"
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
 
 export type BillyMood = 
   | "happy" 
@@ -23,8 +22,8 @@ interface BillyProps {
 }
 
 /**
- * Componente centralizado de Billy con animaciones integradas.
- * Soporta estados de ánimo, animación de habla y efectos de flotación.
+ * Componente avanzado de Billy con físicas de resorte y perspectiva 3D.
+ * Incluso con una imagen estática, recrea una sensación de vida y profundidad.
  */
 export function Billy({
   mood = "mascot",
@@ -35,10 +34,49 @@ export function Billy({
   showGlow = true
 }: BillyProps) {
   const [frame, setFrame] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  // Map mood to available images
+  // -- Tracking del Mouse para Perspectiva 3D --
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  // Configuramos resortes para que el movimiento sea suave y orgánico
+  const springConfig = { damping: 20, stiffness: 120 }
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [15, -15]), springConfig)
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-15, 15]), springConfig)
+  
+  // -- Animación de Flotación con Seno --
+  const floatY = useMotionValue(0)
+  const springFloatY = useSpring(floatY, { damping: 15, stiffness: 30 })
+
+  useEffect(() => {
+    let start = Date.now()
+    const animate = () => {
+      const elapsed = Date.now() - start
+      // Onda de flotación suave
+      floatY.set(Math.sin(elapsed / 1000) * 12)
+      requestAnimationFrame(animate)
+    }
+    const raf = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(raf)
+  }, [floatY])
+
+  // Manejar entrada del mouse para el tilt 3D
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    mouseX.set(x)
+    mouseY.set(y)
+  }
+
+  const handleMouseLeave = () => {
+    mouseX.set(0)
+    mouseY.set(0)
+  }
+
   const getMascotImage = (currentMood: BillyMood, currentFrame: number) => {
-    // Si está hablando, alternamos entre frames si están disponibles
     if (isTalking) {
       return currentFrame === 0 ? "/2.png" : "/3.png"
     }
@@ -55,7 +93,6 @@ export function Billy({
     }
   }
 
-  // Animación de habla (parpadeo de boca)
   useEffect(() => {
     let interval: NodeJS.Timeout
     if (isTalking) {
@@ -70,67 +107,63 @@ export function Billy({
 
   const src = getMascotImage(mood, frame)
 
-  // Glow color based on mood
+  // Colores de resplandor basados en humor
   const getGlowColor = () => {
     switch (mood) {
       case "crying":
-      case "worried":
-        return "rgba(148, 163, 184, 0.2)"
+      case "worried": return "rgba(148, 163, 184, 0.25)"
       case "happy":
-      case "celebrating":
-        return "rgba(34, 197, 94, 0.2)"
-      default:
-        return "rgba(59, 130, 246, 0.2)"
+      case "celebrating": return "rgba(34, 197, 94, 0.25)"
+      case "thinking": return "rgba(99, 102, 241, 0.25)"
+      default: return "rgba(59, 130, 246, 0.25)"
     }
   }
 
+  // Shadow dynamic properties
+  const shadowScale = useTransform(springFloatY, [-12, 12], [0.8, 1.2])
+  const shadowOpacity = useTransform(springFloatY, [-12, 12], [0.1, 0.3])
+
   return (
     <div 
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className={`relative inline-block ${className}`}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size, perspective: "1200px" }}
     >
       <AnimatePresence mode="wait">
         <motion.div
-          key={mood + (isTalking ? "-talking" : "-idle")}
-          initial={{ y: 20, opacity: 0, scale: 0.8 }}
-          animate={{ 
-            y: 0, 
-            opacity: 1, 
-            scale: 1,
-            // Animación de "respiración" o flotación constante
-            transition: {
-              y: {
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "mirror",
-                ease: "easeInOut"
-              },
-              scale: {
-                duration: 1.5,
-                repeat: Infinity,
-                repeatType: "mirror",
-                ease: "easeInOut"
-              }
-            }
-          }}
-          whileHover={{ scale: 1.05, rotate: [0, -2, 2, 0] }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onClick}
-          className="relative z-10 w-full h-full flex items-center justify-center cursor-pointer"
+           key={mood + (isTalking ? "-talking" : "-idle")}
+           style={{ 
+             rotateX, 
+             rotateY, 
+             y: springFloatY,
+             transformStyle: "preserve-3d" 
+           }}
+           whileHover={{ scale: 1.08 }}
+           whileTap={{ scale: 0.92 }}
+           onClick={onClick}
+           className="relative z-10 w-full h-full flex items-center justify-center cursor-pointer"
         >
-          {/* Resplandor de fondo (Glow) */}
+          {/* Sombra Dinámica (Proyectada en "piso" imaginario) */}
+          <motion.div 
+            style={{ 
+              scale: shadowScale, 
+              opacity: shadowOpacity,
+              y: useTransform(springFloatY, (v) => -v + 50) // Mantiene la sombra en el sitio
+            }}
+            className="absolute bottom-[-5%] left-[20%] right-[20%] h-[10%] bg-black/30 rounded-[50%] blur-xl z-[-1]"
+          />
+
+          {/* Resplandor (Glow) Ambientall */}
           {showGlow && (
             <motion.div
               animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.5, 0.8, 0.5],
+                scale: [1, 1.15, 1],
+                opacity: [0.4, 0.7, 0.4],
               }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute inset-[-20%] rounded-full blur-3xl z-[-1]"
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-[-30%] rounded-full blur-[60px] z-[-2]"
               style={{ background: `radial-gradient(circle, ${getGlowColor()} 0%, transparent 70%)` }}
             />
           )}
@@ -138,10 +171,11 @@ export function Billy({
           <img
             src={src}
             alt="Billy Mascot"
-            className="w-full h-full object-contain filter drop-shadow-xl"
+            className="w-full h-full object-contain filter drop-shadow-2xl"
             style={{ 
                 imageRendering: 'auto',
-                WebkitFilter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.15))'
+                WebkitFilter: 'drop-shadow(0 25px 35px rgba(0,0,0,0.18))',
+                transform: "translateZ(60px)" // Hace que la imagen "salga" del fondo al rotar
             }}
           />
         </motion.div>
