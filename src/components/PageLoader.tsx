@@ -4,11 +4,10 @@ import { Billy } from "./Billy"
 export default function PageLoader() {
     return (
         <div style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
+            position: "relative",
             width: "100%",
             height: "100%",
+            minHeight: "100vh",
             background: "#FBFAF5", // Crema institucional
             zIndex: 9999,
             display: "flex",

@@ -38,8 +38,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   // On protected routes, don't render children while auth is loading.
   if (isProtected && loading) {
-    return <PageLoader />;
+    return (
+      <div className="app-shell">
+        <div style={{ display: "flex", width: "100%", height: "100%" }}>
+          <div className="hidden md:block w-[280px] flex-shrink-0" />
+          <div className="flex-1 relative flex items-center justify-center">
+            <PageLoader />
+          </div>
+        </div>
+      </div>
+    );
   }
+
 
   // Show unauthenticated screen on any protected page if user is not logged in
   if (isProtected && !loading && !user) {
