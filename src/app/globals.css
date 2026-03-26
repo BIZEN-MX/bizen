@@ -365,7 +365,7 @@ a {
 
 /* Tablet & Desktop: Offset the entire shell so the usable space is centered */
 @media (min-width: 768px) {
-    .app-shell:not([data-no-sidebar="true"]):not([data-landing-page="true"]) {
+    body:not([data-no-sidebar="true"]):not([data-landing-page="true"]) .app-shell {
         left: 280px;
         width: calc(100% - 280px);
     }
