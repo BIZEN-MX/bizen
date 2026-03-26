@@ -593,18 +593,14 @@ export default function VisionCanvasPage() {
     <>
       <style>{`
         .vision-shell {
-          width: 100%; height: 100vh;
+          width: 100%; height: 100%;
           display: flex; flex-direction: column;
           background: #FBFAF5;
           font-family: var(--font-family, 'Inter', ui-sans-serif, system-ui, sans-serif);
           overflow: hidden;
+          position: relative;
         }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .vision-shell { width: calc(100% - 220px) !important; margin-left: 220px !important; }
-        }
-        @media (min-width: 1161px) {
-          .vision-shell { width: calc(100% - 280px) !important; margin-left: 280px !important; }
-        }
+
 
         .vision-main-content {
           flex: 1;
