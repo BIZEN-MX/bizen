@@ -1,3 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0F62FE;
+  --color-primary-hover: #0043ce;
+  --bg-main: #FBFAF5;
+  
+  --shadow-premium: 0 20px 50px rgba(0,0,0,0.06), 0 8px 20px rgba(15,98,254,0.03);
+  --shadow-card: 0 10px 30px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
+  --shadow-blue-lg: 0 16px 32px rgba(15,98,254,0.28);
+}
+
 /* Global Styles */
 :root {
     /* ── Brand Colors ──────────────────────────────────────────── */
@@ -36,6 +48,10 @@
     --shadow-blue-sm: 0 4px 12px rgba(15,98,254,0.15);
     --shadow-blue-md: 0 8px 20px rgba(15,98,254,0.22);
     --shadow-blue-lg: 0 16px 32px rgba(15,98,254,0.28);
+
+    /* Dashboard & Tools shadows */
+    --shadow-premium: 0 20px 50px rgba(0,0,0,0.06), 0 8px 20px rgba(15,98,254,0.03);
+    --shadow-card: 0 10px 30px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
 
     /* ── Glass / Surface Tokens ───────────────────────────────── */
     --glass-bg: rgba(255, 255, 255, 0.03);
