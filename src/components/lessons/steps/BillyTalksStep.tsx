@@ -159,8 +159,10 @@ export function BillyTalksStep({
              initial={{ opacity: 0, y: 10, scale: 0.95 }}
              animate={{ opacity: 1, y: 0, scale: 1 }}
              transition={{ delay: 0.2, type: "spring", stiffness: 150 }}
+             className="font-educational"
              style={{
                  background: "#ffffff",
+
                  border: "2px solid #e2e8f0",
                  borderRadius: 24,
                  padding: "clamp(14px, 4vw, 24px) clamp(16px, 5vw, 32px)",

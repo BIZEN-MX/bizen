@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next"
-import { Geist } from "next/font/google"
+import { Geist, Outfit } from "next/font/google"
 import { Providers } from "@/components/Providers"
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
@@ -13,6 +13,14 @@ const geist = Geist({
   display: "swap",
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 })
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+})
+
 
 export const metadata: Metadata = {
   title: "BIZEN",
@@ -61,7 +69,8 @@ export const viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={geist.variable}>
+    <html lang="es" className={`${geist.variable} ${outfit.variable}`}>
+
       <head />
       <body>
         <Providers>

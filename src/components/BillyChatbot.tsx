@@ -475,7 +475,9 @@ export default function BillyChatbot() {
                           boxShadow: "0 8px 24px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.02)",
                           border: "1px solid rgba(0,0,0,0.03)",
                           wordBreak: "break-word",
+                          fontFamily: "var(--font-educational)",
                         }}>
+
                           {renderMessageContent(msg.content)}
                         </div>
                         {/* Suggested Action Chips */}
