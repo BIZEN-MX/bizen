@@ -12,7 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const PUBLIC_PATHS = [
   "/", "/login", "/signup", "/forgot-password", "/reset-password",
-  "/bizen/", "/payment", "/auth/", "/impacto-social"
+  "/bizen/", "/payment", "/auth/", "/impacto-social", "/tools"
 ]
 
 function isPublicPath(p: string | null) {

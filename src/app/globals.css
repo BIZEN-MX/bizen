@@ -327,3 +327,58 @@ a {
     transform: translateY(-2px) !important;
     box-shadow: var(--shadow-blue-md) !important;
 }
+
+/* ─── Layout & Sidebar Spacing ────────────────────────────────── */
+
+/* Default app shell layout */
+.app-shell {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--bg-main);
+}
+
+.app-scroll {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100%;
+    position: relative;
+    transition: padding 0.3s ease;
+}
+
+/* Tablet & Desktop: Account for fixed sidebar */
+@media (min-width: 768px) {
+    .app-main {
+        padding-left: 280px !important;
+    }
+}
+
+/* On mobile, remove padding (sidebar is hidden or overlay) */
+@media (max-width: 767px) {
+    .app-main {
+        padding-left: 0 !important;
+    }
+}
+
+/* Special cases: Hide sidebar padding where it's not needed (like landing or interactive lessons) */
+[data-no-sidebar="true"] .app-main,
+[data-landing-page="true"] .app-main {
+    padding-left: 0 !important;
+}
