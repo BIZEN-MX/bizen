@@ -8,6 +8,9 @@ import Image from "next/image"
 import { useAuth } from "@/contexts/AuthContext"
 import { touchStreak } from "@/lib/streakClient"
 
+import { MessageSquare, Send, X, Mic, History, Trash2, ArrowRight, Sparkles, AlertCircle, ChevronDown } from "lucide-react"
+import { Billy } from "./Billy"
+
 interface Message {
   role: "user" | "assistant"
   content: string
@@ -294,21 +297,12 @@ export default function BillyChatbot() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95, cursor: "grabbing" }}
       >
-        <Image
-          src="/billy_chatbot.png"
-          alt="Billy"
-          width={72}
-          height={72}
-          draggable={false}
-          style={{
-            pointerEvents: "none",
-            objectFit: "contain",
-            width: "100%",
-            height: "100%",
-            padding: "4px",
-            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))"
-          }}
+        <Billy 
+          mood={hasUnread ? "happy" : "mascot"} 
+          size={64} 
+          showGlow={hasUnread}
         />
+
         {/* Unread badge */}
         <AnimatePresence>
           {hasUnread && (
@@ -384,15 +378,12 @@ export default function BillyChatbot() {
                 borderBottom: "1px solid rgba(255,255,255,0.1)"
               }}
             >
-              <div style={{
-                flexShrink: 0,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                pointerEvents: "none",
-                animation: isLoading ? "billyBob 2s ease-in-out infinite" : "none"
-              }}>
-                <Image src="/billy_chatbot.png" alt="Billy" width={48} height={48}
-                  style={{ objectFit: "cover", objectPosition: "center top", transform: "scale(1.1)" }} />
-              </div>
+                <Billy 
+                  mood={isLoading ? "thinking" : "happy"} 
+                  size={42} 
+                  showGlow={false}
+                />
+
               <div style={{ flex: 1, minWidth: 0, pointerEvents: "none" }}>
                 <div style={{ color: "white", fontSize: 18, fontWeight: 800, lineHeight: 1.2, letterSpacing: "-0.01em" }}>Billy</div>
                 <div style={{ color: "rgba(255,255,255,0.85)", fontSize: 12, display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
@@ -439,13 +430,8 @@ export default function BillyChatbot() {
                   initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
                   style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "30px 10px" }}
                 >
-                  <div style={{
-                    marginBottom: 20,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                  }}>
-                    <Image src="/billy_chatbot.png" alt="Billy" width={84} height={84}
-                      style={{ objectFit: "cover", objectPosition: "center top", transform: "scale(1.1)" }} />
-                  </div>
+                    <Billy mood="happy" size={100} />
+
                   <div style={{ fontSize: 22, fontWeight: 800, color: "#1e3a8a", marginBottom: 8, letterSpacing: "-0.02em" }}>¡Hola, {userName}! Soy Billy</div>
                   <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, marginBottom: 20, maxWidth: 280 }}>
                     Tu mentor financiero personal. ¿En qué "feria" trabajamos hoy?
@@ -476,13 +462,8 @@ export default function BillyChatbot() {
                 >
                   {msg.role === "assistant" && (
                     <div style={{ display: "flex", alignItems: "flex-end", gap: 10, width: "100%" }}>
-                      <div style={{
-                        flexShrink: 0,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                      }}>
-                        <Image src="/billy_chatbot.png" alt="Billy" width={28} height={28}
-                          style={{ objectFit: "cover", objectPosition: "center top", transform: "scale(1.2)" }} />
-                      </div>
+                        <Billy mood="thinking" size={32} showGlow={false} />
+
                       <div style={{ display: "flex", flexDirection: "column", gap: 6, maxWidth: "82%" }}>
                         <div style={{
                           background: "white",
@@ -541,13 +522,8 @@ export default function BillyChatbot() {
               {/* Typing indicator */}
               {isLoading && (
                 <div style={{ display: "flex", alignItems: "flex-end", gap: 10 }}>
-                  <div style={{
-                    flexShrink: 0,
-                    display: "flex", alignItems: "center", justifyContent: "center"
-                  }}>
-                    <Image src="/billy_chatbot.png" alt="Billy" width={28} height={28}
-                      style={{ objectFit: "cover", objectPosition: "center top", transform: "scale(1.2)" }} />
-                  </div>
+                    <Billy mood="loading" size={32} showGlow={false} />
+
                   <div style={{
                     background: "white", padding: "16px 22px", borderRadius: "20px 20px 20px 6px",
                     boxShadow: "0 10px 25px rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.03)",

@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
+import { Billy } from "@/components/Billy"
 import { useAuth } from "@/contexts/AuthContext"
+
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
@@ -541,22 +543,30 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* right: XP ring (Student ONLY) */}
+            {/* right: XP ring & BILLY (Student ONLY) */}
             {!isAdminOrTeacher && (
-              <div className="hero-xp-ring" style={{ flex: "0 0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                <div style={{ animation: "fl 4s ease-in-out infinite" }}>
-                  <XPRing pct={xpPct} level={level} />
+              <div className="hero-xp-ring" style={{ flex: "0 0 auto", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center" }}>
+                {/* Billy Mascot with 3D animation */}
+                <div style={{ filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))" }}>
+                   <Billy size={120} mood="happy" showGlow={true} />
                 </div>
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.45)", textTransform: "uppercase", letterSpacing: ".08em", lineHeight: 1.5 }}>
-                    {xpPct}% hacia nivel {level + 1}
+
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                  <div style={{ animation: "fl 4s ease-in-out infinite" }}>
+                    <XPRing pct={xpPct} level={level} />
                   </div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.30)", marginTop: 3 }}>
-                    {stats?.xpToNextLevel ?? 0} XP restantes
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.45)", textTransform: "uppercase", letterSpacing: ".08em", lineHeight: 1.5 }}>
+                      {xpPct}% hacia nivel {level + 1}
+                    </div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.30)", marginTop: 3 }}>
+                      {stats?.xpToNextLevel ?? 0} XP restantes
+                    </div>
                   </div>
                 </div>
               </div>
             )}
+
           </div>
         </div>
 
