@@ -80,6 +80,43 @@ export type Database = {
         }
         Relationships: []
       }
+      sim_runs: {
+        Row: {
+          id: string
+          user_id: string
+          simulator_slug: string
+          run_name: string
+          inputs: Json
+          outputs: Json
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          simulator_slug: string
+          run_name?: string
+          inputs: Json
+          outputs: Json
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          simulator_slug?: string
+          run_name?: string
+          inputs?: Json
+          outputs?: Json
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+
     }
     Views: { [_ in never]: never }
     Functions: { [_ in never]: never }

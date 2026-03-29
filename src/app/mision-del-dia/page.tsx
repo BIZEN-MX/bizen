@@ -633,6 +633,14 @@ export default function MisionDiaPage() {
                 </div>
               </div>
 
+              {/* Action Button */}
+              <div style={{ padding: "10px 0 32px", display: "flex", justifyContent: "center", animation: "fadeUp 0.6s ease 0.2s both" }}>
+                <button className="rd-complete-btn" onClick={() => setShowEvidence(true)}>
+                  <Camera size={20} />
+                  Subir Foto y Completar Misión
+                </button>
+              </div>
+
               {/* ── Info cards ── */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
 

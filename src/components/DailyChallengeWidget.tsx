@@ -26,13 +26,16 @@ const IcoCoin = ({ size = 24, color = "currentColor" }) => (
 )
 
 export default function DailyChallengeWidget() {
-    const { refreshUser, user } = useAuth()
+    const { refreshUser, user, dbProfile } = useAuth()
     const [challenge, setChallenge] = useState<DailyChallenge | null>(null)
     const [loading, setLoading] = useState(true)
     const [isExpanding, setIsExpanding] = useState(false)
     const [response, setResponse] = useState("")
     const [submitting, setSubmitting] = useState(false)
     const [completed, setCompleted] = useState(false)
+
+    const isAdminOrTeacher = dbProfile?.role === 'school_admin' || dbProfile?.role === 'teacher';
+
     
     // Image Upload State
     const [uploading, setUploading] = useState(false)
@@ -211,18 +214,21 @@ export default function DailyChallengeWidget() {
 
                             {!completed && (
                                 <button 
-                                    onClick={() => setIsExpanding(true)}
+                                    onClick={() => !isAdminOrTeacher && setIsExpanding(true)}
+                                    disabled={isAdminOrTeacher}
                                     style={{
                                         width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-                                        padding: "14px 18px", background: "rgba(255,255,255,0.1)", 
+                                        padding: "14px 18px", background: isAdminOrTeacher ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.1)", 
                                         border: "1px solid rgba(255,255,255,0.15)", borderRadius: 16,
-                                        cursor: "pointer", transition: "all 0.2s"
+                                        cursor: isAdminOrTeacher ? "default" : "pointer", transition: "all 0.2s"
                                     }}
-                                    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
-                                    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                                    onMouseEnter={e => { if(!isAdminOrTeacher) e.currentTarget.style.background = "rgba(255,255,255,0.15)" }}
+                                    onMouseLeave={e => { if(!isAdminOrTeacher) e.currentTarget.style.background = "rgba(255,255,255,0.1)" }}
                                 >
-                                    <span style={{ fontSize: 14, fontWeight: 800, color: "#fff" }}>Comenzar Misión</span>
-                                    <ArrowRight size={18} color="#fff" />
+                                    <span style={{ fontSize: 14, fontWeight: 800, color: "#fff" }}>
+                                        {isAdminOrTeacher ? "Reto Activo (Solo Lectura)" : "Comenzar Misión"}
+                                    </span>
+                                    {isAdminOrTeacher ? <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>Solo alumnos pueden publicar</div> : <ArrowRight size={18} color="#fff" />}
                                 </button>
                             )}
                             
@@ -234,6 +240,7 @@ export default function DailyChallengeWidget() {
                                     ¡Vuelve mañana para más!
                                 </div>
                             )}
+
                         </motion.div>
                     ) : (
                         <motion.div key="expanded" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }}>

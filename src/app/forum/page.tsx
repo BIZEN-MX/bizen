@@ -149,8 +149,12 @@ function EvidenceCard({
 
   return (
     <div style={{
-      background: "white", borderRadius: 24, padding: "clamp(16px, 3vw, 24px)",
-      border: `1px solid ${post.status === "validated" ? "rgba(16,185,129,0.2)" : "rgba(0,0,0,0.05)"}`,
+      background: `linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4))`,
+      backgroundColor: post.status === "validated" ? "rgba(16,185,129,0.05)" : "rgba(15,98,254,0.03)",
+      backdropFilter: "blur(16px)",
+      WebkitBackdropFilter: "blur(16px)",
+      borderRadius: 24, padding: "clamp(16px, 3vw, 24px)",
+      border: `1px solid ${post.status === "validated" ? "rgba(16,185,129,0.3)" : "rgba(255,255,255,0.6)"}`,
       boxShadow: post.status === "validated" ? "0 12px 24px rgba(16,185,129,0.06)" : "0 4px 12px rgba(0,0,0,0.02)",
       marginBottom: 16,
       transition: "all 0.3s ease",
@@ -508,16 +512,20 @@ function ForumContent() {
         .forum-tab-btn.inactive:hover { background: #f8fafc; border-color: #cbd5e1; color: #1e293b; }
 
         .forum-card-premium {
-          background: white;
+          background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4));
+          background-color: rgba(15,98,254,0.03);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           border-radius: 24px;
-          border: 1px solid #f1f5f9;
+          border: 1px solid rgba(255,255,255,0.6);
           box-shadow: 0 4px 20px rgba(0,0,0,0.03);
           transition: all 0.3s ease;
         }
         .forum-card-premium:hover {
           transform: translateY(-4px);
+          background-color: rgba(15,98,254,0.08);
           box-shadow: 0 20px 40px rgba(15,98,254,0.08);
-          border-color: #dbeafe;
+          border-color: rgba(15,98,254,0.3);
         }
       `}</style>
 
@@ -637,7 +645,7 @@ function ForumContent() {
                       { label: "Validadas", value: validatedToday, color: "#10b981", bg: "rgba(16,185,129,0.05)", icon: <CheckCircle size={24} color="#10b981" /> },
                       { label: "Pendientes", value: pendingToday, color: "#F59E0B", bg: "rgba(245,158,11,0.05)", icon: <AlertCircle size={24} color="#F59E0B" /> },
                     ].map(({ label, value, color, bg, icon }) => (
-                      <div key={label} style={{ background: "white", borderRadius: 24, padding: "24px", border: "1px solid #f1f5f9", boxShadow: "0 4px 12px rgba(0,0,0,0.02)", display: "flex", alignItems: "center", gap: 16 }}>
+                      <div key={label} style={{ background: `linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4))`, backgroundColor: bg, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: 24, padding: "24px", border: "1px solid rgba(255,255,255,0.6)", boxShadow: "0 4px 12px rgba(0,0,0,0.02)", display: "flex", alignItems: "center", gap: 16 }}>
                         <div style={{ width: 48, height: 48, borderRadius: 16, background: bg, display: "flex", alignItems: "center", justifyContent: "center" }}>{icon}</div>
                         <div>
                           <div style={{ fontSize: 24, fontWeight: 700, color, lineHeight: 1 }}>{value}</div>

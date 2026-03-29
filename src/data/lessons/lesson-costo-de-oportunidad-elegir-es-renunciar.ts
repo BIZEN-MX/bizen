@@ -2,97 +2,176 @@ import type { LessonStep } from "@/types/lessonTypes"
 
 /**
  * Lesson: Costo de Oportunidad: Elegir es renunciar
- * Theme: El Tablero del Juego (Mentalidad)
+ * Theme: Operativo BIZEN
  * Lesson ID: costo-de-oportunidad-elegir-es-renunciar
- * Difficulty: Intermedio / Analítico
  */
 
 export const lessonCostoDeOportunidadElegirEsRenunciarSteps: LessonStep[] = [
   {
-    id: "cdo-slide-1",
+    id: "cdo-1",
     stepType: "billy_talks",
     mood: "thinking",
-    body: "Cada vez que dices 'SÍ' a un gasto, le estás diciendo 'NO' a algo más. Eso se llama **Costo de Oportunidad**.\n\nEn finanzas, lo que NO haces con tu dinero es tan importante como lo que SÍ haces. Vamos a ver por qué elegir mal hoy te quita opciones mañana.",
-    continueLabel: "Analizar opciones",
-    fullScreen: true,
-  },
-  {
-    id: "cdo-slide-2",
-    stepType: "info",
-    title: "¿Qué es el Costo de Oportunidad?",
-    description: "La alternativa perdida",
-    body: "No es solo el precio de lo que compras. Es el **beneficio que dejas de recibir** de la mejor alternativa que sacrificaste.\n\nEjemplo: Si te compras unos tenis de $3,000, el costo no son solo los $3,000. Es también el rendimiento que esos $3,000 habrían generado si los hubieras invertido.",
-    continueLabel: "Ver ejemplo real",
-    fullScreen: true,
-  },
-  {
-    id: "cdo-slide-3",
-    stepType: "mcq",
-    title: "El Dilema de Lucía",
-    description: "Lucía tiene $5,000 extras. Puede gastarlos en un viaje el fin de semana o invertirlos en un fondo que le daría $500 extras cada año para siempre.",
-    question: "Si Lucía elige el viaje, ¿cuál es su costo de oportunidad anual?",
-    options: [
-      { id: "opt-1", label: "$5,000 (lo que gastó)", isCorrect: false },
-      { id: "opt-2", label: "$500 (lo que dejó de ganar cada año)", isCorrect: true, explanation: "El costo de oportunidad es el beneficio de la opción NO elegida." },
-      { id: "opt-3", label: "$4,500", isCorrect: false },
-    ],
-    isAssessment: true,
-    fullScreen: true,
-  },
-  {
-    id: "cdo-slide-4",
-    stepType: "blitz_challenge",
-    title: "Reto Relámpago",
-    description: "Andrés decide quedarse a trabajar horas extras para ganar $1,000 más, en lugar de ir a una cena que le costaría $600.",
-    question: "¿Cuánto dinero 'mejoró' la posición de Andrés comparado con haber ido a la cena?",
-    options: [
-      { id: "opt-1", label: "$1,000", isCorrect: false },
-      { id: "opt-2", label: "$1,600", isCorrect: true, explanation: "Ganó $1,000 y evitó gastar $600. La diferencia neta en su bolsillo es de $1,600." },
-      { id: "opt-3", label: "$400", isCorrect: false },
-    ],
-    timeLimit: 15,
-    isAssessment: true,
-    fullScreen: true,
-  },
-  {
-    id: "cdo-slide-5",
-    stepType: "impulse_meter",
-    item: {
-      name: "Upgrade a Suite en tus vacaciones",
-      price: "$2,500 adicionales",
+    body: "Cada vez que dices 'SÍ' a un gasto, le estás diciendo 'NO' a algo más. Eso se llama **[[Costo de Oportunidad|El valor de la mejor alternativa que sacrificas al tomar una decisión]]**.\n\nEn finanzas, lo que NO haces con tu dinero es tan importante como lo que SÍ haces.",
+    data: { 
+      glossary: [
+        { word: "Costo de Oportunidad", definition: "El beneficio que dejas de recibir de la segunda mejor opción disponible." },
+        { word: "Alternativa Sacrificada", definition: "La opción real que descartaste para poder ejecutar tu decisión actual." }
+      ] 
     },
-    description: "Llegas al hotel y te ofrecen una habitación mejor por $2,500 extra. Se ve increíble, pero esos $2,500 son exactamente lo que te falta para comprar tu nueva laptop de trabajo.",
-    instructions: "Mantén presionado para elegir la laptop (tu futuro) sobre el lujo temporal.",
-    holdTime: 3.5,
+    fullScreen: true,
+  },
+  {
+    id: "cdo-2",
+    stepType: "info",
+    title: "La Alternativa Perdida",
+    body: "No es solo el precio de lo que compras. Es el **rendimiento** que ese dinero habría generado si lo hubieras usado para tu libertad.\n\nEjemplo: Comprar unos tenis de $3,000 no cuesta $3,000. Cuesta $3,000 + los intereses que esos $3,000 habrían ganado en un año.",
+    aiInsight: "El costo de oportunidad es la razón por la cual los millonarios parecen tacaños: ellos no ven el precio, ven el potencial perdido.",
+    fullScreen: true,
+  },
+  {
+    id: "cdo-3",
+    stepType: "mcq",
+    question: "Lucía tiene $5,000. Puede viajar o invertirlos para ganar $500 anuales. Si viaja, ¿cuál es su costo de oportunidad?",
+    options: [
+      { id: "o1", label: "$5,000 (Lo que gastó)", isCorrect: false },
+      { id: "o2", label: "$500 (Lo que dejó de ganar cada año)", isCorrect: true, explanation: "El costo de oportunidad es el beneficio de la opción NO elegida." }
+    ],
     isAssessment: true,
     fullScreen: true,
   },
   {
-    id: "cdo-slide-6",
+    id: "cdo-4",
+    stepType: "blitz_challenge",
+    question: "Si eliges ver Netflix 3 horas en lugar de estudiar una habilidad que te pagan en $200/hora, ¿cuánto te costó Netflix?",
+    options: [
+      { id: "o1", label: "$600 pesos de tu futuro", isCorrect: true },
+      { id: "o2", label: "Solo el precio de la suscripción", isCorrect: false }
+    ],
+    timeLimit: 12,
+    isAssessment: true,
+    fullScreen: true,
+  },
+  {
+    id: "cdo-5",
+    stepType: "swipe_sorter",
+    question: "¿Es un Costo de Oportunidad Alto o Bajo?",
+    leftBucket: { label: "Costo Alto (Peligro)", color: "#ef4444" },
+    rightBucket: { label: "Costo Bajo (Okey)", color: "#10b981" },
+    items: [
+      { id: "i1", label: "Dejar $100k en el colchón", correctBucket: "left" },
+      { id: "i2", label: "Comprar comida básica", correctBucket: "right" },
+      { id: "i3", label: "Pagar tarjeta al mínimo", correctBucket: "left" },
+      { id: "i4", label: "Gastar en un curso útil", correctBucket: "right" }
+    ],
+    isAssessment: true,
+    fullScreen: true,
+  },
+  {
+    id: "cdo-6",
+    stepType: "info",
+    title: "El Dinero Quieto Muere",
+    body: "Si tienes tu dinero en una cuenta que no te da nada, tu costo de oportunidad es la **[[Inflación|Pérdida de poder de compra]]**. \n\nEstás pagando una 'multa' por no mover tu capital hacia activos productivos.",
+    aiInsight: "Mantener efectivo durante 10 años te hace un 40% más pobre en promedio debido a la inflación acumulada.",
+    fullScreen: true,
+  },
+  {
+    id: "cdo-7",
     stepType: "true_false",
-    statement: "El costo de oportunidad de dejar tu dinero en una cuenta que no te da intereses es igual a la inflación acumulada.",
-    correctValue: true,
-    explanation: "Si no ganas nada mientras todo sube de precio, tu costo de oportunidad es la pérdida de poder adquisitivo.",
+    statement: "Invertir en tu educación tiene un costo de oportunidad de $0 porque es para ti.",
+    correctValue: false,
+    explanation: "Falso. Siempre hay costo. El costo de estudiar es el dinero que podrías haber ganado trabajando en ese tiempo. Pero el ROI suele compensarlo.",
     isAssessment: true,
     fullScreen: true,
-    aiInsight: "Billy dice: El dinero quieto es dinero que está muriendo lentamente.",
   },
   {
-    id: "cdo-slide-7",
-    stepType: "narrative_check",
-    question: "Piensa en tu último gasto mayor de $1,000. Si no lo hubieras hecho, ¿en qué otra cosa útil podrías haber usado ese dinero?",
-    promptPlaceholder: "Podría haberlo usado para...",
-    minChars: 20,
-    billyResponse: "¡Exacto! Visualizar esa alternativa es lo que te hará pensar dos veces la próxima vez.",
-    isAssessment: false,
+    id: "cdo-8",
+    stepType: "impulse_meter",
+    instructions: "Mantén presionado para 'Renunciar al placer inmediato' por una meta mayor.",
+    item: { name: "Upgrade Temporal", price: "$2,000", imageUrl: "/billy-breathing.png" },
+    holdTime: 5,
     fullScreen: true,
   },
   {
-    id: "cdo-slide-8",
+    id: "cdo-9",
+    stepType: "blitz_challenge",
+    question: "¿Qué es elegir?",
+    options: [
+      { id: "o1", label: "Renunciar a lo demás", isCorrect: true },
+      { id: "o2", label: "Tenerlo todo", isCorrect: false }
+    ],
+    timeLimit: 10,
+    isAssessment: true,
+    fullScreen: true,
+  },
+  {
+    id: "cdo-10",
+    stepType: "order",
+    question: "Jerarquía de Oportunidad",
+    items: [
+      { id: "p1", label: "Inversión en Negocio/Habilidad", correctOrder: 1 },
+      { id: "p2", label: "Saldar deudas de alto CAT", correctOrder: 2 },
+      { id: "p3", label: "Consumo discrecional (Lujo)", correctOrder: 3 }
+    ],
+    isAssessment: true,
+    fullScreen: true,
+  },
+  {
+    id: "cdo-11",
+    stepType: "match",
+    question: "Relaciona el sacrificio",
+    leftItems: [
+      { id: "l1", label: "Comer fuera diario" },
+      { id: "l2", label: "No invertir $1,000/mes" }
+    ],
+    rightItems: [
+      { id: "r1", label: "Costo: -$30,000/año en libertad" },
+      { id: "r2", label: "Costo: -$1,000,000 en 30 años" }
+    ],
+    correctPairs: [
+      { leftId: "l1", rightId: "r1" },
+      { leftId: "l2", rightId: "r2" }
+    ],
+    isAssessment: true,
+    fullScreen: true,
+  },
+  {
+    id: "cdo-12",
+    stepType: "mindset_translator",
+    question: "Traduce tu decisión",
+    beliefs: [
+      { 
+        id: "b1", 
+        original: "Me lo merezco, para eso trabajo.", 
+        healthyOptions: [
+          { id: "h1", label: "Merezco libertad futura más que un placer efímero hoy", isCorrect: true },
+          { id: "h2", label: "Mi esfuerzo borra mi costo de oportunidad", isCorrect: false }
+        ] 
+      }
+    ],
+    fullScreen: true,
+  },
+  {
+    id: "cdo-13",
+    stepType: "info",
+    title: "El Costo Oculto del Tiempo",
+    body: "Si pasas 2 horas buscando un descuento de $20 pesos, y tu hora real vale $100, acabas de PERDER $180 pesos de valor vital. \n\nNo busques el descuento más barato, busca el uso más eficiente de tu energía.",
+    aiInsight: "Los millonarios subcontratan tareas de bajo valor para liberar tiempo para tareas de alto valor.",
+    fullScreen: true,
+  },
+  {
+    id: "cdo-14",
+    stepType: "narrative_check",
+    question: "¿Qué 'SÍ' vas a decir hoy que implique un 'NO' a un gasto tonto del pasado?",
+    promptPlaceholder: "Le digo SÍ a ... y NO a ...",
+    minChars: 15,
+    billyResponse: "Ese SÍ es el cimiento de tu nueva arquitectura financiera.",
+    fullScreen: true,
+  },
+  {
+    id: "cdo-15",
     stepType: "summary",
-    title: "Estratega Formado",
-    body: "Ahora entiendes que cada peso tiene un propósito prohibido: el de su alternativa. En la siguiente lección, calcularemos tu 'Número de Libertad' para saber cuánto dinero necesitas para decir 'NO' a lo que no quieras.",
-    continueLabel: "Finalizar",
+    title: "Estratega de Opciones",
+    body: "Has dejado de ser reactivo. Ahora evalúas cada opción por su sombra de costo. Siguiente: La Pausa de las 24 Horas.",
     fullScreen: true,
   },
 ]

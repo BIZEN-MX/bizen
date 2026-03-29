@@ -91,7 +91,7 @@ export async function checkAndAwardAchievements(
 
     // 2. fetch already-unlocked achievements for this user
     const unlocked = await prisma.$queryRawUnsafe<{ achievement_id: string }[]>(
-      `SELECT achievement_id FROM public.user_achievements WHERE user_id = $1`,
+      `SELECT achievement_id FROM public.user_achievements WHERE user_id = $1::uuid`,
       userId
     )
     const unlockedSet = new Set(unlocked.map(r => r.achievement_id))
@@ -106,7 +106,7 @@ export async function checkAndAwardAchievements(
     // 4. insert new user_achievements rows + grant XP
     for (const achievement of toAward) {
       await prisma.$executeRawUnsafe(
-        `INSERT INTO public.user_achievements (user_id, achievement_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+        `INSERT INTO public.user_achievements (user_id, achievement_id) VALUES ($1::uuid, $2) ON CONFLICT DO NOTHING`,
         userId,
         achievement.id
       )

@@ -97,10 +97,11 @@ export async function GET(req: NextRequest) {
         try {
             posts = await prisma.evidencePost.findMany({
                 where: {
-                    profiles: {
+                    author: {
                         role: isParticular ? 'particular' : { not: 'particular' }
                     }
                 },
+
                 orderBy: { createdAt: "desc" },
                 take: 50,
                 include: {

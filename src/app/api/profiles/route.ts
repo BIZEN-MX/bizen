@@ -190,7 +190,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { fullName, role, schoolId, avatar, username, bio, phone, settings, birthDate } = body
+    const { fullName, role, schoolId, avatar, username, bio, phone, settings, birthDate, cardTheme } = body
 
     // Special case: prevent overwriting special access via update if we ever add UI for it
     const isSpecialUser = user.email === 'diegopenita31@gmail.com';
@@ -217,7 +217,8 @@ export async function PATCH(request: NextRequest) {
         ...(bio !== undefined && { bio }),
         ...(phone !== undefined && { phone }),
         ...(settings !== undefined && { settings }),
-        ...(birthDate !== undefined && { birthDate: birthDate ? new Date(birthDate) : null })
+        ...(birthDate !== undefined && { birthDate: birthDate ? new Date(birthDate) : null }),
+        ...(cardTheme !== undefined && { cardTheme })
       },
     })
 

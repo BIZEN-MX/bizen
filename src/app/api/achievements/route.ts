@@ -33,13 +33,13 @@ export async function GET() {
     let unlocked: any[] = []
     try {
       unlocked = await prisma.$queryRawUnsafe(
-        `SELECT achievement_id, unlocked_at FROM user_achievements WHERE user_id = $1`,
+        `SELECT achievement_id, earned_at FROM user_achievements WHERE user_id = $1`,
         user.id
       ) as any[]
     } catch {
       try {
         unlocked = await prisma.$queryRawUnsafe(
-          `SELECT achievement_id, unlocked_at FROM public.user_achievements WHERE user_id = $1`,
+          `SELECT achievement_id, earned_at FROM public.user_achievements WHERE user_id = $1`,
           user.id
         ) as any[]
       } catch (e3: any) {
@@ -48,7 +48,7 @@ export async function GET() {
       }
     }
 
-    const unlockedMap = new Map(unlocked.map((r: any) => [r.achievement_id, r.unlocked_at]))
+    const unlockedMap = new Map(unlocked.map((r: any) => [r.achievement_id, r.earned_at]))
 
     const result = all.map((a: any) => ({
       id:          a.id,

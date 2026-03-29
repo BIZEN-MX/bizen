@@ -163,10 +163,12 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         const escaped = term.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         const re = new RegExp(`\\b${escaped}\\b`, 'i')
         
-        if (re.test(fullText)) {
+        if (re.test(fullText) && !seenWords.has(term.word)) {
           stepWords.push(term)
+          seenWords.add(term.word)
         }
       })
+
       
       if (stepWords.length > 0) {
         map.set(step.order, stepWords)

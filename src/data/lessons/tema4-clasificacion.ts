@@ -138,5 +138,32 @@ export const lessonClasificarMisGastosEjercicioCompletoSteps: LessonStep[] = [
   { id: "cla-5-14", stepType: "info", title: "Alerta de Resultados", body: "Dominar la clasificación te da la CAPACIDAD DE PREDICCIÓN. Un Ingeniero BIZEN nunca se sorprende al final del mes preguntándose '¿a dónde se fue?'.", fullScreen: true,
     aiInsight: "Las personas que usan aplicaciones de clasificación (como BIZEN) ahorran un 18% más que las que usan métodos manuales o no registran nada."
   },
-  { id: "cla-5-15", stepType: "summary", title: "Maestría en Clasificación", body: "Felicidades. Has terminado el Subtema A. Prepárate para cazar Gastos Hormiga en el Subtema B.", fullScreen: true },
+  { id: "cla-5-15", stepType: "summary", title: "Maestría en Clasificación", body: "Felicidades. Has terminado el Subtema A.", fullScreen: true },
+]
+
+// ==============================================================================
+// LECCIÓN 6: Auditoría de Micro-seguros Ocultos - 15 SLIDES
+// ==============================================================================
+export const lessonAuditoriaDeMicroSegurosOcultosSteps: LessonStep[] = [
+  { id: "mic-1-1", stepType: "billy_talks", body: "Los bancos y servicios digitales suelen inyectar micro-seguros que no pediste. Vamos a hacer una auditoría profunda para eliminar estos parásitos financieros.", fullScreen: true,
+    data: { glossary: [{ word: "Micro-seguro Oculto", definition: "Pequeñas primas de seguros (vida, fraude, asistencia) que se cobran automáticamente sin una confirmación explícita recurrente." }, { word: "Métrica de Fuga Silenciosa", definition: "Suma anual de todos los cobros menores a $100 que pasan desapercibidos en el estado de cuenta." }] }
+  },
+  { id: "mic-1-2", stepType: "info", title: "El Costo de 'Por si acaso'", body: "¿Seguro de celular? ¿Seguro de fraude extra? ¿Asistencia en el hogar que ya tiene tu seguro de casa? Si no lo sabías, no lo usas. Eliminar estos micro-gastos libera un flujo que puede ir directamente a tu fondo de paz.", fullScreen: true,
+    aiInsight: "Las instituciones financieras generan hasta un 15% de rentabilidad extra solo mediante la venta cruzada de micro-seguros no utilizados."
+  },
+  { id: "mic-1-3", stepType: "mcq", question: "Ves un cargo de $49 pesos llamado 'Asistencia Total'. ¿Qué haces?", options: [{id:"o1", label:"Dejarlo, no es mucho", isCorrect:false}, {id:"o2", label:"Llamar y cancelar; es una fuga de eficiencia", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "mic-1-4", stepType: "swipe_sorter", question: "¿Seguro Necesario o Fuga Inútil?", leftBucket: {label:"Necesario (Vital)", color:"#10b981"}, rightBucket: {label:"Inútil (Parásito)", color:"#ef4444"}, items: [{id:"i1", label:"Gastos Médicos Mayores", correctBucket:"left"}, {id:"i2", label:"Seguro de bolso/cartera (fraude ya cubierto)", correctBucket:"right"}, {id:"i3", label:"Responsabilidad Civil Auto", correctBucket:"left"}, {id:"i4", label:"Seguro de 'mantenimiento de red' en internet", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "mic-1-5", stepType: "info", title: "Cero Tolerancia", body: "Un Ingeniero BIZEN tiene tolerancia cero a las fugas no justificadas. Si un servicio cobra $1 extra por algo que no pediste, el sistema ha sido vulnerado. Sella la brecha.", fullScreen: true },
+  { id: "mic-1-6", stepType: "true_false", statement: "Los seguros que vienen 'gratis' el primer mes suelen empezar a cobrar automáticamente después sin avisar.", correctValue: true, explanation: "Es una táctica de marketing clásica basada en el olvido del usuario. Pon alarmas para cancelar.", isAssessment:true, fullScreen: true },
+  { id: "mic-1-7", stepType: "order", question: "Proceso de Caza de Micro-seguros", items: [{id:"p1", label: "Descargar XML o PDF detallado", correctOrder: 1}, {id: "p2", label: "Buscar conceptos menores a $150", correctOrder: 2}, {id: "p3", label: "Solicitar el folio de cancelación telefónica", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "mic-1-8", stepType: "blitz_challenge", question: "¿Cómo se llama la suma de fugas pequeñas?", options: [{id:"o1", label:"Gasto Hormiga Institucional", isCorrect:true}, {id:"o2", label:"Costo operativo", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "mic-1-9", stepType: "blitz_challenge", question: "¿Cual es el arma contra cobros no solicitados?", options: [{id:"o1", label:"CONDUSEF (o equivalente)", isCorrect:true}, {id:"o2", label:"La paciencia", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "mic-1-10", stepType: "match", question: "Relaciona Servicio con Fuga común", leftItems: [{id:"l1", label:"Telefonía Móvil"}, {id:"l2", label:"Tarjeta de Crédito"}, {id:"l3", label:"Internet Casa"}], rightItems: [{id:"r1", label:"Seguro de vida/accidentes"}, {id:"r2", label:"Protección de compras"}, {id:"r3", label:"Asistencia técnica premium"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "mic-1-11", stepType: "impulse_meter", instructions: "Mantén pulsado y visualiza tu estado de cuenta limpio de micro-cargos. Siente la victoria técnica.", item: { name: "Limpiador de Cargos", price: "0.00", imageUrl: "/billy-breathing.png" }, holdTime: 6, fullScreen: true },
+  { id: "mic-1-12", stepType: "mindset_translator", question: "Refactoriza tu atención", beliefs: [{id: "b1", original: "Son solo $30 pesos, no vale la pena la llamada.", healthyOptions: [{id: "h1", label: "$30 pesos al mes por 20 años son miles de pesos que me pertenecen a MÍ, no al banco", isCorrect: true}, {id: "h2", label: "Mi tiempo vale más que $30", isCorrect: false}]}] },
+  { id: "mic-1-13", stepType: "narrative_check", question: "¿Has revisado hoy los 'conceptos' de tu factura telefónica o bancaria?", promptPlaceholder: "He revisado ...", minChars: 10, billyResponse: "Hazlo. Encontrarás dinero tirado a la basura.", fullScreen: true },
+  { id: "mic-1-14", stepType: "info", title: "Alerta importante", body: "Al cancelar, pide siempre un número de folio y verifica en el siguiente mes que no aparezca el cargo. La persistencia es clave en la auditoría.", fullScreen: true,
+    aiInsight: "Las facturas digitales oscurecen estos cargos para que no los notes en el scroll rápido."
+  },
+  { id: "mic-1-15", stepType: "summary", title: "Auditoría Finalizada", body: "Has expulsado a los parásitos. Siguiente: Cacería de Hormigas.", fullScreen: true },
 ]

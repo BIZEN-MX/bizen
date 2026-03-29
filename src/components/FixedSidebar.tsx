@@ -412,26 +412,31 @@ export default function FixedSidebar() {
                         flex-shrink: 0;
                       }
                     `}</style>
-                    {isPremium ? (
-                      <span className="plan-badge-premium">
-                        <span className="plan-dot" />
-                        Plan Premium
-                      </span>
-                    ) : !isParticular ? (
-                      <span className="plan-badge-institutional">
-                        <span className="plan-dot" />
-                        Plan Institucional
-                      </span>
-                    ) : (
-                      <span 
-                        className="plan-badge-gratuito" 
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => router.push('/payment')}
-                      >
-                        <span className="plan-dot" />
-                        Plan Gratuito
-                      </span>
-                    )}
+                    {(() => {
+                      const role = dbProfile?.role;
+                      const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0;
+                      
+                      let label = 'Plan Básico';
+                      if (role === 'teacher') label = 'Docente';
+                      else if (role === 'school_admin' || role === 'admin') label = 'Administrador';
+                      else if (role === 'student') label = 'Plan Institucional';
+                      else if (role === 'particular') label = isPremium ? 'Plan Premium' : 'Plan Básico';
+                      else label = 'Plan Institucional';
+                      
+                      const isBasic = label === 'Plan Básico';
+                      
+                      return (
+                        <span 
+                          onClick={() => isBasic && router.push("/payment")}
+                          className={isBasic ? "plan-badge-gratuito" : "plan-badge-institutional"}
+                          style={{ cursor: isBasic ? "pointer" : "default" }}
+                        >
+                          <span className="plan-dot" />
+                          {label}
+                        </span>
+                      );
+                    })()}
+
                   </>
                 )
               })()}

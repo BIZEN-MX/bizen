@@ -138,5 +138,32 @@ export const lessonDetectarMisTriggersCasosSteps: LessonStep[] = [
   { id: "tri-5-14", stepType: "info", title: "Alerta importante", body: "No te confíes. El sistema siempre querrá que vuelvas a gastar.", fullScreen: true,
     aiInsight: "La consciencia del trigger reduce su potencia emocional en un 50% de inmediato."
   },
-  { id: "tri-5-15", stepType: "summary", title: "Bloque Terminado", body: "Has terminado el bloque de Triggers de Compra. ¡Felicidades! Siguiente: Compras Impulsivas.", fullScreen: true },
+  { id: "tri-5-15", stepType: "summary", title: "Bloque Terminado", body: "Has terminado el bloque de Triggers de Compra. ¡Felicidades!", fullScreen: true },
+]
+
+// ==============================================================================
+// LECCIÓN 6: El Ego en el Consumo Digital - 15 SLIDES
+// ==============================================================================
+export const lessonElEgoEnElConsumoDigitalSteps: LessonStep[] = [
+  { id: "ego-1-1", stepType: "billy_talks", body: "En el mundo digital, el consumo no es para sobrevivir, es para alimentar una imagen. Vamos a hackear el ego que drena tu capital.", fullScreen: true,
+    data: { glossary: [{ word: "Ego-Consumo", definition: "Hábito de comprar bienes o servicios digitales para proyectar éxito o pertenencia, sin utilidad real." }, { word: "Métrica de Vanidad Financiera", definition: "Indicador de éxito visible (ropa, gadgets) que no se traduce en patrimonio real." }] }
+  },
+  { id: "ego-1-2", stepType: "info", title: "La Trampa del 'Like'", body: "Las redes sociales han acelerado el ciclo de comparación. Compramos cosas que no necesitamos para impresionar a gente que no conocemos. Un Ingeniero BIZEN invierte en activos que NO se ven, pero SÍ se sienten en el patrimonio.", fullScreen: true,
+    aiInsight: "La necesidad de estatus digital es la principal causa de sobre-endeudamiento en la Generación Z y Millennials."
+  },
+  { id: "ego-1-3", stepType: "impulse_meter", instructions: "Mantén pulsado y desinfla el globo del ego. Respira humildad estratégica. Siente la libertad de no tener que impresionar a nadie.", item: { name: "Reductor de Ego", price: "Libertad", imageUrl: "/billy-breathing.png" }, holdTime: 6, fullScreen: true },
+  { id: "ego-1-4", stepType: "mcq", question: "¿Cuál es el costo real de comprar el nuevo iPhone 'solo para las fotos' si ya tienes uno funcional?", options: [{id:"o1", label:"El precio en la tienda", isCorrect:false}, {id:"o2", label:"El precio de la tienda + 10 años de interés compuesto perdido", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "ego-1-5", stepType: "swipe_sorter", question: "¿Es para mi Utilidad o para mi Ego?", leftBucket: {label:"Utilidad (Valor)", color:"#10b981"}, rightBucket: {label:"Ego (Vanidad)", color:"#fbbf24"}, items: [{id:"i1", label:"Suscripción a herramienta de trabajo", correctBucket:"left"}, {id:"i2", label:"Suscribirse a OF o contenido de ocio caro", correctBucket:"right"}, {id:"i3", label:"Curso de especialización", correctBucket:"left"}, {id:"i4", label:"Avatar o skin digital de $50 USD", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "ego-1-6", stepType: "info", title: "Soberanía sobre la Audiencia", body: "Si dejas de postear lo que compras, ¿seguirías comprándolo? Si la respuesta es NO, tu gasto es un costo de marketing personal ineficiente. El verdadero lujo es la discreción y el flujo libre.", fullScreen: true },
+  { id: "ego-1-7", stepType: "true_false", statement: "Gastar en estatus es una inversión porque 'abre puertas'.", correctValue: false, explanation: "El estatus falso abre puertas a círculos de consumo, no a círculos de riqueza. La riqueza real busca valor, no brillo.", isAssessment:true, fullScreen: true },
+  { id: "ego-1-8", stepType: "order", question: "Filtro Anti-Ego", items: [{id:"p1", label: "¿Usaré esto en privado sin contárselo a nadie?", correctOrder: 1}, {id: "p2", label: "¿Mejorará mi productividad o ingresos?", correctOrder: 2}, {id: "p3", label: "¿Puedo pagarlo sin comprometer mi fondo de paz?", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "ego-1-9", stepType: "blitz_challenge", question: "¿Qué drena el ego digital?", options: [{id:"o1", label:"Tu Capital", isCorrect:true}, {id:"o2", label:"Tu tiempo solamente", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "ego-1-10", stepType: "blitz_challenge", question: "¿Cual es el antídoto contra la comparación?", options: [{id:"o1", label:"Comprar más", isCorrect:false}, {id:"o2", label:"Tener metas propias claras", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "ego-1-11", stepType: "match", question: "Relaciona Perfil", leftItems: [{id:"l1", label:"Poseedor de Activos"}, {id:"l2", label:"Poseedor de Objetos"}], rightItems: [{id:"r1", label:"Busca Libertad"}, {id:"r2", label:"Busca Validación"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+  { id: "ego-1-12", stepType: "mindset_translator", question: "Refactoriza tu imagen", beliefs: [{id: "b1", original: "Tengo que verme exitoso para ser exitoso.", healthyOptions: [{id: "h1", label: "Tengo que TENER éxito real (patrimonio) para SENTIRME exitoso de verdad", isCorrect: true}, {id: "h2", label: "Las apariencias lo son todo", isCorrect: false}]}] },
+  { id: "ego-1-13", stepType: "narrative_check", question: "¿Qué compra digital hiciste recientemente solo para 'sentirte parte' de algo?", promptPlaceholder: "Compré ...", minChars: 10, billyResponse: "Honestidad nivel ingeniero. El primer paso para el control.", fullScreen: true },
+  { id: "ego-1-14", stepType: "info", title: "Alerta importante", body: "El ego es el impuesto de la inseguridad. Entre menos necesites validación externa, menos capital desperdiciarás en el camino.", fullScreen: true,
+    aiInsight: "Las celebridades que más ostentan en redes suelen tener el patrimonio más frágil debido a sus altos costos de mantenimiento de ego."
+  },
+  { id: "ego-1-15", stepType: "summary", title: "Ego Hackeado", body: "Ahora tienes el control de tu imagen y de tu cartera. ¡Felicidades!", fullScreen: true },
 ]

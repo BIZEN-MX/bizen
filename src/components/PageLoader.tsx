@@ -75,7 +75,7 @@ export default function PageLoader() {
                         fontFamily: "var(--font-family)",
                         textTransform: "uppercase"
                     }}>
-                        Cargando Bizen
+                        Cargando
                     </h2>
                 </div>
             </div>

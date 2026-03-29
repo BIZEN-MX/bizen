@@ -12,8 +12,10 @@ import Link from "next/link"
 import {
   Flame, Zap, Shield, Award, UserPlus, Users,
   Search, Mail, ChevronRight, X as CloseIcon, Camera, Star,
-  Trophy, BookOpen, Compass, Share2, Heart, Settings, Instagram
+  Trophy, BookOpen, Compass, Share2, Heart, Settings, Instagram,
+  Palette, CreditCard, Lock as LockIcon
 } from "lucide-react"
+import BizenVirtualCard, { CardTheme } from "@/components/BizenVirtualCard"
 
 // --- CUSTOM ILLUSTRATIONS ---
 const CommunityIllustration = () => (
@@ -22,8 +24,6 @@ const CommunityIllustration = () => (
     <path d="M40 48C46.6274 48 52 42.6274 52 36C52 29.3726 46.6274 24 40 24C33.3726 24 28 29.3726 28 36C28 42.6274 33.3726 48 40 48Z" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     <path d="M22 60V56C22 51.5817 25.5817 48 30 48H32" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     <path d="M58 60V56C58 51.5817 54.4183 48 50 48H48" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <circle cx="58" cy="34" r="6" stroke="#0F62FE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <circle cx="22" cy="34" r="6" stroke="#0F62FE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
@@ -33,41 +33,7 @@ const FollowIllustration = () => (
     <path d="M40 24V56M24 40H56" stroke="#0F62FE" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" opacity="0.3" />
     <path d="M40 28C44.4183 28 48 31.5817 48 36C48 40.4183 44.4183 44 40 44C35.5817 44 32 40.4183 32 36C32 31.5817 35.5817 28 40 28Z" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     <path d="M28 56V52C28 47.5817 31.5817 44 36 44H44C48.4183 44 52 47.5817 52 52V56" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <circle cx="60" cy="24" r="4" fill="#0F62FE" stroke="#0F62FE" strokeWidth="1" />
   </svg>
-)
-
-const CustomFollowingIcon = ({ active }: { active: boolean }) => (
-  <div style={{
-    width: 44, height: 44, borderRadius: "50%",
-    background: active ? "rgba(15,98,254,0.12)" : "rgba(148,163,184,0.06)",
-    display: "flex", alignItems: "center", justifyContent: "center",
-    transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
-    transform: active ? "scale(1.1)" : "scale(1)"
-  }}>
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: active ? "tienda-bounce 2s infinite" : "none" }}>
-      <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M17 11L19 13L23 9" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  </div>
-)
-
-const CustomFollowersIcon = ({ active }: { active: boolean }) => (
-  <div style={{
-    width: 44, height: 44, borderRadius: "50%",
-    background: active ? "rgba(15,98,254,0.12)" : "rgba(148,163,184,0.06)",
-    display: "flex", alignItems: "center", justifyContent: "center",
-    transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
-    transform: active ? "scale(1.1)" : "scale(1)"
-  }}>
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: active ? "tienda-wiggle 2s infinite" : "none" }}>
-      <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88" stroke={active ? "#0F62FE" : "#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  </div>
 )
 
 interface UserStats {
@@ -81,39 +47,11 @@ interface UserStats {
   inventory?: string[]
 }
 
-
 interface AchievementDef {
   id: string; title: string; description: string;
   icon: string; category: string; threshold: number;
   xpReward: number; rarity: string;
   unlocked: boolean; unlockedAt: string | null
-}
-
-// Icon renderer — handles both new and legacy icon keys
-function AchievementIconSm({ icon, size = 22, color = "currentColor" }: { icon: string; size?: number; color?: string }) {
-  const p = { width: size, height: size, style: {} }
-  switch (icon) {
-    case "flame":
-    case "fire":
-      return <svg {...p} viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 8 6 8 10C8 12 9.5 13.5 11 14C10 12.5 10.5 11 12 10C12 12 14 13.5 14 15.5C14 17.5 13 19 11.5 20C15 19.5 17 17 17 14C17 11 15 9 14 8C14.5 10 13.5 11.5 12 12C12 12 10 10 12 2Z" fill={color} fillOpacity="0.9"/></svg>
-    case "book":
-    case "seedling":
-      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-    case "award": return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-    case "trophy": return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="8 21 12 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M7 4H17a4 4 0 0 1 4 4v3a8 8 0 0 1-8 8 8 8 0 0 1-8-8V8a4 4 0 0 1 4-4Z"/><path d="M3 7v3M21 7v3"/></svg>
-    case "star": return <svg {...p} viewBox="0 0 24 24" fill={color} fillOpacity="0.9"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-    case "zap":  return <svg {...p} viewBox="0 0 24 24" fill={color} fillOpacity="0.9"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-    case "coin": return <svg {...p} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill={color} fillOpacity="0.2" stroke={color} strokeWidth="1.5"/><path d="M12 7v10M9.5 9.5h3.75a1.75 1.75 0 0 1 0 3.5H10.5a1.75 1.75 0 0 0 0 3.5H14" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>
-    case "users":
-    case "message-circle":
-      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    case "crown":
-      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h20M4 20 6 9l6 5 6-5 2 11"/><circle cx="12" cy="5" r="2"/></svg>
-    case "shopping-cart":
-      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-    default:
-      return <svg {...p} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-  }
 }
 
 const RARITY_CFG: Record<string, { grad: string; color: string; label: string }> = {
@@ -123,155 +61,55 @@ const RARITY_CFG: Record<string, { grad: string; color: string; label: string }>
   legendario: { grad: "linear-gradient(135deg,#92400e,#d97706)", color: "#fbbf24", label: "Legendario" },
 }
 
+function AchievementIconSm({ icon, size = 22, color = "currentColor" }: { icon: string; size?: number; color?: string }) {
+  const p = { width: size, height: size, style: {} }
+  switch (icon) {
+    case "flame": return <Flame {...p} color={color} />
+    case "zap": return <Zap {...p} color={color} />
+    case "award": return <Award {...p} color={color} />
+    case "trophy": return <Trophy {...p} color={color} />
+    case "star": return <Star {...p} color={color} />
+    default: return <Shield {...p} color={color} />
+  }
+}
+
 function AchievementCard({ a, cfg }: { a: AchievementDef; cfg: { grad: string; color: string; label: string } }) {
   const [flipped, setFlipped] = React.useState(false)
-  const ref = React.useRef<HTMLDivElement>(null)
-
-  // Close on outside tap (mobile)
-  React.useEffect(() => {
-    if (!flipped) return
-    const close = (e: MouseEvent | TouchEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setFlipped(false)
-    }
-    document.addEventListener("mousedown", close)
-    document.addEventListener("touchstart", close)
-    return () => {
-      document.removeEventListener("mousedown", close)
-      document.removeEventListener("touchstart", close)
-    }
-  }, [flipped])
-
-  const unlockedDate = a.unlockedAt
-    ? new Date(a.unlockedAt).toLocaleDateString("es-MX", { day: "numeric", month: "short", year: "numeric" })
-    : null
-
-  // Subtle card-flip sound using Web Audio API (no external files)
-  const playFlipSound = () => {
-    try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
-      const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.07), ctx.sampleRate)
-      const data = buf.getChannelData(0)
-      for (let i = 0; i < data.length; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3.5) * 0.7
-      }
-      const src = ctx.createBufferSource()
-      src.buffer = buf
-      const gain = ctx.createGain()
-      gain.gain.setValueAtTime(0.22, ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07)
-      src.connect(gain)
-      gain.connect(ctx.destination)
-      src.start()
-    } catch { /* silently ignore if AudioContext is blocked */ }
-  }
-
-  const handleFlip = () => {
-    playFlipSound()
-    setFlipped(v => !v)
-  }
-
+  
   return (
-    <div ref={ref} onClick={handleFlip} style={{ perspective: "900px", cursor: "pointer", userSelect: "none" }}>
+    <div onClick={() => setFlipped(!flipped)} style={{ perspective: "900px", cursor: "pointer", userSelect: "none" }}>
       <div style={{
-        position: "relative",
-        width: "100%",
-        paddingBottom: "135%",
-        transformStyle: "preserve-3d",
-        transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-        transition: "transform 0.52s cubic-bezier(0.4, 0.2, 0.2, 1)",
+        position: "relative", width: "100%", paddingBottom: "130%", transformStyle: "preserve-3d",
+        transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)", transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
       }}>
-
-        {/* ─── FRONT ──────────────────────────────────── */}
+        {/* FRONT */}
         <div style={{
-          position: "absolute", inset: 0,
-          backfaceVisibility: "hidden",
-          WebkitBackfaceVisibility: "hidden",
-          borderRadius: 24,
-          background: a.unlocked ? cfg.grad : "#f8fafc",
-          border: a.unlocked ? "none" : "1.5px solid #e2e8f0",
-          boxShadow: a.unlocked ? `0 8px 28px ${cfg.color}40` : "0 2px 8px rgba(0,0,0,0.06)",
-          display: "flex", flexDirection: "column", alignItems: "center",
-          justifyContent: "center", textAlign: "center",
-          gap: 14, padding: "24px 16px", overflow: "hidden",
+          position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
+          borderRadius: 20, background: a.unlocked ? cfg.grad : "#f1f5f9", display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", textAlign: "center", padding: 16, border: a.unlocked ? "none" : "1.5px dashed #cbd5e1"
         }}>
-          {!a.unlocked && (
-            <div style={{ position: "absolute", top: 12, right: 12 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-            </div>
-          )}
-          <div style={{
-            width: 68, height: 68, borderRadius: 20,
-            background: a.unlocked ? "rgba(255,255,255,0.18)" : "#e2e8f0",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            border: a.unlocked ? "1px solid rgba(255,255,255,0.25)" : "none",
-            boxShadow: a.unlocked ? "0 4px 16px rgba(0,0,0,0.15)" : "none",
-          }}>
-            <AchievementIconSm icon={a.icon} size={32} color={a.unlocked ? "#fff" : "#94a3b8"} />
+          {!a.unlocked && <LockIcon size={14} color="#94a3b8" style={{ position: "absolute", top: 12, right: 12 }} />}
+          <div style={{ width: 48, height: 48, borderRadius: 12, background: a.unlocked ? "rgba(255,255,255,0.2)" : "#e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+            <AchievementIconSm icon={a.icon} size={24} color={a.unlocked ? "white" : "#94a3b8"} />
           </div>
-          <div>
-            <div style={{ fontSize: 14, fontWeight: 800, color: a.unlocked ? "#fff" : "#0f172a", lineHeight: 1.2, marginBottom: 5 }}>{a.title}</div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: a.unlocked ? cfg.color : "#94a3b8", textTransform: "uppercase", letterSpacing: ".08em" }}>{cfg.label}</div>
-          </div>
-          {a.unlocked && a.xpReward > 0 && (
-            <div style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.14)", borderRadius: 999, padding: "4px 12px" }}>
-              <AchievementIconSm icon="zap" size={12} color="#fbbf24" />
-              <span style={{ fontSize: 12, fontWeight: 800, color: "#fbbf24" }}>+{a.xpReward} XP</span>
-            </div>
-          )}
-          <div style={{ fontSize: 9, fontWeight: 600, color: a.unlocked ? "rgba(255,255,255,0.38)" : "#cbd5e1", textTransform: "uppercase", letterSpacing: "0.07em", marginTop: 2 }}>
-            Toca para ver
-          </div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: a.unlocked ? "white" : "#64748b", lineHeight: 1.2 }}>{a.title}</div>
+          <div style={{ fontSize: 9, fontWeight: 600, color: a.unlocked ? "rgba(255,255,255,0.6)" : "#94a3b8", textTransform: "uppercase", marginTop: 4 }}>{cfg.label}</div>
         </div>
-
-        {/* ─── BACK ───────────────────────────────────── */}
+        {/* BACK */}
         <div style={{
-          position: "absolute", inset: 0,
-          backfaceVisibility: "hidden",
-          WebkitBackfaceVisibility: "hidden",
-          transform: "rotateY(180deg)",
-          borderRadius: 24,
-          background: a.unlocked ? cfg.grad : "linear-gradient(135deg, #1e293b, #0f172a)",
-          boxShadow: a.unlocked ? `0 8px 28px ${cfg.color}50` : "0 8px 28px rgba(0,0,0,0.3)",
-          display: "flex", flexDirection: "column", alignItems: "center",
-          justifyContent: "center", textAlign: "center",
-          gap: 12, padding: "24px 16px", overflow: "hidden",
+          position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
+          transform: "rotateY(180deg)", borderRadius: 20, background: "#1e293b", padding: 16, display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", textAlign: "center", color: "white"
         }}>
-          <div style={{
-            fontSize: 9, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase",
-            color: a.unlocked ? cfg.color : "#60a5fa",
-            padding: "4px 14px",
-            background: a.unlocked ? "rgba(255,255,255,0.12)" : "rgba(96,165,250,0.15)",
-            borderRadius: 999,
-          }}>
-            {a.unlocked ? "Desbloqueado" : "Como conseguirlo"}
-          </div>
-          <div style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.6, color: a.unlocked ? "rgba(255,255,255,0.92)" : "#e2e8f0" }}>
-            {a.description || "Sigue usando BIZEN para desbloquear este logro."}
-          </div>
-          {unlockedDate && (
-            <div style={{
-              fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.45)",
-              borderTop: "1px solid rgba(255,255,255,0.1)",
-              paddingTop: 10, marginTop: 2, width: "100%", textAlign: "center",
-            }}>
-              Obtenido el {unlockedDate}
-            </div>
-          )}
-          <div style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.28)", textTransform: "uppercase", letterSpacing: "0.07em", marginTop: 2 }}>
-            Toca para volver
-          </div>
+          <div style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.4 }}>{a.description}</div>
+          {a.unlockedAt && <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", marginTop: 8 }}>Obtenido el {new Date(a.unlockedAt).toLocaleDateString()}</div>}
         </div>
       </div>
     </div>
   )
 }
 
-
 export default function ProfilePage() {
-
   const { user, loading, refreshUser, dbProfile } = useAuth()
   const { startTour } = useOnboarding()
   const router = useRouter()
@@ -282,209 +120,130 @@ export default function ProfilePage() {
   const [savingAvatar, setSavingAvatar] = useState(false)
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [loadingStats, setLoadingStats] = useState(true)
-  const [profileStats, setProfileStats] = useState<{
-    joinDate: string | null
-    followersCount: number
-    followingCount: number
-  } | null>(null)
-  const [schools, setSchools] = useState<{ id: string; name: string }[]>([])
-  const [formData, setFormData] = useState({ fullName: "", username: "", bio: "", birthDate: "", schoolId: "" })
-  const [showFollowers, setShowFollowers] = useState(false)
-  const [showFollowing, setShowFollowing] = useState(false)
+  const [profileStats, setProfileStats] = useState<{ joinDate: string | null; followersCount: number; followingCount: number } | null>(null)
+  const [rightTab, setRightTab] = useState<"following" | "followers">("following")
   const [followers, setFollowers] = useState<any[]>([])
   const [following, setFollowing] = useState<any[]>([])
   const [loadingFollowers, setLoadingFollowers] = useState(false)
   const [loadingFollowing, setLoadingFollowing] = useState(false)
-  const [rightTab, setRightTab] = useState<"following" | "followers">("following")
   const [achievements, setAchievements] = useState<AchievementDef[]>([])
   const [loadingAchievements, setLoadingAchievements] = useState(true)
   const [screenSize, setScreenSize] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+  const [cardTheme, setCardTheme] = useState<CardTheme>("blue")
+  const [savingTheme, setSavingTheme] = useState(false)
+  const [isThemePickerOpen, setIsThemePickerOpen] = useState(false)
+  const [planPopoverOpen, setPlanPopoverOpen] = useState(false)
 
+  useEffect(() => { setMounted(true) }, [])
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth)
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-
-  useEffect(() => { setMounted(true) }, [])
-
-  useEffect(() => {
-    document.body.style.background = "#FBFAF5"
-    // Refresh user profile whenever page mounts to ensure inventory is fresh
-    if (refreshUser) refreshUser()
-    return () => { document.body.style.background = "" }
-  }, [])
-
   useEffect(() => {
     if (loading) return
-    if (!user) { window.open("/login", "_blank"); return }
-    setFormData({
-      fullName: user.user_metadata?.full_name || "",
-      username: user.user_metadata?.username || "",
-      bio: user.user_metadata?.bio || "",
-      birthDate: user.user_metadata?.birth_date || "",
-      schoolId: user.user_metadata?.school_id || ""
-    })
-    fetch(`/api/user/stats?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(d => { if (d) setUserStats(d) }).finally(() => setLoadingStats(false))
-    fetch(`/api/profile/stats?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(d => { if (d) setProfileStats(d) })
-    fetch("/api/schools").then(r => r.ok ? r.json() : null).then(d => { if (d) setSchools(d) })
-    fetch(`/api/achievements`).then(r => r.ok ? r.json() : []).then(d => { setAchievements(Array.isArray(d) ? d : []) }).catch(() => {}).finally(() => setLoadingAchievements(false))
-  }, [user, loading, router])
+    if (!user) { router.push("/login"); return }
+    if (user.user_metadata?.cardTheme) setCardTheme(user.user_metadata.cardTheme as CardTheme)
+    
+    const fetchData = async () => {
+      try {
+        const [statsRes, profStatsRes, achRes] = await Promise.all([
+          fetch(`/api/user/stats?t=${Date.now()}`),
+          fetch(`/api/profile/stats?t=${Date.now()}`),
+          fetch(`/api/achievements`)
+        ]);
+        if (statsRes.ok) setUserStats(await statsRes.json());
+        if (profStatsRes.ok) setProfileStats(await profStatsRes.json());
+        if (achRes.ok) {
+          const achData = await achRes.json();
+          setAchievements(Array.isArray(achData) ? achData : []);
+        }
+      } catch (err) {
+        console.error("Error fetching profile data", err);
+      } finally {
+        setLoadingStats(false);
+        setLoadingAchievements(false);
+      }
+    };
+    fetchData();
+  }, [user, loading]);
 
   const fetchFollowersList = async () => {
     if (!user?.id || loadingFollowers) return
     setLoadingFollowers(true)
-    try { const r = await fetch(`/api/forum/profile/${user.id}/followers`); if (r.ok) { const d = await r.json(); setFollowers(d.followers || []) } }
-    catch { } finally { setLoadingFollowers(false) }
+    try {
+      const r = await fetch(`/api/forum/profile/${user.id}/followers`);
+      if (r.ok) {
+        const d = await r.json();
+        setFollowers(d.followers || []);
+      }
+    } finally { setLoadingFollowers(false) }
   }
   const fetchFollowingList = async () => {
     if (!user?.id || loadingFollowing) return
     setLoadingFollowing(true)
-    try { const r = await fetch(`/api/forum/profile/${user.id}/following`); if (r.ok) { const d = await r.json(); setFollowing(d.following || []) } }
-    catch { } finally { setLoadingFollowing(false) }
+    try {
+      const r = await fetch(`/api/forum/profile/${user.id}/following`);
+      if (r.ok) {
+        const d = await r.json();
+        setFollowing(d.following || []);
+      }
+    } finally { setLoadingFollowing(false) }
   }
-
-  const [avatarPickerTab, setAvatarPickerTab] = useState(0)
 
   const updateAvatar = async (newAvatar: any) => {
     if (!supabase) return
     setSavingAvatar(true)
     try {
-      const { error } = await supabase.auth.updateUser({ data: { avatar: newAvatar } })
-      if (error) throw error
+      await supabase.auth.updateUser({ data: { avatar: newAvatar } })
       await fetch("/api/profiles", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ avatar: newAvatar }) })
-      setIsPickerOpen(false)
       if (refreshUser) refreshUser()
-      router.refresh()
-    } catch { alert("No se pudo actualizar el avatar") } finally { setSavingAvatar(false) }
+      setIsPickerOpen(false)
+    } finally { setSavingAvatar(false) }
   }
 
-  const handleManageSubscription = async () => {
-    if (!user?.id) return
+  const updateCardTheme = async (newTheme: CardTheme) => {
+    if (!supabase) return
+    setSavingTheme(true);
+    setCardTheme(newTheme);
     try {
-      const res = await fetch("/api/payment/create-portal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id })
-      })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        alert(data.error || "No se pudo abrir el portal de gestión. Si no tienes una suscripción activa pagada por Stripe, no hay nada que gestionar.")
-      }
-    } catch (err) {
-      console.error("Error redirecting to portal:", err)
-      alert("Error al conectar con Stripe.")
-    }
+      await supabase.auth.updateUser({ data: { cardTheme: newTheme } })
+      await fetch("/api/profiles", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cardTheme: newTheme }) })
+      if (refreshUser) refreshUser()
+    } finally { setSavingTheme(false) }
   }
 
-  // ── SKELETON COMPONENTS ──
-  const Skeleton = ({ w, h, r = 12, mb = 0, style = {} }: any) => (
-    <div className="skeleton-pulse" style={{ width: w, height: h, borderRadius: r, marginBottom: mb, background: "#f1f5f9", ...style }} />
-  )
-
-  const ProfileSkeleton = () => (
-    <div className="prof-outer" style={{ minHeight: "100vh", background: "#FBFAF5", padding: "clamp(24px, 5vw, 48px) clamp(16px, 4vw, 40px)" }}>
-      <div style={{ maxWidth: 1140, margin: "0 auto", display: "flex", gap: 32 }}>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 24, alignItems: "center" }}>
-          <Skeleton w={190} h={190} r="50%" mb={20} />
-          <Skeleton w={200} h={40} mb={8} />
-          <Skeleton w={140} h={20} mb={24} />
-          <div style={{ display: "flex", gap: 16 }}>
-            <Skeleton w={80} h={40} />
-            <Skeleton w={80} h={40} />
-          </div>
-          <div style={{ width: "100%", height: 1, background: "#e2e8f0", margin: "10px 0" }} />
-          <div style={{ alignSelf: "flex-start", width: "100%" }}>
-            <Skeleton w={120} h={24} mb={16} />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <Skeleton w="100%" h={100} />
-              <Skeleton w="100%" h={100} />
-              <Skeleton w="100%" h={100} />
-              <Skeleton w="100%" h={100} />
-            </div>
-          </div>
-        </div>
-        <div style={{ width: 300, display: "flex", flexDirection: "column", gap: 16 }}>
-          <Skeleton w="100%" h={250} />
-          <Skeleton w="100%" h={180} />
-        </div>
-      </div>
-    </div>
-  )
-
-  const ListSkeleton = () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      {[1, 2, 3, 4].map(i => (
-        <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Skeleton w={40} h={40} r="50%" />
-          <div style={{ flex: 1 }}>
-            <Skeleton w="70%" h={14} mb={6} />
-            <Skeleton w="40%" h={10} />
-          </div>
-        </div>
-      ))}
-    </div>
-  )
+  const handleSignOut = async () => {
+    if (!supabase) return;
+    try {
+      await supabase.auth.signOut();
+      router.push("/login");
+    } catch { console.error("Error signing out") }
+  }
 
   if (loading || !mounted || loadingStats) return <PageLoader />
   if (!user) return null
 
   const isAdminOrTeacher = dbProfile?.role === 'school_admin' || dbProfile?.role === 'teacher'
+  const isParticular = dbProfile?.role === 'particular'
+  const isInstitutionalStudent = dbProfile?.role === 'student'
+  const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0
 
-  // Achievements section helper to avoid duplication while reordering for mobile
-  const renderAchievementsSection = () => (
-    <div style={{ marginTop: 24 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-        <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.01em", display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 30, height: 30, borderRadius: 10, background: "linear-gradient(135deg,#fef3c7,#fde68a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <AchievementIconSm icon="trophy" size={16} color="#d97706" />
-          </div>
-          Logros
-          <span style={{ fontSize: 12, fontWeight: 700, color: "#10b981", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 999, padding: "2px 10px" }}>
-            {achievements.filter(a => a.unlocked).length}/{achievements.length}
-          </span>
-        </h2>
-      </div>
+  const getPlanTitle = () => {
+    if (isAdminOrTeacher || isInstitutionalStudent) return "INSTITUCIONAL"
+    if (isParticular) return isPremium ? "PREMIUM" : "BÁSICO"
+    return null
+  }
 
-      {loadingAchievements ? (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="skeleton-pulse" style={{ height: 140, borderRadius: 20, background: "#f1f5f9" }} />
-          ))}
-        </div>
-      ) : achievements.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "32px 0", color: "#94a3b8", fontSize: 14 }}>
-          Completa el SQL de configuración para activar los logros.
-        </div>
-      ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
-          {achievements.map(a => {
-            const cfg = RARITY_CFG[a.rarity] ?? RARITY_CFG["común"]
-            return (
-              <AchievementCard key={a.id} a={a} cfg={cfg} />
-            )
-          })}
-        </div>
-      )}
-    </div>
-  );
-
-  const displayName = formData.fullName || user.email?.split("@")[0] || "Usuario"
-  const nickname = formData.username ? formData.username.replace("@", "") : user.email?.split("@")[0] || ""
-  const joinDate = profileStats?.joinDate
-    ? new Date(profileStats.joinDate).toLocaleDateString("es-ES", { month: "long", year: "numeric" })
-    : null
-
-  const streak = dbProfile?.currentStreak || userStats?.currentStreak || 0
-  const totalXp = userStats?.xp || 0
+  const displayName = user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario"
+  const nickname = user.user_metadata?.username || user.email?.split("@")[0] || ""
   const level = userStats?.level || dbProfile?.level || 1
+  const totalXp = userStats?.xp || 0
   const bizcoins = (dbProfile as any)?.bizcoins || 0
+  const xpPct = Math.min(((userStats?.xpInCurrentLevel || 0) / (userStats?.xpNeeded || 100)) * 100, 100)
   const xpInLevel = userStats?.xpInCurrentLevel || 0
   const xpForNext = userStats?.xpNeeded || 100
-  const xpPct = Math.min((xpInLevel / xpForNext) * 100, 100)
 
   const getLeagueTitle = (lvl: number) => {
     if (lvl >= 20) return "Leyenda"
@@ -494,851 +253,334 @@ export default function ProfilePage() {
     return "Explorer"
   }
 
-  const statCards = [
-    { icon: <Flame size={22} color="#0F62FE" />, value: streak, label: "Racha diaria", hide: isAdminOrTeacher },
-    { icon: <Zap size={22} color="#0F62FE" />, value: totalXp, label: "Total XP", hide: isAdminOrTeacher },
-    { icon: <Shield size={22} color="#0F62FE" />, value: getLeagueTitle(level), label: "Liga actual", hide: isAdminOrTeacher },
-    { icon: <Award size={22} color="#0F62FE" />, value: achievements.filter(a => a.unlocked).length, label: "Logros", hide: isAdminOrTeacher },
-  ].filter(c => !c.hide)
+  const getPlanInfo = () => {
+    const plan = getPlanTitle()
+    if (plan === "BÁSICO") return {
+      label: "Plan Básico", color: "#0F62FE", bg: "white",
+      desc: "Accede a lecciones gratuitas y a tu tarjeta BIZEN. Mejora a Pro para desbloquear todo el contenido.",
+      cta: "Mejorar a BIZEN Pro — $179/mes"
+    }
+    if (plan === "PREMIUM") return {
+      label: "BIZEN Pro", color: "white", bg: "rgba(16,185,129,0.9)",
+      desc: "Tienes acceso ilimitado a todos los cursos, simuladores y herramientas premium de la plataforma.",
+      cta: null
+    }
+    if (plan === "INSTITUCIONAL") return {
+      label: "Plan Institucional", color: "white", bg: "rgba(99,102,241,0.85)",
+      desc: "Tu acceso es gestionado por tu institución educativa. Disfruta de todos los beneficios del plan.",
+      cta: null
+    }
+    return null
+  }
 
-  const Card = ({ style, className, children }: any) => (
-    <div className={className} style={{
-      background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
-      border: "1px solid rgba(15,98,254,0.12)",
-      borderRadius: 24,
-      boxSizing: "border-box",
-      boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1)",
-      ...style
-    }}>
-      {children}
-    </div>
-  )
+  const statCards = [
+    { icon: <Flame size={20} color="#0F62FE" />, value: userStats?.currentStreak || 0, label: "Racha" },
+    { icon: <Zap size={20} color="#0F62FE" />, value: totalXp, label: "Total XP" },
+    { icon: <Award size={20} color="#0F62FE" />, value: achievements.filter(a => a.unlocked).length, label: "Logros" },
+    { icon: <Star size={20} color="#0F62FE" />, value: getLeagueTitle(level), label: "Liga" },
+  ]
 
   return (
-    <>
-
-
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        @keyframes fadeUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        @keyframes blobRotate { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
-        @keyframes skeleton-pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
-        @keyframes tooltipFadeIn { from { opacity:0; transform:translateY(6px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
-
-        .skeleton-pulse { animation: skeleton-pulse 1.5s infinite ease-in-out; }
-
-        .achievement-card { position: relative; cursor: pointer; }
-        .achievement-tooltip {
-          display: none;
-          position: absolute;
-          bottom: calc(100% + 10px);
-          left: 50%;
-          transform: translateX(-50%);
-          background: #1e293b;
-          color: #f8fafc;
-          border-radius: 14px;
-          padding: 12px 14px;
-          width: 200px;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 1.5;
-          box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-          z-index: 200;
-          text-align: left;
-          pointer-events: none;
-          animation: tooltipFadeIn 0.18s ease;
-          white-space: normal;
+    <div className="prof-outer" style={{ minHeight: "100vh", background: "#FBFAF5" }}>
+      <style>{`
+        @media (max-width: 767px) {
+          .prof-outer { width: 100% !important; margin-left: 0 !important; padding: 24px 16px 120px !important; }
+          .prof-body  { flex-direction: column !important; gap: 24px !important; }
+          .prof-side  { width: 100% !important; order: -1; }
+          .prof-hero  { height: 160px !important; border-radius: 24px !important; }
+          .prof-avatar-box { width: 120px !important; height: 120px !important; margin-top: -60px !important; }
         }
-        .achievement-tooltip::after {
-          content: '';
-          position: absolute;
-          top: 100%;
-          left: 50%;
-          transform: translateX(-50%);
-          border: 6px solid transparent;
-          border-top-color: #1e293b;
-        }
-        .achievement-card:hover .achievement-tooltip,
-        .achievement-card.tooltip-open .achievement-tooltip {
-          display: block;
-        }
-
-        @media (max-width: 1024px) {
-          .prof-outer { 
-            padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; 
-            width: 100% !important;
-            margin-left: 0 !important;
-          }
-          .prof-two-col { 
-            flex-direction: column !important; 
-            align-items: stretch !important; 
-            padding: 140px 16px 20px !important; 
-            gap: 20px !important; 
-          }
-          .prof-left-col { width: 100% !important; display: flex !important; flex-direction: column !important; align-items: stretch !important; }
-          .prof-right-col { width: 100% !important; }
-          
-          /* Mobile specific spacing and sizes */
-          .mobile-banner { height: 160px !important; }
-          .mobile-avatar-container { 
-            width: 144px !important; 
-            height: 144px !important; 
-            margin-top: -72px !important; 
-            margin-bottom: 8px !important;
-          }
-          .mobile-stat-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-          .mobile-stat-card { padding: 14px 12px !important; }
-          .mobile-stat-value { font-size: 22px !important; }
-        }
-        @media (min-width: 1025px) and (max-width: 1160px) {
-          .prof-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .prof-outer { margin-left: 220px !important; padding: 40px 24px 80px !important; width: calc(100% - 220px) !important; }
         }
         @media (min-width: 1161px) {
-          .prof-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
+          .prof-outer { margin-left: 280px !important; padding: 60px 48px 80px !important; width: calc(100% - 280px) !important; }
         }
-        .prof-tab-btn {
-          flex: 1; padding: 14px; font-size: 13px; font-weight: 500;
-          font-family: inherit; border: none; cursor: pointer;
-          text-transform: uppercase; letter-spacing: 0.08em;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); background: transparent;
-        }
-        .prof-tab-btn.active { color: #0F62FE; border-bottom: 3px solid #0F62FE; }
-        .prof-tab-btn.inactive { color: #94a3b8; border-bottom: 3px solid transparent; }
-        .prof-tab-btn.inactive:hover { color: #64748b; background: rgba(15,98,254,0.02); }
+        .prof-card { background: white; border: 1.5px solid #e2e8f0; border-radius: 24px; box-shadow: 0 4px 20px rgba(15,23,42,0.03); transition: transform 0.2s; }
+        .prof-card:hover { transform: translateY(-2px); }
+        .prof-tab-btn { flex: 1; padding: 14px; border: none; background: transparent; font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .prof-tab-btn.active { color: #0F62FE; border-bottom: 2px solid #0F62FE; background: #f8fafc; }
+        .prof-tab-btn.inactive { color: #94a3b8; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp 0.4s ease both; }
+      `}</style>
 
-        .prof-add-row {
-          display: flex; align-items: center; gap: 14px;
-          padding: 14px 20px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 12px;
-        }
-        .prof-add-row:hover { background: #f1f5f9; transform: translateX(4px); }
-
-        .prof-card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .prof-card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.1); }
-
-        .progress-shimmer {
-          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-          background-size: 200% 100%;
-          animation: shimmer 2s infinite;
-        }
-
-        .blob {
-          position: fixed; width: 400px; height: 400px;
-          background: radial-gradient(circle, rgba(15,98,254,0.06) 0%, transparent 70%);
-          border-radius: 50%; z-index: -1; animation: blobRotate 20s infinite linear;
-        }
-
-        @keyframes tienda-bounce  { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        @keyframes tienda-wiggle  { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
-
-        /* Avatar Picker Responsive Grid */
-        .avatar-picker-grid {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: clamp(8px, 1.5vw, 14px);
-          margin-bottom: 20px;
-        }
-        @media (max-width: 480px) {
-          .avatar-picker-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        }
-        @media (max-width: 360px) {
-          .avatar-picker-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        }
-
-        .avatar-picker-btn {
-          width: 100% !important;
-          aspect-ratio: 1;
-          border-radius: 50%;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-          padding: 0; outline: none; overflow: hidden;
-          transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
-          background: #f8fafc;
-          border: 3px solid transparent;
-        }
-        .avatar-picker-btn.selected {
-          border-color: #0F62FE;
-          background: #eff6ff;
-          transform: scale(1.08);
-          box-shadow: 0 0 0 4px rgba(15,98,254,0.2);
-        }
-        .avatar-picker-btn:hover:not(:disabled) {
-          transform: scale(1.05);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        `
-      }} />
-
-      <div className="prof-outer" style={{
-        minHeight: "100vh", background: "#FBFAF5",
-        boxSizing: "border-box", color: "#0f172a",
-        position: "relative", overflowX: "hidden"
+      {/* Hero Banner with Identity */}
+      <div className="prof-hero fade-up" style={{ 
+        height: 220, background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", 
+        borderRadius: 32, position: "relative", overflow: "hidden", marginBottom: 32,
+        boxShadow: "0 20px 40px -12px rgba(15,98,254,0.3)",
+        display: "flex", alignItems: "flex-end", padding: screenSize < 768 ? "24px" : "32px 48px"
       }}>
-        {/* Decorative elements */}
-        <div className="blob" style={{ top: "-100px", right: "-100px" }} />
-        <div className="blob" style={{ bottom: "-100px", left: "-100px", animationDelay: "-10s" }} />
-
-        {/* Banner Section */}
-        <div className="mobile-banner" style={{
-          height: screenSize < 1024 ? 160 : 220, 
-          borderRadius: "32px",
-          background: "linear-gradient(135deg, #0a0f1e 0%, #1e3a8a 60%, #1d4ed8 100%)",
-          position: "absolute", 
-          top: 16, 
-          left: 16, 
-          right: 16, 
-          zIndex: 0,
-          boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.25)",
-          overflow: "hidden"
-        }}>
-          {/* Premium Noise Texture for Banner */}
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            opacity: 0.08,
-            pointerEvents: "none",
-            mixBlendMode: "overlay",
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          }} />
-          <div style={{ position: "absolute", inset: 0, opacity: 0.15, backgroundImage: "radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-          <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 400, height: 400, background: "radial-gradient(circle, rgba(99,179,255,0.15) 0%, transparent 60%)", borderRadius: "50%", pointerEvents: "none" }} />
-        </div>
-
-        <div className="prof-two-col" style={{
-          display: "flex", gap: 32,
-          padding: "clamp(24px, 5vw, 48px) clamp(16px, 4vw, 40px)",
-          maxWidth: 1400, margin: "0 auto",
-          boxSizing: "border-box", width: "100%",
-          alignItems: "flex-start",
-          animation: "fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both"
-        }}>
-
-          {/* ══ LEFT COLUMN ══ */}
-          <div className="prof-left-col" style={{ flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column", gap: 20 }}>
-
-            {/* Avatar card - CIRCULAR with 'Life' features */}
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
-              <div
-                onClick={() => setIsPickerOpen(true)}
-                className="prof-card-hover mobile-avatar-container"
-                style={{
-                  width: 190, height: 190,
-                  background: "white",
-                  borderRadius: "50%", overflow: "hidden",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  position: "relative", cursor: "pointer",
-                  border: "6px solid #fff",
-                  boxShadow: "0 20px 40px rgba(15,98,254,0.12)",
-                }}
-              >
-                {/* Background glow in circle */}
-                <div style={{
-                  position: "absolute", inset: 0,
-                  background: "radial-gradient(circle at 50% 50%, #ffffff 0%, #eff6ff 100%)",
-                  zIndex: 0
-                }} />
-
-                <div style={{ position: "relative", zIndex: 1 }}>
-                  <AvatarDisplay
-                    avatar={user.user_metadata?.avatar || { type: "character", id: "robot", character: "robot" }}
-                    size={screenSize < 1024 ? 100 : 155}
-                    frame={
-                      (userStats?.inventory?.includes("2") || dbProfile?.inventory?.includes("2")) ? "vip" :
-                        (userStats?.inventory?.includes("1") || dbProfile?.inventory?.includes("1")) ? "ambassador" : null
-                    }
-                  />
-                </div>
-
-                {/* Camera icon button */}
-                <div style={{
-                  position: "absolute", bottom: screenSize < 1024 ? "5%" : 12, right: screenSize < 1024 ? "5%" : 12,
-                  width: screenSize < 1024 ? 32 : 42, height: screenSize < 1024 ? 32 : 42, borderRadius: "50%",
-                  background: "#0F62FE",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: "0 8px 16px rgba(15,98,254,0.4)",
-                  border: "2px solid white",
-                  zIndex: 2,
-                  transition: "transform 0.2s"
-                }}>
-                  <Camera size={screenSize < 1024 ? 14 : 20} color="white" />
-                </div>
-              </div>
+        <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(white 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
+        
+        <div style={{ position: "relative", zIndex: 10, display: "flex", gap: 24, alignItems: "center", width: "100%", flexDirection: screenSize < 768 ? "column" : "row", textAlign: screenSize < 768 ? "center" : "left" }}>
+          {/* Avatar Box in Banner */}
+          <div onClick={() => setIsPickerOpen(true)} className="prof-avatar-box" style={{ 
+            width: 140, height: 140, borderRadius: "50%", background: "white", 
+            border: "4px solid rgba(255,255,255,0.2)", backdropFilter: "blur(10px)",
+            boxShadow: "0 15px 35px rgba(0,0,0,0.2)", 
+            position: "relative", cursor: "pointer", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center",
+            flexShrink: 0
+          }}>
+            <AvatarDisplay avatar={user.user_metadata?.avatar || { id: "robot" }} size={120} />
+            <div style={{ position: "absolute", bottom: 4, right: 4, width: 28, height: 28, borderRadius: "50%", background: "#0F62FE", display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid white", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}>
+              <Camera size={12} color="white" />
             </div>
-
-            {/* Identity */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", width: "100%" }}>
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                background: "rgba(15,98,254,0.06)", border: "1px solid rgba(15,98,254,0.12)",
-                padding: "4px 12px", borderRadius: 999, marginBottom: 12
-              }}>
-                <Trophy size={14} color="#0F62FE" />
-                <span style={{ fontSize: 12, fontWeight: 500, color: "#0f172a", textTransform: "uppercase", letterSpacing: "0.02em" }}>Nivel {level}</span>
-              </div>
-
-              <h1 style={{ margin: "0 0 4px", fontSize: 36, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.04em", lineHeight: 1.1 }}>
-                {displayName}
-              </h1>
-              <p style={{ margin: "0 0 4px", fontSize: 16, color: "#64748b", fontWeight: 500 }}>
-                {nickname ? `@${nickname}` : user.email}
-              </p>
-              {joinDate && (
-                <p style={{ margin: "0 0 20px", fontSize: 13, color: "#94a3b8", fontWeight: 500 }}>
-                  <Compass size={13} style={{ verticalAlign: "middle", marginRight: 5, marginTop: -2 }} />
-                  Se unió en {joinDate}
-                </p>
-              )}
-
-              {/* Instagram link */}
-              <a
-                  href="https://www.instagram.com/bizen.mx?igsh=ZmJmYmdxZHg1Z2E3"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                      padding: "8px 16px",
-                      background: "rgba(225, 48, 108, 0.08)",
-                      border: "1px solid rgba(225, 48, 108, 0.2)",
-                      borderRadius: 999,
-                      cursor: "pointer",
-                      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: "#E1306C",
-                      textDecoration: "none",
-                      marginBottom: 20
-                  }}
-                  onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(225, 48, 108, 0.15)";
-                      e.currentTarget.style.transform = "translateY(-1px)";
-                  }}
-                  onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(225, 48, 108, 0.08)";
-                      e.currentTarget.style.transform = "translateY(0)";
-                  }}
-              >
-                  <Instagram size={15} />
-                  <span>Síguenos en Instagram</span>
-              </a>
-
-              {/* Following / Followers */}
-              <div style={{ display: "flex", gap: "clamp(24px, 12vw, 64px)", marginBottom: 16, justifyContent: "center", width: "100%", position: "relative" }}>
-                <button
-                  onClick={() => { setRightTab("following"); fetchFollowingList() }}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}
-                >
-                  <CustomFollowingIcon active={true} />
-                  <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{profileStats?.followingCount ?? 0}</div>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.03em" }}>Siguiendo</div>
-                  </div>
-                </button>
-                
-                {/* Vertical Divider */}
-                <div style={{ width: 1, height: 40, background: "#e2e8f0", alignSelf: "center", opacity: 0.6 }} />
-
-                <button
-                  onClick={() => { setRightTab("followers"); fetchFollowersList() }}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}
-                >
-                  <CustomFollowersIcon active={true} />
-                  <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>{profileStats?.followersCount ?? 0}</div>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.03em" }}>Seguidores</div>
-                  </div>
-                </button>
-              </div>
-
-              <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #e2e8f0, transparent)", marginBottom: 16 }} />
-            </div>
-
-            {/* Level Progress - Adding Life (SKIP FOR ADMINS) */}
-            {!isAdminOrTeacher && (
-              <div className="prof-card-hover" style={{
-                background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
-                padding: screenSize < 1024 ? "16px 20px" : "24px 28px", borderRadius: 24,
-                border: "1px solid rgba(15,98,254,0.12)",
-                boxShadow: "0 16px 32px -8px rgba(15,98,254,0.1)"
-              }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <h3 style={{ margin: 0, fontSize: 15, fontWeight: 500, color: "#0f172a", display: "flex", alignItems: "center", gap: 8 }}>
-                    <Zap size={16} color="#0F62FE" />
-                    Tu Progreso
-                  </h3>
-                  <span style={{ fontSize: 12, fontWeight: 500, color: "#0F62FE", background: "rgba(15,98,254,0.07)", padding: "3px 10px", borderRadius: 999 }}>{xpPct.toFixed(0)}%</span>
-                </div>
-                <div style={{ width: "100%", height: 10, background: "#e9f0ff", borderRadius: 10, overflow: "hidden", position: "relative" }}>
-                  <div style={{
-                    width: `${xpPct}%`, height: "100%",
-                    background: "linear-gradient(90deg, #60a5fa, #0F62FE)",
-                    borderRadius: 10, transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                  }} />
-                  <div className="progress-shimmer" style={{ position: "absolute", inset: 0, width: `${xpPct}%`, borderRadius: 10 }} />
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 12, fontWeight: 500, color: "#94a3b8" }}>
-                  <span>{xpInLevel.toLocaleString()} XP</span>
-                  <span>Nivel {level + 1} →</span>
-                </div>
-              </div>
-            )}
-
-            {/* Statistics - SKIP FOR ADMINS */}
-            {!isAdminOrTeacher && statCards.length > 0 && (
-              <div>
-                <h2 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.02em" }}>
-                  Estadísticas
-                </h2>
-                <div className="mobile-stat-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                  {statCards.map(({ icon, value, label }, i) => (
-                    <div
-                      key={label}
-                      className="prof-card-hover mobile-stat-card"
-                      style={{
-                        padding: "20px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 10,
-                        background: "linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)",
-                        border: "1px solid rgba(15,98,254,0.12)",
-                        borderRadius: 24,
-                        boxShadow: "0 12px 24px -6px rgba(15,98,254,0.08)",
-                        boxSizing: "border-box"
-                      }}
-                    >
-                      <div style={{
-                        width: 36, height: 36, borderRadius: 10,
-                        background: "rgba(15,98,254,0.08)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        flexShrink: 0
-                      }}>{icon}</div>
-                      <div>
-                        <div className="mobile-stat-value" style={{ fontSize: 28, fontWeight: 800, color: "#0F172A", lineHeight: 1, letterSpacing: "-0.02em" }}>{value}</div>
-                        <div style={{ fontSize: 10, color: "#64748B", fontWeight: 700, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Inventory / Purchases Section */}
-            {(userStats?.inventory?.length || dbProfile?.inventory?.length) ? (
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#0f172a", letterSpacing: "-0.01em" }}>
-                    Mis Compras
-                  </h2>
-                  <Link href="/tienda" style={{ fontSize: 13, fontWeight: 500, color: "#0F62FE", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                    VER TIENDA
-                  </Link>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 12 }}>
-                  {(() => {
-                    // Merged inventory from both sources to ensure freshness
-                    const fullInventory = Array.from(new Set([
-                      ...(userStats?.inventory || []),
-                      ...(dbProfile?.inventory || [])
-                    ]));
-
-                    // Define product details for inventory items (should ideally match PRODUCTS in tienda/page.tsx)
-                    const INVENTORY_DETAILS: Record<string, { name: string; icon: string; color: string }> = {
-                      "1": { name: "Marco Embajador", icon: "💎", color: "#0F62FE" },
-                      "2": { name: "Marco VIP", icon: "👑", color: "#d97706" },
-                      "3": { name: "Guía Inversión", icon: "📚", color: "#10b981" },
-                      "4": { name: "Cash Flow Pro", icon: "🔥", color: "#ef4444" },
-                      "5": { name: "Tema Premium", icon: "🎨", color: "#7c3aed" },
-                      "6": { name: "Escudo Racha", icon: "🛡️", color: "#0891b2" },
-                    };
-
-                    return fullInventory.map(id => {
-                      const details = INVENTORY_DETAILS[id] || { name: `Producto #${id}`, icon: "📦", color: "#64748b" };
-                      return (
-                        <div key={id} className="prof-card-hover" style={{
-                          background: "white", padding: "16px", borderRadius: 16, border: "1.5px solid rgba(15,98,254,0.1)",
-                          display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 8
-                        }}>
-                          <div style={{ fontSize: 24 }}>{details.icon}</div>
-                          <div style={{ fontSize: 12, fontWeight: 500, color: "#0f172a", lineHeight: 1.2 }}>{details.name}</div>
-                          <div style={{ fontSize: 10, fontWeight: 500, color: "#10b981", background: "#f0fdf4", padding: "2px 8px", borderRadius: 10 }}>ADQUIRIDO</div>
-                        </div>
-                      );
-                    });
-                  })()}
-                </div>
-              </div>
-            ) : null}
-
-
-
-            {/* Achievements - Render here ONLY on Desktop (SKIP FOR ADMINS) */}
-            {screenSize >= 1024 && !isAdminOrTeacher && renderAchievementsSection()}
           </div>
 
-          {/* ══ RIGHT COLUMN ══ */}
-          <div className="prof-right-col" style={{ width: 300, flexShrink: 0, display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Identity Details in Banner */}
+          <div style={{ flex: 1, color: "white" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, justifyContent: screenSize < 768 ? "center" : "flex-start", flexWrap: "wrap" }}>
+              <div style={{ background: "rgba(255,255,255,0.25)", padding: "4px 12px", borderRadius: 999, fontSize: 10, fontWeight: 800, letterSpacing: "0.05em", border: "1px solid rgba(255,255,255,0.1)" }}>NIVEL {level}</div>
+            </div>
+            <h1 style={{ fontSize: screenSize < 768 ? 24 : 36, fontWeight: 800, margin: 0, letterSpacing: "-0.03em", textShadow: "0 2px 10px rgba(0,0,0,0.2)" }}>{displayName}</h1>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4, justifyContent: screenSize < 768 ? "center" : "flex-start" }}>
+              <span style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>@{nickname}</span>
+              <div style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.3)" }} />
+              <a href="https://instagram.com/bizen.mx" target="_blank" style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,0.9)", textDecoration: "none", fontWeight: 600, fontSize: 13 }}>
+                <Instagram size={14} /> @bizen.mx
+              </a>
+            </div>
+          </div>
 
-            {/* Following / Followers panel */}
-            <Card style={{ overflow: "hidden" }}>
-              {/* Tabs */}
-              <div style={{ display: "flex", borderBottom: "1.5px solid #e2e8f0" }}>
-                <button className={`prof-tab-btn ${rightTab === "following" ? "active" : "inactive"}`}
+          {/* Plan Badge - Right Side of Banner */}
+          {getPlanTitle() && (() => {
+            const info = getPlanInfo()!
+            const isBasic = getPlanTitle() === "BÁSICO"
+            return (
+              <div
+                onClick={() => isBasic && router.push("/payment")}
+                style={{
+                  marginLeft: "auto", flexShrink: 0,
+                  background: isBasic
+                    ? "linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%)"
+                    : info.bg,
+                  padding: isBasic ? "14px 22px" : "10px 22px",
+                  borderRadius: 20,
+                  display: "flex", flexDirection: "column", gap: isBasic ? 4 : 2,
+                  cursor: isBasic ? "pointer" : "default",
+                  boxShadow: isBasic
+                    ? "0 12px 30px rgba(15,98,254,0.25), 0 2px 8px rgba(0,0,0,0.08)"
+                    : "0 8px 24px rgba(0,0,0,0.15)",
+                  border: isBasic ? "1.5px solid rgba(15,98,254,0.3)" : "1.5px solid rgba(255,255,255,0.3)",
+                  transition: "opacity 0.2s ease",
+                  backdropFilter: "blur(12px)",
+                  minWidth: isBasic ? 160 : 130,
+                }}
+                onMouseEnter={e => { if (isBasic) e.currentTarget.style.opacity = "0.75" }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = "1" }}
+              >
+                {isBasic ? (
+                  <>
+                    <div style={{ fontSize: 9, fontWeight: 900, color: "#0F62FE", letterSpacing: "0.18em", textTransform: "uppercase" }}>Mejora a Pro</div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
+                      <span style={{ fontSize: 26, fontWeight: 950, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1 }}>$179</span>
+                      <span style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>/mes</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.12em", textTransform: "uppercase" }}>Tu Plan</div>
+                    <div style={{ fontSize: 16, fontWeight: 900, color: "white", letterSpacing: "-0.01em" }}>{info.label}</div>
+                  </>
+                )}
+              </div>
+            )
+          })()}
+        </div>
+      </div>
+
+      <div className="prof-body" style={{ display: "flex", gap: 40, maxWidth: 1300, margin: "0 auto", position: "relative", zIndex: 2 }}>
+        
+        {/* LEFT COLUMN: IDENTITY & STATS */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 32 }}>
+          
+          {/* XP Card with detailed count */}
+          {!isAdminOrTeacher && (
+            <div className="prof-card fade-up" style={{ padding: 0, animationDelay: "0.1s", overflow: "hidden", border: "1.5px solid #e2e8f0" }}>
+              {/* Top gradient header - compact */}
+              <div style={{ background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", padding: "14px 24px", position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", inset: 0, opacity: 0.08, backgroundImage: "radial-gradient(white 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 1 }}>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 2 }}>Progreso</div>
+                    <div style={{ fontSize: 22, fontWeight: 950, color: "white", lineHeight: 1, letterSpacing: "-0.03em" }}>Nivel {level}</div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 26, fontWeight: 950, color: "white", lineHeight: 1, letterSpacing: "-0.03em" }}>{xpInLevel.toLocaleString()}<span style={{ fontSize: 13, fontWeight: 600, opacity: 0.65 }}> XP</span></div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: 3 }}>de {xpForNext.toLocaleString()} XP</div>
+                  </div>
+                </div>
+              </div>
+              {/* Progress bar footer */}
+              <div style={{ padding: "14px 24px" }}>
+                <div style={{ height: 20, background: "#f1f5f9", borderRadius: 99, overflow: "hidden" }}>
+                  <div style={{ width: `${xpPct}%`, height: "100%", background: "linear-gradient(90deg, #60a5fa, #0F62FE)", borderRadius: 99, transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)", boxShadow: "0 0 10px rgba(15,98,254,0.5)" }} />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8 }}>
+                  <span style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>Nivel {level}</span>
+                  <span style={{ fontSize: 10, color: "#0F62FE", fontWeight: 700 }}>{(xpForNext - xpInLevel).toLocaleString()} XP para subir</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Stats Grid */}
+          <div className="fade-up" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, animationDelay: "0.2s" }}>
+            {[
+              { icon: <Flame size={18} />, value: userStats?.currentStreak || 0, label: "Racha", sub: "días seguidos", cardBg: "linear-gradient(135deg, #fff1f2, #ffe4e6)", iconBg: "rgba(244,63,94,0.15)", iconColor: "#f43f5e", valColor: "#be123c", border: "#fecdd3" },
+              { icon: <Zap size={18} />, value: totalXp.toLocaleString(), label: "Total XP", sub: "puntos acumulados", cardBg: "linear-gradient(135deg, #eff6ff, #dbeafe)", iconBg: "rgba(15,98,254,0.12)", iconColor: "#0F62FE", valColor: "#1d4ed8", border: "#bfdbfe" },
+              { icon: <Award size={18} />, value: achievements.filter(a => a.unlocked).length, label: "Logros", sub: `de ${achievements.length} totales`, cardBg: "linear-gradient(135deg, #fefce8, #fef9c3)", iconBg: "rgba(202,138,4,0.15)", iconColor: "#ca8a04", valColor: "#a16207", border: "#fde68a" },
+              { icon: <Star size={18} />, value: getLeagueTitle(level), label: "Liga", sub: `Nivel ${level}`, cardBg: "linear-gradient(135deg, #f0fdf4, #dcfce7)", iconBg: "rgba(22,163,74,0.15)", iconColor: "#16a34a", valColor: "#15803d", border: "#bbf7d0" },
+            ].map(s => (
+              <div key={s.label} style={{ padding: "18px 20px", display: "flex", alignItems: "center", gap: 14, background: s.cardBg, border: `1.5px solid ${s.border}`, borderRadius: 24, boxShadow: "0 4px 12px rgba(0,0,0,0.04)", transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
+                <div style={{ width: 42, height: 42, borderRadius: 12, background: s.iconBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: s.iconColor }}>
+                  {s.icon}
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: s.valColor, lineHeight: 1, letterSpacing: "-0.02em" }}>{s.value}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: s.valColor, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.04em", opacity: 0.7 }}>{s.label}</div>
+                  <div style={{ fontSize: 10, color: s.valColor, fontWeight: 500, marginTop: 1, opacity: 0.5 }}>{s.sub}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Achievements Area */}
+          <div className="fade-up" style={{ animationDelay: "0.3s" }}>
+             <h2 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 20, display: "flex", alignItems: "center", gap: 8 }}>
+               Mis Logros
+               <span style={{ fontSize: 12, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "2px 8px", borderRadius: 8 }}>{achievements.filter(a => a.unlocked).length}</span>
+             </h2>
+             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 16 }}>
+                {achievements.map(a => <AchievementCard key={a.id} a={a} cfg={RARITY_CFG[a.rarity] || RARITY_CFG.común} />)}
+             </div>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: BIZEN CARD & SOCIAL */}
+        <div className="prof-side fade-up" style={{ width: 380, display: "flex", flexDirection: "column", gap: 32, animationDelay: "0.15s" }}>
+          
+          {!isAdminOrTeacher && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", margin: 0 }}>Tarjeta BIZEN Virtual</h2>
+                </div>
+                <button onClick={() => setIsThemePickerOpen(!isThemePickerOpen)} style={{ background: "none", border: "none", color: "#0F62FE", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600 }}>
+                  <Palette size={14} /> Estilo
+                </button>
+              </div>
+              
+              <div style={{ transform: "scale(0.95)", transformOrigin: "top center" }}>
+                <BizenVirtualCard bizcoins={bizcoins} holderName={displayName} colorTheme={cardTheme} />
+              </div>
+
+              {isThemePickerOpen && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, padding: 16, background: "white", borderRadius: 20, border: "1.5px solid #e2e8f0", boxShadow: "0 10px 25px rgba(0,0,0,0.05)", animation: "fadeUp 0.3s ease" }}>
+                  {(["blue", "emerald", "violet", "rose", "amber", "slate", "obsidian"] as CardTheme[]).map(t => (
+                    <button key={t} onClick={() => updateCardTheme(t)} style={{ 
+                      width: 32, height: 32, borderRadius: "50%", cursor: "pointer", 
+                      border: cardTheme === t ? "3px solid #0F62FE" : "2px solid white", 
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                      background: t === "obsidian" ? "#1a1a1a" : t === "blue" ? "#0F62FE" : t === "emerald" ? "#10B981" : t === "violet" ? "#8B5CF6" : t === "rose" ? "#F43F5E" : t === "amber" ? "#F59E0B" : "#64748B" 
+                    }} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Status Badge for Admins/Teachers */}
+          {isAdminOrTeacher && (
+            <div style={{ padding: 24, background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", borderRadius: 24, color: "white" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                <Shield size={20} color="white" />
+                <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>Perfil de Gestión</h3>
+              </div>
+              <p style={{ margin: 0, fontSize: 13, opacity: 0.8, lineHeight: 1.5 }}>
+                Como {dbProfile?.role === 'school_admin' ? 'Administrador' : 'Docente'}, tienes acceso total a las métricas y gestión de tu institución.
+              </p>
+            </div>
+          )}
+
+          {/* Social Panel */}
+          <div className="prof-card" style={{ overflow: "hidden" }}>
+             <div style={{ display: "flex", borderBottom: "1.5px solid #f1f5f9" }}>
+                <button 
+                  className={`prof-tab-btn ${rightTab === "following" ? "active" : "inactive"}`}
                   onClick={() => { setRightTab("following"); fetchFollowingList() }}>
                   Siguiendo
                 </button>
-                <button className={`prof-tab-btn ${rightTab === "followers" ? "active" : "inactive"}`}
+                <button 
+                  className={`prof-tab-btn ${rightTab === "followers" ? "active" : "inactive"}`}
                   onClick={() => { setRightTab("followers"); fetchFollowersList() }}>
                   Seguidores
                 </button>
-              </div>
-
-              {/* Content */}
-              <div style={{ padding: "24px 20px", minHeight: 280 }}>
+             </div>
+             <div style={{ padding: 20, minHeight: 240, maxHeight: 400, overflowY: "auto" }}>
                 {(rightTab === "following" ? loadingFollowing : loadingFollowers) ? (
-                  <ListSkeleton />
+                  <div style={{ textAlign: "center", padding: 40, color: "#94a3b8" }}>Cargando...</div>
                 ) : (rightTab === "following" ? following : followers).length === 0 ? (
-                  <div style={{ textAlign: "center", animation: "fadeUp 0.5s ease" }}>
-                    <div style={{
-                      width: "100%", height: 140,
-                      borderRadius: 16, marginBottom: 20,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      {rightTab === "following" ? <FollowIllustration /> : <CommunityIllustration />}
-                    </div>
-                    <p style={{ fontSize: 15, color: "#64748b", fontWeight: 500, lineHeight: 1.6, margin: 0 }}>
-                      {rightTab === "following"
-                        ? "Aún no sigues a nadie. ¡Comienza a conectar con tus compañeros!"
-                        : "Todavía no tienes seguidores. ¡Mantente activo y destaca!"}
-                    </p>
+                  <div style={{ textAlign: "center", padding: 40 }}>
+                    {rightTab === "following" ? <FollowIllustration /> : <CommunityIllustration />}
+                    <p style={{ marginTop: 16, color: "#94a3b8", fontSize: 13, fontWeight: 500 }}>No hay actividad aún.</p>
                   </div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {(rightTab === "following" ? following : followers).map((f: any) => (
-                      <div key={f.userId}
-                        onClick={() => router.push(`/forum/profile/${f.userId}`)}
-                        style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 12, cursor: "pointer", transition: "all 0.15s" }}
-                        onMouseEnter={e => (e.currentTarget.style.background = "#f1f5f9")}
-                        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                      >
-                        <div style={{ width: 38, height: 38, borderRadius: "50%", background: "#f1f5f9", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <AvatarDisplay
-                            avatar={f.avatar}
-                            size={34}
-                            frame={f.inventory?.includes("2") ? "vip" : f.inventory?.includes("1") ? "ambassador" : null}
-                          />
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 13, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.nickname}</div>
-                          <div style={{ fontSize: 11, color: "#64748b" }}>Nivel {f.level}</div>
-                        </div>
-                        <ChevronRight size={15} color="#cbd5e1" />
+                      <div key={f.userId} onClick={() => router.push(`/forum/profile/${f.userId}`)} style={{ display: "flex", alignItems: "center", gap: 12, padding: 10, borderRadius: 16, cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                         <AvatarDisplay avatar={f.avatar} size={36} />
+                         <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 700, fontSize: 14, color: "#0f172a" }}>{f.nickname}</div>
+                            <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>Nivel {f.level}</div>
+                         </div>
+                         <ChevronRight size={14} color="#cbd5e1" />
                       </div>
                     ))}
                   </div>
                 )}
-              </div>
-            </Card>
-
-            {/* Add friends & Actions */}
-            <Card className="prof-card-hover" style={{ padding: "20px 16px", background: "linear-gradient(135deg, #f8faff 0%, #fff 100%)" }}>
-              <h3 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 500, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                Más Acciones
-              </h3>
-              <div className="prof-add-row" onClick={() => router.push("/forum")}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(15,98,254,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <Search size={22} color="#0F62FE" />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a" }}>Buscar en el Foro</div>
-                </div>
-                <ChevronRight size={18} color="#cbd5e1" />
-              </div>
-              <div className="prof-add-row" onClick={startTour} style={{ marginTop: 8 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(15,98,254,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <Mail size={22} color="#0F62FE" />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a" }}>Repetir tour BIZEN</div>
-                </div>
-                <ChevronRight size={18} color="#cbd5e1" />
-              </div>
-            </Card>
-
-            {/* ── PREMIUM UPSELL / STATUS CARD ── */}
-            {(() => {
-              const hasActiveStripe = dbProfile?.subscriptionStatus === 'active'
-              const hasActiveLicense = !!(dbProfile?.school?.licenses?.length)
-              const isPremium = hasActiveStripe || hasActiveLicense
-              const isParticular = dbProfile?.role === 'particular' || !dbProfile?.role
-              const isAdminOrTeacher = dbProfile?.role === 'school_admin' || dbProfile?.role === 'teacher'
-
-              if (isAdminOrTeacher) {
-                return (
-                  <div style={{
-                    background: "linear-gradient(145deg, #0a0f1e 0%, #1e3a8a 70%, #1d4ed8 100%)",
-                    borderRadius: 24,
-                    padding: "24px",
-                    position: "relative",
-                    overflow: "hidden",
-                    boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.3)",
-                  }}>
-                    <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)", pointerEvents: "none" }} />
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Shield size={18} color="#93c5fd" />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", letterSpacing: "0.05em", textTransform: "uppercase" }}>Administrador</div>
-                        <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", marginTop: 2 }}>Acceso administrativo completo</div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              }
-
-              if (isPremium) {
-                return (
-                  <div style={{
-                    background: "linear-gradient(145deg, #0a0f1e 0%, #1e3a8a 70%, #1d4ed8 100%)",
-                    borderRadius: 24,
-                    padding: "24px",
-                    position: "relative",
-                    overflow: "hidden",
-                    boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.3)",
-                  }}>
-                    {/* Glow orb */}
-                    <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)", pointerEvents: "none" }} />
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, position: "relative" }}>
-                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Shield size={18} color="#93c5fd" />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: "#fff", letterSpacing: "-0.01em" }}>Plan Premium Activo</div>
-                        <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", marginTop: 2 }}>Tienes acceso completo a BIZEN</div>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.08)", borderRadius: 10, padding: "8px 12px", position: "relative" }}>
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 6px #4ade80", flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, fontWeight: 500, color: "#e2e8f0" }}>
-                          {hasActiveLicense ? `Acceso vía ${dbProfile?.school?.name || "Institución"}` : "Suscripción activa"}
-                        </span>
-                      </div>
-
-                      {hasActiveStripe && dbProfile?.stripeCustomerId && !hasActiveLicense && isParticular && (
-                        <button
-                          onClick={handleManageSubscription}
-                          style={{
-                            marginTop: 4,
-                            padding: "10px 14px",
-                            background: "rgba(255,255,255,0.12)",
-                            border: "1px solid rgba(255,255,255,0.2)",
-                            borderRadius: "10px",
-                            color: "#fff",
-                            fontSize: "12px",
-                            fontWeight: 500,
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            width: "fit-content",
-                            transition: "all 0.2s"
-                          }}
-                        >
-                          <Settings size={14} />
-                          Gestionar Suscripción
-                        </button>
-                      )}
-
-                      {!hasActiveLicense && isParticular && (
-                        <div style={{ fontSize: 11, color: "rgba(147,197,253,0.7)", marginTop: 4, fontStyle: "italic", marginLeft: 4 }}>
-                          Al cancelar, mantienes tu acceso hasta el final del periodo pagado.
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )
-              }
-
-              // Hide non-premium upsell if user is an institutional student
-              if (!isParticular) {
-                return (
-                  <div style={{
-                    background: "linear-gradient(145deg, #0a0f1e 0%, #1e3a8a 70%, #1d4ed8 100%)",
-                    borderRadius: 24,
-                    padding: "24px",
-                    position: "relative",
-                    overflow: "hidden",
-                    boxShadow: "0 24px 48px -12px rgba(15, 98, 254, 0.3)",
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Shield size={18} color="#93c5fd" />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: "#fff", letterSpacing: "-0.01em" }}>Plan Institucional</div>
-                        <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", marginTop: 2 }}>Tu acceso es provisto por tu institución.</div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              }
-
-              // Non-premium: show upsell card (for particulars)
-              return (
-                <div
-                  onClick={() => router.push("/payment")}
-                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 16px 40px rgba(15,98,254,0.35)"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = ""; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 30px rgba(15,98,254,0.2)"; }}
-                  style={{
-                    background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%)",
-                    borderRadius: 20,
-                    padding: "22px",
-                    position: "relative",
-                    overflow: "hidden",
-                    boxShadow: "0 8px 30px rgba(15,98,254,0.2)",
-                    cursor: "pointer",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                  }}
-                >
-                  {/* Decorative orbs */}
-                  <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.5) 0%, transparent 70%)", pointerEvents: "none" }} />
-                  <div style={{ position: "absolute", bottom: -30, left: -10, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%)", pointerEvents: "none" }} />
-
-                  {/* Badge */}
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.2)", padding: "4px 12px", borderRadius: 999, marginBottom: 14, position: "relative" }}>
-                    <Zap size={11} color="#e0f2fe" />
-                    <span style={{ fontSize: 11, fontWeight: 500, color: "#e0f2fe", letterSpacing: "0.08em", textTransform: "uppercase" }}>BIZEN PRO</span>
-                  </div>
-
-                  <div style={{ position: "relative" }}>
-                    <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 500, color: "#fff", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
-                      Accede a todo el contenido
-                    </h3>
-                    <p style={{ margin: "0 0 18px", fontSize: 13, color: "#93c5fd", fontWeight: 500, lineHeight: 1.6 }}>
-                      Domina tus finanzas con acceso ilimitado a todos los temas y cursos de BIZEN.
-                    </p>
-
-                    {/* Price */}
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 18 }}>
-                      <span style={{ fontSize: 30, fontWeight: 500, color: "#fff", lineHeight: 1 }}>$179</span>
-                      <span style={{ fontSize: 14, color: "#93c5fd", fontWeight: 500 }}>/mes MXN</span>
-                    </div>
-
-                    {/* CTA Button */}
-                    <button
-                      onClick={e => { e.stopPropagation(); router.push("/payment") }}
-                      style={{
-                        width: "100%",
-                        padding: "13px 20px",
-                        background: "linear-gradient(90deg, #fff 0%, #e0f2fe 100%)",
-                        border: "none",
-                        borderRadius: 12,
-                        fontSize: 14,
-                        fontWeight: 500,
-                        color: "#1e3a8a",
-                        cursor: "pointer",
-                        letterSpacing: "-0.01em",
-                        boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-                        transition: "all 0.2s ease",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 8
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.02)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)"; }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.15)"; }}
-                    >
-                      <span>Ver Plan Premium</span>
-                      <ChevronRight size={16} />
-                    </button>
-                  </div>
-                </div>
-              )
-            })()}
-
-            {/* Achievements - Render here ONLY on Mobile/Tablet */}
-            {screenSize < 1024 && renderAchievementsSection()}
+             </div>
           </div>
+
+          {/* Premium Upsell Card */}
+          {isParticular && !isPremium && (
+            <div 
+              onClick={() => router.push("/payment")}
+              style={{ 
+                background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", borderRadius: 24, padding: 24, color: "white", cursor: "pointer", position: "relative", overflow: "hidden", boxShadow: "0 15px 35px rgba(15,98,254,0.3)"
+              }}
+            >
+              <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "rgba(255,255,255,0.1)", borderRadius: "50%" }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.2)", width: "fit-content", padding: "4px 10px", borderRadius: 99, fontSize: 10, fontWeight: 700, marginBottom: 12, letterSpacing: "0.08em" }}>BIZEN PRO</div>
+              <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 700 }}>Acceso Ilimitado</h3>
+              <p style={{ margin: "0 0 20px", fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>Domina tus finanzas con todos los cursos y simuladores desbloqueados.</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 4, fontWeight: 800, fontSize: 24 }}>$179 <span style={{ fontSize: 12, fontWeight: 500, opacity: 0.8 }}>/mes</span></div>
+            </div>
+          )}
+
         </div>
-      </div >
+      </div>
 
-      {/* ── AVATAR PICKER MODAL ── */}
-      {
-        isPickerOpen && (
-          <div style={{
-            position: "fixed", inset: 0, background: "rgba(15,23,42,0.65)",
-            backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center",
-            zIndex: 9999, padding: 20
-          }} onClick={() => setIsPickerOpen(false)}>
-            <div
-              style={{ background: "white", border: "1.5px solid #e2e8f0", borderRadius: 28, width: "100%", maxWidth: 480, padding: "32px 28px", position: "relative", boxShadow: "0 24px 80px rgba(0,0,0,0.2)" }}
-              onClick={e => e.stopPropagation()}>
-
-              {/* Header */}
-              <button onClick={() => setIsPickerOpen(false)} style={{ position: "absolute", top: 20, right: 20, background: "#f1f5f9", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <CloseIcon size={18} />
-              </button>
-
-              {/* Live preview + title */}
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
-                <div style={{ width: 72, height: 72, borderRadius: "50%", overflow: "hidden", flexShrink: 0, boxShadow: "0 8px 24px rgba(15,98,254,0.25)", border: "3px solid #0F62FE" }}>
-                  <AvatarDisplay avatar={user.user_metadata?.avatar || getDefaultAvatar(displayName)} size={72} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>Elige tu Avatar</h3>
-                  <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>Tu cara en el foro y el ranking</p>
-                </div>
-              </div>
-
-              {/* Category Tabs */}
-              <div style={{ display: "flex", gap: 6, marginBottom: 18, flexWrap: "wrap" }}>
-                {AVATAR_CATEGORIES.map((cat, ci) => (
-                  <button
-                    key={cat.label}
-                    onClick={() => setAvatarPickerTab(ci)}
-                    style={{
-                      padding: "7px 16px", borderRadius: 999, fontSize: 13, fontWeight: 600,
-                      cursor: "pointer", border: "none", transition: "all 0.2s ease",
-                      background: avatarPickerTab === ci ? "linear-gradient(135deg, #0F62FE, #6366f1)" : "#f1f5f9",
-                      color: avatarPickerTab === ci ? "white" : "#64748b",
-                      boxShadow: avatarPickerTab === ci ? "0 4px 12px rgba(15,98,254,0.3)" : "none",
-                    }}
-                  >
-                    {cat.label}
+      {/* Picker Modal Overlay */}
+      {isPickerOpen && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 20 }} onClick={() => setIsPickerOpen(false)}>
+           <div style={{ background: "white", padding: 32, borderRadius: 32, width: "100%", maxWidth: 480, boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)", position: "relative" }} onClick={e => e.stopPropagation()}>
+              <button onClick={() => setIsPickerOpen(false)} style={{ position: "absolute", top: 20, right: 20, background: "#f1f5f9", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><CloseIcon size={18} color="#64748b" /></button>
+              <h3 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 800, color: "#0f172a" }}>Elige tu Avatar</h3>
+              <p style={{ margin: "0 0 24px", color: "#64748b", fontSize: 14 }}>Personaliza tu identidad en la plataforma.</p>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(60px, 1fr))", gap: 12, maxHeight: 300, overflowY: "auto", paddingRight: 4 }}>
+                {AVATAR_OPTIONS.map(av => (
+                  <button key={av.id} onClick={() => updateAvatar(av)} style={{ background: "none", border: "2.5px solid transparent", cursor: "pointer", borderRadius: "50%", padding: 0, transition: "transform 0.2s", display: "flex", alignItems: "center", justifyContent: "center" }} onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"} onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}>
+                    <AvatarDisplay avatar={av} size={screenSize < 480 ? 56 : 64} />
                   </button>
                 ))}
               </div>
-
-              {/* Avatar Grid - Responsive */}
-              <div className="avatar-picker-grid">
-                {AVATAR_OPTIONS
-                  .filter(av => AVATAR_CATEGORIES[avatarPickerTab].ids.includes(av.id))
-                  .map(av => {
-                    const isSelected = (user.user_metadata?.avatar?.id) === av.id
-                    return (
-                      <div key={av.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                        <button
-                          onClick={() => updateAvatar(av)}
-                          disabled={savingAvatar}
-                          className={`avatar-picker-btn ${isSelected ? 'selected' : ''}`}
-                        >
-                          <AvatarDisplay avatar={av} size={screenSize < 400 ? 50 : 64} />
-                        </button>
-                        <span style={{ fontSize: "clamp(9px, 2vw, 10px)", fontWeight: isSelected ? 700 : 500, color: isSelected ? "#0F62FE" : "#94a3b8", textAlign: "center", lineHeight: 1.2 }}>
-                          {av.label}
-                        </span>
-                      </div>
-                    )
-                  })}
-              </div>
-
-              {savingAvatar && <div style={{ textAlign: "center", marginTop: 8, fontSize: 13, color: "#0F62FE", fontWeight: 500 }}>Guardando...</div>}
-            </div>
-          </div>
-        )
-      }
-    </>
+           </div>
+        </div>
+      )}
+    </div>
   )
 }

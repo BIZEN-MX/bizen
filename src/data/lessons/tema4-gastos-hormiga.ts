@@ -136,5 +136,32 @@ export const lessonRetoSemanaSinGastoHormigaSteps: LessonStep[] = [
   { id: "hor-5-14", stepType: "info", title: "Cierre del Bloque", body: "Has dominado el arte de detectar y exterminar hormigas. Tu flujo de capital acaba de ganar una presión extra que antes se fugaba.", fullScreen: true,
     aiInsight: "La confianza ganada al vencer pequeños impulsos se transfiere a decisiones financieras grandes (inversión y negocios)."
   },
-  { id: "hor-5-15", stepType: "summary", title: "Subtema Terminado", body: "Felicidades. Has terminado el Subtema de Gastos Hormiga. Siguiente: Gastos Invisibles.", fullScreen: true },
+  { id: "hor-5-15", stepType: "summary", title: "Cacería Terminada", body: "Has visto dónde se fugaba tu capital. ¡Actúa hoy!", fullScreen: true },
+]
+
+// ==============================================================================
+// LECCIÓN 6: Sustitución de Marcas Estratégica - 15 SLIDES
+// ==============================================================================
+export const lessonSustitucionDeMarcasEstrategicaSteps: LessonStep[] = [
+  { id: "sus-1-1", stepType: "billy_talks", body: "Pagar por el logo en lugar de por el producto es una ineficiencia que tu Yo del Futuro no puede permitirse. Vamos a aplicar ingeniería de sustitución.", fullScreen: true,
+    data: { glossary: [{ word: "Marca Blanca (Genérica)", definition: "Productos fabricados por grandes empresas pero comercializados bajo la marca del distribuidor, ofreciendo calidad similar a menor precio." }, { word: "Costo por Logotipo", definition: "Diferencia de precio entre un producto de marca reconocida y uno genérico con la misma composición técnica." }] }
+  },
+  { id: "sus-1-2", stepType: "info", title: "La Trampa del Branding", body: "En categorías como medicamentos, limpieza del hogar o alimentos básicos, la diferencia técnica suele ser nula, pero la diferencia de precio es de hasta el 400%. Un Ingeniero BIZEN compra moléculas y materiales, no historias de marketing.", fullScreen: true,
+    aiInsight: "Sustituir solo los 10 productos de limpieza y despensa más comunes por marcas blancas ahorra un promedio de $800 pesos mensuales."
+  },
+  { id: "sus-1-3", stepType: "impulse_meter", instructions: "Mantén pulsado y visualiza la misma calidad a una fracción del costo. Siente la eficiencia.", item: { name: "Sustituto Estratégico", price: "-40%", imageUrl: "/billy-breathing.png" }, holdTime: 5, fullScreen: true },
+  { id: "sus-1-4", stepType: "mcq", question: "¿Qué compras cuando eliges el medicamento genérico certificado?", options: [{id:"o1", label:"Un producto de menor calidad", isCorrect:false}, {id:"o2", label:"La misma molécula activa por un precio justo", isCorrect:true}], isAssessment: true, fullScreen: true },
+  { id: "sus-1-5", stepType: "swipe_sorter", question: "¿Marca Reconocida o Sustituto Inteligente?", leftBucket: {label:"Reconocida (Caro)", color:"#fbbf24"}, rightBucket: {label:"Sustituto (Eficiente)", color:"#10b981"}, items: [{id:"i1", label:"Cloro de marca líder", correctBucket:"left"}, {id:"i2", label:"Cloro genérico de supermercado", correctBucket:"right"}, {id:"i3", label:"Arroz con empaque de lujo", correctBucket:"left"}, {id:"i4", label:"Arroz a granel o marca blanca", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "sus-1-6", stepType: "info", title: "El Blind Test Mental", body: "Si te dieran el producto en un envase blanco, ¿podrías notar la diferencia? Si la respuesta es no, estás pagando por el estatus de tener ese envase en tu basura después. Detén la fuga.", fullScreen: true },
+  { id: "sus-1-7", stepType: "true_false", statement: "Las marcas blancas siempre son 'peores' para la salud.", correctValue: false, explanation: "Muchos genéricos son fabricados en las mismas plantas que las marcas líderes, solo cambia el empaque y el presupuesto de marketing.", isAssessment:true, fullScreen: true },
+  { id: "sus-1-8", stepType: "order", question: "Pasos para optimizar tu alacena", items: [{id:"p1", label: "Identificar los 5 productos más caros de uso recurrente", correctOrder: 1}, {id: "p2", label: "Comprar una unidad de la marca blanca para prueba técnica", correctOrder: 2}, {id: "p3", label: "Hacer el cambio permanente si la calidad es aceptable", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "sus-1-9", stepType: "blitz_challenge", question: "¿Cómo se llama el ahorro por marca genérica?", options: [{id:"o1", label:"Eficiencia de Compra", isCorrect:true}, {id:"o2", label:"Tacañería", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "sus-1-10", stepType: "blitz_challenge", question: "¿Qué industria tiene el mayor margen por marca?", options: [{id:"o1", label:"Farmacéutica y Cosmética", isCorrect:true}, {id:"o2", label:"Alimentos frescos", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "sus-1-11", stepType: "match", question: "Relaciona Categoría", leftItems: [{id:"l1", label:"Líquidos limpieza"}, {id:"l2", label:"Granos básicos"}, {id:"l3", label:"Medicamentos"}], rightItems: [{id:"r1", label:"Sustituir Siempre"}, {id:"r2", label:"Sustituir Siempre"}, {id:"r3", label:"Sustituir (con aval médico)"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "sus-1-12", stepType: "mindset_translator", question: "Refactoriza tu estatus", beliefs: [{id: "b1", original: "Me da pena que vean marcas baratas en mi carrito.", healthyOptions: [{id: "h1", label: "Mi riqueza se mide por mi balance bancario, no por las marcas que tiro a la basura", isCorrect: true}, {id: "h2", label: "Consumir caro me hace ver importante", isCorrect: false}]}] },
+  { id: "sus-1-13", stepType: "narrative_check", question: "¿Qué producto de marca 'líder' vas a dejar de comprar para probar el genérico esta semana?", promptPlaceholder: "Voy a sustituir ...", minChars: 10, billyResponse: "Nivel de soberanía aumentando. El ahorro empieza en las pequeñas decisiones.", fullScreen: true },
+  { id: "sus-1-14", stepType: "info", title: "Alerta importante", body: "No sacrifiques calidad vital (como calzado deportivo o herramientas de trabajo esenciales), pero optimiza lo que es un 'commodity' (sal, detergente, azúcar).", fullScreen: true,
+    aiInsight: "El consumidor inteligente ahorra un 20% anual en supermercado solo mediante sustitución estratégica."
+  },
+  { id: "sus-1-15", stepType: "summary", title: "Sustitución Completada", body: "Has dominado la cacería de marcas. Siguiente: Gastos Invisibles.", fullScreen: true },
 ]

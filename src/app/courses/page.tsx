@@ -570,18 +570,24 @@ export default function CoursesPage() {
                                 maxWidth: isOrphan ? "550px" : "100%",
                                 gridRow: rowIdx + 1,
                                 minHeight: 180,
-                                cursor: isLocked && !isPaywalled ? "not-allowed" : "pointer",
-                                border: isLocked ? "1.5px solid rgba(148, 163, 184, 0.1)" : "1.5px solid rgba(15, 98, 254, 0.1)",
+                                cursor: "pointer",
                                 borderRadius: "24px",
-                                background: isLocked ? "rgba(241, 245, 249, 0.6)" : "#fff",
+                                background: isLocked 
+                                  ? `linear-gradient(135deg, rgba(241, 245, 249, 0.8), rgba(241, 245, 249, 0.4))`
+                                  : `linear-gradient(135deg, rgba(255, 255, 255, 0.8), ${topic.catColor}15)`,
+                                backgroundColor: isLocked ? "rgba(241, 245, 249, 0.6)" : "rgba(255, 255, 255, 0.3)",
+                                backdropFilter: "blur(20px)",
+                                WebkitBackdropFilter: "blur(20px)",
+                                border: isLocked 
+                                  ? "1.5px solid rgba(255, 255, 255, 0.6)" 
+                                  : `1.5px solid ${topic.catColor}30`,
                                 boxShadow: isLocked ? "none" : "0 10px 30px rgba(0, 0, 0, 0.03)",
-                                transition: "all 0.3s ease",
+                                transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                 overflow: "hidden",
                                 display: "flex",
                                 flexDirection: "column",
                                 position: "relative",
                                 opacity: isLocked ? 0.8 : 1,
-                                cursor: isLocked ? "pointer" : "pointer",
                                 pointerEvents: "auto",
                                 zIndex: 2
                               }}
@@ -594,12 +600,14 @@ export default function CoursesPage() {
                                   </div>
                                   <div style={{ 
                                     fontSize: 10, 
-                                    fontWeight: 600, 
+                                    fontWeight: 700, 
                                     color: isLocked ? '#64748b' : topic.catColor, 
-                                    background: isLocked ? '#f1f5f9' : `${topic.catColor}12`, 
+                                    background: isLocked ? 'rgba(255,255,255,0.4)' : `${topic.catColor}15`, 
                                     padding: "4px 10px", 
                                     borderRadius: 999, 
-                                    textTransform: "uppercase" 
+                                    textTransform: "uppercase",
+                                    border: `1px solid ${isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`}`,
+                                    backdropFilter: "blur(10px)"
                                   }}>
                                     {isPaywalled ? 'Premium' : topic.category}
                                   </div>
@@ -608,8 +616,10 @@ export default function CoursesPage() {
                                 <h3 style={{ fontSize: 20, fontWeight: 700, color: "#1e293b", margin: 0, lineHeight: 1.3 }}>{topic.title}</h3>
                                 
                                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 24, fontSize: 13, color: "#64748b" }}>
-                                  <BookOpen size={16} color={isLocked ? "#94a3b8" : "#3b82f6"} />
-                                  <span>{topic.lessons} cursos disponibles</span>
+                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: 8, background: isLocked ? "rgba(255,255,255,0.4)" : `${topic.catColor}15`, border: `1px solid ${isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`}` }}>
+                                    <BookOpen size={16} color={isLocked ? "#94a3b8" : topic.catColor} />
+                                  </div>
+                                  <span style={{ fontWeight: 500 }}>{topic.lessons} cursos disponibles</span>
                                 </div>
                               </div>
                               {isLocked && (

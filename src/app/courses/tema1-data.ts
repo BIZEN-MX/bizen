@@ -9,43 +9,43 @@ export interface Tema1Subtema {
   lessons: Tema1Lesson[]
 }
 
-export const TEMA1_TITLE = "El Tablero del Juego (Mentalidad)"
+export const TEMA1_TITLE = "Operativo BIZEN: El Sistema Financiero"
 
 export const TEMA1_SUBTEMAS: Tema1Subtema[] = [
   {
-    title: "Percepción Analítica",
+    title: "El Tablero Real",
     lessons: [
-      { title: "¿Qué es el dinero para mí?", slug: "que-es-el-dinero-para-mi", level: "Básico" },
-      { title: "¿Qué espero del dinero?", slug: "que-espero-del-dinero", level: "Básico" },
-      { title: "Dinero como seguridad vs libertad", slug: "dinero-como-seguridad-vs-libertad", level: "Intermedio" },
-      { title: "Dinero como presión vs oportunidad", slug: "dinero-como-presion-vs-oportunidad", level: "Intermedio" },
-      { title: "Identificar mi definición personal del dinero", slug: "identificar-mi-definicion-personal-del-dinero", level: "Avanzado" },
+      { title: "Las Reglas del Sistema Financiero", slug: "las-reglas-del-sistema-financiero", level: "Básico" },
+      { title: "¿Qué es el dinero? (Deuda vs Energía)", slug: "que-es-el-dinero-deuda-vs-energia", level: "Básico" },
+      { title: "Tu Primer Estado de Resultados", slug: "tu-primer-estado-de-resultados-personal", level: "Intermedio" },
+      { title: "El Criterio de Realidad (Datos vs Opinión)", slug: "el-criterio-de-realidad-datos-vs-opinion", level: "Intermedio" },
+      { title: "El Mapa del Tesoro (Encontrando el flujo)", slug: "el-mapa-del-tesoro-encontrando-el-flujo", level: "Avanzado" },
     ]
   },
   {
-    title: "Sesgos y Decisiones",
+    title: "El Registro de Guerra",
     lessons: [
-      { title: "¿Cómo me hace sentir el dinero?", slug: "como-me-hace-sentir-el-dinero", level: "Básico" },
-      { title: "Señales de emoción dominando una decisión", slug: "senales-de-emocion-dominando-una-decision", level: "Básico" },
-      { title: "Pausa financiera (reglas anti-impulso)", slug: "pausa-financiera-reglas-anti-impulso", level: "Intermedio" },
-      { title: "Culpa y ansiedad financiera (cómo se forman)", slug: "culpa-y-ansiedad-financiera-como-se-forman", level: "Intermedio" },
-      { title: "Emoción vs decisión (casos reales)", slug: "emocion-vs-decision-casos-reales", level: "Avanzado" },
+      { title: "El Registro de Guerra (Por qué trackear)", slug: "el-registro-de-guerra-por-que-trackear-todo", level: "Básico" },
+      { title: "Clasificación de Gastos (Fijos vs Variables)", slug: "gastos-fijos-vs-variables", level: "Básico" },
+      { title: "Gastos Hormiga (Fugas Diarias)", slug: "que-son-y-por-que-importan", level: "Intermedio" },
+      { title: "El Blindaje de Cuenta (Cero comisiones)", slug: "el-blindaje-de-cuenta-cero-comisiones", level: "Intermedio" },
+      { title: "El Filtro de Valor (Gasto vs Inversión)", slug: "el-filtro-de-valor-gasto-vs-inversion", level: "Avanzado" },
     ]
   },
   {
-    title: "Rutinas de Control",
+    title: "El Valor del Tiempo",
     lessons: [
-      { title: "Mis primeras creencias sobre el dinero", slug: "mis-primeras-creencias-sobre-el-dinero", level: "Básico" },
-      { title: "Expectativas vs realidad financiera", slug: "expectativas-vs-realidad-financiera", level: "Básico" },
-      { title: "Frases heredadas que me limitan", slug: "frases-heredadas-que-me-limitan", level: "Intermedio" },
-      { title: "Cómo cuestionar una creencia con evidencia", slug: "como-cuestionar-una-creencia-con-evidencia", level: "Intermedio" },
-      { title: "Mi nuevo manual de reglas financieras", slug: "mi-nuevo-manual-de-reglas-financieras", level: "Avanzado" },
+      { title: "El Valor de tu Tiempo (Cálculo Real)", slug: "el-valor-de-tu-tiempo-calculo-real", level: "Básico" },
+      { title: "Costo de Oportunidad (Elegir es Renunciar)", slug: "costo-de-oportunidad-elegir-es-renunciar", level: "Intermedio" },
+      { title: "La Pausa de las 24 Horas", slug: "la-pausa-de-las-24-horas-mecanica", level: "Avanzado" },
+      { title: "El Salario de tu 'Yo del Futuro'", slug: "el-salario-de-tu-yo-del-futuro", level: "Intermedio" },
+      { title: "La Auditoría de Supervivencia", slug: "la-auditoria-de-supervivencia", level: "Avanzado" },
     ]
   },
   {
-    title: "Evaluación Final",
+    title: "Certificación Operativa",
     lessons: [
-      { title: "Certificación de Mentalidad (Evaluación de Bloque)", slug: "evaluacion-bloque-1", level: "Avanzado" },
+      { title: "Examen de Sistema (Evaluación de Bloque)", slug: "evaluacion-bloque-1", level: "Avanzado" },
     ]
   },
 ]

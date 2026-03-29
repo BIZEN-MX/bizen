@@ -28,6 +28,7 @@ import {
     TrendingUp,
 } from "lucide-react"
 import PageLoader from "@/components/PageLoader"
+import BizenVirtualCard, { CardTheme } from "@/components/BizenVirtualCard"
 import StreakWidget from "@/components/StreakWidget"
 import { useSettings } from "@/contexts/SettingsContext"
 import { useTranslation } from "@/lib/translations"
@@ -873,28 +874,18 @@ export default function TiendaPage() {
                             </p>
                         </div>
 
-                        {/* Balance display */}
+                        {/* Balance display -> Virtual Card */}
                         <div style={{
-                            background: "rgba(255, 255, 255, 0.05)",
-                            border: "1px solid rgba(255, 255, 255, 0.15)",
-                            borderRadius: 36,
-                            padding: "40px",
-                            textAlign: "center",
-                            backdropFilter: "blur(20px)",
-                            boxShadow: "0 32px 64px rgba(0,0,0,0.3)",
                             flexShrink: 0,
-                            minWidth: 260,
+                            width: "100%",
+                            maxWidth: 420,
+                            animation: "tienda-fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both",
                         }}>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: "#93C5FD", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12, display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
-                                <Zap size={14} color="#FBBF24" fill="#FBBF24" />
-                                Saldo Actual
-                            </div>
-                            <div style={{ fontSize: "clamp(48px,8vw,68px)", fontWeight: 800, lineHeight: 1, color: "white", letterSpacing: "-0.02em" }}>
-                                {loadingStats ? "..." : bizcoins.toLocaleString()}
-                            </div>
-                            <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.5)", marginTop: 8 }}>
-                                BIZCOINS
-                            </div>
+                            <BizenVirtualCard 
+                                bizcoins={bizcoins} 
+                                holderName={dbProfile?.fullName || user?.email?.split("@")[0] || "Usuario"} 
+                                colorTheme={(dbProfile?.cardTheme || dbProfile?.card_theme || user?.user_metadata?.cardTheme || "blue") as CardTheme}
+                            />
                         </div>
                     </div>
                 </div>

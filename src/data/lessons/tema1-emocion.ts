@@ -40,7 +40,7 @@ export const lessonSenalesDeEmocionDominandoUnaDecisionSteps: LessonStep[] = [
   { id: "emo-2-1", stepType: "billy_talks", body: "Tu cuerpo te avisa ANTES de que saques la tarjeta. ¿Sabes leer tu propio hardware emocional?", fullScreen: true,
     data: { glossary: [{ word: "Somatización", definition: "Proceso por el cual el estrés emocional se manifiesta como síntomas físicos." }, { word: "Cerebro Límbico", definition: "Parte primitiva involucrada en las respuestas emocionales inmediatas." }] }
   },
-  { id: "emo-2-2", stepType: "influence_detective", scenario: "Ves una oferta de 'última oportunidad' y sientes un nudo en el estómago y calor en la cara. ¿Qué está pasando?", options: [{id:"o1", label:"Es una oportunidad del destino", isCorrect:false}, {id:"o2", label:"Mi sistema límbico está bajo secuestro publicitario", isCorrect:true}], isAssessment: true, fullScreen: true,
+  { id: "emo-2-2", stepType: "influence_detective", scenario: "Ves una oferta de 'última oportunidad' y sientes un nudo en el estómago y calor en la cara. ¿Qué está pasando?", options: [{id:"o1", label:"Es una oportunidad del destino", emotion: "neutral", isCorrect:false}, {id:"o2", label:"Mi sistema límbico está bajo secuestro publicitario", emotion: "fear", isCorrect:true}], isAssessment: true, fullScreen: true,
     aiInsight: "El 'nudo en el estómago' es una señal ancestral de alerta ante la pérdida percibida."
   },
   { id: "emo-2-3", stepType: "info", title: "El 'Nudo' de la Escasez", body: "La ansiedad financiera se siente como presión en el pecho. Si no la identificas, comprarás algo solo para 'quitarte' esa sensación. No es amor al objeto, es alivio a la presión.", fullScreen: true },
@@ -139,4 +139,31 @@ export const lessonEmocionVsDecisionCasosRealesSteps: LessonStep[] = [
     aiInsight: "La simulación mental de crisis te entrena para que cuando la emoción sea real, tu respuesta sea automática."
   },
   { id: "emo-5-15", stepType: "summary", title: "Entrenamiento Finalizado", body: "Has superado las pruebas. Tema 1 completado. ¡Prepárate para crecer!", fullScreen: true },
+]
+
+// ==============================================================================
+// LECCIÓN 6: Psicología de la Deuda - 15 SLIDES
+// ==============================================================================
+export const lessonPsicologiaDeLaDeudaSteps: LessonStep[] = [
+  { id: "deu-1-1", stepType: "billy_talks", body: "La deuda no es solo un número rojo; es una carga emocional que altera tu percepción del futuro. Vamos a entender por qué duele pagar y cómo liberar esa presión.", fullScreen: true,
+    data: { glossary: [{ word: "Dolor de Pago", definition: "Respuesta psicológica negativa al desprendimiento de capital para cubrir una obligación previa sin beneficio inmediato." }, { word: "Apalancamiento Psíquico", definition: "Uso del alivio de pagar deudas para liberar energía mental hacia la creación de valor." }] }
+  },
+  { id: "deu-1-2", stepType: "info", title: "El Costo de Oportunidad Emocional", body: "Cada peso que debes es una decisión del futuro que ya tomaste. La deuda mala te quita soberanía. Pagarla no es un gasto; es la compra de tu libertad psicológica.", fullScreen: true,
+    aiInsight: "La deuda de consumo es la principal causa de ansiedad y falta de creatividad en los profesionales modernos."
+  },
+  { id: "deu-1-3", stepType: "impulse_meter", instructions: "Mantén pulsado y siente el peso de la deuda desvaneciéndose. Respira ligereza. Siente el poder del flujo libre.", item: { name: "Liberador de Carga", price: "Libertad", imageUrl: "/billy-breathing.png" }, holdTime: 6, fullScreen: true },
+  { id: "deu-1-4", stepType: "mcq", question: "Si pagas una deuda de $1,000 con interés del 50% anual, ¿cuánto dinero le 'regalaste' a tu yo del futuro?", options: [{id:"o1", label:"$500 pesos de intereses que ya no pagarás", isCorrect:true}, {id:"o2", label:"Nada, el dinero ya se fue", isCorrect:false}], isAssessment: true, fullScreen: true },
+  { id: "deu-1-5", stepType: "swipe_sorter", question: "¿Deuda que te hace Crecer o Deuda que te hace Esclavo?", leftBucket: {label:"Crecimiento", color:"#10b981"}, rightBucket: {label:"Esclavitud", color:"#ef4444"}, items: [{id:"i1", label:"Crédito para educación técnica", correctBucket:"left"}, {id:"i2", label:"Ropa a meses sin intereses", correctBucket:"right"}, {id:"i3", label:"Préstamo para primera mercancía", correctBucket:"left"}, {id:"i4", label:"Cena de aniversario a crédito", correctBucket:"right"}], isAssessment: true, fullScreen: true },
+  { id: "deu-1-6", stepType: "info", title: "El Alivio de la Bola de Nieve", body: "Pagar la deuda más pequeña primero te da una victoria psicológica rápida. El cerebro necesita dopamina de éxito para mantener la disciplina de pago a largo plazo.", fullScreen: true },
+  { id: "deu-1-7", stepType: "true_false", statement: "Tener deudas 'es normal' y todo el mundo vive así por necesidad.", correctValue: false, explanation: "La deuda de consumo es una opción cultural, no una necesidad técnica. Se puede vivir 100% sobre capital propio.", isAssessment:true, fullScreen: true },
+  { id: "deu-1-8", stepType: "order", question: "Ruta de Liberación BIZEN", items: [{id:"p1", label: "Cese total de nuevos créditos de consumo", correctOrder: 1}, {id: "p2", label: "Lista de deudas ordenada por tasa de interés", correctOrder: 2}, {id: "p3", label: "Ataque agresivo al principal con excedentes de HVA", correctOrder: 3}], isAssessment: true, fullScreen: true },
+  { id: "deu-1-9", stepType: "blitz_challenge", question: "¿Qué parte de la deuda no baja el capital?", options: [{id:"o1", label:"El Interés", isCorrect:true}, {id:"o2", label:"El Abono", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "deu-1-10", stepType: "blitz_challenge", question: "¿Quién es el dueño de tu tiempo cuando debes?", options: [{id:"o1", label:"Tu acreedor", isCorrect:true}, {id:"o2", label:"Tú", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
+  { id: "deu-1-11", stepType: "match", question: "Relaciona Estado con Efecto", leftItems: [{id:"l1", label:"Sobre-endeudado"}, {id:"l2", label:"Solvente"}, {id:"l3", label:"Inversionista"}], rightItems: [{id:"r1", label:"Miedo/Parálisis"}, {id:"r2", label:"Paz/Opción"}, {id:"r3", label:"Poder/Escala"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}, {leftId:"l3", rightId:"r3"}], isAssessment: true, fullScreen: true },
+  { id: "deu-1-12", stepType: "mindset_translator", question: "Refactoriza tu deuda", beliefs: [{id: "b1", original: "No voy a terminar de pagar nunca.", healthyOptions: [{id: "h1", label: "Cada abono a capital es un día de libertad recuperado para mi sistema", isCorrect: true}, {id: "h2", label: "Es mi destino ser deudor", isCorrect: false}]}] },
+  { id: "deu-1-13", stepType: "narrative_check", question: "¿Cuál es el primer gasto que vas a eliminar mañana mismo para inyectar ese capital a tu deuda más alta?", promptPlaceholder: "Voy a eliminar ...", minChars: 10, billyResponse: "Ese es el primer paso de un ingeniero hacia la soberanía.", fullScreen: true },
+  { id: "deu-1-14", stepType: "info", title: "Alerta importante", body: "No busques el perdón del banco; busca la eficiencia de tu flujo. Pagar deudas caras es la inversión con el ROI más seguro del mercado.", fullScreen: true,
+    aiInsight: "Un CAT del 60% significa que por cada peso que debes, pagas más de la mitad en aire puro cada año."
+  },
+  { id: "deu-1-15", stepType: "summary", title: "Deuda Comprendida", body: "Has visto el peso real. ¡Lucha por tu paz!", fullScreen: true },
 ]

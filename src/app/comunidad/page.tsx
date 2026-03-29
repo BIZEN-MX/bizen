@@ -52,21 +52,23 @@ function HubCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: T.surface,
+        background: `linear-gradient(135deg, rgba(255,255,255,0.8), ${accentColor}1A)`,
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
         borderRadius: T.radius,
-        border: `1px solid ${hovered ? accentColor : T.border}`,
-        boxShadow: hovered ? `0 12px 32px -8px ${accentColor}15` : T.shadow,
+        border: `1px solid ${hovered ? accentColor : `${accentColor}30`}`,
+        boxShadow: hovered ? `0 20px 40px -12px ${accentColor}30` : T.shadow,
         padding: "24px",
         cursor: "pointer",
         display: "flex",
         flexDirection: "column",
         gap: 0,
-        transition: "all 0.2s ease-out",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
+        transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        transform: hovered ? "translateY(-6px) scale(1.01)" : "translateY(0) scale(1)",
         position: "relative",
         overflow: "hidden",
         animationFillMode: "both",
-        animation: `fadeUp 0.4s ease ${delay} both`,
+        animation: `fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${delay} both`,
       }}
     >
       {children}
@@ -285,7 +287,7 @@ export default function ComunidadHubPage() {
             {/* Foro */}
             <HubCard onClick={() => router.push("/forum")} accentColor="#0F62FE" delay="0s">
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: T.blueLight, border: `1px solid ${T.blue}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: `${T.blue}15`, border: `1px solid ${T.blue}30`, backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <MessageSquare size={24} color="#0F62FE" strokeWidth={2} />
                 </div>
                 <div>
@@ -297,7 +299,7 @@ export default function ComunidadHubPage() {
                 Haz preguntas, comparte tus logros y aprende de la experiencia colectiva de toda la comunidad BIZEN.
               </p>
               <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: T.blueLight, color: "#0F62FE", borderRadius: 10, fontWeight: 500, fontSize: 14, border: `1px solid ${T.blue}30` }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: `${T.blue}15`, color: "#0F62FE", borderRadius: 10, fontWeight: 600, fontSize: 14, border: `1px solid ${T.blue}40`, backdropFilter: "blur(10px)" }}>
                   Explorar el Foro <ArrowRight size={15} />
                 </div>
               </div>
@@ -306,7 +308,7 @@ export default function ComunidadHubPage() {
             {/* Rankings */}
             <HubCard onClick={() => router.push("/rankings")} accentColor="#D97706" delay="0.08s">
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: T.amberLight, border: `1px solid ${T.amber}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: `${T.amber}15`, border: `1px solid ${T.amber}30`, backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <Trophy size={24} color="#D97706" strokeWidth={2} />
                 </div>
                 <div>
@@ -318,7 +320,7 @@ export default function ComunidadHubPage() {
                 Compara tu XP y racha con estudiantes de todo el mundo. ¿Tienes lo que se necesita para el Top 10?
               </p>
               <div style={{ marginTop: "auto" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: T.amberLight, color: "#D97706", borderRadius: 10, fontWeight: 500, fontSize: 14, border: `1px solid ${T.amber}30` }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: `${T.amber}15`, color: "#D97706", borderRadius: 10, fontWeight: 600, fontSize: 14, border: `1px solid ${T.amber}40`, backdropFilter: "blur(10px)" }}>
                   Ver Clasificación <ArrowRight size={15} />
                 </div>
               </div>
@@ -327,7 +329,7 @@ export default function ComunidadHubPage() {
             {/* Impacto Social */}
             <HubCard onClick={() => router.push("/impacto-social")} accentColor="#059669" delay="0.16s">
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: T.greenLight, border: `1px solid ${T.green}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: `${T.green}15`, border: `1px solid ${T.green}30`, backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <Heart size={24} color="#059669" strokeWidth={2} />
                 </div>
                 <div>
@@ -339,7 +341,7 @@ export default function ComunidadHubPage() {
                 Descubre cómo cada lección completada y tu progreso se convierte en ayuda real y árboles plantados.
               </p>
               <div style={{ marginTop: "auto" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: T.greenLight, color: "#059669", borderRadius: 10, fontWeight: 500, fontSize: 14, border: `1px solid ${T.green}30` }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 16px", background: `${T.green}15`, color: "#059669", borderRadius: 10, fontWeight: 600, fontSize: 14, border: `1px solid ${T.green}40`, backdropFilter: "blur(10px)" }}>
                   Ver Impacto <ArrowRight size={15} />
                 </div>
               </div>
@@ -351,7 +353,7 @@ export default function ComunidadHubPage() {
             <div className="com-top-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
 
               {/* Leaderboard preview */}
-              <div style={{ background: T.surface, borderRadius: 24, border: `1.5px solid ${T.border}`, boxShadow: T.shadow, overflow: "hidden", animation: "fadeUp 0.45s ease 0.24s both" }}>
+              <div style={{ background: `linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.4))`, backgroundColor: `${T.blue}08`, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: 24, border: `1.5px solid rgba(255,255,255,0.6)`, boxShadow: T.shadow, overflow: "hidden", animation: "fadeUp 0.45s ease 0.24s both" }}>
                 {/* Header */}
                 <div style={{ padding: "16px 20px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

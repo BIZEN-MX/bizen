@@ -9,6 +9,7 @@ import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 import { Flame, Shield, Target } from "lucide-react"
+import BizenVirtualCard from "@/components/BizenVirtualCard"
 
 // ─────────────────────────────────────────────────────────────────
 // CUSTOM SVG ICON COMPONENTS
@@ -545,26 +546,16 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* right: XP ring & BILLY (Student ONLY) */}
+            {/* right: Virtual Card (Student ONLY) */}
             {!isAdminOrTeacher && (
-              <div className="hero-xp-ring" style={{ flex: "0 0 auto", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center" }}>
-                {/* Billy Mascot with 3D animation */}
-                <div style={{ filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))" }}>
-                   <Billy size={120} mood="happy" showGlow={true} />
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                  <div style={{ animation: "fl 4s ease-in-out infinite" }}>
-                    <XPRing pct={xpPct} level={level} />
-                  </div>
-                  <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.45)", textTransform: "uppercase", letterSpacing: ".08em", lineHeight: 1.5 }}>
-                      {xpPct}% hacia nivel {level + 1}
-                    </div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.30)", marginTop: 3 }}>
-                      {stats?.xpToNextLevel ?? 0} XP restantes
-                    </div>
-                  </div>
+              <div className="hero-virtual-card" style={{ flex: "1 1 300px", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                <div style={{ width: "100%", maxWidth: 400 }}>
+                  <BizenVirtualCard
+                    bizcoins={bizcoins}
+                    holderName={dbProfile?.fullName || user?.email?.split("@")[0] || ""}
+                    animationDelay=".12s"
+                    colorTheme={dbProfile?.cardTheme || dbProfile?.card_theme || user?.user_metadata?.cardTheme || "blue"}
+                  />
                 </div>
               </div>
             )}
@@ -630,7 +621,7 @@ export default function DashboardPage() {
 
         {/* STAT CARDS (Student ONLY) */}
         {!isAdminOrTeacher && (
-        <div className="stats-row" style={{ display: "flex", gap: 14, marginBottom: 24, alignItems: "stretch" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14, marginBottom: 24 }}>
 
           {/* CARD 1 — Racha */}
           <div className="sc dc" style={{
@@ -664,24 +655,6 @@ export default function DashboardPage() {
             </div>
             <div style={{ width: "100%", height: 5, background: "#e0e9ff", borderRadius: 10, overflow: "hidden" }}>
               <div style={{ width: `${lessonPct}%`, height: "100%", background: "linear-gradient(90deg,#93c5fd,#0F62FE)", borderRadius: 10, transition: "width 1.4s cubic-bezier(.34,1.56,.64,1)" }} />
-            </div>
-          </div>
-
-          {/* CARD 3 — Bizcoins */}
-          <div className="sc dc" style={{
-            animationDelay: ".17s", cursor: "pointer",
-            background: "linear-gradient(145deg,#eff6ff,#dbeafe)", border: "1px solid #bfdbfe",
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            textAlign: "center", minHeight: 160,
-          }} onClick={() => router.push("/tienda")}>
-            <div className="sc-label" style={{ color: "#1d4ed8", marginBottom: 18 }}>Bizcoins</div>
-            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6, marginBottom: 10 }}>
-              <div className="sc-num" style={{ color: "#1e40af" }}>{bizcoins.toLocaleString()}</div>
-              <div style={{ fontSize: 15, fontWeight: 600, color: "#3b82f6" }}>BC</div>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 12, fontWeight: 600, color: "#3b82f6" }}>
-              <IcoStore size={12} color="#3b82f6" strokeWidth={2} />
-              Ver tienda
             </div>
           </div>
         </div>
