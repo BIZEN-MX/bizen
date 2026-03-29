@@ -98,11 +98,12 @@ function ProgressRing({ pct, color, size = 32 }: { pct: number; color: string; s
 
 // ─── Canvas Card ─────────────────────────────────────────────────────────────
 
-function CanvasCardComponent({ card, onUpdate, onDelete, onDrag }: {
+function CanvasCardComponent({ card, onUpdate, onDelete, onDrag, isMobile }: {
   card: CanvasCard
   onUpdate: (id: string, u: Partial<CanvasCard>) => void
   onDelete: (id: string) => void
   onDrag: (id: string, x: number, y: number) => void
+  isMobile: boolean
 }) {
   const cfg = CARD_CONFIG[card.type]
   const { Icon } = cfg
@@ -143,7 +144,7 @@ function CanvasCardComponent({ card, onUpdate, onDelete, onDrag }: {
       animate={{ opacity: 1, scale: 1 }}
       whileDrag={{ scale: 1.03, zIndex: 100, boxShadow: "0 24px 48px rgba(0,0,0,0.18)" }}
       style={{
-        position: "absolute", width: card.type === "note" ? 215 : 255,
+        position: "absolute", width: isMobile ? (card.type === "note" ? 180 : 220) : (card.type === "note" ? 215 : 255),
         cursor: "grab", borderRadius: 18,
         border: `1.5px solid ${cfg.border}`,
         background: cardBg,
@@ -405,6 +406,13 @@ export default function VisionCanvasPage() {
     }
   }, [user]);
 
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768)
+    check(); window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
+
   useEffect(() => {
     if (user) {
       loadSavedCanvas();
@@ -601,6 +609,10 @@ export default function VisionCanvasPage() {
           position: relative;
         }
 
+        .vision-shell .canvas-only {
+          height: calc(100vh - 57px);
+        }
+
 
         .vision-main-content {
           flex: 1;
@@ -631,11 +643,12 @@ export default function VisionCanvasPage() {
 
         @media (max-width: 768px) {
           .vision-sidebar {
-            top: 0; right: 0; bottom: 0; left: 0;
-            width: 100%; height: 100vh;
-            border-radius: 0;
-            z-index: 10001; /* Above mobile footer if any */
+            top: auto; right: 0; bottom: 0; left: 0;
+            width: 100%; height: 50vh;
+            border-radius: 24px 24px 0 0;
+            z-index: 10001;
             background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
           }
         }
 
@@ -645,7 +658,7 @@ export default function VisionCanvasPage() {
           transform: translateX(20px) scale(0.98);
         }
         @media (max-width: 768px) {
-          .vision-sidebar.hidden { transform: translateY(40px); }
+          .vision-sidebar.hidden { transform: translateY(100%); }
         }
 
         .canvas-area {
@@ -943,8 +956,13 @@ export default function VisionCanvasPage() {
           >
             <div className="canvas-stage" style={{ transform: `translate(${pan.x}px,${pan.y}px) scale(${scale})`, transformOrigin: "0 0" }}>
               {visibleCards.map(card => (
-                <CanvasCardComponent key={card.id} card={card}
-                  onUpdate={updateCard} onDelete={deleteCard} onDrag={onDrag}
+                <CanvasCardComponent
+                  key={card.id}
+                  card={card}
+                  onUpdate={updateCard}
+                  onDelete={deleteCard}
+                  onDrag={onDrag}
+                  isMobile={isMobile}
                 />
               ))}
 

@@ -995,12 +995,11 @@ export default function WelcomePage() {
                 }
                 @media (max-width: 768px) {
                   .landing-hero-mascot {
-                    width: 170px !important;
-                    top: 50% !important;
-                    left: -100px !important;
-                    opacity: 0.6 !important;
+                    width: 280px !important;
+                    top: 180px !important;
+                    left: -110px !important;
+                    opacity: 0.7 !important;
                     z-index: -1 !important;
-                    transform: translateY(-50%) !important;
                   }
                 }
               `,
@@ -1381,7 +1380,7 @@ export default function WelcomePage() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "clamp(12px, 2vw, 20px)",
-                  marginTop: "clamp(8px, 2vw, 16px)",
+                  marginTop: "clamp(24px, 4vw, 40px)",
                   flexWrap: "wrap",
                 }}
               >

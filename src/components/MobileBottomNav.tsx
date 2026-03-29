@@ -63,7 +63,7 @@ export default function MobileBottomNav() {
   const navItems = isStudentOrGuest ? [
     {
       id: "inicio",
-      label: "Inicio",
+      label: "Dashboard",
       icon: LayoutGrid,
       path: "/dashboard",
       protected: true
@@ -76,17 +76,17 @@ export default function MobileBottomNav() {
       protected: false
     },
     {
+      id: "simuladores",
+      label: "Simuladores",
+      icon: Gamepad2,
+      path: "/cash-flow",
+      protected: false
+    },
+    {
       id: "comunidad",
       label: "Comunidad",
       icon: MessageSquare,
       path: "/comunidad",
-      protected: false
-    },
-    {
-      id: 'live',
-      label: 'Bizen Live',
-      icon: Zap,
-      path: '/live/join',
       protected: false
     }
   ] : [
@@ -127,6 +127,15 @@ export default function MobileBottomNav() {
 
   // More menu items (for authenticated users)
   const moreMenuItems = user ? [
+    ...(isStudentOrGuest ? [
+      {
+        id: 'live',
+        label: 'BIZEN Live',
+        icon: Zap,
+        path: '/live/join',
+        protected: false
+      }
+    ] : []),
     {
       id: 'profile',
       label: 'Perfil',
@@ -135,13 +144,6 @@ export default function MobileBottomNav() {
       protected: true
     },
     ...(isStudentOrGuest ? [
-      {
-        id: 'simulador',
-        label: 'Simuladores',
-        icon: Gamepad2,
-        path: '/cash-flow',
-        protected: false
-      },
       {
         id: 'tienda',
         label: 'Tienda',
@@ -379,7 +381,7 @@ export default function MobileBottomNav() {
             );
           })()}
 
-          {/* More menu button for authenticated users (Perfil, Cuenta, Configuración) */}
+          {/* Profile menu button for authenticated users (opens sub-menu) */}
           {moreMenuItems.length > 0 && (
             <button
               onClick={() => setShowMoreMenu(!showMoreMenu)}
@@ -388,49 +390,48 @@ export default function MobileBottomNav() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 4,
-                padding: "8px 12px",
-                background: showMoreMenu ? "rgba(15, 98, 254, 0.15)" : "transparent",
+                gap: 2,
+                padding: "6px 4px",
+                background: (showMoreMenu || isActivePath('/profile') || isActivePath('/configuracion') || isActivePath('/tienda')) ? "rgba(15, 98, 254, 0.15)" : "transparent",
                 border: "none",
-                borderRadius: 12,
+                borderRadius: 10,
                 cursor: "pointer",
                 transition: "all 0.2s ease",
-                minWidth: "60px",
-                width: "60px",
-                flexShrink: 0
+                minWidth: "50px",
+                flex: "1 1 0",
+                maxWidth: "none"
               }}
               onTouchStart={(e) => {
                 e.currentTarget.style.transform = "scale(0.95)"
-                e.currentTarget.style.background = showMoreMenu ? "rgba(15, 98, 254, 0.25)" : "rgba(15, 98, 254, 0.1)"
+                e.currentTarget.style.background = "rgba(15, 98, 254, 0.25)"
                 e.preventDefault()
               }}
               onTouchEnd={(e) => {
                 e.currentTarget.style.transform = "scale(1)"
-                e.currentTarget.style.background = showMoreMenu ? "rgba(15, 98, 254, 0.15)" : "transparent"
+                e.currentTarget.style.background = (showMoreMenu || isActivePath('/profile') || isActivePath('/configuracion') || isActivePath('/tienda')) ? "rgba(15, 98, 254, 0.15)" : "transparent"
               }}
               onTouchCancel={(e) => {
                 e.currentTarget.style.transform = "scale(1)"
-                e.currentTarget.style.background = showMoreMenu ? "rgba(15, 98, 254, 0.15)" : "transparent"
+                e.currentTarget.style.background = (showMoreMenu || isActivePath('/profile') || isActivePath('/configuracion') || isActivePath('/tienda')) ? "rgba(15, 98, 254, 0.15)" : "transparent"
               }}
             >
               <span className="mobile-nav-icon" style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: showMoreMenu ? "#0F62FE" : "#64748b",
-                transform: showMoreMenu ? "rotate(180deg)" : "rotate(0deg)",
+                color: (showMoreMenu || isActivePath('/profile') || isActivePath('/configuracion') || isActivePath('/tienda')) ? "#0F62FE" : "#64748b",
                 transition: "all 0.2s ease"
               }}>
-                <ChevronUp size={24} strokeWidth={showMoreMenu ? 2.5 : 2} />
+                <User size={24} strokeWidth={(showMoreMenu || isActivePath('/profile')) ? 2.5 : 2} />
               </span>
               <span style={{
                 fontSize: 9,
-                fontWeight: showMoreMenu ? 700 : 600,
-                color: showMoreMenu ? "#0F62FE" : "#374151",
+                fontWeight: (showMoreMenu || isActivePath('/profile')) ? 700 : 600,
+                color: (showMoreMenu || isActivePath('/profile')) ? "#0F62FE" : "#374151",
                 textAlign: "center",
                 lineHeight: 1.1
               }}>
-                Más
+                Perfil
               </span>
             </button>
           )}

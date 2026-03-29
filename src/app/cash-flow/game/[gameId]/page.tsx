@@ -157,11 +157,13 @@ export default function CashFlowGamePage() {
 
   const modalCardStyle: React.CSSProperties = {
     width: "100%",
-    maxWidth: 520,
+    maxWidth: isMobile ? "94vw" : 520,
     background: "white",
     borderRadius: 20,
-    padding: 32,
-    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)"
+    padding: isMobile ? "20px 16px" : 32,
+    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+    maxHeight: "90vh",
+    overflowY: "auto"
   }
 
   const modalTitleStyle: React.CSSProperties = {

@@ -100,7 +100,7 @@ function SectionCard({
           {subtitle && <div style={{ fontSize: 12, color: MUTED, marginTop: 2 }}>{subtitle}</div>}
         </div>
       </div>
-      <div style={{ padding: '24px' }}>{children}</div>
+      <div className="section-card-content" style={{ padding: '24px' }}>{children}</div>
     </div>
   );
 }
@@ -135,7 +135,7 @@ function MetricCard({
   };
   const c = configs[variant];
   return (
-    <div style={{
+    <div className={`metric-card metric-variant-${variant}`} style={{
       background: c.bg, border: `1.5px solid ${c.border}`,
       borderRadius: 18, padding: large ? '20px 22px' : '18px 20px',
       display: 'flex', alignItems: 'center', gap: 14,
@@ -151,7 +151,7 @@ function MetricCard({
       </div>
       <div>
         <div style={{ fontSize: 11, fontWeight: 700, color: c.label, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{label}</div>
-        <div style={{ fontSize: large ? 26 : 22, fontWeight: 800, color: c.val, letterSpacing: '-0.02em', lineHeight: 1 }}>{value}</div>
+        <div className="metric-card-val" style={{ fontSize: large ? 26 : 22, fontWeight: 800, color: c.val, letterSpacing: '-0.02em', lineHeight: 1 }}>{value}</div>
         {sub && <div style={{ fontSize: 12, color: MUTED, marginTop: 4 }}>{sub}</div>}
       </div>
     </div>
@@ -335,10 +335,34 @@ export function SavingsGoalSimulator() {
   const futureValue        = result?.futureValue ?? 0;
 
   return (
-    <div>
+    <div className="simulator-container">
+      <style>{`
+        @media (max-width: 768px) {
+          .simulator-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+          .section-card-content {
+            padding: 16px !important;
+          }
+          .metric-card {
+            padding: 14px !important;
+            gap: 10px !important;
+          }
+          .metric-card-val {
+            font-size: 18px !important;
+          }
+          .hero-strip {
+             padding: 16px !important;
+          }
+          .hero-strip button {
+            width: 100% !important;
+          }
+        }
+      `}</style>
 
       {/* ── HERO STRIP ── */}
-      <div style={{
+      <div className="hero-strip" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexWrap: 'wrap', gap: 16, marginBottom: 32,
         padding: '20px 24px',
@@ -376,7 +400,7 @@ export function SavingsGoalSimulator() {
       </div>
 
       {/* ── 2-COLUMN GRID ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 24 }}>
+      <div className="simulator-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 24 }}>
 
         {/* ──── LEFT: INPUTS ──── */}
         <div>

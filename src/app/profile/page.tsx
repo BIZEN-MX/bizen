@@ -285,11 +285,11 @@ export default function ProfilePage() {
     <div className="prof-outer" style={{ minHeight: "100vh", background: "#FBFAF5" }}>
       <style>{`
         @media (max-width: 767px) {
-          .prof-outer { width: 100% !important; margin-left: 0 !important; padding: 24px 16px 120px !important; }
-          .prof-body  { flex-direction: column !important; gap: 24px !important; }
-          .prof-side  { width: 100% !important; order: -1; }
-          .prof-hero  { height: 160px !important; border-radius: 24px !important; }
-          .prof-avatar-box { width: 120px !important; height: 120px !important; margin-top: -60px !important; }
+          .prof-outer { width: 100% !important; margin-left: 0 !important; padding: 12px 12px 100px !important; }
+          .prof-body  { flex-direction: column !important; gap: 20px !important; }
+          .prof-side  { width: 100% !important; order: 1; }
+          .prof-hero  { height: 200px !important; border-radius: 24px !important; padding: 20px !important; align-items: center !important; justify-content: center !important; }
+          .prof-avatar-box { width: 110px !important; height: 110px !important; margin-top: 0 !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .prof-outer { margin-left: 220px !important; padding: 40px 24px 80px !important; width: calc(100% - 220px) !important; }
@@ -309,9 +309,9 @@ export default function ProfilePage() {
       {/* Hero Banner with Identity */}
       <div className="prof-hero fade-up" style={{ 
         height: 220, background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", 
-        borderRadius: 32, position: "relative", overflow: "hidden", marginBottom: 32,
+        borderRadius: 32, position: "relative", marginBottom: 32,
         boxShadow: "0 20px 40px -12px rgba(15,98,254,0.3)",
-        display: "flex", alignItems: "flex-end", padding: screenSize < 768 ? "24px" : "32px 48px"
+        display: "flex", alignItems: "flex-end", padding: screenSize < 768 ? "24px" : "40px 48px"
       }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(white 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
         
@@ -353,13 +353,15 @@ export default function ProfilePage() {
               <div
                 onClick={() => isBasic && router.push("/payment")}
                 style={{
-                  marginLeft: "auto", flexShrink: 0,
+                  marginLeft: screenSize < 768 ? "0" : "auto", flexShrink: 0,
+                  marginTop: screenSize < 768 ? 12 : 0,
                   background: isBasic
                     ? "linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%)"
                     : info.bg,
-                  padding: isBasic ? "14px 22px" : "10px 22px",
+                  padding: isBasic ? "12px 20px" : "8px 20px",
                   borderRadius: 20,
                   display: "flex", flexDirection: "column", gap: isBasic ? 4 : 2,
+                  alignItems: screenSize < 768 ? "center" : "flex-start",
                   cursor: isBasic ? "pointer" : "default",
                   boxShadow: isBasic
                     ? "0 12px 30px rgba(15,98,254,0.25), 0 2px 8px rgba(0,0,0,0.08)"
@@ -367,7 +369,7 @@ export default function ProfilePage() {
                   border: isBasic ? "1.5px solid rgba(15,98,254,0.3)" : "1.5px solid rgba(255,255,255,0.3)",
                   transition: "opacity 0.2s ease",
                   backdropFilter: "blur(12px)",
-                  minWidth: isBasic ? 160 : 130,
+                  minWidth: isBasic ? 140 : 120,
                 }}
                 onMouseEnter={e => { if (isBasic) e.currentTarget.style.opacity = "0.75" }}
                 onMouseLeave={e => { e.currentTarget.style.opacity = "1" }}
