@@ -137,7 +137,7 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "evaluacion-como-se-ve-tu-flujo-de-entrada-hoy": lessonEvaluacionComoSeVeTuFlujoDeEntradaHoySteps,
   "habilidades-de-alto-valor-high-income-skills": lessonHabilidadesDeAltoValorSteps,
   "escalabilidad-tu-tiempo-tiene-techo": lessonEscalabilidadTuTiempoTieneTechoSteps,
-  "invertir-en-ti-el-roi-de-tu-education": lessonRoiDeTuEducacionSteps,
+  "invertir-en-ti-el-roi-de-tu-educacion": lessonRoiDeTuEducacionSteps,
   "soft-skills-el-multiplicador-invisible-de-ingresos": lessonSoftSkillsMultiplicadorIngresosSteps,
   "diseno-de-carrera-de-operativo-a-estrategico": lessonDisenoDeCarreraOperativoAEstrategicoSteps,
   "capital-intelectual-vs-capital-financiero": lessonCapitalIntelectualVsFinancieroSteps,
