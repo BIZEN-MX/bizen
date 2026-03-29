@@ -5,22 +5,22 @@ import type { LessonStep } from "@/types/lessonTypes"
  * Re-architected to "Get to the point" (Practical Theme 1)
  */
 
-import { lessonQueEsElDineroParaMiSteps } from "./lesson-que-es-el-dinero-para-mi"
-import { lessonLasRulesDelSistemaFinancieroSteps } from "./lesson-las-reglas-del-sistema-financiero"
-import { lessonQueEsElDineroDeudaVsEnergiaSteps } from "./lesson-que-es-el-dinero-deuda-vs-energia"
-import { lessonTuPrimerEstadoDeResultadosPersonalSteps } from "./lesson-tu-primer-estado-de-resultados-personal"
-import { lessonElRegistroDeGuerraPorQueTrackearTodoSteps } from "./lesson-el-registro-de-guerra-por-que-trackear-todo"
-import { lessonGastosFijosVsVariablesSteps } from "./tema4-clasificacion"
-import { lessonQueSonYPorQueImportanSteps } from "./tema4-gastos-hormiga"
-import { lessonElValorDeTuTiempoCalculoRealSteps } from "./lesson-el-valor-de-tu-tiempo-calculo-real"
-import { lessonCostoDeOportunidadElegirEsRenunciarSteps } from "./lesson-costo-de-oportunidad-elegir-es-renunciar"
-import { lessonLaPausaDeLas24HorasMecanicaSteps } from "./lesson-la-pausa-de-las-24-horas-mecanica"
-import { lessonElCriterioDeRealidadSteps } from "./lesson-el-criterio-de-realidad-datos-vs-opinion"
-import { lessonElMapaDelTesoroSteps } from "./lesson-el-mapa-del-tesoro-encontrando-el-flujo"
-import { lessonElBlindajeDeCuentaSteps } from "./lesson-el-blindaje-de-cuenta-cero-comisiones"
-import { lessonElFiltroDeValorSteps } from "./lesson-el-filtro-de-valor-gasto-vs-inversion"
-import { lessonElSalarioDeTuYoDelFuturoSteps } from "./lesson-el-salario-de-tu-yo-del-futuro"
-import { lessonLaAuditoriaDeSupervivenciaSteps } from "./lesson-la-auditoria-de-supervivencia"
+import { lessonQueEsElDineroParaMiSteps } from "@/data/lessons/lesson-que-es-el-dinero-para-mi"
+import { lessonLasRulesDelSistemaFinancieroSteps } from "@/data/lessons/lesson-las-reglas-del-sistema-financiero"
+import { lessonQueEsElDineroDeudaVsEnergiaSteps } from "@/data/lessons/lesson-que-es-el-dinero-deuda-vs-energia"
+import { lessonTuPrimerEstadoDeResultadosPersonalSteps } from "@/data/lessons/lesson-tu-primer-estado-de-resultados-personal"
+import { lessonElRegistroDeGuerraPorQueTrackearTodoSteps } from "@/data/lessons/lesson-el-registro-de-guerra-por-que-trackear-todo"
+import { lessonGastosFijosVsVariablesSteps } from "@/data/lessons/tema4-clasificacion"
+import { lessonQueSonYPorQueImportanSteps } from "@/data/lessons/tema4-gastos-hormiga"
+import { lessonElValorDeTuTiempoCalculoRealSteps } from "@/data/lessons/lesson-el-valor-de-tu-tiempo-calculo-real"
+import { lessonCostoDeOportunidadElegirEsRenunciarSteps } from "@/data/lessons/lesson-costo-de-oportunidad-elegir-es-renunciar"
+import { lessonLaPausaDeLas24HorasMecanicaSteps } from "@/data/lessons/lesson-la-pausa-de-las-24-horas-mecanica"
+import { lessonElCriterioDeRealidadSteps } from "@/data/lessons/lesson-el-criterio-de-realidad-datos-vs-opinion"
+import { lessonElMapaDelTesoroSteps } from "@/data/lessons/lesson-el-mapa-del-tesoro-encontrando-el-flujo"
+import { lessonElBlindajeDeCuentaSteps } from "@/data/lessons/lesson-el-blindaje-de-cuenta-cero-comisiones"
+import { lessonElFiltroDeValorSteps } from "@/data/lessons/lesson-el-filtro-de-valor-gasto-vs-inversion"
+import { lessonElSalarioDeTuYoDelFuturoSteps } from "@/data/lessons/lesson-el-salario-de-tu-yo-del-futuro"
+import { lessonLaAuditoriaDeSupervivenciaSteps } from "@/data/lessons/lesson-la-auditoria-de-supervivencia"
 
 // --- TEMA 2: Ingeniería del Ingreso (Existing) ---
 import { 
@@ -132,10 +132,22 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "evaluacion-de-bloque-1": lessonEvaluacionBloque1Steps,
   "evaluacion-bloque-1": lessonEvaluacionBloque1Steps,
   
-  // Legacy slugs from old seed
+  // Legacy slugs from Topic 1 (Old Seed)
   "que-es-el-dinero-para-mi-hoy": lessonQueEsElDineroParaMiSteps,
+  "que-es-el-dinero-para-mi": lessonQueEsElDineroParaMiSteps,
+  "que-espero-del-dinero": lessonQueEsElDineroParaMiSteps,
+  "identificar-mi-definicion-personal-del-dinero": lessonQueEsElDineroParaMiSteps,
   "dinero-como-seguridad-vs-libertad": lessonQueEsElDineroDeudaVsEnergiaSteps,
+  "dinero-como-presion-vs-oportunidad": lessonQueEsElDineroDeudaVsEnergiaSteps,
   "pausa-financiera-reglas-anti-impulso": lessonLaPausaDeLas24HorasMecanicaSteps,
+  "culpa-y-ansiedad-financiera-como-se-forman": lessonCulpaYAnsiedadFinancieraSteps,
+  "emocion-vs-decision-casos-reales": lessonEmocionVsDecisionCasosRealesSteps,
+  "mis-primeras-creencias-sobre-el-dinero": lessonMisPrimerasCreenciasSobreElDineroSteps,
+  "expectativas-vs-realidad-financiera": lessonExpectativasVsRealidadFinancieraSteps,
+  "frases-heredadas-que-me-limitan": lessonFrasesHeredadasQueMeLimitanSteps,
+  "como-cuestionar-una-creencia-con-evidencia": lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
+  "reescribir-creencias-en-reglas-utiles": lessonMiNuevoManualDeReglasFinancierasSteps,
+  "checkpoint-mi-manual-de-dinero-v1": lessonMiNuevoManualDeReglasFinancierasSteps,
 
   // --- TEMA 2 ---
   "por-que-el-mercado-paga-lo-que-paga": lessonPorQueElMercadoPagaLoQuePagaSteps,
@@ -160,16 +172,9 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "como-me-hace-sentir-el-dinero": lessonComoMeHaceSentirElDineroSteps,
   "sesgos-cognitivos-y-dinero": lessonComoMeHaceSentirElDineroSteps,
   "senales-de-emocion-dominando-una-decision": lessonSenalesDeEmocionDominandoUnaDecisionSteps,
-  "culpa-y-ansiedad-financiera-como-se-forman": lessonCulpaYAnsiedadFinancieraSteps,
   "mis-creencias-limitantes-heredadas": lessonMisPrimerasCreenciasSobreElDineroSteps,
-  "emocion-vs-decision-casos-reales": lessonEmocionVsDecisionCasosRealesSteps,
   "psicologia-de-la-deuda-por-que-duele-pagar": lessonPsicologiaDeLaDeudaSteps,
-  "mis-primeras-creencias-sobre-el-dinero": lessonMisPrimerasCreenciasSobreElDineroSteps,
-  "expectativas-vs-realidad-financiera": lessonExpectativasVsRealidadFinancieraSteps,
-  "frases-heredadas-que-me-limitan": lessonFrasesHeredadasQueMeLimitanSteps,
-  "como-cuestionar-una-creencia-con-evidencia": lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
   "mi-nuevo-manual-de-reglas-financieras": lessonMiNuevoManualDeReglasFinancierasSteps,
-  "reescribir-creencias-en-reglas-utiles": lessonMiNuevoManualDeReglasFinancierasSteps,
   "que-es-un-trigger-de-compra": lessonQueEsUnTriggerDeCompraSteps,
   "apariencia-de-riqueza-vs-riqueza-real": lessonElEgoEnElConsumoDigitalSteps,
   "presion-social-en-decisiones-escenarios": lessonRedesComparacionYPresionSteps,
