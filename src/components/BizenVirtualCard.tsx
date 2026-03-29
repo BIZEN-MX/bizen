@@ -349,7 +349,7 @@ export default function BizenVirtualCard({ bizcoins, holderName, animationDelay 
                   fontSize: "clamp(12px,2vw,16px)", fontWeight: 700, color: "rgba(255,255,255,0.8)",
                   letterSpacing: "0.06em",
                 }}>
-                  BC
+                  BZ
                 </span>
               </div>
             </div>

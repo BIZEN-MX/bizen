@@ -1129,7 +1129,7 @@ export default function TiendaPage() {
                                                 <div style={{ display: "flex", alignItems: "center", gap: 4, fontWeight: 700, fontSize: 14, color: isOwned ? "#10b981" : (canAfford ? product.accent : "#94a3b8") }}>
                                                     {isOwned ? <CheckCircle2 size={13} color="#10b981" /> : <Zap size={13} fill={canAfford ? product.accent : "#cbd5e1"} color={canAfford ? product.accent : "#94a3b8"} />}
                                                     {isOwned ? "Canjeado" : product.price.toLocaleString()}
-                                                    {!isOwned && <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.05em" }}>BC</span>}
+                                                    {!isOwned && <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.05em" }}>BZ</span>}
                                                 </div>
                                             </div>
 

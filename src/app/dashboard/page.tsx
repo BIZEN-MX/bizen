@@ -532,7 +532,7 @@ export default function DashboardPage() {
                   {[
                     { icon: <Flame size={14} style={{ color: "#60a5fa" }} />, label: `${streak} días`, sub: "Racha", bg: "rgba(96,165,250,.15)", border: "rgba(96,165,250,.25)" },
                     { icon: <IcoZap size={14} color="#a78bfa" />, label: `${(stats?.xpInCurrentLevel ?? 0).toLocaleString()} XP`, sub: "Nivel Actual", bg: "rgba(167,139,250,.12)", border: "rgba(167,139,250,.25)" },
-                    { icon: <IcoCoin size={14} color="#34d399" />, label: `${bizcoins.toLocaleString()} BC`, sub: "Bizcoins", bg: "rgba(52,211,153,.12)", border: "rgba(52,211,153,.25)" },
+                    { icon: <IcoCoin size={14} color="#34d399" />, label: `${bizcoins.toLocaleString()} BZ`, sub: "Bizcoins", bg: "rgba(52,211,153,.12)", border: "rgba(52,211,153,.25)" },
                   ].map(m => (
                     <div key={m.sub} style={{ display: "flex", alignItems: "center", gap: 9, background: m.bg, border: `1px solid ${m.border}`, borderRadius: 12, padding: "9px 14px" }}>
                       {m.icon}
