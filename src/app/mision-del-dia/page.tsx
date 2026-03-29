@@ -630,15 +630,17 @@ export default function MisionDiaPage() {
                     <p className="rd-card-desc">{challenge?.description ?? "Cargando la misión de hoy..."}</p>
                   )}
 
-                </div>
-              </div>
+                  {/* Action Button inside card */}
+                  {!loadingChallenge && !errorDetails && (
+                    <div style={{ marginTop: 32, display: "flex", justifyContent: "flex-start", animation: "fadeUp 0.6s ease 0.3s both" }}>
+                      <button className="rd-complete-btn" onClick={() => setShowEvidence(true)} style={{ margin: 0 }}>
+                        <SquareCheckBig size={20} />
+                        Completar Misión
+                      </button>
+                    </div>
+                  )}
 
-              {/* Action Button */}
-              <div style={{ padding: "10px 0 32px", display: "flex", justifyContent: "center", animation: "fadeUp 0.6s ease 0.2s both" }}>
-                <button className="rd-complete-btn" onClick={() => setShowEvidence(true)}>
-                  <Camera size={20} />
-                  Subir Foto y Completar Misión
-                </button>
+                </div>
               </div>
 
               {/* ── Info cards ── */}

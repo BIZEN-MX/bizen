@@ -995,10 +995,12 @@ export default function WelcomePage() {
                 }
                 @media (max-width: 768px) {
                   .landing-hero-mascot {
-                    width: 220px !important;
-                    top: 130px !important;
-                    left: -80px !important;
-                    opacity: 0.9 !important;
+                    width: 170px !important;
+                    top: 50% !important;
+                    left: -100px !important;
+                    opacity: 0.6 !important;
+                    z-index: -1 !important;
+                    transform: translateY(-50%) !important;
                   }
                 }
               `,
@@ -1197,9 +1199,8 @@ export default function WelcomePage() {
                   }
                   @media (max-width: 450px) {
                     .hero-tagline-border-wrap { 
-                      transform: translateX(12%); 
-                      margin-left: auto !important;
-                      margin-right: 0 !important;
+                      transform: none !important; 
+                      margin: 0 auto !important;
                     }
                   }
                 `,
