@@ -241,18 +241,18 @@ export default function WelcomePage() {
           transition: "all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
         }}
       >
-        <div
-          className="landing-header-container"
-          style={{
-            width: "100%",
-            maxWidth: "1200px",
-            padding: "0 clamp(20px, 4vw, 48px)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "16px",
-          }}
-        >
+          <div
+            className="landing-header-container"
+            style={{
+              width: "100%",
+              maxWidth: "1200px",
+              padding: "0 clamp(16px, 4vw, 48px)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "16px",
+            }}
+          >
           {/* Logo */}
           <Link
             href="/"
@@ -1569,7 +1569,7 @@ export default function WelcomePage() {
               display: "flex",
               alignItems: "center",
               gap: "12px",
-              padding: "clamp(32px, 5vw, 60px) clamp(24px, 6vw, 80px) 0",
+              padding: "clamp(32px, 5vw, 60px) clamp(16px, 6vw, 80px) 0",
               maxWidth: "1200px",
               margin: "0 auto",
               boxSizing: "border-box",
@@ -4317,7 +4317,7 @@ function LandingContent({
               display: "flex",
               alignItems: "center",
               gap: "12px",
-              padding: "clamp(32px, 5vw, 60px) clamp(24px, 6vw, 80px) 0",
+              padding: "clamp(32px, 5vw, 60px) clamp(16px, 6vw, 80px) 0",
               maxWidth: "1200px",
               margin: "0 auto",
               boxSizing: "border-box",
@@ -4362,7 +4362,7 @@ function LandingContent({
                 background: "linear-gradient(170deg, #040f26 0%, #06184d 50%, #040f26 100%)",
                 margin: "clamp(0px, 4vw, 60px) clamp(16px, 4vw, 40px)",
                 borderRadius: "48px",
-                padding: "clamp(64px, 10vw, 110px) clamp(24px, 5vw, 60px)",
+                padding: "clamp(48px, 10vw, 110px) clamp(16px, 5vw, 60px)",
                 position: "relative",
                 overflow: "visible",
                 boxShadow: "0 24px 80px rgba(0, 0, 0, 0.25)",
@@ -5073,7 +5073,7 @@ function LandingContent({
             className="section adventure-carousel-section reveal-element"
             style={{
               background: "#FBFAF5",
-              padding: "clamp(72px, 9vw, 112px) clamp(16px, 4vw, 60px)",
+              padding: "clamp(64px, 9vw, 112px) clamp(16px, 4vw, 60px)",
               maxWidth: "1440px",
               margin: "0 auto",
               overflow: "visible",

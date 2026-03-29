@@ -411,17 +411,19 @@ export default function DashboardPage() {
           /* reduce general container padding */
           .di { padding: 12px 14px 120px !important; }
 
-          /* STAT CARDS: side by side logic or smaller height */
+          /* STAT CARDS: better scaling, avoid dead space */
           .stats-row { 
             display: grid !important; 
             grid-template-columns: 1fr 1fr !important;
-            gap: 10px !important;
+            gap: 12px !important;
           }
-          /* Card 1 & 2 side by side, Card 3 full width */
-          .stats-row > div:nth-child(3) { grid-column: span 2; min-height: 100px !important; }
-          .sc { padding: 16px 14px !important; min-height: 110px !important; }
-          .sc-num { font-size: 32px !important; margin-top: 8px !important; }
-          .sc-label { font-size: 9px !important; margin-bottom: 8px !important; }
+          @media (max-width:420px) {
+            .stats-row { grid-template-columns: 1fr !important; }
+          }
+          /* Card spacing & font sizes */
+          .sc { padding: 16px !important; min-height: 100px !important; }
+          .sc-num { font-size: clamp(28px, 8vw, 36px) !important; margin-top: 6px !important; }
+          .sc-label { font-size: 10px !important; margin-bottom: 6px !important; }
 
           /* hero: more compact */
           .hero-xp-ring { display:none !important; }

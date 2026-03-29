@@ -5,6 +5,7 @@ import { Providers } from "@/components/Providers"
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
 import { AchievementToastProvider } from "@/components/AchievementToast"
+import StructuredData from "@/components/SEO/StructuredData"
 import "./globals.css"
 
 const geist = Geist({
@@ -23,17 +24,36 @@ const outfit = Outfit({
 
 
 export const metadata: Metadata = {
-  title: "BIZEN",
-  description: "Educación financiera premium para la nueva generación",
+  metadataBase: new URL("https://bizen.mx"),
+  title: {
+    default: "BIZEN - Educación Financiera Premium para Jóvenes",
+    template: "%s | BIZEN",
+  },
+  description: "Plataforma de educación financiera premium para la nueva generación en México. Domina tus finanzas con simuladores, IA y contenido gamificado.",
   applicationName: "BIZEN",
+  keywords: [
+    "Educación financiera",
+    "Finanzas personales",
+    "Jóvenes",
+    "México",
+    "Ahorro",
+    "Inversión",
+    "Simulador financiero",
+    "BIZEN",
+    "IA financiera",
+    "Estudiantes",
+    "Instituciones educativas",
+  ],
+  authors: [{ name: "BIZEN Team" }],
+  category: "education",
   appleWebApp: {
     capable: true,
     title: "BIZEN",
     statusBarStyle: "default",
   },
   openGraph: {
-    title: "BIZEN",
-    description: "Educación financiera premium para la nueva generación",
+    title: "BIZEN | Educación Financiera Premium",
+    description: "La plataforma líder en educación financiera para jóvenes en México. Gamificada, con IA y simuladores reales.",
     url: "https://bizen.mx",
     siteName: "BIZEN",
     type: "website",
@@ -43,23 +63,29 @@ export const metadata: Metadata = {
         url: "/og-bizen.png",
         width: 1200,
         height: 630,
-        alt: "BIZEN - Educación Financiera",
+        alt: "BIZEN - El futuro de la educación financiera",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "BIZEN",
-    description: "Educación financiera premium para la nueva generación",
+    title: "BIZEN | Educación Financiera para Jóvenes",
+    description: "Domina tus finanzas personales con BIZEN. Educación financiera premium para la nueva generación.",
     images: ["/og-bizen.png"],
+    creator: "@bizen_mx",
   },
   icons: {
-    icon: "/thumbs up.png",
-    apple: "/thumbs up.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.png", type: "image/png" },
+      { url: "/thumbs up.png", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
   },
 }
 
 export const viewport = {
+  themeColor: "#0056E7",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -67,11 +93,14 @@ export const viewport = {
   viewportFit: "cover" as const, // Enable safe area insets for iOS devices with notches
 }
 
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${geist.variable} ${outfit.variable}`}>
 
-      <head />
+      <head>
+        <StructuredData />
+      </head>
       <body>
         <Providers>
           <ClientLayoutWrapper>

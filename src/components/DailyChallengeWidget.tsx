@@ -155,7 +155,7 @@ export default function DailyChallengeWidget() {
             background: completed 
                 ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
                 : "linear-gradient(145deg, #0d1b4b 0%, #1e0648 50%, #2d0a6b 100%)",
-            borderRadius: 24, padding: "24px",
+            borderRadius: 24, padding: "clamp(16px, 4vw, 24px)",
             boxShadow: completed 
                 ? "0 12px 32px rgba(16,185,129,0.25)"
                 : "0 12px 40px rgba(109,40,217,0.3)",

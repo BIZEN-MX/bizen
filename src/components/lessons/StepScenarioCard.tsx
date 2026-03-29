@@ -71,7 +71,7 @@ export function StepScenarioCard({ text, variant = "case" }: StepScenarioCardPro
         borderRadius: 20,
         border: `1.5px solid ${v.border}`,
         boxShadow: v.shadow,
-        padding: "20px 22px",
+        padding: "clamp(16px, 3.5vw, 22px)",
         display: "flex",
         flexDirection: "column",
         gap: 12,

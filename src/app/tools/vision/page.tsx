@@ -624,15 +624,28 @@ export default function VisionCanvasPage() {
           height: auto;
           overflow-y: auto;
           box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-          z-index: 100;
+          z-index: 1000; /* Higher z-index to stay on top */
           border-radius: 20px;
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+          .vision-sidebar {
+            top: 0; right: 0; bottom: 0; left: 0;
+            width: 100%; height: 100vh;
+            border-radius: 0;
+            z-index: 10001; /* Above mobile footer if any */
+            background: rgba(255, 255, 255, 0.98);
+          }
         }
 
         .vision-sidebar.hidden {
           opacity: 0;
           pointer-events: none;
           transform: translateX(20px) scale(0.98);
+        }
+        @media (max-width: 768px) {
+          .vision-sidebar.hidden { transform: translateY(40px); }
         }
 
         .canvas-area {
@@ -651,10 +664,16 @@ export default function VisionCanvasPage() {
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           border-bottom: 1px solid rgba(15,98,254,0.08);
-          padding: 10px 20px;
-          display: flex; align-items: center; gap: 10px; flex-wrap: nowrap;
-          position: relative; z-index: 20; flex-shrink: 0; overflow-x: auto;
+          padding: 8px 16px;
+          display: flex; align-items: center; gap: 12px; flex-wrap: nowrap;
+          position: relative; z-index: 20; flex-shrink: 0;
           box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+        @media (max-width: 640px) {
+          .vision-header { padding: 8px 12px; gap: 8px; }
+          .vision-title-group { display: none !important; } /* Hide sub-text on tiny screens */
         }
         .vision-header::-webkit-scrollbar { display: none; }
 
@@ -790,8 +809,8 @@ export default function VisionCanvasPage() {
                 >
                   <Maximize2 size={20} color="white" />
                 </div>
-                <div>
-                  <h1 style={{ fontSize: 24, fontWeight: 900, color: "#0F62FE", margin: 0, letterSpacing: "-0.03em" }}>
+                <div className="vision-title-group">
+                  <h1 style={{ fontSize: "clamp(18px, 4vw, 24px)", fontWeight: 900, color: "#0F62FE", margin: 0, letterSpacing: "-0.03em" }}>
                     Vision Canvas
                   </h1>
                   <span style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Crea tu futuro financiero hoy</span>
@@ -943,19 +962,27 @@ export default function VisionCanvasPage() {
 
           {/* ── Persistent Right Sidebar ── */}
           <aside className={`vision-sidebar ${!showAiPanel ? "hidden" : ""}`}>
-            {/* Sidebar header */}
             <div style={{ padding: "18px 20px", borderBottom: "1px solid rgba(15,98,254,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 38, height: 38, borderRadius: 11, background: "linear-gradient(135deg,#0F62FE,#4A9EFF)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 10px rgba(15,98,254,0.2)" }}>
-                  <Sparkles size={18} color="white" />
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg,#0F62FE,#4A9EFF)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(15,98,254,0.3)" }}>
+                  <Sparkles size={20} color="white" />
                 </div>
                 <div>
-                  <p style={{ fontSize: 14, fontWeight: 800, color: "#1e293b", margin: 0 }}>Asistente Billy IA</p>
-                  <p style={{ fontSize: 11, color: "#94a3b8", margin: 0 }}>Analítica & Estrategia</p>
+                  <p style={{ fontSize: 16, fontWeight: 800, color: "#1e293b", margin: 0, letterSpacing: "-0.01em" }}>Asistente Billy IA</p>
+                  <p style={{ fontSize: 12, color: "#94a3b8", margin: 0 }}>Analítica & Estrategia</p>
                 </div>
               </div>
-              <button onClick={() => setShowAiPanel(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b" }}>
-                <X size={16} />
+              <button 
+                onClick={() => setShowAiPanel(false)} 
+                style={{ 
+                  background: "rgba(100, 116, 139, 0.08)", border: "none", borderRadius: "50%",
+                  width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer", color: "#64748b", transition: "all 0.2s"
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(100, 116, 139, 0.12)"}
+                onMouseLeave={e => e.currentTarget.style.background = "rgba(100, 116, 139, 0.08)"}
+              >
+                <X size={22} />
               </button>
             </div>
 
@@ -1075,6 +1102,35 @@ export default function VisionCanvasPage() {
              Scroll = Zoom · Clic y arrastrar fondo = Mover Canvas
            </span>
         </div>
+        <AnimatePresence>
+          {!showAiPanel && (
+            <motion.button
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              onClick={() => setShowAiPanel(true)}
+              style={{
+                position: "fixed",
+                bottom: 24,
+                right: 24,
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                background: "#0F62FE",
+                color: "white",
+                border: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 10px 25px rgba(15,98,254,0.4)",
+                zIndex: 999,
+                cursor: "pointer"
+              }}
+            >
+              <Sparkles size={24} />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
     </>
   )
