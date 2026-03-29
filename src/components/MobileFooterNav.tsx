@@ -17,7 +17,8 @@ import {
   LogIn,
   Target,
   BarChart2,
-  Trophy
+  Trophy,
+  Zap
 } from "lucide-react"
 
 export default function MobileFooterNav() {
@@ -71,28 +72,28 @@ export default function MobileFooterNav() {
 
   const navItems = isStudentOrGuest ? [
     {
+      path: "/dashboard",
+      label: "Dashboard",
+      icon: BarChart2,
+      active: isActivePath("/dashboard")
+    },
+    {
       path: "/courses",
-      label: "Cursos",
+      label: "Cursos y Lecc.",
       icon: MapIcon,
       active: isActivePath("/courses")
     },
     {
-      path: "/rankings",
-      label: "Rankings",
-      icon: Trophy,
-      active: isActivePath("/rankings")
-    },
-    {
-      path: "/cash-flow",
-      label: "Simulador",
+      path: "/tools",
+      label: "Simuladores",
       icon: Gamepad2,
-      active: isActivePath("/cash-flow")
+      active: isActivePath("/tools") || isActivePath("/cash-flow")
     },
     {
-      path: "/forum",
-      label: "Foro",
+      path: "/comunidad",
+      label: "Comunidad",
       icon: MessageSquare,
-      active: isActivePath("/forum")
+      active: isActivePath("/comunidad") || isActivePath("/forum")
     },
     {
       path: "/profile",
@@ -341,6 +342,65 @@ export default function MobileFooterNav() {
             }} />
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {/* BIZEN Live */}
+              <button
+                onClick={() => {
+                  setShowProfilePanel(false)
+                  navigateTo(isAdminOrTeacher ? "/live/host" : "/live/join")
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  padding: "14px 18px",
+                  background: pathname?.includes("/live") ? "rgba(15, 98, 254, 0.08)" : "transparent",
+                  border: "none",
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: pathname?.includes("/live") ? "#0F62FE" : "#1e293b",
+                  width: "100%",
+                  textAlign: "left",
+                  transition: "all 0.2s ease"
+                }}
+              >
+                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Zap size={20} color="#0F62FE" strokeWidth={2.5} />
+                </div>
+                <span>BIZEN Live</span>
+              </button>
+
+              {/* Perfil */}
+              <button
+                onClick={() => {
+                  setShowProfilePanel(false)
+                  navigateTo("/profile")
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  padding: "14px 18px",
+                  background: pathname === "/profile" ? "rgba(15, 98, 254, 0.08)" : "transparent",
+                  border: "none",
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: pathname === "/profile" ? "#0F62FE" : "#1e293b",
+                  width: "100%",
+                  textAlign: "left",
+                  transition: "all 0.2s ease"
+                }}
+              >
+                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <User size={20} color="#0F62FE" strokeWidth={2.5} />
+                </div>
+                <span>Perfil</span>
+              </button>
+
+              {/* Tienda */}
               {isStudentOrGuest && (
                 <button
                   onClick={() => {
@@ -371,6 +431,7 @@ export default function MobileFooterNav() {
                 </button>
               )}
 
+              {/* Configuración */}
               <button
                 onClick={() => {
                   setShowProfilePanel(false)
@@ -399,6 +460,8 @@ export default function MobileFooterNav() {
                 <span>Configuración</span>
               </button>
 
+              <div style={{ height: "1px", background: "rgba(0, 0, 0, 0.06)", margin: "8px 0" }} />
+
               <button
                 onClick={() => {
                   setShowProfilePanel(false)
@@ -408,22 +471,19 @@ export default function MobileFooterNav() {
                   display: "flex",
                   alignItems: "center",
                   gap: "14px",
-                  padding: "14px 18px",
-                  background: pathname === "/rankings" ? "rgba(15, 98, 254, 0.08)" : "transparent",
+                  padding: "10px 18px",
+                  background: "transparent",
                   border: "none",
-                  borderRadius: "16px",
+                  borderRadius: "12px",
                   cursor: "pointer",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: pathname === "/rankings" ? "#0F62FE" : "#1e293b",
+                  fontSize: 14,
+                  color: "#64748b",
                   width: "100%",
                   textAlign: "left",
                   transition: "all 0.2s ease"
                 }}
               >
-                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Trophy size={20} color="#0F62FE" strokeWidth={2.5} />
-                </div>
+                <Trophy size={16} />
                 <span>Rankings</span>
               </button>
 
@@ -436,51 +496,20 @@ export default function MobileFooterNav() {
                   display: "flex",
                   alignItems: "center",
                   gap: "14px",
-                  padding: "14px 18px",
-                  background: pathname === "/impacto-social" ? "rgba(15, 98, 254, 0.08)" : "transparent",
+                  padding: "10px 18px",
+                  background: "transparent",
                   border: "none",
-                  borderRadius: "16px",
+                  borderRadius: "12px",
                   cursor: "pointer",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: pathname === "/impacto-social" ? "#0F62FE" : "#1e293b",
+                  fontSize: 14,
+                  color: "#64748b",
                   width: "100%",
                   textAlign: "left",
                   transition: "all 0.2s ease"
                 }}
               >
-                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Heart size={20} color="#0F62FE" strokeWidth={2.5} />
-                </div>
-                <span>Mi Impacto Social</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowProfilePanel(false)
-                  navigateTo("/profile")
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "14px",
-                  padding: "14px 18px",
-                  background: pathname === "/profile" ? "rgba(15, 98, 254, 0.08)" : "transparent",
-                  border: "none",
-                  borderRadius: "16px",
-                  cursor: "pointer",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: pathname === "/profile" ? "#0F62FE" : "#1e293b",
-                  width: "100%",
-                  textAlign: "left",
-                  transition: "all 0.2s ease"
-                }}
-              >
-                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <User size={20} color="#0F62FE" strokeWidth={2.5} />
-                </div>
-                <span>Perfil</span>
+                <Heart size={16} />
+                <span>Impacto Social</span>
               </button>
 
               <div style={{ height: "1px", background: "rgba(0, 0, 0, 0.06)", margin: "8px 0" }} />
