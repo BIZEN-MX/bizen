@@ -5,7 +5,7 @@ import type { LessonStep } from "@/types/lessonTypes"
  * Re-architected to "Get to the point" (Practical Theme 1)
  */
 
-// --- TEMA 1: Operativo BIZEN (The System) ---
+import { lessonQueEsElDineroParaMiSteps } from "./lesson-que-es-el-dinero-para-mi"
 import { lessonLasRulesDelSistemaFinancieroSteps } from "./lesson-las-reglas-del-sistema-financiero"
 import { lessonQueEsElDineroDeudaVsEnergiaSteps } from "./lesson-que-es-el-dinero-deuda-vs-energia"
 import { lessonTuPrimerEstadoDeResultadosPersonalSteps } from "./lesson-tu-primer-estado-de-resultados-personal"
@@ -131,6 +131,11 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "la-pausa-de-las-24-horas": lessonLaPausaDeLas24HorasMecanicaSteps,
   "evaluacion-de-bloque-1": lessonEvaluacionBloque1Steps,
   "evaluacion-bloque-1": lessonEvaluacionBloque1Steps,
+  
+  // Legacy slugs from old seed
+  "que-es-el-dinero-para-mi-hoy": lessonQueEsElDineroParaMiSteps,
+  "dinero-como-seguridad-vs-libertad": lessonQueEsElDineroDeudaVsEnergiaSteps,
+  "pausa-financiera-reglas-anti-impulso": lessonLaPausaDeLas24HorasMecanicaSteps,
 
   // --- TEMA 2 ---
   "por-que-el-mercado-paga-lo-que-paga": lessonPorQueElMercadoPagaLoQuePagaSteps,
