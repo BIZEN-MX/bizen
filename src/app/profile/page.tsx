@@ -285,17 +285,21 @@ export default function ProfilePage() {
     <div className="prof-outer" style={{ minHeight: "100vh", background: "#FBFAF5" }}>
       <style>{`
         @media (max-width: 767px) {
-          .prof-outer { width: 100% !important; margin-left: 0 !important; padding: 12px 12px 100px !important; }
-          .prof-body  { flex-direction: column !important; gap: 20px !important; }
+          .prof-outer { width: 100% !important; margin-left: 0 !important; padding: 12px 12px 110px !important; }
+          .prof-body  { flex-direction: column !important; gap: 16px !important; }
           .prof-side  { width: 100% !important; order: 1; }
-          .prof-hero  { height: 200px !important; border-radius: 24px !important; padding: 20px !important; align-items: center !important; justify-content: center !important; }
-          .prof-avatar-box { width: 110px !important; height: 110px !important; margin-top: 0 !important; }
+          .prof-hero  { height: auto !important; min-height: 180px !important; border-radius: 20px !important; padding: 20px 16px !important; align-items: center !important; justify-content: center !important; }
+          .prof-avatar-box { width: 90px !important; height: 90px !important; margin-top: 0 !important; }
+          .prof-stat-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+          .prof-card { border-radius: 20px !important; padding: 16px !important; }
+          .xp-card-header { padding: 12px 16px !important; }
+          .xp-card-body { padding: 12px 16px !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .prof-outer { margin-left: 220px !important; padding: 40px 24px 80px !important; width: calc(100% - 220px) !important; }
         }
         @media (min-width: 1161px) {
-          .prof-outer { margin-left: 280px !important; padding: 60px 48px 80px !important; width: calc(100% - 280px) !important; }
+          .prof-outer { margin-left: 280px !important; padding: 40px 48px 80px !important; width: calc(100% - 280px) !important; }
         }
         .prof-card { background: white; border: 1.5px solid #e2e8f0; border-radius: 24px; box-shadow: 0 4px 20px rgba(15,23,42,0.03); transition: transform 0.2s; }
         .prof-card:hover { transform: translateY(-2px); }
@@ -315,32 +319,32 @@ export default function ProfilePage() {
       }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(white 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
         
-        <div style={{ position: "relative", zIndex: 10, display: "flex", gap: 24, alignItems: "center", width: "100%", flexDirection: screenSize < 768 ? "column" : "row", textAlign: screenSize < 768 ? "center" : "left" }}>
+        <div style={{ position: "relative", zIndex: 10, display: "flex", gap: screenSize < 768 ? 16 : 24, alignItems: "center", width: "100%", flexDirection: screenSize < 768 ? "column" : "row", textAlign: screenSize < 768 ? "center" : "left" }}>
           {/* Avatar Box in Banner */}
           <div onClick={() => setIsPickerOpen(true)} className="prof-avatar-box" style={{ 
-            width: 140, height: 140, borderRadius: "50%", background: "white", 
+            width: 130, height: 130, borderRadius: "50%", background: "white", 
             border: "4px solid rgba(255,255,255,0.2)", backdropFilter: "blur(10px)",
             boxShadow: "0 15px 35px rgba(0,0,0,0.2)", 
             position: "relative", cursor: "pointer", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0
           }}>
-            <AvatarDisplay avatar={user.user_metadata?.avatar || { id: "robot" }} size={120} />
-            <div style={{ position: "absolute", bottom: 4, right: 4, width: 28, height: 28, borderRadius: "50%", background: "#0F62FE", display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid white", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}>
-              <Camera size={12} color="white" />
+            <AvatarDisplay avatar={user.user_metadata?.avatar || { id: "robot" }} size={screenSize < 768 ? 80 : 110} />
+            <div style={{ position: "absolute", bottom: 4, right: 4, width: 24, height: 24, borderRadius: "50%", background: "#0F62FE", display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid white", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}>
+              <Camera size={10} color="white" />
             </div>
           </div>
 
           {/* Identity Details in Banner */}
-          <div style={{ flex: 1, color: "white" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, justifyContent: screenSize < 768 ? "center" : "flex-start", flexWrap: "wrap" }}>
-              <div style={{ background: "rgba(255,255,255,0.25)", padding: "4px 12px", borderRadius: 999, fontSize: 10, fontWeight: 800, letterSpacing: "0.05em", border: "1px solid rgba(255,255,255,0.1)" }}>NIVEL {level}</div>
+          <div style={{ flex: 1, color: "white", width: "100%" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4, justifyContent: screenSize < 768 ? "center" : "flex-start", flexWrap: "wrap" }}>
+              <div style={{ background: "rgba(255,255,255,0.25)", padding: "3px 10px", borderRadius: 999, fontSize: 9, fontWeight: 800, letterSpacing: "0.05em", border: "1px solid rgba(255,255,255,0.1)" }}>NIVEL {level}</div>
             </div>
-            <h1 style={{ fontSize: screenSize < 768 ? 24 : 36, fontWeight: 800, margin: 0, letterSpacing: "-0.03em", textShadow: "0 2px 10px rgba(0,0,0,0.2)" }}>{displayName}</h1>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4, justifyContent: screenSize < 768 ? "center" : "flex-start" }}>
-              <span style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>@{nickname}</span>
-              <div style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.3)" }} />
-              <a href="https://instagram.com/bizen.mx" target="_blank" style={{ display: "flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,0.9)", textDecoration: "none", fontWeight: 600, fontSize: 13 }}>
-                <Instagram size={14} /> @bizen.mx
+            <h1 style={{ fontSize: screenSize < 768 ? 22 : 32, fontWeight: 800, margin: 0, letterSpacing: "-0.03em", textShadow: "0 2px 8px rgba(0,0,0,0.2)", lineHeight: 1.1 }}>{displayName}</h1>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4, justifyContent: screenSize < 768 ? "center" : "flex-start", opacity: 0.9 }}>
+              <span style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 500 }}>@{nickname}</span>
+              <div style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(255,255,255,0.4)" }} />
+              <a href="https://instagram.com/bizen.mx" target="_blank" style={{ display: "flex", alignItems: "center", gap: 6, color: "white", textDecoration: "none", fontWeight: 600, fontSize: 12 }}>
+                <Instagram size={13} /> @bizen.mx
               </a>
             </div>
           </div>
@@ -354,38 +358,42 @@ export default function ProfilePage() {
                 onClick={() => isBasic && router.push("/payment")}
                 style={{
                   marginLeft: screenSize < 768 ? "0" : "auto", flexShrink: 0,
-                  marginTop: screenSize < 768 ? 12 : 0,
+                  marginTop: screenSize < 768 ? 10 : 0,
                   background: isBasic
                     ? "linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%)"
                     : info.bg,
-                  padding: isBasic ? "12px 20px" : "8px 20px",
-                  borderRadius: 20,
-                  display: "flex", flexDirection: "column", gap: isBasic ? 4 : 2,
-                  alignItems: screenSize < 768 ? "center" : "flex-start",
+                  padding: isBasic ? (screenSize < 768 ? "8px 16px" : "12px 20px") : "8px 20px",
+                  borderRadius: 16,
+                  display: "flex", 
+                  flexDirection: isBasic && screenSize < 768 ? "row" : "column", 
+                  gap: isBasic ? 8 : 2,
+                  alignItems: "center",
+                  justifyContent: "center",
                   cursor: isBasic ? "pointer" : "default",
                   boxShadow: isBasic
-                    ? "0 12px 30px rgba(15,98,254,0.25), 0 2px 8px rgba(0,0,0,0.08)"
+                    ? "0 8px 20px rgba(15,98,254,0.15), 0 2px 4px rgba(0,0,0,0.05)"
                     : "0 8px 24px rgba(0,0,0,0.15)",
                   border: isBasic ? "1.5px solid rgba(15,98,254,0.3)" : "1.5px solid rgba(255,255,255,0.3)",
                   transition: "opacity 0.2s ease",
                   backdropFilter: "blur(12px)",
-                  minWidth: isBasic ? 140 : 120,
+                  minWidth: isBasic ? (screenSize < 768 ? "none" : 140) : 120,
+                  width: screenSize < 768 ? "100%" : "auto"
                 }}
                 onMouseEnter={e => { if (isBasic) e.currentTarget.style.opacity = "0.75" }}
                 onMouseLeave={e => { e.currentTarget.style.opacity = "1" }}
               >
                 {isBasic ? (
                   <>
-                    <div style={{ fontSize: 9, fontWeight: 900, color: "#0F62FE", letterSpacing: "0.18em", textTransform: "uppercase" }}>Mejora a Pro</div>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
-                      <span style={{ fontSize: 26, fontWeight: 950, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1 }}>$179</span>
-                      <span style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>/mes</span>
+                    <div style={{ fontSize: 9, fontWeight: 900, color: "#0F62FE", letterSpacing: "0.1em", textTransform: "uppercase" }}>{screenSize < 768 ? "PRO" : "Mejora a Pro"}</div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
+                      <span style={{ fontSize: 20, fontWeight: 950, color: "#0f172a", letterSpacing: "-0.02em", lineHeight: 1 }}>$179</span>
+                      <span style={{ fontSize: 10, color: "#64748b", fontWeight: 500 }}>/mes</span>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.12em", textTransform: "uppercase" }}>Tu Plan</div>
-                    <div style={{ fontSize: 16, fontWeight: 900, color: "white", letterSpacing: "-0.01em" }}>{info.label}</div>
+                    <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.12em", textTransform: "uppercase" }}>Tu Plan</div>
+                    <div style={{ fontSize: 14, fontWeight: 900, color: "white", letterSpacing: "-0.01em" }}>{info.label}</div>
                   </>
                 )}
               </div>
@@ -403,48 +411,48 @@ export default function ProfilePage() {
           {!isAdminOrTeacher && (
             <div className="prof-card fade-up" style={{ padding: 0, animationDelay: "0.1s", overflow: "hidden", border: "1.5px solid #e2e8f0" }}>
               {/* Top gradient header - compact */}
-              <div style={{ background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", padding: "14px 24px", position: "relative", overflow: "hidden" }}>
+              <div className="xp-card-header" style={{ background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", padding: "14px 20px", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", inset: 0, opacity: 0.08, backgroundImage: "radial-gradient(white 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 1 }}>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 2 }}>Progreso</div>
-                    <div style={{ fontSize: 22, fontWeight: 950, color: "white", lineHeight: 1, letterSpacing: "-0.03em" }}>Nivel {level}</div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 2 }}>Progreso</div>
+                    <div style={{ fontSize: screenSize < 768 ? 18 : 22, fontWeight: 950, color: "white", lineHeight: 1, letterSpacing: "-0.02em" }}>Nivel {level}</div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: 26, fontWeight: 950, color: "white", lineHeight: 1, letterSpacing: "-0.03em" }}>{xpInLevel.toLocaleString()}<span style={{ fontSize: 13, fontWeight: 600, opacity: 0.65 }}> XP</span></div>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: 3 }}>de {xpForNext.toLocaleString()} XP</div>
+                    <div style={{ fontSize: screenSize < 768 ? 20 : 26, fontWeight: 950, color: "white", lineHeight: 1, letterSpacing: "-0.02em" }}>{xpInLevel.toLocaleString()}<span style={{ fontSize: 12, fontWeight: 600, opacity: 0.65 }}> XP</span></div>
+                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: 2 }}>de {xpForNext.toLocaleString()} XP</div>
                   </div>
                 </div>
               </div>
               {/* Progress bar footer */}
-              <div style={{ padding: "14px 24px" }}>
-                <div style={{ height: 20, background: "#f1f5f9", borderRadius: 99, overflow: "hidden" }}>
-                  <div style={{ width: `${xpPct}%`, height: "100%", background: "linear-gradient(90deg, #60a5fa, #0F62FE)", borderRadius: 99, transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)", boxShadow: "0 0 10px rgba(15,98,254,0.5)" }} />
+              <div className="xp-card-body" style={{ padding: "12px 20px" }}>
+                <div style={{ height: 16, background: "#f1f5f9", borderRadius: 99, overflow: "hidden" }}>
+                  <div style={{ width: `${xpPct}%`, height: "100%", background: "linear-gradient(90deg, #60a5fa, #0F62FE)", borderRadius: 99, transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)", boxShadow: "0 0 10px rgba(15,98,254,0.3)" }} />
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8 }}>
-                  <span style={{ fontSize: 10, color: "#94a3b8", fontWeight: 600 }}>Nivel {level}</span>
-                  <span style={{ fontSize: 10, color: "#0F62FE", fontWeight: 700 }}>{(xpForNext - xpInLevel).toLocaleString()} XP para subir</span>
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+                  <span style={{ fontSize: 9, color: "#94a3b8", fontWeight: 600 }}>Nivel {level}</span>
+                  <span style={{ fontSize: 9, color: "#0F62FE", fontWeight: 700 }}>{(xpForNext - xpInLevel).toLocaleString()} XP para viajar al nivel {level + 1}</span>
                 </div>
               </div>
             </div>
           )}
 
           {/* Stats Grid */}
-          <div className="fade-up" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, animationDelay: "0.2s" }}>
+          <div className="fade-up prof-stat-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, animationDelay: "0.2s" }}>
             {[
-              { icon: <Flame size={18} />, value: userStats?.currentStreak || 0, label: "Racha", sub: "días seguidos", cardBg: "linear-gradient(135deg, #fff1f2, #ffe4e6)", iconBg: "rgba(244,63,94,0.15)", iconColor: "#f43f5e", valColor: "#be123c", border: "#fecdd3" },
-              { icon: <Zap size={18} />, value: totalXp.toLocaleString(), label: "Total XP", sub: "puntos acumulados", cardBg: "linear-gradient(135deg, #eff6ff, #dbeafe)", iconBg: "rgba(15,98,254,0.12)", iconColor: "#0F62FE", valColor: "#1d4ed8", border: "#bfdbfe" },
-              { icon: <Award size={18} />, value: achievements.filter(a => a.unlocked).length, label: "Logros", sub: `de ${achievements.length} totales`, cardBg: "linear-gradient(135deg, #fefce8, #fef9c3)", iconBg: "rgba(202,138,4,0.15)", iconColor: "#ca8a04", valColor: "#a16207", border: "#fde68a" },
-              { icon: <Star size={18} />, value: getLeagueTitle(level), label: "Liga", sub: `Nivel ${level}`, cardBg: "linear-gradient(135deg, #f0fdf4, #dcfce7)", iconBg: "rgba(22,163,74,0.15)", iconColor: "#16a34a", valColor: "#15803d", border: "#bbf7d0" },
+              { icon: <Flame size={screenSize < 768 ? 16 : 18} />, value: userStats?.currentStreak || 0, label: "Racha", sub: "días", cardBg: "linear-gradient(135deg, #fff1f2, #ffe4e6)", iconBg: "rgba(244,63,94,0.12)", iconColor: "#f43f5e", valColor: "#be123c", border: "#fecdd3" },
+              { icon: <Zap size={screenSize < 768 ? 16 : 18} />, value: totalXp.toLocaleString(), label: "Total XP", sub: "puntos", cardBg: "linear-gradient(135deg, #eff6ff, #dbeafe)", iconBg: "rgba(15,98,254,0.1)", iconColor: "#0F62FE", valColor: "#1d4ed8", border: "#bfdbfe" },
+              { icon: <Award size={screenSize < 768 ? 16 : 18} />, value: achievements.filter(a => a.unlocked).length, label: "Logros", sub: `de ${achievements.length}`, cardBg: "linear-gradient(135deg, #fefce8, #fef9c3)", iconBg: "rgba(202,138,4,0.12)", iconColor: "#ca8a04", valColor: "#a16207", border: "#fde68a" },
+              { icon: <Star size={screenSize < 768 ? 16 : 18} />, value: getLeagueTitle(level), label: "Liga", sub: `Nivel ${level}`, cardBg: "linear-gradient(135deg, #f0fdf4, #dcfce7)", iconBg: "rgba(22,163,74,0.12)", iconColor: "#16a34a", valColor: "#15803d", border: "#bbf7d0" },
             ].map(s => (
-              <div key={s.label} style={{ padding: "18px 20px", display: "flex", alignItems: "center", gap: 14, background: s.cardBg, border: `1.5px solid ${s.border}`, borderRadius: 24, boxShadow: "0 4px 12px rgba(0,0,0,0.04)", transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
-                <div style={{ width: 42, height: 42, borderRadius: 12, background: s.iconBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: s.iconColor }}>
+              <div key={s.label} style={{ padding: screenSize < 768 ? "12px 14px" : "18px 20px", display: "flex", alignItems: "center", gap: screenSize < 768 ? 10 : 14, background: s.cardBg, border: `1.5px solid ${s.border}`, borderRadius: 20, boxShadow: "0 4px 10px rgba(0,0,0,0.03)", transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
+                <div style={{ width: screenSize < 768 ? 32 : 42, height: screenSize < 768 ? 32 : 42, borderRadius: 10, background: s.iconBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: s.iconColor }}>
                   {s.icon}
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: s.valColor, lineHeight: 1, letterSpacing: "-0.02em" }}>{s.value}</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: s.valColor, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.04em", opacity: 0.7 }}>{s.label}</div>
-                  <div style={{ fontSize: 10, color: s.valColor, fontWeight: 500, marginTop: 1, opacity: 0.5 }}>{s.sub}</div>
+                  <div style={{ fontSize: screenSize < 768 ? 18 : 22, fontWeight: 900, color: s.valColor, lineHeight: 1, letterSpacing: "-0.01em" }}>{s.value}</div>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: s.valColor, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.02em", opacity: 0.8 }}>{s.label}</div>
+                  {screenSize >= 768 && <div style={{ fontSize: 10, color: s.valColor, fontWeight: 500, marginTop: 1, opacity: 0.5 }}>{s.sub}</div>}
                 </div>
               </div>
             ))}
@@ -452,11 +460,11 @@ export default function ProfilePage() {
 
           {/* Achievements Area */}
           <div className="fade-up" style={{ animationDelay: "0.3s" }}>
-             <h2 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 20, display: "flex", alignItems: "center", gap: 8 }}>
+             <h2 style={{ fontSize: screenSize < 768 ? 16 : 18, fontWeight: 700, color: "#0f172a", marginBottom: screenSize < 768 ? 12 : 20, display: "flex", alignItems: "center", gap: 8 }}>
                Mis Logros
-               <span style={{ fontSize: 12, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "2px 8px", borderRadius: 8 }}>{achievements.filter(a => a.unlocked).length}</span>
+               <span style={{ fontSize: 11, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "2px 8px", borderRadius: 8 }}>{achievements.filter(a => a.unlocked).length}</span>
              </h2>
-             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 16 }}>
+             <div style={{ display: "grid", gridTemplateColumns: screenSize < 768 ? "repeat(auto-fill, minmax(100px, 1fr))" : "repeat(auto-fill, minmax(140px, 1fr))", gap: screenSize < 768 ? 10 : 16 }}>
                 {achievements.map(a => <AchievementCard key={a.id} a={a} cfg={RARITY_CFG[a.rarity] || RARITY_CFG.común} />)}
              </div>
           </div>
@@ -476,7 +484,14 @@ export default function ProfilePage() {
                 </button>
               </div>
               
-              <div style={{ transform: "scale(0.95)", transformOrigin: "top center" }}>
+              <div style={{ 
+                transform: screenSize < 768 ? `scale(${Math.max(0.7, (screenSize - 40) / 340)})` : "scale(0.95)", 
+                transformOrigin: "top center",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                height: screenSize < 768 ? "auto" : 210
+              }}>
                 <BizenVirtualCard bizcoins={bizcoins} holderName={displayName} colorTheme={cardTheme} />
               </div>
 
