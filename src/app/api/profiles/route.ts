@@ -136,6 +136,7 @@ export async function GET(request: NextRequest) {
       subscriptionStatus: profile.subscription_status || profile.subscriptionStatus || 'none',
       subscriptionEnds: profile.subscription_ends || profile.subscriptionEnds || null,
       stripeCustomerId: profile.stripe_customer_id || profile.stripeCustomerId || null,
+      cardTheme: profile.card_theme || profile.cardTheme || 'blue',
       school
     };
 

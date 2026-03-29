@@ -554,7 +554,7 @@ export default function DashboardPage() {
                     bizcoins={bizcoins}
                     holderName={dbProfile?.fullName || user?.email?.split("@")[0] || ""}
                     animationDelay=".12s"
-                    colorTheme={dbProfile?.cardTheme || dbProfile?.card_theme || user?.user_metadata?.cardTheme || "blue"}
+                    colorTheme={dbProfile?.cardTheme || "blue"}
                   />
                 </div>
               </div>

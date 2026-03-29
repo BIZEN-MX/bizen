@@ -884,7 +884,7 @@ export default function TiendaPage() {
                             <BizenVirtualCard 
                                 bizcoins={bizcoins} 
                                 holderName={dbProfile?.fullName || user?.email?.split("@")[0] || "Usuario"} 
-                                colorTheme={(dbProfile?.cardTheme || dbProfile?.card_theme || user?.user_metadata?.cardTheme || "blue") as CardTheme}
+                                colorTheme={(dbProfile?.cardTheme || "blue") as CardTheme}
                             />
                         </div>
                     </div>

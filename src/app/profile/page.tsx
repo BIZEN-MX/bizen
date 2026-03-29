@@ -144,7 +144,8 @@ export default function ProfilePage() {
   useEffect(() => {
     if (loading) return
     if (!user) { router.push("/login"); return }
-    if (user.user_metadata?.cardTheme) setCardTheme(user.user_metadata.cardTheme as CardTheme)
+    const currentTheme = dbProfile?.cardTheme || dbProfile?.card_theme || user.user_metadata?.cardTheme || "blue"
+    setCardTheme(currentTheme as CardTheme)
     
     const fetchData = async () => {
       try {
