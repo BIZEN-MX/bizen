@@ -66,11 +66,11 @@ import {
 
 import {
   lessonQueEsUnTriggerDeCompraSteps,
+  lessonPublicidadComoTeManipulaSteps,
+  lessonRedesComparacionYPresionSteps,
+  lessonComprasPorAburrimientoVsNecesidadSteps,
+  lessonDetectarMisTriggersCasosSteps,
   lessonElEgoEnElConsumoDigitalSteps
-} from "./tema3-triggers-compra"
-
-import {
-  lessonRedesComparacionYPresionSteps
 } from "./tema3-triggers-compra"
 
 import {
@@ -159,10 +159,13 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "como-cuestionar-una-creencia-con-evidencia": lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
   "mi-nuevo-manual-de-reglas-financieras": lessonMiNuevoManualDeReglasFinancierasSteps,
   "que-es-un-trigger-de-compra": lessonQueEsUnTriggerDeCompraSteps,
-  "el-ego-en-el-consumo-digital": lessonElEgoEnElConsumoDigitalSteps,
   "redes-comparacion-y-presion": lessonRedesComparacionYPresionSteps,
   "comprar-por-estatus-vs-por-valor": lessonComprarPorEstatusVsPorValorSteps,
   "regla-personal-anti-estatus": lessonReglaPersonalAntiEstatusSteps,
+  "el-ego-en-el-consumo-digital": lessonElEgoEnElConsumoDigitalSteps,
+  "publicidad-como-te-manipula": lessonPublicidadComoTeManipulaSteps,
+  "compras-por-aburrimiento-vs-necesidad": lessonComprasPorAburrimientoVsNecesidadSteps,
+  "detectar-mis-triggers-casos": lessonDetectarMisTriggersCasosSteps,
   "evaluacion-bloque-3": lessonEvaluacionBloque3Steps,
 
   // --- TEMA 4 ---
