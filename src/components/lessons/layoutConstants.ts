@@ -10,7 +10,7 @@ import type { CSSProperties } from "react"
 export const CONTENT_MAX_WIDTH = 900
 
 /** Horizontal padding: equal left and right. Use in CSS or style objects. */
-export const CONTENT_PADDING_X = "clamp(24px, 4vw, 48px)"
+export const CONTENT_PADDING_X = "clamp(16px, 4vw, 48px)"
 
 /** Vertical padding for content area: balanced top and bottom. */
 export const CONTENT_PADDING_Y = "clamp(24px, 4vh, 48px)"

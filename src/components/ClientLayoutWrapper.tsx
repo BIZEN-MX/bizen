@@ -21,13 +21,15 @@ function isPublicPath(p: string | null) {
 }
 
 import BillyChatbot from './BillyChatbot';
+import AppTourOverlay from './AppTourOverlay';
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   // const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
   const [isMobile, setIsMobile] = useState(false);
-  const { user, loading } = useAuth();
+  const { user, dbProfile, loading } = useAuth();
+  const [showTour, setShowTour] = useState(false);
 
   // Hide navigation entirely when user is not authenticated on a protected route
   const isUnauthProtected = !loading && !user && !isPublicPath(pathname)
@@ -162,6 +164,29 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     return () => document.documentElement.removeAttribute("data-lesson-interactive")
   }, [isLessonInteractivePage, isDiagnosticPage])
 
+  // ── APP TOUR LOGIC ──
+  useEffect(() => {
+    if (loading || !user || !dbProfile) return;
+    
+    // Auto-trigger for new users
+    const hasSeen = dbProfile.settings?.hasSeenTour;
+    const isPublic = isPublicPath(pathname);
+    const isLanding = pathname === "/";
+    
+    if (!hasSeen && !isPublic && !isLanding && !hideAppNavigation) {
+      // Small delay to ensure page content loads
+      const t = setTimeout(() => setShowTour(true), 1500);
+      return () => clearTimeout(t);
+    }
+  }, [loading, user, dbProfile, pathname, hideAppNavigation]);
+
+  // Global event listener for manual tour start
+  useEffect(() => {
+    const handleStartTour = () => setShowTour(true);
+    window.addEventListener('start-bizen-tour', handleStartTour);
+    return () => window.removeEventListener('start-bizen-tour', handleStartTour);
+  }, []);
+
   return (
     <>
       {/* Show FixedSidebar only on larger screens (>767px), hidden during interactive lesson, hidden when unauth */}
@@ -173,6 +198,10 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
       {!hideAppNavigation && !isUnauthProtected && <GlobalLogo />}
       {children}
       {!hideChat && <BillyChatbot />}
+      
+      {showTour && (
+        <AppTourOverlay onEnd={() => setShowTour(false)} />
+      )}
     </>
   );
 }

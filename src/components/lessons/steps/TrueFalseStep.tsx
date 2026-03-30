@@ -2,12 +2,10 @@
 
 import React, { useState, useEffect } from "react"
 import { TrueFalseStepFields } from "@/types/lessonTypes"
-import { motion } from "framer-motion"
-import { sharedStyles } from "../sharedStyles"
-import { CONTENT_MAX_WIDTH, CONTENT_GAP } from "../layoutConstants"
+import { motion, AnimatePresence } from "framer-motion"
 import { playCorrectSound, playIncorrectSound } from "../lessonSounds"
 import { ExerciseInstruction } from "./ExerciseInstruction"
-import { Check, X, CheckCircle2, XCircle } from "lucide-react"
+import { Check, X, CheckCircle2, XCircle, Lightbulb } from "lucide-react"
 import { StepScenarioCard } from "../StepScenarioCard"
 
 interface TrueFalseStepProps {
@@ -31,144 +29,198 @@ export function TrueFalseStep({
   const handleSelect = (value: boolean) => {
     if (hasChecked) return
     setSelectedValue(value)
-    // Notify parent to enable "Check" button
     onAnswered({ isCompleted: false, canAction: true, answerData: { selectedValue: value } })
   }
 
   const handleCheck = () => {
     if (selectedValue === undefined || hasChecked) return
-
     setHasChecked(true)
     setShowFeedback(true)
     const isCorrect = selectedValue === step.correctValue
-
     if (isCorrect) playCorrectSound()
     else playIncorrectSound()
-
     onAnswered({ isCompleted: true, isCorrect, answerData: { selectedValue } })
   }
 
   useEffect(() => {
-    if (actionTrigger && actionTrigger > 0 && selectedValue !== undefined && !hasChecked) {
-      handleCheck()
-    }
+    if (actionTrigger && actionTrigger > 0 && selectedValue !== undefined && !hasChecked) handleCheck()
   }, [actionTrigger])
 
-  const getButtonStyle = (value: boolean) => {
+  // Determines styles for each button
+  const getStyles = (value: boolean) => {
     const isSelected = selectedValue === value
+    const isCorrect = value === step.correctValue
 
-    // Normal state
-    let borderColor = "#E5E7EB"
-    let background = "#FFFFFF"
-    let color = "#374151"
-    let boxShadow = "0 2px 0 0 #E5E7EB"
-
-    if (showFeedback) {
-      if (value === step.correctValue) {
-        borderColor = "#3B82F6"
-        background = "#EFF6FF"
-        color = "#1D4ED8"
-        boxShadow = "0 2px 0 0 #93C5FD"
-      } else if (isSelected) {
-        borderColor = "#EF4444"
-        background = "#FEF2F2"
-        color = "#DC2626"
-        boxShadow = "0 2px 0 0 #FCA5A5"
+    if (!showFeedback) {
+      if (isSelected) {
+        return {
+          bg: value ? "linear-gradient(135deg, #f0fdf4, #dcfce7)" : "linear-gradient(135deg, #fef2f2, #fee2e2)",
+          border: value ? "#22c55e" : "#ef4444",
+          color: value ? "#15803d" : "#b91c1c",
+          shadow: value ? "0 4px 16px rgba(34,197,94,0.2)" : "0 4px 16px rgba(239,68,68,0.2)",
+          iconBg: value ? "#dcfce7" : "#fee2e2",
+          iconBorder: value ? "#22c55e" : "#ef4444",
+        }
       }
-    } else if (isSelected) {
-      borderColor = "#0F62FE"
-      background = "#EFF6FF"
-      color = "#1D4ED8"
-      boxShadow = "0 2px 0 0 #93C5FD"
+      return {
+        bg: "#FFFFFF",
+        border: "#E5E7EB",
+        color: "#374151",
+        shadow: "0 2px 0 0 #E5E7EB",
+        iconBg: "#F3F4F6",
+        iconBorder: "#E5E7EB",
+      }
     }
 
-    return {
-      background,
-      border: `2px solid ${borderColor}`,
-      color,
-      boxShadow,
-      borderRadius: 16,
-      padding: 'clamp(10px, 3vw, 20px)',
-      fontSize: 'clamp(15px, 3.5vw, 20px)',
-      fontWeight: 500,
-      cursor: hasChecked ? 'default' : 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '12px',
-      transition: 'all 0.2s ease',
-            opacity: 1,
+    // After check
+    if (isCorrect) {
+      return {
+        bg: "linear-gradient(135deg, #EFF6FF, #DBEAFE)",
+        border: "#3B82F6",
+        color: "#1D4ED8",
+        shadow: "0 4px 20px rgba(59,130,246,0.2)",
+        iconBg: "#DBEAFE",
+        iconBorder: "#3B82F6",
+      }
     }
+    if (isSelected && !isCorrect) {
+      return {
+        bg: "linear-gradient(135deg, #FEF2F2, #FEE2E2)",
+        border: "#EF4444",
+        color: "#DC2626",
+        shadow: "0 4px 20px rgba(239,68,68,0.15)",
+        iconBg: "#FEE2E2",
+        iconBorder: "#EF4444",
+      }
+    }
+    return {
+      bg: "#FAFAFA",
+      border: "#E5E7EB",
+      color: "#9CA3AF",
+      shadow: "none",
+      iconBg: "#F3F4F6",
+      iconBorder: "#E5E7EB",
+    }
+  }
+
+  const explanationText = (step as any).explanation
+
+  const renderButton = (value: boolean) => {
+    const styles = getStyles(value)
+    const isSelected = selectedValue === value
+    const isCorrect = value === step.correctValue
+
+    return (
+      <motion.button
+        whileHover={!hasChecked ? { y: -2, boxShadow: value ? "0 8px 24px rgba(34,197,94,0.15)" : "0 8px 24px rgba(239,68,68,0.15)" } : {}}
+        whileTap={!hasChecked ? { scale: 0.97, y: 2 } : {}}
+        onClick={() => handleSelect(value)}
+        disabled={hasChecked}
+        style={{
+          flex: 1,
+          padding: "clamp(16px, 3vw, 24px) clamp(14px, 3vw, 24px)",
+          borderRadius: 20,
+          background: styles.bg,
+          border: `2px solid ${styles.border}`,
+          boxShadow: styles.shadow,
+          color: styles.color,
+          fontSize: "clamp(17px, 3.5vw, 22px)",
+          fontWeight: 700,
+          cursor: hasChecked ? "not-allowed" : "pointer",
+          display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
+          transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+          outline: "none",
+          opacity: showFeedback && !isSelected && !isCorrect ? 0.45 : 1,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Subtle animated background wave on select */}
+        {isSelected && !showFeedback && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0.5 }}
+            animate={{ scale: 3, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{
+              position: "absolute", width: 60, height: 60, borderRadius: "50%",
+              background: value ? "rgba(34,197,94,0.2)" : "rgba(239,68,68,0.2)",
+              pointerEvents: "none",
+            }}
+          />
+        )}
+
+        {/* Icon circle */}
+        <div style={{
+          width: 52, height: 52, borderRadius: "50%",
+          background: styles.iconBg, border: `2px solid ${styles.iconBorder}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          transition: "all 0.25s ease",
+          position: "relative", zIndex: 1,
+        }}>
+          {showFeedback ? (
+            isCorrect
+              ? <CheckCircle2 size={26} color="#10B981" strokeWidth={2.5} />
+              : isSelected
+                ? <XCircle size={26} color="#EF4444" strokeWidth={2.5} />
+                : (value ? <Check size={24} strokeWidth={2.5} /> : <X size={24} strokeWidth={2.5} />)
+          ) : (
+            value
+              ? <Check size={26} strokeWidth={3} color={isSelected ? "#22c55e" : "#9CA3AF"} />
+              : <X size={26} strokeWidth={3} color={isSelected ? "#ef4444" : "#9CA3AF"} />
+          )}
+        </div>
+
+        <span style={{ position: "relative", zIndex: 1 }}>
+          {value ? "Verdadero" : "Falso"}
+        </span>
+      </motion.button>
+    )
   }
 
   return (
     <div style={{
-      width: "100%",
-      maxWidth: 520,
-      margin: "0 auto",
-      display: "flex",
-      flexDirection: "column",
-      gap: "clamp(10px, 4vw, 28px)"
+      width: "100%", maxWidth: 540, margin: "0 auto",
+      display: "flex", flexDirection: "column",
+      gap: "clamp(14px, 4vw, 28px)",
     }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(6px, 1.5vw, 12px)" }}>
+      {/* ── Question ── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(8px, 2vw, 14px)" }}>
         <ExerciseInstruction type="true_false" />
-        <h3 style={{
-          fontSize: "clamp(20px, 3.5vw, 28px)",
-          fontWeight: 500,
-          color: "#111827",
-          margin: 0,
-          lineHeight: 1.3,
-        }}>
+        <motion.h3
+          initial={{ y: -8, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          style={{ fontSize: "clamp(20px, 3.5vw, 28px)", fontWeight: 500, color: "#111827", margin: 0, lineHeight: 1.35 }}
+        >
           {step.statement}
-        </h3>
-
+        </motion.h3>
         {step.description && <StepScenarioCard text={step.description} />}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(8px, 2vw, 16px)', width: '100%' }}>
-        <button
-          onClick={() => handleSelect(true)}
-          disabled={hasChecked}
-          style={getButtonStyle(true)}
-          onMouseEnter={(e) => { if (!hasChecked) e.currentTarget.style.opacity = "0.72" }}
-          onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === true ? "#0F62FE15" : "#F3F4F6", border: selectedValue === true ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
-            <Check size={20} strokeWidth={3} />
-          </div>
-          <span style={{ flex: 1, textAlign: "left", }}>Verdadero</span>
-          {showFeedback && selectedValue === true && (
-            <div style={{ flexShrink: 0 }}>
-              {step.correctValue === true ? (
-                <CheckCircle2 size={24} color="#10B981" strokeWidth={3} />
-              ) : (
-                <XCircle size={24} color="#EF4444" strokeWidth={3} />
-              )}
-            </div>
-          )}
-        </button>
-        <button
-          onClick={() => handleSelect(false)}
-          disabled={hasChecked}
-          style={getButtonStyle(false)}
-          onMouseEnter={(e) => { if (!hasChecked) e.currentTarget.style.opacity = "0.72" }}
-          onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: selectedValue === false ? "#0F62FE15" : "#F3F4F6", border: selectedValue === false ? "1.5px solid #0F62FE" : "1.5px solid #E5E7EB" }}>
-            <X size={20} strokeWidth={3} />
-          </div>
-          <span style={{ flex: 1, textAlign: "left", }}>Falso</span>
-          {showFeedback && selectedValue === false && (
-            <div style={{ flexShrink: 0 }}>
-              {step.correctValue === false ? (
-                <CheckCircle2 size={24} color="#10B981" strokeWidth={3} />
-              ) : (
-                <XCircle size={24} color="#EF4444" strokeWidth={3} />
-              )}
-            </div>
-          )}
-        </button>
+      {/* ── Buttons ── */}
+      <div style={{ display: "flex", gap: "clamp(10px, 2vw, 16px)", width: "100%" }}>
+        {renderButton(true)}
+        {renderButton(false)}
       </div>
+
+      {/* ── Explanation banner ── */}
+      <AnimatePresence>
+        {showFeedback && explanationText && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            style={{
+              display: "flex", gap: 12, padding: "14px 18px", borderRadius: 16,
+              background: selectedValue === step.correctValue ? "rgba(16,185,129,0.07)" : "rgba(239,68,68,0.07)",
+              border: `1.5px solid ${selectedValue === step.correctValue ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)"}`,
+            }}
+          >
+            <Lightbulb size={18} color={selectedValue === step.correctValue ? "#10b981" : "#ef4444"} style={{ flexShrink: 0, marginTop: 2 }} />
+            <span style={{ fontSize: 14, lineHeight: 1.55, color: "#374151", fontWeight: 450 }}>{explanationText}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

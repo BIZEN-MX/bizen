@@ -125,15 +125,16 @@ export function FillBlanksStep({
 
       {/* Sentence Area */}
       <div style={{
-        fontSize: "clamp(20px, 4vw, 32px)",
-        lineHeight: 1.8,
+        fontSize: "clamp(18px, 4vw, 24px)",
+        lineHeight: 1.6,
         color: "#374151",
         background: "#F9FAFB",
-        padding: "32px",
+        padding: "clamp(16px, 4vw, 32px)",
         borderRadius: "24px",
-        border: "2px solid #F1F5F9",
+        border: "1.5px solid #F1F5F9",
         fontWeight: 500,
       }}>
+
         {step.textParts.map((part, idx) => {
           if (part.type === "text") {
             return <span key={idx} style={{}}>{part.content}</span>

@@ -1232,7 +1232,7 @@ export default function WelcomePage() {
                     display: "flex",
                     justifyContent: "center",
                     width: "100%",
-                    padding: "0 clamp(24px, 10vw, 140px)",
+                    padding: "0 clamp(16px, 5vw, 140px)",
                     boxSizing: "border-box",
                   }}
                 >
@@ -1249,7 +1249,7 @@ export default function WelcomePage() {
                       backgroundSize: "300% 300%",
                       animation: "border-shimmer 6s ease infinite",
                       width: "100%",
-                      maxWidth: "clamp(240px, 50vw, 750px)",
+                      maxWidth: "clamp(280px, 92vw, 750px)",
                       transition: "background-image 0.4s ease",
                     }}
                   >
@@ -1719,7 +1719,7 @@ export default function WelcomePage() {
                     background: "var(--glass-bg)",
                     border: "1px solid var(--glass-border)",
                     borderRadius: "var(--radius-xl)",
-                    padding: "clamp(28px, 4vw, 48px) clamp(20px, 3vw, 40px)",
+                    padding: "clamp(28px, 4vw, 48px) clamp(16px, 3vw, 40px)",
                     textAlign: "center",
                     backdropFilter: "blur(var(--glass-blur))",
                     position: "relative",
@@ -1773,7 +1773,7 @@ export default function WelcomePage() {
                     background: "var(--glass-bg)",
                     border: "1px solid var(--glass-border)",
                     borderRadius: "var(--radius-xl)",
-                    padding: "clamp(28px, 4vw, 48px) clamp(20px, 3vw, 40px)",
+                    padding: "clamp(28px, 4vw, 48px) clamp(16px, 3vw, 40px)",
                     textAlign: "center",
                     backdropFilter: "blur(var(--glass-blur))",
                     position: "relative",
@@ -1828,7 +1828,7 @@ export default function WelcomePage() {
                     background: "var(--glass-bg)",
                     border: "1px solid var(--glass-border)",
                     borderRadius: "var(--radius-xl)",
-                    padding: "clamp(28px, 4vw, 48px) clamp(20px, 3vw, 40px)",
+                    padding: "clamp(28px, 4vw, 48px) clamp(16px, 3vw, 40px)",
                     textAlign: "center",
                     backdropFilter: "blur(var(--glass-blur))",
                     position: "relative",
@@ -2088,11 +2088,17 @@ export default function WelcomePage() {
         @media (max-width: 640px) {
           .bento-grid {
             grid-template-columns: 1fr;
+            padding: 16px;
+            gap: 16px;
+          }
+          .bento-item {
+            padding: 20px;
           }
           .bento-item-large, .bento-item-medium {
             grid-column: span 1;
           }
         }
+
 
 
         /* Magnetic / Premium Button Effects */

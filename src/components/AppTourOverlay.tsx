@@ -27,10 +27,10 @@ interface TourStep {
 const BASE_TOUR_STEPS: TourStep[] = [
   {
     path: "/courses",
-    label: "Lecciones",
+    label: "Cursos",
     icon: BookOpen,
     title: "Tu camino de aprendizaje",
-    description: "Explora 30 temas de educación financiera diseñados paso a paso: presupuesto, inversión, deuda, emprendimiento y más. Cada tema tiene lecciones interactivas, quizzes y simuladores.",
+    description: "Explora temas de educación financiera diseñados paso a paso. Cada tema tiene lecciones interactivas, quizzes y simuladores.",
     tip: "Completa lecciones para ganar XP y subir de nivel.",
     color: "#0F62FE",
     colorLight: "rgba(15,98,254,0.1)",
@@ -39,7 +39,7 @@ const BASE_TOUR_STEPS: TourStep[] = [
   },
   {
     path: "/dashboard",
-    label: "Dashboard",
+    label: "Inicio",
     icon: Home,
     title: "Tu centro de control",
     description: "El dashboard es tu punto de partida. Mira tu racha diaria, las misiones del día, tu progreso en XP y accede rápidamente a lo que necesitas.",
@@ -50,11 +50,11 @@ const BASE_TOUR_STEPS: TourStep[] = [
     placement: "bottom-left",
   },
   {
-    path: "/tools/budget",
-    label: "Smart Budget",
+    path: "/cash-flow",
+    label: "Simuladores",
     icon: Wallet,
-    title: "Presupuesto inteligente con IA",
-    description: "Registra ingresos y gastos, analiza tu flujo de dinero y obtén consejos de tu asesor financiero con IA. También puedes predecir tu flujo futuro con el modo 'Forecast'.",
+    title: "Simula tu futuro financiero",
+    description: "Registra ingresos y gastos, analiza tu flujo de dinero y obtén consejos de tu asesor financiero con IA. Aprende a predecir tu flujo futuro.",
     tip: "Usa Billy Insights para obtener consejos personalizados sobre tu presupuesto.",
     color: "#0F62FE",
     colorLight: "rgba(15,98,254,0.1)",
@@ -62,23 +62,11 @@ const BASE_TOUR_STEPS: TourStep[] = [
     placement: "bottom-left",
   },
   {
-    path: "/tools/vision",
-    label: "Vision Board",
-    icon: Target,
-    title: "Tablero de metas financieras",
-    description: "Visualiza tus metas de ahorro e inversión con el Vision Board. Define objetivos, ponles fecha y monitorea tu avance hacia la libertad financiera.",
-    tip: "Tener metas claras triplica la probabilidad de alcanzarlas.",
-    color: "#0F62FE",
-    colorLight: "rgba(15,98,254,0.1)",
-    colorDark: "#0040c8",
-    placement: "bottom-left",
-  },
-  {
-    path: "/forum",
-    label: "Foro & Comunidad",
+    path: "/comunidad",
+    label: "Comunidad",
     icon: MessageSquare,
     title: "Aprende con tu comunidad",
-    description: "Comparte tus avances, haz preguntas financieras y aprende de otros. El foro es un espacio donde la comunidad BIZEN crece junta. Publica evidencias de tus retos diarios y recibe retroalimentación.",
+    description: "Comparte tus avances, haz preguntas financieras y aprende de otros. El espacio donde la comunidad BIZEN crece junta.",
     tip: "Participar en el foro te da puntos extra de XP.",
     color: "#0F62FE",
     colorLight: "rgba(15,98,254,0.1)",
@@ -87,10 +75,10 @@ const BASE_TOUR_STEPS: TourStep[] = [
   },
   {
     path: "/impacto-social",
-    label: "Impacto Social",
+    label: "Impacto",
     icon: Globe,
     title: "Tu aprendizaje genera donaciones",
-    description: "Cada lección que completas y cada reto que logras hace que BIZEN done a causas sociales. Tu educación financiera tiene un impacto real en el mundo.",
+    description: "Cada lección que completas y cada reto que logras hace que BIZEN done a causas sociales. Tu educación financiera tiene un impacto real.",
     tip: "Mira cuánto ha donado la comunidad BIZEN en total.",
     color: "#0F62FE",
     colorLight: "rgba(15,98,254,0.1)",
@@ -99,10 +87,10 @@ const BASE_TOUR_STEPS: TourStep[] = [
   },
   {
     path: "/tienda",
-    label: "Tienda & Recompensas",
+    label: "Tienda",
     icon: ShoppingBag,
-    title: "Tus BIZCOINS y recompensas",
-    description: "Gana BIZCOINS por completar lecciones, retos y participar en la comunidad. Canjéalos por recompensas exclusivas, avatares premium y beneficios reales.",
+    title: "Tus recompensas",
+    description: "Gana BIZCOINS por completar lecciones y retos. Canjéalos por premios exclusivos, avatares premium y beneficios reales.",
     tip: "Mantén una racha de 7 días para multiplicar tus BIZCOINS.",
     color: "#0F62FE",
     colorLight: "rgba(15,98,254,0.1)",
@@ -110,11 +98,11 @@ const BASE_TOUR_STEPS: TourStep[] = [
     placement: "bottom-right",
   },
   {
-    path: "/leaderboard",
+    path: "/rankings",
     label: "Rankings",
     icon: Trophy,
     title: "Compite y destaca",
-    description: "Mira dónde estás en el ranking semanal y mensual. Compite con tu clase, tu escuela o con toda la comunidad BIZEN. ¿Puedes llegar al TOP 10?",
+    description: "Mira dónde estás en el ranking semanal y mensual. Compite con tu clase, tu escuela o con toda la comunidad BIZEN.",
     tip: "Los rankings se actualizan cada semana. ¡El domingo es el gran reset!",
     color: "#0F62FE",
     colorLight: "rgba(15,98,254,0.1)",
@@ -123,10 +111,10 @@ const BASE_TOUR_STEPS: TourStep[] = [
   },
   {
     path: "/profile",
-    label: "Tu Perfil",
+    label: "Perfil",
     icon: User,
-    title: "Tu identidad en BIZEN",
-    description: "Personaliza tu avatar, edita tu bio y muestra tus logros al mundo. Aquí también puedes ver a quién sigues, quién te sigue y tus certificaciones obtenidas.",
+    title: "Tu identidad",
+    description: "Personaliza tu avatar, edita tu bio y muestra tus logros al mundo. Gestiona tus seguidores y certificaciones.",
     tip: "Un perfil completo genera más conexiones con la comunidad.",
     color: "#0F62FE",
     colorLight: "rgba(15,98,254,0.1)",
@@ -150,7 +138,7 @@ interface AppTourOverlayProps {
 export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTourOverlayProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const { dbProfile } = useAuth()
+  const { dbProfile, setDbProfile } = useAuth()
 
   // Find the step corresponding to the current path for discovery mode
   const initialStepIndex = useMemo(() => {
@@ -174,7 +162,7 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
       if (step.path === "/forum" && !isInstitutional) {
         return {
           ...step,
-          description: "Comparte tus avances, haz preguntas financieras y aprende de otros. El foro es un espacio colaborativo donde toda la comunidad BIZEN crece junta. Publica evidencias de tus retos y recibe retroalimentación en tiempo real.",
+          description: "Comparte tus avances, haz preguntas financieras y aprende de otros. El foro es un espacio colaborativo donde toda la comunidad BIZEN crece junta.",
         }
       }
       return step
@@ -233,15 +221,34 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
     }
   }, [pathname, current?.path])
 
-  const endTour = useCallback(() => {
+  const endTour = useCallback(async () => {
     setClosing(true)
     setCardVisible(false)
+    
+    // Persist to DB if not in discovery mode
+    if (!discoveryMode && dbProfile) {
+      try {
+        const currentSettings = dbProfile.settings || {}
+        const newSettings = { ...currentSettings, hasSeenTour: true };
+        
+        // Optimistic update
+        setDbProfile({ ...dbProfile, settings: newSettings });
+
+        await fetch("/api/profiles", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ settings: newSettings })
+        })
+      } catch (err) {
+        console.error("Failed to save tour progress:", err)
+      }
+    }
+
     setTimeout(() => { setVisible(false); onEnd() }, 400)
-  }, [onEnd])
+  }, [onEnd, discoveryMode, dbProfile, setDbProfile])
 
   const goToNext = useCallback(() => {
     if (navigating) return
-    // In discovery mode, "Next" just closes the current page onboarding
     if (discoveryMode || isLast) { endTour(); return }
     
     setCardVisible(false)
@@ -271,17 +278,14 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-        @keyframes tc-in      { from { opacity:0; transform:translateY(32px) scale(0.95) } to { opacity:1; transform:translateY(0) scale(1) } }
-        @keyframes tc-out     { from { opacity:1; transform:translateY(0) scale(1) } to { opacity:0; transform:translateY(24px) scale(0.96) } }
-        @keyframes tc-float   { 0%,100% { transform:translateY(0) rotate(-1deg) } 50% { transform:translateY(-9px) rotate(1.5deg) } }
-        @keyframes tc-shimmer { 0% { background-position:-200% center } 100% { background-position:200% center } }
-        @keyframes tc-breathe { 0%,100% { box-shadow: 0 6px 20px var(--c-shadow-a) } 50% { box-shadow: 0 12px 36px var(--c-shadow-b), 0 0 32px var(--c-glow) } }
-        @keyframes tc-spin    { to { transform: rotate(360deg) } }
-        @keyframes tc-dot-pop { from { transform:scale(0.5); opacity:0 } to { transform:scale(1); opacity:1 } }
-        @keyframes tc-tip-in  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
-        @keyframes tc-ring    { 0% { opacity:0.6; transform:scale(0.92) } 100% { opacity:0; transform:scale(1.55) } }
+        @keyframes tc-in      { from { opacity:0; transform:translateY(32px) scale(0.95); } to { opacity:1; transform:translateY(0) scale(1); } }
+        @keyframes tc-out     { from { opacity:1; transform:translateY(0) scale(1); } to { opacity:0; transform:translateY(24px) scale(0.96); } }
+        @keyframes tc-float   { 0%,100% { transform:translateY(0) rotate(-1deg); } 50% { transform:translateY(-9px) rotate(1.5deg); } }
+        @keyframes tc-shimmer { 0% { background-position:-200% center; } 100% { background-position:200% center; } }
+        @keyframes tc-breathe { 0%,100% { box-shadow: 0 6px 20px var(--c-shadow-a); } 50% { box-shadow: 0 12px 36px var(--c-shadow-b), 0 0 32px var(--c-glow); } }
+        @keyframes tc-spin    { to { transform: rotate(360deg); } }
+        @keyframes tc-tip-in  { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
 
-        /* ── Backdrop (non-blocking, just a faint tint) ── */
         .tc-backdrop {
           position: fixed; inset: 0; z-index: 100000;
           pointer-events: none;
@@ -291,7 +295,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
         }
         .tc-backdrop.hiding { animation: tc-out 0.35s ease forwards; }
 
-        /* ── Skip pill floated top-right ── */
         .tc-skip {
           position: fixed; top: clamp(12px,3vw,20px); right: clamp(12px,3vw,20px);
           z-index: 100003;
@@ -306,7 +309,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
         }
         .tc-skip:hover { background: rgba(255,255,255,0.16); color: #fff; }
 
-        /* ── Main card ── */
         .tc-card {
           position: fixed; z-index: 100001;
           background: #ffffff;
@@ -325,7 +327,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
         .tc-card.shown { animation: tc-in 0.44s cubic-bezier(0.34,1.56,0.64,1) both; }
         .tc-card.hiding { animation: tc-out 0.32s ease forwards; }
 
-        /* ── Top accent bar ── */
         .tc-accent-bar {
           height: 5px;
           background: linear-gradient(90deg, var(--tc-color) 0%, var(--tc-color-light,#93c5fd) 100%);
@@ -334,13 +335,11 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           position: relative; overflow: hidden;
         }
 
-        /* ── Header ── */
         .tc-header {
           display: flex; align-items: flex-start; gap: clamp(10px,2.5vw,16px);
           padding: clamp(14px,3.5vw,24px) clamp(16px,4vw,28px) 0;
         }
 
-        /* ── Badge row ── */
         .tc-badge {
           display: inline-flex; align-items: center; gap: 7px;
           padding: 4px 12px; border-radius: 999px;
@@ -348,22 +347,18 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           letter-spacing: 0.05em; margin-bottom: 5px;
         }
 
-        /* ── Title ── */
         .tc-title {
           margin: 0; font-size: clamp(15px,3.5vw,20px); font-weight: 800;
           color: #0f172a; line-height: 1.2; letter-spacing: -0.025em;
         }
 
-        /* ── Body ── */
         .tc-body { padding: 0 clamp(16px,4vw,28px) clamp(16px,4vw,24px); }
 
-        /* ── Description ── */
         .tc-desc {
           margin: clamp(10px,2.5vw,14px) 0 0;
           font-size: clamp(12px,2.8vw,14px); color: #475569; line-height: 1.68;
         }
 
-        /* ── Tip box ── */
         .tc-tip {
           margin-top: clamp(10px,2.5vw,14px);
           padding: 10px 14px; border-radius: 12px;
@@ -372,24 +367,20 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           display: flex; align-items: flex-start; gap: 8px;
           animation: tc-tip-in 0.4s ease 0.2s both;
         }
-        .tc-tip-emoji { font-size: 14px; line-height: 1.5; flex-shrink: 0; }
         .tc-tip-text { font-size: clamp(11px,2.6vw,12.5px); color: #475569; font-weight: 500; line-height: 1.6; }
 
-        /* ── Footer ── */
         .tc-footer {
           display: flex; align-items: center; gap: 10px;
           padding: clamp(12px,3vw,18px) clamp(16px,4vw,28px) clamp(14px,3.5vw,22px);
           border-top: 1px solid #f1f5f9;
         }
 
-        /* ── Progress / step dots ── */
         .tc-dots { display: flex; gap: 5px; align-items: center; flex: 1; }
         .tc-dot {
           height: 5px; border-radius: 3px;
           transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        /* ── Buttons ── */
         .tc-actions { display: flex; gap: 7px; }
         .tc-btn {
           border-radius: 12px; font-family: 'Inter', sans-serif;
@@ -402,31 +393,18 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           padding: clamp(9px,2vw,12px) clamp(14px,3vw,18px);
           border: 2px solid #e5e7eb; background: white; color: #6b7280;
         }
-        .tc-btn-prev:hover { border-color: #cbd5e1; background: #f9fafb; color: #374151; }
-        .tc-btn-next {
+        .tc-btn tc-btn-next {
           padding: clamp(9px,2vw,12px) clamp(16px,3.5vw,24px);
           border: none; color: white; position: relative; overflow: hidden;
-          --c-shadow-a: rgba(15,98,254,0.3);
-          --c-shadow-b: rgba(15,98,254,0.55);
-          --c-glow: rgba(15,98,254,0.25);
           animation: tc-breathe 2.8s ease-in-out infinite;
         }
-        .tc-btn-next::before {
-          content: ''; position:absolute; inset:0;
-          background: linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.15) 50%,transparent 70%);
-          background-size: 200%; animation: tc-shimmer 2.5s linear infinite;
-        }
-        .tc-btn-next:hover:not(:disabled) { filter: brightness(1.1); animation-play-state: paused; transform: translateY(-1px); }
-        .tc-btn-next:disabled { opacity: 0.65; cursor: not-allowed; animation: none; }
 
-        /* ── Progress bar (thin top inside footer) ── */
         .tc-progress-wrap { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #f1f5f9; }
         .tc-progress-fill {
           height: 100%; background: var(--tc-color, #0F62FE);
           transition: width 0.55s cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        /* ── Step count badge (top of card) ── */
         .tc-step-count {
           position: absolute; top: 16px; right: 16px;
           background: rgba(15,98,254,0.08); border-radius: 999px;
@@ -434,12 +412,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           color: #0F62FE; font-family: 'Inter', sans-serif;
         }
 
-          font-size: 13px;
-          box-shadow: 0 8px 20px rgba(37,99,235,0.4);
-          animation: tc-in 0.5s ease both;
-        }
-
-        /* ────────── MOBILE ────────── */
         @media (max-width: 767px) {
           .tc-card {
             left: 10px !important; right: 10px !important;
@@ -447,36 +419,18 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
             transform: none !important; width: calc(100% - 20px) !important;
             max-width: 100% !important; border-radius: 20px !important;
           }
-          .tc-skip { top: 12px; right: 12px; }
-          .tc-mascot-wrap { width: 44px; height: 44px; }
-          .tc-title { font-size: 15px; }
-          .tc-desc  { font-size: 12.5px; line-height: 1.6; }
-          .tc-tip   { padding: 9px 12px; }
           .tc-footer { padding: 10px 16px 14px; gap: 8px; }
-          .tc-btn   { font-size: 13px; }
-          .tc-btn-prev { padding: 9px 14px; }
-          .tc-btn-next { padding: 9px 18px; }
-        }
-        @media (max-width: 400px) {
-          .tc-header { padding: 12px 14px 0; gap: 9px; }
-          .tc-body { padding: 0 14px 14px; }
-          .tc-mascot-wrap { width: 38px; height: 38px; }
-          .tc-badge { font-size: 9px; padding: 3px 9px; }
-          .tc-title { font-size: 14px; }
         }
       `}</style>
 
-      {/* Dimming backdrop */}
       <div className={`tc-backdrop${closing ? " hiding" : ""}`} />
 
-      {/* Skip pill */}
       {!discoveryMode && (
         <button className="tc-skip" onClick={endTour}>
           Saltar tour ✕
         </button>
       )}
 
-      {/* Tour card */}
       <div
         className={`tc-card ${cardVisible ? "shown" : "hiding"}`}
         style={{
@@ -486,25 +440,20 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           "--tc-accent": current.colorLight,
         } as React.CSSProperties}
       >
-        {/* Thin top accent */}
         <div className="tc-accent-bar" style={{ "--tc-color": current.color, "--tc-color-light": current.colorLight.replace('0.1', '0.6') } as React.CSSProperties} />
 
-        {/* Thin top progress */}
         <div className="tc-progress-wrap">
           <div className="tc-progress-fill" style={{ width: `${progressPct}%`, background: current.color }} />
         </div>
 
-        {/* Step count chip (only in tour mode) */}
         {!discoveryMode && (
           <div className="tc-step-count" style={{ color: current.color, background: current.colorLight }}>
             {stepIndex + 1} / {tourSteps.length}
           </div>
         )}
 
-        {/* Header */}
         <div className="tc-header">
           <div style={{ flex: 1, minWidth: 0, paddingTop: 2, paddingRight: discoveryMode ? 0 : 48 }}>
-            {/* Badge */}
             <div className="tc-badge" style={{ color: current.color, background: current.colorLight, border: `1.5px solid ${current.colorLight.replace('0.1)', '0.3)')}` }}>
               <current.icon size={13} style={{ marginRight: 4 }} />
               <span>{current.label}</span>
@@ -513,10 +462,8 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           </div>
         </div>
 
-        {/* Body */}
         <div className="tc-body">
           <p className="tc-desc" style={{ marginTop: 0 }}>{current.description}</p>
-
           {current.tip && (
             <div className="tc-tip">
               <Lightbulb size={12} style={{ marginRight: 6, flexShrink: 0 }} />
@@ -525,9 +472,7 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
           )}
         </div>
 
-        {/* Footer */}
         <div className="tc-footer">
-          {/* Dots (only in tour mode) */}
           <div className="tc-dots">
             {!discoveryMode && tourSteps.map((_, i) => (
               <div
@@ -543,19 +488,14 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
             ))}
           </div>
 
-          {/* Buttons */}
           <div className="tc-actions" style={{ width: discoveryMode ? '100%' : 'auto' }}>
             {stepIndex > 0 && !discoveryMode && (
-              <button
-                className="tc-btn tc-btn-prev"
-                onClick={goToPrev}
-                disabled={navigating}
-              >
+              <button className="tc-btn tc-btn-prev" onClick={goToPrev} disabled={navigating}>
                 ← Anterior
               </button>
             )}
             <button
-              className="tc-btn tc-btn-next"
+              className="tc-btn"
               onClick={goToNext}
               disabled={navigating}
               style={{
@@ -563,10 +503,12 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
                 background: navigating
                   ? "#94a3b8"
                   : `linear-gradient(135deg, ${current.colorDark} 0%, ${current.color} 100%)`,
-                "--c-shadow-a": `${current.color}40`,
-                "--c-shadow-b": `${current.color}65`,
-                "--c-glow": `${current.color}30`,
-              } as React.CSSProperties}
+                padding: "10px 20px",
+                borderRadius: "12px",
+                color: "white",
+                border: "none",
+                fontWeight: "700"
+              }}
             >
               {navigating ? (
                 <span style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "white", borderRadius: "50%", animation: "tc-spin 0.7s linear infinite", display: "inline-block" }} />

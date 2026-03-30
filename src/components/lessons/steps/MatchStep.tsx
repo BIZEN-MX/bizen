@@ -407,10 +407,11 @@ export function MatchStep({ step, onAnswered, matches: initialMatches = [], acti
         {/* Two columns */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "1fr clamp(30px, 8vw, 56px) 1fr",
+          gridTemplateColumns: "1fr clamp(24px, 6vw, 48px) 1fr",
           gap: 0,
           width: "100%",
         }}>
+
           {/* Left column */}
           <div style={{ display: "flex", flexDirection: "column", gap: ITEM_GAP }}>
             {step.leftItems.map((item, idx) => {

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState, useMemo, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Billy } from "@/components/Billy"
 import { useAuth } from "@/contexts/AuthContext"
@@ -8,11 +8,12 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Flame, Shield, Target } from "lucide-react"
+import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
 import { useSearchParams } from "next/navigation"
+import TransferModal from "@/components/bizen/TransferModal"
 
 // ─────────────────────────────────────────────────────────────────
 // CUSTOM SVG ICON COMPONENTS
@@ -313,6 +314,25 @@ export default function DashboardPage() {
     return total > 0 ? Math.round((stats.xpInCurrentLevel / total) * 100) : 0
   }, [stats])
 
+  const fetchStats = useCallback(async () => {
+    if (!user) return
+    try {
+      const res = await fetch("/api/user/stats")
+      if (res.ok) {
+        const data = await res.json()
+        setStats(data)
+      }
+    } catch (err) {
+      console.error("Error fetching stats:", err)
+    }
+  }, [user])
+
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
+
+  useEffect(() => {
+    fetchStats()
+  }, [fetchStats])
+
   useEffect(() => {
     if (loading) return
     if (!user)   { router.replace("/login"); return }
@@ -588,6 +608,7 @@ export default function DashboardPage() {
                     animationDelay=".12s"
                     colorTheme={dbProfile?.cardTheme || "blue"}
                     level={dbProfile?.level || 1}
+                    onTransferClick={() => setIsTransferModalOpen(true)}
                   />
                 </div>
               </div>
@@ -595,6 +616,15 @@ export default function DashboardPage() {
 
           </div>
         </div>
+
+        {/* Transfer Modal */}
+        {isTransferModalOpen && (
+          <TransferModal 
+            onClose={() => setIsTransferModalOpen(false)} 
+            currentBalance={bizcoins} 
+            onTransferSuccess={(newBal) => { fetchStats(); }} 
+          />
+        )}
 
         {/* DNA PROFILE SECTION */}
         <div className="dc" style={{ animationDelay: ".05s", marginBottom: 24 }}>
