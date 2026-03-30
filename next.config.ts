@@ -23,6 +23,31 @@ const nextConfig: NextConfig = {
         destination: '/tienda',
         permanent: true,
       },
+      {
+        source: '/simulador',
+        destination: '/cash-flow',
+        permanent: true,
+      },
+      {
+        source: '/simuladores',
+        destination: '/cash-flow',
+        permanent: true,
+      },
+      {
+        source: '/simulators',
+        destination: '/cash-flow',
+        permanent: true,
+      },
+      {
+        source: '/cashflow',
+        destination: '/cash-flow',
+        permanent: true,
+      },
+      {
+        source: '/tools',
+        destination: '/cash-flow',
+        permanent: true,
+      },
     ]
   },
   webpack: (config) => {

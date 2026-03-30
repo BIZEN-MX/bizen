@@ -103,6 +103,25 @@ import {
   lessonAuditoria360DeMisSalidasSteps
 } from "./tema4-gastos-invisibles"
 
+// --- TEMA 5: Ahorro Inteligente ---
+import {
+  lessonAhorroNoEsGuardarEsAcumularSteps,
+  lessonFondoDeEmergenciaDeAceroSteps,
+  lessonSistemasDeAutomatizacionSteps,
+  lessonAhorroPorObjetivosSteps,
+  lessonLaTasaDeAhorroSteps,
+  lessonReto30DiasSteps,
+  lessonMicroAhorroSteps,
+  lessonInflacionSteps,
+  lessonAhorroHedonicoSteps,
+  lessonAuditoriaSuscripcionesSteps,
+  lessonAhorroVsInversionSteps,
+  lessonCuentasAltoRendimientoSteps,
+  lessonCostoInaccionSteps,
+  lessonProteccionDevaluacionSteps,
+  lessonExamenMaestriaAcumulacionSteps
+} from "./tema5-ahorro-inteligente"
+
 // --- EVALUACIONES ---
 import {
   lessonEvaluacionBloque1Steps,
@@ -116,8 +135,6 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "que-es-el-dinero-deuda-vs-energia": lessonQueEsElDineroDeudaVsEnergiaSteps,
   "tu-primer-estado-de-resultados-personal": lessonTuPrimerEstadoDeResultadosPersonalSteps,
   "el-registro-de-guerra-por-que-trackear-todo": lessonElRegistroDeGuerraPorQueTrackearTodoSteps,
-  "gastos-fijos-vs-variables": lessonGastosFijosVsVariablesSteps,
-  "que-son-y-por-que-importan": lessonQueSonYPorQueImportanSteps,
   "el-valor-de-tu-tiempo-calculo-real": lessonElValorDeTuTiempoCalculoRealSteps,
   "costo-de-oportunidad-elegir-es-renunciar": lessonCostoDeOportunidadElegirEsRenunciarSteps,
   "la-pausa-de-las-24-horas-mecanica": lessonLaPausaDeLas24HorasMecanicaSteps,
@@ -140,12 +157,6 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "dinero-como-seguridad-vs-libertad": lessonQueEsElDineroDeudaVsEnergiaSteps,
   "dinero-como-presion-vs-oportunidad": lessonQueEsElDineroDeudaVsEnergiaSteps,
   "pausa-financiera-reglas-anti-impulso": lessonLaPausaDeLas24HorasMecanicaSteps,
-  "culpa-y-ansiedad-financiera-como-se-forman": lessonCulpaYAnsiedadFinancieraSteps,
-  "emocion-vs-decision-casos-reales": lessonEmocionVsDecisionCasosRealesSteps,
-  "mis-primeras-creencias-sobre-el-dinero": lessonMisPrimerasCreenciasSobreElDineroSteps,
-  "expectativas-vs-realidad-financiera": lessonExpectativasVsRealidadFinancieraSteps,
-  "frases-heredadas-que-me-limitan": lessonFrasesHeredadasQueMeLimitanSteps,
-  "como-cuestionar-una-creencia-con-evidencia": lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
   "reescribir-creencias-en-reglas-utiles": lessonMiNuevoManualDeReglasFinancierasSteps,
   "checkpoint-mi-manual-de-dinero-v1": lessonMiNuevoManualDeReglasFinancierasSteps,
 
@@ -168,31 +179,58 @@ export const lessonRegistry: Record<string, LessonStep[]> = {
   "evaluacion-de-bloque-2": lessonEvaluacionBloque2Steps,
   "evaluacion-bloque-2": lessonEvaluacionBloque2Steps,
 
-  // --- TEMA 3 ---
+  // --- TEMA 3: Psicología & Hacks de Comportamiento ---
   "como-me-hace-sentir-el-dinero": lessonComoMeHaceSentirElDineroSteps,
-  "sesgos-cognitivos-y-dinero": lessonComoMeHaceSentirElDineroSteps,
   "senales-de-emocion-dominando-una-decision": lessonSenalesDeEmocionDominandoUnaDecisionSteps,
-  "mis-creencias-limitantes-heredadas": lessonMisPrimerasCreenciasSobreElDineroSteps,
+  "culpa-y-ansiedad-financiera-como-se-forman": lessonCulpaYAnsiedadFinancieraSteps,
+  "emocion-vs-decision-casos-reales": lessonEmocionVsDecisionCasosRealesSteps,
   "psicologia-de-la-deuda-por-que-duele-pagar": lessonPsicologiaDeLaDeudaSteps,
+  "mis-primeras-creencias-sobre-el-dinero": lessonMisPrimerasCreenciasSobreElDineroSteps,
+  "expectativas-vs-realidad-financiera": lessonExpectativasVsRealidadFinancieraSteps,
+  "frases-heredadas-que-me-limitan": lessonFrasesHeredadasQueMeLimitanSteps,
+  "como-cuestionar-una-creencia-con-evidencia": lessonComoCuestionarUnaCreenciaConEvidenciaSteps,
   "mi-nuevo-manual-de-reglas-financieras": lessonMiNuevoManualDeReglasFinancierasSteps,
   "que-es-un-trigger-de-compra": lessonQueEsUnTriggerDeCompraSteps,
-  "apariencia-de-riqueza-vs-riqueza-real": lessonElEgoEnElConsumoDigitalSteps,
-  "presion-social-en-decisiones-escenarios": lessonRedesComparacionYPresionSteps,
-  "como-decir-que-no-sin-sentirte-menos": lessonReglaPersonalAntiEstatusSteps,
+  "redes-comparacion-y-presion": lessonRedesComparacionYPresionSteps,
+  "comprar-por-estatus-vs-por-valor": lessonComprarPorEstatusVsPorValorSteps,
+  "regla-personal-anti-estatus": lessonReglaPersonalAntiEstatusSteps,
+  "el-ego-en-el-consumo-digital": lessonElEgoEnElConsumoDigitalSteps,
   "evaluacion-de-bloque-3": lessonEvaluacionBloque3Steps,
   "evaluacion-bloque-3": lessonEvaluacionBloque3Steps,
 
-  // --- TEMA 4 ---
-  "gastos-fijos-los-no-negociables": lessonGastosFijosVsVariablesSteps,
-  "que-hacer-con-el-ocio": lessonSustitucionesBaratoSaludableUtilSteps,
-  "auditoria-de-mi-gasto-personal": lessonClasificarMisGastosEjercicioCompletoSteps,
-  "el-blindaje-de-cuenta-fijos": lessonAuditoriaDeMicroSegurosOcultosSteps,
-  "suscripciones-y-cobros-fantasma": lessonMembresiasYSuscripcionesOlvidadasSteps,
-  "comisiones-bancarias-comunes": lessonComisionesYFugasBancariasSteps,
-  "envios-propinas-recargos": lessonDescuentosQueSalenCarosSteps,
-  "costos-por-pagar-tarde": lessonElCostoDelInteresDeudaMalaSteps,
-  "limpieza-cancelar-y-optimizar": lessonAuditoria360DeMisSalidasSteps,
+  // --- TEMA 4: Optimización de Egresos ---
+  "gastos-fijos-vs-variables": lessonGastosFijosVsVariablesSteps,
+  "necesidad-vs-deseo": lessonNecesidadVsDeseoSteps,
+  "gastos-discrecionales-lo-que-si-eliges": lessonGastosDiscrecionalesLoQueSiEligesSteps,
+  "costo-real-gasto-extras": lessonCostoRealGastoExtrasSteps,
+  "clasificar-mis-gastos-ejercicio-completo": lessonClasificarMisGastosEjercicioCompletoSteps,
+  "que-son-y-por-que-importan": lessonQueSonYPorQueImportanSteps,
+  "detectar-3-gastos-hormiga-personales": lessonDetectar3GastosHormigaPersonalesSteps,
+  "recorte-inteligente-sin-sufrir": lessonRecorteInteligenteSinSufrirSteps,
+  "sustituciones-barato-saludable-util": lessonSustitucionesBaratoSaludableUtilSteps, 
+  "reto-semana-sin-gasto-hormiga": lessonRetoSemanaSinGastoHormigaSteps,
+  "auditoria-de-micro-seguros-ocultos": lessonAuditoriaDeMicroSegurosOcultosSteps,
+  "comisiones-y-fugas-bancarias": lessonComisionesYFugasBancariasSteps,
+  "membresias-y-suscripciones-olvidadas": lessonMembresiasYSuscripcionesOlvidadasSteps,
+  "el-costo-del-interes-deuda-mala": lessonElCostoDelInteresDeudaMalaSteps,
   "auditoria-360-de-mis-salidas": lessonAuditoria360DeMisSalidasSteps,
+
+  // --- TEMA 5 ---
+  "ahorro-bizen-no-es-guardar-es-acumular": lessonAhorroNoEsGuardarEsAcumularSteps,
+  "fondo-de-emergencia-de-acero": lessonFondoDeEmergenciaDeAceroSteps,
+  "sistemas-de-automatizacion-friccion-cero": lessonSistemasDeAutomatizacionSteps,
+  "ahorro-por-objetivos-bucket-system": lessonAhorroPorObjetivosSteps,
+  "la-tasa-de-ahorro-tu-indicador-maestro": lessonLaTasaDeAhorroSteps,
+  "reto-de-los-30-dias": lessonReto30DiasSteps,
+  "micro-ahorro-el-poder-de-lo-pequeno": lessonMicroAhorroSteps,
+  "inflacion-el-enemigo-invisible": lessonInflacionSteps,
+  "ahorro-hedonico-no-te-prives-optimiza": lessonAhorroHedonicoSteps,
+  "auditoria-de-suscripciones-maestras": lessonAuditoriaSuscripcionesSteps,
+  "ahorro-vs-inversion-el-salto-cuantico": lessonAhorroVsInversionSteps,
+  "cuentas-de-alto-rendimiento-efectivo-inteligente": lessonCuentasAltoRendimientoSteps,
+  "el-costo-de-la-inaccion": lessonCostoInaccionSteps,
+  "proteccion-contra-devaluacion": lessonProteccionDevaluacionSteps,
+  "examen-maestria-acumulacion": lessonExamenMaestriaAcumulacionSteps,
 }
 
 export function getStepsForLesson(lessonId: string | undefined): LessonStep[] {

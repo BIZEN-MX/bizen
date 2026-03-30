@@ -16,7 +16,7 @@ const getRuleBasedResponse = (message: string): string | null => {
 
   // Greetings
   if (lowerMessage.includes('hola') || lowerMessage.includes('hi') || lowerMessage.includes('buenos')) {
-    return '¡Hola! Soy tu asistente de BIZEN. Puedo ayudarte con información sobre nuestros cursos de educación financiera, módulos disponibles, y cómo navegar por la plataforma. ¿En qué puedo ayudarte?'
+    return '¡Hola! Soy Billy Insights, tu guía financiero. Puedo ayudarte con información sobre nuestros cursos de educación financiera, módulos disponibles, y cómo navegar por la plataforma. ¿En qué puedo ayudarte?'
   }
 
   // About BIZEN
@@ -186,7 +186,7 @@ export default function FreeAIChatbot() {
             <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 flex justify-between items-center">
               <div>
                 <h3 className="font-semibold text-lg flex items-center gap-2">
-                  <BotIcon size={20} /> BIZEN Assistant
+                  <BotIcon size={20} /> Billy Insights
                 </h3>
                 <p className="text-sm opacity-90">¿En qué puedo ayudarte?</p>
               </div>
@@ -243,7 +243,7 @@ export default function FreeAIChatbot() {
                   <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  <p className="text-sm">¡Hola! Soy tu asistente de BIZEN.</p>
+                  <p className="text-sm">¡Hola! Soy Billy Insights.</p>
                   <p className="text-xs mt-1">
                     {useAI ? 'Modo AI activado - respuestas inteligentes' : 'Modo gratuito - respuestas básicas'}
                   </p>

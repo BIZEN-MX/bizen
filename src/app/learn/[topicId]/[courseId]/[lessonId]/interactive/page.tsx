@@ -20,6 +20,14 @@ function InteractiveLessonContent() {
   const lessonIdStr = (params?.lessonId as string) || ""
   const initialStepIndex = searchParams?.get("step")
 
+  // Redirect legacy 'course-1' topic format to 'tema-01'
+  useEffect(() => {
+    if (topicIdStr.startsWith('course-')) {
+      const num = topicIdStr.replace('course-', '').padStart(2, '0')
+      router.replace(`/learn/tema-${num}/${courseIdStr}/${lessonIdStr}/interactive`)
+    }
+  }, [topicIdStr, courseIdStr, lessonIdStr, router])
+
   const [dbLesson, setDbLesson] = useState<any>(null)
   const [loadingLesson, setLoadingLesson] = useState(true)
   const { completedLessons } = useLessonProgress()
@@ -207,7 +215,12 @@ function InteractiveLessonContent() {
   }, [lessonIdStr, user, isRepeated, refreshUser, setDbProfile])
 
   const handleExit = useCallback(() => {
-    router.push(`/courses/${topicIdStr || 'tema-01'}`)
+    // TRIGGER: If finishing Tema 05 final lesson, go to DNA Evolution
+    if (topicIdStr === "tema-05") {
+      router.push("/dna-evolution")
+    } else {
+      router.push(`/courses/${topicIdStr || 'tema-01'}`)
+    }
   }, [topicIdStr, router])
 
   if (loading || loadingLesson) return <PageLoader />

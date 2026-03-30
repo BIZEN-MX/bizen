@@ -84,7 +84,7 @@ export default function MobileFooterNav() {
       active: isActivePath("/courses")
     },
     {
-      path: "/tools",
+      path: "/cash-flow",
       label: "Simuladores",
       icon: Gamepad2,
       active: isActivePath("/tools") || isActivePath("/cash-flow")

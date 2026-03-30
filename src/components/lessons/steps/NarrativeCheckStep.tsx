@@ -66,7 +66,7 @@ export function NarrativeCheckStep({ step, onAnswered, isContinueEnabled }: Narr
         />
         <div>
           <p style={{ fontSize: 13, fontWeight: 700, color: "#1d4ed8", margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            Billy pregunta
+            Billy Insights
           </p>
           <p style={{ fontSize: "clamp(16px, 2.5vw, 18px)", fontWeight: 600, color: "#1e293b", margin: 0, lineHeight: 1.4 }}>
             {step.question}

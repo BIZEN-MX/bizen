@@ -12,6 +12,8 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
+        const topic = request.nextUrl.searchParams.get("topic");
+
         // Fetch profile and last game session
         const profile = await prisma.profile.findUnique({
             where: { userId: user.id },
@@ -35,6 +37,8 @@ export async function GET(request: NextRequest) {
             xp: profile.xp,
             level: profile.level,
             completedLessons: profile.progress.map(p => p.lessonId),
+            dnaProfile: (profile as any).dnaProfile || "Sin Diagnosticar",
+            currentTopic: topic || undefined,
             gameStats: lastGame.data ? {
                 totalCash: lastGame.data.cash_on_hand,
                 passiveIncome: lastGame.data.passive_income,

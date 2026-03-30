@@ -915,7 +915,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               textTransform: "uppercase",
             }}
           >
-            BILLY DICE
+            BILLY INSIGHTS
           </motion.div>
 
           {/* Insight text */}
@@ -1363,7 +1363,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               />
               <div>
                 <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "#93c5fd", letterSpacing: "0.04em" }}>
-                  BILLY DICE
+                  BILLY INSIGHTS
                 </p>
                 <p style={{ margin: "2px 0 0", fontSize: 14, fontWeight: 600, color: "white", lineHeight: 1.4 }}>
                   {((currentStep as any)?.aiInsight && (billyInsightsCount.current < 3 || billyInsightShownFor.current === currentStep?.id)) ? (currentStep as any).aiInsight :

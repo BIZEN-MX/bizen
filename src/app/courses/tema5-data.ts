@@ -9,37 +9,37 @@ export interface Tema5Subtema {
   lessons: Tema5Lesson[]
 }
 
-export const TEMA5_TITLE = "Flujo de dinero"
+export const TEMA5_TITLE = "Ahorro Inteligente: Ingeniería de Acumulación"
 
 export const TEMA5_SUBTEMAS: Tema5Subtema[] = [
   {
-    title: "Entradas",
+    title: "La Física del Ahorro",
     lessons: [
-      { title: "¿De dónde entra mi dinero hoy?", slug: "de-donde-entra-mi-dinero-hoy", level: "Básico" },
-      { title: "Ingresos fijos vs variables", slug: "ingresos-fijos-vs-variables", level: "Básico" },
-      { title: "Ingresos irregulares (cómo manejarlos)", slug: "ingresos-irregulares-como-manejarlos", level: "Intermedio" },
-      { title: "Aumentar ingresos sin “trabajar más”", slug: "aumentar-ingresos-sin-trabajar-mas", level: "Intermedio" },
-      { title: "Detectar mi fuente principal de riesgo", slug: "detectar-mi-fuente-principal-de-riesgo", level: "Avanzado" },
+      { title: "Ahorro BIZEN: No es guardar, es acumular energía", slug: "ahorro-bizen-no-es-guardar-es-acumular", level: "Básico" },
+      { title: "El Fondo de Emergencia de Acero", slug: "fondo-de-emergencia-de-acero", level: "Básico" },
+      { title: "Sistemas de Automatización (Fricción Cero)", slug: "sistemas-de-automatizacion-friccion-cero", level: "Intermedio" },
+      { title: "Ahorro por Objetivos (Bucket System)", slug: "ahorro-por-objetivos-bucket-system", level: "Intermedio" },
+      { title: "La Tasa de Ahorro: Tu indicador maestro", slug: "la-tasa-de-ahorro-tu-indicador-maestro", level: "Avanzado" },
     ]
   },
   {
-    title: "Salidas",
+    title: "Estrategias de Retención",
     lessons: [
-      { title: "Acondo se va mi dinero", slug: "acondo-se-va-mi-dinero", level: "Básico" },
-      { title: "Fugas de dinero (las 3 típicas)", slug: "fugas-de-dinero-las-3-tipicas", level: "Básico" },
-      { title: "Gastar más de lo que entra (señales)", slug: "gastar-mas-de-lo-que-entra-senales", level: "Intermedio" },
-      { title: "Ajuste rápido de salidas (plan 7 días)", slug: "ajuste-rapido-de-salidas-plan-7-dias", level: "Intermedio" },
-      { title: "Caso: recuperar control del mes", slug: "caso-recuperar-control-del-mes", level: "Avanzado" },
+      { title: "El Reto de los 30 Días", slug: "reto-de-los-30-dias", level: "Básico" },
+      { title: "Micro-ahorro: El poder de lo pequeño", slug: "micro-ahorro-el-poder-de-lo-pequeno", level: "Básico" },
+      { title: "Inflación: El enemigo invisible", slug: "inflacion-el-enemigo-invisible", level: "Intermedio" },
+      { title: "Ahorro Hedónico: No te prives, optimiza", slug: "ahorro-hedonico-no-te-prives-optimiza", level: "Intermedio" },
+      { title: "Auditoría de Suscripciones Maestras", slug: "auditoria-de-suscripciones-maestras", level: "Avanzado" },
     ]
   },
   {
-    title: "Balance",
+    title: "Hacia la Inversión",
     lessons: [
-      { title: "Balance simple (entra/sale)", slug: "balance-simple-entrasale", level: "Básico" },
-      { title: "¿Qué pasa si siempre quedo en 0?", slug: "que-pasa-si-siempre-quedo-en-0", level: "Básico" },
-      { title: "¿Cómo crear margen?", slug: "como-crear-margen", level: "Intermedio" },
-      { title: "Margen como hábito (no accidente)", slug: "margen-como-habito-no-accidente", level: "Intermedio" },
-      { title: "Semana de balance: seguimiento real", slug: "semana-de-balance-seguimiento-real", level: "Avanzado" },
+      { title: "Ahorro vs Inversión: El salto cuántico", slug: "ahorro-vs-inversion-el-salto-cuantico", level: "Básico" },
+      { title: "Cuentas de Alto Rendimiento (Efectivo Inteligente)", slug: "cuentas-de-alto-rendimiento-efectivo-inteligente", level: "Básico" },
+      { title: "El Costo de la Inacción", slug: "el-costo-de-la-inaccion", level: "Intermedio" },
+      { title: "Protección contra Devaluación", slug: "proteccion-contra-devaluacion", level: "Intermedio" },
+      { title: "Examen de Maestría en Acumulación", slug: "examen-maestria-acumulacion", level: "Avanzado" },
     ]
   },
 ]

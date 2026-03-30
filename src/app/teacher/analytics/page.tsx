@@ -60,15 +60,15 @@ export default function TeacherAnalyticsPage() {
           completionRate: 45,
           courseStats: [
             {
-              id: "course-1",
-              title: "Fundamentos de Finanzas Personales",
+              id: "tema-01",
+              title: "Relación con el dinero",
               studentsEnrolled: 45,
               avgProgress: 68,
               completionRate: 52
             },
             {
-              id: "course-2",
-              title: "Inversión para Principiantes",
+              id: "tema-02",
+              title: "Ingeniería del Ingreso",
               studentsEnrolled: 28,
               avgProgress: 54,
               completionRate: 35

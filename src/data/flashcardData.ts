@@ -159,6 +159,106 @@ export const FLASHCARD_DATA: FlashcardSet[] = [
       { id: "t3s3-c9", concept: "Integridad de Sistema", definition: "Estado en el que tus decisiones diarias coinciden con tus reglas pre-diseñadas." },
       { id: "t3s3-c10", concept: "Ley de Parkinson Financiera", definition: "Tendencia a elevar el nivel de vida siempre que tus ingresos aumentan." },
     ]
+  },
+
+  // --- TEMA 04: OPTIMIZACIÓN DE EGRESOS ---
+  {
+    topicId: "tema-04",
+    subtemaIndex: 0, // A: Análisis de Valor
+    cards: [
+      { id: "t4s1-c1", concept: "Gasto Fijo", definition: "Entrada recurrente que no varía mes con mes y representa tu costo operativo." },
+      { id: "t4s1-c2", concept: "Gasto Variable", definition: "Salida de dinero que depende del consumo y decisiones diarias." },
+      { id: "t4s1-c3", concept: "Necesidad Vital", definition: "Elemento indispensable para mantener la vida y la integridad básica." },
+      { id: "t4s1-c4", concept: "Deseo (Want)", definition: "Elemento que mejora la calidad de vida pero cuya ausencia no pone en riesgo la supervivencia." },
+      { id: "t4s1-c5", concept: "Gasto Discrecional", definition: "Aquel que puedes elegir hacer o no sin compromisos legales o vitales." },
+      { id: "t4s1-c6", concept: "TCO (Total Cost of Ownership)", definition: "Estimación del costo directo e indirecto de un producto en todo su ciclo de vida." },
+      { id: "t4s1-c7", concept: "Costo de Mantenimiento", definition: "Gasto recurrente necesario para que un bien siga siendo funcional." },
+      { id: "t4s1-c8", concept: "OPEX Personal", definition: "Suma de todos tus gastos fijos y variables necesarios para operar tu vida." },
+      { id: "t4s1-c9", concept: "Margen de Libertad", definition: "Capital libre después de cubrir gastos operativos (OPEX)." },
+      { id: "t4s1-c10", concept: "Ingeniería de Costos", definition: "Análisis técnico de cada salida de dinero para maximizar el valor recibido." },
+    ]
+  },
+  {
+    topicId: "tema-04",
+    subtemaIndex: 1, // B: Cacería de Hormigas
+    cards: [
+      { id: "t4s2-c1", concept: "Gasto Hormiga", definition: "Consumo diario de bajo costo que parece insignificante pero tiene un alto impacto acumulado." },
+      { id: "t4s2-c2", concept: "Efecto Acumulado", definition: "Impacto masivo de pequeñas acciones o gastos repetidos a largo plazo." },
+      { id: "t4s2-c3", concept: "Costo de Conveniencia", definition: "Precio extra que pagas por no estar preparado logísticamente." },
+      { id: "t4s2-c4", concept: "Sustitución de Hábito", definition: "Cambiar un gasto irracional por uno racional con el mismo beneficio percibido." },
+      { id: "t4s2-c5", concept: "Prep-Day", definition: "Día destinado a la preparación logística para evitar gastos de conveniencia semanales." },
+      { id: "t4s2-c6", concept: "Marca Blanca (Genérica)", definition: "Productos con calidad similar a la marca líder pero sin costo de branding." },
+      { id: "t4s2-c7", concept: "Trigger de Hormiga", definition: "Estímulo emocional (estrés, aburrimiento) que detona un gasto pequeño." },
+      { id: "t4s2-c8", concept: "Día de Gasto Cero", definition: "Jornada en la que solo se ejecutan gastos fijos y variables necesarios." },
+      { id: "t4s2-c9", concept: "Soberanía de Consumo", definition: "Capacidad de decidir cada compra basada en valor, no en inercia." },
+      { id: "t4s2-c10", concept: "Auditoría de Fuga", definition: "Proceso de identificar y sellar micro-salidas de capital no planeadas." },
+    ]
+  },
+  {
+    topicId: "tema-04",
+    subtemaIndex: 2, // C: Gastos Invisibles
+    cards: [
+      { id: "t4s3-c1", concept: "Micro-seguro Oculto", definition: "Primas de seguros automáticas cargadas sin confirmación explícita recurrente." },
+      { id: "t4s3-c2", concept: "Fuga Pasiva", definition: "Dinero que sale del sistema sin una acción de compra consciente." },
+      { id: "t4s3-c3", concept: "Impuesto a la Desidia", definition: "Costo extra pagado por no revisar estados de cuenta o términos bancarios." },
+      { id: "t4s3-c4", concept: "Economía de Suscripción", definition: "Blindaje de ingresos de empresas mediante cuotas periódicas automáticas." },
+      { id: "t4s3-c5", concept: "CAT (Costo Anual Total)", definition: "Indicador del costo financiero total de un crédito, incluyendo intereses y seguros." },
+      { id: "t4s3-c6", concept: "Interés Moratorio", definition: "Sanción económica por no cumplir con un pago en la fecha acordada." },
+      { id: "t4s3-c7", concept: "Amortización de Deuda", definition: "Proceso de reducción del capital principal de una deuda mediante pagos." },
+      { id: "t4s3-c8", concept: "Ahorro Ficticio", definition: "Dinero que crees haber ganado al comprar algo rebajado que no necesitabas." },
+      { id: "t4s3-c9", concept: "Gasto de Llenado", definition: "Compra extra realizada solo para alcanzar un beneficio de promoción o envío." },
+      { id: "t4s3-c10", concept: "Auditoría 360", definition: "Revisión exhaustiva de todas las entradas y salidas de capital del sistema." },
+    ]
+  },
+
+  // --- TEMA 05: AHORRO INTELIGENTE ---
+  {
+    topicId: "tema-05",
+    subtemaIndex: 0, // A: Física del Ahorro
+    cards: [
+      { id: "t5s1-c1", concept: "Acumulación de Energía", definition: "Visión del ahorro como almacenamiento de potencial para uso futuro, no como privación." },
+      { id: "t5s1-c2", concept: "Fondo de Emergencia", definition: "Reserva líquida destinada exclusivamente a imprevistos que amenacen el sistema." },
+      { id: "t5s1-c3", concept: "Fricción Cero", definition: "Eliminación de pasos manuales en el ahorro para evitar el fallo por falta de voluntad." },
+      { id: "t5s1-c4", concept: "Automatización Financiera", definition: "Configuración de reglas automáticas para mover capital hacia fondos de ahorro." },
+      { id: "t5s1-c5", concept: "Bucket System (Cubetas)", definition: "División del ahorro en compartimentos específicos según su objetivo y plazo." },
+      { id: "t5s1-c6", concept: "Tasa de Ahorro", definition: "Porcentaje de los ingresos mensuales totales que se logra retener e invertir." },
+      { id: "t5s1-c7", concept: "Indicador Maestro", definition: "Métrica clave que determina la velocidad a la que construyes tu libertad." },
+      { id: "t5s1-c8", concept: "Integridad de Flujo", definition: "Coherencia entre tus ingresos proyectados y el ahorro realmente ejecutado." },
+      { id: "t5s1-c9", concept: "Ahorro por Objetivos", definition: "Asignación de capital a metas específicas con nombre, monto y fecha límite." },
+      { id: "t5s1-c10", concept: "Paz Mental Financiera", definition: "Estado alcanzado al tener la infraestructura de ahorro necesaria ante crisis." },
+    ]
+  },
+  {
+    topicId: "tema-05",
+    subtemaIndex: 1, // B: Estrategias de Retención
+    cards: [
+      { id: "t5s2-c1", concept: "Micro-ahorro", definition: "Pequeñas transferencias diarias o semanales que crean hábito sin dolor financiero." },
+      { id: "t5s2-c2", concept: "Reto de los 30 Días", definition: "Práctica intensiva de un nuevo hábito financiero para reducir la resistencia cerebral." },
+      { id: "t5s2-c3", concept: "Inflación", definition: "Aumento generalizado de precios que erosiona el poder adquisitivo del dinero estático." },
+      { id: "t5s2-c4", concept: "Ahorro Hedónico", definition: "Retención de capital mediante la optimización inteligente del placer, sin privación total." },
+      { id: "t5s2-c5", concept: "Auditoría Maestra", definition: "Cierre de fugas recurrentes detectadas en la fase de optimización." },
+      { id: "t5s2-c6", concept: "Poder Adquisitivo", definition: "Capacidad real de compra que tiene una moneda frente a bienes y servicios." },
+      { id: "t5s2-c7", concept: "Costo de Retención", definition: "Esfuerzo necesario para mantener el capital dentro de tu sistema y evitar que fluya hacia afuera." },
+      { id: "t5s2-c8", concept: "Eficiencia de Retención", definition: "Capacidad de un sistema para conservar la mayor parte del ingreso generado." },
+      { id: "t5s2-c9", concept: "Resistencia al Consumo", definition: "Fortalecimiento psicológico ante la presión constante del entorno por gastar." },
+      { id: "t5s2-c10", concept: "Mentalidad de Acumulador", definition: "Enfoque centrado en el crecimiento de activos en lugar de la exhibición de consumo." },
+    ]
+  },
+  {
+    topicId: "tema-05",
+    subtemaIndex: 2, // C: Hacia la Inversión
+    cards: [
+      { id: "t5s3-c1", concept: "Capital de Trabajo", definition: "Fondos necesarios para que un negocio u oportunidad de ingreso pueda operar." },
+      { id: "t5s3-c2", concept: "Cuentas de Alto Rendimiento", definition: "Vehículos financieros líquidos que ofrecen una tasa de interés competitiva sobre el ahorro." },
+      { id: "t5s3-c3", concept: "Costo de Inacción (Interés Perdido)", definition: "La ganancia que dejas de percibir por retrasar el inicio de la inversión." },
+      { id: "t5s3-c4", concept: "Protección de Capital", definition: "Estrategias técnicas para evitar que el ahorro pierda valor real ante la devaluación." },
+      { id: "t5s3-c5", concept: "Activo Líquido", definition: "Bienes o dinero que pueden convertirse en efectivo de forma casi inmediata sin pérdida significativa." },
+      { id: "t5s3-c6", concept: "Salto Cuántico", definition: "Transición de una economía basada solo en ahorro a una basada en inversión compuesta." },
+      { id: "t5s3-c7", concept: "Estrategia de Blindaje", definition: "Asignación de capital en diferentes monedas o instrumentos para reducir riesgos sistémicos." },
+      { id: "t5s3-c8", concept: "Métrica de Crecimiento", definition: "Dato cuantitativo que mide la evolución neta de tu patrimonio total." },
+      { id: "t5s3-c9", concept: "Soberanía Financiera", definition: "Estado donde tu capital acumulado te permite tomar decisiones sin presión externa." },
+      { id: "t5s3-c10", concept: "Hoja de Ruta de Inversión", definition: "Plan secuencial para pasar de ahorrador a inversor activo y estratégico." },
+    ]
   }
 ];
 

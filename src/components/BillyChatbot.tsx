@@ -276,7 +276,7 @@ export default function BillyChatbot() {
         className="chatbot-launcher"
         type="button"
         onClick={() => setIsOpen((o) => !o)}
-        aria-label="Abrir chat con Billy"
+        aria-label="Abrir Billy Insights"
         drag
         dragConstraints={{ left: -1000, right: 0, top: -1000, bottom: 0 }}
         dragMomentum={false}
@@ -385,7 +385,7 @@ export default function BillyChatbot() {
                 />
 
               <div style={{ flex: 1, minWidth: 0, pointerEvents: "none" }}>
-                <div style={{ color: "white", fontSize: 18, fontWeight: 800, lineHeight: 1.2, letterSpacing: "-0.01em" }}>Billy</div>
+                <div style={{ color: "white", fontSize: 18, fontWeight: 800, lineHeight: 1.2, letterSpacing: "-0.01em" }}>Billy Insights</div>
                 <div style={{ color: "rgba(255,255,255,0.85)", fontSize: 12, display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
                   <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", flexShrink: 0, boxShadow: "0 0 8px #10b981" }} />
                   {isLoading ? "Pensando..." : "Mentor de BIZEN"}
@@ -432,7 +432,7 @@ export default function BillyChatbot() {
                 >
                     <Billy mood="happy" size={100} />
 
-                  <div style={{ fontSize: 22, fontWeight: 800, color: "#1e3a8a", marginBottom: 8, letterSpacing: "-0.02em" }}>¡Hola, {userName}! Soy Billy</div>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: "#1e3a8a", marginBottom: 8, letterSpacing: "-0.02em" }}>¡Hola, {userName}! Soy Billy Insights</div>
                   <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, marginBottom: 20, maxWidth: 280 }}>
                     Tu mentor financiero personal. ¿En qué "feria" trabajamos hoy?
                   </div>
@@ -561,7 +561,7 @@ export default function BillyChatbot() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyPress}
-                    placeholder="Pregúntale a Billy..."
+                    placeholder="Pregúntale a Billy Insights..."
                     disabled={isLoading}
                     style={{
                       width: "100%",
@@ -629,7 +629,7 @@ export default function BillyChatbot() {
                 </button>
               </div>
               <div style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: "#94a3b8", letterSpacing: "0.01em" }}>
-                Billy puede cometer errores. Verifica info importante.
+                Billy Insights puede cometer errores. Verifica info importante.
               </div>
             </div>
           </motion.div>

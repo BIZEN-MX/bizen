@@ -527,6 +527,11 @@ export default function CoursesPage() {
                         const isLastTopic = idx === topics.length - 1;
                         const isOrphan = isLastTopic && idx % 2 === 0;
 
+                        // SPECIALIZATION LOGIC: DNA Bypass
+                        const isDnaSpecialist = dbProfile?.dnaProfile === "Billy Inversionista";
+                        const isDnaRecommended = isDnaSpecialist && (topic.id === "tema-09" || topic.id === "tema-10");
+                        const isDnaSkipped = isDnaSpecialist && (topic.id === "tema-06" || topic.id === "tema-07" || topic.id === "tema-08");
+
                         // Determine visual position in grid
                         let gridColumn = (idx % 2) + 1;
                         if (!isEvenRow) {
@@ -541,7 +546,9 @@ export default function CoursesPage() {
                         const nextTopicIdx = dbTopics.findIndex(t => t.id === nextTopicId);
                         const currentTopicIdx = dbTopics.findIndex(t => t.id === topic.id);
                         const isSequenceLocked = nextTopicIdx !== -1 && currentTopicIdx > nextTopicIdx;
-                        const isLocked = isPaywalled || isSequenceLocked;
+                        
+                        // LOCKED if (paywalled OR out of order) AND NOT (unlocked by DNA)
+                        const isLocked = (isPaywalled || isSequenceLocked) && !isDnaRecommended;
 
                         return (
                           <React.Fragment key={topic.id}>
@@ -574,52 +581,67 @@ export default function CoursesPage() {
                                 borderRadius: "24px",
                                 background: isLocked 
                                   ? `linear-gradient(135deg, rgba(241, 245, 249, 0.8), rgba(241, 245, 249, 0.4))`
-                                  : `linear-gradient(135deg, rgba(255, 255, 255, 0.8), ${topic.catColor}15)`,
+                                  : (isDnaRecommended 
+                                      ? "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)" 
+                                      : `linear-gradient(135deg, rgba(255, 255, 255, 0.8), ${topic.catColor}15)`),
                                 backgroundColor: isLocked ? "rgba(241, 245, 249, 0.6)" : "rgba(255, 255, 255, 0.3)",
                                 backdropFilter: "blur(20px)",
                                 WebkitBackdropFilter: "blur(20px)",
                                 border: isLocked 
                                   ? "1.5px solid rgba(255, 255, 255, 0.6)" 
-                                  : `1.5px solid ${topic.catColor}30`,
-                                boxShadow: isLocked ? "none" : "0 10px 30px rgba(0, 0, 0, 0.03)",
+                                  : (isDnaRecommended 
+                                      ? "2px solid #60a5fa" 
+                                      : `1.5px solid ${topic.catColor}30`),
+                                boxShadow: isDnaRecommended 
+                                  ? "0 20px 40px rgba(37, 99, 235, 0.3)" 
+                                  : (isLocked ? "none" : "0 10px 30px rgba(0, 0, 0, 0.03)"),
                                 transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                 overflow: "hidden",
                                 display: "flex",
                                 flexDirection: "column",
                                 position: "relative",
-                                opacity: isLocked ? 0.8 : 1,
+                                opacity: isDnaSkipped ? 0.6 : (isLocked ? 0.8 : 1),
                                 pointerEvents: "auto",
                                 zIndex: 2
                               }}
-                              className={topic.id === nextTopicId ? "next-topic-glow" : ""}
+                              className={topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "dna-glow-pulse" : "")}
                             >
                               <div style={{ padding: "32px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-                                  <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                                  <div style={{ fontSize: 11, fontWeight: 400, color: isDnaRecommended ? "#93c5fd" : "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                                     TEMA {topic.displayOrder.toString().padStart(2, "0")}
                                   </div>
                                   <div style={{ 
                                     fontSize: 10, 
-                                    fontWeight: 700, 
-                                    color: isLocked ? '#64748b' : topic.catColor, 
-                                    background: isLocked ? 'rgba(255,255,255,0.4)' : `${topic.catColor}15`, 
+                                    fontWeight: 400, 
+                                    color: isDnaRecommended ? "#fff" : (isLocked ? '#64748b' : topic.catColor), 
+                                    background: isDnaRecommended ? "rgba(255,255,255,0.2)" : (isLocked ? 'rgba(255,255,255,0.4)' : `${topic.catColor}15`), 
                                     padding: "4px 10px", 
                                     borderRadius: 999, 
                                     textTransform: "uppercase",
-                                    border: `1px solid ${isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`}`,
-                                    backdropFilter: "blur(10px)"
+                                    border: `1px solid ${isDnaRecommended ? "rgba(255,255,255,0.3)" : (isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`)}`,
+                                    backdropFilter: "blur(10px)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 6
                                   }}>
-                                    {isPaywalled ? 'Premium' : topic.category}
+                                    {isDnaRecommended && <Dna size={12} color="#60a5fa" />}
+                                    {isDnaRecommended ? "Billy DNA Recomendado" : (isPaywalled ? 'Premium' : topic.category)}
                                   </div>
                                 </div>
                                 
-                                <h3 style={{ fontSize: 20, fontWeight: 700, color: "#1e293b", margin: 0, lineHeight: 1.3 }}>{topic.title}</h3>
-                                
-                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 24, fontSize: 13, color: "#64748b" }}>
-                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: 8, background: isLocked ? "rgba(255,255,255,0.4)" : `${topic.catColor}15`, border: `1px solid ${isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`}` }}>
-                                    <BookOpen size={16} color={isLocked ? "#94a3b8" : topic.catColor} />
+                                <h3 style={{ fontSize: 22, fontWeight: 500, color: isDnaRecommended ? "#fff" : "#1e293b", margin: 0, lineHeight: 1.3 }}>{topic.title}</h3>
+                                {isDnaSkipped && (
+                                  <div style={{ fontSize: 11, fontWeight: 400, color: "#64748b", marginTop: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                                    <Sparkles size={12} color={topic.catColor} /> BILLY DNA: NIVEL DOMINADO
                                   </div>
-                                  <span style={{ fontWeight: 500 }}>{topic.lessons} cursos disponibles</span>
+                                )}
+                                
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 24, fontSize: 13, color: isDnaRecommended ? "rgba(255,255,255,0.8)" : "#64748b" }}>
+                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: 8, background: isDnaRecommended ? "rgba(255,255,255,0.15)" : (isLocked ? "rgba(255,255,255,0.4)" : `${topic.catColor}15`), border: `1px solid ${isDnaRecommended ? "rgba(255,255,255,0.2)" : (isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`)}` }}>
+                                    <BookOpen size={16} color={isDnaRecommended ? "#fff" : (isLocked ? "#94a3b8" : topic.catColor)} />
+                                  </div>
+                                  <span style={{ fontWeight: 400 }}>{topic.lessons} cursos disponibles</span>
                                 </div>
                               </div>
                               {isLocked && (
@@ -788,6 +810,22 @@ export default function CoursesPage() {
         }
         .next-topic-glow {
           animation: topic-glow-pulse 4s ease-in-out infinite !important;
+        }
+
+        @keyframes dna-glow-pulse {
+          0%, 100% { 
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2), 0 0 0 0px rgba(96, 165, 250, 0); 
+            border-color: #60a5fa;
+            transform: translateY(-5px) scale(1.01);
+          }
+          50% { 
+            box-shadow: 0 25px 50px rgba(37, 99, 235, 0.4), 0 0 0 4px rgba(96, 165, 250, 0.2); 
+            border-color: #93c5fd;
+            transform: translateY(-8px) scale(1.02);
+          }
+        }
+        .dna-glow-pulse {
+          animation: dna-glow-pulse 3s ease-in-out infinite !important;
         }
 
         .phase-title-shimmer {

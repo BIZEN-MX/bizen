@@ -17,6 +17,13 @@ export default function DynamicTopicPage() {
     useEffect(() => {
         if (!id) return
 
+        // Redirect legacy 'course-1' format to 'tema-01'
+        if (id.startsWith('course-')) {
+            const num = id.replace('course-', '').padStart(2, '0')
+            router.replace(`/courses/tema-${num}`)
+            return
+        }
+
         async function fetchTopic() {
             try {
                 setLoading(true)

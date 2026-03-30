@@ -178,14 +178,23 @@ export default function CoursePageTemplate({
     const router = useRouter()
     const { user, loading, dbProfile } = useAuth()
     const { completedLessons, lessonStars } = useLessonProgress()
+
+    const topicNumStr = topicId.toString().replace('tema-', '').replace(/^0+/, '')
+    const topicNum = parseInt(topicNumStr)
+
+    const topic = ALL_TOPICS.find((t) => t.id === topicNum) || {
+        id: Number(topicId),
+        title: topicTitle || "Cargando...",
+        icon: BookOpen,
+        color: "#3b82f6",
+        lessons: 0
+    }
     const [lessonModal, setLessonModal] = useState<{ lesson: GenericLesson; unitTitle: string } | null>(null)
     const [sequenceWarning, setSequenceWarning] = useState<string | null>(null)
     
-    // AI Chat State
-    const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([])
-    const [chatInput, setChatInput] = useState("")
-    const [isThinking, setIsThinking] = useState(false)
-    const [showChat, setShowChat] = useState(false)
+    // Billy Insight State
+    const [insight, setInsight] = useState<string | null>(null)
+    const [loadingInsight, setLoadingInsight] = useState(true)
     const [flashcardSet, setFlashcardSet] = useState<any[] | null>(null)
 
     // Access check
@@ -206,6 +215,21 @@ export default function CoursePageTemplate({
         const body = document.body
         html.style.background = "#ffffff"
         body.style.background = "#ffffff"
+
+        const fetchInsight = async () => {
+            try {
+                setLoadingInsight(true)
+                const topicTitleForInsight = topic?.title || ""
+                const res = await fetch(`/api/dashboard/insights?topic=${encodeURIComponent(topicTitleForInsight)}`)
+                const data = await res.json()
+                setInsight(data.insight)
+            } catch (e) {
+                console.error("Failed to fetch insights", e)
+            } finally {
+                setLoadingInsight(false)
+            }
+        }
+        fetchInsight()
 
         return () => {
             html.style.background = ""
@@ -245,17 +269,19 @@ export default function CoursePageTemplate({
     const totalInTopic = allLessonsInTopic.length
     const topicPct = totalInTopic > 0 ? Math.round((completedInTopic / totalInTopic) * 100) : 0
 
-    if (loading || !user) {
+    if (loading || !user || loadingInsight) {
         return <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", }} />
     }
 
     if (isTopicLockedBySequence) {
         return (
             <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#FBFAF5", padding: 20, textAlign: "center" }}>
-                <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(15,98,254,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, fontSize: 40 }}>🔒</div>
+                <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(15,98,254,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
+                    <Lock size={40} color="#1e3a8a" />
+                </div>
                 <h1 style={{ fontSize: 28, fontWeight: 500, color: "#0f172a", marginBottom: 12 }}>Tema Bloqueado</h1>
                 <p style={{ fontSize: 18, color: "#64748b", maxWidth: 500, lineHeight: 1.6, marginBottom: 32 }}>
-                    Para acceder a este tema, primero debes completar todas las lecciones del <strong>Tema {Number(topicId) - 1}</strong>.
+                    Para acceder a este tema, primero debes completar todas las lecciones del <strong>Tema {currentTopicNum - 1}</strong>.
                 </p>
                 <button
                     onClick={() => router.push('/courses?noredirect=true')}
@@ -267,52 +293,9 @@ export default function CoursePageTemplate({
         )
     }
 
-    const topicNumStr = topicId.toString().replace('tema-', '').replace(/^0+/, '')
-    const topicNum = parseInt(topicNumStr)
-
-    const topic = ALL_TOPICS.find((t) => t.id === topicNum) || {
-        id: topicId,
-        title: topicTitle || "Cargando...",
-        icon: BookOpen,
-        color: "#3b82f6",
-        lessons: totalInTopic
-    }
     const IconComp = topic.icon
     const prevTopic = !isNaN(topicNum) ? ALL_TOPICS.find((t) => t.id === topicNum - 1) : null
     const nextTopic = !isNaN(topicNum) ? ALL_TOPICS.find((t) => t.id === topicNum + 1) : null
-
-    async function handleAskBilly() {
-        if (!chatInput.trim() || isThinking) return;
-        
-        const userMsg = chatInput.trim();
-        setChatInput("");
-        setChatMessages(prev => [...prev, { role: 'user', content: userMsg }]);
-        setIsThinking(true);
-        
-        try {
-            const resp = await fetch('/api/free-chatbot', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: userMsg,
-                    currentPath: `/learn/tema-${topicNum}`, // Simulate context
-                    userName: dbProfile?.fullName || "Estudiante",
-                    xp: dbProfile?.xp || 0
-                })
-            });
-            const data = await resp.json();
-            if (resp.ok && data.response) {
-                setChatMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
-            } else {
-                setChatMessages(prev => [...prev, { role: 'assistant', content: "¡Ups! Mis circuitos se recalentaron. ¿Podrías intentar de nuevo? 😅" }]);
-            }
-        } catch (err) {
-            console.error("Billy Chat error:", err);
-            setChatMessages(prev => [...prev, { role: 'assistant', content: "No pude conectarme con mis servidores. Revisa tu internet, porfa." }]);
-        } finally {
-            setIsThinking(false);
-        }
-    }
 
     return (
         <div style={{ position: "relative", width: "100%", maxWidth: "100%", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>
@@ -450,89 +433,63 @@ export default function CoursePageTemplate({
                     </div>
 
 
-                    {/* ── ASK BILLY SECTION ────────────────────────────────────────── */}
-                    <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto 32px", boxSizing: "border-box" }}>
-                        <div style={{ 
-                            background: "rgba(255, 255, 255, 0.7)", 
-                            backdropFilter: "blur(20px)", 
-                            borderRadius: 24, 
-                            padding: "20px 24px", 
-                            border: "1px solid rgba(255, 255, 255, 0.8)",
-                            boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 16
-                        }}>
-                            <div className="billy-chat-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                <div className="billy-chat-info" style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                        <Image src="/billy_chatbot.png" alt="Billy" width={40} height={40} />
-                                    </div>
-                                    <div style={{ minWidth: 0 }}>
-                                        <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: 1.4 }}>¿Tienes dudas sobre "{topic.title}"?</div>
-                                        <div style={{ fontSize: 13, color: "#64748b" }}>Pregúntale a Billy sobre este tema.</div>
+                    {/* ── BILLY INSIGHT SECTION ────────────────────────────────────────── */}
+                    {insight && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            style={{ 
+                                width: "100%", 
+                                maxWidth: "100%", 
+                                margin: "0 auto 32px", 
+                                boxSizing: "border-box",
+                            }}
+                        >
+                            <div style={{ 
+                                background: "rgba(255, 255, 255, 0.7)", 
+                                backdropFilter: "blur(20px)", 
+                                borderRadius: 24, 
+                                padding: "20px 24px", 
+                                border: "1px solid rgba(255, 255, 255, 0.8)",
+                                boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 16
+                            }}>
+                                <div style={{ 
+                                    width: 52, 
+                                    height: 52, 
+                                    display: "flex", 
+                                    alignItems: "center", 
+                                    justifyContent: "center", 
+                                    flexShrink: 0,
+                                    position: "relative"
+                                }}>
+                                    <Image 
+                                        src="/billy_chatbot.png" 
+                                        alt="Billy" 
+                                        width={52} 
+                                        height={52} 
+                                        style={{ 
+                                            objectFit: "contain",
+                                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.08))"
+                                        }} 
+                                    />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ 
+                                        fontSize: "clamp(13px, 1.6vw, 15px)", 
+                                        color: "#1e293b", 
+                                        lineHeight: 1.5,
+                                        fontWeight: 500
+                                    }}>
+                                        &quot;{insight.replace(/\*/g, '')}&quot;
                                     </div>
                                 </div>
-                                {!showChat && (
-                                    <button 
-                                        className="billy-chat-btn"
-                                        onClick={() => setShowChat(true)}
-                                        style={{ background: "#2563eb", color: "white", border: "none", borderRadius: 12, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap", flexShrink: 0 }}
-                                    >
-                                        <Sparkles size={14} /> Empezar Chat
-                                    </button>
-                                )}
                             </div>
-
-                            {showChat && (
-                                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                                    <div style={{ maxHeight: 300, overflowY: "auto", display: "flex", flexDirection: "column", gap: 12, padding: "10px 4px" }}>
-                                        {chatMessages.length === 0 && (
-                                            <p style={{ fontSize: 14, color: "#94a3b8", textAlign: "center", margin: "20px 0" }}>Pregunta lo que quieras sobre {topic.title}...</p>
-                                        )}
-                                        {chatMessages.map((msg, i) => (
-                                            <div key={i} style={{ 
-                                                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                                                background: msg.role === 'user' ? '#2563eb' : '#f1f5f9',
-                                                color: msg.role === 'user' ? 'white' : '#1e293b',
-                                                padding: "10px 16px",
-                                                borderRadius: msg.role === 'user' ? "18px 18px 2px 18px" : "18px 18px 18px 2px",
-                                                fontSize: 14,
-                                                maxWidth: "85%",
-                                                lineHeight: 1.5
-                                            }}>
-                                                {msg.content}
-                                            </div>
-                                        ))}
-                                        {isThinking && (
-                                            <div style={{ alignSelf: 'flex-start', background: '#f1f5f9', padding: "10px 16px", borderRadius: "18px 18px 18px 2px", display: "flex", gap: 4 }}>
-                                                <div className="dot-pulse-mini" style={{ width: 4, height: 4, borderRadius: "50%", background: "#94a3b8" }} />
-                                                <div className="dot-pulse-mini" style={{ width: 4, height: 4, borderRadius: "50%", background: "#94a3b8", animationDelay: "0.2s" }} />
-                                                <div className="dot-pulse-mini" style={{ width: 4, height: 4, borderRadius: "50%", background: "#94a3b8", animationDelay: "0.4s" }} />
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div style={{ display: "flex", gap: 8 }}>
-                                        <input 
-                                            type="text" 
-                                            value={chatInput}
-                                            onChange={(e) => setChatInput(e.target.value)}
-                                            onKeyDown={(e) => e.key === 'Enter' && handleAskBilly()}
-                                            placeholder="Escribe tu duda aquí..."
-                                            style={{ flex: 1, background: "white", border: "1.5px solid #e2e8f0", borderRadius: 12, padding: "10px 16px", fontSize: 14, outline: "none" }}
-                                        />
-                                        <button 
-                                            onClick={handleAskBilly}
-                                            disabled={!chatInput.trim() || isThinking}
-                                            style={{ background: "#2563eb", color: "white", border: "none", borderRadius: 12, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", opacity: (!chatInput.trim() || isThinking) ? 0.6 : 1 }}
-                                        >
-                                            <Send size={18} />
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                        </motion.div>
+                    )}
 
                     {/* ── SUBTEMAS ──────────────────────────────────────────────────── */}
                     <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px, 5vw, 44px)", paddingBottom: 40, boxSizing: "border-box" }}>

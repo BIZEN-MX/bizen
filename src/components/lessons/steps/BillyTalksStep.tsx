@@ -98,61 +98,7 @@ export function BillyTalksStep({
       }}
     >
         <div style={{ maxWidth: 640, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          
-<div 
-  style={{
-     width: "clamp(120px, 25vw, 200px)",
-     height: "clamp(120px, 25vw, 200px)",
-     position: "relative",
-     marginBottom: "clamp(12px, 3vw, 24px)",
-     cursor: "pointer"
-  }}
->
-   {/* Touch Hint */}
-   <motion.div 
-      initial={{ y: 0 }}
-      animate={{ y: [-5, 0, -5] }}
-      transition={{ duration: 2, repeat: Infinity }}
-      style={{
-          position: "absolute",
-          top: -30,
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "#10b981", // Change to green for contrast
-          color: "white",
-          padding: "4px 12px",
-          borderRadius: 8,
-          fontSize: 11,
-          fontWeight: 800,
-          whiteSpace: "nowrap",
-          boxShadow: "0 4px 12px rgba(16,185,129,0.2)",
-          pointerEvents: "none",
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          zIndex: 50
-      }}
-   >
-      TÓCAME PARA ESCUCHAR
-      <Mic size={14} color="white" strokeWidth={3} />
-   </motion.div>
-
-   <Billy 
-     mood={mood} 
-     isTalking={isTalking}
-     size="100%"
-     onClick={() => {
-        const { initAudioContext } = require("../lessonSounds")
-        initAudioContext()
-        onPlayAudio?.()
-        haptic.light()
-        
-        // Simular que habla durante 3 segundos o hasta que termine el audio si hubiera callback
-        setIsTalking(true)
-        setTimeout(() => setIsTalking(false), 3000)
-     }}
-   />
-</div>
+          {/* Billy removed for now per user request */}
 
           {/* Speech Bubble */}
           <motion.div
@@ -171,18 +117,7 @@ export function BillyTalksStep({
                  width: "100%"
              }}
           >
-             {/* Speech bubble tail pointing to mascot */}
-             <div style={{
-                 position: "absolute",
-                 top: -12,
-                 left: "50%",
-                 transform: "translateX(-50%) rotate(45deg)",
-                 width: 24,
-                 height: 24,
-                 background: "#ffffff",
-                 borderLeft: "2px solid #e2e8f0",
-                 borderTop: "2px solid #e2e8f0",
-             }} />
+             {/* Speech bubble tail removed per user request */}
 
              <SmartText 
                 text={step.body} 

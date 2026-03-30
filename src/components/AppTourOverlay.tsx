@@ -55,7 +55,7 @@ const BASE_TOUR_STEPS: TourStep[] = [
     icon: Wallet,
     title: "Presupuesto inteligente con IA",
     description: "Registra ingresos y gastos, analiza tu flujo de dinero y obtén consejos de tu asesor financiero con IA. También puedes predecir tu flujo futuro con el modo 'Forecast'.",
-    tip: "Usa el chat de IA para obtener consejos personalizados sobre tu presupuesto.",
+    tip: "Usa Billy Insights para obtener consejos personalizados sobre tu presupuesto.",
     color: "#0F62FE",
     colorLight: "rgba(15,98,254,0.1)",
     colorDark: "#0040c8",

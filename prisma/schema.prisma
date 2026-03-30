@@ -99,6 +99,8 @@ model Profile {
   forumVotes           ForumVote[]         @relation("ForumVotes")
   progress             Progress[]
   inventory            UserInventoryItem[] @relation("ProfileInventory")
+  dnaProfile           String?             @default("Sin Diagnosticar") @map("dna_profile")
+  dnaScore             Int?                @default(0) @map("dna_score")
 
   @@index([schoolId], map: "idx_profiles_school")
   @@index([username], map: "idx_profiles_username")

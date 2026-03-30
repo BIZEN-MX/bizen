@@ -57,13 +57,13 @@ export default function SimulatorPage() {
           .single()
 
         if (error || !data) {
-          router.push('/simulador')
+          router.push('/cash-flow')
         } else {
           setSimulator(data)
         }
       } catch (err) {
         console.error('Error fetching simulator:', err)
-        router.push('/simulador')
+        router.push('/cash-flow')
       } finally {
         setLoading(false)
       }
@@ -79,7 +79,7 @@ export default function SimulatorPage() {
 
   const SimulatorComponent = simulatorComponents[slug];
   if (!SimulatorComponent) {
-    router.push('/simulador')
+    router.push('/cash-flow')
     return null
   }
 
