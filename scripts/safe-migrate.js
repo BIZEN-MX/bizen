@@ -1,7 +1,17 @@
 const { PrismaClient } = require('@prisma/client');
 
 async function main() {
-    console.log("Running safe database adjustments...");
+    if (process.env.SKIP_MIGRATIONS === 'true') {
+        console.log("⏭️ Skipping safe-migrate.js due to SKIP_MIGRATIONS=true");
+        return;
+    }
+    
+    if (!process.env.DATABASE_URL) {
+        console.log("⚠️ skipping safe-migrate.js - DATABASE_URL not set in build environment.");
+        return;
+    }
+
+    console.log("🛠️ Running safe database adjustments...");
     const prisma = new PrismaClient();
     try {
         // Disable statement timeout for this session to prevent migrations from being cancelled

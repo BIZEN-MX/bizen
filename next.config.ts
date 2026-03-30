@@ -1,62 +1,32 @@
-// Build Trigger - Wed Feb 18 17:50:00 CST 2026
 import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["src/apps"],
+  // Transpile packages is usually for external libs. 
+  // Local project code under /src is handled automatically by Next.js.
+  // transpilePackages: ["src/apps"], 
+
   eslint: {
-    // TODO: After fixing all ESLint errors, set to false
     // This allows production builds to complete even if there are ESLint errors
-    // Current status: Many console.log statements and other issues need fixing
+    // TODO: Fix lints for better code quality
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // TODO: After fixing all TypeScript errors (especially 'any' types), set to false
     // This allows production builds to complete even if there are type errors
-    // Current status: 294+ uses of 'any' type need to be replaced
+    // TODO: Reduce 'any' types and fix type errors
     ignoreBuildErrors: true,
   },
   async redirects() {
     return [
-      {
-        source: '/puntos',
-        destination: '/tienda',
-        permanent: true,
-      },
-      {
-        source: '/simulador',
-        destination: '/cash-flow',
-        permanent: true,
-      },
-      {
-        source: '/simuladores',
-        destination: '/cash-flow',
-        permanent: true,
-      },
-      {
-        source: '/simulators',
-        destination: '/cash-flow',
-        permanent: true,
-      },
-      {
-        source: '/cashflow',
-        destination: '/cash-flow',
-        permanent: true,
-      },
-      {
-        source: '/tools',
-        destination: '/cash-flow',
-        permanent: true,
-      },
+      { source: '/puntos', destination: '/tienda', permanent: true },
+      { source: '/simulador', destination: '/cash-flow', permanent: true },
+      { source: '/simuladores', destination: '/cash-flow', permanent: true },
+      { source: '/simulators', destination: '/cash-flow', permanent: true },
+      { source: '/cashflow', destination: '/cash-flow', permanent: true },
+      { source: '/tools', destination: '/cash-flow', permanent: true },
     ]
   },
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': path.resolve(__dirname, 'src'),
-    };
-    return config;
-  },
+  // Removed redundant webpack alias. TS Paths in tsconfig.json are handled by Next.js automatically.
 };
 
 export default nextConfig;

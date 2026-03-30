@@ -18,6 +18,7 @@ interface LabStep {
 export default function BillyLabPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [lab, setLab] = useState<any>(null)
   const [currentStepIdx, setCurrentStepIdx] = useState(0)
   const [completed, setCompleted] = useState(false)
@@ -25,13 +26,19 @@ export default function BillyLabPage() {
   useEffect(() => {
     const fetchLab = async () => {
       try {
+        setLoading(true)
+        setError(null)
         const res = await fetch("/api/billy-lab/generate")
+        if (!res.ok) throw new Error("Error en el servidor de Billy.")
         const data = await res.json()
-        if (data.success) {
+        if (data.success && data.lab) {
           setLab(data.lab)
+        } else {
+          throw new Error(data.error || "No se pudo generar el laboratorio.")
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err)
+        setError(err.message || "Error de conexión con el motor de IA.")
       } finally {
         setLoading(false)
       }
@@ -63,7 +70,23 @@ export default function BillyLabPage() {
     )
   }
 
-  const currentStep = lab?.steps[currentStepIdx]
+  if (error || !lab) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#060914", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#fff", padding: 24, textAlign: "center" }}>
+        <Zap size={48} color="#ef4444" style={{ marginBottom: 24 }} />
+        <h2 style={{ fontSize: 24, fontWeight: 500, marginBottom: 16 }}>Anomalía Detectada</h2>
+        <p style={{ color: "rgba(255,255,255,0.5)", marginBottom: 32 }}>{error || "El laboratorio no pudo ser generado."}</p>
+        <button 
+          onClick={() => window.location.reload()}
+          style={{ padding: "12px 24px", background: "#3b82f6", color: "#fff", border: "none", borderRadius: 12, fontWeight: 500, cursor: "pointer" }}
+        >
+          Reintentar Calibración
+        </button>
+      </div>
+    )
+  }
+
+  const currentStep = lab.steps[currentStepIdx]
 
   const handleNext = () => {
     if (currentStepIdx < lab.steps.length - 1) {

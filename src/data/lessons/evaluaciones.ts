@@ -1,4 +1,4 @@
-import type { LessonStep } from "@/types/lessonTypes"
+import type { LessonStep } from "@/types/lessonTypes";
 
 /**
  * EVALUACIONES DE BLOQUE (EXÁMENES FINALES DE TEMA)
@@ -8,7 +8,7 @@ import type { LessonStep } from "@/types/lessonTypes"
  */
 
 // ==============================================================================
-// EVALUACIÓN BLOQUE 1: MENTALIDAD (TEMA 1)
+// EVALUACION BLOQUE 1: MENTALIDAD (TEMA 1)
 // ==============================================================================
 export const lessonEvaluacionBloque1Steps: LessonStep[] = [
   { id: "eval-1-1", stepType: "billy_talks", body: "Bienvenido al Examen de Certificación: Bloque 1. Esta evaluación mide tu capacidad predictiva sobre tu propio software mental.", fullScreen: true },
