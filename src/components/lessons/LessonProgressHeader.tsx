@@ -19,6 +19,7 @@ export interface LessonProgressHeaderProps {
   isAudioPlaying?: boolean
   isAudioLoading?: boolean
   hasGlossary?: boolean
+  isExam?: boolean
 }
 
 export function LessonProgressHeader({
@@ -34,6 +35,7 @@ export function LessonProgressHeader({
   isAudioPlaying = false,
   isAudioLoading = false,
   hasGlossary = false,
+  isExam = false,
 }: LessonProgressHeaderProps) {
   const progress = totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0
 
@@ -179,7 +181,7 @@ export function LessonProgressHeader({
       {/* Stars removed section was here */}
 
       {/* Stars */}
-      {!hideStars && (
+      {!hideStars && !isExam && (
         <div
           style={{
             flexShrink: 0,

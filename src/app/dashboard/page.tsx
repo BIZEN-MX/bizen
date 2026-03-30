@@ -1,14 +1,15 @@
 "use client"
 
-import React, { useEffect, useState, useMemo, useCallback, Suspense } from "react"
+import React, { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import { Billy } from "@/components/Billy"
 import { useAuth } from "@/contexts/AuthContext"
 
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target } from "lucide-react"
+import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
@@ -258,6 +259,11 @@ function DashboardContent() {
   const [dnaResult,        setDnaResult]        = useState<any>(null)
   const [liveProfile,      setLiveProfile]      = useState<any>(null)
   const [loadingData,      setLoadingData]      = useState(true)
+  const [isSyncing,        setIsSyncing]        = useState(false)
+  const [transactions,     setTransactions]     = useState<any[]>([])
+  const [prevStats,        setPrevStats]        = useState<Stats | null>(null)
+  const [showPulseXp,      setShowPulseXp]      = useState(false)
+  const [showPulseBc,      setShowPulseBc]      = useState(false)
 
   const searchParams = useSearchParams()
   const [showEvolution, setShowEvolution] = useState(false)
@@ -334,6 +340,61 @@ function DashboardContent() {
     fetchStats()
   }, [fetchStats])
 
+  const go = useCallback(async (isSilent = false) => {
+    if (!isSilent) setLoadingData(true)
+    else setIsSyncing(true)
+    
+    try {
+      const [sR, tR, pR, dR, profR, transR] = await Promise.all([
+        fetch("/api/user/stats"),
+        fetch("/api/topics"),
+        fetch("/api/progress"),
+        fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(user?.email || "")}`),
+        fetch("/api/profile"),
+        fetch("/api/wallet/transactions?limit=10")
+      ])
+
+      const newStats = sR.ok ? await sR.json() : null
+      
+      if (newStats) {
+        // Detect changes for pulse effects
+        if (stats) {
+          if (newStats.xp !== stats.xp) {
+            setShowPulseXp(true)
+            setTimeout(() => setShowPulseXp(false), 2000)
+          }
+          if (newStats.bizcoins !== stats.bizcoins) {
+            setShowPulseBc(true)
+            setTimeout(() => setShowPulseBc(false), 2000)
+          }
+        }
+        setStats(newStats)
+      }
+
+      if (tR.ok) setTopics(await tR.json())
+      if (pR.ok) {
+        const pd = await pR.json()
+        setCompletedLessons(
+          (pd.progress ?? pd ?? []).map((p: any) => p.lessonId || p.slug || "").filter(Boolean)
+        )
+      }
+      if (dR.ok) {
+        const dd = await dR.json()
+        if (dd.exists) setDnaResult(dd.result)
+      }
+      if (profR.ok) setLiveProfile(await profR.json())
+      if (transR.ok) {
+        const td = await transR.json()
+        setTransactions(td.transactions || [])
+      }
+    } catch (err) {
+      console.error("Dashboard Sync Error:", err)
+    } finally {
+      setLoadingData(false)
+      setIsSyncing(false)
+    }
+  }, [user, stats])
+
   useEffect(() => {
     if (loading) return
     if (!user)   { router.replace("/login"); return }
@@ -344,35 +405,13 @@ function DashboardContent() {
       return
     }
 
-    const go = async () => {
-      setLoadingData(true)
-      try {
-        const [sR, tR, pR, dR, profR] = await Promise.all([
-          fetch("/api/user/stats"),
-          fetch("/api/topics"),
-          fetch("/api/progress"),
-          fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(user.email || "")}`),
-          fetch("/api/profile")
-        ])
-        if (sR.ok) setStats(await sR.json())
-        if (tR.ok) setTopics(await tR.json())
-        if (pR.ok) {
-          const pd = await pR.json()
-          setCompletedLessons(
-            (pd.progress ?? pd ?? []).map((p: any) => p.lessonId || p.slug || "").filter(Boolean)
-          )
-        }
-        if (dR.ok) {
-          const dd = await dR.json()
-          if (dd.exists) setDnaResult(dd.result)
-        }
-        if (profR.ok) {
-          setLiveProfile(await profR.json())
-        }
-      } catch {/* silent */} finally { setLoadingData(false) }
-    }
+    // Initial Load
     go()
-  }, [user, loading, router])
+
+    // Real-time Polling (every 10s)
+    const interval = setInterval(() => go(true), 10000)
+    return () => clearInterval(interval)
+  }, [user, loading, router, dbProfile, go])
 
   if (loading || loadingData) return <PageLoader />
 
@@ -517,6 +556,31 @@ function DashboardContent() {
 
       {/* ── content wrapper ── */}
       <div className="di" style={{position:"relative",zIndex:1,boxSizing:"border-box",maxWidth:"none"}}>
+        
+        {/* Real-Time Sync Indicator */}
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "flex-end", 
+            gap: 8, 
+            marginBottom: 16,
+            paddingRight: 8
+          }}
+        >
+          <div style={{ position: "relative", width: 8, height: 8 }}>
+            <motion.div 
+              animate={{ scale: [1, 1.5, 1], opacity: [1, 0.4, 1] }} 
+              transition={{ duration: 2, repeat: Infinity }}
+              style={{ position: "absolute", inset: 0, background: isSyncing ? "#0F62FE" : "#10B981", borderRadius: "50%" }}
+            />
+          </div>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+            {isSyncing ? "Sincronizando..." : "En vivo"}
+          </span>
+        </motion.div>
 
         {/* ══════════════════════════════════════════════════════════
             HERO
@@ -591,10 +655,32 @@ function DashboardContent() {
                     { icon: <IcoZap size={14} color="#a78bfa" />, label: `${(stats?.xpInCurrentLevel ?? 0).toLocaleString()} XP`, sub: "Nivel Actual", bg: "rgba(167,139,250,.12)", border: "rgba(167,139,250,.25)" },
                     { icon: <IcoCoin size={14} color="#34d399" />, label: `${bizcoins.toLocaleString()} BZ`, sub: "Bizcoins", bg: "rgba(52,211,153,.12)", border: "rgba(52,211,153,.25)" },
                   ].map(m => (
-                    <div key={m.sub} style={{ display: "flex", alignItems: "center", gap: 9, background: m.bg, border: `1px solid ${m.border}`, borderRadius: 12, padding: "9px 14px" }}>
+                    <div key={m.sub} style={{ 
+                      display: "flex", 
+                      alignItems: "center", 
+                      gap: 9, 
+                      background: m.bg, 
+                      border: `1px solid ${m.border}`, 
+                      borderRadius: 12, 
+                      padding: "9px 14px",
+                      position: "relative",
+                      overflow: "hidden"
+                    }}>
+                      {m.sub === "NIVEL" && showPulseXp && (
+                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: [0, 0.2, 0] }} transition={{ duration: 1 }} style={{ position: "absolute", inset: 0, background: "#10b981" }} />
+                      )}
+                      {m.sub === "BIZCOINS" && showPulseBc && (
+                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: [0, 0.2, 0] }} transition={{ duration: 1 }} style={{ position: "absolute", inset: 0, background: "#10b981" }} />
+                      )}
                       {m.icon}
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{m.label}</div>
+                        <motion.div 
+                          key={m.label}
+                          animate={((m.sub === "NIVEL" && showPulseXp) || (m.sub === "BIZCOINS" && showPulseBc)) ? { scale: [1, 1.15, 1], color: ["#fff", "#10b981", "#fff"] } : {}}
+                          style={{ fontSize: 13, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}
+                        >
+                          {m.label}
+                        </motion.div>
                         <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,.5)", textTransform: "uppercase", letterSpacing: ".08em", marginTop: 2 }}>{m.sub}</div>
                       </div>
                     </div>
@@ -863,12 +949,112 @@ function DashboardContent() {
             </div>
 
             {/* streak row */}
-            <div style={{marginTop:20,padding:"12px 14px",background:"#f8fafc",borderRadius:12,display:"flex",alignItems:"center",gap:8}}>
+            <div style={{marginTop:20,padding:"12px 14px",background:"#f8fafc",borderRadius:12,display:"flex",alignItems:"center",gap:8, cursor: "pointer"}} onClick={() => router.push("/profile")}>
               <Flame size={16} style={{color:"#f97316"}}/>
               <span style={{fontSize:12,fontWeight:600,color:"#475569"}}>
                 {streak>0 ? `Racha activa de ${streak} días` : "Completa el reto de hoy para iniciar tu racha"}
               </span>
             </div>
+          </div>
+
+          {/* Activity Feed / Notifications */}
+          <div className="dc" style={{
+            background:"#fff",borderRadius:24,padding:"28px 24px",
+            border:"1.5px solid rgba(0,0,0,.055)",
+            boxShadow:"0 2px 14px rgba(0,0,0,.045)",animationDelay:".28s",
+            display: "flex", flexDirection: "column",
+            minHeight: 460
+          }}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:22}}>
+               <div style={{display:"flex",alignItems:"center",gap:10}}>
+                 <div style={{width:42,height:42,borderRadius:13,background:"linear-gradient(135deg,#fdf2f8,#fce7f3)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 12px rgba(236,72,153,.15)"}}>
+                    <History size={19} color="#db2777" />
+                 </div>
+                 <div>
+                   <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#0f172a", lineHeight: 1.2 }}>Estado de Cuenta</h3>
+                   <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600, marginTop: 2 }}>Historial de Tarjeta BIZEN</div>
+                 </div>
+               </div>
+               <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#f8fafc", padding: "6px 10px", borderRadius: 10, border: "1px solid #f1f5f9" }}>
+                  <Coins size={13} color="#0F62FE" />
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "#0F62FE" }}>{bizcoins} BC</span>
+               </div>
+            </div>
+
+            <div style={{ 
+              flex: 1, 
+              display: "flex", 
+              flexDirection: "column", 
+              gap: 10, 
+              maxHeight: 380, 
+              overflowY: "auto",
+              paddingRight: 6,
+              scrollbarWidth: "none"
+            }}>
+              {transactions.length === 0 ? (
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 0", textAlign: "center" }}>
+                   <div style={{ width: 44, height: 44, borderRadius: "50%", background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                      <Check size={20} color="#cbd5e1" />
+                   </div>
+                   <p style={{ margin: 0, fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>Sin movimientos</p>
+                   <p style={{ margin: "4px 0 0", fontSize: 11, color: "#cbd5e1" }}>Usa tu tarjeta para ver actividad.</p>
+                </div>
+              ) : (
+                <AnimatePresence>
+                  {transactions.slice(0, 10).map((t, idx) => (
+                    <motion.div 
+                      key={t.id}
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: idx * 0.05 }}
+                      style={{ 
+                        padding: "12px 14px", 
+                        borderRadius: 16, 
+                        background: idx === 0 ? "#f0f7ff" : "white", 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: 14,
+                        border: idx === 0 ? "1.5px solid #bfdbfe" : "1.5px solid #f1f5f9",
+                        boxShadow: idx === 0 ? "0 4px 12px rgba(15,98,254,0.08)" : "none",
+                        transition: "all 0.2s"
+                      }}
+                      onMouseEnter={e => {if(idx!==0) { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.borderColor = "#e2e8f0"; }}}
+                      onMouseLeave={e => {if(idx!==0) { e.currentTarget.style.background = "white"; e.currentTarget.style.borderColor = "#f1f5f9"; }}}
+                    >
+                      <div style={{ 
+                        width: 38, 
+                        height: 38, 
+                        borderRadius: 12, 
+                        background: t.type === "income" ? "rgba(16,185,129,0.12)" : "rgba(244,63,94,0.08)", 
+                        display: "flex", 
+                        alignItems: "center", 
+                        justifyContent: "center",
+                        color: t.type === "income" ? "#10B981" : "#F43F5E",
+                        flexShrink: 0
+                      }}>
+                        {t.category === "transfer_received" ? <ArrowDownLeft size={18} /> : 
+                         t.category === "transfer_sent" ? <ArrowUpRight size={18} /> :
+                         t.category === "purchase" ? <ShoppingBag size={18} /> :
+                         t.category === "lesson_reward" ? <BookOpen size={18} /> :
+                         <Coins size={18} />}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.description}</div>
+                        <div style={{ fontSize: 10, color: "#94a3b8", fontWeight: 500, marginTop: 1 }}>{new Date(t.createdAt).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })} • {t.category === "purchase" ? "Gasto" : "Recompensa"}</div>
+                      </div>
+                      <div style={{ textAlign: "right", minWidth: 60 }}>
+                        <div style={{ fontSize: 14, fontWeight: 900, color: t.type === "income" ? "#10B981" : "#F43F5E" }}>
+                          {t.type === "income" ? "+" : "-"}{t.amount}
+                        </div>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8" }}>BC</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              )}
+            </div>
+            
+            <button onClick={() => router.push("/profile")} style={{ marginTop: 12, width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "10px", borderRadius: 12, fontSize: 12, fontWeight: 700, color: "#475569", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.background="#0F62FE"; e.currentTarget.style.color="white"; e.currentTarget.style.borderColor="#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.color="#475569"; e.currentTarget.style.borderColor="#e2e8f0"}}>Ver historial completo</button>
           </div>
 
           <DailyChallengeWidget />

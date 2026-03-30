@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     }
 
     // 1. Fetch pending orders
-    const pendingOrders = await prisma.simulator_orders.findMany({
+    const pendingOrders = await prisma.simulatorOrders.findMany({
       where: { status: 'pending' },
       include: { portfolio: true }
     });
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     const symbolsToFetch = Array.from(new Set(pendingOrders.map(o => o.symbol)));
     
     // In reality, this table requires seeded data daily. We will grab the latest date per symbol.
-    const latestPrices = await prisma.market_prices_eod.findMany({
+    const latestPrices = await prisma.marketPricesEod.findMany({
       where: { symbol: { in: symbolsToFetch } },
       orderBy: { date: 'desc' },
       distinct: ['symbol'] // PostgreSQL extension, works for Supabase

@@ -11,7 +11,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    let portfolio = await prisma.simulator_portfolios.findFirst({
+    let portfolio = await prisma.simulatorPortfolios.findFirst({
       where: { user_id: user.id },
       include: {
         holdings: true,
@@ -23,7 +23,7 @@ export async function GET(req: Request) {
 
     if (!portfolio) {
       // Create initial portfolio for user
-      portfolio = await prisma.simulator_portfolios.create({
+      portfolio = await prisma.simulatorPortfolios.create({
         data: {
           user_id: user.id,
           currency: 'USD',

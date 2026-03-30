@@ -574,6 +574,7 @@ export default function CoursePageTemplate({
                                             const previousLesson = absoluteLessonNumber > 1 ? allLessonsInTopic[absoluteLessonNumber - 2] : null;
                                             const isSequenceLocked = false; // Bloqueo desactivado para pruebas
 
+                                            const isExam = lesson.slug.startsWith('eval-') || lesson.slug.includes('examen') || lesson.slug.includes('evaluacion') || lesson.title.toLowerCase().includes('examen') || lesson.title.toLowerCase().includes('evaluación');
                                             const isLocked = isPaywalled || isSequenceLocked;
 
                                             return (
@@ -612,32 +613,39 @@ export default function CoursePageTemplate({
                                                                 setLessonModal(isSelected ? null : { lesson, unitTitle: sub.title });
                                                             }
                                                         }}
-                                                        className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""}`}
+                                                        className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""} ${isExam ? "is-exam-card" : ""}`}
                                                         style={{
                                                             width: "clamp(180px, 65vw, 320px)",
                                                             minWidth: "initial",
                                                             flexShrink: 0,
                                                             display: "flex",
                                                             flexDirection: "column",
-                                                            padding: "clamp(12px, 3.5vw, 32px) clamp(10px, 3vw, 28px)",
-                                                            background: isDone
-                                                                ? "#f0f7ff"
-                                                                : "#ffffff",
+                                                            padding: "clamp(18px, 3.5vw, 36px) clamp(14px, 3vw, 32px)",
+                                                            background: isExam 
+                                                                ? "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" 
+                                                                : (isDone ? "#f0f7ff" : "#ffffff"),
                                                             borderRadius: 24,
                                                             border: isLocked
                                                                 ? "2px dashed #cbd5e1"
-                                                                : (isDone ? "2.5px solid #2563eb" : "2.5px solid #ffffff"),
+                                                                : (isExam ? "2.5px solid #3b82f6" : (isDone ? "2.5px solid #2563eb" : "2.5px solid #ffffff")),
                                                             boxSizing: "border-box",
                                                             scrollSnapAlign: "start",
                                                             cursor: "pointer",
-                                                            boxShadow: isLocked ? "none" : "0 8px 20px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.8)",
+                                                            boxShadow: isExam 
+                                                                ? "0 15px 40px rgba(15,98,254,0.15), inset 0 0 0 1px rgba(255,255,255,0.05)"
+                                                                : (isLocked ? "none" : "0 8px 20px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.8)"),
                                                             gap: "clamp(8px, 2vw, 12px)",
                                                             transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                                             position: "relative",
                                                             overflow: "hidden",
                                                             opacity: isLocked ? 0.75 : 1,
+                                                            transform: lesson.slug === nextLessonSlug ? "scale(1.02)" : "scale(1)"
                                                         }}
                                                     >
+                                                        {isExam && !isLocked && (
+                                                            <div style={{ position: "absolute", top: -20, left: -20, width: 100, height: 100, background: "radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                                                        )}
+
                                                         {isLocked && (
                                                             <div style={{ position: "absolute", top: 12, right: 12, width: 28, height: 28, borderRadius: "50%", background: "#f1f5f9", border: "1.5px solid #cbd5e1", display: "flex", alignItems: "center", justifyContent: "center" }}>
                                                                 <Lock size={14} color="#64748b" />
@@ -650,18 +658,49 @@ export default function CoursePageTemplate({
                                                             </div>
                                                         )}
 
-                                                        <div style={{
-                                                            width: "clamp(34px, 10vw, 44px)", height: "clamp(34px, 10vw, 44px)", borderRadius: 14,
-                                                            background: isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)"),
-                                                            border: isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)"),
-                                                            color: isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb"),
-                                                            fontSize: "clamp(16px, 4vw, 19px)", fontWeight: 500, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                                                        <div style={{ 
+                                                            display: "flex", 
+                                                            alignItems: "center", 
+                                                            justifyContent: "space-between",
+                                                            marginBottom: 4
                                                         }}>
-                                                            {absoluteLessonNumber}
+                                                            <div style={{
+                                                                width: "clamp(34px, 10vw, 44px)", height: "clamp(34px, 10vw, 44px)", borderRadius: 14,
+                                                                background: isExam ? "rgba(59,130,246,0.15)" : (isLocked ? "#f8fafc" : (isDone ? "#2563eb" : "rgba(15,98,254,0.1)")),
+                                                                border: isExam ? "2px solid #3b82f6" : (isLocked ? "1.8px solid #e2e8f0" : (isDone ? "none" : "1.8px solid rgba(15,98,254,0.2)")),
+                                                                color: isExam ? "#60a5fa" : (isLocked ? "#94a3b8" : (isDone ? "#fff" : "#2563eb")),
+                                                                fontSize: "clamp(16px, 4vw, 19px)", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                                                            }}>
+                                                                {isExam ? <Trophy size={20} /> : absoluteLessonNumber}
+                                                            </div>
+                                                            {isExam && (
+                                                                <div style={{ 
+                                                                    fontSize: 10, 
+                                                                    fontWeight: 900, 
+                                                                    color: "#60a5fa", 
+                                                                    background: "rgba(59,130,246,0.1)", 
+                                                                    padding: "3px 8px", 
+                                                                    borderRadius: 6, 
+                                                                    letterSpacing: "0.1em",
+                                                                    textTransform: "uppercase"
+                                                                }}>
+                                                                    Certificación
+                                                                </div>
+                                                            )}
                                                         </div>
 
-                                                        <div style={{ fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 500, color: "#1e293b", lineHeight: 1.35, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", flex: 1 }}>
-                                                            {lesson.title}
+                                                        <div style={{ 
+                                                            fontSize: "clamp(14px, 3.5vw, 17px)", 
+                                                            fontWeight: isExam ? 700 : 500, 
+                                                            color: isExam ? "#fff" : "#1e293b", 
+                                                            lineHeight: 1.35, 
+                                                            overflow: "hidden", 
+                                                            display: "-webkit-box", 
+                                                            WebkitLineClamp: 3, 
+                                                            WebkitBoxOrient: "vertical", 
+                                                            flex: 1 
+                                                        }}>
+                                                            {isExam ? "EXAMEN: " : ""}{lesson.title}
                                                         </div>
 
                                                         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
@@ -676,12 +715,14 @@ export default function CoursePageTemplate({
                                                                             key={i}
                                                                             size={18}
                                                                             filled={i <= stars}
+                                                                            color={isExam ? "#fbbf24" : undefined}
                                                                         />
                                                                     ))}
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </div>
+
 
                                                     {/* Inline Action Panel removed - now using full screen modal */}
 

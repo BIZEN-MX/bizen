@@ -190,7 +190,8 @@ function InteractiveLessonContent() {
     const prevStars = (user?.user_metadata?.lessonStars?.[lessonIdStr] ?? 0) as 0 | 1 | 2 | 3
     const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? (stars as 0 | 1 | 2 | 3) : (2 as 0 | 1 | 2 | 3)
     const isFirstTime = !isRepeated
-    const xpToBeAwarded = isFirstTime ? (starsEarned * 5) : Math.max(0, (starsEarned - prevStars) * 5)
+    const isExam = lessonIdStr.startsWith('eval-') || lessonIdStr.includes('examen') || lessonIdStr.includes('evaluacion')
+    const xpToBeAwarded = (isFirstTime && !isExam) ? (starsEarned * 5) : (!isExam ? Math.max(0, (starsEarned - prevStars) * 5) : 0)
 
     if (user && lessonIdStr) {
       fetch("/api/lesson/complete", {

@@ -269,6 +269,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const isLastStep = state.currentStepIndex >= state.allSteps.length - 1
   const isSummaryStep = currentStep?.stepType === "summary"
   const isAssessment = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice", "blitz_challenge", "swipe_sorter", "influence_detective", "impulse_meter", "narrative_check"].includes(currentStep?.stepType || "")
+  // Check if current lesson/step is part of a final evaluation (exam)
+  const isExam = lessonSteps.some(s => s.id.startsWith("eval-")) || currentStep?.id.startsWith("eval-") || currentStep?.id.toLowerCase().includes("examen") || currentStep?.id.toLowerCase().includes("evaluacion")
 
   // Blitz Splash: fullscreen warning when entering a blitz_challenge step
   useEffect(() => {
@@ -283,9 +285,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   // Billy Insight Splash: show fullscreen when entering a step with aiInsight
   // Per user request, don't show it before a Blitz Challenge to avoid overlay fatigue
-  // Maximum 3 Billy Insights per lesson
+  // Maximum 3 Billy Insights per lesson. HIDE DURING EXAMS.
   useEffect(() => {
-    if (!currentStep) return
+    if (!currentStep || isExam) return
     const insight = (currentStep as any).aiInsight
     if (insight && currentStep.stepType !== "blitz_challenge" && billyInsightShownFor.current !== currentStep.id) {
       // Check for limit
@@ -428,7 +430,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     return null
   }, [state.currentStepIndex, state.allSteps])
 
-  const showRecallButton = isAssessment && lastInfoStep != null && !state.isContinueEnabled
+  const showRecallButton = isAssessment && lastInfoStep != null && !state.isContinueEnabled && !isExam
 
   // Animate hint bounce once per session when the button first becomes visible
   const [recallHintBounce, setRecallHintBounce] = useState(false)
@@ -628,7 +630,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           : 100
         const totalTime = Math.floor((Date.now() - startTime) / 1000)
 
-        const isExam = currentStep.id.startsWith("eval-") || currentStep.id.toLowerCase().includes("examen") || currentStep.id.toLowerCase().includes("evaluacion")
+        const isExamStep = currentStep.id.startsWith("eval-") || currentStep.id.toLowerCase().includes("examen") || currentStep.id.toLowerCase().includes("evaluacion")
         content = (
           <SummaryStep 
             {...stepProps} 
@@ -638,7 +640,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               isRepeat,
               accuracy,
               totalTime,
-              isExam
+              isExam: isExamStep
             }} 
             onRestart={() => dispatch({ type: "RESTART_LESSON" })}
           />
@@ -1271,6 +1273,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 totalSteps={state.allSteps.length}
                 streak={streak}
                 stars={stars}
+                isExam={isExam}
                 onExit={handleAttemptExit}
                 onToggleAudio={getTTSContent(currentStep, (currentStep as any)?.aiInsight && billyInsightsCount.current >= 3 && billyInsightShownFor.current !== currentStep?.id) ? toggleAudio : undefined}
                 isAudioPlaying={isAudioPlaying}

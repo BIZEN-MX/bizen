@@ -146,9 +146,9 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRe
   const isRepeat = step.isRepeat ?? false
 
   const prevStars = (user?.user_metadata?.lessonStars?.[step.id] ?? 0) as 0 | 1 | 2 | 3
-  const xpEarned = !isRepeat
+  const xpEarned = (!isRepeat && !isExam)
     ? (stars * XP_PER_STAR)
-    : Math.max(0, (stars - prevStars) * XP_PER_STAR)
+    : (!isExam ? Math.max(0, (stars - prevStars) * XP_PER_STAR) : 0)
 
   useEffect(() => {
     onAnswered({ isCompleted: false, canAction: true })
@@ -304,15 +304,26 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRe
               </div>
             </motion.div>
 
-            <div style={{ display: "flex", justifyContent: "center", gap: 12 }}>
-              {[1, 2, 3].map((i) => (
-                <AnimatedStarLocal key={i} filled={i <= stars} delay={0.4 + i * 0.15} />
-              ))}
-            </div>
+            {!isExam && (
+              <div style={{ display: "flex", justifyContent: "center", gap: 12 }}>
+                {[1, 2, 3].map((i) => (
+                  <AnimatedStarLocal key={i} filled={i <= stars} delay={0.4 + i * 0.15} />
+                ))}
+              </div>
+            )}
 
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1 }}>
-              <h2 style={{ fontSize: 36, fontWeight: 950, color: SLATE_DARK, margin: 0 }}>¡Lección Completada!</h2>
-              <div style={{ fontSize: 18, fontWeight: 700, color: BLUE, marginTop: 8 }}>{starMessages[stars]}</div>
+              <h2 style={{ fontSize: 36, fontWeight: 950, color: SLATE_DARK, margin: 0 }}>
+                {isExam ? "Evaluación Completada" : "Lección Completada!"}
+              </h2>
+              {!isExam && (
+                <div style={{ fontSize: 18, fontWeight: 700, color: BLUE, marginTop: 8 }}>{starMessages[stars]}</div>
+              )}
+              {isExam && (
+                 <div style={{ fontSize: 18, fontWeight: 700, color: BLUE, marginTop: 8 }}>
+                   {isPassed ? "¡HAS APROBADO LA CERTIFICACIÓN!" : "NO SE HA ALCANZADO LA PUNTUACIÓN MÍNIMA"}
+                 </div>
+              )}
             </motion.div>
           </motion.div>
         ) : (
@@ -327,7 +338,9 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRe
               <h2 style={{ fontSize: 24, fontWeight: 900, color: "white", margin: 0 }}>{step.title || "Resumen Final"}</h2>
             </div>
 
-            <XPBar initialXP={dbProfile?.xp ?? 0} xpEarned={xpEarned} delay={300} />
+            {!isExam && (
+              <XPBar initialXP={dbProfile?.xp ?? 0} xpEarned={xpEarned} delay={300} />
+            )}
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 20, padding: "20px 12px", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column", alignItems: "center" }}>

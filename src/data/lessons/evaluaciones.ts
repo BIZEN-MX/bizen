@@ -3,73 +3,159 @@ import type { LessonStep } from "@/types/lessonTypes"
 /**
  * EVALUACIONES DE BLOQUE (EXÁMENES FINALES DE TEMA)
  * 
- * Each evaluation is a 15-slide intensive assessment consistent with the BIZEN Blueprint.
+ * Nivel de Dificultad: Media-Alta.
+ * Enfoque: Validación de dominio técnico y aplicación de conceptos BIZEN.
  */
 
 // ==============================================================================
-// EVALUACIÓN BLOQUE 1: MENTALIDAD (TEMA 1) - 15 SLIDES
+// EVALUACIÓN BLOQUE 1: MENTALIDAD (TEMA 1)
 // ==============================================================================
 export const lessonEvaluacionBloque1Steps: LessonStep[] = [
-  { id: "eval-1-1", stepType: "billy_talks", body: "Bienvenido a la Evaluación de Certificación del Bloque 1: Mentalidad. Aquí validaremos tu capacidad para ver el dinero como una herramienta de ingeniería y no como una carga emocional.", fullScreen: true },
-  { id: "eval-1-2", stepType: "mcq", question: "¿Qué representa el 'Número de Libertad' en el sistema BIZEN?", options: [{id:"o1", label:"El dinero que me sobra al mes", isCorrect:false}, {id:"o2", label:"El costo operativo mensual mínimo para vivir sin depender de un empleo fijo", isCorrect:true}], isAssessment: true, fullScreen: true },
-  { id: "eval-1-3", stepType: "true_false", statement: "El dinero es un recurso limitado de suma cero (si yo gano, alguien pierde).", correctValue: false, explanation: "Es una creencia limitante. El dinero se expande mediante la creación de valor técnico y mercado.", isAssessment:true, fullScreen: true },
-  { id: "eval-1-4", stepType: "swipe_sorter", question: "¿Es una Señal de Lógica o de Emoción?", leftBucket: {label:"Lógica (Ingeniero)", color:"#10b981"}, rightBucket: {label:"Emoción (Pasajero)", color:"#ef4444"}, items: [{id:"i1", label:"Analizar el costo de oportunidad", correctBucket:"left"}, {id:"i2", label:"Comprar para aliviar el estrés del día", correctBucket:"right"}, {id:"i3", label:"Etiquetar la emoción antes de decidir", correctBucket:"left"}, {id:"i4", label:"Sentir taquicardia frente a una oferta", correctBucket:"right"}], isAssessment: true, fullScreen: true },
-  { id: "eval-1-5", stepType: "order", question: "Jerarquía de Decisión BIZEN", items: [{id:"p1", label: "Detección del Estímulo (Oferta/Deseo)", correctOrder: 1}, {id: "p2", label: "Pausa Táctica y Etiquetado Emocional", correctOrder: 2}, {id: "p3", label: "Cálculo de Costo de Oportunidad y Acción", correctOrder: 3}], isAssessment: true, fullScreen: true },
-  { id: "eval-1-6", stepType: "match", question: "Relaciona el Concepto", leftItems: [{id:"l1", label:"Sesgo de Anclaje"}, {id:"l2", label:"Costo Hundido"}], rightItems: [{id:"r1", label:"Quedarse con el primer precio visto"}, {id:"r2", label:"No soltar un error por la inversión previa"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
-  { id: "eval-1-7", stepType: "mcq", question: "Si ganas $100 por hora y una cena cuesta $500, ¿cuál es el costo real en BIZEN?", options: [{id:"o1", label: "$500 pesos", isCorrect: false}, {id:"o2", label: "5 horas de tu vida neta", isCorrect: true}], isAssessment: true, fullScreen: true },
-  { id: "eval-1-8", stepType: "true_false", statement: "La 'Somatización' es una métrica útil para detectar una mala decisión financiera.", correctValue: true, explanation: "Tu cuerpo reacciona al estrés de una decisión irracional antes que tu consciencia lógica.", isAssessment:true, fullScreen: true },
-  { id: "eval-1-9", stepType: "blitz_challenge", question: "¿Qué parte del cerebro busca el placer inmediato?", options: [{id:"o1", label:"Cerebro Límbico", isCorrect:true}, {id:"o2", label:"Corteza Prefrontal", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
-  { id: "eval-1-10", stepType: "blitz_challenge", question: "¿Qué invalida el 'Software Mental'?", options: [{id:"o1", label:"El Criterio de Realidad (Datos)", isCorrect:true}, {id:"o2", label:"La Fe", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
-  { id: "eval-1-11", stepType: "influence_detective", scenario: "Te ofrecen un aumento, pero tus gastos suben de inmediato. ¿Qué ley está operando?", options: [{id:"o1", label:"Ley de Parkinson", emotion: "Hábitos", isCorrect:true}, {id:"o2", label:"Ley de Gravedad", emotion: "Física", isCorrect:false}], isAssessment: true, fullScreen: true },
-  { id: "eval-1-12", stepType: "mindset_translator", question: "Refactoriza tu identidad", beliefs: [{id: "b1", original: "Soy malo con el dinero.", healthyOptions: [{id: "h1", label: "Mi sistema actual tiene fallos de configuración que estoy reparando hoy", isCorrect: true}, {id: "h2", label: "Nací así y no puedo cambiar", isCorrect: false}]}] },
-  { id: "eval-1-13", stepType: "narrative_check", question: "¿Qué regla de tu nuevo 'Manual de Reglas' es la más importante para no volver a tu estado anterior?", promptPlaceholder: "Mi regla maestra es ...", minChars: 15, billyResponse: "Integridad comprobada. Has pasado la fase teórica de mentalidad.", fullScreen: true },
-  { id: "eval-1-14", stepType: "info", title: "Certificado de Mentalidad", body: "Has demostrado dominio sobre tus sesgos y una comprensión clara del dinero como energía técnica. Estás listo para el Bloque de Ingeniería del Ingreso.", fullScreen: true,
-    aiInsight: "La consistencia en la mentalidad es el 80% del éxito en el sistema BIZEN."
-  },
-  { id: "eval-1-15", stepType: "summary", title: "Mentalidad Financiera", body: "¡Felicidades! Has superado la evaluación de bloque. Tu sistema operativo mental ha sido actualizado.", fullScreen: true },
+  { id: "eval-1-1", stepType: "billy_talks", body: "Bienvenido al Examen de Certificación: Bloque 1. Esta evaluación mide tu capacidad predictiva sobre tu propio software mental.", fullScreen: true },
+  
+  { id: "eval-1-2", stepType: "mcq", question: "En el sistema BIZEN, ¿cuál es el riesgo técnico más alto de no conocer tu 'Número de Libertad'?", options: [
+    {id:"o1", label:"No poder comprar lo que deseas a fin de mes", isCorrect:false}, 
+    {id:"o2", label:"Ceder el control de tu tiempo a un tercero al no tener una métrica de salida clara", isCorrect:true},
+    {id:"o3", label:"Tener un balance bancario negativo", isCorrect:false}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-1-3", stepType: "true_false", statement: "La Somatización Financiera es un error del sistema que debe eliminarse mediante el pensamiento lógico puro.", correctValue: false, explanation: "Falso. La somatización es una señal técnica del cuerpo que indica una desalineación entre el riesgo y tu capacidad de respuesta.", isAssessment:true, fullScreen: true },
+
+  { id: "eval-1-4", stepType: "swipe_sorter", question: "Clasifica el Estímulo por su Origen en el Software Mental", leftBucket: {label:"Lógica (Corteza)", color:"#10b981"}, rightBucket: {label:"Sesgo (Límbico)", color:"#ef4444"}, items: [
+    {id:"i1", label:"Anclaje: Comparar el precio actual con el anterior", correctBucket:"right"}, 
+    {id:"i2", label:"Cálculo del Costo de Oportunidad", correctBucket:"left"}, 
+    {id:"i3", label:"Aversión a la Pérdida: No vender un activo que cae", correctBucket:"right"}, 
+    {id:"i4", label:"Etiquetado de Emoción ante un trigger", correctBucket:"left"}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-1-5", stepType: "order", question: "Protocolo de Intercepción BIZEN ante un Gasto Imprevisto", items: [
+    {id:"p1", label: "Pausa Táctica (Etiquetado Emocional)", correctOrder: 1}, 
+    {id: "p2", label: "Cálculo de Vida Neta (Horas-Hombre)", correctOrder: 2}, 
+    {id: "p3", label: "Validación de Realidad vs Deseo", correctOrder: 3}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-1-6", stepType: "match", question: "Relaciona el Concepto con su Función Crítica", leftItems: [
+    {id:"l1", label:"Criterio de Realidad"}, 
+    {id:"l2", label:"Costo Hundido"}
+  ], rightItems: [
+    {id:"r1", label:"Filtro de datos contra creencias"}, 
+    {id:"r2", label:"Trampa de persistencia por inversión previa"}
+  ], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+
+  { id: "eval-1-7", stepType: "mcq", question: "Si tu Capacidad de Ahorro es del 10% y tus ingresos suben un 20%, pero tus gastos suben un 20%, ¿qué ha ocurrido?", options: [
+    {id:"o1", label: "Tu sistema se ha expandido proporcionalmente", isCorrect: false}, 
+    {id:"o2", label: "Has caído en la Ley de Parkinson, invalidando el crecimiento", isCorrect: true},
+    {id:"o3", label: "Estás ahorrando el doble de dinero nominal", isCorrect: false}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-1-8", stepType: "true_false", statement: "El Dinero es Energía Técnica que se expande mediante la creación de valor, no es un recurso finito.", correctValue: true, isAssessment:true, fullScreen: true },
+
+  { id: "eval-1-9", stepType: "blitz_challenge", question: "¿Qué parte del cerebro es responsable del 'Sesgo de Gratificación Inmediata'?", options: [
+    {id:"o1", label:"Sistema Límbico", isCorrect:true}, 
+    {id:"o2", label:"Neocórtex", isCorrect:false}
+  ], timeLimit: 10, isAssessment: true, fullScreen: true },
+
+  { id: "eval-1-10", stepType: "summary", title: "Certificación: Mentalidad", body: "Examen finalizado. Si has respondido con precisión técnica, tu certificación de Bloque 1 está validada.", fullScreen: true },
 ]
 
 // ==============================================================================
-// EVALUACIÓN BLOQUE 2: INGENIERÍA DEL INGRESO (TEMA 2) - 15 SLIDES
+// EVALUACIÓN BLOQUE 2: INGENIERÍA DEL INGRESO (TEMA 2)
 // ==============================================================================
 export const lessonEvaluacionBloque2Steps: LessonStep[] = [
-  { id: "eval-2-1", stepType: "billy_talks", body: "Bienvenido a la Evaluación de Certificación del Bloque 2: Ingeniería del Ingreso. Validaremos si sabes cómo multiplicar tu valor en el mercado de forma escalable.", fullScreen: true },
-  { id: "eval-2-2", stepType: "mcq", question: "¿Cuál es el componente del 'Triángulo del Valor' que permite ganar dinero mientras duermes?", options: [{id:"o1", label:"Habilidad", isCorrect:false}, {id:"o2", label:"Escala", isCorrect:true}, {id:"o3", label:"Rareza", isCorrect:false}], isAssessment: true, fullScreen: true },
-  { id: "eval-2-3", stepType: "true_false", statement: "El ingreso pasivo no requiere ningún esfuerzo inicial de construcción.", correctValue: false, explanation: "Requiere una gran inversión inicial de tiempo o capital para construir el sistema que luego genera el flujo.", isAssessment:true, fullScreen: true },
-  { id: "eval-2-4", stepType: "swipe_sorter", question: "¿Es una Habilidad de Alto Valor (HVA)?", leftBucket: {label:"HVA (Escalable/Cara)", color:"#10b981"}, rightBucket: {label:"Operativa (Intercambiable)", color:"#64748b"}, items: [{id:"i1", label:"Ventas complejas B2B", correctBucket:"left"}, {id:"i2", label:"Transcripción de datos", correctBucket:"right"}, {id:"i3", label:"Arquitectura de Software", correctBucket:"left"}, {id:"i4", label:"Atención al público básica", correctBucket:"right"}], isAssessment: true, fullScreen: true },
-  { id: "eval-2-5", stepType: "order", question: "Ruta de Carrera Estratégica", items: [{id:"p1", label: "Fase Operativa (Cambio tiempo por dinero)", correctOrder: 1}, {id: "p2", label: "Fase de Especialización (Adquisición de HVA)", correctOrder: 2}, {id: "p3", label: "Fase Estratégica (Decisiones y Sistemas)", correctOrder: 3}], isAssessment: true, fullScreen: true },
-  { id: "eval-2-6", stepType: "match", question: "Relaciona la Palanca", leftItems: [{id:"l1", label:"Código"}, {id:"l2", label:"Media"}], rightItems: [{id:"r1", label:"Automatiza procesos"}, {id:"r2", label:"Automatiza influencia"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
-  { id: "eval-2-7", stepType: "mcq", question: "¿Qué es el 'Impuesto a la Ignorancia'?", options: [{id:"o1", label: "Lo que pagas al SAT", isCorrect: false}, {id:"o2", label: "El costo oculto de no saber cómo funciona el sistema financiero", isCorrect: true}], isAssessment: true, fullScreen: true },
-  { id: "eval-2-8", stepType: "true_false", statement: "El capital intelectual es el único activo que no se devalúa si se mantiene actualizado.", correctValue: true, explanation: "Tus habilidades son inalienables y son tu mejor seguro de vida.", isAssessment:true, fullScreen: true },
-  { id: "eval-2-10", stepType: "blitz_challenge", question: "¿Qué mide el ROI Educativo?", options: [{id:"o1", label:"Ingreso Extra / Inversión en Curso", isCorrect:true}, {id:"o2", label:"Horas de estudio", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
-  { id: "eval-2-11", stepType: "blitz_challenge", question: "¿Cómo se llama la pérdida de suscriptores?", options: [{id:"o1", label:"Churn", isCorrect:true}, {id:"o2", label:"Burn", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
-  { id: "eval-2-12", stepType: "mindset_translator", question: "Optimiza tu flujo", beliefs: [{id: "b1", original: "No tengo dinero para invertir.", healthyOptions: [{id: "h1", label: "Invertiré mi tiempo en capital intelectual para generar mi primer excedente", isCorrect: true}, {id: "h2", label: "Esperaré a que me sobre dinero", isCorrect: false}]}] },
-  { id: "eval-2-13", stepType: "impulse_meter", instructions: "Mantén pulsado y visualiza tus sistemas de ingreso creciendo. Respira abundancia técnica.", item: { name: "Motor de Riqueza", price: "Libertad", imageUrl: "/billy-breathing.png" }, holdTime: 6, fullScreen: true },
-  { id: "eval-2-14", stepType: "info", title: "Certificado de Producción", body: "Has demostrado que entiendes cómo se crea el valor real y cómo apalancarlo. Estás listo para dominar tus salidas de capital.", fullScreen: true,
-    aiInsight: "El ingreso es una función de la rareza de tus problemas resueltos."
-  },
-  { id: "eval-2-15", stepType: "summary", title: "Ingeniería de Ingresos", body: "¡Excelente! Has dominado la ingeniería de entrada. Siguiente parada: Psicología del Consumo.", fullScreen: true },
+  { id: "eval-2-1", stepType: "billy_talks", body: "Bienvenido al Examen de Certificación: Bloque 2. Aquí validaremos tu capacidad para construir palancas de valor escalable.", fullScreen: true },
+  
+  { id: "eval-2-2", stepType: "mcq", question: "¿Cuál es la diferencia técnica fundamental entre una Habilidad (Skill) y una Palanca (Leverage)?", options: [
+    {id:"o1", label:"La habilidad es lo que haces, la palanca es cuánto te pagan", isCorrect:false}, 
+    {id:"o2", label:"La palanca desacopla el tiempo del resultado mediante sistemas o capital", isCorrect:true},
+    {id:"o3", label:"No hay diferencia, son sinónimos en el sistema BIZEN", isCorrect:false}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-2-3", stepType: "true_false", statement: "El Capital Intelectual es el único activo que puede generar flujo sin requerir una fase previa de construcción intensiva.", correctValue: false, explanation: "Todo activo escalable (intelectual, código, media) requiere una fase inicial de Inversión Neta de Tiempo.", isAssessment:true, fullScreen: true },
+
+  { id: "eval-2-4", stepType: "swipe_sorter", question: "Clasifica la Actividad por su Potencial de Escala", leftBucket: {label:"Escalable (Palanca)", color:"#10b981"}, rightBucket: {label:"Lineal (Intercambio)", color:"#64748b"}, items: [
+    {id:"i1", label:"Creación de un software de suscripción", correctBucket:"left"}, 
+    {id:"i2", label:"Consultoría técnica cobrada por hora", correctBucket:"right"}, 
+    {id:"i3", label:"Grabación de un curso digital", correctBucket:"left"}, 
+    {id:"i4", label:"Gestión administrativa presencial", correctBucket:"right"}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-2-5", stepType: "order", question: "Ruta de Evolución del Ingreso BIZEN", items: [
+    {id:"p1", label: "Adquisición de HVA (Rareza en el mercado)", correctOrder: 1}, 
+    {id: "p2", label: "Excedente de Flujo (Validación de Ingreso)", correctOrder: 2}, 
+    {id: "p3", label: "Apalancamiento (Código/Media/Capital)", correctOrder: 3}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-2-6", stepType: "match", question: "Relaciona la Palanca con su Característica Técnica", leftItems: [
+    {id:"l1", label:"Media (Contenido)"}, 
+    {id:"l2", label:"Código (Software)"}
+  ], rightItems: [
+    {id:"r1", label:"Permiso de audiencia masiva constante"}, 
+    {id:"r2", label:"Ejecución lógica sin intervención humana"}
+  ], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+
+  { id: "eval-2-7", stepType: "mcq", question: "En el Triángulo del Valor (HVA, Escala, Rareza), ¿qué ocurre si tienes HVA y Rareza pero NO tienes Escala?", options: [
+    {id:"o1", label: "Serás un profesional muy bien pagado, pero atrapado en el intercambio de horas", isCorrect: true}, 
+    {id:"o2", label: "Ganarás dinero de forma pasiva inmediatamente", isCorrect: false},
+    {id:"o3", label: "Tu valor en el mercado caerá por falta de visibilidad", isCorrect: false}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-2-8", stepType: "true_false", statement: "El 'Impuesto a la Ignorancia' se paga cada vez que delegas una decisión financiera que no comprendes técnicamente.", correctValue: true, isAssessment:true, fullScreen: true },
+
+  { id: "eval-2-9", stepType: "blitz_challenge", question: "¿Cómo se llama la métrica que mide la deserción de ingresos recurrentes?", options: [
+    {id:"o1", label:"Churn Rate", isCorrect:true}, 
+    {id:"o2", label:"Burn Rate", isCorrect:false}
+  ], timeLimit: 10, isAssessment: true, fullScreen: true },
+
+  { id: "eval-2-10", stepType: "summary", title: "Certificación: Ingresos", body: "Examen finalizado. El dominio de la producción es la base de tu libertad técnica.", fullScreen: true },
 ]
 
 // ==============================================================================
-// EVALUACIÓN BLOQUE 3: PSICOLOGÍA DEL CONSUMO (TEMA 3) - 15 SLIDES
+// EVALUACIÓN BLOQUE 3: PSICOLOGÍA DEL CONSUMO (TEMA 3)
 // ==============================================================================
 export const lessonEvaluacionBloque3Steps: LessonStep[] = [
-  { id: "eval-3-1", stepType: "billy_talks", body: "Bienvenido a la Evaluación de Certificación del Bloque 3: Psicología del Consumo. Validaremos si eres el dueño de tu dinero o si los algoritmos y el estatus lo son.", fullScreen: true },
-  { id: "eval-3-2", stepType: "mcq", question: "¿Cuál es la función real de un 'Trigger de Compra'?", options: [{id:"o1", label:"Facilitarme la vida", isCorrect:false}, {id:"o2", label:"Explotar una vulnerabilidad emocional para generar una transacción", isCorrect:true}], isAssessment: true, fullScreen: true },
-  { id: "eval-3-3", stepType: "true_false", statement: "La 'Regla de las 48 Horas' sirve para que mi cerebro lógico recupere el control.", correctValue: true, explanation: "La dopamina del impulso cae tras un periodo de espera, permitiendo una decisión fría.", isAssessment:true, fullScreen: true },
-  { id: "eval-3-4", stepType: "swipe_sorter", question: "¿Es una Compra de Estatus o de Valor Intrínseco?", leftBucket: {label:"Estatus (Fachada)", color:"#fbbf24"}, rightBucket: {label:"Valor (BIZEN)", color:"#10b981"}, items: [{id:"i1", label:"Ropa con logo gigante", correctBucket:"left"}, {id:"i2", label:"Fondo de emergencia completo", correctBucket:"right"}, {id:"i3", label:"Viaje solo para la foto", correctBucket:"left"}, {id:"i4", label:"SaaS que automatiza mi HVA", correctBucket:"right"}], isAssessment: true, fullScreen: true },
-  { id: "eval-3-5", stepType: "order", question: "Protocolo Anti-Impulso", items: [{id:"p1", label: "Sentir el 'Trigger' y la taquicardia", correctOrder: 1}, {id: "p2", label: "Aplicar Fricción (Borrar tarjeta/App)", correctOrder: 2}, {id: "p3", label: "Ejecutar Checklist de Decisión (48h después)", correctOrder: 3}], isAssessment: true, fullScreen: true },
-  { id: "eval-3-6", stepType: "match", question: "Relaciona el Concepto", leftItems: [{id:"l1", label:"Riqueza Invisible"}, {id:"l2", label:"Asertividad Financiera"}], rightItems: [{id:"r1", label:"Liberdad y paz mental"}, {id:"r2", label:"Capacidad de decir NO"}], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
-  { id: "eval-3-7", stepType: "mcq", question: "Tus amigos dicen 'YOLO' para convencerte de gastar. ¿Cuál es tu respuesta BIZEN?", options: [{id:"o1", label: "Gastar, porque tienen razón", isCorrect: false}, {id:"o2", label: "Proteger mi integridad de sistema y proponer plan alternativo", isCorrect: true}], isAssessment: true, fullScreen: true },
-  { id: "eval-3-8", stepType: "true_false", statement: "El marketing de escasez suele ser una manipulación técnica del tiempo.", correctValue: true, explanation: "Casi nada es 'solo por hoy', es solo para forzar tu sistema a cometer un error.", isAssessment:true, fullScreen: true },
-  { id: "eval-3-9", stepType: "blitz_challenge", question: "¿Qué mide un Post-Audit?", options: [{id:"o1", label:"La satisfacción post-compra", isCorrect:false}, {id:"o2", label:"La causa raíz del error de gasto", isCorrect:true}], timeLimit: 12, isAssessment: true, fullScreen: true },
-  { id: "eval-3-10", stepType: "blitz_challenge", question: "¿Asertividad es?", options: [{id:"o1", label:"Decir 'no' con determinación", isCorrect:true}, {id:"o2", label:"Ser grosero", isCorrect:false}], timeLimit: 12, isAssessment: true, fullScreen: true },
-  { id: "eval-3-11", stepType: "influence_detective", scenario: "Ves una oferta de 70% de descuento en algo que NO buscabas. ¿Cuánto ahorras si lo compras?", options: [{id:"o1", label: "Ahorro el 70%", emotion: "Sesgo de Ganancia", isCorrect: false}, {id:"o2", label: "Pierdo el 30% que gasté innecesariamente", emotion: "Lógica BIZEN", isCorrect: true}], isAssessment: true, fullScreen: true },
-  { id: "eval-3-12", stepType: "mindset_translator", question: "Defiende tu presupuesto", beliefs: [{id: "b1", original: "No quiero ser el raro que no gasta.", healthyOptions: [{id: "h1", label: "Soy la persona libre que tiene el mando de sus recursos", isCorrect: true}, {id: "h2", label: "Seré normal y pobre", isCorrect: false}]}] },
-  { id: "eval-3-13", stepType: "narrative_check", question: "¿Cual de tus 'Reglas Sagradas' te ha salvado de más gastos inútiles este mes?", promptPlaceholder: "Mi regla salvadora es ...", minChars: 15, billyResponse: "Nivel de soberanía: Ingeniero Maestro.", fullScreen: true },
-  { id: "eval-3-14", stepType: "info", title: "Certificado de Consumo Consciente", body: "Has demostrado inmunidad al marketing agresivo y a la presión social. Eres oficialmente libre de la trampa del consumo irracional.", fullScreen: true,
-    aiInsight: "La libertad financiera empieza por el NO asertivo al gasto innecesario."
-  },
-  { id: "eval-3-15", stepType: "summary", title: "Psicología del Consumo", body: "¡Felicidades! Has completado el entrenamiento básico BIZEN. Los Temas 1, 2 y 3 están en tu ADN técnico.", fullScreen: true },
+  { id: "eval-3-1", stepType: "billy_talks", body: "Bienvenido al Examen de Certificación: Bloque 3. Aquí probaremos si eres el ingeniero de tus recursos o el pasajero de los algoritmos.", fullScreen: true },
+  
+  { id: "eval-3-2", stepType: "mcq", question: "¿Qué vulnerabilidad psicológica explota principalmente el 'Marketing de Urgencia' (Contadores de tiempo)?", options: [
+    {id:"o1", label:"El deseo de tener algo nuevo", isCorrect:false}, 
+    {id:"o2", label:"El sesgo de Aversión a la Pérdida y el FOMO", isCorrect:true},
+    {id:"o3", label:"La necesidad de ahorrar dinero", isCorrect:false}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-3-3", stepType: "true_false", statement: "La Riqueza Invisible BIZEN se define como el capital que tienes invertido pero que no puedes retirar a corto plazo.", correctValue: false, explanation: "Falso. La riqueza invisible es la libertad, el tiempo y la paz mental que obtienes al NO gastar en pasivos de estatus.", isAssessment:true, fullScreen: true },
+
+  { id: "eval-3-4", stepType: "swipe_sorter", question: "Clasifica el Gasto por su Impacto en tu Libertad Neta", leftBucket: {label:"Activo (Inversión)", color:"#10b981"}, rightBucket: {label:"Pasivo (Estatus)", color:"#fbbf24"}, items: [
+    {id:"i1", label:"Suscripción a herramienta de automatización HVA", correctBucket:"left"}, 
+    {id:"i2", label:"Vehículo financiado por encima de tu capacidad", correctBucket:"right"}, 
+    {id:"i3", label:"Formación técnica de alta demanda", correctBucket:"left"}, 
+    {id:"i4", label:"Cena de lujo para impresionar círculo social", correctBucket:"right"}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-3-5", stepType: "order", question: "Filtro Anti-Consumo de 3 Capas BIZEN", items: [
+    {id:"p1", label: "Detección del Trigger (¿Por qué lo quiero?)", correctOrder: 1}, 
+    {id: "p2", label: "Fricción Táctica (Esperar 48 horas)", correctOrder: 2}, 
+    {id: "p3", label: "Célula Proyectiva (¿Cuánto tiempo neta me cuesta?)", correctOrder: 3}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-3-6", stepType: "match", question: "Relaciona el Sesgo con el Error Técnico", leftItems: [
+    {id:"l1", label:"Efecto Diderot"}, 
+    {id:"l2", label:"Prueba Social"}
+  ], rightItems: [
+    {id:"r1", label:"Una compra genera una espiral de necesidades nuevas"}, 
+    {id:"r2", label:"Comprar porque 'todos los demás' lo hacen"}
+  ], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+
+  { id: "eval-3-7", stepType: "mcq", question: "Si aplicas la 'Asertividad Financiera', ¿cuál es tu respuesta técnica ante la presión social para gastar?", options: [
+    {id:"o1", label: "Ignorar la presión y aislarse socialmente", isCorrect: false}, 
+    {id:"o2", label: "Defender tu integridad de sistema ofreciendo una alternativa que no comprometa tu capital", isCorrect: true},
+    {id:"o3", label: "Ceder solo una vez para evitar el conflicto", isCorrect: false}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-3-8", stepType: "true_false", statement: "El 'Post-Audit' de un gasto impulsivo tiene como objetivo principal castigar el error para no repetirlo.", correctValue: false, explanation: "Falso. El objetivo es desglosar la ruta del trigger para parchar la vulnerabilidad del software mental.", isAssessment:true, fullScreen: true },
+
+  { id: "eval-3-9", stepType: "blitz_challenge", question: "¿Qué regla BIZEN vence al impulso inmediato?", options: [
+    {id:"o1", label:"Regla de las 48 Horas", isCorrect:true}, 
+    {id:"o2", label:"Regla del 50/30/20", isCorrect:false}
+  ], timeLimit: 10, isAssessment: true, fullScreen: true },
+
+  { id: "eval-3-10", stepType: "summary", title: "Certificación: Consumo", body: "Examen finalizado. Has demostrado que el control de tus salidas de capital es una ventaja competitiva.", fullScreen: true },
 ]
