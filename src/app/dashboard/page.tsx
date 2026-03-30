@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useEffect, useState, useMemo, useCallback } from "react"
-import { useRouter } from "next/navigation"
+import React, { useEffect, useState, useMemo, useCallback, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Billy } from "@/components/Billy"
 import { useAuth } from "@/contexts/AuthContext"
 
@@ -12,7 +12,7 @@ import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUp
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
-import { useSearchParams } from "next/navigation"
+// import { useSearchParams } from "next/navigation" // Moved up
 import TransferModal from "@/components/bizen/TransferModal"
 
 // ─────────────────────────────────────────────────────────────────
@@ -247,7 +247,7 @@ function XPRing({ pct, level }: { pct: number; level: number }) {
 // ─────────────────────────────────────────────────────────────────
 // MAIN PAGE
 // ─────────────────────────────────────────────────────────────────
-export default function DashboardPage() {
+function DashboardContent() {
   const { user, loading, dbProfile } = useAuth()
   const router = useRouter()
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
@@ -925,5 +925,13 @@ export default function DashboardPage() {
         />
       )}
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <DashboardContent />
+    </Suspense>
   )
 }

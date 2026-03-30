@@ -3,10 +3,10 @@
 import React, { useEffect, useCallback, useRef, useState, useMemo, Suspense } from "react"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-import { LessonEngine, LessonProgressHeader } from "@/components/lessons"
+import { LessonEngine, LessonProgressHeader, TopicCompletionSplash } from "@/components/lessons"
 import { getStepsForLesson } from "@/data/lessons/registry"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
-import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
+import { SUBTEMAS_BY_COURSE, TOPIC_TITLES } from "@/data/lessons/courseLessonsOrder"
 import PageLoader from "@/components/PageLoader"
 
 function InteractiveLessonContent() {
@@ -30,6 +30,8 @@ function InteractiveLessonContent() {
 
   const [dbLesson, setDbLesson] = useState<any>(null)
   const [loadingLesson, setLoadingLesson] = useState(true)
+  const [showTopicSplash, setShowTopicSplash] = useState(false)
+  const [splashData, setSplashData] = useState({ accuracy: 100, lessons: [] as string[] })
   const { completedLessons } = useLessonProgress()
 
   // Fetch Lesson Data from DB with fallback
@@ -178,9 +180,12 @@ function InteractiveLessonContent() {
   }, [])
 
   const hasCompletedRef = useRef(false)
+  const lastLessonAnswers = useRef<any>(null)
+  
   const handleComplete = useCallback(async (stars: number, answers: Record<string, any>) => {
     if (hasCompletedRef.current) return
     hasCompletedRef.current = true
+    lastLessonAnswers.current = answers
 
     const prevStars = (user?.user_metadata?.lessonStars?.[lessonIdStr] ?? 0) as 0 | 1 | 2 | 3
     const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? (stars as 0 | 1 | 2 | 3) : (2 as 0 | 1 | 2 | 3)
@@ -215,13 +220,42 @@ function InteractiveLessonContent() {
   }, [lessonIdStr, user, isRepeated, refreshUser, setDbProfile])
 
   const handleExit = useCallback(() => {
-    // TRIGGER: If finishing Tema 05 final lesson, go to DNA Evolution
+    // 1. Check if this is the final lesson of the topic being completed
+    const topicIdx = topicNum - 1
+    const subthemes = SUBTEMAS_BY_COURSE[topicIdx]
+    const allSlugs = subthemes ? subthemes.flatMap(s => s.lessons.map(l => l.slug)) : []
+    
+    // We consider it "finished" if every lesson in the topic is marked as complete in the DB/Metadata
+    // or is the current lesson we JUST finished.
+    const isTopicFinished = allSlugs.length > 0 && allSlugs.every(slug => 
+      slug === lessonIdStr || (user?.user_metadata?.completedLessons || []).includes(slug)
+    )
+
+    if (isTopicFinished && !showTopicSplash) {
+      // Calculate average accuracy or just use current if it's the last one for now
+      // (Optional: can be refined later to average all lessons if desired)
+      const assessmentSteps = lessonSteps.filter(s => ["mcq", "true_false", "multi_select"].includes(s.stepType))
+      let lessonAccuracy = 100
+      if (assessmentSteps.length > 0 && lastLessonAnswers.current) {
+         const correctCount = Object.values(lastLessonAnswers.current).filter((a: any) => a.isCorrect).length
+         lessonAccuracy = Math.round((correctCount / assessmentSteps.length) * 100)
+      }
+
+      setSplashData({
+        accuracy: lessonAccuracy,
+        lessons: allSlugs
+      })
+      setShowTopicSplash(true)
+      return // Don't redirect yet
+    }
+
+    // Normal Exit Logic
     if (topicIdStr === "tema-05") {
       router.push("/dna-evolution")
     } else {
       router.push(`/courses/${topicIdStr || 'tema-01'}`)
     }
-  }, [topicIdStr, router])
+  }, [topicNum, lessonIdStr, user, lessonSteps, topicIdStr, router, showTopicSplash])
 
   if (loading || loadingLesson) return <PageLoader />
   if (isLocked) return null
@@ -248,6 +282,24 @@ function InteractiveLessonContent() {
           isRepeat={isRepeated}
           onProgressChange={handleProgressChange}
         />
+
+        {showTopicSplash && (
+          <TopicCompletionSplash
+            topicTitle={TOPIC_TITLES[topicNum - 1] || "Bizen Topic"}
+            topicNum={topicNum}
+            studentName={user?.user_metadata?.full_name || "Estudiante BIZEN"}
+            accuracy={splashData.accuracy}
+            lessonsCompleted={splashData.lessons}
+            onClose={() => {
+              setShowTopicSplash(false)
+              if (topicIdStr === "tema-05") {
+                router.push("/dna-evolution")
+              } else {
+                router.push(`/courses/${topicIdStr || 'tema-01'}`)
+              }
+            }}
+          />
+        )}
     </div>
   )
 }

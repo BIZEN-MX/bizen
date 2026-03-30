@@ -33,6 +33,39 @@ import { TEMA28_SUBTEMAS } from "@/app/courses/tema28-data"
 import { TEMA29_SUBTEMAS } from "@/app/courses/tema29-data"
 import { TEMA30_SUBTEMAS } from "@/app/courses/tema30-data"
 
+export const TOPIC_TITLES = [
+  "Operativo BIZEN: El Sistema Financiero",
+  "Ingeniería del ingreso",
+  "Psicología & Hacks de Comportamiento",
+  "Optimización de Egresos",
+  "Ahorro Inteligente: Ingeniería de Acumulación",
+  "Presupuesto personal",
+  "Hábitos financieros",
+  "Ahorro",
+  "Metas financieras",
+  "Planeación financiera (básica)",
+  "Sistema financiero básico",
+  "Crédito y tarjetas",
+  "Historial crediticio",
+  "Deuda",
+  "Intereses",
+  "Protección financiera (seguros)",
+  "Impuestos básicos",
+  "Fraudes y seguridad financiera",
+  "Educación financiera digital",
+  "Inflación",
+  "Activos vs pasivos",
+  "Ingresos y generación de dinero",
+  "Ingresos pasivos",
+  "Inversión básica",
+  "Riesgo financiero",
+  "Diversificación",
+  "Construcción de patrimonio",
+  "Estrategia financiera personal",
+  "Libertad financiera",
+  "Emprendimiento financiero",
+]
+
 export const SUBTEMAS_BY_COURSE: { lessons: { slug: string }[] }[][] = [
   TEMA1_SUBTEMAS,
   TEMA2_SUBTEMAS,

@@ -6,6 +6,7 @@ import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion"
 
 interface UserRank {
     rank: number
@@ -69,27 +70,43 @@ export default function RankingsPage() {
     const [users, setUsers] = useState<UserRank[]>([])
     const [particulares, setParticulares] = useState<UserRank[]>([])
     const [schools, setSchools] = useState<SchoolRank[]>([])
-    const [loading, setLoading] = useState(true)
+    const [isInitialLoading, setIsInitialLoading] = useState(true)
+    const [isSyncing, setIsSyncing] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-        const fetchRankings = async () => {
-            try {
-                setLoading(true)
-                const res = await fetch("/api/rankings")
-                if (!res.ok) throw new Error("Error cargando rankings")
-                const data = await res.json()
-                setUsers(data.users || [])
-                setParticulares(data.particulares || [])
-                setSchools(data.schools || [])
-            } catch (err) {
-                setError("No se pudieron cargar los rankings. Intenta de nuevo más tarde.")
-            } finally {
-                setLoading(false)
-            }
+    const fetchRankings = async (silent = false) => {
+        try {
+            if (!silent) setLoading(true)
+            else setIsSyncing(true)
+            
+            const res = await fetch("/api/rankings")
+            if (!res.ok) throw new Error("Error cargando rankings")
+            const data = await res.json()
+            setUsers(data.users || [])
+            setParticulares(data.particulares || [])
+            setSchools(data.schools || [])
+            setError(null)
+        } catch (err) {
+            setError("No se pudieron cargar los rankings. Intenta de nuevo más tarde.")
+        } finally {
+            setLoading(false)
+            setIsInitialLoading(false)
+            setIsSyncing(false)
         }
+    }
+
+    useEffect(() => {
         fetchRankings()
+        
+        // Real-time polling every 10 seconds
+        const interval = setInterval(() => {
+            fetchRankings(true)
+        }, 10000)
+        
+        return () => clearInterval(interval)
     }, [])
+
+    if (isInitialLoading) return <PageLoader />
 
     return (
         <div
@@ -209,10 +226,28 @@ export default function RankingsPage() {
                     <div style={{ position: "absolute", bottom: "-20%", left: "10%", width: 240, height: 240, background: "radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
 
                     <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
-                        <div>
-                            <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px", marginBottom: 14 }}>
-                                <Trophy size={13} color="#60a5fa" />
-                                <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tabla de clasificación</span>
+                        <div className="flex-1">
+                            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "5px 14px" }}>
+                                    <Trophy size={13} color="#60a5fa" />
+                                    <span style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tabla de clasificación</span>
+                                </div>
+                                
+                                {isSyncing ? (
+                                    <motion.div 
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(16,185,129,0.15)", borderRadius: 999, padding: "5px 12px", border: "1px solid rgba(16,185,129,0.2)" }}
+                                    >
+                                        <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 8px #10b981" }} className="animate-pulse" />
+                                        <span style={{ fontSize: 11, fontWeight: 700, color: "#10b981", textTransform: "uppercase" }}>Sincronizando...</span>
+                                    </motion.div>
+                                ) : (
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.05)", borderRadius: 999, padding: "5px 12px" }}>
+                                        <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80" }} />
+                                        <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>En vivo</span>
+                                    </div>
+                                )}
                             </div>
                             <h1 style={{ fontSize: "clamp(26px, 5vw, 42px)", fontWeight: 500, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
                                 Rankings BIZEN
@@ -335,99 +370,119 @@ export default function RankingsPage() {
                                 No hay usuarios con XP todavía. ¡Sé el primero! 🚀
                             </div>
                         ) : (
-                            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                                {(isParticular ? particulares : users).map((user, idx) => {
-                                    const lc = getLevelColor(user.level)
-                                    const isTop3 = user.rank <= 3
-                                    return (
-                                        <Link
-                                            key={user.userId}
-                                            href={`/forum/profile/${user.userId}`}
-                                            className={`rk-row ${isTop3 ? "top3" : ""}`}
-                                            style={{
-                                                animationDelay: `${Math.min(idx * 0.04, 0.5)}s`,
-                                                cursor: "pointer",
-                                                textDecoration: "none",
-                                                display: "flex"
-                                            }}
-                                        >
-                                            {/* Rank */}
-                                            <div style={{ minWidth: 36, textAlign: "center", flexShrink: 0 }}>
-                                                <RankBadge rank={user.rank} />
-                                            </div>
-
-                                            {/* Avatar Display */}
-                                            <div
-                                                style={{
-                                                    width: 44,
-                                                    height: 44,
-                                                    borderRadius: "50%",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    flexShrink: 0,
-                                                    overflow: "hidden",
-                                                    position: "relative",
-                                                    background: user.avatar ? "transparent" : lc.bg,
-                                                    boxShadow: user.avatar ? "none" : `0 4px 14px ${lc.text}40`,
+                            <LayoutGroup>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                                    {(isParticular ? particulares : users).map((user, idx) => {
+                                        const lc = getLevelColor(user.level)
+                                        const isTop3 = user.rank <= 3
+                                        return (
+                                            <motion.div
+                                                layout
+                                                key={user.userId}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, scale: 0.95 }}
+                                                transition={{ 
+                                                    type: "spring", 
+                                                    stiffness: 300, 
+                                                    damping: 30,
+                                                    opacity: { duration: 0.2 }
                                                 }}
                                             >
-                                                {user.avatar ? (
-                                                    <AvatarDisplay avatar={user.avatar} size={38} />
-                                                ) : (
-                                                    <span style={{ color: "#fff", fontWeight: 500, fontSize: 17 }}>
-                                                        {user.displayName.charAt(0).toUpperCase()}
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            {/* Name & school */}
-                                            <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                    {user.displayName}
-                                                </div>
-                                                {user.schoolName && (
-                                                    <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500, marginTop: 1, display: "flex", alignItems: "center", gap: 4 }}>
-                                                        <School size={11} />
-                                                        {user.schoolName}
+                                                <Link
+                                                    href={`/forum/profile/${user.userId}`}
+                                                    className={`rk-row ${isTop3 ? "top3" : ""}`}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                        textDecoration: "none",
+                                                        display: "flex",
+                                                        animation: "none", // Override static animation
+                                                    }}
+                                                >
+                                                    {/* Rank */}
+                                                    <div style={{ minWidth: 36, textAlign: "center", flexShrink: 0 }}>
+                                                        <RankBadge rank={user.rank} />
                                                     </div>
-                                                )}
-                                            </div>
 
-                                            {/* Level badge */}
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    alignItems: "center",
-                                                    gap: 2,
-                                                    background: "linear-gradient(135deg,#eff6ff,#dbeafe)",
-                                                    borderRadius: 10,
-                                                    padding: "6px 14px",
-                                                    flexShrink: 0,
-                                                    border: "1px solid #bfdbfe",
-                                                }}
-                                            >
-                                                <div style={{ fontSize: 18, fontWeight: 500, color: "#0F62FE", lineHeight: 1 }}>
-                                                    {user.level}
-                                                </div>
-                                                <div style={{ fontSize: 9, fontWeight: 500, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                                                    {getLevelTitle(user.level)}
-                                                </div>
-                                            </div>
+                                                    {/* Avatar Display */}
+                                                    <div
+                                                        style={{
+                                                            width: 44,
+                                                            height: 44,
+                                                            borderRadius: "50%",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            flexShrink: 0,
+                                                            overflow: "hidden",
+                                                            position: "relative",
+                                                            background: user.avatar ? "transparent" : lc.bg,
+                                                            boxShadow: user.avatar ? "none" : `0 4px 14px ${lc.text}40`,
+                                                        }}
+                                                    >
+                                                        {user.avatar ? (
+                                                            <AvatarDisplay avatar={user.avatar} size={38} />
+                                                        ) : (
+                                                            <span style={{ color: "#fff", fontWeight: 500, fontSize: 17 }}>
+                                                                {user.displayName.charAt(0).toUpperCase()}
+                                                            </span>
+                                                        )}
+                                                    </div>
 
-                                            {/* XP */}
-                                            <div style={{ textAlign: "right", flexShrink: 0 }}>
-                                                <div style={{ fontSize: 18, fontWeight: 500, color: isTop3 ? "#d97706" : "#0F62FE", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
-                                                    <Zap size={14} fill={isTop3 ? "#d97706" : "#0F62FE"} color={isTop3 ? "#d97706" : "#0F62FE"} />
-                                                    {user.xp.toLocaleString()}
-                                                </div>
-                                                <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>XP</div>
-                                            </div>
-                                        </Link>
-                                    )
-                                })}
-                            </div>
+                                                    {/* Name & school */}
+                                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                                        <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                                            {user.displayName}
+                                                        </div>
+                                                        {user.schoolName && (
+                                                            <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500, marginTop: 1, display: "flex", alignItems: "center", gap: 4 }}>
+                                                                <School size={11} />
+                                                                {user.schoolName}
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Level badge */}
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            flexDirection: "column",
+                                                            alignItems: "center",
+                                                            gap: 2,
+                                                            background: "linear-gradient(135deg,#eff6ff,#dbeafe)",
+                                                            borderRadius: 10,
+                                                            padding: "6px 14px",
+                                                            flexShrink: 0,
+                                                            border: "1px solid #bfdbfe",
+                                                        }}
+                                                    >
+                                                        <div style={{ fontSize: 18, fontWeight: 500, color: "#0F62FE", lineHeight: 1 }}>
+                                                            {user.level}
+                                                        </div>
+                                                        <div style={{ fontSize: 9, fontWeight: 500, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                                                            {getLevelTitle(user.level)}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* XP */}
+                                                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                                                        <motion.div 
+                                                            key={user.xp}
+                                                            initial={{ scale: 1.2, color: "#10b981" }}
+                                                            animate={{ scale: 1, color: isTop3 ? "#d97706" : "#0F62FE" }}
+                                                            style={{ fontSize: 18, fontWeight: 500, display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}
+                                                        >
+                                                            <Zap size={14} fill="currentColor" color="currentColor" />
+                                                            {user.xp.toLocaleString()}
+                                                        </motion.div>
+                                                        <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>XP</div>
+                                                    </div>
+                                                </Link>
+                                            </motion.div>
+                                        )
+                                    })}
+                                </div>
+                            </LayoutGroup>
                         )}
                     </div>
                 )}
@@ -470,95 +525,110 @@ export default function RankingsPage() {
                                 No hay datos de escuelas todavía. 🏫
                             </div>
                         ) : (
-                            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                                {schools.map((school, idx) => {
-                                    const isTop3 = school.rank <= 3
-                                    const barPct = schools[0]?.xpPerCapita
-                                        ? Math.round((school.xpPerCapita / schools[0].xpPerCapita) * 100)
-                                        : 100
-                                    return (
-                                        <Link
-                                            key={school.schoolId}
-                                            href={`/rankings/escuela/${school.schoolId}`}
-                                            className={`rk-row ${isTop3 ? "top3" : ""}`}
-                                            style={{
-                                                animationDelay: `${Math.min(idx * 0.04, 0.5)}s`,
-                                                flexDirection: "column",
-                                                alignItems: "stretch",
-                                                gap: 12,
-                                                cursor: "pointer",
-                                                textDecoration: "none",
-                                                display: "flex"
-                                            }}
-                                        >
-                                            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                                                {/* Rank */}
-                                                <div style={{ minWidth: 36, textAlign: "center", flexShrink: 0 }}>
-                                                    <RankBadge rank={school.rank} />
-                                                </div>
-
-                                                {/* School icon */}
-                                                <div
+                            <LayoutGroup>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                                    {schools.map((school, idx) => {
+                                        const isTop3 = school.rank <= 3
+                                        const barPct = schools[0]?.xpPerCapita
+                                            ? Math.round((school.xpPerCapita / schools[0].xpPerCapita) * 100)
+                                            : 100
+                                        return (
+                                            <motion.div
+                                                layout
+                                                key={school.schoolId}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                            >
+                                                <Link
+                                                    href={`/rankings/escuela/${school.schoolId}`}
+                                                    className={`rk-row ${isTop3 ? "top3" : ""}`}
                                                     style={{
-                                                        width: 44,
-                                                        height: 44,
-                                                        borderRadius: 12,
-                                                        background: isTop3
-                                                            ? "linear-gradient(135deg,#fef3c7,#fde68a)"
-                                                            : "linear-gradient(135deg,#eff6ff,#dbeafe)",
+                                                        flexDirection: "column",
+                                                        alignItems: "stretch",
+                                                        gap: 12,
+                                                        cursor: "pointer",
+                                                        textDecoration: "none",
                                                         display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "center",
-                                                        flexShrink: 0,
-                                                        boxShadow: isTop3
-                                                            ? "0 4px 14px rgba(245,158,11,0.25)"
-                                                            : "0 4px 14px rgba(15,98,254,0.12)",
+                                                        animation: "none"
                                                     }}
                                                 >
-                                                    <School size={22} color={isTop3 ? "#d97706" : "#0F62FE"} />
-                                                </div>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                                                        {/* Rank */}
+                                                        <div style={{ minWidth: 36, textAlign: "center", flexShrink: 0 }}>
+                                                            <RankBadge rank={school.rank} />
+                                                        </div>
 
-                                                {/* Name & students */}
-                                                <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                        {school.schoolName}
-                                                    </div>
-                                                    <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>
-                                                        {school.studentCount} {isParticular ? "usuario" : "estudiante"}{school.studentCount !== 1 ? "s" : ""} · {school.totalXp.toLocaleString()} XP total
-                                                    </div>
-                                                </div>
+                                                        {/* School icon */}
+                                                        <div
+                                                            style={{
+                                                                width: 44,
+                                                                height: 44,
+                                                                borderRadius: 12,
+                                                                background: isTop3
+                                                                    ? "linear-gradient(135deg,#fef3c7,#fde68a)"
+                                                                    : "linear-gradient(135deg,#eff6ff,#dbeafe)",
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                justifyContent: "center",
+                                                                flexShrink: 0,
+                                                                boxShadow: isTop3
+                                                                    ? "0 4px 14px rgba(245,158,11,0.25)"
+                                                                    : "0 4px 14px rgba(15,98,254,0.12)",
+                                                            }}
+                                                        >
+                                                            <School size={22} color={isTop3 ? "#d97706" : "#0F62FE"} />
+                                                        </div>
 
-                                                {/* XP per capita */}
-                                                <div style={{ textAlign: "right", flexShrink: 0 }}>
-                                                    <div style={{ fontSize: 20, fontWeight: 500, color: isTop3 ? "#d97706" : "#0F62FE", display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}>
-                                                        <Medal size={15} color={isTop3 ? "#d97706" : "#0F62FE"} />
-                                                        {school.xpPerCapita.toLocaleString()}
-                                                    </div>
-                                                    <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>XP / {isParticular ? "usuario" : "estudiante"}</div>
-                                                </div>
-                                            </div>
+                                                        {/* Name & students */}
+                                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                                            <div style={{ fontSize: 15, fontWeight: 500, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                                                {school.schoolName}
+                                                            </div>
+                                                            <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>
+                                                                {school.studentCount} {isParticular ? "usuario" : "estudiante"}{school.studentCount !== 1 ? "s" : ""} · {school.totalXp.toLocaleString()} XP total
+                                                            </div>
+                                                        </div>
 
-                                            {/* Progress bar */}
-                                            <div style={{ width: "100%", height: 6, background: "#f1f5f9", borderRadius: 6, overflow: "hidden" }}>
-                                                <div
-                                                    style={{
-                                                        width: `${barPct}%`,
-                                                        height: "100%",
-                                                        background: isTop3
-                                                            ? "linear-gradient(90deg,#fbbf24,#f59e0b)"
-                                                            : "linear-gradient(90deg,#60a5fa,#0F62FE)",
-                                                        borderRadius: 6,
-                                                        boxShadow: isTop3
-                                                            ? "0 0 8px rgba(245,158,11,0.4)"
-                                                            : "0 0 8px rgba(15,98,254,0.4)",
-                                                        transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)",
-                                                    }}
-                                                />
-                                            </div>
-                                        </Link>
-                                    )
-                                })}
-                            </div>
+                                                        {/* XP per capita */}
+                                                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                                                            <motion.div 
+                                                                key={school.xpPerCapita}
+                                                                initial={{ scale: 1.1, color: "#10b981" }}
+                                                                animate={{ scale: 1, color: isTop3 ? "#d97706" : "#0F62FE" }}
+                                                                style={{ fontSize: 20, fontWeight: 500, display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end" }}
+                                                            >
+                                                                <Medal size={15} color="currentColor" />
+                                                                {school.xpPerCapita.toLocaleString()}
+                                                            </motion.div>
+                                                            <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>XP / {isParticular ? "usuario" : "estudiante"}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Progress bar */}
+                                                    <div style={{ width: "100%", height: 6, background: "#f1f5f9", borderRadius: 6, overflow: "hidden" }}>
+                                                        <motion.div
+                                                            layout
+                                                            style={{
+                                                                width: `${barPct}%`,
+                                                                height: "100%",
+                                                                background: isTop3
+                                                                    ? "linear-gradient(90deg,#fbbf24,#f59e0b)"
+                                                                    : "linear-gradient(90deg,#60a5fa,#0F62FE)",
+                                                                borderRadius: 6,
+                                                                boxShadow: isTop3
+                                                                    ? "0 0 8px rgba(245,158,11,0.4)"
+                                                                    : "0 0 8px rgba(15,98,254,0.4)",
+                                                                transition: "width 1.2s cubic-bezier(0.34,1.56,0.64,1)",
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </Link>
+                                            </motion.div>
+                                        )
+                                    })}
+                                </div>
+                            </LayoutGroup>
                         )}
                     </div>
                 )}

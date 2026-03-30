@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { Trophy, Star, Download, Share2, Rocket, ArrowRight, CheckCircle2, Sparkles } from "lucide-react"
+import { Trophy, Star, Download, Share2, Rocket, ArrowRight, CheckCircle2, Sparkles, MessageSquare } from "lucide-react"
 import { generateBizenCertificate } from "@/utils/certificateGenerator"
 import { haptic } from "@/utils/hapticFeedback"
 
@@ -23,8 +24,11 @@ export function TopicCompletionSplash({
   lessonsCompleted,
   onClose
 }: TopicCompletionSplashProps) {
+  const router = useRouter()
   const [mounted, setMounted] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [isSharing, setIsSharing] = useState(false)
+  const [shared, setShared] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -47,6 +51,35 @@ export function TopicCompletionSplash({
       console.error("Error generating certificate:", err)
     } finally {
       setIsGenerating(false)
+    }
+  }
+
+  const handleShare = async () => {
+    setIsSharing(true)
+    try {
+      const res = await fetch("/api/forum/threads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: `¡Acabo de graduarme de ${topicTitle} con ${accuracy}% de precisión! 🚀`,
+          body: `Hola comunidad, hoy alcancé un nuevo hito en mi formación de BIZEN. Logré dominar el tema "${topicTitle}" y obtuve mi certificado oficial. ¡Sigamos aprendiendo juntos!`,
+          topicId: "topic-general", // Default 'General' topic
+          tagSlugs: ["logro", "graduacion", "reconocimiento", "bizen"]
+        })
+      });
+
+      if (res.ok) {
+        haptic.success();
+        setShared(true);
+        // Short delay to show success state before redirect
+        setTimeout(() => router.push("/comunidad"), 1500);
+      } else {
+        throw new Error("Failed to share");
+      }
+    } catch (err) {
+      console.error("Error sharing achievement:", err);
+    } finally {
+      setIsSharing(false);
     }
   }
 
@@ -149,24 +182,58 @@ export function TopicCompletionSplash({
           transition={{ delay: 0.8 }}
           className="w-full space-y-4"
         >
-          <button
-            onClick={handleDownload}
-            disabled={isGenerating}
-            className="group relative w-full py-5 bg-white text-slate-950 rounded-2xl font-black text-lg transition-all active:scale-[0.97] hover:bg-slate-100 flex items-center justify-center gap-3 overflow-hidden shadow-2xl shadow-white/5"
-          >
-            {isGenerating ? (
-              <div className="w-6 h-6 border-4 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" />
-            ) : (
-              <>
-                <Download size={24} />
-                Descargar Certificado PDF
-              </>
-            )}
-            <div className="absolute inset-0 bg-blue-500/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-          </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              onClick={handleDownload}
+              disabled={isGenerating || isSharing}
+              className="group relative w-full py-4 bg-white text-slate-950 rounded-2xl font-black text-base transition-all active:scale-[0.97] hover:bg-slate-100 flex items-center justify-center gap-3 overflow-hidden shadow-2xl shadow-white/5"
+            >
+              {isGenerating ? (
+                <div className="w-5 h-5 border-3 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" />
+              ) : (
+                <>
+                  <Download size={20} />
+                  Descargar PDF
+                </>
+              )}
+              <div className="absolute inset-0 bg-blue-500/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            </button>
+
+            <button
+              onClick={handleShare}
+              disabled={isSharing || shared}
+              className={`group relative w-full py-4 rounded-2xl font-black text-base transition-all active:scale-[0.97] flex items-center justify-center gap-3 overflow-hidden shadow-lg ${
+                shared 
+                ? "bg-green-600 text-white" 
+                : "bg-blue-600 text-white hover:bg-blue-500 shadow-blue-600/10"
+              }`}
+            >
+              {isSharing ? (
+                <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : shared ? (
+                <>
+                  <CheckCircle2 size={20} />
+                  ¡Publicado!
+                </>
+              ) : (
+                <>
+                  <MessageSquare size={20} />
+                  Compartir Logro
+                </>
+              )}
+              {!shared && !isSharing && (
+                <motion.div
+                  className="absolute inset-0 bg-white/20 translate-x-[-100%]"
+                  animate={{ translate: ["-100%", "200%"] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                />
+              )}
+            </button>
+          </div>
 
           <button
             onClick={onClose}
+            disabled={isGenerating || isSharing}
             className="w-full py-4 bg-white/[0.05] hover:bg-white/10 text-white rounded-2xl font-bold transition-all flex items-center justify-center gap-2"
           >
             Continuar al Siguiente Tema

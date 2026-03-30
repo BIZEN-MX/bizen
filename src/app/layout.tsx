@@ -6,6 +6,7 @@ import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
 import { AchievementToastProvider } from "@/components/AchievementToast"
 import StructuredData from "@/components/SEO/StructuredData"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css"
 
 const geist = Geist({
@@ -109,6 +110,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </AppLayout>
           </ClientLayoutWrapper>
           <AchievementToastProvider />
+          <SpeedInsights />
         </Providers>
       </body>
     </html>
