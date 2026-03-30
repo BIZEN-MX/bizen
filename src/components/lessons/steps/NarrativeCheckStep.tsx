@@ -126,7 +126,7 @@ export function NarrativeCheckStep({ step, onAnswered, isContinueEnabled }: Narr
               boxShadow: isReady ? "0 6px 20px rgba(37,99,235,0.3)" : "none",
             }}
           >
-            💪 Me comprometo
+            Me comprometo
           </motion.button>
         </div>
       ) : (
@@ -162,16 +162,6 @@ export function NarrativeCheckStep({ step, onAnswered, isContinueEnabled }: Narr
               <p style={{ margin: 0, fontSize: 14, color: "#166534", fontWeight: 500, lineHeight: 1.55 }}>
                 {billyResponse}
               </p>
-            </div>
-
-            {/* XP badge */}
-            <div style={{
-              display: "flex", alignItems: "center", gap: 8,
-              background: "#16a34a", borderRadius: 999,
-              padding: "6px 14px", width: "fit-content",
-            }}>
-              <span style={{ fontSize: 16 }}>⚡</span>
-              <span style={{ fontSize: 13, fontWeight: 800, color: "white" }}>+10 XP Bonus — ¡Compromiso real!</span>
             </div>
           </motion.div>
         </AnimatePresence>

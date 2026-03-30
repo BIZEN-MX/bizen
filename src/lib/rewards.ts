@@ -84,12 +84,14 @@ export async function touchDailyStreak(userId: string): Promise<StreakTouchResul
     return { streakUpdated, currentStreak: newStreak, isFirstTouchToday }
 }
 
-/**
- * Awards XP and Bizcoins to a user and updates their daily streak if applicable.
- * @param userId - the ID of the user receiving the reward
- * @param amount - the amount of XP and Bizcoins to award (usually 1:1)
- */
-export async function awardXp(userId: string, amount: number): Promise<RewardsResult> {
+export async function awardXp(
+    userId: string, 
+    amount: number,
+    options?: {
+        category?: string;
+        description?: string;
+    }
+): Promise<RewardsResult> {
     const profile = await prisma.profile.findUnique({
         where: { userId }
     })
@@ -156,17 +158,31 @@ export async function awardXp(userId: string, amount: number): Promise<RewardsRe
         newLongestStreak = newStreak
     }
 
-    // Save the updates to the database
-    await prisma.profile.update({
-        where: { userId },
-        data: {
-            xp: newTotalXp,
-            bizcoins: newTotalBizcoins,
-            level: newLevel,
-            currentStreak: newStreak,
-            longestStreak: newLongestStreak,
-            lastActive: now
-        } as any
+    // Save the updates to the database (in a transaction to ensure bizcoins and wallet record match)
+    await prisma.$transaction(async (tx) => {
+        await tx.profile.update({
+            where: { userId },
+            data: {
+                xp: newTotalXp,
+                bizcoins: newTotalBizcoins,
+                level: newLevel,
+                currentStreak: newStreak,
+                longestStreak: newLongestStreak,
+                lastActive: now
+            } as any
+        })
+
+        if (bizcoinsAwarded > 0) {
+            await (tx as any).walletTransaction.create({
+                data: {
+                    userId,
+                    amount: bizcoinsAwarded,
+                    type: "income",
+                    category: options?.category || "activity_reward",
+                    description: options?.description || "Recompensa de actividad"
+                }
+            })
+        }
     })
 
     return {

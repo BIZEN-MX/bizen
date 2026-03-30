@@ -55,7 +55,10 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        const rewards = await awardXp(user.id, 50)
+        const rewards = await awardXp(user.id, 50, {
+            category: "daily_mission_reward",
+            description: `Misión diaria completada: ${challenge?.title || 'Reto de hoy'}`
+        })
 
         // Count completed retos for this user
         const retosCompleted = await prisma.evidencePost.count({ where: { authorUserId: user.id } }).catch(() => 0)

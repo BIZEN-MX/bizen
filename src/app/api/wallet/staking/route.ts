@@ -54,21 +54,6 @@ export async function GET() {
       orderBy: { startDate: "desc" }
     })
 
-    // If empty, return some nice mock data for the WOW factor
-    if (allPositions.length === 0) {
-      const now = new Date();
-      allPositions = [
-        {
-          id: "s-1",
-          amount: 200,
-          yieldRate: 0.12,
-          startDate: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 5).toISOString(), // 5 days ago
-          endDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days in future
-          status: "active",
-        }
-      ] as any;
-    }
-
     return NextResponse.json({ positions: allPositions })
   } catch (error) {
     console.error("Error in staking GET:", error)

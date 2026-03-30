@@ -298,9 +298,10 @@ export function InlineSegments({ segments }: { segments: Segment[] }) {
                         <em
                             key={i}
                             style={{
-                                color: "#7C3AED",
+                                color: "inherit",
                                 fontStyle: "italic",
-                                fontWeight: 500,
+                                fontWeight: 600,
+                                opacity: 0.9
                             }}
                         >
                             "{seg.content}"

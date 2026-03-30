@@ -165,7 +165,10 @@ export async function POST(req: NextRequest) {
                     })
                 }
 
-                rewardResult = await awardXp(userId, xpToAward)
+                rewardResult = await awardXp(userId, xpToAward, {
+                    category: "lesson_reward",
+                    description: `Lección completada: ${lesson?.title || lessonId}`
+                })
             } catch (err) {
                 console.error("[lesson/complete] Failed to award XP:", err)
             }

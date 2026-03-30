@@ -24,22 +24,24 @@ export interface GeneratedLesson {
 export async function generatePersonalizedLab(
   dnaProfile: string,
   lastMistakes: string[],
-  currentTopic: string
+  currentTopic: string,
+  savingsGoals: string[] = [] // Accept real life goals
 ): Promise<GeneratedLesson> {
   const prompt = `
     Eres Billy, el motor de inteligencia financiera de BIZEN. 
     Tu misión es generar una MICRO-LECCIÓN INTERACTIVA personalizada de 5 pasos para un alumno.
 
-    PERFIL DEL ALUMNO:
-    - ADN Billy: ${dnaProfile}
-    - Errores Recientes: ${lastMistakes.join(", ") || "Ninguno detectado"}
+    CONTEXTO DEL ALUMNO:
+    - ADN Billy (Especialización): ${dnaProfile}
+    - Metas de Ahorro Reales (SUEÑOS): ${savingsGoals.join(", ") || "No ha definido metas aún"}
+    - Errores Recientes (Debilidades): ${lastMistakes.join(", ")}
     - Tema Actual: ${currentTopic}
 
     REQUISITOS DE LA LECCIÓN (En formato JSON):
-    1. Paso 1 (theory): Introducción táctica con el tono de Billy (Directo, inteligente, sin emojis).
-    2. Paso 2 (interactive/matching): Un ejercicio para conectar conceptos donde falló antes o conceptos clave del tema.
+    1. Paso 1 (theory): Introducción táctica (Tono Billy: Directo, inteligente, sin emojis). Saluda al alumno.
+    2. Paso 2 (interactive/matching): Un ejercicio para conectar conceptos del tema actual.
     3. Paso 3 (theory): Profundización técnica.
-    4. Paso 4 (sim): Un simulador de decisión financiera extrema.
+    4. Paso 4 (sim): Un simulador de decisión financiera extrema. OBLIGATORIO: Si hay "SUEÑOS" en el contexto, el simulador debe tratar sobre cómo acelerar la consecución de uno de ellos (ej. como llegar antes a su meta).
     5. Paso 5 (quiz): Una pregunta final de "Maestría".
 
     RESPONDE ÚNICAMENTE CON EL OBJETO JSON SIGUIENTE:
@@ -58,11 +60,35 @@ export async function generatePersonalizedLab(
   try {
     const result = await model.generateContent(prompt);
     const text = result.response.text();
-    // Limpiar el markdown si Gemini lo incluye
-    const jsonStr = text.replace(/```json|```/g, "").trim();
-    return JSON.parse(jsonStr) as GeneratedLesson;
+    
+    // Robust JSON Extraction: Find the first '{' and the last '}'
+    const startIndex = text.indexOf("{");
+    const endIndex = text.lastIndexOf("}");
+    
+    if (startIndex === -1 || endIndex === -1) {
+      console.error("No valid JSON found in Gemini response:", text);
+      throw new Error("Respuesta de IA malformada.");
+    }
+    
+    const jsonStr = text.substring(startIndex, endIndex + 1);
+    const lab = JSON.parse(jsonStr) as GeneratedLesson;
+
+    // Validation: Ensure steps exists
+    if (!lab.steps || !Array.isArray(lab.steps)) {
+      throw new Error("La lección generada no tiene pasos válidos.");
+    }
+
+    return lab;
   } catch (error) {
     console.error("Billy Lab Generation Error:", error);
-    throw new Error("No se pudo generar el laboratorio personalizado.");
+    // Fallback simple lesson to prevent app crash
+    return {
+      id: "lab-fallback",
+      title: "Recalibración de Emergencia",
+      description: "Billy ha detectado una anomalía en la generación. Aquí tienes un reto rápido de respaldo.",
+      steps: [
+        { type: "theory", title: "Anomalía de Datos", content: "Lo siento, Diego. He detectado una turbulencia en mis circuitos de IA. Mientras me reinicio, recuerda: El control de tus gastos es tu mejor defensa." }
+      ]
+    };
   }
 }

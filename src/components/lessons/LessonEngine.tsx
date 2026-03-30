@@ -628,7 +628,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           : 100
         const totalTime = Math.floor((Date.now() - startTime) / 1000)
 
-        const isExam = currentStep.id.startsWith("eval-")
+        const isExam = currentStep.id.startsWith("eval-") || currentStep.id.toLowerCase().includes("examen") || currentStep.id.toLowerCase().includes("evaluacion")
         content = (
           <SummaryStep 
             {...stepProps} 

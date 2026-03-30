@@ -1,254 +1,131 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
-import { SummaryStepFields } from "@/types/lessonTypes"
+import React, { useEffect, useState, useRef, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Target, Star, Zap, Flame, Trophy } from "lucide-react"
+import { Trophy, Star, Clock, Target, ArrowRight, RotateCcw, Download, CheckCircle2, Sparkles, Zap, Flame, ShieldCheck, RefreshCcw } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
-import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel } from "@/lib/xp"
-import { AnimatedStar } from "@/components/icons/StarIcon"
 import { generateBizenCertificate } from "@/utils/certificateGenerator"
-import { Download, RefreshCcw, ShieldAlert, Award } from "lucide-react"
+import { haptic } from "@/utils/hapticFeedback"
+import { playCorrectSound } from "../lessonSounds"
+import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel } from "@/lib/xp"
 
 interface SummaryStepProps {
-  step: SummaryStepFields & {
+  step: {
     id: string
     title?: string
-    description?: string
-    fullScreen?: boolean
-    continueLabel?: string
+    body?: string
     imageUrl?: string
     starsEarned?: 0 | 1 | 2 | 3
+    isRepeat?: boolean
     accuracy?: number
     totalTime?: number
     isExam?: boolean
   }
-  onAnswered: (result: { isCompleted: boolean; isCorrect?: boolean; answerData?: any; canAction?: boolean }) => void
+  onAnswered: (result: { isCompleted: boolean; canAction?: boolean }) => void
   onRestart?: () => void
+  actionTrigger?: number
 }
 
+const BLUE = "#0F62FE"
+const SLATE_DARK = "#0f172a"
+const SLATE_BODY = "#475569"
 const XP_PER_STAR = 5
 
-// --- Confetti helper ---
-function useConfetti(active: boolean) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  useEffect(() => {
-    if (!active) return
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
-
-    const pieces: { x: number; y: number; vx: number; vy: number; color: string; size: number; rotation: number; rotV: number }[] = []
-    const colors = ["#0F62FE", "#4A9EFF", "#FFB800", "#FF6B6B", "#00D084", "#A855F7", "#F97316"]
-    for (let i = 0; i < 80; i++) {
-      pieces.push({
-        x: canvas.width / 2 + (Math.random() - 0.5) * canvas.width * 0.3,
-        y: canvas.height * 0.35,
-        vx: (Math.random() - 0.5) * 12,
-        vy: -Math.random() * 14 - 4,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        size: Math.random() * 8 + 4,
-        rotation: Math.random() * Math.PI * 2,
-        rotV: (Math.random() - 0.5) * 0.3,
-      })
-    }
-
-    let frame: number
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      for (const p of pieces) {
-        p.x += p.vx
-        p.vy += 0.45
-        p.y += p.vy
-        p.rotation += p.rotV
-        ctx.save()
-        ctx.translate(p.x, p.y)
-        ctx.rotate(p.rotation)
-        ctx.fillStyle = p.color
-        ctx.globalAlpha = Math.max(0, 1 - p.y / (canvas.height * 1.1))
-        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.55)
-        ctx.restore()
-      }
-      if (pieces.some(p => p.y < canvas.height * 1.2)) {
-        frame = requestAnimationFrame(animate)
-      }
-    }
-    frame = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(frame)
-  }, [active])
-  return canvasRef
-}
-
-// --- Animated number count-up ---
-function useCountUp(target: number, delay: number = 0, duration: number = 1000) {
-  const [value, setValue] = useState(0)
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const start = performance.now()
-      const tick = (now: number) => {
-        const elapsed = now - start
-        const progress = Math.min(elapsed / duration, 1)
-        const eased = 1 - Math.pow(1 - progress, 3)
-        setValue(Math.round(eased * target))
-        if (progress < 1) requestAnimationFrame(tick)
-      }
-      requestAnimationFrame(tick)
-    }, delay)
-    return () => clearTimeout(timeout)
-  }, [target, delay, duration])
-  return value
-}
-
-
-// --- XP Progress Bar component ---
-function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: number; delay: number }) {
+// --- XP Bar Component ---
+const XPBar = ({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: number; delay: number }) => {
+  const [displayXP, setDisplayXP] = useState(0)
   const currentLevel = calculateLevel(initialXP)
   const xpInLevel = xpInCurrentLevel(initialXP)
   const xpNeeded = totalXpForNextLevel(initialXP)
-
+  
   const startPct = Math.min(100, (xpInLevel / xpNeeded) * 100)
-  const gainedXP = useCountUp(xpEarned, delay + 200, 900)
-  const endPct = Math.min(100, ((xpInLevel + gainedXP) / xpNeeded) * 100)
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const duration = 1000
+      const startTime = performance.now()
+      
+      const animate = (now: number) => {
+        const elapsed = now - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        const eased = 1 - Math.pow(1 - progress, 3)
+        setDisplayXP(Math.round(eased * xpEarned))
+        if (progress < 1) requestAnimationFrame(animate)
+      }
+      requestAnimationFrame(animate)
+    }, delay)
+    return () => clearTimeout(timer)
+  }, [xpEarned, delay])
 
+  const endPct = Math.min(100, ((xpInLevel + displayXP) / xpNeeded) * 100)
   const newLevel = calculateLevel(initialXP + xpEarned)
-  const leveledUp = newLevel > currentLevel
+  const leveledUp = newLevel > currentLevel && displayXP === xpEarned
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: delay / 1000, duration: 0.5 }}
       style={{
-        background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-        borderRadius: 20,
-        padding: "20px 24px",
+        background: "linear-gradient(135deg, #020617 0%, #0f172a 100%)",
+        borderRadius: 24,
+        padding: "24px",
         width: "100%",
-        maxWidth: 360,
-        margin: "0 auto",
+        boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
+        border: "1px solid rgba(255,255,255,0.1)",
         position: "relative",
-        overflow: "hidden",
-        boxShadow: "0 12px 40px rgba(15,98,254,0.35)",
-        border: "1.5px solid rgba(255,255,255,0.1)",
+        overflow: "hidden"
       }}
     >
-      {/* Glow blob */}
-      <div style={{
-        position: "absolute", top: -20, right: -20, width: 100, height: 100,
-        background: "radial-gradient(circle, rgba(15,98,254,0.25) 0%, transparent 70%)",
-        pointerEvents: "none",
-      }} />
-
-      {/* XP Earned big number */}
-      <div style={{ textAlign: "center", marginBottom: 14 }}>
-        <motion.div
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 280, damping: 18, delay: delay / 1000 + 0.1 }}
-          style={{ display: "inline-flex", alignItems: "baseline", gap: 6 }}
-        >
-          <span style={{
-            fontSize: 56,
-            fontWeight: 950,
-            color: "#FFF",
-            lineHeight: 1,
-            textShadow: "0 0 30px rgba(96,165,250,0.5)",
-          }}>
-            +{gainedXP}
-          </span>
-          <span style={{ fontSize: 22, fontWeight: 500, color: "#93c5fd", }}>XP</span>
-        </motion.div>
-        <div style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 2 }}>
-          XP ganado
+      <div style={{ textAlign: "center", marginBottom: 20 }}>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 8 }}>
+          <span style={{ fontSize: 48, fontWeight: 900, color: "white", lineHeight: 1 }}>+{displayXP}</span>
+          <span style={{ fontSize: 18, fontWeight: 700, color: "#93c5fd" }}>XP</span>
         </div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 4 }}>Experiencia ganada</div>
       </div>
 
-      {/* Level labels */}
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-        <span style={{ fontSize: 12, fontWeight: 500, color: "#fff", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          Nivel {leveledUp ? newLevel : currentLevel}
-        </span>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: delay / 1000 + 0.5 }}
-          style={{ fontSize: 12, fontWeight: 500, color: "#93c5fd" }}
-        >
-          {Math.min(xpNeeded, xpInLevel + gainedXP)} / {xpNeeded} XP
-        </motion.span>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "white" }}>NIVEL {currentLevel}</span>
+        <span style={{ fontSize: 13, fontWeight: 600, color: "#93c5fd" }}>{Math.min(xpNeeded, xpInLevel + displayXP)} / {xpNeeded} XP</span>
       </div>
 
-      {/* Progress bar track */}
-      <div style={{
-        width: "100%", height: 14,
-        background: "rgba(255,255,255,0.08)",
-        borderRadius: 99, overflow: "hidden",
-        border: "1px solid rgba(255,255,255,0.06)",
-        position: "relative",
-      }}>
-        {/* Base progress */}
-        <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0,
-          width: `${startPct}%`,
-          background: "rgba(255,255,255,0.15)",
-          zIndex: 1,
-        }} />
-        {/* Animated fill */}
-        <motion.div
-          initial={{ width: `${startPct}%` }}
-          animate={{ width: `${endPct}%` }}
-          transition={{ delay: delay / 1000 + 0.5, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            height: "100%",
-            background: "linear-gradient(90deg, #3b82f6, #60a5fa, #fff)",
-            borderRadius: 99,
-            zIndex: 2,
-            position: "relative",
-            boxShadow: "0 0 16px rgba(96,165,250,0.7)",
-          }}
-        >
-          {/* Shimmer */}
-          <motion.div
-            animate={{ x: ["-100%", "200%"] }}
-            transition={{ delay: delay / 1000 + 1.2, duration: 0.8, ease: "easeInOut" }}
-            style={{
-              position: "absolute", top: 0, left: 0, bottom: 0, width: "40%",
-              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)",
-              borderRadius: 99,
-            }}
-          />
-        </motion.div>
+      <div style={{ height: 12, background: "rgba(255,255,255,0.1)", borderRadius: 10, overflow: "hidden", position: "relative" }}>
+        <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${startPct}%`, background: "rgba(255,255,255,0.15)" }} />
+        <div 
+          style={{ 
+            height: "100%", 
+            width: `${endPct}%`, 
+            background: "linear-gradient(90deg, #3b82f6, #60a5fa, #fff)", 
+            borderRadius: 10,
+            boxShadow: "0 0 15px rgba(96,165,250,0.5)",
+            transition: "width 0.1s linear"
+          }} 
+        />
       </div>
 
-      {/* Level up badge */}
       <AnimatePresence>
-        {leveledUp && gainedXP === xpEarned && (
+        {leveledUp && (
           <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.2 }}
-            style={{
-              marginTop: 12,
-              background: "linear-gradient(135deg, #FFB800, #FF6B6B)",
-              borderRadius: 99,
-              padding: "8px 16px",
+            initial={{ scale: 0, y: 10 }}
+            animate={{ scale: 1, y: 0 }}
+            style={{ 
+              marginTop: 16, 
+              background: "linear-gradient(135deg, #fbbf24, #f59e0b)", 
+              borderRadius: 12, 
+              padding: "10px", 
               textAlign: "center",
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: 800,
-              color: "#fff",
-              letterSpacing: "0.04em",
-              boxShadow: "0 4px 16px rgba(255,184,0,0.4)",
+              color: "#0c0a09",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: 8
             }}
           >
-            <Trophy size={16} fill="white" strokeWidth={2.5} />
-            ¡Subiste al nivel {newLevel}!
+            <Trophy size={18} fill="#0c0a09" />
+            ¡NIVEL {newLevel} ALCANZADO!
           </motion.div>
         )}
       </AnimatePresence>
@@ -256,360 +133,254 @@ function XPBar({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
   )
 }
 
-// --- Main SummaryStep ---
-export function SummaryStep({ step, onAnswered, onRestart, actionTrigger = 0 }: SummaryStepProps & { actionTrigger?: number }) {
-  const { dbProfile, user } = useAuth()
-  const stars: 0 | 1 | 2 | 3 = (step as any).starsEarned ?? 3
-  const isExam = (step as any).isExam ?? false
-  const accuracy = (step as any).accuracy ?? 100
-  const isPassed = !isExam || accuracy >= 50
+export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRestart, actionTrigger }) => {
+  const { user, dbProfile } = useAuth()
+  const [phase, setPhase] = useState<'celebration' | 'stats'>('celebration')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const [phase, setPhase] = useState<'celebration' | 'xp'>('celebration')
-  const [isGeneratingCert, setIsGeneratingCert] = useState(false)
+  const stars = step.starsEarned ?? 3
+  const isExam = step.isExam ?? false
+  const accuracy = step.accuracy ?? 100
+  const isPassed = accuracy >= 50
+  const isRepeat = step.isRepeat ?? false
 
-  // Snapshot XP on mount
-  const [xpSnapshot, setXpSnapshot] = useState<number | null>(null)
-
-  useEffect(() => {
-    if (dbProfile?.xp !== undefined && xpSnapshot === null) {
-      setXpSnapshot(dbProfile.xp)
-    }
-  }, [dbProfile])
-
-  // XP calculation logic
-  const lessonIdStr = step.id
-  const prevStars = (user?.user_metadata?.lessonStars?.[lessonIdStr] ?? 0) as 0 | 1 | 2 | 3
-  const isRepeated = (step as any).isRepeat ?? false
-
-  const xpEarned = !isRepeated
+  const prevStars = (user?.user_metadata?.lessonStars?.[step.id] ?? 0) as 0 | 1 | 2 | 3
+  const xpEarned = !isRepeat
     ? (stars * XP_PER_STAR)
     : Math.max(0, (stars - prevStars) * XP_PER_STAR)
 
-  // Confetti helper
-  const [confettiActive, setConfettiActive] = useState(false)
-  const canvasRef = useConfetti(confettiActive)
-
   useEffect(() => {
-    // Phase 1 (Celebration) is initially NOT "completed" to allow footer to say "Continuar"
-    // and wait for user action to go to XP phase
     onAnswered({ isCompleted: false, canAction: true })
-
-    if (stars > 0) {
-      const t = setTimeout(() => setConfettiActive(true), 300)
-      return () => clearTimeout(t)
+    if (phase === 'celebration') {
+      playCorrectSound()
+      haptic.success()
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
-    if (actionTrigger > 0 && phase === 'celebration') {
-      if (!isPassed) {
-        onRestart?.()
-        return
+    if (actionTrigger && actionTrigger > 0) {
+      if (phase === 'celebration') {
+        setPhase('stats')
+        onAnswered({ isCompleted: true })
       }
-      setPhase('xp')
-      onAnswered({ isCompleted: true }) // Now it's completed, footer says "Finalizar"
     }
-  }, [actionTrigger, phase, onAnswered, isPassed, onRestart])
+  }, [actionTrigger, phase, onAnswered])
 
-  const totalTime = (step as any).totalTime ?? 0
+  // Confetti Animation
+  useEffect(() => {
+    if (phase !== 'celebration') return
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
 
-  const handleDownloadCertificate = async () => {
-    setIsGeneratingCert(true)
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    const particles: any[] = []
+    const colors = ["#0F62FE", "#3b82f6", "#60a5fa", "#fbbf24", "#ffffff"]
+
+    for (let i = 0; i < 80; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speed: Math.random() * 4 + 2,
+        angle: Math.random() * 360,
+        rotation: Math.random() * 0.2 - 0.1,
+      })
+    }
+
+    let animationId: number
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      particles.forEach((p) => {
+        p.y += p.speed
+        p.angle += p.rotation
+        if (p.y > canvas.height) p.y = -20
+        
+        ctx.save()
+        ctx.translate(p.x, p.y)
+        ctx.rotate(p.angle)
+        ctx.fillStyle = p.color
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6)
+        ctx.restore()
+      })
+      animationId = requestAnimationFrame(animate)
+    }
+    animate()
+
+    return () => cancelAnimationFrame(animationId)
+  }, [phase])
+
+  const handleDownloadCertificate = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsGenerating(true)
     try {
       await generateBizenCertificate({
-        studentName: dbProfile?.firstName ? `${dbProfile.firstName} ${dbProfile.lastName || ""}` : (user?.email?.split('@')[0] || "Estudiante BIZEN"),
-        topicTitle: step.title || "Certificación BIZEN",
+        studentName: user?.user_metadata?.full_name || "Estudiante BIZEN",
+        topicTitle: step.title || "Graduación BIZEN",
         accuracy: accuracy,
-        date: new Date().toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }),
-        lessonsCompleted: [
-          "Mentalidad Analítica",
-          "Ingeniería de Ingresos",
-          "Optimización de Capital",
-          "Psicología de Consumo",
-          "Protocolo Anti-Impulso"
-        ]
+        date: new Date().toLocaleDateString("es-MX", { day: 'numeric', month: 'long', year: 'numeric' }),
+        lessonsCompleted: [step.id]
       })
+      haptic.success()
+    } catch (err) {
+      console.error("Error generating certificate:", err)
     } finally {
-      setIsGeneratingCert(false)
+      setIsGenerating(false)
     }
   }
 
-  const starMessages: Record<0 | 1 | 2 | 3, React.ReactNode> = {
-    3: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Excelente trabajo! <Target size={20} color="#BFDBFE" /></div>,
-    2: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Muy bien! Casi perfecto <Star size={20} color="#BFDBFE" fill="#BFDBFE" /></div>,
-    1: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Buen esfuerzo! Sigue practicando <Zap size={20} color="#BFDBFE" fill="#BFDBFE" /></div>,
-    0: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>Sigue intentándolo, ¡tú puedes! <Flame size={20} color="#BFDBFE" fill="#BFDBFE" /></div>,
+  const starMessages: Record<number, React.ReactNode> = {
+    0: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>Sigue intentándolo <Flame size={20} color={BLUE} /></div>,
+    1: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Vas muy bien! <Zap size={20} color={BLUE} /></div>,
+    2: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Excelente progreso! <Rocket size={20} color={BLUE} /></div>,
+    3: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Perfección absoluta! <Sparkles size={20} color="#EAB308" /></div>,
   }
 
-  return (
-    <div style={{ position: "relative", width: "100%", minHeight: "clamp(300px, 60vh, 500px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      {/* Confetti canvas */}
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: 10,
-        }}
-      />
+  const Rocket = ({ size, color }: { size: number; color: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.71-2.13.71-2.13l-4.42-4.42s-1.29 0-2.13.71c1.26 1.5 2 5 2 5s3.74-.5 5-2c.71-.84.71-2.13.71-2.13l-4.42-4.42s-1.29 0-2.13.71z"/><path d="m12 8 4 4"/><path d="M16 4l4 4"/><path d="m9 15 3 3"/><path d="m19 19-3-3"/></svg>
+  )
 
+  const AnimatedStarLocal = ({ filled, delay }: { filled: boolean; delay: number }) => (
+    <motion.div
+      initial={{ scale: 0, rotate: -25, opacity: 0 }}
+      animate={filled ? {
+        scale: [0, 1.25, 1],
+        rotate: 0,
+        opacity: 1
+      } : {
+        scale: 1,
+        rotate: 0,
+        opacity: 0.35
+      }}
+      transition={{ type: "spring", stiffness: 260, damping: 20, delay }}
+    >
+      <Star size={64} fill={filled ? "#EAB308" : "#E2E8F0"} stroke={filled ? "#F59E0B" : "#CBD5E1"} strokeWidth={2} />
+    </motion.div>
+  )
+
+  return (
+    <div style={{
+      width: "100%",
+      minHeight: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "32px 24px",
+      background: phase === 'celebration' ? "#ffffff" : "#020617",
+      position: "relative",
+      overflow: "hidden",
+      transition: "background 0.6s ease"
+    }}>
       <AnimatePresence mode="wait">
         {phase === 'celebration' ? (
           <motion.div
             key="celebration"
-            initial={{ opacity: 0, scale: 0.96, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: -10 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
-              gap: 24,
-              padding: "16px 0 32px",
-            }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 40, zIndex: 10, textAlign: "center" }}
           >
-            {/* Celebration image */}
+            <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, pointerEvents: "none" }} />
+            
             <motion.div
-              initial={{ scale: 0, rotate: -15 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
               style={{ position: "relative" }}
             >
               <div style={{
-                position: "absolute", inset: -20,
-                background: "radial-gradient(circle, rgba(15,98,254,0.18) 0%, transparent 70%)",
-                borderRadius: "50%", filter: "blur(24px)", pointerEvents: "none",
-              }} />
-              <img
-                src={(step as any).imageUrl || "/Lección%20completada.png"}
-                alt="Lección completada"
-                style={{
-                  width: "clamp(140px, 32vw, 220px)",
-                  height: "auto",
-                  objectFit: "contain",
-                  position: "relative",
-                  zIndex: 1,
-                  filter: "drop-shadow(0 12px 32px rgba(15,98,254,0.25))",
-                }}
-              />
-            </motion.div>
-
-            {/* Title */}
-            <motion.h2
-              initial={{ y: -12, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.25 }}
-              style={{
-                fontSize: "clamp(32px, 8vw, 44px)",
-                fontWeight: 800,
-                background: "linear-gradient(135deg, #FFFFFF 0%, #93C5FD 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                margin: 0,
-                lineHeight: 1.1,
-                letterSpacing: "-0.02em",
-                textShadow: "0 0 32px rgba(147, 197, 253, 0.3)",
-              }}
-            >
-              {step.title || `¡Bien hecho, ${dbProfile?.firstName || dbProfile?.fullName || "Dragón"}!`}
-            </motion.h2>
-
-            {/* Statistics row */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}
-            >
-              <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-                {[1, 2, 3].map((i) => (
-                  <AnimatedStar
-                    key={i}
-                    filled={i <= stars}
-                    delay={0.5 + i * 0.22}
-                    size={64}
-                  />
-                ))}
+                width: 130, height: 130, borderRadius: "50%",
+                background: "linear-gradient(135deg, #0F62FE 0%, #3b82f6 100%)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 20px 40px rgba(15,98,254,0.3)"
+              }}>
+                <Trophy size={60} color="white" />
               </div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.3 }}
-                style={{ margin: 0, fontSize: 18, fontWeight: 500, color: "#BFDBFE" }}
-              >
-                {starMessages[stars]}
-              </motion.div>
             </motion.div>
 
-            {/* Body text */}
-            {step.body && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-                style={{
-                  fontSize: "clamp(15px, 2vw, 18px)",
-                  color: isPassed ? "#93c5fd" : "#fca5a5",
-                  lineHeight: 1.6,
-                  fontWeight: 400,
-                  maxWidth: 440,
-                  padding: "0 16px",
-                }}
-              >
-                {!isPassed ? (
-                  <div style={{ background: "rgba(239, 68, 68, 0.1)", padding: 20, borderRadius: 20, border: "1.5px solid rgba(239, 68, 68, 0.2)" }}>
-                    <ShieldAlert size={40} color="#ef4444" style={{ marginBottom: 16 }} />
-                    <p style={{ margin: 0, fontWeight: 700, fontSize: 20, color: "#ef4444" }}>No has alcanzado el 50%</p>
-                    <p style={{ opacity: 0.8, fontSize: 14, marginTop: 8 }}>Para certificarte en este bloque necesitas dominar el contenido. ¡Vuelve a intentarlo!</p>
-                  </div>
-                ) : (
-                  <>
-                    {step.body.split("\n\n").map((line, i) => (
-                      <p key={i} style={{ margin: "0 0 8px" }}>{line}</p>
-                    ))}
-                    
-                    {isExam && isPassed && (
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleDownloadCertificate}
-                        disabled={isGeneratingCert}
-                        style={{
-                          marginTop: 24,
-                          background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                          color: "white",
-                          border: "none",
-                          padding: "12px 24px",
-                          borderRadius: 16,
-                          fontSize: 15,
-                          fontWeight: 700,
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10,
-                          boxShadow: "0 8px 24px rgba(16, 185, 129, 0.4)",
-                          margin: "24px auto 0"
-                        }}
-                      >
-                        {isGeneratingCert ? (
-                          <RefreshCcw size={18} className="animate-spin" />
-                        ) : (
-                          <Download size={18} />
-                        )}
-                        DESCARGAR CERTIFICADO PROFESIONAL
-                      </motion.button>
-                    )}
-                  </>
-                )}
-              </motion.div>
-            )}
+            <div style={{ display: "flex", justifyContent: "center", gap: 12 }}>
+              {[1, 2, 3].map((i) => (
+                <AnimatedStarLocal key={i} filled={i <= stars} delay={0.4 + i * 0.15} />
+              ))}
+            </div>
+
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1 }}>
+              <h2 style={{ fontSize: 36, fontWeight: 950, color: SLATE_DARK, margin: 0 }}>¡Lección Completada!</h2>
+              <div style={{ fontSize: 18, fontWeight: 700, color: BLUE, marginTop: 8 }}>{starMessages[stars]}</div>
+            </motion.div>
           </motion.div>
         ) : (
           <motion.div
-            key="xp"
-            initial={{ opacity: 0, scale: 0.96, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              width: "100%",
-              maxWidth: 420,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 32,
-            }}
+            key="stats"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ width: "100%", maxWidth: 440, display: "flex", flexDirection: "column", alignItems: "stretch", gap: 24, zIndex: 10 }}
           >
-            {/* Icon for XP slide */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 280, damping: 20 }}
-              style={{
-                width: 80, height: 80,
-                borderRadius: 24,
-                background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 8px 32px rgba(15,98,254,0.3)",
-              }}
-            >
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-            </motion.div>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 12, fontWeight: 900, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 8 }}>ANÁLISIS DE RENDIMIENTO</div>
+              <h2 style={{ fontSize: 24, fontWeight: 900, color: "white", margin: 0 }}>{step.title || "Resumen Final"}</h2>
+            </div>
 
-            <h2 style={{
-              fontSize: 32,
-              fontWeight: 700,
-              color: "#FFFFFF",
-              textShadow: "0 0 24px rgba(255,255,255,0.2)",
-              margin: 0,
-            }}>
-              Tu progreso actual
-            </h2>
+            <XPBar initialXP={dbProfile?.xp ?? 0} xpEarned={xpEarned} delay={300} />
 
-            {/* XP Statistics Dashboard */}
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 24, padding: "0 16px" }}>
-              <XPBar
-                initialXP={xpSnapshot ?? dbProfile?.xp ?? 0}
-                xpEarned={xpEarned}
-                delay={200}
-              />
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                {/* Accuracy Card */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2 }}
-                  style={{
-                    background: "rgba(15, 23, 42, 0.6)",
-                    borderRadius: 24,
-                    padding: "20px",
-                    border: "1px solid rgba(147, 197, 253, 0.1)",
-                    textAlign: "center",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-                  }}
-                >
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Precisión</div>
-                  <div style={{ fontSize: 32, fontWeight: 900, color: accuracy >= 80 ? "#10b981" : "#f59e0b" }}>{accuracy}%</div>
-                </motion.div>
-
-                {/* Time Card */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.4 }}
-                  style={{
-                    background: "rgba(15, 23, 42, 0.6)",
-                    borderRadius: 24,
-                    padding: "20px",
-                    border: "1px solid rgba(147, 197, 253, 0.1)",
-                    textAlign: "center",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-                  }}
-                >
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Tiempo</div>
-                  <div style={{ fontSize: 24, fontWeight: 900, color: "#fff", height: 38, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    {Math.floor(totalTime / 60)}:{(totalTime % 60).toString().padStart(2, '0')}
-                  </div>
-                </motion.div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 20, padding: "20px 12px", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Target size={20} color="#60a5fa" style={{ marginBottom: 8 }} />
+                <div style={{ fontSize: 24, fontWeight: 900, color: "white" }}>{accuracy}%</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase" }}>Precisión</div>
+              </div>
+              <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 20, padding: "20px 12px", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Clock size={20} color="#60a5fa" style={{ marginBottom: 8 }} />
+                <div style={{ fontSize: 24, fontWeight: 900, color: "white" }}>
+                  {Math.floor((step.totalTime || 0) / 60)}:{( (step.totalTime || 0) % 60).toString().padStart(2, '0')}
+                </div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase" }}>Tiempo</div>
               </div>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.0 }}
-              style={{ fontSize: 15, color: "#64748b", textAlign: "center", maxWidth: 280, lineHeight: 1.5 }}
-            >
-              Cada paso te acerca más a tu libertad financiera.
-            </motion.div>
+            {isExam && isPassed && (
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                style={{
+                  background: "linear-gradient(135deg, #1e3a8a 0%, #1e1b4b 100%)",
+                  borderRadius: 24, padding: "28px",
+                  display: "flex", flexDirection: "column", alignItems: "center", gap: 20, textAlign: "center",
+                  border: "1.5px solid rgba(96,165,250,0.3)"
+                }}
+              >
+                <CheckCircle2 size={40} color="#10b981" />
+                <h3 style={{ fontSize: 20, fontWeight: 900, color: "white", margin: 0 }}>¡GRADUACIÓN EXITOSA!</h3>
+                <button
+                  onClick={handleDownloadCertificate}
+                  disabled={isGenerating}
+                  style={{
+                    width: "100%", height: 50, borderRadius: 16, background: "white", color: "#0f172a",
+                    fontSize: 14, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
+                  }}
+                >
+                  {isGenerating ? <RefreshCcw size={18} className="animate-spin" /> : <><Download size={18} /> DESCARGAR PDF</>}
+                </button>
+              </motion.div>
+            )}
+
+            {onRestart && (
+               <button 
+                  onClick={onRestart}
+                  style={{
+                    width: "100%", height: 48, borderRadius: 16, background: "transparent", color: "rgba(255,255,255,0.5)",
+                    fontSize: 13, fontWeight: 700, border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8
+                  }}
+                >
+                  <RotateCcw size={16} /> Repetir Lección
+                </button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

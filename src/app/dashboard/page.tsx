@@ -256,6 +256,7 @@ function DashboardContent() {
   const [topics,           setTopics]           = useState<Topic[]>([])
   const [completedLessons, setCompletedLessons] = useState<string[]>([])
   const [dnaResult,        setDnaResult]        = useState<any>(null)
+  const [liveProfile,      setLiveProfile]      = useState<any>(null)
   const [loadingData,      setLoadingData]      = useState(true)
 
   const searchParams = useSearchParams()
@@ -346,11 +347,12 @@ function DashboardContent() {
     const go = async () => {
       setLoadingData(true)
       try {
-        const [sR, tR, pR, dR] = await Promise.all([
+        const [sR, tR, pR, dR, profR] = await Promise.all([
           fetch("/api/user/stats"),
           fetch("/api/topics"),
           fetch("/api/progress"),
-          fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(user.email || "")}`)
+          fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(user.email || "")}`),
+          fetch("/api/profile")
         ])
         if (sR.ok) setStats(await sR.json())
         if (tR.ok) setTopics(await tR.json())
@@ -363,6 +365,9 @@ function DashboardContent() {
         if (dR.ok) {
           const dd = await dR.json()
           if (dd.exists) setDnaResult(dd.result)
+        }
+        if (profR.ok) {
+          setLiveProfile(await profR.json())
         }
       } catch {/* silent */} finally { setLoadingData(false) }
     }
@@ -628,12 +633,12 @@ function DashboardContent() {
 
         {/* DNA PROFILE SECTION */}
         <div className="dc" style={{ animationDelay: ".05s", marginBottom: 24 }}>
-          {dbProfile?.dnaProfile && dbProfile.dnaProfile.includes("Billy") ? (
+          {liveProfile?.dnaProfile && liveProfile.dnaProfile.includes("Billy") ? (
             <BillyLabWidget 
-              dnaProfile={dbProfile.dnaProfile}
-              dnaScore={dbProfile.dnaScore || 0}
-              nextTopicId={dbProfile.dnaProfile === "Billy Inversionista" ? "tema-09" : (dbProfile.dnaProfile === "Billy Estratega" ? "tema-07" : "tema-06")}
-              nextTopicTitle={dbProfile.dnaProfile === "Billy Inversionista" ? "Estrategias de Inversión" : (dbProfile.dnaProfile === "Billy Estratega" ? "Sistema de Crédito" : "Presupuesto Real")}
+              dnaProfile={liveProfile.dnaProfile}
+              dnaScore={liveProfile.dnaScore || 0}
+              nextTopicId={liveProfile.dnaProfile === "Billy Inversionista" ? "tema-09" : (liveProfile.dnaProfile === "Billy Estratega" ? "tema-07" : "tema-06")}
+              nextTopicTitle={liveProfile.dnaProfile === "Billy Inversionista" ? "Estrategias de Inversión" : (liveProfile.dnaProfile === "Billy Estratega" ? "Sistema de Crédito" : "Presupuesto Real")}
             />
           ) : dnaResult ? (
             <div style={{

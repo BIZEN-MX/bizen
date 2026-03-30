@@ -5,15 +5,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai"
 let dailyAIRequests = 0
 let lastResetDate = new Date().toDateString()
 
-function checkLimit(maxLimit: number): boolean {
-  const today = new Date().toDateString()
-  if (today !== lastResetDate) {
-    dailyAIRequests = 0
-    lastResetDate = today
-  }
-  return dailyAIRequests < maxLimit
-}
-
 export async function POST(request: NextRequest) {
   try {
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY
@@ -57,11 +48,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!checkLimit(MAX_DAILY_REQUESTS)) {
-      return NextResponse.json(
-        { response: "¡Vaya! He hablado demasiado hoy y necesito descansar (Límite diario alcanzado). Inténtalo de nuevo mañana." },
-        { status: 200 }
-      )
+    // Check limit
+    const currentDate = new Date().toDateString()
+    if (currentDate !== lastResetDate) {
+      dailyAIRequests = 0
+      lastResetDate = currentDate
+    }
+
+    if (dailyAIRequests >= MAX_DAILY_REQUESTS) {
+      return NextResponse.json({
+        response: "Billy ha tenido un día muy ocupado ayudando a otros. Vuelve mañana para seguir aprendiendo juntos.",
+        source: "limit-reached"
+      })
     }
 
     const systemPrompt = `Eres Billy, el mentor asistente de BIZEN. BIZEN enseña educación financiera a jóvenes.
@@ -87,7 +85,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
     const geminiModel = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash"
+      model: "gemini-1.5-flash" 
     })
 
     const formattedHistory = (conversationHistory || [])
@@ -96,28 +94,27 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
 
     const fullPromptForAI = `SISTEMA: ${systemPrompt}\n\nHISTORIAL PREVIO:\n${formattedHistory}\n\nMENSAJE ACTUAL DEL USUARIO: ${message}`
 
-    console.log("🤖 BillyChatbot: Generating content for:", userName)
     const result = await geminiModel.generateContent(fullPromptForAI)
-    const response = await result.response
+    const response = result.response
     
+    // Safety check for candidates
     if (!response || !response.candidates || response.candidates.length === 0) {
-      console.error("❌ BillyChatbot: No candidates returned from Gemini")
-      throw new Error("No response generated from AI")
+      console.error("❌ [Billy:Gemini] No candidates returned")
+      throw new Error("No response generated")
     }
 
     let responseText = "¡Ups! Me quedé pensando. ¿Puedes repetir eso?"
     try {
-      responseText = response.text()
+      // In newer SDK versions text() can be a string or a method returning a string
+      responseText = typeof response.text === 'function' ? response.text() : (response.text as unknown as string)
     } catch (e) {
-      console.warn("⚠️ BillyChatbot: text() extraction failed, falling back to parts.", e)
-      // Fallback for some SDK edge cases or blocked responses
+      console.warn("⚠️ [Billy:Gemini] Text extraction failed, using parts fallback.", e)
       const candidate = response.candidates[0]
       if (candidate?.content?.parts?.[0]?.text) {
         responseText = candidate.content.parts[0].text
       }
     }
-    
-    console.log("✅ BillyChatbot: Generation complete.")
+
     dailyAIRequests++
 
     return NextResponse.json({
@@ -126,13 +123,13 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
     })
 
   } catch (error: any) {
-    console.error("Billy Chatbot backend error detailed:", {
-      message: error.message,
-      stack: error.stack
-    })
+    console.error("❌ [Billy:BackendError]:", error)
     return NextResponse.json(
-      { response: "¡Ups! Mis circuitos se recalentaron un poco. ¿Podrías intentar enviarme tu mensaje de nuevo? 😅", error: error.message },
-      { status: 200 } // Return 200 with error message to avoid catch block in frontend
+      { 
+        response: "¡Ups! Mis circuitos se recalentaron un poco. ¿Podrías intentar enviarme tu mensaje de nuevo? 😅",
+        debug: error.message 
+      },
+      { status: 200 }
     )
   }
 }

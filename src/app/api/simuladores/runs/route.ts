@@ -113,7 +113,10 @@ export async function POST(request: NextRequest) {
     // AWARD XP and update streak for meaningful AI tool interaction
     let rewards = null;
     try {
-      rewards = await awardXp(user.id, 25);
+      rewards = await awardXp(user.id, 25, {
+        category: "simulator_reward",
+        description: `Uso del simulador: ${run_name || simulator_slug}`
+      });
       
       // Trigger achievement check for financial category
       try {

@@ -16,20 +16,6 @@ export async function GET() {
       orderBy: { createdAt: "desc" }
     })
 
-    // If empty, return some nice mock data for the WOW factor
-    if (goals.length === 0) {
-      goals = [
-        {
-          id: "g-1",
-          title: "Avatar Astronauta Blue",
-          targetAmount: 500,
-          category: "avatar",
-          isCompleted: false,
-          createdAt: new Date().toISOString(),
-        }
-      ] as any;
-    }
-
     return NextResponse.json({ goals })
   } catch (error) {
     console.error("Error fetching savings goals:", error)

@@ -18,15 +18,24 @@ export async function GET(request: NextRequest) {
             select: { dnaProfile: true, dnaScore: true }
         });
 
-        // Simulating mistake tracking (In a real scenario, this would come from analytics or quiz logs)
-        const mistakes = ["Confusión entre Interés Simple y Compuesto", "Sesgo de confirmación en compras"];
+        // FETCH REAL SAVINGS GOALS
+        const goals = await (prisma as any).savingsGoal.findMany({
+          where: { userId: user.id, isCompleted: false },
+          select: { title: true, targetAmount: true }
+        });
+
+        const goalList: string[] = (goals as any[]).map((g: any) => `${g.title} ($${g.targetAmount})`);
+
+        // Simulating mistake tracking (Could come from DB later)
+        const mistakes: string[] = ["Confusión entre Interés Simple y Compuesto"];
         const currentTopic = "Inversión y Patrimonio";
 
-        // Generate the lab using Gemini
+        // Generate the lab using Gemini 2.0 Flash
         const lab = await generatePersonalizedLab(
-            profile?.dnaProfile || "Iniciado por Billy",
+            profile?.dnaProfile || "Iniciado BIZEN",
             mistakes,
-            currentTopic
+            currentTopic,
+            goalList // Pass goals to engine
         );
 
         return NextResponse.json({
