@@ -571,9 +571,9 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
               {navigating ? (
                 <span style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "white", borderRadius: "50%", animation: "tc-spin 0.7s linear infinite", display: "inline-block" }} />
               ) : discoveryMode ? (
-                <>¡Entendido! ✨</>
+                <>¡Entendido!</>
               ) : isLast ? (
-                <>¡Empezar! 🚀</>
+                <>¡Empezar!</>
               ) : (
                 <>Siguiente →</>
               )}

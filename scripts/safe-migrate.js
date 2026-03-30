@@ -76,6 +76,47 @@ async function main() {
             CONSTRAINT "evidence_comments_pkey" PRIMARY KEY ("id")
         )`);
 
+        await prisma.$executeRawUnsafe(`CREATE TABLE IF NOT EXISTS "public"."wallet_transactions" (
+            "id" TEXT NOT NULL,
+            "user_id" TEXT NOT NULL,
+            "amount" INTEGER NOT NULL,
+            "type" TEXT NOT NULL,
+            "category" TEXT NOT NULL,
+            "description" TEXT NOT NULL,
+            "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT "wallet_transactions_pkey" PRIMARY KEY ("id"),
+            CONSTRAINT "wallet_transactions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."profiles"("user_id") ON DELETE CASCADE ON UPDATE CASCADE
+        )`);
+        await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "wallet_transactions_user_id_idx" ON "public"."wallet_transactions"("user_id")`);
+
+        await prisma.$executeRawUnsafe(`CREATE TABLE IF NOT EXISTS "public"."savings_goals" (
+            "id" TEXT NOT NULL,
+            "user_id" TEXT NOT NULL,
+            "title" TEXT NOT NULL,
+            "target_amount" INTEGER NOT NULL,
+            "category" TEXT,
+            "is_completed" BOOLEAN DEFAULT false,
+            "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT "savings_goals_pkey" PRIMARY KEY ("id"),
+            CONSTRAINT "savings_goals_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."profiles"("user_id") ON DELETE CASCADE ON UPDATE CASCADE
+        )`);
+        await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "savings_goals_user_id_idx" ON "public"."savings_goals"("user_id")`);
+
+        await prisma.$executeRawUnsafe(`CREATE TABLE IF NOT EXISTS "public"."staking_positions" (
+            "id" TEXT NOT NULL,
+            "user_id" TEXT NOT NULL,
+            "amount" INTEGER NOT NULL,
+            "yield_rate" DOUBLE PRECISION NOT NULL,
+            "start_date" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "end_date" TIMESTAMPTZ(6) NOT NULL,
+            "status" TEXT DEFAULT 'active',
+            "earned_amount" INTEGER,
+            CONSTRAINT "staking_positions_pkey" PRIMARY KEY ("id"),
+            CONSTRAINT "staking_positions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."profiles"("user_id") ON DELETE CASCADE ON UPDATE CASCADE
+        )`);
+        await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "staking_positions_user_id_idx" ON "public"."staking_positions"("user_id")`);
+        console.log("wallet, savings and staking tables verified.");
+
         const fkSql = `
         DO $$
         BEGIN

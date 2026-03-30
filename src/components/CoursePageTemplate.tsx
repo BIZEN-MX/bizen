@@ -209,18 +209,13 @@ export default function CoursePageTemplate({
         }
     }, [loading, user])
 
-    // White background
+    // Billy Insights
     useEffect(() => {
-        const html = document.documentElement
-        const body = document.body
-        html.style.background = "#ffffff"
-        body.style.background = "#ffffff"
-
         const fetchInsight = async () => {
+            if (!topic?.title) return
             try {
                 setLoadingInsight(true)
-                const topicTitleForInsight = topic?.title || ""
-                const res = await fetch(`/api/dashboard/insights?topic=${encodeURIComponent(topicTitleForInsight)}`)
+                const res = await fetch(`/api/dashboard/insights?topic=${encodeURIComponent(topic.title)}`)
                 const data = await res.json()
                 setInsight(data.insight)
             } catch (e) {
@@ -230,12 +225,29 @@ export default function CoursePageTemplate({
             }
         }
         fetchInsight()
+    }, [topicId, topic?.title])
 
+    // White background
+    useEffect(() => {
+        const html = document.documentElement
+        const body = document.body
+        html.style.background = "#ffffff"
+        body.style.background = "#ffffff"
         return () => {
             html.style.background = ""
             body.style.background = ""
         }
     }, [])
+
+    // ─── Hide Sidebar on Flashcard Activity ──────────────────────────────────
+    useEffect(() => {
+        if (flashcardSet) {
+            document.documentElement.setAttribute('data-flashcard-active', 'true')
+        } else {
+            document.documentElement.removeAttribute('data-flashcard-active')
+        }
+        return () => document.documentElement.removeAttribute('data-flashcard-active')
+    }, [flashcardSet])
 
     // Progress for this topic
     const allLessonsInTopic = subtemas.flatMap((s) => s.lessons)
@@ -263,7 +275,7 @@ export default function CoursePageTemplate({
 
     const currentTopicNumStr = topicId.toString().replace('tema-', '').replace(/^0+/, '')
     const currentTopicNum = parseInt(currentTopicNumStr)
-    const isTopicLockedBySequence = !isNaN(currentTopicNum) && currentTopicNum > nextTopicId;
+    const isTopicLockedBySequence = false; // Bloqueo desactivado para pruebas
 
     const completedInTopic = allLessonsInTopic.filter((l) => completedLessons.includes(l.slug)).length
     const totalInTopic = allLessonsInTopic.length
@@ -560,7 +572,7 @@ export default function CoursePageTemplate({
                                             // 3. Lessons are also locked if they are paywalled (premium lesson + no subscription).
                                             const isFirstLessonOfWholeTopic = absoluteLessonNumber === 1;
                                             const previousLesson = absoluteLessonNumber > 1 ? allLessonsInTopic[absoluteLessonNumber - 2] : null;
-                                            const isSequenceLocked = !isFirstLessonOfWholeTopic && previousLesson && !completedLessons.includes(previousLesson.slug);
+                                            const isSequenceLocked = false; // Bloqueo desactivado para pruebas
 
                                             const isLocked = isPaywalled || isSequenceLocked;
 
@@ -1058,6 +1070,19 @@ export default function CoursePageTemplate({
                 @media (min-width: 1161px) {
                   .courses-main-content { padding-left: 312px !important; padding-right: 16px !important; display: flex !important; justify-content: center !important; }
                   .courses-main-content > div { max-width: calc(100vw - 312px - 48px) !important; width: 100% !important; margin: 0 auto !important; }
+                }
+
+                /* Flashcard Overrides - Hide Sidebar & Reset Padding */
+                [data-flashcard-active="true"] [data-fixed-sidebar] {
+                  display: none !important;
+                }
+                [data-flashcard-active="true"] .courses-main-content {
+                  padding-left: 16px !important;
+                  width: 100% !important;
+                }
+                [data-flashcard-active="true"] .courses-main-content > div {
+                  max-width: 1200px !important;
+                  margin: 0 auto !important;
                 }
 
                 /* Lesson card hover */

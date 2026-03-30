@@ -11,7 +11,7 @@ import StreakWidget from "@/components/StreakWidget"
 import {
   Target, MessageCircle, Briefcase, CheckCircle, AlertCircle,
   ChevronDown, ChevronUp, ChevronRight,
-  Send, ExternalLink, X, BookOpen
+  Send, ExternalLink, X, BookOpen, Gift, Search, Loader2, Check, Palette, History, ArrowUpRight, ArrowDownLeft
 } from "lucide-react"
 import { RocketIcon, LeafIcon, NoteIcon, ThumbsUpIcon, IdeaIcon, WarningIcon, ZapIcon } from "@/components/CustomIcons"
 import PageLoader from "@/components/PageLoader"
@@ -90,12 +90,14 @@ function EvidenceCard({
   onValidate,
   isTeacher,
   currentUserId,
+  onTransferClick,
 }: {
   post: EvidencePost
   onReact: (postId: string, type: string) => void
   onValidate: (postId: string) => void
   isTeacher: boolean
   currentUserId: string
+  onTransferClick: (userId: string, name: string) => void
 }) {
   const [expanded, setExpanded] = useState(false)
   const [showComments, setShowComments] = useState(false)
@@ -182,7 +184,20 @@ function EvidenceCard({
             <div style={{ fontSize: 11, color: "#94a3b8" }}>{formatDate(post.createdAt)}</div>
           </div>
         </Link>
-        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {!post.isMe && (
+            <button 
+              onClick={() => onTransferClick(post.authorUserId, post.authorDisplay)}
+              style={{
+                display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8,
+                background: "rgba(15,98,254,0.08)", color: "#0F62FE", border: "1px solid rgba(15,98,254,0.15)",
+                fontSize: 11, fontWeight: 700, cursor: "pointer", transition: "all 0.2s"
+              }}
+              className="gift-btn-hover"
+            >
+              <Gift size={13} /> Regalar
+            </button>
+          )}
           <span style={{
             fontSize: 11, fontWeight: 500, padding: "3px 10px", borderRadius: 8,
             background: post.status === "validated" ? "#ecfdf5" : "#f1f5f9",
@@ -308,6 +323,95 @@ function EvidenceCard({
       )}
     </div>
   )
+}
+
+// --- TRANSFER MODAL COMPONENT (Copied for Forum use) ---
+function TransferModal({ onClose, currentBalance, targetUser, onTransferSuccess }: { onClose: () => void, currentBalance: number, targetUser: any, onTransferSuccess: (newBal: number) => void }) {
+  const [step, setStep] = useState<"amount" | "success">("amount");
+  const [amount, setAmount] = useState("");
+  const [concept, setConcept] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleTransfer = async () => {
+    const amtNum = parseInt(amount);
+    if (!amtNum || amtNum <= 0) {
+      setError("Monto inválido");
+      return;
+    }
+    if (amtNum > currentBalance) {
+      setError("Saldo insuficiente");
+      return;
+    }
+
+    setIsProcessing(true);
+    setError("");
+    try {
+      const res = await fetch("/api/wallet/transfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ targetUserId: targetUser.userId, amount: amtNum, concept: concept || "Regalo desde el foro" })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStep("success");
+        onTransferSuccess(data.newBalance);
+      } else {
+        setError(data.error || "Error al transferir");
+      }
+    } catch (err) {
+      setError("Error de conexión");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10000, padding: 20 }}>
+      <div className="fade-up" style={{ background: "white", width: "100%", maxWidth: 400, borderRadius: 24, overflow: "hidden", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)" }}>
+        <div style={{ padding: "20px 24px", borderBottom: "1.5px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc" }}>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a" }}>
+            {step === "success" ? "Transferencia Exitosa" : `Regalar a ${targetUser.nickname || targetUser.fullName}`}
+          </h3>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer" }}><X size={20} /></button>
+        </div>
+        <div style={{ padding: 24 }}>
+          {step === "amount" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#475569", marginBottom: 8 }}>Monto a regalar</label>
+                <div style={{ position: "relative" }}>
+                   <input type="number" autoFocus placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)} style={{ width: "100%", padding: "16px 60px 16px 20px", borderRadius: 16, border: "2px solid #0F62FE", fontSize: 24, fontWeight: 800, color: "#0f172a", outline: "none" }} />
+                   <span style={{ position: "absolute", right: 20, top: "50%", transform: "translateY(-50%)", fontSize: 14, fontWeight: 800, color: "#0F62FE" }}>BIZCOINS</span>
+                </div>
+                <div style={{ marginTop: 8, fontSize: 11, color: parseInt(amount) > currentBalance ? "#e11d48" : "#64748b", fontWeight: 600 }}>Tu saldo: {currentBalance} BC</div>
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#475569", marginBottom: 8 }}>Mensaje (Opcional)</label>
+                <input placeholder="Ej: Me gustó mucho tu idea!" value={concept} onChange={(e) => setConcept(e.target.value)} style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1.5px solid #e2e8f0", fontSize: 13, outline: "none" }} />
+              </div>
+              {error && <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fee2e2", borderRadius: 10, color: "#b91c1c", fontSize: 12, fontWeight: 600 }}>{error}</div>}
+              <button 
+                onClick={handleTransfer}
+                disabled={isProcessing || !amount || parseInt(amount) <= 0 || parseInt(amount) > currentBalance}
+                style={{ width: "100%", padding: "16px", borderRadius: 16, background: "#0F62FE", color: "white", border: "none", fontSize: 15, fontWeight: 800, cursor: isProcessing ? "default" : "pointer", opacity: (isProcessing || !amount || parseInt(amount) <= 0 || parseInt(amount) > currentBalance) ? 0.6 : 1, transition: "all 0.2s" }}
+              >
+                {isProcessing ? "Procesando..." : "Confirmar Regalo"}
+              </button>
+            </div>
+          )}
+          {step === "success" && (
+            <div style={{ textAlign: "center", padding: "20px 0" }}>
+               <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}><Check size={40} color="#10B981" /></div>
+               <h2 style={{ margin: "0 0 8px", fontSize: 22, fontWeight: 900, color: "#0f172a" }}>¡Enviado!</h2>
+               <p style={{ margin: "0 0 24px", fontSize: 14, color: "#64748b", lineHeight: 1.5 }}>Has regalado con éxito <strong style={{color: "#0f172a"}}>{amount} Bizcoins</strong> a <strong style={{color: "#0f172a"}}>{targetUser.nickname || targetUser.fullName}</strong>.</p>
+               <button onClick={onClose} style={{ width: "100%", padding: "14px", borderRadius: 14, background: "#0f172a", color: "white", border: "none", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Listo</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ── Main Forum Content ─────────────────────────────────────────────────────────
@@ -467,6 +571,8 @@ function ForumContent() {
     (activeTab === "mision-del-dia" && loadingEvidence && evidencePosts.length === 0) ||
     (activeTab !== "mision-del-dia" && loadingData && threads.length === 0)
 
+  const [transferTarget, setTransferTarget] = useState<any>(null)
+
   if (showFullLoader) return <PageLoader />
   if (!user) return null
 
@@ -526,6 +632,10 @@ function ForumContent() {
           background-color: rgba(15,98,254,0.08);
           box-shadow: 0 20px 40px rgba(15,98,254,0.08);
           border-color: rgba(15,98,254,0.3);
+        }
+        .gift-btn-hover:hover {
+           background: rgba(15,98,254,0.15) !important;
+           transform: scale(1.05);
         }
       `}</style>
 
@@ -720,6 +830,7 @@ function ForumContent() {
                       onValidate={handleValidate}
                       isTeacher={isTeacher}
                       currentUserId={user.id}
+                      onTransferClick={(uid, name) => setTransferTarget({ userId: uid, nickname: name })}
                     />
                   ))
                 )}
@@ -912,6 +1023,15 @@ function ForumContent() {
           </main>
         </div >
       </div >
+
+      {transferTarget && (
+        <TransferModal 
+          onClose={() => setTransferTarget(null)} 
+          currentBalance={dbProfile?.bizcoins || 0} 
+          targetUser={transferTarget}
+          onTransferSuccess={() => { /* maybe refresh stats */ }}
+        />
+      )}
     </>
   )
 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
 // Simple in-memory tracker (resets daily, resets on server restart).
 let dailyAIRequests = 0
@@ -84,25 +85,43 @@ LO QUE HACES:
 
 RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, moderno y motivador. NO USES EMOJIS y VE DIRECTO AL GRANO sin saludar en cada mensaje.`
 
-    const { GoogleGenerativeAI } = await import("@google/generative-ai")
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
     const geminiModel = genAI.getGenerativeModel({
       model: "gemini-1.5-flash"
     })
 
-    // Build the final prompt by including the system/personality instructions
-    const fullPromptForAI = `SISTEMA: ${systemPrompt}\n\nMENSAJE DEL USUARIO: ${message}`
+    const formattedHistory = (conversationHistory || [])
+      .map((h: any) => `${h.role === 'user' ? 'USUARIO' : 'BILLY'}: ${h.content}`)
+      .join('\n');
 
+    const fullPromptForAI = `SISTEMA: ${systemPrompt}\n\nHISTORIAL PREVIO:\n${formattedHistory}\n\nMENSAJE ACTUAL DEL USUARIO: ${message}`
+
+    console.log("🤖 BillyChatbot: Generating content for:", userName)
     const result = await geminiModel.generateContent(fullPromptForAI)
-    const data = result.response
-    const responseText = data.text().trim() || "¡Ups! Me quedé pensando. ¿Puedes repetir eso?"
+    const response = await result.response
+    
+    if (!response || !response.candidates || response.candidates.length === 0) {
+      console.error("❌ BillyChatbot: No candidates returned from Gemini")
+      throw new Error("No response generated from AI")
+    }
 
-    console.log(`[Billy:Gemini] Successfully generated response (length: ${responseText.length})`)
+    let responseText = "¡Ups! Me quedé pensando. ¿Puedes repetir eso?"
+    try {
+      responseText = response.text()
+    } catch (e) {
+      console.warn("⚠️ BillyChatbot: text() extraction failed, falling back to parts.", e)
+      // Fallback for some SDK edge cases or blocked responses
+      const candidate = response.candidates[0]
+      if (candidate?.content?.parts?.[0]?.text) {
+        responseText = candidate.content.parts[0].text
+      }
+    }
+    
+    console.log("✅ BillyChatbot: Generation complete.")
     dailyAIRequests++
-    console.log(`[Billy:Gemini] Used 1 request. Daily count: ${dailyAIRequests}/${MAX_DAILY_REQUESTS}`)
 
     return NextResponse.json({
-      response: responseText,
+      response: responseText.trim(),
       source: "google:gemini-1.5-flash"
     })
 
@@ -112,8 +131,8 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
       stack: error.stack
     })
     return NextResponse.json(
-      { response: "¡Ups! Mis circuitos se recalentaron un poco. ¿Podrías intentar enviarme tu mensaje de nuevo? 😅" },
-      { status: 500 }
+      { response: "¡Ups! Mis circuitos se recalentaron un poco. ¿Podrías intentar enviarme tu mensaje de nuevo? 😅", error: error.message },
+      { status: 200 } // Return 200 with error message to avoid catch block in frontend
     )
   }
 }

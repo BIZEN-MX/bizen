@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { AVATAR_OPTIONS, AVATAR_CATEGORIES } from "@/lib/avatarOptions"
 import { createClient } from "@/lib/supabase/client"
@@ -8,7 +9,8 @@ import { useAuth } from "@/contexts/AuthContext"
 import { SchoolIcon, CakeIcon, PartyIcon, RocketIcon, ChevronRightIcon } from "@/components/CustomIcons"
 import { 
   BookOpen, Bot, Award, Banknote, Trophy, 
-  Globe, ChevronRight, User, Cake, Star, Sparkles, Lightbulb
+  Globe, ChevronRight, User, Cake, Star, Sparkles, Lightbulb,
+  ArrowLeft, CheckCircle2, LayoutDashboard, BrainCircuit, Target
 } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -20,20 +22,14 @@ interface OnboardingModalProps {
 }
 
 // ─── Particle Component ───────────────────────────────────────────────────────
-const PARTICLES = [
-    { top: "8%", left: "6%", size: 2.5, dur: 3.2, del: 0, opacity: 0.7 },
-    { top: "15%", left: "90%", size: 1.5, dur: 4.1, del: 0.5, opacity: 0.5 },
-    { top: "4%", left: "52%", size: 1, dur: 2.8, del: 1.1, opacity: 0.4 },
-    { top: "25%", left: "93%", size: 2, dur: 3.6, del: 0.3, opacity: 0.6 },
-    { top: "32%", left: "2%", size: 1.5, dur: 4.5, del: 1.4, opacity: 0.3 },
-    { top: "58%", left: "96%", size: 1, dur: 3.0, del: 0.8, opacity: 0.5 },
-    { top: "72%", left: "4%", size: 2, dur: 4.2, del: 0.2, opacity: 0.6 },
-    { top: "85%", left: "82%", size: 1.5, dur: 2.9, del: 1.0, opacity: 0.4 },
-    { top: "90%", left: "18%", size: 1, dur: 3.8, del: 0.6, opacity: 0.3 },
-    { top: "20%", left: "42%", size: 1.5, dur: 3.4, del: 1.8, opacity: 0.5 },
-    { top: "48%", left: "8%", size: 1, dur: 5.0, del: 0.4, opacity: 0.4 },
-    { top: "65%", left: "78%", size: 2, dur: 3.1, del: 1.2, opacity: 0.6 },
-]
+const PARTICLES = Array.from({ length: 20 }).map((_, i) => ({
+    id: i,
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    size: Math.random() * 3 + 1,
+    duration: Math.random() * 15 + 10,
+    delay: Math.random() * 5,
+}))
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -50,10 +46,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const [schools, setSchools] = useState<{ id: string, name: string }[]>([])
     const [usernameError, setUsernameError] = useState("")
     const [saving, setSaving] = useState(false)
-    const [exiting, setExiting] = useState(false)
     const [avatarCategory, setAvatarCategory] = useState(0)
     const [screenSize, setScreenSize] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
-    const [animating, setAnimating] = useState(false)
 
     useEffect(() => {
         const handleResize = () => setScreenSize(window.innerWidth)
@@ -72,7 +66,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     }, [])
 
     useEffect(() => {
-        if (user?.user_metadata?.full_name) {
+        if (user?.user_metadata?.full_name && !username) {
             const suggested = user.user_metadata.full_name
                 .toLowerCase()
                 .replace(/\s+/g, "_")
@@ -80,14 +74,10 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 .slice(0, 20)
             setUsername(suggested)
         }
-    }, [user])
+    }, [user, username])
 
     const goToStep = useCallback((next: Step) => {
-        setAnimating(true)
-        setTimeout(() => {
-            setStep(next)
-            setAnimating(false)
-        }, 280)
+        setStep(next)
     }, [])
 
     const validateUsername = (val: string): string => {
@@ -102,7 +92,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         setUsernameError(validateUsername(val))
     }
 
-    const handleSaveAndStartTour = async () => {
+    const handleSave = async () => {
         const err = validateUsername(username)
         if (err) { setUsernameError(err); return }
 
@@ -127,8 +117,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
             await supabase.auth.refreshSession()
             await refreshUser()
-            setExiting(true)
-            setTimeout(onComplete, 500)
+            onComplete()
         } catch {
             setUsernameError("Error de conexión. Intenta de nuevo.")
         } finally {
@@ -142,12 +131,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     const stepList: Step[] = isInstitutional
         ? ["welcome", "avatar", "username", "school", "birthday"]
         : ["welcome", "avatar", "username", "birthday"]
-    const totalSteps = stepList.length - 1
-
-    const getProgressPct = () => {
-        const idx = stepList.indexOf(step)
-        return Math.round((idx / (stepList.length - 1)) * 100)
-    }
+    
+    const stepIdx = stepList.indexOf(step)
+    const progressPct = Math.round(((stepIdx + 1) / stepList.length) * 100)
 
     const calcAge = (dateStr: string): number | null => {
         if (!dateStr) return null
@@ -159,782 +145,403 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         return age
     }
 
-    const progressPct = getProgressPct()
-    const stepIdx = stepList.indexOf(step)
+    // Variants for animations
+    const pageVariants = {
+        initial: { opacity: 0, x: 20 },
+        animate: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: -20 }
+    }
 
     return (
-        <>
-            <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        <div className="fixed inset-0 z-[9999] bg-[#020617] text-white flex flex-col font-geist overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-blue-600/20 blur-[120px] animate-pulse" />
+                <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-indigo-600/10 blur-[100px]" />
+                
+                {PARTICLES.map((p) => (
+                    <motion.div
+                        key={p.id}
+                        className="absolute rounded-full bg-white/20"
+                        style={{
+                            top: p.top,
+                            left: p.left,
+                            width: p.size,
+                            height: p.size,
+                        }}
+                        animate={{
+                            y: [0, -100, 0],
+                            opacity: [0.2, 0.5, 0.2],
+                        }}
+                        transition={{
+                            duration: p.duration,
+                            repeat: Infinity,
+                            delay: p.delay,
+                            ease: "linear",
+                        }}
+                    />
+                ))}
+            </div>
 
-        /* ── Keyframes ── */
-        @keyframes ob-fade-in    { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes ob-slide-up   { from { opacity: 0; transform: translateY(60px) scale(0.94) } to { opacity: 1; transform: translateY(0) scale(1) } }
-        @keyframes ob-slide-out  { from { opacity: 1; transform: translateY(0) scale(1) } to { opacity: 0; transform: translateY(-32px) scale(0.95) } }
-        @keyframes ob-spin       { to { transform: rotate(360deg) } }
-        @keyframes ob-pop        { 0% { transform: scale(0.6); opacity: 0 } 65% { transform: scale(1.08) } 100% { transform: scale(1); opacity: 1 } }
-        @keyframes ob-twinkle    { 0%,100% { opacity:0.2; transform:scale(0.7) } 50% { opacity:1; transform:scale(1.4) } }
-        @keyframes ob-glow-pulse { 0%,100% { opacity:0.5; transform:scale(1) } 50% { opacity:0.8; transform:scale(1.08) } }
-        @keyframes ob-float      { 0%,100% { transform:translateY(0) rotate(-1deg) } 50% { transform:translateY(-10px) rotate(1deg) } }
-        @keyframes ob-shimmer    { 0% { background-position: -200% center } 100% { background-position: 200% center } }
-        @keyframes ob-breathe    { 0%,100% { box-shadow: 0 8px 32px rgba(15,98,254,0.45) } 50% { box-shadow: 0 16px 48px rgba(15,98,254,0.65), 0 0 40px rgba(79,142,255,0.3) } }
-        @keyframes ob-step-in    { from { opacity:0; transform:translateX(24px) } to { opacity:1; transform:translateX(0) } }
-        @keyframes ob-step-out   { from { opacity:1; transform:translateX(0) } to { opacity:0; transform:translateX(-24px) } }
-        @keyframes ob-ring-pulse { 0% { transform:scale(0.92); opacity:0.5 } 100% { transform:scale(1.5); opacity:0 } }
-        @keyframes ob-badge-in   { from { opacity:0; transform:translateY(-8px) scale(0.9) } to { opacity:1; transform:translateY(0) scale(1) } }
-        @keyframes ob-line-in    { from { width:0 } to { width:100% } }
-
-        /* ── Overlay ── */
-        .ob-overlay {
-          position: fixed; inset: 0; z-index: 9999;
-          background: rgba(2,8,23,0.92);
-          backdrop-filter: blur(20px) saturate(200%);
-          -webkit-backdrop-filter: blur(20px) saturate(200%);
-          display: flex; align-items: center; justify-content: center;
-          padding: clamp(8px, 3vw, 24px);
-          animation: ob-fade-in 0.4s ease both;
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        /* ── Card ── */
-        .ob-card {
-          background: #ffffff;
-          border-radius: clamp(24px, 4vw, 36px);
-          width: 100%;
-          max-width: clamp(300px, 94vw, 560px);
-          max-height: 96dvh;
-          overflow-y: auto;
-          overflow-x: hidden;
-          box-shadow:
-            0 0 0 1px rgba(15,98,254,0.1),
-            0 32px 80px rgba(2,8,23,0.6),
-            0 8px 24px rgba(0,0,0,0.15);
-          animation: ob-slide-up 0.55s cubic-bezier(0.34,1.56,0.64,1) both;
-          scroll-behavior: smooth;
-          -webkit-overflow-scrolling: touch;
-          position: relative;
-        }
-        .ob-card.exit { animation: ob-slide-out 0.4s cubic-bezier(0.4,0,0.2,1) forwards; }
-        .ob-card::-webkit-scrollbar { width: 3px; }
-        .ob-card::-webkit-scrollbar-track { background: transparent; }
-        .ob-card::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 3px; }
-
-        /* ── Progress Track (top) ── */
-        .ob-progress-track {
-          height: 4px; background: #f1f5f9; position: relative; overflow: hidden;
-        }
-        .ob-progress-fill {
-          height: 100%; border-radius: 2px;
-          background: linear-gradient(90deg, #0F62FE 0%, #60a5fa 50%, #0F62FE 100%);
-          background-size: 200% auto;
-          animation: ob-shimmer 2.5s linear infinite;
-          transition: width 0.7s cubic-bezier(0.34,1.56,0.64,1);
-        }
-
-        /* ── Welcome Hero ── */
-        .ob-hero {
-          position: relative; overflow: hidden; text-align: center;
-          background:
-            radial-gradient(ellipse 90% 60% at 50% -10%, rgba(37,99,235,0.7) 0%, transparent 65%),
-            radial-gradient(ellipse 60% 80% at 15% 110%, rgba(11,113,254,0.4) 0%, transparent 65%),
-            radial-gradient(ellipse 80% 60% at 90% 80%, rgba(15,98,254,0.25) 0%, transparent 70%),
-            linear-gradient(175deg, #0B1E5E 0%, #0B1E5E 45%, #030a1e 100%);
-          padding: clamp(36px, 8vw, 64px) clamp(24px, 6vw, 44px) clamp(32px, 7vw, 52px);
-          animation: ob-fade-in 0.6s ease both;
-        }
-        .ob-hero-particle {
-          position: absolute; border-radius: 50%; background: #fff;
-          animation: ob-twinkle var(--dur, 3s) ease-in-out infinite;
-          animation-delay: var(--del, 0s);
-          opacity: var(--op, 0.5);
-        }
-        .ob-hero-glow {
-          position: absolute; inset: -60%; border-radius: 50%; pointer-events: none;
-          background: radial-gradient(circle, rgba(37,99,235,0.4) 0%, rgba(37,99,235,0.1) 45%, transparent 70%);
-          animation: ob-glow-pulse 4s ease-in-out infinite;
-        }
-        .ob-hero-ring {
-          position: absolute; inset: -20%; border-radius: 50%; pointer-events: none;
-          border: 1.5px solid rgba(37,99,235,0.3);
-          animation: ob-ring-pulse 2.8s ease-out infinite;
-        }
-        .ob-hero-badge {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.15);
-          border-radius: 999px; padding: 6px 18px;
-          margin-bottom: clamp(12px, 3vw, 20px);
-          backdrop-filter: blur(8px);
-          animation: ob-badge-in 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
-        }
-        .ob-hero-badge-dot {
-          width: 7px; height: 7px; border-radius: 50%;
-          background: #4ade80; box-shadow: 0 0 8px #4ade80, 0 0 16px rgba(74,222,128,0.4);
-        }
-        .ob-hero-badge-text {
-          font-size: clamp(10px, 2.5vw, 11.5px); font-weight: 700;
-          color: rgba(255,255,255,0.88); letter-spacing: 0.08em; text-transform: uppercase;
-        }
-        .ob-hero-mascot {
-          position: relative; z-index: 2;
-          width: clamp(110px, 26vw, 156px); height: clamp(110px, 26vw, 156px);
-          margin: 0 auto clamp(24px, 6vw, 36px);
-          animation: ob-float 4.5s ease-in-out infinite;
-          filter: drop-shadow(0 4px 24px rgba(37,99,235,0.6)) drop-shadow(0 8px 12px rgba(0,0,20,0.4));
-        }
-        .ob-hero-h1 {
-          font-size: clamp(26px, 6.5vw, 40px); font-weight: 900;
-          color: #fff; margin: 0 0 clamp(10px, 2.5vw, 18px);
-          letter-spacing: -0.04em; line-height: 1.1;
-          text-shadow: 0 4px 24px rgba(37,99,235,0.5);
-        }
-        .ob-hero-h1 em {
-          font-style: normal;
-          background: linear-gradient(135deg, #93c5fd 0%, #818cf8 100%);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .ob-hero-sub {
-          font-size: clamp(14px, 3.5vw, 16.5px); color: rgba(186,210,255,0.75);
-          margin: 0 0 clamp(8px, 2vw, 12px); line-height: 1.7;
-        }
-        .ob-hero-hint {
-          font-size: clamp(11.5px, 2.8vw, 13px); color: rgba(148,172,255,0.6);
-          margin: 0 0 clamp(28px, 7vw, 44px); line-height: 1.6;
-        }
-        .ob-hero-hint strong { color: #93c5fd; font-weight: 700; }
-        .ob-hero-divider {
-          display: flex; align-items: center; gap: 12px;
-          margin: 0 0 clamp(18px, 4.5vw, 28px);
-        }
-        .ob-hero-divider-line {
-          flex: 1; height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        }
-        .ob-hero-divider-text {
-          font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.3);
-          letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
-        }
-
-        /* ── Feature pills on welcome ── */
-        .ob-features {
-          display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-          margin: 0 0 clamp(20px, 5vw, 32px);
-        }
-        .ob-feature-pill {
-          display: flex; align-items: center; gap: 6px;
-          background: rgba(255,255,255,0.07);
-          border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 999px; padding: 5px 12px;
-          font-size: clamp(10.5px, 2.5vw, 12px); font-weight: 500;
-          color: rgba(255,255,255,0.75);
-          backdrop-filter: blur(6px);
-        }
-        .ob-feature-pill-icon { font-size: 13px; }
-
-        /* ── Welcome Primary CTA ── */
-        .ob-hero-btn {
-          width: 100%; padding: clamp(14px, 3.5vw, 18px) 24px;
-          background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 40%, #4f46e5 100%);
-          color: white; border: none; border-radius: 16px;
-          font-size: clamp(14.5px, 3.5vw, 16px); font-weight: 700;
-          cursor: pointer; position: relative; overflow: hidden;
-          display: flex; align-items: center; justify-content: center; gap: 10px;
-          letter-spacing: 0.01em;
-          animation: ob-breathe 3s ease-in-out infinite;
-          transition: filter 0.2s, transform 0.2s;
-          box-shadow: 0 8px 32px rgba(37,99,235,0.55), 0 0 0 1px rgba(255,255,255,0.08) inset;
-        }
-        .ob-hero-btn::before {
-          content: ''; position: absolute; inset: 0;
-          background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
-          background-size: 200% auto;
-          animation: ob-shimmer 3s linear infinite;
-        }
-        .ob-hero-btn:hover { filter: brightness(1.1); transform: translateY(-1px); animation-play-state: paused; }
-        .ob-hero-btn:active { transform: scale(0.98) translateY(0); }
-
-        /* ── Step dots ── */
-        .ob-dots {
-          display: flex; gap: 6px; justify-content: center;
-          margin-top: clamp(18px, 4.5vw, 28px);
-        }
-        .ob-dot {
-          height: 5px; border-radius: 99px;
-          transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        .ob-dot.on-dark { background: rgba(255,255,255,0.85) !important; }
-        .ob-dot.on-dark-inactive { background: rgba(255,255,255,0.2) !important; }
-        .ob-dot.on-dark-done { background: rgba(255,255,255,0.45) !important; }
-        .ob-dot.on-light-active { background: #0F62FE !important; }
-        .ob-dot.on-light-done { background: rgba(15,98,254,0.35) !important; }
-        .ob-dot.on-light-inactive { background: #e2e8f0 !important; }
-
-        /* ── Step area ── */
-        .ob-step-body {
-          padding: clamp(22px, 5.5vw, 44px) clamp(22px, 5.5vw, 40px) clamp(22px, 5.5vw, 36px);
-          animation: ob-step-in 0.35s cubic-bezier(0.25,0.46,0.45,0.94) both;
-        }
-        .ob-step-body.out { animation: ob-step-out 0.28s ease forwards; }
-
-        /* ── Step nav ── */
-        .ob-step-nav {
-          display: flex; justify-content: space-between; align-items: center;
-          margin-bottom: clamp(16px, 4vw, 28px);
-        }
-        .ob-back-btn {
-          background: none; border: none; cursor: pointer;
-          color: #94a3b8; font-size: clamp(12.5px, 3vw, 14px); font-weight: 500;
-          padding: 6px 4px; transition: color 0.2s;
-          display: flex; align-items: center; gap: 4px;
-          font-family: inherit;
-        }
-        .ob-back-btn:hover { color: #475569; }
-        .ob-step-label {
-          font-size: clamp(10px, 2.5vw, 12px); color: #94a3b8; font-weight: 600;
-          letter-spacing: 0.06em; text-transform: uppercase;
-        }
-
-        /* ── Step heading ── */
-        .ob-step-icon-circle {
-          width: clamp(64px, 16vw, 80px); height: clamp(64px, 16vw, 80px);
-          border-radius: 50%; display: flex; align-items: center; justify-content: center;
-          margin: 0 auto clamp(12px, 3vw, 20px);
-          animation: ob-pop 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
-        }
-        .ob-step-h2 {
-          font-size: clamp(18px, 4.8vw, 24px); font-weight: 800;
-          color: #0f172a; margin: 0 0 6px; letter-spacing: -0.025em;
-          text-align: center;
-        }
-        .ob-step-h2-sub {
-          font-size: clamp(12.5px, 3.2vw, 14px); color: #64748b;
-          margin: 0; text-align: center; line-height: 1.6;
-        }
-        .ob-step-heading-wrap {
-          text-align: center; margin-bottom: clamp(20px, 5vw, 32px);
-        }
-
-        /* ── Inline avatar preview ── */
-        .ob-avatar-preview {
-          width: clamp(58px, 14vw, 76px); height: clamp(58px, 14vw, 76px);
-          border-radius: 50%;
-          background: linear-gradient(135deg, #0F62FE, #10b981);
-          margin: 0 auto clamp(12px, 3vw, 18px);
-          overflow: hidden; display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 8px 28px rgba(15,98,254,0.35);
-          animation: ob-pop 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
-        }
-
-        /* ── Avatar category tabs ── */
-        .ob-cat-tabs {
-          display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
-          margin-bottom: clamp(14px, 3.5vw, 22px);
-        }
-        .ob-cat-tab {
-          padding: 6px 16px; border-radius: 999px; border: none;
-          font-size: clamp(11px, 2.8vw, 13px); font-weight: 600;
-          cursor: pointer; transition: all 0.22s ease; font-family: inherit;
-        }
-        .ob-cat-tab.active {
-          background: linear-gradient(135deg, #0F62FE, #3b82f6);
-          color: white; box-shadow: 0 4px 14px rgba(15,98,254,0.35);
-        }
-        .ob-cat-tab.inactive { background: #f1f5f9; color: #64748b; }
-        .ob-cat-tab.inactive:hover { background: #e2e8f0; color: #475569; }
-
-        /* ── Avatar grid ── */
-        .ob-avatar-grid {
-          display: grid; grid-template-columns: repeat(5, 1fr);
-          gap: clamp(8px, 2vw, 14px);
-          margin-bottom: clamp(20px, 5vw, 30px);
-        }
-        @media (max-width: 440px) { .ob-avatar-grid { grid-template-columns: repeat(4, 1fr); } }
-        .ob-av-btn {
-          aspect-ratio: 1; width: 100%; border-radius: 50%;
-          cursor: pointer; border: 3px solid transparent;
-          display: flex; align-items: center; justify-content: center;
-          overflow: hidden; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-          background: rgba(15,98,254,0.04); padding: 0; outline: none;
-          flex-direction: column;
-        }
-        .ob-av-btn:hover { transform: scale(1.14); border-color: rgba(15,98,254,0.3); background: rgba(15,98,254,0.08); }
-        .ob-av-btn.selected {
-          border-color: #0F62FE; transform: scale(1.1);
-          box-shadow: 0 0 0 5px rgba(15,98,254,0.18);
-          background: rgba(15,98,254,0.07);
-        }
-        .ob-av-label {
-          font-size: clamp(8px, 2vw, 10px); font-weight: 600;
-          color: #94a3b8; text-align: center; line-height: 1.1;
-          transition: color 0.2s; margin-top: 3px;
-        }
-        .selected .ob-av-label { color: #0F62FE; }
-
-        /* ── Inline avatar + heading combo ── */
-        .ob-username-heading {
-          display: flex; align-items: center; gap: clamp(12px, 3vw, 18px);
-          margin-bottom: clamp(18px, 4.5vw, 28px);
-        }
-        .ob-username-av {
-          width: clamp(46px, 12vw, 58px); height: clamp(46px, 12vw, 58px);
-          border-radius: 50%; background: linear-gradient(135deg, #0F62FE, #2563eb);
-          flex-shrink: 0; overflow: hidden;
-          display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 4px 16px rgba(15,98,254,0.3);
-        }
-
-        /* ── Inputs ── */
-        .ob-field { margin-bottom: clamp(14px, 3.5vw, 22px); }
-        .ob-label {
-          display: block; font-size: clamp(10px, 2.5vw, 11.5px); font-weight: 700;
-          color: #374151; text-transform: uppercase; letter-spacing: 0.07em;
-          margin-bottom: 8px;
-        }
-        .ob-label-optional { font-weight: 500; color: #9ca3af; text-transform: none; letter-spacing: 0; }
-        .ob-input {
-          width: 100%; padding: clamp(12px, 3vw, 15px) clamp(14px, 3.5vw, 18px);
-          border: 2px solid #e8ecf2; border-radius: 14px;
-          font-size: clamp(14px, 3.5vw, 15.5px); color: #111827; outline: none;
-          transition: all 0.2s; box-sizing: border-box;
-          background: #f8fafc; font-family: inherit;
-          -webkit-appearance: none; appearance: none;
-        }
-        .ob-input:focus { border-color: #0F62FE; background: #fff; box-shadow: 0 0 0 4px rgba(15,98,254,0.1); }
-        .ob-input.error { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.08); }
-        .ob-input-at { position: relative; }
-        .ob-input-at-sym {
-          position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-          color: #94a3b8; font-size: 15px; pointer-events: none; font-weight: 600;
-        }
-        .ob-input-at input { padding-left: 30px; }
-        .ob-input-hint { font-size: clamp(11px, 2.8vw, 12.5px); margin: 5px 0 0; }
-        .ob-input-hint.ok { color: #10b981; }
-        .ob-input-hint.err { color: #ef4444; }
-        .ob-input-hint.neutral { color: #9ca3af; }
-        .ob-char-count { font-size: clamp(10px, 2.5vw, 11px); color: #9ca3af; text-align: right; margin: 3px 0 0; }
-
-        /* ── Age reveal ── */
-        .ob-age-reveal {
-          margin-top: 12px; padding: 12px 16px;
-          background: linear-gradient(135deg, #eff6ff, #dbeafe);
-          border: 1.5px solid #bfdbfe; border-radius: 14px;
-          display: flex; align-items: center; gap: 12px;
-          animation: ob-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
-        }
-
-        /* ── Primary button ── */
-        .ob-btn-primary {
-          width: 100%; padding: clamp(14px, 3.5vw, 17px) 24px;
-          background: linear-gradient(135deg, #0F62FE 0%, #4F8EFF 100%);
-          color: white; border: none; border-radius: 15px;
-          font-size: clamp(14px, 3.5vw, 15.5px); font-weight: 700;
-          cursor: pointer; position: relative; overflow: hidden;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-          font-family: inherit; letter-spacing: 0.02em;
-          transition: filter 0.2s, transform 0.15s;
-          box-shadow: 0 8px 24px rgba(15,98,254,0.4);
-        }
-        .ob-btn-primary::after {
-          content: ''; position: absolute; inset: 0;
-          background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%);
-          background-size: 200%; animation: ob-shimmer 2.8s linear infinite;
-        }
-        .ob-btn-primary:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1.5px); }
-        .ob-btn-primary:active:not(:disabled) { transform: scale(0.98); }
-        .ob-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-
-        /* ── Skip / ghost button ── */
-        .ob-btn-ghost {
-          background: none; border: none; cursor: pointer; font-family: inherit;
-          color: #94a3b8; font-size: clamp(12px, 3vw, 13.5px); font-weight: 500;
-          padding: 8px; transition: color 0.2s; width: 100%;
-        }
-        .ob-btn-ghost:hover { color: #64748b; }
-
-        /* ── Mobile ── */
-        @media (max-width: 480px) {
-          .ob-card { border-radius: 26px; }
-          .ob-hero { padding: 32px 20px 24px; }
-          .ob-step-body { padding: 20px 18px; }
-        }
-      `}</style>
-
-            <div className="ob-overlay">
-                <div className={`ob-card${exiting ? " exit" : ""}`}>
-
-                    {/* ── Progress stripe ── */}
-                    <div className="ob-progress-track">
-                        <div className="ob-progress-fill" style={{ width: `${progressPct}%` }} />
+            {/* Header / Progress */}
+            <div className="relative z-10 px-6 py-8 flex flex-col items-center">
+                <div className="w-full max-w-lg">
+                    <div className="flex justify-between items-center mb-4">
+                        <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                                <Sparkles size={18} className="text-white" />
+                            </div>
+                            <span className="text-sm font-bold tracking-tight uppercase text-blue-400">Onboarding</span>
+                        </div>
+                        <span className="text-xs font-semibold text-slate-500 bg-slate-900/50 px-2 py-1 rounded-full border border-slate-800">
+                            Paso {stepIdx + 1} de {stepList.length}
+                        </span>
                     </div>
-
-                    {/* ─── WELCOME ──────────────────────────────────────────── */}
-                    {step === "welcome" && (
-                        <div className="ob-hero">
-                            {/* Particles */}
-                            {PARTICLES.map((p, i) => (
-                                <div key={i} className="ob-hero-particle" style={{
-                                    top: p.top, left: p.left,
-                                    width: p.size, height: p.size,
-                                    "--dur": `${p.dur}s`, "--del": `${p.del}s`, "--op": p.opacity,
-                                } as React.CSSProperties} />
-                            ))}
-
-                            {/* Brand Icon with glow */}
-                            <div style={{ position: "relative", display: "inline-block", marginBottom: "clamp(24px,6vw,36px)" }}>
-                                <div className="ob-hero-glow" />
-                                <div className="ob-hero-ring" />
-                                <div style={{ 
-                                    width: 80, height: 80, borderRadius: 24, background: '#0F62FE',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    boxShadow: '0 8px 32px rgba(15,98,254,0.3)', position: 'relative', zIndex: 1
-                                }}>
-                                    <Sparkles size={40} color="white" />
-                                </div>
-                            </div>
-
-                            {/* Badge */}
-                            <div className="ob-hero-badge">
-                                <div className="ob-hero-badge-dot" />
-                                <span className="ob-hero-badge-text">Bienvenido a BIZEN</span>
-                            </div>
-
-                            {/* Heading */}
-                            <h1 className="ob-hero-h1">
-                                Hola, <em>{profileName}</em>
-                            </h1>
-                            <p className="ob-hero-sub">
-                                En 2 minutos configuramos tu perfil y te mostramos todo lo que puedes hacer aquí.
-                            </p>
-                            <p className="ob-hero-hint" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                                <strong>IA Mentor</strong> lista para asistirte.
-                                <Bot size={18} color="#93c5fd" />
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ animation: 'ob-twinkle 1s infinite'}}>
-                                    <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="#93c5fd" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                            </p>
-
-                            {/* Feature pills */}
-                            <div className="ob-features">
-                                {[
-                                    { icon: BookOpen, label: "30 temas" },
-                                    { icon: Bot, label: "Mentoria IA" },
-                                    { icon: Award, label: "Retos diarios" },
-                                    { icon: Banknote, label: "Simuladores" },
-                                    { icon: Trophy, label: "Rankings" },
-                                    { icon: Globe, label: "Impacto social" },
-                                ].map(f => (
-                                    <div key={f.label} className="ob-feature-pill">
-                                        <f.icon size={13} style={{ color: '#0F62FE' }} />
-                                        {f.label}
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="ob-hero-divider">
-                                <div className="ob-hero-divider-line" />
-                                <span className="ob-hero-divider-text">Empecemos</span>
-                                <div className="ob-hero-divider-line" />
-                            </div>
-
-                            {/* CTA */}
-                            <button className="ob-hero-btn" onClick={() => goToStep("avatar")}>
-                                <ChevronRightIcon size={18} color="white" />
-                                Crear mi perfil
-                            </button>
-
-                            {/* Dots */}
-                            <div className="ob-dots">
-                                {stepList.map((s, i) => {
-                                    const isActive = s === step
-                                    const isDone = i < stepIdx
-                                    return (
-                                        <div key={s} className={`ob-dot ${isActive ? "on-dark" : isDone ? "on-dark-done" : "on-dark-inactive"}`}
-                                            style={{ width: isActive ? 26 : 7 }} />
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ─── AVATAR ───────────────────────────────────────────── */}
-                    {step === "avatar" && (
-                        <div className={`ob-step-body${animating ? " out" : ""}`}>
-                            <div className="ob-step-nav">
-                                <button className="ob-back-btn" onClick={() => goToStep("welcome")}>← Atrás</button>
-                                <span className="ob-step-label">Paso 1 de {totalSteps}</span>
-                            </div>
-
-                            <div className="ob-step-heading-wrap">
-                                <div className="ob-avatar-preview">
-                                    <AvatarDisplay avatar={selectedAvatar} size={50} />
-                                </div>
-                                <h2 className="ob-step-h2">Elige tu avatar</h2>
-                                <p className="ob-step-h2-sub">Esta será tu cara en el foro y tu perfil público</p>
-                            </div>
-
-                            {/* Category tabs */}
-                            <div className="ob-cat-tabs">
-                                {AVATAR_CATEGORIES.map((cat, ci) => (
-                                    <button key={cat.label} onClick={() => setAvatarCategory(ci)}
-                                        className={`ob-cat-tab ${avatarCategory === ci ? "active" : "inactive"}`}>
-                                        {cat.label}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* Grid */}
-                            <div className="ob-avatar-grid">
-                                {AVATAR_OPTIONS
-                                    .filter(av => AVATAR_CATEGORIES[avatarCategory].ids.includes(av.id))
-                                    .map(av => {
-                                        const isSel = selectedAvatar?.id === av.id
-                                        return (
-                                            <div key={av.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                                                <button onClick={() => setSelectedAvatar(av)} className={`ob-av-btn${isSel ? " selected" : ""}`}>
-                                                    <AvatarDisplay avatar={av} size={screenSize < 400 ? 48 : 56} />
-                                                </button>
-                                                <span style={{
-                                                    fontSize: "clamp(8px,2vw,10px)", fontWeight: isSel ? 700 : 500,
-                                                    color: isSel ? "#0F62FE" : "#94a3b8",
-                                                    textAlign: "center", transition: "color 0.2s"
-                                                }}>{av.label}</span>
-                                            </div>
-                                        )
-                                    })}
-                            </div>
-
-                            <button className="ob-btn-primary" onClick={() => goToStep("username")}>
-                                Continuar →
-                            </button>
-
-                            <div className="ob-dots" style={{ marginTop: 16 }}>
-                                {stepList.map((s, i) => {
-                                    const isActive = s === step
-                                    const isDone = i < stepIdx
-                                    return (
-                                        <div key={s} className={`ob-dot ${isActive ? "on-light-active" : isDone ? "on-light-done" : "on-light-inactive"}`}
-                                            style={{ width: isActive ? 24 : 7 }} />
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ─── USERNAME ─────────────────────────────────────────── */}
-                    {step === "username" && (
-                        <div className={`ob-step-body${animating ? " out" : ""}`}>
-                            <div className="ob-step-nav">
-                                <button className="ob-back-btn" onClick={() => goToStep("avatar")}>← Atrás</button>
-                                <span className="ob-step-label">Paso 2 de {totalSteps}</span>
-                            </div>
-
-                            {/* Avatar + heading combo */}
-                            <div className="ob-username-heading">
-                                <div className="ob-username-av">
-                                    <AvatarDisplay avatar={selectedAvatar} size={34} />
-                                </div>
-                                <div>
-                                    <h2 style={{ fontSize: "clamp(17px,4.5vw,22px)", fontWeight: 800, color: "#0f172a", margin: "0 0 3px", letterSpacing: "-0.025em" }}>
-                                        Tu nombre en BIZEN
-                                    </h2>
-                                    <p style={{ fontSize: "clamp(11.5px,3vw,13px)", color: "#64748b", margin: 0 }}>Así te verán todos en el foro y rankings</p>
-                                </div>
-                            </div>
-
-                            {/* Username */}
-                            <div className="ob-field">
-                                <label className="ob-label">Nombre de usuario *</label>
-                                <div className="ob-input-at">
-                                    <span className="ob-input-at-sym">@</span>
-                                    <input
-                                        className={`ob-input${usernameError ? " error" : ""}`}
-                                        style={{ paddingLeft: 30 }}
-                                        placeholder="tu_nombre_aqui"
-                                        value={username}
-                                        maxLength={30}
-                                        onChange={(e) => handleUsernameChange(e.target.value)}
-                                        autoFocus
-                                    />
-                                </div>
-                                {usernameError ? (
-                                    <p className="ob-input-hint err">{usernameError}</p>
-                                ) : username.length >= 3 ? (
-                                    <p className="ob-input-hint ok">✓ Disponible</p>
-                                ) : (
-                                    <p className="ob-input-hint neutral">Letras, números, guiones y puntos. 3-30 caracteres.</p>
-                                )}
-                            </div>
-
-                            {/* Bio */}
-                            <div className="ob-field">
-                                <label className="ob-label">
-                                    Intereses financieros <span className="ob-label-optional">(opcional)</span>
-                                </label>
-                                <textarea
-                                    className="ob-input"
-                                    style={{ resize: "vertical", minHeight: "clamp(64px,18vw,80px)", lineHeight: 1.6 }}
-                                    placeholder="Ej: Quiero aprender a invertir y ahorrar para mi futuro..."
-                                    value={bio}
-                                    maxLength={200}
-                                    onChange={e => setBio(e.target.value)}
-                                    rows={3}
-                                />
-                                <p className="ob-char-count">{bio.length}/200</p>
-                            </div>
-
-                            <button
-                                className="ob-btn-primary"
-                                disabled={!!usernameError || username.length < 3}
-                                onClick={() => goToStep(isInstitutional ? "school" : "birthday")}
-                                style={{ marginBottom: 0 }}
-                            >
-                                Continuar →
-                            </button>
-
-                            <div className="ob-dots" style={{ marginTop: 16 }}>
-                                {stepList.map((s, i) => {
-                                    const isActive = s === step
-                                    const isDone = i < stepIdx
-                                    return (
-                                        <div key={s} className={`ob-dot ${isActive ? "on-light-active" : isDone ? "on-light-done" : "on-light-inactive"}`}
-                                            style={{ width: isActive ? 24 : 7 }} />
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ─── SCHOOL ───────────────────────────────────────────── */}
-                    {step === "school" && (
-                        <div className={`ob-step-body${animating ? " out" : ""}`}>
-                            <div className="ob-step-nav">
-                                <button className="ob-back-btn" onClick={() => goToStep("username")}>← Atrás</button>
-                                <span className="ob-step-label">Paso 3 de {totalSteps}</span>
-                            </div>
-
-                            <div className="ob-step-heading-wrap">
-                                <div className="ob-step-icon-circle" style={{ background: "#EFF6FF" }}>
-                                    <SchoolIcon size={36} color="#0F62FE" />
-                                </div>
-                                <h2 className="ob-step-h2">¿Cuál es tu escuela?</h2>
-                                <p className="ob-step-h2-sub">Compara tu progreso con el de tus compañeros</p>
-                            </div>
-
-                            <div className="ob-field">
-                                <label className="ob-label">Selecciona tu institución *</label>
-                                <select
-                                    className="ob-input"
-                                    value={selectedSchool}
-                                    onChange={e => setSelectedSchool(e.target.value)}
-                                    required
-                                >
-                                    <option value="" disabled>Selecciona tu escuela...</option>
-                                    {Array.isArray(schools) && schools.map(s => (
-                                        <option key={s.id} value={s.id}>{s.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <button className="ob-btn-primary" disabled={!selectedSchool} onClick={() => goToStep("birthday")}>
-                                Continuar →
-                            </button>
-
-                            <div className="ob-dots" style={{ marginTop: 16 }}>
-                                {stepList.map((s, i) => {
-                                    const isActive = s === step
-                                    const isDone = i < stepIdx
-                                    return (
-                                        <div key={s} className={`ob-dot ${isActive ? "on-light-active" : isDone ? "on-light-done" : "on-light-inactive"}`}
-                                            style={{ width: isActive ? 24 : 7 }} />
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ─── BIRTHDAY ─────────────────────────────────────────── */}
-                    {step === "birthday" && (
-                        <div className={`ob-step-body${animating ? " out" : ""}`}>
-                            <div className="ob-step-nav">
-                                <button className="ob-back-btn" onClick={() => goToStep(isInstitutional ? "school" : "username")}>← Atrás</button>
-                                <span className="ob-step-label">Paso {isInstitutional ? 4 : 3} de {totalSteps}</span>
-                            </div>
-
-                            <div className="ob-step-heading-wrap">
-                                <div className="ob-step-icon-circle" style={{ background: "#eff6ff" }}>
-                                    <Cake size={36} color="#0F62FE" />
-                                </div>
-                                <h2 className="ob-step-h2">¿Cuándo es tu cumpleaños?</h2>
-                                <p className="ob-step-h2-sub">Nos ayuda a personalizar tu experiencia</p>
-                            </div>
-
-                            <div className="ob-field">
-                                <label className="ob-label">
-                                    Fecha de nacimiento <span className="ob-label-optional">(opcional)</span>
-                                </label>
-                                <input
-                                    type="date"
-                                    className="ob-input"
-                                    value={birthDate}
-                                    max={new Date().toISOString().split('T')[0]}
-                                    onChange={e => setBirthDate(e.target.value)}
-                                    style={{ colorScheme: "light" }}
-                                />
-                                {birthDate && (() => {
-                                    const age = calcAge(birthDate)
-                                    return age !== null && age >= 0 && age <= 120 ? (
-                                        <div className="ob-age-reveal">
-                                            <Star size={22} color="#1e40af" />
-                                            <div>
-                                                <div style={{ fontSize: "clamp(12.5px,3vw,14px)", fontWeight: 700, color: "#1e40af" }}>¡Tienes {age} años!</div>
-                                                <div style={{ fontSize: "clamp(10.5px,2.5vw,12px)", color: "#3b82f6" }}>Bienvenido a BIZEN</div>
-                                            </div>
-                                        </div>
-                                    ) : null
-                                })()}
-                            </div>
-
-                            {/* Final CTA */}
-                            <button
-                                className="ob-btn-primary"
-                                disabled={saving}
-                                onClick={handleSaveAndStartTour}
-                                style={{ marginBottom: 10 }}
-                            >
-                                {saving ? (
-                                    <>
-                                        <span style={{ width: 16, height: 16, border: "2.5px solid rgba(255,255,255,0.3)", borderTopColor: "white", borderRadius: "50%", animation: "ob-spin 0.8s linear infinite", display: "inline-block", flexShrink: 0 }} />
-                                        Guardando...
-                                    </>
-                                ) : (
-                                    <>
-                                        ¡Listo! Ver el tour
-                                        <RocketIcon size={18} color="white" />
-                                    </>
-                                )}
-                            </button>
-
-                            {!birthDate && (
-                                <button className="ob-btn-ghost" onClick={handleSaveAndStartTour} disabled={saving}>
-                                    Saltar este paso
-                                </button>
-                            )}
-
-                            <div className="ob-dots" style={{ marginTop: 8 }}>
-                                {stepList.map((s, i) => {
-                                    const isActive = s === step
-                                    const isDone = i < stepIdx
-                                    return (
-                                        <div key={s} className={`ob-dot ${isActive ? "on-light-active" : isDone ? "on-light-done" : "on-light-inactive"}`}
-                                            style={{ width: isActive ? 24 : 7 }} />
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    )}
-
+                    <div className="h-1.5 w-full bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
+                        <motion.div 
+                            className="h-full bg-gradient-to-r from-blue-600 to-indigo-400 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progressPct}%` }}
+                            transition={{ duration: 0.6, ease: "circOut" }}
+                        />
+                    </div>
                 </div>
             </div>
-        </>
+
+            {/* Main Content */}
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6">
+                <div className="w-full max-w-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[32px] p-8 md:p-12 shadow-2xl shadow-black/40">
+                    <AnimatePresence mode="wait">
+                        {step === "welcome" && (
+                            <motion.div 
+                                key="welcome"
+                                variants={pageVariants}
+                                initial="initial"
+                                animate="animate"
+                                exit="exit"
+                                className="flex flex-col items-center text-center space-y-8"
+                            >
+                                <div className="space-y-4">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-widest">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping" />
+                                        Comienza tu viaje
+                                    </div>
+                                    <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-[1.1]">
+                                        Hola, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">{profileName}</span>
+                                    </h1>
+                                    <p className="text-slate-400 text-lg max-w-md mx-auto leading-relaxed">
+                                        Bienvenido a la nueva era de la educación financiera. En 2 minutos estarás listo para dominar tus finanzas.
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 w-full">
+                                    {[
+                                        { icon: BrainCircuit, label: "IA Mentor" },
+                                        { icon: Target, label: "Retos" },
+                                        { icon: LayoutDashboard, label: "Simuladores" },
+                                        { icon: BookOpen, label: "30 Temas" },
+                                        { icon: Trophy, label: "Premios" },
+                                        { icon: Globe, label: "Impacto" },
+                                    ].map((feat, i) => (
+                                        <div key={i} className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/5 transition-colors">
+                                            <feat.icon size={22} className="text-blue-500" />
+                                            <span className="text-xs font-bold text-slate-300">{feat.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <button 
+                                    onClick={() => goToStep("avatar")}
+                                    className="group relative w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98] flex items-center justify-center gap-3"
+                                >
+                                    ¡Vamos allá!
+                                    <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </motion.div>
+                        )}
+
+                        {step === "avatar" && (
+                            <motion.div 
+                                key="avatar"
+                                variants={pageVariants}
+                                initial="initial"
+                                animate="animate"
+                                exit="exit"
+                                className="flex flex-col space-y-8"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <button onClick={() => goToStep("welcome")} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                                        <ArrowLeft size={24} />
+                                    </button>
+                                    <div>
+                                        <h2 className="text-2xl font-black">Elige tu Avatar</h2>
+                                        <p className="text-slate-400">Esta será tu identidad en BIZEN</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col items-center gap-6">
+                                    <div className="relative">
+                                        <div className="absolute inset-0 bg-blue-500 blur-2xl opacity-20 animate-pulse" />
+                                        <div className="relative w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-blue-600 to-indigo-400 overflow-hidden shadow-2xl">
+                                            <div className="w-full h-full rounded-full bg-slate-900 overflow-hidden">
+                                                <AvatarDisplay avatar={selectedAvatar} size={120} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="w-full space-y-4">
+                                        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+                                            {AVATAR_CATEGORIES.map((cat, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => setAvatarCategory(i)}
+                                                    className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
+                                                        avatarCategory === i 
+                                                        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
+                                                        : "bg-white/5 text-slate-400 hover:bg-white/10"
+                                                    }`}
+                                                >
+                                                    {cat.label}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <div className="grid grid-cols-5 md:grid-cols-6 gap-3 max-h-[240px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                                            {AVATAR_OPTIONS.filter(av => AVATAR_CATEGORIES[avatarCategory].ids.includes(av.id)).map((av) => (
+                                                <button
+                                                    key={av.id}
+                                                    onClick={() => setSelectedAvatar(av)}
+                                                    className={`aspect-square rounded-xl p-1 transition-all ${
+                                                        selectedAvatar?.id === av.id 
+                                                        ? "bg-blue-600 ring-2 ring-blue-500/50 scale-105" 
+                                                        : "bg-white/5 hover:bg-white/10"
+                                                    }`}
+                                                >
+                                                    <AvatarDisplay avatar={av} size={50} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button 
+                                    onClick={() => goToStep("username")}
+                                    className="w-full py-4 bg-white text-slate-950 hover:bg-slate-100 rounded-2xl font-bold text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                >
+                                    Siguiente paso
+                                    <ChevronRight size={20} />
+                                </button>
+                            </motion.div>
+                        )}
+
+                        {step === "username" && (
+                            <motion.div 
+                                key="username"
+                                variants={pageVariants}
+                                initial="initial"
+                                animate="animate"
+                                exit="exit"
+                                className="flex flex-col space-y-8"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <button onClick={() => goToStep("avatar")} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                                        <ArrowLeft size={24} />
+                                    </button>
+                                    <div>
+                                        <h2 className="text-2xl font-black">Tu Identidad</h2>
+                                        <p className="text-slate-400">¿Cómo quieres que te llamen?</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Nombre de usuario</label>
+                                        <div className="relative group">
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">@</span>
+                                            <input
+                                                type="text"
+                                                value={username}
+                                                onChange={(e) => handleUsernameChange(e.target.value)}
+                                                className={`w-full bg-white/5 border-2 ${usernameError ? 'border-red-500/50' : 'border-white/10 group-focus-within:border-blue-500/50'} rounded-2xl py-4 pl-9 pr-4 text-lg font-semibold focus:outline-none focus:bg-white/[0.08] transition-all`}
+                                                placeholder="tu_nombre"
+                                            />
+                                        </div>
+                                        {usernameError ? (
+                                            <p className="text-xs font-bold text-red-500 ml-1">{usernameError}</p>
+                                        ) : (
+                                            <p className="text-xs text-slate-500 ml-1">Solo letras, números y guiones bajos.</p>
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Intereses (opcional)</label>
+                                        <textarea
+                                            value={bio}
+                                            onChange={(e) => setBio(e.target.value)}
+                                            className="w-full bg-white/5 border-2 border-white/10 rounded-2xl py-4 px-4 text-lg font-semibold focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.08] transition-all h-32 resize-none"
+                                            placeholder="¿Qué quieres aprender en BIZEN?"
+                                        />
+                                    </div>
+                                </div>
+
+                                <button 
+                                    disabled={!!usernameError || username.length < 3}
+                                    onClick={() => goToStep(isInstitutional ? "school" : "birthday")}
+                                    className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 text-white rounded-2xl font-bold text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                >
+                                    Continuar
+                                    <ChevronRight size={20} />
+                                </button>
+                            </motion.div>
+                        )}
+
+                        {step === "school" && (
+                            <motion.div 
+                                key="school"
+                                variants={pageVariants}
+                                initial="initial"
+                                animate="animate"
+                                exit="exit"
+                                className="flex flex-col space-y-8"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <button onClick={() => goToStep("username")} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                                        <ArrowLeft size={24} />
+                                    </button>
+                                    <div>
+                                        <h2 className="text-2xl font-black">Tu Institución</h2>
+                                        <p className="text-slate-400">Conecta con tu comunidad educativa</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="p-6 rounded-2xl bg-blue-500/5 border border-blue-500/10 flex items-center gap-4">
+                                        <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center">
+                                            <SchoolIcon size={24} color="white" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-1">Escuela Seleccionada</p>
+                                            <select
+                                                className="w-full bg-transparent text-lg font-bold outline-none focus:text-white transition-colors"
+                                                value={selectedSchool}
+                                                onChange={e => setSelectedSchool(e.target.value)}
+                                            >
+                                                <option value="" disabled className="bg-slate-900">Selecciona tu escuela...</option>
+                                                {schools.map(s => (
+                                                    <option key={s.id} value={s.id} className="bg-slate-900">{s.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <p className="text-center text-xs text-slate-500 px-8">
+                                        Al seleccionar tu escuela podrás participar en rankings exclusivos y desbloquear beneficios institucionales.
+                                    </p>
+                                </div>
+
+                                <button 
+                                    disabled={!selectedSchool}
+                                    onClick={() => goToStep("birthday")}
+                                    className="w-full py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 text-white rounded-2xl font-bold text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                >
+                                    Siguiente
+                                    <ChevronRight size={20} />
+                                </button>
+                            </motion.div>
+                        )}
+
+                        {step === "birthday" && (
+                            <motion.div 
+                                key="birthday"
+                                variants={pageVariants}
+                                initial="initial"
+                                animate="animate"
+                                exit="exit"
+                                className="flex flex-col space-y-8"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <button onClick={() => goToStep(isInstitutional ? "school" : "username")} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                                        <ArrowLeft size={24} />
+                                    </button>
+                                    <div>
+                                        <h2 className="text-2xl font-black">Tu Cumpleaños</h2>
+                                        <p className="text-slate-400">Queremos celebrar contigo</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="relative group">
+                                        <Cake className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" size={20} />
+                                        <input
+                                            type="date"
+                                            value={birthDate}
+                                            onChange={e => setBirthDate(e.target.value)}
+                                            className="w-full bg-white/5 border-2 border-white/10 rounded-2xl py-4 pl-12 pr-4 text-lg font-semibold focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.08] transition-all [color-scheme:dark]"
+                                        />
+                                    </div>
+
+                                    {birthDate && (() => {
+                                        const age = calcAge(birthDate)
+                                        return age !== null && age >= 0 && age <= 120 ? (
+                                            <motion.div 
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="p-4 rounded-2xl bg-green-500/10 border border-green-500/20 flex items-center gap-4"
+                                            >
+                                                <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center">
+                                                    <CheckCircle2 size={20} className="text-white" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-lg font-black text-green-400">¡Tienes {age} años!</p>
+                                                    <p className="text-xs text-green-500/70 uppercase font-black">Estás listo para BIZEN</p>
+                                                </div>
+                                            </motion.div>
+                                        ) : null
+                                    })()}
+                                </div>
+
+                                <div className="space-y-3">
+                                    <button 
+                                        disabled={saving}
+                                        onClick={handleSave}
+                                        className="relative w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold text-xl transition-all active:scale-[0.98] shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3 overflow-hidden"
+                                    >
+                                        {saving ? (
+                                            <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+                                        ) : (
+                                            <>
+                                                ¡Finalizar!
+                                                <RocketIcon size={22} className="text-white" />
+                                            </>
+                                        )}
+                                        <motion.div 
+                                            className="absolute inset-0 bg-white/20"
+                                            initial={{ x: "-100%" }}
+                                            animate={{ x: "200%" }}
+                                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                                        />
+                                    </button>
+                                    {!birthDate && (
+                                        <button 
+                                            disabled={saving}
+                                            onClick={handleSave}
+                                            className="w-full py-3 text-slate-500 hover:text-slate-300 font-bold transition-colors"
+                                        >
+                                            Omitir por ahora
+                                        </button>
+                                    )}
+                                </div>
+                            </motion.div>
+                       )}
+                    </AnimatePresence>
+                </div>
+            </div>
+
+            {/* Footer / Info */}
+            <div className="relative z-10 px-6 py-8 text-center">
+                <p className="text-xs text-slate-500 font-medium">
+                    Explora el futuro de las finanzas con BIZEN.© 2026.
+                </p>
+            </div>
+        </div>
     )
 }

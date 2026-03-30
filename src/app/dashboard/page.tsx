@@ -10,6 +10,9 @@ import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 import { Flame, Shield, Target } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
+import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
+import BillyLabWidget from "@/components/bizen/BillyLabWidget"
+import { useSearchParams } from "next/navigation"
 
 // ─────────────────────────────────────────────────────────────────
 // CUSTOM SVG ICON COMPONENTS
@@ -168,6 +171,7 @@ interface Stats {
 }
 interface Topic {
   id: string; title: string; icon?: string; level?: string
+  courses?: { id: string; title: string; order: number }[]
   _count?: { courses?: number }
 }
 
@@ -253,23 +257,51 @@ export default function DashboardPage() {
   const [dnaResult,        setDnaResult]        = useState<any>(null)
   const [loadingData,      setLoadingData]      = useState(true)
 
+  const searchParams = useSearchParams()
+  const [showEvolution, setShowEvolution] = useState(false)
+
   const firstName = useMemo(() => {
     const n = dbProfile?.fullName || user?.email || ""
     return n.split(" ")[0]
   }, [dbProfile, user])
 
-  /* next incomplete topic — same logic as /courses */
-  const nextTopic = useMemo(() => {
+  useEffect(() => {
+    if (searchParams.get("showEvolution") === "true") {
+      setShowEvolution(true)
+    }
+  }, [searchParams])
+
+  /* next incomplete topic + lesson info — same logic as /courses but finding first lesson */
+  const nextLessonInfo = useMemo(() => {
+    // We already have topics (with courses) and completedLessons (slugs)
     for (let i = 0; i < topics.length; i++) {
+      const dbTopic = topics[i]
       const sub = SUBTEMAS_BY_COURSE[i]
-      if (!sub) continue
-      const slugs = sub.flatMap((s: any) => s.lessons.map((l: any) => l.slug))
-      if (!slugs.length) continue
-      if (!slugs.every((sl: string) => completedLessons.includes(sl))) return topics[i]
+      if (!sub || !dbTopic) continue
+
+      // For each subtheme (DB Course) in this Theme (DB Topic)
+      for (let j = 0; j < sub.length; j++) {
+        const subtheme = sub[j]
+        const dbCourse = dbTopic.courses?.[j] // Assume correct order
+        if (!subtheme || !dbCourse) continue
+
+        const lessons = subtheme.lessons || []
+        // Find FIRST incomplete lesson in this subtheme
+        const next = lessons.find((l: any) => !completedLessons.includes(l.slug))
+        if (next) {
+          return {
+            topic: dbTopic,
+            courseId: dbCourse.id,
+            lessonSlug: next.slug,
+            isThemePage: false // We can go direct to /learn/...
+          }
+        }
+      }
     }
     return null
   }, [topics, completedLessons])
 
+  const nextTopic = nextLessonInfo?.topic || null
   const topicColor  = nextTopic?.level ? (TOPIC_COLORS[nextTopic.level] ?? "#3b82f6") : "#3b82f6"
   const days        = useMemo(() => weekDays(), [])
   const activeSet   = useMemo(() => new Set(stats?.weeklyActiveDays ?? []), [stats])
@@ -555,6 +587,7 @@ export default function DashboardPage() {
                     holderName={dbProfile?.fullName || user?.email?.split("@")[0] || ""}
                     animationDelay=".12s"
                     colorTheme={dbProfile?.cardTheme || "blue"}
+                    level={dbProfile?.level || 1}
                   />
                 </div>
               </div>
@@ -565,7 +598,14 @@ export default function DashboardPage() {
 
         {/* DNA PROFILE SECTION */}
         <div className="dc" style={{ animationDelay: ".05s", marginBottom: 24 }}>
-          {dnaResult ? (
+          {dbProfile?.dnaProfile && dbProfile.dnaProfile.includes("Billy") ? (
+            <BillyLabWidget 
+              dnaProfile={dbProfile.dnaProfile}
+              dnaScore={dbProfile.dnaScore || 0}
+              nextTopicId={dbProfile.dnaProfile === "Billy Inversionista" ? "tema-09" : (dbProfile.dnaProfile === "Billy Estratega" ? "tema-07" : "tema-06")}
+              nextTopicTitle={dbProfile.dnaProfile === "Billy Inversionista" ? "Estrategias de Inversión" : (dbProfile.dnaProfile === "Billy Estratega" ? "Sistema de Crédito" : "Presupuesto Real")}
+            />
+          ) : dnaResult ? (
             <div style={{
               background: dnaInfo?.bg || "white",
               border: `1.5px solid ${dnaInfo?.border || "#e2e8f0"}`,
@@ -713,9 +753,13 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <button className="cb" onClick={() => {
-                  const id = String(nextTopic.id)
-                  const nav = (!id.startsWith("tema-") && !isNaN(parseInt(id))) ? `tema-${id.padStart(2,"0")}` : id
-                  router.push(`/courses/${nav}`)
+                  if (nextLessonInfo?.lessonSlug && nextLessonInfo?.courseId) {
+                    router.push(`/learn/${nextLessonInfo.topic.id}/${nextLessonInfo.courseId}/${nextLessonInfo.lessonSlug}/interactive`)
+                  } else if (nextTopic) {
+                    const id = String(nextTopic.id)
+                    const nav = (!id.startsWith("tema-") && !isNaN(parseInt(id))) ? `tema-${id.padStart(2,"0")}` : id
+                    router.push(`/courses/${nav}`)
+                  }
                 }}>
                   Continuar <IcoArrowRight size={17} color="#fff"/>
                 </button>
@@ -833,6 +877,23 @@ export default function DashboardPage() {
         </div>
 
       </div>
+
+      {/* DNA Evolution Modal overlay */}
+      {showEvolution && dnaResult && (
+        <DNAEvolutionScreen 
+          currentProfile="Aspirante BIZEN"
+          newProfile={dnaResult.dnaProfile}
+          stats={{
+            mentalidad: dnaResult.categoryScores?.Presupuesto?.percentage ?? 80,
+            bases: dnaResult.categoryScores?.Crédito?.percentage ?? 80,
+            optimizacion: dnaResult.categoryScores?.Inversión?.percentage ?? 80,
+            ahorro: dnaResult.categoryScores?.Ahorro?.percentage ?? 80,
+            riesgos: dnaResult.categoryScores?.Seguridad?.percentage ?? 80,
+          }}
+          nextTopicId={nextLessonInfo?.lessonSlug || "intro"}
+          nextTopicTitle={nextLessonInfo?.lessonSlug ? "Tu Plan Personalizado" : "Explorar Cursos"}
+        />
+      )}
     </div>
   )
 }

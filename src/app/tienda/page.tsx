@@ -885,6 +885,7 @@ export default function TiendaPage() {
                                 bizcoins={bizcoins} 
                                 holderName={dbProfile?.fullName || user?.email?.split("@")[0] || "Usuario"} 
                                 colorTheme={(dbProfile?.cardTheme || "blue") as CardTheme}
+                                level={dbProfile?.level || 1}
                             />
                         </div>
                     </div>

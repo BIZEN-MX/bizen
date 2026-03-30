@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { simulatorRunSchema } from '@/lib/simulators/schemas';
 import { awardXp } from '@/lib/rewards';
+import { prisma } from '@/lib/prisma';
 
 // GET: Fetch user's saved runs
 export async function GET(request: NextRequest) {

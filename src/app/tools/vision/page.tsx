@@ -382,6 +382,8 @@ export default function VisionCanvasPage() {
   const [aiError, setAiError] = useState("")
   const [copied, setCopied] = useState(false)
   const [showAiPanel, setShowAiPanel] = useState(true)
+  const [showAddMenu, setShowAddMenu] = useState(false)
+  const [showToolsMenu, setShowToolsMenu] = useState(false)
   const canvasRef = useRef<HTMLDivElement>(null)
   
   const { user } = useAuth()
@@ -628,7 +630,8 @@ export default function VisionCanvasPage() {
           bottom: 24px;
           width: 340px;
           background: rgba(255, 255, 255, 0.85);
-          backdrop-filter: blur(12px);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           border: 1px solid rgba(15,98,254,0.12);
           display: flex;
           flex-direction: column;
@@ -636,30 +639,55 @@ export default function VisionCanvasPage() {
           height: auto;
           overflow-y: auto;
           box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-          z-index: 1000; /* Higher z-index to stay on top */
+          z-index: 1000;
           border-radius: 20px;
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-          .vision-sidebar {
-            top: auto; right: 0; bottom: 0; left: 0;
-            width: 100%; height: 50vh;
-            border-radius: 24px 24px 0 0;
-            z-index: 10001;
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
-          }
+          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
         }
 
         .vision-sidebar.hidden {
           opacity: 0;
           pointer-events: none;
-          transform: translateX(20px) scale(0.98);
+          transform: translateX(40px) scale(0.98);
         }
+
+        /* --- Mobile Drawer Styles --- */
         @media (max-width: 768px) {
-          .vision-sidebar.hidden { transform: translateY(100%); }
+          .vision-sidebar {
+            top: auto; right: 0; bottom: 0; left: 0;
+            width: 100%; height: 65vh;
+            border-radius: 24px 24px 0 0;
+            z-index: 10001;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 -12px 48px rgba(0,0,0,0.2);
+            border: none;
+            border-top: 1px solid rgba(15,98,254,0.1);
+            transform: translateY(0);
+          }
+          
+          .vision-sidebar.hidden {
+            transform: translateY(100%);
+            opacity: 1; /* Keep it opaque but off-screen */
+            pointer-events: none;
+          }
+
+          .drawer-handle {
+            width: 40px; height: 4px; background: rgba(0,0,0,0.1);
+            border-radius: 2px; margin: 12px auto 4px; flex-shrink: 0;
+          }
         }
+
+        .vision-backdrop {
+          position: fixed; inset: 0;
+          background: rgba(0,0,0,0.25);
+          backdrop-filter: blur(4px);
+          z-index: 10000;
+          opacity: 0; pointer-events: none;
+          transition: opacity 0.3s ease;
+        }
+        .vision-backdrop.visible {
+          opacity: 1; pointer-events: auto;
+        }
+
 
         .canvas-area {
           flex: 1;
@@ -793,91 +821,150 @@ export default function VisionCanvasPage() {
         @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
         .ai-fade { animation: fadeUp 0.3s cubic-bezier(0.16,1,0.3,1); }
         @keyframes spin { to { transform:rotate(360deg); } }
-        .spin { animation: spin 0.85s linear infinite; display:inline-block; }
+        .tb-sep {
+          width: 1px; height: 24px; background: rgba(15,98,254,0.08); flex-shrink: 0;
+        }
         input[type="range"] { height: 4px; }
       `}</style>
 
       <div className="vision-shell">
 
         {/* ── Header toolbar ── */}
+        {/* ── Header toolbar ── */}
         <header className="vision-header">
           <Link href="/cash-flow" style={{ textDecoration: "none", flexShrink: 0 }}>
-            <button className="tb-btn"><ArrowLeft size={13} /> Volver</button>
+            <button className="tb-btn"><ArrowLeft size={13} /> {isMobile ? "" : "Volver"}</button>
           </Link>
 
           <div className="tb-sep" />
 
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-                <div
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: 11,
-                    background: "linear-gradient(135deg,#0F62FE,#4A9EFF)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 4px 12px rgba(15,98,254,0.3)",
-                  }}
-                >
-                  <Maximize2 size={20} color="white" />
-                </div>
-                <div className="vision-title-group">
-                  <h1 style={{ fontSize: "clamp(18px, 4vw, 24px)", fontWeight: 900, color: "#0F62FE", margin: 0, letterSpacing: "-0.03em" }}>
-                    Vision Canvas
-                  </h1>
-                  <span style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Crea tu futuro financiero hoy</span>
-                </div>
-              </div>
-
-          <div className="tb-sep" />
-
-          {/* Add-type buttons */}
-          {(["goal","savings","debt","income","note"] as CardType[]).map(type => {
-            const cfg = CARD_CONFIG[type]
-            const { Icon } = cfg
-            return (
-              <button key={type} className="add-type-btn"
-                onClick={() => addCard(type)}
-                style={{ borderColor: cfg.border, color: cfg.accent, background: "white" }}
-                onMouseEnter={e => (e.currentTarget.style.background = `${cfg.accent}10`)}
-                onMouseLeave={e => (e.currentTarget.style.background = "white")}
-              >
-                <Plus size={10} />
-                <Icon size={11} />
-                {cfg.label}
-              </button>
-            )
-          })}
-
-          <div className="tb-sep" />
-
-          <button className="tb-btn" onClick={autoArrange} title="Organizar por tipo"><Layers size={13} /> Organizar</button>
-          <button className="tb-btn" onClick={() => setCards(INITIAL_CARDS)} title="Restaurar ejemplo"><RotateCcw size={13} /></button>
-
-          <div className="tb-sep" />
-
-          {/* Zoom */}
-          <button className="tb-btn" onClick={() => setScale(s => Math.min(2, s + 0.15))}><ZoomIn size={13} /></button>
-          <span style={{ fontSize: 11, color: "#64748b", fontWeight: 600, minWidth: 34, textAlign: "center", flexShrink: 0 }}>
-            {Math.round(scale * 100)}%
-          </span>
-          <button className="tb-btn" onClick={() => setScale(s => Math.max(0.3, s - 0.15))}><ZoomOut size={13} /></button>
-          <button className="tb-btn" onClick={() => { setScale(0.85); setPan({ x: 0, y: 0 }) }}><Maximize2 size={13} /></button>
-
-          <div className="tb-sep" />
-
-          {/* Export */}
-          <button className="tb-btn" onClick={exportText} title="Copiar canvas como texto">
-            {copied ? <CheckCircle size={13} color="#059669" /> : <Download size={13} />}
-            {copied ? "Copiado" : "Exportar"}
-          </button>
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 11,
+                background: "linear-gradient(135deg,#0F62FE,#4A9EFF)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 12px rgba(15,98,254,0.3)",
+              }}
+            >
+              <Maximize2 size={20} color="white" />
+            </div>
+            <div className="vision-title-group">
+              <h1 style={{ fontSize: "clamp(18px, 4vw, 22px)", fontWeight: 900, color: "#0F62FE", margin: 0, letterSpacing: "-0.03em" }}>
+                Vision Canvas
+              </h1>
+              {!isMobile && <span style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Tu futuro financiero</span>}
+            </div>
+          </div>
 
           <div style={{ flex: 1 }} />
 
-          <span style={{ fontSize: 10, color: "#94a3b8", flexShrink: 0, display: "flex", alignItems: "center", gap: 4 }}>
-            <Move size={10} /> Alt+arrastrar
-          </span>
+          {/* New Add Dropdown */}
+          <div style={{ position: "relative" }}>
+            <button 
+              className="tb-btn" 
+              onClick={() => { setShowAddMenu(!showAddMenu); setShowToolsMenu(false) }}
+              style={{ background: "#0F62FE", color: "white", border: "none" }}
+            >
+              <Plus size={14} /> {isMobile ? "" : "Agregar"} <ChevronDown size={12} />
+            </button>
+            <AnimatePresence>
+              {showAddMenu && (
+                <>
+                  <div 
+                    style={{ position: "fixed", inset: 0, zIndex: 90 }} 
+                    onClick={() => setShowAddMenu(false)} 
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    style={{
+                      position: "absolute", top: "100%", right: 0, marginTop: 8,
+                      background: "white", border: "1px solid rgba(15,98,254,0.12)",
+                      borderRadius: 12, padding: 8, zIndex: 100,
+                      boxShadow: "0 10px 30px rgba(0,0,0,0.15)", minWidth: 160
+                    }}
+                  >
+                    {(["goal","savings","debt","income","note"] as CardType[]).map(type => {
+                      const cfg = CARD_CONFIG[type]
+                      return (
+                        <button key={type} 
+                          onClick={() => { addCard(type); setShowAddMenu(false) }}
+                          style={{
+                            display: "flex", width: "100%", alignItems: "center", gap: 10,
+                            padding: "10px 12px", background: "none", border: "none",
+                            cursor: "pointer", borderRadius: 8, color: cfg.accent,
+                            fontWeight: 700, fontSize: 13, textAlign: "left"
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = `${cfg.accent}10`}
+                          onMouseLeave={e => e.currentTarget.style.background = "none"}
+                        >
+                          <cfg.Icon size={14} /> {cfg.label}
+                        </button>
+                      )
+                    })}
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="tb-sep" />
+
+          {/* New Tools Dropdown */}
+          <div style={{ position: "relative" }}>
+            <button className="tb-btn" onClick={() => { setShowToolsMenu(!showToolsMenu); setShowAddMenu(false) }}>
+              <Filter size={14} /> {isMobile ? "" : "Herramientas"} <ChevronDown size={12} />
+            </button>
+            <AnimatePresence>
+              {showToolsMenu && (
+                <>
+                  <div 
+                    style={{ position: "fixed", inset: 0, zIndex: 90 }} 
+                    onClick={() => setShowToolsMenu(false)} 
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    style={{
+                      position: "absolute", top: "100%", right: 0, marginTop: 8,
+                      background: "white", border: "1px solid rgba(15,98,254,0.12)",
+                      borderRadius: 12, padding: 8, zIndex: 100,
+                      boxShadow: "0 10px 30px rgba(0,0,0,0.15)", minWidth: 180
+                    }}
+                  >
+                    <button onClick={() => { autoArrange(); setShowToolsMenu(false) }}
+                      style={{ display: "flex", width: "100%", alignItems: "center", gap: 10, padding: "10px 12px", background: "none", border: "none", cursor: "pointer", borderRadius: 8, color: "#64748b", fontWeight: 600, fontSize: 13 }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#f1f5f9"}
+                      onMouseLeave={e => e.currentTarget.style.background = "none"}
+                    >
+                      <Layers size={14} /> Organizar por tipo
+                    </button>
+                    <button onClick={() => { setCards(INITIAL_CARDS); setShowToolsMenu(false) }}
+                      style={{ display: "flex", width: "100%", alignItems: "center", gap: 10, padding: "10px 12px", background: "none", border: "none", cursor: "pointer", borderRadius: 8, color: "#64748b", fontWeight: 600, fontSize: 13 }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#f1f5f9"}
+                      onMouseLeave={e => e.currentTarget.style.background = "none"}
+                    >
+                      <RotateCcw size={14} /> Restaurar ejemplo
+                    </button>
+                    <button onClick={() => { exportText(); setShowToolsMenu(false) }}
+                      style={{ display: "flex", width: "100%", alignItems: "center", gap: 10, padding: "10px 12px", background: "none", border: "none", cursor: "pointer", borderRadius: 8, color: "#64748b", fontWeight: 600, fontSize: 13 }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#f1f5f9"}
+                      onMouseLeave={e => e.currentTarget.style.background = "none"}
+                    >
+                      <Download size={14} /> Copiar como texto
+                    </button>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
 
           <div className="tb-sep" />
 
@@ -889,11 +976,12 @@ export default function VisionCanvasPage() {
             style={{ 
               borderColor: saveSuccess ? "#10b981" : "rgba(15,98,254,0.12)",
               color: saveSuccess ? "#10b981" : (saveLoading ? "#94a3b8" : "#0F62FE"),
-              background: saveSuccess ? "#f0fdf4" : "white"
+              background: saveSuccess ? "#f0fdf4" : "white",
+              padding: isMobile ? "0 10px" : "0 16px"
             }}
           >
-            {saveLoading ? <Loader2 size={13} className="spin" /> : <Save size={13} />}
-            {saveSuccess ? "¡Guardado!" : (saveLoading ? "Guardando..." : "Guardar")}
+            {saveLoading ? <Loader2 size={13} className="spin" /> : (saveSuccess ? <CheckCircle size={13} /> : <Save size={13} />)}
+            {!isMobile && (saveSuccess ? "¡Guardado!" : (saveLoading ? "Guardando..." : "Guardar"))}
           </button>
 
           <div className="tb-sep" />
@@ -908,9 +996,10 @@ export default function VisionCanvasPage() {
                 : "linear-gradient(135deg,#0F62FE,#4A9EFF)",
               color: "white",
               boxShadow: "0 4px 14px rgba(15,98,254,0.3)",
+              padding: isMobile ? "0 12px" : "0 20px"
             }}
           >
-            <Sparkles size={13} /> Billy IA
+            <Sparkles size={13} /> {!isMobile && "Billy IA"}
           </button>
         </header>
 
@@ -978,9 +1067,18 @@ export default function VisionCanvasPage() {
             </div>
           </div>
 
-          {/* ── Persistent Right Sidebar ── */}
+          {/* Backdrop for mobile drawer focus */}
+          <div 
+            className={`vision-backdrop ${showAiPanel && isMobile ? "visible" : ""}`} 
+            onClick={() => setShowAiPanel(false)}
+          />
+
+          {/* ── Persistent Right Sidebar (Mobile Drawer) ── */}
           <aside className={`vision-sidebar ${!showAiPanel ? "hidden" : ""}`}>
-            <div style={{ padding: "18px 20px", borderBottom: "1px solid rgba(15,98,254,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            {/* Visual handle for mobile drawer */}
+            {isMobile && <div className="drawer-handle" />}
+
+            <div style={{ padding: isMobile ? "10px 20px 18px" : "18px 20px", borderBottom: "1px solid rgba(15,98,254,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg,#0F62FE,#4A9EFF)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(15,98,254,0.3)" }}>
                   <Sparkles size={20} color="white" />
@@ -1009,6 +1107,7 @@ export default function VisionCanvasPage() {
               <div style={{ padding: "20px" }}>
                 <p style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 14 }}>Resumen de hoy</p>
                 <div style={{ background: "#f8fafc", border: "1px solid rgba(15,98,254,0.06)", borderRadius: 16, padding: "16px" }}>
+
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                     {[
                       { label: "Metas",    value: stats.goals,    color: CARD_CONFIG.goal.accent },
@@ -1113,13 +1212,39 @@ export default function VisionCanvasPage() {
           </aside>
         </div>
 
-        {/* Controls Hint */}
-        <div style={{ position: "fixed", bottom: 16, left: "50%", transform: "translateX(-50%)", padding: "8px 16px", background: "rgba(255,255,255,0.85)", backdropFilter: "blur(10px)", border: "1px solid rgba(15,98,254,0.12)", borderRadius: 10, display: "flex", alignItems: "center", gap: 8, zIndex: 5, boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}>
-           <Move size={12} color="#0F62FE" />
-           <span style={{ fontSize: 11, fontWeight: 700, color: "#1e293b", letterSpacing: "0.02em" }}>
-             Scroll = Zoom · Clic y arrastrar fondo = Mover Canvas
-           </span>
+        {/* ── Zoom & Move Controls (Floating Bottom Left) ── */}
+        <div style={{ position: "fixed", bottom: 24, left: 24, display: "flex", alignItems: "center", gap: 10, zIndex: 1000 }}>
+          <div style={{ 
+            display: "flex", alignItems: "center", background: "white", 
+            border: "1px solid rgba(15,98,254,0.12)", borderRadius: 12, overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+          }}>
+            <button className="tb-btn" style={{ border: "none", borderRadius: 0 }} onClick={() => setScale(s => Math.max(0.3, s - 0.15))} title="Zoom Out">
+              <ZoomOut size={14} />
+            </button>
+            <button 
+              className="tb-btn" 
+              style={{ border: "none", borderRadius: 0, padding: "0 10px", minWidth: 50, fontSize: 11, background: "#f8fafc" }}
+              onClick={() => { setScale(0.85); setPan({ x: 0, y: 0 }) }}
+              title="Reset Zoom & Pan"
+            >
+              {Math.round(scale * 100)}%
+            </button>
+            <button className="tb-btn" style={{ border: "none", borderRadius: 0 }} onClick={() => setScale(s => Math.min(2, s + 0.15))} title="Zoom In">
+              <ZoomIn size={14} />
+            </button>
+          </div>
+
+          <div style={{ 
+            padding: "10px 14px", background: "white", border: "1px solid rgba(15,98,254,0.12)", 
+            borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            display: isMobile ? "none" : "flex", alignItems: "center", gap: 8
+          }}>
+            <Move size={14} color="#0F62FE" />
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b" }}>Alt + Drag para mover</span>
+          </div>
         </div>
+
         <AnimatePresence>
           {!showAiPanel && (
             <motion.button

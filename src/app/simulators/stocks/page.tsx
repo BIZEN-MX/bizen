@@ -35,6 +35,27 @@ const SYMBOL_SECTORS: Record<string, string> = {
   'XLE': 'Energía', 'XLV': 'Salud'
 }
 
+const SYMBOL_DOMAINS: Record<string, string> = {
+  // ETFs
+  'SPY': 'ssga.com', 'VOO': 'vanguard.com', 'IVV': 'ishares.com', 'QQQ': 'invesco.com', 'DIA': 'ssga.com',
+  'IWM': 'ishares.com', 'VTI': 'vanguard.com', 'VT': 'vanguard.com', 'SCHD': 'schwabassetmanagement.com', 'VIG': 'vanguard.com',
+  'ARKK': 'ark-funds.com', 'XLK': 'ssga.com', 'XLF': 'ssga.com', 'XLV': 'ssga.com', 'XLE': 'ssga.com',
+  'XLY': 'ssga.com', 'XLP': 'ssga.com', 'XLI': 'ssga.com', 'XLU': 'ssga.com', 'GLD': 'ssga.com',
+  'SLV': 'ishares.com', 'TLT': 'ishares.com', 'SHY': 'ishares.com', 'LQD': 'ishares.com', 'HYG': 'ishares.com',
+  // Stocks
+  'AAPL': 'apple.com', 'MSFT': 'microsoft.com', 'AMZN': 'amazon.com', 'GOOGL': 'google.com', 'META': 'meta.com',
+  'NVDA': 'nvidia.com', 'TSLA': 'tesla.com', 'BRK.B': 'berkshirehathaway.com', 'JPM': 'jpmorganchase.com', 'V': 'visa.com',
+  'MA': 'mastercard.com', 'UNH': 'unitedhealthgroup.com', 'JNJ': 'jnj.com', 'PG': 'pg.com', 'XOM': 'exxonmobil.com',
+  'KO': 'cocacola.com', 'PEP': 'pepsico.com', 'WMT': 'walmart.com', 'HD': 'homedepot.com', 'COST': 'costco.com',
+  'AVGO': 'broadcom.com', 'CRM': 'salesforce.com', 'NFLX': 'netflix.com', 'DIS': 'disney.com', 'NKE': 'nike.com'
+}
+
+const getLogoUrl = (symbol: string) => {
+  const domain = SYMBOL_DOMAINS[symbol];
+  if (domain) return `https://logo.clearbit.com/${domain}`;
+  return null;
+}
+
 const CHALLENGES = [
   { title: 'Primera Inversión', desc: 'Compra tu primera fracción de un ETF indexado.', pts: '+50 XP', icon: <Rocket size={24} color="#10b981" /> },
   { title: 'Portafolio Diversificado', desc: 'Mantén posiciones en al menos 3 activos distintos.', pts: '+100 XP', icon: <Target size={24} color="#3b82f6" /> },
@@ -375,8 +396,19 @@ function StockSimulatorContent() {
                             return (
                               <tr key={h.symbol} className="sim-row-table" style={{ borderBottom: '1px solid #f8fafc' }}>
                                 <td style={{ padding: '16px' }}>
-                                  <div style={{ fontWeight: 700, color: '#0B1E5E' }}>{h.symbol}</div>
-                                  <div style={{ fontSize: 11, color: '#94a3b8' }}>{marketData.find(m => m.symbol === h.symbol)?.name}</div>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <div style={{ width: 32, height: 32, borderRadius: 8, background: '#f1f5f9', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #e2e8f0' }}>
+                                      {getLogoUrl(h.symbol) ? (
+                                        <img src={getLogoUrl(h.symbol)!} alt={h.symbol} style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                                      ) : (
+                                        <div style={{ fontSize: 10, fontWeight: 800, color: '#94a3b8' }}>{h.symbol.slice(0, 2)}</div>
+                                      )}
+                                    </div>
+                                    <div>
+                                      <div style={{ fontWeight: 700, color: '#0B1E5E' }}>{h.symbol}</div>
+                                      <div style={{ fontSize: 11, color: '#94a3b8' }}>{marketData.find(m => m.symbol === h.symbol)?.name}</div>
+                                    </div>
+                                  </div>
                                 </td>
                                 <td style={{ padding: '16px' }}>
                                   <span style={{ fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 8, background: `${SECTOR_COLORS[sector]}15`, color: SECTOR_COLORS[sector] }}>
@@ -454,10 +486,19 @@ function StockSimulatorContent() {
                           zIndex: isSelected ? 1 : 0
                         }}
                       >
-                        <div>
-                          <p style={{ fontWeight: 600, fontSize: 16, color: '#0B1E5E', margin: '0 0 2px' }}>{s.symbol}</p>
-                          <p style={{ fontSize: 12, color: '#64748b', margin: '0 0 5px', maxWidth: 180, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</p>
-                          <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 8px', background: isSelected ? '#dcfce7' : '#e2e8f0', color: isSelected ? '#166534' : '#475569', borderRadius: 99, textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>{s.sector}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <div style={{ width: 40, height: 40, borderRadius: 10, background: isSelected ? '#fff' : '#f1f5f9', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', border: isSelected ? '1.5px solid #86efac' : '1px solid #e2e8f0', boxShadow: isSelected ? '0 2px 8px rgba(0,0,0,0.05)' : 'none' }}>
+                            {getLogoUrl(s.symbol) ? (
+                              <img src={getLogoUrl(s.symbol)!} alt={s.symbol} style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                            ) : (
+                              <div style={{ fontSize: 12, fontWeight: 800, color: '#94a3b8' }}>{s.symbol.slice(0, 2)}</div>
+                            )}
+                          </div>
+                          <div>
+                            <p style={{ fontWeight: 600, fontSize: 16, color: '#0B1E5E', margin: '0 0 2px' }}>{s.symbol}</p>
+                            <p style={{ fontSize: 12, color: '#64748b', margin: '0 0 5px', maxWidth: 150, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</p>
+                            <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 8px', background: isSelected ? '#dcfce7' : '#e2e8f0', color: isSelected ? '#166534' : '#475569', borderRadius: 99, textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>{s.sector}</span>
+                          </div>
                         </div>
                         <div style={{ textAlign: 'right' as const }}>
                           <p style={{ fontWeight: 600, fontSize: 18, color: '#0B1E5E', margin: '0 0 4px' }}>${s.price.toFixed(2)}</p>
@@ -483,6 +524,13 @@ function StockSimulatorContent() {
                       if (!selectedStock) return null;
                       return (
                         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.05)', padding: '6px 14px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <div style={{ width: 24, height: 24, borderRadius: 6, background: 'white', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                             {getLogoUrl(selectedStock.symbol) ? (
+                               <img src={getLogoUrl(selectedStock.symbol)!} alt={selectedStock.symbol} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                             ) : (
+                               <div style={{ fontSize: 8, fontWeight: 800, color: '#94a3b8' }}>{selectedStock.symbol.slice(0, 2)}</div>
+                             )}
+                          </div>
                           <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>{selectedStock.name}</span>
                           <span style={{ fontSize: 18, fontWeight: 700, color: isCrisis ? '#ef4444' : '#10b981' }}>${selectedStock.price.toFixed(2)}</span>
                         </div>

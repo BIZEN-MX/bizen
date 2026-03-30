@@ -100,7 +100,9 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     pathname === '/bizen/terminos' // Terms page
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
-  const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage
+  const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
+  const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage;
+  const hideChat = isDiagnosticPage; // Only hide on diagnostic flow (keeps focus)
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {
@@ -170,7 +172,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
       {!hideAppNavigation && !isUnauthProtected && <GlobalLogo />}
       {children}
-      {!hideAppNavigation && user && <BillyChatbot />}
+      {!hideChat && <BillyChatbot />}
     </>
   );
 }

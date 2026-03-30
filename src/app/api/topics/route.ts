@@ -48,6 +48,16 @@ export async function GET(request: NextRequest) {
       // Get all topics
       topics = await prisma.topic.findMany({
         include: {
+          courses: {
+            select: {
+              id: true,
+              title: true,
+              order: true
+            },
+            orderBy: {
+              order: 'asc'
+            }
+          },
           _count: {
             select: {
               courses: true,

@@ -49,22 +49,22 @@ export default function BillyChatbot() {
       }
     }
 
-    const mq = window.matchMedia("(max-width: 640px)")
+    const mq = window.matchMedia("(max-width: 767px)")
     const onChange = (e: MediaQueryList | MediaQueryListEvent) => {
       // @ts-expect-error Safari
-      setIsMobile(e.matches ?? e.target.matches)
+      setIsMobile(e.matches ?? (e as MediaQueryListEvent).target?.matches ?? false)
     }
     onChange(mq)
     mq.addEventListener?.("change", onChange)
-    setMounted(true)
-
-    let node = document.getElementById("chatbot-portal") as HTMLElement | null
+    let node = document.getElementById("chatbot-portal")
     if (!node) {
       node = document.createElement("div")
       node.id = "chatbot-portal"
       document.body.appendChild(node)
     }
     setPortal(node)
+    setMounted(true)
+    console.log("🤖 BillyChatbot: Initialized portal and mounted.")
 
     return () => mq.removeEventListener?.("change", onChange)
   }, [])
@@ -121,8 +121,17 @@ export default function BillyChatbot() {
           conversationHistory: messages.slice(-5).map(m => ({ role: m.role, content: m.content }))
         }),
       })
-      const data = await api.json()
-      const response = data.response || "¡Ups! No pude procesar tu pregunta. ¿Intentamos de nuevo?"
+      console.log("🤖 BillyChatbot: Fetch status:", api.status)
+      let data;
+      try {
+        data = await api.json()
+        console.log("🤖 BillyChatbot: Data received:", data)
+      } catch (e) {
+        console.error("Chatbot JSON Parse Error:", e)
+        throw new Error("Invalid response from server")
+      }
+      
+      const response = data?.response || "¡Ups! No pude procesar tu pregunta. ¿Intentamos de nuevo?"
 
       // Basic suggestion logic based on keywords
       let suggestions: string[] = []
@@ -250,12 +259,11 @@ export default function BillyChatbot() {
           width: 72px;
           height: 72px;
           border-radius: 50%;
-          z-index: 9999;
+          z-index: 10001; /* Above mobile footer nav (10000) */
           cursor: pointer;
           border: none;
           overflow: hidden;
           backdrop-filter: blur(8px);
-          touch-action: none;
         }
         @media (max-width: 767px) {
           #chatbot-launcher,
@@ -277,12 +285,12 @@ export default function BillyChatbot() {
         type="button"
         onClick={() => setIsOpen((o) => !o)}
         aria-label="Abrir Billy Insights"
-        drag
+        drag={!isMobile} // Disable drag on mobile to avoid click interference
         dragConstraints={{ left: -1000, right: 0, top: -1000, bottom: 0 }}
         dragMomentum={false}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
         style={{
           background: "linear-gradient(135deg, rgba(30,64,175,0.9) 0%, rgba(37,99,235,0.9) 100%)",
           boxShadow: "0 12px 32px rgba(37,99,235,0.4), 0 4px 12px rgba(0,0,0,0.1)",
@@ -345,7 +353,7 @@ export default function BillyChatbot() {
               position: "fixed",
               bottom: chatBottom,
               right: chatRight,
-              zIndex: 9998,
+              zIndex: 10002,
               width: chatWidth,
               height: chatHeight,
               maxHeight: "85dvh",

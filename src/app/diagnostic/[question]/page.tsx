@@ -149,19 +149,27 @@ export default function DiagnosticQuestionPage() {
       // Phase 2: countdown to dashboard
       setTimeout(() => {
         setAnalysisPhase(2)
-        let c = 5
-        setCountdown(c)
-        const interval = setInterval(() => {
-          c--
-          setCountdown(c)
-          if (c <= 0) {
-            clearInterval(interval)
-            router.push("/dashboard")
-          }
-        }, 1000)
       }, 4500)
     }
   }, [quizIncomplete, router, userInfo, userAnswers])
+
+  // New effect to handle the countdown and automatic redirection
+  React.useEffect(() => {
+    if (analysisPhase === 2) {
+      setCountdown(5)
+      const interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval)
+            router.push("/dashboard")
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+      return () => clearInterval(interval)
+    }
+  }, [analysisPhase, router])
 
   const handleStartQuiz = async () => {
     if (!tempUserInfo.email || !tempUserInfo.fullName || !tempUserInfo.institution) {
@@ -421,7 +429,7 @@ export default function DiagnosticQuestionPage() {
                     {analysisPhase === 2 && (
                       <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ duration:0.4 }}>
                         <button
-                          onClick={() => router.push("/dashboard")}
+                          onClick={() => router.push("/dashboard?showEvolution=true")}
                           style={{
                             padding:"14px 36px",
                             background:"linear-gradient(135deg,#4f46e5,#7c3aed)",

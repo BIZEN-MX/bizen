@@ -43,7 +43,8 @@ import {
   Zap,
   Layout,
   GraduationCap,
-  Sparkles
+  Sparkles,
+  Dna
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import PageLoader from "@/components/PageLoader"
@@ -543,9 +544,7 @@ export default function CoursesPage() {
 
                         const isPremiumTopic = topic.displayOrder > 1;
                         const isPaywalled = isPremiumTopic && !hasPremiumAccess;
-                        const nextTopicIdx = dbTopics.findIndex(t => t.id === nextTopicId);
-                        const currentTopicIdx = dbTopics.findIndex(t => t.id === topic.id);
-                        const isSequenceLocked = nextTopicIdx !== -1 && currentTopicIdx > nextTopicIdx;
+                        const isSequenceLocked = false; // Bloqueo de secuencia desactivado para pruebas
                         
                         // LOCKED if (paywalled OR out of order) AND NOT (unlocked by DNA)
                         const isLocked = (isPaywalled || isSequenceLocked) && !isDnaRecommended;
@@ -655,7 +654,7 @@ export default function CoursesPage() {
                             {!isLastTopic && (() => {
                               const nextTopic = topics[idx + 1];
                               const isTurnRow = (idx + 1) % 2 === 0; // Turn row every 2 topics
-                              const isDestLocked = (nextTopic.displayOrder > 1 && !hasPremiumAccess) || (nextTopicIdx !== -1 && (currentTopicIdx + 1) > nextTopicIdx);
+                              const isDestLocked = (nextTopic.displayOrder > 1 && !hasPremiumAccess); // Solo bloqueado si es premium y no tiene acceso, no por secuencia
                               const arrowColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
                               const isRightToLeft = !isEvenRow;
 
