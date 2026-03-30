@@ -50,14 +50,21 @@ export async function POST(request: Request) {
         throw new Error("El destinatario no existe")
       }
 
-      // 3. Update sender balance
-      const updatedSender = await tx.profile.update({
-        where: { userId: user.id },
+      // 3. Update sender balance ONLY if they still have enough (ATOMIC CHECK)
+      const updateResult = await tx.profile.updateMany({
+        where: { 
+          userId: user.id,
+          bizcoins: { gte: amount }
+        },
         data: { bizcoins: { decrement: amount } }
       })
 
+      if (updateResult.count === 0) {
+        throw new Error("Insuficientes Bizcoins")
+      }
+
       // 4. Update receiver balance
-      const updatedReceiver = await tx.profile.update({
+      await tx.profile.update({
         where: { userId: targetUserId },
         data: { bizcoins: { increment: amount } }
       })
@@ -84,10 +91,10 @@ export async function POST(request: Request) {
         }
       })
 
-      return { updatedSender }
+      return { senderBalance: sender.bizcoins || 0 }
     })
 
-    return NextResponse.json({ success: true, newBalance: result.updatedSender.bizcoins })
+    return NextResponse.json({ success: true, newBalance: (result.senderBalance - amount) })
   } catch (error: any) {
     console.error("Error in P2P transfer:", error)
     return NextResponse.json({ error: error.message || "Error al procesar transferencia" }, { status: 500 })

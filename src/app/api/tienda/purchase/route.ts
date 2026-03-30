@@ -61,17 +61,25 @@ export async function POST(request: NextRequest) {
                     throw new Error("INSUFFICIENT_FUNDS")
                 }
 
-                // C. Deduct & Insert
+                // C. Deduct & Insert with atomic check
                 logToFile(`DEDUCTING: ${price} from ${profile.fullName}`)
 
-                const updated = await tx.profile.update({
-                    where: { userId: user.id },
+                const updateResult = await tx.profile.updateMany({
+                    where: { 
+                        userId: user.id,
+                        bizcoins: { gte: price }
+                    },
                     data: {
                         bizcoins: {
                             decrement: price
                         }
                     }
                 })
+
+                if (updateResult.count === 0) {
+                    logToFile(`INSUFFICIENT FUNDS (RACE CONDITION): ${profile.fullName}`)
+                    throw new Error("INSUFFICIENT_FUNDS")
+                }
 
                 logToFile(`INSERTING inventory item for user=${user.id}`)
                 await tx.userInventoryItem.create({
@@ -83,8 +91,8 @@ export async function POST(request: NextRequest) {
                     }
                 })
 
-                logToFile(`SUCCESS: user=${user.id} new_balance=${updated.bizcoins}`)
-                return { bizcoins: updated.bizcoins }
+                logToFile(`SUCCESS: user=${user.id}`)
+                return { bizcoins: (currentBalance - price) }
             })
 
             return NextResponse.json({

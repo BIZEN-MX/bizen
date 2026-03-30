@@ -115,11 +115,18 @@ export async function POST(request: Request) {
       }
     })
 
-    // 4. Deduct bizcoins from user
-    await prisma.profile.update({
-      where: { userId: user.id },
+    // 4. Deduct bizcoins from user safely (ATOMIC)
+    const updateResult = await prisma.profile.updateMany({
+      where: { 
+        userId: user.id,
+        bizcoins: { gte: amount }
+      },
       data: { bizcoins: { decrement: amount } }
     })
+
+    if (updateResult.count === 0) {
+      return NextResponse.json({ error: "Insuficientes Bizcoins (Error de racha)" }, { status: 400 })
+    }
 
     // 5. Create transaction
     await (prisma as any).walletTransaction.create({

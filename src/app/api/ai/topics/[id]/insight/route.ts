@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth/api-auth";
 import { prisma } from "@/lib/prisma";
 import { generateFinancialInsights } from "@/lib/ai/insights";
 
@@ -10,57 +9,29 @@ export async function GET(
 ) {
     try {
         const { id: topicId } = await params;
-        const session = await getServerSession(authOptions);
+        const authResult = await requireAuth(request);
         
-        if (!session?.user?.email) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        if (!authResult.success) {
+            return authResult.response;
         }
 
-        const user = await prisma.user.findUnique({
-            where: { email: session.user.email },
+        const supabaseUser = authResult.data.user;
+
+        const profile = await prisma.profile.findUnique({
+            where: { userId: supabaseUser.id },
             include: {
-                diagnosticResults: true,
-                simuladoresRuns: {
-                    orderBy: { createdAt: 'desc' },
-                    take: 1
+                progress: {
+                    where: { completedAt: { not: null } },
+                    select: { lessonId: true }
                 }
             }
         });
 
-        if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
+        if (!profile) {
+            return NextResponse.json({ error: "Profile not found" }, { status: 404 });
         }
 
-        // Get completed lessons for this user
-        const enrollments = await prisma.enrollment.findMany({
-            where: { userId: user.id, status: "completed" },
-            select: { lessonId: true }
-        });
-        const completedLessons = enrollments.map(e => e.lessonId);
-
-        // Map DNA profile from diagnostic results
-        const latestDiagnostic = user.diagnosticResults[0];
-        let dnaProfile = "Sin Diagnosticar";
-        if (latestDiagnostic) {
-            // Simplified logic to pick the strongest category
-            const results = latestDiagnostic.results as any;
-            if (results && typeof results === 'object') {
-                const categories = Object.entries(results);
-                if (categories.length > 0) {
-                    const top = categories.reduce((a, b) => (a[1] as number) > (b[1] as number) ? a : b);
-                    dnaProfile = top[0];
-                }
-            }
-        }
-
-        // Get game stats from last simulator run
-        const lastRun = user.simuladoresRuns[0];
-        const gameStats = lastRun ? {
-            totalCash: (lastRun.state as any)?.cash || 0,
-            passiveIncome: (lastRun.state as any)?.passiveIncome || 0,
-            escapedRatRace: (lastRun.state as any)?.escapedRatRace || false,
-            mainProfession: (lastRun.state as any)?.profession?.name || "N/A"
-        } : undefined;
+        const completedLessons = profile.progress.map(p => p.lessonId);
 
         // Fetch topic title for context
         const topic = await prisma.topic.findUnique({
@@ -69,12 +40,14 @@ export async function GET(
         });
 
         const insight = await generateFinancialInsights({
-            name: user.fullName || user.id.slice(0, 8),
-            xp: user.xp,
-            level: user.level,
+            name: profile.fullName || supabaseUser.email?.split('@')[0] || "BIZENer",
+            xp: profile.xp,
+            level: profile.level,
             completedLessons,
-            dnaProfile,
-            gameStats,
+            dnaProfile: profile.dnaProfile || "Sin Diagnosticar",
+            // Game stats can be fetched from a separate query if needed, 
+            // but for now we skip or find last game session
+            gameStats: undefined, 
             currentTopic: topic?.title || topicId
         });
 
