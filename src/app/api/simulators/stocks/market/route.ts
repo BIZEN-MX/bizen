@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 export async function GET(req: Request) {
     try {
         // Fetch active symbols
-        const symbols = await prisma.marketSymbols.findMany({
+        const symbols = await prisma.market_symbols.findMany({
             where: { is_active: true }
         });
 
@@ -12,7 +12,7 @@ export async function GET(req: Request) {
 
         // Fetch their latest EOD price
         const symbolNames = symbols.map(s => s.symbol);
-        const latestPrices = await prisma.marketPricesEod.findMany({
+        const latestPrices = await prisma.market_prices_eod.findMany({
             where: { symbol: { in: symbolNames } },
             orderBy: { date: 'desc' },
             distinct: ['symbol']

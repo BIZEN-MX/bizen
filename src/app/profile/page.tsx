@@ -527,15 +527,72 @@ export default function ProfilePage() {
              <div style={{ display: "grid", gridTemplateColumns: screenSize < 768 ? "repeat(auto-fill, minmax(100px, 1fr))" : "repeat(auto-fill, minmax(140px, 1fr))", gap: screenSize < 768 ? 10 : 16 }}>
                 {achievements.map(a => <AchievementCard key={a.id} a={a} cfg={RARITY_CFG[a.rarity] || RARITY_CFG.común} />)}
              </div>
-          </div>
+           </div>
         </div>
 
         {/* RIGHT COLUMN: BIZEN CARD & SOCIAL */}
         <div className="prof-side fade-up" style={{ width: 380, display: "flex", flexDirection: "column", gap: 32, animationDelay: "0.15s" }}>
-          
+          {/* BIZEN VIRTUAL CARD */}
+          <div className="prof-card fade-up" style={{ padding: 24, background: "white", animationDelay: "0.15s", borderRadius: 24 }}>
+            <div style={{ marginBottom: 20 }}>
+              <BizenVirtualCard 
+                holderName={displayName} 
+                level={level}
+                colorTheme={cardTheme}
+                bizcoins={bizcoins}
+                onTransferClick={() => setIsTransferModalOpen(true)}
+              />
+            </div>
 
+            {/* Theme Picker */}
+            <div style={{ marginTop: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tema de Tarjeta</span>
+                <div style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: 8, fontSize: 10, fontWeight: 700, color: "#64748b" }}>{cardTheme.toUpperCase()}</div>
+              </div>
+              <div style={{ width: "100%", display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {(["blue", "emerald", "violet", "rose", "amber", "slate", "obsidian"] as CardTheme[]).map(t => (
+                  <button 
+                    key={t} 
+                    onClick={() => updateCardTheme(t)} 
+                    disabled={savingTheme}
+                    style={{ 
+                      width: 32, height: 32, borderRadius: "50%", cursor: savingTheme ? "wait" : "pointer", 
+                      border: cardTheme === t ? "3px solid #0F62FE" : "2px solid white", 
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                      background: t === "obsidian" ? "#1a1a1a" : t === "blue" ? "#0F62FE" : t === "emerald" ? "#10B981" : t === "violet" ? "#8B5CF6" : t === "rose" ? "#F43F5E" : t === "amber" ? "#F59E0B" : "#64748B",
+                      transition: "all 0.2s ease",
+                      transform: cardTheme === t ? "scale(1.1)" : "scale(1)"
+                    }} 
+                  />
+                ))}
+              </div>
+            </div>
 
-          {/* Status Badge for Admins/Teachers */}
+            <div style={{ marginTop: 24, display: "flex", gap: 10 }}>
+              <button 
+                onClick={() => setIsTransferModalOpen(true)}
+                style={{ 
+                  flex: 1, background: "#0F62FE", color: "white", border: "none", padding: "10px", 
+                  borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  boxShadow: "0 4px 12px rgba(15,98,254,0.2)"
+                }}
+              >
+                <Send size={14} /> Transferir
+              </button>
+              <button 
+                onClick={() => router.push("/tienda")}
+                style={{ 
+                  flex: 1, background: "#f8fafc", color: "#475569", border: "1.5px solid #e2e8f0", 
+                  padding: "10px", borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8
+                }}
+              >
+                <ShoppingCart size={14} /> Tienda
+              </button>
+            </div>
+          </div>          {/* Status Badge for Admins/Teachers */}
           {isAdminOrTeacher && (
             <div style={{ padding: 24, background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", borderRadius: 24, color: "white" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>

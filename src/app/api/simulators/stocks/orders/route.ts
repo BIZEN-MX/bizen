@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     // Validate symbol against allowlist
-    const activeSymbol = await prisma.marketSymbols.findFirst({
+    const activeSymbol = await prisma.market_symbols.findFirst({
         where: { symbol, is_active: true }
     });
 
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Symbol not allowed or inactive" }, { status: 400 });
     }
 
-    let portfolio = await prisma.simulatorPortfolios.findFirst({
+    let portfolio = await prisma.simulator_portfolios.findFirst({
       where: { user_id: user.id },
       include: {
         holdings: true
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     }
 
     // Creating pending order
-    const order = await prisma.simulatorOrders.create({
+    const order = await prisma.simulator_orders.create({
       data: {
         portfolio_id: portfolio.id,
         symbol,
