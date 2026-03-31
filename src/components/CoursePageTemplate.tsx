@@ -48,6 +48,7 @@ import {
     Sparkles,
     Send,
     MessageCircle,
+    Trophy,
     X,
     LucideIcon
 } from "lucide-react"
@@ -715,7 +716,6 @@ export default function CoursePageTemplate({
                                                                             key={i}
                                                                             size={18}
                                                                             filled={i <= stars}
-                                                                            color={isExam ? "#fbbf24" : undefined}
                                                                         />
                                                                     ))}
                                                                 </div>

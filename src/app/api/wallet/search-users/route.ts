@@ -25,8 +25,7 @@ export async function GET(request: Request) {
           {
             OR: [
               { fullName: { contains: query, mode: "insensitive" } },
-              { nickname: { contains: query, mode: "insensitive" } },
-              { email: { contains: query, mode: "insensitive" } }
+              { nickname: { contains: query, mode: "insensitive" } }
             ]
           }
         ]
