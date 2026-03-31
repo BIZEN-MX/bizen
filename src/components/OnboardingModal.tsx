@@ -189,9 +189,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                             </div>
                             <span className="text-sm font-bold tracking-tight uppercase text-blue-400">Onboarding</span>
                         </div>
-                        <span className="text-xs font-semibold text-slate-500 bg-slate-900/50 px-2 py-1 rounded-full border border-slate-800">
-                            Paso {stepIdx + 1} de {stepList.length}
-                        </span>
                     </div>
                     <div className="h-1.5 w-full bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
                         <motion.div 
