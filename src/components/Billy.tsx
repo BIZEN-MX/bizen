@@ -119,7 +119,7 @@ export function Billy({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={`relative inline-block ${className}`}
-      style={{ width: size, height: size, perspective: "1200px" }}
+      style={{ width: size, height: size, perspective: "1200px", overflow: "hidden" }}
     >
       <AnimatePresence mode="wait">
         <motion.div
