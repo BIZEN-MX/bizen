@@ -56,6 +56,7 @@ export default function FixedSidebar() {
   const [masFlyoutPosition, setMasFlyoutPosition] = useState({ top: 0, left: 0 })
   const masCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const masTriggerRef = useRef<HTMLDivElement>(null)
+  const [isHiddenByGlobalClass, setIsHiddenByGlobalClass] = useState(false)
 
   const showMasPanel = () => {
     if (masCloseTimerRef.current) {
@@ -77,6 +78,24 @@ export default function FixedSidebar() {
   // Only render auth-dependent UI after mount to avoid hydration mismatch (server has no session)
   useEffect(() => {
     setMounted(true)
+    
+    // Check for global hide-sidebar class
+    const checkGlobalClass = () => {
+      setIsHiddenByGlobalClass(document.body.classList.contains('hide-sidebar'))
+    }
+    
+    checkGlobalClass()
+    
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          checkGlobalClass()
+        }
+      })
+    })
+    
+    observer.observe(document.body, { attributes: true })
+    return () => observer.disconnect()
   }, [])
 
   // Detect mobile screen size (only phones, not tablets)
@@ -278,8 +297,11 @@ export default function FixedSidebar() {
           overflowX: "hidden",
           borderRight: "1px solid rgba(15, 98, 254, 0.08)",
           boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column"
+          display: isHiddenByGlobalClass ? "none" : "flex",
+          flexDirection: "column",
+          opacity: isHiddenByGlobalClass ? 0 : 1,
+          visibility: isHiddenByGlobalClass ? "hidden" : "visible",
+          transition: "all 0.3s ease-in-out"
         }}>
         <div style={{ padding: "24px 20px 0 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", height: "100%" }} className="sidebar-inner-container">
           {/* Bizen logo and brand name */}

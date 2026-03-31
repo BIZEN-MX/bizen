@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { X, Search, Loader2, Check, Send, Coins, UserRound, ArrowRight } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { AvatarDisplay } from "../AvatarDisplay"
 
 interface TransferModalProps {
   onClose: () => void
@@ -60,6 +61,14 @@ export default function TransferModal({
     }, 450)
     return () => clearTimeout(timer)
   }, [searchQuery])
+
+  // Hide sidebar logic
+  useEffect(() => {
+    document.body.classList.add('hide-sidebar')
+    return () => {
+      document.body.classList.remove('hide-sidebar')
+    }
+  }, [])
 
   const handleTransfer = async () => {
     const amtNum = parseInt(amount)
@@ -170,7 +179,7 @@ export default function TransferModal({
                       {searchResults.map(u => (
                         <div key={u.userId} onClick={() => { setSelectedUser(u); setStep("amount"); }} style={{ padding: 20, borderRadius: 24, border: "2px solid #f1f5f9", display: "flex", alignItems: "center", gap: 16, cursor: "pointer", transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", background: "white" }} onMouseEnter={e => {e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.borderColor = "#0F62FE"; e.currentTarget.style.boxShadow = "0 12px 20px rgba(15,98,254,0.1)"}} onMouseLeave={e => {e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "#f1f5f9"; e.currentTarget.style.boxShadow = "none"}}>
                           <div style={{ width: 60, height: 60, borderRadius: "50%", background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid white", boxShadow: "0 4px 10px rgba(0,0,0,0.05)" }}>
-                            {u.avatar ? <img src={u.avatar} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <UserRound size={28} color="#94a3b8" />}
+                            <AvatarDisplay avatar={u.avatar} size={60} />
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{u.fullName || u.nickname}</div>
