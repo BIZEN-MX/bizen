@@ -65,19 +65,6 @@ export default function PageLoader() {
                     />
                 </div>
 
-                <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 10 }}>
-                    <h2 style={{
-                        fontSize: 16,
-                        fontWeight: 600,
-                        color: "#0F62FE",
-                        margin: 0,
-                        letterSpacing: "0.1em",
-                        fontFamily: "var(--font-family)",
-                        textTransform: "uppercase"
-                    }}>
-                        Cargando
-                    </h2>
-                </div>
             </div>
         </div>
     )

@@ -2,7 +2,7 @@ export const translations = {
   es: {
     // Common
     common: {
-      loading: "Cargando...",
+      loading: "",
       save: "Guardar",
       cancel: "Cancelar",
       delete: "Eliminar",
@@ -34,7 +34,7 @@ export const translations = {
     // Courses Page
     courses: {
       title: "Camino de Aprendizaje",
-      loadingPath: "Cargando camino de aprendizaje...",
+      loadingPath: "",
       course: "CURSO",
       lessons: "lecciones",
       hours: "horas",

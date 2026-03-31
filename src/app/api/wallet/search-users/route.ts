@@ -37,7 +37,7 @@ export async function GET(request: Request) {
         avatar: true,
         level: true
       },
-      take: 5
+      take: 20
     })
 
     return NextResponse.json({ users })

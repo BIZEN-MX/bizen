@@ -781,129 +781,127 @@ function DashboardContent() {
           )}
         </div>
 
-        {/* STAT CARDS (Student ONLY) */}
         {!isAdminOrTeacher && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14, marginBottom: 24 }}>
-
-          {/* CARD 1 — Racha */}
-          <div className="sc dc" style={{
-            animationDelay: ".07s",
-            background: streak > 0 ? "linear-gradient(145deg,#f0f9ff,#e0f2fe)" : "linear-gradient(145deg,#f8fafc,#f1f5f9)",
-            border: streak > 0 ? "1px solid #bae6fd" : "1px solid #e2e8f0",
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            textAlign: "center", minHeight: 160,
+          <div style={{ 
+            display: "flex", 
+            flexWrap: "wrap", 
+            gap: 14, 
+            marginBottom: 20,
+            alignItems: "stretch" 
           }}>
-            <div className="sc-label" style={{ color: streak > 0 ? "#1d4ed8" : "#94a3b8", marginBottom: 18 }}>Racha Diaria</div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-              <Flame size={34} style={{ color: streak > 0 ? "#0F62FE" : "#94a3b8" }} />
-              <div className="sc-num" style={{ color: streak > 0 ? "#001d6c" : "#cbd5e1" }}>{streak}</div>
+            {/* CARD 1 — Racha */}
+            <div className="sc dc" style={{
+              animationDelay: ".07s",
+              flex: "0 0 200px",
+              background: streak > 0 ? "linear-gradient(145deg,#f0f9ff,#e0f2fe)" : "linear-gradient(145deg,#f8fafc,#f1f5f9)",
+              border: streak > 0 ? "1px solid #bae6fd" : "1px solid #e2e8f0",
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+              textAlign: "center", padding: "16px", borderRadius: 24, boxShadow: "0 2px 10px rgba(0,0,0,0.02)"
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 800, color: streak > 0 ? "#1d4ed8" : "#94a3b8", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Racha Diaria</div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                <Flame size={24} style={{ color: streak > 0 ? "#3b82f6" : "#94a3b8" }} />
+                <div style={{ fontSize: 28, fontWeight: 900, color: streak > 0 ? "#001d6c" : "#cbd5e1", lineHeight: 1 }}>{streak}</div>
+              </div>
+              <div style={{ marginTop: 8, fontSize: 11, fontWeight: 600, color: streak > 0 ? "#3b82f6" : "#94a3b8" }}>
+                {streak === 0 ? "Sin racha" : "¡Sigue así!"}
+              </div>
             </div>
-            <div style={{ marginTop: 10, fontSize: 13, fontWeight: 600, color: streak > 0 ? "#0F62FE" : "#94a3b8" }}>
-              {streak === 0 ? "Sin racha activa" : streak >= 7 ? "Racha legendaria" : "¡No la rompas!"}
+
+            {/* CARD 2 — Lecciones */}
+            <div className="sc dc" style={{
+              animationDelay: ".12s",
+              flex: "0 0 200px",
+              background: "#fff", border: "1px solid #e9eef8",
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+              textAlign: "center", padding: "16px", borderRadius: 24, boxShadow: "0 2px 10px rgba(0,0,0,0.02)"
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Lecciones</div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 10 }}>
+                <IcoBook size={22} color="#3b82f6" />
+                <div style={{ fontSize: 28, fontWeight: 900, color: "#0F62FE", lineHeight: 1 }}>{lessons}</div>
+              </div>
+              <div style={{ width: "100%", height: 5, background: "#f1f5f9", borderRadius: 10, overflow: "hidden" }}>
+                <div style={{ width: `${lessonPct}%`, height: "100%", background: "linear-gradient(90deg,#93c5fd,#3b82f6)", borderRadius: 10, transition: "width 1.4s cubic-bezier(.34,1.56,.64,1)" }} />
+              </div>
+            </div>
+
+            {/* CARD 3 — Continue Learning (Elastic) */}
+            <div className="dc" style={{
+              flex: "1 1 340px",
+              background:"#fff", borderRadius:24,
+              border:"1.5px solid rgba(0,0,0,.055)",
+              boxShadow:`0 4px 24px rgba(0,0,0,.045)`,
+              position:"relative", overflow:"hidden",
+              animationDelay:".21s"
+            }}>
+              <div style={{position:"absolute",left:0,top:0,bottom:0,width:4,background:`linear-gradient(180deg,${topicColor},${topicColor}55)`}}/>
+              <div style={{padding: "16px 20px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
+                  <div style={{width:20,height:20,borderRadius:6,background:`${topicColor}18`,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    <IcoChart size={10} color={topicColor} strokeWidth={2.5}/>
+                  </div>
+                  <span style={{fontSize:9,fontWeight:800,color:topicColor,textTransform:"uppercase",letterSpacing:".10em"}}>
+                    Continúa donde lo dejaste
+                  </span>
+                </div>
+
+                {nextTopic ? (
+                  <div className="continue-inner" style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:16}}>
+                    <div style={{display:"flex",alignItems:"center",gap:16,flex:"1 1 200px"}}>
+                      <div style={{
+                        width:56,height:56,borderRadius:16,flexShrink:0,
+                        background:`linear-gradient(135deg,${topicColor}22,${topicColor}0a)`,
+                        border:`1.5px solid ${topicColor}30`,
+                        display:"flex",alignItems:"center",justifyContent:"center",
+                        position:"relative",overflow:"hidden"
+                      }}>
+                        <IcoBook size={26} color={topicColor} strokeWidth={1.5}/>
+                      </div>
+                      <div style={{minWidth:0}}>
+                        <div style={{fontSize:9,fontWeight:800,color:"#94a3b8",textTransform:"uppercase",letterSpacing:".12em",marginBottom:2}}>
+                          {nextTopic.level ?? "Finanzas"}
+                        </div>
+                        <div style={{fontSize:"clamp(16px,2vw,20px)",fontWeight:800,color:"#0f172a",lineHeight:1.1,letterSpacing:"-0.02em",marginBottom:4}}>
+                          {nextTopic.title}
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:6,fontSize:11,color:"#64748b",fontWeight:600}}>
+                          <span>{nextTopic._count?.courses ?? "?"} cursos</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button className="cb" style={{ padding: "10px 20px", fontSize: 13 }} onClick={() => {
+                      if (nextLessonInfo?.lessonSlug && nextLessonInfo?.courseId) {
+                        router.push(`/learn/${nextLessonInfo.topic.id}/${nextLessonInfo.courseId}/${nextLessonInfo.lessonSlug}/interactive`)
+                      } else if (nextTopic) {
+                        const id = String(nextTopic.id)
+                        const nav = (!id.startsWith("tema-") && !isNaN(parseInt(id))) ? `tema-${id.padStart(2,"0")}` : id
+                        router.push(`/courses/${nav}`)
+                      }
+                    }}>
+                      Continuar <IcoArrowRight size={15} color="#fff"/>
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{display:"flex",alignItems:"center",gap:12}}>
+                    <div style={{width:44,height:44,borderRadius:14,background:"linear-gradient(135deg,#d1fae5,#6ee7b7)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      <IcoCheck size={20} color="#059669"/>
+                    </div>
+                    <div>
+                      <div style={{fontSize:16,fontWeight:800,color:"#0f172a"}}>Completado</div>
+                      <div style={{fontSize:12,color:"#64748b"}}>Has terminado todos los temas.</div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-
-          {/* CARD 2 — Lecciones */}
-          <div className="sc dc" style={{
-            animationDelay: ".12s",
-            background: "#fff", border: "1px solid #e9eef8",
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            textAlign: "center", minHeight: 160,
-          }}>
-            <div className="sc-label" style={{ color: "#94a3b8", marginBottom: 18 }}>Lecciones completadas</div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 16 }}>
-              <IcoBook size={32} color="#0F62FE" />
-              <div className="sc-num" style={{ color: "#0F62FE" }}>{lessons}</div>
-            </div>
-            <div style={{ width: "100%", height: 5, background: "#e0e9ff", borderRadius: 10, overflow: "hidden" }}>
-              <div style={{ width: `${lessonPct}%`, height: "100%", background: "linear-gradient(90deg,#93c5fd,#0F62FE)", borderRadius: 10, transition: "width 1.4s cubic-bezier(.34,1.56,.64,1)" }} />
-            </div>
-          </div>
-        </div>
         )}
-
-        {/* ══════════════════════════════════════════════════════════
-            CONTINUE LEARNING
-        ══════════════════════════════════════════════════════════ */}
-        <div className="dc" style={{
-          background:"#fff", borderRadius:28,
-          border:"1.5px solid rgba(0,0,0,.055)",
-          boxShadow:`0 4px 24px rgba(0,0,0,.06), 0 0 0 3px ${topicColor}14`,
-          marginBottom:24, position:"relative", overflow:"hidden",
-          animationDelay:".21s"
-        }}>
-          {/* colored left border accent */}
-          <div style={{position:"absolute",left:0,top:0,bottom:0,width:4,background:`linear-gradient(180deg,${topicColor},${topicColor}55)`}}/>
-
-          <div style={{padding:"clamp(18px,3vw,32px) clamp(18px,3vw,32px) clamp(18px,3vw,32px) calc(clamp(18px,3vw,32px) + 12px)"}}>
-            {/* section label */}
-            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:20}}>
-              <div style={{width:28,height:28,borderRadius:9,background:`${topicColor}18`,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                <IcoChart size={14} color={topicColor} strokeWidth={2.5}/>
-              </div>
-              <span style={{fontSize:11,fontWeight:800,color:topicColor,textTransform:"uppercase",letterSpacing:".10em"}}>
-                Continúa donde lo dejaste
-              </span>
-            </div>
-
-            {nextTopic ? (
-              <div className="continue-inner" style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:20}}>
-                <div style={{display:"flex",alignItems:"center",gap:20,flex:"1 1 260px"}}>
-                  {/* icon box */}
-                  <div style={{
-                    width:72,height:72,borderRadius:20,flexShrink:0,
-                    background:`linear-gradient(135deg,${topicColor}22,${topicColor}0a)`,
-                    border:`1.5px solid ${topicColor}30`,
-                    display:"flex",alignItems:"center",justifyContent:"center",
-                    boxShadow:`0 8px 24px ${topicColor}20`,
-                    position:"relative",overflow:"hidden"
-                  }}>
-                    <div style={{position:"absolute",bottom:"-20%",right:"-20%",width:60,height:60,background:`radial-gradient(circle,${topicColor}30 0%,transparent 70%)`,borderRadius:"50%"}}/>
-                    <IcoBook size={32} color={topicColor} strokeWidth={1.5}/>
-                  </div>
-                  <div style={{minWidth:0}}>
-                    <div style={{fontSize:11,fontWeight:800,color:"#94a3b8",textTransform:"uppercase",letterSpacing:".12em",marginBottom:8,lineHeight:1.4}}>
-                      {nextTopic.level ?? "Finanzas"}
-                    </div>
-                    <div style={{fontSize:"clamp(16px,3vw,26px)",fontWeight:800,color:"#0f172a",lineHeight:1.2,letterSpacing:"-0.02em",marginBottom:10}}>
-                      {nextTopic.title}
-                    </div>
-                    <div style={{display:"flex",alignItems:"center",gap:7,fontSize:12,color:"#64748b",fontWeight:600}}>
-                      <IcoMap size={13} color="#94a3b8" strokeWidth={2}/>
-                      <span>{nextTopic._count?.courses ?? "?"} cursos en este tema</span>
-                    </div>
-                  </div>
-                </div>
-                <button className="cb" onClick={() => {
-                  if (nextLessonInfo?.lessonSlug && nextLessonInfo?.courseId) {
-                    router.push(`/learn/${nextLessonInfo.topic.id}/${nextLessonInfo.courseId}/${nextLessonInfo.lessonSlug}/interactive`)
-                  } else if (nextTopic) {
-                    const id = String(nextTopic.id)
-                    const nav = (!id.startsWith("tema-") && !isNaN(parseInt(id))) ? `tema-${id.padStart(2,"0")}` : id
-                    router.push(`/courses/${nav}`)
-                  }
-                }}>
-                  Continuar <IcoArrowRight size={17} color="#fff"/>
-                </button>
-              </div>
-            ) : (
-              <div style={{display:"flex",alignItems:"center",gap:16}}>
-                <div style={{width:60,height:60,borderRadius:18,background:"linear-gradient(135deg,#d1fae5,#6ee7b7)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  <IcoCheck size={28} color="#059669"/>
-                </div>
-                <div>
-                  <div style={{fontSize:22,fontWeight:800,color:"#0f172a"}}>Camino completado</div>
-                  <div style={{fontSize:14,color:"#64748b",marginTop:4}}>Has terminado todos los temas. Eres increíble.</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
 
         {/* ══════════════════════════════════════════════════════════
             ACTIVITY + RETO DIARIO
         ══════════════════════════════════════════════════════════ */}
-        <div className="dual-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:16,marginBottom:24}}>
+        <div className="dual-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:16,marginBottom:24,alignItems:"start"}}>
 
           {/* Weekly Activity */}
           <div className="dc" style={{
@@ -963,8 +961,7 @@ function DashboardContent() {
             background:"#fff",borderRadius:24,padding:"22px 20px",
             border:"1.5px solid rgba(0,0,0,.055)",
             boxShadow:"0 2px 14px rgba(0,0,0,.045)",animationDelay:".28s",
-            display: "flex", flexDirection: "column",
-            minHeight: 460
+            display: "flex", flexDirection: "column"
           }}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:22}}>
                <div style={{display:"flex",alignItems:"center",gap:10}}>

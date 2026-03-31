@@ -321,7 +321,7 @@ export function SavingsGoalSimulator() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 0', gap: 20 }}>
         <Loader2 className="animate-spin" size={42} color={BLUE} />
-        <p style={{ color: MUTED, fontWeight: 500 }}>Cargando tu simulación guardada...</p>
+        <p style={{ color: MUTED, fontWeight: 500 }}></p>
       </div>
     );
   }

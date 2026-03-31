@@ -531,7 +531,7 @@ export default function ProfilePage() {
         </div>
 
         {/* RIGHT COLUMN: BIZEN CARD & SOCIAL */}
-        <div className="prof-side fade-up" style={{ width: 380, display: "flex", flexDirection: "column", gap: 24, animationDelay: "0.15s" }}>
+        <div className="prof-side fade-up" style={{ width: screenSize < 1200 ? "100%" : 380, display: "flex", flexDirection: "column", gap: 24, animationDelay: "0.15s" }}>
           {/* BIZEN VIRTUAL CARD */}
           <div className="prof-card fade-up" style={{ padding: "20px", background: "white", animationDelay: "0.15s", borderRadius: 24, overflow: "visible" }}>
             <div style={{ marginBottom: 16 }}>
@@ -541,6 +541,7 @@ export default function ProfilePage() {
                 colorTheme={cardTheme}
                 bizcoins={bizcoins}
                 onTransferClick={() => setIsTransferModalOpen(true)}
+                hideButtons={true}
               />
             </div>
 
@@ -700,11 +701,6 @@ export default function ProfilePage() {
                   )}
                 </div>
 
-                <div style={{ padding: "10px 20px", background: "#f8fafc", borderTop: "1px solid #f1f5f9" }}>
-                  <button onClick={() => router.push("/tienda")} style={{ width: "100%", background: "white", border: "1.5px solid #e2e8f0", padding: "8px", borderRadius: 12, fontSize: 11, fontWeight: 700, color: "#475569", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.borderColor = "#0F62FE"; e.currentTarget.style.color = "#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.color = "#475569"}}>
-                    <ShoppingCart size={14} /> Ir a la Tienda
-                  </button>
-                </div>
               </>
             )}
           </div>

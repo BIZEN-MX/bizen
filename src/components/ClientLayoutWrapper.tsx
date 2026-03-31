@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 // import NavigationLoading from './NavigationLoading';
 import FixedSidebar from './FixedSidebar';
 import MobileFooterNav from './MobileFooterNav';
@@ -27,6 +27,7 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   // const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const previousPathname = useRef(pathname);
   const [isMobile, setIsMobile] = useState(false);
   const { user, dbProfile, loading } = useAuth();
@@ -51,29 +52,28 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   useEffect(() => {
     if (typeof window !== 'undefined' && !(window as any)._fetchPatched) {
       const originalFetch = window.fetch;
-      window.fetch = async function () {
-        let [resource, config] = arguments;
-
+      window.fetch = async function (resource, config) {
         if (typeof resource === 'string' && resource.startsWith('/api/')) {
           config = config || {};
-          // Force no-store and cache-busting on all API GET requests
           if (!config.method || config.method.toUpperCase() === 'GET') {
             config.cache = 'no-store';
             const t = Date.now();
-            if (resource.includes('?')) {
-              if (!resource.includes('_t=')) resource += `&_t=${t}`;
-            } else {
-              resource += `?_t=${t}`;
-            }
-            config.headers = {
-              ...config.headers,
-              'Pragma': 'no-cache',
-              'Cache-Control': 'no-cache, no-store, must-revalidate',
-            };
+            resource += (resource.includes('?') ? '&' : '?') + `_t=${t}`;
+
+            // Safely merge headers regardless of whether input is a plain object or Headers instance
+            const headers = new Headers(config.headers || {});
+            headers.set('Pragma', 'no-cache');
+            headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+            config.headers = headers;
           }
         }
 
-        return originalFetch.apply(this, [resource, config]);
+        try {
+          return await originalFetch.call(window, resource, config);
+        } catch (err) {
+          console.error('Fetch error caught in interceptor:', err);
+          throw err;
+        }
       };
       (window as any)._fetchPatched = true;
       console.log('✅ Global Fetch interceptor activated (Cache Buster)');
@@ -105,7 +105,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
-  const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage;
+  const isTransferPage = searchParams?.get('action') === 'transfer'
+  const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage || isTransferPage;
   const hideChat = isDiagnosticPage || pathname === "/" || onboardingActive; // Hide on diagnostic, landing, and onboarding
 
   // Detect mobile screen size (≤767px)

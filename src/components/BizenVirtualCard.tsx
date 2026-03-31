@@ -31,6 +31,7 @@ interface BizenVirtualCardProps {
   level?: number           // determines material tier
   showTierBadge?: boolean  // show/hide the tier badge pill
   onTransferClick?: () => void // new prop for P2P transfer
+  hideButtons?: boolean    // hide transfer/redeem buttons
 }
 
 const THEMES: Record<CardTheme, {
@@ -265,7 +266,8 @@ const HoloBizenLogo = ({ tier }: { tier: CardTier }) => {
 export default function BizenVirtualCard({
   bizcoins, holderName, animationDelay = "0s",
   colorTheme = "blue", level = 1, showTierBadge = true,
-  onTransferClick
+  onTransferClick,
+  hideButtons = false
 }: BizenVirtualCardProps) {
   const router = useRouter()
   const cardRef = useRef<HTMLDivElement>(null)
@@ -305,7 +307,18 @@ export default function BizenVirtualCard({
 
   const lastFour = String(bizcoins).padStart(4, "0").slice(-4)
   const cardNumber = `•••• •••• •••• ${lastFour}`
-  const displayName = holderName ? holderName.toUpperCase().substring(0, 22) : "USUARIO BIZEN"
+  const getRefinedName = (name: string) => {
+    if (!name) return "USUARIO BIZEN"
+    const parts = name.trim().split(/\s+/)
+    if (parts.length === 1) return parts[0].toUpperCase()
+    // Logic for "Un nombre y un apellido"
+    // If 4 parts (Juan Carlos Perez Gomez), take 1st and 3rd -> JUAN PEREZ
+    if (parts.length >= 4) return `${parts[0]} ${parts[2]}`.toUpperCase()
+    // If 2 or 3 parts (Diego Penas Sanchez), take 1st and 2nd -> DIEGO PENAS
+    return `${parts[0]} ${parts[1]}`.toUpperCase()
+  }
+
+  const displayName = getRefinedName(holderName).substring(0, 22)
   const cardId = `bc-card-${colorTheme}-${tier}`
 
   const boxShadowIdle = `0 28px 72px -10px var(--shadow-idle), 0 0 0 1px rgba(255,255,255,0.07)${tierCfg.extraShadow ? `, ${tierCfg.extraShadow}` : ""}`
@@ -516,58 +529,62 @@ export default function BizenVirtualCard({
                 <div style={{
                   display: "flex", alignItems: "center", gap: 8,
                 }}>
-                   {/* Transferir Button */}
-                  <div
-                    style={{
-                      display: "flex", alignItems: "center", gap: 6,
-                      background: tier === "legendary" ? "rgba(251,191,36,0.18)" : "rgba(255,255,255,0.12)",
-                      border: `1px solid ${tier === "legendary" ? "rgba(251,191,36,0.4)" : "rgba(255,255,255,0.18)"}`,
-                      borderRadius: 999,
-                      padding: "5px 12px",
-                      backdropFilter: "blur(8px)",
-                      cursor: "pointer",
-                    }}
-                    className="bc-shop-btn"
-                    onClick={(e) => { 
-                      e.stopPropagation(); 
-                      if (onTransferClick) onTransferClick();
-                      else router.push("/profile?action=transfer");
-                    }}
-                  >
-                    <Send size={11} color={tier === "legendary" ? "#fbbf24" : "rgba(255,255,255,0.85)"} />
-                    <span style={{
-                      fontSize: "clamp(8px,1.2vw,10px)", fontWeight: 700,
-                      color: tier === "legendary" ? "#fbbf24" : "rgba(255,255,255,0.85)",
-                      letterSpacing: "0.08em", textTransform: "uppercase",
-                    }}>
-                      Transferir
-                    </span>
+                   {/* Transferir Button (conditional) */}
+                   {!hideButtons && (
+                    <div
+                      style={{
+                        display: "flex", alignItems: "center", gap: 6,
+                        background: tier === "legendary" ? "rgba(251,191,36,0.18)" : "rgba(255,255,255,0.12)",
+                        border: `1px solid ${tier === "legendary" ? "rgba(251,191,36,0.4)" : "rgba(255,255,255,0.18)"}`,
+                        borderRadius: 999,
+                        padding: "5px 12px",
+                        backdropFilter: "blur(8px)",
+                        cursor: "pointer",
+                      }}
+                      className="bc-shop-btn"
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
+                        if (onTransferClick) onTransferClick();
+                        else router.push("/profile?action=transfer");
+                      }}
+                    >
+                      <Send size={11} color={tier === "legendary" ? "#fbbf24" : "rgba(255,255,255,0.85)"} />
+                      <span style={{
+                        fontSize: "clamp(8px,1.2vw,10px)", fontWeight: 700,
+                        color: tier === "legendary" ? "#fbbf24" : "rgba(255,255,255,0.85)",
+                        letterSpacing: "0.08em", textTransform: "uppercase",
+                      }}>
+                        Transferir
+                      </span>
+                    </div>
+                   )}
+  
+                    {/* Canjear Button (conditional) */}
+                    {!hideButtons && (
+                    <div
+                      style={{
+                        display: "flex", alignItems: "center", gap: 6,
+                        background: tier === "legendary" ? "rgba(251,191,36,0.18)" : "rgba(255,255,255,0.12)",
+                        border: `1px solid ${tier === "legendary" ? "rgba(251,191,36,0.4)" : "rgba(255,255,255,0.18)"}`,
+                        borderRadius: 999,
+                        padding: "5px 12px",
+                        backdropFilter: "blur(8px)",
+                        cursor: "pointer",
+                      }}
+                      className="bc-shop-btn"
+                      onClick={(e) => { e.stopPropagation(); router.push("/tienda") }}
+                    >
+                      <ShoppingBag size={11} color={tier === "legendary" ? "rgba(251,191,36,0.9)" : "rgba(255,255,255,0.8)"} />
+                      <span style={{
+                        fontSize: "clamp(8px,1.2vw,10px)", fontWeight: 700,
+                        color: tier === "legendary" ? "rgba(251,191,36,0.9)" : "rgba(255,255,255,0.8)",
+                        letterSpacing: "0.08em", textTransform: "uppercase",
+                      }}>
+                        Canjear
+                      </span>
+                    </div>
+                    )}
                   </div>
-
-                  {/* Canjear Button */}
-                  <div
-                    style={{
-                      display: "flex", alignItems: "center", gap: 6,
-                      background: tier === "legendary" ? "rgba(251,191,36,0.18)" : "rgba(255,255,255,0.12)",
-                      border: `1px solid ${tier === "legendary" ? "rgba(251,191,36,0.4)" : "rgba(255,255,255,0.18)"}`,
-                      borderRadius: 999,
-                      padding: "5px 12px",
-                      backdropFilter: "blur(8px)",
-                      cursor: "pointer",
-                    }}
-                    className="bc-shop-btn"
-                    onClick={(e) => { e.stopPropagation(); router.push("/tienda") }}
-                  >
-                    <ShoppingBag size={11} color={tier === "legendary" ? "rgba(251,191,36,0.9)" : "rgba(255,255,255,0.8)"} />
-                    <span style={{
-                      fontSize: "clamp(8px,1.2vw,10px)", fontWeight: 700,
-                      color: tier === "legendary" ? "rgba(251,191,36,0.9)" : "rgba(255,255,255,0.8)",
-                      letterSpacing: "0.08em", textTransform: "uppercase",
-                    }}>
-                      Canjear
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

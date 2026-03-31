@@ -98,7 +98,15 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const [showBlitzSplash, setShowBlitzSplash] = useState(false)
   const blitzSplashShownFor = useRef<string | null>(null)
   
-  const [showMissionStartSplash, setShowMissionStartSplash] = useState(!isRepeat)
+  const [showMissionStartSplash, setShowMissionStartSplash] = useState(false)
+  const missionSplashTriggered = useRef(false)
+  
+  useEffect(() => {
+    if (isRepeat === false && !missionSplashTriggered.current) {
+      setShowMissionStartSplash(true)
+      missionSplashTriggered.current = true
+    }
+  }, [isRepeat])
   const [showStreakSplash, setShowStreakSplash] = useState(false)
   const hasShownStreakSplash = useRef(false)
 
@@ -1249,9 +1257,9 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     </AnimatePresence>
   )
 
-  if (shouldPassFullScreenProps) {
-    return (
-      <GlossaryProvider terms={lessonGlossary}>
+  return (
+    <GlossaryProvider terms={lessonGlossary}>
+      {shouldPassFullScreenProps ? (
         <div
         style={{
           display: "flex",
@@ -1670,8 +1678,19 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           }
         `}</style>
 
-        {renderFooter(true)}
-      </div>
+        </div>
+      ) : (
+        <LessonScreen
+          currentStep={state.currentStepIndex + 1}
+          totalSteps={state.allSteps.length}
+          streak={streak}
+          stars={stars}
+          showProgressBar={!onProgressChange}
+          footerContent={renderFooter(false)}
+        >
+          {renderStep()}
+        </LessonScreen>
+      )}
 
       {/* ── Lesson Glossary Overlay ── */}
       <AnimatePresence>
@@ -1825,21 +1844,5 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       <MissionStartSplashOverlay />
       <StreakMilestoneSplashOverlay />
       </GlossaryProvider>
-  )
-}
-
-  return (
-    <GlossaryProvider terms={lessonGlossary}>
-      <LessonScreen
-      currentStep={state.currentStepIndex + 1}
-      totalSteps={state.allSteps.length}
-      streak={streak}
-      stars={stars}
-      showProgressBar={!onProgressChange}
-      footerContent={renderFooter(false)}
-    >
-      {renderStep()}
-    </LessonScreen>
-    </GlossaryProvider>
   )
 }

@@ -274,12 +274,14 @@ export default function FixedSidebar() {
           background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)",
           boxShadow: "4px 0 24px rgba(0, 0, 0, 0.03)",
           zIndex: 1000,
-          overflowY: "auto",
+          overflowY: "hidden",
           overflowX: "hidden",
           borderRight: "1px solid rgba(15, 98, 254, 0.08)",
-          boxSizing: "border-box"
+          boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "column"
         }}>
-        <div style={{ padding: "24px 20px 0 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", minHeight: "100%" }} className="sidebar-inner-container">
+        <div style={{ padding: "24px 20px 0 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", height: "100%" }} className="sidebar-inner-container">
           {/* Bizen logo and brand name */}
           <div
             style={{
@@ -512,7 +514,7 @@ export default function FixedSidebar() {
 
           {/* Quick Actions */}
           {mounted && (
-            <div style={{ marginBottom: 24, flex: "1 1 auto" }}>
+            <div style={{ marginBottom: 24, flex: "1", overflowY: "auto", overflowX: "hidden" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: stackAlignment }}>
                 {/* ── INICIO / Dashboard ── */}
                 {user && (
@@ -892,7 +894,7 @@ export default function FixedSidebar() {
               onClick={() => navigateTo("/profile")}
               style={{
                 marginTop: "auto",
-                marginBottom: 20,
+                marginBottom: 0,
                 padding: "16px",
                 display: "flex",
                 flexDirection: isCompactSidebar ? "column" : "row",
@@ -1313,7 +1315,7 @@ export default function FixedSidebar() {
             height: 100vh !important;
             min-height: 100vh !important;
             max-height: 100vh !important;
-            overflow-y: auto !important;
+            overflow-y: hidden !important; /* Managed by inner flex */
             overflow-x: hidden !important;
             border-right: 2px solid #0F62FE !important;
             border-left: none !important;
@@ -1322,10 +1324,10 @@ export default function FixedSidebar() {
             background: #FBFAF5 !important;
             backdrop-filter: blur(20px) !important;
             box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08) !important;
+            display: flex !important;
             flex-direction: column !important;
             transform: translateX(-100%) !important;
             transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out !important;
-            display: flex !important;
             visibility: hidden !important;
             opacity: 0 !important;
             pointer-events: none !important;
@@ -1511,6 +1513,7 @@ export default function FixedSidebar() {
             pointer-events: auto !important;
             position: fixed !important;
             display: flex !important;
+            flex-direction: column !important; /* Ensure flex layout */
             top: 0 !important;
             left: 0 !important;
             width: 220px !important; /* Text-only sidebar on tablet */
@@ -1518,7 +1521,7 @@ export default function FixedSidebar() {
             max-width: 220px !important;
             height: 100vh !important;
             overflow-x: hidden !important;
-            overflow-y: auto !important;
+            overflow-y: hidden !important; /* Scroll managed by inner div */
             background: #FBFAF5 !important;
             border-right: 2px solid #0F62FE !important;
           }
@@ -1617,12 +1620,13 @@ export default function FixedSidebar() {
             pointer-events: auto !important;
             position: fixed !important;
             display: flex !important;
+            flex-direction: column !important; /* Ensure flex layout */
             top: 0 !important;
             left: 0 !important;
             width: 280px !important;
             height: 100vh !important;
             overflow-x: hidden !important;
-            overflow-y: auto !important;
+            overflow-y: hidden !important; /* Scroll managed by inner div */
             background: #FBFAF5 !important;
             border-right: 2px solid #0F62FE !important;
           }

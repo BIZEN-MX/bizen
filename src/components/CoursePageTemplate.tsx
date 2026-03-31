@@ -185,7 +185,7 @@ export default function CoursePageTemplate({
 
     const topic = ALL_TOPICS.find((t) => t.id === topicNum) || {
         id: Number(topicId),
-        title: topicTitle || "Cargando...",
+        title: topicTitle || "",
         icon: BookOpen,
         color: "#3b82f6",
         lessons: 0

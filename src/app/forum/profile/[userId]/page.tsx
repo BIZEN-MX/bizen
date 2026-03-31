@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import StreakWidget from "@/components/StreakWidget"
@@ -18,8 +19,11 @@ import {
   Inbox,
   ChevronRight,
   TrendingUp,
-  Award
+  Award,
+  Send,
+  Coins
 } from "lucide-react"
+import TransferModal from "@/components/bizen/TransferModal"
 
 interface UserProfile {
   userId: string
@@ -52,10 +56,13 @@ interface UserProfile {
 }
 
 export default function ForumProfilePage() {
-  const { user, loading } = useAuth()
+  const { user, loading, dbProfile } = useAuth()
   const router = useRouter()
   const params = useParams()
   const userId = params?.userId as string
+
+  const [currentBalance, setCurrentBalance] = useState(0)
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
 
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loadingData, setLoadingData] = useState(true)
@@ -81,8 +88,11 @@ export default function ForumProfilePage() {
   useEffect(() => {
     if (loading) return
     if (!user) { router.push("/login"); return }
-    if (userId) fetchProfile()
-  }, [user, loading, router, userId])
+    if (userId) {
+      fetchProfile()
+      setCurrentBalance((dbProfile as any)?.bizcoins || 0)
+    }
+  }, [user, loading, router, userId, dbProfile])
 
   const fetchProfile = async () => {
     try {
@@ -200,6 +210,8 @@ export default function ForumProfilePage() {
       <style>{`
         @keyframes float-bg { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         @media (max-width: 767px) {
           .fp-outer { padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
@@ -398,6 +410,28 @@ export default function ForumProfilePage() {
                     {isLoadingFollow ? "..." : isFollowing ? (
                       <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Check size={16} /> Siguiendo</span>
                     ) : "+ Seguir"}
+                  </button>
+                )}
+
+                {user && userId !== user.id && (
+                  <button
+                    onClick={() => setIsTransferModalOpen(true)}
+                    style={{
+                      padding: "12px 26px",
+                      background: "rgba(255,255,255,0.1)",
+                      color: "white",
+                      border: "1.5px solid rgba(255,255,255,0.25)",
+                      borderRadius: 14,
+                      fontSize: 15, fontWeight: 500,
+                      cursor: "pointer",
+                      display: "flex", alignItems: "center", gap: 8,
+                      transition: "all 0.2s ease"
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; e.currentTarget.style.transform = "translateY(-2px)" }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.transform = "translateY(0)" }}
+                  >
+                    <Send size={16} style={{ transform: "rotate(-15deg)" }} />
+                    Transferir
                   </button>
                 )}
               </div>
@@ -681,6 +715,25 @@ export default function ForumProfilePage() {
             </div>
           </div>
         )}
+
+        {/* ── TRANSFER MODAL ── */}
+        <AnimatePresence>
+          {isTransferModalOpen && (
+            <TransferModal
+              currentBalance={currentBalance}
+              onClose={() => setIsTransferModalOpen(false)}
+              onTransferSuccess={(newBal) => {
+                setCurrentBalance(newBal)
+                setIsTransferModalOpen(false)
+              }}
+              targetUser={{
+                userId: profile.userId,
+                nickname: profile.nickname,
+                avatar: profile.avatar
+              }}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </>
   )

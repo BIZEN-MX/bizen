@@ -198,17 +198,7 @@ export default function LessonPage() {
       `}</style>
 
             <div className="lesson-interactive-outer">
-                {/* Progress Header */}
-                <div style={{ flexShrink: 0, minHeight: 90, padding: "12px 16px", display: "flex", justifyContent: "center", alignItems: "center", background: "#f1f5f9", borderBottom: "2px solid #cbd5e1", boxSizing: "border-box" }}>
-                    <LessonProgressHeader
-                        currentStepIndex={progress.currentStep - 1}
-                        totalSteps={progress.totalSteps}
-                        streak={progress.streak}
-                        stars={progress.stars}
-                    />
-                </div>
-
-                {/* Engine */}
+                {/* Engine - Fullscreen interactive mode */}
                 <div style={{ flex: 1, minHeight: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                     <LessonEngine
                         lessonSteps={lessonData.steps}

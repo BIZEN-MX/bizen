@@ -510,15 +510,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                                         />
                                     </button>
-                                    {!birthDate && (
-                                        <button 
-                                            disabled={saving}
-                                            onClick={handleSave}
-                                            className="w-full py-3 text-slate-500 hover:text-slate-300 font-bold transition-colors"
-                                        >
-                                            Omitir por ahora
-                                        </button>
-                                    )}
                                 </div>
                             </motion.div>
                        )}
