@@ -256,20 +256,20 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   // Blitz Splash: fullscreen warning when entering a blitz_challenge step
   useEffect(() => {
-    if (!currentStep) return
+    if (!currentStep || showMissionStartSplash) return
     if (currentStep.stepType === "blitz_challenge" && blitzSplashShownFor.current !== currentStep.id) {
       blitzSplashShownFor.current = currentStep.id
       setShowBlitzSplash(true)
       const t = setTimeout(() => setShowBlitzSplash(false), 2600)
       return () => clearTimeout(t)
     }
-  }, [currentStep?.id, currentStep?.stepType])
+  }, [currentStep?.id, currentStep?.stepType, showMissionStartSplash])
 
   // Billy Insight Splash: show fullscreen when entering a step with aiInsight
   // Per user request, don't show it before a Blitz Challenge to avoid overlay fatigue
   // Maximum 3 Billy Insights per lesson. HIDE DURING EXAMS.
   useEffect(() => {
-    if (!currentStep || isExam) return
+    if (!currentStep || isExam || showMissionStartSplash) return
     const insight = (currentStep as any).aiInsight
     if (insight && currentStep.stepType !== "blitz_challenge" && billyInsightShownFor.current !== currentStep.id) {
       // Check for limit
@@ -288,7 +288,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       const t = setTimeout(() => setShowBillyInsightSplash(false), calculatedDuration)
       return () => clearTimeout(t)
     }
-  }, [currentStep?.id, currentStep?.stepType])
+  }, [currentStep?.id, currentStep?.stepType, showMissionStartSplash, isExam])
 
 
 
@@ -349,11 +349,11 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   // Trigger Streak Splash
   useEffect(() => {
-    if (streak >= 5 && !hasShownStreakSplash.current) {
+    if (!showMissionStartSplash && streak >= 5 && !hasShownStreakSplash.current) {
         hasShownStreakSplash.current = true
         setShowStreakSplash(true)
     }
-  }, [streak])
+  }, [streak, showMissionStartSplash])
 
   const mistakeCount = state.totalMistakes
   const stars: 0 | 1 | 2 | 3 =
