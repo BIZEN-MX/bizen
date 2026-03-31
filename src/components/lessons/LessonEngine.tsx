@@ -749,12 +749,12 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           <motion.div
             animate={{ scale: [1, 1.6], opacity: [0.12, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
-            style={{ position: "absolute", width: 360, height: 360, borderRadius: "50%", background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)", pointerEvents: "none" }}
+            style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 360, height: 360, borderRadius: "50%", background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)", pointerEvents: "none" }}
           />
           <motion.div
             animate={{ scale: [1, 1.8], opacity: [0.08, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
-            style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, #60a5fa 0%, transparent 70%)", pointerEvents: "none" }}
+            style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, #60a5fa 0%, transparent 70%)", pointerEvents: "none" }}
           />
 
           {/* Billy avatar */}
