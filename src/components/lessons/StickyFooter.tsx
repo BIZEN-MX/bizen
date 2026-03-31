@@ -54,7 +54,7 @@ export function StickyFooter({
         left: 0,
         right: 0,
         width: "100%",
-        zIndex: 100,
+        zIndex: 9999,
         background: bg,
         borderTop: `2px solid ${borderColor}`,
         paddingTop: "clamp(12px, 2vw, 20px)",

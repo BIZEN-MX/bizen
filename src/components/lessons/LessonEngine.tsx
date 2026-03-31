@@ -47,33 +47,7 @@ interface LessonEngineProps {
 /**
  * Extracts readable text from a LessonStep for Text-to-Speech playback.
  */
-function getTTSContent(step: any, skipInsight: boolean = false): string {
-  if (!step) return ""
-  const parts: string[] = []
 
-  // ONLY return content if there is an AI Insight or Clue.
-  // This makes the voice exclusive to Billy's messages.
-  if (step.aiInsight && !skipInsight) {
-    parts.push(step.aiInsight)
-  } else if (step.clue && !skipInsight) {
-    parts.push(`¡Pista! ${step.clue}`)
-  } else if (step.stepType === "billy_talks" && step.body) {
-    parts.push(step.body)
-  }
-
-  // clean out glossary definitions: [[term|definition]] -> term
-  // Also handle simple [[term]] -> term
-  let text = parts.join(". ")
-  
-  // 1. Handle [[word|definition]] -> word
-  text = text.replace(/\[\[(.*?)\|(.*?)\]\]/g, "$1")
-  
-  // 2. Handle [[word]] -> word
-  text = text.replace(/\[\[(.*?)\]\]/g, "$1")
-  
-  // 3. Clean out markdown symbols
-  return text.replace(/[*_#`]/g, "")
-}
 
 /**
  * Main lesson engine component that manages state and renders appropriate step components
@@ -316,118 +290,12 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     }
   }, [currentStep?.id, currentStep?.stepType])
 
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false)
-  const [isAudioLoading, setIsAudioLoading] = useState(false)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  const stopAudio = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-    }
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      window.speechSynthesis.cancel()
-    }
-    setIsAudioPlaying(false)
-    setIsAudioLoading(false)
-  }, [])
 
-  const playFallbackSpeech = useCallback((text: string) => {
-    console.warn("[TTS] Using browser fallback speech (Google TTS API failed)")
-    if (typeof window === "undefined" || !window.speechSynthesis) return
 
-    const utterance = new SpeechSynthesisUtterance(text)
-    const voices = window.speechSynthesis.getVoices()
-    const mxVoice = voices.find(v => v.lang === "es-MX" || v.lang === "es-US")
-    const esVoice = voices.find(v => v.lang.startsWith("es"))
-    
-    if (mxVoice) utterance.voice = mxVoice
-    else if (esVoice) utterance.voice = esVoice
-    else utterance.lang = "es-MX"
-
-    utterance.rate = 1.25   // Even faster per user request for mobile snappy feel
-    utterance.pitch = 1.0  // Natural pitch
-
-    utterance.onstart = () => {
-      setIsAudioPlaying(true)
-      setIsAudioLoading(false)
-    }
-    utterance.onend = () => setIsAudioPlaying(false)
-    utterance.onerror = () => {
-      setIsAudioPlaying(false)
-      setIsAudioLoading(false)
-    }
-
-    window.speechSynthesis.speak(utterance)
-  }, [])
-
-  const playAudio = useCallback(async () => {
-    initAudioContext() // Unlock context
-    if (!currentStep) return
-    if (typeof window === "undefined") return
-
-    stopAudio()
-
-    const skipInsightStatus = !!currentStep && (currentStep as any).aiInsight && billyInsightsCount.current >= 3 && billyInsightShownFor.current !== currentStep.id
-    const content = getTTSContent(currentStep, skipInsightStatus)
-    if (!content) return
-
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || navigator.maxTouchPoints > 0
-
-    if (isMobile) {
-      console.log("[TTS] Mobile detected - using sync browser fallback to avoid gesture block")
-      playFallbackSpeech(content)
-      return
-    }
-
-    try {
-      setIsAudioLoading(true)
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: content }),
-      })
-
-      if (!response.ok) throw new Error(`TTS API error: ${response.status}`)
-
-      const audioBlob = await response.blob()
-      const audioUrl = URL.createObjectURL(audioBlob)
-
-      const audio = new Audio(audioUrl)
-      audioRef.current = audio
-
-      audio.onplay = () => {
-        setIsAudioPlaying(true)
-        setIsAudioLoading(false)
-      }
-
-      audio.onended = () => {
-        setIsAudioPlaying(false)
-        URL.revokeObjectURL(audioUrl)
-      }
-
-      audio.play().catch(err => {
-        console.warn("Audio.play() blocked on mobile, falling back:", err)
-        playFallbackSpeech(content)
-      })
-    } catch (error) {
-      console.warn("TTS API failed, falling back to browser speech:", error)
-      playFallbackSpeech(content)
-    }
-  }, [currentStep, stopAudio, playFallbackSpeech])
-
-  const toggleAudio = useCallback(() => {
-    if (isAudioPlaying) {
-      stopAudio()
-    } else {
-      playAudio()
-    }
-  }, [isAudioPlaying, playAudio, stopAudio])
 
   // Stop audio on unmount or step change
-  useEffect(() => {
-    return () => stopAudio()
-  }, [currentStep?.id, stopAudio])
+
 
   // Find the last theoretical step seen before the current step
   const lastInfoStep = React.useMemo(() => {
@@ -593,7 +461,6 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const stepProps = {
     step: currentStep as any,
     onAnswered: onStepAnswered,
-    onPlayAudio: playAudio,
     actionTrigger: state.actionTrigger,
     isContinueEnabled: state.isContinueEnabled,
   }
@@ -1283,9 +1150,6 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 stars={stars}
                 isExam={isExam}
                 onExit={handleAttemptExit}
-                onToggleAudio={getTTSContent(currentStep, (currentStep as any)?.aiInsight && billyInsightsCount.current >= 3 && billyInsightShownFor.current !== currentStep?.id) ? toggleAudio : undefined}
-                isAudioPlaying={isAudioPlaying}
-                isAudioLoading={isAudioLoading}
                 hasGlossary={lessonGlossary.length > 0}
                 onOpenGlossary={() => {
                   haptic.light()
@@ -1686,7 +1550,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           streak={streak}
           stars={stars}
           showProgressBar={!onProgressChange}
-          footerContent={renderFooter(false)}
+          footerContent={renderFooter(true)}
         >
           {renderStep()}
         </LessonScreen>

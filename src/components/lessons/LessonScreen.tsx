@@ -83,7 +83,7 @@ export function LessonScreen({
       {/* Content area — vertically centered, horizontally constrained */}
       <LessonContainer
         className={className}
-        bottomPad={0}
+        bottomPad={100}
         topPad={0}
         noScroll={false}
       >
