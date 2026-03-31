@@ -45,21 +45,11 @@ export function Billy({
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [15, -15]), springConfig)
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-15, 15]), springConfig)
   
-  // -- Animación de Flotación con Seno --
+  // -- Animación de Flotación (DESHABILITADA por petición) --
   const floatY = useMotionValue(0)
   const springFloatY = useSpring(floatY, { damping: 15, stiffness: 30 })
 
-  useEffect(() => {
-    let start = Date.now()
-    const animate = () => {
-      const elapsed = Date.now() - start
-      // Onda de flotación suave
-      floatY.set(Math.sin(elapsed / 1000) * 12)
-      requestAnimationFrame(animate)
-    }
-    const raf = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(raf)
-  }, [floatY])
+  // useEffect que movía a Billy eliminado
 
   // Manejar entrada del mouse para el tilt 3D
   const handleMouseMove = (e: React.MouseEvent) => {

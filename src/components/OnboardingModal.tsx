@@ -65,16 +65,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             .catch(() => setSchools([]))
     }, [])
 
-    useEffect(() => {
-        if (user?.user_metadata?.full_name && !username) {
-            const suggested = user.user_metadata.full_name
-                .toLowerCase()
-                .replace(/\s+/g, "_")
-                .replace(/[^a-z0-9_.-]/g, "")
-                .slice(0, 20)
-            setUsername(suggested)
-        }
-    }, [user, username])
+    // No hay sugerencias de nombre. Debe empezar en blanco.
 
     const goToStep = useCallback((next: Step) => {
         setStep(next)

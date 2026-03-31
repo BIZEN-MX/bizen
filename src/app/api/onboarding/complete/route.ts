@@ -24,10 +24,28 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Solo se permiten letras, números, guiones y puntos" }, { status: 400 })
         }
 
+        const trimmedUser = username.trim()
+
+        // Uniqueness check
+        try {
+            const { prisma } = await import("@/lib/prisma")
+            const existing = await prisma.profile.findFirst({
+                where: { 
+                    nickname: { equals: trimmedUser, mode: 'insensitive' },
+                    NOT: { userId: user.id }
+                }
+            })
+            if (existing) {
+                return NextResponse.json({ error: "Este nombre de usuario ya está en uso. Por favor elige otro." }, { status: 400 })
+            }
+        } catch (dbError) {
+            console.error("Uniqueness check error:", dbError)
+        }
+
         // Update user metadata to mark onboarding as complete
         const { error: updateError } = await supabase.auth.updateUser({
             data: {
-                username: username.trim(),
+                username: trimmedUser,
                 bio: bio?.trim() || "",
                 avatar: avatar || { type: "emoji", value: "👤" },
                 birth_date: birthDate || null,
@@ -47,7 +65,7 @@ export async function POST(request: NextRequest) {
             await prisma.profile.updateMany({
                 where: { userId: user.id },
                 data: {
-                    nickname: username.trim(),
+                    nickname: trimmedUser,
                     ...(birthDate ? { birthDate: new Date(birthDate) } : {}),
                     ...(schoolId ? { schoolId } : {})
                 } as any

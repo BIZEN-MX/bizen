@@ -104,7 +104,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
   const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage;
-  const hideChat = isDiagnosticPage; // Only hide on diagnostic flow (keeps focus)
+  const hideChat = isDiagnosticPage || pathname === "/"; // Only hide on diagnostic flow (keeps focus) and landing page
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {
