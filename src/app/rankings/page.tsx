@@ -70,6 +70,7 @@ export default function RankingsPage() {
     const [users, setUsers] = useState<UserRank[]>([])
     const [particulares, setParticulares] = useState<UserRank[]>([])
     const [schools, setSchools] = useState<SchoolRank[]>([])
+    const [loading, setLoading] = useState(false)
     const [isInitialLoading, setIsInitialLoading] = useState(true)
     const [isSyncing, setIsSyncing] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -172,8 +173,8 @@ export default function RankingsPage() {
         .rk-row {
           display: flex;
           align-items: center;
-          gap: 16px;
-          padding: 16px 20px;
+          gap: 12px;
+          padding: 12px 16px;
           background: white;
           border-radius: 14px;
           border: 1.5px solid #e8f0fe;
@@ -204,7 +205,7 @@ export default function RankingsPage() {
                     width: "100%",
                     maxWidth: "1200px",
                     margin: "0 auto",
-                    padding: "clamp(20px, 5vw, 48px)",
+                    padding: "clamp(12px, 4vw, 32px)",
                     boxSizing: "border-box",
                 }}
             >
@@ -213,8 +214,8 @@ export default function RankingsPage() {
                     style={{
                         background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0F62FE 100%)",
                         borderRadius: 28,
-                        padding: "clamp(32px, 5vw, 52px) clamp(28px, 5vw, 48px)",
-                        marginBottom: 32,
+                        padding: "clamp(24px, 4vw, 40px) clamp(20px, 4vw, 36px)",
+                        marginBottom: 20,
                         position: "relative",
                         overflow: "hidden",
                         boxShadow: "0 20px 60px rgba(15,98,254,0.25)",

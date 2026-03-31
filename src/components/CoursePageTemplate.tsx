@@ -429,7 +429,7 @@ export default function CoursePageTemplate({
                                                 background: "rgba(255,255,255,0.06)",
                                                 border: "1px solid rgba(255,255,255,0.1)",
                                                 borderRadius: 20,
-                                                padding: "20px 24px",
+                                                padding: "16px 20px",
                                                 backdropFilter: "blur(4px)"
                                             }}
                                         >
@@ -463,7 +463,7 @@ export default function CoursePageTemplate({
                                 background: "rgba(255, 255, 255, 0.7)", 
                                 backdropFilter: "blur(20px)", 
                                 borderRadius: 24, 
-                                padding: "20px 24px", 
+                                padding: "16px 22px", 
                                 border: "1px solid rgba(255, 255, 255, 0.8)",
                                 boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
                                 display: "flex",
@@ -519,7 +519,7 @@ export default function CoursePageTemplate({
                                     {(() => {
                                         const v = SUBTEMA_VARIANTS[subIdx % SUBTEMA_VARIANTS.length]
                                         return (
-                                            <div style={{ display: "flex", flexDirection: "column", padding: "clamp(18px, 3vw, 26px)", paddingBottom: 16, background: v.background, borderRadius: 18, boxShadow: v.boxShadow, border: v.border, marginBottom: 20 }}>
+                                            <div style={{ display: "flex", flexDirection: "column", padding: "14px 20px", paddingBottom: 14, background: v.background, borderRadius: 18, boxShadow: v.boxShadow, border: v.border, marginBottom: 16 }}>
                                                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
                                                     <div style={{ flex: 1, minWidth: 0 }}>
                                                         <div style={{ fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>CURSO {(subIdx + 1).toString().padStart(2, "0")}</div>

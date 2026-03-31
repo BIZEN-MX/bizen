@@ -28,19 +28,19 @@ export default function BillyLabWidget({
         width: "100%",
         background: "linear-gradient(135deg, #0a0f1e 0%, #171c2d 100%)",
         borderRadius: 24,
-        padding: "24px",
+        padding: "18px 20px",
         border: "1px solid rgba(59,130,246,0.3)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.3), inset 0 0 20px rgba(59,130,246,0.1)",
         position: "relative",
         overflow: "hidden",
-        marginBottom: 32,
+        marginBottom: 16,
         fontFamily: "'Outfit', sans-serif"
       }}
     >
       {/* Background Grid Accent */}
       <div style={{ position: "absolute", top: 0, right: 0, width: "300px", height: "100%", backgroundImage: "linear-gradient(rgba(59,130,246,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.05) 1px, transparent 1px)", backgroundSize: "30px 30px", opacity: 0.5, pointerEvents: "none" }} />
       
-      <div style={{ display: "flex", gap: 24, alignItems: "center", position: "relative", zIndex: 1, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 18, alignItems: "center", position: "relative", zIndex: 1, flexWrap: "wrap" }}>
         
         {/* DNA Indicator */}
         <div style={{ 
@@ -85,18 +85,18 @@ export default function BillyLabWidget({
         </div>
 
         {/* Action Buttons: The Bypass Portal & The Gen-Lab */}
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap", flex: "1 1 100%" }}>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", flex: "1 1 100%", marginTop: 4 }}>
           <motion.div
             whileHover={{ x: 5, scale: 1.02 }}
             onClick={() => router.push(`/courses/${nextTopicId}`)}
             style={{
               background: "rgba(59,130,246,0.1)",
               border: "1px solid rgba(59,130,246,0.4)",
-              padding: "16px 24px",
+              padding: "14px 20px",
               borderRadius: 16,
               display: "flex",
               alignItems: "center",
-              gap: 16,
+              gap: 12,
               cursor: "pointer",
               transition: "all 0.3s ease",
               flex: 1,
@@ -104,25 +104,25 @@ export default function BillyLabWidget({
             }}
           >
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", fontWeight: 500 }}>Recomendación Billy Lab</div>
-              <div style={{ fontSize: 16, fontWeight: 500, color: "#fff" }}>Saltar a {nextTopicTitle}</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", fontWeight: 500 }}>Recomendación Billy Lab</div>
+              <div style={{ fontSize: 15, fontWeight: 500, color: "#fff" }}>Saltar a {nextTopicTitle}</div>
             </div>
-            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <ChevronRight size={20} color="#fff" />
+            <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <ChevronRight size={18} color="#fff" />
             </div>
           </motion.div>
-
+ 
           <motion.div
             whileHover={{ x: 5, scale: 1.02 }}
             onClick={() => router.push("/learn/billy-lab")}
             style={{
               background: "linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%)",
               border: "1px solid rgba(255,255,255,0.2)",
-              padding: "16px 24px",
+              padding: "14px 20px",
               borderRadius: 16,
               display: "flex",
               alignItems: "center",
-              gap: 16,
+              gap: 12,
               cursor: "pointer",
               transition: "all 0.3s ease",
               flex: 1,
@@ -130,12 +130,12 @@ export default function BillyLabWidget({
               boxShadow: "0 10px 20px rgba(59,130,246,0.3)"
             }}
           >
-            <Zap size={24} color="#fff" />
+            <Zap size={20} color="#fff" />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", fontWeight: 500 }}>Generador de ADN</div>
-              <div style={{ fontSize: 16, fontWeight: 500, color: "#fff" }}>Iniciar Entrenamiento Delta</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", fontWeight: 500 }}>Generador de ADN</div>
+              <div style={{ fontSize: 15, fontWeight: 500, color: "#fff" }}>Iniciar Entrenamiento Delta</div>
             </div>
-            <ChevronRight size={20} color="#fff" />
+            <ChevronRight size={18} color="#fff" />
           </motion.div>
         </div>
 

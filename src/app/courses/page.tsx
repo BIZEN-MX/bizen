@@ -312,10 +312,10 @@ export default function CoursesPage() {
             style={{
               background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
               borderRadius: 28,
-              padding: "clamp(32px, 5vw, 52px) clamp(28px, 5vw, 48px)",
+              padding: "clamp(24px, 4vw, 40px) clamp(22px, 4vw, 36px)",
               width: "100%",
               maxWidth: 1188,
-              margin: "0 auto clamp(28px, 5vw, 40px)",
+              margin: "0 auto clamp(20px, 4vw, 32px)",
               position: "relative",
               overflow: "hidden",
               boxShadow: "0 20px 60px rgba(15, 98, 254, 0.25)",
@@ -385,7 +385,7 @@ export default function CoursesPage() {
                         background: "rgba(255,255,255,0.06)",
                         border: "1px solid rgba(255,255,255,0.1)",
                         borderRadius: 20,
-                        padding: "20px 24px",
+                        padding: "16px 20px",
                         backdropFilter: "blur(4px)"
                       }}
                     >
@@ -418,7 +418,7 @@ export default function CoursesPage() {
                 background: "rgba(255, 255, 255, 0.7)", 
                 backdropFilter: "blur(20px)", 
                 borderRadius: 24, 
-                padding: "20px 24px", 
+                padding: "16px 20px", 
                 border: "1px solid rgba(255, 255, 255, 0.8)",
                 boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
                 display: "flex",
@@ -605,7 +605,7 @@ export default function CoursesPage() {
                               }}
                               className={topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "dna-glow-pulse" : "")}
                             >
-                              <div style={{ padding: "32px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                              <div style={{ padding: "22px 24px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
                                   <div style={{ fontSize: 11, fontWeight: 400, color: isDnaRecommended ? "#93c5fd" : "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                                     TEMA {topic.displayOrder.toString().padStart(2, "0")}

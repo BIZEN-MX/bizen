@@ -58,7 +58,7 @@ function HubCard({
         borderRadius: T.radius,
         border: `1px solid ${hovered ? accentColor : `${accentColor}30`}`,
         boxShadow: hovered ? `0 20px 40px -12px ${accentColor}30` : T.shadow,
-        padding: "24px",
+        padding: "18px 20px",
         cursor: "pointer",
         display: "flex",
         flexDirection: "column",
@@ -147,12 +147,12 @@ export default function ComunidadHubPage() {
     <div style={{ minHeight: "100vh", background: T.bg, fontFamily: T.font, boxSizing: "border-box" }}>
       <style>{`
         @media (max-width:767px) {
-          .com-wrap { margin-left: 0 !important; padding: 0 16px 100px !important; }
+          .com-wrap { margin-left: 0 !important; padding: 0 12px 100px !important; }
           .com-hero { border-radius: 0 !important; margin: 0 !important; }
-          .com-hero-pad { padding: 48px 24px 48px !important; }
-          .com-hero-stats { grid-template-columns: 1fr 1fr !important; display: grid !important; gap: 10px !important; }
-          .com-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
-          .com-top-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .com-hero-pad { padding: 32px 20px 40px !important; }
+          .com-hero-stats { grid-template-columns: 1fr 1fr !important; display: grid !important; gap: 8px !important; }
+          .com-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+          .com-top-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
         }
         @media (min-width:768px) and (max-width:1160px) {
           .com-wrap { margin-left: 220px !important; }
@@ -186,7 +186,7 @@ export default function ComunidadHubPage() {
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
         }} />
 
-        <div className="com-wrap com-hero-pad" style={{ padding: "64px 48px 80px", position: "relative", zIndex: 1, boxSizing: "border-box" }}>
+        <div className="com-wrap com-hero-pad" style={{ padding: "40px 40px 48px", position: "relative", zIndex: 1, boxSizing: "border-box" }}>
           {/* Breadcrumb */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24, opacity: 0.8 }}>
             <span style={{ fontSize: 13, color: "#fff", fontWeight: 500, opacity: 0.5 }}>Plataforma</span>

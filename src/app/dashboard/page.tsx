@@ -435,9 +435,9 @@ function DashboardContent() {
     <div style={{ minHeight: "100vh", background: "#FBFAF5", width: "100%", boxSizing: "border-box", fontFamily: '"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif' }}>
       <style>{`
         /* ── sidebar offsets ── */
-        @media (max-width:767px)              { .di { padding:20px 16px 100px !important; margin-left:0 !important; } }
-        @media (min-width:768px) and (max-width:1160px) { .di { margin-left:220px !important; padding:32px 28px 64px !important; } }
-        @media (min-width:1161px)             { .di { margin-left:280px !important; padding:40px 60px 80px !important; max-width: 1600px !important; margin-right: auto !important; } }
+        @media (max-width:767px)              { .di { padding:14px 12px 100px !important; margin-left:0 !important; } }
+        @media (min-width:768px) and (max-width:1160px) { .di { margin-left:220px !important; padding:24px 20px 48px !important; } }
+        @media (min-width:1161px)             { .di { margin-left:280px !important; padding:32px 48px 64px !important; max-width: 1600px !important; margin-right: auto !important; } }
 
         /* ── animations ── */
         @keyframes du { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
@@ -450,7 +450,7 @@ function DashboardContent() {
 
         /* stat card — screenshot style: colored bg, centered content, no heavy border */
         .sc {
-          border-radius:20px; padding:28px 24px 24px;
+          border-radius:20px; padding:22px 20px 18px;
           flex:1; min-width:0;
           font-family:"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
           transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1);
@@ -475,7 +475,7 @@ function DashboardContent() {
         /* quick link */
         .ql {
           background: linear-gradient(145deg,#FFFFFF 0%,#F8FAFC 100%);
-          border-radius:20px; padding:18px 16px;
+          border-radius:20px; padding:14px 12px;
           border:1px solid rgba(15,98,254,0.10);
           box-shadow:0 8px 20px -6px rgba(15,98,254,0.08);
           display:flex; align-items:center; gap:14px; cursor:pointer;
@@ -589,8 +589,8 @@ function DashboardContent() {
         {/* HERO */}
         <div className="dc" style={{
           background: isAdminOrTeacher ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0F62FE 100%)" : "linear-gradient(135deg,#0a0f2e 0%,#0d2a6b 45%,#1a56db 100%)",
-          borderRadius: 32, padding: "clamp(36px,5vw,56px) clamp(32px,5vw,52px)",
-          marginBottom: 24, position: "relative", overflow: "hidden",
+          borderRadius: 32, padding: "clamp(24px,4vw,40px) clamp(22px,4vw,36px)",
+          marginBottom: 16, position: "relative", overflow: "hidden",
           boxShadow: "0 24px 64px rgba(13,42,107,.35), inset 0 1px 0 rgba(255,255,255,.08)",
           animationDelay: "0s",
         }}>
@@ -731,8 +731,8 @@ function DashboardContent() {
             <div style={{
               background: dnaInfo?.bg || "white",
               border: `1.5px solid ${dnaInfo?.border || "#e2e8f0"}`,
-              borderRadius: 24, padding: "20px 24px",
-              display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20,
+              borderRadius: 24, padding: "16px 20px",
+              display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16,
               boxShadow: "0 4px 12px rgba(0,0,0,0.03)"
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -759,8 +759,8 @@ function DashboardContent() {
             <div style={{
               background: "linear-gradient(135deg, #f0f9ff, #e0f2fe)",
               border: "1.5px dashed #bae6fd",
-              borderRadius: 24, padding: "24px 32px",
-              display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20
+              borderRadius: 24, padding: "18px 24px",
+              display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -835,7 +835,7 @@ function DashboardContent() {
           {/* colored left border accent */}
           <div style={{position:"absolute",left:0,top:0,bottom:0,width:4,background:`linear-gradient(180deg,${topicColor},${topicColor}55)`}}/>
 
-          <div style={{padding:"clamp(28px,4vw,40px) clamp(28px,4vw,40px) clamp(28px,4vw,40px) calc(clamp(28px,4vw,40px) + 12px)"}}>
+          <div style={{padding:"clamp(18px,3vw,32px) clamp(18px,3vw,32px) clamp(18px,3vw,32px) calc(clamp(18px,3vw,32px) + 12px)"}}>
             {/* section label */}
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:20}}>
               <div style={{width:28,height:28,borderRadius:9,background:`${topicColor}18`,display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -907,7 +907,7 @@ function DashboardContent() {
 
           {/* Weekly Activity */}
           <div className="dc" style={{
-            background:"#fff",borderRadius:24,padding:"28px 24px",
+            background:"#fff",borderRadius:24,padding:"20px 20px",
             border:"1.5px solid rgba(0,0,0,.055)",
             boxShadow:"0 2px 14px rgba(0,0,0,.045)",animationDelay:".25s"
           }}>
@@ -960,7 +960,7 @@ function DashboardContent() {
 
           {/* Activity Feed / Notifications */}
           <div className="dc" style={{
-            background:"#fff",borderRadius:24,padding:"28px 24px",
+            background:"#fff",borderRadius:24,padding:"22px 20px",
             border:"1.5px solid rgba(0,0,0,.055)",
             boxShadow:"0 2px 14px rgba(0,0,0,.045)",animationDelay:".28s",
             display: "flex", flexDirection: "column",

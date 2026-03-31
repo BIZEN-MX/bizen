@@ -158,13 +158,13 @@ export default function DailyChallengeWidget() {
             background: completed 
                 ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
                 : "linear-gradient(145deg, #0d1b4b 0%, #1e0648 50%, #2d0a6b 100%)",
-            borderRadius: 24, padding: "clamp(16px, 4vw, 24px)",
+            borderRadius: 24, padding: "16px 20px",
             boxShadow: completed 
                 ? "0 12px 32px rgba(16,185,129,0.25)"
                 : "0 12px 40px rgba(109,40,217,0.3)",
             position: "relative", overflow: "hidden",
             transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-            marginBottom: 24
+            marginBottom: 16
         }}>
             {/* Orbs */}
             {!completed && (
@@ -196,8 +196,8 @@ export default function DailyChallengeWidget() {
                         </div>
                     </div>
                     {isExpanding && (
-                        <button onClick={() => setIsExpanding(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.5)" }}>
-                            <X size={20} />
+                        <button onClick={() => setIsExpanding(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.5)", padding: 4 }}>
+                            <X size={18} />
                         </button>
                     )}
                 </div>
