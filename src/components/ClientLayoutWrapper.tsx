@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 // import NavigationLoading from './NavigationLoading';
 import FixedSidebar from './FixedSidebar';
@@ -25,6 +25,14 @@ import AppTourOverlay from './AppTourOverlay';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<>{children}</>}>
+      <InnerClientWrapper>{children}</InnerClientWrapper>
+    </Suspense>
+  );
+}
+
+function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   // const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
