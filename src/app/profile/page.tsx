@@ -15,7 +15,7 @@ import {
   Search, Mail, ChevronRight, X as CloseIcon, Camera, Star,
   Trophy, BookOpen, Compass, Share2, Heart, Settings, Instagram,
   Palette, CreditCard, Lock as LockIcon, History, ArrowUpRight, ArrowDownLeft,
-  CircleDollarSign, ShoppingCart, Gem, PlusCircle, Target, Send, Search as SearchIcon, Loader2, Check
+  CircleDollarSign, ShoppingCart, Gem, PlusCircle, Target, Send, Search as SearchIcon, Loader2, Check, ChevronDown
 } from "lucide-react"
 import BizenVirtualCard, { CardTheme, getTierFromLevel } from "@/components/BizenVirtualCard"
 
@@ -462,10 +462,10 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="prof-body" style={{ display: "flex", gap: 40, maxWidth: 1300, margin: "0 auto", position: "relative", zIndex: 2 }}>
+      <div className="prof-body" style={{ display: "flex", gap: screenSize < 1200 ? 20 : 24, maxWidth: 1300, margin: "0 auto", position: "relative", zIndex: 2 }}>
         
         {/* LEFT COLUMN: IDENTITY & STATS */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 32 }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 24 }}>
           
           {/* XP Card with detailed count */}
           {!isAdminOrTeacher && (
@@ -520,7 +520,7 @@ export default function ProfilePage() {
 
           {/* Achievements Area */}
           <div className="fade-up" style={{ animationDelay: "0.3s" }}>
-             <h2 style={{ fontSize: screenSize < 768 ? 16 : 18, fontWeight: 700, color: "#0f172a", marginBottom: screenSize < 768 ? 12 : 20, display: "flex", alignItems: "center", gap: 8 }}>
+             <h2 style={{ fontSize: screenSize < 768 ? 16 : 18, fontWeight: 700, color: "#0f172a", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
                Mis Logros
                <span style={{ fontSize: 11, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "2px 8px", borderRadius: 8 }}>{achievements.filter(a => a.unlocked).length}</span>
              </h2>
@@ -531,10 +531,10 @@ export default function ProfilePage() {
         </div>
 
         {/* RIGHT COLUMN: BIZEN CARD & SOCIAL */}
-        <div className="prof-side fade-up" style={{ width: 380, display: "flex", flexDirection: "column", gap: 32, animationDelay: "0.15s" }}>
+        <div className="prof-side fade-up" style={{ width: 380, display: "flex", flexDirection: "column", gap: 24, animationDelay: "0.15s" }}>
           {/* BIZEN VIRTUAL CARD */}
-          <div className="prof-card fade-up" style={{ padding: 24, background: "white", animationDelay: "0.15s", borderRadius: 24 }}>
-            <div style={{ marginBottom: 20 }}>
+          <div className="prof-card fade-up" style={{ padding: "20px", background: "white", animationDelay: "0.15s", borderRadius: 24, overflow: "visible" }}>
+            <div style={{ marginBottom: 16 }}>
               <BizenVirtualCard 
                 holderName={displayName} 
                 level={level}
@@ -544,54 +544,49 @@ export default function ProfilePage() {
               />
             </div>
 
-            {/* Theme Picker */}
-            <div style={{ marginTop: 16 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tema de Tarjeta</span>
-                <div style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: 8, fontSize: 10, fontWeight: 700, color: "#64748b" }}>{cardTheme.toUpperCase()}</div>
-              </div>
-              <div style={{ width: "100%", display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {(["blue", "emerald", "violet", "rose", "amber", "slate", "obsidian"] as CardTheme[]).map(t => (
-                  <button 
-                    key={t} 
-                    onClick={() => updateCardTheme(t)} 
-                    disabled={savingTheme}
-                    style={{ 
-                      width: 32, height: 32, borderRadius: "50%", cursor: savingTheme ? "wait" : "pointer", 
-                      border: cardTheme === t ? "3px solid #0F62FE" : "2px solid white", 
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                      background: t === "obsidian" ? "#1a1a1a" : t === "blue" ? "#0F62FE" : t === "emerald" ? "#10B981" : t === "violet" ? "#8B5CF6" : t === "rose" ? "#F43F5E" : t === "amber" ? "#F59E0B" : "#64748B",
-                      transition: "all 0.2s ease",
-                      transform: cardTheme === t ? "scale(1.1)" : "scale(1)"
-                    }} 
-                  />
-                ))}
-              </div>
-            </div>
+            {/* Edit / Personalize Trigger */}
+            <button 
+              onClick={() => setIsThemePickerOpen(!isThemePickerOpen)}
+              style={{
+                width: "100%", padding: "10px", borderRadius: 12, border: "1.5px solid #e2e8f0",
+                background: isThemePickerOpen ? "#f8fafc" : "white", color: "#64748b",
+                fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", 
+                alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.2s"
+              }}
+            >
+              <Palette size={14} color={isThemePickerOpen ? "#0F62FE" : "#64748b"} />
+              {isThemePickerOpen ? "Cerrar Personalización" : "Personalizar Tarjeta"}
+              {isThemePickerOpen ? <ChevronDown size={14} style={{ transform: "rotate(180deg)" }} /> : <ChevronRight size={14} />}
+            </button>
 
-            <div style={{ marginTop: 24, display: "flex", gap: 10 }}>
-              <button 
-                onClick={() => setIsTransferModalOpen(true)}
-                style={{ 
-                  flex: 1, background: "#0F62FE", color: "white", border: "none", padding: "10px", 
-                  borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  boxShadow: "0 4px 12px rgba(15,98,254,0.2)"
-                }}
-              >
-                <Send size={14} /> Transferir
-              </button>
-              <button 
-                onClick={() => router.push("/tienda")}
-                style={{ 
-                  flex: 1, background: "#f8fafc", color: "#475569", border: "1.5px solid #e2e8f0", 
-                  padding: "10px", borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8
-                }}
-              >
-                <ShoppingCart size={14} /> Tienda
-              </button>
-            </div>
+            {/* Theme Picker - Conditional */}
+            {isThemePickerOpen && (
+              <div style={{ marginTop: 20, padding: 16, background: "#f8fafc", borderRadius: 16, border: "1px solid #f1f5f9" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Selecciona un Color</span>
+                  <div style={{ background: "white", padding: "2px 8px", borderRadius: 6, fontSize: 9, fontWeight: 800, color: "#0F62FE", border: "1px solid #e2e8f0" }}>{cardTheme.toUpperCase()}</div>
+                </div>
+                <div style={{ width: "100%", display: "flex", flexWrap: "wrap", gap: 10 }}>
+                  {(["blue", "emerald", "violet", "rose", "amber", "slate", "obsidian"] as CardTheme[]).map(t => (
+                    <button 
+                      key={t} 
+                      onClick={() => updateCardTheme(t)} 
+                      disabled={savingTheme}
+                      onMouseEnter={e => { if (!savingTheme) e.currentTarget.style.transform = "scale(1.15)" }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = cardTheme === t ? "scale(1.1)" : "scale(1)" }}
+                      style={{ 
+                        width: 32, height: 32, borderRadius: "50%", cursor: savingTheme ? "wait" : "pointer", 
+                        border: cardTheme === t ? "3px solid #0F62FE" : "2.5px solid white", 
+                        boxShadow: cardTheme === t ? "0 0 12px rgba(15,98,254,0.3)" : "0 2px 6px rgba(0,0,0,0.08)",
+                        background: t === "obsidian" ? "#1a1a1a" : t === "blue" ? "#0F62FE" : t === "emerald" ? "#10B981" : t === "violet" ? "#8B5CF6" : t === "rose" ? "#F43F5E" : t === "amber" ? "#F59E0B" : "#64748B",
+                        transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                        transform: cardTheme === t ? "scale(1.1)" : "scale(1)"
+                      }} 
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>          {/* Status Badge for Admins/Teachers */}
           {isAdminOrTeacher && (
             <div style={{ padding: 24, background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", borderRadius: 24, color: "white" }}>
@@ -611,7 +606,7 @@ export default function ProfilePage() {
             <div 
                onClick={() => setShowActivity(!showActivity)}
                style={{ 
-                 padding: "18px 24px", 
+                 padding: "16px 20px", 
                  borderBottom: showActivity ? "1.5px solid #f1f5f9" : "none", 
                  display: "flex", 
                  justifyContent: "space-between", 
@@ -634,7 +629,7 @@ export default function ProfilePage() {
 
             {showActivity && (
               <>
-                <div style={{ padding: "8px 0", maxHeight: 320, overflowY: "auto" }}>
+                <div style={{ padding: "6px 0", maxHeight: 320, overflowY: "auto" }}>
                   {loadingTransactions ? (
                     <div style={{ textAlign: "center", padding: 32, fontSize: 13, color: "#94a3b8" }}>Cargando actividad...</div>
                   ) : transactions.length === 0 ? (
@@ -705,7 +700,7 @@ export default function ProfilePage() {
                   )}
                 </div>
 
-                <div style={{ padding: "12px 24px", background: "#f8fafc", borderTop: "1px solid #f1f5f9" }}>
+                <div style={{ padding: "10px 20px", background: "#f8fafc", borderTop: "1px solid #f1f5f9" }}>
                   <button onClick={() => router.push("/tienda")} style={{ width: "100%", background: "white", border: "1.5px solid #e2e8f0", padding: "8px", borderRadius: 12, fontSize: 11, fontWeight: 700, color: "#475569", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.borderColor = "#0F62FE"; e.currentTarget.style.color = "#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.color = "#475569"}}>
                     <ShoppingCart size={14} /> Ir a la Tienda
                   </button>
@@ -716,14 +711,14 @@ export default function ProfilePage() {
 
           {/* Savings Goals Section */}
           <div className="prof-card fade-up" style={{ animationDelay: "0.25s" }}>
-            <div style={{ padding: "18px 24px", borderBottom: "1.5px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ padding: "16px 20px", borderBottom: "1.5px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: 10 }}>
                 <Target size={18} color="#10B981" /> Metas de Ahorro
               </h3>
               <PlusCircle size={16} color="#64748b" style={{ cursor: "pointer" }} onClick={() => router.push("/tienda")} />
             </div>
 
-            <div style={{ padding: "16px 24px" }}>
+            <div style={{ padding: "14px 20px" }}>
               {loadingGoals ? (
                  <div style={{ textAlign: "center", padding: 20, fontSize: 12, color: "#94a3b8" }}>Cargando metas...</div>
               ) : goals.length === 0 ? (
@@ -764,13 +759,13 @@ export default function ProfilePage() {
 
           {/* Staking Section */}
           <div className="prof-card fade-up" style={{ animationDelay: "0.28s" }}>
-             <div style={{ padding: "18px 24px", borderBottom: "1.5px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+             <div style={{ padding: "16px 20px", borderBottom: "1.5px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: 10 }}>
                    <Zap size={18} color="#8B5CF6" /> Inversión BIZEN
                 </h3>
              </div>
              
-             <div style={{ padding: "16px 24px" }}>
+             <div style={{ padding: "14px 20px" }}>
                 {loadingStaking ? (
                    <div style={{ textAlign: "center", padding: 20, fontSize: 12, color: "#94a3b8" }}>Cargando inversiones...</div>
                 ) : staking.length === 0 ? (
