@@ -29,6 +29,7 @@ interface DNAEvolutionScreenProps {
   }
   nextTopicId: string
   nextTopicTitle: string
+  onClose?: () => void
 }
 
 export default function DNAEvolutionScreen({
@@ -36,7 +37,8 @@ export default function DNAEvolutionScreen({
   newProfile = "Billy Constructor",
   stats = { mentalidad: 85, bases: 90, optimizacion: 75, ahorro: 95, riesgos: 60 },
   nextTopicId = "tema-09",
-  nextTopicTitle = "Estrategias de Inversión"
+  nextTopicTitle = "Estrategias de Inversión",
+  onClose
 }: DNAEvolutionScreenProps) {
   const [phase, setPhase] = useState<"scanning" | "revealing" | "ready">("scanning")
   const [mounted, setMounted] = useState(false)
@@ -183,7 +185,10 @@ export default function DNAEvolutionScreen({
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => router.push(`/courses/${nextTopicId}`)}
+              onClick={() => {
+                if (onClose) onClose()
+                router.push(`/courses/${nextTopicId}`)
+              }}
               style={{
                 background: "linear-gradient(90deg, #3b82f6, #6366f1)",
                 padding: "20px 40px",
@@ -206,7 +211,10 @@ export default function DNAEvolutionScreen({
 
             <div style={{ marginTop: 32 }}>
               <button 
-                onClick={() => router.push("/courses?noredirect=true")}
+                onClick={() => {
+                  if (onClose) onClose()
+                  router.push("/courses?noredirect=true")
+                }}
                 style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 14, fontWeight: 500, borderBottom: "1px solid rgba(255,255,255,0.1)" }}
               >
                 O quiero elegir mi propio camino

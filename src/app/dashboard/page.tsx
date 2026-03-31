@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins } from "lucide-react"
+import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
@@ -413,7 +413,8 @@ function DashboardContent() {
     return () => clearInterval(interval)
   }, [user, loading, router, dbProfile, go])
 
-  if (loading || loadingData) return <PageLoader />
+  // Initial page load vs background sync
+  if (loading || (loadingData && !stats)) return <PageLoader />
 
   const streak   = stats?.currentStreak   ?? 0
   const bizcoins = stats?.bizcoins        ?? 0
@@ -1113,6 +1114,10 @@ function DashboardContent() {
           }}
           nextTopicId={nextLessonInfo?.lessonSlug || "intro"}
           nextTopicTitle={nextLessonInfo?.lessonSlug ? "Tu Plan Personalizado" : "Explorar Cursos"}
+          onClose={() => {
+            setShowEvolution(false)
+            router.replace("/dashboard", { scroll: false })
+          }}
         />
       )}
     </div>
