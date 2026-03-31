@@ -14,9 +14,11 @@ async function main() {
     console.log("🛠️ Running safe database adjustments...");
     const prisma = new PrismaClient();
     try {
-        // Disable statement timeout for this session to prevent migrations from being cancelled
-        await prisma.$executeRawUnsafe(`SET statement_timeout = 0;`);
+        // Set a reasonable timeout for these adjustments to avoid hanging the build.
+        // If it takes more than 10s, it's likely the table is locked or DB is slow.
+        await prisma.$executeRawUnsafe(`SET statement_timeout = '10s';`);
         
+        console.log("⏳ Running profile column checks...");
         await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "current_streak" INTEGER DEFAULT 0;`);
         await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "longest_streak" INTEGER DEFAULT 0;`);
         await prisma.$executeRawUnsafe(`ALTER TABLE "public"."profiles" ADD COLUMN IF NOT EXISTS "last_active" TIMESTAMP(3);`);
