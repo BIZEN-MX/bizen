@@ -4,6 +4,52 @@ import { dicebearUrl } from "@/lib/avatarOptions"
 
 export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?: number; frame?: "ambassador" | "vip" | null | string }) => {
   const renderContent = () => {
+    // ── Exclusive Admin Avatar
+    if (avatar?.type === "admin") {
+      return (
+        <div style={{
+          width: "100%",
+          height: "100%",
+          background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          overflow: "hidden"
+        }}>
+          {/* Institutional Shield / Icon */}
+          <div style={{
+            width: "55%",
+            height: "55%",
+            border: "3px solid rgba(255,255,255,0.8)",
+            borderRadius: 12,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: "rotate(45deg)",
+            boxShadow: "0 0 20px rgba(255,255,255,0.2)"
+          }}>
+            <div style={{
+              width: "50%",
+              height: "50%",
+              background: "white",
+              borderRadius: "50%",
+              transform: "rotate(-45deg)"
+            }} />
+          </div>
+          {/* Subtle Glow */}
+          <div style={{
+            position: "absolute",
+            width: "150%",
+            height: "150%",
+            background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
+            top: "-25%",
+            left: "-25%"
+          }} />
+        </div>
+      )
+    }
+
     if (!avatar) {
       return <UserIcon size={size * 0.6} />
     }

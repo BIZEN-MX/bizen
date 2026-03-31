@@ -15,6 +15,7 @@ import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
 // import { useSearchParams } from "next/navigation" // Moved up
 import TransferModal from "@/components/bizen/TransferModal"
+import TransactionHistoryModal from "@/components/bizen/TransactionHistoryModal"
 
 // ─────────────────────────────────────────────────────────────────
 // CUSTOM SVG ICON COMPONENTS
@@ -264,6 +265,7 @@ function DashboardContent() {
   const [prevStats,        setPrevStats]        = useState<Stats | null>(null)
   const [showPulseXp,      setShowPulseXp]      = useState(false)
   const [showPulseBc,      setShowPulseBc]      = useState(false)
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
 
   const searchParams = useSearchParams()
   const [showEvolution, setShowEvolution] = useState(false)
@@ -718,6 +720,15 @@ function DashboardContent() {
           />
         )}
 
+        <AnimatePresence>
+          {isHistoryModalOpen && (
+            <TransactionHistoryModal 
+              onClose={() => setIsHistoryModalOpen(false)}
+              currentBalance={bizcoins}
+            />
+          )}
+        </AnimatePresence>
+
         {/* DNA PROFILE SECTION */}
         <div className="dc" style={{ animationDelay: ".05s", marginBottom: 24 }}>
           {liveProfile?.dnaProfile && liveProfile.dnaProfile.includes("Billy") ? (
@@ -1052,7 +1063,7 @@ function DashboardContent() {
               )}
             </div>
             
-            <button onClick={() => router.push("/profile")} style={{ marginTop: 12, width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "10px", borderRadius: 12, fontSize: 12, fontWeight: 700, color: "#475569", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.background="#0F62FE"; e.currentTarget.style.color="white"; e.currentTarget.style.borderColor="#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.color="#475569"; e.currentTarget.style.borderColor="#e2e8f0"}}>Ver historial completo</button>
+            <button onClick={() => setIsHistoryModalOpen(true)} style={{ marginTop: 12, width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "10px", borderRadius: 12, fontSize: 12, fontWeight: 700, color: "#475569", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.background="#0F62FE"; e.currentTarget.style.color="white"; e.currentTarget.style.borderColor="#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.color="#475569"; e.currentTarget.style.borderColor="#e2e8f0"}}>Ver historial completo</button>
           </div>
 
           <DailyChallengeWidget />

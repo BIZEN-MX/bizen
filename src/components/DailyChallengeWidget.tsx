@@ -233,12 +233,24 @@ export default function DailyChallengeWidget() {
                             )}
                             
                             {completed && (
-                                <div style={{ 
-                                    padding: "12px 18px", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 16,
-                                    fontSize: 14, fontWeight: 700, color: "#fff", textAlign: "center"
-                                }}>
-                                    ¡Vuelve mañana para más!
-                                </div>
+                                <motion.div 
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    style={{ 
+                                        padding: "16px", 
+                                        background: "rgba(255,255,255,0.2)", 
+                                        border: "1px solid rgba(255,255,255,0.3)", 
+                                        borderRadius: 20,
+                                        backdropFilter: "blur(4px)",
+                                        textAlign: "center",
+                                        boxShadow: "0 8px 24px rgba(0,0,0,0.1)"
+                                    }}
+                                >
+                                    <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", marginBottom: 4 }}>¡Objetivo del día alcanzado!</div>
+                                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>
+                                        Vuelve mañana por tu siguiente reto estratégico.
+                                    </div>
+                                </motion.div>
                             )}
 
                         </motion.div>

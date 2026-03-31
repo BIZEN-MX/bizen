@@ -282,7 +282,8 @@ export default function ProfilePage() {
   if (loading || !mounted || loadingStats) return <PageLoader />
   if (!user) return null
 
-  const isAdminOrTeacher = dbProfile?.role === 'school_admin' || dbProfile?.role === 'teacher'
+  const isSchoolAdmin = dbProfile?.role === 'school_admin'
+  const isAdminOrTeacher = isSchoolAdmin || dbProfile?.role === 'teacher'
   const isParticular = dbProfile?.role === 'particular'
   const isInstitutionalStudent = dbProfile?.role === 'student'
   const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0
@@ -336,6 +337,41 @@ export default function ProfilePage() {
     { icon: <Award size={20} color="#0F62FE" />, value: achievements.filter(a => a.unlocked).length, label: "Logros" },
     { icon: <Star size={20} color="#0F62FE" />, value: getLeagueTitle(level), label: "Liga" },
   ]
+
+  // IMPORTANT: Admins must not have a traditional profile
+  if (isSchoolAdmin) {
+    return (
+      <div className="prof-outer" style={{ minHeight: "100vh", background: "#FBFAF5", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ maxWidth: 500, width: "100%", textAlign: "center", padding: 40, background: "white", borderRadius: 32, border: "1.5px solid #e2e8f0", boxShadow: "0 20px 50px rgba(0,0,0,0.05)" }}>
+          <div style={{ margin: "0 auto 24px", width: 120, height: 120, borderRadius: "50%", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", border: "4px solid #f1f5f9" }}>
+            <AvatarDisplay avatar={{ type: "admin" }} size={120} />
+          </div>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0f172a", marginBottom: 8 }}>Cuenta de Administración</h1>
+          <p style={{ color: "#64748b", fontSize: 16, marginBottom: 32 }}>Este es un perfil institucional de gestión técnica. Las funciones sociales y de gamificación están desactivadas.</p>
+          
+          <div style={{ display: "grid", gap: 12 }}>
+            <div style={{ padding: "16px 20px", background: "#f8fafc", borderRadius: 16, border: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#94a3b8" }}>Rol Académico</span>
+              <span style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE" }}>Administrador Escolar</span>
+            </div>
+            <div style={{ padding: "16px 20px", background: "#f8fafc", borderRadius: 16, border: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#94a3b8" }}>Institución</span>
+              <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a" }}>{dbProfile?.school?.name || "Bizen Institute"}</span>
+            </div>
+          </div>
+
+          <button 
+            onClick={handleSignOut}
+            style={{ marginTop: 40, width: "100%", padding: 16, background: "#ef4444", color: "white", border: "none", borderRadius: 16, fontWeight: 700, cursor: "pointer", transition: "opacity 0.2s" }}
+            onMouseEnter={e => e.currentTarget.style.opacity = "0.9"}
+            onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+          >
+            Cerrar Sesión Institucional
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="prof-outer" style={{ minHeight: "100vh", background: "#FBFAF5" }}>

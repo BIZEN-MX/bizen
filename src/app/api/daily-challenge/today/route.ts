@@ -23,7 +23,23 @@ export async function GET() {
         const startDate = new Date(`${todayStr}T00:00:00Z`);
         const endDate = new Date(`${todayStr}T23:59:59Z`);
 
-        // 2. Fetch challenge
+        // 1.5 Check if user already completed ANY challenge today
+        const existingTodayEvidence = await prisma.evidencePost.findFirst({
+            where: {
+                authorUserId: user.id,
+                createdAt: { gte: startDate, lte: endDate }
+            },
+            include: { dailyChallenge: true }
+        }).catch(() => null);
+
+        if (existingTodayEvidence && existingTodayEvidence.dailyChallenge) {
+            return NextResponse.json({ 
+                ...existingTodayEvidence.dailyChallenge, 
+                isCompleted: true 
+            });
+        }
+
+        // 2. Fetch challenge for today specifically
         let challenge: any = await prisma.dailyChallenge.findFirst({
             where: {
                 activeDate: { gte: startDate, lte: endDate }
@@ -34,6 +50,7 @@ export async function GET() {
         });
 
         // 3. Fallback to most recent UNCOMPLETED if none found for *exactly* today
+        // and we haven't already finished one today
         if (!challenge) {
             challenge = await prisma.dailyChallenge.findFirst({
                 where: {
