@@ -22,6 +22,7 @@ function isPublicPath(p: string | null) {
 
 import BillyChatbot from './BillyChatbot';
 import AppTourOverlay from './AppTourOverlay';
+import { useOnboarding } from '@/contexts/OnboardingContext';
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   // const [isNavigating, setIsNavigating] = useState(false);
@@ -29,6 +30,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   const previousPathname = useRef(pathname);
   const [isMobile, setIsMobile] = useState(false);
   const { user, dbProfile, loading } = useAuth();
+  const { isActive: onboardingActive } = useOnboarding();
   const [showTour, setShowTour] = useState(false);
 
   // Hide navigation entirely when user is not authenticated on a protected route
@@ -104,7 +106,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
   const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage;
-  const hideChat = isDiagnosticPage || pathname === "/"; // Only hide on diagnostic flow (keeps focus) and landing page
+  const hideChat = isDiagnosticPage || pathname === "/" || onboardingActive; // Hide on diagnostic, landing, and onboarding
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {

@@ -42,11 +42,14 @@ interface OnboardingContextType {
     startTour: () => void
     /** Mark a specific page as seen */
     markPageAsSeen: (path: string) => void
+    /** Is the user currently in the middle of a setup or tour? */
+    isActive: boolean
 }
 
 const OnboardingContext = createContext<OnboardingContextType>({
     startTour: () => { },
     markPageAsSeen: () => { },
+    isActive: false,
 })
 
 export function useOnboarding() {
@@ -152,8 +155,10 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
         setShowTour(true)
     }, [])
 
+    const isActive = showSetup || showTour
+
     return (
-        <OnboardingContext.Provider value={{ startTour, markPageAsSeen }}>
+        <OnboardingContext.Provider value={{ startTour, markPageAsSeen, isActive }}>
             {children}
             {showSetup && <OnboardingModal onComplete={handleSetupComplete} />}
             {showTour && <AppTourOverlay onEnd={handleTourEnd} discoveryMode={true} />}
