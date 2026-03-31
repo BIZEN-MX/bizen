@@ -149,7 +149,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     }
 
     return (
-        <div className="fixed inset-0 z-[9999] bg-[#020617] text-white flex flex-col font-geist overflow-hidden">
+        <div className="fixed inset-0 z-[9999] bg-[#020617] text-white flex flex-col font-geist overflow-y-auto">
             {/* Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-blue-600/20 blur-[120px] animate-pulse" />
@@ -180,9 +180,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             </div>
 
             {/* Header / Progress */}
-            <div className="relative z-10 px-6 py-8 flex flex-col items-center">
+            <div className="relative z-10 px-6 py-6 md:py-8 flex flex-col items-center">
                 <div className="w-full max-w-lg">
-                    <div className="h-3 w-full bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
+                    <div className="h-2 md:h-3 w-full bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
                         <motion.div 
                             className="h-full bg-gradient-to-r from-blue-600 to-indigo-400 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
                             initial={{ width: 0 }}
@@ -194,8 +194,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             </div>
 
             {/* Main Content */}
-            <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6">
-                <div className="w-full max-w-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[32px] p-8 md:p-12 shadow-2xl shadow-black/40">
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-start md:justify-center px-4 md:px-6 pb-20 md:pb-0">
+                <div className="w-full max-w-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl md:rounded-[32px] p-6 md:p-12 shadow-2xl shadow-black/40">
                     <AnimatePresence mode="wait">
                         {step === "welcome" && (
                             <motion.div 
@@ -518,7 +518,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             </div>
 
             {/* Footer / Info */}
-            <div className="relative z-10 px-6 py-8 text-center">
+            <div className="relative z-10 px-6 py-8 text-center hidden md:block">
                 <p className="text-xs text-slate-500 font-medium">
                     Explora el futuro de las finanzas con BIZEN.© 2026.
                 </p>
