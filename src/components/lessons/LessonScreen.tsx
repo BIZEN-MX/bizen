@@ -15,6 +15,9 @@ interface LessonScreenProps {
   hideStars?: boolean
   hideHeaderBorder?: boolean
   footerContent?: React.ReactNode
+  onExit?: () => void
+  onOpenGlossary?: () => void
+  hasGlossary?: boolean
   className?: string
 }
 
@@ -35,6 +38,9 @@ export function LessonScreen({
   hideStars = false,
   hideHeaderBorder = false,
   footerContent,
+  onExit,
+  onOpenGlossary,
+  hasGlossary,
   className = "",
 }: LessonScreenProps) {
   const starsClamped = (typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 3) as 0 | 1 | 2 | 3
@@ -76,6 +82,9 @@ export function LessonScreen({
             streak={streak}
             stars={starsClamped}
             hideStars={hideStars}
+            onExit={onExit}
+            onOpenGlossary={onOpenGlossary}
+            hasGlossary={hasGlossary}
           />
         </div>
       )}

@@ -504,6 +504,7 @@ function DashboardContent() {
             grid-template-columns: 1fr 1fr !important;
             gap: 12px !important;
           }
+          .stats-row > div:nth-child(3) { grid-column: span 2 !important; }
           @media (max-width:420px) {
             .stats-row { grid-template-columns: 1fr !important; }
           }
@@ -527,15 +528,18 @@ function DashboardContent() {
 
           /* quick links: already 2 cols, but make them shorter */
           .quick-grid { grid-template-columns: 1fr 1fr !important; gap:8px !important; }
-          .ql { padding:12px 10px !important; gap:8px !important; }
-          .ql-label { font-size: 13px !important; }
-          .ql-sub { font-size: 11px !important; }
+          .ql { padding:10px 8px !important; gap:6px !important; border-radius: 16px !important; }
+          .ql-icon-box { width: 38px !important; height: 38px !important; border-radius: 10px !important; }
+          .ql-label { font-size: 12px !important; font-weight: 800 !important; }
+          .ql-sub { font-size: 10px !important; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+          .ql-arrow { display: none !important; }
         }
 
-        @media (max-width:380px) {
-          /* single col on very tiny screens */
-          .quick-grid { grid-template-columns:1fr !important; }
-          .ql { flex-direction:row !important; align-items:center !important; }
+        @media (max-width:360px) {
+          /* reduce gap even more for ultra-small screens */
+          .quick-grid { gap:6px !important; }
+          .ql { padding: 8px 6px !important; }
+          .ql-label { font-size: 11px !important; }
         }
       `}</style>
 
@@ -780,7 +784,7 @@ function DashboardContent() {
         </div>
 
         {!isAdminOrTeacher && (
-          <div style={{ 
+          <div className="stats-row" style={{ 
             display: "flex", 
             flexWrap: "wrap", 
             gap: 14, 
@@ -1078,14 +1082,17 @@ function DashboardContent() {
               { Icon:IcoUser,    label:"Mi Perfil",          sub:"Insignias y logros",        href:"/profile",  color:"#0891b2", bg:"#cffafe", delay:".53s" },
             ] as const).map(({Icon,label,sub,href,color,bg,delay})=>(
               <div key={href} className="ql dc" style={{animationDelay:delay}} onClick={()=>router.push(href)}>
-                <div style={{width:46,height:46,borderRadius:14,background:bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 4px 12px ${color}20`}}>
+                <div 
+                  className="ql-icon-box"
+                  style={{width:46,height:46,borderRadius:14,background:bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 4px 12px ${color}20`}}
+                >
                   <Icon size={22} color={color} strokeWidth={1.8}/>
                 </div>
                 <div style={{minWidth:0,flex:1}}>
                   <div className="ql-label">{label}</div>
                   <div className="ql-sub">{sub}</div>
                 </div>
-                <div style={{flexShrink:0,opacity:.3}}>
+                <div className="ql-arrow" style={{flexShrink:0,opacity:.3}}>
                   <IcoArrowRight size={15} color="#64748b"/>
                 </div>
               </div>

@@ -322,8 +322,8 @@ export default function CoursePageTemplate({
                     flex: 1,
                     paddingTop: "clamp(8px, 1.5vw, 16px)",
                     paddingBottom: "clamp(40px, 8vw, 80px)",
-                    paddingLeft: "16px",
-                    paddingRight: "16px",
+                    paddingLeft: "4px",
+                    paddingRight: "4px",
                     background: "transparent",
                     position: "relative",
                     display: "flex",
@@ -550,10 +550,12 @@ export default function CoursePageTemplate({
                                             flexDirection: "row",
                                             gap: 16,
                                             overflowX: "auto",
-                                            overflowY: "hidden",
-                                            paddingBottom: "clamp(40px, 8vw, 60px)",
-                                            paddingTop: "clamp(20px, 4vw, 30px)",
-                                            marginTop: "-20px",
+                                            overflowY: "visible", // Enforced for the aura/glow shadows
+                                            paddingBottom: "60px",
+                                            paddingTop: "48px",
+                                            paddingLeft: "60px",
+                                            paddingRight: "60px",
+                                            marginTop: "-32px", // Compensate the extra top padding
                                             scrollSnapType: "x mandatory",
                                             WebkitOverflowScrolling: "touch",
                                             scrollbarWidth: "none"
@@ -1178,8 +1180,10 @@ export default function CoursePageTemplate({
                     padding: 12px 10px !important;
                   }
                   .lessons-scroll-container {
-                     gap: 8px !important;
-                     padding-bottom: 20px !important;
+                     gap: 12px !important;
+                     padding-bottom: 40px !important;
+                     padding-left: 50px !important;
+                     padding-right: 50px !important;
                   }
                 }
                 
