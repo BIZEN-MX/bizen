@@ -45,23 +45,9 @@ export async function GET() {
     const isAdminOrTeacher = profile?.role === 'school_admin' || profile?.role === 'teacher';
 
     if (!profile) {
-      // Instead of 404, return default empty stats so the client doesn't crash.
-      // The actual profile creation usually happens in /api/profiles or auth callback.
-      return NextResponse.json({
-        xp: 0,
-        level: 1,
-        xpInCurrentLevel: 0,
-        xpNeeded: 100,
-        xpToNextLevel: 100,
-        lessonsCompleted: 0,
-        coursesEnrolled: 0,
-        currentStreak: 0,
-        certificatesCount: 0,
-        totalPoints: 0,
-        bizcoins: 0,
-        inventory: [],
-        weeklyActiveDays: [],
-      })
+      // If we cannot find a profile for an authenticated user, it's a database failure or a severe sync issue.
+      // Do NOT return 0s as it causes UI flicker. Return 500 to indicate a retry is needed.
+      return NextResponse.json({ error: "Profile not found for authenticated user" }, { status: 500 });
     }
 
     // Optional stats (if they fail, we can still return basic stats)

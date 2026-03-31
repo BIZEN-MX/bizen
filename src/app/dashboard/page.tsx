@@ -323,26 +323,11 @@ function DashboardContent() {
     return total > 0 ? Math.round((stats.xpInCurrentLevel / total) * 100) : 0
   }, [stats])
 
-  const fetchStats = useCallback(async () => {
-    if (!user) return
-    try {
-      const res = await fetch("/api/user/stats")
-      if (res.ok) {
-        const data = await res.json()
-        setStats(data)
-      }
-    } catch (err) {
-      console.error("Error fetching stats:", err)
-    }
-  }, [user])
-
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
 
-  useEffect(() => {
-    fetchStats()
-  }, [fetchStats])
-
   const go = useCallback(async (isSilent = false) => {
+    if (!user?.email) return // No user, no call
+    
     if (!isSilent) setLoadingData(true)
     else setIsSyncing(true)
     
@@ -351,26 +336,28 @@ function DashboardContent() {
         fetch("/api/user/stats"),
         fetch("/api/topics"),
         fetch("/api/progress"),
-        fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(user?.email || "")}`),
+        fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(user.email)}`),
         fetch("/api/profile"),
         fetch("/api/wallet/transactions?limit=10")
       ])
 
-      const newStats = sR.ok ? await sR.json() : null
-      
-      if (newStats) {
-        // Detect changes for pulse effects
-        if (stats) {
-          if (newStats.xp !== stats.xp) {
-            setShowPulseXp(true)
-            setTimeout(() => setShowPulseXp(false), 2000)
+      // Only update stats IF we got a valid response (avoid flashing 0s)
+      if (sR.ok) {
+        const newStats = await sR.json()
+        if (newStats && typeof newStats.bizcoins === 'number') {
+          // Detect changes for pulse effects
+          if (stats) {
+            if (newStats.xp !== stats.xp) {
+              setShowPulseXp(true)
+              setTimeout(() => setShowPulseXp(false), 2000)
+            }
+            if (newStats.bizcoins !== stats.bizcoins) {
+              setShowPulseBc(true)
+              setTimeout(() => setShowPulseBc(false), 2000)
+            }
           }
-          if (newStats.bizcoins !== stats.bizcoins) {
-            setShowPulseBc(true)
-            setTimeout(() => setShowPulseBc(false), 2000)
-          }
+          setStats(newStats)
         }
-        setStats(newStats)
       }
 
       if (tR.ok) setTopics(await tR.json())
@@ -392,7 +379,7 @@ function DashboardContent() {
     } catch (err) {
       console.error("Dashboard Sync Error:", err)
     } finally {
-      setLoadingData(false)
+      if (!isSilent) setLoadingData(false)
       setIsSyncing(false)
     }
   }, [user, stats])
@@ -716,7 +703,7 @@ function DashboardContent() {
           <TransferModal 
             onClose={() => setIsTransferModalOpen(false)} 
             currentBalance={bizcoins} 
-            onTransferSuccess={(newBal) => { fetchStats(); }} 
+            onTransferSuccess={(newBal) => { go(true); }} 
           />
         )}
 
