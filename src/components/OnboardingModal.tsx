@@ -182,15 +182,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             {/* Header / Progress */}
             <div className="relative z-10 px-6 py-8 flex flex-col items-center">
                 <div className="w-full max-w-lg">
-                    <div className="flex justify-between items-center mb-4">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                                <Sparkles size={18} className="text-white" />
-                            </div>
-                            <span className="text-sm font-bold tracking-tight uppercase text-blue-400">Onboarding</span>
-                        </div>
-                    </div>
-                    <div className="h-1.5 w-full bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
+                    <div className="h-3 w-full bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
                         <motion.div 
                             className="h-full bg-gradient-to-r from-blue-600 to-indigo-400 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
                             initial={{ width: 0 }}

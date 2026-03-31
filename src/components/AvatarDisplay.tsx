@@ -41,7 +41,7 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
         <div style={{
           width: "100%",
           height: "100%",
-          background: "#FBFAF5",
+          background: "transparent",
           borderRadius: "50%",
           overflow: "hidden",
           display: "flex",
@@ -55,9 +55,8 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "cover",
-              transform: "scale(1.1)",
-              mixBlendMode: "multiply"
+              objectFit: "contain",
+              mixBlendMode: "normal"
             }}
           />
         </div>
