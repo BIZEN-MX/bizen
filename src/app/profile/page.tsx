@@ -218,13 +218,19 @@ export default function ProfilePage() {
     }
   };
 
+  const hasInitializedTheme = React.useRef(false)
   useEffect(() => {
     if (loading) return
     if (!user) { router.push("/login"); return }
-    const currentTheme = dbProfile?.cardTheme || dbProfile?.card_theme || user.user_metadata?.cardTheme || "blue"
-    setCardTheme(currentTheme as CardTheme)
+    
+    if (!hasInitializedTheme.current) {
+      const currentTheme = dbProfile?.cardTheme || dbProfile?.card_theme || user.user_metadata?.cardTheme || "blue"
+      setCardTheme(currentTheme as CardTheme)
+      hasInitializedTheme.current = true
+    }
+    
     fetchData();
-  }, [user, loading]);
+  }, [user, loading, dbProfile]);
 
   const fetchFollowersList = async () => {
     if (!user?.id || loadingFollowers) return
