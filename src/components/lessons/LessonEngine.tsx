@@ -753,6 +753,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           </div>
         </div>
 
+        {renderFooter(true)}
+
         {/* ── Billy Empático Overlay (Feature 2) ─────────────────────────── */}
         <AnimatePresence>
           {showBillyEmpathy && (
