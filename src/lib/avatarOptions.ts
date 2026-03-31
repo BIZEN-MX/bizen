@@ -201,7 +201,6 @@ export function dicebearUrl(option: AvatarOption, sizePx = 128): string {
   const params = new URLSearchParams({
     seed: option.seed || option.id,
     backgroundColor: option.backgroundColor || 'DBEAFE',
-    radius: '50',
     size: String(sizePx),
   })
   return `https://api.dicebear.com/9.x/${option.style}/svg?${params.toString()}`

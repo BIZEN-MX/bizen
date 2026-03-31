@@ -21,6 +21,7 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          padding: "10%" // Internal padding to prevent head-clipping
         }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -28,7 +29,7 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
             alt={avatar.label || "Avatar"}
             width={size}
             height={size}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
             loading="lazy"
           />
         </div>
@@ -46,7 +47,8 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
           overflow: "hidden",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          padding: "10%" // Prevent clipping
         }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
