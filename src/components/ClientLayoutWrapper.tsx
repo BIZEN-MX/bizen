@@ -115,7 +115,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
   const isTransferPage = searchParams?.get('action') === 'transfer'
   const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage || isTransferPage;
-  const hideChat = isDiagnosticPage || pathname === "/" || onboardingActive; // Hide on diagnostic, landing, and onboarding
+  const hideChat = isDiagnosticPage || pathname === "/" || onboardingActive || isLessonInteractivePage || isCourseTopicPage; // Hide on diagnostic, landing, onboarding, lessons, and course topics
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {
