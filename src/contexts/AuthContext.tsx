@@ -111,6 +111,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
+    // Clear BIZEN local storage to prevent zombie data leaks between users
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('bizen_diagnostic_quiz_v1')
+      localStorage.removeItem('bizen_has_access')
+    }
+    setDbProfile(null)
     const { error } = await supabase.auth.signOut()
     return { error }
   }
@@ -140,6 +146,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           'Cache-Control': 'no-cache'
         }
       })
+      if (res.status === 401) {
+        console.warn('Unauthorized session detected. Clearing storage...')
+        setDbProfile(null)
+        setUser(null)
+        setSession(null)
+        
+        // Clear BIZEN specific local storage to prevent "zombie" data
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('bizen_diagnostic_quiz_v1')
+          localStorage.removeItem('supabase.auth.token') // Common supabase key
+        }
+
+        // Force logout to break the loop
+        supabase.auth.signOut().then(() => {
+          // If we are on a protected route, redirect to login
+          if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+             window.location.href = '/login?error=session_expired'
+          }
+        })
+        return
+      }
+
       if (res.ok) {
         const data = await res.json()
         setDbProfile(data)

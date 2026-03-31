@@ -10,18 +10,16 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
 
     // ── DiceBear illustrated avatars (new system)
     if (avatar.type === "dicebear") {
-      const url = dicebearUrl(avatar, Math.max(128, size * 2)) // 2× for retina
+      const url = dicebearUrl(avatar, Math.max(128, size * 2))
       return (
         <div style={{
           width: "100%",
           height: "100%",
-          borderRadius: "50%",
-          overflow: "hidden",
           background: avatar.backgroundColor ? `#${avatar.backgroundColor}` : "#DBEAFE",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "10%" // Internal padding to prevent head-clipping
+          padding: "15%", // More aggressive padding for safety
         }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -29,7 +27,12 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
             alt={avatar.label || "Avatar"}
             width={size}
             height={size}
-            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            style={{ 
+              width: "100%", 
+              height: "100%", 
+              objectFit: "contain",
+              transform: "translateY(-5%)" // Compensate for bottom-heavy characters
+            }}
             loading="lazy"
           />
         </div>
@@ -43,12 +46,10 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
           width: "100%",
           height: "100%",
           background: "transparent",
-          borderRadius: "50%",
-          overflow: "hidden",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "10%" // Prevent clipping
+          padding: "15%" // extra room
         }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -58,7 +59,8 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
               width: "100%",
               height: "100%",
               objectFit: "contain",
-              mixBlendMode: "normal"
+              mixBlendMode: "normal",
+              transform: "translateY(-3%)" // slight boost
             }}
           />
         </div>
