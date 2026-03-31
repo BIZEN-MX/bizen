@@ -883,45 +883,7 @@ export default function FixedSidebar() {
             </div>
           )}
 
-          {/* Guided Tour Reset */}
-          {mounted && user && (
-            <div style={{ padding: "0 14px", marginBottom: 12 }}>
-              <button
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('start-bizen-tour'));
-                  if (isMobile) toggleSidebar();
-                }}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "10px 14px",
-                  background: "transparent",
-                  border: "1px dashed rgba(15, 98, 254, 0.2)",
-                  borderRadius: 12,
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  color: "#64748B",
-                  fontSize: 13,
-                  justifyContent: isCompactSidebar ? "center" : "flex-start"
-                }}
-                onMouseEnter={(e) => {
-                   e.currentTarget.style.background = "rgba(15, 98, 254, 0.05)"
-                   e.currentTarget.style.color = "#0B71FE"
-                   e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.4)"
-                }}
-                onMouseLeave={(e) => {
-                   e.currentTarget.style.background = "transparent"
-                   e.currentTarget.style.color = "#64748B"
-                   e.currentTarget.style.borderColor = "rgba(15, 98, 254, 0.2)"
-                }}
-              >
-                <HelpCircle size={18} strokeWidth={2} />
-                {!isCompactSidebar && <span>Tour Guiado</span>}
-              </button>
-            </div>
-          )}
+
 
           {/* User Profile Footer */}
           {mounted && user && (
