@@ -103,6 +103,11 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 } catch { }
                 setUsernameError(errorMsg)
                 setSaving(false)
+                
+                // If it's a nickname error, go back to that step
+                if (errorMsg.toLowerCase().includes("usuario")) {
+                    setStep("username")
+                }
                 return
             }
 
@@ -491,6 +496,11 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                                 </div>
 
                                 <div className="space-y-3">
+                                    {usernameError && (
+                                        <p className="text-sm font-bold text-red-500 text-center mb-3 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                                            {usernameError}
+                                        </p>
+                                    )}
                                     <button 
                                         disabled={saving}
                                         onClick={handleSave}
