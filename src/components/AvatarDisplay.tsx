@@ -8,7 +8,7 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
       return <UserIcon size={size * 0.6} />
     }
 
-    // ── DiceBear illustrated avatars (new system)
+    // ── DiceBear illustrated avatars
     if (avatar.type === "dicebear") {
       const url = dicebearUrl(avatar, Math.max(128, size * 2))
       return (
@@ -19,7 +19,8 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "15%", // More aggressive padding for safety
+          position: "relative",
+          overflow: "hidden"
         }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -31,7 +32,9 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
               width: "100%", 
               height: "100%", 
               objectFit: "contain",
-              transform: "translateY(-5%)" // Compensate for bottom-heavy characters
+              // Use absolute scale to guarantee breathing room
+              transform: "scale(0.85) translateY(-12%)", 
+              transformOrigin: "center center"
             }}
             loading="lazy"
           />
@@ -39,7 +42,7 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
       )
     }
 
-    // Mascot image avatars (local PNGs in /public/avatars/)
+    // ── Old Mascot system
     if (avatar.type === "mascot") {
       return (
         <div style={{
@@ -49,7 +52,8 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "15%" // extra room
+          position: "relative",
+          overflow: "hidden"
         }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -60,7 +64,9 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
               height: "100%",
               objectFit: "contain",
               mixBlendMode: "normal",
-              transform: "translateY(-3%)" // slight boost
+              // Guarantee safety for tight PNGs
+              transform: "scale(0.82) translateY(-8%)",
+              transformOrigin: "center center"
             }}
           />
         </div>

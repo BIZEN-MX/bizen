@@ -271,18 +271,19 @@ export default function DiagnosticQuestionPage() {
         {showSuccess ? (
           <motion.div
             key="success"
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             style={{
-              position: "relative",
-              textAlign: "center",
-              maxWidth: "560px",
-              margin: "40px auto",
-              width: "100%",
-              boxSizing: "border-box" as const,
+              position: "fixed",
+              inset: 0,
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "linear-gradient(135deg, #050b14 0%, #0a192f 40%, #173d7a 100%)",
               overflow: "hidden",
-              borderRadius: "32px",
+              padding: "24px",
             }}
           >
             <style>{`
@@ -292,171 +293,206 @@ export default function DiagnosticQuestionPage() {
               @keyframes pulse-ring { 0%{transform:scale(0.8);opacity:1} 100%{transform:scale(2.2);opacity:0} }
               @keyframes float-particle { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(-120px) rotate(720deg);opacity:0} }
               @keyframes shimmer-text { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-              @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+              @keyframes sparkle-twinkle { 0%,100%{opacity:0.3;scale:0.8} 50%{opacity:1;scale:1.2} }
             `}</style>
 
-            {/* Magical dark background card */}
-            <div style={{
-              background: "linear-gradient(145deg, #060c1f 0%, #0d1a3a 50%, #0a1628 100%)",
-              borderRadius: "32px",
-              padding: "clamp(40px, 6vw, 60px) clamp(28px, 5vw, 48px)",
-              border: "1px solid rgba(99,102,241,0.25)",
-              boxShadow: "0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
-              position: "relative",
-              overflow: "hidden",
-            }}>
-              {/* BG Orbs */}
-              <div style={{ position:"absolute",top:"-30%",left:"-20%",width:300,height:300,borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,0.35) 0%,transparent 70%)",animation:"orb1 6s ease-in-out infinite",pointerEvents:"none" }} />
-              <div style={{ position:"absolute",bottom:"-20%",right:"-15%",width:280,height:280,borderRadius:"50%",background:"radial-gradient(circle,rgba(167,139,250,0.28) 0%,transparent 70%)",animation:"orb2 8s ease-in-out infinite",pointerEvents:"none" }} />
+            {/* Immersive Background Elements */}
+            <div aria-hidden style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,134,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,134,255,0.05) 1px, transparent 1px)", backgroundSize: "64px 64px", opacity: 0.4 }} />
+            <div style={{ position:"absolute",top:"-10%",right:"-5%",width:"60vw",height:"60vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,0.2) 0%,transparent 70%)",animation:"orb1 10s ease-in-out infinite",pointerEvents:"none" }} />
+            <div style={{ position:"absolute",bottom:"-15%",left:"-5%",width:"50vw",height:"50vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(167,139,250,0.15) 0%,transparent 70%)",animation:"orb2 12s ease-in-out infinite",pointerEvents:"none" }} />
 
-              {/* Scan line (only on phase 0) */}
-              {analysisPhase === 0 && (
-                <div style={{ position:"absolute",left:0,right:0,height:2,background:"linear-gradient(90deg,transparent,rgba(99,102,241,0.8),rgba(167,139,250,0.9),transparent)",animation:"scanLine 2.2s linear infinite",zIndex:5,pointerEvents:"none" }} />
-              )}
+            {/* Random Sparkles */}
+            {[...Array(12)].map((_, i) => (
+              <div key={i} style={{
+                position: "absolute",
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                width: "3px",
+                height: "3px",
+                background: "#fff",
+                borderRadius: "50%",
+                boxShadow: "0 0 8px #fff",
+                animation: `sparkle-twinkle ${3 + i % 4}s infinite ease-in-out`,
+                animationDelay: `${i * 0.5}s`,
+                opacity: 0.6
+              }} />
+            ))}
 
-              {/* Floating particles (phase 1+) */}
-              {analysisPhase >= 1 && [0,1,2,3,4,5].map(i => (
-                <div key={i} style={{
-                  position:"absolute",
-                  left:`${15+i*14}%`,
-                  bottom:"10%",
-                  width:6,height:6,
-                  borderRadius:"50%",
-                  background: i%2===0 ? "#818cf8" : "#c4b5fd",
-                  animation:`float-particle ${1.2+i*0.3}s ease-out ${i*0.15}s forwards`,
-                  pointerEvents:"none"
-                }} />
-              ))}
-
-              <div style={{ position: "relative", zIndex: 2 }}>
-                {/* Phase 0: Scanning */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                width: "100%",
+                maxWidth: "600px",
+                textAlign: "center",
+                position: "relative",
+                zIndex: 10,
+              }}
+            >
+              {/* Glass Card */}
+              <div style={{
+                background: "rgba(10, 25, 47, 0.4)",
+                backdropFilter: "blur(40px)",
+                WebkitBackdropFilter: "blur(40px)",
+                borderRadius: "40px",
+                padding: "clamp(48px, 8vw, 72px) clamp(32px, 6vw, 48px)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+                boxShadow: "0 48px 96px -24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+                position: "relative",
+                overflow: "hidden",
+              }}>
+                {/* Scan line (only on phase 0) */}
                 {analysisPhase === 0 && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-                    <div style={{ marginBottom: 28 }}>
-                      {/* DNA helix icon */}
-                      <div style={{ position:"relative", width:100, height:100, margin:"0 auto" }}>
-                        <div style={{ position:"absolute",inset:0,borderRadius:"50%",border:"2px solid rgba(99,102,241,0.3)",animation:"pulse-ring 1.5s ease-out infinite" }} />
-                        <div style={{ position:"absolute",inset:8,borderRadius:"50%",border:"2px solid rgba(99,102,241,0.5)",animation:"pulse-ring 1.5s ease-out 0.4s infinite" }} />
-                        <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center" }}>
-                          <div style={{ width:60,height:60,borderRadius:"50%",background:"linear-gradient(135deg,#4f46e5,#7c3aed)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 0 30px rgba(99,102,241,0.6)" }}>
-                            <span style={{ fontSize:28 }}>🧬</span>
+                  <div style={{ position:"absolute",left:0,right:0,height:3,background:"linear-gradient(90deg,transparent,rgba(99,102,241,0.9),rgba(59,130,246,1),transparent)",animation:"scanLine 2s linear infinite",zIndex:5,pointerEvents:"none" }} />
+                )}
+
+                {/* Floating particles (phase 1+) */}
+                {analysisPhase >= 1 && [0,1,2,3,4,5,6,7].map(i => (
+                  <div key={i} style={{
+                    position:"absolute",
+                    left:`${10+i*11}%`,
+                    bottom:"-20px",
+                    width:8,height:8,
+                    borderRadius:"50%",
+                    background: i%2===0 ? "#60a5fa" : "#a78bfa",
+                    animation:`float-particle ${1.5+i*0.4}s ease-out ${i*0.2}s forwards`,
+                    pointerEvents:"none"
+                  }} />
+                ))}
+
+                <div style={{ position: "relative", zIndex: 2 }}>
+                  {/* Phase 0: Scanning */}
+                  {analysisPhase === 0 && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+                      <div style={{ marginBottom: 36 }}>
+                        {/* DNA helix icon environment */}
+                        <div style={{ position:"relative", width:120, height:120, margin:"0 auto" }}>
+                          <div style={{ position:"absolute",inset:0,borderRadius:"50%",border:"2px solid rgba(59,130,246,0.3)",animation:"pulse-ring 1.8s ease-out infinite" }} />
+                          <div style={{ position:"absolute",inset:12,borderRadius:"50%",border:"2px solid rgba(59,130,246,0.5)",animation:"pulse-ring 1.8s ease-out 0.6s infinite" }} />
+                          <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center" }}>
+                            <div style={{ width:72,height:72,borderRadius:"50%",background:"linear-gradient(135deg,#0F62FE,#4A9EFF)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow: "0 0 40px rgba(15,98,254,0.6)", border: "1px solid rgba(255,255,255,0.2)" }}>
+                              <span style={{ fontSize:32 }}>🧬</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div style={{ fontSize:11,fontWeight:800,color:"rgba(167,139,250,0.7)",letterSpacing:".2em",textTransform:"uppercase",marginBottom:12 }}>
-                      Billy está analizando...
-                    </div>
-                    <div style={{ fontSize:"clamp(22px,4vw,30px)",fontWeight:800,color:"#fff",letterSpacing:"-0.02em",lineHeight:1.2 }}>
-                      Calculando tu
-                    </div>
-                    <div style={
-                      {
-                        fontSize:"clamp(26px,5vw,38px)",fontWeight:900,
-                        background:"linear-gradient(90deg,#818cf8,#c4b5fd,#e879f9,#818cf8)",
-                        backgroundSize:"200% auto",
-                        WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
-                        animation:"shimmer-text 2s linear infinite",
-                        letterSpacing:"-0.03em",
-                      }
-                    }>ADN Financiero</div>
-
-                    {/* Fake progress bar */}
-                    <div style={{ marginTop:28,height:5,background:"rgba(255,255,255,0.08)",borderRadius:99,overflow:"hidden" }}>
-                      <motion.div
-                        initial={{ width:"0%" }}
-                        animate={{ width:"100%" }}
-                        transition={{ duration:2.3, ease:"easeInOut" }}
-                        style={{ height:"100%",background:"linear-gradient(90deg,#4f46e5,#7c3aed,#c4b5fd)",borderRadius:99 }}
-                      />
-                    </div>
-                    <div style={{ marginTop:10,fontSize:12,color:"rgba(255,255,255,0.3)",fontWeight:500 }}>Procesando respuestas...</div>
-                  </motion.div>
-                )}
-
-                {/* Phase 1+: Result teaser */}
-                {analysisPhase >= 1 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
-                  >
-                    {/* Big checkmark */}
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type:"spring", stiffness:260, damping:18, delay:0.1 }}
-                      style={{ width:90,height:90,borderRadius:"50%",background:"linear-gradient(135deg,#4f46e5,#7c3aed)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 24px",boxShadow:"0 0 60px rgba(99,102,241,0.5)" }}
-                    >
-                      <span style={{ fontSize: 40 }}>🔮</span>
-                    </motion.div>
-
-                    <div style={{ fontSize:11,fontWeight:800,color:"rgba(167,139,250,0.8)",letterSpacing:".2em",textTransform:"uppercase",marginBottom:10 }}>
-                      Análisis completo
-                    </div>
-
-                    <h2 style={{ fontSize:"clamp(26px,5vw,36px)",fontWeight:900,color:"#fff",margin:"0 0 16px",letterSpacing:"-0.03em",lineHeight:1.15 }}>
-                      Billy encontró
-                      <br/>
-                      <span style={{ background:"linear-gradient(90deg,#818cf8,#c4b5fd,#e879f9)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent" }}>
-                        tu ADN Financiero
-                      </span>
-                    </h2>
-
-                    <p style={{ fontSize:"clamp(14px,2vw,16px)",color:"rgba(255,255,255,0.5)",lineHeight:1.7,margin:"0 0 28px",maxWidth:380,marginLeft:"auto",marginRight:"auto" }}>
-                      Tu perfil está listo. Descúbrelo en tu Dashboard, junto con la ruta de aprendizaje que Billy ha preparado <em>solo para ti</em>.
-                    </p>
-
-                    {/* Mystery profile tease */}
-                    <div style={{
-                      background:"rgba(255,255,255,0.04)",
-                      border:"1px solid rgba(99,102,241,0.3)",
-                      borderRadius:20,
-                      padding:"18px 24px",
-                      marginBottom:28,
-                      display:"flex",
-                      alignItems:"center",
-                      justifyContent:"center",
-                      gap:16
-                    }}>
-                      <div style={{ fontSize:32 }}>🧬</div>
-                      <div style={{ textAlign:"left" as const }}>
-                        <div style={{ fontSize:11,fontWeight:700,color:"rgba(167,139,250,0.6)",textTransform:"uppercase",letterSpacing:".1em" }}>Tu Perfil DNA</div>
-                        <div style={{ fontSize:18,fontWeight:800,color:"rgba(255,255,255,0.2)",letterSpacing:2,filter:"blur(5px)" }}>??? ????????</div>
+                      
+                      <div style={{ fontSize:13,fontWeight:800,color:"rgba(96,165,250,0.8)",letterSpacing:".3em",textTransform:"uppercase",marginBottom:16 }}>
+                        Billy está analizando...
                       </div>
-                    </div>
+                      <h2 style={{ fontSize:"clamp(28px,6vw,44px)",fontWeight:900,color:"#fff",letterSpacing:"-0.03em",lineHeight:1.1, margin: 0 }}>
+                        Calculando tu
+                        <br/>
+                        <span style={{
+                          background:"linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa)",
+                          backgroundSize:"200% auto",
+                          WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
+                          animation:"shimmer-text 3s linear infinite",
+                        }}>ADN Financiero</span>
+                      </h2>
 
-                    {analysisPhase === 2 && (
-                      <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ duration:0.4 }}>
-                        <button
-                          onClick={() => router.push("/dashboard?showEvolution=true")}
-                          style={{
-                            padding:"14px 36px",
-                            background:"linear-gradient(135deg,#4f46e5,#7c3aed)",
-                            color:"white",
-                            border:"none",
-                            borderRadius:"14px",
-                            fontSize:"clamp(14px,2vw,16px)",
-                            fontWeight:700,
-                            cursor:"pointer",
-                            boxShadow:"0 8px 32px rgba(79,70,229,0.45)",
-                            width:"100%",
-                            display:"flex",
-                            alignItems:"center",
-                            justifyContent:"center",
-                            gap:8,
-                            fontFamily:"inherit"
-                          }}
-                        >
-                          Ver mi ADN → <span style={{ opacity:0.7 }}>({countdown})</span>
-                        </button>
-                        <div style={{ marginTop:12, fontSize:13,color:"rgba(255,255,255,0.25)",fontWeight:500 }}>Redirigiendo automáticamente...</div>
+                      {/* Cosmic progress bar */}
+                      <div style={{ marginTop:48,height:6,background:"rgba(255,255,255,0.06)",borderRadius:99,overflow:"hidden", border: "1px solid rgba(255,255,255,0.08)" }}>
+                        <motion.div
+                          initial={{ width:"0%" }}
+                          animate={{ width:"100%" }}
+                          transition={{ duration:2.3, ease:"easeInOut" }}
+                          style={{ height:"100%",background:"linear-gradient(90deg,#0F62FE,#4A9EFF,#a78bfa)",borderRadius:99 }}
+                        />
+                      </div>
+                      <div style={{ marginTop:14,fontSize:14,color:"rgba(255,255,255,0.4)",fontWeight:600 }}>Decodificando patrones de comportamiento...</div>
+                    </motion.div>
+                  )}
+
+                  {/* Phase 1+: Result teaser */}
+                  {analysisPhase >= 1 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      {/* Big crystal icon */}
+                      <motion.div
+                        initial={{ scale: 0, rotate: -45 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type:"spring", stiffness:200, damping:15, delay:0.2 }}
+                        style={{ width:100,height:100,borderRadius:"50%",background:"linear-gradient(135deg,#0F62FE,#4A9EFF)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 32px",boxShadow:"0 0 60px rgba(15,98,254,0.5)", border: "2px solid rgba(255,255,255,0.2)" }}
+                      >
+                        <span style={{ fontSize: 44 }}>🔮</span>
                       </motion.div>
-                    )}
-                  </motion.div>
-                )}
+
+                      <div style={{ fontSize:13,fontWeight:800,color:"rgba(96,165,250,0.9)",letterSpacing:".3em",textTransform:"uppercase",marginBottom:12 }}>
+                        Análisis completo
+                      </div>
+
+                      <h2 style={{ fontSize:"clamp(28px,6vw,44px)",fontWeight:900,color:"#fff",margin:"0 0 20px",letterSpacing:"-0.03em",lineHeight:1.1 }}>
+                        Billy encontró
+                        <br/>
+                        <span style={{ background:"linear-gradient(90deg,#60a5fa,#c4b5fd,#f472b6)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent" }}>
+                          tu ADN Financiero
+                        </span>
+                      </h2>
+
+                      <p style={{ fontSize:"clamp(15px,2vw,18px)",color:"rgba(255,255,255,0.5)",lineHeight:1.8,margin:"0 0 40px",maxWidth:440,marginLeft:"auto",marginRight:"auto", fontWeight: 500 }}>
+                        Tu perfil único está listo. Descúbrelo en tu Dashboard junto a la hoja de ruta que Billy ha forjado <em>solo para ti</em>.
+                      </p>
+
+                      {/* Mystery profile card */}
+                      <div style={{
+                        background:"rgba(255,255,255,0.03)",
+                        border:"1px solid rgba(255,255,255,0.1)",
+                        borderRadius:24,
+                        padding:"20px 28px",
+                        marginBottom:40,
+                        display:"flex",
+                        alignItems:"center",
+                        justifyContent:"center",
+                        gap:20,
+                        backdropFilter: "blur(10px)",
+                      }}>
+                        <div style={{ fontSize:36 }}>🧬</div>
+                        <div style={{ textAlign:"left" as const }}>
+                          <div style={{ fontSize:12,fontWeight:700,color:"rgba(96,165,250,0.6)",textTransform:"uppercase",letterSpacing:".15em" }}>TU FIRMA BIOMÉTRICA</div>
+                          <div style={{ fontSize:20,fontWeight:900,color:"rgba(255,255,255,0.15)",letterSpacing:3,filter:"blur(6px)" }}>●●● ●●●●●●●●</div>
+                        </div>
+                      </div>
+
+                      {analysisPhase === 2 && (
+                        <motion.div initial={{ opacity:0, y: 10 }} animate={{ opacity:1, y: 0 }} transition={{ duration:0.5 }}>
+                          <button
+                            onClick={() => router.push("/dashboard?showEvolution=true")}
+                            style={{
+                              padding:"18px 48px",
+                              background:"linear-gradient(135deg,#0F62FE,#4A9EFF)",
+                              color:"white",
+                              border:"none",
+                              borderRadius:"18px",
+                              fontSize:"clamp(16px,2vw,18px)",
+                              fontWeight:800,
+                              cursor:"pointer",
+                              boxShadow:"0 16px 40px rgba(15,98,254,0.45)",
+                              width:"100%",
+                              display:"flex",
+                              alignItems:"center",
+                              justifyContent:"center",
+                              gap:12,
+                              fontFamily:"inherit",
+                              transition: "all 0.3s ease",
+                            }}
+                            onMouseOver={(e) => { e.currentTarget.style.transform = "scale(1.02) translateY(-2px)"; e.currentTarget.style.boxShadow = "0 20px 50px rgba(15,98,254,0.6)"; }}
+                            onMouseOut={(e) => { e.currentTarget.style.transform = "scale(1) translateY(0)"; e.currentTarget.style.boxShadow = "0 16px 40px rgba(15,98,254,0.45)"; }}
+                          >
+                            REVELAR MI ADN → <span style={{ opacity:0.7, fontWeight: 500 }}>({countdown})</span>
+                          </button>
+                          <div style={{ marginTop:16, fontSize:14,color:"rgba(255,255,255,0.3)",fontWeight:600 }}>Entrando a la plataforma...</div>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         ) : !userInfo ? (
           <motion.div

@@ -384,21 +384,25 @@ function SettingsContent() {
 
             {/* User badge */}
             <div style={{
-              display:"inline-flex", alignItems:"center", gap:10,
+              display:"inline-flex", alignItems:"center", gap:12,
               background:"rgba(255,255,255,.08)", backdropFilter:"blur(12px)",
-              border:"1px solid rgba(255,255,255,.15)", borderRadius:40, padding:"8px 16px"
+              border:"1px solid rgba(255,255,255,.18)", borderRadius:40, padding:"6px 16px 6px 6px"
             }}>
               <div style={{
-                width:32, height:32, borderRadius:"50%", background: C.blue,
+                width:40, height:40, borderRadius:"50%", background: C.blue,
                 display:"flex", alignItems:"center", justifyContent:"center",
-                fontSize:13, fontWeight:600, color:"#fff", flexShrink:0,
-                boxShadow: "0 0 16px rgba(15,98,254,0.4)"
+                flexShrink:0, overflow: "hidden",
+                boxShadow: "0 0 20px rgba(15,98,254,0.4)",
+                border: "1px solid rgba(255,255,255,0.2)"
               }}>
-                {(user.email || "?")[0].toUpperCase()}
+                <AvatarDisplay 
+                  avatar={avatar || { type: "character", id: "robot", character: "robot" }} 
+                  size={32} 
+                />
               </div>
-              <div>
-                <div style={{ fontSize:12, fontWeight:600, color:"#fff", lineHeight:1.3 }}>{user.email}</div>
-                <div style={{ fontSize:10, color:"rgba(255,255,255,.5)", textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight:1.3 }}>{roleLabel()}</div>
+              <div style={{ paddingRight: 4 }}>
+                <div style={{ fontSize:13, fontWeight:700, color:"#fff", lineHeight:1.2 }}>{fullName || user.email?.split("@")[0]}</div>
+                <div style={{ fontSize:10, color:"rgba(255,255,255,.6)", textTransform: 'uppercase', letterSpacing: '0.05em', lineHeight:1.2 }}>{roleLabel()}</div>
               </div>
             </div>
           </div>
