@@ -960,7 +960,7 @@ export default function FixedSidebar() {
               }}>
                 <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "white", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <AvatarDisplay
-                    avatar={user.user_metadata?.avatar}
+                    avatar={dbProfile?.avatar || user.user_metadata?.avatar}
                     size={50}
                     frame={dbProfile?.inventory?.includes("2") ? "vip" : dbProfile?.inventory?.includes("1") ? "ambassador" : null}
                   />
@@ -977,7 +977,7 @@ export default function FixedSidebar() {
                     textOverflow: "ellipsis",
                     lineHeight: 1.2
                   }}>
-                    {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                    {dbProfile?.fullName || user.user_metadata?.full_name || user.email?.split('@')[0]}
                   </div>
                   <div style={{
                     fontSize: 12,

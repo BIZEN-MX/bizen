@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowLeft, Send, Search, Loader2, Check, Coins, UserRound, ArrowRight, RotateCcw } from "lucide-react"
+import { ArrowLeft, Send, Search, Loader2, Check, Coins, UserRound, ArrowRight, RotateCcw, X } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import PageLoader from "@/components/PageLoader"
@@ -167,7 +167,7 @@ function TransferContent() {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <button 
-            onClick={() => step === "amount" ? setStep("search") : router.back()}
+            onClick={() => step === "amount" ? setStep("search") : router.push("/dashboard")}
             style={{ 
               width: 44, 
               height: 44, 
@@ -181,10 +181,10 @@ function TransferContent() {
               transition: "all 0.2s",
               color: "white"
             }}
-            onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+            onMouseEnter={e => e.currentTarget.style.background = "rgba(15, 98, 254, 0.2)"}
             onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
           >
-            <ArrowLeft size={20} />
+            {step === "amount" ? <ArrowLeft size={20} /> : <X size={20} />}
           </button>
           <div>
             <h1 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: "white", letterSpacing: "-0.02em" }}>

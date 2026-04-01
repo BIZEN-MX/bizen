@@ -322,8 +322,8 @@ export default function ProfilePage() {
     return null
   }
 
-  const displayName = user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario"
-  const nickname = user.user_metadata?.username || user.email?.split("@")[0] || ""
+  const displayName = dbProfile?.fullName || user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario"
+  const nickname = dbProfile?.username || user.user_metadata?.username || user.email?.split("@")[0] || ""
   const level = userStats?.level || dbProfile?.level || 1
   const totalXp = userStats?.xp || 0
   const bizcoins = (dbProfile as any)?.bizcoins || 0
@@ -469,9 +469,19 @@ export default function ProfilePage() {
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4, justifyContent: screenSize < 768 ? "center" : "flex-start", opacity: 0.9 }}>
               <span style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 500 }}>@{nickname}</span>
               <div style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(255,255,255,0.4)" }} />
-              <a href="https://instagram.com/bizen.mx" target="_blank" style={{ display: "flex", alignItems: "center", gap: 6, color: "white", textDecoration: "none", fontWeight: 600, fontSize: 12 }}>
-                <Instagram size={13} /> @bizen.mx
-              </a>
+              <button 
+                onClick={() => router.push("/configuracion")}
+                style={{ 
+                  display: "flex", alignItems: "center", gap: 5, color: "white", 
+                  background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+                  padding: "2px 10px", borderRadius: 99, fontSize: 11, fontWeight: 700, 
+                  cursor: "pointer", transition: "all 0.2s" 
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.2)"}
+                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+              >
+                <Settings size={12} /> Editar Perfil
+              </button>
             </div>
           </div>
 

@@ -77,10 +77,10 @@ export default function HistorialDeCuentaPage() {
   )
 
   const formatAmount = (amt: number, category: string) => {
-    // Logic: Sent transfers are deductions (-), Rewards are additions (+)
+    // Determine sign: deductions (-), additions (+)
     const isSent = category === "transfer_sent" || category === "purchase";
-    const prefix = isSent ? "" : (amt > 0 ? "+" : "");
-    return `${prefix}${amt.toLocaleString()}`;
+    const prefix = isSent ? "-" : (amt > 0 ? "+" : "");
+    return `${prefix}${Math.abs(amt).toLocaleString()}`;
   }
 
   const getIcon = (category: string) => {
@@ -149,7 +149,7 @@ export default function HistorialDeCuentaPage() {
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
             <button 
-              onClick={() => router.back()}
+              onClick={() => router.push("/dashboard")}
               style={{ 
                 width: 48, 
                 height: 48, 
@@ -163,10 +163,10 @@ export default function HistorialDeCuentaPage() {
                 cursor: "pointer",
                 transition: "all 0.2s"
               }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(15, 98, 254, 0.2)"}
               onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
             >
-              <ArrowLeft size={22} />
+              <X size={22} />
             </button>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>

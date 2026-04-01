@@ -209,26 +209,26 @@ export default function InvestmentsPage() {
         <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
             <button 
-              onClick={() => router.back()}
+              onClick={() => router.push("/dashboard")}
               style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.1)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(15, 98, 254, 0.2)"}
               onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
             >
-              <ArrowLeft size={22} />
+              <X size={22} />
             </button>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
-                <TrendingUp size={24} color="#0F62FE" />
-                <h1 style={{ fontSize: 32, fontWeight: 900, margin: 0, letterSpacing: "-0.03em" }}>Gestión de Inversiones</h1>
+                <h1 style={{ fontSize: 32, fontWeight: 900, margin: 0, letterSpacing: "-0.03em" }}>Inversión BIZEN</h1>
+                <span style={{ padding: "4px 12px", background: "#ef4444", color: "white", borderRadius: 8, fontSize: 11, fontWeight: 900, letterSpacing: "0.05em" }}>LIVE</span>
               </div>
               <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", margin: 0, fontWeight: 500 }}>
-                Maximiza tu capital BIZEN con estrategias de crecimiento inteligente.
+                Pon tus Bizcoins a trabajar para ti.
               </p>
             </div>
           </div>
 
           <div style={{ background: "linear-gradient(135deg, rgba(15, 98, 254, 0.15), rgba(15, 98, 254, 0.05))", border: "1.5px solid rgba(15, 98, 254, 0.2)", borderRadius: 20, padding: "12px 24px", textAlign: "right" }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(15, 98, 254, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Saldo para Invertir</div>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(15, 98, 254, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Disponible</div>
             <div style={{ fontSize: 26, fontWeight: 950, color: "white", display: "flex", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
               <Coins size={24} color="#f59e0b" />
               {bizcoins.toLocaleString()} <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>BC</span>
@@ -287,7 +287,7 @@ export default function InvestmentsPage() {
                 {/* Amount Selection */}
                 <section className="card-glass" style={{ padding: 40 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Monto de Inversión</div>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Cantidad a Invertir</div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>Mín: 1 BC · Máx: {bizcoins.toLocaleString()}</div>
                   </div>
 
@@ -315,13 +315,14 @@ export default function InvestmentsPage() {
                         onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "white" }}
                         onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)" }}
                       >
-                        {pct === 1 ? "100%" : `${pct * 100}%`}
+                        {pct === 1 ? "MAX" : `${pct * 100}%`}
                       </button>
                     ))}
                   </div>
                 </section>
 
                 {/* Plan Selection */}
+                <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8, marginLeft: 8 }}>Plazo de Inversión</div>
                 <section style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {STAKING_PLANS.map(plan => {
                     const active = selectedPlan.id === plan.id
@@ -381,13 +382,13 @@ export default function InvestmentsPage() {
                       <span style={{ fontWeight: 800, fontSize: 18 }}>{amount.toLocaleString()} BC</span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>Rendimiento ({selectedPlan.yieldRate * 100}%)</span>
-                      <span style={{ fontWeight: 900, fontSize: 18, color: "#10B981" }}>+{animatedReturn.toLocaleString()} BC</span>
+                      <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>Rendimiento</span>
+                      <span style={{ fontWeight: 900, fontSize: 18, color: "#10B981" }}>+{animatedReturn.toLocaleString()} BC de ganancia</span>
                     </div>
                     <div style={{ height: 1, background: "rgba(255,255,255,0.06)" }} />
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ color: "#fff", fontWeight: 700 }}>Total Final</span>
-                      <span style={{ fontWeight: 950, fontSize: 28, color: "#fff" }}>{animatedTotal.toLocaleString()} BC</span>
+                      <span style={{ color: "#fff", fontWeight: 700 }}>Total a Recibir</span>
+                      <span style={{ fontWeight: 950, fontSize: 24, color: "#fff" }}>{animatedTotal.toLocaleString()} BC en {selectedPlan.days} días</span>
                     </div>
                   </div>
 
@@ -419,7 +420,7 @@ export default function InvestmentsPage() {
                       gap: 12
                     }}
                   >
-                    {isSubmitting ? <Loader2 size={24} className="animate-spin" /> : <><Sparkles size={20} /> Confirmar Inversión</>}
+                    {isSubmitting ? <Loader2 size={24} className="animate-spin" /> : <><Sparkles size={20} /> Iniciar Inversión</>}
                   </button>
                   
                   {error && <div style={{ marginTop: 16, textAlign: "center", color: "#ef4444", fontWeight: 700, fontSize: 14 }}>{error}</div>}

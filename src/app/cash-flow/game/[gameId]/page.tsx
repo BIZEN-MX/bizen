@@ -7,7 +7,14 @@ import GameBoard from "@/components/cashflow/GameBoard"
 import { useCashflowSounds } from "@/hooks/useCashflowSounds"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { motion, AnimatePresence } from "framer-motion"
-import { TrophyIcon, TargetIcon, MoneyIcon, BarChartIcon, BriefcaseIcon, ClockIcon, ZapIcon, CreditCardIcon, ShoppingCartIcon, CompassIcon, HeartIcon } from "@/components/CustomIcons"
+import { 
+  TrophyIcon, TargetIcon, MoneyIcon, BarChartIcon, BriefcaseIcon, ClockIcon, ZapIcon, CreditCardIcon, ShoppingCartIcon, CompassIcon, HeartIcon 
+} from "@/components/CustomIcons"
+import { 
+  X, Home, TrendingUp, Briefcase, Users, BadgeDollarSign, Check, AlertTriangle, 
+  Gamepad2, Film, Shirt, Plane, Utensils, Gem, CheckCircle2, Coins, ArrowLeft, 
+  Lightbulb, Info, History, ShieldCheck, Target, Sparkles, Map, BookOpen, Star
+} from "lucide-react"
 
 type Player = {
   id: number
@@ -235,6 +242,14 @@ export default function CashFlowGamePage() {
     color: "#dc2626",
     fontStyle: "italic"
   }
+
+  useEffect(() => {
+    // Hide sidebar on mount for full-screen immersion
+    document.body.classList.add('hide-sidebar')
+    return () => {
+      document.body.classList.remove('hide-sidebar')
+    }
+  }, [])
 
   useEffect(() => {
     const updateIsMobile = () => {
@@ -668,12 +683,6 @@ export default function CashFlowGamePage() {
       <>
         <style>{`
           .cashflow-game-page { width: 100% !important; min-height: 100vh; overflow-x: hidden !important; }
-          @media (min-width: 768px) and (max-width: 1160px) {
-            .cashflow-game-page { margin-left: 220px !important; width: calc(100% - 220px) !important; max-width: calc(100vw - 220px) !important; }
-          }
-          @media (min-width: 1161px) {
-            .cashflow-game-page { margin-left: 280px !important; width: calc(100% - 280px) !important; max-width: calc(100vw - 280px) !important; }
-          }
         `}</style>
         <div
           className="cashflow-game-page"
@@ -717,10 +726,10 @@ export default function CashFlowGamePage() {
     <div style={modalOverlayStyle}>
       <div style={modalCardStyle}>
         <h2 style={modalTitleStyle}>
-          {currentCard?.type === "real_estate" && "🏠"}
-          {currentCard?.type === "stock" && "📈"}
-          {currentCard?.type === "business" && "💼"}
-          {currentCard?.type === "limited_partnership" && "🤝"}{" "}
+          {currentCard?.type === "real_estate" && <Home size={28} color="#0F62FE" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {currentCard?.type === "stock" && <TrendingUp size={28} color="#10b981" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {currentCard?.type === "business" && <Briefcase size={28} color="#8b5cf6" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {currentCard?.type === "limited_partnership" && <Users size={28} color="#f59e0b" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
           {currentCard?.name}
         </h2>
         <p style={modalDescriptionStyle}>{currentCard?.description}</p>
@@ -765,7 +774,7 @@ export default function CashFlowGamePage() {
               cursor: actionInProgress ? "not-allowed" : "pointer"
             }}
           >
-            💰 Comprar
+            <BadgeDollarSign size={18} style={{ marginRight: 8 }} /> Comprar
           </button>
           <button
             onClick={passCard}
@@ -775,7 +784,7 @@ export default function CashFlowGamePage() {
               cursor: actionInProgress ? "not-allowed" : "pointer"
             }}
           >
-            ❌ Pasar
+            <X size={18} style={{ marginRight: 8 }} /> Pasar
           </button>
         </div>
       </div>
@@ -786,17 +795,18 @@ export default function CashFlowGamePage() {
     <div style={modalOverlayStyle}>
       <div style={modalCardStyle}>
         <h2 style={modalTitleStyle}>
-          {currentDoodad?.category === "toys" && "🎮"}
-          {currentDoodad?.category === "entertainment" && "🎬"}
-          {currentDoodad?.category === "fashion" && "👔"}
-          {currentDoodad?.category === "travel" && "✈️"}
-          {currentDoodad?.category === "food" && "🍽️"}
-          {!currentDoodad?.category && "💎"} {currentDoodad?.name}
+          {currentDoodad?.category === "toys" && <Gamepad2 size={28} color="#ec4899" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {currentDoodad?.category === "entertainment" && <Film size={28} color="#ef4444" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {currentDoodad?.category === "fashion" && <Shirt size={28} color="#3b82f6" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {currentDoodad?.category === "travel" && <Plane size={28} color="#0ea5e9" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {currentDoodad?.category === "food" && <Utensils size={28} color="#f59e0b" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {!currentDoodad?.category && <Gem size={28} color="#a78bfa" style={{ marginRight: 12, verticalAlign: 'middle' }} />}
+          {currentDoodad?.name}
         </h2>
         <p style={modalDescriptionStyle}>{currentDoodad?.description}</p>
         <div style={warningBoxStyle}>
           <div style={warningTextStyle}>
-            ⚠️ <strong>ADVERTENCIA:</strong> Este es un gasto de lujo que NO genera ningún ingreso.
+            <AlertTriangle size={16} style={{ marginRight: 8, verticalAlign: 'text-bottom' }} /> <strong>ADVERTENCIA:</strong> Este es un gasto de lujo que NO genera ningún ingreso.
           </div>
           <div style={warningQuoteStyle}>
             "Los pobres y la clase media compran lujos primero. Los ricos compran activos primero." - Robert Kiyosaki
@@ -818,7 +828,7 @@ export default function CashFlowGamePage() {
             onClick={passDoodad}
             style={modalPrimaryButtonStyle}
           >
-            ✅ Pasar (Decisión Inteligente)
+            <Check size={18} style={{ marginRight: 8 }} /> Pasar (Decisión Inteligente)
           </button>
           <button
             onClick={buyDoodad}
@@ -835,7 +845,7 @@ export default function CashFlowGamePage() {
                 : "pointer"
             }}
           >
-            💸 Comprar (Mala Idea)
+            <BadgeDollarSign size={18} style={{ marginRight: 8 }} /> Comprar (Mala Idea)
           </button>
         </div>
       </div>
@@ -861,19 +871,8 @@ export default function CashFlowGamePage() {
             padding-bottom: 0;
           }
         }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .cashflow-game-page {
-            margin-left: 220px !important;
-            width: calc(100% - 220px) !important;
-            max-width: calc(100vw - 220px) !important;
-          }
-        }
-        @media (min-width: 1161px) {
-          .cashflow-game-page {
-            margin-left: 280px !important;
-            width: calc(100% - 280px) !important;
-            max-width: calc(100vw - 280px) !important;
-          }
+        @media (min-width: 768px) {
+          .cashflow-game-page { margin-left: 0 !important; width: 100% !important; max-width: 100% !important; }
         }
         .cashflow-game-container {
           width: 100% !important;
@@ -1049,6 +1048,31 @@ export default function CashFlowGamePage() {
                 gap: 20
               }}
             >
+              {/* EXIT BUTTON */}
+              <button 
+                onClick={() => router.push("/dashboard")}
+                style={{ 
+                  position: "absolute", 
+                  top: 16, 
+                  right: 16, 
+                  width: 44, 
+                  height: 44, 
+                  borderRadius: 14, 
+                  background: "rgba(255,255,255,0.1)", 
+                  border: "1px solid rgba(255,255,255,0.2)", 
+                  color: "white", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  zIndex: 10,
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(15, 98, 254, 0.3)"}
+                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+              >
+                <X size={20} />
+              </button>
               {/* Decorative elements */}
               <div style={{ position: "absolute", top: "-20%", right: "-5%", width: "40%", height: "140%", background: player.isOnFastTrack ? "radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%)" : "radial-gradient(circle, rgba(11,113,254,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
 

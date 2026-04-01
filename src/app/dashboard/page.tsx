@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen } from "lucide-react"
+import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
@@ -1044,7 +1044,7 @@ function DashboardContent() {
               )}
             </div>
             
-            <button onClick={() => setIsHistoryModalOpen(true)} style={{ marginTop: 12, width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "10px", borderRadius: 12, fontSize: 12, fontWeight: 700, color: "#475569", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.background="#0F62FE"; e.currentTarget.style.color="white"; e.currentTarget.style.borderColor="#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.color="#475569"; e.currentTarget.style.borderColor="#e2e8f0"}}>Ver historial completo</button>
+            <button onClick={() => router.push("/historial-de-cuenta")} style={{ marginTop: 12, width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "10px", borderRadius: 12, fontSize: 12, fontWeight: 700, color: "#475569", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.background="#0F62FE"; e.currentTarget.style.color="white"; e.currentTarget.style.borderColor="#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.color="#475569"; e.currentTarget.style.borderColor="#e2e8f0"}}>Ver historial completo</button>
           </div>
 
           <DailyChallengeWidget />
@@ -1064,6 +1064,7 @@ function DashboardContent() {
           <div className="quick-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:12}}>
             {([
               { Icon:IcoBook,    label:"Aprende Finanzas",  sub:"30 temas en total",       href:"/courses",    color:"#3b82f6", bg:"#dbeafe", delay:".33s" },
+              { Icon:TrendingUp, label:"Inversión BIZEN",    sub:"Poner Bizcoins a trabajar", href:"/investments",color:"#0F62FE", bg:"#dbeafe", delay:".35s" },
               { Icon:IcoGamepad, label:"Simuladores",        sub:"Practica con escenarios",  href:"/cash-flow", color:"#8b5cf6", bg:"#ede9fe", delay:".37s" },
               { Icon:IcoStore,   label:"Tienda Bizen",       sub:`${bizcoins.toLocaleString()} BIZCOINS`,        href:"/tienda",   color:"#d97706", bg:"#fef3c7", delay:".41s" },
               { Icon:IcoUsers,   label:"Foro",               sub:"Comunidad activa",          href:"/forum",    color:"#10b981", bg:"#d1fae5", delay:".45s" },
