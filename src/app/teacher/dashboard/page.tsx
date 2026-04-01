@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import PageLoader from '@/components/PageLoader'
+import DailyChallengeWidget from '@/components/DailyChallengeWidget'
 import {
     Users, BookOpen, TrendingUp, Zap, Search,
     ChevronRight, Award, BarChart2, Activity,
@@ -404,6 +405,17 @@ export default function AdminDashboardPage() {
                             <div style={{ fontSize: 11, color: '#94a3b8' }}>{kpi.sub}</div>
                         </div>
                     ))}
+                </div>
+                
+                {/* ── DAILY CHALLENGE PREVIEW ── */}
+                <div style={{ marginBottom: 24, animation: 'fadeSlideUp 0.5s ease 0.1s both' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 12 }}>
+                        <div style={{ width: 28, height: 28, borderRadius: 9, background: 'linear-gradient(135deg,#fef2f2,#fee2e2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Target size={14} color="#ef4444" strokeWidth={2.5} />
+                        </div>
+                        <span style={{ fontSize: 16, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.01em' }}>Misión del Día (Vista Previa)</span>
+                    </div>
+                    <DailyChallengeWidget />
                 </div>
 
                 {/* ── DIAGNOSTIC + COMMUNITY GRID ── */}
