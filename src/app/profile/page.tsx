@@ -8,6 +8,7 @@ import { useOnboarding } from "@/contexts/OnboardingContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import TransferModal from "@/components/bizen/TransferModal"
 import StakingModal from "@/components/bizen/StakingModal"
+import TransactionHistoryModal from "@/components/bizen/TransactionHistoryModal"
 import PageLoader from "@/components/PageLoader"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { AVATAR_OPTIONS, AVATAR_CATEGORIES, getDefaultAvatar } from "@/lib/avatarOptions"
@@ -175,6 +176,18 @@ export default function ProfilePage() {
   const [isStakingModalOpen, setIsStakingModalOpen] = useState(false)
   const [showActivity, setShowActivity] = useState(true)
   const [isFullHistoryOpen, setIsFullHistoryOpen] = useState(false)
+
+  const getIcon = (cat: string) => {
+    switch(cat) {
+      case "purchase": return <ShoppingCart size={18} />
+      case "streak_bonus": return <Flame size={18} />
+      case "lesson_reward": return <BookOpen size={18} />
+      case "achievement": return <Trophy size={18} />
+      case "transfer_sent": return <ArrowUpRight size={18} />
+      case "transfer_received": return <ArrowDownLeft size={18} />
+      default: return <PlusCircle size={18} />
+    }
+  }
 
   // Sync theme with dbProfile
   useEffect(() => {
@@ -731,13 +744,7 @@ export default function ProfilePage() {
                             justifyContent: "center",
                             color: t.type === "income" ? "#10B981" : "#F43F5E"
                           }}>
-                            {t.category === "purchase" ? <ShoppingCart size={18} /> : 
-                            t.category === "streak_bonus" ? <Flame size={18} /> :
-                            t.category === "lesson_reward" ? <BookOpen size={18} /> :
-                            t.category === "achievement" ? <Trophy size={18} /> :
-                            t.category === "transfer_sent" ? <ArrowUpRight size={18} /> :
-                            t.category === "transfer_received" ? <ArrowDownLeft size={18} /> :
-                            <PlusCircle size={18} />}
+                            {getIcon(t.category)}
                           </div>
                           
                           <div style={{ flex: 1, minWidth: 0 }}>
@@ -993,135 +1000,14 @@ export default function ProfilePage() {
       </div>
 
       {/* Full Screen History Overlay */}
-      {isFullHistoryOpen && (
-        <div style={{ 
-          position: "fixed", 
-          inset: 0, 
-          zIndex: 15000, 
-          background: "#FBFAF5", 
-          display: "flex", 
-          flexDirection: "column",
-          animation: "fadeUp 0.4s ease both",
-          marginLeft: screenSize < 768 ? 0 : (screenSize < 1161 ? '220px' : '280px')
-        }}>
-          {/* Header */}
-          <div style={{ 
-            padding: "24px 40px", 
-            background: "white", 
-            borderBottom: "1.5px solid #e2e8f0", 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "space-between",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.03)"
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <button 
-                onClick={() => setIsFullHistoryOpen(false)}
-                style={{ 
-                  width: 44, 
-                  height: 44, 
-                  borderRadius: 14, 
-                  background: "#f1f5f9", 
-                  border: "none", 
-                  cursor: "pointer", 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "center",
-                  transition: "all 0.2s"
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"}
-                onMouseLeave={e => e.currentTarget.style.background = "#f1f5f9"}
-              >
-                <CloseIcon size={20} color="#0f172a" />
-              </button>
-              <div>
-                <h2 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.02em" }}>Historial de Cuenta</h2>
-                <p style={{ margin: 0, fontSize: 13, color: "#64748b", fontWeight: 500 }}>Revisa todos tus movimientos y Bizcoins obtenidos</p>
-              </div>
-            </div>
-
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 24, fontWeight: 950, color: "#0F62FE" }}>{bizcoins} <span style={{ fontSize: 14, fontWeight: 700 }}>BC</span></div>
-              <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>Balance Actual</div>
-            </div>
-          </div>
-
-          {/* History List */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "40px", maxWidth: 1000, margin: "0 auto", width: "100%" }}>
-            <div style={{ background: "white", borderRadius: 32, border: "1.5px solid #e2e8f0", overflow: "hidden", boxShadow: "0 10px 40px rgba(0,0,0,0.02)" }}>
-              {transactions.length === 0 ? (
-                <div style={{ padding: 80, textAlign: "center" }}>
-                   <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
-                      <CircleDollarSign size={40} color="#cbd5e1" />
-                   </div>
-                   <h3 style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>Sin movimientos registrados</h3>
-                   <p style={{ color: "#94a3b8", fontSize: 15 }}>Aún no has realizado transacciones en BIZEN.</p>
-                </div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  {transactions.map((t, idx) => (
-                    <div key={t.id} style={{ 
-                      padding: "20px 32px", 
-                      display: "flex", 
-                      alignItems: "center", 
-                      gap: 24, 
-                      borderBottom: idx === transactions.length - 1 ? "none" : "1px solid #f1f5f9",
-                      transition: "background 0.2s"
-                    }} onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                      <div style={{ 
-                        width: 48, 
-                        height: 48, 
-                        borderRadius: 16, 
-                        background: t.type === "income" ? "rgba(16,185,129,0.08)" : "rgba(244,63,94,0.08)", 
-                        display: "flex", 
-                        alignItems: "center", 
-                        justifyContent: "center",
-                        color: t.type === "income" ? "#10B981" : "#F43F5E",
-                        flexShrink: 0
-                      }}>
-                        {t.category === "purchase" ? <ShoppingCart size={24} /> : 
-                        t.category === "streak_bonus" ? <Flame size={24} /> :
-                        t.category === "lesson_reward" ? <BookOpen size={24} /> :
-                        t.category === "achievement" ? <Trophy size={24} /> :
-                        t.category === "transfer_sent" ? <ArrowUpRight size={24} /> :
-                        t.category === "transfer_received" ? <ArrowDownLeft size={24} /> :
-                        <PlusCircle size={24} />}
-                      </div>
-                      
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 2 }}>{t.description}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                          <span style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>{new Date(t.createdAt).toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
-                          <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#cbd5e1" }} />
-                          <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>{t.category.replace('_', ' ')}</span>
-                        </div>
-                      </div>
-
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ 
-                          fontSize: 20, 
-                          fontWeight: 950, 
-                          color: t.type === "income" ? "#10B981" : "#F43F5E",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-end",
-                          gap: 4
-                        }}>
-                          {t.type === "income" ? "+" : "-"}{t.amount}
-                          <span style={{ fontSize: 12, fontWeight: 800 }}>BC</span>
-                        </div>
-                        <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{t.type === "income" ? "Abonado" : "Debitado"}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            
-            <div style={{ height: 100 }} /> {/* Bottom spacing */}
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {isFullHistoryOpen && (
+          <TransactionHistoryModal 
+            onClose={() => setIsFullHistoryOpen(false)}
+            currentBalance={bizcoins}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Transfer Modal */}
       {isTransferModalOpen && (

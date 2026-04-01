@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ArrowUpRight, ArrowDownLeft, History, Search, Filter, Download, Coins, Calendar, Tag, ShieldCheck, Zap } from "lucide-react"
+import { X, ArrowUpRight, ArrowDownLeft, History, Search, Filter, Download, Coins, Calendar, Tag, ShieldCheck, Zap, ShoppingBag, Flame, BookOpen, Trophy, PlusCircle } from "lucide-react"
 
 interface Transaction {
   id: string
@@ -41,6 +41,12 @@ export default function TransactionHistoryModal({ onClose, currentBalance }: Tra
 
   useEffect(() => {
     fetchFullHistory()
+    
+    // Hide sidebar on mount
+    document.body.classList.add('hide-sidebar')
+    return () => {
+      document.body.classList.remove('hide-sidebar')
+    }
   }, [])
 
   const filtered = transactions.filter(t => 
@@ -52,11 +58,17 @@ export default function TransactionHistoryModal({ onClose, currentBalance }: Tra
     return amt >= 0 ? `+${amt}` : amt
   }
 
-  const getIcon = (type: string, category: string) => {
-    if (category === 'transfer') return <ArrowUpRight size={18} color="#ef4444" />
-    if (category === 'reward' || category === 'challenge') return <Zap size={18} color="#f59e0b" />
-    if (category === 'interest') return <ArrowDownLeft size={18} color="#10b981" />
-    return <ArrowDownLeft size={18} color="#10b981" />
+  const getIcon = (category: string) => {
+    switch (category) {
+      case "purchase": return <ShoppingBag size={18} color="#f43f5e" />
+      case "streak_bonus": return <Flame size={18} color="#f59e0b" />
+      case "lesson_reward": return <BookOpen size={18} color="#10b981" />
+      case "achievement": return <Trophy size={18} color="#8b5cf6" />
+      case "transfer_sent": return <ArrowUpRight size={18} color="#f43f5e" />
+      case "transfer_received": return <ArrowDownLeft size={18} color="#10b981" />
+      case "staking_reward": return <Zap size={18} color="#8b5cf6" />
+      default: return <PlusCircle size={18} color="#0F62FE" />
+    }
   }
 
   return (
@@ -67,9 +79,9 @@ export default function TransactionHistoryModal({ onClose, currentBalance }: Tra
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 9999,
-        background: "rgba(10, 15, 46, 0.98)",
-        backdropFilter: "blur(20px)",
+        zIndex: 15000,
+        background: "radial-gradient(circle at top right, #0a0f2e 0%, #05081a 100%)",
+        backdropFilter: "blur(40px)",
         padding: "clamp(12px, 3vw, 40px)",
         display: "flex",
         flexDirection: "column",
@@ -77,6 +89,7 @@ export default function TransactionHistoryModal({ onClose, currentBalance }: Tra
         fontFamily: '"SF Pro Display", system-ui, sans-serif'
       }}
     >
+      <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
       {/* ── HEADER ── */}
       <header style={{ 
         display: "flex", 
@@ -245,7 +258,7 @@ export default function TransactionHistoryModal({ onClose, currentBalance }: Tra
                   justifyContent: "center",
                   flexShrink: 0
                 }}>
-                  {getIcon(t.type, t.category)}
+                    {getIcon(t.category)}
                 </div>
 
                 {/* Concept */}
