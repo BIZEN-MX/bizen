@@ -1145,12 +1145,12 @@ export default function CoursePageTemplate({
 
                 @keyframes active-lesson-pulse {
                   0%, 100% { 
-                    box-shadow: 0 8px 20px rgba(15,98,254,0.12), 0 0 0 1px rgba(15,98,254,0.15); 
-                    border-color: rgba(15, 98, 254, 0.3);
+                    box-shadow: 0 4px 12px rgba(15,98,254,0.06), 0 0 0 1px rgba(15,98,254,0.1); 
+                    border-color: rgba(15, 98, 254, 0.2);
                   }
                   50% { 
-                    box-shadow: 0 20px 60px rgba(15,98,254,0.4), 0 0 0 4px rgba(15,98,254,0.3); 
-                    border-color: rgba(15, 98, 254, 0.7);
+                    box-shadow: 0 0 25px rgba(15,98,254,0.18), 0 0 0 2px rgba(15,98,254,0.15); 
+                    border-color: rgba(15, 98, 254, 0.45);
                   }
                 }
                 .next-lesson-to-complete {
