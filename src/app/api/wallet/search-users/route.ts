@@ -40,7 +40,10 @@ export async function GET(request: Request) {
       take: 20
     })
 
-    return NextResponse.json({ users })
+    // Ensure uniqueness by userId (just in case)
+    const uniqueUsers = Array.from(new Map(users.map(u => [u.userId, u])).values());
+
+    return NextResponse.json({ users: uniqueUsers })
   } catch (error) {
     console.error("Error in user search:", error)
     return NextResponse.json({ error: "Failed to search users" }, { status: 500 })
