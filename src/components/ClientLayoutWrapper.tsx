@@ -114,7 +114,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
   const isTransferPage = pathname === '/transfer' || searchParams?.get('action') === 'transfer'
-  const isHistoryPage = pathname === '/historial-de-cuenta'
+  const isHistoryPage = pathname === '/historial' || pathname === '/historial-de-cuenta'
   const isInvestmentsPage = pathname === '/investments'
   const isCashflowStatsPage = pathname === '/cash-flow/stats'
   const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isCashflowStatsPage;

@@ -1407,49 +1407,8 @@ export default function TiendaPage() {
                                 </button>
                             </div>
                         </div>
-
-
-                        {/* Recent History Section - Merged from Puntos page */}
-                        <div style={{ marginTop: 48, background: "white", borderRadius: 36, padding: "48px", border: "1px solid #f1f5f9", boxShadow: "0 10px 60px rgba(15,98,254,0.06)" }}>
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
-                                <h3 style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", margin: 0 }}>Historial de BIZCOINS</h3>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: "#64748b", background: "#f1f5f9", padding: "6px 14px", borderRadius: 10 }}>Últimos 30 días</div>
-                            </div>
-                            
-                            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", background: "#f8fafc", borderRadius: 20, border: "1px solid #f1f5f9" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                                        <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "#10b981" }}>
-                                            <Zap size={20} />
-                                        </div>
-                                        <div>
-                                            <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 15 }}>Sesión de hoy completada</div>
-                                            <div style={{ fontSize: 13, color: "#94a3b8" }}>Hoy, 10:24 AM</div>
-                                        </div>
-                                    </div>
-                                    <div style={{ fontWeight: 800, color: "#10b981", fontSize: 16 }}>+50 BIZCOINS</div>
-                                </div>
-
-                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", background: "#f8fafc", borderRadius: 20, border: "1px solid #f1f5f9" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                                        <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "#10b981" }}>
-                                            <Target size={20} />
-                                        </div>
-                                        <div>
-                                            <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 15 }}>Misión del día Completado</div>
-                                            <div style={{ fontSize: 13, color: "#94a3b8" }}>Ayer, 06:15 PM</div>
-                                        </div>
-                                    </div>
-                                    <div style={{ fontWeight: 800, color: "#10b981", fontSize: 16 }}>+150 BIZCOINS</div>
-                                </div>
-
-                                <div style={{ textAlign: "center", padding: "32px", border: "2px dashed #f1f5f9", borderRadius: 24, marginTop: 12 }}>
-                                    <p style={{ margin: 0, color: "#94a3b8", fontSize: 14, fontWeight: 500 }}>Estamos trabajando en un historial detallado para todas tus transacciones.</p>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
             </div>
         </div>

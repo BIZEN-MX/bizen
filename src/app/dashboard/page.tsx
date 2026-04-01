@@ -991,7 +991,7 @@ function DashboardContent() {
                 </div>
               ) : (
                 <AnimatePresence>
-                  {transactions.slice(0, 10).map((t, idx) => (
+                  {transactions.slice(0, 2).map((t, idx) => (
                     <motion.div 
                       key={t.id}
                       initial={{ opacity: 0, scale: 0.98 }}
@@ -1044,7 +1044,7 @@ function DashboardContent() {
               )}
             </div>
             
-            <button onClick={() => router.push("/historial-de-cuenta")} style={{ marginTop: 12, width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "10px", borderRadius: 12, fontSize: 12, fontWeight: 700, color: "#475569", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.background="#0F62FE"; e.currentTarget.style.color="white"; e.currentTarget.style.borderColor="#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.color="#475569"; e.currentTarget.style.borderColor="#e2e8f0"}}>Ver historial completo</button>
+            <button onClick={() => router.push("/historial")} style={{ marginTop: 12, width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "10px", borderRadius: 12, fontSize: 12, fontWeight: 700, color: "#475569", cursor: "pointer", transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.background="#0F62FE"; e.currentTarget.style.color="white"; e.currentTarget.style.borderColor="#0F62FE"}} onMouseLeave={e => {e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.color="#475569"; e.currentTarget.style.borderColor="#e2e8f0"}}>Ver historial completo</button>
           </div>
 
           <DailyChallengeWidget />

@@ -703,7 +703,7 @@ export default function ProfilePage() {
                   <button 
                     onClick={(e) => {
                       e.stopPropagation()
-                      setIsFullHistoryOpen(true)
+                      router.push("/historial")
                     }}
                     style={{ 
                       fontSize: 11, 
@@ -740,7 +740,7 @@ export default function ProfilePage() {
                     </div>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                      {transactions.slice(0, 10).map((t) => (
+                      {transactions.slice(0, 2).map((t) => (
                         <div key={t.id} className="transaction-row-hover" style={{ padding: "14px 24px", display: "flex", alignItems: "center", gap: 16 }}>
                           <div style={{ 
                             width: 38, 
