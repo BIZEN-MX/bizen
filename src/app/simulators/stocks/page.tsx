@@ -51,11 +51,10 @@ const SYMBOL_DOMAINS: Record<string, string> = {
 }
 
 const StockLogo = ({ symbol, size = 32 }: { symbol: string, size?: number }) => {
-  const [error, setError] = useState(false);
+  const [logoState, setLogoState] = useState<'clearbit' | 'google' | 'none'>('clearbit');
   const domain = SYMBOL_DOMAINS[symbol];
-  const url = domain && !error ? `https://logo.clearbit.com/${domain}` : null;
 
-  if (!url) {
+  if (!domain || logoState === 'none') {
     return (
       <div style={{ 
         width: size, height: size, borderRadius: size/4, 
@@ -69,6 +68,16 @@ const StockLogo = ({ symbol, size = 32 }: { symbol: string, size?: number }) => 
     );
   }
 
+  const urls = {
+    clearbit: `https://logo.clearbit.com/${domain}`,
+    google: `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
+  };
+
+  const handleLogoError = () => {
+    if (logoState === 'clearbit') setLogoState('google');
+    else setLogoState('none');
+  };
+
   return (
     <div style={{ 
       width: size, height: size, borderRadius: size/4, 
@@ -77,10 +86,10 @@ const StockLogo = ({ symbol, size = 32 }: { symbol: string, size?: number }) => 
       border: '1.5px solid #e2e8f0', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' 
     }}>
       <img 
-        src={url} 
+        src={urls[logoState as keyof typeof urls]} 
         alt={symbol} 
         style={{ width: '85%', height: '85%', objectFit: 'contain' }} 
-        onError={() => setError(true)} 
+        onError={handleLogoError} 
       />
     </div>
   );
