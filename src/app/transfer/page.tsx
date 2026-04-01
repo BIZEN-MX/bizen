@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import PageLoader from "@/components/PageLoader"
 
-export default function TransferPage() {
+function TransferContent() {
   const { user, dbProfile, loading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -419,4 +419,12 @@ export default function TransferPage() {
       </footer>
     </div>
   )
+}
+
+export default function TransferPage() {
+    return (
+        <React.Suspense fallback={<PageLoader />}>
+            <TransferContent />
+        </React.Suspense>
+    )
 }
