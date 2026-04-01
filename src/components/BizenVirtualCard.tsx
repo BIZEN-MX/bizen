@@ -545,7 +545,7 @@ export default function BizenVirtualCard({
                       onClick={(e) => { 
                         e.stopPropagation(); 
                         if (onTransferClick) onTransferClick();
-                        else router.push("/profile?action=transfer");
+                        else router.push("/transfer");
                       }}
                     >
                       <Send size={11} color={tier === "legendary" ? "#fbbf24" : "rgba(255,255,255,0.85)"} />

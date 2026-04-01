@@ -26,6 +26,12 @@ export default function HistorialLogrosPage() {
             router.push("/login")
             return
         }
+
+        // Hide sidebar on mount
+        document.body.classList.add('hide-sidebar')
+        return () => {
+            document.body.classList.remove('hide-sidebar')
+        }
     }, [user, loading, router])
 
     if (loading) return <PageLoader />
@@ -74,8 +80,8 @@ export default function HistorialLogrosPage() {
                     .historial-content { padding: 20px !important; }
                 }
                 @media (min-width: 768px) {
-                    .historial-inner { margin-left: 280px !important; }
-                    .historial-content { padding: 40px !important; width: auto; margin: 0; }
+                    .historial-inner { margin-left: 0 !important; }
+                    .historial-content { padding: 40px !important; width: 100%; max-width: 1000px; margin: 0 auto; }
                 }
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(10px); }

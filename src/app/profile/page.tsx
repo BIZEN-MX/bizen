@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
 import { useOnboarding } from "@/contexts/OnboardingContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
-import TransferModal from "@/components/bizen/TransferModal"
 import StakingModal from "@/components/bizen/StakingModal"
 import TransactionHistoryModal from "@/components/bizen/TransactionHistoryModal"
 import PageLoader from "@/components/PageLoader"
@@ -172,7 +171,6 @@ export default function ProfilePage() {
   const [loadingGoals, setLoadingGoals] = useState(true)
   const [staking, setStaking] = useState<StakingPosition[]>([])
   const [loadingStaking, setLoadingStaking] = useState(true)
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [isStakingModalOpen, setIsStakingModalOpen] = useState(false)
   const [showActivity, setShowActivity] = useState(true)
   const [isFullHistoryOpen, setIsFullHistoryOpen] = useState(false)
@@ -608,7 +606,7 @@ export default function ProfilePage() {
                 level={level}
                 colorTheme={cardTheme}
                 bizcoins={bizcoins}
-                onTransferClick={() => setIsTransferModalOpen(true)}
+                onTransferClick={() => router.push("/transfer")}
                 hideButtons={true}
               />
             </div>
@@ -1009,14 +1007,6 @@ export default function ProfilePage() {
         )}
       </AnimatePresence>
 
-      {/* Transfer Modal */}
-      {isTransferModalOpen && (
-        <TransferModal 
-          onClose={() => setIsTransferModalOpen(false)} 
-          currentBalance={bizcoins}
-          onTransferSuccess={(newBal) => { fetchData(); }}
-        />
-      )}
 
       <AnimatePresence>
         {isStakingModalOpen && (

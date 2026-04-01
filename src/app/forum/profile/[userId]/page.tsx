@@ -23,7 +23,6 @@ import {
   Send,
   Coins
 } from "lucide-react"
-import TransferModal from "@/components/bizen/TransferModal"
 
 interface UserProfile {
   userId: string
@@ -62,7 +61,6 @@ export default function ForumProfilePage() {
   const userId = params?.userId as string
 
   const [currentBalance, setCurrentBalance] = useState(0)
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
 
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loadingData, setLoadingData] = useState(true)
@@ -415,7 +413,7 @@ export default function ForumProfilePage() {
 
                 {user && userId !== user.id && (
                   <button
-                    onClick={() => setIsTransferModalOpen(true)}
+                    onClick={() => router.push(`/transfer?target=${userId}`)}
                     style={{
                       padding: "12px 26px",
                       background: "rgba(255,255,255,0.1)",
@@ -716,24 +714,6 @@ export default function ForumProfilePage() {
           </div>
         )}
 
-        {/* ── TRANSFER MODAL ── */}
-        <AnimatePresence>
-          {isTransferModalOpen && (
-            <TransferModal
-              currentBalance={currentBalance}
-              onClose={() => setIsTransferModalOpen(false)}
-              onTransferSuccess={(newBal) => {
-                setCurrentBalance(newBal)
-                setIsTransferModalOpen(false)
-              }}
-              targetUser={{
-                userId: profile.userId,
-                nickname: profile.nickname,
-                avatar: profile.avatar
-              }}
-            />
-          )}
-        </AnimatePresence>
       </div>
     </>
   )

@@ -13,8 +13,6 @@ import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUp
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
-// import { useSearchParams } from "next/navigation" // Moved up
-import TransferModal from "@/components/bizen/TransferModal"
 import TransactionHistoryModal from "@/components/bizen/TransactionHistoryModal"
 
 // ─────────────────────────────────────────────────────────────────
@@ -323,7 +321,7 @@ function DashboardContent() {
     return total > 0 ? Math.round((stats.xpInCurrentLevel / total) * 100) : 0
   }, [stats])
 
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
+  // const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
 
   const go = useCallback(async (isSilent = false) => {
     if (!user?.email) return // No user, no call
@@ -693,7 +691,7 @@ function DashboardContent() {
                     animationDelay=".12s"
                     colorTheme={dbProfile?.cardTheme || "blue"}
                     level={dbProfile?.level || 1}
-                    onTransferClick={() => setIsTransferModalOpen(true)}
+                    onTransferClick={() => router.push("/transfer")}
                   />
                 </div>
               </div>
@@ -702,14 +700,6 @@ function DashboardContent() {
           </div>
         </div>
 
-        {/* Transfer Modal */}
-        {isTransferModalOpen && (
-          <TransferModal 
-            onClose={() => setIsTransferModalOpen(false)} 
-            currentBalance={bizcoins} 
-            onTransferSuccess={(newBal) => { go(true); }} 
-          />
-        )}
 
         <AnimatePresence>
           {isHistoryModalOpen && (

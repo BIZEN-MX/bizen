@@ -15,7 +15,6 @@ import {
 } from "lucide-react"
 import { RocketIcon, LeafIcon, NoteIcon, ThumbsUpIcon, IdeaIcon, WarningIcon, ZapIcon } from "@/components/CustomIcons"
 import PageLoader from "@/components/PageLoader"
-import TransferModal from "@/components/bizen/TransferModal"
 
 export const dynamic = 'force-dynamic'
 
@@ -483,7 +482,6 @@ function ForumContent() {
     (activeTab === "mision-del-dia" && loadingEvidence && evidencePosts.length === 0) ||
     (activeTab !== "mision-del-dia" && loadingData && threads.length === 0)
 
-  const [transferTarget, setTransferTarget] = useState<any>(null)
 
   if (showFullLoader) return <PageLoader />
   if (!user) return null
@@ -742,7 +740,7 @@ function ForumContent() {
                       onValidate={handleValidate}
                       isTeacher={isTeacher}
                       currentUserId={user.id}
-                      onTransferClick={(uid, name) => setTransferTarget({ userId: uid, nickname: name })}
+                      onTransferClick={(uid) => router.push(`/transfer?target=${uid}`)}
                     />
                   ))
                 )}
@@ -936,14 +934,6 @@ function ForumContent() {
         </div >
       </div >
 
-      {transferTarget && (
-        <TransferModal 
-          onClose={() => setTransferTarget(null)} 
-          currentBalance={dbProfile?.bizcoins || 0} 
-          targetUser={transferTarget}
-          onTransferSuccess={() => { /* maybe refresh stats */ }}
-        />
-      )}
     </>
   )
 }

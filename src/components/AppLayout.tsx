@@ -28,6 +28,28 @@ function isPublicPath(pathname: string | null) {
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, loading } = useAuth();
+  const [isSidebarHidden, setIsSidebarHidden] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof document === 'undefined') return;
+    
+    const checkSidebarStatus = () => {
+      setIsSidebarHidden(document.body.classList.contains('hide-sidebar'));
+    };
+
+    checkSidebarStatus();
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          checkSidebarStatus();
+        }
+      });
+    });
+
+    observer.observe(document.body, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
 
   const isLanding = pathname === "/";
   const isProtected = !isPublicPath(pathname) && !isLanding;
@@ -41,7 +63,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     return (
       <div className="app-shell">
         <div style={{ display: "flex", width: "100%", height: "100%" }}>
-          <div className="hidden md:block w-[280px] flex-shrink-0" />
+          {!isSidebarHidden && <div className="hidden md:block w-[280px] flex-shrink-0" />}
           <div className="flex-1 relative flex items-center justify-center">
             <PageLoader />
           </div>
@@ -58,7 +80,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const hasSidebar = !isLanding && !isPublicPath(pathname) && !pathname.startsWith("/diagnostic") && !pathname.startsWith("/learn");
   // We include tools in pages that should have a sidebar-like layout or at least the gutter
-  const showGutter = hasSidebar || pathname.startsWith("/tools");
+  const showGutter = (hasSidebar || pathname.startsWith("/tools")) && !isSidebarHidden;
 
   return (
     <div className="app-shell">
