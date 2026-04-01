@@ -113,8 +113,11 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
-  const isTransferPage = searchParams?.get('action') === 'transfer'
-  const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage || isTransferPage;
+  const isTransferPage = pathname === '/transfer' || searchParams?.get('action') === 'transfer'
+  const isHistoryPage = pathname === '/historial-de-cuenta'
+  const isInvestmentsPage = pathname === '/investments'
+  const isCashflowStatsPage = pathname === '/cash-flow/stats'
+  const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isCashflowStatsPage;
   const hideChat = isDiagnosticPage || pathname === "/" || onboardingActive || isLessonInteractivePage || isCourseTopicPage; // Hide on diagnostic, landing, onboarding, lessons, and course topics
 
   // Detect mobile screen size (≤767px)

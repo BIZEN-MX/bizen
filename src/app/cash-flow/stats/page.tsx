@@ -5,6 +5,23 @@ import { useAuth } from "@/contexts/AuthContext"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import PageLoader from "@/components/PageLoader"
+import { 
+  BarChart3, 
+  Gamepad2, 
+  Trophy, 
+  TrendingUp, 
+  Zap, 
+  Target, 
+  User, 
+  Wallet, 
+  Home, 
+  AlertCircle, 
+  Dice5, 
+  Clock, 
+  CheckCircle2, 
+  ArrowLeft,
+  Sparkles
+} from "lucide-react"
 
 type Statistics = {
   overview: {
@@ -52,6 +69,11 @@ export default function CashFlowStatsPage() {
 
   useEffect(() => {
     fetchStats()
+    // Hide sidebar on mount
+    document.body.classList.add('hide-sidebar')
+    return () => {
+      document.body.classList.remove('hide-sidebar')
+    }
   }, [])
 
   const fetchStats = async () => {
@@ -109,36 +131,46 @@ export default function CashFlowStatsPage() {
               alignItems: "center"
             }}>
               <div>
-                <h1 style={{
-                  fontSize: 48,
-                  fontWeight: 500,
-                  margin: "0 0 8px",
-                  background: "linear-gradient(135deg, #667eea, #764ba2)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text"
-                }}>
-                  📊 Estadísticas
-                </h1>
-                <p style={{ fontSize: 16, color: "#666", margin: 0 }}>
-                  Tu progreso en el juego Cashflow
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 8 }}>
+                  <BarChart3 size={40} color="#764ba2" />
+                  <h1 style={{
+                    fontSize: 48,
+                    fontWeight: 800,
+                    margin: 0,
+                    background: "linear-gradient(135deg, #667eea, #764ba2)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    letterSpacing: "-0.02em"
+                  }}>
+                    Estadísticas
+                  </h1>
+                </div>
+                <p style={{ fontSize: 16, color: "#666", margin: 0, fontWeight: 500 }}>
+                  Tu progreso en el ecosistema Cashflow BIZEN
                 </p>
               </div>
 
               <Link
                 href="/cash-flow"
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
                   padding: "12px 24px",
                   background: "linear-gradient(135deg, #667eea, #764ba2)",
                   color: "white",
                   borderRadius: 12,
                   fontSize: 14,
-                  fontWeight: 500,
+                  fontWeight: 600,
                   textDecoration: "none",
-                  boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)"
+                  boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+                  transition: "transform 0.2s"
                 }}
+                onMouseEnter={e => e.currentTarget.style.transform = "translateX(-4px)"}
+                onMouseLeave={e => e.currentTarget.style.transform = "translateX(0)"}
               >
-                ← Volver
+                <ArrowLeft size={18} /> Volver
               </Link>
             </div>
           </div>
@@ -155,13 +187,18 @@ export default function CashFlowStatsPage() {
               borderRadius: 16,
               padding: 24,
               textAlign: "center",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+              border: "1px solid rgba(102, 126, 234, 0.1)"
             }}>
-              <div style={{ fontSize: 48, marginBottom: 8 }}>🎮</div>
-              <div style={{ fontSize: 36, fontWeight: 500, color: "#667eea", marginBottom: 4 }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                <div style={{ padding: 16, borderRadius: 20, background: "rgba(102, 126, 234, 0.05)" }}>
+                  <Gamepad2 size={40} color="#667eea" />
+                </div>
+              </div>
+              <div style={{ fontSize: 36, fontWeight: 800, color: "#667eea", marginBottom: 4 }}>
                 {stats.overview.totalGames}
               </div>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 500 }}>
+              <div style={{ fontSize: 13, color: "#666", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Partidas Jugadas
               </div>
             </div>
@@ -171,13 +208,18 @@ export default function CashFlowStatsPage() {
               borderRadius: 16,
               padding: 24,
               textAlign: "center",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+              border: "1px solid rgba(16, 185, 129, 0.1)"
             }}>
-              <div style={{ fontSize: 48, marginBottom: 8 }}>🏆</div>
-              <div style={{ fontSize: 36, fontWeight: 500, color: "#10b981", marginBottom: 4 }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                <div style={{ padding: 16, borderRadius: 20, background: "rgba(16, 185, 129, 0.05)" }}>
+                  <Trophy size={40} color="#10b981" />
+                </div>
+              </div>
+              <div style={{ fontSize: 36, fontWeight: 800, color: "#10b981", marginBottom: 4 }}>
                 {stats.overview.completedGames}
               </div>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 500 }}>
+              <div style={{ fontSize: 13, color: "#666", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Victorias
               </div>
             </div>
@@ -187,13 +229,18 @@ export default function CashFlowStatsPage() {
               borderRadius: 16,
               padding: 24,
               textAlign: "center",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+              border: "1px solid rgba(37, 99, 235, 0.1)"
             }}>
-              <div style={{ fontSize: 48, marginBottom: 8 }}>📈</div>
-              <div style={{ fontSize: 36, fontWeight: 500, color: "#2563eb", marginBottom: 4 }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                <div style={{ padding: 16, borderRadius: 20, background: "rgba(37, 99, 235, 0.05)" }}>
+                  <TrendingUp size={40} color="#2563eb" />
+                </div>
+              </div>
+              <div style={{ fontSize: 36, fontWeight: 800, color: "#2563eb", marginBottom: 4 }}>
                 {stats.overview.winRate}%
               </div>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 500 }}>
+              <div style={{ fontSize: 13, color: "#666", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Tasa de Victoria
               </div>
             </div>
@@ -203,14 +250,19 @@ export default function CashFlowStatsPage() {
               borderRadius: 16,
               padding: 24,
               textAlign: "center",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+              border: "1px solid rgba(245, 158, 11, 0.1)"
             }}>
-              <div style={{ fontSize: 48, marginBottom: 8 }}>⚡</div>
-              <div style={{ fontSize: 36, fontWeight: 500, color: "#f59e0b", marginBottom: 4 }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                <div style={{ padding: 16, borderRadius: 20, background: "rgba(245, 158, 11, 0.05)" }}>
+                  <Zap size={40} color="#f59e0b" />
+                </div>
+              </div>
+              <div style={{ fontSize: 36, fontWeight: 800, color: "#f59e0b", marginBottom: 4 }}>
                 {stats.performance.fastestWin || "-"}
               </div>
-              <div style={{ fontSize: 14, color: "#666", fontWeight: 500 }}>
-                Victoria Más Rápida (turnos)
+              <div style={{ fontSize: 13, color: "#666", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                Récord de Turnos
               </div>
             </div>
           </div>
@@ -225,11 +277,14 @@ export default function CashFlowStatsPage() {
           }}>
             <h2 style={{
               fontSize: 28,
-              fontWeight: 500,
+              fontWeight: 800,
               margin: "0 0 24px",
-              color: "#333"
+              color: "#333",
+              display: "flex",
+              alignItems: "center",
+              gap: 12
             }}>
-              🎯 Rendimiento
+              <Target size={28} color="#667eea" /> Rendimiento Directivo
             </h2>
 
             <div style={{
@@ -242,10 +297,10 @@ export default function CashFlowStatsPage() {
                 borderRadius: 12,
                 padding: 20
               }}>
-                <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
-                  📊 Turnos Promedio para Ganar
+                <div style={{ fontSize: 13, color: "#666", marginBottom: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                  <BarChart3 size={16} /> Turnos Promedio
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 500, color: "#667eea" }}>
+                <div style={{ fontSize: 32, fontWeight: 800, color: "#667eea" }}>
                   {stats.performance.avgTurnsToWin || "-"}
                 </div>
               </div>
@@ -255,10 +310,10 @@ export default function CashFlowStatsPage() {
                 borderRadius: 12,
                 padding: 20
               }}>
-                <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
-                  👤 Mejor Profesión
+                <div style={{ fontSize: 13, color: "#666", marginBottom: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                  <User size={16} /> Mejor Profesión
                 </div>
-                <div style={{ fontSize: 24, fontWeight: 500, color: "#10b981" }}>
+                <div style={{ fontSize: 24, fontWeight: 800, color: "#10b981" }}>
                   {stats.performance.bestProfession?.name || "Ninguna aún"}
                 </div>
                 {stats.performance.bestProfession && (
@@ -273,10 +328,10 @@ export default function CashFlowStatsPage() {
                 borderRadius: 12,
                 padding: 20
               }}>
-                <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
-                  💰 Dinero Total Ganado
+                <div style={{ fontSize: 13, color: "#666", marginBottom: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                  <Wallet size={16} /> Dinero Total Ganado
                 </div>
-                <div style={{ fontSize: 28, fontWeight: 500, color: "#10b981" }}>
+                <div style={{ fontSize: 28, fontWeight: 800, color: "#10b981" }}>
                   ${stats.performance.totalCashEarned.toLocaleString()}
                 </div>
               </div>
@@ -286,10 +341,10 @@ export default function CashFlowStatsPage() {
                 borderRadius: 12,
                 padding: 20
               }}>
-                <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
-                  🏠 Inversiones Totales
+                <div style={{ fontSize: 13, color: "#666", marginBottom: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                  <Home size={16} /> Inversiones Totales
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 500, color: "#2563eb" }}>
+                <div style={{ fontSize: 32, fontWeight: 800, color: "#2563eb" }}>
                   {stats.performance.totalInvestments}
                 </div>
               </div>
@@ -300,10 +355,10 @@ export default function CashFlowStatsPage() {
                 padding: 20,
                 border: "1px solid #fecaca"
               }}>
-                <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
-                  💸 Doodads Comprados
+                <div style={{ fontSize: 13, color: "#666", marginBottom: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                  <AlertCircle size={16} /> Doodads Comprados
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 500, color: "#ef4444" }}>
+                <div style={{ fontSize: 32, fontWeight: 800, color: "#ef4444" }}>
                   {stats.performance.totalDoodads}
                 </div>
                 <div style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>
@@ -316,10 +371,10 @@ export default function CashFlowStatsPage() {
                 borderRadius: 12,
                 padding: 20
               }}>
-                <div style={{ fontSize: 14, color: "#666", marginBottom: 8 }}>
-                  🎲 Partidas Activas
+                <div style={{ fontSize: 13, color: "#666", marginBottom: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                  <Dice5 size={16} /> Partidas Activas
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 500, color: "#f59e0b" }}>
+                <div style={{ fontSize: 32, fontWeight: 800, color: "#f59e0b" }}>
                   {stats.overview.activeGames}
                 </div>
               </div>
@@ -336,11 +391,14 @@ export default function CashFlowStatsPage() {
             }}>
               <h2 style={{
                 fontSize: 28,
-                fontWeight: 500,
+                fontWeight: 800,
                 margin: "0 0 24px",
-                color: "#333"
+                color: "#333",
+                display: "flex",
+                alignItems: "center",
+                gap: 12
               }}>
-                🕐 Partidas Recientes
+                <Clock size={28} color="#667eea" /> Partidas Recientes
               </h2>
 
               <div style={{
@@ -382,15 +440,18 @@ export default function CashFlowStatsPage() {
                           {game.profession}
                           {game.hasWon && (
                             <span style={{
-                              marginLeft: 8,
-                              padding: "4px 10px",
+                              marginLeft: 12,
+                              padding: "4px 12px",
                               background: "linear-gradient(135deg, #10b981, #059669)",
                               color: "white",
                               borderRadius: 8,
-                              fontSize: 11,
-                              fontWeight: 500
+                              fontSize: 10,
+                              fontWeight: 800,
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6
                             }}>
-                              ✓ GANADO
+                              <CheckCircle2 size={12} /> ÉXITO
                             </span>
                           )}
                         </div>
@@ -446,52 +507,53 @@ export default function CashFlowStatsPage() {
               textAlign: "center",
               boxShadow: "0 20px 60px rgba(0,0,0,0.2)"
             }}>
-              <div style={{ fontSize: 80, marginBottom: 16 }}>
-                🎮
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+                <div style={{ padding: 32, borderRadius: "50%", background: "rgba(102, 126, 234, 0.05)" }}>
+                  <Gamepad2 size={80} color="#667eea" />
+                </div>
               </div>
               <h2 style={{
-                fontSize: 28,
-                fontWeight: 500,
+                fontSize: 32,
+                fontWeight: 800,
                 color: "#333",
-                marginBottom: 16
+                marginBottom: 16,
+                letterSpacing: "-0.02em"
               }}>
-                Aún no has jugado
+                Aún no has iniciado tu racha
               </h2>
               <p style={{
                 fontSize: 16,
                 color: "#666",
-                marginBottom: 32
+                marginBottom: 32,
+                fontWeight: 500
               }}>
-                ¡Comienza tu primera partida de Cashflow y aparecerán tus estadísticas aquí!
+                Comienza tu primera partida de Cashflow BIZEN para registrar tus métricas de éxito.
               </p>
               <Link
                 href="/cash-flow"
                 style={{
-                  display: "inline-block",
-                  padding: "16px 32px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "18px 36px",
                   background: "linear-gradient(135deg, #10b981, #059669)",
                   color: "white",
-                  borderRadius: 12,
+                  borderRadius: 16,
                   fontSize: 16,
-                  fontWeight: 500,
+                  fontWeight: 700,
                   textDecoration: "none",
-                  boxShadow: "0 6px 20px rgba(16, 185, 129, 0.3)"
+                  boxShadow: "0 6px 20px rgba(16, 185, 129, 0.3)",
+                  transition: "transform 0.2s"
                 }}
+                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
+                onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
               >
-                🚀 Empezar a Jugar
+                <Sparkles size={20} /> Empezar Partida de Élite
               </Link>
             </div>
           )}
         </div>
       </main>
-
-      {/* Sidebar Spacer */}
-      <aside style={{
-        width: "320px",
-        flexShrink: 0
-      }} />
     </div>
   )
 }
-
-
