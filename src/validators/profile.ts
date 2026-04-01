@@ -20,7 +20,8 @@ export const updateProfileSchema = z.object({
   birthDate: z.string().datetime().optional().nullable(),
   cardTheme: z.string().max(30).optional(),
   avatar: z.string().url('URL de avatar inválida').optional().nullable(),
-  settings: z.record(z.any()).optional()
+  settings: z.record(z.any()).optional(),
+  role: z.string().optional()
 })
 
 export type UpdateProfileData = z.infer<typeof updateProfileSchema>

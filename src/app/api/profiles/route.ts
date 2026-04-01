@@ -214,12 +214,25 @@ export async function PATCH(request: NextRequest) {
     // 2. Logic Protection (Role Downgrading for non-institutional)
     const canUpdateRole = isEduEmail || isSpecialAdmin;
 
+    // Check for username uniqueness if it's being changed
+    if (data.username && data.username !== existingProfile.username) {
+      const usernameExists = await prisma.profile.findFirst({
+        where: { 
+          username: data.username,
+          NOT: { userId: user.id }
+        }
+      });
+      if (usernameExists) {
+        return NextResponse.json({ error: 'El nombre de usuario ya está en uso' }, { status: 400 });
+      }
+    }
+
     const updatedProfile = await prisma.profile.update({
       where: { userId: user.id },
       data: {
         ...(data.fullName && { fullName: data.fullName }),
-        ...((data.role || data.schoolId) && {
-          role: canUpdateRole ? (data.role || existingProfile.role) : 'particular',
+        ...(((data as any).role || data.schoolId) && {
+          role: canUpdateRole ? ((data as any).role || existingProfile.role) : 'particular',
           schoolId: canUpdateRole ? (data.schoolId !== undefined ? data.schoolId : existingProfile.schoolId) : null
         }),
         ...(data.avatar !== undefined && { avatar: data.avatar }),
@@ -231,6 +244,22 @@ export async function PATCH(request: NextRequest) {
         ...(data.cardTheme !== undefined && { cardTheme: data.cardTheme })
       },
     })
+
+    // ── SYNC WITH SUPABASE AUTH METADATA ──
+    // This prevents "phantom profiles" where the auth session has an old name
+    if (data.fullName || data.avatar) {
+      try {
+        await supabase.auth.updateUser({
+          data: {
+            ...(data.fullName && { full_name: data.fullName }),
+            ...(data.avatar && { avatar_url: typeof data.avatar === 'string' ? data.avatar : (data.avatar as any)?.url })
+          }
+        });
+      } catch (syncErr) {
+        console.error('⚠️ [Profiles:SyncWarning]: Failed to sync auth metadata:', syncErr);
+        // We don't fail the whole request because the DB is already updated
+      }
+    }
 
     return NextResponse.json(updatedProfile)
   } catch (error) {
