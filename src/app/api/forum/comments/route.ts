@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { filterContent } from "@/lib/forum/contentFilter"
 import { checkRateLimit } from "@/lib/forum/rateLimiter"
 import { touchDailyStreak } from "@/lib/rewards"
+import { forumCommentSchema } from "@/validators/forum"
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,15 +12,22 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
     const body = await request.json()
-    const { threadId, parentCommentId, body: content } = body
-
-    if (!threadId || !content) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    
+    // 1. Validation (Allow-listing & Length Limits)
+    const validation = forumCommentSchema.safeParse(body)
+    
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: "Datos de comentario inválidos", 
+        details: validation.error.format() 
+      }, { status: 400 })
     }
+
+    const { threadId, parentCommentId, body: content } = validation.data
 
     // Verify thread exists and is not locked
     const thread = await prisma.forumThread.findUnique({
@@ -27,11 +35,11 @@ export async function POST(request: NextRequest) {
     })
 
     if (!thread) {
-      return NextResponse.json({ error: "Thread not found" }, { status: 404 })
+      return NextResponse.json({ error: "Tema no encontrado" }, { status: 404 })
     }
 
     if (thread.status === 'locked') {
-      return NextResponse.json({ error: "Thread is locked" }, { status: 403 })
+      return NextResponse.json({ error: "El tema está bloqueado" }, { status: 403 })
     }
 
     // Get or create user profile
@@ -77,34 +85,32 @@ export async function POST(request: NextRequest) {
     }
 
     // Check rate limit
-    const rateLimit = await checkRateLimit(user.id, 'create_comment', 20, 60)
+    const rateLimit = await checkRateLimit(user.id, 'create_comment', 10, 60)
     if (!rateLimit.allowed) {
       return NextResponse.json({ 
-        error: `Límite de comentarios alcanzado. Intenta de nuevo en ${Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 60000)} minutos` 
+        error: `Límite alcanzado. Intenta de nuevo en ${Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 60000)} min` 
       }, { status: 429 })
     }
 
-    // Filter content
+    // 2. Sanitization (Strip HTML & Escape)
     const contentFilter = filterContent(content, profile.reputation)
     if (contentFilter.isBlocked) {
       return NextResponse.json({ error: contentFilter.reason }, { status: 400 })
     }
 
-    // Check moderation status
-    // Minors (< 18) always need approval, regardless of commentsCreated
-    // Adults: first 3 comments need approval
+    // Determine moderation status
     const isMinor = profile?.isMinor ?? false
     const hasParentalOverride = profile?.parentalOverride ?? false
     const requiresModeration = isMinor && !hasParentalOverride
     const moderationStatus = requiresModeration || (profile?.commentsCreated || 0) < 3 ? 'pending' : 'approved'
 
-    // Create comment
+    // Create comment using SAFE SANITIZED content
     const comment = await prisma.forumComment.create({
       data: {
         threadId,
         parentCommentId,
         authorId: user.id,
-        body: content.trim(),
+        body: contentFilter.filteredContent.trim(), // Sanitized!
         moderationStatus
       },
       include: {
@@ -125,39 +131,32 @@ export async function POST(request: NextRequest) {
       data: { commentsCreated: { increment: 1 } }
     })
 
-    // Create notification for thread followers
-    const followers = await prisma.forumFollow.findMany({
-      where: {
-        threadId,
-        userId: { not: user.id },
-        notifyInApp: true
-      }
-    })
-
-    for (const follow of followers) {
-      await prisma.forumNotification.create({
-        data: {
-          userId: follow.userId,
-          type: 'new_comment',
+    // Create notifications (non-blocking)
+    prisma.forumFollow.findMany({
+      where: { threadId, userId: { not: user.id }, notifyInApp: true }
+    }).then(followers => {
+      followers.forEach(follow => {
+        prisma.forumNotification.create({
           data: {
-            threadId,
-            commentId: comment.id,
-            authorName: profile?.nickname || profile?.fullName,
-            threadTitle: thread.title
+            userId: follow.userId,
+            type: 'new_comment',
+            data: {
+              threadId,
+              commentId: comment.id,
+              authorName: profile?.nickname || profile?.fullName,
+              threadTitle: thread.title
+            }
           }
-        }
+        }).catch(() => {})
       })
-    }
+    }).catch(() => {})
 
-    console.log(`✅ Created comment on thread ${threadId} by user ${user.id}`)
-
-    // Touch daily streak — commenting in the forum counts as active today
+    // Touch daily streak
     touchDailyStreak(user.id).catch(() => {})
 
     return NextResponse.json(comment, { status: 201 })
   } catch (error) {
-    console.error("Error creating comment:", error)
-    return NextResponse.json({ error: "Failed to create comment" }, { status: 500 })
+    console.error("❌ [Forum:CommentError]:", error)
+    return NextResponse.json({ error: "No se pudo publicar el comentario" }, { status: 500 })
   }
 }
-

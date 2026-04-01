@@ -176,60 +176,66 @@ export async function GET(request: NextRequest) {
   }
 }
 
+import { updateProfileSchema } from '@/validators/profile'
+
 // PATCH /api/profiles - Update current user profile
 export async function PATCH(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    if (authError || !user) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
     const body = await request.json()
-    const { fullName, role, schoolId, avatar, username, bio, phone, settings, birthDate, cardTheme } = body
+    
+    // 1. Validation (Allow-listing & Length Limits)
+    const validation = updateProfileSchema.safeParse(body)
+    
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: 'Datos de perfil inválidos', 
+        details: validation.error.format() 
+      }, { status: 400 })
+    }
 
-    // Special case: prevent overwriting special access via update if we ever add UI for it
-    const isSpecialUser = user.email === 'diegopenita31@gmail.com';
+    const data = validation.data
 
-    // Fetch current profile to check role/schoolId
+    // Fetch current profile
     const existingProfile = await prisma.profile.findUnique({ where: { userId: user.id } });
     if (!existingProfile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Perfil no encontrado' }, { status: 404 });
     }
 
     const isEduEmail = isInstitutionalEmail(user.email || '');
     const isSpecialAdmin = user.email?.toLowerCase() === 'diegopenita31@gmail.com';
 
+    // 2. Logic Protection (Role Downgrading for non-institutional)
+    const canUpdateRole = isEduEmail || isSpecialAdmin;
+
     const updatedProfile = await prisma.profile.update({
       where: { userId: user.id },
       data: {
-        ...(fullName && { fullName }),
-        ...((role || schoolId) && {
-          role: (isEduEmail || isSpecialAdmin) ? (role || existingProfile.role) : 'particular',
-          schoolId: (isEduEmail || isSpecialAdmin) ? (schoolId !== undefined ? schoolId : existingProfile.schoolId) : null
+        ...(data.fullName && { fullName: data.fullName }),
+        ...((data.role || data.schoolId) && {
+          role: canUpdateRole ? (data.role || existingProfile.role) : 'particular',
+          schoolId: canUpdateRole ? (data.schoolId !== undefined ? data.schoolId : existingProfile.schoolId) : null
         }),
-        ...(avatar !== undefined && { avatar }),
-        ...(username !== undefined && { username }),
-        ...(bio !== undefined && { bio }),
-        ...(phone !== undefined && { phone }),
-        ...(settings !== undefined && { settings }),
-        ...(birthDate !== undefined && { birthDate: birthDate ? new Date(birthDate) : null }),
-        ...(cardTheme !== undefined && { cardTheme })
+        ...(data.avatar !== undefined && { avatar: data.avatar }),
+        ...(data.username !== undefined && { username: data.username }),
+        ...(data.bio !== undefined && { bio: data.bio }),
+        ...(data.phone !== undefined && { phone: data.phone }),
+        ...(data.settings !== undefined && { settings: data.settings }),
+        ...(data.birthDate !== undefined && { birthDate: data.birthDate ? new Date(data.birthDate) : null }),
+        ...(data.cardTheme !== undefined && { cardTheme: data.cardTheme })
       },
     })
 
     return NextResponse.json(updatedProfile)
   } catch (error) {
-    console.error('Error updating profile:', error)
-    return NextResponse.json(
-      { error: 'Failed to update profile' },
-      { status: 500 }
-    )
+    console.error('❌ [Profiles:PatchError]:', error)
+    return NextResponse.json({ error: 'No se pudo actualizar el perfil' }, { status: 500 })
   }
 }
 

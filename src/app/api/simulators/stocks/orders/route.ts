@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import { stockOrderSchema } from '@/validators/stocks';
 
 export async function POST(req: Request) {
   try {
@@ -11,11 +12,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { symbol, side, order_type, quantity, limit_price } = await req.json();
-
-    if (!symbol || !side || !order_type || !quantity || quantity <= 0) {
-      return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
+    const body = await req.json();
+    
+    // 1. Validation (Allow-listing, Types & Range)
+    const validation = stockOrderSchema.safeParse(body);
+    
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: "Parámetros de orden inválidos", 
+        details: validation.error.format() 
+      }, { status: 400 });
     }
+
+    const { symbol, side, order_type, quantity, limit_price } = validation.data;
 
     // Validate symbol against allowlist
     const activeSymbol = await prisma.market_symbols.findFirst({
@@ -23,7 +32,7 @@ export async function POST(req: Request) {
     });
 
     if (!activeSymbol) {
-      return NextResponse.json({ error: "Symbol not allowed or inactive" }, { status: 400 });
+      return NextResponse.json({ error: "Símbolo no permitido o inactivo" }, { status: 400 });
     }
 
     let portfolio = await prisma.simulator_portfolios.findFirst({
@@ -34,18 +43,14 @@ export async function POST(req: Request) {
     });
 
     if (!portfolio) {
-      return NextResponse.json({ error: "Portfolio not found" }, { status: 404 });
+      return NextResponse.json({ error: "Portafolio no encontrado" }, { status: 404 });
     }
 
-    // Optional constraint: checking daily trading limit, e.g. 5 orders max? 
-    // Let's just create the order for now.
-    
-    // We might want to validate cash balance / holding amounts now. But prices fluctuate, so standard sim just rejects execution later if insufficient funds.
-    // However, for immediate user feedback on sell:
+    // Validation for sell: checking holdings
     if (side === 'sell') {
       const holding = portfolio.holdings.find(h => h.symbol === symbol);
       if (!holding || Number(holding.quantity) < quantity) {
-        return NextResponse.json({ error: "Insufficient holdings to sell" }, { status: 400 });
+        return NextResponse.json({ error: "Fondos insuficientes para vender" }, { status: 400 });
       }
     }
 
@@ -54,33 +59,30 @@ export async function POST(req: Request) {
       data: {
         portfolio_id: portfolio.id,
         symbol,
-        side, // 'buy' | 'sell'
-        order_type, // 'market' | 'limit'
+        side, 
+        order_type,
         quantity,
         limit_price: limit_price || null,
-        status: 'pending' // pending until filled
+        status: 'pending' 
       }
     });
 
     // ⚡️ INSTANT EXECUTION for Market Orders ⚡️
-    // If it's a market order, we try to fill it immediately using the latest EOD price.
     if (order_type === 'market') {
       try {
-        const res = await fetch(`${new URL(req.url).origin}/api/simulators/stocks/execute`, {
+        await fetch(`${new URL(req.url).origin}/api/simulators/stocks/execute`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
-        if (res.ok) {
-           console.log(`✅ Auto-executed market order ${order.id}`);
-        }
       } catch (err) {
         console.error("Auto-execution failed:", err);
       }
     }
 
-    return NextResponse.json({ order });
+    return NextResponse.json({ success: true, order });
   } catch (error: any) {
+    // 2. Safe Failure
     console.error("Order creation error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "No se pudo procesar la orden" }, { status: 500 });
   }
 }

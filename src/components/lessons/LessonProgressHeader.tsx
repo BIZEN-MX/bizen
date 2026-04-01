@@ -17,6 +17,7 @@ export interface LessonProgressHeaderProps {
   onOpenGlossary?: () => void
   hasGlossary?: boolean
   isExam?: boolean
+  isDark?: boolean
 }
 
 export function LessonProgressHeader({
@@ -30,6 +31,7 @@ export function LessonProgressHeader({
   onOpenGlossary,
   hasGlossary = false,
   isExam = false,
+  isDark = false,
 }: LessonProgressHeaderProps) {
   const progress = totalSteps > 0 ? ((currentStepIndex + 1) / totalSteps) * 100 : 0
 
@@ -56,12 +58,12 @@ export function LessonProgressHeader({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#94a3b8",
+            color: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8",
             transition: "color 0.2s ease",
             flexShrink: 0,
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#475569")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
+          onMouseEnter={(e) => (e.currentTarget.style.color = isDark ? "#ffffff" : "#475569")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.5)" : "#94a3b8")}
           aria-label="Salir de la lección"
         >
           <X style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
@@ -80,12 +82,12 @@ export function LessonProgressHeader({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#94a3b8",
+            color: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8",
             transition: "all 0.2s ease",
             flexShrink: 0,
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#2563eb")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
+          onMouseEnter={(e) => (e.currentTarget.style.color = isDark ? "#ffffff" : "#2563eb")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.5)" : "#94a3b8")}
           aria-label="Ver glosario de la lección"
         >
           <Book style={{ width: "clamp(20px, 5vw, 24px)", height: "clamp(20px, 5vw, 24px)" }} strokeWidth={2.5} />
@@ -98,7 +100,7 @@ export function LessonProgressHeader({
           flex: 1,
           height: "clamp(10px, 3vw, 16px)",
           borderRadius: 999,
-          background: "#F3F4F6",
+          background: isDark ? "rgba(255,255,255,0.1)" : "#F3F4F6",
           overflow: "hidden",
           boxSizing: "border-box",
           position: "relative",

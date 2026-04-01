@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { GoogleGenerativeAI } from "@google/generative-ai"
+import { chatbotMessageSchema } from "@/validators/chatbot"
 
 // Simple in-memory tracker (resets daily, resets on server restart).
 let dailyAIRequests = 0
@@ -10,6 +11,18 @@ export async function POST(request: NextRequest) {
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY
     const MAX_DAILY_REQUESTS = parseInt(process.env.MAX_AI_DAILY_REQUESTS || "500")
     
+    const body = await request.json()
+    
+    // 1. Validation (Allow-listing & Length Limits)
+    const validation = chatbotMessageSchema.safeParse(body)
+    
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: "Entrada inválida", 
+        details: validation.error.issues[0]?.message 
+      }, { status: 400 })
+    }
+
     const {
       message,
       conversationHistory = [],
@@ -17,15 +30,11 @@ export async function POST(request: NextRequest) {
       xp = 0,
       level = 1,
       currentPath = ""
-    } = await request.json()
-
-    if (!message || typeof message !== "string") {
-      return NextResponse.json({ error: "Mensaje requerido" }, { status: 400 })
-    }
+    } = validation.data
 
     // Context analysis
     let contextDescription = ""
-    if (currentPath.includes('/learn/')) {
+    if (currentPath?.includes('/learn/')) {
       const parts = currentPath.split('/').filter(Boolean)
       const topicId = parts[1] // tema-01, tema-02...
       const lessonSlug = parts[parts.length - 1] === 'interactive' ? parts[parts.length - 2] : parts[parts.length - 1]
@@ -34,16 +43,15 @@ export async function POST(request: NextRequest) {
       const lessonTitle = lessonSlug?.replace(/-/g, ' ')
 
       contextDescription = `\nCONTEXTO ACTUAL: El usuario está en la lección "${lessonTitle}" del Tema ${topicNum}.`
-    } else if (currentPath.includes('/courses')) {
+    } else if (currentPath?.includes('/courses')) {
       contextDescription = `\nCONTEXTO ACTUAL: El usuario está explorando el catálogo de cursos.`
     }
 
     const userStats = `\nESTADÍSTICAS DEL USUARIO: XP: ${xp}, Nivel: ${level}.`
 
     if (!GEMINI_API_KEY) {
-      console.error("Missing GEMINI_API_KEY")
       return NextResponse.json(
-        { response: "Hola, BIZEN pronto será más inteligente. Por el momento, el administrador necesita configurar mi conexión (Faltará GEMINI_API_KEY)." },
+        { response: "Billy está temporalmente fuera de línea. Por favor, intenta más tarde." },
         { status: 200 }
       )
     }
@@ -99,16 +107,13 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
     
     // Safety check for candidates
     if (!response || !response.candidates || response.candidates.length === 0) {
-      console.error("❌ [Billy:Gemini] No candidates returned")
       throw new Error("No response generated")
     }
 
     let responseText = "¡Ups! Me quedé pensando. ¿Puedes repetir eso?"
     try {
-      // In newer SDK versions text() can be a string or a method returning a string
       responseText = typeof response.text === 'function' ? response.text() : (response.text as unknown as string)
     } catch (e) {
-      console.warn("⚠️ [Billy:Gemini] Text extraction failed, using parts fallback.", e)
       const candidate = response.candidates[0]
       if (candidate?.content?.parts?.[0]?.text) {
         responseText = candidate.content.parts[0].text
@@ -123,12 +128,10 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
     })
 
   } catch (error: any) {
+    // 2. Safe Failure: Log internally, return generic help to user.
     console.error("❌ [Billy:BackendError]:", error)
     return NextResponse.json(
-      { 
-        response: "¡Ups! Mis circuitos se recalentaron un poco. ¿Podrías intentar enviarme tu mensaje de nuevo? 😅",
-        debug: error.message 
-      },
+      { response: "¡Ups! Billy está descansando un momento. ¿Puedes intentarlo de nuevo en unos minutos?" },
       { status: 200 }
     )
   }

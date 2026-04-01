@@ -25,22 +25,30 @@ export interface StreakTouchResult {
  */
 export async function getRewardMultiplier(userId: string): Promise<number> {
     try {
+        // ── Billy's Global Offer (April 2026 Racha) ─────────────────────────
+        // All users get 2x benefits globally this week!
+        const isGlobalOfferActive = true // Hardcoded for this promotional burst
+        
         const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000)
         
-        // Find if user has a Boost de XP (ID 14) active
-        const activeBoost = await prisma.userInventoryItem.findFirst({
+        // Find if user has a personal Boost de XP (ID 14) 
+        const activePersonalBoost = await prisma.userInventoryItem.findFirst({
             where: {
                 userId,
-                productId: "14", // Boost de XP x2
+                productId: "14",
                 purchasedAt: { gte: fortyEightHoursAgo }
             }
         })
 
-        if (activeBoost) return 2
+        if (isGlobalOfferActive) {
+            // Stack logic: Global x2 + Personal x2 = x4? 
+            // For BIZEN economy stability, we'll cap it at x2 OR make it additive
+            if (activePersonalBoost) return 3 // Bonus for subscribers/purchasers during event
+            return 2 
+        }
+
+        if (activePersonalBoost) return 2
         
-        // Check for Global "Oferta de la semana" (Placeholder logic)
-        // In a real scenario, this might check a global config table or a date range
-        // For now, we'll implement it as a constant for this specific request if needed
         return 1
     } catch {
         return 1

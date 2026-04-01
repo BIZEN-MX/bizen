@@ -397,6 +397,9 @@ export default function TiendaPage() {
           50%      { box-shadow: 0 4px 28px rgba(15,98,254,0.65); }
         }
         @keyframes tienda-spin    { to { transform: rotate(360deg); } }
+        @keyframes tienda-orb     { 0%,100% { transform: scale(1) translateY(0); opacity:0.6; } 50% { transform: scale(1.15) translateY(-8px); opacity:1; } }
+        @keyframes tienda-badge-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.5); } 60% { box-shadow: 0 0 0 8px rgba(251,191,36,0); } }
+        @keyframes tienda-x2-shine { 0% { left:-60%; } 100% { left:140%; } }
         @keyframes tienda-bounce  { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         @keyframes tienda-wiggle  { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
         @keyframes tienda-glow    { 0%,100% { filter: drop-shadow(0 0 4px rgba(15,98,254,0.3)); } 50% { filter: drop-shadow(0 0 12px rgba(15,98,254,0.6)); } }
@@ -892,39 +895,91 @@ export default function TiendaPage() {
                 </div>
 
                 {/* ── FEATURED PROMO BANNER ── */}
-                <div 
+                <div
                     className="tienda-promo"
                     style={{
-                        background: "linear-gradient(120deg, #6d28d9 0%, #4f46e5 50%, #0F62FE 100%)",
-                        borderRadius: 24,
-                        padding: "28px 36px",
+                        background: "linear-gradient(135deg, #18002e 0%, #3b0764 30%, #1e3a8a 70%, #0f172a 100%)",
+                        borderRadius: 28,
+                        padding: "32px 40px",
                         marginBottom: 32,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        gap: 20,
+                        gap: 24,
                         flexWrap: "wrap",
                         position: "relative",
                         overflow: "hidden",
                         animation: "tienda-fadeUp 0.55s ease 0.1s both",
+                        border: "1px solid rgba(139,92,246,0.3)",
+                        boxShadow: "0 24px 60px rgba(109,40,217,0.35), 0 1px 0 rgba(255,255,255,0.05) inset",
                     }}
                 >
+                    {/* Background orbs */}
+                    <div style={{ position:"absolute", top:"-30%", right:"-5%", width:260, height:260, borderRadius:"50%", background:"radial-gradient(circle, rgba(139,92,246,0.35) 0%, transparent 70%)", animation:"tienda-orb 6s ease-in-out infinite", pointerEvents:"none" }} />
+                    <div style={{ position:"absolute", bottom:"-40%", left:"5%", width:200, height:200, borderRadius:"50%", background:"radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)", animation:"tienda-orb 8s ease-in-out infinite 2s", pointerEvents:"none" }} />
                     {/* Shine sweep */}
-                    <div style={{ position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%", background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)", animation: "tienda-shine 4s ease-in-out infinite", pointerEvents: "none" }} />
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: 12, color: "white" }}>
-                        <div style={{ animation: "tienda-wiggle 2s ease infinite" }}>
-                            <Gift size={28} color="#fbbf24" fill="#fbbf2430" />
+                    <div style={{ position:"absolute", top:0, left:"-100%", width:"55%", height:"100%", background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent)", animation:"tienda-shine 5s ease-in-out infinite", pointerEvents:"none" }} />
+                    {/* Grid dots */}
+                    <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px)", backgroundSize:"24px 24px", pointerEvents:"none" }} />
+
+                    {/* Left: badge + copy */}
+                    <div style={{ display:"flex", flexDirection:"column", gap:10, position:"relative", zIndex:1 }}>
+                        {/* Pill badge */}
+                        <div style={{ display:"inline-flex", alignItems:"center", gap:8, width:"fit-content" }}>
+                            <div style={{
+                                display:"inline-flex", alignItems:"center", gap:6,
+                                background:"rgba(251,191,36,0.15)",
+                                border:"1px solid rgba(251,191,36,0.45)",
+                                borderRadius:999, padding:"4px 12px",
+                                animation:"tienda-badge-pulse 2.5s ease infinite"
+                            }}>
+                                <Flame size={13} color="#fbbf24" fill="#fbbf24" />
+                                <span style={{ fontSize:11, fontWeight:800, color:"#fbbf24", letterSpacing:"0.08em", textTransform:"uppercase" }}>Oferta Global Activa</span>
+                            </div>
+                            {/* 2x pill */}
+                            <div style={{
+                                position:"relative", overflow:"hidden",
+                                background:"linear-gradient(135deg,#f59e0b,#ef4444)",
+                                borderRadius:999, padding:"3px 10px",
+                                boxShadow:"0 4px 12px rgba(239,68,68,0.5)"
+                            }}>
+                                <div style={{ position:"absolute", top:0, left:"-60%", width:"40%", height:"100%", background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)", animation:"tienda-x2-shine 2s ease-in-out infinite" }} />
+                                <span style={{ fontSize:12, fontWeight:900, color:"#fff", letterSpacing:"0.02em" }}>×2</span>
+                            </div>
                         </div>
-                        <span style={{ fontWeight: 500, fontSize: "clamp(14px,2vw,17px)" }}>¡Oferta de la semana! Doble beneficios en todos los Accesorios</span>
+                        {/* Headline */}
+                        <div>
+                            <div style={{ fontSize:"clamp(20px,3vw,26px)", fontWeight:900, color:"#fff", lineHeight:1.15, letterSpacing:"-0.02em", marginBottom:4 }}>
+                                Doble XP y BIZCOINS
+                            </div>
+                            <div style={{ fontSize:"clamp(13px,1.5vw,15px)", color:"rgba(196,181,253,0.9)", fontWeight:500 }}>
+                                En cada lección completada — automáticamente para todos
+                            </div>
+                        </div>
                     </div>
-                    <button
-                        onClick={() => setActiveCategory("Accesorios")}
-                        style={{ whiteSpace: "nowrap", padding: "10px 22px", background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.35)", borderRadius: 10, color: "white", fontWeight: 500, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, backdropFilter: "blur(6px)", transition: "all 0.2s" }}
-                        onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.3)" }}
-                        onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.2)" }}
-                    >
-                        Ver Accesorios <ArrowRight size={15} />
-                    </button>
+
+                    {/* Right: CTA */}
+                    <div style={{ position:"relative", zIndex:1 }}>
+                        <button
+                            onClick={() => setActiveCategory("Todo")}
+                            style={{
+                                whiteSpace:"nowrap", padding:"13px 26px",
+                                background:"linear-gradient(135deg, rgba(139,92,246,0.4), rgba(59,130,246,0.4))",
+                                border:"1px solid rgba(139,92,246,0.6)",
+                                borderRadius:14, color:"white", fontWeight:700,
+                                fontSize:14, cursor:"pointer",
+                                display:"flex", alignItems:"center", gap:8,
+                                backdropFilter:"blur(12px)",
+                                transition:"all 0.25s cubic-bezier(0.34,1.56,0.64,1)",
+                                boxShadow:"0 8px 24px rgba(109,40,217,0.3)"
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(139,92,246,0.6), rgba(59,130,246,0.6))"; e.currentTarget.style.transform = "translateY(-2px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(109,40,217,0.45)" }}
+                            onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(139,92,246,0.4), rgba(59,130,246,0.4))"; e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(109,40,217,0.3)" }}
+                        >
+                            <Sparkles size={15} />
+                            Explorar Tienda
+                        </button>
+                    </div>
                 </div>
 
                 {/* ── NAVIGATION TABS ── */}
@@ -1097,26 +1152,66 @@ export default function TiendaPage() {
 
                                             {/* Rarity / Owned badge */}
                                             {isOwned ? (
-                                                <div style={{ position: "absolute", top: 14, right: 14, background: "#10b981", color: "#fff", fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 999, boxShadow: "0 2px 8px rgba(16,185,129,0.5)", letterSpacing: "0.04em" }}>
-                                                    ✓ ADQUIRIDO
+                                                <div style={{
+                                                    position: "absolute", top: 12, right: 12,
+                                                    display: "flex", alignItems: "center", gap: 5,
+                                                    background: "rgba(16,185,129,0.2)",
+                                                    border: "1px solid rgba(16,185,129,0.5)",
+                                                    backdropFilter: "blur(8px)",
+                                                    color: "#10b981", fontSize: 10, fontWeight: 800,
+                                                    padding: "5px 10px", borderRadius: 999,
+                                                    boxShadow: "0 4px 12px rgba(16,185,129,0.3)",
+                                                    letterSpacing: "0.06em"
+                                                }}>
+                                                    <CheckCircle2 size={11} /> ADQUIRIDO
                                                 </div>
                                             ) : product.badge && RARITY_STYLES[product.badge] ? (
                                                 <div style={{
-                                                    position: "absolute", top: 14, right: 14,
-                                                    background: RARITY_STYLES[product.badge].bg,
-                                                    color: RARITY_STYLES[product.badge].text,
-                                                    fontSize: 10, fontWeight: 700, padding: "4px 12px",
-                                                    borderRadius: 999, letterSpacing: "0.06em", textTransform: "uppercase",
-                                                    boxShadow: `0 2px 10px ${RARITY_STYLES[product.badge].glow}`,
+                                                    position: "absolute", top: 12, right: 12,
+                                                    display: "flex", alignItems: "center", gap: 5,
+                                                    background: "rgba(0,0,0,0.35)",
+                                                    border: `1px solid ${RARITY_STYLES[product.badge].glow.replace("rgba","rgba").replace(/,[\d.]+\)$/, ",0.6)")}`,
+                                                    backdropFilter: "blur(10px)",
+                                                    color: "#fff", fontSize: 10, fontWeight: 800,
+                                                    padding: "5px 11px", borderRadius: 999,
+                                                    letterSpacing: "0.07em", textTransform: "uppercase",
+                                                    boxShadow: `0 4px 14px ${RARITY_STYLES[product.badge].glow}`,
                                                 }}>
+                                                    {product.badge === "Legendario" && <Trophy size={10} />}
+                                                    {product.badge === "Épico" && <Star size={10} fill="currentColor" />}
+                                                    {product.badge === "Raro" && <Sparkles size={10} />}
+                                                    {product.badge === "Común" && <Shield size={10} />}
                                                     {product.badge}
                                                 </div>
                                             ) : null}
 
+                                            {/* Global 2x offer indicator */}
+                                            {!isOwned && (
+                                                <div style={{
+                                                    position: "absolute", top: 12, left: 12,
+                                                    display: "flex", alignItems: "center", gap: 4,
+                                                    background: "linear-gradient(135deg,rgba(245,158,11,0.9),rgba(239,68,68,0.9))",
+                                                    backdropFilter: "blur(6px)",
+                                                    color: "#fff", fontSize: 10, fontWeight: 900,
+                                                    padding: "4px 8px", borderRadius: 8,
+                                                    boxShadow: "0 3px 10px rgba(239,68,68,0.4)",
+                                                    letterSpacing: "0.04em"
+                                                }}>
+                                                    <Zap size={10} fill="white" /> ×2 XP
+                                                </div>
+                                            )}
+
                                             {/* Insufficient funds lock */}
                                             {!canAfford && !isOwned && (
-                                                <div style={{ position: "absolute", top: 14, left: 14, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 999, display: "flex", alignItems: "center", gap: 4, backdropFilter: "blur(6px)" }}>
-                                                    <Lock size={10} />Sin saldo
+                                                <div style={{
+                                                    position: "absolute", bottom: 12, left: 12,
+                                                    background: "rgba(0,0,0,0.5)", color: "#fff",
+                                                    fontSize: 10, fontWeight: 600,
+                                                    padding: "4px 10px", borderRadius: 999,
+                                                    display: "flex", alignItems: "center", gap: 4,
+                                                    backdropFilter: "blur(6px)"
+                                                }}>
+                                                    <Lock size={10} />Saldo insuficiente
                                                 </div>
                                             )}
                                         </div>

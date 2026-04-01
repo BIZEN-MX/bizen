@@ -19,11 +19,12 @@ interface LessonScreenProps {
   onOpenGlossary?: () => void
   hasGlossary?: boolean
   className?: string
+  isDark?: boolean
 }
 
 /**
  * Main lesson screen — Duolingo-style layout:
- * - Pure white background
+ * - Pure white background (or immersive dark mode)
  * - Slim progress bar header at top
  * - Centered scrollable content in the middle
  * - Sticky footer with action buttons at the bottom
@@ -42,6 +43,7 @@ export function LessonScreen({
   onOpenGlossary,
   hasGlossary,
   className = "",
+  isDark = false,
 }: LessonScreenProps) {
   const starsClamped = (typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 3) as 0 | 1 | 2 | 3
 
@@ -55,7 +57,7 @@ export function LessonScreen({
         maxHeight: "100dvh",
         height: "100dvh",
         overflow: "hidden",
-        background: "#FFFFFF",
+        background: isDark ? "#020617" : "#FFFFFF",
         position: "relative",
       }}
     >
@@ -71,8 +73,8 @@ export function LessonScreen({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            background: "#FFFFFF",
-            borderBottom: hideHeaderBorder ? "none" : "1.5px solid #F1F5F9",
+            background: "transparent",
+            borderBottom: hideHeaderBorder || isDark ? "none" : "1.5px solid #F1F5F9",
             boxSizing: "border-box",
           }}
         >
@@ -85,6 +87,7 @@ export function LessonScreen({
             onExit={onExit}
             onOpenGlossary={onOpenGlossary}
             hasGlossary={hasGlossary}
+            isDark={isDark}
           />
         </div>
       )}

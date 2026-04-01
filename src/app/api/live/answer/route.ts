@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { touchDailyStreak } from "@/lib/rewards"
+import { liveAnswerSchema } from "@/validators/live"
 
 async function createSupabase() {
   const cookieStore = await cookies()
@@ -29,11 +30,24 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { session_id, question_id, participant_id, selected_option_id, answer_time_ms } = body
-
-    if (!session_id || !question_id || !participant_id) {
-      return NextResponse.json({ error: "Faltan parámetros" }, { status: 400 })
+    
+    // 1. Validation (Allow-listing & Type checks)
+    const validation = liveAnswerSchema.safeParse(body)
+    
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: "Parámetros de respuesta inválidos", 
+        details: validation.error.format() 
+      }, { status: 400 })
     }
+
+    const { session_id, question_id, participant_id, selected_option_id, answer_time_ms } = validation.data
+
+    // 2. ANTI-CHEAT HEURISTIC (Heuristic validation)
+    // No person can read a question, process 4 options and click in less than 800ms.
+    // If less, we cap it to prevent maximum points via console manipulation.
+    const MIN_COGNITIVE_TIME = 800;
+    const sanitizedTime = Math.max(answer_time_ms, MIN_COGNITIVE_TIME);
 
     // Fetch the question to get correct answer and settings
     const { data: question, error: qError } = await supabase
@@ -46,14 +60,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Pregunta no encontrada" }, { status: 404 })
     }
 
-    // Fetch participant to get current streak
+    // Fetch participant to get current streak and ensure they exist
     const { data: participant } = await supabase
       .from("live_participants")
       .select("current_streak, total_score")
       .eq("id", participant_id)
       .single()
 
-    const currentStreak = participant?.current_streak || 0
+    if (!participant) {
+      return NextResponse.json({ error: "Participante no encontrado" }, { status: 404 })
+    }
+
+    const currentStreak = participant.current_streak || 0
 
     // Determine if answer is correct
     const options = question.options as Array<{ id: string; text: string; isCorrect: boolean }>
@@ -62,14 +80,14 @@ export async function POST(request: NextRequest) {
 
     // Calculate score using our formula
     const timeLimitMs = (question.time_limit || 20) * 1000
-    const safeAnswerTime = Math.min(answer_time_ms || timeLimitMs, timeLimitMs)
+    const finalAnswerTime = Math.min(sanitizedTime, timeLimitMs)
 
     let scoreEarned = 0
     if (isCorrect) {
       const { data: scoreData } = await supabase.rpc("calculate_live_score", {
         p_base_points: question.points_base || 1000,
         p_time_limit_ms: timeLimitMs,
-        p_answer_time_ms: safeAnswerTime,
+        p_answer_time_ms: finalAnswerTime,
         p_streak: currentStreak,
       })
       scoreEarned = scoreData || 0
@@ -87,7 +105,7 @@ export async function POST(request: NextRequest) {
         participant_id,
         selected_option_id: selected_option_id || null,
         is_correct: isCorrect,
-        answer_time_ms: safeAnswerTime,
+        answer_time_ms: finalAnswerTime,
         score_earned: scoreEarned,
         streak_at_answer: currentStreak,
       })
@@ -105,27 +123,32 @@ export async function POST(request: NextRequest) {
     await supabase
       .from("live_participants")
       .update({
-        total_score: (participant?.total_score || 0) + scoreEarned,
+        total_score: (participant.total_score || 0) + scoreEarned,
         current_streak: newStreak,
       })
       .eq("id", participant_id)
 
     // Touch daily streak in the BIZEN profile (fire-and-forget)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user?.id) {
-      touchDailyStreak(user.id).catch(() => {/* silent */})
+    // Attempt to get user session to update streak in main profile
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user?.id) {
+        touchDailyStreak(user.id).catch(() => {/* silent */})
+      }
+    } catch (authErr) {
+      // Ignore auth errors, don't break the game for a reward streak
     }
 
     return NextResponse.json({
       is_correct: isCorrect,
       score_earned: scoreEarned,
-      new_total: (participant?.total_score || 0) + scoreEarned,
+      new_total: (participant.total_score || 0) + scoreEarned,
       new_streak: newStreak,
       correct_option_id: options.find(o => o.isCorrect)?.id || null,
     })
 
   } catch (err) {
-    console.error("POST /api/live/answer error:", err)
-    return NextResponse.json({ error: "Error interno" }, { status: 500 })
+    console.error("❌ [Live:AnswerError]:", err)
+    return NextResponse.json({ error: "No se pudo procesar tu respuesta" }, { status: 500 })
   }
 }

@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
 import { useOnboarding } from "@/contexts/OnboardingContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import TransferModal from "@/components/bizen/TransferModal"
+import StakingModal from "@/components/bizen/StakingModal"
 import PageLoader from "@/components/PageLoader"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { AVATAR_OPTIONS, AVATAR_CATEGORIES, getDefaultAvatar } from "@/lib/avatarOptions"
@@ -15,7 +17,7 @@ import {
   Search, Mail, ChevronRight, X as CloseIcon, Camera, Star,
   Trophy, BookOpen, Compass, Share2, Heart, Settings, Instagram,
   Palette, CreditCard, Lock as LockIcon, History, ArrowUpRight, ArrowDownLeft,
-  CircleDollarSign, ShoppingCart, Gem, PlusCircle, Target, Send, Search as SearchIcon, Loader2, Check, ChevronDown
+  CircleDollarSign, ShoppingCart, Gem, PlusCircle, Target, Send, Search as SearchIcon, Loader2, Check, ChevronDown, Calendar, Info
 } from "lucide-react"
 import BizenVirtualCard, { CardTheme, getTierFromLevel } from "@/components/BizenVirtualCard"
 
@@ -170,6 +172,7 @@ export default function ProfilePage() {
   const [staking, setStaking] = useState<StakingPosition[]>([])
   const [loadingStaking, setLoadingStaking] = useState(true)
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
+  const [isStakingModalOpen, setIsStakingModalOpen] = useState(false)
   const [showActivity, setShowActivity] = useState(true)
   const [isFullHistoryOpen, setIsFullHistoryOpen] = useState(false)
 
@@ -845,41 +848,73 @@ export default function ProfilePage() {
                 {loadingStaking ? (
                    <div style={{ textAlign: "center", padding: 20, fontSize: 12, color: "#94a3b8" }}>Cargando inversiones...</div>
                 ) : staking.length === 0 ? (
-                   <div style={{ textAlign: "center", padding: 20 }}>
-                      <p style={{ margin: 0, color: "#94a3b8", fontSize: 12 }}>No tienes Bizcoins trabajando ahora.</p>
+                   <div style={{ textAlign: "center", padding: "24px 20px", background: "#f8fafc", borderRadius: 20, border: "1.5px dashed #e2e8f0" }}>
+                      <div style={{ width: 48, height: 48, background: "#f1f5f9", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+                         <CircleDollarSign size={24} color="#cbd5e1" />
+                      </div>
+                      <p style={{ margin: "0 0 4px", color: "#64748B", fontSize: 13, fontWeight: 700 }}>Activos en pausa</p>
+                      <p style={{ margin: 0, color: "#94a3b8", fontSize: 11 }}>No tienes Bizcoins trabajando ahora.</p>
                    </div>
                 ) : (
-                   <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                       {/* Yield Summary if multiple */}
+                       {staking.filter(s => s.status === 'active').length > 1 && (
+                         <div style={{ padding: "10px 14px", background: "rgba(139,92,246,0.05)", borderRadius: 12, border: "1px solid rgba(139,92,246,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                           <span style={{ fontSize: 11, fontWeight: 700, color: "#7C3AED" }}>Total en crecimiento</span>
+                           <span style={{ fontSize: 13, fontWeight: 900, color: "#7C3AED" }}>{staking.filter(s => s.status === 'active').reduce((acc, curr) => acc + (curr.amount * curr.yieldRate), 0).toFixed(0)} <span style={{fontSize: 9}}>BC</span></span>
+                         </div>
+                       )}
                       {staking.map(s => {
                         const total = new Date(s.endDate).getTime() - new Date(s.startDate).getTime();
                         const elapsed = new Date().getTime() - new Date(s.startDate).getTime();
                         const progress = Math.min(100, Math.max(0, Math.floor((elapsed / total) * 100)));
-                        const isExpired = progress === 100;
                         const returnAmt = Math.floor(s.amount * s.yieldRate);
 
                         return (
-                          <div key={s.id} style={{ background: "#f8fafc", borderRadius: 16, padding: 16, border: "1px solid #f1f5f9" }}>
+                          <div key={s.id} style={{ 
+                             background: s.status === 'active' ? "white" : "#f8fafc", 
+                             borderRadius: 20, padding: 18, 
+                             border: s.status === 'active' ? "1.5px solid #e2e8f0" : "1.5px solid #f1f5f9",
+                             boxShadow: s.status === 'active' ? "0 4px 12px rgba(0,0,0,0.03)" : "none",
+                             position: "relative",
+                             overflow: "hidden"
+                           }}>
+                            {s.status === 'active' && <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 4, background: "#8B5CF6" }} />}
                             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
                               <div>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: s.status === 'active' ? "#8B5CF6" : "#10B981", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>{s.status === 'active' ? "En Curso" : "Finalizado"}</div>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{s.amount} <span style={{fontSize: 10, fontWeight: 500, color: "#64748b"}}>BC invertidos</span></div>
+                                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: s.status === 'active' ? "#8B5CF6" : "#10B981", animation: s.status === 'active' ? "pulse 2s infinite" : "none" }} />
+                                  <div style={{ fontSize: 9, fontWeight: 800, color: s.status === 'active' ? "#8B5CF6" : "#10B981", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.status === 'active' ? "Activo" : "Completado"}</div>
+                                </div>
+                                <div style={{ fontSize: 15, fontWeight: 900, color: "#0f172a" }}>{s.amount.toLocaleString()} <span style={{fontSize: 10, fontWeight: 600, color: "#94a3b8"}}>BC en fondo</span></div>
                               </div>
                               <div style={{ textAlign: "right" }}>
-                                <div style={{ fontSize: 13, fontWeight: 800, color: "#10B981" }}>+{returnAmt} BC</div>
-                                <div style={{ fontSize: 9, color: "#94a3b8", fontWeight: 600 }}>Rendimiento (+{(s.yieldRate * 100).toFixed(0)}%)</div>
+                                <div style={{ fontSize: 15, fontWeight: 950, color: "#10B981" }}>+{returnAmt} BC</div>
+                                <div style={{ fontSize: 9, color: "#94a3b8", fontWeight: 700 }}>RETORNO ({(s.yieldRate * 100).toFixed(0)}%)</div>
                               </div>
                             </div>
                             
-                            {s.status === 'active' && (
-                              <>
-                                <div style={{ height: 6, background: "rgba(139,92,246,0.1)", borderRadius: 3, overflow: "hidden", marginBottom: 6 }}>
-                                  <div style={{ height: "100%", width: `${progress}%`, background: "#8B5CF6", transition: "width 0.5s ease" }} />
+                            {s.status === 'active' ? (
+                              <div style={{ marginTop: 12 }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#64748B", fontWeight: 700, marginBottom: 6 }}>
+                                  <span>Progreso de maduración</span>
+                                  <span>{progress}%</span>
                                 </div>
-                                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: "#94a3b8", fontWeight: 600 }}>
-                                  <span>{isExpired ? "Madurando..." : "Creciendo"}</span>
-                                  <span>Vence: {new Date(s.endDate).toLocaleDateString()}</span>
+                                <div style={{ height: 8, background: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}>
+                                  <div 
+                                    style={{ height: "100%", width: `${progress}%`, background: "linear-gradient(90deg, #8B5CF6, #C084FC)", borderRadius: 4, transition: "width 1s ease-out" }} 
+                                  />
                                 </div>
-                              </>
+                                <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 8, fontSize: 9, color: "#94a3b8", fontWeight: 600 }}>
+                                  <Calendar size={10} />
+                                  Vence el {new Date(s.endDate).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                </div>
+                              </div>
+                            ) : (
+                              <div style={{ marginTop: 8, padding: "8px 12px", background: "rgba(16,185,129,0.06)", borderRadius: 10, display: "flex", alignItems: "center", gap: 8 }}>
+                                <Check size={12} color="#10B981" />
+                                <span style={{ fontSize: 10, color: "#059669", fontWeight: 700 }}>Inversión liquidada exitosamente</span>
+                              </div>
                             )}
                           </div>
                         )
@@ -888,14 +923,29 @@ export default function ProfilePage() {
                 )}
                 
                 <button style={{ 
-                  marginTop: 16, width: "100%", padding: "10px", borderRadius: 12, border: "none",
+                  marginTop: 16, width: "100%", padding: "14px", borderRadius: 16, border: "none",
                   background: "linear-gradient(135deg, #2e1065 0%, #4c1d95 100%)",
-                  color: "white", fontSize: 11, fontWeight: 700, cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  boxShadow: "0 4px 12px rgba(46,16,101,0.2)"
-                }} onClick={() => router.push("/courses/tema-05")}>
-                   <Zap size={14} fill="white" /> Empezar a Invertir
+                  color: "white", fontSize: 12, fontWeight: 800, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                  boxShadow: "0 8px 24px rgba(46,16,101,0.25)",
+                  transition: "all 0.2s"
+                }} 
+                onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+                onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
+                onClick={() => setIsStakingModalOpen(true)}>
+                   <Zap size={16} fill="white" /> 
+                   <span>Gestionar Inversiones</span>
                 </button>
+
+                 <div style={{ marginTop: 20, padding: 16, background: "rgba(15, 98, 254, 0.04)", borderRadius: 16, border: "1px solid rgba(15, 98, 254, 0.08)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                       <Info size={14} color="#0F62FE" />
+                       <span style={{ fontSize: 11, fontWeight: 800, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.05em" }}>Sabías que...</span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: 11, color: "#64748B", lineHeight: 1.5 }}>
+                       Invertir tus Bizcoins es la mejor forma de generar <span style={{ fontWeight: 700, color: "#0F172A" }}>interés compuesto</span>. ¡Entre más tiempo los dejes, más crecerán!
+                    </p>
+                 </div>
              </div>
           </div>
 
@@ -1087,7 +1137,23 @@ export default function ProfilePage() {
       )}
 
       {/* Transfer Modal */}
-      {isTransferModalOpen && <TransferModal onClose={() => setIsTransferModalOpen(false)} currentBalance={bizcoins} onTransferSuccess={(newBal: number) => { fetchData(); }} />}
+      {isTransferModalOpen && (
+        <TransferModal 
+          onClose={() => setIsTransferModalOpen(false)} 
+          currentBalance={bizcoins}
+          onTransferSuccess={(newBal) => { fetchData(); }}
+        />
+      )}
+
+      <AnimatePresence>
+        {isStakingModalOpen && (
+          <StakingModal
+            onClose={() => setIsStakingModalOpen(false)}
+            currentBalance={bizcoins}
+            onSuccess={() => fetchData()}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Picker Modal Overlay */}
       {isPickerOpen && (

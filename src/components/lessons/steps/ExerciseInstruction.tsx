@@ -18,10 +18,18 @@ const config: Record<ExerciseType, { label: string; color: string; bg: string; b
 
 interface ExerciseInstructionProps {
   type: ExerciseType
+  isDark?: boolean
 }
 
-export function ExerciseInstruction({ type }: ExerciseInstructionProps) {
-  const { label, color, bg, border, Icon } = config[type] ?? config.info
+export function ExerciseInstruction({ type, isDark = false }: ExerciseInstructionProps) {
+  const baseConfig = config[type] ?? config.info
+
+  // Adjust colors for dark mode context
+  const label = baseConfig.label
+  const Icon = baseConfig.Icon
+  const color = isDark ? "#60a5fa" : baseConfig.color
+  const bg = isDark ? "rgba(59,130,246,0.15)" : baseConfig.bg
+  const border = isDark ? "rgba(59,130,246,0.3)" : baseConfig.border
 
   return (
     <div style={{
@@ -37,11 +45,11 @@ export function ExerciseInstruction({ type }: ExerciseInstructionProps) {
       <Icon size={14} color={color} strokeWidth={2.5} />
       <span style={{
         fontSize: 12,
-        fontWeight: 500,
+        fontWeight: 600,
         color,
         letterSpacing: "0.04em",
         textTransform: "uppercase",
-              }}>
+      }}>
         {label}
       </span>
     </div>

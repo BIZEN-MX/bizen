@@ -17,6 +17,13 @@ import {
   Check,
   X,
   MessageSquare,
+  Bot,
+  Crown,
+  Sword,
+  Medal,
+  CircleDollarSign,
+  Flame,
+  Store,
 } from "lucide-react";
 import { CheckIcon, CrossIcon } from "@/components/CustomIcons";
 import * as React from "react";
@@ -1563,38 +1570,6 @@ export default function WelcomePage() {
           </div>
 
           {/* ── Instituciones anchor + section label ── */}
-          <div id="instituciones" style={{ scrollMarginTop: "80px" }} />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "clamp(32px, 5vw, 60px) clamp(16px, 6vw, 80px) 0",
-              maxWidth: "1200px",
-              margin: "0 auto",
-              boxSizing: "border-box",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                background: "rgba(0, 86, 231, 0.1)",
-                border: "1px solid rgba(0, 86, 231, 0.25)",
-                borderRadius: "9999px",
-                padding: "6px 16px",
-                fontSize: "clamp(12px, 1.1vw, 14px)",
-                fontWeight: 600,
-                color: "#1983FD",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-              }}
-            >
-              Para Instituciones
-            </span>
-            <div style={{ flex: 1, height: "1px", background: "rgba(0, 86, 231, 0.15)" }} />
-          </div>
 
           {/* SOMOS BIZEN Section */}
           <div
@@ -4317,38 +4292,6 @@ function LandingContent({
       {(sectionRange === "all" || sectionRange === "gradient") && (
         <>
           {/* ── Estudiantes anchor + section label ── */}
-          <div id="estudiantes" style={{ scrollMarginTop: "80px" }} />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "clamp(32px, 5vw, 60px) clamp(16px, 6vw, 80px) 0",
-              maxWidth: "1200px",
-              margin: "0 auto",
-              boxSizing: "border-box",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                background: "rgba(124, 58, 237, 0.1)",
-                border: "1px solid rgba(124, 58, 237, 0.25)",
-                borderRadius: "9999px",
-                padding: "6px 16px",
-                fontSize: "clamp(12px, 1.1vw, 14px)",
-                fontWeight: 600,
-                color: "#a78bfa",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-              }}
-            >
-              Para Estudiantes
-            </span>
-            <div style={{ flex: 1, height: "1px", background: "rgba(124, 58, 237, 0.15)" }} />
-          </div>
 
           {/* ── FEATURES SECTION: BIZEN Live, La Fragua, El Mercado ── */}
           <section
@@ -4465,10 +4408,15 @@ function LandingContent({
                   <div style={{ flex: "1 1 300px", minWidth: 0 }}>
                     <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "28px", padding: "clamp(24px,4vw,40px)", backdropFilter: "blur(16px)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#10b981,#059669)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔥</div>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#10b981,#059669)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <Flame size={20} color="#fff" />
+                        </div>
                         <div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: "#10b981" }}>Misión del día</div>
-                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Racha: 7 días 🔥</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 2 }}>
+                            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Racha: 7 días</div>
+                            <Flame size={12} color="#10b981" fill="#10b981" />
+                          </div>
                         </div>
                         <div style={{ marginLeft: "auto", background: "rgba(16,185,129,0.15)", borderRadius: 8, padding: "4px 10px", fontSize: 12, color: "#10b981", fontWeight: 600 }}>+50 BZ</div>
                       </div>
@@ -4493,7 +4441,7 @@ function LandingContent({
                   {/* Text */}
                   <div style={{ flex: "1 1 320px", minWidth: 0 }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(16,185,129,0.12)", color: "#10b981", borderRadius: "999px", padding: "5px 16px", fontSize: "12px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px", border: "1px solid rgba(16,185,129,0.2)" }}>
-                      🔥 La Fragua
+                      <Flame size={14} /> La Fragua
                     </span>
                     <h3 style={{ fontSize: "clamp(26px, 3.5vw, 42px)", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: "16px" }}>
                       Misiones diarias<br />que forjan hábitos
@@ -4522,7 +4470,7 @@ function LandingContent({
                   {/* Text */}
                   <div style={{ flex: "1 1 320px", minWidth: 0 }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(139,92,246,0.12)", color: "#a78bfa", borderRadius: "999px", padding: "5px 16px", fontSize: "12px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "20px", border: "1px solid rgba(139,92,246,0.2)" }}>
-                      🏪 El Mercado
+                      <Store size={14} /> El Mercado
                     </span>
                     <h3 style={{ fontSize: "clamp(26px, 3.5vw, 42px)", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.15, marginBottom: "16px" }}>
                       Gana Bizcoins,<br />personaliza tu perfil
@@ -4550,23 +4498,25 @@ function LandingContent({
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                         <span style={{ fontSize: 13, fontWeight: 700, color: "#a78bfa" }}>Tu saldo</span>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(139,92,246,0.15)", borderRadius: 8, padding: "6px 12px" }}>
-                          <span style={{ fontSize: 16 }}>🪙</span>
+                          <CircleDollarSign size={16} color="#a78bfa" />
                           <span style={{ fontSize: 16, fontWeight: 800, color: "#a78bfa" }}>1,250</span>
                           <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>BZ</span>
                         </div>
                       </div>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                         {[
-                          { name: "Avatar Robot", icon: "🤖", price: 300, color: "#3b82f6" },
-                          { name: "Marco VIP", icon: "👑", price: 800, color: "#fbbf24" },
-                          { name: "Avatar Ninja", icon: "🥷", price: 400, color: "#10b981" },
-                          { name: "Insignia 🔥", icon: "🏅", price: 200, color: "#ef4444" },
+                          { name: "Avatar Robot", icon: Bot, price: 300, color: "#3b82f6" },
+                          { name: "Marco VIP", icon: Crown, price: 800, color: "#fbbf24" },
+                          { name: "Avatar Ninja", icon: Sword, price: 400, color: "#10b981" },
+                          { name: "Insignia 🔥", icon: Medal, price: 200, color: "#ef4444" },
                         ].map((item) => (
                           <div key={item.name} style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${item.color}33`, borderRadius: 14, padding: "12px", textAlign: "center" }}>
-                            <div style={{ fontSize: 28, marginBottom: 6 }}>{item.icon}</div>
+                            <div style={{ display: "flex", justifyContent: "center", marginBottom: 6 }}>
+                              <item.icon size={28} color={item.color} />
+                            </div>
                             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", fontWeight: 500, marginBottom: 6 }}>{item.name}</div>
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                              <span style={{ fontSize: 11 }}>🪙</span>
+                              <CircleDollarSign size={12} color={item.color} />
                               <span style={{ fontSize: 12, fontWeight: 700, color: item.color }}>{item.price}</span>
                             </div>
                           </div>

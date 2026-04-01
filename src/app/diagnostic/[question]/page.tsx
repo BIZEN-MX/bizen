@@ -219,21 +219,29 @@ export default function DiagnosticQuestionPage() {
 
   // Footer is only shown during the quiz, not on the intro screen
   const quizFooter = userInfo && !showSuccess ? (
-    <div className="flex p-4 md:p-6 pb-[max(24px,env(safe-area-inset-bottom))] bg-white border-t-2 border-slate-100">
-      <div className="w-full max-w-4xl mx-auto flex items-center justify-between gap-3 md:gap-4">
+    <div style={{
+      display: "flex",
+      padding: "16px 24px",
+      paddingBottom: "max(24px, env(safe-area-inset-bottom))",
+      background: "rgba(15, 23, 42, 0.8)",
+      backdropFilter: "blur(20px)",
+      borderTop: "1px solid rgba(255,255,255,0.1)",
+      zIndex: 10,
+    }}>
+      <div style={{ width: "100%", maxWidth: "896px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
         <div>
           {!isFirstPage && (
             <StickyFooterButton
               variant="secondary"
               onClick={() => goToPage(currentPage - 1)}
-              style={{ width: "auto", minWidth: "clamp(80px, 20vw, 140px)" }}
+              style={{ width: "auto", minWidth: "clamp(80px, 20vw, 140px)", background: "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               Anterior
             </StickyFooterButton>
           )}
         </div>
 
-        <div className="flex-1 flex justify-end">
+        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
           {currentPage < totalQuestions ? (
             <StickyFooterButton
               variant="blue"
@@ -266,6 +274,7 @@ export default function DiagnosticQuestionPage() {
       hideStars={true}
       hideHeaderBorder={true}
       footerContent={quizFooter}
+      isDark={true}
     >
       <AnimatePresence mode="wait">
         {showSuccess ? (
@@ -530,10 +539,10 @@ export default function DiagnosticQuestionPage() {
               <ExerciseInstruction type="mcq" />
               <h3 style={{
                 fontSize: "clamp(19px, 5vw, 26px)",
-                fontWeight: 500,
-                color: "#111827",
+                fontWeight: 600,
+                color: "#ffffff",
                 margin: 0,
-                lineHeight: 1.25,
+                lineHeight: 1.35,
                 textAlign: "left",
               }}>
                 {currentQuestion.question}
@@ -549,13 +558,13 @@ export default function DiagnosticQuestionPage() {
               {currentQuestion.options.map((option, index) => {
                 const isSelected = userAnswers[currentQuestion.id] === option.value
 
-                // Determine visual state
-                let borderColor = isSelected ? "#0F62FE" : "#E5E7EB"
-                let background = isSelected ? "#EFF6FF" : "#FFFFFF"
-                let color = isSelected ? "#1D4ED8" : "#374151"
-                let boxShadow = isSelected ? "0 2px 0 0 #93C5FD" : "0 2px 0 0 #E5E7EB"
-                let labelBg = isSelected ? "#DBEAFE" : "#F3F4F6"
-                let labelColor = isSelected ? "#1D4ED8" : "#6B7280"
+                // Determine visual state for Premium Spatial Blue
+                let borderColor = isSelected ? "#3b82f6" : "rgba(255,255,255,0.15)"
+                let background = isSelected ? "rgba(59,130,246,0.1)" : "rgba(255,255,255,0.03)"
+                let color = isSelected ? "#ffffff" : "rgba(255,255,255,0.85)"
+                let boxShadow = isSelected ? "0 0 0 2px rgba(59,130,246,0.3)" : "none"
+                let labelBg = isSelected ? "#2563eb" : "rgba(255,255,255,0.1)"
+                let labelColor = isSelected ? "#ffffff" : "rgba(255,255,255,0.6)"
 
                 return (
                   <button
@@ -571,39 +580,35 @@ export default function DiagnosticQuestionPage() {
                       padding: "16px 20px",
                       borderRadius: 16,
                       background,
-                      border: `2px solid ${borderColor}`,
+                      border: `1.5px solid ${borderColor}`,
                       boxShadow,
                       cursor: quizSubmitted ? "not-allowed" : "pointer",
                       textAlign: "left",
                       color,
-                      transition: "all 0.2s ease",
+                      transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                       userSelect: "none",
                       outline: "none",
                       transform: "translateY(0)",
-                      opacity: 1,
+                      backdropFilter: "blur(10px)",
                     }}
                     onMouseEnter={(e) => {
                       if (!quizSubmitted) {
-                        e.currentTarget.style.transform = "translateY(-1px)"
-                        e.currentTarget.style.opacity = "0.72"
+                        e.currentTarget.style.transform = "translateY(-2px)"
+                        e.currentTarget.style.backgroundColor = isSelected ? background : "rgba(255,255,255,0.06)"
                       }
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = "translateY(0)"
-                      e.currentTarget.style.opacity = "1"
+                      e.currentTarget.style.backgroundColor = background
                     }}
                     onMouseDown={(e) => {
                       if (!quizSubmitted) {
                         e.currentTarget.style.transform = "translateY(2px)"
-                        e.currentTarget.style.boxShadow = "0 0px 0 0 #E5E7EB"
-                        e.currentTarget.style.opacity = "0.55"
                       }
                     }}
                     onMouseUp={(e) => {
                       if (!quizSubmitted) {
                         e.currentTarget.style.transform = "translateY(0)"
-                        e.currentTarget.style.boxShadow = boxShadow
-                        e.currentTarget.style.opacity = "1"
                       }
                     }}
                   >
@@ -616,10 +621,9 @@ export default function DiagnosticQuestionPage() {
                       alignItems: "center",
                       justifyContent: "center",
                       fontSize: 14,
-                      fontWeight: 500,
+                      fontWeight: 700,
                       color: labelColor,
                       flexShrink: 0,
-                      border: `1.5px solid ${borderColor}`,
                       transition: "all 0.2s ease",
                     }}>
                       {option.value}
