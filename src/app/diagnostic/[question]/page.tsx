@@ -536,7 +536,7 @@ export default function DiagnosticQuestionPage() {
             }}
           >
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <ExerciseInstruction type="mcq" />
+              <ExerciseInstruction type="mcq" isDark={true} />
               <h3 style={{
                 fontSize: "clamp(19px, 5vw, 26px)",
                 fontWeight: 600,

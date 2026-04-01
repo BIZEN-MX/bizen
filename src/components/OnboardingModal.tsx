@@ -7,15 +7,16 @@ import { AVATAR_OPTIONS, AVATAR_CATEGORIES } from "@/lib/avatarOptions"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/AuthContext"
 import { SchoolIcon, RocketIcon } from "@/components/CustomIcons"
+import { Billy } from "@/components/Billy"
 import {
   BookOpen, Trophy, Globe, ChevronRight, Cake, Sparkles, Lightbulb,
   ArrowLeft, CheckCircle2, LayoutDashboard, BrainCircuit, Target,
-  ArrowLeftRight, Gift, Coins, Wifi, CreditCard, Star, Zap, ShoppingBag,
-  Lock, TrendingUp
+  ArrowLeftRight, Gift, Wifi, Star, Zap, ShoppingBag,
+  TrendingUp, MessageCircle, BookMarked, FlaskConical, MapPin
 } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Step = "welcome" | "avatar" | "username" | "school" | "birthday" | "wallet"
+type Step = "welcome" | "avatar" | "username" | "school" | "birthday" | "wallet" | "billy"
 
 interface OnboardingModalProps {
   onComplete: () => void
@@ -394,8 +395,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const emailForRole = user?.email?.toLowerCase() || ""
   const isInstitutional = emailForRole.endsWith(".edu") || emailForRole.includes(".edu.")
   const stepList: Step[] = isInstitutional
-    ? ["welcome", "avatar", "username", "school", "birthday", "wallet"]
-    : ["welcome", "avatar", "username", "birthday", "wallet"]
+    ? ["welcome", "avatar", "username", "school", "birthday", "wallet", "billy"]
+    : ["welcome", "avatar", "username", "birthday", "wallet", "billy"]
+
 
   const stepIdx = stepList.indexOf(step)
   const progressPct = Math.round(((stepIdx + 1) / stepList.length) * 100)
@@ -414,9 +416,10 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
   const pageVariants = {
     initial: { opacity: 0, x: 24 },
-    animate: { opacity: 1, x: 0, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] } },
-    exit: { opacity: 0, x: -24, transition: { duration: 0.25 } },
+    animate: { opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
+    exit: { opacity: 0, x: -24, transition: { duration: 0.25, ease: "easeIn" as const } },
   }
+
 
   return (
     <div className="fixed inset-0 z-[9999] bg-[#020617] text-white flex flex-col font-geist overflow-y-auto">
@@ -760,13 +763,136 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                       {usernameError}
                     </p>
                   )}
-                  <button disabled={saving} onClick={handleSave}
+                  <button onClick={() => goToStep("billy")}
                     className="relative w-full py-4 text-white rounded-2xl font-bold text-xl transition-all active:scale-[0.98] shadow-xl flex items-center justify-center gap-3 overflow-hidden"
                     style={{ background: `linear-gradient(135deg, #1d4ed8, ${activeFeature.color})`, boxShadow: `0 16px 40px ${activeFeature.glow}`, transition: "box-shadow 0.5s, background 0.5s" }}>
+                    Conocer a Billy
+                    <ChevronRight size={22} />
+                    <motion.div className="absolute inset-0 bg-white/15"
+                      initial={{ x: "-100%" }}
+                      animate={{ x: "200%" }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── BILLY STEP ── */}
+            {step === "billy" && (
+              <motion.div key="billy" variants={pageVariants} initial="initial" animate="animate" exit="exit"
+                className="flex flex-col space-y-6">
+
+                {/* Header */}
+                <div className="flex items-center gap-4">
+                  <button onClick={() => goToStep("wallet")} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                    <ArrowLeft size={24} />
+                  </button>
+                  <div>
+                    <h2 className="text-2xl font-black">Conoce a Billy</h2>
+                    <p className="text-slate-400">Tu mentor de IA financiera personal</p>
+                  </div>
+                </div>
+
+                {/* Billy hero section */}
+                <div className="relative flex flex-col items-center gap-4">
+                  {/* Glow blob behind Billy */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <motion.div
+                      className="w-64 h-64 rounded-full"
+                      style={{ background: "radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)" }}
+                      animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  </div>
+
+                  {/* Billy mascot */}
+                  <motion.div
+                    initial={{ scale: 0.7, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+                    className="relative z-10"
+                  >
+                    <Billy mood="happy" size={160} showGlow={true} />
+                  </motion.div>
+
+                  {/* Name badge */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35 }}
+                    className="relative z-10 text-center"
+                  >
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/15 border border-blue-500/30 mb-2">
+                      <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                      <span className="text-blue-400 text-sm font-bold">Billy Insights · Disponible ahora</span>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed max-w-xs mx-auto">
+                      Soy tu asistente de IA entrenado en finanzas personales. Pregúntame lo que quieras, cuando quieras.
+                    </p>
+                  </motion.div>
+                </div>
+
+                {/* What Billy can do */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="grid grid-cols-2 gap-3"
+                >
+                  {[
+                    { icon: MessageCircle, label: "Responde preguntas", desc: "Sobre presupuesto, deudas, inversión y más", color: "#3b82f6" },
+                    { icon: BookMarked, label: "Explica lecciones", desc: "Resume y aclara cualquier tema del curso", color: "#8b5cf6" },
+                    { icon: FlaskConical, label: "Analiza tu perfil", desc: "Genera insights basados en tu DNA financiero", color: "#10b981" },
+                    { icon: Zap, label: "Siempre disponible", desc: "Las 24 hrs en cada página de la app", color: "#f59e0b" },
+                  ].map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.45 + i * 0.08 }}
+                      className="flex flex-col gap-2 p-4 rounded-2xl border"
+                      style={{ background: `${item.color}08`, borderColor: `${item.color}20` }}
+                    >
+                      <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: `${item.color}20` }}>
+                        <item.icon size={16} style={{ color: item.color }} />
+                      </div>
+                      <p className="text-sm font-black" style={{ color: item.color }}>{item.label}</p>
+                      <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                {/* Where to find Billy */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="p-4 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center gap-4"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-600/20">
+                    <MapPin size={22} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-white mb-0.5">¿Dónde encontrarme?</p>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      Busca el <span className="text-blue-400 font-bold">botón azul flotante</span> en la esquina inferior derecha de cualquier pantalla. ¡Siempre estoy ahí!
+                    </p>
+                  </div>
+                </motion.div>
+
+                {/* Final CTA */}
+                <div className="space-y-3 pt-1">
+                  {usernameError && (
+                    <p className="text-sm font-bold text-red-500 text-center p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                      {usernameError}
+                    </p>
+                  )}
+                  <button disabled={saving} onClick={handleSave}
+                    className="relative w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold text-xl transition-all active:scale-[0.98] shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3 overflow-hidden">
                     {saving
                       ? <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin" />
                       : <>
-                        ¡Activar mi tarjeta!
+                        ¡Empezar en BIZEN!
                         <RocketIcon size={22} className="text-white" />
                       </>}
                     <motion.div className="absolute inset-0 bg-white/15"
@@ -775,6 +901,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
                   </button>
                 </div>
+
               </motion.div>
             )}
 
