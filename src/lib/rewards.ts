@@ -20,6 +20,34 @@ export interface StreakTouchResult {
 }
 
 /**
+ * Checks for active XP Boosts in the user's inventory.
+ * A boost is active if purchased within the last 48 hours.
+ */
+export async function getRewardMultiplier(userId: string): Promise<number> {
+    try {
+        const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000)
+        
+        // Find if user has a Boost de XP (ID 14) active
+        const activeBoost = await prisma.userInventoryItem.findFirst({
+            where: {
+                userId,
+                productId: "14", // Boost de XP x2
+                purchasedAt: { gte: fortyEightHoursAgo }
+            }
+        })
+
+        if (activeBoost) return 2
+        
+        // Check for Global "Oferta de la semana" (Placeholder logic)
+        // In a real scenario, this might check a global config table or a date range
+        // For now, we'll implement it as a constant for this specific request if needed
+        return 1
+    } catch {
+        return 1
+    }
+}
+
+/**
  * Touches the daily streak for a user without awarding XP.
  * Call this from any action that should count as "active today":
  * - Participating in BIZEN Live
@@ -117,8 +145,10 @@ export async function awardXp(
     }
 
     // Calculate new XP and Level
-    const newTotalXp = profile.xp + amount
-    const bizcoinsAwarded = amount // Default 1:1 ratio
+    const multiplier = await getRewardMultiplier(userId)
+    const finalAmount = amount * multiplier
+    const newTotalXp = profile.xp + finalAmount
+    const bizcoinsAwarded = finalAmount // Maintain 1:1 ratio with boosted XP
     const newTotalBizcoins = ((profile as any).bizcoins || 0) + bizcoinsAwarded
     const oldLevel = profile.level
     const newLevel = calculateLevel(newTotalXp)
@@ -186,7 +216,7 @@ export async function awardXp(
     })
 
     return {
-        xpAwarded: amount,
+        xpAwarded: finalAmount,
         newTotalXp,
         bizcoinsAwarded,
         newTotalBizcoins,
