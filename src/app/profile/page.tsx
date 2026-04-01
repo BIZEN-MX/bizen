@@ -176,15 +176,12 @@ export default function ProfilePage() {
   const [showActivity, setShowActivity] = useState(true)
   const [isFullHistoryOpen, setIsFullHistoryOpen] = useState(false)
 
-  // Toggle global sidebar visibility via body class
+  // Sync theme with dbProfile
   useEffect(() => {
-    if (isFullHistoryOpen) {
-      document.body.classList.add('hide-sidebar')
-    } else {
-      document.body.classList.remove('hide-sidebar')
+    if (dbProfile?.cardTheme || dbProfile?.card_theme) {
+      setCardTheme((dbProfile.cardTheme || dbProfile.card_theme) as CardTheme)
     }
-    return () => document.body.classList.remove('hide-sidebar')
-  }, [isFullHistoryOpen])
+  }, [dbProfile])
 
   useEffect(() => { setMounted(true) }, [])
   useEffect(() => {
@@ -424,6 +421,8 @@ export default function ProfilePage() {
         .prof-side-btn.secondary:hover { background: #f8fafc !important; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-up { animation: fadeUp 0.4s ease both; }
+        .transaction-row-hover { transition: all 0.2s ease; cursor: default; border-bottom: 1px solid #f8fafc; }
+        .transaction-row-hover:hover { background: #f8fafc !important; transform: translateX(4px); }
       `}</style>
 
       {/* Hero Banner with Identity */}
@@ -496,7 +495,7 @@ export default function ProfilePage() {
                   width: screenSize < 768 ? "100%" : "auto"
                 }}
                 onMouseEnter={e => { if (isBasic) e.currentTarget.style.opacity = "0.75" }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = "1" }}
+                onMouseLeave={e => e.currentTarget.style.opacity = "1"}
               >
                 {isBasic ? (
                   <>
@@ -661,6 +660,7 @@ export default function ProfilePage() {
           {/* Recent Activity (Wallet History) */}
           <div className="prof-card fade-up" style={{ animationDelay: "0.2s", display: "flex", flexDirection: "column" }}>
             <div 
+               onClick={() => setShowActivity(!showActivity)}
                style={{ 
                  padding: "16px 20px", 
                  borderBottom: showActivity ? "1.5px solid #f1f5f9" : "none", 
@@ -671,7 +671,6 @@ export default function ProfilePage() {
                }}
             >
               <h3 
-                onClick={() => setShowActivity(!showActivity)}
                 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: 10, flex: 1 }}
               >
                 <History size={18} color="#0F62FE" /> Actividad Reciente
@@ -721,20 +720,7 @@ export default function ProfilePage() {
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column" }}>
                       {transactions.slice(0, 10).map((t) => (
-                        <div key={t.id} style={{ 
-                          padding: "14px 24px", 
-                          display: "flex", 
-                          alignItems: "center", 
-                          gap: 16, 
-                          transition: "all 0.2s ease", 
-                          cursor: "default",
-                          borderBottom: "1px solid #f8fafc"
-                        }} 
-                        className="transaction-row-hover"
-                        >
-                          <style>{`
-                            .transaction-row-hover:hover { background: #f8fafc !important; transform: translateX(4px); }
-                          `}</style>
+                        <div key={t.id} className="transaction-row-hover" style={{ padding: "14px 24px", display: "flex", alignItems: "center", gap: 16 }}>
                           <div style={{ 
                             width: 38, 
                             height: 38, 
@@ -1015,7 +1001,8 @@ export default function ProfilePage() {
           background: "#FBFAF5", 
           display: "flex", 
           flexDirection: "column",
-          animation: "fadeUp 0.4s ease both"
+          animation: "fadeUp 0.4s ease both",
+          marginLeft: screenSize < 768 ? 0 : (screenSize < 1161 ? '220px' : '280px')
         }}>
           {/* Header */}
           <div style={{ 
