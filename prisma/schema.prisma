@@ -1999,8 +1999,8 @@ model WalletTransaction {
   id          String   @id @default(cuid())
   userId      String   @map("user_id")
   amount      Int
-  type        String   // "income" | "expense"
-  category    String   // "lesson_reward", "purchase", "streak_bonus", etc.
+  type        String // "income" | "expense"
+  category    String // "lesson_reward", "purchase", "streak_bonus", etc.
   description String
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   user        Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
@@ -2011,14 +2011,14 @@ model WalletTransaction {
 }
 
 model SavingsGoal {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
-  title       String
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  title        String
   targetAmount Int      @map("target_amount")
-  category    String?  // e.g., "avatar", "item", "gift_card"
-  isCompleted Boolean  @default(false) @map("is_completed")
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  user        Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  category     String? // e.g., "avatar", "item", "gift_card"
+  isCompleted  Boolean  @default(false) @map("is_completed")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  user         Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@index([userId])
   @@map("savings_goals")
@@ -2026,15 +2026,15 @@ model SavingsGoal {
 }
 
 model StakingPosition {
-  id            String   @id @default(cuid())
-  userId        String   @map("user_id")
-  amount        Int
-  yieldRate     Float    @map("yield_rate")
-  startDate     DateTime @default(now()) @map("start_date") @db.Timestamptz(6)
-  endDate       DateTime @map("end_date") @db.Timestamptz(6)
-  status        String   @default("active") // "active", "completed"
-  earnedAmount  Int?     @map("earned_amount")
-  user          Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  amount       Int
+  yieldRate    Float    @map("yield_rate")
+  startDate    DateTime @default(now()) @map("start_date") @db.Timestamptz(6)
+  endDate      DateTime @map("end_date") @db.Timestamptz(6)
+  status       String   @default("active") // "active", "completed"
+  earnedAmount Int?     @map("earned_amount")
+  user         Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@index([userId])
   @@map("staking_positions")

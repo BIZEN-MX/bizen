@@ -11,6 +11,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    let canClaimBonus = false;
+
     // 1. Fetch Profile to get real Bizcoins
     let profile = await prisma.profile.findUnique({
       where: { userId: user.id }
@@ -27,7 +29,16 @@ export async function GET(req: Request) {
       });
     }
 
-    let canClaimBonus = false;
+    // Unified Bonus Check: Check if bonus was ever claimed via transaction log
+    const bonusTx = await prisma.walletTransaction.findFirst({
+      where: { 
+        userId: user.id, 
+        description: { 
+          contains: "Bono de Bienvenida: BIZEN Market",
+        } 
+      }
+    });
+
     let portfolio = await prisma.simulator_portfolios.findFirst({
       where: { user_id: user.id },
       include: {
@@ -38,7 +49,7 @@ export async function GET(req: Request) {
       }
     });
 
-    // Initial Creation if missing
+    // 1. Initial Creation or Migration Logic
     if (!portfolio) {
       portfolio = await prisma.simulator_portfolios.create({
         data: {
@@ -49,22 +60,21 @@ export async function GET(req: Request) {
         },
         include: { holdings: true, orders: true }
       });
-      // Check if they ever claimed the bonus
-      const bonusTx = await prisma.walletTransaction.findFirst({
-        where: { userId: user.id, description: { contains: "Bono de Bienvenida: BIZEN Market" } }
-      });
-      if (!bonusTx) canClaimBonus = true;
-    } else if (portfolio.currency === 'USD') {
-      // Legacy USD portfolios need to migrate AND get the bonus if not already awarded
-      canClaimBonus = true;
+      canClaimBonus = !bonusTx;
     } else {
-      // Portfolio already in BIZCOINS, check if bonus was ever claimed
-      const bonusTx = await prisma.walletTransaction.findFirst({
-        where: { userId: user.id, description: { contains: "Bono de Bienvenida: BIZEN Market" } }
-      });
-      if (!bonusTx) canClaimBonus = true;
+      // 2. Migration from USD to BIZCOINS if needed
+      if (portfolio.currency === 'USD') {
+          portfolio = await prisma.simulator_portfolios.update({
+            where: { id: portfolio.id },
+            data: { 
+                currency: 'BIZCOINS',
+                cash_balance: profile.bizcoins || 0
+            },
+            include: { holdings: true, orders: { orderBy: { placed_at: 'desc' } } }
+          });
+      }
 
-      // Sync cash_balance with real Bizcoins
+      // 3. Sync cash_balance with real Bizcoins from Profile
       if (Number(portfolio.cash_balance) !== (profile.bizcoins || 0)) {
         portfolio = await prisma.simulator_portfolios.update({
           where: { id: portfolio.id },
@@ -75,6 +85,9 @@ export async function GET(req: Request) {
           }
         });
       }
+      
+      // Banner should show ONLY if they haven't claimed the transaction yet
+      canClaimBonus = !bonusTx;
     }
 
     return NextResponse.json({ ...portfolio, canClaimBonus });

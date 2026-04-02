@@ -43,6 +43,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import PageLoader from "@/components/PageLoader";
 import { SaveRunButton } from "@/components/simulators/SaveRunButton";
 import BizenVirtualCard from "@/components/BizenVirtualCard";
+import { STOCK_METADATA } from "@/data/simulators/stock-metadata";
 
 const SECTOR_COLORS: Record<string, string> = {
   Tecnología: "#3b82f6",
@@ -126,6 +127,8 @@ const SYMBOL_DOMAINS: Record<string, string> = {
   DIS: "disney.com",
   NKE: "nike.com",
 };
+
+
 
 const StockLogo = ({
   symbol,
@@ -232,7 +235,7 @@ function StockSimulatorContent() {
   const [portfolio, setPortfolio] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("portfolio");
   const [orderForm, setOrderForm] = useState({
-    symbol: "VOO",
+    symbol: "",
     side: "buy",
     amount: 1000,
     qty: 0,
@@ -253,7 +256,24 @@ function StockSimulatorContent() {
   const [history, setHistory] = useState<any[]>([]);
   const [historyRange, setHistoryRange] = useState("1m");
   const [fetchingHistory, setFetchingHistory] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [fetchingRankings, setFetchingRankings] = useState(false);
   const orderFormRef = React.useRef<HTMLDivElement>(null);
+
+  const fetchRankings = async () => {
+    if (leaderboard.length > 0) return;
+    setFetchingRankings(true);
+    try {
+      const res = await fetch("/api/simulators/stocks/leaderboard");
+      if (res.ok) setLeaderboard(await res.json());
+    } catch {} finally {
+      setFetchingRankings(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "rankings") fetchRankings();
+  }, [activeTab]);
 
   const claimBonus = async () => {
     try {
@@ -439,9 +459,9 @@ function StockSimulatorContent() {
   }, [portfolio]);
   const tabs = [
     { id: "portfolio", label: "Mi Portafolio", icon: BarChart2 },
-    { id: "market", label: "Mercado + Orden", icon: TrendingUp },
+    { id: "market", label: "Mercado", icon: TrendingUp },
     { id: "orders", label: "Historial", icon: Clock },
-    { id: "challenges", label: "Misiones", icon: Target },
+    { id: "rankings", label: "Rankings", icon: Flame },
   ];
 
   if (loading || (user && !dataFetched)) return <PageLoader />;
@@ -1571,12 +1591,7 @@ function StockSimulatorContent() {
                         className="sim-stock-row"
                         onClick={() => {
                           setOrderForm((f) => ({ ...f, symbol: s.symbol }));
-                          setTimeout(() => {
-                            orderFormRef.current?.scrollIntoView({
-                              behavior: "smooth",
-                              block: "center",
-                            });
-                          }, 50);
+                          setOrderMsg(null);
                         }}
                         style={{
                           borderColor: isSelected ? "#10b981" : "#e2e8f0",
@@ -1710,63 +1725,108 @@ function StockSimulatorContent() {
                   })}
                 </div>
 
-                {/* Quick Order Form */}
-                <div
-                  ref={orderFormRef}
-                  style={{
-                    background: "linear-gradient(135deg,#0f172a,#1e293b)",
-                    borderRadius: 24,
-                    padding: "clamp(20px, 4vw, 32px)",
-                    color: "white",
-                    border: "2px solid rgba(16,185,129,0.2)",
-                    transition: "all 0.3s",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      marginBottom: 26,
-                    }}
-                  >
-                    <div
+                {/* Quick Order Form Modal */}
+                <AnimatePresence>
+                  {orderForm.symbol && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                       style={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: 10,
-                        background: "rgba(16,185,129,0.2)",
-                        border: "1px solid rgba(16,185,129,0.3)",
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: "rgba(11, 30, 94, 0.4)",
+                        backdropFilter: "blur(8px)",
+                        zIndex: 9999,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        padding: "24px",
                       }}
+                      onClick={() => setOrderForm((f) => ({ ...f, symbol: "" }))}
                     >
-                      <Zap size={18} color="#10b981" />
-                    </div>
-                    <h3
-                      style={{
-                        fontWeight: 500,
-                        fontSize: 18,
-                        margin: 0,
-                        color: "white",
-                      }}
-                    >
-                      Colocar Orden
-                    </h3>
-                    {orderForm.symbol && (
-                      <div
+                      <motion.div
+                        ref={orderFormRef}
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         style={{
-                          marginLeft: "auto",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                          background: "rgba(255,255,255,0.05)",
-                          padding: "6px 14px",
-                          borderRadius: 12,
-                          border: "1px solid rgba(255,255,255,0.1)",
+                          width: "100%",
+                          maxWidth: 800,
+                          maxHeight: "95vh",
+                          overflowY: "auto",
+                          background: "linear-gradient(135deg,#0f172a,#1e293b)",
+                          borderRadius: 24,
+                          padding: "clamp(20px, 4vw, 32px)",
+                          color: "white",
+                          border: "2px solid rgba(16,185,129,0.2)",
+                          boxShadow: "0 24px 50px rgba(0,0,0,0.5)",
                         }}
+                        onClick={(e) => e.stopPropagation()}
                       >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                            marginBottom: 26,
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: 10,
+                              background: "rgba(16,185,129,0.2)",
+                              border: "1px solid rgba(16,185,129,0.3)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Zap size={18} color="#10b981" />
+                          </div>
+                          <h3
+                            style={{
+                              fontWeight: 500,
+                              fontSize: 18,
+                              margin: 0,
+                              color: "white",
+                            }}
+                          >
+                            Colocar Orden
+                          </h3>
+                          <button
+                            onClick={() => setOrderForm((f) => ({ ...f, symbol: "" }))}
+                            style={{
+                              marginLeft: "auto",
+                              background: "none",
+                              border: "none",
+                              color: "rgba(255,255,255,0.5)",
+                              cursor: "pointer",
+                              padding: 4,
+                            }}
+                          >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          </button>
+                        </div>
+
+                        {orderForm.symbol && (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              background: "rgba(255,255,255,0.05)",
+                              padding: "10px 16px",
+                              borderRadius: 16,
+                              border: "1px solid rgba(255,255,255,0.1)",
+                              marginBottom: 24,
+                            }}
+                          >
                         {(() => {
                           const s = processedMarketData.find(
                             (st) => st.symbol === orderForm.symbol,
@@ -1797,7 +1857,49 @@ function StockSimulatorContent() {
                         })()}
                       </div>
                     )}
-                  </div>
+
+                  {/* Educational Context Widget */}
+                  {orderForm.symbol && (() => {
+                    const meta = STOCK_METADATA[orderForm.symbol] || {
+                      desc: `Estás invirtiendo en ${processedMarketData.find((m: any) => m.symbol === orderForm.symbol)?.name || orderForm.symbol}. Es importante investigar cada activo y diversificar tu portafolio.`,
+                      sector: "Mercado Global",
+                      risk: "Variable",
+                      stats: "Diversificación recomendada"
+                    };
+                    return (
+                      <div
+                        style={{
+                          marginBottom: 24,
+                          padding: "18px 20px",
+                          background: "linear-gradient(145deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02))",
+                          border: "1px solid rgba(16,185,129,0.25)",
+                          borderRadius: 16,
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                          <Activity size={18} color="#10b981" />
+                          <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "#10b981", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                            Inteligencia de Mercado
+                          </h4>
+                        </div>
+                        <p style={{ margin: "0 0 16px", fontSize: 14, color: "rgba(255,255,255,0.9)", lineHeight: 1.6 }}>
+                          {meta.desc}
+                        </p>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                          <span style={{ fontSize: 11, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", padding: "5px 12px", borderRadius: 8, color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", gap: 4 }}>
+                            <strong>Sector:</strong> {meta.sector}
+                          </span>
+                          <span style={{ fontSize: 11, background: meta.risk.includes("Alto") ? "rgba(239,68,68,0.15)" : meta.risk.includes("Medio") ? "rgba(245,158,11,0.15)" : "rgba(16,185,129,0.15)", border: `1px solid ${meta.risk.includes("Alto") ? "rgba(239,68,68,0.3)" : meta.risk.includes("Medio") ? "rgba(245,158,11,0.3)" : "rgba(16,185,129,0.3)"}`, color: meta.risk.includes("Alto") ? "#fca5a5" : meta.risk.includes("Medio") ? "#fcd34d" : "#6ee7b7", padding: "5px 12px", borderRadius: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                            <strong>Riesgo:</strong> {meta.risk}
+                          </span>
+                          <span style={{ fontSize: 11, background: "rgba(59,130,246,0.15)", border: "1px solid rgba(59,130,246,0.3)", padding: "5px 12px", borderRadius: 8, color: "#93c5fd", display: "flex", alignItems: "center", gap: 4 }}>
+                            <strong>Métrica Clave:</strong> {meta.stats}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Stock Chart */}
                   <div
@@ -1899,6 +2001,7 @@ function StockSimulatorContent() {
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
+
                   </div>
 
                   <div
@@ -2257,7 +2360,10 @@ function StockSimulatorContent() {
                       </p>
                     </div>
                   )}
-                </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
               </div>
             )}
 
@@ -2404,89 +2510,104 @@ function StockSimulatorContent() {
               </div>
             )}
 
-            {activeTab === "challenges" && (
+            {activeTab === "rankings" && (
               <div style={{ padding: "28px clamp(16px, 4vw, 32px)" }}>
-                <h2
-                  style={{
-                    fontSize: 19,
-                    fontWeight: 500,
-                    color: "#0B1E5E",
-                    margin: "0 0 6px",
-                  }}
-                >
-                  Misiones de Inversión
-                </h2>
-                <p
-                  style={{ fontSize: 13, color: "#64748b", margin: "0 0 22px" }}
-                >
-                  Completa misiones para ganar XP y dominar conceptos reales.
-                </p>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
-                    gap: 16,
-                  }}
-                >
-                  {CHALLENGES.map((c, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        border: "1px solid #e2e8f0",
-                        borderRadius: 20,
-                        padding: "20px 22px",
-                        background: "white",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                        display: "flex",
-                        gap: 14,
-                        alignItems: "flex-start",
-                        transition: "all 0.2s",
-                      }}
-                    >
-                      <div style={{ fontSize: 26, flexShrink: 0 }}>
-                        {c.icon}
-                      </div>
-                      <div>
-                        <p
-                          style={{
-                            fontWeight: 500,
-                            fontSize: 15,
-                            color: "#0B1E5E",
-                            margin: "0 0 5px",
-                          }}
-                        >
-                          {c.title}
-                        </p>
-                        <p
-                          style={{
-                            fontSize: 13,
-                            color: "#64748b",
-                            lineHeight: 1.6,
-                            margin: "0 0 10px",
-                          }}
-                        >
-                          {c.desc}
-                        </p>
-                        <span
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 500,
-                            padding: "3px 10px",
-                            background:
-                              "linear-gradient(135deg,#ddd6fe,#c4b5fd)",
-                            color: "#4c1d95",
-                            borderRadius: 99,
-                            textTransform: "uppercase" as const,
-                            letterSpacing: "0.06em",
-                          }}
-                        >
-                          {c.pts}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                  <Flame size={24} color="#f59e0b" style={{ flexShrink: 0 }} />
+                  <h2
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 600,
+                      color: "#0B1E5E",
+                      margin: 0,
+                    }}
+                  >
+                    Top Inversionistas
+                  </h2>
                 </div>
+                <p
+                  style={{ fontSize: 13, color: "#64748b", margin: "0 0 28px" }}
+                >
+                  Los mejores retornos de la comunidad evaluados en tiempo real contra el mercado.
+                </p>
+                
+                {fetchingRankings ? (
+                   <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>
+                     Cargando leaderboard mundial...
+                   </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {leaderboard.map((user, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          border: "1px solid #e2e8f0",
+                          borderRadius: 20,
+                          padding: "16px 24px",
+                          background: i === 0 ? "linear-gradient(to right, rgba(245,158,11,0.1), white)" : "white",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          transition: "all 0.2s",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                          <div style={{ 
+                            width: 32, 
+                            height: 32, 
+                            borderRadius: "50%", 
+                            background: i === 0 ? "#f59e0b" : i === 1 ? "#94a3b8" : i === 2 ? "#d97706" : "#f1f5f9", 
+                            color: i <= 2 ? "white" : "#64748b", 
+                            display: "flex", 
+                            alignItems: "center", 
+                            justifyContent: "center", 
+                            fontWeight: 800, 
+                            fontSize: 14 
+                          }}>
+                            {i + 1}
+                          </div>
+                          {user.userPicture ? (
+                            <img src={user.userPicture} alt="User" style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                          ) : (
+                            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#e2e8f0" }} />
+                          )}
+                          <div>
+                            <p style={{ fontWeight: 600, color: "#0B1E5E", fontSize: 15, margin: "0 0 2px" }}>
+                              {user.userName}
+                            </p>
+                            <p style={{ fontSize: 12, color: "#64748b", margin: 0 }}>
+                              Total BIZ: {Math.round(user.totalValue).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div style={{ textAlign: "right" }}>
+                          <span
+                            style={{
+                              fontSize: 14,
+                              fontWeight: 700,
+                              color: user.yield >= 0 ? "#10b981" : "#ef4444",
+                              background: user.yield >= 0 ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                              padding: "6px 12px",
+                              borderRadius: 12,
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 4
+                            }}
+                          >
+                            {user.yield >= 0 ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+                            {user.yield > 0 ? "+" : ""}{user.yield.toFixed(2)}%
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                    {leaderboard.length === 0 && (
+                      <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>
+                        Aún no hay inversionistas registrados con Bizcoins. ¡Sé el primero!
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>

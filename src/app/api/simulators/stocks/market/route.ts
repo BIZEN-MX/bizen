@@ -12,10 +12,16 @@ export async function GET(req: Request) {
 
         // Fetch their historical prices (last 7 per symbol)
         const symbolNames = symbols.map(s => s.symbol);
+        
+        const dateLimit = new Date();
+        dateLimit.setDate(dateLimit.getDate() - 15); // Cover last 7 trading days safely
+
         const historyRows = await prisma.market_prices_eod.findMany({
-            where: { symbol: { in: symbolNames } },
-            orderBy: [{ symbol: 'asc' }, { date: 'desc' }],
-            take: symbolNames.length * 7 // Not perfect with distinct but we'll manually bucket
+            where: { 
+                symbol: { in: symbolNames },
+                date: { gte: dateLimit }
+            },
+            orderBy: [{ symbol: 'asc' }, { date: 'desc' }]
         });
 
         const historyMap = new Map();
