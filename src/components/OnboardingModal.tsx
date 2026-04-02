@@ -805,9 +805,10 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <motion.div
                       className="w-64 h-64 rounded-full"
-                      style={{ background: "radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)" }}
-                      animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      style={{ 
+                        background: "radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)",
+                        opacity: 0.6
+                      }}
                     />
                   </div>
 

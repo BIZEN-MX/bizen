@@ -147,14 +147,12 @@ export function Billy({
 
           {/* Resplandor (Glow) Ambientall */}
           {showGlow && (
-            <motion.div
-              animate={{
-                scale: [1, 1.15, 1],
-                opacity: [0.4, 0.7, 0.4],
-              }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            <div
               className="absolute inset-[-30%] rounded-full blur-[60px] z-[-2]"
-              style={{ background: `radial-gradient(circle, ${getGlowColor()} 0%, transparent 70%)` }}
+              style={{ 
+                background: `radial-gradient(circle, ${getGlowColor()} 0%, transparent 70%)`,
+                opacity: 0.5
+              }}
             />
           )}
 
