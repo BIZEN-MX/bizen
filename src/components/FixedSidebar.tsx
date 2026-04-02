@@ -252,7 +252,6 @@ export default function FixedSidebar() {
   const tiendaActive = isActivePath("/tienda")
   const rankingsActive = isActivePath("/rankings")
   const liveActive = isActivePath("/live")
-  const investmentsActive = isActivePath("/investments")
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
   const isStudentOrGuest = !isAdminOrTeacher
@@ -688,50 +687,6 @@ export default function FixedSidebar() {
                     </button>
                 )}
 
-                {/* ── INVERSIÓN BIZEN ── */}
-                {user && isStudentOrGuest && (
-                    <button
-                        data-tour-id="/investments"
-                        onClick={() => navigateTo("/investments")}
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            padding: "12px 14px",
-                            background: isCompactSidebar ? "transparent" : (investmentsActive ? "rgba(15, 98, 254, 0.12)" : "transparent"),
-                            border: "none",
-                            borderRadius: 10,
-                            cursor: "pointer",
-                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                            fontSize: 14,
-                            fontWeight: investmentsActive ? 500 : 400,
-                            textAlign: "left",
-                            color: investmentsActive ? "#0B71FE" : "#64748B",
-                            ...compactButtonOverrides(investmentsActive),
-                            position: "relative",
-                            overflow: "hidden",
-                            boxShadow: investmentsActive ? "0 4px 12px rgba(15, 98, 254, 0.12)" : "none"
-                        }}
-                        onMouseEnter={(e) => {
-                            if (!isCompactSidebar) {
-                                e.currentTarget.style.background = investmentsActive ? "rgba(15, 98, 254, 0.18)" : "#F1F5F9"
-                                e.currentTarget.style.color = "#0B71FE"
-                            }
-                        }}
-                        onMouseLeave={(e) => {
-                            if (!isCompactSidebar) {
-                                e.currentTarget.style.background = investmentsActive ? "rgba(15, 98, 254, 0.12)" : "transparent"
-                                e.currentTarget.style.color = investmentsActive ? "#0B71FE" : "#64748B"
-                            }
-                        }}
-                    >
-                        {investmentsActive && (
-                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
-                        )}
-                        <TrendingUp size={iconSize} strokeWidth={investmentsActive ? 2.5 : 2} />
-                        <span className="nav-item-label">Inversión BIZEN</span>
-                    </button>
-                )}
 
                 {/* ── COMUNIDAD ── */}
                 {user && isStudentOrGuest && (

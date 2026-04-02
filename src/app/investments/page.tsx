@@ -376,21 +376,56 @@ export default function InvestmentsPage() {
                     Resumen del Contrato <ShieldCheck size={24} color="#10B981" />
                   </h3>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 24, marginBottom: 40 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>Inversión Inicial</span>
-                      <span style={{ fontWeight: 800, fontSize: 18 }}>{amount.toLocaleString()} BC</span>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}
+                  >
+                    <motion.div 
+                      whileHover={{ scale: 1.02 }}
+                      style={{ background: "rgba(255,255,255,0.03)", padding: "20px 16px", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 4 }}
+                    >
+                      <span style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Inversión</span>
+                      <span style={{ fontWeight: 900, fontSize: 20, letterSpacing: "-0.02em" }}>{amount.toLocaleString()} <span style={{ fontSize: 12, opacity: 0.5, fontWeight: 500 }}>BC</span></span>
+                    </motion.div>
+                    <motion.div 
+                      key={animatedReturn}
+                      initial={{ scale: 0.95 }}
+                      animate={{ scale: 1 }}
+                      whileHover={{ scale: 1.02 }}
+                      style={{ background: "rgba(16,185,129,0.05)", padding: "20px 16px", borderRadius: 20, border: "1px solid rgba(16,185,129,0.1)", display: "flex", flexDirection: "column", gap: 4 }}
+                    >
+                      <span style={{ fontSize: 10, fontWeight: 800, color: "#10B981", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ganancia</span>
+                      <span style={{ fontWeight: 900, fontSize: 20, color: "#10B981", letterSpacing: "-0.02em" }}>+{animatedReturn.toLocaleString()} <span style={{ fontSize: 12, opacity: 0.8, fontWeight: 500 }}>BC</span></span>
+                    </motion.div>
+                  </motion.div>
+
+                  <motion.div 
+                    key={selectedPlan.id}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    style={{ background: selectedPlan.gradient, padding: "24px", borderRadius: 24, marginBottom: 24, boxShadow: `0 15px 35px ${selectedPlan.glow}`, position: "relative", overflow: "hidden" }}
+                  >
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)", transform: "translateX(-100%)", animation: "shimmer 3s infinite" }} />
+                    <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <span style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: 4 }}>Total a Liquidar</span>
+                        <motion.span 
+                          key={animatedTotal}
+                          initial={{ opacity: 0.5 }}
+                          animate={{ opacity: 1 }}
+                          style={{ fontWeight: 950, fontSize: 28, color: "#fff", letterSpacing: "-0.04em" }}
+                        >
+                          {animatedTotal.toLocaleString()} BC
+                        </motion.span>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <span style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: 4 }}>Plazo</span>
+                        <span style={{ fontWeight: 900, fontSize: 18, color: "#fff" }}>{selectedPlan.days} Días</span>
+                      </div>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 500 }}>Rendimiento</span>
-                      <span style={{ fontWeight: 900, fontSize: 18, color: "#10B981" }}>+{animatedReturn.toLocaleString()} BC de ganancia</span>
-                    </div>
-                    <div style={{ height: 1, background: "rgba(255,255,255,0.06)" }} />
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ color: "#fff", fontWeight: 700 }}>Total a Recibir</span>
-                      <span style={{ fontWeight: 950, fontSize: 24, color: "#fff" }}>{animatedTotal.toLocaleString()} BC en {selectedPlan.days} días</span>
-                    </div>
-                  </div>
+                  </motion.div>
 
                   <div style={{ background: "rgba(15, 98, 254, 0.05)", border: "1px solid rgba(15, 98, 254, 0.15)", borderRadius: 20, padding: "20px", display: "flex", gap: 12, marginBottom: 32 }}>
                     <Info size={20} color="#0F62FE" style={{ flexShrink: 0 }} />
@@ -399,7 +434,9 @@ export default function InvestmentsPage() {
                     </p>
                   </div>
 
-                  <button 
+                  <motion.button 
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={handleSubmit}
                     disabled={isSubmitting || amount <= 0 || amount > bizcoins}
                     style={{ 
@@ -421,14 +458,18 @@ export default function InvestmentsPage() {
                     }}
                   >
                     {isSubmitting ? <Loader2 size={24} className="animate-spin" /> : <><Sparkles size={20} /> Iniciar Inversión</>}
-                  </button>
+                  </motion.button>
                   
                   {error && <div style={{ marginTop: 16, textAlign: "center", color: "#ef4444", fontWeight: 700, fontSize: 14 }}>{error}</div>}
                   
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 24, opacity: 0.3 }}>
-                    <Lock size={12} />
-                    <span style={{ fontSize: 11, fontWeight: 600 }}>Protocolo BIZEN Ledger v2.1 Activo</span>
-                  </div>
+                  <motion.div 
+                    animate={{ opacity: [0.2, 0.5, 0.2] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 24 }}
+                  >
+                    <Lock size={12} color="#0F62FE" />
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: "0.05em" }}>Protocolo BIZEN Ledger v2.1 Activo</span>
+                  </motion.div>
                 </div>
               </aside>
 

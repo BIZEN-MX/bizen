@@ -933,7 +933,7 @@ export default function ProfilePage() {
                 }} 
                 onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
                 onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
-                onClick={() => setIsStakingModalOpen(true)}>
+                onClick={() => router.push("/investments")}>
                    <Zap size={16} fill="white" /> 
                    <span>Gestionar Inversiones</span>
                 </button>
