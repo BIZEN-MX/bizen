@@ -197,6 +197,16 @@ export default function InvestmentsPage() {
            background: rgba(255, 255, 255, 0.05);
            border-color: rgba(15, 98, 254, 0.3);
         }
+
+        /* Hide number arrows */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
       `}</style>
 
       {/* Decorative Orbs */}
@@ -219,7 +229,6 @@ export default function InvestmentsPage() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
                 <h1 style={{ fontSize: 32, fontWeight: 900, margin: 0, letterSpacing: "-0.03em" }}>Inversión BIZEN</h1>
-                <span style={{ padding: "4px 12px", background: "#ef4444", color: "white", borderRadius: 8, fontSize: 11, fontWeight: 900, letterSpacing: "0.05em" }}>LIVE</span>
               </div>
               <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", margin: 0, fontWeight: 500 }}>
                 Pon tus Bizcoins a trabajar para ti.

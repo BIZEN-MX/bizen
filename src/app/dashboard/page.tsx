@@ -570,7 +570,7 @@ function DashboardContent() {
             />
           </div>
           <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-            {isSyncing ? "Sincronizando..." : "En vivo"}
+            {isSyncing ? "Sincronizando..." : "Conectado"}
           </span>
         </motion.div>
 
@@ -989,77 +989,127 @@ function DashboardContent() {
         ══════════════════════════════════════════════════════════ */}
         <div className="dual-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:16,marginBottom:24,alignItems:"start"}}>
 
-          {/* Weekly Activity */}
-          <motion.div 
+          {/* Weekly Activity — Enhanced */}
+          <motion.div
             variants={{
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 }
             }}
             style={{
-              background:"#fff",borderRadius:24,padding:"24px",
-              border:"1.5px solid rgba(0,0,0,.055)",
-              boxShadow:"0 4px 15px rgba(0,0,0,.03)"
+              background: "linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%)",
+              borderRadius: 28,
+              padding: "28px 24px",
+              border: "1.5px solid rgba(99,102,241,0.2)",
+              boxShadow: "0 8px 32px rgba(99,102,241,0.12)",
+              position: "relative",
+              overflow: "hidden"
             }}
           >
-            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:24}}>
-              <div style={{width:46,height:46,borderRadius:14,background:"linear-gradient(135deg,#dbeafe,#bfdbfe)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 12px rgba(59,130,246,.15)"}}>
-                <IcoCalendar size={22} color="#3b82f6" strokeWidth={2}/>
-              </div>
-              <div>
-                <div style={{fontSize:16,fontWeight:800,color:"#0f172a"}}>Actividad Semanal</div>
-                <div style={{fontSize:12,color:"#94a3b8",fontWeight:600,marginTop:2}}>
-                  {Array.from(activeSet).filter(d=>days.includes(d)).length} de 7 días activos
+            {/* Background glows */}
+            <div style={{ position: "absolute", top: "-30%", right: "-10%", width: 200, height: 200, background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", bottom: "-20%", left: "-5%", width: 150, height: 150, background: "radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+
+            {/* Header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, position: "relative", zIndex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg, #6366f1, #8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(99,102,241,0.4)" }}>
+                  <IcoCalendar size={20} color="#fff" strokeWidth={2.2}/>
+                </div>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>Actividad Semanal</div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontWeight: 600, marginTop: 2 }}>
+                    {Array.from(activeSet).filter(d => days.includes(d)).length} de 7 días activos
+                  </div>
                 </div>
               </div>
+              {streak > 0 && (
+                <motion.div
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ repeat: Infinity, duration: 2.5 }}
+                  style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(251,146,60,0.15)", border: "1px solid rgba(251,146,60,0.35)", borderRadius: 12, padding: "6px 12px" }}
+                >
+                  <Flame size={14} style={{ color: "#fb923c" }} />
+                  <span style={{ fontSize: 13, fontWeight: 900, color: "#fb923c" }}>{streak}d</span>
+                </motion.div>
+              )}
             </div>
 
-            <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
-              {days.map((day,i) => {
+            {/* Animated bar chart */}
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-end", height: 80, marginBottom: 14, position: "relative", zIndex: 1 }}>
+              {days.map((day, i) => {
                 const active  = activeSet.has(day)
                 const isToday = day === todayStr
+                const barHeight = active ? 64 : isToday ? 40 : 18 + (i % 3) * 5
                 return (
-                  <motion.div 
-                    key={day} 
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1 + (i * 0.1) }}
-                    style={{display:"flex",flexDirection:"column",alignItems:"center",gap:9,flex:1}}
-                  >
-                    <motion.div 
-                      className="dd" 
+                  <div key={day} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flex: 1 }}>
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: barHeight, opacity: 1 }}
+                      transition={{ delay: 0.4 + i * 0.08, duration: 0.5, ease: "easeOut" }}
                       style={{
+                        width: "100%",
+                        borderRadius: 8,
                         background: active
-                          ? "linear-gradient(135deg,#10b981,#059669)"
-                          : isToday ? "#f0f9ff" : "#f8fafc",
-                        border: isToday ? "2px solid #3b82f6" : active ? "2px solid #059669" : "2px solid transparent",
-                        boxShadow: active ? "0 4px 12px rgba(16,185,129,.35)" : "none",
-                        transition: "all 0.2s ease"
+                          ? "linear-gradient(180deg, #10b981 0%, #059669 100%)"
+                          : isToday
+                          ? "rgba(99,102,241,0.5)"
+                          : "rgba(255,255,255,0.07)",
+                        boxShadow: active ? "0 4px 16px rgba(16,185,129,0.4)" : "none",
+                        border: isToday && !active ? "1px solid rgba(99,102,241,0.4)" : "none",
+                        position: "relative",
+                        overflow: "hidden"
                       }}
                     >
-                      {active
-                        ? <IcoCheck size={14} color="#fff"/>
-                        : <span style={{fontSize:10,fontWeight:800,color:isToday?"#3b82f6":"#cbd5e1"}}>·</span>
-                      }
+                      {active && (
+                        <motion.div
+                          animate={{ y: ["-100%", "200%"] }}
+                          transition={{ repeat: Infinity, duration: 2, ease: "linear", delay: i * 0.15 }}
+                          style={{ position: "absolute", inset: "0 0 auto", height: "50%", background: "linear-gradient(180deg, rgba(255,255,255,0.22), transparent)", borderRadius: 8 }}
+                        />
+                      )}
                     </motion.div>
-                    <span style={{fontSize:11,fontWeight:800,color:isToday?"#3b82f6":"#94a3b8",textTransform:"uppercase",letterSpacing: "0.05em"}}>
+                    <span style={{ fontSize: 10, fontWeight: 800, color: active ? "#10b981" : isToday ? "#818cf8" : "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       {DAY_LABELS[i]}
                     </span>
-                  </motion.div>
+                  </div>
                 )
               })}
             </div>
 
-            {/* streak row */}
-            <motion.div 
+            {/* Week progress bar */}
+            <div style={{ position: "relative", zIndex: 1, marginBottom: 18 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Progreso semanal</span>
+                <span style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.5)" }}>
+                  {Array.from(activeSet).filter(d => days.includes(d)).length}/7
+                </span>
+              </div>
+              <div style={{ height: 5, background: "rgba(255,255,255,0.08)", borderRadius: 99, overflow: "hidden" }}>
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(Array.from(activeSet).filter(d => days.includes(d)).length / 7) * 100}%` }}
+                  transition={{ duration: 1, delay: 0.9, ease: "easeOut" }}
+                  style={{ height: "100%", background: "linear-gradient(90deg, #6366f1, #10b981)", borderRadius: 99 }}
+                />
+              </div>
+            </div>
+
+            {/* Streak footer */}
+            <motion.div
               onClick={() => router.push("/profile")}
-              style={{marginTop:24,padding:"14px 16px",background:"#f8fafc",borderRadius:16,display:"flex",alignItems:"center",gap:10, cursor: "pointer", border: "1px solid #f1f5f9", transition: "all 0.2s"}} 
+              style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.05)", borderRadius: 16, padding: "12px 16px", cursor: "pointer", border: "1px solid rgba(255,255,255,0.07)", position: "relative", zIndex: 1 }}
             >
               <motion.div animate={streak > 0 ? { rotate: [0, 15, 0] } : {}} transition={{ repeat: Infinity, duration: 2 }}>
-                <Flame size={18} style={{color:"#f97316"}}/>
+                <Flame size={16} style={{ color: streak > 0 ? "#fb923c" : "rgba(255,255,255,0.2)" }} />
               </motion.div>
-              <span style={{fontSize:13,fontWeight:700,color:"#475569"}}>
-                {streak>0 ? `Racha activa de ${streak} días` : "Completa el reto de hoy para iniciar tu racha"}
+              <span style={{ fontSize: 12, fontWeight: 700, color: streak > 0 ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.3)", flex: 1 }}>
+                {streak > 0 ? `Racha activa de ${streak} día${streak === 1 ? "" : "s"}` : "Completa el reto de hoy para iniciar tu racha"}
               </span>
+              {streak > 0 && (
+                <span style={{ fontSize: 11, fontWeight: 800, color: "#fb923c", background: "rgba(251,146,60,0.15)", padding: "3px 9px", borderRadius: 8 }}>
+                  🔥 {streak}d
+                </span>
+              )}
             </motion.div>
           </motion.div>
 
@@ -1087,7 +1137,7 @@ function DashboardContent() {
                  </div>
                </div>
                <motion.div 
-                 onClick={() => setIsHistoryModalOpen(true)}
+                 onClick={() => router.push("/historial")}
                  style={{ display: "flex", alignItems: "center", gap: 8, background: "#f0f7ff", padding: "8px 14px", borderRadius: 12, border: "1px solid #bfdbfe", cursor: "pointer" }}
                >
                   <Coins size={14} color="#0F62FE" />
@@ -1133,7 +1183,7 @@ function DashboardContent() {
                         cursor: "pointer",
                         transition: "all 0.2s"
                       }}
-                      onClick={() => setIsHistoryModalOpen(true)}
+                      onClick={() => router.push("/historial")}
                     >
                       <div style={{ 
                         width: 40, 
@@ -1168,7 +1218,7 @@ function DashboardContent() {
             </div>
             
             <motion.button 
-              onClick={() => setIsHistoryModalOpen(true)} 
+              onClick={() => router.push("/historial")} 
               style={{ marginTop: 16, width: "100%", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "12px", borderRadius: 14, fontSize: 13, fontWeight: 800, color: "#475569", cursor: "pointer", transition: "all 0.2s" }}
             >
               Ver historial completo
