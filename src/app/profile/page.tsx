@@ -856,10 +856,28 @@ export default function ProfilePage() {
           {/* Savings Goals Section */}
           <div className="prof-card fade-up" style={{ animationDelay: "0.25s" }}>
             <div style={{ padding: "16px 20px", borderBottom: "1.5px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: 10 }}>
+              <h3 
+                onClick={() => router.push("/metas")}
+                style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
+              >
                 <Target size={18} color="#10B981" /> Metas de Ahorro
               </h3>
-              <PlusCircle size={16} color="#64748b" style={{ cursor: "pointer" }} onClick={() => router.push("/tienda")} />
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {goals.length > 0 && (
+                  <button 
+                    onClick={() => router.push("/metas")}
+                    style={{ fontSize: 11, fontWeight: 700, color: "#10B981", background: "rgba(16,185,129,0.08)", padding: "4px 12px", borderRadius: 99, border: "none", cursor: "pointer" }}
+                  >
+                    Ver Todo
+                  </button>
+                )}
+                <PlusCircle 
+                  size={18} 
+                  color="#10B981" 
+                  style={{ cursor: "pointer", opacity: 0.8 }} 
+                  onClick={() => router.push("/metas")} 
+                />
+              </div>
             </div>
 
             <div style={{ padding: "14px 20px" }}>
@@ -904,9 +922,28 @@ export default function ProfilePage() {
           {/* Staking Section */}
           <div className="prof-card fade-up" style={{ animationDelay: "0.28s" }}>
              <div style={{ padding: "16px 20px", borderBottom: "1.5px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: 10 }}>
+                <h3 
+                  onClick={() => router.push("/investments")}
+                  style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
+                >
                    <Zap size={18} color="#8B5CF6" /> Inversión BIZEN
                 </h3>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {staking.length > 0 && (
+                    <button 
+                      onClick={() => router.push("/investments")}
+                      style={{ fontSize: 11, fontWeight: 700, color: "#8B5CF6", background: "rgba(139,92,246,0.08)", padding: "4px 12px", borderRadius: 99, border: "none", cursor: "pointer" }}
+                    >
+                      Ver Todo
+                    </button>
+                  )}
+                  <PlusCircle 
+                    size={18} 
+                    color="#8B5CF6" 
+                    style={{ cursor: "pointer", opacity: 0.8 }} 
+                    onClick={() => router.push("/investments")} 
+                  />
+                </div>
              </div>
              
              <div style={{ padding: "14px 20px" }}>

@@ -155,118 +155,86 @@ function BizenCard({
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Top row: Brand + Chip */}
-        <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 28, height: 28, borderRadius: 8, background: accentColor, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 15px ${accentGlow}` }}>
-              <Sparkles size={16} color="white" />
+        {/* Top row: Brand Logo + Wireless icon */}
+        <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <div style={{ 
+              fontSize: 22, 
+              fontWeight: 950, 
+              color: "white", 
+              letterSpacing: "-0.05em", 
+              lineHeight: 1,
+              background: "linear-gradient(to bottom, #fff, rgba(255,255,255,0.7))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent"
+            }}>
+              BIZEN
             </div>
-            <div>
-              <span style={{ fontSize: 18, fontWeight: 900, color: "white", letterSpacing: -0.5, display: "block", lineHeight: 1 }}>BIZEN</span>
-              <span style={{ fontSize: 8, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase" }}>Financial</span>
+            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", marginTop: 2 }}>
+              Digital Card
             </div>
           </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Wifi size={18} color="rgba(255,255,255,0.2)" style={{ transform: "rotate(90deg)" }} />
-            <motion.div
-              style={{
-                width: 40,
-                height: 30,
-                borderRadius: 6,
-                background: "linear-gradient(135deg, #d4a843 0%, #f0c060 40%, #c49030 100%)",
-                boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "1px solid rgba(255,255,255,0.2)",
-              }}
-              animate={highlight === "transfer" ? { scale: [1, 1.05, 1], filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"] } : {}}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <div style={{ width: 26, height: 18, borderRadius: 3, border: "1px solid rgba(0,0,0,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, padding: 3 }}>
-                {[0, 1, 2, 3].map(i => <div key={i} style={{ background: "rgba(0,0,0,0.1)", borderRadius: 1 }} />)}
-              </div>
-            </motion.div>
+          <div style={{ opacity: 0.4 }}>
+            <Wifi size={20} color="white" style={{ transform: "rotate(90deg)" }} />
           </div>
         </div>
 
-        {/* Balance section */}
+        {/* Balance section (Centered & Prominent) */}
         <motion.div
           style={{ position: "relative", zIndex: 2 }}
           animate={highlight === "balance" ? { scale: [1, 1.02, 1] } : {}}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>Disponible</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
             <motion.span
               style={{
-                fontSize: "clamp(30px, 7vw, 36px)",
-                fontWeight: 900,
+                fontSize: "clamp(34px, 8vw, 44px)",
+                fontWeight: 950,
                 color: "white",
-                letterSpacing: -1,
-                textShadow: highlight === "balance" ? `0 0 20px ${accentGlow}` : "none",
+                letterSpacing: "-0.04em",
+                textShadow: highlight === "balance" ? `0 0 30px ${accentGlow}` : "0 2px 10px rgba(0,0,0,0.3)",
                 transition: "text-shadow 0.5s",
               }}
             >
               0
             </motion.span>
-            <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>BZC</span>
+            <span style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", fontWeight: 800, letterSpacing: "0.05em" }}>BC</span>
           </div>
-          <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: -2 }}>Bizcoins Balance</div>
         </motion.div>
 
-        {/* Action buttons row */}
-        <div style={{ position: "relative", zIndex: 2, display: "flex", gap: 6 }}>
-          {[
-            { label: "Transferir", icon: ArrowLeftRight, id: "transfer" },
-            { label: "Canjear", icon: Gift, id: "redeem" },
-            { label: "Tienda", icon: ShoppingBag, id: "store" },
-            { label: "Invertir", icon: TrendingUp, id: "invest" },
-          ].map((btn) => {
-            const isActive = highlight === btn.id
-            return (
-              <motion.div
-                key={btn.id}
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 3,
-                  padding: "6px 2px",
-                  borderRadius: 10,
-                  background: isActive ? `${accentColor}22` : "rgba(255,255,255,0.03)",
-                  border: isActive ? `1px solid ${accentColor}88` : "1px solid rgba(255,255,255,0.05)",
-                  transition: "all 0.4s ease",
-                  boxShadow: isActive ? `0 0 15px ${accentGlow}` : "none",
-                }}
-                animate={isActive ? { scale: [1, 1.05, 1] } : { scale: 1 }}
-                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <btn.icon size={13} color={isActive ? accentColor : "rgba(255,255,255,0.3)"} />
-                <span style={{ fontSize: 7, fontWeight: 700, color: isActive ? "white" : "rgba(255,255,255,0.25)", letterSpacing: 0.2, textTransform: "uppercase" }}>
-                  {btn.label}
-                </span>
-              </motion.div>
-            )
-          })}
-        </div>
-
-        {/* Bottom row: User + Logo */}
+        {/* Bottom row: Chip + Holder details */}
         <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: "50%", overflow: "hidden", border: `2px solid ${accentColor}`, boxShadow: `0 0 10px ${accentGlow}` }}>
-              <AvatarDisplay avatar={avatar} size={34} />
-            </div>
-            <div>
-              <div style={{ fontSize: 12, fontWeight: 900, color: "white", letterSpacing: -0.2 }}>@{username || "usuario"}</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>•••• 0001</div>
-            </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+             {/* Virtual Chip */}
+             <div style={{ 
+               width: 38, 
+               height: 28, 
+               borderRadius: 6, 
+               background: "linear-gradient(135deg, #d4a843 0%, #f0c060 40%, #c49030 100%)",
+               border: "1px solid rgba(255,255,255,0.2)",
+               display: "flex",
+               alignItems: "center",
+               justifyContent: "center",
+               boxShadow: "0 4px 10px rgba(0,0,0,0.3)"
+             }}>
+               <div style={{ width: 24, height: 18, border: "1px solid rgba(0,0,0,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, padding: 2 }}>
+                 {[0,1,2,3].map(i => <div key={i} style={{ background: "rgba(0,0,0,0.05)", borderRadius: 1 }} />)}
+               </div>
+             </div>
+
+             <div>
+               <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Titular</div>
+               <div style={{ fontSize: 13, fontWeight: 800, color: "white", letterSpacing: "0.02em" }}>@{username || "usuario"}</div>
+             </div>
           </div>
 
-          <div style={{ width: 40, height: 24, position: "relative" }}>
-            <div style={{ position: "absolute", right: 0, width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }} />
-            <div style={{ position: "absolute", right: 12, width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }} />
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 600, letterSpacing: "0.15em", fontFamily: "monospace" }}>•••• 0001</div>
+            <div style={{ display: "flex", gap: -5, justifyContent: "flex-end", marginTop: 8 }}>
+               <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.1)" }} />
+               <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.05)", marginLeft: -10 }} />
+            </div>
           </div>
         </div>
       </motion.div>
@@ -681,42 +649,71 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                   />
                 </motion.div>
 
-                {/* Feature highlight pills */}
-                <div className="flex gap-2 justify-center flex-wrap">
-                  {WALLET_FEATURES.map((feat, i) => (
-                    <button key={feat.id} onClick={() => setActiveFeatureIdx(i)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border"
-                      style={{
-                        background: activeFeatureIdx === i ? `${feat.color}20` : "rgba(255,255,255,0.04)",
-                        borderColor: activeFeatureIdx === i ? `${feat.color}60` : "rgba(255,255,255,0.08)",
-                        color: activeFeatureIdx === i ? feat.color : "rgba(255,255,255,0.4)",
-                        transform: activeFeatureIdx === i ? "scale(1.05)" : "scale(1)",
-                        boxShadow: activeFeatureIdx === i ? `0 0 12px ${feat.glow}` : "none",
-                      }}>
-                      <feat.icon size={11} />
-                      {feat.label}
-                    </button>
-                  ))}
+                {/* Feature highlight grid (Mini cuadros sacados de la tarjeta) */}
+                <div className="grid grid-cols-5 gap-2 px-2">
+                  {WALLET_FEATURES.map((feat, i) => {
+                    const isActive = activeFeatureIdx === i
+                    return (
+                      <button 
+                        key={feat.id} 
+                        onClick={() => setActiveFeatureIdx(i)}
+                        className="flex flex-col items-center gap-2 p-2 rounded-2xl transition-all border group relative overflow-hidden"
+                        style={{
+                          background: isActive ? `${feat.color}15` : "rgba(255,255,255,0.03)",
+                          borderColor: isActive ? `${feat.color}50` : "rgba(255,255,255,0.08)",
+                          boxShadow: isActive ? `0 8px 24px ${feat.glow}` : "none",
+                          transform: isActive ? "translateY(-4px)" : "translateY(0)",
+                        }}
+                      >
+                        {isActive && (
+                          <motion.div 
+                            layoutId="activeFeatureGlow"
+                            className="absolute inset-0 opacity-20"
+                            style={{ background: `radial-gradient(circle at center, ${feat.color}, transparent 70%)` }}
+                          />
+                        )}
+                        <div 
+                          className="w-10 h-10 rounded-xl flex items-center justify-center relative z-10 transition-transform group-hover:scale-110"
+                          style={{ 
+                            background: isActive ? feat.color : "rgba(255,255,255,0.05)",
+                            boxShadow: isActive ? `0 0 15px ${feat.glow}` : "none"
+                          }}
+                        >
+                          <feat.icon size={18} color={isActive ? "white" : "rgba(255,255,255,0.3)"} />
+                        </div>
+                        <span 
+                          className="text-[10px] font-black uppercase tracking-tighter relative z-10"
+                          style={{ color: isActive ? "white" : "rgba(255,255,255,0.25)" }}
+                        >
+                          {feat.label}
+                        </span>
+                      </button>
+                    )
+                  })}
                 </div>
 
-                {/* Active feature description */}
+                {/* Active feature description (Expanded) */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeFeature.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex items-start gap-3 p-4 rounded-2xl border"
-                    style={{ background: `${activeFeature.color}08`, borderColor: `${activeFeature.color}25` }}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    className="p-5 rounded-3xl border relative overflow-hidden group"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${activeFeature.color}08, rgba(255,255,255,0.02))`, 
+                      borderColor: `${activeFeature.color}30` 
+                    }}
                   >
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{ background: `${activeFeature.color}20`, border: `1.5px solid ${activeFeature.color}40` }}>
-                      <activeFeature.icon size={17} style={{ color: activeFeature.color }} />
+                    <div 
+                      className="absolute -right-4 -bottom-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity"
+                      style={{ color: activeFeature.color }}
+                    >
+                      <activeFeature.icon size={120} />
                     </div>
-                    <div>
-                      <p className="text-sm font-black mb-0.5" style={{ color: activeFeature.color }}>{activeFeature.label}</p>
-                      <p className="text-sm text-slate-400 leading-relaxed">{activeFeature.desc}</p>
+                    <div className="relative z-10 space-y-2">
+                       <h4 className="text-lg font-black" style={{ color: activeFeature.color }}>{activeFeature.label}</h4>
+                       <p className="text-slate-400 text-sm leading-relaxed max-w-[90%]">{activeFeature.desc}</p>
                     </div>
                   </motion.div>
                 </AnimatePresence>
