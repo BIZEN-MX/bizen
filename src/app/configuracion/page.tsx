@@ -13,6 +13,7 @@ import {
   Phone, Calendar, School, Instagram, ChevronDown
 } from "lucide-react"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import BizenVirtualCard, { CardTheme } from "@/components/BizenVirtualCard"
 
 export const dynamic = 'force-dynamic'
 
@@ -225,6 +226,7 @@ function SettingsContent() {
   const [schoolId, setSchoolId]             = useState("")
   const [schools, setSchools]               = useState<{ id: string; name: string }[]>([])
   const [phone, setPhone]                   = useState("")
+  const [cardTheme, setCardTheme]           = useState<CardTheme>("blue")
   const inputBase: React.CSSProperties = {
     width: "100%", padding: "11px 14px", fontSize: 14, fontFamily: C.font,
     border: `1.5px solid ${C.border}`, borderRadius: C.rSm,
@@ -244,6 +246,7 @@ function SettingsContent() {
       else setBirthDate(user.user_metadata?.birth_date || "")
       setSchoolId(dbProfile.schoolId || user.user_metadata?.school_id || "")
       setAvatar(dbProfile.avatar || user.user_metadata?.avatar || { type: "character", id: "robot", character: "robot", label: "Robot" })
+      setCardTheme((dbProfile.cardTheme as CardTheme) || "blue")
       if (dbProfile.settings && Object.keys(dbProfile.settings).length > 0) updateSettings(dbProfile.settings)
     }
   }, [user, dbProfile])
@@ -296,7 +299,7 @@ function SettingsContent() {
 
   const saveProfile = () => doSave(async () => {
     await supabase!.auth.updateUser({ data: { full_name: fullName, username, bio, birth_date: birthDate, school_id: schoolId, avatar } })
-    await syncToDB({ fullName, username, bio, birthDate, schoolId, avatar, settings })
+    await syncToDB({ fullName, username, bio, birthDate, schoolId, avatar, settings, cardTheme })
   })
 
   const savePhone = () => doSave(async () => {
@@ -320,6 +323,7 @@ function SettingsContent() {
     { id: "general",        label: "General",         icon: <Settings size={15} color="white" /> },
     { id: "profile",        label: "Perfil",          icon: <User size={15} color="white" /> },
     { id: "account",        label: "Cuenta",          icon: <Lock size={15} color="white" /> },
+    { id: "card",           label: "Tarjeta BIZEN",   icon: <Award size={15} color="white" /> },
     ...(!isAdmin ? [
       { id: "notifications", label: "Notificaciones",  icon: <Bell size={15} color="white" /> },
       { id: "privacy",      label: "Privacidad",      icon: <Shield size={15} color="white" /> },
@@ -912,6 +916,89 @@ function SettingsContent() {
                   <div style={{ paddingBottom:4 }} />
                 </SectionCard>
                 <SaveBtn onClick={saveGlobalSettings} loading={saving} label="Guardar accesibilidad" />
+              </div>
+            )}
+
+            {/* ── BIZEN CARD CUSTOMIZATION ── */}
+            {activeSection === "card" && (
+              <div style={{ animation: "fadeUp .4s ease both" }}>
+                {/* Real-time Preview Area */}
+                <div style={{ 
+                  marginBottom: 32, display: "flex", flexDirection: "column", alignItems: "center",
+                  background: "rgba(0,0,0,0.02)", borderRadius: C.rLg, padding: "32px 20px",
+                  border: `1px dashed ${C.border}`
+                }}>
+                  <div style={{ 
+                    fontSize: 11, fontWeight: 700, color: C.textMuted, 
+                    textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 20 
+                  }}>
+                    Vista previa en tiempo real
+                  </div>
+                  <div style={{ width: "100%", maxWidth: 440 }}>
+                    <BizenVirtualCard 
+                      bizcoins={dbProfile?.bizcoins || 0}
+                      holderName={fullName || dbProfile?.fullName || "Usuario BIZEN"}
+                      colorTheme={cardTheme}
+                      level={dbProfile?.level || 1}
+                      pattern={settings.cardCustomizations?.pattern || "none"}
+                      showBillySticker={settings.cardCustomizations?.showBillySticker || false}
+                      hideButtons={true}
+                    />
+                  </div>
+                </div>
+
+                <SectionCard title="Tema de Color" icon={<Sparkles size={15} color="white" />}>
+                  <div style={{ paddingTop: 14, paddingBottom: 14 }}>
+                    <FieldLabel>Elige la personalidad de tu tarjeta</FieldLabel>
+                    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
+                      {(["blue", "emerald", "violet", "rose", "amber", "slate", "obsidian"] as CardTheme[]).map(t => (
+                        <button
+                          key={t}
+                          onClick={() => setCardTheme(t)}
+                          style={{
+                            width: 38, height: 38, borderRadius: "50%",
+                            border: `3px solid ${cardTheme === t ? C.blue : "transparent"}`,
+                            padding: 2, cursor: "pointer", background: "none", transition: "all .2s",
+                            boxShadow: cardTheme === t ? `0 4px 12px ${C.blue}40` : "none"
+                          }}
+                        >
+                          <div style={{ 
+                            width: "100%", height: "100%", borderRadius: "50%", 
+                            background: t === "obsidian" ? "#000" : t === "blue" ? "#0F62FE" : t === "emerald" ? "#10B981" : t === "violet" ? "#8B5CF6" : t === "rose" ? "#F43F5E" : t === "amber" ? "#F59E0B" : "#64748B"
+                          }} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </SectionCard>
+
+                <SectionCard title="Efectos Visuales" icon={<Award size={15} color="white" />}>
+                  <div style={{ paddingTop: 14 }}>
+                    <FieldLabel>Patrón de fondo</FieldLabel>
+                    <PillSelect 
+                      options={[
+                        { v: "none", l: "Estándar" },
+                        { v: "geometric", l: "Geométrico" },
+                        { v: "circuit", l: "Tech Circuit" }
+                      ]}
+                      value={settings.cardCustomizations?.pattern || "none"}
+                      onChange={v => updateSettings({ cardCustomizations: { ...settings.cardCustomizations, pattern: v as any } })}
+                    />
+                  </div>
+                  <div style={{ marginTop: 24 }}>
+                    <ToggleRow 
+                      label="Sello Billy Premium"
+                      desc="Añade un sticker holográfico exclusivo de Billy"
+                      checked={settings.cardCustomizations?.showBillySticker || false}
+                      onChange={v => updateSettings({ cardCustomizations: { ...settings.cardCustomizations, showBillySticker: v } })}
+                    />
+                  </div>
+                  <div style={{ paddingBottom: 8 }} />
+                </SectionCard>
+
+                <div style={{ marginTop: 24, display: "flex", alignItems: "center", gap: 12 }}>
+                  <SaveBtn onClick={saveProfile} loading={saving} label="Guardar diseño de tarjeta" />
+                </div>
               </div>
             )}
 

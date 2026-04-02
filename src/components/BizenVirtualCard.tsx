@@ -32,6 +32,8 @@ interface BizenVirtualCardProps {
   showTierBadge?: boolean  // show/hide the tier badge pill
   onTransferClick?: () => void // new prop for P2P transfer
   hideButtons?: boolean    // hide transfer/redeem buttons
+  pattern?: "none" | "geometric" | "circuit" | "dots"
+  showBillySticker?: boolean
 }
 
 const THEMES: Record<CardTheme, {
@@ -192,6 +194,50 @@ function LegendaryOverlay({ isHovered }: { isHovered: boolean }) {
   )
 }
 
+// Geometric pattern: subtle diamonds
+function GeometricOverlay() {
+  return (
+    <div style={{
+      position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0l20 20-20 20L0 20z' fill='none' stroke='white' stroke-width='1' opacity='0.03'/%3E%3C/svg%3E")`,
+      backgroundRepeat: "repeat",
+      opacity: 0.8,
+    }} />
+  )
+}
+
+// Circuit pattern: tech-inspired lines
+function CircuitOverlay() {
+  return (
+    <div style={{
+      position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10h20v20M50 10v40h30M10 70v20h40M80 80h10v10' fill='none' stroke='white' stroke-width='1' opacity='0.04'/%3E%3Ccircle cx='10' cy='10' r='2' fill='white' opacity='0.05'/%3E%3Ccircle cx='90' cy='90' r='2' fill='white' opacity='0.05'/%3E%3C/svg%3E")`,
+      backgroundRepeat: "repeat",
+      backgroundSize: "80px 80px",
+      opacity: 0.9,
+    }} />
+  )
+}
+
+// Billy Sticker: holographic badge
+function BillySticker() {
+  return (
+    <div style={{
+      position: "absolute", top: "50%", right: "20%", transform: "translateY(-50%)",
+      width: 48, height: 48, borderRadius: "50%",
+      background: "linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05))",
+      border: "1px solid rgba(255,255,255,0.3)",
+      backdropFilter: "blur(4px)",
+      zIndex: 6, display: "flex", alignItems: "center", justifyContent: "center",
+      boxShadow: "0 0 15px rgba(255,255,255,0.1), inset 0 0 10px rgba(255,255,255,0.1)",
+      overflow: "hidden"
+    }}>
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent)", animation: "bcHoloSweep 2s infinite" }} />
+      <span style={{ fontSize: 8, fontWeight: 900, color: "white", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: 1 }}>Billy<br/>Certificado</span>
+    </div>
+  )
+}
+
 // ─────────────────────────────────────────────────────────────────
 // SVG sub-components
 // ─────────────────────────────────────────────────────────────────
@@ -267,7 +313,9 @@ export default function BizenVirtualCard({
   bizcoins, holderName, animationDelay = "0s",
   colorTheme = "blue", level = 1, showTierBadge = true,
   onTransferClick,
-  hideButtons = false
+  hideButtons = false,
+  pattern = "none",
+  showBillySticker = false
 }: BizenVirtualCardProps) {
   const router = useRouter()
   const cardRef = useRef<HTMLDivElement>(null)
@@ -406,6 +454,11 @@ export default function BizenVirtualCard({
           {tier === "metal"     && <MetalOverlay />}
           {tier === "carbon"    && <CarbonOverlay />}
           {tier === "legendary" && <LegendaryOverlay isHovered={isHovered} />}
+
+          {/* ── CUSTOM PATTERNS ── */}
+          {pattern === "geometric" && <GeometricOverlay />}
+          {pattern === "circuit"   && <CircuitOverlay />}
+          {showBillySticker && <BillySticker />}
 
           {/* ── MOUSE GLOW FOLLOW ── */}
           <div style={{

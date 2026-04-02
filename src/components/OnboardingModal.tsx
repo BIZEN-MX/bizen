@@ -16,7 +16,7 @@ import {
 } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Step = "welcome" | "avatar" | "username" | "school" | "birthday" | "wallet" | "billy"
+type Step = "welcome" | "avatar" | "username" | "school" | "birthday" | "wallet" | "billy" | "diagnostic"
 
 interface OnboardingModalProps {
   onComplete: () => void
@@ -98,25 +98,29 @@ function BizenCard({
   return (
     <div
       style={{
-        perspective: "1000px",
+        perspective: "1200px",
         width: "100%",
-        maxWidth: 360,
+        maxWidth: 380,
         margin: "0 auto",
       }}
     >
       <motion.div
-        animate={{ rotateY: [0, 3, -3, 0], rotateX: [0, -2, 2, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ rotateY: [0, 5, -5, 0], rotateX: [0, -3, 3, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         style={{
           transformStyle: "preserve-3d",
           borderRadius: 24,
-          background: "linear-gradient(135deg, #0f1f4a 0%, #0a1535 40%, #0e1d3d 70%, #1a237e 100%)",
-          boxShadow: `0 32px 80px rgba(0,0,0,0.6), 0 0 60px ${accentGlow}, inset 0 1px 0 rgba(255,255,255,0.1)`,
-          padding: "28px 28px 24px",
+          background: "linear-gradient(135deg, #0f172a 0%, #020617 100%)",
+          boxShadow: `0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px ${accentGlow}, inset 0 1px 0 rgba(255,255,255,0.1)`,
+          padding: "clamp(18px, 4vw, 22px)",
           position: "relative",
           overflow: "hidden",
-          border: `1.5px solid rgba(255,255,255,0.08)`,
-          transition: "box-shadow 0.5s ease",
+          border: `1px solid rgba(255,255,255,0.1)`,
+          transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+          aspectRatio: "1.586 / 1",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between"
         }}
       >
         {/* Sheen layer */}
@@ -124,89 +128,79 @@ function BizenCard({
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)",
-            backgroundSize: "200% 100%",
+            background: "linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.03) 60%, transparent 100%)",
+            backgroundSize: "250% 100%",
             zIndex: 1,
+            pointerEvents: "none"
           }}
           animate={{ backgroundPosition: ["200% 0%", "-200% 0%"] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
         />
 
         {/* Accent glow blob */}
         <motion.div
           style={{
             position: "absolute",
-            width: 200,
-            height: 200,
+            width: "60%",
+            height: "60%",
             borderRadius: "50%",
             background: accentGlow,
-            filter: "blur(60px)",
-            top: -60,
-            right: -60,
+            filter: "blur(40px)",
+            top: "-10%",
+            right: "-10%",
             zIndex: 0,
-            opacity: 0.5,
+            opacity: 0.4,
           }}
-          animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.7, 0.4] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Circuit lines decoration */}
-        <svg
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, opacity: 0.06 }}
-          viewBox="0 0 360 200"
-        >
-          <path d="M0 150 Q60 100 120 150 T240 150 T360 150" stroke="white" strokeWidth="1" fill="none" />
-          <path d="M0 100 Q90 60 180 100 T360 100" stroke="white" strokeWidth="0.5" fill="none" />
-          <circle cx="120" cy="150" r="3" fill="white" />
-          <circle cx="240" cy="150" r="3" fill="white" />
-          <circle cx="180" cy="100" r="2" fill="white" />
-        </svg>
-
         {/* Top row: Brand + Chip */}
-        <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
-              <div style={{ width: 28, height: 28, borderRadius: 8, background: accentColor, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 12px ${accentGlow}` }}>
-                <Sparkles size={16} color="white" />
-              </div>
-              <span style={{ fontSize: 18, fontWeight: 900, color: "white", letterSpacing: -0.5 }}>BIZEN</span>
+        <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 28, height: 28, borderRadius: 8, background: accentColor, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 15px ${accentGlow}` }}>
+              <Sparkles size={16} color="white" />
             </div>
-            <span style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" }}>Financial Card</span>
+            <div>
+              <span style={{ fontSize: 18, fontWeight: 900, color: "white", letterSpacing: -0.5, display: "block", lineHeight: 1 }}>BIZEN</span>
+              <span style={{ fontSize: 8, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase" }}>Financial</span>
+            </div>
           </div>
 
-          {/* Chip */}
-          <motion.div
-            style={{
-              width: 42,
-              height: 32,
-              borderRadius: 6,
-              background: "linear-gradient(135deg, #d4a843 0%, #f0c060 40%, #c49030 100%)",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid rgba(255,255,255,0.2)",
-            }}
-            animate={highlight === "transfer" ? { scale: [1, 1.1, 1], boxShadow: ["0 2px 8px rgba(0,0,0,0.4)", `0 4px 16px ${accentGlow}`, "0 2px 8px rgba(0,0,0,0.4)"] } : {}}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <div style={{ width: 28, height: 20, borderRadius: 3, border: "1px solid rgba(0,0,0,0.15)", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, padding: 3 }}>
-              {[0, 1, 2, 3].map(i => <div key={i} style={{ background: "rgba(0,0,0,0.15)", borderRadius: 1 }} />)}
-            </div>
-          </motion.div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Wifi size={18} color="rgba(255,255,255,0.2)" style={{ transform: "rotate(90deg)" }} />
+            <motion.div
+              style={{
+                width: 40,
+                height: 30,
+                borderRadius: 6,
+                background: "linear-gradient(135deg, #d4a843 0%, #f0c060 40%, #c49030 100%)",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "1px solid rgba(255,255,255,0.2)",
+              }}
+              animate={highlight === "transfer" ? { scale: [1, 1.05, 1], filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"] } : {}}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <div style={{ width: 26, height: 18, borderRadius: 3, border: "1px solid rgba(0,0,0,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, padding: 3 }}>
+                {[0, 1, 2, 3].map(i => <div key={i} style={{ background: "rgba(0,0,0,0.1)", borderRadius: 1 }} />)}
+              </div>
+            </motion.div>
+          </div>
         </div>
 
         {/* Balance section */}
         <motion.div
-          style={{ position: "relative", zIndex: 2, marginBottom: 20 }}
-          animate={highlight === "balance" ? { scale: [1, 1.03, 1] } : {}}
+          style={{ position: "relative", zIndex: 2 }}
+          animate={highlight === "balance" ? { scale: [1, 1.02, 1] } : {}}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 4 }}>Bizcoins</div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
             <motion.span
               style={{
-                fontSize: 36,
+                fontSize: "clamp(30px, 7vw, 36px)",
                 fontWeight: 900,
                 color: "white",
                 letterSpacing: -1,
@@ -216,27 +210,13 @@ function BizenCard({
             >
               0
             </motion.span>
-            <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", fontWeight: 700 }}>BZC</span>
-            <motion.div
-              style={{
-                marginLeft: "auto",
-                display: "flex",
-                alignItems: "center",
-                gap: 4,
-                background: "rgba(16,185,129,0.15)",
-                border: "1px solid rgba(16,185,129,0.3)",
-                borderRadius: 999,
-                padding: "3px 8px",
-              }}
-            >
-              <TrendingUp size={10} color="#10b981" />
-              <span style={{ fontSize: 10, color: "#10b981", fontWeight: 700 }}>Listo</span>
-            </motion.div>
+            <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>BZC</span>
           </div>
+          <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: -2 }}>Bizcoins Balance</div>
         </motion.div>
 
         {/* Action buttons row */}
-        <div style={{ position: "relative", zIndex: 2, display: "flex", gap: 8, marginBottom: 20 }}>
+        <div style={{ position: "relative", zIndex: 2, display: "flex", gap: 6 }}>
           {[
             { label: "Transferir", icon: ArrowLeftRight, id: "transfer" },
             { label: "Canjear", icon: Gift, id: "redeem" },
@@ -252,34 +232,19 @@ function BizenCard({
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: 4,
-                  padding: "8px 4px",
-                  borderRadius: 12,
-                  background: isActive ? `${accentColor}22` : "rgba(255,255,255,0.05)",
-                  border: isActive ? `1.5px solid ${accentColor}88` : "1.5px solid rgba(255,255,255,0.06)",
-                  cursor: "pointer",
+                  gap: 3,
+                  padding: "6px 2px",
+                  borderRadius: 10,
+                  background: isActive ? `${accentColor}22` : "rgba(255,255,255,0.03)",
+                  border: isActive ? `1px solid ${accentColor}88` : "1px solid rgba(255,255,255,0.05)",
                   transition: "all 0.4s ease",
-                  boxShadow: isActive ? `0 0 20px ${accentGlow}` : "none",
+                  boxShadow: isActive ? `0 0 15px ${accentGlow}` : "none",
                 }}
-                animate={isActive ? {
-                  scale: [1, 1.05, 1],
-                  boxShadow: [`0 0 0px ${accentGlow}`, `0 0 24px ${accentGlow}`, `0 0 0px ${accentGlow}`],
-                } : { scale: 1 }}
+                animate={isActive ? { scale: [1, 1.05, 1] } : { scale: 1 }}
                 transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
               >
-                <btn.icon
-                  size={15}
-                  color={isActive ? accentColor : "rgba(255,255,255,0.4)"}
-                  style={{ transition: "color 0.3s" }}
-                />
-                <span style={{
-                  fontSize: 8,
-                  fontWeight: 700,
-                  color: isActive ? "white" : "rgba(255,255,255,0.35)",
-                  letterSpacing: 0.5,
-                  textTransform: "uppercase",
-                  transition: "color 0.3s",
-                }}>
+                <btn.icon size={13} color={isActive ? accentColor : "rgba(255,255,255,0.3)"} />
+                <span style={{ fontSize: 7, fontWeight: 700, color: isActive ? "white" : "rgba(255,255,255,0.25)", letterSpacing: 0.2, textTransform: "uppercase" }}>
                   {btn.label}
                 </span>
               </motion.div>
@@ -287,36 +252,33 @@ function BizenCard({
           })}
         </div>
 
-        {/* Bottom: Avatar + card number */}
-        <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        {/* Bottom row: User + Logo */}
+        <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 34, height: 34, borderRadius: "50%", overflow: "hidden", border: `2px solid ${accentColor}`, boxShadow: `0 0 10px ${accentGlow}` }}>
               <AvatarDisplay avatar={avatar} size={34} />
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 800, color: "white" }}>@{username || "usuario"}</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>Miembro BIZEN</div>
+              <div style={{ fontSize: 12, fontWeight: 900, color: "white", letterSpacing: -0.2 }}>@{username || "usuario"}</div>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>•••• 0001</div>
             </div>
           </div>
 
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", fontWeight: 600, letterSpacing: 1, marginBottom: 2 }}>CARD</div>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>•••• •••• 0001</div>
+          <div style={{ width: 40, height: 24, position: "relative" }}>
+            <div style={{ position: "absolute", right: 0, width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }} />
+            <div style={{ position: "absolute", right: 12, width: 24, height: 24, borderRadius: "50%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }} />
           </div>
         </div>
-
-        {/* NFC/Contactless icon */}
-        <Wifi
-          size={18}
-          color="rgba(255,255,255,0.2)"
-          style={{ position: "absolute", bottom: 24, right: 28, transform: "rotate(90deg)", zIndex: 2 }}
-        />
       </motion.div>
     </div>
   )
 }
 
+
 // ─── Main Component ───────────────────────────────────────────────────────────
+
+
+
 export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const { user, refreshUser } = useAuth()
   const supabase = createClient()
@@ -383,7 +345,15 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
       }
       await supabase.auth.refreshSession()
       await refreshUser()
-      onComplete()
+      
+      const emailForRole = user?.email?.toLowerCase() || ""
+      const isInstitutional = emailForRole.endsWith(".edu") || emailForRole.includes(".edu.")
+      
+      if (!isInstitutional) {
+        setStep("diagnostic")
+      } else {
+        onComplete()
+      }
     } catch {
       setUsernameError("Error de conexión. Intenta de nuevo.")
     } finally {
@@ -398,9 +368,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     ? ["welcome", "avatar", "username", "school", "birthday", "wallet", "billy"]
     : ["welcome", "avatar", "username", "birthday", "wallet", "billy"]
 
-
-  const stepIdx = stepList.indexOf(step)
-  const progressPct = Math.round(((stepIdx + 1) / stepList.length) * 100)
+  const stepIdx = stepList.indexOf(step) === -1 ? stepList.length : stepList.indexOf(step)
+  const progressPct = Math.round(((stepIdx + 1) / (stepList.length + (step === 'diagnostic' ? 1 : 0))) * 100)
 
   const calcAge = (dateStr: string): number | null => {
     if (!dateStr) return null
@@ -665,17 +634,13 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                   })()}
                 </div>
                 <div className="space-y-3">
-                  <button onClick={() => goToStep("wallet")}
-                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold text-lg transition-all active:scale-[0.98] shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2">
+                  <button 
+                    disabled={!birthDate}
+                    onClick={() => goToStep("wallet")}
+                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white rounded-2xl font-bold text-lg transition-all active:scale-[0.98] shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2">
                     Continuar
                     <ChevronRight size={20} />
                   </button>
-                  {!birthDate && (
-                    <button onClick={() => goToStep("wallet")}
-                      className="w-full py-3 text-slate-500 hover:text-slate-300 font-bold transition-colors text-sm">
-                      Omitir este paso
-                    </button>
-                  )}
                 </div>
               </motion.div>
             )}
@@ -777,7 +742,51 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
               </motion.div>
             )}
 
-            {/* ── BILLY STEP ── */}
+            {/* ── DIAGNOSTIC OFFER (After Save) ── */}
+            {step === "diagnostic" && (
+              <motion.div key="diagnostic" variants={pageVariants} initial="initial" animate="animate" exit="exit"
+                className="flex flex-col items-center text-center space-y-8">
+                
+                <div className="relative">
+                  <div className="absolute inset-0 bg-blue-500 blur-3xl opacity-20 animate-pulse" />
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="relative w-40 h-40 rounded-full border-4 border-dashed border-blue-500/30 flex items-center justify-center"
+                  >
+                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-2xl shadow-blue-600/40">
+                      <BrainCircuit size={64} className="text-white" />
+                    </div>
+                  </motion.div>
+                </div>
+
+                <div className="space-y-3">
+                  <h2 className="text-3xl font-black tracking-tight leading-tight">
+                    ¡Perfil Listo! Solo falta tu <span className="text-blue-400">DNA Financiero</span>
+                  </h2>
+                  <p className="text-slate-400 text-lg max-w-sm mx-auto">
+                    Realiza un test rápido de 2 minutos para desbloquear tu ruta de aprendizaje personalizada y ver tu nivel inicial.
+                  </p>
+                </div>
+
+                <div className="w-full space-y-3">
+                  <button onClick={() => window.location.href = "/diagnostic"}
+                    className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-xl transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98] flex items-center justify-center gap-3">
+                    Empezar Diagnóstico
+                    <ChevronRight size={22} />
+                  </button>
+                  
+                  <button onClick={onComplete}
+                    className="w-full py-4 bg-white/5 hover:bg-white/10 text-slate-400 rounded-2xl font-bold text-lg transition-all active:scale-[0.98]">
+                    Omitir por ahora
+                  </button>
+                </div>
+
+                <p className="text-xs text-slate-500 max-w-xs font-medium">
+                  Tranquilo, si lo omites ahora podrás realizarlo después desde tu panel de control.
+                </p>
+              </motion.div>
+            )}
             {step === "billy" && (
               <motion.div key="billy" variants={pageVariants} initial="initial" animate="animate" exit="exit"
                 className="flex flex-col space-y-6">

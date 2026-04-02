@@ -93,7 +93,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
     const geminiModel = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash" 
+      model: "gemini-1.5-flash-latest" 
     })
 
     const formattedHistory = (conversationHistory || [])
@@ -128,7 +128,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
 
     return NextResponse.json({
       response: responseText.trim(),
-      source: "google:gemini-1.5-flash"
+      source: "google:gemini-1.5-flash-latest"
     })
 
   } catch (error: any) {

@@ -105,6 +105,8 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
     pathname === '/reset-password' ||
     pathname === '/forgot-password' ||
     pathname === '/bizen/signup' ||
+    pathname?.startsWith('/auth/') || 
+    pathname?.startsWith('/bizen/auth/') ||
     pathname === '/' || // Landing page
     pathname === '/payment' ||
     pathname.startsWith('/payment/') || // Payment pages
@@ -117,8 +119,9 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isHistoryPage = pathname === '/historial' || pathname === '/historial-de-cuenta'
   const isInvestmentsPage = pathname === '/investments'
   const isCashflowStatsPage = pathname === '/cash-flow/stats'
-  const hideAppNavigation = isAuthPage || isDiagnosticPage || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isCashflowStatsPage;
-  const hideChat = isDiagnosticPage || pathname === "/" || onboardingActive || isLessonInteractivePage || isCourseTopicPage; // Hide on diagnostic, landing, onboarding, lessons, and course topics
+  const hideAppNavigation = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isCashflowStatsPage;
+
+  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage; // Hide on auth, diagnostic, onboarding, lessons, and course topics
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {

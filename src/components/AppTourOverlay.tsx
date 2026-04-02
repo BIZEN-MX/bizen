@@ -295,19 +295,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
         }
         .tc-backdrop.hiding { animation: tc-out 0.35s ease forwards; }
 
-        .tc-skip {
-          position: fixed; top: clamp(12px,3vw,20px); right: clamp(12px,3vw,20px);
-          z-index: 100003;
-          background: rgba(255,255,255,0.1);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255,255,255,0.18);
-          border-radius: 999px; padding: 7px 18px;
-          font-size: clamp(11.5px,2.8vw,13px); font-weight: 600;
-          color: rgba(255,255,255,0.8); cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          transition: all 0.2s; letter-spacing: 0.01em;
-        }
-        .tc-skip:hover { background: rgba(255,255,255,0.16); color: #fff; }
 
         .tc-card {
           position: fixed; z-index: 100001;
@@ -424,12 +411,6 @@ export default function AppTourOverlay({ onEnd, discoveryMode = false }: AppTour
       `}</style>
 
       <div className={`tc-backdrop${closing ? " hiding" : ""}`} />
-
-      {!discoveryMode && (
-        <button className="tc-skip" onClick={endTour}>
-          Saltar tour ✕
-        </button>
-      )}
 
       <div
         className={`tc-card ${cardVisible ? "shown" : "hiding"}`}

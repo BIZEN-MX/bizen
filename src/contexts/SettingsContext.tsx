@@ -55,6 +55,10 @@ export interface AppSettings {
   contentPreferences: ContentPreferences
   accessibility: AccessibilitySettings
   linkedAccounts: LinkedAccounts
+  cardCustomizations: {
+    pattern: 'none' | 'geometric' | 'circuit' | 'dots'
+    showBillySticker: boolean
+  }
 }
 
 const defaultSettings: AppSettings = {
@@ -93,6 +97,10 @@ const defaultSettings: AppSettings = {
     google: false,
     facebook: false,
     apple: false
+  },
+  cardCustomizations: {
+    pattern: 'none',
+    showBillySticker: false
   }
 }
 

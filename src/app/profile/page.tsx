@@ -543,31 +543,95 @@ export default function ProfilePage() {
         {/* LEFT COLUMN: IDENTITY & STATS */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 24 }}>
           
-          {/* XP Card with detailed count */}
+          {/* XP Card — Spatial Blue Premium Redesign */}
           {!isAdminOrTeacher && (
-            <div className="prof-card fade-up" style={{ padding: 0, animationDelay: "0.1s", overflow: "hidden", border: "1.5px solid #e2e8f0" }}>
-              {/* Top gradient header - compact */}
-              <div className="xp-card-header" style={{ background: "linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%)", padding: "14px 20px", position: "relative", overflow: "hidden" }}>
-                <div style={{ position: "absolute", inset: 0, opacity: 0.08, backgroundImage: "radial-gradient(white 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 1 }}>
+            <div className="fade-up" style={{ animationDelay: "0.1s", borderRadius: 28, overflow: "hidden", background: "linear-gradient(135deg, #060d22 0%, #0b1e5e 40%, #0F62FE 100%)", position: "relative", boxShadow: "0 24px 64px rgba(15,98,254,0.35), 0 0 0 1px rgba(255,255,255,0.05)" }}>
+              {/* Ambient orbs */}
+              <div style={{ position: "absolute", top: "-40%", right: "-10%", width: 300, height: 300, background: "radial-gradient(circle, rgba(96,165,250,0.25) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+              <div style={{ position: "absolute", bottom: "-30%", left: "0%", width: 220, height: 220, background: "radial-gradient(circle, rgba(167,139,250,0.2) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+              <div style={{ position: "absolute", inset: 0, opacity: 0.04, backgroundImage: "radial-gradient(white 1px, transparent 1px)", backgroundSize: "24px 24px", pointerEvents: "none" }} />
+
+              <div style={{ position: "relative", zIndex: 1, padding: screenSize < 768 ? "20px 18px" : "24px 28px" }}>
+                {/* Top row: badge + XP value */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
                   <div>
-                    <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 2 }}>Progreso</div>
-                    <div style={{ fontSize: screenSize < 768 ? 18 : 22, fontWeight: 950, color: "white", lineHeight: 1, letterSpacing: "-0.02em" }}>Nivel {level}</div>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 999, padding: "4px 12px", marginBottom: 10 }}>
+                      <Zap size={11} color="#60a5fa" />
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#93c5fd", letterSpacing: "0.07em", textTransform: "uppercase" }}>Progreso de Nivel</span>
+                    </div>
+                    <div style={{ fontSize: screenSize < 768 ? 28 : 36, fontWeight: 900, color: "#fff", lineHeight: 1, letterSpacing: "-0.03em" }}>
+                      Nivel <span style={{ background: "linear-gradient(90deg, #93c5fd, #c4b5fd)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{level}</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontWeight: 500, marginTop: 4 }}>
+                      {xpInLevel.toLocaleString()} / {xpForNext.toLocaleString()} XP en este nivel
+                    </div>
                   </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: screenSize < 768 ? 20 : 26, fontWeight: 950, color: "white", lineHeight: 1, letterSpacing: "-0.02em" }}>{xpInLevel.toLocaleString()}<span style={{ fontSize: 12, fontWeight: 600, opacity: 0.65 }}> XP</span></div>
-                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: 2 }}>de {xpForNext.toLocaleString()} XP</div>
+                  {/* XP Ring */}
+                  <div style={{ flexShrink: 0 }}>
+                    <svg width={screenSize < 768 ? 72 : 90} height={screenSize < 768 ? 72 : 90} viewBox="0 0 100 100">
+                      <defs>
+                        <linearGradient id="xpRingPrf" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#60a5fa"/>
+                          <stop offset="50%" stopColor="#a78bfa"/>
+                          <stop offset="100%" stopColor="#f472b6"/>
+                        </linearGradient>
+                        <filter id="xpGlowPrf">
+                          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                      </defs>
+                      <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="9"/>
+                      <circle cx="50" cy="50" r="40" fill="none"
+                        stroke="url(#xpRingPrf)" strokeWidth="9"
+                        strokeLinecap="round"
+                        strokeDasharray={`${2 * Math.PI * 40 * Math.min(xpPct / 100, 1)} ${2 * Math.PI * 40}`}
+                        strokeDashoffset={2 * Math.PI * 40 * 0.25}
+                        transform="rotate(-90 50 50)"
+                        filter="url(#xpGlowPrf)"
+                        style={{ transition: "stroke-dasharray 1.6s cubic-bezier(0.34,1.56,0.64,1)" }}
+                      />
+                      <text x="50" y="44" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="800" style={{ letterSpacing: "0.15em" }}>XP</text>
+                      <text x="50" y="62" textAnchor="middle" fill="#fff" fontSize="20" fontWeight="900" style={{ letterSpacing: "-0.02em" }}>{Math.round(xpPct)}%</text>
+                    </svg>
                   </div>
                 </div>
-              </div>
-              {/* Progress bar footer */}
-              <div className="xp-card-body" style={{ padding: "12px 20px" }}>
-                <div style={{ height: 16, background: "#f1f5f9", borderRadius: 99, overflow: "hidden" }}>
-                  <div style={{ width: `${xpPct}%`, height: "100%", background: "linear-gradient(90deg, #60a5fa, #0F62FE)", borderRadius: 99, transition: "width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)", boxShadow: "0 0 10px rgba(15,98,254,0.3)" }} />
+
+                {/* XP Bar */}
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ height: 10, background: "rgba(255,255,255,0.08)", borderRadius: 99, overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div style={{
+                      width: `${xpPct}%`, height: "100%",
+                      background: "linear-gradient(90deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%)",
+                      borderRadius: 99,
+                      transition: "width 1.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                      boxShadow: "0 0 16px rgba(167,139,250,0.6), 0 0 8px rgba(96,165,250,0.4)",
+                      position: "relative"
+                    }} />
+                  </div>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
-                  <span style={{ fontSize: 9, color: "#94a3b8", fontWeight: 600 }}>Nivel {level}</span>
-                  <span style={{ fontSize: 9, color: "#0F62FE", fontWeight: 700 }}>{(xpForNext - xpInLevel).toLocaleString()} XP para viajar al nivel {level + 1}</span>
+
+                {/* Level milestones + XP remaining pill */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    {/* Current level node */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                      <div style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg, #60a5fa, #a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 900, color: "#fff", boxShadow: "0 0 10px rgba(96,165,250,0.6)" }}>{level}</div>
+                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 600 }}>Ahora</span>
+                    </div>
+                    <div style={{ flex: 1, width: 32, height: 1, background: "rgba(255,255,255,0.12)" }} />
+                    {/* Next level node */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                      <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(255,255,255,0.08)", border: "1.5px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 900, color: "rgba(255,255,255,0.5)" }}>{level + 1}</div>
+                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>Siguiente</span>
+                    </div>
+                  </div>
+                  {/* XP remaining pill */}
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(96,165,250,0.12)", border: "1px solid rgba(96,165,250,0.25)", borderRadius: 99, padding: "4px 10px" }}>
+                    <Zap size={10} color="#60a5fa" />
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#93c5fd", whiteSpace: "nowrap" }}>
+                      {(xpForNext - xpInLevel).toLocaleString()} XP restantes
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
