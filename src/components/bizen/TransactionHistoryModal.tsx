@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, ArrowUpRight, ArrowDownLeft, History, Search, Filter, Download, Coins, Calendar, Tag, ShieldCheck, Zap, ShoppingBag, Flame, BookOpen, Trophy, PlusCircle } from "lucide-react"
+import { X, ArrowUpRight, ArrowDownLeft, History, Search, Filter, Download, Calendar, Tag, ShieldCheck, Zap, ShoppingBag, Flame, BookOpen, Trophy, PlusCircle } from "lucide-react"
+import BizcoinIcon from "../BizcoinIcon"
 
 interface Transaction {
   id: string
@@ -160,8 +161,8 @@ export default function TransactionHistoryModal({ onClose, currentBalance }: Tra
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Saldo Disponible</div>
             <div style={{ fontSize: 32, fontWeight: 900, display: "flex", alignItems: "center", gap: 8 }}>
-              <Coins size={28} color="#f59e0b" />
-              {currentBalance.toLocaleString()} <span style={{ fontSize: 13, color: "rgba(255,255,255,0.3)" }}>BC</span>
+              <BizcoinIcon size={28} />
+              {currentBalance.toLocaleString()} <span style={{ fontSize: 13, color: "rgba(255,255,255,0.3)" }}>bz</span>
             </div>
           </div>
           <div style={{ width: 1, height: 40, background: "rgba(255,255,255,0.1)" }} />
@@ -288,7 +289,7 @@ export default function TransactionHistoryModal({ onClose, currentBalance }: Tra
                     color: t.amount >= 0 ? "#10b981" : "#ef4444",
                     letterSpacing: "-0.01em"
                   }}>
-                    {formatAmount(t.amount)} <span style={{ fontSize: 10, opacity: 0.6 }}>BC</span>
+                    {formatAmount(t.amount)} <span style={{ fontSize: 10, opacity: 0.6 }}>bz</span>
                   </div>
                   <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>Finalizado</div>
                 </div>

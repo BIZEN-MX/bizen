@@ -1,9 +1,10 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { X, Search, Loader2, Check, Send, Coins, UserRound, ArrowRight, RotateCcw } from "lucide-react"
+import { X, Search, Loader2, Check, Send, UserRound, ArrowRight, RotateCcw } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { AvatarDisplay } from "../AvatarDisplay"
+import BizcoinIcon from "../BizcoinIcon"
 
 interface TransferModalProps {
   onClose: () => void
@@ -125,7 +126,7 @@ export default function TransferModal({
               <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.01em" }}>
                 {step === "success" ? "Transferencia Exitosa" : initialTarget ? "Enviar Regalo" : "Nueva Transferencia"}
               </h3>
-              <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600, marginTop: 2 }}>Saldo: <strong style={{ color: "#0F62FE" }}>{currentBalance} BC</strong></div>
+              <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600, marginTop: 2 }}>Saldo: <strong style={{ color: "#0F62FE" }}>{currentBalance} bz</strong></div>
             </div>
           </div>
           <button onClick={onClose} style={{ background: "#f1f5f9", border: "none", color: "#64748b", cursor: "pointer", width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }} onMouseEnter={e => {e.currentTarget.style.background="#e2e8f0"; e.currentTarget.style.color="#0f172a"}} onMouseLeave={e => {e.currentTarget.style.background="#f1f5f9"; e.currentTarget.style.color="#64748b"}}><X size={18} /></button>
@@ -221,15 +222,15 @@ export default function TransferModal({
                    <div style={{ textAlign: "center", background: "#f8fafc", padding: "24px", borderRadius: 24, border: "1.5px solid #e2e8f0" }}>
                      <label style={{ display: "block", fontSize: 14, fontWeight: 800, color: "#64748b", marginBottom: 12 }}>MONTO A ENVIAR</label>
                      <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
-                        <Coins size={28} color={parseInt(amount) > currentBalance ? "#e11d48" : "#0F62FE"} />
+                        <BizcoinIcon size={28} />
                         <input type="number" autoFocus placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value)} 
                           style={{ background: "transparent", border: "none", fontSize: 44, fontWeight: 900, color: "#0f172a", outline: "none", width: "120px", textAlign: "center" }} 
                         />
-                        <span style={{ fontSize: 18, fontWeight: 900, color: "#94a3b8" }}>BC</span>
+                        <span style={{ fontSize: 18, fontWeight: 900, color: "#94a3b8" }}>bz</span>
                      </div>
                      <div style={{ marginTop: 12, height: 2, background: parseInt(amount) > currentBalance ? "#e11d48" : "#e2e8f0", width: "80%", margin: "12px auto" }} />
                      <div style={{ fontSize: 13, fontWeight: 700, color: parseInt(amount) > currentBalance ? "#e11d48" : "#64748b" }}>
-                        {parseInt(amount) > currentBalance ? "Saldo insuficiente" : `Disponible: ${currentBalance} BC`}
+                        {parseInt(amount) > currentBalance ? "Saldo insuficiente" : `Disponible: ${currentBalance} bz`}
                      </div>
                    </div>
 
@@ -258,7 +259,7 @@ export default function TransferModal({
                  </div>
                  <h2 style={{ margin: "0 0 12px", fontSize: 26, fontWeight: 900, color: "#0f172a" }}>¡Listo!</h2>
                  <p style={{ margin: "0 0 32px", fontSize: 16, color: "#64748b", lineHeight: 1.5 }}>
-                   Has enviado <strong style={{color: "#0F62FE"}}>{amount} BC</strong> a <strong style={{color: "#0f172a"}}>{selectedUser.fullName || selectedUser.nickname}</strong> exitosamente.
+                   Has enviado <strong style={{color: "#0F62FE"}}>{amount} bz</strong> a <strong style={{color: "#0f172a"}}>{selectedUser.fullName || selectedUser.nickname}</strong> exitosamente.
                  </p>
                  <button onClick={onClose} style={{ width: "100%", maxWidth: 260, padding: "16px", borderRadius: 16, background: "#0f172a", color: "white", border: "none", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>Volver al Inicio</button>
               </motion.div>

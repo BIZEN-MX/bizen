@@ -2,7 +2,8 @@
 
 import React, { useState, useMemo, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, Zap, Coins, Calendar, TrendingUp, CheckCircle2, Loader2, AlertCircle, Lock, Sparkles } from "lucide-react"
+import { X, Zap, Calendar, TrendingUp, CheckCircle2, Loader2, AlertCircle, Lock, Sparkles } from "lucide-react"
+import BizcoinIcon from "../BizcoinIcon"
 
 interface StakingModalProps {
   onClose: () => void
@@ -232,7 +233,7 @@ export default function StakingModal({ onClose, currentBalance, onSuccess }: Sta
                 transition={{ delay: 0.32 }}
               >
                 <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 15, lineHeight: 1.6, marginBottom: 28 }}>
-                  Tus <span style={{ color: "#10B981", fontWeight: 900 }}>{amount.toLocaleString()} BC</span> están en modo de crecimiento.
+                  Tus <span style={{ color: "#10B981", fontWeight: 900 }}>{amount.toLocaleString()} bz</span> están en modo de crecimiento.
                   Regresa en <span style={{ color: "#fff", fontWeight: 800 }}>{selectedPlan.days} días</span> para cosechar tus ganancias.
                 </p>
 
@@ -247,11 +248,11 @@ export default function StakingModal({ onClose, currentBalance, onSuccess }: Sta
                 }}>
                   <div style={{ textAlign: "left" }}>
                     <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(16,185,129,0.8)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Rendimiento esperado</div>
-                    <div style={{ fontSize: 22, fontWeight: 950, color: "#10B981" }}>+{potentialReturn.toLocaleString()} BC</div>
+                    <div style={{ fontSize: 22, fontWeight: 950, color: "#10B981" }}>+{potentialReturn.toLocaleString()} bz</div>
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Total a recibir</div>
-                    <div style={{ fontSize: 22, fontWeight: 950, color: "#fff" }}>{totalReturn.toLocaleString()} BC</div>
+                    <div style={{ fontSize: 22, fontWeight: 950, color: "#fff" }}>{totalReturn.toLocaleString()} bz</div>
                   </div>
                 </div>
               </motion.div>
@@ -317,11 +318,11 @@ export default function StakingModal({ onClose, currentBalance, onSuccess }: Sta
                   borderRadius: 99, padding: "8px 16px 8px 10px",
                 }}>
                   <div style={{ width: 28, height: 28, background: "rgba(255,255,255,0.08)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Coins size={14} color="#94A3B8" />
+                    <BizcoinIcon size={14} />
                   </div>
                   <div>
                     <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Disponible</div>
-                    <div style={{ fontSize: 14, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{currentBalance.toLocaleString()} <span style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)" }}>BC</span></div>
+                    <div style={{ fontSize: 14, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{currentBalance.toLocaleString()} <span style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)" }}>bz</span></div>
                   </div>
                 </div>
               </div>
@@ -365,7 +366,7 @@ export default function StakingModal({ onClose, currentBalance, onSuccess }: Sta
                           fontFamily: "inherit",
                         }}
                       />
-                      <div style={{ fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em" }}>BC</div>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em" }}>bz</div>
                     </div>
 
                     {/* usage bar */}
@@ -489,14 +490,14 @@ export default function StakingModal({ onClose, currentBalance, onSuccess }: Sta
                         <div style={{ fontSize: 26, fontWeight: 950, color: amount > 0 ? "#10B981" : "rgba(255,255,255,0.15)", letterSpacing: "-0.02em", transition: "color 0.3s" }}>
                           +{animatedReturn.toLocaleString()}
                         </div>
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.2)" }}>BC de ganancia</div>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.2)" }}>bz de ganancia</div>
                       </div>
                       <div style={{ flex: 1, padding: "18px 20px" }}>
                         <div style={{ fontSize: 9, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Total a Recibir</div>
                         <div style={{ fontSize: 26, fontWeight: 950, color: amount > 0 ? "#fff" : "rgba(255,255,255,0.15)", letterSpacing: "-0.02em", transition: "color 0.3s" }}>
                           {animatedTotal.toLocaleString()}
                         </div>
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.2)" }}>BC en {selectedPlan.days} días</div>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.2)" }}>bz en {selectedPlan.days} días</div>
                       </div>
                     </div>
 
@@ -505,7 +506,7 @@ export default function StakingModal({ onClose, currentBalance, onSuccess }: Sta
                       <div style={{ padding: "0 20px 16px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)", marginBottom: 6 }}>
                           <span>Usando {progress.toFixed(0)}% de tu balance</span>
-                          <span>{amount.toLocaleString()} / {currentBalance.toLocaleString()} BC</span>
+                          <span>{amount.toLocaleString()} / {currentBalance.toLocaleString()} bz</span>
                         </div>
                         <div style={{ height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
                           <motion.div

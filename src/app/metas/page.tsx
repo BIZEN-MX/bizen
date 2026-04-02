@@ -135,7 +135,7 @@ export default function SavingsGoalsPage() {
             </div>
             <div style={{ marginTop: 24, display: "flex", gap: 12 }}>
               <div style={{ background: "rgba(255,255,255,0.15)", padding: "8px 16px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-                <Zap size={14} color="#fbbf24" /> +120 BC ganados hoy
+                <Zap size={14} color="#fbbf24" /> +120 bz ganados hoy
               </div>
             </div>
           </div>
@@ -218,8 +218,8 @@ export default function SavingsGoalsPage() {
                           />
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, fontSize: 12, fontWeight: 600, color: "#94a3b8" }}>
-                          <span>{bizcoins.toLocaleString()} BC</span>
-                          <span>Objetivo: {goal.targetAmount.toLocaleString()} BC</span>
+                          <span>{bizcoins.toLocaleString()} bz</span>
+                          <span>Objetivo: {goal.targetAmount.toLocaleString()} bz</span>
                         </div>
                       </div>
 
@@ -236,7 +236,7 @@ export default function SavingsGoalsPage() {
                       ) : (
                         <div style={{ marginTop: 20, padding: "10px", background: "#f8fafc", borderRadius: 12, display: "flex", alignItems: "center", gap: 10 }}>
                           <Flame size={14} color="#f59e0b" />
-                          <span style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Faltan {(goal.targetAmount - bizcoins).toLocaleString()} BC</span>
+                          <span style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Faltan {(goal.targetAmount - bizcoins).toLocaleString()} bz</span>
                         </div>
                       )}
                     </div>

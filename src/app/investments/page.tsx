@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
+import BizcoinIcon from "@/components/BizcoinIcon"
 
 const STAKING_PLANS = [
   {
@@ -239,8 +240,8 @@ export default function InvestmentsPage() {
           <div style={{ background: "linear-gradient(135deg, rgba(15, 98, 254, 0.15), rgba(15, 98, 254, 0.05))", border: "1.5px solid rgba(15, 98, 254, 0.2)", borderRadius: 20, padding: "12px 24px", textAlign: "right" }}>
             <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(15, 98, 254, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Disponible</div>
             <div style={{ fontSize: 26, fontWeight: 950, color: "white", display: "flex", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
-              <Coins size={24} color="#f59e0b" />
-              {bizcoins.toLocaleString()} <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>BC</span>
+              <BizcoinIcon size={24} />
+              {bizcoins.toLocaleString()} <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>bz</span>
             </div>
           </div>
         </header>
@@ -269,7 +270,7 @@ export default function InvestmentsPage() {
 
               <h2 style={{ fontSize: 32, fontWeight: 950, color: "#fff", marginBottom: 12, letterSpacing: "-0.03em" }}>¡Inversión Iniciada!</h2>
               <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 17, lineHeight: 1.6, marginBottom: 40 }}>
-                Has puesto <strong style={{ color: "#10B981" }}>{amount.toLocaleString()} BC</strong> a trabajar. Los rendimientos se acreditarán automáticamente en <strong style={{ color: "#fff" }}>{selectedPlan.days} días</strong>.
+                Has puesto <strong style={{ color: "#10B981" }}>{amount.toLocaleString()} bz</strong> a trabajar. Los rendimientos se acreditarán automáticamente en <strong style={{ color: "#fff" }}>{selectedPlan.days} días</strong>.
               </p>
 
               <div style={{ display: "flex", gap: 16 }}>
@@ -297,7 +298,7 @@ export default function InvestmentsPage() {
                 <section className="card-glass" style={{ padding: 40 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
                     <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Cantidad a Invertir</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>Mín: 1 BC · Máx: {bizcoins.toLocaleString()}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>Mín: 1 bz · Máx: {bizcoins.toLocaleString()}</div>
                   </div>
 
                   <div style={{ position: "relative", marginBottom: 24 }}>
@@ -311,7 +312,7 @@ export default function InvestmentsPage() {
                         onBlur={() => setInputFocused(false)}
                         style={{ flex: 1, background: "transparent", border: "none", outline: "none", fontSize: 56, fontWeight: 950, color: "white", letterSpacing: "-0.04em" }}
                       />
-                      <span style={{ fontSize: 24, fontWeight: 900, color: "rgba(255,255,255,0.2)" }}>BC</span>
+                      <span style={{ fontSize: 24, fontWeight: 900, color: "rgba(255,255,255,0.2)" }}>bz</span>
                     </div>
                   </div>
 
@@ -396,7 +397,7 @@ export default function InvestmentsPage() {
                       style={{ background: "rgba(255,255,255,0.03)", padding: "20px 16px", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 4 }}
                     >
                       <span style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Inversión</span>
-                      <span style={{ fontWeight: 900, fontSize: 20, letterSpacing: "-0.02em" }}>{amount.toLocaleString()} <span style={{ fontSize: 12, opacity: 0.5, fontWeight: 500 }}>BC</span></span>
+                      <span style={{ fontWeight: 900, fontSize: 20, letterSpacing: "-0.02em" }}>{amount.toLocaleString()} <span style={{ fontSize: 12, opacity: 0.5, fontWeight: 500 }}>bz</span></span>
                     </motion.div>
                     <motion.div 
                       key={animatedReturn}
@@ -406,7 +407,7 @@ export default function InvestmentsPage() {
                       style={{ background: "rgba(16,185,129,0.05)", padding: "20px 16px", borderRadius: 20, border: "1px solid rgba(16,185,129,0.1)", display: "flex", flexDirection: "column", gap: 4 }}
                     >
                       <span style={{ fontSize: 10, fontWeight: 800, color: "#10B981", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ganancia</span>
-                      <span style={{ fontWeight: 900, fontSize: 20, color: "#10B981", letterSpacing: "-0.02em" }}>+{animatedReturn.toLocaleString()} <span style={{ fontSize: 12, opacity: 0.8, fontWeight: 500 }}>BC</span></span>
+                      <span style={{ fontWeight: 900, fontSize: 20, color: "#10B981", letterSpacing: "-0.02em" }}>+{animatedReturn.toLocaleString()} <span style={{ fontSize: 12, opacity: 0.8, fontWeight: 500 }}>bz</span></span>
                     </motion.div>
                   </motion.div>
 
@@ -426,7 +427,7 @@ export default function InvestmentsPage() {
                           animate={{ opacity: 1 }}
                           style={{ fontWeight: 950, fontSize: 28, color: "#fff", letterSpacing: "-0.04em" }}
                         >
-                          {animatedTotal.toLocaleString()} BC
+                          {animatedTotal.toLocaleString()} bz
                         </motion.span>
                       </div>
                       <div style={{ textAlign: "right" }}>

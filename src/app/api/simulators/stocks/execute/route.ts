@@ -146,7 +146,7 @@ export async function POST(req: Request) {
                     amount: Math.abs(Math.floor(cashAdjustment)),
                     type: cashAdjustment > 0 ? "income" : "expense",
                     category: "investment",
-                    description: `${order.side === 'buy' ? 'Compra' : 'Venta'} de ${order.quantity} acciones de ${order.symbol} @ ${executionPriceBizcoins.toFixed(0)} ₿`
+                    description: `${order.side === 'buy' ? 'Compra' : 'Venta'} de ${order.quantity} acciones de ${order.symbol} @ ${executionPriceBizcoins.toFixed(0)} bz`
                 }
             });
 

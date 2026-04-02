@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Target, Zap, Flame, Sparkles, ChevronRight, CheckCircle, Clock, Trophy, ArrowRight, Lightbulb, X, Send, Camera, Image as ImageIcon, Trash2 } from "lucide-react"
 import confetti from "canvas-confetti"
 import { useAuth } from "@/contexts/AuthContext"
+import BizcoinIcon from "@/components/BizcoinIcon"
 
 interface DailyChallenge {
     id: string
@@ -271,7 +272,7 @@ export default function DailyChallengeWidget() {
                                     <div style={{ flex: 1, background: "rgba(255,255,255,0.08)", padding: "12px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)" }}>
                                         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", fontWeight: 800 }}>Premio</div>
                                         <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", display: "flex", alignItems: "center", gap: 5, marginTop: 4 }}>
-                                            <IcoCoin size={14} color="#34d399" /> +50 BC
+                                            <BizcoinIcon size={14} /> +50 bz
                                         </div>
                                     </div>
                                 </div>

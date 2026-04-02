@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
+import { ArrowLeft } from "lucide-react"
 import { IconBolt, IconGamepad } from "@/components/live/LiveIcons"
 import { AVATARS, AvatarSvg } from "@/components/live/LiveAvatars"
 
@@ -214,6 +215,37 @@ export default function JoinPage() {
         overflow: "hidden",
         position: "relative",
       }}>
+
+        {/* Back Button */}
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          whileHover={{ scale: 1.05, background: "rgba(255,255,255,0.12)" }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => router.push("/dashboard")}
+          style={{
+            position: "fixed", 
+            top: "clamp(16px, 4vw, 32px)", 
+            left: "clamp(16px, 4vw, 32px)", 
+            zIndex: 100,
+            width: "clamp(40px, 10vw, 52px)", 
+            height: "clamp(40px, 10vw, 52px)", 
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center",
+            cursor: "pointer", 
+            color: "white", 
+            boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+            transition: "background 0.2s"
+          }}
+        >
+          <ArrowLeft size={24} />
+        </motion.button>
 
         {/* Ambient background rings */}
         <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>

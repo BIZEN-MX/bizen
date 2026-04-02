@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp, BrainCircuit, ChevronRight } from "lucide-react"
+import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp, BrainCircuit, ChevronRight, RefreshCw, Newspaper } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
@@ -268,6 +268,18 @@ function DashboardContent() {
   const [showPulseXp,      setShowPulseXp]      = useState(false)
   const [showPulseBc,      setShowPulseBc]      = useState(false)
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
+  const [news, setNews] = useState<any[]>([])
+  const [loadingNews, setLoadingNews] = useState(true)
+  const [activeNewsIndex, setActiveNewsIndex] = useState(0)
+
+  useEffect(() => {
+    if (news.length > 0) {
+      const interval = setInterval(() => {
+        setActiveNewsIndex((prev) => (prev + 1) % news.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [news]);
 
   const activeDnaProfile = liveProfile?.dnaProfile || dnaResult?.dnaProfile
   const hasCompletedDiagnostic = !!activeDnaProfile || !!liveProfile?.diagnosticCompleted || !!dnaResult
@@ -388,6 +400,21 @@ function DashboardContent() {
       setIsSyncing(false)
     }
   }, [user, stats])
+
+  const fetchNews = async () => {
+    try {
+      const res = await fetch("/api/news")
+      if (res.ok) setNews(await res.json())
+    } catch (err) {
+      console.error("News fetch error:", err)
+    } finally {
+      setLoadingNews(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchNews()
+  }, [])
 
   useEffect(() => {
     if (loading) return
@@ -1330,6 +1357,81 @@ function DashboardContent() {
           </motion.div>
         </div>
 
+        {/* FINANCIAL NEWS WIDGET — Enhanced with real images */}
+        <motion.div
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.2 }}
+           style={{ marginBottom: 32 }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(15, 98, 254, 0.1)", border: "1.5px solid rgba(15, 98, 254, 0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Newspaper size={22} color="#0F62FE" />
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#0B1E5E", letterSpacing: "-0.015em" }}>Noticias BIZEN</h3>
+                <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Actualización automática cada 5s</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 12 }}>
+              <button onClick={() => router.push("/news")} style={{ background: "white", border: "1.5px solid #e2e8f0", color: "#64748b", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: "8px 16px", borderRadius: 12, transition: "all 0.2s" }} onMouseOver={(e) => e.currentTarget.style.borderColor = "#0F62FE"} onMouseOut={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}>
+                Ver todas
+              </button>
+              <button onClick={fetchNews} style={{ background: "rgba(15, 98, 254, 0.05)", border: "none", color: "#0F62FE", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 12, transition: "all 0.2s" }} onMouseOver={(e) => e.currentTarget.style.opacity = "0.7"} onMouseOut={(e) => e.currentTarget.style.opacity = "1"}>
+                Actualizar <RefreshCw size={14} className={loadingNews ? "animate-spin" : ""} />
+              </button>
+            </div>
+          </div>
+
+          <div style={{ position: "relative", height: 180, overflow: "hidden", borderRadius: 24 }}>
+            {loadingNews ? (
+              <div style={{ height: "100%", background: "white", borderRadius: 24, border: "1.5px solid #e9eef8", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div className="animate-spin" style={{ width: 24, height: 24, border: "3px solid #f1f5f9", borderTopColor: "#0F62FE", borderRadius: "50%" }} />
+              </div>
+            ) : (
+              <AnimatePresence mode="wait">
+                {news.length > 0 && (
+                  <motion.div
+                    key={activeNewsIndex}
+                    initial={{ x: 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: -50, opacity: 0 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "#fff",
+                      borderRadius: 24,
+                      padding: 20,
+                      display: "flex",
+                      gap: 20,
+                      border: "1.5px solid #e9eef8",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.02)",
+                    }}
+                    onClick={() => router.push("/news")}
+                  >
+                    <div style={{ width: 140, height: 140, borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
+                      <img src={news[activeNewsIndex].image} alt={news[activeNewsIndex].title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </div>
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                        <span style={{ fontSize: 10, fontWeight: 900, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.08em", background: "rgba(15,98,254,0.08)", padding: "2px 10px", borderRadius: 99 }}>{news[activeNewsIndex].category}</span>
+                        <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{news[activeNewsIndex].time}</span>
+                      </div>
+                      <h4 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>{news[activeNewsIndex].title}</h4>
+                      <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 5, color: "#0F62FE", fontSize: 12, fontWeight: 700 }}>
+                        Leer noticia completa <ChevronRight size={14} />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            )}
+          </div>
+        </motion.div>
+
         {/* ══════════════════════════════════════════════════════════
             QUICK LINKS — Enhanced
         ══════════════════════════════════════════════════════════ */}
@@ -1352,7 +1454,7 @@ function DashboardContent() {
                 <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600, marginTop: 1 }}>Todos tus destinos en un click</div>
               </div>
             </div>
-            <div style={{ fontSize: 11, fontWeight: 800, color: "#6366f1", background: "#eef2ff", padding: "4px 12px", borderRadius: 99, border: "1px solid #c7d2fe" }}>8 herramientas</div>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#6366f1", background: "#eef2ff", padding: "4px 12px", borderRadius: 99, border: "1px solid #c7d2fe" }}>9 herramientas</div>
           </div>
 
           <div className="quick-grid-container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14 }}>
@@ -1406,6 +1508,12 @@ function DashboardContent() {
                 href: "/profile",
                 gradient: "linear-gradient(145deg, #0c4a6e 0%, #075985 100%)",
                 glow: "rgba(8,145,178,0.35)", border: "rgba(103,232,249,0.2)"
+              },
+              {
+                Icon: Newspaper, label: "Noticias BIZEN", sub: "Análisis y tendencias globales",
+                href: "/news",
+                gradient: "linear-gradient(145deg, #0B1E5E 0%, #173896 100%)",
+                glow: "rgba(11,30,94,0.35)", border: "rgba(23,56,150,0.2)"
               },
             ] as const).map(({ Icon, label, sub, href, gradient, glow, border }, idx) => (
               <motion.div

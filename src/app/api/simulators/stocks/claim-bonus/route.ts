@@ -42,7 +42,7 @@ export async function POST(req: Request) {
           amount: bonusAmount,
           type: "income",
           category: "investment_reward",
-          description: "Bono de Bienvenida: BIZEN Market ₿"
+          description: "Bono de Bienvenida: BIZEN Market bz"
         }
       });
 

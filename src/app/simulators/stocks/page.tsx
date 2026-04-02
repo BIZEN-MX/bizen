@@ -25,6 +25,8 @@ import {
   Flame,
   Skull,
   Info,
+  Newspaper,
+  X,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -44,6 +46,7 @@ import PageLoader from "@/components/PageLoader";
 import { SaveRunButton } from "@/components/simulators/SaveRunButton";
 import BizenVirtualCard from "@/components/BizenVirtualCard";
 import { STOCK_METADATA } from "@/data/simulators/stock-metadata";
+import BizcoinIcon from "@/components/BizcoinIcon";
 
 const SECTOR_COLORS: Record<string, string> = {
   Tecnología: "#3b82f6",
@@ -256,6 +259,12 @@ function StockSimulatorContent() {
   const [history, setHistory] = useState<any[]>([]);
   const [historyRange, setHistoryRange] = useState("1m");
   const [fetchingHistory, setFetchingHistory] = useState(false);
+  const [fetchingPerformance, setFetchingPerformance] = useState(false);
+  const [performanceData, setPerformanceData] = useState<any[]>([]);
+  const [performanceRange, setPerformanceRange] = useState("1m");
+  const [underperformanceAlert, setUnderperformanceAlert] = useState<any>(null);
+  const [stockNews, setStockNews] = useState<any[]>([]);
+  const [fetchingStockNews, setFetchingStockNews] = useState(false);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [fetchingRankings, setFetchingRankings] = useState(false);
   const orderFormRef = React.useRef<HTMLDivElement>(null);
@@ -296,8 +305,72 @@ function StockSimulatorContent() {
   }, [user, loading]);
 
   useEffect(() => {
+    if (activeTab === "portfolio" && portfolio) {
+      fetchPerformance(performanceRange);
+    }
+  }, [activeTab, portfolio, performanceRange]);
+
+  const fetchPerformance = async (range: string) => {
+    setFetchingPerformance(true);
+    try {
+      const res = await fetch(`/api/simulators/stocks/performance?range=${range}`);
+      if (res.ok) {
+        const data = await res.json();
+        setPerformanceData(data);
+        
+        if (data.length > 0) {
+          const latest = data[data.length - 1];
+          const avgMarket = (latest.spyYield + latest.nasdaqYield + latest.dowYield) / 3;
+          
+          if (latest.portfolioYield < avgMarket - 5) {
+            // Find best performing sector
+            const sectorPerformance: Record<string, number> = {};
+            const sectorCounts: Record<string, number> = {};
+            processedMarketData.forEach(s => {
+              sectorPerformance[s.sector] = (sectorPerformance[s.sector] || 0) + s.change;
+              sectorCounts[s.sector] = (sectorCounts[s.sector] || 0) + 1;
+            });
+            let bestSector = "Mercado";
+            let maxAvg = -999;
+            Object.keys(sectorPerformance).forEach(sec => {
+              const avg = sectorPerformance[sec] / sectorCounts[sec];
+              if (avg > maxAvg) {
+                maxAvg = avg;
+                bestSector = sec;
+              }
+            });
+
+            setUnderperformanceAlert({
+               delta: (avgMarket - latest.portfolioYield).toFixed(1),
+               bench: avgMarket.toFixed(1),
+               suggestion: bestSector
+            });
+          } else {
+            setUnderperformanceAlert(null);
+          }
+        }
+      }
+    } catch {
+    } finally {
+      setFetchingPerformance(false);
+    }
+  };
+
+  const fetchStockNews = async (symbol: string) => {
+    setFetchingStockNews(true);
+    try {
+      const res = await fetch(`/api/news?symbol=${symbol}`);
+      if (res.ok) setStockNews(await res.json());
+    } catch {
+    } finally {
+      setFetchingStockNews(false);
+    }
+  };
+
+  useEffect(() => {
     if (orderForm.symbol) {
       fetchHistory(orderForm.symbol, historyRange);
+      fetchStockNews(orderForm.symbol);
     }
   }, [orderForm.symbol, historyRange]);
 
@@ -594,7 +667,7 @@ function StockSimulatorContent() {
                   cursor: "pointer",
                 }}
               >
-                Reclamar 1,000 ₿
+                Reclamar 1,000 bz <BizcoinIcon size={18} style={{ marginLeft: 6 }} />
               </button>
             </motion.div>
           )}
@@ -700,7 +773,7 @@ function StockSimulatorContent() {
                 }}
               >
                 Aprende a invertir en acciones y ETFs reales usando tus{" "}
-                <strong>Bizcoins</strong>. 1 USD = 10 ₿.
+                <strong>Bizcoins</strong>. 1 USD = 10 bz. <BizcoinIcon size={14} />
               </p>
             </div>
 
@@ -878,53 +951,62 @@ function StockSimulatorContent() {
           >
             {[
               {
-                label: "Bizcoins Disponibles",
-                value: `₿ ${cash.toLocaleString("es-MX", { minimumFractionDigits: 0 })}`,
-                sub: "Saldo Unificado",
-                bg: "linear-gradient(135deg,#d1fae5,#a7f3d0)",
-                tc: "#065f46",
+                label: "Poder de Compra",
+                value: `bz ${cash.toLocaleString("es-MX", { minimumFractionDigits: 0 })}`,
+                sub: "Bizcoins disponibles",
+                bg: "linear-gradient(145deg, #0B1E5E 0%, #173896 100%)",
+                tc: "white",
+                subtc: "rgba(255,255,255,0.7)"
               },
               {
-                label: "Valor Portafolio",
-                value: `₿ ${totalValue.toLocaleString("es-MX", { minimumFractionDigits: 0 })}`,
-                sub: "mercado + efectivo",
-                bg: "linear-gradient(135deg,#dbeafe,#bfdbfe)",
-                tc: "#1e3a8a",
+                label: "Valor del Portafolio",
+                value: `bz ${totalValue.toLocaleString("es-MX", { minimumFractionDigits: 0 })}`,
+                sub: "Efectivo + Mercado",
+                bg: "white",
+                tc: "#0B1E5E",
+                subtc: "#64748b",
+                border: "1.5px solid #e2e8f0"
               },
               {
-                label: "Rendimiento",
-                value: `${returns.toFixed(2)}%`,
-                sub: "desde el inicio",
-                bg: "linear-gradient(135deg,#ede9fe,#ddd6fe)",
-                tc: "#4c1d95",
+                label: "Rendimiento Global",
+                value: `${returns > 0 ? "+" : ""}${returns.toFixed(2)}%`,
+                sub: "Desde el inicio",
+                bg: returns >= 0 ? "linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%)" : "linear-gradient(145deg, #fef2f2 0%, #fee2e2 100%)",
+                tc: returns >= 0 ? "#166534" : "#991b1b",
+                subtc: returns >= 0 ? "#15803d" : "#b91c1c",
+                border: returns >= 0 ? "1.5px solid #bbf7d0" : "1.5px solid #fecaca"
               },
               {
-                label: "Posiciones",
+                label: "Activos en Cartera",
                 value: String(portfolio?.holdings?.length ?? 0),
-                sub: "activos",
-                bg: "linear-gradient(135deg,#fef3c7,#fde68a)",
-                tc: "#78350f",
+                sub: "Posiciones abiertas",
+                bg: "white",
+                tc: "#0B1E5E",
+                subtc: "#64748b",
+                border: "1.5px solid #e2e8f0"
               },
             ].map((s, i) => (
-              <div
+              <motion.div
+                whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.06)" }}
                 key={i}
                 style={{
                   background: s.bg,
-                  borderRadius: 20,
-                  padding: "20px",
-                  border: "1.5px solid rgba(0,0,0,0.03)",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+                  borderRadius: 24,
+                  padding: "22px 24px",
+                  border: s.border || "1.5px solid transparent",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
+                  cursor: "default"
                 }}
               >
                 <p
                   style={{
-                    fontSize: 10,
-                    fontWeight: 500,
+                    fontSize: 11,
+                    fontWeight: 700,
                     color: s.tc,
                     textTransform: "uppercase" as const,
-                    letterSpacing: "0.07em",
-                    margin: "0 0 6px",
-                    opacity: 0.7,
+                    letterSpacing: "0.06em",
+                    margin: "0 0 8px",
+                    opacity: 0.8,
                   }}
                 >
                   {s.label}
@@ -932,9 +1014,9 @@ function StockSimulatorContent() {
                 <p
                   style={{
                     fontSize: 26,
-                    fontWeight: 600,
+                    fontWeight: 800,
                     color: s.tc,
-                    margin: "0 0 2px",
+                    margin: "0 0 4px",
                     letterSpacing: "-0.02em",
                     lineHeight: 1.1,
                   }}
@@ -942,11 +1024,11 @@ function StockSimulatorContent() {
                   {s.value}
                 </p>
                 <p
-                  style={{ fontSize: 11, color: s.tc, margin: 0, opacity: 0.6 }}
+                  style={{ fontSize: 13, color: s.subtc, margin: 0, fontWeight: 500 }}
                 >
                   {s.sub}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -1014,6 +1096,270 @@ function StockSimulatorContent() {
                       gap: 32,
                     }}
                   >
+                    {/* Underperformance Intelligent Alert */}
+                    <AnimatePresence>
+                      {underperformanceAlert && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          animate={{ opacity: 1, height: "auto", marginBottom: 0 }}
+                          exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          style={{ overflow: "hidden" }}
+                        >
+                          <div
+                            style={{
+                              background: "rgba(239, 68, 68, 0.08)",
+                              borderRadius: 20,
+                              padding: "16px 20px",
+                              border: "1.5px solid rgba(239, 68, 68, 0.25)",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 16,
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: 44,
+                                height: 44,
+                                borderRadius: 12,
+                                background: "#ef4444",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                boxShadow: "0 4px 12px rgba(239, 68, 68, 0.3)",
+                                flexShrink: 0
+                              }}
+                            >
+                              <AlertTriangle size={22} color="white" />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                              <h4 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#991b1b", letterSpacing: "-0.01em" }}>Alerta: Tu portafolio rinde por debajo del mercado</h4>
+                              <p style={{ margin: "2px 0 10px", fontSize: 13, color: "#ef4444", fontWeight: 600 }}>
+                                Estás un <strong style={{ textDecoration: "underline" }}>{underperformanceAlert.delta}% por detrás</strong> del promedio de los índices ({underperformanceAlert.bench}%).
+                              </p>
+                              <div style={{ background: "rgba(239, 68, 68, 0.12)", padding: "10px 14px", borderRadius: 12, display: "flex", alignItems: "center", gap: 10 }}>
+                                <Rocket size={16} color="#ef4444" />
+                                <span style={{ fontSize: 12, fontWeight: 700, color: "#991b1b" }}>
+                                  TIP BIZEN: El sector de <strong style={{ textTransform: "uppercase" }}>{underperformanceAlert.suggestion}</strong> está rindiendo mejor hoy. Considera reequilibrar tus posiciones ahí.
+                                </span>
+                              </div>
+                            </div>
+                            <button
+                               onClick={() => setUnderperformanceAlert(null)}
+                               style={{ background: "none", border: "none", color: "#ef4444", opacity: 0.5, cursor: "pointer" }}
+                            >
+                              <X size={20} />
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Performance Section: Portfolio vs S&P 500 */}
+                    <div
+                      style={{
+                        background: "#fff",
+                        borderRadius: 24,
+                        padding: 24,
+                        border: "1.5px solid #e2e8f0",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: 24,
+                          flexWrap: "wrap",
+                          gap: 12,
+                        }}
+                      >
+                        <div>
+                          <h3
+                            style={{
+                              fontSize: 16,
+                              fontWeight: 700,
+                              color: "#0B1E5E",
+                              margin: "0 0 4px",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 8,
+                            }}
+                          >
+                            <TrendingUp size={18} color="#10b981" /> Desempeño vs S&P 500
+                          </h3>
+                          <p
+                            style={{
+                              fontSize: 13,
+                              color: "#64748b",
+                              margin: 0,
+                            }}
+                          >
+                            Mide tu rendimiento contra el índice más importante del mercado.
+                          </p>
+                        </div>
+                        <div style={{ display: "flex", gap: 6 }}>
+                          {["1d", "5d", "1m", "6m"].map((r) => (
+                            <button
+                              key={r}
+                              onClick={() => setPerformanceRange(r)}
+                              style={{
+                                padding: "6px 12px",
+                                borderRadius: 10,
+                                fontSize: 12,
+                                fontWeight: 700,
+                                cursor: "pointer",
+                                border: "none",
+                                background:
+                                  performanceRange === r
+                                    ? "#0B1E5E"
+                                    : "rgba(0,0,0,0.04)",
+                                color:
+                                  performanceRange === r
+                                    ? "white"
+                                    : "#64748b",
+                                transition: "all 0.2s",
+                              }}
+                            >
+                              {r === "1d" ? "HOY" : r.toUpperCase()}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div style={{ height: 320, width: "100%", position: "relative", opacity: fetchingPerformance ? 0.3 : 1 }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={performanceData}>
+                            <defs>
+                              <linearGradient id="colPortfolio" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                              </linearGradient>
+                              <linearGradient id="colSpy" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1}/>
+                                <stop offset="95%" stopColor="#94a3b8" stopOpacity={0}/>
+                              </linearGradient>
+                              <linearGradient id="colNasdaq" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1}/>
+                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                              </linearGradient>
+                              <linearGradient id="colDow" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.1}/>
+                                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                              </linearGradient>
+                            </defs>
+                            <XAxis 
+                              dataKey="date" 
+                              axisLine={false} 
+                              tickLine={false} 
+                              tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
+                              minTickGap={40}
+                              dy={10}
+                              tickFormatter={(v: string) => {
+                                const d = new Date(v);
+                                return d.toLocaleDateString("es-MX", { day: 'numeric', month: 'short' });
+                              }}
+                            />
+                            <YAxis 
+                              axisLine={false} 
+                              tickLine={false} 
+                              tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
+                              width={40}
+                              dx={-10}
+                              tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v}%`}
+                            />
+                            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                            <Tooltip 
+                               contentStyle={{ background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 16, boxShadow: '0 10px 25px rgba(0,0,0,0.05)', fontSize: 12 }}
+                               itemStyle={{ fontWeight: 700 }}
+                               labelStyle={{ fontWeight: 800, color: '#0B1E5E', marginBottom: 6 }}
+                               formatter={(v: number, name: string) => [
+                                 `${v > 0 ? "+" : ""}${v}%`, 
+                                 name === 'portfolioYield' ? 'Tú (Portafolio)' : 
+                                 name === 'nasdaqYield' ? 'Nasdaq (Índice)' : 
+                                 name === 'dowYield' ? 'Dow Jones (Índice)' :
+                                 'S&P 500 (Índice)'
+                               ]}
+                               labelFormatter={(v) => new Date(v).toLocaleDateString("es-MX", { day: 'numeric', month: 'long' })}
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="spyYield"
+                              stroke="#94a3b8"
+                              fillOpacity={1}
+                              fill="url(#colSpy)"
+                              strokeWidth={2}
+                              strokeDasharray="5 5"
+                              isAnimationActive={true}
+                              name="S&P 500"
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="nasdaqYield"
+                              stroke="#3b82f6"
+                              fillOpacity={1}
+                              fill="url(#colNasdaq)"
+                              strokeWidth={2}
+                              strokeDasharray="5 5"
+                              isAnimationActive={true}
+                              name="Nasdaq"
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="dowYield"
+                              stroke="#f59e0b"
+                              fillOpacity={1}
+                              fill="url(#colDow)"
+                              strokeWidth={2}
+                              strokeDasharray="5 5"
+                              isAnimationActive={true}
+                              name="Dow Jones"
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="portfolioYield"
+                              stroke="#10b981"
+                              fillOpacity={1}
+                              fill="url(#colPortfolio)"
+                              strokeWidth={4}
+                              isAnimationActive={true}
+                              name="Portafolio"
+                            />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                        
+                        {fetchingPerformance && (
+                          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <div style={{ width: 32, height: 32, border: "3px solid #f1f5f9", borderTopColor: "#10b981", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                          </div>
+                        )}
+                        
+                        {performanceData.length === 0 && !fetchingPerformance && (
+                          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.8)", flexDirection: "column", gap: 12 }}>
+                            <Activity size={40} color="#cbd5e1" />
+                            <p style={{ fontSize: 14, color: "#64748b", fontWeight: 500 }}>Estamos recolectando datos históricos...</p>
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 20 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ width: 12, height: 12, background: "#10b981", borderRadius: "50%" }} />
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "#475569" }}>Tú (bz)</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ width: 12, height: 12, background: "#94a3b8", borderRadius: "50%", opacity: 0.5 }} />
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "#475569" }}>S&P 500</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ width: 12, height: 12, background: "#3b82f6", borderRadius: "50%", opacity: 0.5 }} />
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "#475569" }}>Nasdaq</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ width: 12, height: 12, background: "#f59e0b", borderRadius: "50%", opacity: 0.5 }} />
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "#475569" }}>Dow Jones</span>
+                        </div>
+                      </div>
+                    </div>
                     {/* Visual Insights Section */}
                     <div
                       style={{
@@ -1121,7 +1467,7 @@ function StockSimulatorContent() {
                                 margin: 0,
                               }}
                             >
-                              ₿ {holdingsValue.toLocaleString()}
+                              <BizcoinIcon size={14} style={{ marginRight: 4 }} /> {holdingsValue.toLocaleString()} bz
                             </p>
                           </div>
                         </div>
@@ -1407,7 +1753,7 @@ function StockSimulatorContent() {
                                     color: "#64748b",
                                   }}
                                 >
-                                  ₿{" "}
+                                  bz{" "}
                                   {Math.round(
                                     Number(h.avg_cost),
                                   ).toLocaleString()}
@@ -1420,7 +1766,7 @@ function StockSimulatorContent() {
                                     color: isCrisis ? "#ef4444" : "#0B1E5E",
                                   }}
                                 >
-                                  ₿{" "}
+                                  bz{" "}
                                   {Math.round(
                                     marketPriceBizcoins,
                                   ).toLocaleString()}
@@ -1546,16 +1892,15 @@ function StockSimulatorContent() {
                     gap: 10,
                   }}
                 >
-                  <h2
-                    style={{
-                      fontSize: 19,
-                      fontWeight: 500,
-                      color: "#0B1E5E",
-                      margin: 0,
-                    }}
-                  >
-                    ETFs & Acciones
-                  </h2>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(11, 30, 94, 0.06)", border: "1.5px solid rgba(11, 30, 94, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Activity size={22} color="#0B1E5E" />
+                    </div>
+                    <div>
+                        <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0B1E5E", margin: 0, letterSpacing: "-0.015em" }}>Explorar Mercado</h2>
+                        <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600, marginTop: 2 }}>Descubre los mejores activos financieros</div>
+                    </div>
+                  </div>
                   <span
                     style={{
                       fontSize: 12,
@@ -1586,21 +1931,30 @@ function StockSimulatorContent() {
                   {processedMarketData.map((s) => {
                     const isSelected = orderForm.symbol === s.symbol;
                     return (
-                      <div
+                      <motion.div
                         key={s.symbol}
                         className="sim-stock-row"
+                        whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.06)" }}
                         onClick={() => {
                           setOrderForm((f) => ({ ...f, symbol: s.symbol }));
                           setOrderMsg(null);
                         }}
                         style={{
                           borderColor: isSelected ? "#10b981" : "#e2e8f0",
-                          background: isSelected ? "#f0fdf4" : "#f8fafc",
+                          background: isSelected ? "#f0fdf4" : "white",
                           boxShadow: isSelected
                             ? "0 0 0 3px rgba(16,185,129,0.1)"
-                            : "none",
+                            : "0 4px 12px rgba(0,0,0,0.02)",
                           transform: isSelected ? "scale(1.02)" : "none",
                           zIndex: isSelected ? 1 : 0,
+                          borderRadius: 20,
+                          padding: 18,
+                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                          borderStyle: "solid",
+                          borderWidth: "1.5px"
                         }}
                       >
                         <div
@@ -1667,7 +2021,7 @@ function StockSimulatorContent() {
                               margin: "0 0 2px",
                             }}
                           >
-                            ₿ {(s.price * 10).toFixed(0)}
+                                bz {(s.price * 10).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
                           </p>
                           <div
                             style={{
@@ -1720,7 +2074,7 @@ function StockSimulatorContent() {
                             </div>
                           )}
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -1850,7 +2204,7 @@ function StockSimulatorContent() {
                                   color: isCrisis ? "#ef4444" : "#10b981",
                                 }}
                               >
-                                ₿ {(s.price * 10).toFixed(0)}
+                                    bz {(s.price * 10).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
                               </span>
                             </>
                           );
@@ -1956,7 +2310,7 @@ function StockSimulatorContent() {
                           fontWeight: 500,
                         }}
                       >
-                        Tendencia Histórica - Bizcoins (₿)
+                        Tendencia Histórica - Bizcoins (bz) <BizcoinIcon size={16} />
                       </div>
                     </div>
 
@@ -1988,7 +2342,7 @@ function StockSimulatorContent() {
                             contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, fontSize: 12, color: 'white' }}
                             itemStyle={{ color: '#10b981', fontWeight: 700 }}
                             labelStyle={{ color: 'rgba(255,255,255,0.5)', marginBottom: 4 }}
-                            formatter={(v: any) => [`₿ ${v.toFixed(0)}`, 'Precio']}
+                            formatter={(v: any) => [`${v.toFixed(0)} bz`, 'Precio']}
                           />
                           <Area 
                             type="monotone" 
@@ -2002,6 +2356,47 @@ function StockSimulatorContent() {
                       </ResponsiveContainer>
                     </div>
 
+                  </div>
+
+                  {/* Company News Section */}
+                  <div style={{ marginBottom: 28 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                      <Newspaper size={18} color="#94a3b8" />
+                      <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        Noticias Recientes de {orderForm.symbol}
+                      </h4>
+                    </div>
+                    {fetchingStockNews ? (
+                        <div style={{ height: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <div style={{ width: 24, height: 24, border: "2px solid rgba(255,255,255,0.1)", borderTopColor: "#10b981", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                        </div>
+                    ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }}>
+                            {stockNews.map((n) => (
+                                <motion.div
+                                    key={n.id}
+                                    whileHover={{ background: "rgba(255,255,255,0.05)" }}
+                                    style={{
+                                        display: "flex",
+                                        gap: 14,
+                                        padding: 12,
+                                        borderRadius: 16,
+                                        background: "rgba(255,255,255,0.02)",
+                                        border: "1px solid rgba(255,255,255,0.05)",
+                                        cursor: "pointer",
+                                        transition: "all 0.2s"
+                                    }}
+                                    onClick={() => window.open(n.url, "_blank")}
+                                >
+                                    <img src={n.image} alt={n.title} style={{ width: 60, height: 60, borderRadius: 10, objectFit: "cover" }} />
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 800, color: "#10b981", marginBottom: 4 }}>{n.category} • {n.time}</div>
+                                        <h5 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "white", lineHeight: 1.3 }}>{n.title}</h5>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
                   </div>
 
                   <div
@@ -2139,8 +2534,8 @@ function StockSimulatorContent() {
                         }}
                       >
                         {orderForm.side === "buy"
-                          ? "Monto a Invertir (₿)"
-                          : "Monto a Vender (equiv. ₿)"}
+                          ? "Monto a Invertir (bz)"
+                          : "Monto a Vender (equiv. bz)"}
                       </label>
                       <div style={{ position: "relative" }}>
                         <input
@@ -2191,7 +2586,7 @@ function StockSimulatorContent() {
                             fontWeight: 800,
                           }}
                         >
-                          ₿
+                          bz
                         </div>
                       </div>
                       <div
@@ -2735,7 +3130,7 @@ function StockSimulatorContent() {
                   }}
                 >
                   {animOrder?.side === "buy" ? "-" : "+"}
-                  {Math.round(animOrder?.cost).toLocaleString()} ₿
+                  {Math.round(animOrder?.cost).toLocaleString()} bz <BizcoinIcon size={24} />
                 </motion.div>
 
                 <div
@@ -2882,7 +3277,7 @@ function StockSimulatorContent() {
                     zIndex: 20,
                   }}
                 >
-                  +1,000 ₿
+                  +1,000 bz <BizcoinIcon size={18} />
                 </motion.div>
 
                 <div

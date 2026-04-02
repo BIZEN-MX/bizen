@@ -39,6 +39,7 @@ import {
   CheckIcon,
   ShieldIcon
 } from "@/components/CustomIcons"
+import BizcoinIcon from "@/components/BizcoinIcon"
 
 export default function FixedSidebar() {
   const router = useRouter()
@@ -1023,8 +1024,8 @@ export default function FixedSidebar() {
                           fontSize: 13,
                           fontWeight: 400
                         }}>
-                          <Star size={12} fill="#0369A1" />
-                          {((dbProfile as any)?.bizcoins || 0).toLocaleString()}
+                          <BizcoinIcon size={14} style={{ marginRight: 4 }} />
+                          {((dbProfile as any)?.bizcoins || 0).toLocaleString()} <span style={{ marginLeft: 4 }}>bz</span>
                         </div>
                         <span style={{ fontSize: 13, fontWeight: 400 }}>MI PERFIL</span>
                       </>

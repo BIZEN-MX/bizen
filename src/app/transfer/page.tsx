@@ -7,6 +7,7 @@ import { ArrowLeft, Send, Search, Loader2, Check, Coins, UserRound, ArrowRight, 
 import { useAuth } from "@/contexts/AuthContext"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import PageLoader from "@/components/PageLoader"
+import BizcoinIcon from "@/components/BizcoinIcon"
 
 function TransferContent() {
   const { user, dbProfile, loading } = useAuth()
@@ -204,8 +205,8 @@ function TransferContent() {
         }}>
           <div style={{ fontSize: 11, color: "rgba(15, 98, 254, 0.8)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Tu Balance</div>
           <div style={{ fontSize: 20, fontWeight: 950, color: "white", display: "flex", alignItems: "center", gap: 6 }}>
-            <Coins size={18} color="#f59e0b" />
-            {bizcoins.toLocaleString()} <span style={{ fontSize: 12, fontWeight: 700, opacity: 0.5 }}>BC</span>
+            <BizcoinIcon size={24} />
+            {bizcoins.toLocaleString()} <span style={{ fontSize: 12, fontWeight: 700, opacity: 0.5 }}>bz</span>
           </div>
         </div>
       </header>
@@ -318,7 +319,7 @@ function TransferContent() {
                 <div className="card-glass" style={{ padding: 40, textAlign: "center" }}>
                   <label style={{ display: "block", fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 20 }}>Monto a Transferir</label>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
-                    <Coins size={40} color="#f59e0b" />
+                    <BizcoinIcon size={40} />
                     <input 
                       type="number" 
                       autoFocus
@@ -336,7 +337,7 @@ function TransferContent() {
                         textAlign: "center"
                       }}
                     />
-                    <span style={{ fontSize: 24, fontWeight: 900, color: "rgba(255,255,255,0.4)" }}>BC</span>
+                    <span style={{ fontSize: 24, fontWeight: 900, color: "rgba(255,255,255,0.4)" }}>bz</span>
                   </div>
                   <div style={{ marginTop: 24, height: 4, background: "rgba(255,255,255,0.05)", borderRadius: 2, width: "100%", overflow: "hidden" }}>
                     <motion.div 
@@ -346,7 +347,7 @@ function TransferContent() {
                     />
                   </div>
                   <div style={{ marginTop: 12, fontSize: 14, fontWeight: 700, color: parseInt(amount) > bizcoins ? "#ef4444" : "rgba(255,255,255,0.4)" }}>
-                    {parseInt(amount) > bizcoins ? "Saldo insuficiente" : `Límite disponible: ${bizcoins.toLocaleString()} BC`}
+                    {parseInt(amount) > bizcoins ? "Saldo insuficiente" : <>Límite disponible: {bizcoins.toLocaleString()} bz <BizcoinIcon size={14} /></>}
                   </div>
                 </div>
 
@@ -405,7 +406,7 @@ function TransferContent() {
                 </div>
                 <h2 style={{ fontSize: 36, fontWeight: 950, color: "white", marginBottom: 12 }}>¡Transferido!</h2>
                 <p style={{ fontSize: 18, color: "rgba(255,255,255,0.5)", lineHeight: 1.6, marginBottom: 40 }}>
-                  Has enviado <strong style={{ color: "#0F62FE" }}>{amount} BC</strong> a <strong style={{ color: "white" }}>{selectedUser.fullName || selectedUser.nickname}</strong> de forma exitosa.
+                  Has enviado <strong style={{ color: "#0F62FE" }}>{amount} bz <BizcoinIcon size={18} /></strong> a <strong style={{ color: "white" }}>{selectedUser.fullName || selectedUser.nickname}</strong> de forma exitosa.
                 </p>
                 
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>

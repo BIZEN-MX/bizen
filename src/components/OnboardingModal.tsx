@@ -14,6 +14,7 @@ import {
   ArrowLeftRight, Gift, Wifi, Star, Zap, ShoppingBag,
   TrendingUp, MessageCircle, BookMarked, FlaskConical, MapPin
 } from "lucide-react"
+import BizcoinIcon from "@/components/BizcoinIcon"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Step = "welcome" | "avatar" | "username" | "school" | "birthday" | "wallet" | "billy" | "diagnostic"
@@ -54,7 +55,7 @@ const WALLET_FEATURES = [
   },
   {
     id: "bizcoins",
-    icon: Star,
+    icon: (props: any) => <BizcoinIcon {...props} />,
     label: "Bizcoins",
     desc: "Gana moneda digital por cada lección completada, reto logrado y día de racha.",
     color: "#f59e0b",
@@ -226,7 +227,7 @@ function BizenCard({
             >
               0
             </motion.span>
-            <span style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", fontWeight: 800, letterSpacing: "0.05em" }}>BC</span>
+            <span style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", fontWeight: 800, letterSpacing: "0.05em" }}>bz</span>
           </div>
         </motion.div>
 

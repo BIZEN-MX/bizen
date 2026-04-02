@@ -166,7 +166,7 @@ function LegendaryOverlay({ isHovered }: { isHovered: boolean }) {
       <div style={{
         position: "absolute", inset: 0, zIndex: 4, pointerEvents: "none",
         background: "linear-gradient(105deg, transparent 30%, rgba(255,215,0,0.08) 50%, rgba(255,100,200,0.07) 60%, rgba(100,180,255,0.07) 70%, transparent 80%)",
-        animation: "bcHoloSweep 3s ease-in-out infinite",
+        animation: "bzHoloSweep 3s ease-in-out infinite",
         mixBlendMode: "screen",
       }} />
       {/* Gold border glow */}
@@ -187,7 +187,7 @@ function LegendaryOverlay({ isHovered }: { isHovered: boolean }) {
           width: 4, height: 4, borderRadius: "50%",
           background: "#fbbf24",
           boxShadow: "0 0 6px 2px rgba(251,191,36,0.7)",
-          animation: `bcSparkle ${1.4 + i * 0.3}s ease-in-out infinite`,
+          animation: `bzSparkle ${1.4 + i * 0.3}s ease-in-out infinite`,
         }} />
       ))}
     </>
@@ -232,7 +232,7 @@ function BillySticker() {
       boxShadow: "0 0 15px rgba(255,255,255,0.1), inset 0 0 10px rgba(255,255,255,0.1)",
       overflow: "hidden"
     }}>
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent)", animation: "bcHoloSweep 2s infinite" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent)", animation: "bzHoloSweep 2s infinite" }} />
       <span style={{ fontSize: 8, fontWeight: 900, color: "white", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: 1 }}>Billy<br/>Certificado</span>
     </div>
   )
@@ -375,33 +375,33 @@ export default function BizenVirtualCard({
   return (
     <>
       <style>{`
-        @keyframes bcShimmer {
+        @keyframes bzShimmer {
           0%   { left: -100%; }
           20%, 100% { left: 130%; }
         }
-        @keyframes bcHoloSweep {
+        @keyframes bzHoloSweep {
           0%   { transform: translateX(-100%) skewX(-10deg); opacity: 0; }
           40%  { opacity: 1; }
           60%  { opacity: 1; }
           100% { transform: translateX(200%) skewX(-10deg); opacity: 0; }
         }
-        @keyframes bcSparkle {
+        @keyframes bzSparkle {
           0%, 100% { opacity: 0; transform: scale(0.5); }
           50%       { opacity: 1; transform: scale(1.3); }
         }
-        @keyframes bcGlow-${colorTheme}-${tier} {
+        @keyframes bzGlow-${colorTheme}-${tier} {
           0%, 100% { box-shadow: ${boxShadowIdle}; }
           50%       { box-shadow: 0 36px 90px -8px var(--glow-anim-idle), 0 0 0 1px rgba(255,255,255,0.1)${tierCfg.extraShadow ? `, ${tierCfg.extraShadow}` : ""}; }
         }
-        .bc-card-wrap {
-          animation: bcDu 0.55s cubic-bezier(.2,.8,.2,1) both;
+        .bz-card-wrap {
+          animation: bzDu 0.55s cubic-bezier(.2,.8,.2,1) both;
         }
-        @keyframes bcDu {
+        @keyframes bzDu {
           from { opacity:0; transform: translateY(20px) rotateX(8deg); }
           to   { opacity:1; transform: translateY(0) rotateX(0deg); }
         }
-        .bc-shop-btn { transition: all .22s ease; }
-        .bc-shop-btn:hover {
+        .bz-shop-btn { transition: all .22s ease; }
+        .bz-shop-btn:hover {
           transform: translateY(-2px);
           background: rgba(255,255,255,0.2) !important;
           box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
@@ -409,7 +409,7 @@ export default function BizenVirtualCard({
       `}</style>
 
       <div
-        className="bc-card-wrap"
+        className="bz-card-wrap"
         style={{
           animationDelay,
           perspective: "1200px",
@@ -439,7 +439,7 @@ export default function BizenVirtualCard({
             transformStyle: "preserve-3d",
             transition: isHovered ? "transform 0.08s linear" : "transform 0.55s cubic-bezier(.4,0,.2,1)",
             boxShadow: isHovered ? boxShadowHover : boxShadowIdle,
-            animation: isHovered ? "none" : `bcGlow-${colorTheme}-${tier} 4s ease-in-out infinite`,
+            animation: isHovered ? "none" : `bzGlow-${colorTheme}-${tier} 4s ease-in-out infinite`,
             userSelect: "none",
           }}
         >
@@ -480,7 +480,7 @@ export default function BizenVirtualCard({
               position: "absolute", top: 0, bottom: 0, width: "60%",
               background: `linear-gradient(90deg, transparent, rgba(255,255,255,${tier === "metal" ? "0.12" : "0.07"}), transparent)`,
               zIndex: 4, pointerEvents: "none",
-              animation: "bcShimmer 5s ease-in-out infinite",
+              animation: "bzShimmer 5s ease-in-out infinite",
             }} />
           )}
 
@@ -545,7 +545,7 @@ export default function BizenVirtualCard({
                   color: tier === "legendary" ? "rgba(251,191,36,0.9)" : "rgba(255,255,255,0.8)",
                   letterSpacing: "0.06em",
                 }}>
-                  BC
+                  bz
                 </span>
               </div>
             </div>
@@ -594,7 +594,7 @@ export default function BizenVirtualCard({
                         backdropFilter: "blur(8px)",
                         cursor: "pointer",
                       }}
-                      className="bc-shop-btn"
+                      className="bz-shop-btn"
                       onClick={(e) => { 
                         e.stopPropagation(); 
                         if (onTransferClick) onTransferClick();
@@ -624,7 +624,7 @@ export default function BizenVirtualCard({
                         backdropFilter: "blur(8px)",
                         cursor: "pointer",
                       }}
-                      className="bc-shop-btn"
+                      className="bz-shop-btn"
                       onClick={(e) => { e.stopPropagation(); router.push("/tienda") }}
                     >
                       <ShoppingBag size={11} color={tier === "legendary" ? "rgba(251,191,36,0.9)" : "rgba(255,255,255,0.8)"} />
