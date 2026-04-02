@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp } from "lucide-react"
+import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp, BrainCircuit, ChevronRight } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
@@ -250,7 +250,11 @@ function XPRing({ pct, level }: { pct: number; level: number }) {
 function DashboardContent() {
   const { user, loading, dbProfile } = useAuth()
   const router = useRouter()
-  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin"
+  const isInstitutional = useMemo(() => {
+    const email = user?.email?.toLowerCase() || ""
+    return email.endsWith(".edu") || email.includes(".edu.")
+  }, [user])
 
   const [stats,            setStats]            = useState<Stats | null>(null)
   const [topics,           setTopics]           = useState<Topic[]>([])
@@ -264,6 +268,10 @@ function DashboardContent() {
   const [showPulseXp,      setShowPulseXp]      = useState(false)
   const [showPulseBc,      setShowPulseBc]      = useState(false)
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
+
+  const showDiagnosticWidget = useMemo(() => {
+    return !isInstitutional && !dnaResult && !isAdminOrTeacher && !loadingData && !loading;
+  }, [isInstitutional, dnaResult, isAdminOrTeacher, loadingData, loading])
 
   const searchParams = useSearchParams()
   const [showEvolution, setShowEvolution] = useState(false)
@@ -464,10 +472,21 @@ function DashboardContent() {
           border-radius:24px; padding:20px 18px;
           cursor:pointer; position:relative; overflow:hidden;
           font-family:"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-          transition:transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .quick-grid-container:hover .ql {
+          opacity: 0.5;
+          filter: saturate(0.8) blur(0.5px);
+          transform: scale(0.98);
+        }
+        .quick-grid-container .ql:hover {
+          opacity: 1 !important;
+          filter: saturate(1.1) blur(0) !important;
+          transform: translateY(-6px) scale(1.04) !important;
+          z-index: 10;
         }
         .ql-label { font-size:14px; font-weight:800; color:#fff; line-height:1.3; }
-        .ql-sub   { font-size:11px; color:rgba(255,255,255,0.5); font-weight:600; margin-top:4px;
+        .ql-sub   { font-size:11px; color:rgba(255,255,255,0.65); font-weight:600; margin-top:4px;
                     overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
         /* continue button */
@@ -985,10 +1004,117 @@ function DashboardContent() {
           </motion.div>
         )}
         
+        {/* METAS DE AHORRO (Savings Goals) - Premium Standalone Widget */}
+        <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.1 }}
+           onClick={() => router.push("/metas")}
+           style={{
+             background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+             borderRadius: 28,
+             padding: "24px 32px",
+             marginBottom: 24,
+             display: "flex",
+             alignItems: "center",
+             justifyContent: "space-between",
+             cursor: "pointer",
+             border: "1px solid rgba(16, 185, 129, 0.2)",
+             boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+             position: "relative",
+             overflow: "hidden"
+           }}
+        >
+          {/* Decorative Glow */}
+          <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 200, height: 200, background: "rgba(16,185,129,0.08)", borderRadius: "50%", filter: "blur(50px)" }} />
+          
+          <div style={{ display: "flex", alignItems: "center", gap: 18, position: "relative", zIndex: 1 }}>
+            <div style={{ width: 52, height: 52, borderRadius: 16, background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Target size={28} color="#10b981" />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.01em" }}>Metas de Ahorro</h3>
+              <p style={{ margin: "2px 0 0", fontSize: 13, color: "rgba(255,255,255,0.5)", fontWeight: 600 }}>No tienes metas activas.</p>
+            </div>
+          </div>
+          
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.05)", padding: "8px 16px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)" }}>
+             <span style={{ fontSize: 12, fontWeight: 800, color: "#fff" }}>Ver objetivos</span>
+             <ChevronRight size={14} color="#10b981" />
+          </div>
+        </motion.div>
+
         {/* RETO DIARIO (Billy Challenge) - Standalone Row */}
         <div style={{ marginBottom: 24 }}>
           <DailyChallengeWidget />
         </div>
+        
+        {/* PENDING DIAGNOSTIC WIDGET */}
+        {showDiagnosticWidget && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+              borderRadius: 28,
+              padding: "24px 32px",
+              marginBottom: 24,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 24,
+              boxShadow: "0 12px 40px rgba(79, 70, 229, 0.3)",
+              border: "1.5px solid rgba(255,255,255,0.18)",
+              position: "relative",
+              overflow: "hidden"
+            }}
+          >
+            <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 250, height: 250, background: "rgba(255,255,255,0.12)", borderRadius: "50%", filter: "blur(60px)" }} />
+            
+            <div style={{ display: "flex", alignItems: "center", gap: 20, position: "relative", zIndex: 1 }}>
+              <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.25)" }}>
+                <BrainCircuit size={36} color="#fff" />
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.015em" }}>Descubre tu DNA Financiero</h3>
+                <p style={{ margin: "4px 0 0", fontSize: 15, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Tu ruta de aprendizaje personalizada te espera. ¡Toma el examen inicial!</p>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => router.push("/diagnostic")}
+              style={{
+                background: "#fff",
+                color: "#4f46e5",
+                border: "none",
+                borderRadius: 16,
+                padding: "14px 28px",
+                fontWeight: 900,
+                fontSize: 16,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+                position: "relative",
+                zIndex: 1,
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = "scale(1.05) translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.2)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = "scale(1) translateY(0)";
+                e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
+              }}
+            >
+              Empezar Ahora
+              <ChevronRight size={20} />
+            </button>
+          </motion.div>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
             ACTIVITY FEED
@@ -1171,7 +1297,7 @@ function DashboardContent() {
                 </div>
               ) : (
                 <AnimatePresence>
-                  {transactions.slice(0, 3).map((t, idx) => (
+                  {transactions.slice(0, 2).map((t, idx) => (
                     <motion.div 
                       key={t.id}
                       initial={{ opacity: 0, x: -10 }}
@@ -1257,7 +1383,7 @@ function DashboardContent() {
             <div style={{ fontSize: 11, fontWeight: 800, color: "#6366f1", background: "#eef2ff", padding: "4px 12px", borderRadius: 99, border: "1px solid #c7d2fe" }}>8 herramientas</div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14 }}>
+          <div className="quick-grid-container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14 }}>
             {([
               {
                 Icon: IcoBook, label: "Aprende Finanzas", sub: "30 temas · Educación financiera",
