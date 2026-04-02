@@ -232,7 +232,7 @@ const CHALLENGES = [
 ];
 
 function StockSimulatorContent() {
-  const { user, loading, dbProfile } = useAuth();
+  const { user, loading, dbProfile, refreshUser } = useAuth();
   const searchParams = useSearchParams();
   const runId = searchParams.get("runId");
   const [portfolio, setPortfolio] = useState<any>(null);
@@ -291,7 +291,7 @@ function StockSimulatorContent() {
       });
       if (res.ok) {
         setShowBonusAnim(true);
-        fetchPortfolio();
+        await Promise.all([fetchPortfolio(), refreshUser?.()]);
       }
     } catch {}
   };
@@ -405,7 +405,7 @@ function StockSimulatorContent() {
 
   const fetchPortfolio = async () => {
     try {
-      const res = await fetch("/api/simulators/stocks/portfolio");
+      const res = await fetch("/api/simulators/stocks/portfolio", { cache: 'no-store' });
       if (res.ok) setPortfolio(await res.json());
     } catch {}
   };
@@ -431,9 +431,12 @@ function StockSimulatorContent() {
       });
       const data = await res.json();
       if (res.ok) {
+        const isMarket = orderForm.type === "market";
         setOrderMsg({
           type: "ok",
-          text: `Orden de ${orderForm.side === "buy" ? "compra" : "venta"} de ${orderForm.qty} ${orderForm.symbol} colocada. Se ejecutará al próximo precio de cierre.`,
+          text: isMarket 
+            ? `Orden de ${orderForm.side === "buy" ? "compra" : "venta"} de ${orderForm.qty} ${orderForm.symbol} ejecutada instantáneamente.`
+            : `Orden de ${orderForm.side === "buy" ? "compra" : "venta"} de ${orderForm.qty} ${orderForm.symbol} colocada. Se ejecutará al próximo precio de cierre.`,
         });
 
         // Trigger Card Animation
@@ -444,8 +447,7 @@ function StockSimulatorContent() {
           side: orderForm.side,
         });
         setShowCardAnim(true);
-
-        fetchPortfolio();
+        await Promise.all([fetchPortfolio(), refreshUser?.()]);
       } else {
         setOrderMsg({
           type: "err",

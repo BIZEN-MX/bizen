@@ -70,10 +70,8 @@ export async function POST(req: Request) {
     // ⚡️ INSTANT EXECUTION for Market Orders ⚡️
     if (order_type === 'market') {
       try {
-        await fetch(`${new URL(req.url).origin}/api/simulators/stocks/execute`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
+        const { executePendingOrders } = await import('@/lib/simulators/stocks');
+        await executePendingOrders();
       } catch (err) {
         console.error("Auto-execution failed:", err);
       }

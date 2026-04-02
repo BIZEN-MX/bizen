@@ -78,9 +78,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     return <UnauthScreen />;
   }
 
-  const hasSidebar = !isLanding && !isPublicPath(pathname) && !pathname.startsWith("/diagnostic") && !pathname.startsWith("/learn") && !pathname.startsWith("/live") && !pathname.startsWith("/news") && !pathname.startsWith("/simulators") && !pathname.startsWith("/cash-flow") && !pathname.startsWith("/investments");
-  // We include tools in pages that should have a sidebar-like layout or at least the gutter
-  const showGutter = (hasSidebar || pathname.startsWith("/tools")) && !isSidebarHidden;
+  const isNews = pathname?.startsWith("/news");
+  const isSimulator = pathname?.startsWith("/simulators") || pathname?.startsWith("/cash-flow") || pathname?.startsWith("/simulador");
+  const isInvestment = pathname?.startsWith("/investments") || pathname?.startsWith("/staking") || pathname?.startsWith("/metas");
+  const isLesson = pathname?.startsWith("/learn") || pathname?.startsWith("/diagnostic");
+  const isLive = pathname?.startsWith("/live");
+
+  const hasSidebar = !isLanding && !isPublicPath(pathname) && !isLesson && !isLive && !isNews && !isSimulator && !isInvestment;
+  
+  // Clean gutter logic: only show if the page strictly needs a sidebar context
+  const showGutter = hasSidebar && !isSidebarHidden;
 
   return (
     <div className="app-shell">

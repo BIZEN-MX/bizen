@@ -1467,7 +1467,7 @@ function DashboardContent() {
                       flexDirection: "row", // Desktop: Side by side
                       cursor: "pointer",
                     }}
-                    onClick={() => router.push("/news")}
+                    onClick={() => window.open(news[activeNewsIndex].url, "_blank")}
                   >
                     {/* Visual Section: Background with image */}
                     <div style={{ width: "45%", height: "100%", position: "relative", overflow: "hidden" }}>

@@ -28,12 +28,10 @@ export async function GET() {
           data: { status: "completed", earnedAmount: earned }
         })
 
-        // 2. Add Bizcoins to user
+        // 2. Add Bizcoins to user (Principal + Earned)
         await prisma.profile.update({
           where: { userId: user.id },
-          data: { bizcoins: { increment: earned } } // We increment ONLY the earned part because 'amount' was already there?
-          // Wait, when staking, we should DECREMENT the 'amount' from profile.
-          // So when completing, we INCREMENT 'amount + earned'.
+          data: { bizcoins: { increment: total } }
         })
 
         // 3. Create transaction

@@ -80,12 +80,6 @@ export default function NewsPage() {
               <ArrowLeft size={20} />
             </button>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                <div style={{ padding: "4px 8px", background: "rgba(15, 98, 254, 0.1)", borderRadius: 6 }}>
-                  <Zap size={14} color="#0F62FE" />
-                </div>
-                <span style={{ fontSize: 13, fontWeight: 800, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.1em" }}>Market Intelligence</span>
-              </div>
               <h1 style={{ fontSize: 32, fontWeight: 900, color: "#0B1E5E", margin: 0, letterSpacing: "-0.025em" }}>
                 Noticias BIZEN
               </h1>

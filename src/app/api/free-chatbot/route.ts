@@ -92,9 +92,10 @@ LO QUE HACES:
 RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, moderno y motivador. NO USES EMOJIS y VE DIRECTO AL GRANO sin saludar en cada mensaje.`
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
-    const geminiModel = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp" 
-    })
+    const geminiModel = genAI.getGenerativeModel(
+      { model: "gemini-2.0-flash" },
+      { apiVersion: "v1" }
+    )
 
     const formattedHistory = (conversationHistory || [])
       .map((h: any) => `${h.role === 'user' ? 'USUARIO' : 'BILLY'}: ${h.content}`)
@@ -128,7 +129,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
 
     return NextResponse.json({
       response: responseText.trim(),
-      source: "google:gemini-2.0-flash-exp"
+      source: "google:gemini-2.0-flash"
     })
 
   } catch (error: any) {
@@ -136,7 +137,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
     // Return the specific error for debugging
     return NextResponse.json(
       { 
-        response: `¡Ups! Billy está descansando un momento (${error.message || "Error desconocido"}). ¿Puedes intentarlo de nuevo?`,
+        response: `¡Ups! Billy se está ajustando (v2.1) (${error.message || "Error desconocido"}). ¿Puedes intentarlo de nuevo?`,
         debug: error.message 
       },
       { status: 200 }
