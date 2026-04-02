@@ -79,14 +79,17 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   const isNews = pathname?.startsWith("/news");
-  const isSimulator = pathname?.startsWith("/simulators") || pathname?.startsWith("/cash-flow") || pathname?.startsWith("/simulador");
+  // Show sidebar ONLY on the exact /cash-flow hub, but hide on all its sub-pages or other simulators
+  const isSimulatorSubPage = (pathname?.startsWith("/cash-flow/") && pathname !== "/cash-flow") || pathname?.startsWith("/simulators") || pathname?.startsWith("/simulador");
+  const isSimulatorHub = pathname === "/cash-flow";
+  
   const isInvestment = pathname?.startsWith("/investments") || pathname?.startsWith("/staking") || pathname?.startsWith("/metas");
   const isLesson = pathname?.startsWith("/learn") || pathname?.startsWith("/diagnostic");
   const isLive = pathname?.startsWith("/live");
 
-  const hasSidebar = !isLanding && !isPublicPath(pathname) && !isLesson && !isLive && !isNews && !isSimulator && !isInvestment;
+  const hasSidebar = !isLanding && !isPublicPath(pathname) && !isLesson && !isLive && !isNews && (isSimulatorHub || !isSimulatorSubPage) && !isInvestment;
   
-  // Clean gutter logic: only show if the page strictly needs a sidebar context
+  // Clean gutter logic
   const showGutter = hasSidebar && !isSidebarHidden;
 
   return (

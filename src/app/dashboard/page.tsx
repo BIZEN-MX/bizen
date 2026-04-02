@@ -1471,12 +1471,15 @@ function DashboardContent() {
                   >
                     {/* Visual Section: Background with image */}
                     <div style={{ width: "45%", height: "100%", position: "relative", overflow: "hidden" }}>
-                        <img 
-                            src={news[activeNewsIndex].image} 
-                            alt={news[activeNewsIndex].title} 
-                            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 8s linear" }} 
-                            onLoad={(e) => e.currentTarget.style.transform = "scale(1.15)"}
-                        />
+                         <img 
+                             src={news[activeNewsIndex].image} 
+                             alt={news[activeNewsIndex].title} 
+                             style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 8s linear" }} 
+                             onLoad={(e) => e.currentTarget.style.transform = "scale(1.15)"}
+                             onError={(e) => {
+                                 (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200";
+                             }}
+                         />
                         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, transparent 60%, white 100%)" }} />
                         <div style={{ position: "absolute", top: 20, left: 20, background: "rgba(15, 98, 254, 0.85)", backdropFilter: "blur(8px)", color: "white", padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase" }}>
                             Destacado

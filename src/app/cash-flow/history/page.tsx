@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { currencyMXN } from '@/lib/simulators';
 import PageLoader from '@/components/PageLoader';
+import ReturnButton from '@/components/ReturnButton';
 
 /* ─────────────────────────────────── types ── */
 interface SimulatorRun {
@@ -288,7 +289,6 @@ export default function HistoryPage() {
       <style>{`
         .history-container {
           width: 100%;
-          max-width: 1400px;
           margin: 0 auto;
           padding: 40px;
           box-sizing: border-box;
@@ -297,7 +297,7 @@ export default function HistoryPage() {
           .history-container { padding: 20px 16px 80px; }
         }
         @media (min-width: 768px) {
-          .history-container { width: 100% !important; margin-left: 0 !important; }
+          .history-container { width: 100% !important; }
         }
 
         .category-chip {
@@ -319,15 +319,7 @@ export default function HistoryPage() {
       <div className="history-container">
         {/* Header Section */}
         <div style={{ marginBottom: 40 }}>
-          <Link href="/cash-flow" style={{ 
-            display: 'inline-flex', alignItems: 'center', gap: 8, 
-            color: '#64748B', fontWeight: 600, fontSize: 14, 
-            textDecoration: 'none', marginBottom: 24,
-            transition: 'color 0.2s'
-          }} onMouseEnter={e => e.currentTarget.style.color = '#0B71FE'} onMouseLeave={e => e.currentTarget.style.color = '#64748B'}>
-            <ChevronLeft size={18} />
-            Volver a Simuladores
-          </Link>
+          <ReturnButton href="/cash-flow" label="Volver a Simuladores" />
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
             <div>

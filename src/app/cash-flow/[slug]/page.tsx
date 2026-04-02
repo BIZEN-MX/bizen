@@ -15,8 +15,9 @@ import { SimpleLoanSimulator } from '@/components/simulators/SimpleLoanSimulator
 import { InvestmentComparisonSimulator } from '@/components/simulators/InvestmentComparisonSimulator';
 import { InflationCalculatorSimulator } from '@/components/simulators/InflationCalculatorSimulator';
 import { createClientMicrocred } from '@/lib/supabase/client-microcred';
-import { AlertTriangle, Lightbulb, ArrowLeft } from 'lucide-react';
+import { AlertTriangle, Lightbulb } from 'lucide-react';
 import PageLoader from '@/components/PageLoader';
+import ReturnButton from '@/components/ReturnButton';
 
 interface Simulator {
   id: string;
@@ -102,20 +103,9 @@ export default function SimulatorPage() {
         }
         .simulador-detail-main {
           padding: 40px; min-height: 100vh;
-          box-sizing: border-box; max-width: 1400px;
+          box-sizing: border-box; width: 100%;
         }
 
-        /* ─── Back button ─── */
-        .sim-back-btn {
-          padding: 10px 20px; background: white; color: #1e293b !important;
-          border: 1px solid #e2e8f0; border-radius: 12px; font-size: 14px;
-          font-weight: 500; cursor: pointer;
-          transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
-          display: inline-flex; align-items: center; gap: 8px;
-          text-decoration: none; margin-bottom: 28px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.02); font-family: inherit;
-        }
-        .sim-back-btn:hover { background: #f8fafc; color: #0B1E5E !important; transform: translateX(-4px); border-color: #cbd5e1; }
 
         /* ─── Premium cascade overrides into simulator sub-components ─── */
         .sim-body [class*="card"], .sim-body .rounded-lg, .sim-body .rounded-xl,
@@ -174,7 +164,7 @@ export default function SimulatorPage() {
 
           {/* ─── Hero Header ─── */}
           <div className="sim-hero">
-            <Link href="/cash-flow" className="sim-back-btn"><ArrowLeft size={14} /> Volver a Simuladores</Link>
+            <ReturnButton href="/cash-flow" label="Volver a Simuladores" />
 
             <div style={{ background: 'linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%)', borderRadius: 28, padding: 'clamp(28px,4vw,48px)', marginBottom: 20, position: 'relative', overflow: 'hidden' }}>
               <div aria-hidden style={{ position: 'absolute', top: '-40%', right: '-5%', width: '40%', height: '200%', background: 'radial-gradient(circle,rgba(11,113,254,0.25) 0%,transparent 70%)', pointerEvents: 'none' }} />

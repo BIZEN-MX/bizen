@@ -14,6 +14,7 @@ import { ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Cart
 import PageLoader from '@/components/PageLoader'
 import { SaveRunButton } from '@/components/simulators/SaveRunButton'
 import { useSearchParams } from 'next/navigation'
+import ReturnButton from '@/components/ReturnButton'
 
 type Tab = 'score' | 'cc' | 'loan' | 'msi' | 'guide'
 
@@ -531,12 +532,6 @@ function CreditSimulatorContent() {
           overflow-x:hidden;
         }
         @media(max-width:767px){.bizen-score-outer{padding-bottom:65px!important}}
-        @media (min-width: 1161px) {
-          .bizen-score-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; }
-        }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .bizen-score-outer { margin-left: 240px !important; width: calc(100% - 240px) !important; }
-        }
         .credit-tab-btn:hover{background:#e8eef8!important;color:#1e293b!important;}
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none}
         input[type=range]::-moz-range-thumb{border:none;background:transparent}
@@ -547,17 +542,7 @@ function CreditSimulatorContent() {
 
           {/* Header */}
           <div style={{ marginBottom: 32, animation: 'fadeUp 0.5s ease' }}>
-            {/* Breadcrumb */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#94a3b8', marginBottom: 16, flexWrap: 'wrap' }}>
-              <Link href="/cash-flow" style={{ color: '#64748b', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, transition: 'color 0.2s' }}
-                onMouseEnter={(e: React.MouseEvent<HTMLElement>) => e.currentTarget.style.color = '#0B71FE'}
-                onMouseLeave={(e: React.MouseEvent<HTMLElement>) => e.currentTarget.style.color = '#64748b'}
-              ><ArrowLeft size={12} /> Centro Financiero</Link>
-              <span style={{ color: '#cbd5e1' }}>›</span>
-              <span style={{ color: '#475569', fontWeight: 500 }}>Simulador de Crédito</span>
-              <span style={{ color: '#cbd5e1' }}>›</span>
-              <span style={{ color: activeConf.color, fontWeight: 600 }}>{activeConf.label}</span>
-            </div>
+            <ReturnButton href="/cash-flow" label="Volver al Centro Financiero" />
 
             {/* EDU badge + replay */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>

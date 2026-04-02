@@ -13,7 +13,7 @@ export async function GET(req: Request) {
       title: "Mercados globales en alerta tras discurso de Trump sobre conflicto en Irán",
       category: "Macroeconomía",
       time: "Hace 1 hora",
-      image: "https://images.unsplash.com/photo-1611974715853-2644c59764f1?q=80&w=800&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
       url: "https://www.bloomberg.com/markets",
       desc: "La volatilidad se dispara en Wall Street tras advertencias de nuevas represalias en Medio Oriente.",
       fullDesc: "Los principales índices de Estados Unidos experimentaron una sesión de alta volatilidad después de que el presidente Trump sugiriera un endurecimiento de las acciones militares en Irán. Aunque los mercados recuperaron parte de sus pérdidas iniciales, el sentimiento de precaución prevalece entre los inversores internacionales, quienes ahora monitorean de cerca los próximos pasos diplomáticos."
@@ -104,7 +104,7 @@ export async function GET(req: Request) {
       title: "Apple explora robótica tras fin de proyecto de auto eléctrico",
       category: "Tecnología",
       time: "Hace 18 horas",
-      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
       url: "https://www.theverge.com/apple",
       desc: "La compañía busca su próximo gran éxito en la robótica doméstica y la IA integrada.",
       fullDesc: "Tras cancelar su ambicioso proyecto de vehículo autónomo, Apple está redirigiendo sus recursos de ingeniería hacia la robótica personal. Los informes sugieren que están trabajando en dispositivos capaces de moverse en el hogar y mejorar la interacción de los usuarios con el ecosistema de Apple mediante IA avanzada."

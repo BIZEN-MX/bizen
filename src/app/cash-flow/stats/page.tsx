@@ -22,6 +22,7 @@ import {
   ArrowLeft,
   Sparkles
 } from "lucide-react"
+import ReturnButton from "@/components/ReturnButton"
 
 type Statistics = {
   overview: {
@@ -69,11 +70,6 @@ export default function CashFlowStatsPage() {
 
   useEffect(() => {
     fetchStats()
-    // Hide sidebar on mount
-    document.body.classList.add('hide-sidebar')
-    return () => {
-      document.body.classList.remove('hide-sidebar')
-    }
   }, [])
 
   const fetchStats = async () => {
@@ -116,7 +112,7 @@ export default function CashFlowStatsPage() {
         justifyContent: "center",
         alignItems: "flex-start"
       }}>
-        <div style={{ maxWidth: 1200, width: "100%" }}>
+        <div style={{ width: "100%" }}>
           {/* Header */}
           <div style={{
             background: "white",
@@ -151,27 +147,7 @@ export default function CashFlowStatsPage() {
                 </p>
               </div>
 
-              <Link
-                href="/cash-flow"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "12px 24px",
-                  background: "linear-gradient(135deg, #667eea, #764ba2)",
-                  color: "white",
-                  borderRadius: 12,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  textDecoration: "none",
-                  boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
-                  transition: "transform 0.2s"
-                }}
-                onMouseEnter={e => e.currentTarget.style.transform = "translateX(-4px)"}
-                onMouseLeave={e => e.currentTarget.style.transform = "translateX(0)"}
-              >
-                <ArrowLeft size={18} /> Volver
-              </Link>
+              <ReturnButton href="/cash-flow" label="Volver al Centro Financiero" />
             </div>
           </div>
 
