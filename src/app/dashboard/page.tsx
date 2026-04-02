@@ -409,11 +409,11 @@ function DashboardContent() {
   const level    = stats?.level           ?? 1
   const lessonPct = Math.min(100, Math.round((lessons / 150) * 100))
 
-  const profileColors: Record<string, { bg: string, text: string, icon: string, border: string, path: string }> = {
-    "Gastador Digital": { bg: "#fff1f2", text: "#991b1b", icon: "#ef4444", border: "#fecaca", path: "Control de Gastos y Crédito" },
-    "Ahorrador Estancado": { bg: "#ecfdf5", text: "#065f46", icon: "#10b981", border: "#a7f3d0", path: "Inversión y Crecimiento" },
-    "Explorador Arriesgado": { bg: "#ecfeff", text: "#0891b2", icon: "#06b6d4", border: "#cffafe", path: "Bases Sólidas y Seguridad" },
-    "Maestro BIZEN": { bg: "#f0fdf4", text: "#166534", icon: "#22c55e", border: "#bbf7d0", path: "Estrategias Avanzadas" },
+  const profileColors: Record<string, { bg: string, text: string, icon: string, border: string, path: string, topicId: string }> = {
+    "Gastador Digital": { bg: "#fff1f2", text: "#991b1b", icon: "#ef4444", border: "#fecaca", path: "Control de Gastos y Crédito", topicId: "tema-04" },
+    "Ahorrador Estancado": { bg: "#ecfdf5", text: "#065f46", icon: "#10b981", border: "#a7f3d0", path: "Inversión y Crecimiento", topicId: "tema-08" },
+    "Explorador Arriesgado": { bg: "#ecfeff", text: "#0891b2", icon: "#06b6d4", border: "#cffafe", path: "Bases Sólidas y Seguridad", topicId: "tema-01" },
+    "Maestro BIZEN": { bg: "#f0fdf4", text: "#166534", icon: "#22c55e", border: "#bbf7d0", path: "Estrategias Avanzadas", topicId: "tema-11" },
   }
 
   const dnaInfo = dnaResult?.dnaProfile ? profileColors[dnaResult.dnaProfile] : null
@@ -721,6 +721,8 @@ function DashboardContent() {
                       colorTheme={dbProfile?.cardTheme || "blue"}
                       level={dbProfile?.level || 1}
                       onTransferClick={() => router.push("/transfer")}
+                      pattern={(dbProfile?.settings as any)?.cardCustomizations?.pattern || "none"}
+                      showBillySticker={(dbProfile?.settings as any)?.cardCustomizations?.showBillySticker || false}
                     />
                   </div>
                 </motion.div>
@@ -779,7 +781,15 @@ function DashboardContent() {
                     <div style={{ fontSize: 14, fontWeight: 700, color: dnaInfo?.text }}>{dnaInfo?.path}</div>
                   </div>
                   <motion.div 
-                    style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: `1px solid ${dnaInfo?.border}` }} onClick={() => router.push("/courses")}
+                    style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: `1px solid ${dnaInfo?.border}` }} 
+                    onClick={() => {
+                      if (dnaInfo?.topicId) {
+                        // Use noredirect=true to prevent the /courses page from auto-jumping to "last lesson"
+                        router.push(`/courses/${dnaInfo.topicId}?noredirect=true`)
+                      } else {
+                        router.push("/courses")
+                      }
+                    }}
                   >
                     <IcoArrowRight size={18} color={dnaInfo?.text} />
                   </motion.div>
