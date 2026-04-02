@@ -531,8 +531,12 @@ function CreditSimulatorContent() {
           overflow-x:hidden;
         }
         @media(max-width:767px){.bizen-score-outer{padding-bottom:65px!important}}
-        @media(min-width:768px) and (max-width:1160px){.bizen-score-outer{width:calc(100% - 220px)!important;margin-left:220px!important;}}
-        @media(min-width:1161px){.bizen-score-outer{width:calc(100% - 280px)!important;margin-left:280px!important;}}
+        @media (min-width: 1161px) {
+          .bizen-score-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+        }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .bizen-score-outer { margin-left: 240px !important; width: calc(100% - 240px) !important; }
+        }
         .credit-tab-btn:hover{background:#e8eef8!important;color:#1e293b!important;}
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none}
         input[type=range]::-moz-range-thumb{border:none;background:transparent}

@@ -97,11 +97,8 @@ export default function SimulatorPage() {
           .simulador-detail-outer { padding-bottom: 65px !important; }
           .simulador-detail-main { padding: 20px 16px !important; }
         }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .simulador-detail-main { width: calc(100% - 220px) !important; margin-left: 220px !important; }
-        }
-        @media (min-width: 1161px) {
-          .simulador-detail-main { width: calc(100% - 280px) !important; margin-left: 280px !important; }
+        @media (min-width: 768px) {
+          .simulador-detail-main { width: 100% !important; margin-left: 0 !important; }
         }
         .simulador-detail-main {
           padding: 40px; min-height: 100vh;

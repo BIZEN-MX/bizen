@@ -10,28 +10,27 @@ export async function GET(req: Request) {
 
         if (!symbols.length) return NextResponse.json([]);
 
-        // Fetch their latest EOD price
+        // Fetch their historical prices (last 7 per symbol)
         const symbolNames = symbols.map(s => s.symbol);
-        const latestPrices = await prisma.market_prices_eod.findMany({
+        const historyRows = await prisma.market_prices_eod.findMany({
             where: { symbol: { in: symbolNames } },
-            orderBy: { date: 'desc' },
-            distinct: ['symbol']
+            orderBy: [{ symbol: 'asc' }, { date: 'desc' }],
+            take: symbolNames.length * 7 // Not perfect with distinct but we'll manually bucket
         });
 
-        const priceMap = new Map();
-        latestPrices.forEach(p => {
-            priceMap.set(p.symbol, p);
+        const historyMap = new Map();
+        historyRows.forEach(h => {
+             if (!historyMap.has(h.symbol)) historyMap.set(h.symbol, []);
+             historyMap.get(h.symbol).push(h);
         });
 
-        // Add today's fake changes for UI effect as we don't store previous day natively right now
-        // A better approach later is to calculate proper change% between last two records.
         const response = symbols.map(s => {
-            const priceRecord = priceMap.get(s.symbol);
-            if (!priceRecord) return null;
+            const hRows = historyMap.get(s.symbol) || [];
+            if (!hRows.length) return null;
 
-            // Simple pseudo-random UI change generation or calculate proper later
-            const close = Number(priceRecord.close);
-            const open = Number(priceRecord.open);
+            const latest = hRows[0];
+            const close = Number(latest.close);
+            const open = Number(latest.open);
             
             let change = 0;
             if (open > 0) {
@@ -43,7 +42,8 @@ export async function GET(req: Request) {
                 name: s.name || s.symbol,
                 price: close,
                 change: parseFloat(change.toFixed(2)),
-                sector: s.type === 'ETF' ? 'ETF' : 'Stock'
+                sector: s.type === 'ETF' ? 'ETF' : 'Stock',
+                sparkline: hRows.slice(0, 7).map((h: any) => Number(h.close)).reverse()
             };
         }).filter(Boolean);
 

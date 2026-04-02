@@ -18,7 +18,8 @@ import {
   Flame, 
   BookOpen, 
   Trophy, 
-  PlusCircle
+  PlusCircle,
+  TrendingUp
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
@@ -76,7 +77,7 @@ export default function HistorialPage() {
 
   const formatAmount = (amt: number, category: string) => {
     // Determine sign: deductions (-), additions (+)
-    const isSent = category === "transfer_sent" || category === "purchase";
+    const isSent = category === "transfer_sent" || category === "purchase" || category === "investment";
     const prefix = isSent ? "-" : (amt > 0 ? "+" : "");
     return `${prefix}${Math.abs(amt).toLocaleString()}`;
   }
@@ -90,6 +91,8 @@ export default function HistorialPage() {
       case "transfer_sent": return <ArrowUpRight size={20} color="#f43f5e" />
       case "transfer_received": return <ArrowDownLeft size={20} color="#10b981" />
       case "staking_reward": return <Zap size={20} color="#8b5cf6" />
+      case "investment": return <TrendingUp size={20} color="#f43f5e" />
+      case "investment_reward": return <TrendingUp size={20} color="#10b981" />
       default: return <PlusCircle size={20} color="#0F62FE" />
     }
   }
@@ -243,7 +246,7 @@ export default function HistorialPage() {
                     </div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: 22, fontWeight: 950, color: (t.category === "transfer_sent" || t.category === "purchase") ? "#ef4444" : "#10b981" }}>
+                    <div style={{ fontSize: 22, fontWeight: 950, color: (t.category === "transfer_sent" || t.category === "purchase" || t.category === "investment") ? "#ef4444" : "#10b981" }}>
                       {formatAmount(t.amount, t.category)} BC
                     </div>
                   </div>

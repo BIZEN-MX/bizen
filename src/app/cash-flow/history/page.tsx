@@ -296,11 +296,8 @@ export default function HistoryPage() {
         @media (max-width: 767px) {
           .history-container { padding: 20px 16px 80px; }
         }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .history-container { width: calc(100% - 220px); margin-left: 220px; }
-        }
-        @media (min-width: 1161px) {
-          .history-container { width: calc(100% - 280px); margin-left: 280px; }
+        @media (min-width: 768px) {
+          .history-container { width: 100% !important; margin-left: 0 !important; }
         }
 
         .category-chip {

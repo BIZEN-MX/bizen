@@ -1303,6 +1303,7 @@ function DashboardContent() {
                          t.category === "transfer_sent" ? <ArrowUpRight size={20} /> :
                          t.category === "purchase" ? <ShoppingBag size={20} /> :
                          t.category === "lesson_reward" ? <BookOpen size={20} /> :
+                         (t.category === "investment" || t.category === "investment_reward") ? <TrendingUp size={20} /> :
                          <Coins size={20} />}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>

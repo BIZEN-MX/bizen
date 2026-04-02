@@ -70,14 +70,16 @@ export async function POST(req: Request) {
       }
 
       if (shouldExecute) {
-        const notional = Number(order.quantity) * executionPrice;
+        // 1:10 Ratio -> 1 USD = 10 Bizcoins
+        const bizcoinMultiplier = 10;
+        const executionPriceBizcoins = executionPrice * bizcoinMultiplier;
+        const notional = Number(order.quantity) * executionPriceBizcoins;
         
-        // Slippage & fees
+        // Slippage & fees in Bizcoins
         const slippage = order.order_type === 'market' ? notional * 0.0005 : 0;
-        const baseFee = Math.max(1, notional * 0.001); // min $1 or 10bps
-        const totalFees = baseFee + slippage;
+        const totalFees = (notional * 0.001) + slippage; // 0.1% fee + slippage
         
-        // Execute inside a prisma transaction to ensure balance & holdings integrity
+        // Execute inside a prisma transaction to ensure balance, profile & holdings integrity
         await prisma.$transaction(async (tx) => {
             const currentPortfolio = await tx.simulator_portfolios.findUnique({
               where: { id: order.portfolio_id },
@@ -86,7 +88,13 @@ export async function POST(req: Request) {
 
             if (!currentPortfolio) throw new Error("Portfolio not found");
 
-            const currentCash = Number(currentPortfolio.cash_balance);
+            const profile = await tx.profile.findUnique({
+              where: { userId: currentPortfolio.user_id }
+            });
+
+            if (!profile) throw new Error("User profile not found");
+
+            const currentCash = profile.bizcoins || 0;
             let cashAdjustment = 0;
             let qtyAdjustment = 0;
 
@@ -117,10 +125,29 @@ export async function POST(req: Request) {
                qtyAdjustment = -Number(order.quantity);
             }
 
-            // Update cash
+            const finalBizcoins = currentCash + Math.floor(cashAdjustment);
+
+            // Update Profile Bizcoins
+            await tx.profile.update({
+                where: { userId: currentPortfolio.user_id },
+                data: { bizcoins: finalBizcoins } as any
+            });
+
+            // Update Portfolio Cash Balance (for UI/redundancy)
             await tx.simulator_portfolios.update({
                 where: { id: currentPortfolio.id },
-                data: { cash_balance: currentCash + cashAdjustment }
+                data: { cash_balance: finalBizcoins }
+            });
+
+            // Record Wallet Transaction
+            await (tx as any).walletTransaction.create({
+                data: {
+                    userId: currentPortfolio.user_id,
+                    amount: Math.abs(Math.floor(cashAdjustment)),
+                    type: cashAdjustment > 0 ? "income" : "expense",
+                    category: "investment",
+                    description: `${order.side === 'buy' ? 'Compra' : 'Venta'} de ${order.quantity} acciones de ${order.symbol} @ ${executionPriceBizcoins.toFixed(0)} ₿`
+                }
             });
 
             // Update holdings
@@ -132,11 +159,11 @@ export async function POST(req: Request) {
                         where: { id: holding.id }
                     });
                 } else {
-                    // Update average cost on buy
+                    // Update average cost on buy (store average cost in Bizcoins)
                     let newAvgCost = Number(holding.avg_cost);
                     if (order.side === 'buy') {
                         const totalOldCost = Number(holding.quantity) * Number(holding.avg_cost);
-                        const totalNewCost = Number(order.quantity) * executionPrice;
+                        const totalNewCost = Number(order.quantity) * executionPriceBizcoins;
                         newAvgCost = (totalOldCost + totalNewCost) / updatedQty;
                     }
 
@@ -154,7 +181,7 @@ export async function POST(req: Request) {
                         portfolio_id: currentPortfolio.id,
                         symbol: order.symbol,
                         quantity: qtyAdjustment,
-                        avg_cost: executionPrice
+                        avg_cost: executionPriceBizcoins
                     }
                 });
             }
@@ -165,7 +192,7 @@ export async function POST(req: Request) {
                 data: {
                     status: 'filled',
                     filled_at: new Date(),
-                    fill_price: executionPrice,
+                    fill_price: executionPriceBizcoins,
                     fee: totalFees
                 }
             });

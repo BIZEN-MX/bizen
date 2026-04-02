@@ -238,11 +238,11 @@ export default function CombinedSimulatorsPage() {
           .simulador-outer { padding-bottom: 65px !important; }
           .simulador-main  { padding: 20px 16px !important; }
         }
-        @media (min-width: 768px) and (max-width: 1160px) {
-          .simulador-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
-        }
         @media (min-width: 1161px) {
-          .simulador-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
+          .simulador-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+        }
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .simulador-outer { margin-left: 240px !important; width: calc(100% - 240px) !important; }
         }
 
         /* Simulator cards grid */
