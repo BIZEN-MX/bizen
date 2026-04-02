@@ -119,9 +119,10 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isHistoryPage = pathname === '/historial' || pathname === '/historial-de-cuenta'
   const isInvestmentsPage = pathname === '/investments'
   const isCashflowStatsPage = pathname === '/cash-flow/stats'
-  const hideAppNavigation = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isCashflowStatsPage;
+  const isLivePage = pathname?.startsWith('/live')
+  const hideAppNavigation = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isCashflowStatsPage || isLivePage;
 
-  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage; // Hide on auth, diagnostic, onboarding, lessons, and course topics
+  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage;
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {

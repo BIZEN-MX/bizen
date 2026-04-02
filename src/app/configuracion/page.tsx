@@ -324,11 +324,8 @@ function SettingsContent() {
     { id: "profile",        label: "Perfil",          icon: <User size={15} color="white" /> },
     { id: "account",        label: "Cuenta",          icon: <Lock size={15} color="white" /> },
     ...(!isAdmin ? [
-      { id: "notifications", label: "Notificaciones",  icon: <Bell size={15} color="white" /> },
       { id: "privacy",      label: "Privacidad",      icon: <Shield size={15} color="white" /> },
-      { id: "content",      label: "Contenido",       icon: <Tv size={15} color="white" /> },
     ] : []),
-    { id: "accessibility",  label: "Accesibilidad",   icon: <Eye size={15} color="white" /> },
   ]
 
   return (

@@ -40,12 +40,12 @@ function Particle({ x, y, size, delay, duration, color }: { x: string; y: string
 const PARTICLES = [
   { x: "10%", y: "20%", size: 6, delay: 0, duration: 3.5, color: "rgba(251,191,36,0.7)" },
   { x: "85%", y: "15%", size: 4, delay: 0.7, duration: 4.2, color: "rgba(15,98,254,0.8)" },
-  { x: "25%", y: "75%", size: 5, delay: 1.2, duration: 3.8, color: "rgba(168,85,247,0.7)" },
+  { x: "25%", y: "75%", size: 5, delay: 1.2, duration: 3.8, color: "rgba(15,98,254,0.7)" },
   { x: "75%", y: "70%", size: 7, delay: 0.4, duration: 4.5, color: "rgba(34,197,94,0.6)" },
   { x: "60%", y: "30%", size: 3, delay: 1.8, duration: 3.2, color: "rgba(251,191,36,0.5)" },
   { x: "40%", y: "85%", size: 5, delay: 0.9, duration: 4.0, color: "rgba(15,98,254,0.6)" },
   { x: "90%", y: "50%", size: 4, delay: 2.1, duration: 3.6, color: "rgba(251,191,36,0.8)" },
-  { x: "5%",  y: "60%", size: 6, delay: 1.5, duration: 4.8, color: "rgba(168,85,247,0.5)" },
+  { x: "5%",  y: "60%", size: 6, delay: 1.5, duration: 4.8, color: "rgba(15,98,254,0.5)" },
 ]
 
 export default function JoinPage() {
@@ -148,9 +148,7 @@ export default function JoinPage() {
   return (
     <>
       <style>{`
-        /* Account for sidebar on desktop */
-        @media (min-width: 768px) and (max-width: 1160px)  { .live-join-offset { margin-left: 220px; } }
-        @media (min-width: 1161px)                         { .live-join-offset { margin-left: 280px; } }
+        /* Full screen, no sidebar offsets */
 
         .pin-input:focus { border-color: rgba(15,98,254,0.8) !important; box-shadow: 0 0 0 4px rgba(15,98,254,0.15), 0 0 20px rgba(15,98,254,0.2) !important; }
         .pin-input::placeholder { color: rgba(255,255,255,0.15); }
@@ -215,7 +213,7 @@ export default function JoinPage() {
         justifyContent: "center",
         overflow: "hidden",
         position: "relative",
-      }} className="live-join-offset">
+      }}>
 
         {/* Ambient background rings */}
         <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
@@ -243,7 +241,7 @@ export default function JoinPage() {
           />
           {/* Glow blobs */}
           <div style={{ position: "absolute", top: "-20%", left: "-10%", width: "60vw", height: "60vw", background: "radial-gradient(circle, rgba(15,98,254,0.12) 0%, transparent 65%)", borderRadius: "50%", filter: "blur(60px)" }} />
-          <div style={{ position: "absolute", bottom: "-20%", right: "-10%", width: "55vw", height: "55vw", background: "radial-gradient(circle, rgba(168,85,247,0.10) 0%, transparent 65%)", borderRadius: "50%", filter: "blur(60px)" }} />
+          <div style={{ position: "absolute", bottom: "-20%", right: "-10%", width: "55vw", height: "55vw", background: "radial-gradient(circle, rgba(15,98,254,0.10) 0%, transparent 65%)", borderRadius: "50%", filter: "blur(60px)" }} />
           <div style={{ position: "absolute", top: "30%", right: "15%", width: "30vw", height: "30vw", background: "radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 65%)", borderRadius: "50%", filter: "blur(40px)" }} />
         </div>
 

@@ -181,11 +181,6 @@ export default function DiagnosticQuestionPage() {
       return
     }
 
-    const isInstitutional = isInstitutionalEmail(tempUserInfo.email);
-    if (!isInstitutional) {
-      setUserInfoError("Solo se permiten correos institucionales (.edu) para realizar este examen.")
-      return
-    }
 
     setIsCheckingEmail(true)
     try {

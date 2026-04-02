@@ -46,8 +46,8 @@ const QUIZ_CATALOG = [
     difficulty: 2,
     estimatedMinutes: 12,
     questionCount: 7,
-    gradient: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)",
-    glow: "rgba(124,58,237,0.4)",
+    gradient: "linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%)",
+    glow: "rgba(14,165,233,0.4)",
     questions: [
       { question_text: "¿Qué es una acción (stock)?", question_type: "mcq", time_limit: 20, points_base: 1000, options: [{ id: "a", text: "Un préstamo a una empresa", isCorrect: false }, { id: "b", text: "Una fracción de propiedad en una empresa", isCorrect: true }, { id: "c", text: "Un tipo de cuenta bancaria", isCorrect: false }, { id: "d", text: "Una moneda extranjera", isCorrect: false }] },
       { question_text: "¿Qué es diversificar un portafolio?", question_type: "mcq", time_limit: 20, points_base: 1000, options: [{ id: "a", text: "Poner todo en la inversión más rentable", isCorrect: false }, { id: "b", text: "Distribuir el dinero en distintos activos para reducir riesgo", isCorrect: true }, { id: "c", text: "Invertir solo en bienes raíces", isCorrect: false }, { id: "d", text: "Cambiar inversiones cada semana", isCorrect: false }] },
@@ -149,15 +149,7 @@ export default function HostPage() {
   // 🔊 Audio Management
   const { playFeedback: _unused } = useLiveAudio(hostStatus, true && !isMuted)
 
-  // Detect Mobile for offset
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 767)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-  const sidebarOffset = isMobile ? 0 : 280
+  const sidebarOffset = 0;
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const currentQ = questions[currentQIndex]
@@ -423,9 +415,8 @@ export default function HostPage() {
                 </div>
               )
             })}
-            {/* CREATE FROM SCRATCH CARD */}
-            <div className="quiz-card" style={{ animationDelay: `${QUIZ_CATALOG.length * 0.08}s`, borderRadius: 24, overflow: "hidden", boxShadow: hoveredQuiz === "__create__" ? "0 24px 48px rgba(99,102,241,0.4)" : "0 8px 24px rgba(0,0,0,0.3)", border: `1.5px solid ${hoveredQuiz === "__create__" ? "rgba(99,102,241,0.5)" : "rgba(255,255,255,0.08)"}` }} onMouseEnter={() => setHoveredQuiz("__create__")} onMouseLeave={() => setHoveredQuiz(null)} onClick={() => setHostStatus("create")}>
-              <div style={{ background: "linear-gradient(135deg, #3730a3 0%, #6366f1 100%)", padding: "28px 28px 24px", position: "relative", overflow: "hidden" }}>
+            <div className="quiz-card" style={{ animationDelay: `${QUIZ_CATALOG.length * 0.08}s`, borderRadius: 24, overflow: "hidden", boxShadow: hoveredQuiz === "__create__" ? "0 24px 48px rgba(15,98,254,0.4)" : "0 8px 24px rgba(0,0,0,0.3)", border: `1.5px solid ${hoveredQuiz === "__create__" ? "rgba(15,98,254,0.5)" : "rgba(255,255,255,0.08)"}` }} onMouseEnter={() => setHoveredQuiz("__create__")} onMouseLeave={() => setHoveredQuiz(null)} onClick={() => setHostStatus("create")}>
+              <div style={{ background: "linear-gradient(135deg, #0d2a6b 0%, #1a56db 100%)", padding: "28px 28px 24px", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", top: -20, right: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
                 <div style={{ marginBottom: 14, display: "inline-block" }}><IconEdit size={44} color="white" /></div>
                 <span style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", color: "white", padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 400, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>Personalizado</span>
@@ -433,7 +424,7 @@ export default function HostPage() {
               </div>
               <div style={{ background: "rgba(10,20,40,0.95)", padding: "20px 24px 24px" }}>
                 <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.55, margin: "0 0 20px" }}>Crea tus propias preguntas de opción múltiple con el tema y contenido que necesites.</p>
-                <button className="launch-btn" style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: "0 6px 20px rgba(99,102,241,0.4)", letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }} onClick={e => { e.stopPropagation(); setHostStatus("create") }}>
+                <button className="launch-btn" style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg, #0d2a6b, #1a56db)", border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: "0 6px 20px rgba(15,98,254,0.4)", letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }} onClick={e => { e.stopPropagation(); setHostStatus("create") }}>
                   <IconPlus size={16} color="white" /> Crear nuevo
                 </button>
               </div>
@@ -449,7 +440,7 @@ export default function HostPage() {
             ) : templates.length === 0 ? (
               <div style={{ textAlign: "center", padding: "80px 24px" }}>
                 <div style={{ width: 72, height: 72, borderRadius: 20, background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-                  <IconEdit size={32} color="#6366f1" />
+                  <IconEdit size={32} color="#0056E7" />
                 </div>
                 <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, margin: "0 0 8px" }}>Aún no tienes plantillas guardadas</p>
                 <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 14, margin: 0 }}>Al terminar un quiz personalizado podrás guardarlo aquí para reutilizarlo.</p>
@@ -489,7 +480,7 @@ export default function HostPage() {
                           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>nivel</div>
                         </div>
                       </div>
-                      <button onClick={() => handleLoadTemplate(tpl)} style={{ width: "100%", padding: "11px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 12, color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", boxShadow: "0 4px 16px rgba(99,102,241,0.35)", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, transition: "all 0.2s" }}>
+                      <button onClick={() => handleLoadTemplate(tpl)} style={{ width: "100%", padding: "11px", background: "linear-gradient(135deg, #0d2a6b, #1a56db)", border: "none", borderRadius: 12, color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", boxShadow: "0 4px 16px rgba(15,98,254,0.35)", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, transition: "all 0.2s" }}>
                         <IconRocket size={14} color="white" /> Usar plantilla
                       </button>
                     </div>
@@ -603,8 +594,8 @@ export default function HostPage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, maxWidth: 720, width: "100%" }}>
             {(currentQ.options as any[]).map((opt: any, i: number) => {
-              const colors = ["rgba(123,47,190,0.3)", "rgba(5,150,105,0.3)", "rgba(232,93,74,0.3)", "rgba(245,166,35,0.3)"]
-              const borders = ["rgba(123,47,190,0.6)", "rgba(5,150,105,0.6)", "rgba(232,93,74,0.6)", "rgba(245,166,35,0.6)"]
+              const colors = ["rgba(15,98,254,0.3)", "rgba(5,150,105,0.3)", "rgba(232,93,74,0.3)", "rgba(245,166,35,0.3)"]
+              const borders = ["rgba(15,98,254,0.6)", "rgba(5,150,105,0.6)", "rgba(232,93,74,0.6)", "rgba(245,166,35,0.6)"]
               return (
                 <div key={opt.id} style={{ background: colors[i % 4], border: `2px solid ${borders[i % 4]}`, borderRadius: 16, padding: "18px 24px", display: "flex", alignItems: "center", gap: 14 }}>
                   <span style={{ fontSize: 20, color: "white" }}>{["▲", "◆", "●", "■"][i % 4]}</span>
@@ -641,7 +632,7 @@ export default function HostPage() {
               {(currentQ.options as any[]).map((opt: any, i: number) => {
                 const count = answers.filter(a => a.selected_option_id === opt.id).length
                 const isCorrect = opt.id === correctId
-                const colors = ["rgba(123,47,190,0.3)", "rgba(5,150,105,0.3)", "rgba(232,93,74,0.3)", "rgba(245,166,35,0.3)"]
+                const colors = ["rgba(15,98,254,0.3)", "rgba(5,150,105,0.3)", "rgba(232,93,74,0.3)", "rgba(245,166,35,0.3)"]
                 return (
                   <div key={opt.id} style={{ background: isCorrect ? "rgba(16,185,129,0.15)" : colors[i % 4], border: `2px solid ${isCorrect ? "rgba(16,185,129,0.5)" : "transparent"}`, borderRadius: 14, padding: "14px 18px", display: "flex", alignItems: "center", gap: 12 }}>
                     <span style={{ color: isCorrect ? "#34d399" : "rgba(255,255,255,0.7)", fontSize: 18, display: "flex" }}>{isCorrect ? <IconCheck size={20} /> : ["▲", "◆", "●", "■"][i % 4]}</span>
@@ -695,7 +686,7 @@ export default function HostPage() {
         </div>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
           <button onClick={() => setHostStatus("catalog")} style={{ padding: "14px 28px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer" }}>Nuevo quiz</button>
-          <button onClick={() => { setSaveTitle(sessionTitle); setSaveModalOpen(true) }} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #3730a3, #6366f1)", border: "none", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer", boxShadow: "0 6px 20px rgba(99,102,241,0.35)", display: "flex", alignItems: "center", gap: 8 }}>
+          <button onClick={() => { setSaveTitle(sessionTitle); setSaveModalOpen(true) }} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #0d2a6b, #1a56db)", border: "none", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer", boxShadow: "0 6px 20px rgba(15,98,254,0.35)", display: "flex", alignItems: "center", gap: 8 }}>
             <IconEdit size={15} color="white" /> Guardar como plantilla
           </button>
           <button onClick={() => router.push("/teacher/dashboard")} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 14, color: "white", fontWeight: 700, cursor: "pointer", boxShadow: "0 6px 20px rgba(0,86,231,0.35)" }}>Ir al panel →</button>
@@ -725,7 +716,7 @@ export default function HostPage() {
               ) : (
                 <div style={{ display: "flex", gap: 10 }}>
                   <button onClick={() => setSaveModalOpen(false)} style={{ flex: 1, padding: "13px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "rgba(255,255,255,0.5)", cursor: "pointer", fontWeight: 600 }}>Cancelar</button>
-                  <button onClick={handleSaveTemplate} disabled={!saveTitle.trim() || saveSaving} style={{ flex: 2, padding: "13px", background: saveTitle.trim() ? "linear-gradient(135deg, #3730a3, #6366f1)" : "rgba(255,255,255,0.08)", border: "none", borderRadius: 12, color: "white", cursor: saveTitle.trim() ? "pointer" : "not-allowed", fontWeight: 700, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: saveTitle.trim() ? "0 4px 16px rgba(99,102,241,0.35)" : "none" }}>
+                  <button onClick={handleSaveTemplate} disabled={!saveTitle.trim() || saveSaving} style={{ flex: 2, padding: "13px", background: saveTitle.trim() ? "linear-gradient(135deg, #0d2a6b, #1a56db)" : "rgba(255,255,255,0.08)", border: "none", borderRadius: 12, color: "white", cursor: saveTitle.trim() ? "pointer" : "not-allowed", fontWeight: 700, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: saveTitle.trim() ? "0 4px 16px rgba(15,98,254,0.35)" : "none" }}>
                     {saveSaving ? "Guardando..." : <><IconEdit size={14} color="white" /> Guardar</>}
                   </button>
                 </div>
@@ -762,7 +753,7 @@ function CreateQuizForm({ onBack, onLaunch }: { onBack: () => void; onLaunch: (q
       <div style={{ maxWidth: 680, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32 }}>
           <button onClick={onBack} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "8px 16px", color: "rgba(255,255,255,0.5)", fontSize: 13, cursor: "pointer" }}>← Volver</button>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}><IconEdit size={18} color="#6366f1" /><span style={{ color: "white", fontWeight: 700, fontSize: 18 }}>Crear quiz personalizado</span></div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}><IconEdit size={18} color="#0056E7" /><span style={{ color: "white", fontWeight: 700, fontSize: 18 }}>Crear quiz personalizado</span></div>
         </div>
 
         <div style={{ marginBottom: 24 }}>
@@ -773,7 +764,7 @@ function CreateQuizForm({ onBack, onLaunch }: { onBack: () => void; onLaunch: (q
         {questions.map((q, qi) => (
           <div key={qi} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: "20px 24px", marginBottom: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-              <span style={{ color: "#6366f1", fontWeight: 800, fontSize: 14 }}>Pregunta {qi + 1}</span>
+              <span style={{ color: "#0056E7", fontWeight: 800, fontSize: 14 }}>Pregunta {qi + 1}</span>
               {questions.length > 1 && <button onClick={() => removeQuestion(qi)} style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 8, padding: "4px 8px", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, color: "#f87171", fontSize: 12 }}><IconTrash size={13} color="#f87171" /> Eliminar</button>}
             </div>
             <input placeholder="Escribe la pregunta..." value={q.question_text} onChange={e => updateQ(qi, "question_text", e.target.value)} style={{ width: "100%", padding: "12px 16px", background: "rgba(255,255,255,0.06)", border: "1.5px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "white", fontSize: 14, fontWeight: 600, outline: "none", boxSizing: "border-box", marginBottom: 12 }} />
@@ -791,7 +782,7 @@ function CreateQuizForm({ onBack, onLaunch }: { onBack: () => void; onLaunch: (q
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {q.options.map((opt, oi) => {
-                const colors = ["rgba(123,47,190,0.2)", "rgba(5,150,105,0.2)", "rgba(232,93,74,0.2)", "rgba(245,166,35,0.2)"]
+                const colors = ["rgba(15,98,254,0.2)", "rgba(5,150,105,0.2)", "rgba(232,93,74,0.2)", "rgba(245,166,35,0.2)"]
                 return (
                   <div key={oi} style={{ background: opt.isCorrect ? "rgba(16,185,129,0.12)" : colors[oi], border: `2px solid ${opt.isCorrect ? "rgba(16,185,129,0.5)" : "rgba(255,255,255,0.06)"}`, borderRadius: 12, padding: "10px 12px", display: "flex", gap: 8, alignItems: "center" }}>
                     <button onClick={() => setCorrect(qi, oi)} style={{ width: 20, height: 20, borderRadius: "50%", border: `2px solid ${opt.isCorrect ? "#10b981" : "rgba(255,255,255,0.2)"}`, background: opt.isCorrect ? "#10b981" : "transparent", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>

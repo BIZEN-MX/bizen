@@ -817,14 +817,14 @@ function DashboardContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{
-                  background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                  background: "linear-gradient(135deg, #0a0f2e 0%, #0d2a6b 45%, #1a56db 100%)",
                   borderRadius: 28,
                   padding: "24px 32px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
                   gap: 24,
-                  boxShadow: "0 12px 40px rgba(79, 70, 229, 0.3)",
+                  boxShadow: "0 12px 40px rgba(13, 42, 107, 0.3)",
                   border: "1.5px solid rgba(255,255,255,0.18)",
                   position: "relative",
                   overflow: "hidden"
@@ -846,7 +846,7 @@ function DashboardContent() {
                   onClick={() => router.push("/diagnostic/1")}
                   style={{
                     background: "#fff",
-                    color: "#4f46e5",
+                    color: "#0F62FE",
                     border: "none",
                     borderRadius: 16,
                     padding: "14px 28px",

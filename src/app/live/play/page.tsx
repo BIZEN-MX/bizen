@@ -32,7 +32,7 @@ interface LeaderEntry {
 
 const ANSWER_SHAPES = ["▲", "◆", "●", "■"]
 const ANSWER_COLORS = [
-  { bg: "linear-gradient(135deg, #7B2FBE, #9B59E8)", shadow: "rgba(123,47,190,0.5)" },
+  { bg: "linear-gradient(135deg, #0056E7, #1983FD)", shadow: "rgba(15,98,254,0.5)" },
   { bg: "linear-gradient(135deg, #047857, #059669)", shadow: "rgba(5,150,105,0.5)" },
   { bg: "linear-gradient(135deg, #be3030, #E85D4A)", shadow: "rgba(232,93,74,0.5)" },
   { bg: "linear-gradient(135deg, #D97706, #F5A623)", shadow: "rgba(245,166,35,0.5)" },
@@ -51,15 +51,7 @@ function PlayPageContent() {
 
   const [isMobile, setIsMobile] = useState(false)
 
-  // Detect Mobile for offset
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 767)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-  const sidebarOffset = isMobile ? 0 : 280
+  const sidebarOffset = 0;
 
   // Session state (from Supabase Realtime)
   const [gameStatus, setGameStatus] = useState<GameStatus>("loading")

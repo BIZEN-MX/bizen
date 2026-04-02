@@ -78,7 +78,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     return <UnauthScreen />;
   }
 
-  const hasSidebar = !isLanding && !isPublicPath(pathname) && !pathname.startsWith("/diagnostic") && !pathname.startsWith("/learn");
+  const hasSidebar = !isLanding && !isPublicPath(pathname) && !pathname.startsWith("/diagnostic") && !pathname.startsWith("/learn") && !pathname.startsWith("/live");
   // We include tools in pages that should have a sidebar-like layout or at least the gutter
   const showGutter = (hasSidebar || pathname.startsWith("/tools")) && !isSidebarHidden;
 
