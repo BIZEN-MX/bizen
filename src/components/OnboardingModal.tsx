@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect, useCallback, useRef } from "react"
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { AVATAR_OPTIONS, AVATAR_CATEGORIES } from "@/lib/avatarOptions"
 import { createClient } from "@/lib/supabase/client"
@@ -95,19 +95,45 @@ function BizenCard({
   accentColor: string
   accentGlow: string
 }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  const springConfig = { damping: 25, stiffness: 150 }
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [12, -12]), springConfig)
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), springConfig)
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    mouseX.set(x)
+    mouseY.set(y)
+  }
+
+  const handleMouseLeave = () => {
+    mouseX.set(0)
+    mouseY.set(0)
+  }
+
   return (
     <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       style={{
         perspective: "1200px",
         width: "100%",
         maxWidth: 380,
         margin: "0 auto",
+        cursor: "pointer"
       }}
     >
       <motion.div
-        animate={{ rotateY: [0, 5, -5, 0], rotateX: [0, -3, 3, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         style={{
+          rotateX,
+          rotateY,
           transformStyle: "preserve-3d",
           borderRadius: 24,
           background: "linear-gradient(135deg, #0f172a 0%, #020617 100%)",
@@ -116,12 +142,13 @@ function BizenCard({
           position: "relative",
           overflow: "hidden",
           border: `1px solid rgba(255,255,255,0.1)`,
-          transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
           aspectRatio: "1.586 / 1",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between"
         }}
+        whileHover={{ scale: 1.02 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         {/* Sheen layer */}
         <motion.div
@@ -263,14 +290,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const [avatarCategory, setAvatarCategory] = useState(0)
   const [activeFeatureIdx, setActiveFeatureIdx] = useState(0)
 
-  // Cycle through wallet features automatically
-  useEffect(() => {
-    if (step !== "wallet") return
-    const interval = setInterval(() => {
-      setActiveFeatureIdx((prev) => (prev + 1) % WALLET_FEATURES.length)
-    }, 2200)
-    return () => clearInterval(interval)
-  }, [step])
+  // Features are now strictly manual navigation
 
   useEffect(() => {
     fetch("/api/schools")
@@ -699,7 +719,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                     initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
-                    className="p-5 rounded-3xl border relative overflow-hidden group"
+                    className="p-5 rounded-3xl border relative overflow-hidden group min-h-[120px]"
                     style={{ 
                       background: `linear-gradient(135deg, ${activeFeature.color}08, rgba(255,255,255,0.02))`, 
                       borderColor: `${activeFeature.color}30` 
