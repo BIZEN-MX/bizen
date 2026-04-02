@@ -21,6 +21,10 @@ export async function POST(request: NextRequest) {
       typescript: true,
     })
 
+    // Dynamic Base URL detection
+    const origin = request.headers.get('origin') || 'https://bizen.mx'
+    const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || origin).replace(/\/$/, '')
+
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -49,8 +53,8 @@ export async function POST(request: NextRequest) {
         plan: planName,
         userId: userId ? String(userId) : "",
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3004'}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3004'}/payment/cancel`,
+      success_url: `${baseUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/payment/cancel`,
     })
 
     return NextResponse.json({ sessionId: session.id, url: session.url })

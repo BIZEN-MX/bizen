@@ -18,7 +18,8 @@ import {
   Target,
   BarChart2,
   Trophy,
-  Zap
+  Zap,
+  Newspaper
 } from "lucide-react"
 
 export default function MobileFooterNav() {
@@ -369,6 +370,35 @@ export default function MobileFooterNav() {
                   <Zap size={20} color="#0F62FE" strokeWidth={2.5} />
                 </div>
                 <span>BIZEN Live</span>
+              </button>
+              
+              {/* Noticias BIZEN */}
+              <button
+                onClick={() => {
+                  setShowProfilePanel(false)
+                  navigateTo("/news")
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  padding: "14px 18px",
+                  background: pathname === "/news" ? "rgba(15, 98, 254, 0.08)" : "transparent",
+                  border: "none",
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: pathname === "/news" ? "#0F62FE" : "#1e293b",
+                  width: "100%",
+                  textAlign: "left",
+                  transition: "all 0.2s ease"
+                }}
+              >
+                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Newspaper size={20} color="#0F62FE" strokeWidth={2.5} />
+                </div>
+                <span>Noticias BIZEN</span>
               </button>
 
               {/* Perfil */}

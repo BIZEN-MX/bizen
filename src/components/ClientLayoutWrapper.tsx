@@ -118,12 +118,12 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isTransferPage = pathname === '/transfer' || searchParams?.get('action') === 'transfer'
   const isNewsPage = pathname?.startsWith('/news')
   const isLivePage = pathname?.startsWith('/live')
-  const isSimulatorPage = pathname?.startsWith('/simulators/')
+  const isSimulatorPage = pathname?.startsWith('/simulators') || pathname?.startsWith('/cash-flow')
   const isHistoryPage = pathname === '/history' || pathname?.startsWith('/history/')
   const isInvestmentsPage = pathname === '/investments' || pathname?.startsWith('/investments/')
   const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isSimulatorPage || isLivePage;
 
-  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage;
+  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage;
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {

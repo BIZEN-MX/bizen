@@ -29,7 +29,8 @@ import {
   Medal,
   Zap,
   TrendingUp,
-  HelpCircle
+  HelpCircle,
+  Newspaper
 } from "lucide-react"
 
 import {
@@ -253,6 +254,7 @@ export default function FixedSidebar() {
   const tiendaActive = isActivePath("/tienda")
   const rankingsActive = isActivePath("/rankings")
   const liveActive = isActivePath("/live")
+  const newsActive = isActivePath("/news")
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
   const isStudentOrGuest = !isAdminOrTeacher
@@ -685,6 +687,51 @@ export default function FixedSidebar() {
                             <rect x="2" y="6" width="20" height="12" rx="6"/>
                         </svg>
                         <span className="nav-item-label">Simuladores</span>
+                    </button>
+                )}
+
+
+                {/* ── NOTICIAS BIZEN ── */}
+                {user && isStudentOrGuest && (
+                    <button
+                        onClick={() => navigateTo("/news")}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "12px 14px",
+                            background: isCompactSidebar ? "transparent" : (newsActive ? "rgba(15, 98, 254, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 14,
+                            fontWeight: newsActive ? 500 : 400,
+                            textAlign: "left",
+                            color: newsActive ? "#0B71FE" : "#64748B",
+                            ...compactButtonOverrides(newsActive),
+                            position: "relative",
+                            overflow: "hidden",
+                            boxShadow: newsActive ? "0 4px 12px rgba(15, 98, 254, 0.12)" : "none"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = newsActive ? "rgba(15, 98, 254, 0.18)" : "#F1F5F9"
+                                e.currentTarget.style.color = "#0B71FE"
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isCompactSidebar) {
+                                e.currentTarget.style.background = newsActive ? "rgba(15, 98, 254, 0.12)" : "transparent"
+                                e.currentTarget.style.color = newsActive ? "#0B71FE" : "#64748B"
+                            }
+                        }}
+                    >
+                        {newsActive && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
+                        )}
+                        <Newspaper size={iconSize} strokeWidth={newsActive ? 2.5 : 2} />
+                        <span className="nav-item-label">Noticias BIZEN</span>
                     </button>
                 )}
 

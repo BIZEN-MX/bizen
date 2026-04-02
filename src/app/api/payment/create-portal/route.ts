@@ -34,9 +34,13 @@ export async function POST(req: NextRequest) {
             apiVersion: "2025-01-27.acacia" as any,
         });
 
+        // Dynamic Base URL detection
+        const origin = req.headers.get('origin') || 'https://bizen.mx'
+        const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || origin).replace(/\/$/, '')
+
         const session = await stripe.billingPortal.sessions.create({
             customer: profile.stripeCustomerId,
-            return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3004'}/profile`,
+            return_url: `${baseUrl}/profile`,
         });
 
         return NextResponse.json({ url: session.url });

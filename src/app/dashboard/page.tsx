@@ -785,6 +785,64 @@ function DashboardContent() {
             )}
           </AnimatePresence>
 
+          {/* NEWS TICKER — Top Visibility */}
+          {news.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{
+                background: "linear-gradient(90deg, #0F62FE 0%, #1e1b4b 100%)",
+                borderRadius: 16,
+                padding: "10px 20px",
+                marginBottom: 24,
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                boxShadow: "0 8px 24px rgba(15, 98, 254, 0.15)",
+                overflow: "hidden",
+                cursor: "pointer",
+                border: "1.5px solid rgba(255,255,255,0.1)"
+              }}
+              onClick={() => router.push("/news")}
+            >
+              <div style={{
+                background: "#fff",
+                color: "#0F62FE",
+                fontSize: 10,
+                fontWeight: 900,
+                padding: "3px 10px",
+                borderRadius: 6,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                flexShrink: 0
+              }}>
+                Último Minuto
+              </div>
+              <div style={{ flex: 1, overflow: "hidden" }}>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeNewsIndex}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "#fff",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
+                    {news[activeNewsIndex].title} — {news[activeNewsIndex].source}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+              <ChevronRight size={16} color="#fff" style={{ opacity: 0.6 }} />
+            </motion.div>
+          )}
+
           {/* DNA PROFILE SECTION */}
           <motion.div 
             variants={{
@@ -1357,72 +1415,96 @@ function DashboardContent() {
           </motion.div>
         </div>
 
-        {/* FINANCIAL NEWS WIDGET — Enhanced with real images */}
+        {/* FINANCIAL NEWS WIDGET — High Visibility Featured Layout */}
         <motion.div
            initial={{ opacity: 0, y: 30 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ delay: 0.2 }}
-           style={{ marginBottom: 32 }}
+           style={{ marginBottom: 40 }}
         >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(15, 98, 254, 0.1)", border: "1.5px solid rgba(15, 98, 254, 0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Newspaper size={22} color="#0F62FE" />
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(15, 98, 254, 0.1)", border: "1.5px solid rgba(15, 98, 254, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 16px rgba(15, 98, 254, 0.1)" }}>
+                <Newspaper size={24} color="#0F62FE" />
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#0B1E5E", letterSpacing: "-0.015em" }}>Noticias BIZEN</h3>
-                <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Actualización automática cada 5s</div>
+                <h3 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: "#0B1E5E", letterSpacing: "-0.02em" }}>Inteligencia Financiera</h3>
+                <div style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Noticias y análisis en tiempo real</div>
               </div>
             </div>
-            <div style={{ display: "flex", gap: 12 }}>
-              <button onClick={() => router.push("/news")} style={{ background: "white", border: "1.5px solid #e2e8f0", color: "#64748b", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: "8px 16px", borderRadius: 12, transition: "all 0.2s" }} onMouseOver={(e) => e.currentTarget.style.borderColor = "#0F62FE"} onMouseOut={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}>
-                Ver todas
+            <div style={{ display: "flex", gap: 10 }}>
+              <button 
+                onClick={() => router.push("/news")} 
+                style={{ background: "#0F62FE", border: "none", color: "white", fontSize: 13, fontWeight: 750, cursor: "pointer", padding: "10px 22px", borderRadius: 12, transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", boxShadow: "0 8px 20px rgba(15, 98, 254, 0.3)" }}
+                onMouseOver={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 24px rgba(15, 98, 254, 0.4)"; }}
+                onMouseOut={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(15, 98, 254, 0.3)"; }}
+              >
+                Portal de Noticias
               </button>
-              <button onClick={fetchNews} style={{ background: "rgba(15, 98, 254, 0.05)", border: "none", color: "#0F62FE", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 12, transition: "all 0.2s" }} onMouseOver={(e) => e.currentTarget.style.opacity = "0.7"} onMouseOut={(e) => e.currentTarget.style.opacity = "1"}>
-                Actualizar <RefreshCw size={14} className={loadingNews ? "animate-spin" : ""} />
+              <button onClick={fetchNews} style={{ background: "white", border: "1.5px solid #e2e8f0", color: "#64748b", width: 42, height: 42, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 12, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={(e) => e.currentTarget.style.borderColor = "#0F62FE"}>
+                <RefreshCw size={18} className={loadingNews ? "animate-spin" : ""} />
               </button>
             </div>
           </div>
 
-          <div style={{ position: "relative", height: 180, overflow: "hidden", borderRadius: 24 }}>
+          <div style={{ position: "relative", minHeight: 320, background: "white", borderRadius: 32, border: "1.5px solid #e9eef8", overflow: "hidden", boxShadow: "0 14px 40px rgba(13,42,107,0.06)" }}>
             {loadingNews ? (
-              <div style={{ height: "100%", background: "white", borderRadius: 24, border: "1.5px solid #e9eef8", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div className="animate-spin" style={{ width: 24, height: 24, border: "3px solid #f1f5f9", borderTopColor: "#0F62FE", borderRadius: "50%" }} />
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div className="animate-spin" style={{ width: 32, height: 32, border: "3px solid #f1f5f9", borderTopColor: "#0F62FE", borderRadius: "50%" }} />
               </div>
             ) : (
               <AnimatePresence mode="wait">
                 {news.length > 0 && (
                   <motion.div
                     key={activeNewsIndex}
-                    initial={{ x: 50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -50, opacity: 0 }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.02 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     style={{
-                      position: "absolute",
-                      inset: 0,
-                      background: "#fff",
-                      borderRadius: 24,
-                      padding: 20,
+                      height: "100%",
                       display: "flex",
-                      gap: 20,
-                      border: "1.5px solid #e9eef8",
+                      flexDirection: "row", // Desktop: Side by side
                       cursor: "pointer",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.02)",
                     }}
                     onClick={() => router.push("/news")}
                   >
-                    <div style={{ width: 140, height: 140, borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
-                      <img src={news[activeNewsIndex].image} alt={news[activeNewsIndex].title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    {/* Visual Section: Background with image */}
+                    <div style={{ width: "45%", height: "100%", position: "relative", overflow: "hidden" }}>
+                        <img 
+                            src={news[activeNewsIndex].image} 
+                            alt={news[activeNewsIndex].title} 
+                            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 8s linear" }} 
+                            onLoad={(e) => e.currentTarget.style.transform = "scale(1.15)"}
+                        />
+                        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, transparent 60%, white 100%)" }} />
+                        <div style={{ position: "absolute", top: 20, left: 20, background: "rgba(15, 98, 254, 0.85)", backdropFilter: "blur(8px)", color: "white", padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                            Destacado
+                        </div>
                     </div>
-                    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                        <span style={{ fontSize: 10, fontWeight: 900, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.08em", background: "rgba(15,98,254,0.08)", padding: "2px 10px", borderRadius: 99 }}>{news[activeNewsIndex].category}</span>
-                        <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{news[activeNewsIndex].time}</span>
+
+                    {/* Content Section */}
+                    <div style={{ flex: 1, padding: "40px 48px 40px 32px", display: "flex", flexDirection: "column", justifyContent: "center", background: "white" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.1em", background: "rgba(15,98,254,0.06)", padding: "4px 14px", borderRadius: 99 }}>{news[activeNewsIndex].category}</span>
+                        <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>{news[activeNewsIndex].time} • {news[activeNewsIndex].source}</span>
                       </div>
-                      <h4 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>{news[activeNewsIndex].title}</h4>
-                      <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 5, color: "#0F62FE", fontSize: 12, fontWeight: 700 }}>
-                        Leer noticia completa <ChevronRight size={14} />
+                      <h4 style={{ margin: 0, fontSize: "clamp(22px, 3vw, 32px)", fontWeight: 900, color: "#0B1E5E", lineHeight: 1.15, letterSpacing: "-0.03em" }}>{news[activeNewsIndex].title}</h4>
+                      <p style={{ marginTop: 20, fontSize: 16, color: "#475569", lineHeight: 1.6, fontWeight: 500, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                        {news[activeNewsIndex].desc}
+                      </p>
+                      
+                      <div style={{ marginTop: 32, display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: "50%", background: "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <TrendingUp size={20} color="#0F62FE" />
+                        </div>
+                        <div>
+                            <div style={{ fontSize: 12, fontWeight: 800, color: "#0B1E5E" }}>Análisis BIZEN</div>
+                            <div style={{ fontSize: 12, fontWeight: 600, color: "#64748b" }}>Impacto de mercado sugerido</div>
+                        </div>
+                        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, color: "#0F62FE", fontSize: 15, fontWeight: 800 }}>
+                            Explorar análisis completo <IcoArrowRight size={18} />
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -1430,6 +1512,18 @@ function DashboardContent() {
               </AnimatePresence>
             )}
           </div>
+          
+          {/* Mobile responsive fix for the news card height/layout */}
+          <style>{`
+            @media (max-width: 900px) {
+                .di [style*="minHeight: 320"] { min-height: 500px !important; }
+                .di [style*="flexDirection: row"] { flex-direction: column !important; }
+                .di [style*="width: 45%"] { width: 100% !important; height: 200px !important; }
+                .di [style*="padding: 40px 48px"] { padding: 24px !important; }
+                .di [style*="fontSize: clamp"] { font-size: 20px !important; }
+                .di [style*="WebkitLineClamp: 3"] { -webkit-line-clamp: 2 !important; }
+            }
+          `}</style>
         </motion.div>
 
         {/* ══════════════════════════════════════════════════════════

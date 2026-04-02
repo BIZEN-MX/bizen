@@ -24,7 +24,8 @@ import {
   BarChart2,
   Trophy,
   Zap,
-  LayoutGrid
+  LayoutGrid,
+  Newspaper
 } from "lucide-react"
 
 export default function MobileBottomNav() {
@@ -133,6 +134,13 @@ export default function MobileBottomNav() {
         label: 'BIZEN Live',
         icon: Zap,
         path: '/live/join',
+        protected: false
+      },
+      {
+        id: 'news',
+        label: 'Noticias BIZEN',
+        icon: Newspaper,
+        path: '/news',
         protected: false
       }
     ] : []),
