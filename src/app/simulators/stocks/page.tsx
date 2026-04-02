@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import ReturnButton from "@/components/ReturnButton";
 import {
   TrendingUp,
   TrendingDown,
@@ -568,8 +569,7 @@ function StockSimulatorContent() {
         .sim-stock-row:hover{background:#f0fdf4;border-color:#86efac;transform:translateX(3px);}
         .sim-row-table:hover{background:#f8fafc;}
         .sim-row-table{transition:background 0.15s;}
-        .sidebar-offset { width: 100% !important; margin-left: 0 !important; }
-        @media(max-width:767px){.sidebar-offset{padding-bottom:80px!important}}
+        @media(max-width:767px){.bizen-market-outer{padding-bottom:80px!important}}
         @keyframes pulseGlow {
           0% { transform: scale(1); box-shadow: 0 4px 14px rgba(16,185,129,0.35); }
           50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(16,185,129,0.6); }
@@ -581,7 +581,7 @@ function StockSimulatorContent() {
         }
       `}</style>
       <div
-        className="sidebar-offset"
+        className="bizen-market-outer"
         style={{
           minHeight: "100vh",
           background: "linear-gradient(170deg,#f8fafc 0%,#f1f5f9 100%)",
@@ -687,41 +687,7 @@ function StockSimulatorContent() {
             }}
           >
             <div>
-              <Link
-                href="/cash-flow"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "white",
-                  border: "1.5px solid #e2e8f0",
-                  borderRadius: 14,
-                  padding: "10px 20px",
-                  color: "#64748b",
-                  textDecoration: "none",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  marginBottom: 24,
-                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.02)",
-                }}
-                onMouseEnter={(e: React.MouseEvent<HTMLElement>) => {
-                  e.currentTarget.style.borderColor = "#0B1E5E";
-                  e.currentTarget.style.color = "#0B1E5E";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 10px 20px rgba(0,0,0,0.05)";
-                }}
-                onMouseLeave={(e: React.MouseEvent<HTMLElement>) => {
-                  e.currentTarget.style.borderColor = "#e2e8f0";
-                  e.currentTarget.style.color = "#64748b";
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow =
-                    "0 2px 4px rgba(0,0,0,0.02)";
-                }}
-              >
-                <ArrowLeft size={16} /> Volver al Centro Financiero
-              </Link>
+              <ReturnButton href="/cash-flow" label="Volver al Centro Financiero" />
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <div
                   style={{

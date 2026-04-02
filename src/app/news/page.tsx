@@ -166,8 +166,8 @@ export default function NewsPage() {
                   src={filteredNews[0].image} 
                   alt={filteredNews[0].title} 
                   style={{ width: "100%", height: "100%", objectFit: "cover" }} 
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1611974715853-2644c59764f1?q=80&w=800&auto=format&fit=crop";
+                   onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200";
                   }}
                 />
                 <div style={{ 
@@ -222,7 +222,7 @@ export default function NewsPage() {
                         alt={item.title} 
                         style={{ width: "100%", height: "100%", objectFit: "cover" }} 
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1611974715853-2644c59764f1?q=80&w=800&auto=format&fit=crop";
+                          (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800";
                         }}
                       />
                       <div style={{ 

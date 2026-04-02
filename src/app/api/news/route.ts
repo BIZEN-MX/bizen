@@ -150,7 +150,7 @@ export async function GET(req: Request) {
                 title: `${symbol} muestra volatilidad ante reporte de inflación`,
                 category: "Mercado",
                 time: "Reciente",
-                image: "https://images.unsplash.com/photo-1611974715853-2644c59764f1?q=80&w=800&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200",
                 url: "#",
                 desc: "Los inversores ajustan posiciones esperando los nuevos datos económicos.",
                 fullDesc: "La volatilidad actual es un reflejo de la incertidumbre global. Los participantes del mercado están analizando cada dato macroeconómico para prever los movimientos de las tasas de interés."
