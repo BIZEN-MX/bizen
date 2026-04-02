@@ -117,13 +117,13 @@ export async function GET(req: Request) {
       title: "El peso mexicano muestra resiliencia frente al dólar",
       category: "Divisas",
       time: "Hace 6 horas",
-      image: "https://images.unsplash.com/photo-1512428559083-a400a3b84516?q=80&w=800&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1518458022751-0a53d3f96603?q=80&w=800&auto=format&fit=crop",
       url: "#",
       desc: "El diferencial de tasas sigue favoreciendo a la moneda nacional.",
       fullDesc: "El peso mexicano sigue siendo una de las divisas emergentes más atractivas para el acarreo de divisas (carry trade). La política monetaria prudente del Banco de México, sumada a los flujos récord de remesas y la inversión extranjera directa por el nearshoring, han creado un piso sólido para la moneda nacional frente a las fluctuaciones del billete verde."
     },
     {
-      id: 11,
+      id: 10,
       symbol: "ETH",
       author: "Analista Blockchain",
       source: "Ethereum World",
@@ -136,7 +136,7 @@ export async function GET(req: Request) {
       fullDesc: "El ecosistema de finanzas descentralizadas (DeFi) ha recibido con entusiasmo la última actualización técnica de Ethereum. Al optimizar el uso del gas, las transacciones diarias se han vuelto más accesibles para el usuario promedio, lo que podría disparar la adopción de contratos inteligentes y NFTs en los próximos meses."
     },
     {
-      id: 12,
+      id: 11,
       symbol: "SPY",
       author: "Gestor de Portafolio",
       source: "ETF Global",
@@ -149,7 +149,7 @@ export async function GET(req: Request) {
       fullDesc: "A pesar de las preocupaciones externas, las empresas del S&P 500 siguen reportando beneficios robustos. Este rally está liderado por las 'Siete Magníficas', pero se observa una rotación saludable hacia otros sectores como industrial y consumo discrecional, lo que sugiere un mercado alcista con bases más anchas de lo esperado."
     },
     {
-      id: 13,
+      id: 12,
       symbol: "OIL",
       author: "Analista de Energía",
       source: "Global Energy Watch",
@@ -162,7 +162,7 @@ export async function GET(req: Request) {
       fullDesc: "El mercado del petróleo sigue bajo presión por decisiones estratégicas de los grandes productores. Los recortes voluntarios han logrado mantener el barril por encima de los niveles de soporte fundamentales, impactando directamente en los costos de transporte e inflación a nivel global. Los analistas prevén un mercado ajustado para el resto del trimestre."
     },
     {
-      id: 14,
+      id: 13,
       symbol: "AMZN",
       author: "Corresponsal Ecommerce",
       source: "Market Retail",
@@ -175,7 +175,7 @@ export async function GET(req: Request) {
       fullDesc: "Amazon continúa redefiniendo la logística global mediante la integración profunda de Inteligencia Artificial en sus centros de distribución. La capacidad de predecir la demanda local permite que el inventario esté más cerca del consumidor final, optimizando costos y mejorando drásticamente la satisfacción al cliente."
     },
     {
-      id: 15,
+      id: 14,
       symbol: "MSFT",
       author: "Estratega de Software",
       source: "Enterprise Tech",
@@ -188,7 +188,7 @@ export async function GET(req: Request) {
       fullDesc: "Microsoft ha consolidado su posición como la plataforma de nube preferida para la era de la IA. La integración de Copilot en toda su suite de productividad está forzando a las empresas a actualizar sus infraestructuras digitales, generando un flujo de ingresos recurrente que ha sorprendido incluso a los analistas más optimistas."
     },
     {
-      id: 16,
+      id: 15,
       symbol: "META",
       author: "Analista Redes Sociales",
       source: "Social Index",
@@ -201,7 +201,7 @@ export async function GET(req: Request) {
       fullDesc: "Después de un periodo de reestructuración profunda, Meta ha emergido más fuerte que nunca. El anuncio de dividendos es una señal de confianza para los inversores de largo plazo, validando la estrategia de 'Eficiencia' de la compañía. Mientras tanto, sus inversiones en el metaverso comienzan a mostrar casos de uso más prácticos para el sector industrial."
     },
     {
-      id: 17,
+      id: 16,
       symbol: "ABNB",
       author: "Consultor de Turismo",
       source: "Travel Trends",
@@ -214,7 +214,7 @@ export async function GET(req: Request) {
       fullDesc: "Airbnb está capitalizando el cambio cultural hacia el trabajo remoto. Las estancias de más de 28 días representan ahora una parte significativa de su negocio, transformando la plataforma de una opción de vacaciones a una solución de vivienda flexible. Esta tendencia está forzando a las ciudades turísticas a repensar su regulación de vivienda a corto plazo."
     },
     {
-      id: 18,
+      id: 17,
       symbol: "SHOP",
       author: "Analista Retail",
       source: "E-Comm Review",
@@ -227,7 +227,7 @@ export async function GET(req: Request) {
       fullDesc: "Shopify está ganando terreno rápidamente ante los gigantes tradicionales de e-commerce empresarial. Su flexibilidad y ecosistema de aplicaciones permiten una innovación mucho más dinámica para las marcas DTC (Direct to Consumer). Con el lanzamiento de nuevas herramientas de checkout optimizado, la tasa de conversión ha mejorado sustancialmente para sus comerciantes."
     },
     {
-      id: 19,
+      id: 18,
       symbol: "ZM",
       author: "Analista de Colaboración",
       source: "Work Future",
@@ -240,7 +240,7 @@ export async function GET(req: Request) {
       fullDesc: "Ante el regreso parcial a las oficinas, Zoom está evolucionando su suite de productos para convertirse en un hub de colaboración integral. Su nuevo asistente de IA permite a los participantes ponerse al día en tiempo real con resúmenes automáticos, lo que aumenta la productividad y reduce la fatiga de las videollamadas constantes."
     },
     {
-      id: 20,
+      id: 19,
       symbol: "NFLX",
       author: "Corresponsal Entretenimiento",
       source: "Streaming Insider",
@@ -253,7 +253,7 @@ export async function GET(req: Request) {
       fullDesc: "Pese a las críticas iniciales en redes sociales, la decisión de Netflix de restringir el uso compartido de cuentas ha demostrado ser un éxito comercial. Millones de usuarios han optado por crear sus propias suscripciones o unirse como miembros adicionales, validando el valor del catálogo de contenido exclusivo de la plataforma frente a una competencia cada vez más fragmentada."
     },
     {
-      id: 21,
+      id: 20,
       symbol: "BABA",
       author: "Estratega de Mercados Emergentes",
       source: "Asia Finance",
@@ -266,7 +266,7 @@ export async function GET(req: Request) {
       fullDesc: "Alibaba ha anunciado una de las reestructuraciones más ambiciosas en su historia. Al dividir sus operaciones en unidades autónomas, busca agilidad operativa y la posibilidad de salidas a bolsa individuales. Los inversores ven esto como una señal positiva de apertura y adaptabilidad ante el panorama regulatorio cambiante de China."
     },
     {
-      id: 22,
+      id: 21,
       symbol: "GOOGL",
       author: "Corresponsal de Innovación",
       source: "AI Frontiers",
@@ -279,7 +279,7 @@ export async function GET(req: Request) {
       fullDesc: "Google ha dado un golpe sobre la mesa en la carrera de la IA. Gemini no solo procesa texto, sino que entiende y razona sobre imágenes, video y audio de forma nativa. Su integración en el ecosistema de Workspace y búsqueda marca un punto de inflexión en cómo interactuaremos con la tecnología en el corto plazo."
     },
     {
-      id: 23,
+      id: 22,
       symbol: "EUR",
       author: "Macroeconomista",
       source: "Eurozone Review",
@@ -292,7 +292,7 @@ export async function GET(req: Request) {
       fullDesc: "El BCE ha decidido mantener su postura restrictiva para asegurar el retorno de la inflación al objetivo del 2%. Aunque el crecimiento económico en la eurozona es modesto, la fortaleza del mercado laboral y la persistencia de los precios de servicios sugieren que los recortes de tipos podrían demorarse más de lo previsto por el mercado."
     },
     {
-      id: 24,
+      id: 23,
       symbol: "BTC",
       author: "Investigador Cripto",
       source: "Chain Guard",
@@ -305,7 +305,7 @@ export async function GET(req: Request) {
       fullDesc: "A pesar de la reducción en las recompensas de bloque, la red de Bitcoin está más segura que nunca. El despliegue de procesadores ASICs de alta eficiencia energética ha elevado el hashrate a niveles récord. Este fenómeno demuestra la resiliencia del sector minero y la convicción de largo plazo de los operadores industriales."
     },
     {
-      id: 25,
+      id: 24,
       symbol: "COPPER",
       author: "Consultor de Materias Primas",
       source: "Industrial Daily",
@@ -318,7 +318,7 @@ export async function GET(req: Request) {
       fullDesc: "Con cada vehículo eléctrico requiriendo hasta cuatro veces más cobre que uno de combustión, el mercado enfrenta un déficit estructural. Los analistas advierten que la falta de nuevas minas operativas podría llevar el precio del cobre a niveles insostenibles en la próxima década si no se acelera la inversión en exploración."
     },
     {
-      id: 26,
+      id: 25,
       symbol: "H2",
       author: "Ingeniero Energético",
       source: "Sustainable Tech",
@@ -331,7 +331,7 @@ export async function GET(req: Request) {
       fullDesc: "España se posiciona como el líder europeo en hidrógeno renovable. Al aprovechar su vasta infraestructura solar y eólica, este nuevo hub proveerá energía libre de emisiones a sectores difíciles de electrificar como el acero y el cemento, marcando un hito en la independencia energética de la región."
     },
     {
-      id: 27,
+      id: 26,
       symbol: "VC",
       author: "Analista de Startups",
       source: "Venture Pulse",
@@ -344,7 +344,7 @@ export async function GET(req: Request) {
       fullDesc: "Tras un periodo de cautela, el 'dry powder' de los fondos de VC está volviendo a fluir hacia emprendedores visionarios. El enfoque actual ha virado desde el crecimiento a toda costa hacia la eficiencia del capital y el desarrollo de tecnologías con propiedad intelectual sólida y barreras de entrada reales."
     },
     {
-      id: 28,
+      id: 27,
       symbol: "BRICS",
       author: "Geopolítico",
       source: "Global Strategist",
@@ -357,20 +357,20 @@ export async function GET(req: Request) {
       fullDesc: "La inclusión de potencias regionales en el bloque BRICS está acelerando la discusión sobre una moneda de reserva alternativa o sistemas de pago bilaterales. Este movimiento podría redefinir las rutas comerciales y las alianzas estratégicas en el hemisferio sur para las próximas décadas."
     },
     {
-      id: 29,
+      id: 28,
       symbol: "BANXICO",
       author: "Analista Bancario",
       source: "Mexico Financial",
       title: "Banco de México advierte sobre riesgos inflacionarios",
       category: "Banca",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1518458022751-0a53d3f96603?q=80&w=800&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1512428559083-a400a3b84516?q=80&w=800&auto=format&fit=crop",
       url: "#",
       desc: "La junta de gobierno mantiene vigilancia estrecha sobre los precios de alimentos y servicios.",
       fullDesc: "Banxico ha reiterado su compromiso con la estabilidad de precios en México. Pese a la resiliencia económica, factores externos como la volatilidad de materias primas y la presión salarial mantienen la inflación fuera del rango objetivo, lo que sugiere que la tasa de referencia permanecerá elevada por un periodo prolongado."
     },
     {
-      id: 30,
+      id: 29,
       symbol: "AI-ACT",
       author: "Abogado Tecnológico",
       source: "Legal Tech Insight",
@@ -383,20 +383,20 @@ export async function GET(req: Request) {
       fullDesc: "La EU AI Act marca un precedente histórico en la gobernanza tecnológica. Al clasificar los sistemas de IA por niveles de riesgo, la legislación busca proteger los derechos fundamentales sin sofocar la innovación. Las empresas ahora deben cumplir con estrictos estándares de transparencia y seguridad para operar en el mercado europeo."
     },
     {
-      id: 31,
+      id: 30,
       symbol: "NFLX",
       author: "Analista Media",
       source: "Streaming Insider",
       title: "Expansión de Netflix en el mercado de videojuegos",
       category: "Tecnología",
       time: "Hace 4 días",
-      image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=800&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop",
       url: "#",
       desc: "La plataforma de streaming acelera su apuesta por el gaming interactivo.",
       fullDesc: "Netflix está transformando su oferta de valor de un servicio pasivo a una experiencia interactiva completa. Al incluir juegos basados en sus franquicias más exitosas sin costo adicional, la compañía busca aumentar el tiempo de retención del usuario y diversificar sus fuentes de ingresos a largo plazo."
     },
     {
-      id: 32,
+      id: 31,
       symbol: "CHIP",
       author: "Analista de Supply Chain",
       source: "Logistics Now",
@@ -409,7 +409,7 @@ export async function GET(req: Request) {
       fullDesc: "Tras dos años de cuellos de botella extremos, la producción global de microchips se ha equilibrado con la demanda. Esto ha permitido que los fabricantes de automóviles vuelvan a niveles de inventario normales, reduciendo los tiempos de espera y estabilizando los precios en el mercado secundario."
     },
     {
-      id: 33,
+      id: 32,
       symbol: "SPACE",
       author: "Estratega Aeroespacial",
       source: "Orbital Business",
@@ -422,7 +422,7 @@ export async function GET(req: Request) {
       fullDesc: "Lo que antes era ciencia ficción se está convirtiendo en un plan de negocios tangible. La escasez de tierras raras en la Tierra está impulsando a consorcios privados a desarrollar tecnología de prospección y extracción espacial, con el potencial de redefinir el valor de los metales preciosos en las próximas décadas."
     },
     {
-      id: 34,
+      id: 33,
       symbol: "GENZ",
       author: "Analista de Consumo",
       source: "Market Demographics",
@@ -435,7 +435,7 @@ export async function GET(req: Request) {
       fullDesc: "Un cambio tectónico en la gestión de activos está ocurriendo a medida que la Generación Z entra en su etapa de mayor capacidad de ahorro. Para este grupo, el 'por qué' de una inversión es tan importante como el 'cuánto', lo que está obligando a los fondos tradicionales a integrar criterios ESG de manera auténtica y transparente."
     },
     {
-      id: 35,
+      id: 34,
       symbol: "CYBER",
       author: "Experto en Ciberseguridad",
       source: "Secure World",
@@ -446,8 +446,20 @@ export async function GET(req: Request) {
       url: "#",
       desc: "Las empresas incrementan su gasto en resiliencia digital ante amenazas sofisticadas.",
       fullDesc: "La ciberseguridad ya no es un gasto de TI, sino un pilar de la gestión de riesgos corporativos. El aumento de ataques sofisticados contra infraestructuras críticas ha disparado la demanda de seguros contra ciberataques, mientras que las organizaciones invierten millones en sistemas de detección temprana y recuperación de datos."
+    },
+    {
+      id: 35,
+      symbol: "BIZEN",
+      author: "Equipo Editorial BIZEN",
+      source: "BIZEN Official",
+      title: "El futuro de las finanzas personales es agentivo",
+      category: "BIZEN",
+      time: "Hace 1 hora",
+      image: "https://images.unsplash.com/photo-1611974715853-2644c59764f1?q=80&w=800&auto=format&fit=crop",
+      url: "#",
+      desc: "BIZEN lanza su ecosistema de noticias inmersivo para empoderar a los inversores.",
+      fullDesc: "Con el lanzamiento de este nuevo portal, BIZEN reafirma su compromiso de brindar no solo herramientas, sino inteligencia accionable. La era de los datos masivos requiere filtros inteligentes y narrativas claras que ayuden a navegar la complejidad del mercado global. Estamos construyendo el copiloto financiero definitivo."
     }
-
   ];
 
   let filtered = ALL_NEWS;

@@ -172,6 +172,9 @@ export default function NewsPage() {
                   src={filteredNews[0].image} 
                   alt={filteredNews[0].title} 
                   style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1611974715853-2644c59764f1?q=80&w=800&auto=format&fit=crop";
+                  }}
                 />
                 <div style={{ 
                   position: "absolute", 
@@ -224,6 +227,9 @@ export default function NewsPage() {
                         src={item.image} 
                         alt={item.title} 
                         style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1611974715853-2644c59764f1?q=80&w=800&auto=format&fit=crop";
+                        }}
                       />
                       <div style={{ 
                         position: "absolute", 
