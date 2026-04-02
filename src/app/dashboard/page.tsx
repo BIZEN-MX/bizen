@@ -785,63 +785,6 @@ function DashboardContent() {
             )}
           </AnimatePresence>
 
-          {/* NEWS TICKER — Top Visibility */}
-          {news.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              style={{
-                background: "linear-gradient(90deg, #0F62FE 0%, #1e1b4b 100%)",
-                borderRadius: 16,
-                padding: "10px 20px",
-                marginBottom: 24,
-                display: "flex",
-                alignItems: "center",
-                gap: 16,
-                boxShadow: "0 8px 24px rgba(15, 98, 254, 0.15)",
-                overflow: "hidden",
-                cursor: "pointer",
-                border: "1.5px solid rgba(255,255,255,0.1)"
-              }}
-              onClick={() => router.push("/news")}
-            >
-              <div style={{
-                background: "#fff",
-                color: "#0F62FE",
-                fontSize: 10,
-                fontWeight: 900,
-                padding: "3px 10px",
-                borderRadius: 6,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                flexShrink: 0
-              }}>
-                Último Minuto
-              </div>
-              <div style={{ flex: 1, overflow: "hidden" }}>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeNewsIndex}
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: "#fff",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis"
-                    }}
-                  >
-                    {news[activeNewsIndex].title} — {news[activeNewsIndex].source}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-              <ChevronRight size={16} color="#fff" style={{ opacity: 0.6 }} />
-            </motion.div>
-          )}
 
           {/* DNA PROFILE SECTION */}
           <motion.div 

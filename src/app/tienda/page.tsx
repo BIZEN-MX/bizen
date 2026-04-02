@@ -957,29 +957,6 @@ export default function TiendaPage() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Right: CTA */}
-                    <div style={{ position:"relative", zIndex:1 }}>
-                        <button
-                            onClick={() => setActiveCategory("Todo")}
-                            style={{
-                                whiteSpace:"nowrap", padding:"13px 26px",
-                                background:"linear-gradient(135deg, rgba(139,92,246,0.4), rgba(59,130,246,0.4))",
-                                border:"1px solid rgba(139,92,246,0.6)",
-                                borderRadius:14, color:"white", fontWeight:700,
-                                fontSize:14, cursor:"pointer",
-                                display:"flex", alignItems:"center", gap:8,
-                                backdropFilter:"blur(12px)",
-                                transition:"all 0.25s cubic-bezier(0.34,1.56,0.64,1)",
-                                boxShadow:"0 8px 24px rgba(109,40,217,0.3)"
-                            }}
-                            onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(139,92,246,0.6), rgba(59,130,246,0.6))"; e.currentTarget.style.transform = "translateY(-2px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(109,40,217,0.45)" }}
-                            onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(139,92,246,0.4), rgba(59,130,246,0.4))"; e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(109,40,217,0.3)" }}
-                        >
-                            <Sparkles size={15} />
-                            Explorar Tienda
-                        </button>
-                    </div>
                 </div>
 
                 {/* ── NAVIGATION TABS ── */}
