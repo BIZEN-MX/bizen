@@ -19,6 +19,7 @@ interface BillyProps {
   className?: string
   onClick?: () => void
   showGlow?: boolean
+  isStatic?: boolean
 }
 
 /**
@@ -31,7 +32,8 @@ export function Billy({
   size = 200,
   className = "",
   onClick,
-  showGlow = true
+  showGlow = true,
+  isStatic = false
 }: BillyProps) {
   const [frame, setFrame] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -49,11 +51,9 @@ export function Billy({
   const floatY = useMotionValue(0)
   const springFloatY = useSpring(floatY, { damping: 15, stiffness: 30 })
 
-  // useEffect que movía a Billy eliminado
-
   // Manejar entrada del mouse para el tilt 3D
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current) return
+    if (isStatic || !containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width - 0.5
     const y = (e.clientY - rect.top) / rect.height - 0.5
@@ -62,6 +62,7 @@ export function Billy({
   }
 
   const handleMouseLeave = () => {
+    if (isStatic) return
     mouseX.set(0)
     mouseY.set(0)
   }
@@ -125,15 +126,15 @@ export function Billy({
         <motion.div
            key={mood + (isTalking ? "-talking" : "-idle")}
            style={{ 
-             rotateX, 
-             rotateY, 
+             rotateX: isStatic ? 0 : rotateX, 
+             rotateY: isStatic ? 0 : rotateY, 
              y: springFloatY,
              transformStyle: "preserve-3d" 
            }}
-           whileHover={{ scale: 1.08 }}
-           whileTap={{ scale: 0.92 }}
+           whileHover={isStatic ? {} : { scale: 1.08 }}
+           whileTap={isStatic ? {} : { scale: 0.92 }}
            onClick={onClick}
-           className="relative z-10 w-full h-full flex items-center justify-center cursor-pointer"
+           className={`relative z-10 w-full h-full flex items-center justify-center ${isStatic ? '' : 'cursor-pointer'}`}
         >
           {/* Sombra Dinámica (Proyectada en "piso" imaginario) */}
           <motion.div 
@@ -163,7 +164,7 @@ export function Billy({
             style={{ 
                 imageRendering: 'auto',
                 WebkitFilter: 'drop-shadow(0 25px 35px rgba(0,0,0,0.18))',
-                transform: "translateZ(60px)" // Hace que la imagen "salga" del fondo al rotar
+                transform: isStatic ? "none" : "translateZ(60px)"
             }}
           />
         </motion.div>

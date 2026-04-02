@@ -839,7 +839,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                     transition={{ delay: 0.15, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
                     className="relative z-10"
                   >
-                    <Billy mood="happy" size={160} showGlow={true} />
+                    <Billy mood="happy" size={160} showGlow={true} isStatic={true} />
                   </motion.div>
 
                   {/* Name badge */}
