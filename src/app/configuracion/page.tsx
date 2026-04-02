@@ -527,16 +527,6 @@ function SettingsContent() {
             {/* ── GENERAL ── */}
             {activeSection === "general" && (
               <div>
-                <SectionCard title="Idioma" icon={<Globe size={15} color="white" />}>
-                  <div style={{ paddingTop:14, paddingBottom:14 }}>
-                    <FieldLabel>Selecciona el idioma de la interfaz</FieldLabel>
-                    <PillSelect
-                      options={[{ v:"es", l:"Español" }, { v:"en", l:"English" }]}
-                      value={settings.language} onChange={v => updateSettings({ language: v as Language })}
-                    />
-                  </div>
-                </SectionCard>
-
                 <SectionCard title="Preferencias del sistema" icon={<Zap size={15} color="white" />}>
                   <ToggleRow
                     label="Efectos de Sonido"
@@ -788,27 +778,6 @@ function SettingsContent() {
             )}
 
             {/* ── NOTIFICATIONS ── */}
-            {activeSection === "notifications" && (
-              <div>
-                <SectionCard title="Notificaciones" icon={<Bell size={15} color="white" />}>
-                  {[
-                    { k:"push",          l:"Notificaciones Push",      d:"Recibir notificaciones en tu dispositivo" },
-                    { k:"email",         l:"Correo Electrónico",        d:"Recibir notificaciones por email" },
-                    { k:"sound",         l:"Sonido",                    d:"Reproducir sonido al recibir notificaciones" },
-                    { k:"courseUpdates", l:"Actualizaciones de Cursos", d:"Nuevo contenido en tus cursos" },
-                    { k:"achievements",  l:"Logros",                    d:"Cuando obtienes un nuevo logro" },
-                    { k:"reminders",     l:"Recordatorios",             d:"Recordatorios de estudio programados" },
-                  ].map(({ k, l, d }) => (
-                    <ToggleRow key={k} label={l} desc={d}
-                      checked={settings.notifications[k as keyof typeof settings.notifications] as boolean}
-                      onChange={v => updateSettings({ notifications: { ...settings.notifications, [k]:v } })}
-                    />
-                  ))}
-                  <div style={{ paddingBottom:4 }} />
-                </SectionCard>
-                <SaveBtn onClick={saveGlobalSettings} loading={saving} label="Guardar notificaciones" />
-              </div>
-            )}
 
             {/* ── PRIVACY ── */}
             {activeSection === "privacy" && (
@@ -816,8 +785,7 @@ function SettingsContent() {
                 <SectionCard title="Visibilidad" icon={<Shield size={15} color="white" />}>
                   <div style={{ paddingTop:14, display:"flex", flexDirection:"column", gap:14, paddingBottom:14 }}>
                     {[
-                      { k:"profileVisibility",  l:"Visibilidad del Perfil" },
-                      { k:"activityVisibility", l:"Visibilidad de Actividad" },
+                      { k:"profileVisibility",  l:"Visibilidad de Perfil en P2P" },
                     ].map(({ k, l }) => (
                       <div key={k}>
                         <FieldLabel>{l}</FieldLabel>
@@ -829,9 +797,8 @@ function SettingsContent() {
                             onFocus={e => { e.currentTarget.style.borderColor = C.blue }}
                             onBlur={e => { e.currentTarget.style.borderColor = C.border }}
                           >
-                            <option value="public">Público</option>
-                            <option value="friends">Solo amigos</option>
-                            <option value="private">Privado</option>
+                            <option value="public">Público (Aparecer en búsquedas)</option>
+                            <option value="private">Privado (Modo incógnito)</option>
                           </select>
                           <ChevronDown size={14} color={C.textMuted} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", pointerEvents:"none" }} />
                         </div>
@@ -840,81 +807,13 @@ function SettingsContent() {
                   </div>
                 </SectionCard>
                 <SectionCard title="Interacciones" icon={<Shield size={15} color="white" />}>
-                  <ToggleRow label="Mostrar Progreso" desc="Permitir que otros vean tu progreso"
+                  <ToggleRow label="Mostrar Progreso" desc="Permitir que otros vean tu balance y nivel"
                     checked={settings.privacy.showProgress}
                     onChange={v => updateSettings({ privacy: { ...settings.privacy, showProgress:v } })}
-                  />
-                  <ToggleRow label="Permitir Mensajes" desc="Recibir mensajes directos de otros usuarios"
-                    checked={settings.privacy.allowMessages}
-                    onChange={v => updateSettings({ privacy: { ...settings.privacy, allowMessages:v } })}
                   />
                   <div style={{ paddingBottom:4 }} />
                 </SectionCard>
                 <SaveBtn onClick={saveGlobalSettings} loading={saving} label="Guardar privacidad" />
-              </div>
-            )}
-
-            {/* ── CONTENT ── */}
-            {activeSection === "content" && (
-              <div>
-                <SectionCard title="Preferencias de Contenido" icon={<Tv size={15} color="white" />}>
-                  <ToggleRow label="Subtítulos" desc="Activar subtítulos en videos"
-                    checked={settings.contentPreferences.showSubtitles}
-                    onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, showSubtitles:v } })}
-                  />
-                  <ToggleRow label="Reproducción Automática" desc="Reproducir videos automáticamente"
-                    checked={settings.contentPreferences.autoplayVideos}
-                    onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, autoplayVideos:v } })}
-                  />
-                  <ToggleRow label="Mostrar Pistas" desc="Ver pistas durante los ejercicios"
-                    checked={settings.contentPreferences.showHints}
-                    onChange={v => updateSettings({ contentPreferences: { ...settings.contentPreferences, showHints:v } })}
-                  />
-                  <div style={{ paddingBottom:4 }} />
-                </SectionCard>
-                <SaveBtn onClick={saveGlobalSettings} loading={saving} label="Guardar preferencias" />
-              </div>
-            )}
-
-            {/* ── ACCESSIBILITY ── */}
-            {activeSection === "accessibility" && (
-              <div>
-                <SectionCard title="Tamaño de Texto" icon={<FileText size={15} color="white" />}>
-                  <div style={{ paddingTop:14, paddingBottom:14 }}>
-                    <PillSelect
-                      options={[{ v:"small", l:"Pequeño" }, { v:"medium", l:"Mediano" }, { v:"large", l:"Grande" }, { v:"extra-large", l:"XL" }]}
-                      value={settings.accessibility.textSize}
-                      onChange={v => updateSettings({ accessibility: { ...settings.accessibility, textSize:v as TextSize } })}
-                    />
-                  </div>
-                </SectionCard>
-
-                <SectionCard title="Modo de Contraste" icon={<Contrast size={15} color="white" />}>
-                  <div style={{ paddingTop:14, paddingBottom:14 }}>
-                    <PillSelect
-                      options={[{ v:"normal", l:"Normal" }, { v:"high", l:"Alto Contraste" }]}
-                      value={settings.accessibility.contrastMode}
-                      onChange={v => updateSettings({ accessibility: { ...settings.accessibility, contrastMode:v as ContrastMode } })}
-                    />
-                  </div>
-                </SectionCard>
-
-                <SectionCard title="Otras opciones" icon={<Eye size={15} color="white" />}>
-                  <ToggleRow label="Reducir Movimiento" desc="Minimizar animaciones y efectos"
-                    checked={settings.accessibility.reducedMotion}
-                    onChange={v => updateSettings({ accessibility: { ...settings.accessibility, reducedMotion:v } })}
-                  />
-                  <ToggleRow label="Optimizar para Lector de Pantalla" desc="Mejora la experiencia con lectores de pantalla"
-                    checked={settings.accessibility.screenReaderOptimized}
-                    onChange={v => updateSettings({ accessibility: { ...settings.accessibility, screenReaderOptimized:v } })}
-                  />
-                  <ToggleRow label="Navegación por Teclado" desc="Mejorar la navegación con teclado"
-                    checked={settings.accessibility.keyboardNavigation}
-                    onChange={v => updateSettings({ accessibility: { ...settings.accessibility, keyboardNavigation:v } })}
-                  />
-                  <div style={{ paddingBottom:4 }} />
-                </SectionCard>
-                <SaveBtn onClick={saveGlobalSettings} loading={saving} label="Guardar accesibilidad" />
               </div>
             )}
 

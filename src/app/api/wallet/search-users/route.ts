@@ -35,15 +35,30 @@ export async function GET(request: Request) {
         fullName: true,
         nickname: true,
         avatar: true,
-        level: true
+        level: true,
+        settings: true
       },
-      take: 20
+      take: 40 // Fetch a bit more to accommodate filtering
     })
 
-    // Ensure uniqueness by userId (just in case)
-    const uniqueUsers = Array.from(new Map(users.map(u => [u.userId, u])).values());
+    // Filter out users who have set their profile to private
+    const visibleUsers = users.filter((u: any) => {
+      if (u.settings && u.settings.privacy && u.settings.privacy.profileVisibility === 'private') {
+        return false;
+      }
+      return true;
+    });
 
-    return NextResponse.json({ users: uniqueUsers })
+    // Ensure uniqueness by userId (just in case)
+    const uniqueUsers = Array.from(new Map(visibleUsers.map(u => [u.userId, u])).values()).slice(0, 20);
+
+    // Sanitize output (don't leak settings)
+    const sanitizedUsers = uniqueUsers.map(u => {
+      const { settings, ...safeUser } = u;
+      return safeUser;
+    });
+
+    return NextResponse.json({ users: sanitizedUsers })
   } catch (error) {
     console.error("Error in user search:", error)
     return NextResponse.json({ error: "Failed to search users" }, { status: 500 })

@@ -27,7 +27,23 @@ export const initAudioContext = () => {
   }
 }
 
+/**
+ * Check global user settings to see if sounds are enabled
+ */
+const isSoundEnabled = (): boolean => {
+  if (typeof window === 'undefined') return false
+  try {
+    const saved = localStorage.getItem('bizen_settings')
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      if (parsed.soundsEnabled === false) return false
+    }
+  } catch (e) {}
+  return true
+}
+
 export const playCorrectSound = () => {
+  if (!isSoundEnabled()) return
   const audioContext = getAudioContext()
   if (!audioContext) return
 
@@ -63,6 +79,7 @@ export const playCorrectSound = () => {
 }
 
 export const playIncorrectSound = () => {
+  if (!isSoundEnabled()) return
   const audioContext = getAudioContext()
   if (!audioContext) return
 
@@ -91,6 +108,7 @@ export const playIncorrectSound = () => {
 }
 
 export const playFlipSound = () => {
+  if (!isSoundEnabled()) return
   const audioContext = getAudioContext()
   if (!audioContext) return
 

@@ -269,9 +269,8 @@ function DashboardContent() {
   const [showPulseBc,      setShowPulseBc]      = useState(false)
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
 
-  const showDiagnosticWidget = useMemo(() => {
-    return !isInstitutional && !dnaResult && !isAdminOrTeacher && !loadingData && !loading;
-  }, [isInstitutional, dnaResult, isAdminOrTeacher, loadingData, loading])
+  const activeDnaProfile = liveProfile?.dnaProfile || dnaResult?.dnaProfile
+  const hasCompletedDiagnostic = !!activeDnaProfile || !!liveProfile?.diagnosticCompleted || !!dnaResult
 
   const searchParams = useSearchParams()
   const [showEvolution, setShowEvolution] = useState(false)
@@ -424,7 +423,7 @@ function DashboardContent() {
     "Maestro BIZEN": { bg: "#f0fdf4", text: "#166534", icon: "#22c55e", border: "#bbf7d0", path: "Estrategias Avanzadas", topicId: "tema-11" },
   }
 
-  const dnaInfo = dnaResult?.dnaProfile ? profileColors[dnaResult.dnaProfile] : null
+  const dnaInfo = activeDnaProfile ? profileColors[activeDnaProfile as string] : null
 
   return (
     <div style={{ minHeight: "100vh", background: "#FBFAF5", width: "100%", boxSizing: "border-box", fontFamily: '"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif' }}>
@@ -767,14 +766,14 @@ function DashboardContent() {
             }}
             style={{ marginBottom: 24 }}
           >
-            {liveProfile?.dnaProfile && liveProfile.dnaProfile.includes("Billy") ? (
+            {activeDnaProfile && activeDnaProfile.includes("Billy") ? (
               <BillyLabWidget 
-                dnaProfile={liveProfile.dnaProfile}
-                dnaScore={liveProfile.dnaScore || 0}
-                nextTopicId={liveProfile.dnaProfile === "Billy Inversionista" ? "tema-09" : (liveProfile.dnaProfile === "Billy Estratega" ? "tema-07" : "tema-06")}
-                nextTopicTitle={liveProfile.dnaProfile === "Billy Inversionista" ? "Estrategias de Inversión" : (liveProfile.dnaProfile === "Billy Estratega" ? "Sistema de Crédito" : "Presupuesto Real")}
+                dnaProfile={activeDnaProfile}
+                dnaScore={liveProfile?.dnaScore || dnaResult?.dnaScore || 0}
+                nextTopicId={activeDnaProfile === "Billy Inversionista" ? "tema-09" : (activeDnaProfile === "Billy Estratega" ? "tema-07" : "tema-06")}
+                nextTopicTitle={activeDnaProfile === "Billy Inversionista" ? "Estrategias de Inversión" : (activeDnaProfile === "Billy Estratega" ? "Sistema de Crédito" : "Presupuesto Real")}
               />
-            ) : dnaResult ? (
+            ) : hasCompletedDiagnostic && dnaInfo ? (
               <motion.div 
                 style={{
                   background: dnaInfo?.bg || "white",
@@ -790,7 +789,7 @@ function DashboardContent() {
                   </div>
                   <div>
                     <div style={{ fontSize: 11, fontWeight: 800, color: dnaInfo?.text, textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 4 }}>Tu Perfil Financiero</div>
-                    <div style={{ fontSize: 24, fontWeight: 800, color: dnaInfo?.text }}>{dnaResult.dnaProfile}</div>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: dnaInfo?.text }}>{activeDnaProfile}</div>
                   </div>
                 </div>
                 <div style={{ flex: 1, height: 1.5, background: `${dnaInfo?.border}40`, margin: "0 10px", minWidth: 20 }} className="hidden sm:block" />
@@ -803,7 +802,6 @@ function DashboardContent() {
                     style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: `1px solid ${dnaInfo?.border}` }} 
                     onClick={() => {
                       if (dnaInfo?.topicId) {
-                        // Use noredirect=true to prevent the /courses page from auto-jumping to "last lesson"
                         router.push(`/courses/${dnaInfo.topicId}?noredirect=true`)
                       } else {
                         router.push("/courses")
@@ -814,32 +812,70 @@ function DashboardContent() {
                   </motion.div>
                 </div>
               </motion.div>
-            ) : (
-              <motion.div 
+            ) : (!isInstitutional && !isAdminOrTeacher) ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 style={{
-                  background: "linear-gradient(135deg, #f0f9ff, #e0f2fe)",
-                  border: "1.5px dashed #bae6fd",
-                  borderRadius: 24, padding: "18px 24px",
-                  display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16
+                  background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                  borderRadius: 28,
+                  padding: "24px 32px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 24,
+                  boxShadow: "0 12px 40px rgba(79, 70, 229, 0.3)",
+                  border: "1.5px solid rgba(255,255,255,0.18)",
+                  position: "relative",
+                  overflow: "hidden"
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <div style={{ width: 52, height: 52, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Target size={28} color="#0F62FE" />
+                <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 250, height: 250, background: "rgba(255,255,255,0.12)", borderRadius: "50%", filter: "blur(60px)" }} />
+                
+                <div style={{ display: "flex", alignItems: "center", gap: 20, position: "relative", zIndex: 1 }}>
+                  <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.25)" }}>
+                    <BrainCircuit size={36} color="#fff" />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: 18, fontWeight: 700, color: "#001d6c", margin: 0 }}>Descubre tu ADN Financiero</h3>
-                    <p style={{ fontSize: 13, color: "#1d4ed8", margin: 0 }}>Completa el diagnóstico para recibir una ruta personalizada.</p>
+                    <h3 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.015em" }}>Descubre tu DNA Financiero</h3>
+                    <p style={{ margin: "4px 0 0", fontSize: 15, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Toma un test rápido para recibir tu ruta de aprendizaje.</p>
                   </div>
                 </div>
-                <motion.button 
+                
+                <button
                   onClick={() => router.push("/diagnostic/1")}
-                  style={{ padding: "10px 24px", background: "#0F62FE", color: "white", borderRadius: 12, border: "none", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(15,98,254,0.25)" }}
+                  style={{
+                    background: "#fff",
+                    color: "#4f46e5",
+                    border: "none",
+                    borderRadius: 16,
+                    padding: "14px 28px",
+                    fontWeight: 900,
+                    fontSize: 16,
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+                    position: "relative",
+                    zIndex: 1,
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = "scale(1.05) translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.2)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = "scale(1) translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
+                  }}
                 >
-                  Comenzar <IcoArrowRight size={16} />
-                </motion.button>
+                  Empezar
+                  <ChevronRight size={20} />
+                </button>
               </motion.div>
-            )}
+            ) : null}
           </motion.div>
 
           {!isAdminOrTeacher && (
@@ -1049,72 +1085,7 @@ function DashboardContent() {
           <DailyChallengeWidget />
         </div>
         
-        {/* PENDING DIAGNOSTIC WIDGET */}
-        {showDiagnosticWidget && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{
-              background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-              borderRadius: 28,
-              padding: "24px 32px",
-              marginBottom: 24,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 24,
-              boxShadow: "0 12px 40px rgba(79, 70, 229, 0.3)",
-              border: "1.5px solid rgba(255,255,255,0.18)",
-              position: "relative",
-              overflow: "hidden"
-            }}
-          >
-            <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 250, height: 250, background: "rgba(255,255,255,0.12)", borderRadius: "50%", filter: "blur(60px)" }} />
-            
-            <div style={{ display: "flex", alignItems: "center", gap: 20, position: "relative", zIndex: 1 }}>
-              <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.25)" }}>
-                <BrainCircuit size={36} color="#fff" />
-              </div>
-              <div>
-                <h3 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.015em" }}>Descubre tu DNA Financiero</h3>
-                <p style={{ margin: "4px 0 0", fontSize: 15, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Tu ruta de aprendizaje personalizada te espera. ¡Toma el examen inicial!</p>
-              </div>
-            </div>
-            
-            <button
-              onClick={() => router.push("/diagnostic")}
-              style={{
-                background: "#fff",
-                color: "#4f46e5",
-                border: "none",
-                borderRadius: 16,
-                padding: "14px 28px",
-                fontWeight: 900,
-                fontSize: 16,
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
-                position: "relative",
-                zIndex: 1,
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = "scale(1.05) translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.2)";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = "scale(1) translateY(0)";
-                e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
-              }}
-            >
-              Empezar Ahora
-              <ChevronRight size={20} />
-            </button>
-          </motion.div>
-        )}
+
 
         {/* ══════════════════════════════════════════════════════════
             ACTIVITY FEED
