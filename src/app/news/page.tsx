@@ -150,86 +150,135 @@ export default function NewsPage() {
         {loading ? (
           <PageLoader />
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", gap: 30 }}>
-            <AnimatePresence>
-              {filteredNews.map((item, idx) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.04 }}
-                  whileHover={{ y: -10, boxShadow: "0 25px 50px -12px rgba(0,0,0,0.08)" }}
-                  style={{
-                    background: "white",
-                    borderRadius: 32,
-                    overflow: "hidden",
-                    border: "1.5px solid #eef2f8",
-                    display: "flex",
-                    flexDirection: "column",
-                    cursor: "pointer",
-                    position: "relative"
-                  }}
-                  onClick={() => window.open(item.url, "_blank")}
-                >
-                  <div style={{ width: "100%", height: 280, overflow: "hidden", position: "relative" }}>
-                    <img 
-                      src={item.image} 
-                      alt={item.title} 
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }} 
-                    />
-                    <div style={{ 
-                      position: "absolute", 
-                      bottom: 20, 
-                      left: 20, 
-                      background: "rgba(11, 30, 94, 0.85)", 
-                      backdropFilter: "blur(12px)",
-                      padding: "6px 14px", 
-                      borderRadius: 10, 
-                      fontSize: 10, 
-                      fontWeight: 900, 
-                      color: "white",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em",
-                      border: "1px solid rgba(255,255,255,0.1)"
-                    }}>
-                      {item.category}
-                    </div>
+          <>
+            {/* Featured Section */}
+            {filteredNews.length > 0 && searchTerm === "" && activeCategory === "Todas" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  width: "100%",
+                  height: 500,
+                  borderRadius: 32,
+                  overflow: "hidden",
+                  marginBottom: 60,
+                  position: "relative",
+                  cursor: "pointer",
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.1)"
+                }}
+                onClick={() => window.open(filteredNews[0].url, "_blank")}
+              >
+                <img 
+                  src={filteredNews[0].image} 
+                  alt={filteredNews[0].title} 
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                />
+                <div style={{ 
+                  position: "absolute", 
+                  inset: 0, 
+                  background: "linear-gradient(to top, rgba(11, 30, 94, 0.95), transparent)" 
+                }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, padding: 60, width: "100%" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                    <span style={{ padding: "6px 16px", background: "#0F62FE", borderRadius: 10, fontSize: 12, fontWeight: 900, color: "white", textTransform: "uppercase" }}>Destacado</span>
+                    <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, fontWeight: 700 }}>{filteredNews[0].source} • {filteredNews[0].time}</span>
                   </div>
-                  <div style={{ padding: 28, flex: 1, display: "flex", flexDirection: "column" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                      <Clock size={14} color="#94a3b8" />
-                      <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700 }}>{item.time}</span>
-                      <span style={{ fontSize: 12, color: "#e2e8f0" }}>|</span>
-                      <span style={{ fontSize: 12, color: "#10b981", fontWeight: 700 }}>Lectura de 3 min</span>
-                    </div>
-                    <h3 style={{ margin: "0 0 16px", fontSize: 19, fontWeight: 850, color: "#0B1E5E", lineHeight: 1.4, letterSpacing: "-0.01em" }}>
-                      {item.title}
-                    </h3>
-                    <p style={{ margin: "0 0 24px", color: "#64748b", fontSize: 14, lineHeight: 1.6, fontWeight: 500 }}>
-                      {item.desc || "Información actualizada sobre los últimos movimientos del mercado..."}
-                    </p>
-                    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#0F62FE", fontSize: 13, fontWeight: 800 }}>
-                        Ver artículo completo <ExternalLink size={14} />
-                      </div>
+                  <h2 style={{ fontSize: 42, fontWeight: 900, color: "white", marginBottom: 20, maxWidth: 900, lineHeight: 1.1 }}>
+                    {filteredNews[0].title}
+                  </h2>
+                  <p style={{ fontSize: 18, color: "rgba(255,255,255,0.8)", maxWidth: 700, lineHeight: 1.6, marginBottom: 30 }}>
+                    {filteredNews[0].fullDesc}
+                  </p>
+                  <div style={{ display: "flex", gap: 20 }}>
+                     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 28px", background: "white", borderRadius: 14, color: "#0B1E5E", fontWeight: 800, fontSize: 15 }}>
+                       Leer Historia Completa <ChevronRight size={18} />
+                     </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", gap: 30 }}>
+              <AnimatePresence>
+                {(searchTerm !== "" || activeCategory !== "Todas" ? filteredNews : filteredNews.slice(1)).map((item, idx) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.04 }}
+                    whileHover={{ y: -10, boxShadow: "0 25px 50px -12px rgba(0,0,0,0.08)" }}
+                    style={{
+                      background: "white",
+                      borderRadius: 32,
+                      overflow: "hidden",
+                      border: "1.5px solid #eef2f8",
+                      display: "flex",
+                      flexDirection: "column",
+                      cursor: "pointer",
+                      position: "relative"
+                    }}
+                    onClick={() => window.open(item.url, "_blank")}
+                  >
+                    <div style={{ width: "100%", height: 280, overflow: "hidden", position: "relative" }}>
+                      <img 
+                        src={item.image} 
+                        alt={item.title} 
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                      />
                       <div style={{ 
-                        width: 36, 
-                        height: 36, 
-                        borderRadius: 12, 
-                        background: "#f8fafc", 
-                        display: "flex", 
-                        alignItems: "center", 
-                        justifyContent: "center",
-                        color: "#94a3b8"
+                        position: "absolute", 
+                        bottom: 20, 
+                        left: 20, 
+                        background: "rgba(11, 30, 94, 0.85)", 
+                        backdropFilter: "blur(12px)",
+                        padding: "6px 14px", 
+                        borderRadius: 10, 
+                        fontSize: 10, 
+                        fontWeight: 900, 
+                        color: "white",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.1em",
+                        border: "1px solid rgba(255,255,255,0.1)"
                       }}>
-                        <Share2 size={16} />
+                        {item.category}
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+                    <div style={{ padding: 28, flex: 1, display: "flex", flexDirection: "column" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                        <span style={{ fontSize: 12, color: "#0F62FE", fontWeight: 800 }}>{item.source}</span>
+                        <span style={{ fontSize: 10, color: "#e2e8f0" }}>•</span>
+                        <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 700 }}>{item.time}</span>
+                      </div>
+                      <h3 style={{ margin: "0 0 16px", fontSize: 19, fontWeight: 850, color: "#0B1E5E", lineHeight: 1.4, letterSpacing: "-0.01em" }}>
+                        {item.title}
+                      </h3>
+                      <p style={{ margin: "0 0 24px", color: "#64748b", fontSize: 14, lineHeight: 1.6, fontWeight: 500 }}>
+                        {item.fullDesc ? item.fullDesc.substring(0, 150) + "..." : item.desc}
+                      </p>
+                      <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 20, borderTop: "1px solid #f1f5f9" }}>
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                          <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>ESCRITO POR</span>
+                          <span style={{ fontSize: 13, color: "#0B1E5E", fontWeight: 800 }}>{item.author || "Redacción BIZEN"}</span>
+                        </div>
+                        <div style={{ 
+                          width: 36, 
+                          height: 36, 
+                          borderRadius: 12, 
+                          background: "#f8fafc", 
+                          display: "flex", 
+                          alignItems: "center", 
+                          justifyContent: "center",
+                          color: "#94a3b8"
+                        }}>
+                          <Share2 size={16} />
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </>
         )}
 
         {!loading && filteredNews.length === 0 && (
