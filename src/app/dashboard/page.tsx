@@ -461,17 +461,13 @@ function DashboardContent() {
 
         /* quick link */
         .ql {
-          background: linear-gradient(145deg,#FFFFFF 0%,#F8FAFC 100%);
-          border-radius:20px; padding:14px 12px;
-          border:1px solid rgba(15,98,254,0.10);
-          box-shadow:0 8px 20px -6px rgba(15,98,254,0.08);
-          display:flex; align-items:center; gap:14px; cursor:pointer;
+          border-radius:24px; padding:20px 18px;
+          cursor:pointer; position:relative; overflow:hidden;
           font-family:"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-          transition:all .3s cubic-bezier(.4,0,.2,1);
+          transition:transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s;
         }
-        }
-        .ql-label { font-size:14px; font-weight:700; color:#0f172a; line-height:1.3; }
-        .ql-sub   { font-size:12px; color:#94a3b8; font-weight:500; margin-top:3px;
+        .ql-label { font-size:14px; font-weight:800; color:#fff; line-height:1.3; }
+        .ql-sub   { font-size:11px; color:rgba(255,255,255,0.5); font-weight:600; margin-top:4px;
                     overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
         /* continue button */
@@ -1107,7 +1103,7 @@ function DashboardContent() {
               </span>
               {streak > 0 && (
                 <span style={{ fontSize: 11, fontWeight: 800, color: "#fb923c", background: "rgba(251,146,60,0.15)", padding: "3px 9px", borderRadius: 8 }}>
-                  🔥 {streak}d
+                  {streak}d
                 </span>
               )}
             </motion.div>
@@ -1227,69 +1223,111 @@ function DashboardContent() {
         </div>
 
         {/* ══════════════════════════════════════════════════════════
-            QUICK LINKS
+            QUICK LINKS — Enhanced
         ══════════════════════════════════════════════════════════ */}
         <motion.div
           variants={{
             hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.05 }
-            }
+            visible: { opacity: 1, transition: { staggerChildren: 0.06 } }
           }}
           initial="hidden"
           animate="visible"
         >
-          <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:16}}>
-            <div style={{width:28,height:28,borderRadius:9,background:"linear-gradient(135deg,#dbeafe,#bfdbfe)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-              <IcoGrid size={14} color="#3b82f6" strokeWidth={2.5}/>
+          {/* Section header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 12, background: "linear-gradient(135deg, #1e1b4b, #312e81)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(99,102,241,0.3)" }}>
+                <IcoGrid size={16} color="#a5b4fc" strokeWidth={2.2}/>
+              </div>
+              <div>
+                <span style={{ fontSize: 20, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.02em" }}>Accesos Rápidos</span>
+                <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600, marginTop: 1 }}>Todos tus destinos en un click</div>
+              </div>
             </div>
-            <span style={{fontSize:18,fontWeight:800,color:"#0f172a",letterSpacing:"-0.01em"}}>Accesos Rápidos</span>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#6366f1", background: "#eef2ff", padding: "4px 12px", borderRadius: 99, border: "1px solid #c7d2fe" }}>8 herramientas</div>
           </div>
 
-          <div className="quick-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:12}}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14 }}>
             {([
-              { Icon:IcoBook,    label:"Aprende Finanzas",  sub:"30 temas en total",       href:"/courses",    color:"#3b82f6", bg:"#dbeafe" },
-              { Icon:TrendingUp, label:"Inversión BIZEN",    sub:"Poner Bizcoins a trabajar", href:"/investments",color:"#0F62FE", bg:"#dbeafe" },
-              { Icon:IcoGamepad, label:"Simuladores",        sub:"Practica con escenarios",  href:"/cash-flow", color:"#8b5cf6", bg:"#ede9fe" },
-              { Icon:IcoStore,   label:"Tienda Bizen",       sub:`${bizcoins.toLocaleString()} BIZCOINS`,        href:"/tienda",   color:"#d97706", bg:"#fef3c7" },
-              { Icon:IcoUsers,   label:"Foro",               sub:"Comunidad activa",          href:"/forum",    color:"#10b981", bg:"#d1fae5" },
-              { Icon:IcoTrophy,  label:"Rankings",           sub:"Tu posición global",        href:"/rankings", color:"#ef4444", bg:"#fee2e2" },
-              { Icon:IcoZap,     label: (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') ? "Lanzar Live Quiz" : "Bizen Live", sub:"Quizzes en tiempo real", href:(dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') ? "/live/host" : "/live/join", color:"#fbbf24", bg:"#fef3c7" },
-              { Icon:IcoUser,    label:"Mi Perfil",          sub:"Insignias y logros",        href:"/profile",  color:"#0891b2", bg:"#cffafe" },
-            ] as const).map(({Icon,label,sub,href,color,bg})=>(
-              <motion.div 
-                key={href} 
-                variants={{
-                  hidden: { opacity: 0, y: 15 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-                className="ql" 
-                style={{ 
-                  borderRadius: 20,
-                  transition: "all 0.3s ease",
-                  border: "1px solid rgba(0,0,0,0.05)",
-                  background: "#fff",
-                  padding: "16px",
+              {
+                Icon: IcoBook, label: "Aprende Finanzas", sub: "30 temas · Educación financiera",
+                href: "/courses",
+                gradient: "linear-gradient(145deg, #1d4ed8 0%, #1e40af 100%)",
+                glow: "rgba(59,130,246,0.35)", border: "rgba(96,165,250,0.2)"
+              },
+              {
+                Icon: TrendingUp, label: "Inversión BIZEN", sub: "Haz crecer tus Bizcoins",
+                href: "/investments",
+                gradient: "linear-gradient(145deg, #0f62fe 0%, #1d4ed8 100%)",
+                glow: "rgba(15,98,254,0.35)", border: "rgba(96,165,250,0.2)"
+              },
+              {
+                Icon: IcoGamepad, label: "Simuladores", sub: "Practica con escenarios reales",
+                href: "/cash-flow",
+                gradient: "linear-gradient(145deg, #5b21b6 0%, #7c3aed 100%)",
+                glow: "rgba(139,92,246,0.35)", border: "rgba(167,139,250,0.2)"
+              },
+              {
+                Icon: IcoStore, label: "Tienda Bizen", sub: `${bizcoins.toLocaleString()} BC disponibles`,
+                href: "/tienda",
+                gradient: "linear-gradient(145deg, #92400e 0%, #b45309 100%)",
+                glow: "rgba(217,119,6,0.35)", border: "rgba(251,191,36,0.2)"
+              },
+              {
+                Icon: IcoUsers, label: "Foro", sub: "Comunidad activa de inversores",
+                href: "/forum",
+                gradient: "linear-gradient(145deg, #065f46 0%, #047857 100%)",
+                glow: "rgba(16,185,129,0.35)", border: "rgba(52,211,153,0.2)"
+              },
+              {
+                Icon: IcoTrophy, label: "Rankings", sub: "Tu posición en el tablero global",
+                href: "/rankings",
+                gradient: "linear-gradient(145deg, #991b1b 0%, #b91c1c 100%)",
+                glow: "rgba(239,68,68,0.35)", border: "rgba(252,165,165,0.2)"
+              },
+              {
+                Icon: IcoZap,
+                label: (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') ? "Lanzar Live Quiz" : "Bizen Live",
+                sub: "Quizzes competitivos en tiempo real",
+                href: (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') ? "/live/host" : "/live/join",
+                gradient: "linear-gradient(145deg, #78350f 0%, #92400e 100%)",
+                glow: "rgba(251,191,36,0.35)", border: "rgba(252,211,77,0.2)"
+              },
+              {
+                Icon: IcoUser, label: "Mi Perfil", sub: "Insignias, logros y configuración",
+                href: "/profile",
+                gradient: "linear-gradient(145deg, #0c4a6e 0%, #075985 100%)",
+                glow: "rgba(8,145,178,0.35)", border: "rgba(103,232,249,0.2)"
+              },
+            ] as const).map(({ Icon, label, sub, href, gradient, glow, border }, idx) => (
+              <motion.div
+                key={href}
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                className="ql"
+                style={{
+                  background: gradient,
+                  border: `1.5px solid ${border}`,
+                  boxShadow: `0 8px 24px ${glow}`,
                   display: "flex",
-                  alignItems: "center",
-                  gap: 12,
+                  flexDirection: "column",
+                  gap: 16,
                   cursor: "pointer"
-                }} 
-                onClick={()=>router.push(href)}
+                }}
+                onClick={() => router.push(href)}
               >
-                <div 
-                  className="ql-icon-box"
-                  style={{width:46,height:46,borderRadius:14,background:bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 4px 12px ${color}20`}}
-                >
-                  <Icon size={22} color={color} strokeWidth={1.8}/>
+                {/* Top row: icon + arrow */}
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(8px)" }}>
+                    <Icon size={24} color="#fff" strokeWidth={1.8}/>
+                  </div>
+                  <div style={{ width: 28, height: 28, borderRadius: 10, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <IcoArrowRight size={13} color="rgba(255,255,255,0.7)"/>
+                  </div>
                 </div>
-                <div style={{minWidth:0,flex:1}}>
+                {/* Labels */}
+                <div>
                   <div className="ql-label">{label}</div>
                   <div className="ql-sub">{sub}</div>
-                </div>
-                <div className="ql-arrow" style={{flexShrink:0,opacity:.3}}>
-                  <IcoArrowRight size={15} color="#64748b"/>
                 </div>
               </motion.div>
             ))}
