@@ -116,12 +116,12 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
   const isTransferPage = pathname === '/transfer' || searchParams?.get('action') === 'transfer'
-  const isHistoryPage = pathname === '/historial' || pathname === '/historial-de-cuenta'
-  const isInvestmentsPage = pathname === '/investments'
-  const isCashflowHub = pathname === '/cash-flow'
-  const isSimulatorPage = pathname?.startsWith('/simulators/')
+  const isNewsPage = pathname?.startsWith('/news')
   const isLivePage = pathname?.startsWith('/live')
-  const hideAppNavigation = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isSimulatorPage || isLivePage;
+  const isSimulatorPage = pathname?.startsWith('/simulators/')
+  const isHistoryPage = pathname === '/history' || pathname?.startsWith('/history/')
+  const isInvestmentsPage = pathname === '/investments' || pathname?.startsWith('/investments/')
+  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isSimulatorPage || isLivePage;
 
   const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage;
 
