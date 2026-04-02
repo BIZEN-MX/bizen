@@ -198,7 +198,7 @@ export default function NewsPage() {
               </motion.div>
             )}
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", gap: 30 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(480px, 1fr))", gap: 30 }}>
               <AnimatePresence>
                 {(searchTerm !== "" || activeCategory !== "Todas" ? filteredNews : filteredNews.slice(1)).map((item, idx) => (
                   <motion.div
