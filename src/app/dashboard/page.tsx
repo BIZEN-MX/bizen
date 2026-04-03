@@ -840,71 +840,74 @@ function DashboardContent() {
                   </motion.div>
                 </div>
               </motion.div>
-            ) : (!isInstitutional && !isAdminOrTeacher) ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{
-                  background: "linear-gradient(135deg, #0a0f2e 0%, #0d2a6b 45%, #1a56db 100%)",
-                  borderRadius: 28,
-                  padding: "24px 32px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 24,
-                  boxShadow: "0 12px 40px rgba(13, 42, 107, 0.3)",
-                  border: "1.5px solid rgba(255,255,255,0.18)",
-                  position: "relative",
-                  overflow: "hidden"
-                }}
-              >
-                <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 250, height: 250, background: "rgba(255,255,255,0.12)", borderRadius: "50%", filter: "blur(60px)" }} />
-                
-                <div style={{ display: "flex", alignItems: "center", gap: 20, position: "relative", zIndex: 1 }}>
-                  <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.25)" }}>
-                    <BrainCircuit size={36} color="#fff" />
-                  </div>
-                  <div>
-                    <h3 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.015em" }}>Descubre tu DNA Financiero</h3>
-                    <p style={{ margin: "4px 0 0", fontSize: 15, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Toma un test rápido para recibir tu ruta de aprendizaje.</p>
-                  </div>
-                </div>
-                
-                <button
-                  onClick={() => router.push("/diagnostic/1")}
-                  style={{
-                    background: "#fff",
-                    color: "#0F62FE",
-                    border: "none",
-                    borderRadius: 16,
-                    padding: "14px 28px",
-                    fontWeight: 900,
-                    fontSize: 16,
-                    cursor: "pointer",
-                    whiteSpace: "nowrap",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
-                    position: "relative",
-                    zIndex: 1,
-                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = "scale(1.05) translateY(-2px)";
-                    e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.2)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = "scale(1) translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
-                  }}
-                >
-                  Empezar
-                  <ChevronRight size={20} />
-                </button>
-              </motion.div>
             ) : null}
           </motion.div>
+          {/* DNA PROMO SECTION — NOW ALWAYS VISIBLE FOR STUDENTS */}
+          {!isInstitutional && !isAdminOrTeacher && (
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               style={{
+                 background: "linear-gradient(135deg, #0a0f2e 0%, #0d2a6b 45%, #1a56db 100%)",
+                 borderRadius: 28,
+                 padding: "24px 32px",
+                 marginBottom: 24,
+                 display: "flex",
+                 alignItems: "center",
+                 justifyContent: "space-between",
+                 gap: 24,
+                 boxShadow: "0 12px 40px rgba(13, 42, 107, 0.3)",
+                 border: "1.5px solid rgba(255,255,255,0.18)",
+                 position: "relative",
+                 overflow: "hidden"
+               }}
+            >
+              <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 250, height: 250, background: "rgba(255,255,255,0.12)", borderRadius: "50%", filter: "blur(60px)" }} />
+              
+              <div style={{ display: "flex", alignItems: "center", gap: 20, position: "relative", zIndex: 1 }}>
+                <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.25)" }}>
+                  <BrainCircuit size={36} color="#fff" />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.015em" }}>Descubre tu DNA Financiero</h3>
+                  <p style={{ margin: "4px 0 0", fontSize: 15, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Toma un test rápido para recibir tu ruta de aprendizaje.</p>
+                </div>
+              </div>
+              
+              <button
+                onClick={() => router.push("/diagnostic/1")}
+                style={{
+                  background: "#fff",
+                  color: "#0F62FE",
+                  border: "none",
+                  borderRadius: 16,
+                  padding: "14px 28px",
+                  fontWeight: 900,
+                  fontSize: 16,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+                  position: "relative",
+                  zIndex: 1,
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05) translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.2)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "scale(1) translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
+                }}
+              >
+                Empezar
+                <ChevronRight size={20} />
+              </button>
+            </motion.div>
+          )}
 
           {!isAdminOrTeacher && (
             <motion.div 
