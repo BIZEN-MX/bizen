@@ -1169,15 +1169,34 @@ function DashboardContent() {
             )}
           </div>
           
-          {/* Mobile responsive fix for the news card height/layout */}
+          {/* Mobile and Tablet responsive fix for the news card height/layout */}
           <style>{`
+            /* iPad and Medium Tablets */
+            @media (max-width: 1024px) {
+                .di [style*="minHeight: 320"] { min-height: 280px !important; }
+                .di [style*="width: 45%"] { width: 40% !important; }
+                .di [style*="padding: 40px 48px"] { padding: 32px !important; }
+            }
+
+            /* Small Tablets and Large Mobiles */
             @media (max-width: 900px) {
-                .di [style*="minHeight: 320"] { min-height: 500px !important; }
+                .di [style*="minHeight: 320"] { min-height: 520px !important; }
                 .di [style*="flexDirection: row"] { flex-direction: column !important; }
-                .di [style*="width: 45%"] { width: 100% !important; height: 200px !important; }
-                .di [style*="padding: 40px 48px"] { padding: 24px !important; }
-                .di [style*="fontSize: clamp"] { font-size: 20px !important; }
+                .di [style*="width: 45%"], .di [style*="width: 40%"] { width: 100% !important; height: 220px !important; flexShrink: 0 !important; }
+                .di [style*="padding: 40px 48px"], .di [style*="padding: 32px"] { padding: 24px !important; }
+                .di [style*="fontSize: clamp"] { font-size: 22px !important; }
                 .di [style*="WebkitLineClamp: 3"] { -webkit-line-clamp: 2 !important; }
+                .di [style*="marginTop: 32"] { margin-top: 20px !important; flex-wrap: wrap !important; }
+                .di [style*="marginLeft: auto"] { margin-left: 0 !important; width: 100% !important; margin-top: 12px !important; }
+            }
+
+            /* Mobile screens */
+            @media (max-width: 640px) {
+                .di [style*="minHeight: 320"] { min-height: 480px !important; }
+                .di [style*="height: 200px"], .di [style*="height: 220px"] { height: 180px !important; }
+                .di [style*="fontSize: 24"] { font-size: 20px !important; }
+                .di [style*="fontSize: 22"] { font-size: 18px !important; }
+                .di [style*="padding: 24px"] { padding: 18px !important; }
             }
           `}</style>
         </motion.div>

@@ -56,7 +56,31 @@ export default function NewsPage() {
   });
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f8fafc", padding: "40px clamp(16px, 5vw, 60px)" }}>
+    <div className="news-page-container" style={{ minHeight: "100vh", background: "#f8fafc", padding: "40px clamp(16px, 5vw, 60px)" }}>
+      <style>{`
+        @media (max-width: 1024px) {
+          .news-featured-hero { height: 400px !important; }
+          .news-featured-hero-content { padding: 40px !important; }
+          .news-featured-title { font-size: 32px !important; }
+        }
+        
+        @media (max-width: 768px) {
+          .news-grid { grid-template-columns: 1fr !important; }
+          .news-featured-hero { height: 450px !important; }
+          .news-featured-hero-content { padding: 32px !important; }
+          .news-featured-title { font-size: 28px !important; }
+          .news-featured-desc { font-size: 15px !important; -webkit-line-clamp: 3 !important; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+          .news-search-bar { min-width: 100% !important; }
+        }
+
+        @media (max-width: 480px) {
+          .news-featured-hero { height: 480px !important; }
+          .news-featured-hero-content { padding: 24px !important; }
+          .news-featured-title { font-size: 24px !important; }
+          .news-featured-btn { padding: 12px 20px !important; width: 100% !important; justify-content: center !important; }
+          .news-page-container { padding: 20px 16px !important; }
+        }
+      `}</style>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         {/* Header Section */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 40, flexWrap: "wrap", gap: 20 }}>
@@ -86,7 +110,7 @@ export default function NewsPage() {
             </div>
           </div>
           
-          <div style={{ 
+          <div className="news-search-bar" style={{ 
             background: "white", 
             borderRadius: 16, 
             padding: "4px 16px", 
@@ -150,6 +174,7 @@ export default function NewsPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                className="news-featured-hero"
                 style={{
                   width: "100%",
                   height: 500,
@@ -175,19 +200,19 @@ export default function NewsPage() {
                   inset: 0, 
                   background: "linear-gradient(to top, rgba(11, 30, 94, 0.95), transparent)" 
                 }} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, padding: 60, width: "100%" }}>
+                <div className="news-featured-hero-content" style={{ position: "absolute", bottom: 0, left: 0, padding: 60, width: "100%", boxSizing: "border-box" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
                     <span style={{ padding: "6px 16px", background: "#0F62FE", borderRadius: 10, fontSize: 12, fontWeight: 900, color: "white", textTransform: "uppercase" }}>Destacado</span>
                     <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, fontWeight: 700 }}>{filteredNews[0].source} • {filteredNews[0].time}</span>
                   </div>
-                  <h2 style={{ fontSize: 42, fontWeight: 900, color: "white", marginBottom: 20, maxWidth: 900, lineHeight: 1.1 }}>
+                  <h2 className="news-featured-title" style={{ fontSize: 42, fontWeight: 900, color: "white", marginBottom: 20, maxWidth: 900, lineHeight: 1.1 }}>
                     {filteredNews[0].title}
                   </h2>
-                  <p style={{ fontSize: 18, color: "rgba(255,255,255,0.8)", maxWidth: 700, lineHeight: 1.6, marginBottom: 30 }}>
+                  <p className="news-featured-desc" style={{ fontSize: 18, color: "rgba(255,255,255,0.8)", maxWidth: 700, lineHeight: 1.6, marginBottom: 30 }}>
                     {filteredNews[0].fullDesc}
                   </p>
                   <div style={{ display: "flex", gap: 20 }}>
-                     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 28px", background: "white", borderRadius: 14, color: "#0B1E5E", fontWeight: 800, fontSize: 15 }}>
+                     <div className="news-featured-btn" style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 28px", background: "white", borderRadius: 14, color: "#0B1E5E", fontWeight: 800, fontSize: 15 }}>
                        Leer Historia Completa <ChevronRight size={18} />
                      </div>
                   </div>
@@ -195,7 +220,7 @@ export default function NewsPage() {
               </motion.div>
             )}
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(480px, 1fr))", gap: 30 }}>
+            <div className="news-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 30 }}>
               <AnimatePresence>
                 {(searchTerm !== "" || activeCategory !== "Todas" ? filteredNews : filteredNews.slice(1)).map((item, idx) => (
                   <motion.div

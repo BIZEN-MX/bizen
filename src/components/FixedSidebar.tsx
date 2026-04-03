@@ -1029,7 +1029,6 @@ export default function FixedSidebar() {
                           <BizcoinIcon size={14} style={{ marginRight: 4 }} />
                           {((dbProfile as any)?.bizcoins || 0).toLocaleString()} <span style={{ marginLeft: 4 }}>bz</span>
                         </div>
-                        <span style={{ fontSize: 13, fontWeight: 400 }}>MI PERFIL</span>
                       </>
                     )}
                   </div>

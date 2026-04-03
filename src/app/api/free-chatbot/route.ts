@@ -93,7 +93,7 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
     const geminiModel = genAI.getGenerativeModel(
-      { model: "gemini-1.5-flash" },
+      { model: "gemini-2.5-flash" },
       { apiVersion: "v1" }
     )
 
@@ -137,8 +137,8 @@ RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, mo
     // Return the specific error for debugging
     return NextResponse.json(
       { 
-        response: `¡Ups! Billy se está ajustando (v3.5-STABLE) (${error.message || "Error desconocido"}). ¿Puedes intentarlo de nuevo?`,
-        debug: "Switching to Gemini 1.5 Flash for compatibility: " + error.message 
+        response: `¡Ups! Billy se está ajustando (v4.0-MAX) (${error.message || "Error desconocido"}). ¿Puedes intentarlo de nuevo?`,
+        debug: "Upgrading to Gemini 2.5 Flash for state-of-the-art 2026 performance: " + error.message 
       },
       { status: 200 }
     )
