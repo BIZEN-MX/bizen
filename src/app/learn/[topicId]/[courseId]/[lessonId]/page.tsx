@@ -71,46 +71,44 @@ export default function LessonPage() {
         return () => document.documentElement.removeAttribute("data-lesson-interactive")
     }, [])
 
-    const redirectToCoursesRef = useRef(false)
 
     const handleComplete = useCallback(async (stars?: number) => {
-        if (redirectToCoursesRef.current) return
-        redirectToCoursesRef.current = true
-
         const starsEarned = typeof stars === "number" && stars >= 0 && stars <= 3 ? stars : 0
         const xpEarned = starsEarned * 5
 
         // Save progress logic
-        if (lessonIdStr) {
-            if (user) {
-                try {
-                    // 1. Save to Supabase auth metadata (legacy fallback)
-                    const { createClient } = await import("@/lib/supabase/client")
-                    const supabase = createClient()
-                    const existing = (user.user_metadata?.completedLessons as string[] | undefined) || []
-                    const lessonStars = (user.user_metadata?.lessonStars as Record<string, number> | undefined) || {}
-                    const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
-                    const newLessonStars = { ...lessonStars, [lessonIdStr]: starsEarned }
+        if (lessonIdStr && user) {
+            try {
+                // 1. Save to Supabase auth metadata (legacy fallback)
+                const { createClient } = await import("@/lib/supabase/client")
+                const supabase = createClient()
+                const metadata = user.user_metadata || {}
+                const existing = (metadata.completedLessons as string[] | undefined) || []
+                const lessonStars = (metadata.lessonStars as Record<string, number> | undefined) || {}
+                
+                const completedLessons = existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]
+                const newLessonStars = { ...lessonStars, [lessonIdStr]: starsEarned }
 
-                    await supabase.auth.updateUser({
-                        data: { ...user.user_metadata, completedLessons, lessonStars: newLessonStars },
-                    })
-                    await supabase.auth.refreshSession()
+                await supabase.auth.updateUser({
+                    data: { ...metadata, completedLessons, lessonStars: newLessonStars },
+                })
+                await supabase.auth.refreshSession().catch(() => {});
 
-                    // 2. Call our API to award XP, bizcoins, and update Prisma progress
-                    await fetch("/api/lesson/complete", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
-                    })
+                // 2. Call our API to award XP, bizcoins, and update Prisma progress
+                await fetch("/api/lesson/complete", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ lessonId: lessonIdStr, starsEarned, xpEarned }),
+                }).catch(() => {});
 
-                    // 3. Sync the global AuthContext state so XP shows up immediately
-                    await refreshUser()
-                } catch (err) {
-                    console.error("Error in completion save:", err)
-                }
-            } else {
-                // Guest mode
+                // 3. Sync the global AuthContext state
+                await refreshUser().catch(() => {});
+            } catch (err) {
+                console.error("Error in background completion save:", err)
+            }
+        } else if (lessonIdStr && !user) {
+            // Guest mode
+            try {
                 const stored = localStorage.getItem("guestCompletedLessons")
                 const existing: string[] = stored ? JSON.parse(stored) : []
                 localStorage.setItem("guestCompletedLessons", JSON.stringify(existing.includes(lessonIdStr) ? existing : [...existing, lessonIdStr]))
@@ -119,20 +117,11 @@ export default function LessonPage() {
                 const starsObj: Record<string, number> = starsStored ? JSON.parse(starsStored) : {}
                 starsObj[lessonIdStr] = starsEarned
                 localStorage.setItem("guestLessonStars", JSON.stringify(starsObj))
+            } catch (err) {
+                 console.error("Error saving guest progress:", err)
             }
         }
-
-        // Helper for redirect (Legacy support: '1' -> 'tema-01')
-        const getRedirectUrl = (id: string) => {
-            if (!id) return "/courses"
-            if (!id.startsWith("tema-") && !isNaN(parseInt(id))) {
-                return `/courses/tema-${id.padStart(2, "0")}`
-            }
-            return `/courses/${id}`
-        }
-
-        router.push(getRedirectUrl(topicIdStr))
-    }, [lessonIdStr, user, refreshUser, router, topicIdStr])
+    }, [lessonIdStr, user, refreshUser])
 
     const handleExit = () => {
         const getRedirectUrl = (id: string) => {

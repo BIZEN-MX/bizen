@@ -53,7 +53,7 @@ export async function executePendingOrders() {
     }
 
     if (shouldExecute) {
-      const bizcoinMultiplier = 10;
+      const bizcoinMultiplier = 1;
       const executionPriceBizcoins = executionPrice * bizcoinMultiplier;
       const notional = Number(order.quantity) * executionPriceBizcoins;
       const slippage = order.order_type === 'market' ? notional * 0.0005 : 0;

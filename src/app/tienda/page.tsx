@@ -36,7 +36,7 @@ import { useTranslation } from "@/lib/translations"
 // ─────────────────────────────────────────
 // Catalogue
 // ─────────────────────────────────────────
-const CATEGORIES = ["Avatar", "Ebooks", "Herramientas", "Accesorios", "Insignias"] as const
+const CATEGORIES = ["Ebooks", "Herramientas", "Insignias"] as const
 type Category = (typeof CATEGORIES)[number]
 
 interface Product {
@@ -79,31 +79,6 @@ const IcoBadge2   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="
 const IcoBadge3   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><defs><linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#0ea5e9"/></linearGradient></defs><polygon points="24,4 28,16 42,16 31,25 35,38 24,30 13,38 17,25 6,16 20,16" fill="url(#bg3)"/><circle cx="24" cy="22" r="6" fill="#fff" fillOpacity=".7"/></svg>
 
 const PRODUCTS: Product[] = [
-    // ── AVATARS ────────────────────────────────────────────────────────────────
-    {
-        id: 1, name: "Marco de Embajador", category: "Avatar", price: 200,
-        description: "Destaca en el foro con el marco azul oficial. Muestra que eres parte de la comunidad Bizen.",
-        badge: "Común", icon: <IcoBlueFr />, accent: "#3b82f6",
-        bg: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
-    },
-    {
-        id: 2, name: "Marco Llamas Pro", category: "Avatar", price: 400,
-        description: "Un marco con llamas vivas que muestran tu intensidad al estudiar. Para los más dedicados.",
-        badge: "Raro", icon: <IcoFlameFr />, accent: "#f97316",
-        bg: "linear-gradient(135deg, #7c2d12 0%, #f97316 100%)",
-    },
-    {
-        id: 3, name: "Marco Dorado VIP", category: "Avatar", price: 600,
-        description: "La elegancia hecha marco. Un acabado dorado premium que solo los mejores estudiantes ostentan.",
-        badge: "Épico", icon: <IcoGoldFr />, accent: "#f59e0b",
-        bg: "linear-gradient(135deg, #451a03 0%, #d97706 100%)",
-    },
-    {
-        id: 4, name: "Marco Galaxy Bizen", category: "Avatar", price: 950,
-        description: "El marco más exclusivo de la plataforma. Galaxias y nebulosas rodean tu perfil. Edición limitada.",
-        badge: "Legendario", icon: <IcoGalaxyFr />, accent: "#a78bfa",
-        bg: "linear-gradient(135deg, #0f172a 0%, #4c1d95 50%, #1d4ed8 100%)",
-    },
     // ── EBOOKS ─────────────────────────────────────────────────────────────────
     {
         id: 5, name: "Guía de Inversión 2025", category: "Ebooks", price: 350,
@@ -147,25 +122,6 @@ const PRODUCTS: Product[] = [
         description: "Evalúa el riesgo de cualquier inversión con métricas profesionales: VaR, Sharpe Ratio, Drawdown máximo.",
         badge: "Raro", icon: <IcoRisk />, accent: "#f97316",
         bg: "linear-gradient(135deg, #431407 0%, #c2410c 100%)",
-    },
-    // ── ACCESORIOS ─────────────────────────────────────────────────────────────
-    {
-        id: 12, name: "Escudo Anti-Racha", category: "Accesorios", price: 150,
-        description: "Protege tu racha si un día no puedes completar el reto. El escudo se activa automáticamente.",
-        badge: "Común", icon: <IcoShield />, accent: "#0891b2",
-        bg: "linear-gradient(135deg, #083344 0%, #0891b2 100%)",
-    },
-    {
-        id: 13, name: "Tema Oscuro Premium", category: "Accesorios", price: 350,
-        description: "Activa una experiencia nocturna elegante en toda la plataforma. Reduce la fatiga visual y aumenta el enfoque.",
-        badge: "Raro", icon: <IcoDarkMode />, accent: "#a78bfa",
-        bg: "linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%)",
-    },
-    {
-        id: 14, name: "Boost de XP ×2", category: "Accesorios", price: 450,
-        description: "Duplica todos tus puntos XP y BIZCOINS por 48 horas. Úsalo antes de un maratón de estudio.",
-        badge: "Épico", icon: <IcoBoost />, accent: "#f59e0b",
-        bg: "linear-gradient(135deg, #451a03 0%, #b45309 50%, #f59e0b 100%)",
     },
     // ── INSIGNIAS ──────────────────────────────────────────────────────────────
     {

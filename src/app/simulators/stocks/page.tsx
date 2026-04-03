@@ -49,6 +49,7 @@ import BizenVirtualCard from "@/components/BizenVirtualCard";
 import { STOCK_METADATA } from "@/data/simulators/stock-metadata";
 import BizcoinIcon from "@/components/BizcoinIcon";
 
+
 const SECTOR_COLORS: Record<string, string> = {
   Tecnología: "#3b82f6",
   Finanzas: "#10b981",
@@ -234,6 +235,14 @@ const CHALLENGES = [
 
 function StockSimulatorContent() {
   const { user, loading, dbProfile, refreshUser } = useAuth();
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 767);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const searchParams = useSearchParams();
   const runId = searchParams.get("runId");
   const [portfolio, setPortfolio] = useState<any>(null);
@@ -372,6 +381,16 @@ function StockSimulatorContent() {
     if (orderForm.symbol) {
       fetchHistory(orderForm.symbol, historyRange);
       fetchStockNews(orderForm.symbol);
+      
+      // Auto-scroll to order button after a short delay for rendering
+      setTimeout(() => {
+        if (orderFormRef.current) {
+          orderFormRef.current.scrollTo({
+            top: orderFormRef.current.scrollHeight,
+            behavior: "smooth"
+          });
+        }
+      }, 800);
     }
   }, [orderForm.symbol, historyRange]);
 
@@ -487,7 +506,7 @@ function StockSimulatorContent() {
       (s) => s.symbol === orderForm.symbol,
     );
     if (stock && orderForm.amount > 0) {
-      const bizPrice = stock.price * 10;
+      const bizPrice = stock.price * 1;
       const newQty = Number((orderForm.amount / bizPrice).toFixed(4));
       if (newQty !== orderForm.qty) {
         setOrderForm((f) => ({ ...f, qty: newQty }));
@@ -500,8 +519,8 @@ function StockSimulatorContent() {
     portfolio?.holdings?.reduce((sum: number, h: any) => {
       const marketPriceUSD =
         processedMarketData.find((m) => m.symbol === h.symbol)?.price ??
-        Number(h.avg_cost) / 10;
-      const marketPriceBizcoins = marketPriceUSD * 10;
+        Number(h.avg_cost) / 1;
+      const marketPriceBizcoins = marketPriceUSD * 1;
       return sum + Number(h.quantity) * marketPriceBizcoins;
     }, 0) || 0;
   const totalValue = cash + holdingsValue;
@@ -516,8 +535,8 @@ function StockSimulatorContent() {
       const sector = SYMBOL_SECTORS[h.symbol] || "Otros";
       const marketPriceUSD =
         processedMarketData.find((m) => m.symbol === h.symbol)?.price ??
-        Number(h.avg_cost) / 10;
-      const marketPriceBizcoins = marketPriceUSD * 10;
+        Number(h.avg_cost) / 1;
+      const marketPriceBizcoins = marketPriceUSD * 1;
       const value = Number(h.quantity) * marketPriceBizcoins;
       sectors[sector] = (sectors[sector] || 0) + value;
     });
@@ -741,7 +760,7 @@ function StockSimulatorContent() {
                 }}
               >
                 Aprende a invertir en acciones y ETFs reales usando tus{" "}
-                <strong>Bizcoins</strong>. 1 USD = 10 bz. <BizcoinIcon size={14} />
+                <strong>Bizcoins</strong>. 1 USD = 1 bizcoin. <BizcoinIcon size={14} />
               </p>
             </div>
 
@@ -911,10 +930,9 @@ function StockSimulatorContent() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit, minmax(min(100%, 180px), 1fr))",
-              gap: "clamp(10px, 2vw, 14px)",
-              marginBottom: 32,
+              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fit, minmax(min(100%, 180px), 1fr))",
+              gap: isMobile ? 10 : "clamp(10px, 2vw, 14px)",
+              marginBottom: 24,
             }}
           >
             {[
@@ -1055,7 +1073,7 @@ function StockSimulatorContent() {
             }}
           >
             {activeTab === "portfolio" && (
-              <div style={{ padding: "28px clamp(16px, 4vw, 32px)" }}>
+              <div style={{ padding: isMobile ? "20px 16px" : "28px 32px" }}>
                 {portfolio && portfolio.holdings?.length > 0 ? (
                   <div
                     style={{
@@ -1127,7 +1145,7 @@ function StockSimulatorContent() {
                       style={{
                         background: "#fff",
                         borderRadius: 24,
-                        padding: 24,
+                        padding: isMobile ? 16 : 24,
                         border: "1.5px solid #e2e8f0",
                         boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
                       }}
@@ -1195,7 +1213,7 @@ function StockSimulatorContent() {
                         </div>
                       </div>
 
-                      <div style={{ height: 320, width: "100%", position: "relative", opacity: fetchingPerformance ? 0.3 : 1 }}>
+                      <div style={{ height: isMobile ? 240 : 320, width: "100%", position: "relative", opacity: fetchingPerformance ? 0.3 : 1 }}>
                         <ResponsiveContainer width="100%" height="100%">
                           <AreaChart data={performanceData}>
                             <defs>
@@ -1309,7 +1327,7 @@ function StockSimulatorContent() {
                           </div>
                         )}
                       </div>
-                      <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 20 }}>
+                      <div style={{ display: "flex", justifyContent: "center", gap: isMobile ? 10 : 24, marginTop: 20, flexWrap: "wrap" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <div style={{ width: 12, height: 12, background: "#10b981", borderRadius: "50%" }} />
                           <span style={{ fontSize: 11, fontWeight: 700, color: "#475569" }}>Tú (bz)</span>
@@ -1333,7 +1351,7 @@ function StockSimulatorContent() {
                       style={{
                         display: "grid",
                         gridTemplateColumns:
-                          "repeat(auto-fit, minmax(300px, 1fr))",
+                          "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
                         gap: 24,
                         background: "#fff",
                         borderRadius: 24,
@@ -1644,8 +1662,8 @@ function StockSimulatorContent() {
                             const marketPriceUSD =
                               processedMarketData.find(
                                 (m) => m.symbol === h.symbol,
-                              )?.price ?? Number(h.avg_cost) / 10;
-                            const marketPriceBizcoins = marketPriceUSD * 10;
+                              )?.price ?? Number(h.avg_cost) / 1;
+                            const marketPriceBizcoins = marketPriceUSD * 1;
                             const ret =
                               ((marketPriceBizcoins - Number(h.avg_cost)) /
                                 Number(h.avg_cost)) *
@@ -1849,7 +1867,7 @@ function StockSimulatorContent() {
             )}
 
             {activeTab === "market" && (
-              <div style={{ padding: "28px 32px" }}>
+              <div style={{ padding: isMobile ? "20px 16px" : "28px 32px" }}>
                 <div
                   style={{
                     display: "flex",
@@ -1989,7 +2007,7 @@ function StockSimulatorContent() {
                               margin: "0 0 2px",
                             }}
                           >
-                                bz {(s.price * 10).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
+                                bz {(s.price * 1).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
                           </p>
                           <div
                             style={{
@@ -2172,7 +2190,7 @@ function StockSimulatorContent() {
                                   color: isCrisis ? "#ef4444" : "#10b981",
                                 }}
                               >
-                                    bz {(s.price * 10).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
+                                    bz {(s.price * 1).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
                               </span>
                             </>
                           );
