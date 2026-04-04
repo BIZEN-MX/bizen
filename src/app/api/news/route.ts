@@ -429,7 +429,7 @@ export async function GET(req: Request) {
       title: "Remesas a México alcanzan cifra récord de $63 mil millones de dólares",
       category: "Divisas",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80",
+      image: "https://images.unsplash.com/photo-1593642532400-2682810df593?auto=format&fit=crop&w=800&q=80",
       url: "https://www.elfinanciero.com.mx/",
       desc: "El flujo de dólares sigue siendo un pilar fundamental para el consumo interno mexicano.",
       fullDesc: "A pesar de la fortaleza del peso, el volumen de remesas sigue creciendo. Estos flujos de capital ayudan a mantener la estabilidad de la balanza de pagos y apoyan a millones de familias en sectores rurales."
@@ -654,6 +654,71 @@ export async function GET(req: Request) {
       url: "https://www.psychologytoday.com/",
       desc: "Cómo la educación temprana puede reducir la ansiedad relacionada con el ahorro.",
       fullDesc: "Un nuevo estudio revela que la falta de educación financiera es el principal factor de estrés entre los jóvenes. Programas que simplifican conceptos y ofrecen herramientas prácticas son clave para mejorar el bienestar mental de las nuevas generaciones."
+    },
+    {
+      id: 51,
+      symbol: "AI",
+      author: "Next Horizon",
+      source: "Ars Technica",
+      title: "Modelos de IA de próxima generación prometen razonamiento autónomo",
+      category: "Tecnología",
+      time: "Hace 1 hora",
+      image: "https://images.unsplash.com/photo-1620712943543-bcc4628c9a00?auto=format&fit=crop&w=800&q=80",
+      url: "https://arstechnica.com/",
+      desc: "La nueva frontera de la IA ya no es solo imitar el lenguaje, sino resolver problemas lógicos complejos.",
+      fullDesc: "Los laboratorios de investigación están reportando avances significativos en la capacidad de los modelos para planificar a largo plazo y corregir sus propios errores en tiempo real, lo que podría desbloquear aplicaciones en ingeniería y medicina nunca antes vistas."
+    },
+    {
+      id: 52,
+      symbol: "STOCKS",
+      author: "Market Beat",
+      source: "Seeking Alpha",
+      title: "Empresas de ciberseguridad se disparan tras ola de ataques a infraestructuras",
+      category: "Inversión",
+      time: "Hace 3 horas",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+      url: "https://seekingalpha.com/",
+      desc: "El gasto en protección digital se convierte en la máxima prioridad para los CEOs en 2026.",
+      fullDesc: "Ante un entorno geopolítico incierto, las corporaciones están moviendo presupuestos masivos hacia la defensa cibernética. Analistas prevén que este sector sea uno de los pocos inmunes a las fluctuaciones de consumo discrecional este año."
+    },
+    {
+      id: 53,
+      symbol: "ECONOMY",
+      author: "Global Observer",
+      source: "Reuters",
+      title: "Tasas de interés: ¿Es el 4% la nueva normalidad para la próxima década?",
+      category: "Macro",
+      time: "Hace 6 horas",
+      image: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=800&q=80",
+      url: "https://www.reuters.com/business/",
+      desc: "Economistas sugieren que la era del dinero gratis ha terminado definitivamente.",
+      fullDesc: "Un nuevo consenso entre los directores de bancos centrales sugiere que las presiones demográficas y la transición energética mantendrán el costo del capital por encima de los niveles vistos en la década de 2010. Esto obliga a una reevaluación total de las estrategias de apalancamiento corporativo."
+    },
+    {
+      id: 54,
+      symbol: "TAX",
+      author: "Legal Today",
+      source: "Bloomberg",
+      title: "OCDE pacta impuesto global mínimo para corporaciones digitales",
+      category: "Gobierno",
+      time: "Hace 12 horas",
+      image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
+      url: "https://www.bloomberg.com/politics",
+      desc: "La medida busca evitar el traslado de beneficios a paraísos fiscales de forma coordinada.",
+      fullDesc: "Más de 130 países han ratificado el acuerdo de un impuesto mínimo del 15% para multinacionales. Se espera que esta reforma histórica genere miles de millones en ingresos adicionales para las haciendas públicas de los países desarrollados y en desarrollo."
+    },
+    {
+      id: 55,
+      symbol: "BIZEN",
+      author: "Billy Chatbot",
+      source: "BIZEN Labs",
+      title: "Misiones diarias: Cómo el micro-aprendizaje está cambiando el hábito financiero",
+      category: "Educación",
+      time: "Hace 15 horas",
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
+      url: "#",
+      desc: "Nuestros datos muestran que 5 minutos al día son más efectivos que un seminario de 8 horas.",
+      fullDesc: "En BIZEN hemos analizado el comportamiento de miles de usuarios. Aquellos que completan su misión diaria tienen 3 veces más probabilidades de alcanzar su meta de ahorro semestral. La consistencia es el algoritmo definitivo de la libertad."
     }
   ];
 
@@ -670,7 +735,7 @@ export async function GET(req: Request) {
                 title: `${symbol} muestra volatilidad ante reporte de inflación`,
                 category: "Mercado",
                 time: "Reciente",
-                image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200",
+                image: "https://images.unsplash.com/photo-1611974717482-48a5c18dc907?auto=format&fit=crop&w=1200",
                 url: "#",
                 desc: "Los inversores ajustan posiciones esperando los nuevos datos económicos.",
                 fullDesc: "La volatilidad actual es un reflejo de la incertidumbre global. Los participantes del mercado están analizando cada dato macroeconómico para prever los movimientos de las tasas de interés."

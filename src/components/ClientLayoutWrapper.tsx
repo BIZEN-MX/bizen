@@ -121,7 +121,9 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isSimulatorPage = pathname?.startsWith('/simulators') || (pathname?.startsWith('/cash-flow/') && pathname !== '/cash-flow');
   const isHistoryPage = pathname === '/history' || pathname?.startsWith('/history/')
   const isInvestmentsPage = pathname === '/investments' || pathname?.startsWith('/investments/')
-  const isToolsPageExclude = pathname === '/tools/budget' || pathname === '/tools/vision'
+  const isBudgetTool = pathname?.startsWith('/tools/budget')
+  const isVisionTool = pathname?.startsWith('/tools/vision')
+  const isToolsPageExclude = isBudgetTool || isVisionTool
   const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isSimulatorPage || isLivePage || isToolsPageExclude;
 
   const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage;

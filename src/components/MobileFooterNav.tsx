@@ -32,6 +32,7 @@ export default function MobileFooterNav() {
   const [showProfilePanel, setShowProfilePanel] = useState(false)
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional"
   const isStudentOrGuest = !isAdminOrTeacher
 
   const isOnLessonPage = pathname?.includes('/learn/')
@@ -347,7 +348,7 @@ export default function MobileFooterNav() {
               <button
                 onClick={() => {
                   setShowProfilePanel(false)
-                  navigateTo(isAdminOrTeacher ? "/live/host" : "/live/join")
+                  navigateTo(canHostLive ? "/live/host" : "/live/join")
                 }}
                 style={{
                   display: "flex",

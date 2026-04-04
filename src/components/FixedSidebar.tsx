@@ -255,6 +255,7 @@ export default function FixedSidebar() {
   const liveActive = isActivePath("/live")
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional"
   const isStudentOrGuest = !isAdminOrTeacher
   const iconSize = 24
 
@@ -784,7 +785,7 @@ export default function FixedSidebar() {
                 {/* ── BIZEN LIVE ── */}
                 {user && (
                     <button
-                        onClick={() => navigateTo(isAdminOrTeacher ? "/live/host" : "/live/join")}
+                        onClick={() => navigateTo(canHostLive ? "/live/host" : "/live/join")}
                         style={{
                             display: "flex",
                             alignItems: "center",
@@ -821,7 +822,7 @@ export default function FixedSidebar() {
                             <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#fbbf24", borderRadius: "0 4px 4px 0" }} />
                         )}
                         <Zap size={iconSize} strokeWidth={liveActive ? 2.5 : 2} fill={liveActive ? "#fbbf24" : "none"} />
-                        <span className="nav-item-label">{isAdminOrTeacher ? "Lanzar Live Quiz" : "Bizen Live"}</span>
+                        <span className="nav-item-label">{canHostLive ? "Lanzar Live Quiz" : "Bizen Live"}</span>
                     </button>
                 )}
 

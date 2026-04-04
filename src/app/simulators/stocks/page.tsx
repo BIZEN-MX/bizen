@@ -1904,8 +1904,8 @@ function StockSimulatorContent() {
                   style={{
                     display: "grid",
                     gridTemplateColumns:
-                      "repeat(auto-fill, minmax(min(100%, 280px), 1fr))",
-                    gap: "clamp(10px, 2vw, 14px)",
+                      "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
+                    gap: isMobile ? 12 : 20,
                     marginBottom: 32,
                   }}
                 >
@@ -1947,15 +1947,15 @@ function StockSimulatorContent() {
                           style={{
                             display: "flex",
                             alignItems: "center",
-                            gap: 12,
+                            gap: isMobile ? 10 : 12,
                           }}
                         >
-                          <StockLogo symbol={s.symbol} size={40} />
+                          <StockLogo symbol={s.symbol} size={isMobile ? 36 : 40} />
                           <div>
                             <p
                               style={{
-                                fontWeight: 600,
-                                fontSize: 16,
+                                fontWeight: 700,
+                                fontSize: isMobile ? 14 : 16,
                                 color: "#0B1E5E",
                                 margin: "0 0 2px",
                               }}
@@ -1964,10 +1964,10 @@ function StockSimulatorContent() {
                             </p>
                             <p
                               style={{
-                                fontSize: 12,
+                                fontSize: isMobile ? 11 : 12,
                                 color: "#64748b",
                                 margin: "0 0 5px",
-                                maxWidth: 150,
+                                maxWidth: isMobile ? 100 : 150,
                                 whiteSpace: "nowrap",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
@@ -1977,11 +1977,11 @@ function StockSimulatorContent() {
                             </p>
                             <span
                               style={{
-                                fontSize: 10,
-                                fontWeight: 500,
+                                fontSize: isMobile ? 9 : 10,
+                                fontWeight: 600,
                                 padding: "2px 8px",
-                                background: isSelected ? "#dcfce7" : "#e2e8f0",
-                                color: isSelected ? "#166534" : "#475569",
+                                background: isSelected ? "#dcfce7" : "#f1f5f9",
+                                color: isSelected ? "#166534" : "#64748b",
                                 borderRadius: 99,
                                 textTransform: "uppercase" as const,
                                 letterSpacing: "0.05em",

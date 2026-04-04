@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import { executePendingOrders } from '@/lib/simulators/stocks';
 
 export async function GET(req: Request) {
   try {
@@ -9,6 +10,13 @@ export async function GET(req: Request) {
 
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Trigger execution of any pending orders that meet market price
+    try {
+      await executePendingOrders();
+    } catch (err) {
+      console.error("Order execution sync failed:", err);
     }
 
     let canClaimBonus = false;

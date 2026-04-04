@@ -37,6 +37,7 @@ export default function MobileBottomNav() {
   const [showAuthDialog, setShowAuthDialog] = useState(false)
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional"
   const isStudentOrGuest = !isAdminOrTeacher
 
   // Protected routes that require authentication
@@ -131,9 +132,9 @@ export default function MobileBottomNav() {
     ...(isStudentOrGuest ? [
       {
         id: 'live',
-        label: 'BIZEN Live',
+        label: canHostLive ? 'Lanzar Live' : 'BIZEN Live',
         icon: Zap,
-        path: '/live/join',
+        path: canHostLive ? '/live/host' : '/live/join',
         protected: false
       },
       {

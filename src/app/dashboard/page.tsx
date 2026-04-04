@@ -1560,9 +1560,9 @@ function DashboardContent() {
               },
               {
                 Icon: IcoZap,
-                label: (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') ? "Lanzar Live Quiz" : "Bizen Live",
+                label: (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || isInstitutional) ? "Lanzar Live Quiz" : "Bizen Live",
                 sub: "Quizzes competitivos en tiempo real",
-                href: (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin') ? "/live/host" : "/live/join",
+                href: (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || isInstitutional) ? "/live/host" : "/live/join",
                 gradient: "linear-gradient(145deg, #78350f 0%, #92400e 100%)",
                 glow: "rgba(251,191,36,0.35)", border: "rgba(252,211,77,0.2)"
               },
