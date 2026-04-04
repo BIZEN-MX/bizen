@@ -37,7 +37,7 @@ export default function MobileBottomNav() {
   const [showAuthDialog, setShowAuthDialog] = useState(false)
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
-  const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional"
+  const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional" || dbProfile?.role === "student"
   const isStudentOrGuest = !isAdminOrTeacher
 
   // Protected routes that require authentication

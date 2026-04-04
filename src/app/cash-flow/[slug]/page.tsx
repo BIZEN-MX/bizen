@@ -75,6 +75,15 @@ export default function SimulatorPage() {
     }
   }, [slug, router])
 
+  // Hide sidebar on simulators per user request
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    document.body.classList.add('hide-sidebar')
+    return () => {
+      document.body.classList.remove('hide-sidebar')
+    }
+  }, [])
+
   if (loading) return <PageLoader />
   if (!simulator) return null
 

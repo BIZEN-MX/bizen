@@ -97,8 +97,9 @@ export function BillyTalksStep({
         minHeight: "50vh"
       }}
     >
-        <div style={{ maxWidth: 640, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          {/* Billy removed for now per user request */}
+        <div style={{ maxWidth: 640, width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
+          {/* Restore Billy for Mission Start / Intro steps */}
+          <Billy mood={mood} size={150} showGlow={true} />
 
           {/* Speech Bubble */}
           <motion.div

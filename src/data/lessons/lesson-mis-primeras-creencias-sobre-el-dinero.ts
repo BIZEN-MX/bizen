@@ -60,7 +60,7 @@ export const lessonMisPrimerasCreenciasSobreElDineroSteps: LessonStep[] = [
     title: "El sistema operativo",
     description: "Aprendizaje automático",
     body: "Muchas creencias se aprenden en automático. Son como el sistema operativo de tu mente financiera.\n\n¡Pero a veces ese sistema necesita una actualización!",
-    imageUrl: IMG + "/image-2.png", // Following original pattern
+    imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800", // Digital brain / System
     imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,
@@ -131,7 +131,7 @@ export const lessonMisPrimerasCreenciasSobreElDineroSteps: LessonStep[] = [
     title: "Creencia vs Realidad",
     description: "Cuestionando ideas",
     body: "Las creencias **NO** son hechos. Son solo ideas que aceptamos.\n\n¡Y lo mejor es que puedes cuestionarlas y elegir unas nuevas!",
-    imageUrl: IMG + "/image-4.png",
+    imageUrl: "https://images.unsplash.com/photo-1454165833767-027ffea7243b?auto=format&fit=crop&q=80&w=800", // Analysis / Lens
     imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,

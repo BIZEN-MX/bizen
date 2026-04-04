@@ -255,7 +255,7 @@ export default function FixedSidebar() {
   const liveActive = isActivePath("/live")
 
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
-  const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional"
+  const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional" || dbProfile?.role === "student"
   const isStudentOrGuest = !isAdminOrTeacher
   const iconSize = 24
 

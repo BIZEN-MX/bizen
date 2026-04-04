@@ -33,6 +33,7 @@ import { playCorrectSound, playIncorrectSound, playFlipSound, initAudioContext }
 import { SmartText } from "./SmartText"
 import { motion, AnimatePresence } from "framer-motion"
 import { GlossaryProvider } from "@/contexts/GlossaryContext"
+import { Billy } from "../Billy"
 
 interface LessonEngineProps {
   lessonSteps: LessonStep[]
@@ -1397,7 +1398,10 @@ const MissionStartSplashOverlay = ({ isOpen, onClose }: { isOpen: boolean, onClo
     {isOpen && (
       <motion.div key="mission-start-splash" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.1 }} style={{ position: "fixed", inset: 0, zIndex: 14000, background: "linear-gradient(135deg, #0F62FE 0%, #1E40AF 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ textAlign: "center", maxWidth: 460, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <img src="/thumbs up.png" alt="Billy Start" style={{ width: 180, height: 180, marginBottom: 24, display: "block" }} />
+          {/* Using premium Billy component instead of static img */}
+          <div style={{ marginBottom: 24 }}>
+            <Billy mood="happy" size={200} showGlow={true} isStatic={false} />
+          </div>
           <h1 style={{ fontSize: "clamp(32px, 6vw, 44px)", fontWeight: 900, color: "#fff", marginBottom: 16 }}>¡INICIO DE MISIÓN!</h1>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.85)", marginBottom: 40 }}>Billy te guiará en este camino.<br/>¿Estamos listos para aprender?</p>
           <button onClick={onClose} style={{ padding: "20px 48px", background: "#fff", color: "#0F62FE", borderRadius: 20, border: "none", fontWeight: 800, fontSize: 18, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 12 }}>

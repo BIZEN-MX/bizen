@@ -54,7 +54,7 @@ export const lessonExpectativasVsRealidadFinancieraSteps: LessonStep[] = [
     title: "El filtro de la realidad",
     description: "Expectativas vs Proceso",
     body: "Las redes sociales muestran resultados brillantes, ¡pero casi nunca muestran el proceso difícil detrás!\n\nNo te compares con la versión editada de los demás. ¡Tú tienes tu propio ritmo!",
-    imageUrl: IMG + "/image-2.png",
+    imageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800", // Screen reality
     imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,
@@ -143,7 +143,7 @@ export const lessonExpectativasVsRealidadFinancieraSteps: LessonStep[] = [
     title: "Enfocando el esfuerzo",
     description: "Construyendo la montaña",
     body: "El problema no es tener expectativas grandes. El problema es no entender el proceso para llegar allá.\n\n¡Los pasos pequeños son los que construyen la montaña!",
-    imageUrl: IMG + "/image-4.png",
+    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800", // Team effort / Building
     imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,

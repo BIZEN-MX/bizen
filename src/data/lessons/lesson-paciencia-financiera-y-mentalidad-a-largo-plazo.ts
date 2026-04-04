@@ -53,7 +53,7 @@ export const lessonPacienciaFinancieraYMentalidadALargoPlazoSteps: LessonStep[] 
     title: "La brecha del abandono",
     description: "Tiempos reales",
     body: "La mayoría de las personas abandonan justo antes de ver los resultados.\n\nNo porque sea imposible, sino porque simplemente **tarda** más de lo que esperaban. ¡Tú sé diferente!",
-    imageUrl: IMG + "/image-2.png",
+    imageUrl: "https://images.unsplash.com/photo-1591196113253-157ca0059e9c?auto=format&fit=crop&q=80&w=800", // Seeds growing
     imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,
@@ -135,7 +135,7 @@ export const lessonPacienciaFinancieraYMentalidadALargoPlazoSteps: LessonStep[] 
     title: "Mira el calendario",
     description: "Visión panorámica",
     body: "La mentalidad a largo plazo reduce tu ansiedad a corto plazo. ¡Deja de mirar el reloj y mira el calendario!",
-    imageUrl: IMG + "/image-4.png",
+    imageUrl: "https://images.unsplash.com/photo-1620912189855-ee5e9e2119ed?auto=format&fit=crop&q=80&w=800", // Watch / Hourglass
     imageAlign: "left",
     continueLabel: "Continuar",
     fullScreen: true,
