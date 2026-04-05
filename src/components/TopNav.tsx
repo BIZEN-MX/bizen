@@ -309,6 +309,18 @@ export default function TopNav() {
           align-items: center;
           gap: 2px;
           flex: 1;
+          margin-right: 12px;
+        }
+        @media (max-width: 1100px) {
+          .topnav-links { gap: 1px; }
+          .topnav-link { padding: 7px 10px; font-size: 13px; }
+        }
+        @media (max-width: 980px) {
+          .topnav-link span:not(.topnav-link-dot) { display: none; }
+          .topnav-link { padding: 8px; }
+        }
+        @media (max-width: 768px) {
+          .topnav-links { display: none; }
         }
         .topnav-link {
           display: flex;
@@ -379,6 +391,16 @@ export default function TopNav() {
           width: 180px;
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           margin: 0 16px;
+        }
+        @media (max-width: 1200px) {
+          .topnav-search { margin: 0 8px; width: 140px; }
+          .topnav-search.focused { width: 220px; }
+        }
+        @media (max-width: 1024px) {
+          .topnav-search { width: 40px; padding: 0; justify-content: center; }
+          .topnav-search-input, .topnav-search-key { display: none; }
+          .topnav-search.focused { width: 200px; padding: 0 12px; justify-content: flex-start; }
+          .topnav-search.focused .topnav-search-input { display: block; }
         }
         .topnav-search.focused {
           width: 280px;
@@ -480,6 +502,9 @@ export default function TopNav() {
           width: 5px; height: 5px; border-radius: 50%;
           flex-shrink: 0;
         }
+        @media (max-width: 1150px) {
+          .topnav-plan-badge { display: none; }
+        }
         .topnav-stat-pill {
           display: flex;
           align-items: center;
@@ -534,6 +559,11 @@ export default function TopNav() {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+        }
+        @media (max-width: 850px) {
+          .topnav-avatar-name, .topnav-stat-pill { display: none; }
+          .topnav-bar { padding: 0 12px; }
+          .topnav-brand { margin-right: 12px; }
         }
         /* Profile Dropdown */
         .topnav-dropdown {
@@ -677,7 +707,7 @@ export default function TopNav() {
                   onClick={() => navigateTo(item.path)}
                 >
                   {item.icon}
-                  {item.label}
+                  <span>{item.label}</span>
                   {!isLive && <span className="topnav-link-dot" />}
                 </button>
               )
