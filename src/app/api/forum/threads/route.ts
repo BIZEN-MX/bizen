@@ -194,3 +194,47 @@ export async function POST(request: NextRequest) {
 }
 
 
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const threadId = searchParams.get("id")
+
+    if (!threadId) {
+      return NextResponse.json({ error: "ID de tema no proporcionado" }, { status: 400 })
+    }
+
+    const supabase = await createSupabaseServer()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    }
+
+    // Verify ownership
+    const thread = await prisma.forumThread.findUnique({
+      where: { id: threadId },
+      select: { authorId: true }
+    })
+
+    if (!thread) {
+      return NextResponse.json({ error: "Tema no encontrado" }, { status: 404 })
+    }
+
+    if (thread.authorId !== user.id) {
+      return NextResponse.json({ error: "No tienes permiso para eliminar este tema" }, { status: 403 })
+    }
+
+    // Delete thread (Prisma will handle cascading if configured, but let's be safe)
+    // Actually, we might want to just mark as deleted or delete permanently.
+    // For now, let's do a permanent delete.
+    await prisma.forumThread.delete({
+      where: { id: threadId }
+    })
+
+    return NextResponse.json({ success: true, message: "Tema eliminado correctamente" })
+  } catch (error) {
+    console.error("❌ [Forum:ThreadDeleteError]:", error)
+    return NextResponse.json({ error: "No se pudo eliminar el tema" }, { status: 500 })
+  }
+}

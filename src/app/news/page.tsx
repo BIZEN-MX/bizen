@@ -14,16 +14,19 @@ import {
   Search,
   Filter,
   Zap,
-  Tag
+  Tag,
+  BrainCircuit
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageLoader from "@/components/PageLoader";
+import AnalysisSection from "@/components/news/AnalysisSection";
 
 export default function NewsPage() {
   const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("Todas");
+  const [activeTab, setActiveTab] = useState<"news" | "analysis">("news");
   const router = useRouter();
 
   const fetchNews = async () => {
@@ -110,6 +113,57 @@ export default function NewsPage() {
             </div>
           </div>
           
+          <div style={{ 
+            background: "#f1f5f9", 
+            borderRadius: 16, 
+            padding: 4, 
+            display: "flex", 
+            alignItems: "center",
+            gap: 4,
+            border: "1.5px solid #e2e8f0"
+          }}>
+            <button 
+              onClick={() => setActiveTab("news")}
+              style={{
+                padding: "10px 24px",
+                borderRadius: 12,
+                fontSize: 14,
+                fontWeight: activeTab === "news" ? 850 : 700,
+                background: activeTab === "news" ? "white" : "transparent",
+                color: activeTab === "news" ? "#0F62FE" : "#64748b",
+                border: "none",
+                cursor: "pointer",
+                boxShadow: activeTab === "news" ? "0 4px 12px rgba(0,0,0,0.05)" : "none",
+                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}
+            >
+              <Newspaper size={18} /> Noticias
+            </button>
+            <button 
+              onClick={() => setActiveTab("analysis")}
+              style={{
+                padding: "10px 24px",
+                borderRadius: 12,
+                fontSize: 14,
+                fontWeight: activeTab === "analysis" ? 850 : 700,
+                background: activeTab === "analysis" ? "white" : "transparent",
+                color: activeTab === "analysis" ? "#0F62FE" : "#64748b",
+                border: "none",
+                cursor: "pointer",
+                boxShadow: activeTab === "analysis" ? "0 4px 12px rgba(0,0,0,0.05)" : "none",
+                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}
+            >
+              <BrainCircuit size={18} /> Análisis de Billy
+            </button>
+          </div>
+
           <div className="news-search-bar" style={{ 
             background: "white", 
             borderRadius: 16, 
@@ -167,6 +221,8 @@ export default function NewsPage() {
 
         {loading ? (
           <PageLoader />
+        ) : activeTab === "analysis" ? (
+          <AnalysisSection />
         ) : (
           <>
             {/* Featured Section */}

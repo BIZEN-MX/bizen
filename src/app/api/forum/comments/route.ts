@@ -160,3 +160,46 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No se pudo publicar el comentario" }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const commentId = searchParams.get("id")
+
+    if (!commentId) {
+      return NextResponse.json({ error: "ID de comentario no proporcionado" }, { status: 400 })
+    }
+
+    const supabase = await createSupabaseServer()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    }
+
+    // Verify ownership
+    const comment = await prisma.forumComment.findUnique({
+      where: { id: commentId },
+      select: { authorId: true }
+    })
+
+    if (!comment) {
+      return NextResponse.json({ error: "Comentario no encontrado" }, { status: 404 })
+    }
+
+    if (comment.authorId !== user.id) {
+       // Also allow moderators or admins if we have those roles
+        return NextResponse.json({ error: "No tienes permiso para eliminar este comentario" }, { status: 403 })
+    }
+
+    // Permanent delete
+    await prisma.forumComment.delete({
+      where: { id: commentId }
+    })
+
+    return NextResponse.json({ success: true, message: "Comentario eliminado correctamente" })
+  } catch (error) {
+    console.error("❌ [Forum:CommentDeleteError]:", error)
+    return NextResponse.json({ error: "No se pudo eliminar el comentario" }, { status: 500 })
+  }
+}

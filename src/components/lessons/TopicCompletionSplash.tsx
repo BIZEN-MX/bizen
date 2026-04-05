@@ -150,7 +150,7 @@ export function TopicCompletionSplash({
             Misión Cumplida
           </div>
           <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-            ¡Felicidades, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">{studentName.split(' ')[0]}</span>!
+            ¡Felicidades, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">{(studentName || "Estudiante").split(' ')[0]}</span>!
           </h2>
           <p className="text-slate-400 text-lg md:text-xl font-medium max-w-lg mx-auto">
             Has dominado el tema: <br />

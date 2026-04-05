@@ -269,6 +269,27 @@ export default function ThreadDetailPage() {
     }
   }
 
+  const handleDeleteComment = async (commentId: string) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar este comentario?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/forum/comments?id=${commentId}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        await fetchThread()
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Error al eliminar el comentario')
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error)
+      alert('Error al eliminar el comentario')
+    }
+  }
+
   const renderComment = (comment: Comment, depth: number = 0) => (
     <div key={comment.id} style={{
       marginLeft: depth > 0 ? "clamp(20px, 5vw, 40px)" : 0,
@@ -431,6 +452,23 @@ export default function ThreadDetailPage() {
                   }}
                 >
                   Aceptar Respuesta
+                </button>
+              )}
+              {comment.author.userId === user?.id && (
+                <button
+                  onClick={() => handleDeleteComment(comment.id)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#EF4444",
+                    cursor: "pointer",
+                    fontSize: "clamp(11px, 2.5vw, 12px)",
+                    fontWeight: 500,
+                    padding: "clamp(4px, 1vw, 6px)",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  Eliminar
                 </button>
               )}
             </div>

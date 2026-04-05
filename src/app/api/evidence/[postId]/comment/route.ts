@@ -45,3 +45,40 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pos
         return NextResponse.json({ error: "Error al comentar" }, { status: 500 })
     }
 }
+
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ postId: string }> }) {
+    try {
+        const { searchParams } = new URL(req.url)
+        const commentId = searchParams.get("id")
+
+        if (!commentId) {
+            return NextResponse.json({ error: "ID de comentario no proporcionado" }, { status: 400 })
+        }
+
+        const supabase = await createSupabaseServer()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+        const comment = await prisma.evidenceComment.findUnique({
+            where: { id: commentId },
+            select: { userId: true }
+        })
+
+        if (!comment) {
+            return NextResponse.json({ error: "Comentario no encontrado" }, { status: 404 })
+        }
+
+        if (comment.userId !== user.id) {
+            return NextResponse.json({ error: "No tienes permiso para eliminar este comentario" }, { status: 403 })
+        }
+
+        await prisma.evidenceComment.delete({
+            where: { id: commentId }
+        })
+
+        return NextResponse.json({ success: true, message: "Comentario eliminado" })
+    } catch (err) {
+        console.error("DELETE /api/evidence/[postId]/comment:", err)
+        return NextResponse.json({ error: "Error al eliminar el comentario" }, { status: 500 })
+    }
+}

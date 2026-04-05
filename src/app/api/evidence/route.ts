@@ -165,3 +165,45 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Error al cargar evidencias", details: err.message }, { status: 500 })
     }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const postId = searchParams.get("id")
+
+    if (!postId) {
+      return NextResponse.json({ error: "ID de publicación no proporcionado" }, { status: 400 })
+    }
+
+    const supabase = await createSupabaseServer()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    }
+
+    // Verify ownership
+    const post = await prisma.evidencePost.findUnique({
+      where: { id: postId },
+      select: { authorUserId: true }
+    })
+
+    if (!post) {
+      return NextResponse.json({ error: "Publicación no encontrada" }, { status: 404 })
+    }
+
+    if (post.authorUserId !== user.id) {
+       return NextResponse.json({ error: "No tienes permiso para eliminar esta publicación" }, { status: 403 })
+    }
+
+    // Permanent delete
+    await prisma.evidencePost.delete({
+      where: { id: postId }
+    })
+
+    return NextResponse.json({ success: true, message: "Publicación eliminada correctamente" })
+  } catch (error) {
+    console.error("❌ [Evidence:DeleteError]:", error)
+    return NextResponse.json({ error: "No se pudo eliminar la publicación" }, { status: 500 })
+  }
+}

@@ -211,15 +211,21 @@ export async function awardXp(
         })
 
         if (bizcoinsAwarded > 0) {
-            await (tx as any).walletTransaction.create({
-                data: {
-                    userId,
-                    amount: bizcoinsAwarded,
-                    type: "income",
-                    category: options?.category || "activity_reward",
-                    description: options?.description || "Recompensa de actividad"
-                }
-            })
+            // Safely check for walletTransaction existence on the transaction object
+            const walletTxModel = (tx as any).walletTransaction;
+            if (walletTxModel && typeof walletTxModel.create === 'function') {
+                await walletTxModel.create({
+                    data: {
+                        userId,
+                        amount: bizcoinsAwarded,
+                        type: "income",
+                        category: options?.category || "activity_reward",
+                        description: options?.description || "Recompensa de actividad"
+                    }
+                })
+            } else {
+                console.warn("[rewards] walletTransaction model not available in transaction, skipping ledger entry.");
+            }
         }
     })
 

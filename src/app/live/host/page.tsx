@@ -119,6 +119,7 @@ function QuizIcon({ icon, size = 48 }: { icon: string; size?: number }) {
 
 export default function HostPage() {
   const { user, dbProfile, loading: authLoading } = useAuth()
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
   const router = useRouter()
   const supabase = createClient()
 
@@ -322,8 +323,15 @@ export default function HostPage() {
 
         {/* Top nav */}
         <div style={{ padding: "20px 32px 0", display: "flex", alignItems: "center", gap: 12 }}>
-          <button onClick={() => router.push("/teacher/dashboard")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "8px 16px", color: "rgba(255,255,255,0.5)", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
-            ← Volver al panel
+          <button 
+            onClick={() => router.push(isAdminOrTeacher ? "/teacher/dashboard" : "/dashboard")} 
+            style={{ 
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", 
+              borderRadius: 10, padding: "8px 16px", color: "rgba(255,255,255,0.5)", 
+              fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 
+            }}
+          >
+            ← {isAdminOrTeacher ? "Volver al panel docente" : "Volver a Inicio"}
           </button>
           
           <button 
@@ -345,8 +353,12 @@ export default function HostPage() {
             <IconBolt size={16} color="#fbbf24" />
             <span style={{ fontSize: 12, fontWeight: 500, color: "#fbbf24", letterSpacing: "0.1em", textTransform: "uppercase" }}>BIZEN Live</span>
           </div>
-          <h1 style={{ margin: 0, fontSize: "clamp(26px, 4vw, 44px)", fontWeight: 500, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1 }}>Elige tu Quiz</h1>
-          <p style={{ margin: "12px auto 0", maxWidth: 460, fontSize: 15, color: "rgba(255,255,255,0.40)", lineHeight: 1.6 }}>Quizzes curados, plantillas guardadas o crea uno propio.</p>
+          <h1 style={{ margin: 0, fontSize: "clamp(26px, 4vw, 44px)", fontWeight: 500, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+            {isAdminOrTeacher ? "Lanza un Quiz" : "Crea tu propio Quiz"}
+          </h1>
+          <p style={{ margin: "12px auto 0", maxWidth: 460, fontSize: 15, color: "rgba(255,255,255,0.40)", lineHeight: 1.6 }}>
+            Usa nuestro catálogo oficial o crea un quiz personalizado para tus {isAdminOrTeacher ? "alumnos" : "compañeros"}.
+          </p>
         </div>
 
         {/* Tab Strip */}
@@ -546,7 +558,7 @@ export default function HostPage() {
     return (
       <div style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #08112a 0%, #0a1632 100%)", padding: "48px 40px", display: "flex", flexDirection: "column", alignItems: "center", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
         <div style={{ width: "100%", maxWidth: 1600, textAlign: "center" }}>
-          <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Comparte el PIN con tus alumnos</p>
+          <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Comparte el PIN con tus {isAdminOrTeacher ? "alumnos" : "compañeros"}</p>
           <div style={{ fontSize: 80, fontWeight: 500, color: "white", letterSpacing: "0.15em", textShadow: "0 0 60px rgba(15,98,254,0.5)", marginBottom: 8 }}>{sessionPin}</div>
           <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 14, marginBottom: 40 }}>Accede desde <strong style={{ color: "rgba(255,255,255,0.6)" }}>bizen.mx/live/join</strong></p>
           <div style={{ marginBottom: 12, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>Jugadores conectados: <strong style={{ color: "#3B82F6", fontSize: 20 }}>{active.length}</strong></div>

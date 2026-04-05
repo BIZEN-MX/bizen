@@ -61,18 +61,22 @@ export async function POST(req: NextRequest) {
         const userId = user.id
 
         // Ensure lesson exists in the database (create stub if missing)
-        // This prevents foreign key errors for lessons that are defined in code but not yet in DB
-        const lesson = await prisma.lesson.findUnique({ where: { id: lessonId } })
+        let lesson = await prisma.lesson.findUnique({ where: { id: lessonId } }).catch(() => null)
         if (!lesson) {
-            await prisma.lesson.create({
-                data: {
-                    id: lessonId,
-                    title: (lessonId.charAt(0).toUpperCase() + lessonId.slice(1)).replace(/-/g, " "),
-                    contentType: "interactive",
-                    order: 0,
-                    xpReward: 50
-                }
-            }).catch(err => console.error("[lesson/complete] Failed to create lesson stub:", err))
+            try {
+                lesson = await prisma.lesson.create({
+                    data: {
+                        id: lessonId,
+                        title: (lessonId.charAt(0).toUpperCase() + lessonId.slice(1)).replace(/-/g, " "),
+                        contentType: "interactive",
+                        order: 0,
+                        xpReward: 50
+                    }
+                })
+            } catch (err) {
+                 console.error("[lesson/complete] Failed to create lesson stub:", err)
+                 lesson = await prisma.lesson.findUnique({ where: { id: lessonId } }).catch(() => null)
+            }
         }
 
         // Check existing progress for this lesson to determine rewards
@@ -113,9 +117,11 @@ export async function POST(req: NextRequest) {
             update: {
                 percent: 100,
                 completedAt: new Date(),
-                // Only upgrade stars, never downgrade
                 starsEarned: starsImproved ? starsEarned : prevStars,
             },
+        }).catch(err => {
+            console.error("[lesson/complete] Upsert failed:", err)
+            throw err 
         })
 
         // Save individual step responses for profiling
@@ -152,53 +158,59 @@ export async function POST(req: NextRequest) {
             try {
                 const { awardXp } = await import("@/lib/rewards")
 
-                // Ensure profile exists first
-                const profile = await prisma.profile.findUnique({ where: { userId } })
+                // Ensure profile exists first with extra safety
+                let profile = await prisma.profile.findUnique({ where: { userId } }).catch(() => null)
                 if (!profile) {
-                    await prisma.profile.create({
-                        data: {
-                            userId,
-                            fullName: user.user_metadata?.full_name || "Usuario Bizen",
-                            xp: 0,
-                            level: 1,
-                        }
-                    })
+                    try {
+                        profile = await prisma.profile.create({
+                            data: {
+                                userId,
+                                fullName: user.user_metadata?.full_name || "Usuario Bizen",
+                                xp: 0,
+                                level: 1,
+                            }
+                        })
+                    } catch (pErr) {
+                         profile = await prisma.profile.findUnique({ where: { userId } }).catch(() => null)
+                    }
                 }
 
-                rewardResult = await awardXp(userId, xpToAward, {
-                    category: "lesson_reward",
-                    description: `Lección completada: ${lesson?.title || lessonId}`
-                })
+                if (profile) {
+                    rewardResult = await awardXp(userId, xpToAward, {
+                        category: "lesson_reward",
+                        description: `Lección completada: ${lesson?.title || lessonId}`
+                    }).catch(err => {
+                        console.error("[lesson/complete] awardXp call failed:", err)
+                        return null
+                    })
+                }
             } catch (err) {
-                console.error("[lesson/complete] Failed to award XP:", err)
+                console.error("[lesson/complete] Failed to award XP flow:", err)
             }
         }
 
         // Check & award achievements after XP is granted
         let newAchievements: string[] = []
         try {
-            const [profile, lessonCount, courseCount] = await Promise.all([
+            const [profile, lessonCount] = await Promise.all([
                 prisma.profile.findUnique({
                     where: { userId },
                     select: { currentStreak: true, level: true, bizcoins: true, postsCreated: true }
-                }),
-                prisma.progress.count({ where: { userId, percent: 100 } }),
-                // Count distinct completed courses (all lessons in unit completed)
+                }).catch(() => null),
                 prisma.progress.count({ where: { userId, percent: 100 } }).catch(() => 0)
             ])
 
-            // Count inventory items for store achievements
             const inventoryCount = await prisma.userInventoryItem.count({ where: { userId } }).catch(() => 0)
 
             newAchievements = await checkAndAwardAchievements(userId, {
                 lessonsCompleted:  lessonCount,
-                coursesCompleted:  isFirstCompletion ? 1 : 0, // will be re-checked on context
+                coursesCompleted:  isFirstCompletion ? 1 : 0, 
                 currentStreak:     profile?.currentStreak ?? 0,
                 level:             profile?.level         ?? 1,
                 bizcoins:          profile?.bizcoins      ?? 0,
                 postsCreated:      profile?.postsCreated  ?? 0,
                 itemsOwned:        inventoryCount,
-            })
+            }).catch(() => [])
         } catch (achErr) {
             console.warn("[lesson/complete] Achievement check failed:", achErr)
         }
@@ -213,7 +225,10 @@ export async function POST(req: NextRequest) {
             newAchievements,
         })
     } catch (error) {
-        console.error("[lesson/complete] Error:", error)
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+        console.error("[lesson/complete] Critical Error:", error)
+        return NextResponse.json({ 
+            error: "Internal Server Error", 
+            details: error instanceof Error ? error.message : "Undefined error" 
+        }, { status: 500 })
     }
 }

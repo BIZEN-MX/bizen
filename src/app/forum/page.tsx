@@ -91,6 +91,8 @@ function EvidenceCard({
   isTeacher,
   currentUserId,
   onTransferClick,
+  onDeletePost,
+  onDeleteComment,
 }: {
   post: EvidencePost
   onReact: (postId: string, type: string) => void
@@ -98,6 +100,8 @@ function EvidenceCard({
   isTeacher: boolean
   currentUserId: string
   onTransferClick: (userId: string, name: string) => void
+  onDeletePost: (postId: string) => void
+  onDeleteComment: (postId: string, commentId: string) => void
 }) {
   const [expanded, setExpanded] = useState(false)
   const [showComments, setShowComments] = useState(false)
@@ -218,6 +222,30 @@ function EvidenceCard({
               {isValidating ? "Validando..." : "Validar"}
             </button>
           )}
+          {post.authorUserId === currentUserId && (
+            <button
+              onClick={() => onDeletePost(post.id)}
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                padding: "4px 8px",
+                borderRadius: "8px",
+                background: "rgba(239, 68, 68, 0.08)",
+                color: "#EF4444",
+                border: "1px solid rgba(239, 68, 68, 0.2)",
+                cursor: "pointer",
+                transition: "all 0.2s"
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "rgba(239, 68, 68, 0.15)"
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "rgba(239, 68, 68, 0.08)"
+              }}
+            >
+              Eliminar
+            </button>
+          )}
         </div>
       </div>
 
@@ -299,6 +327,23 @@ function EvidenceCard({
                   <span style={{ fontSize: 12, fontWeight: 500, color: "#374151" }}>{c.authorDisplay || "Usuario"}</span>
                 </Link>
                 <p style={{ fontSize: 13, color: "#334155", margin: "2px 0 0", lineHeight: 1.5 }}>{c.body}</p>
+                {c.userId === currentUserId && (
+                  <button 
+                    onClick={() => onDeleteComment(post.id, c.id)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#EF4444",
+                      fontSize: "10px",
+                      fontWeight: 600,
+                      padding: "4px 0",
+                      cursor: "pointer",
+                      marginTop: "2px"
+                    }}
+                  >
+                    Eliminar
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -450,6 +495,45 @@ function ForumContent() {
         body: JSON.stringify({ reactionType })
       })
     } catch { }
+  }
+
+  const handleDeleteEvidencePost = async (postId: string) => {
+    if (!confirm("¿Estás seguro de que quieres eliminar esta publicación?")) return
+    try {
+      const res = await fetch(`/api/evidence?id=${postId}`, { method: "DELETE" })
+      if (res.ok) {
+        setEvidencePosts(posts => posts.filter(p => p.id !== postId))
+      } else {
+        const err = await res.json()
+        alert(err.error || "No se pudo eliminar la publicación")
+      }
+    } catch {
+      alert("Error al intentar eliminar")
+    }
+  }
+
+  const handleDeleteEvidenceComment = async (postId: string, commentId: string) => {
+    if (!confirm("¿Estás seguro de que quieres eliminar este comentario?")) return
+    try {
+      // Assuming comments under evidence are handled by a specific route or the generic one
+      // If no specific route, I should check if I need to add it.
+      // Based on my previous grep, there's src/app/api/evidence/[postId]/comment/route.ts
+      // Let's check if that route supports DELETE.
+      const res = await fetch(`/api/evidence/${postId}/comment?id=${commentId}`, { method: "DELETE" })
+      if (res.ok) {
+        setEvidencePosts(posts => posts.map(p => {
+          if (p.id === postId) {
+            return { ...p, comments: p.comments.filter(c => c.id !== commentId) }
+          }
+          return p
+        }))
+      } else {
+        const err = await res.json()
+        alert(err.error || "No se pudo eliminar el comentario")
+      }
+    } catch {
+      alert("Error al intentar eliminar")
+    }
   }
 
   const handleValidate = async (postId: string) => {
@@ -741,6 +825,8 @@ function ForumContent() {
                       isTeacher={isTeacher}
                       currentUserId={user.id}
                       onTransferClick={(uid) => router.push(`/transfer?target=${uid}`)}
+                      onDeletePost={handleDeleteEvidencePost}
+                      onDeleteComment={handleDeleteEvidenceComment}
                     />
                   ))
                 )}
